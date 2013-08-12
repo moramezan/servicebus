@@ -1,0 +1,3 @@
+[submodule "lib/salesforce_ant_28.0"]
+	path = lib/salesforce_ant_28.0
+	url = https://github.com/ratsaas/salesforce_ant_28.0.git
