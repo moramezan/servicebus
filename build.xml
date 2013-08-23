@@ -1,0 +1,27 @@
+<project default="usage" basedir="." xmlns:sf="antlib:com.salesforce">
+
+	<taskdef uri="antlib:com.salesforce" classpath="lib/salesforce_ant_28.0/ant-salesforce.jar" />
+
+	<property file="build.properties"/>
+	<property environment="env"/>
+
+	<target name="pull" description="Retrieves all package components">
+		<sf:retrieve username="${sf.username}" password="${sf.password}" serverurl="https://login.salesforce.com" retrieveTarget="src" packageNames="plunger4"/>
+	</target>
+
+	<target name="push" description="Deploys all package components">
+		<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="https://login.salesforce.com" deployRoot="src"/>
+	</target>
+
+	<target name="zip" description="Builds static resources">
+		<zip destfile="src/staticresources/bayeuxZip.resource" basedir="dev/resource/bayeuxZip" includes="**"/>
+	</target>
+
+	<target name="usage">
+		<java classname="org.apache.tools.ant.Main">
+			<arg value="-projecthelp"/>
+			<arg value="-quiet"/>
+		</java>
+	</target>
+
+</project>
