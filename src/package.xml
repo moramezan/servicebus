@@ -9,14 +9,17 @@
     <types>
         <members>Notification__c.Message__c</members>
         <members>Notification__c.State__c</members>
+        <members>Process__c.ApexClass__c</members>
         <name>CustomField</name>
     </types>
     <types>
         <members>Notification__c</members>
+        <members>Process__c</members>
         <name>CustomObject</name>
     </types>
     <types>
         <members>Notification__c-Notification Layout</members>
+        <members>Process__c-Process Layout</members>
         <name>Layout</name>
     </types>
     <types>
