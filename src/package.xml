@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>plunger4</fullName>
+    <types>
+        <members>Notification__c.Message__c</members>
+        <members>Notification__c.State__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Notification__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Notification__c-Notification Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Notification__c.Buffer</members>
+        <members>Notification__c.Failure</members>
+        <members>Notification__c.Success</members>
+        <name>RecordType</name>
+    </types>
     <version>28.0</version>
 </Package>
