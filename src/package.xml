@@ -3,6 +3,7 @@
     <fullName>plunger4</fullName>
     <types>
         <members>Notification</members>
+        <members>Processable</members>
         <name>ApexClass</name>
     </types>
     <types>
