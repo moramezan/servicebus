@@ -11,29 +11,29 @@
         <members>ChainStep__c.Process__c</members>
         <members>ChainStep__c.Sequence__c</members>
         <members>Chain__c.MaxChainStepSequence__c</members>
-        <members>Notification__c.Message__c</members>
-        <members>Notification__c.State__c</members>
+        <members>PersistentData__c.Message__c</members>
+        <members>PersistentData__c.Notification__c</members>
         <members>Process__c.ApexClass__c</members>
         <name>CustomField</name>
     </types>
     <types>
         <members>ChainStep__c</members>
         <members>Chain__c</members>
-        <members>Notification__c</members>
+        <members>PersistentData__c</members>
         <members>Process__c</members>
         <name>CustomObject</name>
     </types>
     <types>
         <members>ChainStep__c-ChainStep Layout</members>
         <members>Chain__c-Chain Layout</members>
-        <members>Notification__c-Notification Layout</members>
+        <members>PersistentData__c-Persistent Data Layout</members>
         <members>Process__c-Process Layout</members>
         <name>Layout</name>
     </types>
     <types>
-        <members>Notification__c.Buffer</members>
-        <members>Notification__c.Failure</members>
-        <members>Notification__c.Success</members>
+        <members>PersistentData__c.Buffer</members>
+        <members>PersistentData__c.Failure</members>
+        <members>PersistentData__c.Success</members>
         <name>RecordType</name>
     </types>
     <types>

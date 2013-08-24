@@ -45,20 +45,20 @@
         <type>TextArea</type>
     </fields>
     <fields>
-        <fullName>State__c</fullName>
+        <fullName>Notification__c</fullName>
         <externalId>false</externalId>
-        <label>State</label>
+        <label>Notification</label>
         <length>32768</length>
         <type>LongTextArea</type>
         <visibleLines>3</visibleLines>
     </fields>
-    <label>Notification</label>
+    <label>Persistent Data</label>
     <nameField>
         <displayFormat>N-{0000000000}</displayFormat>
-        <label>Notification Name</label>
+        <label>Persistent Data Name</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Notifications</pluralLabel>
+    <pluralLabel>Persistent Datas</pluralLabel>
     <recordTypes>
         <fullName>Buffer</fullName>
         <active>true</active>
