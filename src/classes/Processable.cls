@@ -1,5 +1,5 @@
 global interface Processable {
 	
-	List<Notification> execute(Notification notification);
+	List<Map<String,Object>> execute(Map<String,Object> notification);
 	
 }
