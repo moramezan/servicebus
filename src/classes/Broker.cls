@@ -1,4 +1,4 @@
-public class Broker implements Database.Batchable<SObject> {
+public class Broker implements Database.Batchable<SObject>, Database.AllowsCallouts {
 
     public Database.QueryLocator start(Database.BatchableContext context) {
         //find some buffered work
