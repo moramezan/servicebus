@@ -65,9 +65,9 @@
         <label>Buffer</label>
     </recordTypes>
     <recordTypes>
-        <fullName>Failure</fullName>
+        <fullName>Processing</fullName>
         <active>true</active>
-        <label>Failure</label>
+        <label>Processing</label>
     </recordTypes>
     <recordTypes>
         <fullName>Success</fullName>
