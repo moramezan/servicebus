@@ -22,8 +22,11 @@ public class Broker implements Database.Batchable<SObject> {
         //get those exact same list of ids
         Set<Id> ids = id2data.keySet();
         
+        //as a comma delimited string
+        String ins = '(\'' + String.join(new List<Id>(ids), ',') + '\')';
+        
         //hand back just the ones we have marked (WHERE AGE < APEX TIMEOUT ETC)
-        return Database.getQueryLocator('SELECT Id, Notification__c FROM PersistentData__c WHERE Id IN :ids');
+        return Database.getQueryLocator('SELECT Id, Notification__c FROM PersistentData__c WHERE Id IN ' + ins);
     }
     
     public void execute(Database.BatchableContext context, List<SObject> scope) {
@@ -31,7 +34,7 @@ public class Broker implements Database.Batchable<SObject> {
         PersistentData__c persistentData = (PersistentData__c)scope[0];
         
         //prepare the notification (a primitive dto) from persistent data
-        Map<String,Object> notification = (Map<String,Object>)Json.deserialize(persistentData.Notification__c, Map<String,Object>.class);
+        Map<String,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c);
         
         //increment sequence
         notification.put('sequence', (Decimal)notification.get('sequence') + 1);
@@ -73,6 +76,9 @@ public class Broker implements Database.Batchable<SObject> {
                 RecordTypeId = bufferId
             ));
         }
+        
+        //tidy up the successfully processed notification
+        delete persistentData;
         
         //persist these notifications to be picked up in the next batch run
         insert persistentDatas;
