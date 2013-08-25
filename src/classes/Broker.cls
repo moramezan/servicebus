@@ -23,7 +23,7 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
         Set<Id> ids = id2data.keySet();
         
         //as a comma delimited string
-        String ins = '(\'' + String.join(new List<Id>(ids), ',') + '\')';
+        String ins = '(\'' + String.join(new List<Id>(ids), '\',\'') + '\')';
         
         //hand back just the ones we have marked (WHERE AGE < APEX TIMEOUT ETC)
         return Database.getQueryLocator('SELECT Id, Notification__c FROM PersistentData__c WHERE Id IN ' + ins);
@@ -61,9 +61,10 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
         //invoke the processable instance
         List<Map<String,Object>> notifications = processable.execute(notification);
         
-        //count the notifications
+        //count the notifications if marked
         Integer count = notifications.size();
-        if (count != 1) notification.put('count', count);
+        String mark = (String)notification.get('mark');
+        if (null != mark && count != 1) notification.put('count', count);
         
         //get buffer record type
         String bufferId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Buffer').RecordTypeId;

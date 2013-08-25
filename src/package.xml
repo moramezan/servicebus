@@ -4,6 +4,7 @@
     <types>
         <members>Broker</members>
         <members>Processable</members>
+        <members>Publish</members>
         <name>ApexClass</name>
     </types>
     <types>
