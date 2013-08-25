@@ -7,6 +7,10 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>PersistentDataAfterInsert</members>
+        <name>ApexTrigger</name>
+    </types>
+    <types>
         <members>ChainStep__c.Chain__c</members>
         <members>ChainStep__c.Process__c</members>
         <members>ChainStep__c.Sequence__c</members>

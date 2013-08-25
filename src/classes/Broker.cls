@@ -85,7 +85,16 @@ public class Broker implements Database.Batchable<SObject> {
     }
     
     public void finish(Database.BatchableContext context) {
-        //thanks
+        List<PersistentData__c> persistentDatas = [
+            SELECT Id
+            FROM PersistentData__c
+            WHERE RecordType.Name = 'Buffer'
+        ];
+        
+        if (!persistentDatas.isEmpty()) {
+            //new stuff to do
+            Database.executeBatch(new Broker(), 1);
+        }
     }
 
     static public void enqueue(String chainName, Blob data) {
@@ -129,5 +138,4 @@ public class Broker implements Database.Batchable<SObject> {
             Notification__c = Json.serialize(notification)
         );
     }
-    
 }
