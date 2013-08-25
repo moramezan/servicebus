@@ -88,4 +88,46 @@ public class Broker implements Database.Batchable<SObject> {
         //thanks
     }
 
+    static public void enqueue(String chainName, Blob data) {
+        //prepare a very generic container
+        Document document = new Document(
+            Name = String.valueOf(Datetime.now().getTime()),
+            Body = data,
+            FolderId = [SELECT Id FROM Folder WHERE Name = 'Eda'].Id,
+            ContentType = 'text/plain',
+            Type = 'txt'
+        );
+        
+        //store this data away
+        insert document;
+        
+        //scaffold the notification, pointing to the stored data
+        Map<String,Object> notification = new Map<String,Object>{
+            'chainName' => chainName,
+            'sequence' => 0,
+            'id' => document.Id
+        };
+        
+        //enqueue the notification onto the buffer
+        insert new PersistentData__c(
+            RecordTypeId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Buffer').RecordTypeId,
+            Notification__c = Json.serialize(notification)
+        );
+    }
+    
+    static public void enqueue(String chainName, Id data) {
+        //scaffold the notification, pointing to the stored data
+        Map<String,Object> notification = new Map<String,Object>{
+            'chainName' => chainName,
+            'sequence' => 0,
+            'id' => data
+        };
+        
+        //enqueue the notification onto the buffer
+        insert new PersistentData__c(
+            RecordTypeId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Buffer').RecordTypeId,
+            Notification__c = Json.serialize(notification)
+        );
+    }
+    
 }
