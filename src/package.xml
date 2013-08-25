@@ -5,6 +5,7 @@
         <members>Broker</members>
         <members>Processable</members>
         <members>Publish</members>
+        <members>Sink</members>
         <name>ApexClass</name>
     </types>
     <types>
