@@ -9,9 +9,9 @@ global class Publish implements Processable {
 		}
 		
 		//careful: by returning 2 notification, the broker may think the process was a splitter
-		Map<String,Object> clone = notification.clone();
-		clone.put('chainName', publishTo);
-		clone.put('sequence', 0);
+		Map<String,Object> event = notification.clone();
+		event.put('chainName', publishTo);
+		event.put('sequence', 0);
 		
 		//TODO
 		//we might have an inbound document, where parallel chains are attempting
@@ -26,7 +26,7 @@ global class Publish implements Processable {
 		//	event.put('id', clone.Id);
 		//}
 		
-		return new List<Map<String,Object>>{notification};
+		return new List<Map<String,Object>>{notification, event};
 	}
 
 }
