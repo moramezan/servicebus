@@ -65,9 +65,17 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 		List<Map<String,Object>> notifications = processable.execute(notification);
 		
 		//count the notifications if marked
-		Integer count = notifications.size();
-		String mark = (String)notification.get('mark');
-		if (null != mark && count != 1) notification.put('count', count);
+		Decimal markCount = (Decimal)notification.get('markCount');
+		
+		//increment markCount THEN put that value on notification
+		if (null != markCount) notification.put('markCount', ++markCount);
+		
+		//the above process would have been a splitter
+		if (2 == markCount) {
+			Integer count = notifications.size();
+			notification.put('count', count);
+			if (count == 0) Database.delete(new List<Id>{(Id)notification.get('gateGroupId')}); //tidy up split of 0
+		}
 		
 		//get buffer record type
 		String bufferId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Buffer').RecordTypeId;

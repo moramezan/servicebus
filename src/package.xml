@@ -7,6 +7,8 @@
         <members>Broker</members>
         <members>ChainStepExtensionConfigure</members>
         <members>Configurable</members>
+        <members>Gate</members>
+        <members>Mark</members>
         <members>Processable</members>
         <members>Sink</members>
         <members>Wiretap</members>
@@ -30,6 +32,8 @@
         <members>ChainStep__c.Process__c</members>
         <members>ChainStep__c.Sequence__c</members>
         <members>Chain__c.MaxChainStepSequence__c</members>
+        <members>GateItem__c.GateGroup__c</members>
+        <members>GateItem__c.Notification__c</members>
         <members>PersistentData__c.Message__c</members>
         <members>PersistentData__c.Notification__c</members>
         <members>Process__c.ApexClass__c</members>
@@ -40,6 +44,8 @@
         <members>BranchConfiguration__c</members>
         <members>ChainStep__c</members>
         <members>Chain__c</members>
+        <members>GateGroup__c</members>
+        <members>GateItem__c</members>
         <members>PersistentData__c</members>
         <members>Process__c</members>
         <name>CustomObject</name>
@@ -49,6 +55,8 @@
         <members>BranchConfiguration__c-Branch Configuration Layout</members>
         <members>ChainStep__c-ChainStep Layout</members>
         <members>Chain__c-Chain Layout</members>
+        <members>GateGroup__c-Gate Group Layout</members>
+        <members>GateItem__c-Gate Item Layout</members>
         <members>PersistentData__c-Persistent Data Layout</members>
         <members>Process__c-Process Layout</members>
         <name>Layout</name>
