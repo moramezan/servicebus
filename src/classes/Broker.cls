@@ -41,7 +41,7 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 		
 		//resolve chain step
 		ChainStep__c chainStep = [
-			SELECT Process__c
+			SELECT Process__c, Configuration__c
 			FROM ChainStep__c
 			WHERE Chain__r.Name = :(String)notification.get('chainName')
 			AND Sequence__c = :(Decimal)notification.get('sequence')
@@ -57,6 +57,9 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 		//instantiate processable instance
 		Type reflector = Type.forName(process.ApexClass__c);
 		Processable processable = (Processable)reflector.newInstance();
+		
+		//hand in the configuration id
+		notification.put('configuration', chainStep.Configuration__c);
 		
 		//invoke the processable instance
 		List<Map<String,Object>> notifications = processable.execute(notification);
