@@ -2,11 +2,11 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>plunger4</fullName>
     <types>
+        <members>Branch</members>
         <members>Broker</members>
         <members>ChainStepExtensionConfigure</members>
         <members>Configurable</members>
         <members>Processable</members>
-        <members>Publish</members>
         <members>Sink</members>
         <name>ApexClass</name>
     </types>
@@ -21,6 +21,7 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>BranchConfiguration__c.Chain__c</members>
         <members>ChainStep__c.Chain__c</members>
         <members>ChainStep__c.Configuration__c</members>
         <members>ChainStep__c.Process__c</members>
@@ -32,6 +33,7 @@
         <name>CustomField</name>
     </types>
     <types>
+        <members>BranchConfiguration__c</members>
         <members>ChainStep__c</members>
         <members>Chain__c</members>
         <members>PersistentData__c</members>
@@ -39,6 +41,7 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>BranchConfiguration__c-Branch Configuration Layout</members>
         <members>ChainStep__c-ChainStep Layout</members>
         <members>Chain__c-Chain Layout</members>
         <members>PersistentData__c-Persistent Data Layout</members>
