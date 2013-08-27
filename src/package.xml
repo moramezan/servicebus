@@ -22,6 +22,7 @@
         <members>ChainBeforeDelete</members>
         <members>ChainStepBeforeDelete</members>
         <members>PersistentDataAfterInsert</members>
+        <members>PersistentDataAfterUpdate</members>
         <name>ApexTrigger</name>
     </types>
     <types>
