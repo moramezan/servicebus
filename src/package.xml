@@ -82,6 +82,7 @@
     </types>
     <types>
         <members>ChainStep__c.IncrementSequence</members>
+        <members>PersistentData__c.OnPersistentDataError</members>
         <name>WorkflowRule</name>
     </types>
     <version>28.0</version>
