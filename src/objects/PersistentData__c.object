@@ -67,6 +67,7 @@
     <recordTypes>
         <fullName>Processing</fullName>
         <active>true</active>
+        <description>Data is marked as &quot;Processing&quot; when the process begins to handle it. Failure of the process will leave the data in this state.</description>
         <label>Processing</label>
     </recordTypes>
     <recordTypes>

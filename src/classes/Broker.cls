@@ -61,8 +61,24 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 		//hand in the configuration id
 		notification.put('configuration', chainStep.Configuration__c);
 		
-		//invoke the processable instance
-		List<Map<String,Object>> notifications = processable.execute(notification);
+		List<Map<String,Object>> notifications = null;
+		
+		try {
+			//invoke the processable instance
+			notifications = processable.execute(notification);
+		} catch (Exception e) {
+			Map<String,Object> serializedException = new Map<String,Object>();
+			serializedException.put('cause', e.getCause());
+			serializedException.put('lineNumber', e.getLineNumber());
+			serializedException.put('message', e.getMessage());
+			serializedException.put('stackTraceString', e.getStackTraceString());
+			serializedException.put('typeName', e.getTypeName());
+			
+			//log any exceptions and get out of dodge quick
+			persistentData.Message__c = Json.serializePretty(serializedException);
+			update persistentData;
+			return;
+		}
 		
 		//count the notifications if marked
 		Decimal markCount = (Decimal)notification.get('markCount');
@@ -84,7 +100,7 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 		List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
 		for (Map<String,Object> n : notifications) {
 			persistentDatas.add(new PersistentData__c(
-				Notification__c = Json.serialize(n),
+				Notification__c = Json.serializePretty(n),
 				RecordTypeId = bufferId
 			));
 		}
@@ -120,7 +136,7 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 		//enqueue the notification onto the buffer
 		insert new PersistentData__c(
 			RecordTypeId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Buffer').RecordTypeId,
-			Notification__c = Json.serialize(notification)
+			Notification__c = Json.serializePretty(notification)
 		);
 	}
 	
