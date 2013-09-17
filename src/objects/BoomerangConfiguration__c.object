@@ -33,13 +33,16 @@
         <type>Default</type>
     </actionOverrides>
     <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
     <enableActivities>false</enableActivities>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
         <fullName>Chain__c</fullName>
         <deleteConstraint>Restrict</deleteConstraint>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Chain</label>
         <referenceTo>Chain__c</referenceTo>

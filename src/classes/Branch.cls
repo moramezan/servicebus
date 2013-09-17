@@ -1,6 +1,8 @@
 global class Branch implements Processable, Configurable {
 	
-	global SObject configure() {
+    public class BranchException extends Exception {}
+    
+    global SObject configure() {
 		return new BranchConfiguration__c();
 	}
 	
@@ -17,7 +19,7 @@ global class Branch implements Processable, Configurable {
 		
 		//prevent recursion
 		if (branchTo == (String)notification.get('chainName')) {
-			System.assert(false, 'Not allowed to branch to own chain!');
+			throw new BranchException('Not allowed to branch to own chain!');
 		}
 		
 		//careful: by returning 2 notification, the broker may think the process was a splitter

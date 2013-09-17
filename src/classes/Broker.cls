@@ -145,7 +145,7 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 		Document document = new Document(
 			Name = String.valueOf(Datetime.now().getTime()),
 			Body = data,
-			FolderId = [SELECT Id FROM Folder WHERE Name = 'Eda'].Id,
+			FolderId = UserInfo.getUserId(),
 			ContentType = 'text/plain',
 			Type = 'txt'
 		);
