@@ -31,6 +31,7 @@
     </types>
     <types>
         <members>ChainBeforeDelete</members>
+        <members>ChainStepAfterInsert</members>
         <members>ChainStepBeforeDelete</members>
         <members>PersistentDataAfterInsert</members>
         <members>PersistentDataAfterUpdate</members>
