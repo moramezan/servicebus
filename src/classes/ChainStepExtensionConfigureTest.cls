@@ -15,21 +15,19 @@ private  class ChainStepExtensionConfigureTest
         Chain__c chain = new Chain__c( Name = chainName);
         insert chain;
 
-        BranchConfiguration__c branchConfiguration = new BranchConfiguration__c(Chain__c = chain.Id);
-        insert branchConfiguration;
-
         Process__c process = new   Process__c (   ApexClass__c = apexClass);
         insert process;
 
         ChainStep__c chainStep = new ChainStep__c ( Chain__c         =  chain.Id ,
-                                                    Configuration__c =  branchConfiguration.Id,
                                                     Process__c       =  process.Id ,
                                                     Sequence__c      =  sequence);
         insert chainStep;
+        
+        chainStep = [SELECT Id, Configuration__c FROM ChainStep__c WHERE Id = :chainStep.Id];
 
 
 
-        String expectedPageReferenceUrl = new PageReference('/' + branchConfiguration.Id + '/e?retURL=' + chainStep.Id).getUrl();
+        String expectedPageReferenceUrl = new PageReference('/' + chainStep.Configuration__c + '/e?retURL=' + chainStep.Id).getUrl();
 
 
 
@@ -50,7 +48,7 @@ private  class ChainStepExtensionConfigureTest
     {
         // Arrange :
         String  chainName          = 'the-chain';
-        String  apexClass          = 'branch';
+        String  apexClass          = 'Branch';
         Decimal sequence           = 1;
         String  data               = 'data';
 
@@ -60,13 +58,10 @@ private  class ChainStepExtensionConfigureTest
         insert chain;
 
 
-        Id branchConfigurationId = null;
-
         Process__c process = new   Process__c (   ApexClass__c = apexClass);
         insert process;
 
         ChainStep__c chainStep = new ChainStep__c ( Chain__c         =  chain.Id ,
-                                                    Configuration__c =  branchConfigurationId,
                                                     Process__c       =  process.Id ,
                                                     Sequence__c      =  sequence);
         insert chainStep;
@@ -76,13 +71,13 @@ private  class ChainStepExtensionConfigureTest
         // Act
         ApexPages.StandardController controller = new ApexPages.StandardController(chainStep);
         ChainStepExtensionConfigure chainStepExtensionConfigure = new ChainStepExtensionConfigure( controller );
-         String actualPageReferenceUrl  =  chainStepExtensionConfigure.initConfig().getUrl();
-
+        
         // Prepare
-         boolean  actualPageReferenceUrlFlag  = actualPageReferenceUrl.contains('/e?retURL=' + chainStep.Id);
+        String actualUrl = chainStepExtensionConfigure.initConfig().getUrl();
+        String expectedUrl = String.valueOf(chainStep.Id).left(15);
 
         // Assert
-        System.assertEquals( expectedPageReferenceUrlFlag , actualPageReferenceUrlFlag );
+        System.assert(actualUrl.contains(expectedUrl));
     }
 
 

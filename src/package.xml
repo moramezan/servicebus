@@ -11,6 +11,8 @@
         <members>Broker</members>
         <members>BrokerTest</members>
         <members>ChainBeforeDeleteTest</members>
+        <members>ChainStepAfterInsertTest</members>
+        <members>ChainStepBeforeDeleteTest</members>
         <members>ChainStepExtensionConfigure</members>
         <members>ChainStepExtensionConfigureTest</members>
         <members>Configurable</members>
