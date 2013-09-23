@@ -6,7 +6,7 @@
 	<property environment="env"/>
 
 	<target name="pull" description="Retrieves all package components">
-		<sf:retrieve username="${sf.username}" password="${sf.password}" serverurl="https://login.salesforce.com" retrieveTarget="src" packageNames="plunger4"/>
+		<sf:retrieve username="${sf.username}" password="${sf.password}" serverurl="https://login.salesforce.com" retrieveTarget="src" packageNames="Event Driven Architecture"/>
 	</target>
 
 	<target name="push" description="Deploys all package components">

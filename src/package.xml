@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>plunger4</fullName>
+    <fullName>Event Driven Architecture</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <namespacePrefix>eda</namespacePrefix>
     <types>
         <members>Boomerang</members>
+        <members>BoomerangTest</members>
         <members>Branch</members>
+        <members>BranchTest</members>
         <members>Broker</members>
+        <members>BrokerTest</members>
+        <members>ChainBeforeDeleteTest</members>
+        <members>ChainStepAfterInsertTest</members>
+        <members>ChainStepBeforeDeleteTest</members>
         <members>ChainStepExtensionConfigure</members>
+        <members>ChainStepExtensionConfigureTest</members>
         <members>Configurable</members>
         <members>Gate</members>
+        <members>GateTest</members>
         <members>Mark</members>
+        <members>MarkTest</members>
         <members>Processable</members>
         <members>Sink</members>
+        <members>SinkTest</members>
+        <members>WireTapTest</members>
         <members>Wiretap</members>
         <name>ApexClass</name>
     </types>
@@ -20,10 +33,15 @@
     </types>
     <types>
         <members>ChainBeforeDelete</members>
+        <members>ChainStepAfterInsert</members>
         <members>ChainStepBeforeDelete</members>
         <members>PersistentDataAfterInsert</members>
         <members>PersistentDataAfterUpdate</members>
         <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>EDA</members>
+        <name>CustomApplication</name>
     </types>
     <types>
         <members>BoomerangConfiguration__c.Chain__c</members>
@@ -52,6 +70,13 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>Chain__c</members>
+        <members>GateGroup__c</members>
+        <members>PersistentData__c</members>
+        <members>Process__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
         <members>BoomerangConfiguration__c-Boomerang Configuration Layout</members>
         <members>BranchConfiguration__c-Branch Configuration Layout</members>
         <members>ChainStep__c-ChainStep Layout</members>
@@ -61,6 +86,13 @@
         <members>PersistentData__c-Persistent Data Layout</members>
         <members>Process__c-Process Layout</members>
         <name>Layout</name>
+    </types>
+    <types>
+        <members>Chain__c.All</members>
+        <members>GateGroup__c.All</members>
+        <members>PersistentData__c.All</members>
+        <members>Process__c.All</members>
+        <name>ListView</name>
     </types>
     <types>
         <members>PersistentData__c.Buffer</members>

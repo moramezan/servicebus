@@ -33,11 +33,18 @@
         <type>Default</type>
     </actionOverrides>
     <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
     <enableActivities>false</enableActivities>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <label>Gate Group</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
     <nameField>
         <displayFormat>GG-{0000000000}</displayFormat>
         <label>Gate Group Name</label>

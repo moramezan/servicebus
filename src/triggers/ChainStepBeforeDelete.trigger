@@ -1,6 +1,6 @@
 /**
  * If a step has configuration, there is a one-to-one relationship.
- * ChainStepExtensionConfigure takes care of the creation of the configuration.
+ * ChainStepAfterInsert takes care of the creation of the configuration.
  * This trigger takes care of the deletion of the configuration.
  */
 trigger ChainStepBeforeDelete on ChainStep__c (before delete) {
