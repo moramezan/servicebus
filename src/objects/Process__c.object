@@ -63,4 +63,15 @@
     <pluralLabel>Processes</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>Customize</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Customize</masterLabel>
+        <openType>sidebar</openType>
+        <page>ProcessCustomization</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>

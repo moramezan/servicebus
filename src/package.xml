@@ -122,5 +122,5 @@
         <members>PersistentData__c.OnPersistentDataError</members>
         <name>WorkflowRule</name>
     </types>
-    <version>28.0</version>
+    <version>29.0</version>
 </Package>
