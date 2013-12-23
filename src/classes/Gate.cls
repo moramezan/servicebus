@@ -1,8 +1,8 @@
 global class Gate implements Processable {
 
 	global List<Map<String,Object>> execute(Map<String,Object> notification) {
-		Id gateGroupId = (Id)notification.get('gateGroupId');
-		Decimal count = (Decimal)notification.get('count');
+		Id gateGroupId = (Id)notification.get('eda__gateGroupId');
+		Decimal count = (Decimal)notification.get('eda__count');
 		
 		insert new GateItem__c(
 			GateGroup__c = gateGroupId,

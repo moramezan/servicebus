@@ -37,14 +37,14 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 		Map<String,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c);
 		
 		//increment sequence
-		notification.put('sequence', (Decimal)notification.get('sequence') + 1);
+		notification.put('eda__sequence', (Decimal)notification.get('eda__sequence') + 1);
 		
 		//resolve chain step
 		ChainStep__c chainStep = [
 			SELECT Process__c, Configuration__c
 			FROM ChainStep__c
-			WHERE Chain__r.Name = :(String)notification.get('chainName')
-			AND Sequence__c = :(Decimal)notification.get('sequence')
+			WHERE Chain__r.Name = :(String)notification.get('eda__chainName')
+			AND Sequence__c = :(Decimal)notification.get('eda__sequence')
 		];
 		
 		//resolve processable
@@ -59,7 +59,7 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 		Processable processable = (Processable)reflector.newInstance();
 		
 		//hand in the configuration id
-		notification.put('configuration', chainStep.Configuration__c);
+		notification.put('eda__configuration', chainStep.Configuration__c);
 		
 		List<Map<String,Object>> notifications = null;
 		
@@ -81,16 +81,16 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 		}
 		
 		//count the notifications if marked
-		Decimal markCount = (Decimal)notification.get('markCount');
+		Decimal markCount = (Decimal)notification.get('eda__markCount');
 		
 		//increment markCount THEN put that value on notification
-		if (null != markCount) notification.put('markCount', ++markCount);
+		if (null != markCount) notification.put('eda__markCount', ++markCount);
 		
 		//the above process would have been a splitter
 		if (2 == markCount) {
 			Integer count = notifications.size();
-			notification.put('count', count);
-			if (count == 0) Database.delete(new List<Id>{(Id)notification.get('gateGroupId')}); //tidy up split of 0
+			notification.put('eda__count', count);
+			if (count == 0) Database.delete(new List<Id>{(Id)notification.get('eda__gateGroupId')}); //tidy up split of 0
 		}
 		
 		//get buffer record type
@@ -128,8 +128,8 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 	static public void enqueue(String chainName, Id data) {
 		//scaffold the notification, pointing to the stored data
 		Map<String,Object> notification = new Map<String,Object>{
-			'chainName' => chainName,
-			'sequence' => 0,
+			'eda__chainName' => chainName,
+			'eda__sequence' => 0,
 			'id' => data
 		};
 		

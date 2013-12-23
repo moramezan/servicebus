@@ -15,10 +15,10 @@ private  class GateTest
         insert gateGroup;
         Id           gateGroupId    = gateGroup.Id;
 
-        Map<String,Object> notification = new Map<String,Object> {  'chainName' => chainName,
-                                                                    'sequence' => sequence,
-                                                                    'gateGroupId' => gateGroupId,
-                                                                    'count' => count,
+        Map<String,Object> notification = new Map<String,Object> {  'eda__chainName' => chainName,
+                                                                    'eda__sequence' => sequence,
+                                                                    'eda__gateGroupId' => gateGroupId,
+                                                                    'eda__count' => count,
                                                                     'data' => data
                                                                     };
 
@@ -77,10 +77,10 @@ private  class GateTest
         insert gateGroup;
         Id           gateGroupId    = gateGroup.Id;
 
-        Map<String,Object> notification = new Map<String,Object> {  'chainName' => chainName,
-                                                                    'sequence' => sequence,
-                                                                    'gateGroupId' => gateGroupId,
-                                                                    'count' => count,
+        Map<String,Object> notification = new Map<String,Object> {  'eda__chainName' => chainName,
+                                                                    'eda__sequence' => sequence,
+                                                                    'eda__gateGroupId' => gateGroupId,
+                                                                    'eda__count' => count,
                                                                     'data' => data
                                                                     };
 

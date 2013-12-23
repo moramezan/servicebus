@@ -22,9 +22,9 @@
 		
 		//prepare notification
 		Map<String,Object> notification = new Map<String,Object>{
-			'chainName' => 'originChain',
-			'sequence' => 0,
-			'configuration' => config.Id
+			'eda__chainName' => 'originChain',
+			'eda__sequence' => 0,
+			'eda__configuration' => config.Id
 		};
 		
 		//act
@@ -37,11 +37,11 @@
 		System.assertEquals(expectedSize, actualSize);
 		
 		String expectedChainName = 'targetChain';
-		String actualChainName = (String)notifications[0].get('chainName');
+		String actualChainName = (String)notifications[0].get('eda__chainName');
 		System.assertEquals(expectedChainName, actualChainName);
 		
 		Decimal expectedSequence = 0;
-		Decimal actualSequence = (Decimal)notifications[0].get('sequence');
+		Decimal actualSequence = (Decimal)notifications[0].get('eda__sequence');
 		System.assertEquals(expectedSequence, actualSequence);
 	}
 	

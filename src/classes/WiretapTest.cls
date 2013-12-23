@@ -1,5 +1,5 @@
 @isTest  //-- no view of org data
-private  class WireTapTest
+private  class WiretapTest
 {
 
     static testMethod void callingExecuteReturnsExpectedNotificationCollection()
@@ -9,16 +9,16 @@ private  class WireTapTest
         Integer chainStep      = 1;
         String  data           = 'data';
 
-        Map<String,Object> notification = new Map<String,Object> {  'ChainName' => chainName, 
-                                                        'ChainStep' => chainStep, 
-                                                        'Data' => data
+        Map<String,Object> notification = new Map<String,Object> {  'eda__chainName' => chainName, 
+                                                        'eda__chainStep' => chainStep, 
+                                                        'data' => data
                                                         };
         
 
         Integer expectedSize = 1;
 
         // Act
-        Wiretap wireTap = new WireTap();
+        Wiretap wireTap = new Wiretap();
         List<Map<String,Object>> actualNotifications =  wireTap.execute(notification);
 
         // prepare

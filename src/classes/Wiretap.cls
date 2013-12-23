@@ -2,7 +2,7 @@ global class Wiretap implements Processable {
 
 	global List<Map<String,Object>> execute(Map<String,Object> notification) {
 		Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
-		message.setSubject('[Wiretap] ' + notification.get('chainName') + '#' + notification.get('sequence'));
+		message.setSubject('[Wiretap] ' + notification.get('eda__chainName') + '#' + notification.get('eda__sequence'));
 		message.setPlainTextBody(Json.serialize(notification));
 		message.setTargetObjectId(UserInfo.getUserId());
 		message.setSaveAsActivity(false);

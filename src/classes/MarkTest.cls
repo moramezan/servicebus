@@ -10,8 +10,8 @@ private  class MarkTest
         Decimal sequence           = 1;
          String  data              = 'data';
 
-        Map<String,Object> notification = new Map<String,Object> {  'chainName' => chainName,
-                                                                    'sequence' => sequence,
+        Map<String,Object> notification = new Map<String,Object> {  'eda__chainName' => chainName,
+                                                                    'eda__sequence' => sequence,
                                                                     'data' => data
                                                                     };
 
@@ -31,8 +31,8 @@ private  class MarkTest
         if (actualSize > 0)
         {
             Map<String,Object> actualNotification = actualOutNotifications[0];
-            actualMarkCount             = (Decimal) notification.get('markCount' );
-            actualGateGroupIdFlag           =    ( notification.get('gateGroupId' ) != null);
+            actualMarkCount             = (Decimal) notification.get('eda__markCount' );
+            actualGateGroupIdFlag           =    ( notification.get('eda__gateGroupId' ) != null);
         }
         integer actualGateGroupSize = [SELECT id FROM  GateGroup__C].size();
 

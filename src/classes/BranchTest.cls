@@ -22,9 +22,9 @@
         
         //arrange notification
         Map<String,Object> notification = new Map<String,Object>{
-            'chainName' => origin.Name,
-            'sequence' => 1,
-            'configuration' => config.Id
+            'eda__chainName' => origin.Name,
+            'eda__sequence' => 1,
+            'eda__configuration' => config.Id
         };
         
         //arrange processable
@@ -43,11 +43,11 @@
         
         //asserts
         String expectedNormalChainName = origin.Name;
-        String actualNormalChainName = (String)normalNotification.get('chainName');
+        String actualNormalChainName = (String)normalNotification.get('eda__chainName');
         System.assertEquals(expectedNormalChainName, actualNormalChainName);
         
         Decimal expectedNormalSequence = 1;
-        Decimal expectedActualSequence = (Decimal)normalNotification.get('sequence');
+        Decimal expectedActualSequence = (Decimal)normalNotification.get('eda__sequence');
         System.assertEquals(expectedNormalSequence, expectedActualSequence);
         
         //act
@@ -55,11 +55,11 @@
         
         //asserts
         String expectedBranchChainName = target.Name;
-        String actualBranchChainName = (String)branchNotification.get('chainName');
+        String actualBranchChainName = (String)branchNotification.get('eda__chainName');
         System.assertEquals(expectedBranchChainName, actualBranchChainName);
         
         Decimal expectedBranchSequence = 0;
-        Decimal actualBranchSequence = (Decimal)branchNotification.get('sequence');
+        Decimal actualBranchSequence = (Decimal)branchNotification.get('eda__sequence');
         System.assertEquals(expectedBranchSequence, actualBranchSequence);
     }
     
@@ -74,9 +74,9 @@
         
         //arrange notification
         Map<String,Object> notification = new Map<String,Object>{
-            'chainName' => chain.Name,
-            'sequence' => 1,
-            'configuration' => config.Id
+            'eda__chainName' => chain.Name,
+            'eda__sequence' => 1,
+            'eda__configuration' => config.Id
         };
         
         //arrange process

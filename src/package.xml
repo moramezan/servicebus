@@ -23,7 +23,7 @@
         <members>Processable</members>
         <members>Sink</members>
         <members>SinkTest</members>
-        <members>WireTapTest</members>
+        <members>WiretapTest</members>
         <members>Wiretap</members>
         <name>ApexClass</name>
     </types>

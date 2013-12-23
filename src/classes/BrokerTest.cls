@@ -32,8 +32,8 @@
         
         //arrange notification
         Map<String,Object> notification = new Map<String,Object>{
-            'chainName' => chain.Name,
-            'sequence' => 0
+            'eda__chainName' => chain.Name,
+            'eda__sequence' => 0
         };
         
         //arrange persistent data
@@ -94,11 +94,11 @@
         
         //assert
         String expectedChainName = testChain;
-        String actualChainName = (String)notification.get('chainName');
+        String actualChainName = (String)notification.get('eda__chainName');
         System.assertEquals(expectedChainName, actualChainName);
         
         Decimal expectedSequence = 0;
-        Decimal actualSequence = (Decimal)notification.get('sequence');
+        Decimal actualSequence = (Decimal)notification.get('eda__sequence');
         System.assertEquals(expectedSequence, actualSequence);
     }
     

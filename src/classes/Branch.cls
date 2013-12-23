@@ -11,21 +11,21 @@ global class Branch implements Processable, Configurable {
 		BranchConfiguration__c configuration = [
 			SELECT Id, Chain__r.Name
 			FROM BranchConfiguration__c
-			WHERE Id = :(Id)notification.get('configuration')
+			WHERE Id = :(Id)notification.get('eda__configuration')
 		];
 		
 		//get chain name
 		String branchTo = configuration.Chain__r.Name;
 		
 		//prevent recursion
-		if (branchTo == (String)notification.get('chainName')) {
+		if (branchTo == (String)notification.get('eda__chainName')) {
 			throw new BranchException('Not allowed to branch to own chain!');
 		}
 		
 		//careful: by returning 2 notification, the broker may think the process was a splitter
 		Map<String,Object> clone = notification.clone();
-		clone.put('chainName', branchTo);
-		clone.put('sequence', 0);
+		clone.put('eda__chainName', branchTo);
+		clone.put('eda__sequence', 0);
 		
 		//TODO
 		//we might have an inbound document, where parallel chains are attempting

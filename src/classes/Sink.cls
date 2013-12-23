@@ -4,13 +4,13 @@ global class Sink implements Processable {
 		List<Map<String,Object>> notifications = new List<Map<String,Object>>();
 		
 		//if we got here from a boomerang, back to where you came from!
-		String boomerangChainStep = (String)notification.get('boomerangChainName');
-		Decimal boomerangSequence = (Decimal)notification.get('boomerangSequence');
+		String boomerangChainStep = (String)notification.get('eda__boomerangChainName');
+		Decimal boomerangSequence = (Decimal)notification.get('eda__boomerangSequence');
 		if (null != boomerangChainStep && null != boomerangSequence) {
-			notification.remove('boomerangChainName');
-			notification.remove('boomerangSequence');
-			notification.put('chainName', boomerangChainStep);
-			notification.put('sequence', boomerangSequence);
+			notification.remove('eda__boomerangChainName');
+			notification.remove('eda__boomerangSequence');
+			notification.put('eda__chainName', boomerangChainStep);
+			notification.put('eda__sequence', boomerangSequence);
 			notifications.add(notification);
 		}
 		

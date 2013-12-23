@@ -9,13 +9,13 @@ global class Boomerang implements Processable, Configurable {
 		BoomerangConfiguration__c configuration = [
 			SELECT Id, Chain__r.Name
 			FROM BoomerangConfiguration__c
-			WHERE Id = :(Id)notification.get('configuration')
+			WHERE Id = :(Id)notification.get('eda__configuration')
 		];
 		
-		notification.put('boomerangChainName', notification.get('chainName'));
-		notification.put('boomerangSequence', notification.get('sequence'));
-		notification.put('chainName', configuration.Chain__r.Name);
-		notification.put('sequence', 0);
+		notification.put('eda__boomerangChainName', notification.get('eda__chainName'));
+		notification.put('eda__boomerangSequence', notification.get('eda__sequence'));
+		notification.put('eda__chainName', configuration.Chain__r.Name);
+		notification.put('eda__sequence', 0);
 		
 		return new List<Map<String,Object>>{notification};
 	}

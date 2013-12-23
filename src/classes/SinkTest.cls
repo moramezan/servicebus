@@ -12,10 +12,10 @@ private  class SinkTest
         Decimal boomerangSequence  = 2;
  
 
-        Map<String,Object> notification = new Map<String,Object> {  'chainName' => chainName,
-                                                                    'sequence' => sequence,
-                                                                    'boomerangChainName' => boomerangChainName ,
-                                                                    'boomerangSequence'  => boomerangSequence ,
+        Map<String,Object> notification = new Map<String,Object> {  'eda__chainName' => chainName,
+                                                                    'eda__sequence' => sequence,
+                                                                    'eda__boomerangChainName' => boomerangChainName ,
+                                                                    'eda__boomerangSequence'  => boomerangSequence ,
                                                                     'data' => data
                                                                     };
 
@@ -35,8 +35,8 @@ private  class SinkTest
         if (actualSize > 0)
         {
             Map<String,Object> actualNotification = actualOutNotifications[0];
-            actualChainName         = (String)actualNotification.get('chainName');
-            actualSequence          = (Decimal)actualNotification.get('sequence');
+            actualChainName         = (String)actualNotification.get('eda__chainName');
+            actualSequence          = (Decimal)actualNotification.get('eda__sequence');
         }
 
 
@@ -56,8 +56,8 @@ private  class SinkTest
  
  
 
-        Map<String,Object> notification = new Map<String,Object> {  'chainName' => chainName,
-                                                                    'sequence' => sequence,
+        Map<String,Object> notification = new Map<String,Object> {  'eda__chainName' => chainName,
+                                                                    'eda__sequence' => sequence,
                                                                     'data' => data
                                                                     };
 

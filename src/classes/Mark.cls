@@ -6,8 +6,8 @@ global class Mark implements Processable {
 		insert gateGroup;
 		
 		//annotate this step as the marker, so the following step must be a splitter
-		notification.put('markCount', 0);
-		notification.put('gateGroupId', gateGroup.Id);
+		notification.put('eda__markCount', 0);
+		notification.put('eda__gateGroupId', gateGroup.Id);
 		
 		return new List<Map<String,Object>>{notification};
 	}
