@@ -1,0 +1,1 @@
+<apex:page standardController="Process__c" extensions="ProcessExtensionCustomize" action="{!initCustom}" />

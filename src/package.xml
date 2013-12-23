@@ -16,19 +16,23 @@
         <members>ChainStepExtensionConfigure</members>
         <members>ChainStepExtensionConfigureTest</members>
         <members>Configurable</members>
+        <members>Customizable</members>
         <members>Gate</members>
         <members>GateTest</members>
         <members>Mark</members>
         <members>MarkTest</members>
+        <members>ProcessExtensionCustomize</members>
+        <members>ProcessExtensionCustomizeTest</members>
         <members>Processable</members>
         <members>Sink</members>
         <members>SinkTest</members>
-        <members>WiretapTest</members>
         <members>Wiretap</members>
+        <members>WiretapTest</members>
         <name>ApexClass</name>
     </types>
     <types>
         <members>ChainStepConfiguration</members>
+        <members>ProcessCustomization</members>
         <name>ApexPage</name>
     </types>
     <types>
@@ -106,6 +110,7 @@
     </types>
     <types>
         <members>ChainStep__c.ConfigureInstance</members>
+        <members>Process__c.Customize</members>
         <name>WebLink</name>
     </types>
     <types>
