@@ -5,6 +5,10 @@
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
         <actionName>Clone</actionName>
         <type>Default</type>
     </actionOverrides>
@@ -17,11 +21,19 @@
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
         <actionName>List</actionName>
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
@@ -32,6 +44,7 @@
         <actionName>View</actionName>
         <type>Default</type>
     </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <deprecated>false</deprecated>
     <enableActivities>false</enableActivities>
@@ -46,7 +59,8 @@
         <externalId>true</externalId>
         <label>Apex Class</label>
         <length>255</length>
-        <required>true</required>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>true</unique>
     </fields>
@@ -61,7 +75,9 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>Processes</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <listViewButtons>Refresh</listViewButtons>
+    </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
         <fullName>Customize</fullName>
