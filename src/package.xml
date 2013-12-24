@@ -23,6 +23,8 @@
         <members>MarkTest</members>
         <members>ProcessExtensionCustomize</members>
         <members>ProcessExtensionCustomizeTest</members>
+        <members>ProcessExtensionRefresh</members>
+        <members>ProcessRefreshBatch</members>
         <members>Processable</members>
         <members>Sink</members>
         <members>SinkTest</members>
@@ -33,6 +35,7 @@
     <types>
         <members>ChainStepConfiguration</members>
         <members>ProcessCustomization</members>
+        <members>ProcessRefresh</members>
         <name>ApexPage</name>
     </types>
     <types>
@@ -111,6 +114,7 @@
     <types>
         <members>ChainStep__c.ConfigureInstance</members>
         <members>Process__c.Customize</members>
+        <members>Process__c.Refresh</members>
         <name>WebLink</name>
     </types>
     <types>
