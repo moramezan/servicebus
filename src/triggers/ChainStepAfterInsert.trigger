@@ -3,7 +3,7 @@
  * time as the step. (We used to do this when the user attempted to view the configuration
  * for the first time, but that does DML from a Visualforce action and fails security review.)
  */
-trigger ChainStepAfterInsert on eda__ChainStep__c (after insert) {
+trigger ChainStepAfterInsert on ChainStep__c (after insert) {
 	
 	//re-query to get all apex classnames used in any of these new chainsteps
 	Map<Id,ChainStep__c> id2step = new Map<Id,ChainStep__c>([SELECT Process__r.ApexClass__c FROM ChainStep__c WHERE Id IN :Trigger.newMap.keySet()]);
