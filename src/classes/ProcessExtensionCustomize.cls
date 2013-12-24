@@ -3,7 +3,7 @@ public class ProcessExtensionCustomize {
 	private ApexPages.StandardController controller;
 	
 	public ProcessExtensionCustomize(ApexPages.StandardController controller) {
-		if (!Test.isRunningTest()) controller.addFields(new List<String>{SObjectType.Process__c.fields.ApexClass__c.Name});
+		if (!Test.isRunningTest()) controller.addFields(new List<String>{SObjectType.Process__c.fields.Name.Name});
 		this.controller = controller;
 	}
 	
@@ -11,7 +11,7 @@ public class ProcessExtensionCustomize {
 		try {
 			//customizable processes redirect to setting tab
 			Process__c process = (Process__c)this.controller.getRecord();
-			Type reflector = Type.forName(process.ApexClass__c);
+			Type reflector = Type.forName(process.Name);
 			Customizable custom = (Customizable)reflector.newInstance();
 			SObjectType setting = custom.customize();
 			String prefix = setting.getDescribe().getKeyPrefix();

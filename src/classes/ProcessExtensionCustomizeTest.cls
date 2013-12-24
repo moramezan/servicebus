@@ -7,7 +7,7 @@
 	}
 	
 	static testMethod void testCustomizableProcess() {
-		Process__c process = new Process__c(ApexClass__c = 'ProcessExtensionCustomizeTest.CustomizableProcess');
+		Process__c process = new Process__c(Name = 'ProcessExtensionCustomizeTest.CustomizableProcess');
 		ApexPages.StandardController controller = new ApexPages.StandardController(process);
 		ProcessExtensionCustomize extension = new ProcessExtensionCustomize(controller);
 		
@@ -21,7 +21,7 @@
 	}
 	
 	static testMethod void testUncustomizableProcess() {
-		Process__c process = new Process__c(ApexClass__c = 'ProcessExtensionCustomizeTest.UncustomizableProcess');
+		Process__c process = new Process__c(Name = 'ProcessExtensionCustomizeTest.UncustomizableProcess');
 		ApexPages.StandardController controller = new ApexPages.StandardController(process);
 		ProcessExtensionCustomize extension = new ProcessExtensionCustomize(controller);
 		

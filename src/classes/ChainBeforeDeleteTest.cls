@@ -2,7 +2,7 @@
 
     static testMethod void testDeletesAreCascaded() {
         //arrange process
-        Process__c process = new Process__c(Name = 'Test', ApexClass__c = 'Test');
+        Process__c process = new Process__c(Name = 'Test');
         insert process;
         
         //arrange chain

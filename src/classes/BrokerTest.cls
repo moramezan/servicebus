@@ -13,8 +13,8 @@
     
     static testMethod void testNotificationProgressesThroughChain() {
         //arrange processes
-        Process__c noopProcess = new Process__c(Name = 'BrokerTest.Noop', ApexClass__c = 'BrokerTest.Noop');
-        Process__c sinkProcess = new Process__c(Name = 'Sink', ApexClass__c = 'Sink');
+        Process__c noopProcess = new Process__c(Name = 'BrokerTest.Noop');
+        Process__c sinkProcess = new Process__c(Name = 'Sink');
         insert noopProcess;
         insert sinkProcess;
         
@@ -56,8 +56,8 @@
     
     static testMethod void testEnqueueByBlob() {
         //arrange processes
-        Process__c noopProcess = new Process__c(Name = 'BrokerTest.Noop', ApexClass__c = 'BrokerTest.Noop');
-        Process__c sinkProcess = new Process__c(Name = 'Sink', ApexClass__c = 'Sink');
+        Process__c noopProcess = new Process__c(Name = 'BrokerTest.Noop');
+        Process__c sinkProcess = new Process__c(Name = 'Sink');
         insert noopProcess;
         insert sinkProcess;
         
@@ -104,7 +104,7 @@
     
     static testmethod void testDodgyProcess() {
         //arrange process
-        Process__c process = new Process__c(Name = 'BrokerTest.Dodgy', ApexClass__c = 'BrokerTest.Dodgy');
+        Process__c process = new Process__c(Name = 'BrokerTest.Dodgy');
         insert process;
         
         //arrange chain

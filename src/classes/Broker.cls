@@ -49,13 +49,13 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 		
 		//resolve processable
 		Process__c process = [
-			SELECT Id, ApexClass__c
+			SELECT Id, Name
 			FROM Process__c
 			WHERE Id = :chainStep.Process__c
 		];
 		
 		//instantiate processable instance
-		Type reflector = Type.forName(process.ApexClass__c);
+		Type reflector = Type.forName(process.Name);
 		Processable processable = (Processable)reflector.newInstance();
 		
 		//hand in the configuration id

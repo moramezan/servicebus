@@ -15,7 +15,7 @@ private  class ChainStepExtensionConfigureTest
         Chain__c chain = new Chain__c( Name = chainName);
         insert chain;
 
-        Process__c process = new   Process__c (   ApexClass__c = apexClass);
+        Process__c process = new   Process__c (Name = apexClass);
         insert process;
 
         ChainStep__c chainStep = new ChainStep__c ( Chain__c         =  chain.Id ,
@@ -58,7 +58,7 @@ private  class ChainStepExtensionConfigureTest
         insert chain;
 
 
-        Process__c process = new   Process__c (   ApexClass__c = apexClass);
+        Process__c process = new   Process__c (Name = apexClass);
         insert process;
 
         ChainStep__c chainStep = new ChainStep__c ( Chain__c         =  chain.Id ,

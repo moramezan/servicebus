@@ -16,7 +16,7 @@
 	
 	static testMethod void testChainStepConfigurationIsCreatedWhenInserted() {
 		//arrange
-		Process__c process = new Process__c(ApexClass__c = 'ChainStepAfterInsertTest.MockProcess');
+		Process__c process = new Process__c(Name = 'ChainStepAfterInsertTest.MockProcess');
 		insert process;
 		
 		Chain__c chain = new Chain__c(Name = 'TestChain');
