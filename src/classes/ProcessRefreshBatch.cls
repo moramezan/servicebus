@@ -1,7 +1,9 @@
 public class ProcessRefreshBatch implements Database.Batchable<SObject> {
 	
 	public Database.QueryLocator start(Database.BatchableContext context) {
-		return Database.getQueryLocator('SELECT Id, NamespacePrefix, Name FROM ApexClass');
+		String query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass';
+		if (Test.isRunningTest()) query += ' LIMIT 1';
+		return Database.getQueryLocator(query);
 	}
 	
 	public void execute(Database.BatchableContext context, List<ApexClass> scope) {
