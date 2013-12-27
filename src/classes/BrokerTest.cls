@@ -4,10 +4,15 @@
     static Integer executions = 0;
     
     //mock process
-    public class Noop implements Processable {
-        public List<Map<String,Object>> execute(Map<String,Object> notification) {
+    public class Noop implements Process.Plugin {
+        public Process.PluginDescribeResult describe() {
+            return new Process.PluginDescribeResult();
+        }
+        
+        public Process.PluginResult invoke(Process.PluginRequest request) {
+            Map<String,Object> notification = request.inputParameters;
             BrokerTest.executions++;
-            return new List<Map<String,Object>>{notification};
+            return Utility.convert(new List<Map<String,Object>>{notification});
         }
     }
     
@@ -133,9 +138,14 @@
     public class DodgyException extends Exception {}
     
     //mock process
-    public class Dodgy implements Processable {
-        public List<Map<String,Object>> execute(Map<String,Object> notification) {
+    public class Dodgy implements Process.Plugin {
+        public Process.PluginDescribeResult describe() {
+            return new Process.PluginDescribeResult();
+        }
+        
+        public Process.PluginResult invoke(Process.PluginRequest request) {
             throw new DodgyException('catchable');
+            return Utility.convert(new List<Map<String,Object>>());
         }
     }
     

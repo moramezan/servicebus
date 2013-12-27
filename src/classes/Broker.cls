@@ -56,16 +56,17 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 		
 		//instantiate processable instance
 		Type reflector = Type.forName(process.Name);
-		Processable processable = (Processable)reflector.newInstance();
+		Process.Plugin processable = (Process.Plugin)reflector.newInstance();
 		
 		//hand in the configuration id
 		notification.put('eda__configuration', chainStep.Configuration__c);
 		
-		List<Map<String,Object>> notifications = null;
+		List<Map<String,Object>> notifications = new List<Map<String,Object>>();
 		
 		try {
 			//invoke the processable instance
-			notifications = processable.execute(notification);
+			Process.PluginResult results = processable.invoke(new Process.PluginRequest(notification));
+			notifications = Utility.convert(results);
 		} catch (Exception e) {
 			Map<String,Object> serializedException = new Map<String,Object>();
 			serializedException.put('cause', e.getCause());
