@@ -1,6 +1,38 @@
-global class Gate implements Processable {
-
-	global List<Map<String,Object>> execute(Map<String,Object> notification) {
+global class Gate implements Process.Plugin {
+	
+	global Process.PluginDescribeResult describe() {
+		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
+		plugin.Description = 'Gate process allows you to aggregate marked notifications on a common grouping key.';
+		
+		plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
+			new Process.PluginDescribeResult.InputParameter(
+				'eda__gateGroupId',
+				'Id of the GateGroup the marked notifications should belong to.',
+				Process.PluginDescribeResult.ParameterType.ID,
+				false
+			),
+			new Process.PluginDescribeResult.InputParameter(
+				'eda__count',
+				'Number of marked notifications the gate should expect.',
+				Process.PluginDescribeResult.ParameterType.INTEGER,
+				false
+			)
+		};
+		
+		plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
+			new Process.PluginDescribeResult.OutputParameter(
+				'eda__id',
+				'Id of the GateGroup whose members are now all present.',
+				Process.PluginDescribeResult.ParameterType.ID
+			)
+		};
+		
+		return plugin;
+	}
+	
+	global Process.PluginResult invoke(Process.PluginRequest request) {
+		Map<String,Object> notification = request.inputParameters;
+		
 		Id gateGroupId = (Id)notification.get('eda__gateGroupId');
 		Decimal count = (Decimal)notification.get('eda__count');
 		
@@ -17,13 +49,13 @@ global class Gate implements Processable {
 		
 		if (count != gateItems.size()) {
 			//this is not the last item, so let's swallow
-			return new List<Map<String,Object>>();
-		}	
+			return new Process.PluginResult(new Map<String,Object>());
+		}   
 		
 		//this is the last item, let's release
-		notification.put('id', gateGroupId);
+		notification.put('eda__id', gateGroupId);
 		
-		return new List<Map<String,Object>>{notification};
+		return Utility.convert(new List<Map<String,Object>>{notification});
 	}
 	
 }

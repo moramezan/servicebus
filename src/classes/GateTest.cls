@@ -42,8 +42,9 @@ private  class GateTest
         Integer   expectedGateItemsSize     = (Integer) count;
 
         // Act
-        Gate Gate = new Gate();
-        List<Map<String,Object>> actualOutNotifications =  Gate.execute(notification);
+        Gate gate = new Gate();
+        Process.PluginResult results = gate.invoke(new Process.PluginRequest(notification));
+        List<Map<String,Object>> actualOutNotifications = Utility.convert(results);
 
         // prepare
         Decimal actualSize      = actualOutNotifications.size();
@@ -103,8 +104,9 @@ private  class GateTest
         Integer   expectedGateItemsSize     = (Integer) ( count - 1) ;
 
         // Act
-        Gate Gate = new Gate();
-        List<Map<String,Object>> actualOutNotifications =  Gate.execute(notification);
+        Gate gate = new Gate();
+        Process.PluginResult results = gate.invoke(new Process.PluginRequest(notification));
+        List<Map<String,Object>> actualOutNotifications = Utility.convert(results);
 
         // prepare
         Decimal actualSize      = actualOutNotifications.size();
