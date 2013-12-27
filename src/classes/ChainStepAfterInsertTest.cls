@@ -1,15 +1,18 @@
 @isTest public class ChainStepAfterInsertTest {
 	
 	//dummy configurable process
-	public class MockProcess implements Processable, Configurable {
+	public class MockProcess implements Process.Plugin {
 		
-		//which uses some kind of SObject for configuration
-		public SObject configure() {
-			return new Account(Name = 'Some Object');
+		//this needs SOME, ANY SObject for configuration that can be inserted with NO required fields
+		public Process.PluginDescribeResult describe() {
+			Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
+			plugin.Description = '{"eda__configurable":"' + Schema.SObjectType.BoomerangConfiguration__c.Name + '"}';
+			return plugin;
 		}
 		
-		public List<Map<String,Object>> execute(Map<String,Object> notification) {
-			return new List<Map<String,Object>>{notification};
+		public Process.PluginResult invoke(Process.PluginRequest request) {
+			Map<String,Object> notification = request.inputParameters;
+			return Utility.convert(new List<Map<String,Object>>{notification});
 		}
 		
 	}
@@ -30,7 +33,7 @@
 		chainStep = [SELECT Id, Configuration__c FROM ChainStep__c WHERE Id = :chainStep.Id];
 		
 		//assert
-		String expectedId = '001'; //some account record
+		String expectedId = Schema.SObjectType.BoomerangConfiguration__c.KeyPrefix; //this needs to be some config record
 		String actualId = chainStep.Configuration__c;
 		System.assert(actualId.startsWith(expectedId));
 	}

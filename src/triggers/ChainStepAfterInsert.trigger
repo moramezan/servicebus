@@ -17,14 +17,16 @@ trigger ChainStepAfterInsert on ChainStep__c (after insert) {
 		
 		//instantiate each potential configurable process
 		Type reflector = Type.forName(apexClass);
-		Object instance = reflector.newInstance();
+		Process.Plugin instance = (Process.Plugin)reflector.newInstance();
+		Map<String,Object> meta = Utility.meta(instance.describe().Description);
+		String edaConfigurable = (String)meta.get('eda__configurable');
 		
 		//get out of dodge quick if process is not configurable
-		if (!(instance instanceof Configurable)) continue;
+		if (null == edaConfigurable) continue;
 		
 		//invoke the method to get an insertable configuration record
-		Configurable configurable = (Configurable)instance;
-		SObject configuration = (SObject)configurable.configure();
+		Type configurableObject = Type.forName(edaConfigurable);
+		SObject configuration = (SObject)configurableObject.newInstance();
 		
 		//prepare config for insertion
 		id2config.put(chainStep.Id, configuration);
