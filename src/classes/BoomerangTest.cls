@@ -1,12 +1,21 @@
 @isTest public class BoomerangTest {
 	
-	static testMethod void testConfigurationReturnsObject() {
+	static testMethod void testConfigurationReturnsObjectType() {
+		//instantiate the process to describe it
 		Boomerang process = new Boomerang();
-		SObject config = (SObject)process.configure();
+		Process.PluginDescribeResult plugin = process.describe();
 		
-		String expectedType = SObjectType.BoomerangConfiguration__c.Name;
-		String actualType = String.valueOf(config);
-		System.assert(actualType.startsWith(expectedType));
+		//get metadata
+		Map<String,Object> meta = Utility.meta(plugin.Description);
+		String edaConfigurable = (String)meta.get('eda__configurable');
+		
+		//try to instantiate the configuration object
+		Type reflector = Type.forName(edaConfigurable);
+		SObject configObject = (SObject)reflector.newInstance();
+		
+		String expectedType = Schema.SObjectType.BoomerangConfiguration__c.Name;
+		String actualType = configObject.getSObjectType().getDescribe().getName();
+		System.assertEquals(expectedType, actualType);
 	}
 	
 	static testMethod void testNotificationIsRedirected() {
@@ -21,15 +30,16 @@
 		insert config;
 		
 		//prepare notification
-		Map<String,Object> notification = new Map<String,Object>{
+		Process.PluginRequest request = new Process.PluginRequest(new Map<String,Object>{
 			'eda__chainName' => 'originChain',
 			'eda__sequence' => 0,
 			'eda__configuration' => config.Id
-		};
+		});
 		
 		//act
 		Boomerang process = new Boomerang();
-		List<Map<String,Object>> notifications = process.execute(notification);
+		Process.PluginResult result = process.invoke(request);
+		List<Map<String,Object>> notifications = Utility.convert(result);
 		
 		//asserts
 		Decimal expectedSize = 1;
