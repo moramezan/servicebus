@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event Driven Architecture</fullName>
-    <apiAccessLevel>Unrestricted</apiAccessLevel>
-    <namespacePrefix>eda</namespacePrefix>
     <types>
         <members>Boomerang</members>
         <members>BoomerangTest</members>
@@ -24,10 +22,13 @@
         <members>ProcessExtensionCustomize</members>
         <members>ProcessExtensionCustomizeTest</members>
         <members>ProcessExtensionRefresh</members>
+        <members>ProcessExtensionRefreshTest</members>
         <members>ProcessRefreshBatch</members>
         <members>Processable</members>
         <members>Sink</members>
         <members>SinkTest</members>
+        <members>Utility</members>
+        <members>UtilityTest</members>
         <members>Wiretap</members>
         <members>WiretapTest</members>
         <name>ApexClass</name>
