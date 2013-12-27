@@ -1,12 +1,16 @@
-global class Branch implements Processable, Configurable {
+global class Branch implements Process.Plugin {
 	
-    public class BranchException extends Exception {}
-    
-    global SObject configure() {
-		return new BranchConfiguration__c();
+	public class BranchException extends Exception {}
+	
+	global Process.PluginDescribeResult describe() {
+		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
+		plugin.Description = 'This process forks execution. {"eda__configurable":"BranchConfiguration__c"}';
+		return plugin;
 	}
 	
-	global List<Map<String,Object>> execute(Map<String,Object> notification) {
+	global Process.PluginResult invoke(Process.PluginRequest request) {
+		Map<String,Object> notification = request.inputParameters;
+		
 		//get step configuration
 		BranchConfiguration__c configuration = [
 			SELECT Id, Chain__r.Name
@@ -34,12 +38,12 @@ global class Branch implements Processable, Configurable {
 		//
 		//String id = (String)notification.get('id');
 		//if (null != id && id.startsWith('015')) {
-		//	Document document = [SELECT Id, Body FROM Document WHERE Id = :id];
-		//	Document clone = document.clone();
-		//	insert clone;
-		//	event.put('id', clone.Id);
+		//  Document document = [SELECT Id, Body FROM Document WHERE Id = :id];
+		//  Document clone = document.clone();
+		//  insert clone;
+		//  event.put('id', clone.Id);
 		//}
 		
-		return new List<Map<String,Object>>{notification, clone};
+		return Utility.convert(new List<Map<String,Object>>{notification, clone});
 	}
 }

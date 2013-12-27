@@ -1,12 +1,19 @@
 @isTest public class BranchTest {
     
     static testMethod void testConfigureReturnsRightObjectType() {
+        //new up the process and interrogate its description
         Branch process = new Branch();
-        SObject config = process.configure();
+        Process.PluginDescribeResult plugin = process.describe();
         
-        String actualType = String.valueOf(config);
-        String expectedType = SObjectType.BranchConfiguration__c.Name;
-        System.assert(actualType.startsWith(expectedType));
+        //get metadata from description and instantiate a configuration record
+        Map<String,Object> meta = Utility.meta(plugin.Description);
+        Type reflector = Type.forName((String)meta.get('eda__configurable'));
+        SObject config = (SObject)reflector.newInstance();
+        
+        //compare instance types
+        String expectedType = Schema.SObjectType.BranchConfiguration__c.Name;
+        String actualType = config.getSObjectType().getDescribe().getName();
+        System.assertEquals(expectedType, actualType);
     }
     
     static testMethod void testTwoNotificationsReturned() {
@@ -31,7 +38,8 @@
         Branch process = new Branch();
         
         //act
-        List<Map<String,Object>> notifications = process.execute(notification);
+        Process.PluginResult result = process.invoke(new Process.PluginRequest(notification));
+        List<Map<String,Object>> notifications = Utility.convert(result);
         
         //assert
         Decimal expectedSize = 2;
@@ -87,7 +95,8 @@
         
         //act
         try {
-            List<Map<String,Object>> notifications = process.execute(notification);
+            Process.PluginResult result = process.invoke(new Process.PluginRequest(notification));
+            List<Map<String,Object>> notifications = Utility.convert(result);
         } catch (Exception e) {
             exceptionThrown = true;
             System.assert(e instanceof Branch.BranchException);
