@@ -22,7 +22,8 @@ private  class MarkTest
 
         // Act
         Mark mark = new Mark();
-        List<Map<String,Object>> actualOutNotifications =  mark.execute(notification);
+        Process.PluginResult results = mark.invoke(new Process.PluginRequest(notification));
+        List<Map<String,Object>> actualOutNotifications = Utility.convert(results);
 
         // prepare
         Decimal actualSize = actualOutNotifications.size();
