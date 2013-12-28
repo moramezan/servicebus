@@ -12,9 +12,10 @@ public class ProcessExtensionCustomize {
 			//customizable processes redirect to setting tab
 			Process__c process = (Process__c)this.controller.getRecord();
 			Type reflector = Type.forName(process.Name);
-			Customizable custom = (Customizable)reflector.newInstance();
-			SObjectType setting = custom.customize();
-			String prefix = setting.getDescribe().getKeyPrefix();
+			Process.Plugin plugin = (Process.Plugin)reflector.newInstance(); //get process
+			String customizable = (String)Utility.meta(plugin.describe().Description).get('eda__customizable'); //get meta
+			SObject setting = (SObject)Type.forName(customizable).newInstance();
+			String prefix = setting.getSObjectType().getDescribe().getKeyPrefix();
 			return new System.PageReference('/' + prefix + '/o');
 		} catch (Exception e) {
 			//uncustomizable process redirects back to process detail

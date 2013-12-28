@@ -1,8 +1,15 @@
 @isTest public class ProcessExtensionCustomizeTest {
 	
-	public class CustomizableProcess implements Customizable {
-		public SObjectType customize() {
-			return Account.SObjectType;
+	public class CustomizableProcess implements Process.Plugin {
+		
+		public Process.PluginDescribeResult describe() {
+			Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
+			plugin.Description = '{"eda__customizable":"' + Schema.SObjectType.BranchConfiguration__c.Name + '"}';
+			return plugin;
+		}
+		
+		public Process.PluginResult invoke(Process.PluginRequest request) {
+			return new Process.PluginResult(new Map<String,Object>());
 		}
 	}
 	
@@ -13,7 +20,7 @@
 		
 		//button should redirect to /[tab]/o (for a custom setting, this takes us to the manage screen)
 		System.PageReference settingPage = extension.initCustom();
-		System.assert(settingPage.getUrl().contains('/001/o'));
+		System.assert(settingPage.getUrl().contains('/' + Schema.SObjectType.BranchConfiguration__c.KeyPrefix + '/o'));
 	}
 	
 	public class UncustomizableProcess {
