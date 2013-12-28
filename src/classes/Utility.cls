@@ -1,6 +1,9 @@
 public class Utility {
 	
 	static public Map<String,Object> meta(String description) {
+		//no description at all
+		if (null == description) return new Map<String,Object>();
+
 		//no metadata on this process description
 		if (!description.contains('{')) return new Map<String,Object>();
 		
