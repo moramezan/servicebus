@@ -25,8 +25,9 @@ private  class SinkTest
         Decimal expectedSequence    = boomerangSequence;
 
         // Act
-        Sink Sink = new Sink();
-        List<Map<String,Object>> actualOutNotifications =  Sink.execute(notification);
+        Sink sink = new Sink();
+        Process.PluginResult results = sink.invoke(new Process.PluginRequest(notification));
+        List<Map<String,Object>> actualOutNotifications =  Utility.convert(results);
 
         // prepare
         Decimal actualSize = actualOutNotifications.size();
@@ -66,8 +67,9 @@ private  class SinkTest
  
 
         // Act
-        Sink Sink = new Sink();
-        List<Map<String,Object>> actualOutNotifications =  Sink.execute(notification);
+        Sink sink = new Sink();
+        Process.PluginResult results = sink.invoke(new Process.PluginRequest(notification));
+        List<Map<String,Object>> actualOutNotifications =  Utility.convert(results);
 
         // prepare
         Decimal actualSize = actualOutNotifications.size();

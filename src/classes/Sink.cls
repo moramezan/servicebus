@@ -1,9 +1,14 @@
-global class Sink implements Processable {
+global class Sink implements Process.Plugin {
 	
-	global List<Map<String,Object>> execute(Map<String,Object> notification) {
-		List<Map<String,Object>> notifications = new List<Map<String,Object>>();
+	global Process.PluginDescribeResult describe() {
+		return new Process.PluginDescribeResult();
+	}
+	
+	global Process.PluginResult invoke(Process.PluginRequest request) {
+		Map<String,Object> notification = request.inputParameters;
 		
 		//if we got here from a boomerang, back to where you came from!
+		Map<String,Object> notifications = new Map<String,Object>();
 		String boomerangChainStep = (String)notification.get('eda__boomerangChainName');
 		Decimal boomerangSequence = (Decimal)notification.get('eda__boomerangSequence');
 		if (null != boomerangChainStep && null != boomerangSequence) {
@@ -11,10 +16,10 @@ global class Sink implements Processable {
 			notification.remove('eda__boomerangSequence');
 			notification.put('eda__chainName', boomerangChainStep);
 			notification.put('eda__sequence', boomerangSequence);
-			notifications.add(notification);
+			notifications.put('0', notification);
 		}
 		
-		return notifications;
+		return new Process.PluginResult(notifications);
 	}
-	
+
 }
