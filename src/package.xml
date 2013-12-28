@@ -22,6 +22,7 @@
         <members>ProcessExtensionRefresh</members>
         <members>ProcessExtensionRefreshTest</members>
         <members>ProcessRefreshBatch</members>
+        <members>ProcessRefreshBatchTest</members>
         <members>Sink</members>
         <members>SinkTest</members>
         <members>Utility</members>

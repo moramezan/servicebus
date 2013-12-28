@@ -1,8 +1,9 @@
 public class ProcessRefreshBatch implements Database.Batchable<SObject> {
 	
+	@testVisible private String query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass';
+	
 	public Database.QueryLocator start(Database.BatchableContext context) {
-		String query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass';
-		if (Test.isRunningTest()) query += ' LIMIT 1';
+		if (Test.isRunningTest()) this.query += ' LIMIT 1';
 		return Database.getQueryLocator(query);
 	}
 	
@@ -11,7 +12,7 @@ public class ProcessRefreshBatch implements Database.Batchable<SObject> {
 			//implementors of Processable work alright here
 			ApexClass apexClass = scope[0];
 			Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
-			Processable processable = (Processable)reflector.newInstance();
+			Process.Plugin plugin = (Process.Plugin)reflector.newInstance();
 			Process__c process = new Process__c(Name = reflector.getName());
 			upsert process Name; //will not duplicate existing processes
 		} catch (Exception e) {
