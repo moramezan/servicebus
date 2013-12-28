@@ -13,8 +13,6 @@
         <members>ChainStepBeforeDeleteTest</members>
         <members>ChainStepExtensionConfigure</members>
         <members>ChainStepExtensionConfigureTest</members>
-        <members>Configurable</members>
-        <members>Customizable</members>
         <members>Gate</members>
         <members>GateTest</members>
         <members>Mark</members>
@@ -24,7 +22,6 @@
         <members>ProcessExtensionRefresh</members>
         <members>ProcessExtensionRefreshTest</members>
         <members>ProcessRefreshBatch</members>
-        <members>Processable</members>
         <members>Sink</members>
         <members>SinkTest</members>
         <members>Utility</members>
