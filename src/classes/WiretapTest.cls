@@ -19,7 +19,8 @@ private  class WiretapTest
 
         // Act
         Wiretap wireTap = new Wiretap();
-        List<Map<String,Object>> actualNotifications =  wireTap.execute(notification);
+        Process.PluginResult results = wireTap.invoke(new Process.PluginRequest(notification));
+        List<Map<String,Object>> actualNotifications =  Utility.convert(results);
 
         // prepare
         Integer actualSize = actualNotifications.size();
