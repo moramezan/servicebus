@@ -46,7 +46,6 @@
     </actionOverrides>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <deprecated>false</deprecated>
     <enableActivities>false</enableActivities>
     <enableEnhancedLookup>false</enableEnhancedLookup>
     <enableFeeds>false</enableFeeds>
@@ -54,7 +53,6 @@
     <enableReports>false</enableReports>
     <fields>
         <fullName>MaxChainStepSequence__c</fullName>
-        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Max Chain Step Sequence</label>
         <summarizedField>ChainStep__c.Sequence__c</summarizedField>

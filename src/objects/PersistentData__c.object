@@ -46,7 +46,6 @@
     </actionOverrides>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <deprecated>false</deprecated>
     <enableActivities>false</enableActivities>
     <enableEnhancedLookup>false</enableEnhancedLookup>
     <enableFeeds>false</enableFeeds>
@@ -54,7 +53,6 @@
     <enableReports>false</enableReports>
     <fields>
         <fullName>Message__c</fullName>
-        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Message</label>
         <required>false</required>
@@ -63,7 +61,6 @@
     </fields>
     <fields>
         <fullName>Notification__c</fullName>
-        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Notification</label>
         <length>32768</length>
