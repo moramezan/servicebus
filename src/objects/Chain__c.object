@@ -51,16 +51,6 @@
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
-    <fields>
-        <fullName>MaxChainStepSequence__c</fullName>
-        <externalId>false</externalId>
-        <label>Max Chain Step Sequence</label>
-        <summarizedField>ChainStep__c.Sequence__c</summarizedField>
-        <summaryForeignKey>ChainStep__c.Chain__c</summaryForeignKey>
-        <summaryOperation>max</summaryOperation>
-        <trackTrending>false</trackTrending>
-        <type>Summary</type>
-    </fields>
     <label>Chain</label>
     <listViews>
         <fullName>All</fullName>

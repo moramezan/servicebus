@@ -58,7 +58,6 @@
         <members>ChainStep__c.Configuration__c</members>
         <members>ChainStep__c.Process__c</members>
         <members>ChainStep__c.Sequence__c</members>
-        <members>Chain__c.MaxChainStepSequence__c</members>
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Notification__c</members>
         <members>PersistentData__c.Message__c</members>
@@ -119,11 +118,6 @@
         <name>WebLink</name>
     </types>
     <types>
-        <members>ChainStep__c.IncrementSequence</members>
-        <name>WorkflowFieldUpdate</name>
-    </types>
-    <types>
-        <members>ChainStep__c.IncrementSequence</members>
         <members>PersistentData__c.OnPersistentDataError</members>
         <name>WorkflowRule</name>
     </types>
