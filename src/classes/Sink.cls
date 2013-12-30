@@ -8,18 +8,23 @@ global class Sink implements Process.Plugin {
 		Map<String,Object> notification = request.inputParameters;
 		
 		//if we got here from a boomerang, back to where you came from!
-		Map<String,Object> notifications = new Map<String,Object>();
-		String boomerangChainStep = (String)notification.get('eda__boomerangChainName');
-		Decimal boomerangSequence = (Decimal)notification.get('eda__boomerangSequence');
-		if (null != boomerangChainStep && null != boomerangSequence) {
-			notification.remove('eda__boomerangChainName');
-			notification.remove('eda__boomerangSequence');
-			notification.put('eda__chainName', boomerangChainStep);
-			notification.put('eda__sequence', boomerangSequence);
-			notifications.put('0', notification);
-		}
+		List<Map<String,Object>> notifications = new List<Map<String,Object>>();
 		
-		return new Process.PluginResult(notifications);
+		String boomerangChainStepId = (String)notification.get('eda__boomerangChainStepId');
+		if (boomerangChainStepId != null) {
+			ChainStep__c chainStep = [ 
+				SELECT Id, Chain__r.Name, Sequence__c 
+				FROM ChainStep__c 
+				WHERE Id = :(Id)boomerangChainStepId
+			];
+
+			notification.remove('eda__boomerangChainStepId');
+			notification.put('eda__chainName', chainStep.Chain__r.Name );
+			notification.put('eda__sequence', chainStep.Sequence__c );
+			notifications.add(notification);
+ 		}
+		   
+		return Utility.convert(notifications);
 	}
 
 }

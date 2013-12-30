@@ -22,6 +22,14 @@ global class Boomerang implements Process.Plugin {
 	global Process.PluginResult invoke(Process.PluginRequest request) {
 		Map<String,Object> notification = request.inputParameters;
 		
+		//derive the chainStep Id
+		ChainStep__c chainStep = [
+			SELECT Id
+			FROM ChainStep__c
+			WHERE Chain__r.Name = :(String)notification.get('eda__chainName')
+			AND Sequence__c = :(Decimal) notification.get('eda__sequence')
+		];
+  
 		//get destination from configuration
 		BoomerangConfiguration__c configuration = [
 			SELECT Id, Chain__r.Name
@@ -29,8 +37,7 @@ global class Boomerang implements Process.Plugin {
 			WHERE Id = :(Id)notification.get('eda__configuration')
 		];
 		
-		notification.put('eda__boomerangChainName', notification.get('eda__chainName'));
-		notification.put('eda__boomerangSequence', notification.get('eda__sequence'));
+		notification.put('eda__boomerangChainStepId', chainStep.Id);
 		notification.put('eda__chainName', configuration.Chain__r.Name);
 		notification.put('eda__sequence', 0);
 		

@@ -10,12 +10,19 @@ private  class SinkTest
         String  data               = 'data';
         String  boomerangChainName = 'boomerang-chain';
         Decimal boomerangSequence  = 2;
- 
+
+        Chain__c chain = new Chain__c(Name = boomerangChainName);
+        insert chain;
+        
+        Process__c process = new Process__c(Name = 'Boomerang');
+        insert process;
+        
+        ChainStep__c chainStep = new ChainStep__c ( Chain__c = chain.Id, Process__c = process.Id, Sequence__c = boomerangSequence);
+        insert chainStep;
 
         Map<String,Object> notification = new Map<String,Object> {  'eda__chainName' => chainName,
                                                                     'eda__sequence' => sequence,
-                                                                    'eda__boomerangChainName' => boomerangChainName ,
-                                                                    'eda__boomerangSequence'  => boomerangSequence ,
+                                                                    'eda__boomerangChainStepId' => chainStep.Id ,
                                                                     'data' => data
                                                                     };
 

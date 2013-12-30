@@ -19,12 +19,21 @@
 	}
 	
 	static testMethod void testNotificationIsRedirected() {
+		// prepare process
+		Process__c processOrigin =  new Process__c(Name = 'Boomerang' );
+		Process__c processTarget =  new Process__c(Name = 'Sink' );   
+		insert processOrigin;
+		insert processTarget;  
+
 		//prepare chains in db
 		Chain__c origin = new Chain__c(Name = 'originChain');
-		Chain__c target = new Chain__c(Name = 'targetChain');
 		insert origin;
-		insert target;
+		insert new ChainStep__c(Chain__c = origin.Id, Sequence__c = 1, Process__c = processOrigin.Id);
 		
+		Chain__c target = new Chain__c(Name = 'targetChain');
+		insert target;
+		insert new ChainStep__c(Chain__c = target.Id, Sequence__c = 1, Process__c = processTarget.Id);
+
 		//prepare configuration in db
 		BoomerangConfiguration__c config = new BoomerangConfiguration__c(Chain__c = target.Id);
 		insert config;
@@ -32,7 +41,7 @@
 		//prepare notification
 		Process.PluginRequest request = new Process.PluginRequest(new Map<String,Object>{
 			'eda__chainName' => 'originChain',
-			'eda__sequence' => 0,
+			'eda__sequence' => 1,
 			'eda__configuration' => config.Id
 		});
 		
