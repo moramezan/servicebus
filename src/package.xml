@@ -25,8 +25,12 @@
         <members>ProcessExtensionRefreshTest</members>
         <members>ProcessRefreshBatch</members>
         <members>ProcessRefreshBatchTest</members>
+        <members>Publish</members>
+        <members>PublishTest</members>
         <members>Sink</members>
         <members>SinkTest</members>
+        <members>Subscribe</members>
+        <members>SubscribeTest</members>
         <members>Utility</members>
         <members>UtilityTest</members>
         <members>Wiretap</members>
@@ -63,6 +67,8 @@
         <members>PersistentData__c.Message__c</members>
         <members>PersistentData__c.Notification__c</members>
         <members>Process__c.ApexClass__c</members>
+        <members>PublishConfiguration__c.Event__c</members>
+        <members>SubscribeConfiguration__c.Event__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -70,10 +76,13 @@
         <members>BranchConfiguration__c</members>
         <members>ChainStep__c</members>
         <members>Chain__c</members>
+        <members>Event__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
         <members>PersistentData__c</members>
         <members>Process__c</members>
+        <members>PublishConfiguration__c</members>
+        <members>SubscribeConfiguration__c</members>
         <name>CustomObject</name>
     </types>
     <types>
@@ -88,10 +97,13 @@
         <members>BranchConfiguration__c-Branch Configuration Layout</members>
         <members>ChainStep__c-ChainStep Layout</members>
         <members>Chain__c-Chain Layout</members>
+        <members>Event__c-Event Layout</members>
         <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>
         <members>PersistentData__c-Persistent Data Layout</members>
         <members>Process__c-Process Layout</members>
+        <members>PublishConfiguration__c-PubSub Configuration Layout</members>
+        <members>SubscribeConfiguration__c-Subscribe Configuration Layout</members>
         <name>Layout</name>
     </types>
     <types>
