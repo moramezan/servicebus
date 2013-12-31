@@ -37,7 +37,13 @@ global class Boomerang implements Process.Plugin {
 			WHERE Id = :(Id)notification.get('eda__configuration')
 		];
 		
-		notification.put('eda__boomerangChainStepId', chainStep.Id);
+		List<Object> chainStepIds = (List<Object>)notification.get('eda__boomerangChainStepIds');
+		if (chainStepIds == null) {
+			chainStepIds = new List<Object>();
+		}
+		chainStepIds.add(chainStep.Id);
+		
+		notification.put('eda__boomerangChainStepIds', chainStepIds);
 		notification.put('eda__chainName', configuration.Chain__r.Name);
 		notification.put('eda__sequence', 0);
 		
