@@ -1,6 +1,19 @@
 public class Broker implements Database.Batchable<SObject>, Database.AllowsCallouts {
 
+	public class BrokerException extends Exception {}
+
 	public Database.QueryLocator start(Database.BatchableContext context) {
+		List<PersistentData__c> fuckedData = [
+			SELECT Id
+			FROM PersistentData__c
+			WHERE RecordType.Name = 'Processing'
+			LIMIT 100
+		];
+
+		if (fuckedData.size() == 100) {
+			throw new BrokerException('100 or more failed PersistentData - please inspect the message and change RecordType to Buffer');
+		}
+		
 		//find some buffered work
 		Map<Id, PersistentData__c> id2data = new Map<Id, PersistentData__c>([
 			SELECT Id
