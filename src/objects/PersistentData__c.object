@@ -91,11 +91,6 @@
         <description>Data is marked as &quot;Processing&quot; when the process begins to handle it. Failure of the process will leave the data in this state.</description>
         <label>Processing</label>
     </recordTypes>
-    <recordTypes>
-        <fullName>Success</fullName>
-        <active>true</active>
-        <label>Success</label>
-    </recordTypes>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
 </CustomObject>

@@ -116,7 +116,6 @@
     <types>
         <members>PersistentData__c.Buffer</members>
         <members>PersistentData__c.Processing</members>
-        <members>PersistentData__c.Success</members>
         <name>RecordType</name>
     </types>
     <types>
