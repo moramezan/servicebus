@@ -75,9 +75,18 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 			serializedException.put('stackTraceString', e.getStackTraceString());
 			serializedException.put('typeName', e.getTypeName());
 			
-			//log any exceptions and get out of dodge quick
-			persistentData.Message__c = Json.serializePretty(serializedException);
+			//log any exceptions
+			persistentData.Message__c = e.getMessage().left(255);
 			update persistentData;
+			
+			//including any big ones
+			insert new Note(
+				ParentId = persistentData.Id,
+				Title = e.getMessage().left(255),
+				Body = System.Json.serializePretty(serializedException)
+			);
+			
+			//get out of dodge quick
 			return;
 		}
 		
