@@ -1,5 +1,6 @@
 app
 build
+.architect
 app.js
 bootstrap.css
 bootstrap.js

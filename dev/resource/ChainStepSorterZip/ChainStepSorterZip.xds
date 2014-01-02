@@ -1,0 +1,37 @@
+{
+    "name": "ChainStepSorterZip",
+    "settings": {
+        "cmd": {
+            "license": "commercial"
+        },
+        "canvasControls": {
+            "viewportSize": {
+                "name": "Auto Expand",
+                "builtIn": true,
+                "height": null,
+                "width": null
+            }
+        },
+        "urlPrefix": "",
+        "exportPath": ""
+    },
+    "xdsVersion": "3.0.1",
+    "xdsBuild": 1343,
+    "schemaVersion": 1,
+    "upgradeVersion": 300000000004,
+    "framework": "ext42",
+    "viewOrderMap": {
+        "view": [
+            "aa058125-54f1-4753-b8bc-3ff3d4eef967"
+        ],
+        "store": [],
+        "controller": [],
+        "model": [],
+        "resource": [
+            "7ed44062-929e-43c3-853e-ea348b8a8daf"
+        ],
+        "app": [
+            "application"
+        ]
+    }
+}
