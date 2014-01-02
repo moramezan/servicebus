@@ -6,8 +6,7 @@
  */
 Ext.Loader.addClassPathMappings({
   "Ext": "ext/src",
-  "Ext.Msg": "ext/src/window/MessageBox.js",
-  "Steps": "app"
+  "Ext.Msg": "ext/src/window/MessageBox.js"
 });
 Ext.ClassManager.addNameAlternateMappings({
   "Ext.AbstractComponent": [],
@@ -837,11 +836,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.window.MessageBox": [],
   "Ext.window.Window": [
     "Ext.Window"
-  ],
-  "Steps.Application": [],
-  "Steps.controller.Main": [],
-  "Steps.view.Main": [],
-  "Steps.view.Viewport": []
+  ]
 });
 Ext.ClassManager.addNameAliasMappings({
   "Ext.AbstractComponent": [],
@@ -1838,13 +1833,7 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Ext.window.Window": [
     "widget.window"
-  ],
-  "Steps.Application": [],
-  "Steps.controller.Main": [],
-  "Steps.view.Main": [
-    "widget.app-main"
-  ],
-  "Steps.view.Viewport": []
+  ]
 });
 Ext.setVersion("ext-theme-base", "4.2.2");
 Ext.setVersion("ext-theme-classic", "4.2.2");
