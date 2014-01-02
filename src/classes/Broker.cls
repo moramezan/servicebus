@@ -167,6 +167,10 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 			//new stuff to do
 			Database.executeBatch(new Broker(), 1);
 		}
+
+		// empty recycle to remove form recents
+		List<PersistentData__c> pds = [SELECT Id FROM PersistentData__c WHERE IsDeleted = true ALL ROWS];
+		Database.emptyRecycleBin(pds);
 	}
 	
 	static public void enqueue(String chainName, Id data) {
