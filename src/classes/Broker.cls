@@ -3,23 +3,33 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 	public class BrokerException extends Exception {}
 
 	public Database.QueryLocator start(Database.BatchableContext context) {
-		List<PersistentData__c> fuckedData = [
-			SELECT Id
+		Integer fuckedLimit = 100;
+		
+		Integer fuckedCount = [
+			SELECT COUNT()
 			FROM PersistentData__c
 			WHERE RecordType.Name = 'Processing'
-			LIMIT 100
 		];
-
-		if (fuckedData.size() == 100) {
-			throw new BrokerException('100 or more failed PersistentData - please inspect the message and change RecordType to Buffer');
+		
+		Integer reprocessCount = [
+			SELECT COUNT()
+			FROM PersistentData__c
+			WHERE RecordType.Name = 'Reprocess'
+		];
+		
+		Integer queryLimit = Math.max(0, fuckedLimit - fuckedCount) + reprocessCount;
+		
+		if (queryLimit == 0) {
+			System.abortJob(context.getJobId());
 		}
 		
-		//find some buffered work
+		//find some Buffer work, or if there's too many in Processing, only find Reprocess work
 		Map<Id, PersistentData__c> id2data = new Map<Id, PersistentData__c>([
 			SELECT Id
 			FROM PersistentData__c
-			WHERE RecordType.Name = 'Buffer'
-			LIMIT 1000
+			WHERE RecordType.Name IN ('Reprocess', 'Buffer')
+			ORDER BY RecordType.Name DESC
+			LIMIT :queryLimit
 		]);
 		
 		//get processing record type

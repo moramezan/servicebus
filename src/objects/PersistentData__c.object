@@ -71,6 +71,9 @@
     <label>Persistent Data</label>
     <listViews>
         <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>RECORDTYPE</columns>
+        <columns>Notification__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
@@ -83,6 +86,7 @@
     <recordTypes>
         <fullName>Buffer</fullName>
         <active>true</active>
+        <description>Data marked as &quot;Buffer&quot; will be processed if there are fewer than 100 records stuck in &quot;Processing&quot;.</description>
         <label>Buffer</label>
     </recordTypes>
     <recordTypes>
@@ -90,6 +94,12 @@
         <active>true</active>
         <description>Data is marked as &quot;Processing&quot; when the process begins to handle it. Failure of the process will leave the data in this state.</description>
         <label>Processing</label>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Reprocess</fullName>
+        <active>true</active>
+        <description>Data with this Record Type will skip the buffer and be processed immediately.</description>
+        <label>Reprocess</label>
     </recordTypes>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>

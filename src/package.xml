@@ -116,6 +116,7 @@
     <types>
         <members>PersistentData__c.Buffer</members>
         <members>PersistentData__c.Processing</members>
+        <members>PersistentData__c.Reprocess</members>
         <name>RecordType</name>
     </types>
     <types>
