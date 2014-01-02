@@ -13,7 +13,12 @@ public class ProcessRefreshBatch implements Database.Batchable<SObject> {
 			ApexClass apexClass = scope[0];
 			Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
 			Process.Plugin plugin = (Process.Plugin)reflector.newInstance();
-			Process__c process = new Process__c(Name = reflector.getName());
+		  	Process.PluginDescribeResult describeResult = plugin.describe();
+			String description = describeResult.Description.substringBefore('{');
+			Process__c process = new Process__c(
+				Name = reflector.getName(),
+				Description__c = description
+			);
 			upsert process Name; //will not duplicate existing processes
 		} catch (Exception e) {
 			//non-implementors can fail hard in their own execution context

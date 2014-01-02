@@ -1,7 +1,9 @@
 global class Sink implements Process.Plugin {
 	
 	global Process.PluginDescribeResult describe() {
-		return new Process.PluginDescribeResult();
+		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
+		plugin.Description = 'The Sink process terminates all chains and is mandatory.';
+		return plugin;
 	}
 	
 	global Process.PluginResult invoke(Process.PluginRequest request) {
