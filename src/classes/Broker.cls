@@ -55,42 +55,53 @@ public class Broker implements Database.Batchable<SObject>, Database.AllowsCallo
 	public void execute(Database.BatchableContext context, List<SObject> scope) {
 		//list of one
 		PersistentData__c persistentData = (PersistentData__c)scope[0];
-		
-		//prepare the notification (a primitive dto) from persistent data
-		Map<String,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c);
-		
-		//increment sequence
-		notification.put('eda__sequence', (Decimal)notification.get('eda__sequence') + 1);
-		
-		//resolve chain step
-		ChainStep__c chainStep = [
-			SELECT Process__c, Configuration__c
-			FROM ChainStep__c
-			WHERE Chain__r.Name = :(String)notification.get('eda__chainName')
-			AND Sequence__c = :(Decimal)notification.get('eda__sequence')
-		];
-		
-		//resolve processable
-		Process__c process = [
-			SELECT Id, Name
-			FROM Process__c
-			WHERE Id = :chainStep.Process__c
-		];
-		
-		//instantiate processable instance
-		Type reflector = Type.forName(process.Name);
-		Process.Plugin processable = (Process.Plugin)reflector.newInstance();
-		
-		//hand in the configuration id
-		notification.put('eda__configuration', chainStep.Configuration__c);
-		
+
+		//keep scope outside exception
+		Map<String,Object> notification;
 		List<Map<String,Object>> notifications = new List<Map<String,Object>>();
-		
+
 		try {
+			//prepare the notification (a primitive dto) from persistent data
+			notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c);
+
+			//increment sequence
+			notification.put('eda__sequence', (Decimal)notification.get('eda__sequence') + 1);
+
+			//resolve chain step
+			ChainStep__c chainStep = [
+				SELECT Process__c, Configuration__c
+				FROM ChainStep__c
+				WHERE Chain__r.Name = :(String)notification.get('eda__chainName')
+				AND Sequence__c = :(Decimal)notification.get('eda__sequence')
+			];
+
+			//resolve processable
+			Process__c process = [
+				SELECT Id, Name
+				FROM Process__c
+				WHERE Id = :chainStep.Process__c
+			];
+
+			//instantiate processable instance
+			Type reflector = Type.forName(process.Name);
+			Process.Plugin processable = (Process.Plugin)reflector.newInstance();
+
+			//hand in the configuration id
+			notification.put('eda__configuration', chainStep.Configuration__c);
+
 			//invoke the processable instance
 			Process.PluginResult results = processable.invoke(new Process.PluginRequest(notification));
 			notifications = Utility.convert(results);
 		} catch (Exception e) {
+			if (e instanceof System.JsonException) {
+				e.setMessage('Could not deserialize json (malformed notification)');
+			} else if (e instanceof System.NullPointerException) {
+				e.setMessage('Sequence null (key missing from notification) or Type null (class missing)');
+			} else if (e instanceof System.QueryException) {
+				e.setMessage('ChainStep unqueryable (bad chain name, sequence, missing sink)');
+			} else if (e instanceof System.TypeException) {
+				e.setMessage('Could not cast Process.Plugin (interface unimplemented on process class)');
+			}
 			Map<String,Object> serializedException = new Map<String,Object>();
 			serializedException.put('cause', e.getCause());
 			serializedException.put('lineNumber', e.getLineNumber());
