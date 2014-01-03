@@ -91,7 +91,7 @@
         <fullName>Sequence__c</fullName>
         <externalId>false</externalId>
         <label>Sequence</label>
-        <precision>1</precision>
+        <precision>2</precision>
         <required>false</required>
         <scale>0</scale>
         <trackTrending>false</trackTrending>

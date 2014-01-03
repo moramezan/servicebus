@@ -14,7 +14,14 @@
 	</target>
 
 	<target name="zip" description="Builds static resources">
-		<zip destfile="src/staticresources/bayeuxZip.resource" basedir="dev/resource/bayeuxZip" includes="**"/>
+		<delete file="src/staticresources/ChainStepSorterZip.resource" />
+		<zip destfile="src/staticresources/ChainStepSorterZip.resource" basedir="dev/resource/ChainStepSorterZip/build/production/Steps" includes="**"/>
+	</target>
+
+	<target name="sencha" description="Builds Sencha application">
+		<exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ChainStepSorterZip ant clean" />
+		<exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ChainStepSorterZip app refresh" />
+		<exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ChainStepSorterZip app build" />
 	</target>
 
 	<target name="usage">

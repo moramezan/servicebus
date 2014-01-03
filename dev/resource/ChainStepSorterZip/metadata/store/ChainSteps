@@ -1,0 +1,16 @@
+{
+    "type": "Ext.data.Store",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "autoLoad": true,
+        "designer|userClassName": "ChainSteps",
+        "model": "ChainStep",
+        "remoteFilter": true,
+        "storeId": "ChainSteps"
+    },
+    "designerId": "a43ec6a5-795e-478c-8f9e-74b4f9cd36ec"
+}

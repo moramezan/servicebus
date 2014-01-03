@@ -1,6 +1,10 @@
 {
    "name": "Steps",
-   "requires": [],
+   "requires": [
+      "fflib-ext-common"
+   ],
    "id": "bf1697a9-b1bf-46b9-9af3-cf074d720176",
-   "resources": []
+   "resources": [
+      "bootstrap.css"
+   ]
 }

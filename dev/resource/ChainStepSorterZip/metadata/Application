@@ -6,10 +6,39 @@
     },
     "codeClass": null,
     "userConfig": {
+        "models": [
+            "ChainStep"
+        ],
         "name": "Steps",
+        "requires": [
+            "Ext.grid.plugin.DragDrop"
+        ],
+        "stores": [
+            "ChainSteps"
+        ],
         "views": [
-            "MyViewport"
+            "MyViewport",
+            "ChainStepGrid"
         ]
     },
-    "designerId": "application"
+    "designerId": "application",
+    "cn": [
+        {
+            "type": "fixedfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "launch",
+                "implHandler": [
+                    "Ext.create('Steps.view.MyViewport', {",
+                    "    renderTo: 'bodyCell'",
+                    "});"
+                ]
+            },
+            "designerId": "054a7704-822c-4c5d-afa4-c9e0f4a63749"
+        }
+    ]
 }

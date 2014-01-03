@@ -1,114 +1,103 @@
 {
-    "type": "Ext.container.Viewport",
+    "type": "Ext.container.Container",
     "reference": {
         "name": "items",
         "type": "array"
     },
     "codeClass": null,
     "userConfig": {
-        "designer|initialView": true,
+        "designer|initialView": null,
         "designer|userClassName": "MyViewport",
-        "layout": "border"
+        "layout": null,
+        "requires": [
+            "Ext.layout.container.Border"
+        ],
+        "style": [
+            "{",
+            "    background: 'none'",
+            "}"
+        ]
     },
     "designerId": "aa058125-54f1-4753-b8bc-3ff3d4eef967",
     "cn": [
         {
-            "type": "Ext.panel.Panel",
+            "type": "Ext.container.Container",
             "reference": {
                 "name": "items",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "layout|region": "west",
-                "title": "My Panel",
-                "width": 150
+                "container|align": null,
+                "container|pack": "center",
+                "container|padding": 4,
+                "height": null,
+                "layout": "hbox",
+                "style": [
+                    "{",
+                    "    background: 'none'",
+                    "}"
+                ]
             },
-            "designerId": "c2294f3c-219b-46f7-97d5-2b743a305bfb"
-        },
-        {
-            "type": "Ext.tab.Panel",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "activeTab": 0,
-                "layout|region": "center"
-            },
-            "designerId": "d64a02d6-6994-4d7d-adea-56a6d4b5b27d",
+            "designerId": "cc28fffe-26cf-4a6a-b3dd-313d286544d2",
             "cn": [
                 {
-                    "type": "Ext.panel.Panel",
+                    "type": "Ext.button.Button",
                     "reference": {
                         "name": "items",
                         "type": "array"
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "title": "Tab 1"
+                        "baseCls": null,
+                        "href": "ChainSorterController.NewChainStepUrl",
+                        "hrefTarget": "_top",
+                        "layout|flex": null,
+                        "style": [
+                            "{",
+                            "    \"fontWeight\": \"bold\"",
+                            "}"
+                        ],
+                        "text": "New Chain Step",
+                        "width": null
                     },
-                    "designerId": "0d95cb61-41a6-4e25-9e4d-3170893e6446",
+                    "designerId": "90b74440-7000-4044-9300-8cd7f9b10a5e",
                     "cn": [
                         {
-                            "type": "Ext.tab.Tab",
+                            "type": "processcfgfunction",
                             "reference": {
-                                "name": "tabConfig",
-                                "type": "object"
+                                "name": "items",
+                                "type": "array"
                             },
                             "codeClass": null,
-                            "designerId": "f5f00244-47da-46ae-a08a-384ee64be85a"
-                        }
-                    ]
-                },
-                {
-                    "type": "Ext.panel.Panel",
-                    "reference": {
-                        "name": "items",
-                        "type": "array"
-                    },
-                    "codeClass": null,
-                    "userConfig": {
-                        "title": "Tab 2"
-                    },
-                    "designerId": "d6cb4d8c-b966-4fd9-9ff5-8ceb086ce2e5",
-                    "cn": [
-                        {
-                            "type": "Ext.tab.Tab",
-                            "reference": {
-                                "name": "tabConfig",
-                                "type": "object"
+                            "userConfig": {
+                                "designer|params": [
+                                    "config"
+                                ],
+                                "fn": "processNewChainStep",
+                                "implHandler": [
+                                    "config.href = ChainSorterController.NewChainStepUrl;",
+                                    "return config;"
+                                ]
                             },
-                            "codeClass": null,
-                            "designerId": "c521f511-a0b9-4889-8173-b996e32e7947"
-                        }
-                    ]
-                },
-                {
-                    "type": "Ext.panel.Panel",
-                    "reference": {
-                        "name": "items",
-                        "type": "array"
-                    },
-                    "codeClass": null,
-                    "userConfig": {
-                        "title": "Tab 3"
-                    },
-                    "designerId": "9e47ada8-33fa-41c8-bd6c-06261d30c1fe",
-                    "cn": [
-                        {
-                            "type": "Ext.tab.Tab",
-                            "reference": {
-                                "name": "tabConfig",
-                                "type": "object"
-                            },
-                            "codeClass": null,
-                            "designerId": "04311025-3d74-4322-b79f-ced4994cf38d"
+                            "designerId": "0f3f7246-3f91-44a0-8626-43f07a0fd8a6"
                         }
                     ]
                 }
             ]
+        },
+        {
+            "type": "linkedinstance",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "title": "Chain Steps"
+            },
+            "designerId": "e52e4988-0605-459c-8571-f46bb6a35a3b",
+            "masterInstanceId": "9d94b7c9-de1b-44d4-8188-2d878c32eca3"
         }
     ]
 }

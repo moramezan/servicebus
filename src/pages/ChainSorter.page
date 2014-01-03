@@ -1,0 +1,17 @@
+<apex:page standardController="Chain__c" extensions="ChainSorterController">
+    
+    <c:bootstrapExt staticResource="{!$Resource.ChainStepSorterZip}" applicationName="Steps" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}">
+        window['$RemoteAction'] = window['$RemoteAction'] || {};
+        $RemoteAction.ChainSorterController = $RemoteAction.ChainSorterController || {};
+        $RemoteAction.ChainSorterController.readChainSteps = '{!$RemoteAction.ChainSorterController.readChainSteps}';
+        $RemoteAction.ChainSorterController.updateChainSteps = '{!$RemoteAction.ChainSorterController.updateChainSteps}';
+        $RemoteAction.ChainSorterController.destroyChainSteps = '{!$RemoteAction.ChainSorterController.destroyChainSteps}';
+        
+        window['ChainSorterController'] = window['ChainSorterController'] || {};
+        ChainSorterController.Chain__c = ChainSorterController.Chain__c || {};
+        ChainSorterController.Chain__c.Id = '{!Chain__c.Id}';
+        
+        ChainSorterController.NewChainStepUrl = '{!JSENCODE(NewChainStepUrl)}';
+    </c:bootstrapExt>
+
+</apex:page>

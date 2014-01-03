@@ -13,7 +13,15 @@
             }
         },
         "urlPrefix": "",
-        "exportPath": ""
+        "exportPath": "",
+        "buildShouldOverwriteIndex": true,
+        "generateArchitectVersion": true,
+        "spacesToIndent": 4,
+        "lineEnding": "LF",
+        "genTimestamps": false,
+        "cacheBust": false,
+        "displayfield-ExtBox1-1277-inputEl": "Not Installed",
+        "displayfield-ExtBox1-1384-inputEl": "Not Installed"
     },
     "xdsVersion": "3.0.1",
     "xdsBuild": 1343,
@@ -22,13 +30,19 @@
     "framework": "ext42",
     "viewOrderMap": {
         "view": [
-            "aa058125-54f1-4753-b8bc-3ff3d4eef967"
+            "aa058125-54f1-4753-b8bc-3ff3d4eef967",
+            "9d94b7c9-de1b-44d4-8188-2d878c32eca3"
         ],
-        "store": [],
+        "store": [
+            "a43ec6a5-795e-478c-8f9e-74b4f9cd36ec"
+        ],
         "controller": [],
-        "model": [],
+        "model": [
+            "3775f9ce-5e85-4d12-8d4a-0dd03636d96f"
+        ],
         "resource": [
-            "7ed44062-929e-43c3-853e-ea348b8a8daf"
+            "7ed44062-929e-43c3-853e-ea348b8a8daf",
+            "bc22f2fd-040c-4043-b02d-0750eeb47c33"
         ],
         "app": [
             "application"

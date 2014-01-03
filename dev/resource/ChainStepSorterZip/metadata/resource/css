@@ -1,0 +1,13 @@
+{
+    "type": "cssresource",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "css",
+        "url": "bootstrap.css"
+    },
+    "designerId": "bc22f2fd-040c-4043-b02d-0750eeb47c33"
+}

@@ -11,6 +11,7 @@
         <members>Broker</members>
         <members>BrokerTest</members>
         <members>ChainBeforeDeleteTest</members>
+        <members>ChainSorterController</members>
         <members>ChainStepAfterInsertTest</members>
         <members>ChainStepBeforeDeleteTest</members>
         <members>ChainStepExtensionConfigure</members>
@@ -38,6 +39,11 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>bootstrapExt</members>
+        <name>ApexComponent</name>
+    </types>
+    <types>
+        <members>ChainSorter</members>
         <members>ChainStepConfiguration</members>
         <members>ProcessCustomization</members>
         <members>ProcessRefresh</members>
@@ -64,6 +70,7 @@
         <members>ChainStep__c.Sequence__c</members>
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Notification__c</members>
+        <members>KnifeSwitch__c.Url__c</members>
         <members>PersistentData__c.Message__c</members>
         <members>PersistentData__c.Notification__c</members>
         <members>Process__c.ApexClass__c</members>
@@ -80,6 +87,7 @@
         <members>Event__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
+        <members>KnifeSwitch__c</members>
         <members>PersistentData__c</members>
         <members>Process__c</members>
         <members>PublishConfiguration__c</members>
@@ -119,6 +127,10 @@
         <members>PersistentData__c.Processing</members>
         <members>PersistentData__c.Reprocess</members>
         <name>RecordType</name>
+    </types>
+    <types>
+        <members>ChainStepSorterZip</members>
+        <name>StaticResource</name>
     </types>
     <types>
         <members>Chain__c.UniqueName</members>
