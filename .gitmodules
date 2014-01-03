@@ -7,3 +7,6 @@
 [submodule "lib/sencha-cmd-4.0.1.45"]
 	path = lib/sencha-cmd-4.0.1.45
 	url = https://github.com/ratsaas/sencha-cmd.git
+[submodule "lib/sencha-architect-3.0.1"]
+	path = lib/sencha-architect-3.0.1
+	url = https://github.com/ratsaas/sencha-architect.git
