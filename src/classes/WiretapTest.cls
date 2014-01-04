@@ -1,6 +1,13 @@
 @isTest //-- no view of org data
 private class WiretapTest {
-
+	
+	static testMethod void testProcessIsDescribed() {
+		Wiretap wiretap = new Wiretap();
+		System.assertNotEquals(null, wiretap.describe().Name);
+		System.assertNotEquals(null, wiretap.describe().Description);
+		System.assertNotEquals(null, wiretap.describe().Tag);
+	}
+	
 	static testMethod void callingExecuteReturnsExpectedNotificationCollection() {
 		// Arrange :
 		String chainName = 'the-chain';

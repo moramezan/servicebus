@@ -14,7 +14,7 @@ public class ProcessRefreshBatch implements Database.Batchable<SObject> {
 			Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
 			Process.Plugin plugin = (Process.Plugin)reflector.newInstance();
 			Process.PluginDescribeResult describeResult = plugin.describe();
-			String description = describeResult.Description.substringBefore('{');
+			String description = (describeResult.Description != null) ? describeResult.Description.substringBefore('{') : null;
 			Process__c process = new Process__c(
 				Name = reflector.getName(),
 				Description__c = description

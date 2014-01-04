@@ -2,9 +2,10 @@ global class Wiretap implements Process.Plugin {
 	
 	global Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult describeResult = new Process.PluginDescribeResult();
+		describeResult.Name = 'Wiretap';
 		describeResult.Description = 'No-op process that forwards the serialized Notification to the email of the running context user';
 		describeResult.Tag = 'Event Driven Architecture';
-		return new Process.PluginDescribeResult();
+		return describeResult;
 	}
 	
 	global Process.PluginResult invoke(Process.PluginRequest request) {
