@@ -89,6 +89,8 @@
             "codeClass": null,
             "userConfig": {
                 "dataIndex": "Sequence",
+                "menuDisabled": true,
+                "sortable": false,
                 "text": "Sequence"
             },
             "designerId": "8c2d43c9-fde2-4335-9990-67ad060256d5"
@@ -102,6 +104,8 @@
             "codeClass": null,
             "userConfig": {
                 "dataIndex": "Name",
+                "menuDisabled": true,
+                "sortable": false,
                 "text": "Name"
             },
             "designerId": "d22acf4f-a63c-4331-8c98-4cc0412a2ed1"
@@ -115,6 +119,8 @@
             "codeClass": null,
             "userConfig": {
                 "dataIndex": "Process",
+                "menuDisabled": true,
+                "sortable": false,
                 "text": "Process"
             },
             "designerId": "369877e2-7ef1-47df-a7dc-1413851ec2fe"
@@ -128,6 +134,8 @@
             "codeClass": null,
             "userConfig": {
                 "dataIndex": "Process.Description",
+                "menuDisabled": true,
+                "sortable": false,
                 "text": "Process.Description"
             },
             "designerId": "43b2188b-bb92-456a-a6f7-459ba8457e31"
