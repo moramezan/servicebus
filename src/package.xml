@@ -28,6 +28,7 @@
         <members>ProcessRefreshBatchTest</members>
         <members>Publish</members>
         <members>PublishTest</members>
+        <members>Schedule</members>
         <members>Sink</members>
         <members>SinkTest</members>
         <members>Subscribe</members>
