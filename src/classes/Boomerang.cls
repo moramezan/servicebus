@@ -3,6 +3,7 @@ global class Boomerang implements Process.Plugin {
 	global Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
 		plugin.Description = 'Boomerang process perverts execution. {"eda__configurable":"BoomerangConfiguration__c"}';
+		plugin.Tag = 'Event Driven Architecture';
 		
 		plugin.outputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
 			new Process.PluginDescribeResult.OutputParameter(

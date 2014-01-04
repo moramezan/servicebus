@@ -5,6 +5,7 @@ global class Branch implements Process.Plugin {
 	global Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
 		plugin.Description = 'This process forks execution. {"eda__configurable":"BranchConfiguration__c"}';
+        plugin.Tag = 'Event Driven Architecture';
 		return plugin;
 	}
 	

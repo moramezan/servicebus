@@ -3,6 +3,7 @@ global class Sink implements Process.Plugin {
 	global Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
 		plugin.Description = 'The Sink process terminates all chains and is mandatory.';
+		plugin.Tag = 'Event Driven Architecture';
 		return plugin;
 	}
 	

@@ -3,6 +3,7 @@ global class Mark implements Process.Plugin {
 	global Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
 		plugin.Description = 'Marks splitted notifications with an association key. Next process must be a split.';
+		plugin.Tag = 'Event Driven Architecture';
 		
 		plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
 			new Process.PluginDescribeResult.OutputParameter(

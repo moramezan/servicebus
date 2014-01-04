@@ -3,6 +3,7 @@ global class Gate implements Process.Plugin {
 	global Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
 		plugin.Description = 'Gate process allows you to aggregate marked notifications on a common grouping key.';
+		plugin.Tag = 'Event Driven Architecture';
 		
 		plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
 			new Process.PluginDescribeResult.InputParameter(

@@ -5,6 +5,7 @@ public class Publish implements Process.Plugin {
 	public Process.PluginDescribeResult describe () {
 		Process.PluginDescribeResult result = new Process.PluginDescribeResult();
 		result.Description = 'Publishes to a named event {"eda__configurable": "'+Schema.SobjectType.PublishConfiguration__c.Name+'"}';
+		result.Tag = 'Event Driven Architecture';
 		return result;
 	}
 	
