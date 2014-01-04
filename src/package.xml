@@ -76,6 +76,8 @@
         <members>Process__c.ApexClass__c</members>
         <members>Process__c.Description__c</members>
         <members>PublishConfiguration__c.Event__c</members>
+        <members>ScheduleConfiguration__c.EveryXHours__c</members>
+        <members>ScheduleConfiguration__c.LastHeartbeatAt__c</members>
         <members>SubscribeConfiguration__c.Event__c</members>
         <name>CustomField</name>
     </types>
@@ -91,6 +93,7 @@
         <members>PersistentData__c</members>
         <members>Process__c</members>
         <members>PublishConfiguration__c</members>
+        <members>ScheduleConfiguration__c</members>
         <members>SubscribeConfiguration__c</members>
         <name>CustomObject</name>
     </types>
@@ -112,6 +115,7 @@
         <members>PersistentData__c-Persistent Data Layout</members>
         <members>Process__c-Process Layout</members>
         <members>PublishConfiguration__c-PubSub Configuration Layout</members>
+        <members>ScheduleConfiguration__c-Schedule Configuration Layout</members>
         <members>SubscribeConfiguration__c-Subscribe Configuration Layout</members>
         <name>Layout</name>
     </types>
