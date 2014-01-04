@@ -38,5 +38,7 @@
             <target name="-before-build"/>
             <target name="-after-build"/>
     -->
-
+    <target name="-after-build">
+        <replace file="${basedir}/build/production/Steps/resources/Steps-all.css" token="x-body" value="xxx-body" />
+    </target>
 </project>
