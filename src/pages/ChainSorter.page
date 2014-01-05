@@ -12,6 +12,15 @@
         ChainSorterController.Chain__c.Id = '{!Chain__c.Id}';
         
         ChainSorterController.NewChainStepUrl = '{!JSENCODE(NewChainStepUrl)}';
+        
+        window['$ObjectType'] = window['$ObjectType'] || {};
+        $ObjectType.ChainStep__c = $ObjectType.ChainStep__c || {};
+        $ObjectType.ChainStep__c.Fields = $ObjectType.ChainStep__c.Fields || {};
+        $ObjectType.ChainStep__c.Fields.Chain__c = {Name: '{!$ObjectType.ChainStep__c.Fields.Chain__c.Name}'};
+        $ObjectType.ChainStep__c.Fields.Sequence__c = {Name: '{!$ObjectType.ChainStep__c.Fields.Sequence__c.Name}'};
+        $ObjectType.ChainStep__c.Fields.ProcessName__c = {Name: '{!$ObjectType.ChainStep__c.Fields.ProcessName__c.Name}'};
+        $ObjectType.ChainStep__c.Fields.ProcessDescription__c = {Name: '{!$ObjectType.ChainStep__c.Fields.ProcessDescription__c.Name}'};
+        
     </c:bootstrapExt>
 
 </apex:page>

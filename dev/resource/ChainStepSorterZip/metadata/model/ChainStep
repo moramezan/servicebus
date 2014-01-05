@@ -1,5 +1,5 @@
 {
-    "type": "Ext.data.Model",
+    "type": "class",
     "reference": {
         "name": "items",
         "type": "array"
@@ -7,141 +7,78 @@
     "codeClass": null,
     "userConfig": {
         "designer|userClassName": "ChainStep",
-        "idProperty": "Id"
+        "extend": "Ext.data.Model",
+        "fields": [
+            "[",
+            "    {",
+            "        name: 'Id'",
+            "    },",
+            "    {",
+            "        name: 'Name',",
+            "        type: 'string'",
+            "    },",
+            "    {",
+            "        name: 'Sequence',",
+            "        type: 'int',",
+            "        mapping: $ObjectType.ChainStep__c.Fields.Sequence__c.Name",
+            "    },",
+            "    {",
+            "        name: 'ProcessName',",
+            "        type: 'string',",
+            "        persist: false,",
+            "        mapping: $ObjectType.ChainStep__c.Fields.ProcessName__c.Name",
+            "    },",
+            "    {",
+            "        name: 'ProcessDescription',",
+            "        type: 'string',",
+            "        persist: false,",
+            "        mapping: $ObjectType.ChainStep__c.Fields.ProcessDescription__c.Name",
+            "    }",
+            "]"
+        ],
+        "idProperty": "Id",
+        "proxy": [
+            "{",
+            "    type: 'vfremote',",
+            "    api: {",
+            "        read: $RemoteAction.ChainSorterController.readChainSteps,",
+            "        update: $RemoteAction.ChainSorterController.updateChainSteps,",
+            "        destroy: $RemoteAction.ChainSorterController.destroyChainSteps",
+            "    },",
+            "    extraParams: {",
+            "        Id: ChainSorterController.Chain__c.Id",
+            "    },",
+            "    reader: {",
+            "        type: 'json'",
+            "    },",
+            "    writer: {",
+            "        type: 'json',",
+            "        nameProperty: 'mapping',",
+            "        allowSingle: false",
+            "    }",
+            "}"
+        ]
     },
-    "designerId": "3775f9ce-5e85-4d12-8d4a-0dd03636d96f",
-    "cn": [
+    "configAlternates": {
+        "fields": "array",
+        "proxy": "object"
+    },
+    "designerId": "048f49e6-0aea-4a67-93ad-5508e5092fe3",
+    "customConfigs": [
         {
-            "type": "Ext.data.Field",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "name": "Id"
-            },
-            "designerId": "7977a295-9aae-49bc-9d2d-32d46905a6b7"
+            "group": "(Custom Properties)",
+            "name": "fields",
+            "type": "string"
         },
         {
-            "type": "Ext.data.Field",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "name": "Name"
-            },
-            "designerId": "075af12b-4fe6-45e2-8ffb-1e383c50a604"
+            "group": "(Custom Properties)",
+            "name": "idProperty",
+            "type": "string"
         },
         {
-            "type": "Ext.data.Field",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "designer|displayName": null,
-                "mapping": "eda__Sequence__c",
-                "name": "Sequence"
-            },
-            "designerId": "7dc003c3-4754-4430-abc7-4c76ed9b869f"
-        },
-        {
-            "type": "Ext.data.Field",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "designer|displayName": "Process.Name",
-                "mapping": "eda__Process__r.Name",
-                "name": "Process",
-                "persist": false
-            },
-            "designerId": "11680d79-0f4f-4738-a648-1264f9cac4dc"
-        },
-        {
-            "type": "Ext.data.Field",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "mapping": "eda__Process__r.eda__Description__c",
-                "name": "Process.Description",
-                "persist": false
-            },
-            "designerId": "7405bee8-dbd3-4c10-8090-94150526e7c3"
-        },
-        {
-            "type": "Ext.data.Field",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "mapping": "eda__Chain__c",
-                "name": "ChainId"
-            },
-            "designerId": "e2515d85-e2e4-4f3c-b31a-03bfb3d7f506"
-        },
-        {
-            "type": "Ext.data.proxy.Direct",
-            "reference": {
-                "name": "proxy",
-                "type": "object"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "api": [
-                    "{",
-                    "    read: $RemoteAction.ChainSorterController.readChainSteps,",
-                    "    update: $RemoteAction.ChainSorterController.updateChainSteps,",
-                    "    destroy: $RemoteAction.ChainSorterController.destroyChainSteps",
-                    "}"
-                ],
-                "designer|createAlias": "vfremote",
-                "designer|displayName": "ChainStepProxy",
-                "extraParams": [
-                    "{Id: ChainSorterController.Chain__c.Id}"
-                ],
-                "filterParam": "filters"
-            },
-            "designerId": "61adbec7-1d95-467b-ab9a-10965d0699dc",
-            "cn": [
-                {
-                    "type": "Ext.data.reader.Json",
-                    "reference": {
-                        "name": "reader",
-                        "type": "object"
-                    },
-                    "codeClass": null,
-                    "userConfig": {
-                        "designer|displayName": "ChainStepReader"
-                    },
-                    "designerId": "fa11ac18-c05a-426c-8bf2-b880966b0afd"
-                },
-                {
-                    "type": "Ext.data.writer.Json",
-                    "reference": {
-                        "name": "writer",
-                        "type": "object"
-                    },
-                    "codeClass": null,
-                    "userConfig": {
-                        "allowSingle": false,
-                        "designer|displayName": "ChainStepWriter",
-                        "nameProperty": "mapping"
-                    },
-                    "designerId": "5b56ca63-6460-4361-9641-fb98e8221b18"
-                }
-            ]
+            "group": "(Custom Properties)",
+            "name": "proxy",
+            "type": "string"
         }
     ]
 }

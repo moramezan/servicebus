@@ -118,7 +118,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "dataIndex": "Process",
+                "dataIndex": "ProcessName",
                 "menuDisabled": true,
                 "sortable": false,
                 "text": "Process"
@@ -133,10 +133,10 @@
             },
             "codeClass": null,
             "userConfig": {
-                "dataIndex": "Process.Description",
+                "dataIndex": "ProcessDescription",
                 "menuDisabled": true,
                 "sortable": false,
-                "text": "Process.Description"
+                "text": "Description"
             },
             "designerId": "43b2188b-bb92-456a-a6f7-459ba8457e31"
         },
