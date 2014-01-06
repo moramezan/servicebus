@@ -16,11 +16,28 @@
         window['$ObjectType'] = window['$ObjectType'] || {};
         $ObjectType.ChainStep__c = $ObjectType.ChainStep__c || {};
         $ObjectType.ChainStep__c.Fields = $ObjectType.ChainStep__c.Fields || {};
-        $ObjectType.ChainStep__c.Fields.Chain__c = {Name: '{!$ObjectType.ChainStep__c.Fields.Chain__c.Name}'};
-        $ObjectType.ChainStep__c.Fields.Sequence__c = {Name: '{!$ObjectType.ChainStep__c.Fields.Sequence__c.Name}'};
-        $ObjectType.ChainStep__c.Fields.ProcessName__c = {Name: '{!$ObjectType.ChainStep__c.Fields.ProcessName__c.Name}'};
-        $ObjectType.ChainStep__c.Fields.ProcessDescription__c = {Name: '{!$ObjectType.ChainStep__c.Fields.ProcessDescription__c.Name}'};
         
+        $ObjectType.ChainStep__c.Fields.Id = $ObjectType.ChainStep__c.Fields.Id || {};
+        $ObjectType.ChainStep__c.Fields.Id.Name = '{!$ObjectType.ChainStep__c.Fields.Id.Name}';
+        $ObjectType.ChainStep__c.Fields.Name = $ObjectType.ChainStep__c.Fields.Name || {};
+        $ObjectType.ChainStep__c.Fields.Name.Name = '{!$ObjectType.ChainStep__c.Fields.Name.Name}';
+        $ObjectType.ChainStep__c.Fields.Chain__c = $ObjectType.ChainStep__c.Fields.Chain__c || {};
+        $ObjectType.ChainStep__c.Fields.Chain__c.Name = '{!$ObjectType.ChainStep__c.Fields.Chain__c.Name}';
+        $ObjectType.ChainStep__c.Fields.Sequence__c = $ObjectType.ChainStep__c.Fields.Sequence__c || {};
+        $ObjectType.ChainStep__c.Fields.Sequence__c.Name = '{!$ObjectType.ChainStep__c.Fields.Sequence__c.Name}';
+        $ObjectType.ChainStep__c.Fields.Process__c = $ObjectType.ChainStep__c.Fields.Process__c || {};
+        $ObjectType.ChainStep__c.Fields.Process__c.Name = '{!$ObjectType.ChainStep__c.Fields.Process__c.Name}';
+        $ObjectType.ChainStep__c.Fields.Process__c.RelationshipName = '{!$ObjectType.ChainStep__c.Fields.Process__c.RelationshipName}';
+
+        $ObjectType.Process__c = $ObjectType.Process__c || {};
+        $ObjectType.Process__c.Fields = $ObjectType.Process__c.Fields || {};
+        $ObjectType.Process__c.Fields.Description__c = $ObjectType.Process__c.Fields.Description__c || {};
+        $ObjectType.Process__c.Fields.Description__c.Name = '{!$ObjectType.Process__c.Fields.Description__c.Name}';
+        $ObjectType.Process__c.Fields.Id = $ObjectType.Process__c.Fields.Id || {};
+        $ObjectType.Process__c.Fields.Id.Name = '{!$ObjectType.Process__c.Fields.Id.Name}';
+        $ObjectType.Process__c.Fields.Name = $ObjectType.Process__c.Fields.Name || {};
+        $ObjectType.Process__c.Fields.Name.Name = '{!$ObjectType.Process__c.Fields.Name.Name}';
+
     </c:bootstrapExt>
 
 </apex:page>

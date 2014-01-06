@@ -65,8 +65,6 @@
         <members>BranchConfiguration__c.Chain__c</members>
         <members>ChainStep__c.Chain__c</members>
         <members>ChainStep__c.Configuration__c</members>
-        <members>ChainStep__c.ProcessDescription__c</members>
-        <members>ChainStep__c.ProcessName__c</members>
         <members>ChainStep__c.Process__c</members>
         <members>ChainStep__c.Sequence__c</members>
         <members>GateItem__c.GateGroup__c</members>

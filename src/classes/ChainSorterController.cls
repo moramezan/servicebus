@@ -34,7 +34,7 @@ global class ChainSorterController {
     
     @RemoteAction static global List<ChainStep__c> readChainSteps(Id chainId) {
         return [
-            SELECT Id, Name, Chain__c, Sequence__c, ProcessName__c, ProcessDescription__c
+            SELECT Id, Name, Chain__c, Sequence__c, Process__r.Name, Process__r.Description__c
             FROM ChainStep__c
             WHERE Chain__c = :chainId
             ORDER BY Sequence__c
