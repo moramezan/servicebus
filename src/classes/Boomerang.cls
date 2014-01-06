@@ -1,6 +1,6 @@
-global class Boomerang implements Process.Plugin {
+public class Boomerang implements Process.Plugin {
 	
-	global Process.PluginDescribeResult describe() {
+	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
 		plugin.Description = 'Boomerang process perverts execution. {"eda__configurable":"BoomerangConfiguration__c"}';
 		plugin.Tag = 'Event Driven Architecture';
@@ -20,7 +20,7 @@ global class Boomerang implements Process.Plugin {
 		return plugin;
 	}
 	
-	global Process.PluginResult invoke(Process.PluginRequest request) {
+	public Process.PluginResult invoke(Process.PluginRequest request) {
 		Map<String,Object> notification = request.inputParameters;
 		
 		//derive the chainStep Id

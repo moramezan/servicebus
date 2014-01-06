@@ -1,6 +1,6 @@
-global class Wiretap implements Process.Plugin {
+public class Wiretap implements Process.Plugin {
 	
-	global Process.PluginDescribeResult describe() {
+	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult describeResult = new Process.PluginDescribeResult();
 		describeResult.Name = 'Wiretap';
 		describeResult.Description = 'No-op process that forwards the serialized Notification to the email of the running context user';
@@ -8,7 +8,7 @@ global class Wiretap implements Process.Plugin {
 		return describeResult;
 	}
 	
-	global Process.PluginResult invoke(Process.PluginRequest request) {
+	public Process.PluginResult invoke(Process.PluginRequest request) {
 		Map<String,Object> notification = request.inputParameters;
 		
 		Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();

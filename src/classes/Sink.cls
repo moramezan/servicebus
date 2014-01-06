@@ -1,13 +1,13 @@
-global class Sink implements Process.Plugin {
+public class Sink implements Process.Plugin {
 	
-	global Process.PluginDescribeResult describe() {
+	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
 		plugin.Description = 'The Sink process terminates all chains and is mandatory.';
 		plugin.Tag = 'Event Driven Architecture';
 		return plugin;
 	}
 	
-	global Process.PluginResult invoke(Process.PluginRequest request) {
+	public Process.PluginResult invoke(Process.PluginRequest request) {
 		Map<String,Object> notification = request.inputParameters;
 		
 		//if we got here from a boomerang, back to where you came from!
