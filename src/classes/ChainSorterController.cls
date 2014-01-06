@@ -70,4 +70,10 @@ global class ChainSorterController {
         update chainSteps;
     }
     
+    @RemoteAction static global String enqueue(Id chainId) {
+        Chain__c chain = [SELECT Name FROM Chain__c WHERE Id = :chainId];
+        Broker.enqueue(chain.Name, UserInfo.getUserId());
+        return chain.Name;
+    }
+    
 }
