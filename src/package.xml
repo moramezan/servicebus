@@ -128,6 +128,10 @@
         <name>ListView</name>
     </types>
     <types>
+        <members>Orchestrator</members>
+        <name>PermissionSet</name>
+    </types>
+    <types>
         <members>PersistentData__c.Buffer</members>
         <members>PersistentData__c.Processing</members>
         <members>PersistentData__c.Reprocess</members>
