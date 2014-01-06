@@ -17,7 +17,8 @@ public class ProcessRefreshBatch implements Database.Batchable<SObject> {
 			String description = (describeResult.Description != null) ? describeResult.Description.substringBefore('{') : null;
 			Process__c process = new Process__c(
 				Name = reflector.getName(),
-				Description__c = description
+				Description__c = description,
+				Tag__c = describeResult.Tag 
 			);
 			upsert process Name; //will not duplicate existing processes
 		} catch (Exception e) {

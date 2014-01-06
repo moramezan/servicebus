@@ -199,6 +199,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Process__c.Tag__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>PublishConfiguration__c.Event__c</field>
         <readable>false</readable>
     </fieldPermissions>

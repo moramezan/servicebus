@@ -74,6 +74,7 @@
         <members>PersistentData__c.Notification__c</members>
         <members>Process__c.ApexClass__c</members>
         <members>Process__c.Description__c</members>
+        <members>Process__c.Tag__c</members>
         <members>PublishConfiguration__c.Event__c</members>
         <members>ScheduleConfiguration__c.EveryXHours__c</members>
         <members>ScheduleConfiguration__c.LastHeartbeatAt__c</members>

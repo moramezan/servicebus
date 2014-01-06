@@ -9,7 +9,7 @@
 		Test.startTest();
 		Database.executeBatch(batch);
 		Test.stopTest();
-		List<Process__c> processes = [SELECT Id, Name, Description__c FROM Process__c];
+		List<Process__c> processes = [SELECT Id, Name, Description__c, Tag__c FROM Process__c];
 		
 		//assert
 		Integer expectedCount = 1;
@@ -23,6 +23,10 @@
 		String expectedDescription = 'terminates all chains';
 		String actualDescription = processes[0].Description__c;
 		System.assert(actualDescription.contains(expectedDescription));
+		
+		String expectedTag = 'Event Driven Architecture';
+		String actualTag = processes[0].Tag__c;
+		System.assert(actualDescription.contains(expectedDescription));	
 	}
 	
 }
