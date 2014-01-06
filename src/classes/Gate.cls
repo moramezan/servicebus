@@ -1,6 +1,6 @@
-global class Gate implements Process.Plugin {
+public class Gate implements Process.Plugin {
 	
-	global Process.PluginDescribeResult describe() {
+	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
 		plugin.Description = 'Gate process allows you to aggregate marked notifications on a common grouping key.';
 		plugin.Tag = 'Event Driven Architecture';
@@ -31,7 +31,7 @@ global class Gate implements Process.Plugin {
 		return plugin;
 	}
 	
-	global Process.PluginResult invoke(Process.PluginRequest request) {
+	public Process.PluginResult invoke(Process.PluginRequest request) {
 		Map<String,Object> notification = request.inputParameters;
 		
 		Id gateGroupId = (Id)notification.get('eda__gateGroupId');

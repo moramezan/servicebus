@@ -1,6 +1,6 @@
-global class Mark implements Process.Plugin {
+public class Mark implements Process.Plugin {
 	
-	global Process.PluginDescribeResult describe() {
+	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
 		plugin.Description = 'Marks splitted notifications with an association key. Next process must be a split.';
 		plugin.Tag = 'Event Driven Architecture';
@@ -21,7 +21,7 @@ global class Mark implements Process.Plugin {
 		return plugin;
 	}
 	
-	global Process.PluginResult invoke(Process.PluginRequest request) {
+	public Process.PluginResult invoke(Process.PluginRequest request) {
 		Map<String,Object> notification = request.inputParameters;
 		
 		//create a grouping id for what will ultimately be gated

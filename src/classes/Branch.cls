@@ -1,15 +1,15 @@
-global class Branch implements Process.Plugin {
+public class Branch implements Process.Plugin {
 	
 	public class BranchException extends Exception {}
 	
-	global Process.PluginDescribeResult describe() {
+	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
 		plugin.Description = 'This process forks execution. {"eda__configurable":"BranchConfiguration__c"}';
         plugin.Tag = 'Event Driven Architecture';
 		return plugin;
 	}
 	
-	global Process.PluginResult invoke(Process.PluginRequest request) {
+	public Process.PluginResult invoke(Process.PluginRequest request) {
 		Map<String,Object> notification = request.inputParameters;
 		
 		//get step configuration
