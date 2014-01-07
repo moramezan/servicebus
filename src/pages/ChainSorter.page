@@ -6,10 +6,13 @@
         $RemoteAction.ChainSorterController.readChainSteps = '{!$RemoteAction.ChainSorterController.readChainSteps}';
         $RemoteAction.ChainSorterController.updateChainSteps = '{!$RemoteAction.ChainSorterController.updateChainSteps}';
         $RemoteAction.ChainSorterController.destroyChainSteps = '{!$RemoteAction.ChainSorterController.destroyChainSteps}';
+        $RemoteAction.ChainSorterController.enqueue = '{!$RemoteAction.ChainSorterController.enqueue}';
         
         window['ChainSorterController'] = window['ChainSorterController'] || {};
         ChainSorterController.Chain__c = ChainSorterController.Chain__c || {};
         ChainSorterController.Chain__c.Id = '{!Chain__c.Id}';
+        
+        ProtocolAndHost = '{!ProtocolAndHost}';
         
         ChainSorterController.NewChainStepUrl = '{!JSENCODE(NewChainStepUrl)}';
         
