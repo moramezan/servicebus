@@ -46,6 +46,8 @@
         <members>ChainStepConfiguration</members>
         <members>ProcessCustomization</members>
         <members>ProcessRefresh</members>
+        <members>PublishConfigurationEdit</members>
+        <members>SubscribeConfigurationEdit</members>
         <name>ApexPage</name>
     </types>
     <types>
@@ -99,8 +101,6 @@
     </types>
     <types>
         <members>Chain__c</members>
-        <members>GateGroup__c</members>
-        <members>PersistentData__c</members>
         <members>Process__c</members>
         <name>CustomTab</name>
     </types>
@@ -114,15 +114,13 @@
         <members>GateItem__c-Gate Item Layout</members>
         <members>PersistentData__c-Persistent Data Layout</members>
         <members>Process__c-Process Layout</members>
-        <members>PublishConfiguration__c-PubSub Configuration Layout</members>
+        <members>PublishConfiguration__c-Publish Configuration Layout</members>
         <members>ScheduleConfiguration__c-Schedule Configuration Layout</members>
         <members>SubscribeConfiguration__c-Subscribe Configuration Layout</members>
         <name>Layout</name>
     </types>
     <types>
         <members>Chain__c.All</members>
-        <members>GateGroup__c.All</members>
-        <members>PersistentData__c.All</members>
         <members>Process__c.All</members>
         <name>ListView</name>
     </types>

@@ -69,14 +69,6 @@
         <visibleLines>3</visibleLines>
     </fields>
     <label>Persistent Data</label>
-    <listViews>
-        <fullName>All</fullName>
-        <columns>NAME</columns>
-        <columns>RECORDTYPE</columns>
-        <columns>Notification__c</columns>
-        <filterScope>Everything</filterScope>
-        <label>All</label>
-    </listViews>
     <nameField>
         <displayFormat>N-{0000000000}</displayFormat>
         <label>Persistent Data Name</label>
