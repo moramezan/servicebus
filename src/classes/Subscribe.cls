@@ -2,7 +2,7 @@ public class Subscribe implements Process.Plugin{
 	
 	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult result = new Process.PluginDescribeResult();
-		result.Description = '{"eda__configurable":"'+Schema.SObjectType.SubscribeConfiguration__c.Name+'"}';
+		result.Description = 'Subscribes to a named event {"eda__configurable":"'+Schema.SObjectType.SubscribeConfiguration__c.Name+'"}';
 		result.Tag = 'Event Driven Architecture';
 		return result;
 	}
