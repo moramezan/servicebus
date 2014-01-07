@@ -124,7 +124,7 @@
                                     "        msg: 'Enqueued to Chain \"' + response + '\"',",
                                     "        buttons: Ext.Msg.OK",
                                     "    });",
-                                    "    button.enable()",
+                                    "    button.enable();",
                                     "    button.unmask();",
                                     "}",
                                     "",
@@ -133,7 +133,7 @@
                                     "",
                                     "Visualforce.remoting.Manager.invokeAction(",
                                     "    $RemoteAction.ChainSorterController.enqueue,",
-                                    "    ChainSorterController.Chain__c.Id,",
+                                    "    Chain__c.Id,",
                                     "    handler",
                                     ");"
                                 ]
