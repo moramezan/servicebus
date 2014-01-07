@@ -1,4 +1,4 @@
-public class Branch implements Process.Plugin {
+public class Branch implements Process.Plugin, Database.Stateful{
 	
 	public class BranchException extends Exception {}
 	

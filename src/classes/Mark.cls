@@ -1,4 +1,4 @@
-public class Mark implements Process.Plugin {
+public class Mark implements Process.Plugin, Database.Stateful {
 	
 	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
