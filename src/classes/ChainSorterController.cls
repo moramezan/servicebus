@@ -46,28 +46,30 @@ global class ChainSorterController {
         return chainSteps;
     }
     
-    @RemoteAction static global void destroyChainSteps(List<ChainStep__c> chainSteps) {
-        Chain__c chain = [
-            SELECT Id
-            FROM Chain__c
-            WHERE Id = :chainSteps[0].Chain__c
-        ];
+    @RemoteAction static global void destroyChainSteps(List<ChainStep__c> stepsToDelete) {
+        //first get a handle on the chain whose steps will reorder afterwards
+        Id chainId = [
+            SELECT Chain__c
+            FROM ChainStep__c
+            WHERE Id = :stepsToDelete[0].Id
+        ].Chain__c;
         
-        delete chainSteps;
+        //delete the intended steps
+        delete stepsToDelete;
         
-        chainSteps = [
+        List<ChainStep__c> stepsToReorder = [
             SELECT Id
             FROM ChainStep__c
-            WHERE Chain__c = :chain.Id
+            WHERE Chain__c = :chainId
             ORDER BY Sequence__c
         ];
         
         Integer sequence = 1;
-        for (ChainStep__c chainStep : chainSteps) {
+        for (ChainStep__c chainStep : stepsToReorder) {
             chainStep.Sequence__c = sequence++;
         }
         
-        update chainSteps;
+        update stepsToReorder;
     }
     
     @RemoteAction static global String enqueue(Id chainId) {
