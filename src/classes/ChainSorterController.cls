@@ -7,6 +7,10 @@ global class ChainSorterController {
         this.controller = controller;
     }
     
+    public String getProtocolAndHost() {
+        return Url.getSalesforceBaseUrl().toExternalForm();
+    }
+    
     public String getNewChainStepUrl() {
         String data = new System.PageReference('/' + Schema.SObjectType.ChainStep__c.KeyPrefix + '/e').getContent().toString();
         String masterLabel = Schema.SObjectType.ChainStep__c.fields.Chain__c.Label;

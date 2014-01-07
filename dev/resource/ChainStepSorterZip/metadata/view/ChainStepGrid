@@ -108,7 +108,33 @@
                 "sortable": false,
                 "text": "Name"
             },
-            "designerId": "d22acf4f-a63c-4331-8c98-4cc0412a2ed1"
+            "designerId": "d22acf4f-a63c-4331-8c98-4cc0412a2ed1",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "return '<a href=\"' + ProtocolAndHost + '/' + record.get('Id') + '\">' + record.get('Name') + '</a>';"
+                        ]
+                    },
+                    "designerId": "59a724bb-c356-460d-a781-c5357230130a"
+                }
+            ]
         },
         {
             "type": "Ext.grid.column.Column",

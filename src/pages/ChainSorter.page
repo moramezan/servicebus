@@ -12,6 +12,8 @@
         ChainSorterController.Chain__c = ChainSorterController.Chain__c || {};
         ChainSorterController.Chain__c.Id = '{!Chain__c.Id}';
         
+        ProtocolAndHost = '{!ProtocolAndHost}';
+        
         ChainSorterController.NewChainStepUrl = '{!JSENCODE(NewChainStepUrl)}';
         
         window['$ObjectType'] = window['$ObjectType'] || {};
