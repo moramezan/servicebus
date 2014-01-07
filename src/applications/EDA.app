@@ -4,6 +4,4 @@
     <label>Event Driven Architecture</label>
     <tab>Chain__c</tab>
     <tab>Process__c</tab>
-    <tab>GateGroup__c</tab>
-    <tab>PersistentData__c</tab>
 </CustomApplication>

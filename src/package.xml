@@ -101,8 +101,6 @@
     </types>
     <types>
         <members>Chain__c</members>
-        <members>GateGroup__c</members>
-        <members>PersistentData__c</members>
         <members>Process__c</members>
         <name>CustomTab</name>
     </types>
@@ -123,8 +121,6 @@
     </types>
     <types>
         <members>Chain__c.All</members>
-        <members>GateGroup__c.All</members>
-        <members>PersistentData__c.All</members>
         <members>Process__c.All</members>
         <name>ListView</name>
     </types>
