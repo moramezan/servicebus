@@ -16,6 +16,8 @@
         <members>ChainStepExtensionConfigureTest</members>
         <members>Gate</members>
         <members>GateTest</members>
+        <members>Jump</members>
+        <members>JumpTest</members>
         <members>Mark</members>
         <members>MarkTest</members>
         <members>ProcessExtensionCustomize</members>
@@ -71,6 +73,7 @@
         <members>ChainStep__c.Sequence__c</members>
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Notification__c</members>
+        <members>JumpConfiguration__c.Chain__c</members>
         <members>KnifeSwitch__c.Url__c</members>
         <members>PersistentData__c.Message__c</members>
         <members>PersistentData__c.Notification__c</members>
@@ -91,6 +94,7 @@
         <members>Event__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
+        <members>JumpConfiguration__c</members>
         <members>KnifeSwitch__c</members>
         <members>PersistentData__c</members>
         <members>Process__c</members>
@@ -112,6 +116,7 @@
         <members>Event__c-Event Layout</members>
         <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>
+        <members>JumpConfiguration__c-Jump Configuration Layout</members>
         <members>PersistentData__c-Persistent Data Layout</members>
         <members>Process__c-Process Layout</members>
         <members>PublishConfiguration__c-Publish Configuration Layout</members>
