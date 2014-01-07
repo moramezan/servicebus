@@ -45,4 +45,30 @@ trigger ChainStepAfterInsert on ChainStep__c (after insert) {
 	//update chainsteps
 	update id2step.values();
 	
+	//resequence 
+	Set<Id> chainIds = new Set<Id>(); 
+	for ( ChainStep__c chainStep : trigger.new ) {
+		chainIds.add(chainStep.Chain__c);
+	}
+	
+	Map<id, integer> chainIdToSequence = new Map<id, integer>();
+	List<AggregateResult> aggregateResults = Database.query('SELECT Chain__c, MAX(Sequence__c) maxSequence FROM ChainStep__c WHERE Chain__c IN :chainIds GROUP BY Chain__c');
+	for (AggregateResult ar : aggregateResults) {
+		chainIdToSequence.put((Id) ar.get('Chain__c'), Integer.valueOf(ar.get('maxSequence')) );
+	}
+
+	List<ChainStep__c> chainSteps = [SELECT id, Chain__c, Sequence__c FROM ChainStep__c WHERE Sequence__c = 0 ORDER BY Chain__c,Id ASC];
+	Id chainId = null;
+	Integer sequence;
+	for (ChainStep__c chainStep : chainSteps) {
+		if (chainId != chainStep.Chain__c) {
+			sequence = chainIdToSequence.get(chainStep.Chain__c);	
+		}
+		
+		sequence ++;
+		chainStep.Sequence__c = sequence;
+		chainId = chainStep.Chain__c;
+	}
+	
+	update chainSteps;
 }
