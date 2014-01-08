@@ -1,9 +1,7 @@
-/app/model/*.js
-/app/store/*.js
-/app/view/*.js
 /build
 /.architect
 /app.js
 /bootstrap.css
 /bootstrap.js
+/bootstrap.json
 /index.html
