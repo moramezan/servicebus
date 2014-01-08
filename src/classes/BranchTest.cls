@@ -16,6 +16,29 @@
 		System.assertEquals(expectedType, actualType);
 	}
 	
+	static testMethod void testBoomerangDropped() {
+		Chain__c origin = new Chain__c(Name = 'origin');
+		insert origin;
+		
+		Chain__c target = new Chain__c(Name = 'target');
+		insert target;
+		
+		BranchConfiguration__c config = new BranchConfiguration__c(Chain__c = target.Id);
+		insert config;
+		
+		Map<String,Object> notification = new Map<String,Object>{
+			'eda__configuration' => config.Id,
+			'eda__boomerangChainStepIds' => new List<Id>{'000000000000000AAA'}
+		};
+		
+		Branch branch = new Branch();
+		List<Map<String,Object>> notifications = Utility.convert(branch.invoke(new Process.PluginRequest(notification)));
+		
+		List<Object> expectedIds = null;
+		List<Object> actualIds = (List<Object>)notifications[1].get('eda__boomerangChainStepIds');
+		System.assertEquals(expectedIds, actualIds);
+	}
+	
 	static testMethod void testTwoNotificationsReturned() {
 		//arrange chains
 		Chain__c origin = new Chain__c(Name = 'originChain');

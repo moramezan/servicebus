@@ -13,19 +13,10 @@ public class Publish implements Process.Plugin {
 		Map<String,Object> notification = request.InputParameters;
 		List<Map<String,Object>> notifications = new List<Map<string,object>>();
 		
-		String chainName = (String)notification.get('eda__chainName');
-		Decimal sequence = (Decimal)notification.get('eda__sequence');
-		ChainStep__c chainStep = [
-			SELECT Configuration__c
-			FROM ChainStep__c
-			WHERE Chain__r.Name = :chainName AND
-			Sequence__c = :sequence
-		];
-		
 		PublishConfiguration__c publishConfiguration = [
 			SELECT Id, Event__c 
 			FROM PublishConfiguration__c
-			WHERE Id = :chainStep.Configuration__c
+			WHERE Id = :(Id)notification.get('eda__configuration')
 		];
 		
 		if (null == publishConfiguration.Event__c) {
@@ -46,6 +37,8 @@ public class Publish implements Process.Plugin {
 		
 		for (ChainStep__c step : steps) {
 			Map<String,Object> clone = notification.clone();
+			//#47: Any messages properties affecting the SINK behaviour should be stripped from FLOW CONTROL
+			clone.put('eda__boomerangChainStepIds', null);
 			clone.put('eda__sequence', step.Sequence__c);
 			clone.put('eda__chainName', step.Chain__r.Name);
 			notifications.add(clone);
