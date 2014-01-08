@@ -1,4 +1,4 @@
-public class Schedule implements Process.Plugin {
+public with sharing class Schedule implements Process.Plugin, Database.Stateful{
 	
 	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();

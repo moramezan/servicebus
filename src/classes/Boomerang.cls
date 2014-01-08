@@ -1,4 +1,4 @@
-public class Boomerang implements Process.Plugin {
+public with sharing class Boomerang implements Process.Plugin, Database.Stateful {
 	
 	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();

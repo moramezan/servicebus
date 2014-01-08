@@ -50,7 +50,7 @@
             "        destroy: $RemoteAction.ChainSorterController.destroyChainSteps",
             "    },",
             "    extraParams: {",
-            "        Id: ChainSorterController.Chain__c.Id",
+            "        Id: Chain__c.Id",
             "    },",
             "    reader: {",
             "        type: 'json'",

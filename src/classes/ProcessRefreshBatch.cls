@@ -1,4 +1,4 @@
-public class ProcessRefreshBatch implements Database.Batchable<SObject> {
+public with sharing class ProcessRefreshBatch implements Database.Batchable<SObject> {
 	
 	@testVisible private String query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass';
 	
@@ -13,14 +13,16 @@ public class ProcessRefreshBatch implements Database.Batchable<SObject> {
 			ApexClass apexClass = scope[0];
 			Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
 			Process.Plugin plugin = (Process.Plugin)reflector.newInstance();
-			Process.PluginDescribeResult describeResult = plugin.describe();
-			String description = (describeResult.Description != null) ? describeResult.Description.substringBefore('{') : null;
-			Process__c process = new Process__c(
-				Name = reflector.getName(),
-				Description__c = description,
-				Tag__c = describeResult.Tag 
-			);
-			upsert process Name; //will not duplicate existing processes
+			if (plugin instanceof Database.Stateful) {
+				Process.PluginDescribeResult describeResult = plugin.describe();
+				String description = (describeResult.Description != null) ? describeResult.Description.substringBefore('{') : null;
+				Process__c process = new Process__c(
+					Name = reflector.getName(),
+					Description__c = description,
+					Tag__c = describeResult.Tag 
+				);
+				upsert process Name; //will not duplicate existing processes
+			}
 		} catch (Exception e) {
 			//non-implementors can fail hard in their own execution context
 		}

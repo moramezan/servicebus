@@ -1,4 +1,4 @@
-public class Wiretap implements Process.Plugin {
+public with sharing class Wiretap implements Process.Plugin, Database.Stateful{
 	
 	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult describeResult = new Process.PluginDescribeResult();

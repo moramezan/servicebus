@@ -1,4 +1,4 @@
-public class Sink implements Process.Plugin {
+public with sharing class Sink implements Process.Plugin, Database.Stateful {
 	
 	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();

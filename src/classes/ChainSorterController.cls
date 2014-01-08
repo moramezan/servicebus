@@ -1,8 +1,8 @@
-global class ChainSorterController {
-	
+public with sharing class ChainSorterController {
+    
     ApexPages.StandardController controller;
     
-    global ChainSorterController(ApexPages.StandardController controller) {
+    public ChainSorterController(ApexPages.StandardController controller) {
         controller.addFields(new List<String>{'Name'});
         this.controller = controller;
     }
@@ -36,7 +36,7 @@ global class ChainSorterController {
         return pr.getUrl();
     }
     
-    @RemoteAction static global List<ChainStep__c> readChainSteps(Id chainId) {
+    @RemoteAction static public List<ChainStep__c> readChainSteps(Id chainId) {
         return [
             SELECT Id, Name, Chain__c, Sequence__c, Process__r.Name, Process__r.Description__c
             FROM ChainStep__c
@@ -45,12 +45,12 @@ global class ChainSorterController {
         ];
     }
     
-    @RemoteAction static global List<ChainStep__c> updateChainSteps(List<ChainStep__c> chainSteps) {
+    @RemoteAction static public List<ChainStep__c> updateChainSteps(List<ChainStep__c> chainSteps) {
         update chainSteps;
         return chainSteps;
     }
     
-    @RemoteAction static global void destroyChainSteps(List<ChainStep__c> stepsToDelete) {
+    @RemoteAction static public void destroyChainSteps(List<ChainStep__c> stepsToDelete) {
         //first get a handle on the chain whose steps will reorder afterwards
         Id chainId = [
             SELECT Chain__c
@@ -76,7 +76,7 @@ global class ChainSorterController {
         update stepsToReorder;
     }
     
-    @RemoteAction static global String enqueue(Id chainId) {
+    @RemoteAction static public String enqueue(Id chainId) {
         Chain__c chain = [SELECT Name FROM Chain__c WHERE Id = :chainId];
         Broker.enqueue(chain.Name, UserInfo.getUserId());
         return chain.Name;

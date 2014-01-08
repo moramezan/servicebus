@@ -1,4 +1,4 @@
-public class Utility {
+public with sharing class Utility {
 	
 	static public Map<String,Object> meta(String description) {
 		//no description at all

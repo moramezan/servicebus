@@ -1,4 +1,4 @@
-public class Publish implements Process.Plugin {
+public with sharing class Publish implements Process.Plugin, Database.Stateful {
 	
 	public class PublishException extends Exception {}
 	
