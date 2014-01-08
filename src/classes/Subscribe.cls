@@ -1,4 +1,4 @@
-public class Subscribe implements Process.Plugin, Database.Stateful {
+public with sharing class Subscribe implements Process.Plugin, Database.Stateful {
 	
 	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult result = new Process.PluginDescribeResult();

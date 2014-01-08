@@ -1,4 +1,4 @@
-public class ProcessExtensionRefresh {
+public with sharing class ProcessExtensionRefresh {
 	
 	//find any pending instances of ProcessRefreshBatch
 	@testVisible private List<AsyncApexJob> refreshJobs = [

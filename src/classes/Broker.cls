@@ -1,4 +1,4 @@
-public class Broker implements Database.Batchable<SObject>, Database.AllowsCallouts {
+public with sharing class Broker implements Database.Batchable<SObject>, Database.AllowsCallouts {
 
 	public class BrokerException extends Exception {}
 

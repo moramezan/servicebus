@@ -1,5 +1,5 @@
-public class ChainSorterController {
-	
+public with sharing class ChainSorterController {
+    
     ApexPages.StandardController controller;
     
     public ChainSorterController(ApexPages.StandardController controller) {

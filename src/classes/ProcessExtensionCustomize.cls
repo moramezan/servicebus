@@ -1,4 +1,4 @@
-public class ProcessExtensionCustomize {
+public with sharing class ProcessExtensionCustomize {
 	
 	private ApexPages.StandardController controller;
 	

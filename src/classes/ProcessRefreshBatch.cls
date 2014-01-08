@@ -1,4 +1,4 @@
-public class ProcessRefreshBatch implements Database.Batchable<SObject> {
+public with sharing class ProcessRefreshBatch implements Database.Batchable<SObject> {
 	
 	@testVisible private String query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass';
 	

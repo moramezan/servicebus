@@ -1,4 +1,4 @@
-public class Branch implements Process.Plugin, Database.Stateful{
+public with sharing class Branch implements Process.Plugin, Database.Stateful{
 	
 	public class BranchException extends Exception {}
 	

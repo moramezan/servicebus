@@ -1,4 +1,4 @@
-public class ChainStepExtensionConfigure {
+public with sharing class ChainStepExtensionConfigure {
 	
 	private ChainStep__c chainStep;
 	
