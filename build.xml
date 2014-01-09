@@ -17,12 +17,20 @@
 		<sf:deploy username="eda@countryskippers.com" password="CS42lkj1" serverurl="https://login.salesforce.com" deployRoot="src"/>
 	</target>
 
-	<target name="sencha" description="Builds Sencha application">
+	<target name="sencha-steps" description="Builds Sencha application">
 		<delete file="src/staticresources/ChainStepSorterZip.resource" />
 		<exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ChainStepSorterZip ant clean" />
 		<exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ChainStepSorterZip app refresh" />
 		<exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ChainStepSorterZip app build" />
 		<zip destfile="src/staticresources/ChainStepSorterZip.resource" basedir="dev/resource/ChainStepSorterZip/build/production/Steps" includes="**"/>
+	</target>
+
+	<target name="sencha-refresh" description="Builds Sencha application">
+		<delete file="src/staticresources/ProcessRefreshZip.resource" />
+		<exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessRefreshZip ant clean" />
+		<exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessRefreshZip app refresh" />
+		<exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessRefreshZip app build" />
+		<zip destfile="src/staticresources/ProcessRefreshZip.resource" basedir="dev/resource/ProcessRefreshZip/build/production/Refresh" includes="**"/>
 	</target>
 
 	<target name="usage">

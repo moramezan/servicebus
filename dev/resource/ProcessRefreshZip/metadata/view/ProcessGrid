@@ -1,0 +1,69 @@
+{
+    "type": "Ext.grid.Panel",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|initialView": null,
+        "designer|userClassName": "ProcessGrid",
+        "forceFit": true,
+        "header": false,
+        "height": null,
+        "store": "Processes",
+        "title": "My Grid Panel",
+        "width": null
+    },
+    "designerId": "7ff12922-79ad-48c4-904e-05268c13e2d5",
+    "cn": [
+        {
+            "type": "Ext.grid.View",
+            "reference": {
+                "name": "viewConfig",
+                "type": "object"
+            },
+            "codeClass": null,
+            "designerId": "99515c46-d035-422e-aad4-13c8b55e9c84"
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "dataIndex": "Id",
+                "text": "Id"
+            },
+            "designerId": "14716143-a003-4487-9213-9a51f6546cdf"
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "dataIndex": "Name",
+                "text": "Name"
+            },
+            "designerId": "cd5f0239-9fae-45f9-a20f-5202ad01233c"
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "dataIndex": "Description",
+                "text": "Description"
+            },
+            "designerId": "1fa33cba-8c98-48bf-b795-441308a51921"
+        }
+    ]
+}

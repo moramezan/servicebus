@@ -1,0 +1,19 @@
+<apex:page controller="ProcessRefreshTabController">
+    
+    <c:bootstrapExt staticResource="{!$Resource.ProcessRefreshZip}" applicationName="Refresh" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}">
+        window.$RemoteAction = window.$RemoteAction || {};
+        $RemoteAction.ProcessRefreshTabController = $RemoteAction.ProcessRefreshTabController || {};
+        $RemoteAction.ProcessRefreshTabController.readProcesses = '{!$RemoteAction.ProcessRefreshTabController.readProcesses}';
+        
+        window.$ObjectType = window.$ObjectType || {};
+        $ObjectType.Process__c = $ObjectType.Process__c || {};
+        $ObjectType.Process__c.Fields = $ObjectType.Process__c.Fields || {};
+        $ObjectType.Process__c.Fields.Id = $ObjectType.Process__c.Fields.Id || {};
+        $ObjectType.Process__c.Fields.Id.Name = '{!$ObjectType.Process__c.Fields.Id.Name}';
+        $ObjectType.Process__c.Fields.Name = $ObjectType.Process__c.Fields.Name || {};
+        $ObjectType.Process__c.Fields.Name.Name = '{!$ObjectType.Process__c.Fields.Name.Name}';
+        $ObjectType.Process__c.Fields.Description__c = $ObjectType.Process__c.Fields.Description__c || {};
+        $ObjectType.Process__c.Fields.Description__c.Name = '{!$ObjectType.Process__c.Fields.Description__c.Name}';
+    </c:bootstrapExt>
+    
+</apex:page>

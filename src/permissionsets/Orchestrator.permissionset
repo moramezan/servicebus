@@ -101,6 +101,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ProcessRefreshTabController</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Publish</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -343,6 +347,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>ProcessRefreshTab</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>PublishConfigurationEdit</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -367,8 +375,8 @@
         <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>
-        <tab>Process__c</tab>
-        <visibility>Visible</visibility>
+        <tab>Processes</tab>
+        <visibility>None</visibility>
     </tabSettings>
     <userPermissions>
         <enabled>false</enabled>

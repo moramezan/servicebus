@@ -1,0 +1,15 @@
+{
+    "type": "Ext.data.Store",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "autoLoad": true,
+        "designer|userClassName": "Processes",
+        "model": "Process",
+        "storeId": "Processes"
+    },
+    "designerId": "29d18717-ba6e-4ab5-b3c8-2d007f63ac8f"
+}

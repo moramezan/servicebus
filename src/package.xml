@@ -26,6 +26,7 @@
         <members>ProcessExtensionRefreshTest</members>
         <members>ProcessRefreshBatch</members>
         <members>ProcessRefreshBatchTest</members>
+        <members>ProcessRefreshTabController</members>
         <members>Publish</members>
         <members>PublishTest</members>
         <members>Schedule</members>
@@ -48,6 +49,7 @@
         <members>ChainStepConfiguration</members>
         <members>ProcessCustomization</members>
         <members>ProcessRefresh</members>
+        <members>ProcessRefreshTab</members>
         <members>PublishConfigurationEdit</members>
         <members>SubscribeConfigurationEdit</members>
         <name>ApexPage</name>
@@ -105,7 +107,7 @@
     </types>
     <types>
         <members>Chain__c</members>
-        <members>Process__c</members>
+        <members>Processes</members>
         <name>CustomTab</name>
     </types>
     <types>
@@ -126,7 +128,6 @@
     </types>
     <types>
         <members>Chain__c.All</members>
-        <members>Process__c.All</members>
         <name>ListView</name>
     </types>
     <types>
@@ -141,6 +142,7 @@
     </types>
     <types>
         <members>ChainStepSorterZip</members>
+        <members>ProcessRefreshZip</members>
         <name>StaticResource</name>
     </types>
     <types>

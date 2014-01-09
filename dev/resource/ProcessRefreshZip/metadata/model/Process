@@ -1,0 +1,70 @@
+{
+    "type": "Ext.data.Model",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "Process",
+        "idProperty": "Id"
+    },
+    "designerId": "0fb1aa8f-598a-4630-b2d0-c36355e71412",
+    "cn": [
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Id",
+                "type": "auto"
+            },
+            "designerId": "c8baf121-f9ea-4a12-8d96-1099f9c7cec2"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Name",
+                "type": "string"
+            },
+            "designerId": "05764f82-da66-4b39-912b-bd6a705a4424"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Description",
+                "type": "string"
+            },
+            "designerId": "249f36b2-99ea-448e-a91f-990a485e02fc"
+        },
+        {
+            "type": "Ext.data.proxy.Direct",
+            "reference": {
+                "name": "proxy",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "api": [
+                    "{read: $RemoteAction.ProcessRefreshTabController.readProcesses}"
+                ],
+                "designer|createAlias": "vfremote",
+                "designer|displayName": "ProcessProxy"
+            },
+            "designerId": "f244f012-242d-4e8e-b69c-6979c3695643"
+        }
+    ]
+}

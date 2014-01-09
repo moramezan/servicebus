@@ -1,0 +1,41 @@
+{
+    "type": "Ext.app.Application",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "models": [
+            "Process"
+        ],
+        "name": "Refresh",
+        "requires": [
+            "Fflib.data.proxy.VFRemote"
+        ],
+        "stores": [
+            "Processes"
+        ],
+        "views": [
+            "ProcessGrid"
+        ]
+    },
+    "designerId": "application",
+    "cn": [
+        {
+            "type": "fixedfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "launch",
+                "implHandler": [
+                    "Ext.create('Refresh.view.ProcessGrid', {renderTo: 'bodyCell'});"
+                ]
+            },
+            "designerId": "22a4306d-d0ba-4332-a96a-efbe93385bfd"
+        }
+    ]
+}

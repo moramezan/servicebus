@@ -3,5 +3,5 @@
     <defaultLandingTab>Chain__c</defaultLandingTab>
     <label>Event Driven Architecture</label>
     <tab>Chain__c</tab>
-    <tab>Process__c</tab>
+    <tab>Processes</tab>
 </CustomApplication>
