@@ -21,6 +21,7 @@
         <members>JumpTest</members>
         <members>Mark</members>
         <members>MarkTest</members>
+        <members>PersistentDatas</members>
         <members>ProcessExtensionCustomize</members>
         <members>ProcessExtensionCustomizeTest</members>
         <members>ProcessExtensionRefresh</members>
@@ -30,6 +31,7 @@
         <members>ProcessRefreshTabController</members>
         <members>Publish</members>
         <members>PublishTest</members>
+        <members>SObjects</members>
         <members>Schedule</members>
         <members>Sink</members>
         <members>SinkTest</members>
@@ -60,8 +62,8 @@
         <members>ChainBeforeDelete</members>
         <members>ChainStepAfterInsert</members>
         <members>ChainStepBeforeDelete</members>
-        <members>PersistentDataAfterInsert</members>
         <members>PersistentDataAfterUpdate</members>
+        <members>PersistentDataTriggers</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -109,6 +111,7 @@
     </types>
     <types>
         <members>Chain__c</members>
+        <members>Process__c</members>
         <members>Processes</members>
         <name>CustomTab</name>
     </types>
@@ -130,6 +133,7 @@
     </types>
     <types>
         <members>Chain__c.All</members>
+        <members>Process__c.All</members>
         <name>ListView</name>
     </types>
     <types>
