@@ -81,6 +81,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>PersistentDatas</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ProcessExtensionCustomize</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -114,6 +118,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>PublishTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SObjects</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

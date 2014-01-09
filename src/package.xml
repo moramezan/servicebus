@@ -111,7 +111,6 @@
     </types>
     <types>
         <members>Chain__c</members>
-        <members>Process__c</members>
         <members>Processes</members>
         <name>CustomTab</name>
     </types>
@@ -133,7 +132,6 @@
     </types>
     <types>
         <members>Chain__c.All</members>
-        <members>Process__c.All</members>
         <name>ListView</name>
     </types>
     <types>
