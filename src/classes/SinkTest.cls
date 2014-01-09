@@ -141,4 +141,137 @@ private class SinkTest
 		System.assertEquals(expectedSizeAfterSecond , actualSizeAfterSecond);
 	}
 	
+    static testMethod void callingGetHeathReturnsExpectedList() {
+        // #11 : Trivial error / health checker
+        // * Chain with no sink (error)
+        // * Chain with more than one Sink (error)
+        // * Sink that's not at the end (error)
+        
+        // Arrange :
+        Chain__c chainA = new Chain__c(Name = 'ChainA');
+        insert chainA;
+        Chain__c chainB = new Chain__c(Name = 'ChainB');
+        insert chainB;    
+        Chain__c chainC = new Chain__c(Name = 'ChainC');
+        insert chainC;    
+        Chain__c chainD = new Chain__c(Name = 'ChainD');
+        insert chainD;    
+        
+        Process__c sinkProcess  = new Process__c(Name = 'Sink');
+        insert sinkProcess;
+        Process__c wiretapProcess  = new Process__c(Name = 'Wiretap');
+        insert wiretapProcess;       
+        
+        // Chain A - Ok
+        ChainStep__c chainStepA1 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c  = 1);
+        ChainStep__c chainStepA2 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = sinkProcess.Id, Sequence__c = 2);   
+        
+        // Chain B - Problem : Sink Not last Step
+        ChainStep__c chainStepB1 =  new ChainStep__C(Chain__c = chainB.Id, Process__c = sinkProcess.Id, Sequence__c = 1);
+        ChainStep__c chainStepB2 =  new ChainStep__C(Chain__c = chainB.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);       
+ 
+        // Chain C - Problem : More than One Sink
+        ChainStep__c chainStepC1 =  new ChainStep__C(Chain__c = chainC.Id, Process__c = sinkProcess.Id, Sequence__c = 1);
+        ChainStep__c chainStepC2 =  new ChainStep__C(Chain__c = chainC.Id, Process__c = sinkProcess.Id, Sequence__c = 2); 
+        
+        // Chain D - Problem : Zero Sinks
+        ChainStep__c chainStepD1 =  new ChainStep__C(Chain__c = chainD.Id, Process__c = wireTapProcess.Id, Sequence__c = 1);
+        ChainStep__c chainStepD2 =  new ChainStep__C(Chain__c = chainD.Id, Process__c = wireTapProcess.Id, Sequence__c = 2); 
+        insert new List<ChainStep__c>{
+            	chainStepA1, 
+                chainStepA2, 
+                chainStepB1, 
+                chainStepB2, 
+                chainStepC1, 
+                chainStepC2, 
+                chainStepD1, 
+                chainStepD2};
+
+        // Act :
+        List<HealthController.Health> sinkHealths =  Sink.getHealth(); 
+        
+        // Assemble :
+        Map<id,string> chainIdToDescription = new Map<id,string>(); 
+        Integer actualOkCount = 0;
+        Integer actualErrorCount = 0;
+        for (HealthController.Health sinkHealth : sinkHealths ) {
+            chainIdToDescription.put(sinkHealth.ChainId, sinkHealth.Detail);
+            if (sinkHealth.Status == 'Ok') {
+            	actualOkCount++;   
+            }
+            if (sinkHealth.Status == 'Error') {
+            	actualErrorCount++;   
+            }         
+        }
+        
+        // Assert :
+        Integer expectedCount = 4;
+        Integer actualCount = sinkHealths.size();
+        System.assertEquals(expectedCount, actualCount);
+
+        Integer expectedOkCount = 1;
+        System.assertEquals(expectedOkCount, actualOkCount);
+        
+        Integer expectedErrorCount = 3;
+        System.assertEquals(expectedErrorCount, actualErrorCount);
+        
+        String actualChainSinkNotLastStep = chainIdToDescription.get(chainB.Id);
+		String expectedChainSinkNotLastStep = 'Sink process not present at end of chain';
+        System.assertEquals(expectedChainSinkNotLastStep, actualChainSinkNotLastStep);
+        
+        String actualChainMoreThanOneSink = chainIdToDescription.get(chainC.Id);
+		String expectedChainMoreThanOneSink ='More than one sink found in chain';
+        System.assertEquals(expectedChainMoreThanOneSink, actualChainMoreThanOneSink);
+        
+        String actualChainZeroSinks = chainIdToDescription.get(chainD.Id);
+		String  expectedChainZeroSinks =  'No Sink found in chain';
+        System.assertEquals(expectedChainZeroSinks, actualChainZeroSinks);          
+    }
+
+    
+	static testMethod void callingGetHeathReturnsExpectedListWhenSinkNotDefined() {
+        
+        // Arrange :
+        Chain__c chainA = new Chain__c(Name = 'ChainA');
+        insert chainA;
+ 
+        Process__c wiretapProcess  = new Process__c(Name = 'Wiretap');
+        insert wiretapProcess;       
+        
+        // Chain A - Error but Sink process not defined
+        ChainStep__c chainStepA1 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c  = 1);
+        ChainStep__c chainStepA2 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);   
+
+        // Act :
+        List<HealthController.Health> sinkHealths =  Sink.getHealth();
+        
+        // Assemble :
+        Map<id,string> chainIdToDescription = new Map<id,string>(); 
+        Integer actualOkCount = 0;
+        Integer actualUnknownCount = 0;
+        for (HealthController.Health sinkHealth : sinkHealths ) {
+            chainIdToDescription.put(sinkHealth.ChainId, sinkHealth.Detail);
+            if (sinkHealth.Status == 'Ok') {
+            	actualOkCount++;   
+            }
+            if (sinkHealth.Status == 'Unknown') {
+            	actualUnknownCount++;   
+            }         
+        }
+        
+        // Assert :
+        Integer expectedCount = 1;
+        Integer actualCount = sinkHealths.size();
+        System.assertEquals(expectedCount, actualCount);
+
+        Integer expectedOkCount = 0;
+        System.assertEquals(expectedOkCount, actualOkCount);
+        
+        Integer expectedUnknownCount = 1;
+        System.assertEquals(expectedUnknownCount, actualUnknownCount);
+        
+        String actualUnknown = chainIdToDescription.get(chainA.Id);
+		String expectedUnknown = 'Cannot resolve Id of Sink process';
+        System.assertEquals(expectedUnknown, actualUnknown);
+	} 
 }

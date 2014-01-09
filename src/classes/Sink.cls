@@ -1,5 +1,5 @@
 public with sharing class Sink implements Process.Plugin, Database.Stateful {
-	
+   
 	public Process.PluginDescribeResult describe() {
 		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
 		plugin.Description = 'The Sink process terminates all chains and is mandatory.';
@@ -41,4 +41,74 @@ public with sharing class Sink implements Process.Plugin, Database.Stateful {
 		return Utility.convert(notifications);
 	}
 
+    
+    public static List<HealthController.Health> getHealth() {
+        List<HealthController.Health> healths = new List<HealthController.Health>();
+        
+        List<Chain__c> chains = [SELECT id, 
+                                 		Name, 
+                                		(SELECT id, Name, Process__c 
+                                         FROM ChainSteps__r 
+                                         ORDER BY Sequence__c ASC) chainSteps  
+                                 FROM Chain__c
+                                ];
+        
+		List<Process__c> sinkProcesses  = [SELECT id, Name 
+                                           FROM Process__c 
+                                           WHERE Name = 'Sink'
+                                          ];
+        Process__c  sinkProcess = (sinkProcesses.size() > 0) ? sinkProcesses[0] : null; 
+        Boolean resolvedProcess = (sinkProcess != null);
+        
+        // Error conditions:
+        // * Chain with no sink (error)
+        // * Chain with more than one Sink (error)
+        // * Sink that's not at the end (error)
+        for (Chain__c  chain : chains) 
+        {
+            Integer sinkCount = 0;
+            for (ChainStep__c chainStep : chain.ChainSteps__r) {
+                if (resolvedProcess) {
+                    if (chainStep.Process__c == sinkProcess.Id) {
+                        sinkCount++;
+                    }
+                }
+            }
+
+            HealthController.Health health = new HealthController.Health();
+            health.ChainId = chain.Id;
+            health.ChainName = chain.Name;
+            health.Detail = 'Cannot resolve Id of Sink process';
+            health.Status = 'Unknown';
+            if (resolvedProcess) 
+            {
+				health.Detail = 'Sink Check(s)';
+                health.Status = 'Ok'; 
+                
+                Boolean noSinkError = (sinkCount == 0);
+                Boolean gtOneSinkError = (sinkCount > 1);
+                Boolean sinkNotAtEndError = (chain.ChainSteps__r.size() > 0) ? 
+                                            (chain.ChainSteps__r[chain.ChainSteps__r.size()-1].Process__c != sinkProcess.Id) :
+                                        	false;
+                
+               if (sinkNotAtEndError) {
+                    health.Detail = 'Sink process not present at end of chain';
+                    health.Status = 'Error';
+                } 
+                if (noSinkError) {
+                    health.Detail = 'No Sink found in chain';
+                    health.Status = 'Error';
+                }
+                if (gtOneSinkError) {
+                    health.Detail = 'More than one sink found in chain';
+                    health.Status = 'Error';
+                }    
+            }
+
+            healths.add(health);
+        }
+            
+        System.debug(json.serializePretty(healths));
+        return healths;
+    }
 }

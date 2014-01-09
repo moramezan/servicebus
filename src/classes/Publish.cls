@@ -50,6 +50,146 @@ public with sharing class Publish implements Process.Plugin, Database.Stateful {
 		return Utility.convert(notifications);
 	}
 	
-	
-	
+	public static List<HealthController.Health> getHealth() {
+		List<Chain__c> chains = [
+			SELECT id, 
+			Name, 
+			(SELECT id, Name, Process__c, Configuration__c
+			FROM ChainSteps__r 
+			ORDER BY Sequence__c ASC) chainSteps
+			FROM Chain__c
+		];
+		
+		List<Process__c> publishProcesses = [
+			SELECT id, Name 
+			FROM Process__c 
+			WHERE Name = 'Publish'
+		];
+		
+		Process__c publishProcess = (publishProcesses.size() > 0) ? publishProcesses[0] : null; 
+		Boolean resolvedProcess = (publishProcess != null);
+
+		Map<Id,PublishConfiguration__c> publishConfigurationIdToPublishConfiguration = new Map<Id,PublishConfiguration__c>([
+			SELECT id, Name, Event__c
+			FROM PublishConfiguration__c
+		]);
+
+		List<SubscribeConfiguration__c> SubscribeConfigurations = [
+			SELECT Id, Name, Event__c 
+			FROM SubscribeConfiguration__c
+		];
+
+		Map<Id,Event__c> eventIdToEvent = new Map<Id,Event__c>([
+			SELECT Id, Name 
+			FROM Event__c
+		]);
+
+		List<Map<String,Object>> instanceDetails = new List<Map<String,Object>>();
+
+		for (Chain__c chain : chains) {
+			String statusInitial = resolvedProcess ? 'Ok' : 'Unknown';
+			String detailInitial = resolvedProcess ? 'Publish Check(s)' : 'Cannot resolve Id of Publish process';
+			Map<String,Object> singleInstanceDetail = new Map<String,Object>{ 
+				'Status' => statusInitial,
+				'Detail' => detailInitial,
+				'ChainId' => chain.Id,
+				'ChainName' => chain.Name,
+				'ChainSteps' => chain.ChainSteps__r 
+			};
+
+			Boolean requireSingleInstance = false; 
+			if ( !resolvedProcess ) {
+				requireSingleInstance = true;
+			} 
+
+			if ( resolvedProcess ) { 
+				Integer publishOccurs = 0;
+				for (ChainStep__c chainStep : chain.ChainSteps__r) {
+					if (chainStep.Process__c == PublishProcess.Id) {
+						publishOccurs++;
+					}
+				}
+				
+				Boolean hasPublish = (publishOccurs > 0);
+				
+				
+				if (hasPublish) {
+					requireSingleInstance = true;
+				
+					for (ChainStep__c chainStep : chain.ChainSteps__r) {
+						if (chainStep.Process__c == PublishProcess.Id) {
+							Id chainStepId = chainStep.Id;
+							Id publishConfigurationId = (Id) chainStep.Configuration__c; // cast from string to Id
+							 
+							 String status;
+							 String detail;
+							 PublishConfiguration__c publishConfiguration;
+							 Id eventId;
+							 
+							 Boolean isOk = true;
+							 if ( isOk) {
+								 publishConfiguration = publishConfigurationIdToPublishConfiguration.get(publishConfigurationId);
+								 if (publishConfiguration == null) {
+									 isOk = false;
+									 status = 'Error';
+									 detail = 'Cannot resolve Publish configuration, chainStepId=['+chainStepId+']';
+								 }
+							 }
+							 if ( isOk ) {
+								 eventId = publishConfiguration.Event__c;
+								 if (eventId == null) {
+									 isOk = false;
+									 status = 'Error';
+									 detail = 'No event defined on Publish configuration=['+publishConfigurationId+'] for chainStepId=['+chainStepId+']';
+								 }
+							 }
+							 if ( isOk ) {
+								 Boolean subscriberFound = false;
+								 for (SubscribeConfiguration__c SubscribeConfiguration : SubscribeConfigurations) {
+									 if (SubscribeConfiguration.Event__c == eventId) {
+										 subscriberFound = true;
+									 }
+								 }
+								 if (!subscriberFound) {
+									 isOk = false;
+									 Event__c event = eventIdToEvent.get(eventId);
+									 String eventName = (event == null) ? '' : event.Name;
+									 isOk = false;
+									 status = 'Warning';
+									 detail = 'No Subscriber is configured to subscribe to event=['+eventName+'] published on chainStepId=['+chainStepId+']';
+								 }
+							 }
+
+							if ( !isOk ) {
+								requireSingleInstance = false;
+								instanceDetails.add(new Map<String,Object>{ 
+									'Status' => status,
+									'Detail' => detail,
+									'ChainId' => chain.Id,
+									'ChainName' => chain.Name,
+									'ChainSteps' => chain.ChainSteps__r 
+								});
+							}
+						} // end: if (chainStep.Process__c == PublishProcess.Id)
+					} // end:: for (ChainStep__c chainStep : chain.ChainSteps__r)
+				} // end:: if (hasPublish) 
+			} // end: if ( resolvedProcess )
+
+			if (requireSingleInstance) {
+				instanceDetails.add(singleInstanceDetail);
+			}
+		} // end: for (Chain__c chain : chains)
+			 
+		List<HealthController.Health> healths = new List<HealthController.Health>();
+		for (Map<String,Object> instanceDetail : instanceDetails) {
+			HealthController.Health health = new HealthController.Health();
+			health.ChainId = (Id) instanceDetail.get('ChainId');
+			health.ChainName = (String) instanceDetail.get('ChainName');
+			health.Detail = (String) instanceDetail.get('Detail');
+			health.Status = (String) instanceDetail.get('Status');
+			healths.add(health);
+		} 
+ 
+		return healths;
+	}
 }
