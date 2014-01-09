@@ -198,4 +198,265 @@
 		System.assertEquals(expectedSize, actualSize);
 	}
 	
+	static testMethod void callingGetHealthReturnsExpectedListContaingStausEqUnknown() {
+		// Arrange :
+		Chain__c chainA = new Chain__c(Name = 'ChainA');
+		insert chainA;
+ 
+		// Processes :: Publish process not defined
+		Process__c wiretapProcess = new Process__c(Name = 'Wiretap');
+		insert wiretapProcess; 
+		
+		// Chain A
+		ChainStep__c chainStepA1 = new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c  = 1);
+		ChainStep__c chainStepA2 = new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);   
+
+		// Act :
+		List<HealthController.Health> PublishHealths = Publish.getHealth();
+		
+		// Assemble :
+		Map<id,string> chainIdToDescription = new Map<id,string>(); 
+		Integer actualUnknownCount = 0;
+		for (HealthController.Health PublishHealth : PublishHealths ) {
+			chainIdToDescription.put(PublishHealth.ChainId, PublishHealth.Detail);
+			if (PublishHealth.Status == 'Unknown') {
+				actualUnknownCount++;
+			}		 
+		}
+		
+		// Assert :
+		Integer expectedCount = 1;
+		Integer actualCount = PublishHealths.size();
+		System.assertEquals(expectedCount, actualCount);
+
+		Integer expectedUnknownCount = 1;
+		System.assertEquals(expectedUnknownCount, actualUnknownCount);
+		
+		String actualUnknown = chainIdToDescription.get(chainA.Id);
+		String expectedUnknown = 'Cannot resolve Id of Publish process';
+		System.assertEquals(expectedUnknown, actualUnknown);
+	}
+	
+	static testMethod void callingGetHealthReturnsExpectedListContaningStatusEqOk() {
+		// Arrange :
+		Chain__c chainSubscribe = new Chain__c(Name = 'Subscribe');
+		insert chainSubscribe;
+		Chain__c chainZ = new Chain__c(Name = 'ChainZ');
+		insert chainZ;
+
+		Process__c PublishProcess = new Process__c(Name = 'Publish');
+		insert PublishProcess;
+		Process__c wiretapProcess = new Process__c(Name = 'Wiretap');
+		insert wiretapProcess; 
+		Process__c subscribeProcess = new Process__c(Name = 'Subscribe');
+		insert subscribeProcess;
+		
+		// Chain Z - OK : Event is Subscribed
+		ChainStep__c chainStepZ1 = new ChainStep__c(Chain__c = chainZ.Id, Process__c = PublishProcess.Id, Sequence__c = 1); 
+		ChainStep__c chainStepZ2 = new ChainStep__c(Chain__c = chainZ.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);
+		insert new List<ChainStep__c>{chainStepZ1, chainStepZ2};
+		ChainStep__c chainStepZ3 = new ChainStep__c(Chain__c = chainSubscribe.Id, Process__c = subscribeProcess.Id, Sequence__c = 1); 
+		insert new List<ChainStep__c>{chainStepZ3}; 
+
+		// Event
+		Event__c eventSubscribed = new Event__c(Name = 'an-event-that-IS-Subscribed');
+		insert eventSubscribed;
+
+		// Config Subscribe 
+		Id SubscribeConfigurationIdZ3 = (Id) [SELECT Id, Configuration__c 
+			FROM ChainStep__c 
+			WHERE Id = :chainStepZ3.Id LIMIT 1
+		].Configuration__c;
+			
+		SubscribeConfiguration__c SubscribeConfigurationZ3 = [
+			SELECT Id, Event__c 
+			FROM SubscribeConfiguration__c 
+			WHERE Id = :SubscribeConfigurationIdZ3
+		];
+		
+		SubscribeConfigurationZ3.Event__c = eventSubscribed.Id;
+		update SubscribeConfigurationZ3;	
+		
+		// Config Z1 
+		Id configurationIdZ1 = (Id) [
+			SELECT Id, Configuration__c 
+			FROM ChainStep__c 
+			WHERE Id = :chainStepZ1.Id LIMIT 1
+		].Configuration__c;
+		
+		PublishConfiguration__c PublishConfigurationZ1 = [
+			SELECT Id, Event__c 
+			FROM PublishConfiguration__c 
+			WHERE Id = :configurationIdZ1
+		];
+		
+		PublishConfigurationZ1.Event__c = eventSubscribed.Id;
+		update PublishConfigurationZ1;
+
+		// Act :
+		List<HealthController.Health> PublishHealths = Publish.getHealth(); 
+		
+		
+		// Assemble :
+		Map<id,string> chainIdToDescription = new Map<id,string>(); 
+		Integer actualOkCount = 0;
+		for (HealthController.Health PublishHealth : PublishHealths ) {
+			chainIdToDescription.put(PublishHealth.ChainId, PublishHealth.Detail);
+			if (PublishHealth.Status == 'Ok') {
+				actualOkCount++;
+			}
+		}
+		
+		// Assert :
+		Integer expectedCount = 1;
+		Integer actualCount = PublishHealths.size();
+		System.assertEquals(expectedCount, actualCount);
+
+		Integer expectedOkCount = 1; 
+		System.assertEquals(expectedOkCount, actualOkCount);
+	}
+
+	 static testMethod void callingGetHealthReturnsExpectedListContaningStatusEqWarning() {
+		// Arrange :
+		Chain__c chainA = new Chain__c(Name = 'ChainA');
+		insert chainA;
+
+		Process__c PublishProcess = new Process__c(Name = 'Publish');
+		insert PublishProcess;
+		Process__c wiretapProcess = new Process__c(Name = 'Wiretap');
+		insert wiretapProcess;
+
+		// Chain A - Warning : Ok but event Not Subscribed
+		ChainStep__c chainStepA1 = new ChainStep__c(Chain__c = chainA.Id, Process__c = PublishProcess.Id, Sequence__c = 1); 
+		ChainStep__c chainStepA2 = new ChainStep__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);
+		insert new List<ChainStep__c>{chainStepA1, chainStepA2};
+
+		// Event
+		Event__c eventNotSubscribed = new Event__c(Name = 'an-event-not-Subscribed');
+		insert eventNotSubscribed;
+
+		// Config A1
+		Id configurationIdA1 = (Id) [
+			SELECT Id, Configuration__c 
+			FROM ChainStep__c 
+			WHERE Id = :chainStepA1.Id LIMIT 1
+		].Configuration__c;
+	
+		PublishConfiguration__c PublishConfigurationA1 = [
+			SELECT Id, Event__c 
+			FROM PublishConfiguration__c
+			WHERE Id = :configurationIdA1
+		];
+
+		PublishConfigurationA1.Event__c = eventNotSubscribed.Id;
+		update PublishConfigurationA1;
+
+		// Act :
+		List<HealthController.Health> PublishHealths = Publish.getHealth(); 
+		
+		
+		// Assemble :
+		Map<id,string> chainIdToDescription = new Map<id,string>(); 
+		Integer actualWarningCount = 0;
+		for (HealthController.Health PublishHealth : PublishHealths ) {
+			chainIdToDescription.put(PublishHealth.ChainId, PublishHealth.Detail);
+			if (PublishHealth.Status == 'Warning') {
+				actualWarningCount++;
+			} 
+		}
+		
+		// Assert :
+		Integer expectedWarningCount = 1;
+		System.assertEquals(expectedWarningCount, actualWarningCount);
+		
+		String actualDescription = chainIdToDescription.get(chainA.Id);
+		String expectedDescription = 'No Subscriber is configured to subscribe';
+		System.assert(actualDescription.contains(expectedDescription));
+	}
+
+	static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNoConfig() {
+		// Arrange :
+		Chain__c chainB = new Chain__c(Name = 'ChainB');
+		insert chainB;
+
+		Process__c PublishProcess = new Process__c(Name = 'Publish');
+		insert PublishProcess;
+		Process__c wiretapProcess = new Process__c(Name = 'Wiretap');
+		insert wiretapProcess; 
+
+		
+		// Chain B - Problem : No Configuration
+		ChainStep__c chainStepB1 = new ChainStep__c(Chain__c = chainB.Id, Process__c = PublishProcess.Id, Sequence__c = 1);
+		ChainStep__c chainStepB2 = new ChainStep__c(Chain__c = chainB.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);
+		insert new List<ChainStep__c>{chainStepB1, chainStepB2};
+
+		Id configurationIdB1 = (Id) [
+			SELECT Id, Configuration__c 
+			FROM ChainStep__c 
+			WHERE Id = :chainStepB1.Id LIMIT 1
+		 ].Configuration__c;
+		Database.delete(configurationIdB1);
+		
+		// Act :
+		List<HealthController.Health> PublishHealths = Publish.getHealth(); 
+		
+		
+		// Assemble :
+		Map<id,string> chainIdToDescription = new Map<id,string>(); 
+		Integer actualErrorCount = 0;
+		for (HealthController.Health PublishHealth : PublishHealths ) {
+			chainIdToDescription.put(PublishHealth.ChainId, PublishHealth.Detail);
+			if (PublishHealth.Status == 'Error') {
+				actualErrorCount++;
+			}	 
+		}
+		
+		// Assert :
+		Integer expectedErrorCount = 1;
+		System.assertEquals(expectedErrorCount, actualErrorCount);
+
+		String actualDescription = chainIdToDescription.get(chainB.Id);
+		String expectedDescription = 'Cannot resolve Publish configuration';
+		System.assert(actualDescription.contains(expectedDescription));
+	}
+		 
+ 
+	static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNoEventConfig() {
+		// Arrange :
+		Chain__c chainB = new Chain__c(Name = 'ChainB');
+		insert chainB;
+
+		Process__c PublishProcess = new Process__c(Name = 'Publish');
+		insert PublishProcess;
+		Process__c wiretapProcess = new Process__c(Name = 'Wiretap');
+		insert wiretapProcess;
+
+		
+		// Chain B - Problem : No Configuration
+		ChainStep__c chainStepB1 = new ChainStep__c(Chain__c = chainB.Id, Process__c = PublishProcess.Id, Sequence__c = 1);
+		ChainStep__c chainStepB2 = new ChainStep__c(Chain__c = chainB.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);	   
+		insert new List<ChainStep__c>{chainStepB1, chainStepB2};
+
+		// Act :
+		List<HealthController.Health> PublishHealths = Publish.getHealth(); 
+		
+		
+		// Assemble :
+		Map<id,string> chainIdToDescription = new Map<id,string>(); 
+		Integer actualErrorCount = 0;
+		for (HealthController.Health PublishHealth : PublishHealths ) {
+			chainIdToDescription.put(PublishHealth.ChainId, PublishHealth.Detail);
+			if (PublishHealth.Status == 'Error') {
+				actualErrorCount++; 
+			}	 
+		}
+		
+		// Assert :
+		Integer expectedErrorCount = 1;
+		System.assertEquals(expectedErrorCount, actualErrorCount);
+
+		String actualDescription = chainIdToDescription.get(chainB.Id);
+		String expectedDescription = 'No event defined on Publish configuration';
+		System.assert(actualDescription.contains(expectedDescription));
+	} 
 }

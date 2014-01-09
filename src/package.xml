@@ -16,6 +16,7 @@
         <members>ChainStepExtensionConfigureTest</members>
         <members>Gate</members>
         <members>GateTest</members>
+        <members>HealthController</members>
         <members>Jump</members>
         <members>JumpTest</members>
         <members>Mark</members>
@@ -47,6 +48,7 @@
     <types>
         <members>ChainSorter</members>
         <members>ChainStepConfiguration</members>
+        <members>Health</members>
         <members>ProcessCustomization</members>
         <members>ProcessRefresh</members>
         <members>ProcessRefreshTab</members>

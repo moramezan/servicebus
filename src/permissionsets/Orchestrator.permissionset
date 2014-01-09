@@ -61,6 +61,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>HealthController</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Jump</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -336,6 +340,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>ChainStepConfiguration</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>Health</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
