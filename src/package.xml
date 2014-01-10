@@ -14,6 +14,8 @@
         <members>ChainStepBeforeDeleteTest</members>
         <members>ChainStepExtensionConfigure</members>
         <members>ChainStepExtensionConfigureTest</members>
+        <members>ChainSteps</members>
+        <members>Chains</members>
         <members>Gate</members>
         <members>GateTest</members>
         <members>HealthController</members>
@@ -59,10 +61,8 @@
         <name>ApexPage</name>
     </types>
     <types>
-        <members>ChainBeforeDelete</members>
-        <members>ChainStepAfterInsert</members>
-        <members>ChainStepBeforeDelete</members>
-        <members>PersistentDataAfterUpdate</members>
+        <members>ChainStepTriggers</members>
+        <members>ChainTriggers</members>
         <members>PersistentDataTriggers</members>
         <name>ApexTrigger</name>
     </types>
