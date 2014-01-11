@@ -2,6 +2,10 @@ abstract public class SObjects {
 	
 	protected List<SObject> objects;
 	
+	public SObjects() {
+		this(new List<SObject>());
+	}
+	
 	public SObjects(List<SObject> objects) {
 		this.objects = objects;
 	}
