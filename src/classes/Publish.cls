@@ -1,195 +1,195 @@
 public with sharing class Publish implements Process.Plugin, Database.Stateful {
-	
-	public class PublishException extends Exception {}
-	
-	public Process.PluginDescribeResult describe () {
-		Process.PluginDescribeResult result = new Process.PluginDescribeResult();
-		result.Description = 'Publishes to a named event {"eda__configurable": "'+Schema.SobjectType.PublishConfiguration__c.Name+'"}';
-		result.Tag = 'Event Driven Architecture';
-		return result;
-	}
-	
-	public Process.PluginResult invoke(Process.PluginRequest request) {
-		Map<String,Object> notification = request.InputParameters;
-		List<Map<String,Object>> notifications = new List<Map<string,object>>();
-		
-		PublishConfiguration__c publishConfiguration = [
-			SELECT Id, Event__c 
-			FROM PublishConfiguration__c
-			WHERE Id = :(Id)notification.get('eda__configuration')
-		];
-		
-		if (null == publishConfiguration.Event__c) {
-			throw new PublishException('Publish Configuration ' + publishConfiguration.Id + ' has no Event');
-		}
-		
-		Map<Id,SObject> subscribeConfigurations = new Map<Id,SObject>([
-			SELECT Id 
-			FROM SubscribeConfiguration__c
-			WHERE Event__c = :publishConfiguration.Event__c
-		]);
-		
-		List<ChainStep__c> steps = [
-			SELECT Id, Chain__r.Name, Sequence__c
-			FROM ChainStep__c
-			WHERE Configuration__c IN :subscribeConfigurations.keySet()
-		];
-		
-		for (ChainStep__c step : steps) {
-			Map<String,Object> clone = notification.clone();
-			//#47: Any messages properties affecting the SINK behaviour should be stripped from FLOW CONTROL
-			clone.put('eda__boomerangChainStepIds', null);
-			clone.put('eda__sequence', step.Sequence__c);
-			clone.put('eda__chainName', step.Chain__r.Name);
-			notifications.add(clone);
-		}
-		
-		//original guy carries on... this is not a sink
-		notifications.add(notification);
-		
-		return Utility.convert(notifications);
-	}
-	
-	public static List<HealthController.Health> getHealth() {
-		List<Chain__c> chains = [
-			SELECT id, 
-			Name, 
-			(SELECT id, Name, Process__c, Configuration__c
-			FROM ChainSteps__r 
-			ORDER BY Sequence__c ASC) chainSteps
-			FROM Chain__c
-		];
-		
-		List<Process__c> publishProcesses = [
-			SELECT id, Name 
-			FROM Process__c 
-			WHERE Name = 'Publish'
-		];
-		
-		Process__c publishProcess = (publishProcesses.size() > 0) ? publishProcesses[0] : null; 
-		Boolean resolvedProcess = (publishProcess != null);
+    
+    public class PublishException extends Exception {}
+    
+    public Process.PluginDescribeResult describe () {
+        Process.PluginDescribeResult result = new Process.PluginDescribeResult();
+        result.Description = 'Publishes to a named event {"eda__configurable": "'+Schema.SobjectType.PublishConfiguration__c.Name+'"}';
+        result.Tag = 'Event Driven Architecture';
+        return result;
+    }
+    
+    public Process.PluginResult invoke(Process.PluginRequest request) {
+        Map<String,Object> notification = request.InputParameters;
+        List<Map<String,Object>> notifications = new List<Map<string,object>>();
+        
+        PublishConfiguration__c publishConfiguration = [
+            SELECT Id, Event__c 
+            FROM PublishConfiguration__c
+            WHERE Id = :(Id)notification.get('eda__configuration')
+        ];
+        
+        if (null == publishConfiguration.Event__c) {
+            throw new PublishException('Publish Configuration ' + publishConfiguration.Id + ' has no Event');
+        }
+        
+        Map<Id,SObject> subscribeConfigurations = new Map<Id,SObject>([
+            SELECT Id 
+            FROM SubscribeConfiguration__c
+            WHERE Event__c = :publishConfiguration.Event__c
+        ]);
+        
+        List<ChainStep__c> steps = [
+            SELECT Id, Chain__r.Name, Sequence__c
+            FROM ChainStep__c
+            WHERE Configuration__c IN :subscribeConfigurations.keySet()
+        ];
+        
+        for (ChainStep__c step : steps) {
+            Map<String,Object> clone = notification.clone();
+            //#47: Any messages properties affecting the SINK behaviour should be stripped from FLOW CONTROL
+            clone.put('eda__boomerangChainStepIds', null);
+            clone.put('eda__sequence', step.Sequence__c);
+            clone.put('eda__chainName', step.Chain__r.Name);
+            notifications.add(clone);
+        }
+        
+        //original guy carries on... this is not a sink
+        notifications.add(notification);
+        
+        return Utility.convert(notifications);
+    }
+    
+    public static List<HealthController.Health> getHealth() {
+        List<Chain__c> chains = [
+            SELECT id, 
+            Name, 
+            (SELECT id, Name, Process__c, Configuration__c
+            FROM ChainSteps__r 
+            ORDER BY Sequence__c ASC) chainSteps
+            FROM Chain__c
+        ];
+        
+        List<Process__c> publishProcesses = [
+            SELECT id, Name 
+            FROM Process__c 
+            WHERE Name = 'Publish'
+        ];
+        
+        Process__c publishProcess = (publishProcesses.size() > 0) ? publishProcesses[0] : null; 
+        Boolean resolvedProcess = (publishProcess != null);
 
-		Map<Id,PublishConfiguration__c> publishConfigurationIdToPublishConfiguration = new Map<Id,PublishConfiguration__c>([
-			SELECT id, Name, Event__c
-			FROM PublishConfiguration__c
-		]);
+        Map<Id,PublishConfiguration__c> publishConfigurationIdToPublishConfiguration = new Map<Id,PublishConfiguration__c>([
+            SELECT id, Name, Event__c
+            FROM PublishConfiguration__c
+        ]);
 
-		List<SubscribeConfiguration__c> SubscribeConfigurations = [
-			SELECT Id, Name, Event__c 
-			FROM SubscribeConfiguration__c
-		];
+        List<SubscribeConfiguration__c> SubscribeConfigurations = [
+            SELECT Id, Name, Event__c 
+            FROM SubscribeConfiguration__c
+        ];
 
-		Map<Id,Event__c> eventIdToEvent = new Map<Id,Event__c>([
-			SELECT Id, Name 
-			FROM Event__c
-		]);
+        Map<Id,Event__c> eventIdToEvent = new Map<Id,Event__c>([
+            SELECT Id, Name 
+            FROM Event__c
+        ]);
 
-		List<Map<String,Object>> instanceDetails = new List<Map<String,Object>>();
+        List<Map<String,Object>> instanceDetails = new List<Map<String,Object>>();
 
-		for (Chain__c chain : chains) {
-			String statusInitial = resolvedProcess ? 'Ok' : 'Unknown';
-			String detailInitial = resolvedProcess ? 'Publish Check(s)' : 'Cannot resolve Id of Publish process';
-			Map<String,Object> singleInstanceDetail = new Map<String,Object>{ 
-				'Status' => statusInitial,
-				'Detail' => detailInitial,
-				'ChainId' => chain.Id,
-				'ChainName' => chain.Name,
-				'ChainSteps' => chain.ChainSteps__r 
-			};
+        for (Chain__c chain : chains) {
+            String statusInitial = resolvedProcess ? 'Ok' : 'Unknown';
+            String detailInitial = resolvedProcess ? 'Publish Check(s)' : 'Cannot resolve Id of Publish process';
+            Map<String,Object> singleInstanceDetail = new Map<String,Object>{ 
+                'Status' => statusInitial,
+                'Detail' => detailInitial,
+                'ChainId' => chain.Id,
+                'ChainName' => chain.Name,
+                'ChainSteps' => chain.ChainSteps__r 
+            };
 
-			Boolean requireSingleInstance = false; 
-			if ( !resolvedProcess ) {
-				requireSingleInstance = true;
-			} 
+            Boolean requireSingleInstance = false; 
+            if ( !resolvedProcess ) {
+                requireSingleInstance = true;
+            } 
 
-			if ( resolvedProcess ) { 
-				Integer publishOccurs = 0;
-				for (ChainStep__c chainStep : chain.ChainSteps__r) {
-					if (chainStep.Process__c == PublishProcess.Id) {
-						publishOccurs++;
-					}
-				}
-				
-				Boolean hasPublish = (publishOccurs > 0);
-				
-				
-				if (hasPublish) {
-					requireSingleInstance = true;
-				
-					for (ChainStep__c chainStep : chain.ChainSteps__r) {
-						if (chainStep.Process__c == PublishProcess.Id) {
-							Id chainStepId = chainStep.Id;
-							Id publishConfigurationId = (Id) chainStep.Configuration__c; // cast from string to Id
-							 
-							 String status;
-							 String detail;
-							 PublishConfiguration__c publishConfiguration;
-							 Id eventId;
-							 
-							 Boolean isOk = true;
-							 if ( isOk) {
-								 publishConfiguration = publishConfigurationIdToPublishConfiguration.get(publishConfigurationId);
-								 if (publishConfiguration == null) {
-									 isOk = false;
-									 status = 'Error';
-									 detail = 'Cannot resolve Publish configuration, chainStepId=['+chainStepId+']';
-								 }
-							 }
-							 if ( isOk ) {
-								 eventId = publishConfiguration.Event__c;
-								 if (eventId == null) {
-									 isOk = false;
-									 status = 'Error';
-									 detail = 'No event defined on Publish configuration=['+publishConfigurationId+'] for chainStepId=['+chainStepId+']';
-								 }
-							 }
-							 if ( isOk ) {
-								 Boolean subscriberFound = false;
-								 for (SubscribeConfiguration__c SubscribeConfiguration : SubscribeConfigurations) {
-									 if (SubscribeConfiguration.Event__c == eventId) {
-										 subscriberFound = true;
-									 }
-								 }
-								 if (!subscriberFound) {
-									 isOk = false;
-									 Event__c event = eventIdToEvent.get(eventId);
-									 String eventName = (event == null) ? '' : event.Name;
-									 isOk = false;
-									 status = 'Warning';
-									 detail = 'No Subscriber is configured to subscribe to event=['+eventName+'] published on chainStepId=['+chainStepId+']';
-								 }
-							 }
+            if ( resolvedProcess ) { 
+                Integer publishOccurs = 0;
+                for (ChainStep__c chainStep : chain.ChainSteps__r) {
+                    if (chainStep.Process__c == PublishProcess.Id) {
+                        publishOccurs++;
+                    }
+                }
+                
+                Boolean hasPublish = (publishOccurs > 0);
+                
+                
+                if (hasPublish) {
+                    requireSingleInstance = true;
+                
+                    for (ChainStep__c chainStep : chain.ChainSteps__r) {
+                        if (chainStep.Process__c == PublishProcess.Id) {
+                            Id chainStepId = chainStep.Id;
+                            Id publishConfigurationId = (Id) chainStep.Configuration__c; // cast from string to Id
+                             
+                             String status;
+                             String detail;
+                             PublishConfiguration__c publishConfiguration;
+                             Id eventId;
+                             
+                             Boolean isOk = true;
+                             if ( isOk) {
+                                 publishConfiguration = publishConfigurationIdToPublishConfiguration.get(publishConfigurationId);
+                                 if (publishConfiguration == null) {
+                                     isOk = false;
+                                     status = 'Error';
+                                     detail = 'Cannot resolve Publish configuration, chainStepId=['+chainStepId+']';
+                                 }
+                             }
+                             if ( isOk ) {
+                                 eventId = publishConfiguration.Event__c;
+                                 if (eventId == null) {
+                                     isOk = false;
+                                     status = 'Error';
+                                     detail = 'No event defined on Publish configuration=['+publishConfigurationId+'] for chainStepId=['+chainStepId+']';
+                                 }
+                             }
+                             if ( isOk ) {
+                                 Boolean subscriberFound = false;
+                                 for (SubscribeConfiguration__c SubscribeConfiguration : SubscribeConfigurations) {
+                                     if (SubscribeConfiguration.Event__c == eventId) {
+                                         subscriberFound = true;
+                                     }
+                                 }
+                                 if (!subscriberFound) {
+                                     isOk = false;
+                                     Event__c event = eventIdToEvent.get(eventId);
+                                     String eventName = (event == null) ? '' : event.Name;
+                                     isOk = false;
+                                     status = 'Warning';
+                                     detail = 'No Subscriber is configured to subscribe to event=['+eventName+'] published on chainStepId=['+chainStepId+']';
+                                 }
+                             }
 
-							if ( !isOk ) {
-								requireSingleInstance = false;
-								instanceDetails.add(new Map<String,Object>{ 
-									'Status' => status,
-									'Detail' => detail,
-									'ChainId' => chain.Id,
-									'ChainName' => chain.Name,
-									'ChainSteps' => chain.ChainSteps__r 
-								});
-							}
-						} // end: if (chainStep.Process__c == PublishProcess.Id)
-					} // end:: for (ChainStep__c chainStep : chain.ChainSteps__r)
-				} // end:: if (hasPublish) 
-			} // end: if ( resolvedProcess )
+                            if ( !isOk ) {
+                                requireSingleInstance = false;
+                                instanceDetails.add(new Map<String,Object>{ 
+                                    'Status' => status,
+                                    'Detail' => detail,
+                                    'ChainId' => chain.Id,
+                                    'ChainName' => chain.Name,
+                                    'ChainSteps' => chain.ChainSteps__r 
+                                });
+                            }
+                        } // end: if (chainStep.Process__c == PublishProcess.Id)
+                    } // end:: for (ChainStep__c chainStep : chain.ChainSteps__r)
+                } // end:: if (hasPublish) 
+            } // end: if ( resolvedProcess )
 
-			if (requireSingleInstance) {
-				instanceDetails.add(singleInstanceDetail);
-			}
-		} // end: for (Chain__c chain : chains)
-			 
-		List<HealthController.Health> healths = new List<HealthController.Health>();
-		for (Map<String,Object> instanceDetail : instanceDetails) {
-			HealthController.Health health = new HealthController.Health();
-			health.ChainId = (Id) instanceDetail.get('ChainId');
-			health.ChainName = (String) instanceDetail.get('ChainName');
-			health.Detail = (String) instanceDetail.get('Detail');
-			health.Status = (String) instanceDetail.get('Status');
-			healths.add(health);
-		} 
+            if (requireSingleInstance) {
+                instanceDetails.add(singleInstanceDetail);
+            }
+        } // end: for (Chain__c chain : chains)
+             
+        List<HealthController.Health> healths = new List<HealthController.Health>();
+        for (Map<String,Object> instanceDetail : instanceDetails) {
+            HealthController.Health health = new HealthController.Health();
+            health.ChainId = (Id) instanceDetail.get('ChainId');
+            health.ChainName = (String) instanceDetail.get('ChainName');
+            health.Detail = (String) instanceDetail.get('Detail');
+            health.Status = (String) instanceDetail.get('Status');
+            healths.add(health);
+        } 
  
-		return healths;
-	}
+        return healths;
+    }
 }

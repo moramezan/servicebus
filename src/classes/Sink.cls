@@ -1,59 +1,59 @@
 public with sharing class Sink implements Process.Plugin, Database.Stateful {
    
-	public Process.PluginDescribeResult describe() {
-		Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-		plugin.Description = 'The Sink process terminates all chains and is mandatory.';
-		plugin.Tag = 'Event Driven Architecture';
-		return plugin;
-	}
-	
-	public Process.PluginResult invoke(Process.PluginRequest request) {
-		Map<String,Object> notification = request.inputParameters;
-		
-		//if we got here from a boomerang, back to where you came from!
-		List<Map<String,Object>> notifications = new List<Map<String,Object>>();
-		Object data = notification.get('eda__boomerangChainStepIds');
-		
-		if (data == null) {
-			//no boomerangs
-			return Utility.convert(notifications);
-		}
+    public Process.PluginDescribeResult describe() {
+        Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
+        plugin.Description = 'The Sink process terminates all chains and is mandatory.';
+        plugin.Tag = 'Event Driven Architecture';
+        return plugin;
+    }
+    
+    public Process.PluginResult invoke(Process.PluginRequest request) {
+        Map<String,Object> notification = request.inputParameters;
+        
+        //if we got here from a boomerang, back to where you came from!
+        List<Map<String,Object>> notifications = new List<Map<String,Object>>();
+        Object data = notification.get('eda__boomerangChainStepIds');
+        
+        if (data == null) {
+            //no boomerangs
+            return Utility.convert(notifications);
+        }
 
-		List<Id> chainStepIds = (List<Id>)System.Json.deserialize(System.Json.serialize(data), List<Id>.class);
-		if (chainStepIds.isEmpty()) {
-			//boomerangs finished
-			return Utility.convert(notifications);
-		}
-		
-		//pop one boomerang off stack
-		Id lastId = chainStepIds.remove(chainStepIds.size() - 1);
-		ChainStep__c chainStep = [ 
-			SELECT Id, Chain__r.Name, Sequence__c 
-			FROM ChainStep__c 
-			WHERE Id = :lastId
-		];
-		
-		notification.put('eda__boomerangChainStepIds', chainStepIds);
-		notification.put('eda__chainName', chainStep.Chain__r.Name );
-		notification.put('eda__sequence', chainStep.Sequence__c );
-		notifications.add(notification);
+        List<Id> chainStepIds = (List<Id>)System.Json.deserialize(System.Json.serialize(data), List<Id>.class);
+        if (chainStepIds.isEmpty()) {
+            //boomerangs finished
+            return Utility.convert(notifications);
+        }
+        
+        //pop one boomerang off stack
+        Id lastId = chainStepIds.remove(chainStepIds.size() - 1);
+        ChainStep__c chainStep = [ 
+            SELECT Id, Chain__r.Name, Sequence__c 
+            FROM ChainStep__c 
+            WHERE Id = :lastId
+        ];
+        
+        notification.put('eda__boomerangChainStepIds', chainStepIds);
+        notification.put('eda__chainName', chainStep.Chain__r.Name );
+        notification.put('eda__sequence', chainStep.Sequence__c );
+        notifications.add(notification);
 
-		return Utility.convert(notifications);
-	}
+        return Utility.convert(notifications);
+    }
 
     
     public static List<HealthController.Health> getHealth() {
         List<HealthController.Health> healths = new List<HealthController.Health>();
         
         List<Chain__c> chains = [SELECT id, 
-                                 		Name, 
-                                		(SELECT id, Name, Process__c 
+                                         Name, 
+                                        (SELECT id, Name, Process__c 
                                          FROM ChainSteps__r 
                                          ORDER BY Sequence__c ASC) chainSteps  
                                  FROM Chain__c
                                 ];
         
-		List<Process__c> sinkProcesses  = [SELECT id, Name 
+        List<Process__c> sinkProcesses  = [SELECT id, Name 
                                            FROM Process__c 
                                            WHERE Name = 'Sink'
                                           ];
@@ -82,14 +82,14 @@ public with sharing class Sink implements Process.Plugin, Database.Stateful {
             health.Status = 'Unknown';
             if (resolvedProcess) 
             {
-				health.Detail = 'Sink Check(s)';
+                health.Detail = 'Sink Check(s)';
                 health.Status = 'Ok'; 
                 
                 Boolean noSinkError = (sinkCount == 0);
                 Boolean gtOneSinkError = (sinkCount > 1);
                 Boolean sinkNotAtEndError = (chain.ChainSteps__r.size() > 0) ? 
                                             (chain.ChainSteps__r[chain.ChainSteps__r.size()-1].Process__c != sinkProcess.Id) :
-                                        	false;
+                                            false;
                 
                if (sinkNotAtEndError) {
                     health.Detail = 'Sink process not present at end of chain';
