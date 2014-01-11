@@ -2,6 +2,8 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event Driven Architecture</fullName>
     <types>
+        <members>ApexClasses</members>
+        <members>ApexClassesTest</members>
         <members>Boomerang</members>
         <members>BoomerangTest</members>
         <members>Branch</members>

@@ -1,5 +1,11 @@
 abstract public class SObjects {
 	
+	protected List<SObject> objects;
+	
+	public SObjects(List<SObject> objects) {
+		this.objects = objects;
+	}
+	
 	virtual public void onBeforeInsert(List<SObject> objects) {
 		//
 	}
