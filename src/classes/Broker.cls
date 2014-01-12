@@ -156,16 +156,19 @@ public with sharing class Broker implements Database.Batchable<SObject>, Databas
         insert persistentDatas;
     }
     
+    /**
+     * Note that AsyncApexJob is 'Completed' when the finish() method is called.
+     */
     public void finish(Database.BatchableContext context) {
-        List<PersistentData__c> persistentDatas = [
-            SELECT Id
+        Integer persistentDatas = [
+            SELECT COUNT()
             FROM PersistentData__c
             WHERE RecordType.Name = 'Buffer'
         ];
         
-        if (!persistentDatas.isEmpty()) {
+        if (persistentDatas > 0) {
             //new stuff to do
-            Database.executeBatch(new Broker(), 1);
+            AsyncApexJobs.runOne(Broker.class, 1);
         }
 
         // empty recycle to remove form recents
