@@ -1,10 +1,14 @@
 public with sharing class Jump implements Process.Plugin, Database.Stateful {
-    
+
+    public class Metadata {
+        public String configurable = Schema.SObjectType.JumpConfiguration__c.Name;
+    }
+       
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Tag = 'Event Driven Architecture';
         plugin.Name = 'Jump';
-        plugin.Description = 'Jumps to another Chain and does not return {"eda__configurable":"' + Schema.SObjectType.JumpConfiguration__c.Name + '"}';
+        plugin.Description = 'Jumps to another Chain and does not return';
         return plugin;
     }
     

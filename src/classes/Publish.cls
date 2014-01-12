@@ -1,10 +1,14 @@
 public with sharing class Publish implements Process.Plugin, Database.Stateful {
     
     public class PublishException extends Exception {}
+
+    public class Metadata {
+        public String configurable = Schema.SobjectType.PublishConfiguration__c.Name;
+    }        
     
     public Process.PluginDescribeResult describe () {
         Process.PluginDescribeResult result = new Process.PluginDescribeResult();
-        result.Description = 'Publishes to a named event {"eda__configurable": "'+Schema.SobjectType.PublishConfiguration__c.Name+'"}';
+        result.Description = 'Publishes to a named event';
         result.Tag = 'Event Driven Architecture';
         return result;
     }

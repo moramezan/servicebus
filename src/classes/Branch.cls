@@ -1,10 +1,14 @@
 public with sharing class Branch implements Process.Plugin, Database.Stateful{
+
+    public class Metadata {
+        public String configurable = Schema.SObjectType.BranchConfiguration__c.Name;
+    }
     
     public class BranchException extends Exception {}
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'This process forks execution. {"eda__configurable":"BranchConfiguration__c"}';
+        plugin.Description = 'This process forks execution';
         plugin.Tag = 'Event Driven Architecture';
         return plugin;
     }

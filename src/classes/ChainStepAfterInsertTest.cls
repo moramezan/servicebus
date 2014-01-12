@@ -1,32 +1,16 @@
 @isTest public class ChainStepAfterInsertTest {
     
-    //dummy configurable process
-    public class MockProcess implements Process.Plugin {
-        
-        //this needs SOME, ANY SObject for configuration that can be inserted with NO required fields
-        public Process.PluginDescribeResult describe() {
-            Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-            plugin.Description = '{"eda__configurable":"' + Schema.SObjectType.BoomerangConfiguration__c.Name + '"}';
-            return plugin;
-        }
-        
-        public Process.PluginResult invoke(Process.PluginRequest request) {
-            Map<String,Object> notification = request.inputParameters;
-            return Utility.convert(new List<Map<String,Object>>{notification});
-        }
-        
-    }
     
     static testMethod void testChainStepConfigurationIsCreatedWhenInserted() {
         //arrange
-        Process__c process = new Process__c(Name = 'ChainStepAfterInsertTest.MockProcess');
+        Process__c process = new Process__c(Name = 'Boomerang');
         insert process;
         
         Chain__c chain = new Chain__c(Name = 'TestChain');
         insert chain;
         
         //act
-        ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Process__c = process.Id);
+        ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Process__c = process.Id, Sequence__c = 1);
         insert chainStep;
         
         //requery after trigger
