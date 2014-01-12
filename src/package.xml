@@ -4,6 +4,8 @@
     <types>
         <members>ApexClasses</members>
         <members>ApexClassesTest</members>
+        <members>AsyncApexJobs</members>
+        <members>AsyncApexJobsTest</members>
         <members>Boomerang</members>
         <members>BoomerangTest</members>
         <members>Branch</members>
