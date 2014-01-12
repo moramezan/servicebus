@@ -14,6 +14,8 @@ private class WiretapTest {
         Integer chainStep = 1;
         String data = 'data';
 
+        insert new WiretapCustomization__c ( UserId__c = UserInfo.getUserId());
+
         Map<String,Object> notification = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__chainStep' => chainStep,

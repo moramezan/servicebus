@@ -11,9 +11,8 @@ public with sharing class ProcessExtensionCustomize {
         try {
             //customizable processes redirect to setting tab
             Process__c process = (Process__c)this.controller.getRecord();
-            Type reflector = Type.forName(process.Name);
-            Process.Plugin plugin = (Process.Plugin)reflector.newInstance(); //get process
-            String customizable = (String)Utility.meta(plugin.describe().Description).get('eda__customizable'); //get meta
+            String className = process.Name; // TODO (Apex Class Name )
+            String customizable = (String) Utility.meta(className).get('customizable');
             SObject setting = (SObject)Type.forName(customizable).newInstance();
             String prefix = setting.getSObjectType().getDescribe().getKeyPrefix();
             return new System.PageReference('/' + prefix + '/o');
