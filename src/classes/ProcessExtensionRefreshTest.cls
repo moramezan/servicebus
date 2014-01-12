@@ -10,6 +10,7 @@
         System.PageReference tab = extension.doRedirect();
         Test.stopTest();
         
+        System.assert(tab.getUrl().contains('707'));
         System.assert(tab.getUrl().contains(Schema.SObjectType.Process__c.KeyPrefix));
     }
     

@@ -15,7 +15,7 @@ public class AsyncApexJobs extends SObjects {
      * Abort all batch jobs held in the domain instance.
      */
     public void abort() {
-        for (AsyncApexJob asyncApexJob : (List<AsyncApexJob>)this.objects) {
+        for (AsyncApexJob asyncApexJob : (List<AsyncApexJob>)this.getSObjects()) {
             System.abortJob(asyncApexJob.Id);
         }
     }

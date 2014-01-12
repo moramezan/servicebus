@@ -1,13 +1,17 @@
 abstract public class SObjects {
     
-    protected List<SObject> objects;
+    private List<SObject> sobjects;
+    
+    public List<SObject> getSObjects() {
+        return this.sobjects;
+    }
     
     public SObjects() {
         this(new List<SObject>());
     }
     
-    public SObjects(List<SObject> objects) {
-        this.objects = objects;
+    public SObjects(List<SObject> sobjects) {
+        this.sobjects = sobjects;
     }
     
     virtual public void onBeforeInsert(List<SObject> objects) {

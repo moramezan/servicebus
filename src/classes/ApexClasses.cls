@@ -5,7 +5,7 @@ public class ApexClasses extends SObjects {
     }
     
     public List<Process__c> regenerate() {
-        List<ApexClass> apexClasses = (List<ApexClass>)this.objects;
+        List<ApexClass> apexClasses = (List<ApexClass>)this.getSObjects();
         List<Process__c> processes = new List<Process__c>();
 
         for (ApexClass apexClass : apexClasses) {

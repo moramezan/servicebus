@@ -5,8 +5,10 @@ public with sharing class ProcessExtensionRefresh {
     }
     
     public System.PageReference doRedirect() {
-        AsyncApexJobs.runOne(ProcessRefreshBatch.class, 1);
-        return new System.PageReference('/' + Schema.SObjectType.Process__c.KeyPrefix);
+        AsyncApexJobs jobs = AsyncApexJobs.runOne(ProcessRefreshBatch.class, 1);
+        System.PageReference tab = new System.PageReference('/' + Schema.SObjectType.Process__c.KeyPrefix);
+        tab.getParameters().put('id', jobs.getSObjects()[0].Id);
+        return tab;
     }
     
 }
