@@ -16,8 +16,25 @@
             "Processes"
         ],
         "views": [
-            "MyGridPanel"
+            "Grid"
         ]
     },
-    "designerId": "application"
+    "designerId": "application",
+    "cn": [
+        {
+            "type": "fixedfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "launch",
+                "implHandler": [
+                    "Ext.create('Generate.view.Grid', {renderTo: 'bodyCell'});"
+                ]
+            },
+            "designerId": "2362d9de-39a0-4900-a1f3-96bf29152521"
+        }
+    ]
 }
