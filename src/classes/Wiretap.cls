@@ -1,5 +1,7 @@
 public with sharing class Wiretap implements Process.Plugin, Database.Stateful{
-    
+   
+     public class WiretapException extends Exception {}
+      
      public class Metadata {
         public String customizable = Schema.SObjectType.WiretapCustomization__c.Name;
     }       
@@ -15,9 +17,14 @@ public with sharing class Wiretap implements Process.Plugin, Database.Stateful{
     public Process.PluginResult invoke(Process.PluginRequest request) {
         Map<String,Object> notification = request.inputParameters;
         
-        WiretapCustomization__c setting = WiretapCustomization__c.getInstance();
-        Id userId = setting.UserId__c;
-        
+        Id userId;
+        try {
+            WiretapCustomization__c setting = WiretapCustomization__c.getInstance();
+            userId = setting.UserId__c;
+        } catch (Exception e) {
+            throw new WireTapException('Metadata-customizable (Id of user to receive wiretap messages not defined in ' + Schema.SObjectType.WiretapCustomization__c.Name + ' custom setting' );
+        }
+
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
         message.setSubject('[Wiretap] ' + notification.get('eda__chainName') + '#' + notification.get('eda__sequence'));
         message.setPlainTextBody(Json.serialize(notification));

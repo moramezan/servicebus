@@ -8,7 +8,39 @@ private class WiretapTest {
         System.assertNotEquals(null, wiretap.describe().Tag);
     }
     
-    static testMethod void callingExecuteReturnsExpectedNotificationCollection() {
+    static testMethod void callingInvokeThrowsExpectedExceptionWhenDefinedMetaCustomizableNOTSet() {
+        // Arrange :
+        String chainName = 'the-chain';
+        Integer chainStep = 1;
+        String data = 'data';
+
+       //--NOT-DEFINED insert new WiretapCustomization__c ( UserId__c = UserInfo.getUserId());
+
+        Map<String,Object> notification = new Map<String,Object> {
+            'eda__chainName' => chainName,
+            'eda__chainStep' => chainStep,
+            'data' => data
+        };
+        
+
+   
+
+        // Act
+        Wiretap wireTap = new Wiretap();
+        Boolean actualFlagException = false;
+        try {
+            Process.PluginResult results = wireTap.invoke(new Process.PluginRequest(notification)); 
+        } catch (Exception e) {
+            actualFlagException = true;
+        }
+        
+ 
+        // Assert
+        Boolean expectedFlagException = true;
+        System.assertEquals(expectedFlagException , actualFlagException );
+    }  
+   
+    static testMethod void callingExecuteReturnsExpectedNotificationCollectionWhenDefinedMetaCustomizableSet() {
         // Arrange :
         String chainName = 'the-chain';
         Integer chainStep = 1;
