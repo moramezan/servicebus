@@ -1,0 +1,44 @@
+{
+    "name": "ProcessGenerateZip",
+    "settings": {
+        "cmd": {
+            "license": "commercial"
+        },
+        "canvasControls": {
+            "viewportSize": {
+                "name": "Auto Expand",
+                "builtIn": true,
+                "height": null,
+                "width": null
+            }
+        },
+        "urlPrefix": "",
+        "exportPath": ""
+    },
+    "xdsVersion": "3.0.1",
+    "xdsBuild": 1343,
+    "schemaVersion": 1,
+    "upgradeVersion": 300000000004,
+    "framework": "ext42",
+    "viewOrderMap": {
+        "view": [
+            "82753631-02a7-45a6-9538-efa883bef4ed"
+        ],
+        "store": [
+            "a3b9da76-089b-4af3-b4e4-19cdbf253630",
+            "c49d1d2a-b0c4-46a8-a053-4a217c7bdab6"
+        ],
+        "controller": [],
+        "model": [
+            "36956622-31bd-4466-a271-13ff984cbc47",
+            "c7d4097d-1683-471c-9f38-a448ae1f6b14"
+        ],
+        "resource": [
+            "740d4d11-914f-4e10-aa84-fea6a8e6fddf",
+            "e49f586a-4385-422b-8b4c-001e2578532c"
+        ],
+        "app": [
+            "application"
+        ]
+    }
+}

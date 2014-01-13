@@ -1,0 +1,14 @@
+{
+    "type": "libraryresource",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "basePath": "ext",
+        "designer|userClassName": "Library",
+        "includeCss": false
+    },
+    "designerId": "740d4d11-914f-4e10-aa84-fea6a8e6fddf"
+}

@@ -1,0 +1,23 @@
+{
+    "type": "Ext.app.Application",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "models": [
+            "Process",
+            "AsyncApexJob"
+        ],
+        "name": "Generate",
+        "stores": [
+            "AsyncApexJobs",
+            "Processes"
+        ],
+        "views": [
+            "MyGridPanel"
+        ]
+    },
+    "designerId": "application"
+}

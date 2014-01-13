@@ -1,8 +1,8 @@
 {
-    "name": "Generate",
-
-    "requires": [
-    ],
-
-    "id": "cebfb4ac-7776-4b20-8456-e623cf58c820"
+   "name": "Generate",
+   "requires": [],
+   "id": "cebfb4ac-7776-4b20-8456-e623cf58c820",
+   "resources": [
+      "bootstrap.css"
+   ]
 }

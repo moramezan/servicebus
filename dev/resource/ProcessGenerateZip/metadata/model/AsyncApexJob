@@ -1,0 +1,146 @@
+{
+    "type": "Ext.data.Model",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "AsyncApexJob"
+    },
+    "designerId": "c7d4097d-1683-471c-9f38-a448ae1f6b14",
+    "cn": [
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Id"
+            },
+            "designerId": "2af62978-06b5-4791-8594-86db06a41086"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "CompletedDate"
+            },
+            "designerId": "11870b70-b0a8-4846-bd90-1bf489b4479f"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "CreatedDate"
+            },
+            "designerId": "e59bed06-750e-445c-8aa7-cd6c0505f464"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "ExtendedStatus"
+            },
+            "designerId": "306b0358-a842-430a-8491-68f79b5e5917"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "JobItemsProcessed"
+            },
+            "designerId": "5c248486-d9c6-40b6-b35d-38dbcbf6efaf"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "JobType"
+            },
+            "designerId": "8642c1ae-5c24-4799-9c2d-91fd6cd7fc17"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "LastProcessed"
+            },
+            "designerId": "c0552a32-d3d0-4796-8498-8cae271a6153"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "LastProcessedOffset"
+            },
+            "designerId": "e1131955-5953-4dbe-afed-750375f05c85"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "NumberOfErrors"
+            },
+            "designerId": "4c84ac8b-6a65-4adf-837f-0e87a9cfedbb"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Status"
+            },
+            "designerId": "4fcf93ea-357c-44cf-b113-c043fe0c39c4"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "TotalJobItems"
+            },
+            "designerId": "dd67e7e9-a8c8-410c-9379-ac6dc7a39357"
+        }
+    ]
+}
