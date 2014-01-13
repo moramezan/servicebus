@@ -38,5 +38,9 @@
             <target name="-before-build"/>
             <target name="-after-build"/>
     -->
+    <target name="-after-build">
+        <!-- don't let ext framework trample body styles -->
+        <replace file="${basedir}/build/production/Generate/resources/Generate-all.css" token="z-body" value="zzz-body" />
+    </target>
 
 </project>
