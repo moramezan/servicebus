@@ -1,15 +1,15 @@
 @isTest public class SubscribeTest{
     static testMethod void testDescribe() {
         // Arrange 
-        
-        // Act 
         Subscribe process = new Subscribe();
-        Process.PluginDescribeResult result = process.describe();
-        Map<string, Object> meta = Utility.meta(result.Description); 
+        String className = String.valueOf(process).split(':')[0]; 
+        Map<string, Object> meta = Utility.meta(className);  
             
+        // Act 
+        String actualDescription = (String) meta.get('configurable');
+        
         // Assert
-        String expectedDescription = (String) meta.get('eda__configurable');
-        String actualDescription = Schema.SobjectType.SubscribeConfiguration__c.Name;
+        String expectedDescription = Schema.SobjectType.SubscribeConfiguration__c.Name;
         System.assertEquals(expectedDescription, actualDescription);
         
     }
@@ -329,7 +329,7 @@
         System.assert(actualDescription.contains(expectedDescription));    
     }
 
-  
+
     static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNoConfig() {
 
         // Arrange :
@@ -417,4 +417,5 @@
         String expectedDescription = 'No event defined on subscribe configuration';
         System.assert(actualDescription.contains(expectedDescription));
     }
+
 }

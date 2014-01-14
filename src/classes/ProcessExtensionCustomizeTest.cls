@@ -14,13 +14,14 @@
     }
     
     static testMethod void testCustomizableProcess() {
-        Process__c process = new Process__c(Name = 'ProcessExtensionCustomizeTest.CustomizableProcess');
+        Process__c process = new Process__c(Name = 'Wiretap');
+        insert process;
         ApexPages.StandardController controller = new ApexPages.StandardController(process);
         ProcessExtensionCustomize extension = new ProcessExtensionCustomize(controller);
         
         //button should redirect to /[tab]/o (for a custom setting, this takes us to the manage screen)
         System.PageReference settingPage = extension.initCustom();
-        System.assert(settingPage.getUrl().contains('/' + Schema.SObjectType.BranchConfiguration__c.KeyPrefix + '/o'));
+        System.assert(settingPage.getUrl().contains('/' + Schema.SObjectType.WiretapCustomization__c.KeyPrefix + '/o'));
     }
     
     public class UncustomizableProcess {

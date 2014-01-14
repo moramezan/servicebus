@@ -1,8 +1,12 @@
 public with sharing class Boomerang implements Process.Plugin, Database.Stateful {
-    
+ 
+    public class Metadata {
+        public String configurable = Schema.SObjectType.BoomerangConfiguration__c.Name;
+    }
+                     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'Boomerang process perverts execution. {"eda__configurable":"BoomerangConfiguration__c"}';
+        plugin.Description = 'Boomerang process perverts execution.';
         plugin.Tag = 'Event Driven Architecture';
         
         plugin.outputParameters = new List<Process.PluginDescribeResult.OutputParameter>{

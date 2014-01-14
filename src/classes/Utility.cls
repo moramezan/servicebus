@@ -1,16 +1,17 @@
 public with sharing class Utility {
     
-    static public Map<String,Object> meta(String description) {
-        //no description at all
-        if (null == description) return new Map<String,Object>();
+   static public Map<String,Object> meta( String className ) {
+        Map<String,Object> metaData =  new Map<String,Object>(); 
+        try {
+            className = className +'.' + 'Metadata';
+            String ns = ''; //TODO
+            String data = System.Json.serialize(Type.forName(ns, className).newInstance());
+            metaData = (Map<String,Object>)System.Json.deserializeUntyped(data);    
+        } catch (Exception e) {
+            // TODO
+        }
 
-        //no metadata on this process description
-        if (!description.contains('{')) return new Map<String,Object>();
-        
-        //extract metadata and return map
-        String json = '{' + description.substringBetween('{', '}') + '}';
-        Map<String,Object> metadata = (Map<String,Object>)System.Json.deserializeUntyped(json);
-        return metadata;
+        return metaData;
     }
     
     static public Map<String,String> convert(List<Process.PluginDescribeResult.InputParameter> inputs) {

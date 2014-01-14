@@ -17,11 +17,8 @@ public class ChainSteps extends SObjects {
             String apexClass = id2step.get(chainStep.Id).Process__r.Name;
             
             //instantiate each potential configurable process
-            Type reflector = Type.forName(apexClass);
-            Process.Plugin instance = (Process.Plugin)reflector.newInstance();
-            Map<String,Object> meta = Utility.meta(instance.describe().Description);
-            String edaConfigurable = (String)meta.get('eda__configurable');
-            
+            String edaConfigurable = (String)Utility.meta(apexClass).get('configurable');
+             
             //get out of dodge quick if process is not configurable
             if (null == edaConfigurable) continue;
             

@@ -14,7 +14,7 @@ public class ApexClasses extends SObjects {
                 Process.Plugin plugin = (Process.Plugin)reflector.newInstance();
                 if (plugin instanceof Database.Stateful) {
                     Process.PluginDescribeResult describeResult = plugin.describe();
-                    String description = (describeResult.Description != null) ? describeResult.Description.substringBefore('{') : null;
+                    String description = describeResult.Description;
                     Process__c process = new Process__c(
                         Name = reflector.getName(),
                         Description__c = description,

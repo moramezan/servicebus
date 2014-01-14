@@ -1,8 +1,12 @@
 public with sharing class Subscribe implements Process.Plugin, Database.Stateful {
+
+    public class Metadata {
+        public String configurable = Schema.SObjectType.SubscribeConfiguration__c.Name;
+    }                  
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult result = new Process.PluginDescribeResult();
-        result.Description = 'Subscribes to a named event {"eda__configurable":"'+Schema.SObjectType.SubscribeConfiguration__c.Name+'"}';
+        result.Description = 'Subscribes to a named event';
         result.Tag = 'Event Driven Architecture';
         return result;
     }

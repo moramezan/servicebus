@@ -92,6 +92,7 @@
         <members>ScheduleConfiguration__c.EveryXHours__c</members>
         <members>ScheduleConfiguration__c.LastHeartbeatAt__c</members>
         <members>SubscribeConfiguration__c.Event__c</members>
+        <members>WiretapCustomization__c.UserId__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -109,6 +110,7 @@
         <members>PublishConfiguration__c</members>
         <members>ScheduleConfiguration__c</members>
         <members>SubscribeConfiguration__c</members>
+        <members>WiretapCustomization__c</members>
         <name>CustomObject</name>
     </types>
     <types>

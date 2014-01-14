@@ -3,14 +3,14 @@
     static testMethod void testDescriptionContainsConfigurationObjectName() {
         //arrange
         Publish publish = new Publish();
+        String className = String.valueOf(publish).split(':')[0]; 
+        Map<string, Object> meta = Utility.meta(className);
         
         //act
-        Process.PluginDescribeResult plugin = publish.describe();
-        Map<String,Object> meta = Utility.meta(plugin.Description);
+        String actualConfiguration = (String)meta.get('configurable');
         
         //assert
         String expectedConfiguration = Schema.SObjectType.PublishConfiguration__c.Name;
-        String actualConfiguration = (String)meta.get('eda__configurable');
         System.assertEquals(expectedConfiguration, actualConfiguration);
     }
     

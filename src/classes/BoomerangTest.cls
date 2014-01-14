@@ -1,21 +1,17 @@
 @isTest public class BoomerangTest {
     
     static testMethod void testConfigurationReturnsObjectType() {
-        //instantiate the process to describe it
+        // Arrange 
         Boomerang process = new Boomerang();
-        Process.PluginDescribeResult plugin = process.describe();
+        String className = String.valueOf(process).split(':')[0]; 
+        Map<string, Object> meta = Utility.meta(className);  
+            
+        // Act 
+        String actualDescription = (String) meta.get('configurable');
         
-        //get metadata
-        Map<String,Object> meta = Utility.meta(plugin.Description);
-        String edaConfigurable = (String)meta.get('eda__configurable');
-        
-        //try to instantiate the configuration object
-        Type reflector = Type.forName(edaConfigurable);
-        SObject configObject = (SObject)reflector.newInstance();
-        
-        String expectedType = Schema.SObjectType.BoomerangConfiguration__c.Name;
-        String actualType = configObject.getSObjectType().getDescribe().getName();
-        System.assertEquals(expectedType, actualType);
+        // Assert
+        String expectedDescription = Schema.SObjectType.BoomerangConfiguration__c.Name;
+        System.assertEquals(expectedDescription, actualDescription);
     }
 
     static testMethod void testNotificationIsRedirected() {

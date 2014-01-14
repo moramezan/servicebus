@@ -1,21 +1,19 @@
 @isTest public class BranchTest {
     
     static testMethod void testConfigureReturnsRightObjectType() {
-        //new up the process and interrogate its description
+         // Arrange 
         Branch process = new Branch();
-        Process.PluginDescribeResult plugin = process.describe();
+        String className = String.valueOf(process).split(':')[0]; 
+        Map<string, Object> meta = Utility.meta(className);  
+            
+        // Act 
+        String actualDescription = (String) meta.get('configurable');
         
-        //get metadata from description and instantiate a configuration record
-        Map<String,Object> meta = Utility.meta(plugin.Description);
-        Type reflector = Type.forName((String)meta.get('eda__configurable'));
-        SObject config = (SObject)reflector.newInstance();
-        
-        //compare instance types
-        String expectedType = Schema.SObjectType.BranchConfiguration__c.Name;
-        String actualType = config.getSObjectType().getDescribe().getName();
-        System.assertEquals(expectedType, actualType);
+        // Assert
+        String expectedDescription = Schema.SObjectType.BranchConfiguration__c.Name;
+        System.assertEquals(expectedDescription, actualDescription);
     }
-    
+
     static testMethod void testBoomerangDropped() {
         Chain__c origin = new Chain__c(Name = 'origin');
         insert origin;
