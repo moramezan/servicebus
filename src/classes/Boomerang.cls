@@ -1,7 +1,7 @@
 public with sharing class Boomerang implements Process.Plugin, Database.Stateful {
  
     public class Metadata {
-        public String configurable = Schema.SObjectType.BoomerangConfiguration__c.Name;
+        public Type configurable = BoomerangConfiguration__c.class;
     }
                      
     public Process.PluginDescribeResult describe() {

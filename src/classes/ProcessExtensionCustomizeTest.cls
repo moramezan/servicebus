@@ -1,41 +1,39 @@
 @isTest public class ProcessExtensionCustomizeTest {
     
-    public class CustomizableProcess implements Process.Plugin {
-        
-        public Process.PluginDescribeResult describe() {
-            Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-            plugin.Description = '{"eda__customizable":"' + Schema.SObjectType.BranchConfiguration__c.Name + '"}';
-            return plugin;
-        }
-        
-        public Process.PluginResult invoke(Process.PluginRequest request) {
-            return new Process.PluginResult(new Map<String,Object>());
-        }
-    }
-    
     static testMethod void testCustomizableProcess() {
-        Process__c process = new Process__c(Name = 'Wiretap');
-        insert process;
-        ApexPages.StandardController controller = new ApexPages.StandardController(process);
+        //Arrange
+        String  className  = 'Wiretap';
+        List<String> names = new List<String>{className};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        ApexPages.StandardController controller = new ApexPages.StandardController(processes[0]);
         ProcessExtensionCustomize extension = new ProcessExtensionCustomize(controller);
         
+        // Act
         //button should redirect to /[tab]/o (for a custom setting, this takes us to the manage screen)
         System.PageReference settingPage = extension.initCustom();
+
+        // Assert
         System.assert(settingPage.getUrl().contains('/' + Schema.SObjectType.WiretapCustomization__c.KeyPrefix + '/o'));
     }
-    
-    public class UncustomizableProcess {
-        //
-    }
-    
+
     static testMethod void testUncustomizableProcess() {
-        Process__c process = new Process__c(Name = 'ProcessExtensionCustomizeTest.UncustomizableProcess');
-        ApexPages.StandardController controller = new ApexPages.StandardController(process);
+        //Arrange
+        String  className  = 'Sink';
+        List<String> names = new List<String>{className};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        ApexPages.StandardController controller = new ApexPages.StandardController(processes[0]);
         ProcessExtensionCustomize extension = new ProcessExtensionCustomize(controller);
         
-        //button should redirect to /[process_id] (will be null during test as process was never inserted)
+        // Act
+        //button should redirect to /[process_id]  
         System.PageReference processPage = extension.initCustom();
-        System.assertEquals(null, processPage.getUrl());
+        
+        // Assert
+        System.assertEquals(null, processPage.getUrl());  
     }
     
 }

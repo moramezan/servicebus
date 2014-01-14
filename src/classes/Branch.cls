@@ -1,7 +1,7 @@
 public with sharing class Branch implements Process.Plugin, Database.Stateful{
 
     public class Metadata {
-        public String configurable = Schema.SObjectType.BranchConfiguration__c.Name;
+        public Type configurable = BranchConfiguration__c.class;
     }
     
     public class BranchException extends Exception {}

@@ -3,14 +3,18 @@
     
     static testMethod void testChainStepConfigurationIsCreatedWhenInserted() {
         //arrange
-        Process__c process = new Process__c(Name = 'Boomerang');
-        insert process;
-        
+        String  className  = 'Boomerang';
+        List<String> names = new List<String>{className};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+
         Chain__c chain = new Chain__c(Name = 'TestChain');
         insert chain;
         
         //act
-        ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Process__c = process.Id, Sequence__c = 1);
+        ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Process__c =  processes[0].Id, Sequence__c = 1);
         insert chainStep;
         
         //requery after trigger
@@ -130,4 +134,5 @@
         Integer expectedSequence4 = 4; // resequence , max+1+1
         System.assertEquals(expectedSequence4, actualSequence4); 
     }    
+
 }

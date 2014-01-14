@@ -63,6 +63,26 @@
         <unique>true</unique>
     </fields>
     <fields>
+        <fullName>Configurable__c</fullName>
+        <externalId>false</externalId>
+        <label>Configurable</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customizable__c</fullName>
+        <externalId>false</externalId>
+        <label>Customizable</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Description__c</fullName>
         <externalId>false</externalId>
         <label>Description</label>
