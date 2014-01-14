@@ -1,19 +1,5 @@
 public with sharing class Utility {
-    
-   static public Map<String,Object> meta( String className ) {
-        Map<String,Object> metaData =  new Map<String,Object>(); 
-        try {
-            className = className +'.' + 'Metadata';
-            String ns = ''; //TODO
-            String data = System.Json.serialize(Type.forName(ns, className).newInstance());
-            metaData = (Map<String,Object>)System.Json.deserializeUntyped(data);    
-        } catch (Exception e) {
-            // TODO
-        }
 
-        return metaData;
-    }
-    
     static public Map<String,String> convert(List<Process.PluginDescribeResult.InputParameter> inputs) {
         //populate list into key-value map
         Map<String,String> descriptions = new Map<String,String>();

@@ -1,13 +1,15 @@
 @isTest public class PublishTest {
 
-    static testMethod void testDescriptionContainsConfigurationObjectName() {
+    static testMethod void canDetermineConfigurable() {
         //arrange
-        Publish publish = new Publish();
-        String className = String.valueOf(publish).split(':')[0]; 
-        Map<string, Object> meta = Utility.meta(className);
+        String  className  = 'Publish';
+        List<String> names = new List<String>{className};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
         
         //act
-        String actualConfiguration = (String)meta.get('configurable');
+        String actualConfiguration = processes[0].Configurable__c;
         
         //assert
         String expectedConfiguration = Schema.SObjectType.PublishConfiguration__c.Name;
@@ -45,10 +47,6 @@
             'eda__boomerangChainStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
-        System.debug('boomerang dropped');
-        System.debug('subChainStep');
-        System.debug(subscribe);
-        System.debug(subConfig.Id);
         Publish branch = new Publish();
         List<Map<String,Object>> notifications = Utility.convert(branch.invoke(new Process.PluginRequest(notification)));
         
@@ -97,8 +95,16 @@
     
     static testMethod void testNoSubscribersStillReturnsOneNotification() {
         //arrange
-        Process__c process = new Process__c(Name = 'Publish');
-        insert process;
+        List<String> names = new List<String>{'Publish'};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
+       Process__c process = (Process__c )procecessNameToProcess.get('Publish');
         
         Event__c event = new Event__c(Name = 'TestEvent');
         insert event;
@@ -135,9 +141,18 @@
         Event__c event = new Event__c(Name = 'TestEvent');
         insert event;
         
+        List<String> names = new List<String>{'Subscribe', 'Publish'};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
+        
         //publish process
-        Process__c publish = new Process__c(Name = 'Publish');
-        insert publish;
+       Process__c publish = (Process__c )procecessNameToProcess.get('Publish');
         
         //publish chains and steps
         Chain__c publisher = new Chain__c(Name = 'Publisher');
@@ -154,9 +169,9 @@
         ));
         
         //subsribe process
-        Process__c subscribe = new Process__c(Name = 'Subscribe');
-        insert subscribe;
-        
+        Process__c subscribe = (Process__c )procecessNameToProcess.get('Subscribe');
+       
+       
         //subscribe chains and steps
         Chain__c subscriber1 = new Chain__c(Name = 'Subscriber1');
         insert subscriber1;
@@ -204,12 +219,20 @@
         insert chainA;
  
         // Processes :: Publish process not defined
-        Process__c wiretapProcess = new Process__c(Name = 'Wiretap');
-        insert wiretapProcess; 
+        String  classNameWiretap  = 'Wiretap';
+        List<String> names = new List<String>{classNameWiretap};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
         
         // Chain A
-        ChainStep__c chainStepA1 = new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c  = 1);
-        ChainStep__c chainStepA2 = new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);   
+        ChainStep__c chainStepA1 = new ChainStep__C(Chain__c = chainA.Id, Process__c = ((Process__c )procecessNameToProcess.get('Wiretap')).Id, Sequence__c  = 1);
+        ChainStep__c chainStepA2 = new ChainStep__C(Chain__c = chainA.Id, Process__c = ((Process__c )procecessNameToProcess.get('Wiretap')).Id, Sequence__c = 2);   
 
         // Act :
         List<HealthController.Health> PublishHealths = Publish.getHealth();
@@ -244,18 +267,24 @@
         Chain__c chainZ = new Chain__c(Name = 'ChainZ');
         insert chainZ;
 
-        Process__c PublishProcess = new Process__c(Name = 'Publish');
-        insert PublishProcess;
-        Process__c wiretapProcess = new Process__c(Name = 'Wiretap');
-        insert wiretapProcess; 
-        Process__c subscribeProcess = new Process__c(Name = 'Subscribe');
-        insert subscribeProcess;
+        String  classNameWiretap  = 'Wiretap';
+        String  classNamePublish  = 'Publish';
+        String  classNameSubscribe  = 'Subscribe'; 
+        List<String> names = new List<String>{classNameWiretap, classNamePublish, classNameSubscribe};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
         
         // Chain Z - OK : Event is Subscribed
-        ChainStep__c chainStepZ1 = new ChainStep__c(Chain__c = chainZ.Id, Process__c = PublishProcess.Id, Sequence__c = 1); 
-        ChainStep__c chainStepZ2 = new ChainStep__c(Chain__c = chainZ.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);
+        ChainStep__c chainStepZ1 = new ChainStep__c(Chain__c = chainZ.Id, Process__c = ((Process__c )procecessNameToProcess.get('Publish')).Id, Sequence__c = 1); 
+        ChainStep__c chainStepZ2 = new ChainStep__c(Chain__c = chainZ.Id, Process__c = ((Process__c )procecessNameToProcess.get('Wiretap')).Id, Sequence__c = 2);
         insert new List<ChainStep__c>{chainStepZ1, chainStepZ2};
-        ChainStep__c chainStepZ3 = new ChainStep__c(Chain__c = chainSubscribe.Id, Process__c = subscribeProcess.Id, Sequence__c = 1); 
+        ChainStep__c chainStepZ3 = new ChainStep__c(Chain__c = chainSubscribe.Id, Process__c = ((Process__c )procecessNameToProcess.get('Subscribe')).Id, Sequence__c = 1); 
         insert new List<ChainStep__c>{chainStepZ3}; 
 
         // Event
@@ -321,14 +350,21 @@
         Chain__c chainA = new Chain__c(Name = 'ChainA');
         insert chainA;
 
-        Process__c PublishProcess = new Process__c(Name = 'Publish');
-        insert PublishProcess;
-        Process__c wiretapProcess = new Process__c(Name = 'Wiretap');
-        insert wiretapProcess;
+        String  classNameWiretap  = 'Wiretap';
+        String  classNamePublish  = 'Publish';
+        List<String> names = new List<String>{classNameWiretap, classNamePublish};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
 
         // Chain A - Warning : Ok but event Not Subscribed
-        ChainStep__c chainStepA1 = new ChainStep__c(Chain__c = chainA.Id, Process__c = PublishProcess.Id, Sequence__c = 1); 
-        ChainStep__c chainStepA2 = new ChainStep__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);
+        ChainStep__c chainStepA1 = new ChainStep__c(Chain__c = chainA.Id, Process__c = ((Process__c )procecessNameToProcess.get('Publish')).Id, Sequence__c = 1); 
+        ChainStep__c chainStepA2 = new ChainStep__c(Chain__c = chainA.Id, Process__c = ((Process__c )procecessNameToProcess.get('Wiretap')).Id, Sequence__c = 2);
         insert new List<ChainStep__c>{chainStepA1, chainStepA2};
 
         // Event
@@ -379,15 +415,22 @@
         Chain__c chainB = new Chain__c(Name = 'ChainB');
         insert chainB;
 
-        Process__c PublishProcess = new Process__c(Name = 'Publish');
-        insert PublishProcess;
-        Process__c wiretapProcess = new Process__c(Name = 'Wiretap');
-        insert wiretapProcess; 
+        String  classNameWiretap  = 'Wiretap';
+        String  classNamePublish  = 'Publish';
+        List<String> names = new List<String>{classNameWiretap, classNamePublish};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
 
         
         // Chain B - Problem : No Configuration
-        ChainStep__c chainStepB1 = new ChainStep__c(Chain__c = chainB.Id, Process__c = PublishProcess.Id, Sequence__c = 1);
-        ChainStep__c chainStepB2 = new ChainStep__c(Chain__c = chainB.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);
+        ChainStep__c chainStepB1 = new ChainStep__c(Chain__c = chainB.Id, Process__c = ((Process__c )procecessNameToProcess.get('Publish')).Id, Sequence__c = 1);
+        ChainStep__c chainStepB2 = new ChainStep__c(Chain__c = chainB.Id, Process__c = ((Process__c )procecessNameToProcess.get('Wiretap')).Id, Sequence__c = 2);
         insert new List<ChainStep__c>{chainStepB1, chainStepB2};
 
         Id configurationIdB1 = (Id) [
@@ -426,15 +469,22 @@
         Chain__c chainB = new Chain__c(Name = 'ChainB');
         insert chainB;
 
-        Process__c PublishProcess = new Process__c(Name = 'Publish');
-        insert PublishProcess;
-        Process__c wiretapProcess = new Process__c(Name = 'Wiretap');
-        insert wiretapProcess;
+        String  classNameWiretap  = 'Wiretap';
+        String  classNamePublish  = 'Publish';
+        List<String> names = new List<String>{classNameWiretap, classNamePublish};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
 
         
         // Chain B - Problem : No Configuration
-        ChainStep__c chainStepB1 = new ChainStep__c(Chain__c = chainB.Id, Process__c = PublishProcess.Id, Sequence__c = 1);
-        ChainStep__c chainStepB2 = new ChainStep__c(Chain__c = chainB.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);       
+        ChainStep__c chainStepB1 = new ChainStep__c(Chain__c = chainB.Id, Process__c = ((Process__c )procecessNameToProcess.get('Publish')).Id, Sequence__c = 1);
+        ChainStep__c chainStepB2 = new ChainStep__c(Chain__c = chainB.Id, Process__c = ((Process__c )procecessNameToProcess.get('Wiretap')).Id, Sequence__c = 2);       
         insert new List<ChainStep__c>{chainStepB1, chainStepB2};
 
         // Act :

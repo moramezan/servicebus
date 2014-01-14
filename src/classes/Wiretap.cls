@@ -3,7 +3,7 @@ public with sharing class Wiretap implements Process.Plugin, Database.Stateful{
      public class WiretapException extends Exception {}
       
      public class Metadata {
-        public String customizable = Schema.SObjectType.WiretapCustomization__c.Name;
+        public Type customizable = WiretapCustomization__c.class;
     }       
     
     public Process.PluginDescribeResult describe() {

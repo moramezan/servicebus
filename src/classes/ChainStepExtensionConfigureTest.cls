@@ -10,8 +10,16 @@ private  class ChainStepExtensionConfigureTest {
         Chain__c chain = new Chain__c( Name = chainName);
         insert chain;
 
-        Process__c process = new Process__c (Name = apexClass);
-        insert process;
+        List<String> names = new List<String>{apexClass};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+            procecessNameToProcess.put(p.Name, p); 
+        }
+        Process__c process =  (Process__c )procecessNameToProcess.get(apexClass);
 
         ChainStep__c chainStep = new ChainStep__c (
             Chain__c = chain.Id ,
@@ -31,6 +39,7 @@ private  class ChainStepExtensionConfigureTest {
 
         // Assert
         System.assertEquals(expectedPageReferenceUrl , actualPageReferenceUrl );
+        /////// expectedPageReferenceUrl=[ /null/e?retURL=a02b0000008Ewn5AAC ], actualPageReferenceUrl=[ /a02b0000008Ewn5 ]
     }
 
     static testMethod void callingInitConfigWhenConfigurationIdIsNullReturnsExpectedUrl() {

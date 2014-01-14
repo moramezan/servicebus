@@ -1,18 +1,4 @@
 @isTest public class UtilityTest {
-    
-    static testMethod void canAccessMeta() {
-        //arrange
-        String className = 'Subscribe';
-        
-        // act 
-        Map<String,Object> meta = Utility.meta( className );
-        
-        // assert
-        String expectedConfigurable = Schema.SObjectType.SubscribeConfiguration__c.Name;
-        String actualConfigurable = (String) meta.get('configurable');
-        System.assertEquals(expectedConfigurable, actualConfigurable);     
-    }
-        
     static testMethod void testInputs2map() {
         //arrange
         List<Process.PluginDescribeResult.InputParameter> inputs = new List<Process.PluginDescribeResult.InputParameter>{

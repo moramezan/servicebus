@@ -81,11 +81,12 @@
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Notification__c</members>
         <members>JumpConfiguration__c.Chain__c</members>
-        <members>KnifeSwitch__c.IgnoreNamespace__c</members>
         <members>KnifeSwitch__c.Url__c</members>
         <members>PersistentData__c.Message__c</members>
         <members>PersistentData__c.Notification__c</members>
         <members>Process__c.ApexClass__c</members>
+        <members>Process__c.Configurable__c</members>
+        <members>Process__c.Customizable__c</members>
         <members>Process__c.Description__c</members>
         <members>Process__c.Tag__c</members>
         <members>PublishConfiguration__c.Event__c</members>

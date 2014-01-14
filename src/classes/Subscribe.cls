@@ -1,7 +1,7 @@
 public with sharing class Subscribe implements Process.Plugin, Database.Stateful {
 
     public class Metadata {
-        public String configurable = Schema.SObjectType.SubscribeConfiguration__c.Name;
+        public Type configurable = SubscribeConfiguration__c.class;
     }                  
     
     public Process.PluginDescribeResult describe() {

@@ -6,34 +6,24 @@ public class ChainSteps extends SObjects {
      * for the first time, but that does DML from a Visualforce action and fails security review.)
      */
     public override void  onAfterInsert(Map<Id,SObject> objects) {
-        //re-query to get all apex classnames used in any of these new chainsteps
-        Map<Id,ChainStep__c> id2step = new Map<Id,ChainStep__c>([SELECT Process__r.Name FROM ChainStep__c WHERE Id IN :objects.keySet()]);
+        //re-query to get configs
+        Map<Id,ChainStep__c> id2step = new Map<Id,ChainStep__c>([SELECT Process__r.Configurable__c, Process__r.Name FROM ChainStep__c WHERE Id IN :objects.keySet()]);
         
-        //prepare for any new configuration records
+
+        //create configs
         Map<Id,SObject> id2config = new Map<Id,SObject>();
         
-         for (ChainStep__c chainStep : (List<ChainStep__c>) objects.values()) {
-            //get apex class name from traversed process
-            String apexClass = id2step.get(chainStep.Id).Process__r.Name;
-            
-            //instantiate each potential configurable process
-            String edaConfigurable = (String)Utility.meta(apexClass).get('configurable');
-             
-            //get out of dodge quick if process is not configurable
-            if (null == edaConfigurable) continue;
-            
-            //invoke the method to get an insertable configuration record
+        for (ChainStep__c chainStep : (List<ChainStep__c>) id2step.values()) {
+            String edaConfigurable = chainStep.Process__r.Configurable__c;
+            if (String.isBlank(edaConfigurable)) continue;
             Type configurableObject = Type.forName(edaConfigurable);
             SObject configuration = (SObject)configurableObject.newInstance();
-            
-            //prepare config for insertion
             id2config.put(chainStep.Id, configuration);
         }
         
-        //insert configs
         insert id2config.values();
         
-        //prepare chainsteps for update
+        //create back reference to config
         for (Id chainId : id2config.keySet()) {
             SObject config = id2config.get(chainId);
             ChainStep__c chainStep = id2step.get(chainId);

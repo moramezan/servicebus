@@ -1,17 +1,19 @@
 @isTest public class BranchTest {
-    
-    static testMethod void testConfigureReturnsRightObjectType() {
-         // Arrange 
-        Branch process = new Branch();
-        String className = String.valueOf(process).split(':')[0]; 
-        Map<string, Object> meta = Utility.meta(className);  
-            
-        // Act 
-        String actualDescription = (String) meta.get('configurable');
+
+    static testMethod void canDetermineConfigurable() {
+        //arrange
+        String  className  = 'Branch';
+        List<String> names = new List<String>{className};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        
+        //act
+        String actualConfiguration = processes[0].Configurable__c;
         
         // Assert
-        String expectedDescription = Schema.SObjectType.BranchConfiguration__c.Name;
-        System.assertEquals(expectedDescription, actualDescription);
+        String expectedConfiguration = Schema.SobjectType.BranchConfiguration__c.Name;
+        System.assertEquals(expectedConfiguration, actualConfiguration);  
     }
 
     static testMethod void testBoomerangDropped() {
