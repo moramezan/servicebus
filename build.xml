@@ -25,12 +25,12 @@
         <zip destfile="src/staticresources/ChainStepSorterZip.resource" basedir="dev/resource/ChainStepSorterZip/build/production/Steps" includes="**"/>
     </target>
 
-    <target name="sencha-refresh" description="Builds Sencha application">
-        <delete file="src/staticresources/ProcessRefreshZip.resource" />
-        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessRefreshZip ant clean" />
-        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessRefreshZip app refresh" />
-        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessRefreshZip app build" />
-        <zip destfile="src/staticresources/ProcessRefreshZip.resource" basedir="dev/resource/ProcessRefreshZip/build/production/Refresh" includes="**"/>
+    <target name="sencha-generate" description="Builds Generate application">
+        <delete file="src/staticresources/ProcessGenerateZip.resource" />
+        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessGenerateZip ant clean" />
+        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessGenerateZip app refresh" />
+        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessGenerateZip app build" />
+        <zip destfile="src/staticresources/ProcessGenerateZip.resource" basedir="dev/resource/ProcessGenerateZip/build/production/Generate" includes="**"/>
     </target>
 
     <target name="usage">

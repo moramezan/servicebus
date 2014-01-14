@@ -1,0 +1,30 @@
+<apex:page standardController="Process__c" recordSetVar="processes" extensions="ProcessGenerateExtension" action="{!doRedirect}">
+    <c:bootstrapExt applicationName="Generate" staticResource="{!$Resource.ProcessGenerateZip}" baseCSSPrefix="z-" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}">
+        window.$ObjectType = window.$ObjectType || {};
+        $ObjectType.Process__c = $ObjectType.Process__c || {};
+        $ObjectType.Process__c.Fields = $ObjectType.Process__c.Fields || {};
+        $ObjectType.Process__c.Fields.Id = $ObjectType.Process__c.Fields.Id || {};
+        $ObjectType.Process__c.Fields.Id.Name = '{!$ObjectType.Process__c.Fields.Id.Name}';
+        $ObjectType.Process__c.Fields.Name = $ObjectType.Process__c.Fields.Name || {};
+        $ObjectType.Process__c.Fields.Name.Name = '{!$ObjectType.Process__c.Fields.Name.Name}';
+        $ObjectType.Process__c.Fields.Description__c = $ObjectType.Process__c.Fields.Description__c || {};
+        $ObjectType.Process__c.Fields.Description__c.Name = '{!$ObjectType.Process__c.Fields.Description__c.Name}';
+        $ObjectType.Process__c.Fields.Tag__c = $ObjectType.Process__c.Fields.Tag__c || {};
+        $ObjectType.Process__c.Fields.Tag__c.Name = '{!$ObjectType.Process__c.Fields.Tag__c.Name}';
+        
+        window.$RemoteAction = window.$RemoteAction || {};
+        $RemoteAction.ProcessGenerateExtension = $RemoteAction.ProcessGenerateExtension || {};
+        $RemoteAction.ProcessGenerateExtension.readProcesses = '{!$RemoteAction.ProcessGenerateExtension.readProcesses}';
+        $RemoteAction.ProcessGenerateExtension.readAsyncApexJobs = '{!$RemoteAction.ProcessGenerateExtension.readAsyncApexJobs}';
+        
+        window.URLFOR = window.URLFOR || {};
+        URLFOR['$Action.Process__c.Tab'] = '{!URLFOR($Action.Process__c.Tab, $ObjectType.Process__c)}';
+        
+        window.AsyncApexJob = window.AsyncApexJob || {};
+        AsyncApexJob.Id = '{!AsyncApexJob.Id}';
+        AsyncApexJob.CreatedDate = '{!AsyncApexJob.CreatedDate}';
+        AsyncApexJob.JobItemsProcessed = Number('{!AsyncApexJob.JobItemsProcessed}');
+        AsyncApexJob.TotalJobItems = Number('{!AsyncApexJob.TotalJobItems}');
+
+    </c:bootstrapExt>
+</apex:page>

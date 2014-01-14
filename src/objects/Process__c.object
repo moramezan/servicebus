@@ -81,13 +81,18 @@
         <unique>false</unique>
     </fields>
     <label>Process</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
     <nameField>
         <label>Process Name</label>
         <type>Text</type>
     </nameField>
     <pluralLabel>Processes</pluralLabel>
     <searchLayouts>
-        <listViewButtons>Refresh</listViewButtons>
+        <listViewButtons>Generate</listViewButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
@@ -102,14 +107,14 @@
         <protected>false</protected>
     </webLinks>
     <webLinks>
-        <fullName>Refresh</fullName>
+        <fullName>Generate</fullName>
         <availability>online</availability>
         <displayType>massActionButton</displayType>
         <height>600</height>
         <linkType>page</linkType>
-        <masterLabel>Refresh</masterLabel>
+        <masterLabel>Generate</masterLabel>
         <openType>sidebar</openType>
-        <page>ProcessRefresh</page>
+        <page>ProcessGenerate</page>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
     </webLinks>

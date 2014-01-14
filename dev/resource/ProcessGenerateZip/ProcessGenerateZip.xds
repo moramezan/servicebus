@@ -22,13 +22,16 @@
     "framework": "ext42",
     "viewOrderMap": {
         "view": [
-            "82753631-02a7-45a6-9538-efa883bef4ed"
+            "82753631-02a7-45a6-9538-efa883bef4ed",
+            "6e288a28-b274-4e0e-8e20-d842a94a7863"
         ],
         "store": [
             "a3b9da76-089b-4af3-b4e4-19cdbf253630",
-            "c49d1d2a-b0c4-46a8-a053-4a217c7bdab6"
+            "49a8aaf7-77b8-4773-949b-a5cd4b0b0982"
         ],
-        "controller": [],
+        "controller": [
+            "82c204d7-ffa5-4759-a8cc-79105b35ef9f"
+        ],
         "model": [
             "36956622-31bd-4466-a271-13ff984cbc47",
             "c7d4097d-1683-471c-9f38-a448ae1f6b14"

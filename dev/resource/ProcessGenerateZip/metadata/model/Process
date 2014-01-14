@@ -6,7 +6,8 @@
     },
     "codeClass": null,
     "userConfig": {
-        "designer|userClassName": "Process"
+        "designer|userClassName": "Process",
+        "idProperty": "Id"
     },
     "designerId": "36956622-31bd-4466-a271-13ff984cbc47",
     "cn": [
@@ -57,6 +58,25 @@
                 "name": "Tag"
             },
             "designerId": "866854e7-397e-4de8-86e6-e827f1ec9c91"
+        },
+        {
+            "type": "Ext.data.proxy.Direct",
+            "reference": {
+                "name": "proxy",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "api": [
+                    "{read: $RemoteAction.ProcessGenerateExtension.readProcesses}"
+                ],
+                "designer|createAlias": "vfremote",
+                "designer|displayName": "ProcessProxy",
+                "extraParams": [
+                    "{lastModifiedDate: new Date(AsyncApexJob.CreatedDate).toUTCString()}"
+                ]
+            },
+            "designerId": "80b1e297-057f-4c9d-a2e2-89905f856030"
         }
     ]
 }

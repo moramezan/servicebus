@@ -6,11 +6,17 @@
     },
     "codeClass": null,
     "userConfig": {
+        "bodyBorder": false,
         "designer|initialView": null,
         "designer|userClassName": "Grid",
         "forceFit": true,
         "header": false,
         "height": null,
+        "hideHeaders": true,
+        "itemId": "grid",
+        "requires": [
+            "Ext.util.Point"
+        ],
         "store": "Processes",
         "title": "My Grid Panel",
         "width": null
@@ -30,6 +36,37 @@
             "designerId": "bb579438-19e0-45d2-9d1c-e819803fb690"
         },
         {
+            "type": "Ext.grid.column.Action",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "defaultWidth": null,
+                "designer|displayName": "Actions",
+                "maxWidth": 20,
+                "menuDisabled": true,
+                "width": null
+            },
+            "designerId": "e3572d26-1430-4099-8c9c-b86887f5b313",
+            "cn": [
+                {
+                    "type": "actioncolumnitem",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "Gear",
+                        "iconCls": "gear"
+                    },
+                    "designerId": "d1a9c20c-2656-4297-b968-3740e98da00f"
+                }
+            ]
+        },
+        {
             "type": "Ext.grid.column.Column",
             "reference": {
                 "name": "columns",
@@ -38,6 +75,7 @@
             "codeClass": null,
             "userConfig": {
                 "dataIndex": "Id",
+                "sortable": false,
                 "text": "Id"
             },
             "designerId": "6671fecc-6096-43af-94d1-d858b608d3e8"
@@ -51,6 +89,7 @@
             "codeClass": null,
             "userConfig": {
                 "dataIndex": "Name",
+                "sortable": false,
                 "text": "Name"
             },
             "designerId": "d4be4972-1c85-49d9-ac3a-910a076ed375"
@@ -64,6 +103,7 @@
             "codeClass": null,
             "userConfig": {
                 "dataIndex": "Description",
+                "sortable": false,
                 "text": "Description"
             },
             "designerId": "2944c4d3-48ed-4207-a58c-4572591fa06a"
@@ -77,9 +117,28 @@
             "codeClass": null,
             "userConfig": {
                 "dataIndex": "Tag",
+                "sortable": false,
                 "text": "Tag"
             },
             "designerId": "3582dd85-dd2e-4e87-8ada-c32bffd17df4"
+        },
+        {
+            "type": "processcfgfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "config"
+                ],
+                "fn": "processGrid",
+                "implHandler": [
+                    "config.height = Ext.Element.getViewportHeight() - 200;"
+                ]
+            },
+            "designerId": "6b1eb213-4f2d-45a7-a8db-5b58d7272dd3"
         }
     ]
 }

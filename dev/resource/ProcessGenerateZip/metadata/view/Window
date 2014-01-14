@@ -1,0 +1,64 @@
+{
+    "type": "Ext.window.Window",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "autoShow": true,
+        "bodyBorder": false,
+        "bodyPadding": 20,
+        "border": false,
+        "designer|userClassName": "Window",
+        "header": false,
+        "height": null,
+        "resizable": false,
+        "title": "My Window",
+        "width": 400
+    },
+    "configAlternates": {
+        "resizable": "boolean"
+    },
+    "designerId": "6e288a28-b274-4e0e-8e20-d842a94a7863",
+    "cn": [
+        {
+            "type": "Ext.ProgressBar",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|displayName": "ProgressBar",
+                "itemId": "progressbar",
+                "text": "...",
+                "width": null
+            },
+            "designerId": "14eaf769-6973-49be-baa4-acb6ac0fbae6",
+            "cn": [
+                {
+                    "type": "processcfgfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "config"
+                        ],
+                        "fn": "processProgressBar",
+                        "implHandler": [
+                            "//not very DRY, but we can get useful initial values off the bridging component",
+                            "config.value = AsyncApexJob.JobItemsProcessed / AsyncApexJob.TotalJobItems;",
+                            "config.text = AsyncApexJob.JobItemsProcessed + ' of ' + AsyncApexJob.TotalJobItems;",
+                            "return config;"
+                        ]
+                    },
+                    "designerId": "6e36fc85-a717-4fba-b975-904e9f425db7"
+                }
+            ]
+        }
+    ]
+}

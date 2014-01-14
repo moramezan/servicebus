@@ -7,7 +7,7 @@
     "codeClass": null,
     "userConfig": {
         "designer|userClassName": "css",
-        "url": "bootstrap.css"
+        "url": "ext/packages/ext-theme-classic/build/resources/ext-theme-classic-all-rtl.css"
     },
     "designerId": "e49f586a-4385-422b-8b4c-001e2578532c"
 }

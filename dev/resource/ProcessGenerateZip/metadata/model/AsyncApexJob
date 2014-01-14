@@ -6,7 +6,8 @@
     },
     "codeClass": null,
     "userConfig": {
-        "designer|userClassName": "AsyncApexJob"
+        "designer|userClassName": "AsyncApexJob",
+        "idProperty": "Id"
     },
     "designerId": "c7d4097d-1683-471c-9f38-a448ae1f6b14",
     "cn": [
@@ -141,6 +142,49 @@
                 "name": "TotalJobItems"
             },
             "designerId": "dd67e7e9-a8c8-410c-9379-ac6dc7a39357"
+        },
+        {
+            "type": "Ext.data.proxy.Direct",
+            "reference": {
+                "name": "proxy",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "api": [
+                    "{read: $RemoteAction.ProcessGenerateExtension.readAsyncApexJobs}"
+                ],
+                "designer|createAlias": "vfremote",
+                "designer|displayName": "AsyncApexJobProxy",
+                "extraParams": [
+                    "{asyncApexJobId: AsyncApexJob.Id}"
+                ]
+            },
+            "designerId": "846ce609-25e5-4e19-9665-bb1593dea93f"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "progressbar"
+                ],
+                "fn": "draw",
+                "implHandler": [
+                    "var job = this;",
+                    "",
+                    "var value = job.get('JobItemsProcessed') / job.get('TotalJobItems');",
+                    "var text = job.get('JobItemsProcessed') + ' of ' + job.get('TotalJobItems');",
+                    "var animate = true;",
+                    "",
+                    "progressbar.updateProgress(value, text, animate);"
+                ]
+            },
+            "designerId": "1627df2d-5e55-4da7-a470-8fa8c0ba4190"
         }
     ]
 }

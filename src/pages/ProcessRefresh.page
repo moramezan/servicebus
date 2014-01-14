@@ -1,1 +1,0 @@
-<apex:page standardController="Process__c" recordSetVar="processes" extensions="ProcessExtensionRefresh" action="{!doRedirect}" />

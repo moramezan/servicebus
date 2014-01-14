@@ -30,11 +30,9 @@
         <members>PersistentDatas</members>
         <members>ProcessExtensionCustomize</members>
         <members>ProcessExtensionCustomizeTest</members>
-        <members>ProcessExtensionRefresh</members>
-        <members>ProcessExtensionRefreshTest</members>
+        <members>ProcessGenerateExtension</members>
         <members>ProcessRefreshBatch</members>
         <members>ProcessRefreshBatchTest</members>
-        <members>ProcessRefreshTabController</members>
         <members>Publish</members>
         <members>PublishTest</members>
         <members>SObjects</members>
@@ -58,8 +56,7 @@
         <members>ChainStepConfiguration</members>
         <members>Health</members>
         <members>ProcessCustomization</members>
-        <members>ProcessRefresh</members>
-        <members>ProcessRefreshTab</members>
+        <members>ProcessGenerate</members>
         <members>PublishConfigurationEdit</members>
         <members>SubscribeConfigurationEdit</members>
         <name>ApexPage</name>
@@ -84,6 +81,7 @@
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Notification__c</members>
         <members>JumpConfiguration__c.Chain__c</members>
+        <members>KnifeSwitch__c.IgnoreNamespace__c</members>
         <members>KnifeSwitch__c.Url__c</members>
         <members>PersistentData__c.Message__c</members>
         <members>PersistentData__c.Notification__c</members>
@@ -115,7 +113,7 @@
     </types>
     <types>
         <members>Chain__c</members>
-        <members>Processes</members>
+        <members>Process__c</members>
         <name>CustomTab</name>
     </types>
     <types>
@@ -136,6 +134,7 @@
     </types>
     <types>
         <members>Chain__c.All</members>
+        <members>Process__c.All</members>
         <name>ListView</name>
     </types>
     <types>
@@ -150,7 +149,7 @@
     </types>
     <types>
         <members>ChainStepSorterZip</members>
-        <members>ProcessRefreshZip</members>
+        <members>ProcessGenerateZip</members>
         <name>StaticResource</name>
     </types>
     <types>
@@ -160,7 +159,7 @@
     <types>
         <members>ChainStep__c.ConfigureInstance</members>
         <members>Process__c.Customize</members>
-        <members>Process__c.Refresh</members>
+        <members>Process__c.Generate</members>
         <name>WebLink</name>
     </types>
     <types>

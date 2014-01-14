@@ -1,0 +1,191 @@
+{
+    "type": "Ext.app.Controller",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "Application",
+        "isAsyncApexJobFinished": false,
+        "isAsyncApexJobStarted": false
+    },
+    "configAlternates": {
+        "isAsyncApexJobFinished": "boolean",
+        "isAsyncApexJobStarted": "boolean"
+    },
+    "designerId": "82c204d7-ffa5-4759-a8cc-79105b35ef9f",
+    "customConfigs": [
+        {
+            "group": "(Custom Properties)",
+            "name": "isAsyncApexJobFinished",
+            "type": "string"
+        },
+        {
+            "group": "(Custom Properties)",
+            "name": "isAsyncApexJobStarted",
+            "type": "string"
+        }
+    ],
+    "cn": [
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "gridpanel",
+                "designer|targetType": "Grid",
+                "fn": "onGridpanelAfterRender",
+                "implHandler": [
+                    "Ext.log('[Generate.controller.Application] heard gridpanel afterrender event');",
+                    "",
+                    "var me = this;",
+                    "var store = Ext.getStore('AsyncApexJob');",
+                    "",
+                    "Ext.log('[Generate.controller.Application] start polling AsyncApexJob store');",
+                    "store.load(function lambda() {",
+                    "    if (!me.isAsyncApexJobFinished) {",
+                    "        //asyncapexjob not finished yet",
+                    "        Ext.log('[Generate.controller.Application] job unfinished, polling AsyncApexJob store');",
+                    "",
+                    "        //poll, but only enthusiastically IF the job has actually started",
+                    "        Ext.Function.defer(function() {store.load(lambda);}, me.isAsyncApexJobStarted ? 10 : 1000);",
+                    "    } else {",
+                    "        //quit polling",
+                    "        Ext.log('[Generate.controller.Application] found isAsyncApexJobFinished, stop polling AsyncApexJob store');",
+                    "",
+                    "        //redirect back to Processes tab",
+                    "        Ext.Function.defer(function() {window.location = URLFOR['$Action.Process__c.Tab'];}, 3000);",
+                    "    }",
+                    "",
+                    "    //draw progress bar",
+                    "    store.getAt(0).draw(me.getProgressBar());",
+                    "});"
+                ],
+                "name": "afterrender",
+                "scope": "me"
+            },
+            "designerId": "d2231564-a5ca-4fdf-a040-66226f968502"
+        },
+        {
+            "type": "applicationaction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "store",
+                    "records",
+                    "successful",
+                    "eOpts"
+                ],
+                "fn": "onAsyncApexJobStart",
+                "implHandler": [
+                    "//note this event is singular",
+                    "Ext.log('[Generate.controller.Application] heard asyncapexjobstart event');",
+                    "this.isAsyncApexJobStarted = true;",
+                    "",
+                    "var me = this;",
+                    "var store = Ext.getStore('Processes');",
+                    "",
+                    "Ext.log('[Generate.controller.Application] start polling Processes store');",
+                    "store.load(function lambda(records, operation, success) {",
+                    "    if (!me.isAsyncApexJobFinished) {",
+                    "        //job not finished",
+                    "        Ext.log('[Generate.controller.Application] job unfinished, polling Processes store');",
+                    "",
+                    "        //poll, it masks, but we do want AsyncApexJob to get the lion's share of the updates",
+                    "        store.load(lambda);",
+                    "    } else {",
+                    "        //job finished",
+                    "        Ext.log('[Generate.controller.Application] found isAsyncApexJobFinished, stop polling Processes store');",
+                    "    }",
+                    "});"
+                ],
+                "name": "asyncapexjobstart",
+                "scope": "this",
+                "single": true
+            },
+            "designerId": "758f1ee6-8101-42de-9ce7-c99286edcc30"
+        },
+        {
+            "type": "applicationaction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "onAsyncApexJobFinish",
+                "implHandler": [
+                    "//note this event is singular",
+                    "Ext.log('[Generate.controller.Application] heard asyncapexjobfinish event');",
+                    "this.isAsyncApexJobFinished = true;"
+                ],
+                "name": "asyncapexjobfinish",
+                "scope": "this",
+                "single": true
+            },
+            "designerId": "900050cf-d099-4672-b7f9-95e1c98d4b6c"
+        },
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "ProgressBar",
+                "selector": "#progressbar",
+                "xtype": "Ext.ProgressBar"
+            },
+            "designerId": "1731ab06-bb1c-4bdc-ae79-64f7524229d8"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "window",
+                "designer|targetType": "Ext.window.Window",
+                "fn": "onWindowAfterRender",
+                "implHandler": [
+                    "var me = this;",
+                    "",
+                    "//center window over grid",
+                    "Ext.Function.defer(function() {",
+                    "    component.alignTo(me.getGrid(), 'c', [component.getWidth() / -2, component.getHeight() * -3]);",
+                    "}, 1);",
+                    "",
+                    "//component.mask('Loading...');"
+                ],
+                "name": "afterrender",
+                "scope": "me"
+            },
+            "designerId": "5d256a9a-6c76-43f1-be67-2c4fb853f397"
+        },
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "Grid",
+                "selector": "#grid",
+                "xtype": "Ext.grid.Panel"
+            },
+            "designerId": "86a646dd-4330-4f64-9053-2429e0db5a70"
+        }
+    ]
+}

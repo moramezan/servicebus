@@ -117,11 +117,7 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ProcessExtensionRefresh</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ProcessExtensionRefreshTest</apexClass>
+        <apexClass>ProcessGenerateExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -130,10 +126,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>ProcessRefreshBatchTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ProcessRefreshTabController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -383,11 +375,7 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ProcessRefresh</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>ProcessRefreshTab</apexPage>
+        <apexPage>ProcessGenerate</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -415,8 +403,8 @@
         <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>
-        <tab>Processes</tab>
-        <visibility>Visible</visibility>
+        <tab>Process__c</tab>
+        <visibility>None</visibility>
     </tabSettings>
     <userPermissions>
         <enabled>false</enabled>
