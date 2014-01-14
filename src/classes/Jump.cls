@@ -1,7 +1,7 @@
 public with sharing class Jump implements Process.Plugin, Database.Stateful {
 
     public class Metadata {
-        public Type configurable = JumpConfiguration__c.class;
+        public SObject configurable = JumpConfiguration__c.SObjectType.newSObject();
     }
        
     public Process.PluginDescribeResult describe() {

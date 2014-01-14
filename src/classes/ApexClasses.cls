@@ -1,11 +1,17 @@
 public class ApexClasses extends SObjects {
 
+    public class Metadata {
+        public SObject customizable;
+        public SObject configurable;
+    }
+    
     public ApexClasses(List<ApexClass> apexClasses) {
         super(apexClasses);
     }
     
     public List<Process__c> regenerate() {
-        List<ApexClass> apexClasses = (List<ApexClass>)this.getSObjects();
+        Set<Id> ids = new Map<Id,SObject>(this.getSObjects()).keySet();
+        List<ApexClass> apexClasses = [SELECT Id, NamespacePrefix, Name FROM ApexClass WHERE Id IN :ids];
         List<Process__c> processes = new List<Process__c>();
 
         for (ApexClass apexClass : apexClasses) {
@@ -14,16 +20,31 @@ public class ApexClasses extends SObjects {
                 Process.Plugin plugin = (Process.Plugin)reflector.newInstance();
                 if (plugin instanceof Database.Stateful) {
                     Process.PluginDescribeResult describeResult = plugin.describe();
+                    String tag = describeResult.Tag;
                     String description = describeResult.Description;
+                    String customizable;
+                    String configurable;
                     
-                    //TODO :: json serialize serialize untyped map not working - work around ...
-                    Map<string, string> keyToValue = getMetaMap(apexClass.NamespacePrefix, apexClass.Name + '.' + 'Metadata');
-                    String customizable = keyToValue.get('customizable');
-                    String configurable = keyToValue.get('configurable');
+                    Type metadataReflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name + '.' + 'Metadata');
+                    if (metadataReflector != null) {
+                        //if eg Eda.Wiretap.Metadata inner class exists, cast it into our instance from upstairs
+                        Metadata meta = (Metadata)Json.deserialize(Json.serialize(metadataReflector.newInstance()), Metadata.class);
+                        
+                        if (meta.customizable != null) {
+                            //attempt to populate the name of the customization object
+                            customizable = meta.customizable.getSObjectType().getDescribe().getName();
+                        }
+                        
+                        if (meta.configurable != null) {
+                            //attempt to populate the name of the configuration object
+                            configurable = meta.configurable.getSObjectType().getDescribe().getName();
+                        }
+                    }
+                    
                     Process__c process = new Process__c(
                         Name = reflector.getName(),
                         Description__c = description,
-                        Tag__c = describeResult.Tag,
+                        Tag__c = tag,
                         Customizable__c = customizable,
                         Configurable__c = configurable
                     );

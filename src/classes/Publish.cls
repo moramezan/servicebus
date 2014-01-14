@@ -3,8 +3,8 @@ public with sharing class Publish implements Process.Plugin, Database.Stateful {
     public class PublishException extends Exception {}
 
     public class Metadata {
-        public Type configurable = PublishConfiguration__c.class;
-    }        
+        public SObject configurable = PublishConfiguration__c.SObjectType.newSObject();
+    }
     
     public Process.PluginDescribeResult describe () {
         Process.PluginDescribeResult result = new Process.PluginDescribeResult();
