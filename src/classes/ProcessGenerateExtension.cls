@@ -26,8 +26,9 @@ public class ProcessGenerateExtension {
         }
     }
     
+    @testVisible static private List<Process__c> processes;
     @RemoteAction static public List<Process__c> readProcesses(DateTime lastModifiedDate) {
-        return [
+        return processes != null ? processes : [
             SELECT Id, Name, Description__c, Tag__c
             FROM Process__c
             WHERE LastModifiedDate > :lastModifiedDate
@@ -35,8 +36,9 @@ public class ProcessGenerateExtension {
         ];
     }
     
+    @testVisible static private List<AsyncApexJob> jobs;
     @RemoteAction static public List<AsyncApexJob> readAsyncApexJobs(Id asyncApexJobId) {
-        return [
+        return jobs != null ? jobs : [
             SELECT Id, CompletedDate, CreatedDate, ExtendedStatus, JobItemsProcessed, JobType, LastProcessed, LastProcessedOffset, NumberOfErrors, Status, TotalJobItems
             FROM AsyncApexJob
             WHERE Id = :asyncApexJobId
