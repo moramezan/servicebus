@@ -1,4 +1,6 @@
-public with sharing class Gate implements Process.Plugin, Database.Stateful {
+public with sharing class Gate implements Process.Plugin {
+    
+    public class Eda {}
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();

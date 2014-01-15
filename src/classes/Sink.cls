@@ -1,5 +1,7 @@
-public with sharing class Sink implements Process.Plugin, Database.Stateful {
-   
+public with sharing class Sink implements Process.Plugin {
+    
+    public class Eda {}
+    
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Description = 'The Sink process terminates all chains and is mandatory.';

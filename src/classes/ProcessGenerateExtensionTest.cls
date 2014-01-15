@@ -6,7 +6,9 @@
         ApexPages.StandardSetController controller = new ApexPages.StandardSetController(new List<Process__c>());
         ProcessGenerateExtension extension = new ProcessGenerateExtension(controller);
         Test.startTest();
-        AsyncApexJobs jobs = AsyncApexJobs.runOne(ProcessRefreshBatch.class, 1);
+        ProcessRefreshBatch batch = new ProcessRefreshBatch();
+        batch.query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass WHERE Name = \'Sink\' ORDER BY Name ASC LIMIT 1';
+        Database.executeBatch(batch, 1);
         Test.stopTest();
         
         //act

@@ -1,6 +1,6 @@
-public with sharing class Subscribe implements Process.Plugin, Database.Stateful {
+public with sharing class Subscribe implements Process.Plugin {
 
-    public class Metadata {
+    public class Eda {
         public SObject configurable = SubscribeConfiguration__c.SObjectType.newSObject();
     }
     

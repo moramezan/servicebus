@@ -1,8 +1,8 @@
-public with sharing class Wiretap implements Process.Plugin, Database.Stateful{
+public with sharing class Wiretap implements Process.Plugin {
    
     public class WiretapException extends Exception {}
       
-    public class Metadata {
+    public class Eda {
         public SObject customizable = WiretapCustomization__c.SObjectType.newSObject();
     }
     

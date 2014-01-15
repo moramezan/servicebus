@@ -1,6 +1,6 @@
-public with sharing class Branch implements Process.Plugin, Database.Stateful{
+public with sharing class Branch implements Process.Plugin {
 
-    public class Metadata {
+    public class Eda {
         public SObject configurable = BranchConfiguration__c.SObjectType.newSObject();
     }
     

@@ -1,6 +1,6 @@
-public with sharing class Boomerang implements Process.Plugin, Database.Stateful {
+public with sharing class Boomerang implements Process.Plugin {
 
-    public class Metadata {
+    public class Eda {
         public SObject configurable = BoomerangConfiguration__c.SObjectType.newSObject();
     }
     

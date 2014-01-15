@@ -3,7 +3,7 @@
     static testMethod void testRecordCreatedForPluginAndStateful() {
         //arrange
         ProcessRefreshBatch batch = new ProcessRefreshBatch();
-        batch.query += ' WHERE Name = \'Sink\'';
+        batch.query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass WHERE Name = \'Sink\' ORDER BY Name ASC LIMIT 1';
         
         //act
         Test.startTest();
@@ -31,28 +31,28 @@
     
 
  
-    static testMethod void testImplementsDatabaseStateful() {
+    static testMethod void testImplementsEdaSubclass() {
         // arrange
-        Process.Plugin boomerang = (Process.Plugin) new Boomerang();  
-        Process.Plugin branch = (Process.Plugin) new Branch();
-        Process.Plugin gate    = (Process.Plugin) new Gate();
-        Process.Plugin mark    = (Process.Plugin) new Mark();
-        Process.Plugin publish = (Process.Plugin) new Publish();
-        Process.Plugin schedule    = (Process.Plugin) new Schedule();
-        Process.Plugin sink = (Process.Plugin) new Sink();
-        Process.Plugin subscribe = (Process.Plugin) new Subscribe();
-        Process.Plugin wiretap = (Process.Plugin) new Wiretap();
+        Type gate = Type.forName('Gate.Eda');
+        Type mark = Type.forName('Mark.Eda');
+        Type sink = Type.forName('Sink.Eda');
+        Type branch = Type.forName('Branch.Eda');
+        Type wiretap = Type.forName('Wiretap.Eda');
+        Type publish = Type.forName('Publish.Eda');
+        Type schedule = Type.forName('Schedule.Eda');
+        Type boomerang = Type.forName('Boomerang.Eda');  
+        Type subscribe = Type.forName('Subscribe.Eda');
         
         // act
-        Boolean actualBoomerang = (boomerang instanceof Database.Stateful);  
-        Boolean actualBranch = (branch instanceof Database.Stateful);
-        Boolean actualGate = (gate instanceof Database.Stateful);
-        Boolean actualMark = (mark instanceof Database.Stateful);
-        Boolean actualPublish = (publish instanceof Database.Stateful) ;
-        Boolean actualSchedule = (schedule instanceof Database.Stateful);
-        Boolean actualSink = (sink instanceof Database.Stateful);
-        Boolean actualSubscribe = (subscribe instanceof Database.Stateful);
-        Boolean actualWiretap = (wiretap instanceof Database.Stateful); 
+        Boolean actualGate = (gate != null);
+        Boolean actualMark = (mark != null);
+        Boolean actualSink = (sink != null);
+        Boolean actualBranch = (branch != null);
+        Boolean actualWiretap = (wiretap != null); 
+        Boolean actualPublish = (publish != null) ;
+        Boolean actualSchedule = (schedule != null);
+        Boolean actualBoomerang = (boomerang != null);  
+        Boolean actualSubscribe = (subscribe != null);
         
         // assert
         System.assert(actualBoomerang); 
