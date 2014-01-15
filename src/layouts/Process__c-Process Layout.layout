@@ -32,6 +32,10 @@
                 <behavior>Edit</behavior>
                 <field>Customizable__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Icon__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

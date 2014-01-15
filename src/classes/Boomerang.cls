@@ -2,6 +2,7 @@ public with sharing class Boomerang implements Process.Plugin {
 
     public class Eda {
         public SObject configurable = BoomerangConfiguration__c.SObjectType.newSObject();
+        public String icon = 'arrow_undo';
     }
     
     public Process.PluginDescribeResult describe() {

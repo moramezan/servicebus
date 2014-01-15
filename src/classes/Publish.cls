@@ -4,6 +4,7 @@ public with sharing class Publish implements Process.Plugin {
 
     public class Eda {
         public SObject configurable = PublishConfiguration__c.SObjectType.newSObject();
+        public String icon = 'chart_organisation';
     }
     
     public Process.PluginDescribeResult describe () {

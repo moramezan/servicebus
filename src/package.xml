@@ -89,6 +89,7 @@
         <members>Process__c.Configurable__c</members>
         <members>Process__c.Customizable__c</members>
         <members>Process__c.Description__c</members>
+        <members>Process__c.Icon__c</members>
         <members>Process__c.Tag__c</members>
         <members>PublishConfiguration__c.Event__c</members>
         <members>ScheduleConfiguration__c.EveryXHours__c</members>

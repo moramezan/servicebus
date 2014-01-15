@@ -27,6 +27,7 @@
 
     <target name="sencha-generate" description="Builds Generate application">
         <delete file="src/staticresources/ProcessGenerateZip.resource" />
+        <exec command="lib/sencha-cmd-4.0.1.45/sencha repository add --name bigassforce --address http://localhost/repository/lib/repo/pkgs/" />
         <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessGenerateZip ant clean" />
         <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessGenerateZip app refresh" />
         <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessGenerateZip app build" />

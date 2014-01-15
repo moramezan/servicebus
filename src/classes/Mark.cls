@@ -1,6 +1,8 @@
 public with sharing class Mark implements Process.Plugin {
     
-    public class Eda {}
+    public class Eda {
+        public String icon = 'tag_blue';
+    }
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();

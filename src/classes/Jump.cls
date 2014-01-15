@@ -2,8 +2,9 @@ public with sharing class Jump implements Process.Plugin {
 
     public class Eda {
         public SObject configurable = JumpConfiguration__c.SObjectType.newSObject();
+        public String icon = 'arrow_switch';
     }
-       
+    
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Tag = 'Event Driven Architecture';

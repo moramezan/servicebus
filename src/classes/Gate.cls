@@ -1,6 +1,8 @@
 public with sharing class Gate implements Process.Plugin {
     
-    public class Eda {}
+    public class Eda {
+        public String icon = 'arrow_join';
+    }
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();

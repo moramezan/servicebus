@@ -1,6 +1,8 @@
 public with sharing class Sink implements Process.Plugin {
     
-    public class Eda {}
+    public class Eda {
+        public String icon = 'stop';
+    }
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();

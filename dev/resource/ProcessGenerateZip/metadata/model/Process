@@ -55,6 +55,18 @@
             },
             "codeClass": null,
             "userConfig": {
+                "name": "Icon"
+            },
+            "designerId": "ff0ece21-7d40-4627-a282-3a750e3f6c67"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
                 "name": "Tag"
             },
             "designerId": "866854e7-397e-4de8-86e6-e827f1ec9c91"

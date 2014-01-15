@@ -4,6 +4,7 @@ public with sharing class Wiretap implements Process.Plugin {
       
     public class Eda {
         public SObject customizable = WiretapCustomization__c.SObjectType.newSObject();
+        public String icon = 'email';
     }
     
     public Process.PluginDescribeResult describe() {

@@ -6,4 +6,5 @@ Ext.define('Override.model.Process', {
     fields.Name.mapping = $ObjectType.Process__c.Fields.Name.Name;
     fields.Description.mapping = $ObjectType.Process__c.Fields.Description__c.Name;
     fields.Tag.mapping = $ObjectType.Process__c.Fields.Tag__c.Name;
+    fields.Icon.mapping = $ObjectType.Process__c.Fields.Icon__c.Name;
 });

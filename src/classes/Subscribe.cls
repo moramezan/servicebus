@@ -2,6 +2,7 @@ public with sharing class Subscribe implements Process.Plugin {
 
     public class Eda {
         public SObject configurable = SubscribeConfiguration__c.SObjectType.newSObject();
+        public String icon = 'eye';
     }
     
     public Process.PluginDescribeResult describe() {

@@ -1,6 +1,8 @@
 public with sharing class Schedule implements Process.Plugin {
     
-    public class Eda {}
+    public class Eda {
+        public String icon = 'clock';
+    }
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();

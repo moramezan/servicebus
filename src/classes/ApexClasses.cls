@@ -5,7 +5,7 @@ public class ApexClasses extends SObjects {
      * isn't appropriate for Tag, Description, InputParameters or OutputParameters. This inner class must be present
      * for an apex class to appear in the Process list.
      */
-    public class Eda {
+    private class Eda {
         /**
          * Each Process can have one associated customization in the form of a Custom Setting. Process Authors must
          * advertise the custom setting type here, and the framework will provide a link from the Process detail page.
@@ -18,6 +18,12 @@ public class ApexClasses extends SObjects {
          * handle the record lifecycle (creating and deleting them in tandem with the appropriate Chain Step).
          */
         public SObject configurable;
+        
+        /**
+         * Each Process must name an icon (eg 'arrow_left') from the FamFamFam Silk library:
+         * http://www.famfamfam.com/archive/silk-icons-thats-your-lot/
+         */
+        public String icon;
     }
     
     public ApexClasses(List<ApexClass> apexClasses) {
@@ -52,6 +58,11 @@ public class ApexClasses extends SObjects {
                     if (meta.configurable != null) {
                         //attempt to populate the name of the configuration object
                         process.Configurable__c = meta.configurable.getSObjectType().getDescribe().getName();
+                    }
+                    
+                    if (meta.icon != null) {
+                        //attempt to populate the css class name of the process icon
+                        process.Icon__c = meta.icon;
                     }
                     
                     processes.add(process);

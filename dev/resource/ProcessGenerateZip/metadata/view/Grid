@@ -7,9 +7,11 @@
     "codeClass": null,
     "userConfig": {
         "bodyBorder": false,
+        "border": false,
         "designer|initialView": null,
         "designer|userClassName": "Grid",
         "forceFit": true,
+        "frameHeader": false,
         "header": false,
         "height": null,
         "hideHeaders": true,
@@ -60,9 +62,34 @@
                     "codeClass": null,
                     "userConfig": {
                         "designer|displayName": "Gear",
-                        "iconCls": "gear"
+                        "iconCls": "cog"
                     },
                     "designerId": "d1a9c20c-2656-4297-b968-3740e98da00f"
+                },
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "//set the action column's icon from each process",
+                            "this.items[0].iconCls = record.get('Icon');"
+                        ]
+                    },
+                    "designerId": "1563ad90-9d03-4f57-8c23-3a2f0c7bdece"
                 }
             ]
         },

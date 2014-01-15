@@ -2,6 +2,7 @@ public with sharing class Branch implements Process.Plugin {
 
     public class Eda {
         public SObject configurable = BranchConfiguration__c.SObjectType.newSObject();
+        public String icon = 'arrow_branch';
     }
     
     public class BranchException extends Exception {}

@@ -1,6 +1,7 @@
 {
    "name": "Generate",
    "requires": [
+      "baf-theme-native",
       "fflib-ext-common"
    ],
    "id": "cebfb4ac-7776-4b20-8456-e623cf58c820",
