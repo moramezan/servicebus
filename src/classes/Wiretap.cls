@@ -3,8 +3,6 @@ public with sharing class Wiretap implements Process.Plugin, Database.Stateful{
     public class WiretapException extends Exception {}
       
     public class Metadata {
-        public String foo = 'bar';
-        public Account acc = new Account();
         public SObject customizable = WiretapCustomization__c.SObjectType.newSObject();
     }
     
@@ -34,6 +32,6 @@ public with sharing class Wiretap implements Process.Plugin, Database.Stateful{
         message.setSaveAsActivity(false);
         Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{message});
         
-        return new Process.PluginResult(new Map<String,Object>{'0' => notification});
+        return Utility.convert(new List<Map<String,Object>>{notification});
     }
 }
