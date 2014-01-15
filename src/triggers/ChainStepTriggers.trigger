@@ -1,18 +1,27 @@
 trigger ChainStepTriggers on ChainStep__c (before insert, after insert, before update, after update, before delete, after delete) {
 
-    SObjects sobjects = new ChainSteps();
-    
     if (Trigger.isBefore && Trigger.isInsert) {
-        sobjects.onBeforeInsert(Trigger.new);
+       
+        new ChainSteps(Trigger.new).onBeforeInsert();
+    
     } else if (Trigger.isAfter && Trigger.isInsert) {
-        sobjects.onAfterInsert(Trigger.newMap);
+    
+        new ChainSteps(Trigger.new).onAfterInsert();
+    
     } else if (Trigger.isBefore && Trigger.isUpdate) {
-        sobjects.onBeforeUpdate(Trigger.oldMap, Trigger.newMap);
+        
+        new ChainSteps(Trigger.new).onBeforeUpdate(Trigger.old);
+    
     } else if (Trigger.isAfter && Trigger.isUpdate) {
-        sobjects.onAfterUpdate(Trigger.oldMap, Trigger.newMap);
+        
+        new ChainSteps(Trigger.new).onAfterUpdate(Trigger.old);
+    
     } else if (Trigger.isBefore && Trigger.isDelete) {
-        sobjects.onBeforeDelete(Trigger.oldMap);
+        
+        new ChainSteps(Trigger.old).onBeforeDelete();
+    
     } else if (Trigger.isAfter && Trigger.isDelete) {
-        sobjects.onAfterDelete(Trigger.oldMap);
+        
+        new ChainSteps(Trigger.old).onAfterDelete();
     }
 }
