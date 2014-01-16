@@ -1,41 +1,36 @@
 abstract public class SObjects {
     
-    private List<SObject> sobjects;
+    protected List<SObject> sobjects {get; private set;}
     
     public List<SObject> getSObjects() {
         return this.sobjects;
-    }
-    
-    public SObjects() {
-        this(new List<SObject>());
     }
     
     public SObjects(List<SObject> sobjects) {
         this.sobjects = sobjects;
     }
     
-    virtual public void onBeforeInsert(List<SObject> objects) {
+    virtual public void onBeforeInsert() {
         //
     }
     
-    virtual public void onAfterInsert(Map<Id,SObject> objects) {
+    virtual public void onAfterInsert() {
         //
     }
     
-    virtual public void onBeforeUpdate(Map<Id,SObject> olds, Map<Id,SObject> news) {
+    virtual public void onBeforeUpdate(List<SObject> oldObjects) {
         //
     }
     
-    virtual public void onAfterUpdate(Map<Id,SObject> olds, Map<Id,SObject> news) {
+    virtual public void onAfterUpdate(List<SObject> oldObjects) {
         //
     }
     
-    virtual public void onBeforeDelete(Map<Id,SObject> objects) {
+    virtual public void onBeforeDelete() {
         //
     }
     
-    virtual public void onAfterDelete(Map<Id,SObject> objects) {
+    virtual public void onAfterDelete() {
         //
-    }
-
+    }   
 }

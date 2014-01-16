@@ -1,13 +1,19 @@
 public class ChainSteps extends SObjects {
+    
+    public ChainSteps(List<ChainStep__c> sobjects) {
+        super(sobjects);
+    }
+       
 
     /**
      * If a step's process has configuration, we need to insert the configuration at the same
      * time as the step. (We used to do this when the user attempted to view the configuration
      * for the first time, but that does DML from a Visualforce action and fails security review.)
      */
-    public override void  onAfterInsert(Map<Id,SObject> objects) {
+    public override void  onAfterInsert() {
         //re-query to get configs
-        Map<Id,ChainStep__c> id2step = new Map<Id,ChainStep__c>([SELECT Process__r.Configurable__c, Process__r.Name FROM ChainStep__c WHERE Id IN :objects.keySet()]);
+        Set<Id> chainStepIds = (new Map<Id,SObject>(this.sobjects)).keySet();
+        Map<Id,ChainStep__c> id2step = new Map<Id,ChainStep__c>([SELECT Process__r.Configurable__c, Process__r.Name FROM ChainStep__c WHERE Id IN :chainStepIds]);
         
 
         //create configs
@@ -35,7 +41,7 @@ public class ChainSteps extends SObjects {
         
         //resequence 
         Set<Id> chainIds = new Set<Id>(); 
-        for ( ChainStep__c chainStep : (List<ChainStep__c>) objects.values()) {
+        for (ChainStep__c chainStep :  (List<ChainStep__c>)this.sobjects) {  
             chainIds.add(chainStep.Chain__c);
         }
         
@@ -67,8 +73,9 @@ public class ChainSteps extends SObjects {
      * ChainStepAfterInsert takes care of the creation of the configuration.
      * This trigger takes care of the deletion of the configuration.
      */
-    public override void  onBeforeDelete(Map<Id,SObject> objects) {
-        Map<Id,ChainStep__c> id2step = (Map<Id,ChainStep__c>)objects;
+    public override void  onBeforeDelete() {
+       Set<Id> chainStepIds = (new Map<Id,SObject>(this.sobjects)).keySet();
+       Map<Id,ChainStep__c> id2step = new Map<Id,ChainStep__c>([SELECT id, Name, Configuration__c FROM ChainStep__c WHERE Id IN :chainStepIds]);
         
         //prepare list of configuration ids
         List<Id> ids = new List<Id>();
