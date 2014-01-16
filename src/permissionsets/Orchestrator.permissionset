@@ -263,6 +263,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Process__c.FullyQualifiedClassName__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Process__c.Icon__c</field>
         <readable>false</readable>
     </fieldPermissions>

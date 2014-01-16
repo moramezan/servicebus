@@ -91,6 +91,17 @@
         <type>TextArea</type>
     </fields>
     <fields>
+        <fullName>FullyQualifiedClassName__c</fullName>
+        <caseSensitive>false</caseSensitive>
+        <externalId>true</externalId>
+        <label>Fully qualified class name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
         <fullName>Icon__c</fullName>
         <externalId>false</externalId>
         <label>Icon</label>

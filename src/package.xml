@@ -90,6 +90,7 @@
         <members>Process__c.Configurable__c</members>
         <members>Process__c.Customizable__c</members>
         <members>Process__c.Description__c</members>
+        <members>Process__c.FullyQualifiedClassName__c</members>
         <members>Process__c.Icon__c</members>
         <members>Process__c.Tag__c</members>
         <members>PublishConfiguration__c.Event__c</members>
@@ -169,6 +170,11 @@
         <name>WebLink</name>
     </types>
     <types>
+        <members>ChainStep__c.ChainStepSequenceUpdate</members>
+        <name>WorkflowFieldUpdate</name>
+    </types>
+    <types>
+        <members>ChainStep__c.OnChainStepInsert</members>
         <members>PersistentData__c.OnPersistentDataError</members>
         <name>WorkflowRule</name>
     </types>
