@@ -89,6 +89,7 @@
     </fields>
     <fields>
         <fullName>Sequence__c</fullName>
+        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <label>Sequence</label>
         <precision>2</precision>

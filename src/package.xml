@@ -79,6 +79,7 @@
         <members>ChainStep__c.Configuration__c</members>
         <members>ChainStep__c.Process__c</members>
         <members>ChainStep__c.Sequence__c</members>
+        <members>Chain__c.ChainStepsCount__c</members>
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Notification__c</members>
         <members>JumpConfiguration__c.Chain__c</members>

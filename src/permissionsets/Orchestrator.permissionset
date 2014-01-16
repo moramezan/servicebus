@@ -213,6 +213,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Chain__c.ChainStepsCount__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>GateItem__c.GateGroup__c</field>
         <readable>false</readable>
     </fieldPermissions>

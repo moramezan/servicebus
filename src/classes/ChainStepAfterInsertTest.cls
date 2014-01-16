@@ -98,7 +98,11 @@
         ChainStep__c chainStep2 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero2, Process__c = process2.Id);
         ChainStep__c chainStep3 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = SequenceEqToZero3, Process__c = process1.Id);
         ChainStep__c chainStep4 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = SequenceEqToZero4, Process__c = process1.Id);
-        insert new List<ChainStep__c> {chainStep1, chainStep2, chainStep3, chainStep4};
+        insert chainStep1;
+        insert chainStep2;
+        insert chainStep3;
+        insert chainStep4;
+        
             
         //asemble : requery after trigger
         List<ChainStep__c> chainSteps = [SELECT Id, Chain__c, Sequence__c
