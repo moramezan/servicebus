@@ -45,19 +45,7 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ChainBeforeDeleteTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>ChainSorterController</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ChainStepAfterInsertTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ChainStepBeforeDeleteTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -73,7 +61,15 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ChainStepsTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Chains</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ChainsTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -106,6 +102,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>PersistentDatas</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>PersistentDatasTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

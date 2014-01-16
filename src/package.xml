@@ -12,14 +12,13 @@
         <members>BranchTest</members>
         <members>Broker</members>
         <members>BrokerTest</members>
-        <members>ChainBeforeDeleteTest</members>
         <members>ChainSorterController</members>
-        <members>ChainStepAfterInsertTest</members>
-        <members>ChainStepBeforeDeleteTest</members>
         <members>ChainStepExtensionConfigure</members>
         <members>ChainStepExtensionConfigureTest</members>
         <members>ChainSteps</members>
+        <members>ChainStepsTest</members>
         <members>Chains</members>
+        <members>ChainsTest</members>
         <members>Gate</members>
         <members>GateTest</members>
         <members>HealthController</members>
@@ -28,6 +27,7 @@
         <members>Mark</members>
         <members>MarkTest</members>
         <members>PersistentDatas</members>
+        <members>PersistentDatasTest</members>
         <members>ProcessExtensionCustomize</members>
         <members>ProcessExtensionCustomizeTest</members>
         <members>ProcessGenerateExtension</members>

@@ -1,5 +1,6 @@
-@isTest public class ChainBeforeDeleteTest {
+@isTest public class ChainsTest {
 
+    //before delete
     static testMethod void testDeletesAreCascaded() {
         //arrange process
         Process__c process = new Process__c(Name = 'Sink');
@@ -26,5 +27,5 @@
         //assert
         System.assert(steps.isEmpty());
     }
-    
+
 }
