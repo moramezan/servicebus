@@ -9,6 +9,7 @@ public with sharing class Boomerang implements Process.Plugin {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Description = 'Boomerang process perverts execution.';
         plugin.Tag = 'Event Driven Architecture';
+        plugin.Name = 'Boomerang';
         
         plugin.outputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter(

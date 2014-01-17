@@ -11,6 +11,7 @@ public with sharing class Publish implements Process.Plugin {
         Process.PluginDescribeResult result = new Process.PluginDescribeResult();
         result.Description = 'Publishes to a named event';
         result.Tag = 'Event Driven Architecture';
+        result.Name = 'Publish';
         return result;
     }
     

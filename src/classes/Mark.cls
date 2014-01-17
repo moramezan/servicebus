@@ -8,6 +8,7 @@ public with sharing class Mark implements Process.Plugin {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Description = 'Marks splitted notifications with an association key. Next process must be a split.';
         plugin.Tag = 'Event Driven Architecture';
+        plugin.Name = 'Mark';
         
         plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter(

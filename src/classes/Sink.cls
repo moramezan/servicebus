@@ -8,6 +8,7 @@ public with sharing class Sink implements Process.Plugin {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Description = 'The Sink process terminates all chains and is mandatory.';
         plugin.Tag = 'Event Driven Architecture';
+        plugin.Name = 'Sink';
         return plugin;
     }
     

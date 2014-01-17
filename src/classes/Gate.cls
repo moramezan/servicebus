@@ -8,6 +8,7 @@ public with sharing class Gate implements Process.Plugin {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Description = 'Gate process allows you to aggregate marked notifications on a common grouping key.';
         plugin.Tag = 'Event Driven Architecture';
+        plugin.Name = 'Gate';
         
         plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
             new Process.PluginDescribeResult.InputParameter(

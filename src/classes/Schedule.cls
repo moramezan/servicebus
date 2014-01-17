@@ -7,7 +7,8 @@ public with sharing class Schedule implements Process.Plugin {
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Tag = 'Event Driven Architecture';
-        Plugin.Description = 'Fires this chain at controlled intervals {"eda__configurable":"' + Schema.SObjectType.ScheduleConfiguration__c.Name + '"}';
+        plugin.Description = 'Fires this chain at controlled intervals {"eda__configurable":"' + Schema.SObjectType.ScheduleConfiguration__c.Name + '"}';
+        plugin.Name = 'Schedule';
         return plugin;
     }
     
