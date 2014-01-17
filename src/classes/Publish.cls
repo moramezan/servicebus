@@ -9,7 +9,7 @@ public with sharing class Publish implements Process.Plugin {
     
     public Process.PluginDescribeResult describe () {
         Process.PluginDescribeResult result = new Process.PluginDescribeResult();
-        result.Description = 'Publishes to a named event';
+        result.Description = 'Publishes to a named event type';
         result.Tag = 'Event Driven Architecture';
         result.Name = 'Publish';
         return result;
@@ -20,19 +20,19 @@ public with sharing class Publish implements Process.Plugin {
         List<Map<String,Object>> notifications = new List<Map<string,object>>();
         
         PublishConfiguration__c publishConfiguration = [
-            SELECT Id, Event__c 
+            SELECT Id, EventType__c 
             FROM PublishConfiguration__c
             WHERE Id = :(Id)notification.get('eda__configuration')
         ];
         
-        if (null == publishConfiguration.Event__c) {
-            throw new PublishException('Publish Configuration ' + publishConfiguration.Id + ' has no Event');
+        if (null == publishConfiguration.EventType__c) {
+            throw new PublishException('Publish Configuration ' + publishConfiguration.Id + ' has no Event type');
         }
         
         Map<Id,SObject> subscribeConfigurations = new Map<Id,SObject>([
             SELECT Id 
             FROM SubscribeConfiguration__c
-            WHERE Event__c = :publishConfiguration.Event__c
+            WHERE EventType__c = :publishConfiguration.EventType__c
         ]);
         
         List<ChainStep__c> steps = [
@@ -76,18 +76,18 @@ public with sharing class Publish implements Process.Plugin {
         Boolean resolvedProcess = (publishProcess != null);
 
         Map<Id,PublishConfiguration__c> publishConfigurationIdToPublishConfiguration = new Map<Id,PublishConfiguration__c>([
-            SELECT id, Name, Event__c
+            SELECT id, Name, EventType__c
             FROM PublishConfiguration__c
         ]);
 
         List<SubscribeConfiguration__c> SubscribeConfigurations = [
-            SELECT Id, Name, Event__c 
+            SELECT Id, Name, EventType__c 
             FROM SubscribeConfiguration__c
         ];
 
-        Map<Id,Event__c> eventIdToEvent = new Map<Id,Event__c>([
+        Map<Id,EventType__c> eventTypeIdToEventType = new Map<Id,EventType__c>([
             SELECT Id, Name 
-            FROM Event__c
+            FROM EventType__c
         ]);
 
         List<Map<String,Object>> instanceDetails = new List<Map<String,Object>>();
@@ -130,7 +130,7 @@ public with sharing class Publish implements Process.Plugin {
                              String status;
                              String detail;
                              PublishConfiguration__c publishConfiguration;
-                             Id eventId;
+                             Id eventTypeId;
                              
                              Boolean isOk = true;
                              if ( isOk) {
@@ -142,27 +142,27 @@ public with sharing class Publish implements Process.Plugin {
                                  }
                              }
                              if ( isOk ) {
-                                 eventId = publishConfiguration.Event__c;
-                                 if (eventId == null) {
+                                 eventTypeId = publishConfiguration.EventType__c;
+                                 if (eventTypeId == null) {
                                      isOk = false;
                                      status = 'Error';
-                                     detail = 'No event defined on Publish configuration=['+publishConfigurationId+'] for chainStepId=['+chainStepId+']';
+                                     detail = 'No event type defined on Publish configuration=['+publishConfigurationId+'] for chainStepId=['+chainStepId+']';
                                  }
                              }
                              if ( isOk ) {
                                  Boolean subscriberFound = false;
                                  for (SubscribeConfiguration__c SubscribeConfiguration : SubscribeConfigurations) {
-                                     if (SubscribeConfiguration.Event__c == eventId) {
+                                     if (SubscribeConfiguration.EventType__c == eventTypeId) {
                                          subscriberFound = true;
                                      }
                                  }
                                  if (!subscriberFound) {
                                      isOk = false;
-                                     Event__c event = eventIdToEvent.get(eventId);
-                                     String eventName = (event == null) ? '' : event.Name;
+                                     EventType__c eventType = eventTypeIdToEventType.get(eventTypeId);
+                                     String eventTypeName = (eventType == null) ? '' : eventType.Name;
                                      isOk = false;
                                      status = 'Warning';
-                                     detail = 'No Subscriber is configured to subscribe to event=['+eventName+'] published on chainStepId=['+chainStepId+']';
+                                     detail = 'No Subscriber is configured to subscribe to event=['+eventTypeName+'] published on chainStepId=['+chainStepId+']';
                                  }
                              }
 

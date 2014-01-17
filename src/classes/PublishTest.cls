@@ -17,16 +17,16 @@
     }
     
     static testMethod void testBoomerangDropped() {
-        Event__c event = new Event__c(Name = 'ready');
-        insert event;
+        EventType__c eventType = new EventType__c(Name = 'ready');
+        insert eventType;
         
         Process__c process = new Process__c(Name = 'Subscribe');
         insert process;
         
-        PublishConfiguration__c pubConfig = new PublishConfiguration__c(Event__c = event.Id);
+        PublishConfiguration__c pubConfig = new PublishConfiguration__c(EventType__c = eventType.Id);
         insert pubConfig;
         
-        SubscribeConfiguration__c subConfig = new SubscribeConfiguration__c(Event__c = event.Id);
+        SubscribeConfiguration__c subConfig = new SubscribeConfiguration__c(EventType__c = eventType.Id);
         insert subConfig;
         
         Chain__c target = new Chain__c(Name = 'target');
@@ -39,7 +39,7 @@
         
         Database.update(new SubscribeConfiguration__c(
             Id = subscribe.Configuration__c,
-            Event__c = event.Id
+            EventType__c = eventType.Id
         ));
         
         Map<String,Object> notification = new Map<String,Object>{
@@ -106,8 +106,8 @@
         }
        Process__c process = (Process__c )procecessNameToProcess.get('Publish');
         
-        Event__c event = new Event__c(Name = 'TestEvent');
-        insert event;
+        EventType__c eventType = new EventType__c(Name = 'TestEvent');
+        insert eventType;
         
         Chain__c chain = new Chain__c(Name = 'TestChain');
         insert chain;
@@ -116,7 +116,7 @@
         insert chainStep;
         
         PublishConfiguration__c publishConfiguration = [SELECT Id FROM PublishConfiguration__c];
-        publishConfiguration.Event__c = event.Id;
+        publishConfiguration.EventType__c = eventType.Id;
         update publishConfiguration;
         
         String data = '{"eda__chainName":"TestChain","eda__sequence":1,"eda__configuration":"' + publishConfiguration.Id + '"}';
@@ -138,8 +138,8 @@
     }
     
     static testMethod void testSubscribersAffectNotificationsReturned() {
-        Event__c event = new Event__c(Name = 'TestEvent');
-        insert event;
+        EventType__c eventType = new EventType__c(Name = 'TestEvent');
+        insert eventType;
         
         List<String> names = new List<String>{'Subscribe', 'Publish'};
         List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
@@ -165,7 +165,7 @@
         
         Database.update(new PublishConfiguration__c(
             Id = publisherStep.Configuration__c,
-            Event__c = event.Id
+            EventType__c = eventType.Id
         ));
         
         //subsribe process
@@ -183,7 +183,7 @@
         
         Database.update(new SubscribeConfiguration__c(
             Id = subscriber1step.Configuration__c,
-            Event__c = event.Id
+            EventType__c = eventType.Id
         ));
         
         Chain__c subscriber2 = new Chain__c(Name = 'Subscriber2');
@@ -196,7 +196,7 @@
         
         Database.update(new SubscribeConfiguration__c(
             Id = subscriber2step.Configuration__c,
-            Event__c = event.Id
+            EventType__c = eventType.Id
         ));
         
         //arrange
@@ -288,8 +288,8 @@
         insert new List<ChainStep__c>{chainStepZ3}; 
 
         // Event
-        Event__c eventSubscribed = new Event__c(Name = 'an-event-that-IS-Subscribed');
-        insert eventSubscribed;
+        EventType__c eventTypeSubscribed = new EventType__c(Name = 'an-event-that-IS-Subscribed');
+        insert eventTypeSubscribed;
 
         // Config Subscribe 
         Id SubscribeConfigurationIdZ3 = (Id) [SELECT Id, Configuration__c 
@@ -298,12 +298,12 @@
         ].Configuration__c;
             
         SubscribeConfiguration__c SubscribeConfigurationZ3 = [
-            SELECT Id, Event__c 
+            SELECT Id, EventType__c 
             FROM SubscribeConfiguration__c 
             WHERE Id = :SubscribeConfigurationIdZ3
         ];
         
-        SubscribeConfigurationZ3.Event__c = eventSubscribed.Id;
+        SubscribeConfigurationZ3.EventType__c = eventTypeSubscribed.Id;
         update SubscribeConfigurationZ3;    
         
         // Config Z1 
@@ -314,12 +314,12 @@
         ].Configuration__c;
         
         PublishConfiguration__c PublishConfigurationZ1 = [
-            SELECT Id, Event__c 
+            SELECT Id, EventType__c 
             FROM PublishConfiguration__c 
             WHERE Id = :configurationIdZ1
         ];
         
-        PublishConfigurationZ1.Event__c = eventSubscribed.Id;
+        PublishConfigurationZ1.EventType__c = eventTypeSubscribed.Id;
         update PublishConfigurationZ1;
 
         // Act :
@@ -368,8 +368,8 @@
         insert new List<ChainStep__c>{chainStepA1, chainStepA2};
 
         // Event
-        Event__c eventNotSubscribed = new Event__c(Name = 'an-event-not-Subscribed');
-        insert eventNotSubscribed;
+        EventType__c eventTypeNotSubscribed = new EventType__c(Name = 'an-event-not-Subscribed');
+        insert eventTypeNotSubscribed;
 
         // Config A1
         Id configurationIdA1 = (Id) [
@@ -379,12 +379,12 @@
         ].Configuration__c;
     
         PublishConfiguration__c PublishConfigurationA1 = [
-            SELECT Id, Event__c 
+            SELECT Id, EventType__c 
             FROM PublishConfiguration__c
             WHERE Id = :configurationIdA1
         ];
 
-        PublishConfigurationA1.Event__c = eventNotSubscribed.Id;
+        PublishConfigurationA1.EventType__c = eventTypeNotSubscribed.Id;
         update PublishConfigurationA1;
 
         // Act :
@@ -506,7 +506,7 @@
         System.assertEquals(expectedErrorCount, actualErrorCount);
 
         String actualDescription = chainIdToDescription.get(chainB.Id);
-        String expectedDescription = 'No event defined on Publish configuration';
+        String expectedDescription = 'No event type defined on Publish configuration';
         System.assert(actualDescription.contains(expectedDescription));
     } 
 }

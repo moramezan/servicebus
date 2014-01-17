@@ -278,7 +278,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>PublishConfiguration__c.Event__c</field>
+        <field>PublishConfiguration__c.EventType__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -293,7 +293,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>SubscribeConfiguration__c.Event__c</field>
+        <field>SubscribeConfiguration__c.EventType__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <label>Orchestrator</label>
@@ -339,7 +339,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>Event__c</object>
+        <object>EventType__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>

@@ -111,28 +111,28 @@
      
  
         // Event
-        Event__c eventPublished = new Event__c(Name = 'an-event-that-IS-published');
-        insert eventPublished;
+        EventType__c  eventTypePublished  = new EventType__c(Name = 'an-event-that-IS-published');
+        insert  eventTypePublished ;
         
 
         // Config Publish 
         Id publishConfigurationIdZ3 = (Id) [SELECT Id, Configuration__c 
                                      FROM ChainStep__c 
                                      WHERE Id = :chainStepZ3.Id LIMIT 1].Configuration__c;
-        PublishConfiguration__c  publishConfigurationZ3 =  [SELECT Id, Event__c 
+        PublishConfiguration__c  publishConfigurationZ3 =  [SELECT Id, EventType__c 
                                                               FROM PublishConfiguration__c 
                                                               WHERE Id = :publishConfigurationIdZ3];
-        publishConfigurationZ3.Event__c = eventPublished.Id;
+        publishConfigurationZ3.EventType__c =  eventTypePublished .Id;
         update publishConfigurationZ3;    
         
         // Config Z1 
         Id configurationIdZ1 = (Id) [SELECT Id, Configuration__c 
                                      FROM ChainStep__c 
                                      WHERE Id = :chainStepZ1.Id LIMIT 1].Configuration__c;
-        SubscribeConfiguration__c  subscribeConfigurationZ1 =  [SELECT Id, Event__c 
+        SubscribeConfiguration__c  subscribeConfigurationZ1 =  [SELECT Id, EventType__c 
                                                               FROM SubscribeConfiguration__c 
                                                               WHERE Id = :configurationIdZ1];
-        subscribeConfigurationZ1.Event__c = eventPublished.Id;
+        subscribeConfigurationZ1.EventType__c =  eventTypePublished .Id;
         update subscribeConfigurationZ1;
         
   
@@ -191,7 +191,7 @@
         insert new List<ChainStep__c>{chainStepA1, chainStepA2};
 
         // Event
-        Event__c eventNotPublished = new Event__c(Name = 'an-event-not-published');
+        EventType__c eventNotPublished = new EventType__c(Name = 'an-event-not-published');
         insert eventNotPublished;
 
         
@@ -200,10 +200,10 @@
         Id configurationIdA1 = (Id) [SELECT Id, Configuration__c 
                                      FROM ChainStep__c 
                                      WHERE Id = :chainStepA1.Id LIMIT 1].Configuration__c;
-        SubscribeConfiguration__c  subscribeConfigurationA1 =  [SELECT Id, Event__c 
+        SubscribeConfiguration__c  subscribeConfigurationA1 =  [SELECT Id, EventType__c 
                                                               FROM SubscribeConfiguration__c 
                                                               WHERE Id = :configurationIdA1];
-        subscribeConfigurationA1.Event__c = eventNotPublished.Id;
+        subscribeConfigurationA1.EventType__c = eventNotPublished.Id;
         update subscribeConfigurationA1;
  
  
@@ -290,8 +290,7 @@
             
 
         String  classNameSubscribe  = 'Subscribe';
-       // String  classNameWiretap  = 'Wiretap';
-        List<String> names = new List<String>{classNameSubscribe} ; //, classNameWiretap};
+        List<String> names = new List<String>{classNameSubscribe} ; 
         List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
         ApexClasses apexClasses = new ApexClasses(objects);
         List<Process__c> processes = apexClasses.regenerate();
@@ -309,7 +308,7 @@
             
             
         // Event
-        Event__c eventNotPublished = new Event__c(Name = 'an-event-not-published');
+        EventType__c eventNotPublished = new EventType__c(Name = 'an-event-not-published');
         insert eventNotPublished;
 
         
@@ -319,20 +318,20 @@
         Id configurationIdC1 = (Id) [SELECT Id, Configuration__c 
                                    FROM ChainStep__c 
                                    WHERE Id = :chainStepC1.Id LIMIT 1].Configuration__c;
-        SubscribeConfiguration__c  subscribeConfigurationC1 =  [SELECT Id, Event__c 
+        SubscribeConfiguration__c  subscribeConfigurationC1 =  [SELECT Id, EventType__c 
                                                               FROM SubscribeConfiguration__c 
                                                               WHERE Id = :configurationIdC1];
-        subscribeConfigurationC1.Event__c = eventNotPublished.Id;
+        subscribeConfigurationC1.EventType__c = eventNotPublished.Id;
         update subscribeConfigurationC1;
 
         // Config C2
         Id configurationIdC2 = (Id) [SELECT Id, Configuration__c 
                                    FROM ChainStep__c 
                                    WHERE Id = :chainStepC2.Id LIMIT 1].Configuration__c;
-        SubscribeConfiguration__c  subscribeConfigurationC2 =  [SELECT Id, Event__c 
+        SubscribeConfiguration__c  subscribeConfigurationC2 =  [SELECT Id, EventType__c 
                                                               FROM SubscribeConfiguration__c 
                                                               WHERE Id = :configurationIdC2];
-        subscribeConfigurationC2.Event__c = eventNotPublished.Id;
+        subscribeConfigurationC2.EventType__c = eventNotPublished.Id;
         update subscribeConfigurationC2;
         
         
@@ -459,7 +458,7 @@
         System.assertEquals(expectedErrorCount, actualErrorCount);
 
         String actualDescription = chainIdToDescription.get(chainB.Id);
-        String expectedDescription = 'No event defined on subscribe configuration';
+        String expectedDescription = 'No event type defined on subscribe configuration';
         System.assert(actualDescription.contains(expectedDescription));
     }
 

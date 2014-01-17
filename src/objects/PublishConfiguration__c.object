@@ -53,11 +53,11 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
-        <fullName>Event__c</fullName>
+        <fullName>EventType__c</fullName>
         <deleteConstraint>Restrict</deleteConstraint>
         <externalId>false</externalId>
-        <label>Event</label>
-        <referenceTo>Event__c</referenceTo>
+        <label>Event Type</label>
+        <referenceTo>EventType__c</referenceTo>
         <relationshipLabel>Publish Configurations</relationshipLabel>
         <relationshipName>PublishConfigurations</relationshipName>
         <required>false</required>
