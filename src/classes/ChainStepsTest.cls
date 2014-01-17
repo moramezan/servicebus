@@ -1,4 +1,4 @@
-@isTest public class ChainStepsTest {
+@isTest private class ChainStepsTest {
     
     //after insert test
     static testMethod void testChainStepConfigurationIsCreatedWhenInserted() {

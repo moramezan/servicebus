@@ -1,4 +1,4 @@
-@isTest public class PublishTest {
+@isTest private class PublishTest {
 
     static testMethod void canDetermineConfigurable() {
         //arrange

@@ -1,4 +1,4 @@
-@isTest public class ChainsTest {
+@isTest private class ChainsTest {
 
     //before delete
     static testMethod void testDeletesAreCascaded() {

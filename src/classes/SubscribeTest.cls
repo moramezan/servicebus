@@ -1,4 +1,4 @@
-@isTest public class SubscribeTest{
+@isTest private class SubscribeTest{
     
     static testMethod void canDetermineConfigurable() {
         //arrange

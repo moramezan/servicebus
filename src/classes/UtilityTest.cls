@@ -1,4 +1,4 @@
-@isTest public class UtilityTest {
+@isTest private class UtilityTest {
     static testMethod void testInputs2map() {
         //arrange
         List<Process.PluginDescribeResult.InputParameter> inputs = new List<Process.PluginDescribeResult.InputParameter>{

@@ -1,4 +1,4 @@
-@isTest public class BrokerTest {
+@isTest private class BrokerTest {
 
     static testMethod void testNotificationProgressesThroughChain() {
         //arrange processes

@@ -1,4 +1,4 @@
-@isTest public class JumpTest {
+@isTest private class JumpTest {
     
     static testMethod void testJumpPervertsExecution() {
         //arrange
