@@ -9,6 +9,7 @@ public with sharing class Subscribe implements Process.Plugin {
         Process.PluginDescribeResult result = new Process.PluginDescribeResult();
         result.Description = 'Subscribes to a named event';
         result.Tag = 'Event Driven Architecture';
+        result.Name = 'Subscribe';
         return result;
     }
     

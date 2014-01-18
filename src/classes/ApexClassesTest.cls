@@ -55,13 +55,18 @@ public class ApexClassesTest {
         
         // Assert :
         Set<String> actualProcessNames = new Set<String>();
+        Set<String> actualProcessQualifiedNames = new Set<String>();
         for (Process__c  process : processes ) {
                 actualProcessNames.add(process.Name);
+                actualProcessQualifiedNames.add(process.FullyQualifiedClassName__c);          
         }
         
         String expectedName1 = name1;
         System.assert(actualProcessNames.contains(expectedName1));
         String expectedName2 = name2;
         System.assert(actualProcessNames.contains(expectedName2));
+ 
+        System.assert(actualProcessQualifiedNames.contains(expectedName1));
+        System.assert(actualProcessQualifiedNames.contains(expectedName2));        
      }
 }

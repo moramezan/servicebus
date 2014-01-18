@@ -69,9 +69,10 @@ public class ApexClasses extends SObjects {
                     Eda meta = (Eda)Json.deserialize(Json.serialize(innerClass.newInstance()), Eda.class);
                     
                     Process__c process = new Process__c(
-                        Name = outerClass.getName(),
+                        Name = describeResult.Name,
                         Tag__c = describeResult.Tag,
-                        Description__c = describeResult.Description
+                        Description__c = describeResult.Description,
+                        FullyQualifiedClassName__c =  String.isBlank(apexClass.NamespacePrefix) ? apexClass.Name : apexClass.NamespacePrefix + '.' + apexClass.Name
                     );
                     
                     if (meta.customizable != null) {

@@ -11,6 +11,7 @@ public with sharing class Branch implements Process.Plugin {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Description = 'This process forks execution';
         plugin.Tag = 'Event Driven Architecture';
+        plugin.Name = 'Branch';
         return plugin;
     }
     

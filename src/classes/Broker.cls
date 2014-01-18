@@ -77,13 +77,13 @@ public with sharing class Broker implements Database.Batchable<SObject>, Databas
 
             //resolve processable
             Process__c process = [
-                SELECT Id, Name
+                SELECT Id, Name, FullyQualifiedClassName__c
                 FROM Process__c
                 WHERE Id = :chainStep.Process__c
             ];
 
             //instantiate processable instance
-            Type reflector = Type.forName(process.Name);
+            Type reflector = Type.forName(process.FullyQualifiedClassName__c);
             Process.Plugin processable = (Process.Plugin)reflector.newInstance();
 
             //hand in the configuration id

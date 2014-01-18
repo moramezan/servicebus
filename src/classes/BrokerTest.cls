@@ -1,28 +1,19 @@
 @isTest public class BrokerTest {
 
-    //count batch invocations
-    static Integer executions = 0;
-    
-    //mock process
-    public class Noop implements Process.Plugin {
-        public Process.PluginDescribeResult describe() {
-            return new Process.PluginDescribeResult();
-        }
-        
-        public Process.PluginResult invoke(Process.PluginRequest request) {
-            Map<String,Object> notification = request.inputParameters;
-            BrokerTest.executions++;
-            return Utility.convert(new List<Map<String,Object>>{notification});
-        }
-    }
-    
     static testMethod void testNotificationProgressesThroughChain() {
         //arrange processes
-        Process__c noopProcess = new Process__c(Name = 'BrokerTest.Noop');
-        Process__c sinkProcess = new Process__c(Name = 'Sink');
-        insert noopProcess;
-        insert sinkProcess;
-        
+        List<String> names = new List<String>{'Mark', 'Sink'};   
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
+        Process__c noopProcess  = (Process__c )procecessNameToProcess.get('Mark');
+        Process__c sinkProcess  = (Process__c )procecessNameToProcess.get('Sink');
+                
         //arrange chain
         Chain__c chain = new Chain__c(Name = 'testChain');
         insert chain;
@@ -52,20 +43,32 @@
         Test.startTest();
         Broker broker = new Broker();
         Database.executeBatch(broker, 1);
+        List<AsyncApexJob> asyncApexJobsAfter = [SELECT  ApexClassId FROM AsyncApexJob];
         Test.stopTest();
-        
+
+        // assert
         Integer expectedExecutions = 2;
-        Integer actualExecutions = BrokerTest.executions;
+        Integer actualExecutions = 0;
+        for (AsyncApexJob  asyncApexJob  : asyncApexJobsAfter) {
+            actualExecutions++;
+        }
         System.assertEquals(expectedExecutions, actualExecutions);
     }
     
     static testMethod void testEnqueueByBlob() {
         //arrange processes
-        Process__c noopProcess = new Process__c(Name = 'BrokerTest.Noop');
-        Process__c sinkProcess = new Process__c(Name = 'Sink');
-        insert noopProcess;
-        insert sinkProcess;
-        
+        List<String> names = new List<String>{'Mark', 'Sink'};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
+        Process__c noopProcess  = (Process__c )procecessNameToProcess.get('Mark');
+        Process__c sinkProcess  = (Process__c )procecessNameToProcess.get('Sink');
+ 
         //arrange chain
         Chain__c chain = new Chain__c(Name = 'testChain');
         insert chain;
@@ -109,8 +112,17 @@
     
     static testmethod void testDodgyProcess() {
         //arrange process
-        Process__c process = new Process__c(Name = 'BrokerTest.Dodgy');
-        insert process;
+        List<String> names = new List<String>{'Mark'};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
+        Process__c process  = (Process__c )procecessNameToProcess.get('Mark');
+ 
         
         //arrange chain
         Chain__c chain = new Chain__c(Name = 'testChain');
@@ -119,6 +131,10 @@
         //arrange step
         ChainStep__c step = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = process.Id);
         insert step;
+        
+        // simulate dodgy process by deleting reference
+        process.FullyQualifiedClassName__c = null;
+        update process;
         
         //act
         Test.startTest();
@@ -129,24 +145,9 @@
         PersistentData__c persistentData = [SELECT Id, Message__c FROM PersistentData__c];
         
         //asserts
-        String expectedMessage = 'catchable';
+        String expectedMessage = 'class missing';
         String actualMessage = persistentData.Message__c;
         System.assert(actualMessage.contains(expectedMessage));
-    }
-    
-    //mock exception
-    public class DodgyException extends Exception {}
-    
-    //mock process
-    public class Dodgy implements Process.Plugin {
-        public Process.PluginDescribeResult describe() {
-            return new Process.PluginDescribeResult();
-        }
-        
-        public Process.PluginResult invoke(Process.PluginRequest request) {
-            throw new DodgyException('catchable');
-            return Utility.convert(new List<Map<String,Object>>());
-        }
     }
     
     static testMethod void testMalformedNotificationThrowsSystemJsonException() {
@@ -199,8 +200,17 @@
     
     static testMethod void testStupidProcessThrowsNullPointerException() {
         //arrange (note there is no Process__c in database!)
-        Process__c process = new Process__c(Name = 'Sink');
-        insert process; //let trigger create config as appropriate
+        List<String> names = new List<String>{'Sink'};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
+        Process__c process  = (Process__c )procecessNameToProcess.get('Sink');
+
         
         Chain__c chain = new Chain__c(Name = 'TestChain');
         insert chain;
@@ -208,7 +218,7 @@
         ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = process.Id);
         insert chainStep;
         
-        process.Name = 'lalala';
+        process.FullyQualifiedClassName__c = 'lalala';
         update process; //pretend we deleted the class
         
         PersistentData__c pd = new PersistentData__c(Notification__c = '{"eda__chainName": "TestChain", "eda__sequence": 0}');
@@ -226,9 +236,17 @@
     }
     
     static testMethod void testNonProcessPluginThrowsTypeException() {
-        //arrange (note there is no Process__c in database!)
-        Process__c process = new Process__c(Name = 'Sink');
-        insert process; //let trigger create config as appropriate
+        //arrange (note there is no Process__c in database!) 
+        List<String> names = new List<String>{'Sink'};
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
+        Process__c process  = (Process__c )procecessNameToProcess.get('Sink');
         
         Chain__c chain = new Chain__c(Name = 'TestChain');
         insert chain;
@@ -236,7 +254,7 @@
         ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = process.Id);
         insert chainStep;
         
-        process.Name = 'Account';
+        process.FullyQualifiedClassName__c = 'Account';
         update process; //this is definitely not a Process.Plugin
         
         PersistentData__c pd = new PersistentData__c(Notification__c = '{"eda__chainName": "TestChain", "eda__sequence": 0}');
