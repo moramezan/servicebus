@@ -458,7 +458,7 @@
     </tabSettings>
     <tabSettings>
         <tab>Process__c</tab>
-        <visibility>None</visibility>
+        <visibility>Visible</visibility>
     </tabSettings>
     <userPermissions>
         <enabled>false</enabled>
