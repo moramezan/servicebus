@@ -84,6 +84,7 @@
         <members>GateItem__c.Notification__c</members>
         <members>JumpConfiguration__c.Chain__c</members>
         <members>KnifeSwitch__c.Url__c</members>
+        <members>PersistentData__c.ChainStep__c</members>
         <members>PersistentData__c.Message__c</members>
         <members>PersistentData__c.Notification__c</members>
         <members>Process__c.ApexClass__c</members>
