@@ -38,6 +38,11 @@
         <members>PublishTest</members>
         <members>SObjects</members>
         <members>Schedule</members>
+        <members>ScheduleDispatcher</members>
+        <members>ScheduleDispatcherTest</members>
+        <members>ScheduleImplementation</members>
+        <members>ScheduleImplementationTest</members>
+        <members>ScheduleTest</members>
         <members>Sink</members>
         <members>SinkTest</members>
         <members>Subscribe</members>
@@ -95,9 +100,10 @@
         <members>Process__c.Icon__c</members>
         <members>Process__c.Tag__c</members>
         <members>PublishConfiguration__c.EventType__c</members>
-        <members>ScheduleConfiguration__c.EveryXHours__c</members>
-        <members>ScheduleConfiguration__c.LastHeartbeatAt__c</members>
         <members>SubscribeConfiguration__c.EventType__c</members>
+        <members>ScheduleConfiguration__c.Frequency__c</members>
+        <members>ScheduleConfiguration__c.FriendlyDates__c</members>
+        <members>ScheduleConfiguration__c.FriendlyTimes__c</members>
         <members>WiretapCustomization__c.UserId__c</members>
         <name>CustomField</name>
     </types>

@@ -30,6 +30,30 @@ public class ApexClasses extends SObjects {
         super(apexClasses);
     }
     
+    /**
+     * Factory to return domain layer from a list of System.Type instances
+     *
+     * @param types List of System.Type, from eg Type.forName() or Impl.class
+     * @return      Domain instance holding Apex Class objects for all the types.
+     */
+    static public ApexClasses fromTypes(List<System.Type> types) {
+        List<String> clauses = new List<String>();
+        for (System.Type type : types) {
+            String clause;
+            if (type.getName().contains('.')) {
+                //managed (namespaceprefix.classname)
+                clause = '(NamespacePrefix = \'' + type.getName().substringAfter('.') + '\' AND Name = \'' + type.getName().substringAfter('.') + '\')';
+            } else {
+                //unmanaged (classname)
+                clause = '(Name = \'' + type.getName() + '\')';
+            }
+            clauses.add(clause);
+        }
+        String query = 'SELECT Id FROM ApexClass WHERE ' + String.join(clauses, 'OR');
+        List<ApexClass> apexClasses = Database.query(query);
+        return new ApexClasses(apexClasses);
+    }
+    
     public List<Process__c> regenerate() {
         Set<Id> ids = new Map<Id,SObject>(this.getSObjects()).keySet();
         List<ApexClass> apexClasses = [SELECT Id, NamespacePrefix, Name FROM ApexClass WHERE Id IN :ids];
