@@ -1,5 +1,68 @@
 @isTest private class BrokerTest {
  
+      static testMethod void testBrokerSurfacesExceptionThrownInsideofAnEdaProcess() {
+        //arrange 
+        List<String> names = new List<String>{'Wiretap'};   
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
+        Process__c errorProcess  = (Process__c )procecessNameToProcess.get('Wiretap');
+ 
+        Chain__c chain = new Chain__c(Name = 'testChain');
+        insert chain;
+
+        ChainStep__c step1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = errorProcess.Id);
+        List<ChainStep__c> chainSteps =  new List<ChainStep__c>{step1};  
+        insert chainSteps;         
+ 
+        //act
+        Test.startTest();
+        Broker.enqueue(chain.Name, '000000000000000AAA');
+        Test.stopTest();
+        
+        PersistentData__c persistentData = [SELECT Message__c FROM PersistentData__c];
+        String actualMessage = persistentData.Message__c;
+        String expectedMessage = 'eda processable error'; //-- if not configured , wiretap will throw an error
+        System.assert(actualMessage.contains(expectedMessage), actualMessage);
+    }
+    
+      static testMethod void testBrokerDoesNotSurfaceExceptionForProperlyInvokedProcessable() {
+        //arrange 
+        List<String> names = new List<String>{'Sink'};   
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
+        Process__c noErrorProcess  = (Process__c )procecessNameToProcess.get('Sink');
+ 
+        Chain__c chain = new Chain__c(Name = 'testChain');
+        insert chain;
+
+        ChainStep__c step1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = noErrorProcess.Id);
+        List<ChainStep__c> chainSteps =  new List<ChainStep__c>{step1};  
+        insert chainSteps;         
+ 
+        //act
+        Test.startTest();
+        Broker.enqueue(chain.Name, '000000000000000AAA');
+        Test.stopTest();
+        
+        PersistentData__c persistentData = [SELECT Message__c FROM PersistentData__c];
+        String actualMessage = persistentData.Message__c;
+        String expectedMessage = null;   // No Error expected   
+        System.assertEquals(actualMessage, actualMessage); 
+    }
+
+ 
     static testMethod void testNotificationIsCorrectlyWrittenToPersistentDatas() {
         //arrange 
         List<String> names = new List<String>{'Mark', 'Sink'};   
@@ -276,5 +339,5 @@
         String expectedMessage = 'interface';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     } 
- 
+
 }

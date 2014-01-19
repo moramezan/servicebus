@@ -115,7 +115,9 @@ public with sharing class Broker implements Database.Batchable<SObject>, Databas
 
         Map<String,Object> notification;
         List<Map<String,Object>> notifications = new List<Map<String,Object>>();
-
+        Process.Plugin processable;
+        
+        // framework fuckups
         try {
             notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c);
 
@@ -128,12 +130,10 @@ public with sharing class Broker implements Database.Batchable<SObject>, Databas
 
             notification.put('eda__configuration', chainStep.Configuration__c);
 
-            //instantiate processable instance   
-            //call invoke the processable instance
+            //instantiate processable instance  
             Type reflector = Type.forName(chainStep.Process__r.FullyQualifiedClassName__c);
-            Process.Plugin processable = (Process.Plugin)reflector.newInstance();
-            Process.PluginResult results = processable.invoke(new Process.PluginRequest(notification));
-            notifications = Utility.convert(results);  
+            processable = (Process.Plugin)reflector.newInstance();
+            
         } catch (Exception e) {
 
             if (e instanceof System.JsonException) {
@@ -144,51 +144,29 @@ public with sharing class Broker implements Database.Batchable<SObject>, Databas
                 e.setMessage('ChainStep unqueryable (bad chain name, sequence, missing sink)');
             } else if (e instanceof System.TypeException) {
                 e.setMessage('Could not cast Process.Plugin (interface unimplemented on process class)');
-            }
-            Map<String,Object> serializedException = new Map<String,Object>();
-            serializedException.put('cause', e.getCause());
-            serializedException.put('lineNumber', e.getLineNumber());
-            serializedException.put('message', e.getMessage());
-            serializedException.put('stackTraceString', e.getStackTraceString());
-            serializedException.put('typeName', e.getTypeName());
-
-            //log any exceptions
-            //and record all details over 255 bytes using note object
-            persistentData.Message__c = e.getMessage().left(255);
+            }  
         
-            // surface error - logic:
-            // if it's a test and the persistent data id is null , we are ok with that , go no further
-            // if it's a test and there is a persistent data  id, write details to database
-            // if it's not a test and there is no persistent data  id , throw an exception
-            // if it's not a test and there is a persistent data id, write details to database
-            Boolean persistError =  false;
-            if (Test.isRunningTest()) {  
-                if(persistentData.Id == null) {
-                    return;
-                } else {
-                    persistError =  true;
-                }
-            } else { // production
-                if(persistentData.Id == null) {
-                    throw new BrokerException('Id for persistent data is null');
-                } else {
-                    persistError =  true;
-                }   
-            }
-            
-            if (persistError) {
-                update persistentData;
-                insert new Note(
-                    ParentId = persistentData.Id,
-                    Title = e.getMessage().left(255),
-                    Body = System.Json.serializePretty(serializedException)
-                );     
-            }
+            surfaceException(  e , persistentData); 
 
             //get out of dodge quick
             return;
         }
 
+        // eda processable plugin fuckups - could be anything !!!
+        try {
+            //call invoke the processable instance
+            Process.PluginResult  results = processable.invoke(new Process.PluginRequest(notification));
+            notifications = Utility.convert(results); 
+        } catch (Exception e) {
+            e.setMessage('eda processable error');
+            
+            surfaceException(  e , persistentData); 
+            
+            //get out of dodge quick
+            return;
+        }
+        
+        
         //delete successfully processed notification
         if (! Test.isRunningTest() ) {
             delete persistentData;
@@ -221,6 +199,50 @@ public with sharing class Broker implements Database.Batchable<SObject>, Databas
         //write persistentDatas collection to database
         //these persistentDatas will be picked up in the next batch run
         writePersistentDatas (persistentDatas);
+    }
+    
+    
+    private static void surfaceException(Exception e, PersistentData__c persistentData) { 
+      
+        Map<String,Object> serializedException = new Map<String,Object>();
+        serializedException.put('cause', e.getCause());
+        serializedException.put('lineNumber', e.getLineNumber());
+        serializedException.put('message', e.getMessage());
+        serializedException.put('stackTraceString', e.getStackTraceString());
+        serializedException.put('typeName', e.getTypeName());
+
+        //log any exceptions
+        //and record all details over 255 bytes using note object
+        persistentData.Message__c = e.getMessage().left(255);
+    
+        // surface error - logic:
+        // if it's a test and the persistent data id is null , we are ok with that , go no further
+        // if it's a test and there is a persistent data  id, write details to database
+        // if it's not a test and there is no persistent data  id , throw an exception
+        // if it's not a test and there is a persistent data id, write details to database
+        Boolean persistError =  false;
+        if (Test.isRunningTest()) {  
+            if(persistentData.Id == null) {
+                return;
+            } else {
+                persistError =  true;
+            }
+        } else { // production
+            if(persistentData.Id == null) {
+                throw new BrokerException('Id for persistent data is null');
+            } else {
+                persistError =  true;
+            }   
+        }
+        
+        if (persistError) {
+            update persistentData;
+            insert new Note(
+                ParentId = persistentData.Id,
+                Title = e.getMessage().left(255),
+                Body = System.Json.serializePretty(serializedException)
+            );     
+        }
     }
     
     private static Integer getQueryLimit(Integer fuckedLimit) {
