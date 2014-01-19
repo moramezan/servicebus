@@ -33,6 +33,184 @@
         <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessGenerateZip app build" />
         <zip destfile="src/staticresources/ProcessGenerateZip.resource" basedir="dev/resource/ProcessGenerateZip/build/production/Generate" includes="**"/>
     </target>
+    
+    <target name="purge" description="Purges an organization of most customizations and components">
+        <!-- Clean up any previous purge -->
+        <delete dir="purge" />
+        <mkdir dir="purge" />
+        
+        <!-- Prepare a wildcard package definition with as many metadata types as possible -->
+        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+            <Package xmlns="http://soap.sforce.com/2006/04/metadata">
+                <types><members>*</members><name>AccountCriteriaBasedSharingRule</name></types>
+                <types><members>*</members><name>AccountOwnerSharingRule</name></types>
+                <types><members>*</members><name>AccountSharingRules</name></types>
+                <types><members>*</members><name>AnalyticSnapshot</name></types>
+                <types><members>*</members><name>ApexClass</name></types>
+                <types><members>*</members><name>ApexComponent</name></types>
+                <types><members>*</members><name>ApexPage</name></types>
+                <types><members>*</members><name>ApexTrigger</name></types>
+                <types><members>*</members><name>ApexTriggerCoupling</name></types>
+                <types><members>*</members><name>AuthProvider</name></types>
+                <types><members>*</members><name>BusinessProcess</name></types>
+                <types><members>*</members><name>CallCenter</name></types>
+                <types><members>*</members><name>CampaignCriteriaBasedSharingRule</name></types>
+                <types><members>*</members><name>CampaignOwnerSharingRule</name></types>
+                <types><members>*</members><name>CampaignSharingRules</name></types>
+                <types><members>*</members><name>CaseCriteriaBasedSharingRule</name></types>
+                <types><members>*</members><name>CaseOwnerSharingRule</name></types>
+                <types><members>*</members><name>CaseSharingRules</name></types>
+                <types><members>*</members><name>CompactLayout</name></types>
+                <types><members>*</members><name>ConnectedApp</name></types>
+                <types><members>*</members><name>ContactCriteriaBasedSharingRule</name></types>
+                <types><members>*</members><name>ContactOwnerSharingRule</name></types>
+                <types><members>*</members><name>ContactSharingRules</name></types>
+                <types><members>*</members><name>CustomField</name></types>
+                <types><members>*</members><name>CustomLabel</name></types>
+                <types><members>*</members><name>CustomLabels</name></types>
+                <types><members>*</members><name>CustomObject</name></types>
+                <types><members>*</members><name>CustomObjectCriteriaBasedSharingRule</name></types>
+                <types><members>*</members><name>CustomObjectOwnerSharingRule</name></types>
+                <types><members>*</members><name>CustomObjectSharingRules</name></types>
+                <types><members>*</members><name>CustomObjectTranslation</name></types>
+                <types><members>*</members><name>CustomPageWebLink</name></types>
+                <types><members>*</members><name>CustomTab</name></types>
+                <types><members>*</members><name>Dashboard</name></types>
+                <types><members>*</members><name>DataCategoryGroup</name></types>
+                <types><members>*</members><name>Document</name></types>
+                <types><members>*</members><name>EmailTemplate</name></types>
+                <types><members>*</members><name>FieldSet</name></types>
+                <types><members>*</members><name>FlexiPage</name></types>
+                <types><members>*</members><name>Flow</name></types>
+                <types><members>*</members><name>Group</name></types>
+                <types><members>*</members><name>LeadCriteriaBasedSharingRule</name></types>
+                <types><members>*</members><name>LeadOwnerSharingRule</name></types>
+                <types><members>*</members><name>LeadSharingRules</name></types>
+                <types><members>*</members><name>Letterhead</name></types>
+                <types><members>*</members><name>ListView</name></types>
+                <types><members>*</members><name>NamedFilter</name></types>
+                <types><members>*</members><name>OpportunityCriteriaBasedSharingRule</name></types>
+                <types><members>*</members><name>OpportunityOwnerSharingRule</name></types>
+                <types><members>*</members><name>OpportunitySharingRules</name></types>
+                <types><members>*</members><name>RecordType</name></types>
+                <types><members>*</members><name>RemoteSiteSetting</name></types>
+                <types><members>*</members><name>Report</name></types>
+                <types><members>*</members><name>ReportType</name></types>
+                <types><members>*</members><name>SamlSsoConfig</name></types>
+                <types><members>*</members><name>Scontrol</name></types>
+                <types><members>*</members><name>SharingReason</name></types>
+                <types><members>*</members><name>StaticResource</name></types>
+                <types><members>*</members><name>ValidationRule</name></types>
+                <types><members>*</members><name>WebLink</name></types>
+                <types><members>*</members><name>Workflow</name></types>
+                <types><members>*</members><name>WorkflowAlert</name></types>
+                <types><members>*</members><name>WorkflowApex</name></types>
+                <types><members>*</members><name>WorkflowChatterPost</name></types>
+                <types><members>*</members><name>WorkflowFieldUpdate</name></types>
+                <types><members>*</members><name>WorkflowKnowledgePublish</name></types>
+                <types><members>*</members><name>WorkflowOutboundMessage</name></types>
+                <types><members>*</members><name>WorkflowQuickCreate</name></types>
+                <types><members>*</members><name>WorkflowRule</name></types>
+                <types><members>*</members><name>WorkflowSend</name></types>
+                <types><members>*</members><name>WorkflowTask</name></types>
+                <version>29.0</version>
+            </Package>
+        ]]></echo>
+        
+        <!--
+         ! These metadata types are either unpackageable, or tricky because
+         ! they are coupled to profiles (app) or users (permissionsets):
+         ! <types><members>*</members><name>ApprovalProcess</name></types>
+         ! <types><members>*</members><name>AssignmentRule</name></types>
+         ! <types><members>*</members><name>AssignmentRules</name></types>
+         ! <types><members>*</members><name>AutoResponseRule</name></types>
+         ! <types><members>*</members><name>AutoResponseRules</name></types>
+         ! <types><members>*</members><name>Community</name></types>
+         ! <types><members>*</members><name>CustomApplication</name></types>
+         ! <types><members>*</members><name>CustomApplicationComponent</name></types>
+         ! <types><members>*</members><name>CustomSite</name></types>
+         ! <types><members>*</members><name>EscalationRule</name></types>
+         ! <types><members>*</members><name>EscalationRules</name></types>
+         ! <types><members>*</members><name>HomePageComponent</name></types>
+         ! <types><members>*</members><name>HomePageLayout</name></types>
+         ! <types><members>*</members><name>InstalledPackage</name></types>
+         ! <types><members>*</members><name>Layout</name></types>
+         ! <types><members>*</members><name>PermissionSet</name></types>
+         ! <types><members>*</members><name>Profile</name></types>
+         ! <types><members>*</members><name>Queue</name></types>
+         ! <types><members>*</members><name>QuickAction</name></types>
+         ! <types><members>*</members><name>Role</name></types>
+         ! <types><members>*</members><name>Settings</name></types>
+         ! <types><members>*</members><name>SynonymDictionary</name></types>
+         ! <types><members>*</members><name>WorkflowActionFlow</name></types>
+         !-->
+        
+        <!-- Retrieve the wildcard package definition -->
+        <sf:retrieve
+        username="${sf.username}"
+        password="${sf.password}"
+        serverurl="https://login.salesforce.com"
+        retrieveTarget="purge"
+        unpackaged="purge/package.xml"
+        pollWaitMillis="1000" />
+        
+        <!--
+         ! These components retrieve ok, but attempting to deploy them throws:
+         ! "Cannot create workflow directly; must create the CustomObject first"
+         ! We delete them so they don't make their way into destructiveChanges.xml
+         !-->
+        <delete file="purge/workflows/Question.workflow" />
+        <delete file="purge/workflows/Reply.workflow" />
+        <delete file="purge/workflows/SocialPersona.workflow" />
+        <delete file="purge/workflows/SocialPost.workflow" />
+        
+        <!-- Name the package definition -->
+        <replace file="purge/package.xml">
+            <replacetoken><![CDATA[</version>]]></replacetoken>
+            <replacevalue><![CDATA[</version><fullName>Purge</fullName>]]></replacevalue>
+        </replace>
+        
+        <!-- Re-deploy the now-named wildcard package definition -->
+        <sf:deploy
+        username="${sf.username}"
+        password="${sf.password}"
+        serverurl="https://login.salesforce.com"
+        deployRoot="purge"
+        pollWaitMillis="1000" />
+        
+        <!-- Retrieve by name, giving us an explicit package definition -->
+        <sf:retrieve
+        username="${sf.username}"
+        password="${sf.password}"
+        serverurl="https://login.salesforce.com"
+        retrieveTarget="purge"
+        packageNames="Purge"
+        pollWaitMillis="1000" />
+        
+        <!--
+         ! Trash local components: we only needed them to get an explicit package definition.
+         ! Now we turn the explicit package definition into explicit destructive changes, and
+         ! blank out the package definition.
+         !-->
+        <delete includeEmptyDirs="true" dir="purge" includes="**/*" excludes="*.xml" />
+        <copy file="purge/package.xml" tofile="purge/destructiveChanges.xml" />
+        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+            <Package xmlns="http://soap.sforce.com/2006/04/metadata">
+                <version>29.0</version>
+            </Package>
+        ]]></echo>
+        
+        <!-- Perform explicit deploy over the top of the org which should delete all components -->
+        <sf:deploy
+        username="${sf.username}"
+        password="${sf.password}"
+        serverurl="https://login.salesforce.com"
+        deployRoot="purge"
+        pollWaitMillis="1000" />
+        
+        <!-- Tidy up after ourselves -->
+        <delete dir="purge" />
+    </target>
 
     <target name="usage">
         <java classname="org.apache.tools.ant.Main">
