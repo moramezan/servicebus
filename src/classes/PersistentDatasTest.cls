@@ -1,4 +1,4 @@
-@isTest public class PersistentDatasTest {
+@isTest private class PersistentDatasTest {
     
     //after insert
     

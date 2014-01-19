@@ -1,4 +1,4 @@
-@isTest public class ProcessGenerateExtensionTest {
+@isTest private class ProcessGenerateExtensionTest {
     
     static testMethod void testGetAsyncApexJob() {
         //arrange

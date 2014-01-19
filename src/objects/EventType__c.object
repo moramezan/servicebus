@@ -50,12 +50,12 @@
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
-    <label>Event</label>
+    <label>Event Type</label>
     <nameField>
-        <label>Event Name</label>
+        <label>Event Type Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Events</pluralLabel>
+    <pluralLabel>Event Types</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <startsWith>Vowel</startsWith>

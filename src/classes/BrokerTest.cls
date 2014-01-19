@@ -1,7 +1,70 @@
-@isTest public class BrokerTest {
+@isTest private class BrokerTest {
+ 
+      static testMethod void testBrokerSurfacesExceptionThrownInsideofAnEdaProcess() {
+        //arrange 
+        List<String> names = new List<String>{'Wiretap'};   
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
+        Process__c errorProcess  = (Process__c )procecessNameToProcess.get('Wiretap');
+ 
+        Chain__c chain = new Chain__c(Name = 'testChain');
+        insert chain;
 
-    static testMethod void testNotificationProgressesThroughChain() {
-        //arrange processes
+        ChainStep__c step1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = errorProcess.Id);
+        List<ChainStep__c> chainSteps =  new List<ChainStep__c>{step1};  
+        insert chainSteps;         
+ 
+        //act
+        Test.startTest();
+        Broker.enqueue(chain.Name, '000000000000000AAA');
+        Test.stopTest();
+        
+        PersistentData__c persistentData = [SELECT Message__c FROM PersistentData__c];
+        String actualMessage = persistentData.Message__c;
+        String expectedMessage = 'eda processable error'; //-- if not configured , wiretap will throw an error
+        System.assert(actualMessage.contains(expectedMessage), actualMessage);
+    }
+    
+      static testMethod void testBrokerDoesNotSurfaceExceptionForProperlyInvokedProcessable() {
+        //arrange 
+        List<String> names = new List<String>{'Sink'};   
+        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
+        ApexClasses apexClasses = new ApexClasses(objects);
+        List<Process__c> processes = apexClasses.regenerate();
+        insert processes;
+        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
+        for (Process__c p : processes) {
+           procecessNameToProcess.put(p.Name, p); 
+        }
+        Process__c noErrorProcess  = (Process__c )procecessNameToProcess.get('Sink');
+ 
+        Chain__c chain = new Chain__c(Name = 'testChain');
+        insert chain;
+
+        ChainStep__c step1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = noErrorProcess.Id);
+        List<ChainStep__c> chainSteps =  new List<ChainStep__c>{step1};  
+        insert chainSteps;         
+ 
+        //act
+        Test.startTest();
+        Broker.enqueue(chain.Name, '000000000000000AAA');
+        Test.stopTest();
+        
+        PersistentData__c persistentData = [SELECT Message__c FROM PersistentData__c];
+        String actualMessage = persistentData.Message__c;
+        String expectedMessage = null;   // No Error expected   
+        System.assertEquals(actualMessage, actualMessage); 
+    }
+
+ 
+    static testMethod void testNotificationIsCorrectlyWrittenToPersistentDatas() {
+        //arrange 
         List<String> names = new List<String>{'Mark', 'Sink'};   
         List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
         ApexClasses apexClasses = new ApexClasses(objects);
@@ -11,53 +74,55 @@
         for (Process__c p : processes) {
            procecessNameToProcess.put(p.Name, p); 
         }
-        Process__c noopProcess  = (Process__c )procecessNameToProcess.get('Mark');
+        Process__c markProcess  = (Process__c )procecessNameToProcess.get('Mark');
         Process__c sinkProcess  = (Process__c )procecessNameToProcess.get('Sink');
                 
-        //arrange chain
+ 
         Chain__c chain = new Chain__c(Name = 'testChain');
         insert chain;
-        
-        //arrange steps
-        ChainStep__c step1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = noopProcess.Id);
-        ChainStep__c step2 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 2, Process__c = noopProcess.Id);
+
+        ChainStep__c step1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = markProcess.Id);
+        ChainStep__c step2 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 2, Process__c = markProcess.Id);
         ChainStep__c step3 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 3, Process__c = sinkProcess.Id);
-        insert step1;
-        insert step2;
-        insert step3;
-        
-        //arrange notification
-        Map<String,Object> notification = new Map<String,Object>{
-            'eda__chainName' => chain.Name,
-            'eda__sequence' => 0
-        };
-        
-        //arrange persistent data
-        PersistentData__c data = new PersistentData__c(
-            Notification__c = Json.serialize(notification),
-            RecordTypeId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Buffer').RecordTypeId
-        );
-        insert data;
-        
+        List<ChainStep__c> chainSteps =  new List<ChainStep__c>{step1, step2 , step3};
+        insert chainSteps;          
+ 
         //act
         Test.startTest();
-        Broker broker = new Broker();
-        Database.executeBatch(broker, 1);
-        List<AsyncApexJob> asyncApexJobsAfter = [SELECT  ApexClassId FROM AsyncApexJob];
+        Broker.enqueue(chain.Name, '000000000000000AAA');
         Test.stopTest();
-
+        
+        // assemble
+        List<PersistentData__c> persistentDatas = [
+            SELECT id, Notification__c, ChainStep__c  //, Process__c  
+            FROM PersistentData__c 
+            ORDER BY Id ASC
+        ];
+      
+ 
         // assert
-        Integer expectedExecutions = 2;
-        Integer actualExecutions = 0;
-        for (AsyncApexJob  asyncApexJob  : asyncApexJobsAfter) {
-            actualExecutions++;
-        }
-        System.assertEquals(expectedExecutions, actualExecutions);
+        Integer expectedCount = 3;
+        Integer actualCount = persistentDatas.size();
+        System.assertEquals(expectedCount, actualCount);
+        
+ 
+        Id expectedChainStepId1 = step1.Id;
+        Id actualChainStepId1 = persistentDatas[0].ChainStep__c;
+        System.assertEquals(expectedChainStepId1, actualChainStepId1);
+        
+        Id expectedChainStepId2 = step2.Id;
+        Id actualChainStepId2 = persistentDatas[1].ChainStep__c;
+        System.assertEquals(expectedChainStepId2, actualChainStepId2);
+        
+        Id expectedChainStepId3 = step3.Id;
+        Id actualChainStepId3 = persistentDatas[2].ChainStep__c;
+        System.assertEquals(expectedChainStepId3, actualChainStepId3);
     }
-    
+
+
     static testMethod void testEnqueueByBlob() {
-        //arrange processes
-        List<String> names = new List<String>{'Mark', 'Sink'};
+        //arrange 
+        List<String> names = new List<String>{'Mark', 'Sink'};   
         List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
         ApexClasses apexClasses = new ApexClasses(objects);
         List<Process__c> processes = apexClasses.regenerate();
@@ -66,50 +131,62 @@
         for (Process__c p : processes) {
            procecessNameToProcess.put(p.Name, p); 
         }
-        Process__c noopProcess  = (Process__c )procecessNameToProcess.get('Mark');
+        Process__c markProcess  = (Process__c )procecessNameToProcess.get('Mark');
         Process__c sinkProcess  = (Process__c )procecessNameToProcess.get('Sink');
+                
  
-        //arrange chain
         Chain__c chain = new Chain__c(Name = 'testChain');
         insert chain;
-        
-        //arrange steps
-        ChainStep__c step1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = noopProcess.Id);
-        ChainStep__c step2 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 2, Process__c = noopProcess.Id);
-        ChainStep__c step3 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 3, Process__c = sinkProcess.Id);
-        insert step1;
-        insert step2;
-        insert step3;
-        
-        //arrange arguments
-        String testChain = 'testChain';
-        Blob data = Blob.valueOf('herpderp');
-        
+
+        ChainStep__c step1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = markProcess.Id);
+        ChainStep__c step2 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 2, Process__c = sinkProcess.Id);
+        List<ChainStep__c> chainSteps =  new List<ChainStep__c>{step1, step2 };
+        insert chainSteps;          
+
+        String data = 'herpderp';
+        Blob dataBlob = Blob.valueOf(data);
+ 
         //act
-        Broker.enqueue(testChain, data);
+        Test.startTest();
+        Broker.enqueue(chain.Name, dataBlob);
+        Test.stopTest();
         
-        //arrange
-        Document document = [SELECT Id, Body FROM Document];
+        // assemble
+        List<PersistentData__c>  persistentDatas  = [
+            SELECT id, Notification__c, ChainStep__c //, Process__c  
+            FROM PersistentData__c 
+            WHERE ChainStep__r.Process__c = :markProcess.Id
+        ];
+        
+        List<Document> documents = [SELECT Id, Body FROM Document];
+        
+        Id expectedId  = null;
+        Id actualId  =  null;
+        String expectedData = data;
+        String actualData = null;
+        if ( documents.size() >  0 ) {
+            actualId  = documents[0].Id;
+            actualData = documents[0].Body.toString();        
+            
+        }   
+        if ( persistentDatas.size() >  0 ) {
+            Map<string,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentDatas[0].Notification__c);   
+            expectedId  =  (Id) notification.get('id');
+        }
+                
         
         //assert
-        String expectedData = 'herpderp';
-        String actualData = document.Body.toString();
+        Integer expectedCount = 1;
+        Integer actualCount = persistentDatas.size();
+        System.assertEquals(expectedCount, actualCount);
+        
+        System.assert(actualId != null);
+        System.assertEquals(expectedId, actualId);
         System.assertEquals(expectedData, actualData);
-        
-        //arrange
-        PersistentData__c persistentData = [SELECT Id, Notification__c FROM PersistentData__c];
-        Map<String,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c);
-        
-        //assert
-        String expectedChainName = testChain;
-        String actualChainName = (String)notification.get('eda__chainName');
-        System.assertEquals(expectedChainName, actualChainName);
-        
-        Decimal expectedSequence = 0;
-        Decimal actualSequence = (Decimal)notification.get('eda__sequence');
-        System.assertEquals(expectedSequence, actualSequence);
     }
-    
+
+
+ 
     static testmethod void testDodgyProcess() {
         //arrange process
         List<String> names = new List<String>{'Mark'};
@@ -152,53 +229,47 @@
     
     static testMethod void testMalformedNotificationThrowsSystemJsonException() {
         //arrange
-        PersistentData__c pd = new PersistentData__c(Notification__c = '{"malformed":...}');
-        insert pd;
-        
+        PersistentData__c persistentData = new PersistentData__c(Notification__c = '{"malformed":....}');
+ 
         //act
-        Broker broker = new Broker();
-        broker.execute(null, new List<SObject>{pd});
-        
+        broker.doWork(persistentData);
+
         //assert
-        pd = [SELECT Id, Notification__c, Message__c FROM PersistentData__c WHERE Id = :pd.Id];
-        String expectedMessage = 'json';
-        String actualMessage = pd.Message__c;
+        String actualMessage = persistentData.Message__c;
+        String expectedMessage = 'Could not deserialize json';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
+
     
-    static testMethod void testMissingSequenceThrowsNullPointerException() {
+    static testMethod void testMissingSequenceThrowsExpectedException() {
         //arrange
-        PersistentData__c pd = new PersistentData__c(Notification__c = '{"not_sequence": 0}');
-        insert pd;
-        
+        PersistentData__c persistentData = new PersistentData__c(Notification__c = '{"not_sequence": 0}');
+  
         //act
-        Broker broker = new Broker();
-        broker.execute(null, new List<SObject>{pd});
-        
+        broker.doWork(persistentData);
+
         //assert
-        pd = [SELECT Id, Notification__c, Message__c FROM PersistentData__c WHERE Id = :pd.Id];
-        String expectedMessage = 'Sequence';
-        String actualMessage = pd.Message__c;
+        String actualMessage = persistentData.Message__c;
+        String expectedMessage = 'sequence';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
     static testMethod void testNoChainStepThrowsQueryException() {
         //arrange (note there is no ChainStep__c in database!)
-        PersistentData__c pd = new PersistentData__c(Notification__c = '{"eda__chainName": "", "eda__sequence": 0}');
-        insert pd;
-        
+        PersistentData__c persistentData = new PersistentData__c(Notification__c = '{"eda__chainName": "", "eda__sequence": 0}');
+  
         //act
-        Broker broker = new Broker();
-        broker.execute(null, new List<SObject>{pd});
-        
+        broker.doWork(persistentData);
+
         //assert
-        pd = [SELECT Id, Notification__c, Message__c FROM PersistentData__c WHERE Id = :pd.Id];
+        String actualMessage = persistentData.Message__c;
         String expectedMessage = 'ChainStep';
-        String actualMessage = pd.Message__c;
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
-    
-    static testMethod void testStupidProcessThrowsNullPointerException() {
+
+ 
+ 
+    static testMethod void testProcessWithoutClassThrowsThrowsExpectedException() {
         //arrange (note there is no Process__c in database!)
         List<String> names = new List<String>{'Sink'};
         List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
@@ -211,7 +282,7 @@
         }
         Process__c process  = (Process__c )procecessNameToProcess.get('Sink');
 
-        
+        String chainName = 'TestChain';
         Chain__c chain = new Chain__c(Name = 'TestChain');
         insert chain;
         
@@ -221,17 +292,17 @@
         process.FullyQualifiedClassName__c = 'lalala';
         update process; //pretend we deleted the class
         
-        PersistentData__c pd = new PersistentData__c(Notification__c = '{"eda__chainName": "TestChain", "eda__sequence": 0}');
-        insert pd;
-        
         //act
-        Broker broker = new Broker();
-        broker.execute(null, new List<SObject>{pd});
+        Test.startTest();
+        Broker.enqueue(chain.Name, '000000000000000AAA');
+        Test.stopTest();
+        
+        //assemble
+        PersistentData__c persistentData = [SELECT Message__c FROM PersistentData__c];
         
         //assert
-        pd = [SELECT Id, Notification__c, Message__c FROM PersistentData__c WHERE Id = :pd.Id];
+        String actualMessage = persistentData.Message__c;
         String expectedMessage = 'class missing';
-        String actualMessage = pd.Message__c;
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
@@ -257,18 +328,16 @@
         process.FullyQualifiedClassName__c = 'Account';
         update process; //this is definitely not a Process.Plugin
         
-        PersistentData__c pd = new PersistentData__c(Notification__c = '{"eda__chainName": "TestChain", "eda__sequence": 0}');
-        insert pd;
-        
         //act
-        Broker broker = new Broker();
-        broker.execute(null, new List<SObject>{pd});
-        
+        Test.startTest();
+        Broker.enqueue(chain.Name, '000000000000000AAA');
+        Test.stopTest();
+
         //assert
-        pd = [SELECT Id, Notification__c, Message__c FROM PersistentData__c WHERE Id = :pd.Id];
+        PersistentData__c persistentData = [SELECT Message__c FROM PersistentData__c];
+        String actualMessage = persistentData.Message__c;
         String expectedMessage = 'interface';
-        String actualMessage = pd.Message__c;
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
-    }
-    
+    } 
+
 }

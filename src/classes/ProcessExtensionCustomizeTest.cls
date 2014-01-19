@@ -1,4 +1,4 @@
-@isTest public class ProcessExtensionCustomizeTest {
+@isTest private class ProcessExtensionCustomizeTest {
     
     static testMethod void testCustomizableProcess() {
         //Arrange

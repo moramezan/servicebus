@@ -1,4 +1,4 @@
-@isTest public class AsyncApexJobsTest {
+@isTest private class AsyncApexJobsTest {
     
     static testMethod void testAbortJobs() {
         

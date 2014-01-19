@@ -1,5 +1,5 @@
 @IsTest  
-public class ApexClassesTest {
+private class ApexClassesTest {
     private static testMethod void callingRegenerateReturnsExpectedConfigurable() {
         //Arrange :
         String name1 = 'Publish';

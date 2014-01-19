@@ -35,16 +35,16 @@ public with sharing class Subscribe implements Process.Plugin {
 
      
         Map<Id,SubscribeConfiguration__c> subscribeConfigurationIdToSubscribeConfiguration  
-                = new Map<Id,SubscribeConfiguration__c>([SELECT id, Name, Event__c  
+                = new Map<Id,SubscribeConfiguration__c>([SELECT id, Name, EventType__c  
                                                          FROM SubscribeConfiguration__c    
                                                         ]);
 
-        List<PublishConfiguration__c> publishConfigurations = [SELECT Id, Name, Event__c 
+        List<PublishConfiguration__c> publishConfigurations = [SELECT Id, Name, EventType__c 
                                                              FROM PublishConfiguration__c    
                                                              ];
                     
-        Map<Id,Event__c> eventIdToEvent = new Map<Id,Event__c>([SELECT Id, Name 
-                                                                FROM Event__c    
+        Map<Id,EventType__c> eventTypeIdToEventType = new Map<Id,EventType__c>([SELECT Id, Name 
+                                                                FROM EventType__c    
                                                                ]);                                                
                
                            
@@ -110,25 +110,25 @@ public with sharing class Subscribe implements Process.Plugin {
                         }
                     }
                     if ( !isError ) {
-                        eventId = subscribeConfiguration.Event__c;
+                        eventId = subscribeConfiguration.EventType__c;
                         if (eventId == null) {
                             isError = true;
                             instanceDetail.put('Status', 'Error');
-                            instanceDetail.put('Detail', 'No event defined on subscribe configuration=['+subscribeConfigurationId+']');
+                            instanceDetail.put('Detail', 'No event type defined on subscribe configuration=['+subscribeConfigurationId+']');
                         }
                     }
                     if ( !isError ) {
                         Boolean publisherFound = false;
                         for (PublishConfiguration__c  publishConfiguration :  publishConfigurations) {
-                            if (publishConfiguration.Event__c == eventId) {
+                            if (publishConfiguration.EventType__c == eventId) {
                                 publisherFound = true;
                             }
                         }
                         if (!publisherFound) {
-                            Event__c event = eventIdToEvent.get(eventId);
-                            String eventName  = (event == null) ? '' : event.Name;
+                            EventType__c eventType = eventTypeIdToEventType.get(eventId);
+                            String eventTypeName  = (eventType == null) ? '' : eventType.Name;
                             instanceDetail.put('Status', 'Warning');
-                            instanceDetail.put('Detail', 'No publisher is configured to publish event=['+eventName+']');
+                            instanceDetail.put('Detail', 'No publisher is configured to publish event=['+eventTypeName+']');
                         }
                     }
                 }

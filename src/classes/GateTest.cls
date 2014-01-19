@@ -1,6 +1,13 @@
 @isTest  //-- no view of org data
 private  class GateTest {
 
+    static testMethod void testProcessIsDescribed() {
+        Jump jump = new Jump();
+        System.assertNotEquals(null, jump.describe().Name);
+        System.assertNotEquals(null, jump.describe().Description);
+        System.assertNotEquals(null, jump.describe().Tag);
+    }
+    
     static testMethod void callingExecuteReturnsExpectedNotificationCollectionWhenGateItemsCountEqCount() {
         // Arrange :
         String chainName = 'the-chain';

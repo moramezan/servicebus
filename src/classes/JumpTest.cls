@@ -1,4 +1,12 @@
-@isTest public class JumpTest {
+@isTest private class JumpTest {
+
+    static testMethod void testProcessIsDescribed() {
+        Jump jump = new Jump();
+        System.assertNotEquals(null, jump.describe().Name);
+        System.assertNotEquals(null, jump.describe().Description);
+        System.assertNotEquals(null, jump.describe().Tag);
+    }
+    
     
     static testMethod void testJumpPervertsExecution() {
         //arrange

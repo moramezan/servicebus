@@ -1,4 +1,4 @@
-@isTest public class ProcessRefreshBatchTest {
+@isTest private class ProcessRefreshBatchTest {
     
     static testMethod void testRecordCreatedForPluginAndStateful() {
         //arrange

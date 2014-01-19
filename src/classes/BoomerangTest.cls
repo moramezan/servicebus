@@ -1,4 +1,4 @@
-@isTest public class BoomerangTest {
+@isTest private class BoomerangTest {
 
     static testMethod void canDetermineConfigurable() {
         //arrange

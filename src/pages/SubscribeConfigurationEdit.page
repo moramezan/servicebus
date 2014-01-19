@@ -4,12 +4,12 @@
         <apex:pageBlock title="{!$ObjectType.SubscribeConfiguration__c.Label} Edit" mode="edit">
             <apex:pageBlockButtons >
                 <apex:commandButton action="{!Save}" value="Save" />
-                <apex:commandButton onclick="window.open('../{!$ObjectType.Event__c.KeyPrefix}'); return false;" value="Manage Events" />
+                <apex:commandButton onclick="window.open('../{!$ObjectType.EventType__c.KeyPrefix}'); return false;" value="Manage Events" />
             </apex:pageBlockButtons>
             <apex:pageBlockSection title="Information" columns="2">
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$ObjectType.SubscribeConfiguration__c.Fields.Event__c.Label}" />
-                    <apex:inputField value="{!SubscribeConfiguration__c.Event__c}" />
+                    <apex:outputLabel value="{!$ObjectType.SubscribeConfiguration__c.Fields.EventType__c.Label}" />
+                    <apex:inputField value="{!SubscribeConfiguration__c.EventType__c}" />
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
         </apex:pageBlock>

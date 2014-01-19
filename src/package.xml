@@ -89,6 +89,7 @@
         <members>GateItem__c.Notification__c</members>
         <members>JumpConfiguration__c.Chain__c</members>
         <members>KnifeSwitch__c.Url__c</members>
+        <members>PersistentData__c.ChainStep__c</members>
         <members>PersistentData__c.Message__c</members>
         <members>PersistentData__c.Notification__c</members>
         <members>Process__c.ApexClass__c</members>
@@ -98,11 +99,11 @@
         <members>Process__c.FullyQualifiedClassName__c</members>
         <members>Process__c.Icon__c</members>
         <members>Process__c.Tag__c</members>
-        <members>PublishConfiguration__c.Event__c</members>
+        <members>PublishConfiguration__c.EventType__c</members>
+        <members>SubscribeConfiguration__c.EventType__c</members>
         <members>ScheduleConfiguration__c.Frequency__c</members>
         <members>ScheduleConfiguration__c.FriendlyDates__c</members>
         <members>ScheduleConfiguration__c.FriendlyTimes__c</members>
-        <members>SubscribeConfiguration__c.Event__c</members>
         <members>WiretapCustomization__c.UserId__c</members>
         <name>CustomField</name>
     </types>
@@ -111,7 +112,7 @@
         <members>BranchConfiguration__c</members>
         <members>ChainStep__c</members>
         <members>Chain__c</members>
-        <members>Event__c</members>
+        <members>EventType__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
         <members>JumpConfiguration__c</members>
@@ -134,7 +135,7 @@
         <members>BranchConfiguration__c-Branch Configuration Layout</members>
         <members>ChainStep__c-ChainStep Layout</members>
         <members>Chain__c-Chain Layout</members>
-        <members>Event__c-Event Layout</members>
+        <members>EventType__c-Event Type Layout</members>
         <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>
         <members>JumpConfiguration__c-Jump Configuration Layout</members>
