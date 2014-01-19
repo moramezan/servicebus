@@ -1,6 +1,13 @@
 @isTest //-- no view of org data
 private class MarkTest {
 
+    static testMethod void testProcessIsDescribed() {
+        Mark mark = new Mark();
+        System.assertNotEquals(null, mark.describe().Name);
+        System.assertNotEquals(null, mark.describe().Description);
+        System.assertNotEquals(null, mark.describe().Tag);
+    }
+    
     static testMethod void callingExecuteReturnsExpectedNotificationCollectio() {
         // Arrange :
         String chainName = 'the-chain';
