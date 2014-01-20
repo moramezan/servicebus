@@ -131,6 +131,11 @@
         <name>CustomTab</name>
     </types>
     <types>
+        <members>EventDrivenArchitecture</members>
+        <members>EventDrivenArchitecture/edaAppPng.png</members>
+        <name>Document</name>
+    </types>
+    <types>
         <members>BoomerangConfiguration__c-Boomerang Configuration Layout</members>
         <members>BranchConfiguration__c-Branch Configuration Layout</members>
         <members>ChainStep__c-ChainStep Layout</members>
