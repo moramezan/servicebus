@@ -100,10 +100,10 @@
         <members>Process__c.Icon__c</members>
         <members>Process__c.Tag__c</members>
         <members>PublishConfiguration__c.EventType__c</members>
-        <members>SubscribeConfiguration__c.EventType__c</members>
         <members>ScheduleConfiguration__c.Frequency__c</members>
         <members>ScheduleConfiguration__c.FriendlyDates__c</members>
         <members>ScheduleConfiguration__c.FriendlyTimes__c</members>
+        <members>SubscribeConfiguration__c.EventType__c</members>
         <members>WiretapCustomization__c.UserId__c</members>
         <name>CustomField</name>
     </types>
