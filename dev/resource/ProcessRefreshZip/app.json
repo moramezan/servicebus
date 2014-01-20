@@ -1,8 +1,0 @@
-{
-   "name": "Refresh",
-   "requires": [
-      "fflib-ext-common"
-   ],
-   "id": "4d05272a-9425-4c73-aa72-ebb97dd0c049",
-   "resources": []
-}
