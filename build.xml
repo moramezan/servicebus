@@ -65,6 +65,8 @@
                 <types><members>*</members><name>ContactCriteriaBasedSharingRule</name></types>
                 <types><members>*</members><name>ContactOwnerSharingRule</name></types>
                 <types><members>*</members><name>ContactSharingRules</name></types>
+                <types><members>*</members><name>CustomApplication</name></types>
+                <types><members>*</members><name>CustomApplicationComponent</name></types>
                 <types><members>*</members><name>CustomField</name></types>
                 <types><members>*</members><name>CustomLabel</name></types>
                 <types><members>*</members><name>CustomLabels</name></types>
@@ -126,8 +128,6 @@
          ! <types><members>*</members><name>AutoResponseRule</name></types>
          ! <types><members>*</members><name>AutoResponseRules</name></types>
          ! <types><members>*</members><name>Community</name></types>
-         ! <types><members>*</members><name>CustomApplication</name></types>
-         ! <types><members>*</members><name>CustomApplicationComponent</name></types>
          ! <types><members>*</members><name>CustomSite</name></types>
          ! <types><members>*</members><name>EscalationRule</name></types>
          ! <types><members>*</members><name>EscalationRules</name></types>
