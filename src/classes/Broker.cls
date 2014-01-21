@@ -158,9 +158,7 @@ public with sharing class Broker implements Database.Batchable<SObject>, Databas
             Process.PluginResult  results = processable.invoke(new Process.PluginRequest(notification));
             notifications = Utility.convert(results); 
         } catch (Exception e) {
-            e.setMessage('eda processable error');
-            
-            surfaceException(  e , persistentData); 
+            surfaceException(e, persistentData); 
             
             //get out of dodge quick
             return;
