@@ -90,8 +90,10 @@
         <members>JumpConfiguration__c.Chain__c</members>
         <members>KnifeSwitch__c.Url__c</members>
         <members>PersistentData__c.ChainStep__c</members>
+        <members>PersistentData__c.Chain__c</members>
         <members>PersistentData__c.Message__c</members>
         <members>PersistentData__c.Notification__c</members>
+        <members>PersistentData__c.Process__c</members>
         <members>Process__c.ApexClass__c</members>
         <members>Process__c.Configurable__c</members>
         <members>Process__c.Customizable__c</members>
@@ -129,6 +131,11 @@
         <members>Chain__c</members>
         <members>Process__c</members>
         <name>CustomTab</name>
+    </types>
+    <types>
+        <members>EventDrivenArchitecture</members>
+        <members>EventDrivenArchitecture/edaAppPng.png</members>
+        <name>Document</name>
     </types>
     <types>
         <members>BoomerangConfiguration__c-Boomerang Configuration Layout</members>

@@ -3,7 +3,10 @@ public with sharing class ProcessExtensionCustomize {
     private ApexPages.StandardController controller;
     
     public ProcessExtensionCustomize(ApexPages.StandardController controller) {
-        if (!Test.isRunningTest()) controller.addFields(new List<String>{SObjectType.Process__c.fields.Name.Name});
+        if (!Test.isRunningTest()) controller.addFields(new List<String>{
+            SObjectType.Process__c.fields.Name.Name,
+            SObjectType.Process__c.fields.Customizable__c.Name
+        });
         this.controller = controller;
     }
     
