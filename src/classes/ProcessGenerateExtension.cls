@@ -29,7 +29,7 @@ public class ProcessGenerateExtension {
     @testVisible static private List<Process__c> processes;
     @RemoteAction static public List<Process__c> readProcesses(DateTime lastModifiedDate) {
         return processes != null ? processes : [
-            SELECT Id, Name, Description__c, Tag__c
+            SELECT Id, Name, Description__c, Tag__c, Icon__c
             FROM Process__c
             WHERE LastModifiedDate > :lastModifiedDate
             ORDER BY Name ASC

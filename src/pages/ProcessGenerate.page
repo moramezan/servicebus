@@ -11,6 +11,8 @@
         $ObjectType.Process__c.Fields.Description__c.Name = '{!$ObjectType.Process__c.Fields.Description__c.Name}';
         $ObjectType.Process__c.Fields.Tag__c = $ObjectType.Process__c.Fields.Tag__c || {};
         $ObjectType.Process__c.Fields.Tag__c.Name = '{!$ObjectType.Process__c.Fields.Tag__c.Name}';
+        $ObjectType.Process__c.Fields.Icon__c = $ObjectType.Process__c.Fields.Icon__c || {};
+        $ObjectType.Process__c.Fields.Icon__c.Name = '{!$ObjectType.Process__c.Fields.Icon__c.Name}';
         
         window.$RemoteAction = window.$RemoteAction || {};
         $RemoteAction.ProcessGenerateExtension = $RemoteAction.ProcessGenerateExtension || {};
