@@ -98,13 +98,15 @@ public with sharing class Broker implements Database.Batchable<SObject>, Databas
             Map<String,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c); 
             notification.put('eda__sequence', (Decimal)notification.get('eda__sequence') + 1);
             ChainStep__c chainStep = [
-                SELECT Id
+                SELECT Id, Chain__r.Id, Process__r.Id
                 FROM ChainStep__c
                 WHERE Chain__r.Name = :(String)notification.get('eda__chainName')
                 AND Sequence__c = :(Decimal)notification.get('eda__sequence')
             ];  
             persistentData.Notification__c = Json.serializePretty(notification);
             persistentData.ChainStep__c = chainStep.Id;
+            persistentData.Process__c = chainStep.Process__r.Id;
+            persistentData.Chain__c = chainStep.Chain__r.Id;
         }
 
         insert persistentDatas;
