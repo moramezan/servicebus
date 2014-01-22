@@ -17,6 +17,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>Api</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>AsyncApexJobs</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -138,6 +142,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>ProcessRefreshBatchTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ProxyBroker</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -478,6 +486,10 @@
     <pageAccesses>
         <apexPage>ProcessGenerate</apexPage>
         <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>ProxyBroker</apexPage>
+        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>PublishConfigurationEdit</apexPage>

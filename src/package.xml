@@ -5,6 +5,7 @@
         <members>AbstractBroker</members>
         <members>ApexClasses</members>
         <members>ApexClassesTest</members>
+        <members>Api</members>
         <members>AsyncApexJobs</members>
         <members>AsyncApexJobsTest</members>
         <members>Boomerang</members>
@@ -36,6 +37,7 @@
         <members>ProcessGenerateExtensionTest</members>
         <members>ProcessRefreshBatch</members>
         <members>ProcessRefreshBatchTest</members>
+        <members>ProxyBroker</members>
         <members>Publish</members>
         <members>PublishTest</members>
         <members>SObjects</members>
@@ -66,6 +68,7 @@
         <members>Health</members>
         <members>ProcessCustomization</members>
         <members>ProcessGenerate</members>
+        <members>ProxyBroker</members>
         <members>PublishConfigurationEdit</members>
         <members>SubscribeConfigurationEdit</members>
         <name>ApexPage</name>
