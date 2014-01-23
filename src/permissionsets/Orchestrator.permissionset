@@ -189,6 +189,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ScrapeTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Sink</apexClass>
         <enabled>false</enabled>
     </classAccesses>

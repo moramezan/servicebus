@@ -48,6 +48,7 @@
         <members>ScheduleImplementationTest</members>
         <members>ScheduleTest</members>
         <members>Scrape</members>
+        <members>ScrapeTest</members>
         <members>Sink</members>
         <members>SinkTest</members>
         <members>Subscribe</members>
