@@ -2,8 +2,10 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event Driven Architecture</fullName>
     <types>
+        <members>AbstractBroker</members>
         <members>ApexClasses</members>
         <members>ApexClassesTest</members>
+        <members>Api</members>
         <members>AsyncApexJobs</members>
         <members>AsyncApexJobsTest</members>
         <members>Boomerang</members>
@@ -22,6 +24,7 @@
         <members>Gate</members>
         <members>GateTest</members>
         <members>HealthController</members>
+        <members>IsChanged</members>
         <members>Jump</members>
         <members>JumpTest</members>
         <members>Mark</members>
@@ -34,6 +37,7 @@
         <members>ProcessGenerateExtensionTest</members>
         <members>ProcessRefreshBatch</members>
         <members>ProcessRefreshBatchTest</members>
+        <members>ProxyBroker</members>
         <members>Publish</members>
         <members>PublishTest</members>
         <members>SObjects</members>
@@ -43,6 +47,7 @@
         <members>ScheduleImplementation</members>
         <members>ScheduleImplementationTest</members>
         <members>ScheduleTest</members>
+        <members>Scrape</members>
         <members>Sink</members>
         <members>SinkTest</members>
         <members>Subscribe</members>
@@ -63,6 +68,7 @@
         <members>Health</members>
         <members>ProcessCustomization</members>
         <members>ProcessGenerate</members>
+        <members>ProxyBroker</members>
         <members>PublishConfigurationEdit</members>
         <members>SubscribeConfigurationEdit</members>
         <name>ApexPage</name>
@@ -87,6 +93,9 @@
         <members>Chain__c.ChainStepsCount__c</members>
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Notification__c</members>
+        <members>IsChangedConfiguration__c.FieldName__c</members>
+        <members>IsChangedConfiguration__c.LastHash__c</members>
+        <members>IsChangedConfiguration__c.LastValue__c</members>
         <members>JumpConfiguration__c.Chain__c</members>
         <members>KnifeSwitch__c.Url__c</members>
         <members>PersistentData__c.ChainStep__c</members>
@@ -105,6 +114,7 @@
         <members>ScheduleConfiguration__c.Frequency__c</members>
         <members>ScheduleConfiguration__c.FriendlyDates__c</members>
         <members>ScheduleConfiguration__c.FriendlyTimes__c</members>
+        <members>ScrapeConfiguration__c.Endpoint__c</members>
         <members>SubscribeConfiguration__c.EventType__c</members>
         <members>WiretapCustomization__c.UserId__c</members>
         <name>CustomField</name>
@@ -117,12 +127,14 @@
         <members>EventType__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
+        <members>IsChangedConfiguration__c</members>
         <members>JumpConfiguration__c</members>
         <members>KnifeSwitch__c</members>
         <members>PersistentData__c</members>
         <members>Process__c</members>
         <members>PublishConfiguration__c</members>
         <members>ScheduleConfiguration__c</members>
+        <members>ScrapeConfiguration__c</members>
         <members>SubscribeConfiguration__c</members>
         <members>WiretapCustomization__c</members>
         <name>CustomObject</name>
@@ -145,11 +157,13 @@
         <members>EventType__c-Event Type Layout</members>
         <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>
+        <members>IsChangedConfiguration__c-IsChangedConfiguration Layout</members>
         <members>JumpConfiguration__c-Jump Configuration Layout</members>
         <members>PersistentData__c-Persistent Data Layout</members>
         <members>Process__c-Process Layout</members>
         <members>PublishConfiguration__c-Publish Configuration Layout</members>
         <members>ScheduleConfiguration__c-Schedule Configuration Layout</members>
+        <members>ScrapeConfiguration__c-Scrape Configuration Layout</members>
         <members>SubscribeConfiguration__c-Subscribe Configuration Layout</members>
         <name>Layout</name>
     </types>

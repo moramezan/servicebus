@@ -5,11 +5,19 @@
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
+        <apexClass>AbstractBroker</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ApexClasses</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
         <apexClass>ApexClassesTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>Api</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -85,6 +93,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>IsChanged</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Jump</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -133,6 +145,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ProxyBroker</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Publish</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -166,6 +182,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>ScheduleTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>Scrape</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -244,6 +264,21 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>GateItem__c.Notification__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>IsChangedConfiguration__c.FieldName__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>IsChangedConfiguration__c.LastHash__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>IsChangedConfiguration__c.LastValue__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -329,6 +364,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>ScheduleConfiguration__c.FriendlyTimes__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>ScrapeConfiguration__c.Endpoint__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -446,6 +486,10 @@
     <pageAccesses>
         <apexPage>ProcessGenerate</apexPage>
         <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>ProxyBroker</apexPage>
+        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>PublishConfigurationEdit</apexPage>

@@ -78,7 +78,7 @@ public with sharing class ChainSorterController {
     
     @RemoteAction static public String enqueue(Id chainId) {
         Chain__c chain = [SELECT Name FROM Chain__c WHERE Id = :chainId];
-        Broker.enqueue(chain.Name, UserInfo.getUserId());
+        new ProxyBroker().enqueue(chain.Name, UserInfo.getUserId());
         return chain.Name;
     }
     

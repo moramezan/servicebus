@@ -120,7 +120,7 @@
     }
 
 
-    static testMethod void testEnqueueByBlob() {
+    /*static testMethod void testEnqueueByBlob() {
         //arrange 
         List<String> names = new List<String>{'Mark', 'Sink'};   
         List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
@@ -183,7 +183,7 @@
         System.assert(actualId != null);
         System.assertEquals(expectedId, actualId);
         System.assertEquals(expectedData, actualData);
-    }
+    }*/
 
 
  
