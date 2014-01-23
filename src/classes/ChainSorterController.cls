@@ -11,29 +11,13 @@ public with sharing class ChainSorterController {
         return Url.getSalesforceBaseUrl().toExternalForm();
     }
     
-    public String getNewChainStepUrl() {
-        String data = new System.PageReference('/' + Schema.SObjectType.ChainStep__c.KeyPrefix + '/e').getContent().toString();
-        String masterLabel = Schema.SObjectType.ChainStep__c.fields.Chain__c.Label;
-        String expr
-            = Pattern.quote('<label for="CF') //literal CF
-            + '(00N[A-Za-z0-9]{12})' //capture literal 00N followed by exactly 12 alphanumeric characters
-            + Pattern.quote('"><span class="requiredMark">*</span>') //literal asterisk thingo
-            + Pattern.quote(masterLabel) //the name of the master object as seen by the detail
-            + Pattern.quote('</label>') //literal
-        ;
-        
-        Matcher m = Pattern.compile(expr).matcher(data);
-        m.find();
-        String fieldId = m.group(1);
-        
-        String absoluteUrl = Url.getSalesforceBaseUrl().toExternalForm() + '/' + Schema.SObjectType.ChainStep__c.KeyPrefix + '/e';
-        System.PageReference pr = new System.PageReference(absoluteUrl);
-        pr.getParameters().putAll(new Map<String,String>{
-            'CF' + fieldId => (String)this.controller.getRecord().get('Name'),
-            'CF' + fieldId + '_lkid' => this.controller.getId(),
-            'saveURL' => this.controller.view().getUrl()
-        });
-        return pr.getUrl();
+    public String getProcesses() {
+        List<Process__c> processes = [
+            SELECT Id, Name, Tag__c, Icon__c
+            FROM Process__c
+            ORDER BY Name ASC
+        ];
+        return Json.serializePretty(processes);
     }
     
     @RemoteAction static public List<ChainStep__c> readChainSteps(Id chainId) {
@@ -80,6 +64,23 @@ public with sharing class ChainSorterController {
         Chain__c chain = [SELECT Name FROM Chain__c WHERE Id = :chainId];
         new ProxyBroker().enqueue(chain.Name, UserInfo.getUserId());
         return chain.Name;
+    }
+    
+    @RemoteAction static public ChainStep__c newStep(Id chainId, Id processId) {
+        ChainStep__c chainStep = new ChainStep__c(
+            Chain__c = chainId,
+            Process__c = processId
+        );
+        
+        insert chainStep;
+        
+        chainStep = [
+            SELECT Id, Name, Sequence__c, Configuration__c, Process__c, Chain__c
+            FROM ChainStep__c
+            WHERE Id = :chainStep.Id
+        ];
+        
+        return chainStep;
     }
     
 }

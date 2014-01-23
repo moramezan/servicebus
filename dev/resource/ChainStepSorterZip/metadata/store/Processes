@@ -1,0 +1,39 @@
+{
+    "type": "Ext.data.Store",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "autoLoad": null,
+        "data": null,
+        "designer|userClassName": "Processes",
+        "model": "Process",
+        "storeId": "Processes"
+    },
+    "designerId": "91bb25b9-a1f9-4e85-8268-af90bb48d611",
+    "cn": [
+        {
+            "type": "processcfgfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "config"
+                ],
+                "fn": "processProcesses",
+                "implHandler": [
+                    "//we pull the static list from the bridging components",
+                    "//the MemoryProxy and Reader does field mapping for us",
+                    "config.data = Processes;",
+                    "return config;"
+                ]
+            },
+            "designerId": "feccabf3-7280-48b5-8b6d-63cdf76c795c"
+        }
+    ]
+}

@@ -39,6 +39,7 @@
             <target name="-after-build"/>
     -->
     <target name="-after-build">
-        <replace file="${basedir}/build/production/Steps/resources/Steps-all.css" token="x-body" value="xxx-body" />
+        <!-- don't let ext framework trample body styles -->
+        <replace dir="${basedir}/build/production/Steps/resources" includes="*.css" token="z-body" value="zzz-body" />
     </target>
 </project>

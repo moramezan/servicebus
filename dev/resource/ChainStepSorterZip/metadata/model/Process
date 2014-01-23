@@ -1,0 +1,90 @@
+{
+    "type": "Ext.data.Model",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "Process",
+        "idProperty": "Id"
+    },
+    "designerId": "ae535247-0e03-48c5-a20a-2210b81f78bd",
+    "cn": [
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Id"
+            },
+            "designerId": "de1724aa-2a72-4929-b86c-67bae062dfed"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Name"
+            },
+            "designerId": "4e0a7820-b7e5-4a22-8c04-ff309975aef4"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Icon"
+            },
+            "designerId": "b8ea5500-ae88-444b-b8f4-c419fc48dc0c"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "mapping": null,
+                "name": "Tag"
+            },
+            "designerId": "361710ec-3f4a-4b2c-af4c-60a773c3da49"
+        },
+        {
+            "type": "Ext.data.proxy.Memory",
+            "reference": {
+                "name": "proxy",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|displayName": "ProcessProxy"
+            },
+            "designerId": "02294de9-7da7-4dbb-b315-d1d99c42f40d",
+            "cn": [
+                {
+                    "type": "Ext.data.reader.Json",
+                    "reference": {
+                        "name": "reader",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "ProcessReader"
+                    },
+                    "designerId": "86159e74-f1e4-4378-b0b9-2338ea8b7f86"
+                }
+            ]
+        }
+    ]
+}

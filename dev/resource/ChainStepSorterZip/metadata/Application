@@ -6,8 +6,12 @@
     },
     "codeClass": null,
     "userConfig": {
+        "controllers": [
+            "Application"
+        ],
         "models": [
-            "ChainStep"
+            "ChainStep",
+            "Process"
         ],
         "name": "Steps",
         "requires": [
@@ -15,7 +19,8 @@
             "Ext.Msg"
         ],
         "stores": [
-            "ChainSteps"
+            "ChainSteps",
+            "Processes"
         ],
         "views": [
             "MyViewport",

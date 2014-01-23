@@ -14,6 +14,7 @@
         "requires": [
             "Ext.util.Point"
         ],
+        "scroll": "none",
         "simpleDrag": null,
         "store": "ChainSteps",
         "title": "My Grid Panel"
