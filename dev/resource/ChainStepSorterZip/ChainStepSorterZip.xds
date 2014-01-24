@@ -34,15 +34,20 @@
             "9d94b7c9-de1b-44d4-8188-2d878c32eca3"
         ],
         "store": [
-            "a43ec6a5-795e-478c-8f9e-74b4f9cd36ec"
+            "a43ec6a5-795e-478c-8f9e-74b4f9cd36ec",
+            "91bb25b9-a1f9-4e85-8268-af90bb48d611"
         ],
-        "controller": [],
+        "controller": [
+            "30321ebb-d159-427a-9ebf-87c303155eb7"
+        ],
         "model": [
-            "01cba15c-4d92-4182-b364-3a9245edcb47"
+            "01cba15c-4d92-4182-b364-3a9245edcb47",
+            "ae535247-0e03-48c5-a20a-2210b81f78bd"
         ],
         "resource": [
             "7ed44062-929e-43c3-853e-ea348b8a8daf",
-            "bc22f2fd-040c-4043-b02d-0750eeb47c33"
+            "bc22f2fd-040c-4043-b02d-0750eeb47c33",
+            "21822669-1b29-466b-b56a-addfe9553bb7"
         ],
         "app": [
             "application"

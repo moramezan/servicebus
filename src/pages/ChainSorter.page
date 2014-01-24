@@ -1,21 +1,22 @@
 <apex:page standardController="Chain__c" extensions="ChainSorterController">
     
-    <c:bootstrapExt staticResource="{!$Resource.ChainStepSorterZip}" applicationName="Steps" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}">
-        window['$RemoteAction'] = window['$RemoteAction'] || {};
+    <c:bootstrapExt staticResource="{!$Resource.ChainStepSorterZip}" applicationName="Steps" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}" baseCSSPrefix="z-">
+        Processes = {!Processes};
+        ProtocolAndHost = '{!ProtocolAndHost}';
+        
+        window.$RemoteAction = window.$RemoteAction || {};
         $RemoteAction.ChainSorterController = $RemoteAction.ChainSorterController || {};
         $RemoteAction.ChainSorterController.readChainSteps = '{!$RemoteAction.ChainSorterController.readChainSteps}';
         $RemoteAction.ChainSorterController.updateChainSteps = '{!$RemoteAction.ChainSorterController.updateChainSteps}';
         $RemoteAction.ChainSorterController.destroyChainSteps = '{!$RemoteAction.ChainSorterController.destroyChainSteps}';
         $RemoteAction.ChainSorterController.enqueue = '{!$RemoteAction.ChainSorterController.enqueue}';
+        $RemoteAction.ChainSorterController.newStep = '{!$RemoteAction.ChainSorterController.newStep}';
         
         window.Chain__c = window.Chain__c || {};
         Chain__c.Id = '{!Chain__c.Id}';
+        Chain__c.Name = '{!Chain__c.Name}';
         
-        ProtocolAndHost = '{!ProtocolAndHost}';
-        
-        ChainSorterController.NewChainStepUrl = '{!JSENCODE(NewChainStepUrl)}';
-        
-        window['$ObjectType'] = window['$ObjectType'] || {};
+        window.$ObjectType = window.$ObjectType || {};
         $ObjectType.ChainStep__c = $ObjectType.ChainStep__c || {};
         $ObjectType.ChainStep__c.Fields = $ObjectType.ChainStep__c.Fields || {};
         
@@ -39,6 +40,10 @@
         $ObjectType.Process__c.Fields.Id.Name = '{!$ObjectType.Process__c.Fields.Id.Name}';
         $ObjectType.Process__c.Fields.Name = $ObjectType.Process__c.Fields.Name || {};
         $ObjectType.Process__c.Fields.Name.Name = '{!$ObjectType.Process__c.Fields.Name.Name}';
+        $ObjectType.Process__c.Fields.Tag__c = $ObjectType.Process__c.Fields.Tag__c || {};
+        $ObjectType.Process__c.Fields.Tag__c.Name = '{!$ObjectType.Process__c.Fields.Tag__c.Name}';
+        $ObjectType.Process__c.Fields.Icon__c = $ObjectType.Process__c.Fields.Icon__c || {};
+        $ObjectType.Process__c.Fields.Icon__c.Name = '{!$ObjectType.Process__c.Fields.Icon__c.Name}';
 
     </c:bootstrapExt>
 

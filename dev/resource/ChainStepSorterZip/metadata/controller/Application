@@ -1,0 +1,123 @@
+{
+    "type": "Ext.app.Controller",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "Application"
+    },
+    "designerId": "30321ebb-d159-427a-9ebf-87c303155eb7",
+    "cn": [
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "button#newStep",
+                "designer|targetType": "Ext.button.Button",
+                "fn": "onButtonBeforeRender",
+                "implHandler": [
+                    "var button = component;",
+                    "var tag2processes = {};",
+                    "",
+                    "Ext.getStore('Processes').each(function(process) {",
+                    "    var processes = [];",
+                    "    tag2processes[process.get('Tag')] = processes;",
+                    "});",
+                    "",
+                    "Ext.getStore('Processes').each(function(process) {",
+                    "    var processes = tag2processes[process.get('Tag')];",
+                    "    processes.push(process);",
+                    "});",
+                    "",
+                    "var menu = button.menu;",
+                    "",
+                    "//iterate over each tag name",
+                    "Ext.each(Ext.Object.getKeys(tag2processes), function(tag) {",
+                    "    var tagItem = {",
+                    "        text: tag,",
+                    "        menu: {",
+                    "            items: []",
+                    "        }",
+                    "    };",
+                    "",
+                    "    //iterate over each process",
+                    "    Ext.each(tag2processes[tag], function(process) {",
+                    "        var processItem = {",
+                    "            itemId: process.get('Id'),",
+                    "            text: process.get('Name'),",
+                    "            iconCls: process.get('Icon')",
+                    "        };",
+                    "        ",
+                    "        //add process item to tag",
+                    "        tagItem.menu.items.push(processItem);",
+                    "    });",
+                    "    ",
+                    "    //add tag item to menu",
+                    "    menu.add(tagItem);",
+                    "});",
+                    ""
+                ],
+                "name": "beforerender",
+                "scope": "me"
+            },
+            "designerId": "5b6aba6d-4459-4e22-be84-b467900d804b"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "menuitem",
+                "designer|targetType": "Ext.menu.Item",
+                "fn": "onMenuitemClick",
+                "implHandler": [
+                    "var me = this,",
+                    "    grid = me.getGrid(),",
+                    "    view = grid.getView(),",
+                    "    store = grid.getStore(),",
+                    "    processId = item.getItemId(),",
+                    "    chainId = Chain__c.Id;",
+                    "",
+                    "//mask",
+                    "view.mask(Ext.LoadMask.prototype.msg);",
+                    "",
+                    "Visualforce.remoting.Manager.invokeAction(",
+                    "    $RemoteAction.ChainSorterController.newStep,",
+                    "    chainId,",
+                    "    processId,",
+                    "    function(chainStep) {",
+                    "        view.unmask();",
+                    "        store.load();",
+                    "    }",
+                    ");"
+                ],
+                "name": "click",
+                "scope": "me"
+            },
+            "designerId": "2a71ff26-5830-4f54-ba2d-2182b57bbec1"
+        },
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "grid",
+                "selector": "gridpanel#steps",
+                "xtype": "Ext.grid.Panel"
+            },
+            "designerId": "41d85ef8-2f64-434f-9d0f-582d9481dacd"
+        }
+    ]
+}

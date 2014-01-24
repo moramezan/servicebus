@@ -19,6 +19,8 @@
 
     <target name="sencha-steps" description="Builds Sencha application">
         <delete file="src/staticresources/ChainStepSorterZip.resource" />
+        <delete dir="dev/resource/ChainStepSorterZip/packages/baf-theme-native" />
+        <exec command="lib/sencha-cmd-4.0.1.45/sencha repository sync" />
         <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ChainStepSorterZip ant clean" />
         <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ChainStepSorterZip app refresh" />
         <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ChainStepSorterZip app build" />

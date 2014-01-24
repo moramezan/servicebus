@@ -54,39 +54,30 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "baseCls": null,
-                        "href": "ChainSorterController.NewChainStepUrl",
-                        "hrefTarget": "_top",
+                        "itemId": "newStep",
                         "layout|flex": null,
-                        "layout|margins": null,
-                        "style": [
-                            "{",
-                            "    \"fontWeight\": \"bold\"",
-                            "}"
-                        ],
-                        "text": "New Chain Step",
+                        "maxWidth": null,
+                        "text": "New Step",
                         "width": null
                     },
-                    "designerId": "90b74440-7000-4044-9300-8cd7f9b10a5e",
+                    "designerId": "64f7b0a4-3c54-4c7d-847a-e00f5a63c489",
                     "cn": [
                         {
-                            "type": "processcfgfunction",
+                            "type": "Ext.menu.Menu",
                             "reference": {
-                                "name": "items",
-                                "type": "array"
+                                "name": "menu",
+                                "type": "object"
                             },
                             "codeClass": null,
                             "userConfig": {
-                                "designer|params": [
-                                    "config"
-                                ],
-                                "fn": "processNewChainStep",
-                                "implHandler": [
-                                    "config.href = ChainSorterController.NewChainStepUrl;",
-                                    "return config;"
-                                ]
+                                "designer|displayName": "Tags",
+                                "ignoreParentClicks": true,
+                                "minWidth": null,
+                                "plain": true,
+                                "showSeparator": false,
+                                "width": null
                             },
-                            "designerId": "0f3f7246-3f91-44a0-8626-43f07a0fd8a6"
+                            "designerId": "d90f1e8c-6e67-4a35-8407-05f20ddb4501"
                         }
                     ]
                 },
@@ -152,10 +143,20 @@
             },
             "codeClass": null,
             "userConfig": {
+                "itemId": "steps",
                 "title": "Chain Steps"
             },
             "designerId": "e52e4988-0605-459c-8571-f46bb6a35a3b",
             "masterInstanceId": "9d94b7c9-de1b-44d4-8188-2d878c32eca3"
+        },
+        {
+            "type": "Ext.toolbar.Toolbar",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "designerId": "edb03dc7-84eb-49ba-b682-de38b6c31697"
         }
     ]
 }
