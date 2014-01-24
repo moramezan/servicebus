@@ -42,6 +42,8 @@
         Type schedule = Type.forName('Schedule.Eda');
         Type boomerang = Type.forName('Boomerang.Eda');  
         Type subscribe = Type.forName('Subscribe.Eda');
+        Type scrape = Type.forName('Scrape.Eda');
+        Type isChanged = Type.forName('IsChanged.Eda');      
         
         // act
         Boolean actualGate = (gate != null);
@@ -53,6 +55,8 @@
         Boolean actualSchedule = (schedule != null);
         Boolean actualBoomerang = (boomerang != null);  
         Boolean actualSubscribe = (subscribe != null);
+        Boolean actualScrape = (scrape != null);
+        Boolean actualIsChanged = (isChanged != null);
         
         // assert
         System.assert(actualBoomerang); 
@@ -64,6 +68,8 @@
         System.assert(actualSink);
         System.assert(actualSubscribe);
         System.assert(actualWiretap);
+        System.assert(actualScrape); 
+        System.assert(actualIsChanged);  
     }
    
 }

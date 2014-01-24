@@ -97,6 +97,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>IsChangedTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Jump</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -189,6 +193,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ScrapeTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Sink</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -273,12 +281,32 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>IsChangedConfiguration__c.LastHash__c</field>
+        <field>IsChangedConfiguration__c.NewHash__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>IsChangedConfiguration__c.LastValue__c</field>
+        <field>IsChangedConfiguration__c.NewId__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>IsChangedConfiguration__c.NewValue__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>IsChangedConfiguration__c.OldHash__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>IsChangedConfiguration__c.OldId__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>IsChangedConfiguration__c.OldValue__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
