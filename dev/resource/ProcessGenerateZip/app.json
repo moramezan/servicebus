@@ -6,6 +6,6 @@
    ],
    "id": "cebfb4ac-7776-4b20-8456-e623cf58c820",
    "resources": [
-      "ext/packages/ext-theme-classic/build/resources/ext-theme-classic-all-rtl.css"
+      "ext/packages/ext-theme-classic/build/resources/ext-theme-classic-all-rtl-debug.css"
    ]
 }

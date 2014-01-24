@@ -72,6 +72,40 @@
             "designerId": "866854e7-397e-4de8-86e6-e827f1ec9c91"
         },
         {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "FullyQualifiedClassName"
+            },
+            "designerId": "a9dcb4c5-d880-40b4-be38-8ad5ba1bcae1",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "v",
+                            "rec"
+                        ],
+                        "fn": "convert",
+                        "implHandler": [
+                            "//reads (eda.Wiretap)",
+                            "return '(' + v + ')';"
+                        ]
+                    },
+                    "designerId": "39d9bd58-8175-4031-a8d7-e366e63fb262"
+                }
+            ]
+        },
+        {
             "type": "Ext.data.proxy.Direct",
             "reference": {
                 "name": "proxy",

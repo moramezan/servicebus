@@ -1,0 +1,279 @@
+{
+    "type": "Ext.panel.Panel",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "bodyStyle": [
+            "{",
+            "    \"border-color\": \"white\"",
+            "}"
+        ],
+        "border": false,
+        "designer|userClassName": "Holder",
+        "header": false,
+        "height": null,
+        "itemId": "holder",
+        "layout": "fit",
+        "style": null,
+        "title": "My Panel",
+        "width": null
+    },
+    "designerId": "cd16f635-ec7d-4faf-bc2b-ba4655a673b6",
+    "cn": [
+        {
+            "type": "Ext.ProgressBar",
+            "reference": {
+                "name": "dockedItems",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "border": null,
+                "designer|displayName": "ProgressBar",
+                "dock": "top",
+                "height": null,
+                "itemId": "progressbar",
+                "margin": null,
+                "style": [
+                    "//just for shits and giggles, I wanted to make the progress bar",
+                    "//the same height as the adjacent \"SEARCH\" bar to the left, but",
+                    "//it doesn't look good on both empty and full progress, d'oh!",
+                    "//\"border-top\": \"2px solid rgb(176, 202, 237) !important\",",
+                    "//\"border-bottom\": \"2px solid rgb(95, 151, 219) !important\",",
+                    "{",
+                    "    \"margin-bottom\": \"1px\",",
+                    "    \"border-radius\": \"5px\",",
+                    "    \"height\": \"24px\"",
+                    "}"
+                ],
+                "text": "..."
+            },
+            "designerId": "285c6e4b-e844-4116-a899-e57623513d04",
+            "cn": [
+                {
+                    "type": "processcfgfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "config"
+                        ],
+                        "fn": "processProgressBar",
+                        "implHandler": [
+                            "//not very DRY, but we can get useful initial values off the bridging component",
+                            "config.value = Number(AsyncApexJob.JobItemsProcessed / AsyncApexJob.TotalJobItems); //cast to Number() prevents divide by zero",
+                            "return config;"
+                        ]
+                    },
+                    "designerId": "6e36fc85-a717-4fba-b975-904e9f425db7"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "bodyBorder": false,
+                "bodyStyle": [
+                    "{",
+                    "    \"border-radius\": \"5px\"",
+                    "}"
+                ],
+                "border": false,
+                "forceFit": true,
+                "frameHeader": false,
+                "header": false,
+                "hideHeaders": true,
+                "itemId": "grid",
+                "store": "Processes",
+                "style": [
+                    "{",
+                    "    \"border-radius\": \"5px\"",
+                    "}"
+                ],
+                "title": "My Grid Panel"
+            },
+            "designerId": "0c752966-ca9d-4d17-97ce-c546a2b1b525",
+            "cn": [
+                {
+                    "type": "Ext.grid.View",
+                    "reference": {
+                        "name": "viewConfig",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "GridView",
+                        "loadMask": false
+                    },
+                    "configAlternates": {
+                        "loadMask": "boolean"
+                    },
+                    "designerId": "bb579438-19e0-45d2-9d1c-e819803fb690"
+                },
+                {
+                    "type": "Ext.grid.column.Action",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "defaultWidth": null,
+                        "designer|displayName": "Actions",
+                        "maxWidth": 20,
+                        "menuDisabled": true,
+                        "width": null
+                    },
+                    "designerId": "e3572d26-1430-4099-8c9c-b86887f5b313",
+                    "cn": [
+                        {
+                            "type": "actioncolumnitem",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|displayName": "Gear",
+                                "iconCls": "cog"
+                            },
+                            "designerId": "d1a9c20c-2656-4297-b968-3740e98da00f"
+                        },
+                        {
+                            "type": "fixedfunction",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|params": [
+                                    "value",
+                                    "metaData",
+                                    "record",
+                                    "rowIndex",
+                                    "colIndex",
+                                    "store",
+                                    "view"
+                                ],
+                                "fn": "renderer",
+                                "implHandler": [
+                                    "//set the action column's icon from each process",
+                                    "this.items[0].iconCls = record.get('Icon');"
+                                ]
+                            },
+                            "designerId": "1563ad90-9d03-4f57-8c23-3a2f0c7bdece"
+                        }
+                    ]
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "Id",
+                        "defaultWidth": null,
+                        "hidden": true,
+                        "sortable": false,
+                        "text": "Id",
+                        "width": 50
+                    },
+                    "designerId": "6671fecc-6096-43af-94d1-d858b608d3e8"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "Tag",
+                        "defaultWidth": null,
+                        "sortable": false,
+                        "text": "Tag",
+                        "width": 140
+                    },
+                    "designerId": "3582dd85-dd2e-4e87-8ada-c32bffd17df4"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "Name",
+                        "sortable": false,
+                        "text": "Name",
+                        "width": 80
+                    },
+                    "designerId": "d4be4972-1c85-49d9-ac3a-910a076ed375"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "Description",
+                        "flex": 1,
+                        "sortable": false,
+                        "text": "Description"
+                    },
+                    "designerId": "2944c4d3-48ed-4207-a58c-4572591fa06a"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "FullyQualifiedClassName",
+                        "text": "FullyQualifiedClassName",
+                        "width": 100
+                    },
+                    "designerId": "33125910-9a16-4cd6-aa04-b8c4fd9eb4df"
+                }
+            ]
+        },
+        {
+            "type": "processcfgfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "config"
+                ],
+                "fn": "processHolder",
+                "implHandler": [
+                    "//make the grid occupy such space that the salesforce chrome would fill most of the viewport",
+                    "config.height = Ext.Element.getViewportHeight() - 200;"
+                ]
+            },
+            "designerId": "567fb12d-3cdf-4429-812a-fc041f21bdb9"
+        }
+    ]
+}

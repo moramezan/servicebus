@@ -40,7 +40,8 @@
     -->
     <target name="-after-build">
         <!-- don't let ext framework trample body styles -->
-        <replace file="${basedir}/build/production/Generate/resources/Generate-all.css" token="z-body" value="zzz-body" />
+        <replace dir="${basedir}/build/production/Generate/resources" includes="*.css" token="z-body" value="zzz-body" />
+        <replace file="${basedir}/build/production/Generate/app.js" token="this.Ezt" value="window.Ezt" />
     </target>
 
 </project>

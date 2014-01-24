@@ -37,16 +37,25 @@
             "codeClass": null,
             "userConfig": {
                 "designer|controlQuery": "gridpanel",
-                "designer|targetType": "Grid",
+                "designer|params": [
+                    "target"
+                ],
+                "designer|targetType": null,
                 "fn": "onGridpanelAfterRender",
                 "implHandler": [
                     "Ext.log('[Generate.controller.Application] heard gridpanel afterrender event');",
                     "",
                     "var me = this;",
                     "var store = Ext.getStore('AsyncApexJob');",
+                    "var jobAlreadyFinished = Ext.Array.contains(['Aborted', 'Completed', 'Failed'], AsyncApexJob.Status);",
                     "",
                     "Ext.log('[Generate.controller.Application] start polling AsyncApexJob store');",
                     "store.load(function lambda() {",
+                    "    //redraw progress bar",
+                    "    var job = store.getAt(0);",
+                    "    job.draw(me.getProgressBar());",
+                    "    job.mask(me.getGrid());",
+                    "",
                     "    if (!me.isAsyncApexJobFinished) {",
                     "        //asyncapexjob not finished yet",
                     "        Ext.log('[Generate.controller.Application] job unfinished, polling AsyncApexJob store');",
@@ -56,13 +65,12 @@
                     "    } else {",
                     "        //quit polling",
                     "        Ext.log('[Generate.controller.Application] found isAsyncApexJobFinished, stop polling AsyncApexJob store');",
-                    "",
-                    "        //redirect back to Processes tab",
-                    "        Ext.Function.defer(function() {window.location = URLFOR['$Action.Process__c.Tab'];}, 3000);",
+                    "        ",
+                    "        if (!jobAlreadyFinished && job.get('Status') == 'Completed') {",
+                    "            //job was busy, then job became Completed, so redirect to Processes list view",
+                    "            Ext.Function.defer(function() {window.location = URLFOR['/$ObjectType.Process__c'];}, 1000);",
+                    "        }",
                     "    }",
-                    "",
-                    "    //draw progress bar",
-                    "    store.getAt(0).draw(me.getProgressBar());",
                     "});"
                 ],
                 "name": "afterrender",
@@ -146,32 +154,6 @@
                 "xtype": "Ext.ProgressBar"
             },
             "designerId": "1731ab06-bb1c-4bdc-ae79-64f7524229d8"
-        },
-        {
-            "type": "controlleraction",
-            "reference": {
-                "name": "listeners",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "designer|controlQuery": "window",
-                "designer|targetType": "Ext.window.Window",
-                "fn": "onWindowAfterRender",
-                "implHandler": [
-                    "var me = this;",
-                    "",
-                    "//center window over grid",
-                    "Ext.Function.defer(function() {",
-                    "    component.alignTo(me.getGrid(), 'c', [component.getWidth() / -2, component.getHeight() * -3]);",
-                    "}, 1);",
-                    "",
-                    "//component.mask('Loading...');"
-                ],
-                "name": "afterrender",
-                "scope": "me"
-            },
-            "designerId": "5d256a9a-6c76-43f1-be67-2c4fb853f397"
         },
         {
             "type": "controllerref",

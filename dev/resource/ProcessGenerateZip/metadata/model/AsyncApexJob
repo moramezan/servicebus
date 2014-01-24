@@ -33,7 +33,28 @@
             "userConfig": {
                 "name": "CompletedDate"
             },
-            "designerId": "11870b70-b0a8-4846-bd90-1bf489b4479f"
+            "designerId": "11870b70-b0a8-4846-bd90-1bf489b4479f",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "v",
+                            "rec"
+                        ],
+                        "fn": "convert",
+                        "implHandler": [
+                            "return v ? new Date(v) : null;"
+                        ]
+                    },
+                    "designerId": "b676a495-22b5-47e4-b02a-13f7ab42a236"
+                }
+            ]
         },
         {
             "type": "Ext.data.Field",
@@ -45,7 +66,28 @@
             "userConfig": {
                 "name": "CreatedDate"
             },
-            "designerId": "e59bed06-750e-445c-8aa7-cd6c0505f464"
+            "designerId": "e59bed06-750e-445c-8aa7-cd6c0505f464",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "v",
+                            "rec"
+                        ],
+                        "fn": "convert",
+                        "implHandler": [
+                            "return v ? new Date(v) : null;"
+                        ]
+                    },
+                    "designerId": "2fa599bd-3c90-464f-a6e6-3736a650bada"
+                }
+            ]
         },
         {
             "type": "Ext.data.Field",
@@ -177,14 +219,76 @@
                 "implHandler": [
                     "var job = this;",
                     "",
-                    "var value = job.get('JobItemsProcessed') / job.get('TotalJobItems');",
-                    "var text = job.get('JobItemsProcessed') + ' of ' + job.get('TotalJobItems');",
+                    "//part bullshit progress while queueing:",
+                    "//0% at 0 seconds",
+                    "//6% at 1 second",
+                    "//23% at 10 seconds",
+                    "//46% at 100 seconds",
+                    "//69% at 1000 seconds",
+                    "var queuePortion = Math.log(job.countElapsedSeconds() + 1) / 10;",
+                    "Ext.log('[Generate.model.AsyncApexJob] queuePortion ' + queuePortion);",
+                    "",
+                    "//part real progress, eg at 100 seconds in:",
+                    "//46% at 0 of 100",
+                    "//51% at 10 of 100",
+                    "//57% at 20 of 100",
+                    "//73% at 50 of 100",
+                    "//95% at 90 of 100",
+                    "var itemsPortion = Number(job.get('JobItemsProcessed') / job.get('TotalJobItems') * (1 - queuePortion)); //uses Number() cast to prevent divide by zero (0/0) when job is Queued and shows 0 total",
+                    "Ext.log('[Generate.model.AsyncApexJob] itemsPortion ' + itemsPortion);",
+                    "",
+                    "//add the bullshit part and the real part together",
+                    "var value = queuePortion + itemsPortion;",
+                    "var text = job.get('Status') + ' ' + job.get('JobItemsProcessed') + ' of ' + job.get('TotalJobItems');",
                     "var animate = true;",
                     "",
                     "progressbar.updateProgress(value, text, animate);"
                 ]
             },
             "designerId": "1627df2d-5e55-4da7-a470-8fa8c0ba4190"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "countElapsedSeconds",
+                "implHandler": [
+                    "var me = this,",
+                    "    timeCompleted = me.get('CompletedDate') ? me.get('CompletedDate').getTime() : new Date().getTime(),",
+                    "    timeCreated = me.get('CreatedDate').getTime();",
+                    "",
+                    "//reports run time elapsed OR total time taken if finished",
+                    "return (timeCompleted - timeCreated) / 1000;"
+                ]
+            },
+            "designerId": "693fe634-f273-49eb-a288-755b12d73726"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "grid"
+                ],
+                "fn": "mask",
+                "implHandler": [
+                    "var elapsedSeconds = this.countElapsedSeconds();",
+                    "var msg = 'Generation time ' + Ext.Date.format(new Date(elapsedSeconds * 1000), 'i:s');",
+                    "",
+                    "//we mask the grid, not the view, because the store",
+                    "//load() method periodically unmasks the gridView",
+                    "if (this.get('Status') != 'Completed') grid.mask(msg);"
+                ]
+            },
+            "designerId": "f1767ad1-2442-4188-876b-2453b4a1537b"
         }
     ]
 }
