@@ -25,6 +25,7 @@
         <members>GateTest</members>
         <members>HealthController</members>
         <members>IsChanged</members>
+        <members>IsChangedTest</members>
         <members>Jump</members>
         <members>JumpTest</members>
         <members>Mark</members>
