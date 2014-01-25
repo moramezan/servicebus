@@ -193,7 +193,7 @@
                     "userConfig": {
                         "designer|displayName": "DeleteAction",
                         "icon": null,
-                        "iconCls": "fff-cross"
+                        "iconCls": "cross"
                     },
                     "designerId": "9fe3ec2e-c6f4-47f2-80bb-2e79b17373b2",
                     "cn": [
@@ -233,6 +233,29 @@
                                 ]
                             },
                             "designerId": "b07326fe-7fc1-47ed-b6f1-2a085747fb4a"
+                        },
+                        {
+                            "type": "basicfunction",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|params": [
+                                    "view",
+                                    "rowIdx",
+                                    "colIdx",
+                                    "item",
+                                    "record"
+                                ],
+                                "fn": "isDisabled",
+                                "implHandler": [
+                                    "//see Ext.grid.column.Action#290",
+                                    "return record.get('ProcessName') == 'Sink';"
+                                ]
+                            },
+                            "designerId": "adf3c822-52d4-4faa-970e-7ae12dca357b"
                         }
                     ]
                 }
