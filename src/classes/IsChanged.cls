@@ -1,4 +1,4 @@
-public class IsChanged implements Process.Plugin {
+public class IsChanged  implements Process.Plugin {
     
     private static Integer truncateSize = 32768;
     
@@ -12,29 +12,30 @@ public class IsChanged implements Process.Plugin {
         plugin.Name = 'IsChanged';
         plugin.Description = 'Detects if the value of a field has changed on an incoming SObject since the last time';
         plugin.Tag = 'Event Driven Architecture';
-        
-        
-        plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
+
+        plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{ 
             new Process.PluginDescribeResult.OutputParameter(
-                'newId',
-                'The id that points to an object representing the current state of a changed topic.',
+                'newBlobId',
+                'The id that points to a a blob representation of the current state of a changed topic. ' +
+                '(Note: this will be null when newValue is valued ). ',
                 Process.PluginDescribeResult.ParameterType.ID
             ),
             new Process.PluginDescribeResult.OutputParameter(
-                'oldId',
-                'The id that points to an object representing the prior state of a changed topic.',
+                'oldBlobId',
+                'The id that points to a a blob representation of the prior state of a changed topic.' +
+                '(Note: this will be null when oldValue is valued ). ',
                 Process.PluginDescribeResult.ParameterType.ID
             ),
             new Process.PluginDescribeResult.OutputParameter(
                 'newValue',
-                'The value representing the current state of a changed topic. (Note: depending on the schema type of the ' +
-                'source field of a changed topic, this value MAY be base64 encoded and WILL be truncated at' + truncateSize  + ' bytes). ',
+                'The value representing the current state of a changed topic.' +
+                '(Note: this will be null when newBlobId is valued ). ',
                 Process.PluginDescribeResult.ParameterType.STRING
             ),
             new Process.PluginDescribeResult.OutputParameter(
                 'oldValue',
-                'The value represnting the prior state of a changed topic. (Note: depending on the schema type of the ' +
-                'source field of a changed topic, this value MAY be base64 encoded and WILL be truncated at' + truncateSize + ' bytes). ',
+                'The value represnting the prior state of a changed topic.' +
+                '(Note: this will be null when oldBlobId is valued ). ',
                 Process.PluginDescribeResult.ParameterType.STRING
             )           
                 
@@ -50,11 +51,14 @@ public class IsChanged implements Process.Plugin {
         
         // retrieve state
         IsChangedConfiguration__c configuration = [
-            SELECT Id, NewHash__c, OldHash__c, NewId__c, OldId__c, NewValue__c, OldValue__c, FieldName__c
+            SELECT Id, NewHash__c, OldHash__c, newBlobId__c, oldBlobId__c, NewValue__c, OldValue__c, FieldName__c
             FROM IsChangedConfiguration__c
             WHERE Id = :(Id)notification.get('eda__configuration')
         ];
   
+        // Is this the first run ?
+        Boolean firstRun = (configuration.OldHash__c == null);
+        
         // retrieve current value of object referenced by 'id'
         // on notification
         Id objectId = (Id)notification.get('id');    
@@ -64,67 +68,98 @@ public class IsChanged implements Process.Plugin {
         String query = 'SELECT ' + fieldName + ' FROM ' + objectName + ' WHERE Id = :objectId';
         SObject obj = Database.query(query);
         
-        
-        // derive the following 'new' attributes : 
-        //  - the new hash value (the hash on the current value  ) 
-        //  - the new value  ( either it's the  current value  or it's the base64 encoded version of the current value but 
-        //    in either case we truncte to the maximum large text field size defined in the static : 'truncateSize'
-        Blob newValueAsBlob = Blob.valueOf(String.valueOf(obj.get(fieldName)));
-        String newHash = EncodingUtil.convertToHex(Crypto.generateDigest('MD5', newValueAsBlob));
-        String newValue = getNewValue(obj, fieldName, truncateSize);
-        
-        // detect a change
-        Boolean isChanged = (configuration.NewHash__c != newHash);
 
+        // derive the following 'new' attributes : 
+        //  -  if current value is 
+        //     1. a blob
+        //     2. 256 bytes or more
+        //     then assign  current value to  newValueAsBlob  , else set newValueAsBlob to null 
+        //  -  if current value is 
+        //     1. not a blob
+        //     2. and 255 bytes or less
+        //     then assign  current value to  newValueAsString  , else set newValueAsString to null    
+        //  -  assign a hash of the current value to newHash
+        Map<string,Object> attributes =  new Map<string,Object> {
+            'object' => obj.get(fieldName),
+            'configurationId' => configuration.Id,    
+            'newBlobId' => null,
+            'newValueAsString' => null,
+            'newHash' => null
+        };
+        
+        deriveNewAttributes(  attributes ) ;
+        
+        String newHash = (String) attributes.get('newHash');
+        String newValueAsString = ( String ) attributes.get('newValueAsString'); 
+        Id newBlobId = ( Id ) attributes.get('newBlobId');
+        
+        
+        // detect a change 
+        Boolean isChanged =  isChanged(configuration.NewHash__c, newHash,  firstRun);
+        
+        
         // push the state (new to old)
-        configuration.OldId__c = configuration.NewId__c;
-        configuration.NewId__c = objectId;     
+        configuration.oldBlobId__c = configuration.newBlobId__c;
+        configuration.newBlobId__c = newBlobId;     
         configuration.OldValue__c = configuration.NewValue__c;
-        configuration.NewValue__c = newValue;
+        configuration.NewValue__c = newValueAsString;
         configuration.OldHash__c = configuration.NewHash__c;
         configuration.NewHash__c = newHash;     
         update configuration;
-
+        
         // release notification if state has changed
         if  (isChanged) {
             notification.put('oldValue' , configuration.OldValue__c );
             notification.put('newValue' , configuration.NewValue__c );    
-            notification.put('oldId' , configuration.OldId__c );
-            notification.put('newId' , configuration.NewId__c);            
+            notification.put('oldBlobId' , configuration.oldBlobId__c );
+            notification.put('newBlobId' , configuration.newBlobId__c);            
             notifications.add(notification);
         }
-
+        
         return Utility.convert(notifications);
     }
-    
-     @TestVisible
-     private static String getNewValue(SObject obj, String fieldName, integer maxValueSize) {
-        Boolean isBlobType = getIsBlobType(obj, fieldName);
-        String newValue =
-            ( isBlobType ) ?
-            EncodingUtil.base64Encode( (Blob) obj.get(fieldName) ) : 
-             String.valueOf(obj.get(fieldName));
-         
-        return newValue.left(maxValueSize);
-    
+ 
+ 
+    @TestVisible
+    private static Boolean isChanged(String lastHash, String latestHash, Boolean firstRun) {
+        Boolean isChanged = (lastHash != latestHash);
+        if ( firstRun ) {
+            isChanged = false;
+        }
+        
+        return isChanged;
     }
     
     @TestVisible
-    private static Boolean getIsBlobType(SObject obj, String fieldName) {
-        Boolean isBlobType = false;  
-        Map<String, Schema.SObjectField> fieldNameToFieldToken = obj.getSObjectType().getDescribe().fields.getMap();
-        for ( String key : fieldNameToFieldToken.keySet()) {
-            if (key.toLowerCase() == fieldName.toLowerCase()) {     
-                Schema.DescribeFieldResult describeFieldResult = (Schema.DescribeFieldResult) fieldNameToFieldToken.get(key).getDescribe();
-                Schema.DisplayType displayType = describeFieldResult.getType();
-                if (displayType == Schema.DisplayType.BASE64) {
-                    isBlobType = true;    
-                }
-                //TODO :: may need to add more types here 
-                // see http://www.salesforce.com/us/developer/docs/dbcom_apex250/Content/apex_methods_system_fields_describe.htm#apex_displaytype
+    private static void deriveNewAttributes(Map<string,Object> attributes) {
+        Boolean isBlob = ( attributes.get('object') instanceof Blob);
+        Blob newValueAsBlob = (  isBlob ) ?  (Blob) attributes.get('object')  :  Blob.valueOf(  (String) attributes.get('object')  );
+        String newHash = EncodingUtil.convertToHex(Crypto.generateDigest('MD5', newValueAsBlob));
+        String  newValueAsString  = ( ! isBlob ) ?  (String)  attributes.get('object') :  null;
+        if ( ! isBlob ) { 
+            newValueAsBlob = null;
+            if ( newValueAsString.length() > 255 ) {
+                newValueAsBlob = Blob.valueOf(  newValueAsString  );
+                newValueAsString  =  null; 
+                isBlob = true;
             }
         }
         
-        return isBlobType;
+        // write away blob
+        Id newBlobId = null;
+        if (isBlob) {
+            Attachment attachment = new Attachment(
+                Name = 'IsChanged-' + DateTime.Now().format('YYYY-MM-DD HH:mm:ss').replace(' ','T'),
+                Body = newValueAsBlob,
+                ParentId = (Id) attributes.get('configurationId')
+            );  
+            insert attachment;
+            newBlobId = attachment.Id;
+        }
+        
+        
+        attributes.put( 'newBlobId' ,  newBlobId);
+        attributes.put( 'newValueAsString', newValueAsString);
+        attributes.put( 'newHash', newHash);
     }
 }

@@ -281,12 +281,12 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>IsChangedConfiguration__c.NewHash__c</field>
+        <field>IsChangedConfiguration__c.NewBlobId__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>IsChangedConfiguration__c.NewId__c</field>
+        <field>IsChangedConfiguration__c.NewHash__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -296,12 +296,12 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>IsChangedConfiguration__c.OldHash__c</field>
+        <field>IsChangedConfiguration__c.OldBlobId__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>IsChangedConfiguration__c.OldId__c</field>
+        <field>IsChangedConfiguration__c.OldHash__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>

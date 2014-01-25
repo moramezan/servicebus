@@ -33,11 +33,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>NewId__c</field>
+                <field>NewBlobId__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>OldId__c</field>
+                <field>OldBlobId__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>

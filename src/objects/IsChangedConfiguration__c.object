@@ -61,20 +61,20 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>NewHash__c</fullName>
+        <fullName>NewBlobId__c</fullName>
         <externalId>false</externalId>
-        <label>NewHash</label>
-        <length>255</length>
+        <label>NewBlobId</label>
+        <length>18</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>NewId__c</fullName>
+        <fullName>NewHash__c</fullName>
         <externalId>false</externalId>
-        <label>NewId</label>
-        <length>18</length>
+        <label>NewHash</label>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -90,20 +90,20 @@
         <visibleLines>3</visibleLines>
     </fields>
     <fields>
-        <fullName>OldHash__c</fullName>
+        <fullName>OldBlobId__c</fullName>
         <externalId>false</externalId>
-        <label>OldHash</label>
-        <length>255</length>
+        <label>OldBlobId</label>
+        <length>18</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>OldId__c</fullName>
+        <fullName>OldHash__c</fullName>
         <externalId>false</externalId>
-        <label>OldId</label>
-        <length>18</length>
+        <label>OldHash</label>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>

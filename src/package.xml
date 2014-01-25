@@ -96,11 +96,11 @@
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Notification__c</members>
         <members>IsChangedConfiguration__c.FieldName__c</members>
+        <members>IsChangedConfiguration__c.NewBlobId__c</members>
         <members>IsChangedConfiguration__c.NewHash__c</members>
-        <members>IsChangedConfiguration__c.NewId__c</members>
         <members>IsChangedConfiguration__c.NewValue__c</members>
+        <members>IsChangedConfiguration__c.OldBlobId__c</members>
         <members>IsChangedConfiguration__c.OldHash__c</members>
-        <members>IsChangedConfiguration__c.OldId__c</members>
         <members>IsChangedConfiguration__c.OldValue__c</members>
         <members>JumpConfiguration__c.Chain__c</members>
         <members>KnifeSwitch__c.Url__c</members>
