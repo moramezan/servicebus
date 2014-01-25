@@ -33,7 +33,7 @@
     
       static testMethod void testBrokerDoesNotSurfaceExceptionForProperlyInvokedProcessable() {
         //arrange 
-        List<String> names = new List<String>{'Sink'};   
+        List<String> names = new List<String>{'Terminate'};   
         List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
         ApexClasses apexClasses = new ApexClasses(objects);
         List<Process__c> processes = apexClasses.regenerate();
@@ -42,7 +42,7 @@
         for (Process__c p : processes) {
            procecessNameToProcess.put(p.Name, p); 
         }
-        Process__c noErrorProcess  = (Process__c )procecessNameToProcess.get('Sink');
+        Process__c noErrorProcess  = (Process__c )procecessNameToProcess.get('Terminate');
  
         Chain__c chain = new Chain__c(Name = 'testChain');
         insert chain;
@@ -65,7 +65,7 @@
  
     static testMethod void testNotificationIsCorrectlyWrittenToPersistentDatas() {
         //arrange 
-        List<String> names = new List<String>{'Mark', 'Sink'};   
+        List<String> names = new List<String>{'Mark', 'Terminate'};   
         List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
         ApexClasses apexClasses = new ApexClasses(objects);
         List<Process__c> processes = apexClasses.regenerate();
@@ -75,7 +75,7 @@
            procecessNameToProcess.put(p.Name, p); 
         }
         Process__c markProcess  = (Process__c )procecessNameToProcess.get('Mark');
-        Process__c sinkProcess  = (Process__c )procecessNameToProcess.get('Sink');
+        Process__c terminateProcess  = (Process__c )procecessNameToProcess.get('Terminate');
                 
  
         Chain__c chain = new Chain__c(Name = 'testChain');
@@ -83,7 +83,7 @@
 
         ChainStep__c step1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = markProcess.Id);
         ChainStep__c step2 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 2, Process__c = markProcess.Id);
-        ChainStep__c step3 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 3, Process__c = sinkProcess.Id);
+        ChainStep__c step3 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 3, Process__c = terminateProcess.Id);
         List<ChainStep__c> chainSteps =  new List<ChainStep__c>{step1, step2 , step3};
         insert chainSteps;          
  
@@ -122,7 +122,7 @@
 
     /*static testMethod void testEnqueueByBlob() {
         //arrange 
-        List<String> names = new List<String>{'Mark', 'Sink'};   
+        List<String> names = new List<String>{'Mark', 'Terminate'};   
         List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
         ApexClasses apexClasses = new ApexClasses(objects);
         List<Process__c> processes = apexClasses.regenerate();
@@ -132,7 +132,7 @@
            procecessNameToProcess.put(p.Name, p); 
         }
         Process__c markProcess  = (Process__c )procecessNameToProcess.get('Mark');
-        Process__c sinkProcess  = (Process__c )procecessNameToProcess.get('Sink');
+        Process__c terminateProcess  = (Process__c )procecessNameToProcess.get('Terminate');
                 
  
         Chain__c chain = new Chain__c(Name = 'testChain');
@@ -271,7 +271,7 @@
  
     static testMethod void testProcessWithoutClassThrowsThrowsExpectedException() {
         //arrange (note there is no Process__c in database!)
-        List<String> names = new List<String>{'Sink'};
+        List<String> names = new List<String>{'Terminate'};
         List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
         ApexClasses apexClasses = new ApexClasses(objects);
         List<Process__c> processes = apexClasses.regenerate();
@@ -280,7 +280,7 @@
         for (Process__c p : processes) {
            procecessNameToProcess.put(p.Name, p); 
         }
-        Process__c process  = (Process__c )procecessNameToProcess.get('Sink');
+        Process__c process  = (Process__c )procecessNameToProcess.get('Terminate');
 
         String chainName = 'TestChain';
         Chain__c chain = new Chain__c(Name = 'TestChain');
@@ -308,7 +308,7 @@
     
     static testMethod void testNonProcessPluginThrowsTypeException() {
         //arrange (note there is no Process__c in database!) 
-        List<String> names = new List<String>{'Sink'};
+        List<String> names = new List<String>{'Terminate'};
         List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
         ApexClasses apexClasses = new ApexClasses(objects);
         List<Process__c> processes = apexClasses.regenerate();
@@ -317,7 +317,7 @@
         for (Process__c p : processes) {
            procecessNameToProcess.put(p.Name, p); 
         }
-        Process__c process  = (Process__c )procecessNameToProcess.get('Sink');
+        Process__c process  = (Process__c )procecessNameToProcess.get('Terminate');
         
         Chain__c chain = new Chain__c(Name = 'TestChain');
         insert chain;

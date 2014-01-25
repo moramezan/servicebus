@@ -3,7 +3,7 @@
     static testMethod void testRecordCreatedForPluginAndStateful() {
         //arrange
         ProcessRefreshBatch batch = new ProcessRefreshBatch();
-        batch.query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass WHERE Name = \'Sink\' ORDER BY Name ASC LIMIT 1';
+        batch.query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass WHERE Name = \'Terminate\' ORDER BY Name ASC LIMIT 1';
         
         //act
         Test.startTest();
@@ -16,7 +16,7 @@
         Integer actualCount = processes.size();
         System.assertEquals(expectedCount, actualCount);
         
-        String expectedName = 'Sink';
+        String expectedName = 'Terminate';
         String actualName = processes[0].Name;
         System.assert(actualName.contains(expectedName));
 
@@ -35,7 +35,7 @@
         // arrange
         Type gate = Type.forName('Gate.Eda');
         Type mark = Type.forName('Mark.Eda');
-        Type sink = Type.forName('Sink.Eda');
+        Type terminate = Type.forName('Terminate.Eda');
         Type branch = Type.forName('Branch.Eda');
         Type wiretap = Type.forName('Wiretap.Eda');
         Type publish = Type.forName('Publish.Eda');
@@ -48,7 +48,7 @@
         // act
         Boolean actualGate = (gate != null);
         Boolean actualMark = (mark != null);
-        Boolean actualSink = (sink != null);
+        Boolean actualTerminate = (terminate != null);
         Boolean actualBranch = (branch != null);
         Boolean actualWiretap = (wiretap != null); 
         Boolean actualPublish = (publish != null) ;
@@ -65,7 +65,7 @@
         System.assert(actualMark);
         System.assert(actualPublish);
         System.assert(actualSchedule);
-        System.assert(actualSink);
+        System.assert(actualTerminate);
         System.assert(actualSubscribe);
         System.assert(actualWiretap);
         System.assert(actualScrape); 

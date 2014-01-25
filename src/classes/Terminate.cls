@@ -1,4 +1,4 @@
-public with sharing class Sink implements Process.Plugin {
+public with sharing class Terminate implements Process.Plugin {
     
     public class Eda {
         public String icon = 'stop';
@@ -6,9 +6,9 @@ public with sharing class Sink implements Process.Plugin {
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'The Sink process terminates all chains and is mandatory.';
+        plugin.Description = 'Mandatory process that terminates all chains.';
         plugin.Tag = 'Event Driven Architecture';
-        plugin.Name = 'Sink';
+        plugin.Name = 'Terminate';
         return plugin;
     }
     
@@ -58,24 +58,24 @@ public with sharing class Sink implements Process.Plugin {
                                  FROM Chain__c
                                 ];
         
-        List<Process__c> sinkProcesses  = [SELECT id, Name 
+        List<Process__c> terminateProcesses  = [SELECT id, Name 
                                            FROM Process__c 
-                                           WHERE Name = 'Sink'
+                                           WHERE Name = 'Terminate'
                                           ];
-        Process__c  sinkProcess = (sinkProcesses.size() > 0) ? sinkProcesses[0] : null; 
-        Boolean resolvedProcess = (sinkProcess != null);
+        Process__c  terminateProcess = (terminateProcesses.size() > 0) ? terminateProcesses[0] : null; 
+        Boolean resolvedProcess = (terminateProcess != null);
         
         // Error conditions:
-        // * Chain with no sink (error)
-        // * Chain with more than one Sink (error)
-        // * Sink that's not at the end (error)
+        // * Chain with no Terminate (error)
+        // * Chain with more than one Terminate (error)
+        // * Terminate that's not at the end (error)
         for (Chain__c  chain : chains) 
         {
-            Integer sinkCount = 0;
+            Integer terminateCount = 0;
             for (ChainStep__c chainStep : chain.ChainSteps__r) {
                 if (resolvedProcess) {
-                    if (chainStep.Process__c == sinkProcess.Id) {
-                        sinkCount++;
+                    if (chainStep.Process__c == terminateProcess.Id) {
+                        terminateCount++;
                     }
                 }
             }
@@ -83,29 +83,29 @@ public with sharing class Sink implements Process.Plugin {
             HealthController.Health health = new HealthController.Health();
             health.ChainId = chain.Id;
             health.ChainName = chain.Name;
-            health.Detail = 'Cannot resolve Id of Sink process';
+            health.Detail = 'Cannot resolve Id of Terminate process';
             health.Status = 'Unknown';
             if (resolvedProcess) 
             {
-                health.Detail = 'Sink Check(s)';
+                health.Detail = 'Terminate Check(s)';
                 health.Status = 'Ok'; 
                 
-                Boolean noSinkError = (sinkCount == 0);
-                Boolean gtOneSinkError = (sinkCount > 1);
-                Boolean sinkNotAtEndError = (chain.ChainSteps__r.size() > 0) ? 
-                                            (chain.ChainSteps__r[chain.ChainSteps__r.size()-1].Process__c != sinkProcess.Id) :
+                Boolean noTerminateError = (terminateCount == 0);
+                Boolean gtOneTerminateError = (terminateCount > 1);
+                Boolean terminateNotAtEndError = (chain.ChainSteps__r.size() > 0) ? 
+                                            (chain.ChainSteps__r[chain.ChainSteps__r.size()-1].Process__c != terminateProcess.Id) :
                                             false;
                 
-               if (sinkNotAtEndError) {
-                    health.Detail = 'Sink process not present at end of chain';
+               if (terminateNotAtEndError) {
+                    health.Detail = 'Terminate process not present at end of chain';
                     health.Status = 'Error';
                 } 
-                if (noSinkError) {
-                    health.Detail = 'No Sink found in chain';
+                if (noTerminateError) {
+                    health.Detail = 'No Terminate found in chain';
                     health.Status = 'Error';
                 }
-                if (gtOneSinkError) {
-                    health.Detail = 'More than one sink found in chain';
+                if (gtOneTerminateError) {
+                    health.Detail = 'More than one Terminate found in chain';
                     health.Status = 'Error';
                 }    
             }

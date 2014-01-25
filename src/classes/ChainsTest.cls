@@ -3,7 +3,7 @@
     //before delete
     static testMethod void testDeletesAreCascaded() {
         //arrange process
-        Process__c process = new Process__c(Name = 'Sink');
+        Process__c process = new Process__c(Name = 'Terminate');
         insert process;
         
         //arrange chain

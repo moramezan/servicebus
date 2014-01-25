@@ -13,20 +13,20 @@
         Process__c jump = new Process__c(Name = 'Jump');
         insert jump;
         
-        Process__c sink = new Process__c(Name = 'Sink');
-        insert sink;
+        Process__c terminate = new Process__c(Name = 'Terminate');
+        insert terminate;
         
         Chain__c target = new Chain__c(Name = 'target');
         insert target;
-        insert new ChainStep__c(Chain__c = target.Id, Sequence__c = 1, Process__c = sink.Id);
+        insert new ChainStep__c(Chain__c = target.Id, Sequence__c = 1, Process__c = terminate.Id);
         
         JumpConfiguration__c configuration = new JumpConfiguration__c(Chain__c = target.Id);
         insert configuration;
         
         Chain__c origin = new Chain__c(Name = 'origin');
         insert origin;
-        insert new ChainStep__c(Chain__c = origin.Id, Sequence__c = 1, Process__c = jump.Id, Configuration__c = configuration.Id);
-        insert new ChainStep__c(Chain__c = origin.Id, Sequence__c = 2, Process__c = sink.Id);
+        insert new ChainStep__c(Chain__c = origin.Id, Sequence__c = 1, Process__c = jump.Id, ConfigurationId__c = configuration.Id);
+        insert new ChainStep__c(Chain__c = origin.Id, Sequence__c = 2, Process__c = terminate.Id);
         
         
         Map<String,Object> notification = new Map<String,Object>{

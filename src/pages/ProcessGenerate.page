@@ -13,6 +13,8 @@
         $ObjectType.Process__c.Fields.Tag__c.Name = '{!$ObjectType.Process__c.Fields.Tag__c.Name}';
         $ObjectType.Process__c.Fields.Icon__c = $ObjectType.Process__c.Fields.Icon__c || {};
         $ObjectType.Process__c.Fields.Icon__c.Name = '{!$ObjectType.Process__c.Fields.Icon__c.Name}';
+        $ObjectType.Process__c.Fields.FullyQualifiedClassName__c = $ObjectType.Process__c.Fields.FullyQualifiedClassName__c || {};
+        $ObjectType.Process__c.Fields.FullyQualifiedClassName__c.Name = '{!$ObjectType.Process__c.Fields.FullyQualifiedClassName__c.Name}';
         
         window.$RemoteAction = window.$RemoteAction || {};
         $RemoteAction.ProcessGenerateExtension = $RemoteAction.ProcessGenerateExtension || {};
@@ -20,13 +22,20 @@
         $RemoteAction.ProcessGenerateExtension.readAsyncApexJobs = '{!$RemoteAction.ProcessGenerateExtension.readAsyncApexJobs}';
         
         window.URLFOR = window.URLFOR || {};
-        URLFOR['$Action.Process__c.Tab'] = '{!URLFOR($Action.Process__c.Tab, $ObjectType.Process__c)}';
+        URLFOR['/$ObjectType.Process__c'] = '{!URLFOR('/' + $ObjectType.Process__c)}';
         
         window.AsyncApexJob = window.AsyncApexJob || {};
         AsyncApexJob.Id = '{!AsyncApexJob.Id}';
+        AsyncApexJob.CompletedDate = '{!AsyncApexJob.CompletedDate}';
         AsyncApexJob.CreatedDate = '{!AsyncApexJob.CreatedDate}';
-        AsyncApexJob.JobItemsProcessed = Number('{!AsyncApexJob.JobItemsProcessed}');
-        AsyncApexJob.TotalJobItems = Number('{!AsyncApexJob.TotalJobItems}');
+        AsyncApexJob.ExtendedStatus = '{!AsyncApexJob.ExtendedStatus}';
+        AsyncApexJob.JobItemsProcessed = Number({!AsyncApexJob.JobItemsProcessed});
+        AsyncApexJob.JobType = '{!AsyncApexJob.JobType}';
+        AsyncApexJob.LastProcessed = '{!AsyncApexJob.LastProcessed}';
+        AsyncApexJob.LastProcessedOffset = Number({!AsyncApexJob.LastProcessedOffset});
+        AsyncApexJob.NumberOfErrors = Number({!AsyncApexJob.NumberOfErrors});
+        AsyncApexJob.Status = '{!AsyncApexJob.Status}';
+        AsyncApexJob.TotalJobItems = Number({!AsyncApexJob.TotalJobItems});
 
     </c:bootstrapExt>
 </apex:page>

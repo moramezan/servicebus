@@ -197,11 +197,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Sink</apexClass>
+        <apexClass>Terminate</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SinkTest</apexClass>
+        <apexClass>TerminateTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -246,7 +246,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>ChainStep__c.Configuration__c</field>
+        <field>ChainStep__c.ConfigurationId__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -456,6 +456,15 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
+        <object>IsChangedConfiguration__c</object>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowCreate>false</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
         <object>JumpConfiguration__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
@@ -492,6 +501,15 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
+        <object>ScrapeConfiguration__c</object>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowCreate>false</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
         <object>SubscribeConfiguration__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
@@ -517,7 +535,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProxyBroker</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>PublishConfigurationEdit</apexPage>

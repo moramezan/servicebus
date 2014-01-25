@@ -1,4 +1,4 @@
-Ext.define('Steps.model.override.ChainStep', {
+Ext.define('Override.model.ChainStep', {
     override: 'Steps.model.ChainStep'
 }, function() {
     fields = Ext.Array.toValueMap(this.getFields(), 'name');

@@ -44,7 +44,7 @@ private class ApexClassesTest {
     
     private static testMethod void callingRegenerateReturnsExpectedProcesses() {
         //Arrange :
-        String name1 = 'Sink';
+        String name1 = 'Terminate';
         String name2 = 'Publish';
         List<String> names = new List<String>{name1, name2};
         List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];

@@ -1,4 +1,4 @@
-Ext.define('Steps.model.override.Process', {
+Ext.define('Override.model.Process', {
     override: 'Steps.model.Process'
 }, function() {
     fields = Ext.Array.toValueMap(this.getFields(), 'name');

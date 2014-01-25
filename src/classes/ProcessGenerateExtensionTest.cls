@@ -7,7 +7,7 @@
         ProcessGenerateExtension extension = new ProcessGenerateExtension(controller);
         Test.startTest();
         ProcessRefreshBatch batch = new ProcessRefreshBatch();
-        batch.query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass WHERE Name = \'Sink\' ORDER BY Name ASC LIMIT 1';
+        batch.query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass WHERE Name = \'Terminate\' ORDER BY Name ASC LIMIT 1';
         Database.executeBatch(batch, 1);
         Test.stopTest();
         

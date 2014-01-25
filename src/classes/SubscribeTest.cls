@@ -116,9 +116,9 @@
         
 
         // Config Publish 
-        Id publishConfigurationIdZ3 = (Id) [SELECT Id, Configuration__c 
+        Id publishConfigurationIdZ3 = (Id) [SELECT Id, ConfigurationId__c 
                                      FROM ChainStep__c 
-                                     WHERE Id = :chainStepZ3.Id LIMIT 1].Configuration__c;
+                                     WHERE Id = :chainStepZ3.Id LIMIT 1].ConfigurationId__c;
         PublishConfiguration__c  publishConfigurationZ3 =  [SELECT Id, EventType__c 
                                                               FROM PublishConfiguration__c 
                                                               WHERE Id = :publishConfigurationIdZ3];
@@ -126,9 +126,9 @@
         update publishConfigurationZ3;    
         
         // Config Z1 
-        Id configurationIdZ1 = (Id) [SELECT Id, Configuration__c 
+        Id configurationIdZ1 = (Id) [SELECT Id, ConfigurationId__c 
                                      FROM ChainStep__c 
-                                     WHERE Id = :chainStepZ1.Id LIMIT 1].Configuration__c;
+                                     WHERE Id = :chainStepZ1.Id LIMIT 1].ConfigurationId__c;
         SubscribeConfiguration__c  subscribeConfigurationZ1 =  [SELECT Id, EventType__c 
                                                               FROM SubscribeConfiguration__c 
                                                               WHERE Id = :configurationIdZ1];
@@ -197,9 +197,9 @@
         
        
         // Config A1
-        Id configurationIdA1 = (Id) [SELECT Id, Configuration__c 
+        Id configurationIdA1 = (Id) [SELECT Id, ConfigurationId__c 
                                      FROM ChainStep__c 
-                                     WHERE Id = :chainStepA1.Id LIMIT 1].Configuration__c;
+                                     WHERE Id = :chainStepA1.Id LIMIT 1].ConfigurationId__c;
         SubscribeConfiguration__c  subscribeConfigurationA1 =  [SELECT Id, EventType__c 
                                                               FROM SubscribeConfiguration__c 
                                                               WHERE Id = :configurationIdA1];
@@ -315,9 +315,9 @@
 
         
         // Config C1
-        Id configurationIdC1 = (Id) [SELECT Id, Configuration__c 
+        Id configurationIdC1 = (Id) [SELECT Id, ConfigurationId__c 
                                    FROM ChainStep__c 
-                                   WHERE Id = :chainStepC1.Id LIMIT 1].Configuration__c;
+                                   WHERE Id = :chainStepC1.Id LIMIT 1].ConfigurationId__c;
         SubscribeConfiguration__c  subscribeConfigurationC1 =  [SELECT Id, EventType__c 
                                                               FROM SubscribeConfiguration__c 
                                                               WHERE Id = :configurationIdC1];
@@ -325,9 +325,9 @@
         update subscribeConfigurationC1;
 
         // Config C2
-        Id configurationIdC2 = (Id) [SELECT Id, Configuration__c 
+        Id configurationIdC2 = (Id) [SELECT Id, ConfigurationId__c 
                                    FROM ChainStep__c 
-                                   WHERE Id = :chainStepC2.Id LIMIT 1].Configuration__c;
+                                   WHERE Id = :chainStepC2.Id LIMIT 1].ConfigurationId__c;
         SubscribeConfiguration__c  subscribeConfigurationC2 =  [SELECT Id, EventType__c 
                                                               FROM SubscribeConfiguration__c 
                                                               WHERE Id = :configurationIdC2];
@@ -385,9 +385,9 @@
         ChainStep__c chainStepB2 =  new ChainStep__c(Chain__c = chainB.Id, Process__c = ((Process__c )procecessNameToProcess.get('Wiretap')).Id, Sequence__c = 2);       
         insert new List<ChainStep__c>{chainStepB1, chainStepB2};
 
-        Id configurationIdB1 = (Id) [SELECT Id, Configuration__c 
+        Id configurationIdB1 = (Id) [SELECT Id, ConfigurationId__c 
                                      FROM ChainStep__c 
-                                     WHERE Id = :chainStepB1.Id LIMIT 1].Configuration__c;
+                                     WHERE Id = :chainStepB1.Id LIMIT 1].ConfigurationId__c;
         Database.delete(configurationIdB1);
         
         // Act :
