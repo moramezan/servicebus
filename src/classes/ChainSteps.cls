@@ -33,7 +33,7 @@ public class ChainSteps extends SObjects {
         for (Id chainId : id2config.keySet()) {
             SObject config = id2config.get(chainId);
             ChainStep__c chainStep = id2step.get(chainId);
-            chainStep.Configuration__c = config.Id;
+            chainStep.ConfigurationId__c = config.Id;
         }
         
         //update chainsteps
@@ -48,15 +48,15 @@ public class ChainSteps extends SObjects {
      */
     public override void  onBeforeDelete() {
        Set<Id> chainStepIds = (new Map<Id,SObject>(this.sobjects)).keySet();
-       Map<Id,ChainStep__c> id2step = new Map<Id,ChainStep__c>([SELECT id, Name, Configuration__c FROM ChainStep__c WHERE Id IN :chainStepIds]);
+       Map<Id,ChainStep__c> id2step = new Map<Id,ChainStep__c>([SELECT id, Name, ConfigurationId__c FROM ChainStep__c WHERE Id IN :chainStepIds]);
         
         //prepare list of configuration ids
         List<Id> ids = new List<Id>();
         
         //enumerate chain steps to get configuration ids
         for (ChainStep__c chainStep : id2step.values()) {
-            if (null == chainStep.Configuration__c) continue;
-            ids.add(chainStep.Configuration__c);
+            if (null == chainStep.ConfigurationId__c) continue;
+            ids.add(chainStep.ConfigurationId__c);
         }
         
         //delete all the configuration records

@@ -15,7 +15,7 @@ public class ScheduleImplementation implements System.Schedulable {
         List<ChainStep__c> steps = [
             SELECT Id, Chain__r.Name, Sequence__c
             FROM ChainStep__c
-            WHERE Configuration__c IN :scheduleConfigurations.keySet()
+            WHERE ConfigurationId__c IN :scheduleConfigurations.keySet()
         ];
         
         //destine a timestamped notification for each chain step

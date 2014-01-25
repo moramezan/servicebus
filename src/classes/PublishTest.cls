@@ -32,13 +32,13 @@
         Chain__c target = new Chain__c(Name = 'target');
         insert target;
         
-        ChainStep__c subscribe = new ChainStep__c(Chain__c = target.Id, Sequence__c = 1, Process__c = process.Id, Configuration__c = subConfig.Id);
+        ChainStep__c subscribe = new ChainStep__c(Chain__c = target.Id, Sequence__c = 1, Process__c = process.Id, ConfigurationId__c = subConfig.Id);
         insert subscribe;
         
-        subscribe = [SELECT Configuration__c FROM ChainStep__c WHERE Id = :subscribe.Id];
+        subscribe = [SELECT ConfigurationId__c FROM ChainStep__c WHERE Id = :subscribe.Id];
         
         Database.update(new SubscribeConfiguration__c(
-            Id = subscribe.Configuration__c,
+            Id = subscribe.ConfigurationId__c,
             EventType__c = eventType.Id
         ));
         
@@ -161,10 +161,10 @@
         ChainStep__c publisherStep = new ChainStep__c(Chain__c = publisher.Id, Sequence__c = 1, Process__c = publish.Id);
         insert publisherStep;
         
-        publisherStep = [SELECT Id, Configuration__c FROM ChainStep__c WHERE Id = :publisherStep.Id];
+        publisherStep = [SELECT Id, ConfigurationId__c FROM ChainStep__c WHERE Id = :publisherStep.Id];
         
         Database.update(new PublishConfiguration__c(
-            Id = publisherStep.Configuration__c,
+            Id = publisherStep.ConfigurationId__c,
             EventType__c = eventType.Id
         ));
         
@@ -179,10 +179,10 @@
         ChainStep__c subscriber1step = new ChainStep__c(Chain__c = subscriber1.Id, Sequence__c = 1, Process__c = subscribe.Id);
         insert subscriber1step;
         
-        subscriber1step = [SELECT Id, Configuration__c FROM ChainStep__c WHERE Id = :subscriber1step.Id];
+        subscriber1step = [SELECT Id, ConfigurationId__c FROM ChainStep__c WHERE Id = :subscriber1step.Id];
         
         Database.update(new SubscribeConfiguration__c(
-            Id = subscriber1step.Configuration__c,
+            Id = subscriber1step.ConfigurationId__c,
             EventType__c = eventType.Id
         ));
         
@@ -192,15 +192,15 @@
         ChainStep__c subscriber2step = new ChainStep__c(Chain__c = subscriber2.Id, Sequence__c = 1, Process__c = subscribe.Id);
         insert subscriber2step;
         
-        subscriber2step = [SELECT Id, Configuration__c FROM ChainStep__c WHERE Id = :subscriber2step.Id];
+        subscriber2step = [SELECT Id, ConfigurationId__c FROM ChainStep__c WHERE Id = :subscriber2step.Id];
         
         Database.update(new SubscribeConfiguration__c(
-            Id = subscriber2step.Configuration__c,
+            Id = subscriber2step.ConfigurationId__c,
             EventType__c = eventType.Id
         ));
         
         //arrange
-        Map<String,Object> notification = new Map<String,Object>{'eda__chainName' => 'Publisher', 'eda__sequence' => 1, 'eda__configuration' => publisherStep.Configuration__c};
+        Map<String,Object> notification = new Map<String,Object>{'eda__chainName' => 'Publisher', 'eda__sequence' => 1, 'eda__configuration' => publisherStep.ConfigurationId__c};
         
         //act
         Publish process = new Publish();
@@ -292,10 +292,10 @@
         insert eventTypeSubscribed;
 
         // Config Subscribe 
-        Id SubscribeConfigurationIdZ3 = (Id) [SELECT Id, Configuration__c 
+        Id SubscribeConfigurationIdZ3 = (Id) [SELECT Id, ConfigurationId__c 
             FROM ChainStep__c 
             WHERE Id = :chainStepZ3.Id LIMIT 1
-        ].Configuration__c;
+        ].ConfigurationId__c;
             
         SubscribeConfiguration__c SubscribeConfigurationZ3 = [
             SELECT Id, EventType__c 
@@ -308,10 +308,10 @@
         
         // Config Z1 
         Id configurationIdZ1 = (Id) [
-            SELECT Id, Configuration__c 
+            SELECT Id, ConfigurationId__c 
             FROM ChainStep__c 
             WHERE Id = :chainStepZ1.Id LIMIT 1
-        ].Configuration__c;
+        ].ConfigurationId__c;
         
         PublishConfiguration__c PublishConfigurationZ1 = [
             SELECT Id, EventType__c 
@@ -373,10 +373,10 @@
 
         // Config A1
         Id configurationIdA1 = (Id) [
-            SELECT Id, Configuration__c 
+            SELECT Id, ConfigurationId__c 
             FROM ChainStep__c 
             WHERE Id = :chainStepA1.Id LIMIT 1
-        ].Configuration__c;
+        ].ConfigurationId__c;
     
         PublishConfiguration__c PublishConfigurationA1 = [
             SELECT Id, EventType__c 
@@ -434,10 +434,10 @@
         insert new List<ChainStep__c>{chainStepB1, chainStepB2};
 
         Id configurationIdB1 = (Id) [
-            SELECT Id, Configuration__c 
+            SELECT Id, ConfigurationId__c 
             FROM ChainStep__c 
             WHERE Id = :chainStepB1.Id LIMIT 1
-         ].Configuration__c;
+         ].ConfigurationId__c;
         Database.delete(configurationIdB1);
         
         // Act :

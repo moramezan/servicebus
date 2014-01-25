@@ -75,7 +75,7 @@ public with sharing class ChainSorterController {
         insert chainStep;
         
         chainStep = [
-            SELECT Id, Name, Sequence__c, Configuration__c, Process__c, Chain__c
+            SELECT Id, Name, Sequence__c, ConfigurationId__c, Process__c, Chain__c
             FROM ChainStep__c
             WHERE Id = :chainStep.Id
         ];

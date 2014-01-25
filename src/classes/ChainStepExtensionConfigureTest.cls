@@ -28,9 +28,9 @@ private  class ChainStepExtensionConfigureTest {
         );
         insert chainStep;
         
-        chainStep = [SELECT Id, Configuration__c FROM ChainStep__c WHERE Id = :chainStep.Id];
+        chainStep = [SELECT Id, ConfigurationId__c FROM ChainStep__c WHERE Id = :chainStep.Id];
 
-        String expectedPageReferenceUrl = new PageReference('/' + chainStep.Configuration__c + '/e?retURL=' + chainStep.Id).getUrl();
+        String expectedPageReferenceUrl = new PageReference('/' + chainStep.ConfigurationId__c + '/e?retURL=' + chainStep.Id).getUrl();
 
         // Act
         ApexPages.StandardController controller = new ApexPages.StandardController(chainStep);

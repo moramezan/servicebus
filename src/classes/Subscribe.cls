@@ -20,7 +20,7 @@ public with sharing class Subscribe implements Process.Plugin {
     public static List<HealthController.Health> getHealth() {
         List<Chain__c> chains = [SELECT id, 
                                         Name, 
-                                        (SELECT id, Name, Process__c, Configuration__c
+                                        (SELECT id, Name, Process__c, ConfigurationId__c
                                          FROM ChainSteps__r 
                                          ORDER BY Sequence__c ASC) chainSteps  
                                  FROM Chain__c
@@ -73,7 +73,7 @@ public with sharing class Subscribe implements Process.Plugin {
                         if (step == 1) {
                             subscribeFirst = true;
                             chainStepId = chainStep.Id;
-                            subscribeConfigurationId = (Id) chainStep.Configuration__c; // cast from string to Id
+                            subscribeConfigurationId = (Id) chainStep.ConfigurationId__c; // cast from string to Id
                         }
                     }
                     step++;

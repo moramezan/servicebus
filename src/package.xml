@@ -89,7 +89,7 @@
         <members>BoomerangConfiguration__c.Chain__c</members>
         <members>BranchConfiguration__c.Chain__c</members>
         <members>ChainStep__c.Chain__c</members>
-        <members>ChainStep__c.Configuration__c</members>
+        <members>ChainStep__c.ConfigurationId__c</members>
         <members>ChainStep__c.Process__c</members>
         <members>ChainStep__c.Sequence__c</members>
         <members>Chain__c.ChainStepsCount__c</members>

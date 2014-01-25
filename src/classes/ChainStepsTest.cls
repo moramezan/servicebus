@@ -18,11 +18,11 @@
         insert chainStep;
         
         //requery after trigger
-        chainStep = [SELECT Id, Configuration__c FROM ChainStep__c WHERE Id = :chainStep.Id];
+        chainStep = [SELECT Id, ConfigurationId__c FROM ChainStep__c WHERE Id = :chainStep.Id];
         
         //assert
         String expectedId = Schema.SObjectType.BoomerangConfiguration__c.KeyPrefix; //this needs to be some config record
-        String actualId = chainStep.Configuration__c;
+        String actualId = chainStep.ConfigurationId__c;
         System.assert(actualId.startsWith(expectedId));
     }
  

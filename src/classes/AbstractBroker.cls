@@ -114,12 +114,12 @@ abstract public class AbstractBroker {
         Map<String,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c);
 
         ChainStep__c chainStep = [
-            SELECT Process__c, Configuration__c, Process__r.Name, Process__r.FullyQualifiedClassName__c
+            SELECT Process__c, ConfigurationId__c, Process__r.Name, Process__r.FullyQualifiedClassName__c
             FROM ChainStep__c
             WHERE Id = :persistentData.ChainStep__c
         ];
         
-        notification.put('eda__configuration', chainStep.Configuration__c);
+        notification.put('eda__configuration', chainStep.ConfigurationId__c);
         
         //instantiate processable instance  
         Type reflector = Type.forName(chainStep.Process__r.FullyQualifiedClassName__c);

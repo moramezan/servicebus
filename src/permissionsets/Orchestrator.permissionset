@@ -246,7 +246,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>ChainStep__c.Configuration__c</field>
+        <field>ChainStep__c.ConfigurationId__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>

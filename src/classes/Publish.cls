@@ -38,7 +38,7 @@ public with sharing class Publish implements Process.Plugin {
         List<ChainStep__c> steps = [
             SELECT Id, Chain__r.Name, Sequence__c
             FROM ChainStep__c
-            WHERE Configuration__c IN :subscribeConfigurations.keySet()
+            WHERE ConfigurationId__c IN :subscribeConfigurations.keySet()
         ];
         
         for (ChainStep__c step : steps) {
@@ -60,7 +60,7 @@ public with sharing class Publish implements Process.Plugin {
         List<Chain__c> chains = [
             SELECT id, 
             Name, 
-            (SELECT id, Name, Process__c, Configuration__c
+            (SELECT id, Name, Process__c, ConfigurationId__c
             FROM ChainSteps__r 
             ORDER BY Sequence__c ASC) chainSteps
             FROM Chain__c
@@ -125,7 +125,7 @@ public with sharing class Publish implements Process.Plugin {
                     for (ChainStep__c chainStep : chain.ChainSteps__r) {
                         if (chainStep.Process__c == PublishProcess.Id) {
                             Id chainStepId = chainStep.Id;
-                            Id publishConfigurationId = (Id) chainStep.Configuration__c; // cast from string to Id
+                            Id publishConfigurationId = (Id) chainStep.ConfigurationId__c; // cast from string to Id
                              
                              String status;
                              String detail;

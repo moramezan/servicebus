@@ -25,7 +25,7 @@
         
         Chain__c origin = new Chain__c(Name = 'origin');
         insert origin;
-        insert new ChainStep__c(Chain__c = origin.Id, Sequence__c = 1, Process__c = jump.Id, Configuration__c = configuration.Id);
+        insert new ChainStep__c(Chain__c = origin.Id, Sequence__c = 1, Process__c = jump.Id, ConfigurationId__c = configuration.Id);
         insert new ChainStep__c(Chain__c = origin.Id, Sequence__c = 2, Process__c = terminate.Id);
         
         
