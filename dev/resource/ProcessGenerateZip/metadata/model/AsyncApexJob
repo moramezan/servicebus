@@ -234,13 +234,15 @@
                     "//57% at 20 of 100",
                     "//73% at 50 of 100",
                     "//95% at 90 of 100",
-                    "var itemsPortion = Number(job.get('JobItemsProcessed') / job.get('TotalJobItems') * (1 - queuePortion)); //uses Number() cast to prevent divide by zero (0/0) when job is Queued and shows 0 total",
+                    "var itemsPortion = (job.get('JobItemsProcessed') / job.get('TotalJobItems') || 0) * (1 - queuePortion); //uses || 0 to prevent NaN on divide by zero (Queued jobs have zero total items)",
                     "Ext.log('[Generate.model.AsyncApexJob] itemsPortion ' + itemsPortion);",
                     "",
                     "//add the bullshit part and the real part together",
                     "var value = queuePortion + itemsPortion;",
-                    "var text = job.get('Status') + ' ' + job.get('JobItemsProcessed') + ' of ' + job.get('TotalJobItems');",
+                    "var text = job.get('Status');",
                     "var animate = true;",
+                    "",
+                    "if (job.get('JobItemsProcessed')) text += ' ' + job.get('JobItemsProcessed') + ' of ' + job.get('TotalJobItems');",
                     "",
                     "progressbar.updateProgress(value, text, animate);"
                 ]
