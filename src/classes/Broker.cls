@@ -143,7 +143,7 @@ public with sharing class Broker implements Database.Batchable<SObject>, Databas
             } else if (e instanceof System.NullPointerException) {
                 e.setMessage('Sequence null (key missing from notification) or Type null (class missing)');
             } else if (e instanceof System.QueryException) {
-                e.setMessage('ChainStep unqueryable (bad chain name, sequence, missing sink)');
+                e.setMessage('ChainStep unqueryable (bad chain name, sequence, missing terminate)');
             } else if (e instanceof System.TypeException) {
                 e.setMessage('Could not cast Process.Plugin (interface unimplemented on process class)');
             }  

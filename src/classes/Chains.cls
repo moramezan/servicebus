@@ -9,21 +9,21 @@ public class Chains extends SObjects {
     }
     
     public override void onAfterInsert() {
-        this.appendSinks();
+        this.appendTerminates();
     }
     
     /**
-     * Because the terminating Sink is a mandatory part of every chain, we
-     * make sure that all new Chains begin life with a Sink as the last process.
+     * Because the Terminate process is a mandatory part of every chain, we
+     * make sure all new Chains begin life with Terminate as the last step.
      */
-    @testVisible private void appendSinks() {
+    @testVisible private void appendTerminates() {
         Set<Id> chainIds = new Map<Id,SObject>(this.getSObjects()).keySet();
         
         //note hard binding to apex class name instead of string
-        Process__c sinkProcess = [
+        Process__c terminateProcess = [
             SELECT Id
             FROM Process__c
-            WHERE FullyQualifiedClassName__c = :Sink.class.getName()
+            WHERE FullyQualifiedClassName__c = :Terminate.class.getName()
         ];
         
         //bulkified for multiple chains
@@ -31,7 +31,7 @@ public class Chains extends SObjects {
         for (Id chainId : chainIds) {
             chainSteps.add(new ChainStep__c(
                 Chain__c = chainId,
-                Process__c = sinkProcess.Id
+                Process__c = terminateProcess.Id
                 //Sequence__c set by workflow
             ));
         }

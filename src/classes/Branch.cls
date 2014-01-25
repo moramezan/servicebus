@@ -36,7 +36,7 @@ public with sharing class Branch implements Process.Plugin {
         //careful: by returning 2 notification, the broker may think the process was a splitter
         Map<String,Object> clone = notification.clone();
         
-        //#47: Any messages properties affecting the SINK behaviour should be stripped from FLOW CONTROL
+        //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
         clone.put('eda__boomerangChainStepIds', null);
         clone.put('eda__chainName', branchTo);
         clone.put('eda__sequence', 0);

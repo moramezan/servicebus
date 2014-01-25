@@ -252,7 +252,7 @@
                                 "fn": "isDisabled",
                                 "implHandler": [
                                     "//see Ext.grid.column.Action#290",
-                                    "return record.get('ProcessName') == 'Sink';"
+                                    "return record.get('ProcessName') == 'Terminate';"
                                 ]
                             },
                             "designerId": "adf3c822-52d4-4faa-970e-7ae12dca357b"

@@ -12,7 +12,7 @@
     }
     
     static testMethod void testOneScheduledChain() {
-        ApexClasses classes = ApexClasses.fromTypes(new List<Type>{Schedule.class, Sink.class});
+        ApexClasses classes = ApexClasses.fromTypes(new List<Type>{Schedule.class, Terminate.class});
         List<Process__c> processes = classes.regenerate();
         insert processes;
         

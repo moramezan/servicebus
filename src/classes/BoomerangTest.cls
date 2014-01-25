@@ -19,7 +19,7 @@
     static testMethod void testNotificationIsRedirected() {
         // prepare process
         Process__c processOrigin =  new Process__c(Name = 'Boomerang' );
-        Process__c processTarget =  new Process__c(Name = 'Sink' );   
+        Process__c processTarget =  new Process__c(Name = 'Terminate' );
         insert processOrigin;
         insert processTarget;  
 

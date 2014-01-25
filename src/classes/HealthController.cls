@@ -18,7 +18,7 @@ public class HealthController
         get
         {
             List<Health> healthItems = new List<Health>();
-            healthItems.addAll(Sink.getHealth());
+            healthItems.addAll(Terminate.getHealth());
             healthItems.addAll(Subscribe.getHealth());
             healthItems.addAll(Publish.getHealth());
             return getSortedHealths(healthItems) ;

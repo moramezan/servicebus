@@ -2,7 +2,7 @@
 
     static testMethod void testHeartbeatHandled() {
         ApexClasses classes = ApexClasses.fromTypes(new List<Type>{
-            Sink.class,
+            Terminate.class,
             Schedule.class
         });
         
@@ -21,8 +21,8 @@
         scheduleConfiguration.FriendlyTimes__c = '09:00';
         update scheduleConfiguration;
         
-        ChainStep__c sinkStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 2, Process__c = processes[1].Id);
-        insert sinkStep;
+        ChainStep__c terminateStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 2, Process__c = processes[1].Id);
+        insert terminateStep;
         
         //this guy will miss his schedule
         Map<String,Object> notification = new Map<String,Object>{

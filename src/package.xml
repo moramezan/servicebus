@@ -50,10 +50,10 @@
         <members>ScheduleTest</members>
         <members>Scrape</members>
         <members>ScrapeTest</members>
-        <members>Sink</members>
-        <members>SinkTest</members>
         <members>Subscribe</members>
         <members>SubscribeTest</members>
+        <members>Terminate</members>
+        <members>TerminateTest</members>
         <members>Utility</members>
         <members>UtilityTest</members>
         <members>Wiretap</members>

@@ -20,7 +20,7 @@
 
     static testMethod void testUncustomizableProcess() {
         //Arrange
-        String  className  = 'Sink';
+        String  className  = 'Terminate';
         List<String> names = new List<String>{className};
         List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
         ApexClasses apexClasses = new ApexClasses(objects);

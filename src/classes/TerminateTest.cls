@@ -1,5 +1,5 @@
 @isTest //-- no view of org data
-private class SinkTest
+private class TerminateTest
 {
 
     static testMethod void callingExecuteReturnsExpectedNotificationCollectionWhenBoomerangAttribsDefinedOnNotification()
@@ -33,8 +33,8 @@ private class SinkTest
         Decimal expectedSequence = boomerangSequence;
 
         // Act
-        Sink sink = new Sink();
-        Process.PluginResult results = sink.invoke(new Process.PluginRequest(notification));
+        Terminate terminate = new Terminate();
+        Process.PluginResult results = terminate.invoke(new Process.PluginRequest(notification));
         List<Map<String,Object>> actualOutNotifications = Utility.convert(results);
 
         // prepare
@@ -71,8 +71,8 @@ private class SinkTest
         Decimal expectedSize = 0;
  
         // Act
-        Sink sink = new Sink();
-        Process.PluginResult results = sink.invoke(new Process.PluginRequest(notification));
+        Terminate terminate = new Terminate();
+        Process.PluginResult results = terminate.invoke(new Process.PluginRequest(notification));
         List<Map<String,Object>> actualOutNotifications = Utility.convert(results);
 
         // prepare
@@ -116,14 +116,14 @@ private class SinkTest
 
 
         // Act
-        Sink sink = new Sink();
+        Terminate terminate = new Terminate();
         
-        Process.PluginResult resultsInvokeFirst = sink.invoke(new Process.PluginRequest(notificationFirst));
+        Process.PluginResult resultsInvokeFirst = terminate.invoke(new Process.PluginRequest(notificationFirst));
         List<Map<String,Object>> actualOutNotificationsFirst = Utility.convert(resultsInvokeFirst);
         
-        Map<String,Object> notificationSecond = actualOutNotificationsFirst[0].clone(); //-- Sink hands back one
+        Map<String,Object> notificationSecond = actualOutNotificationsFirst[0].clone(); //-- Terminate hands back one
         
-        Process.PluginResult resultsInvokeSecond = sink.invoke(new Process.PluginRequest(notificationSecond));
+        Process.PluginResult resultsInvokeSecond = terminate.invoke(new Process.PluginRequest(notificationSecond));
         List<Map<String,Object>> actualOutNotificationsSecond = Utility.convert(resultsInvokeSecond);
         
         // prepare
@@ -143,9 +143,9 @@ private class SinkTest
     
     static testMethod void callingGetHeathReturnsExpectedList() {
         // #11 : Trivial error / health checker
-        // * Chain with no sink (error)
-        // * Chain with more than one Sink (error)
-        // * Sink that's not at the end (error)
+        // * Chain with no Terminate (error)
+        // * Chain with more than one Terminate (error)
+        // * Terminate that's not at the end (error)
         
         // Arrange :
         Chain__c chainA = new Chain__c(Name = 'ChainA');
@@ -157,24 +157,24 @@ private class SinkTest
         Chain__c chainD = new Chain__c(Name = 'ChainD');
         insert chainD;    
         
-        Process__c sinkProcess  = new Process__c(Name = 'Sink');
-        insert sinkProcess;
+        Process__c terminateProcess  = new Process__c(Name = 'Sink');
+        insert terminateProcess;
         Process__c wiretapProcess  = new Process__c(Name = 'Wiretap');
         insert wiretapProcess;       
         
         // Chain A - Ok
         ChainStep__c chainStepA1 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c  = 1);
-        ChainStep__c chainStepA2 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = sinkProcess.Id, Sequence__c = 2);   
+        ChainStep__c chainStepA2 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = terminateProcess.Id, Sequence__c = 2);   
         
-        // Chain B - Problem : Sink Not last Step
-        ChainStep__c chainStepB1 =  new ChainStep__C(Chain__c = chainB.Id, Process__c = sinkProcess.Id, Sequence__c = 1);
+        // Chain B - Problem : Terminate Not last Step
+        ChainStep__c chainStepB1 =  new ChainStep__C(Chain__c = chainB.Id, Process__c = terminateProcess.Id, Sequence__c = 1);
         ChainStep__c chainStepB2 =  new ChainStep__C(Chain__c = chainB.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);       
  
-        // Chain C - Problem : More than One Sink
-        ChainStep__c chainStepC1 =  new ChainStep__C(Chain__c = chainC.Id, Process__c = sinkProcess.Id, Sequence__c = 1);
-        ChainStep__c chainStepC2 =  new ChainStep__C(Chain__c = chainC.Id, Process__c = sinkProcess.Id, Sequence__c = 2); 
+        // Chain C - Problem : More than One Terminate
+        ChainStep__c chainStepC1 =  new ChainStep__C(Chain__c = chainC.Id, Process__c = terminateProcess.Id, Sequence__c = 1);
+        ChainStep__c chainStepC2 =  new ChainStep__C(Chain__c = chainC.Id, Process__c = terminateProcess.Id, Sequence__c = 2); 
         
-        // Chain D - Problem : Zero Sinks
+        // Chain D - Problem : Zero Terminate
         ChainStep__c chainStepD1 =  new ChainStep__C(Chain__c = chainD.Id, Process__c = wireTapProcess.Id, Sequence__c = 1);
         ChainStep__c chainStepD2 =  new ChainStep__C(Chain__c = chainD.Id, Process__c = wireTapProcess.Id, Sequence__c = 2); 
         insert new List<ChainStep__c>{
@@ -188,25 +188,25 @@ private class SinkTest
                 chainStepD2};
 
         // Act :
-        List<HealthController.Health> sinkHealths =  Sink.getHealth(); 
+        List<HealthController.Health> terminateHealths =  Terminate.getHealth(); 
         
         // Assemble :
         Map<id,string> chainIdToDescription = new Map<id,string>(); 
         Integer actualOkCount = 0;
         Integer actualErrorCount = 0;
-        for (HealthController.Health sinkHealth : sinkHealths ) {
-            chainIdToDescription.put(sinkHealth.ChainId, sinkHealth.Detail);
-            if (sinkHealth.Status == 'Ok') {
+        for (HealthController.Health terminateHealth : terminateHealths ) {
+            chainIdToDescription.put(terminateHealth.ChainId, terminateHealth.Detail);
+            if (terminateHealth.Status == 'Ok') {
                 actualOkCount++;   
             }
-            if (sinkHealth.Status == 'Error') {
+            if (terminateHealth.Status == 'Error') {
                 actualErrorCount++;   
             }         
         }
         
         // Assert :
         Integer expectedCount = 4;
-        Integer actualCount = sinkHealths.size();
+        Integer actualCount = terminateHealths.size();
         System.assertEquals(expectedCount, actualCount);
 
         Integer expectedOkCount = 1;
@@ -215,21 +215,21 @@ private class SinkTest
         Integer expectedErrorCount = 3;
         System.assertEquals(expectedErrorCount, actualErrorCount);
         
-        String actualChainSinkNotLastStep = chainIdToDescription.get(chainB.Id);
-        String expectedChainSinkNotLastStep = 'Sink process not present at end of chain';
-        System.assertEquals(expectedChainSinkNotLastStep, actualChainSinkNotLastStep);
+        String actualChainTerminateNotLastStep = chainIdToDescription.get(chainB.Id);
+        String expectedChainTerminateNotLastStep = 'Terminate process not present at end of chain';
+        System.assertEquals(expectedChainTerminateNotLastStep, actualChainTerminateNotLastStep);
         
-        String actualChainMoreThanOneSink = chainIdToDescription.get(chainC.Id);
-        String expectedChainMoreThanOneSink ='More than one sink found in chain';
-        System.assertEquals(expectedChainMoreThanOneSink, actualChainMoreThanOneSink);
+        String actualChainMoreThanOneTerminate = chainIdToDescription.get(chainC.Id);
+        String expectedChainMoreThanOneTerminate ='More than one Terminate found in chain';
+        System.assertEquals(expectedChainMoreThanOneTerminate, actualChainMoreThanOneTerminate);
         
-        String actualChainZeroSinks = chainIdToDescription.get(chainD.Id);
-        String  expectedChainZeroSinks =  'No Sink found in chain';
-        System.assertEquals(expectedChainZeroSinks, actualChainZeroSinks);          
+        String actualChainZeroTerminates = chainIdToDescription.get(chainD.Id);
+        String  expectedChainZeroTerminates =  'No Terminate found in chain';
+        System.assertEquals(expectedChainZeroTerminates, actualChainZeroTerminates);
     }
 
     
-    static testMethod void callingGetHeathReturnsExpectedListWhenSinkNotDefined() {
+    static testMethod void callingGetHeathReturnsExpectedListWhenTerminateNotDefined() {
         
         // Arrange :
         Chain__c chainA = new Chain__c(Name = 'ChainA');
@@ -238,30 +238,30 @@ private class SinkTest
         Process__c wiretapProcess  = new Process__c(Name = 'Wiretap');
         insert wiretapProcess;       
         
-        // Chain A - Error but Sink process not defined
+        // Chain A - Error but Terminate process not defined
         ChainStep__c chainStepA1 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c  = 1);
         ChainStep__c chainStepA2 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);   
 
         // Act :
-        List<HealthController.Health> sinkHealths =  Sink.getHealth();
+        List<HealthController.Health> terminateHealths =  Terminate.getHealth();
         
         // Assemble :
         Map<id,string> chainIdToDescription = new Map<id,string>(); 
         Integer actualOkCount = 0;
         Integer actualUnknownCount = 0;
-        for (HealthController.Health sinkHealth : sinkHealths ) {
-            chainIdToDescription.put(sinkHealth.ChainId, sinkHealth.Detail);
-            if (sinkHealth.Status == 'Ok') {
+        for (HealthController.Health terminateHealth : terminateHealths ) {
+            chainIdToDescription.put(terminateHealth.ChainId, terminateHealth.Detail);
+            if (terminateHealth.Status == 'Ok') {
                 actualOkCount++;   
             }
-            if (sinkHealth.Status == 'Unknown') {
+            if (terminateHealth.Status == 'Unknown') {
                 actualUnknownCount++;   
             }         
         }
         
         // Assert :
         Integer expectedCount = 1;
-        Integer actualCount = sinkHealths.size();
+        Integer actualCount = terminateHealths.size();
         System.assertEquals(expectedCount, actualCount);
 
         Integer expectedOkCount = 0;
@@ -271,7 +271,7 @@ private class SinkTest
         System.assertEquals(expectedUnknownCount, actualUnknownCount);
         
         String actualUnknown = chainIdToDescription.get(chainA.Id);
-        String expectedUnknown = 'Cannot resolve Id of Sink process';
+        String expectedUnknown = 'Cannot resolve Id of Terminate process';
         System.assertEquals(expectedUnknown, actualUnknown);
     } 
 }

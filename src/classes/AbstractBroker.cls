@@ -4,7 +4,7 @@
  * Example chain:
  * TestChain #1 [Wiretap]
  * TestChain #2 [Wiretap]
- * TestChain #3 [Sink]
+ * TestChain #3 [Terminate]
  *
  * As used by a recursing broker:
  *
@@ -33,7 +33,7 @@
  * +-----------+
  *
  * +-----------+ (CONTEXT 5)
- * |  EXECUTE  | invokes [Sink]
+ * |  EXECUTE  | invokes [Terminate]
  * +-----------+
  *
  *
@@ -77,7 +77,7 @@
  * +-----------+
  *
  * +-----------+ (CONTEXT 9 batchable.execute)
- * |  EXECUTE  | invokes [Sink]
+ * |  EXECUTE  | invokes [Terminate]
  * |  RESOLVE  | 
  * |  PERSIST  | 
  * +-----------+

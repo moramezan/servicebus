@@ -33,7 +33,7 @@
         Integer SequenceGtZero2 = 2;
         Process__c process1 = new Process__c(Name = 'WireTap');
         insert process1;
-        Process__c process2 = new Process__c(Name = 'Sink');
+        Process__c process2 = new Process__c(Name = 'Terminate');
         insert process2;
         
         Chain__c chain = new Chain__c(Name = 'TestChain');
@@ -76,7 +76,7 @@
         
         Process__c process1 = new Process__c(Name = 'WireTap');
         insert process1;
-        Process__c process2 = new Process__c(Name = 'Sink');
+        Process__c process2 = new Process__c(Name = 'Terminate');
         insert process2;
      
         
@@ -85,16 +85,16 @@
         
         //act
         //pre condition :
-        //WireTap 1
-        //Sink    2
-        //WireTap 0
-        //WireTap 0
+        //WireTap   1
+        //Terminate 2
+        //WireTap   0
+        //WireTap   0
 
         //post condition :
-        //WireTap 1
-        //Sink    2
-        //WireTap 3
-        //WireTap 4
+        //WireTap   1
+        //Terminate 2
+        //WireTap   3
+        //WireTap   4
         
         ChainStep__c chainStep1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero1, Process__c = process1.Id);
         ChainStep__c chainStep2 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero2, Process__c = process2.Id);

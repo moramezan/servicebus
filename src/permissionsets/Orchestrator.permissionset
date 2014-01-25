@@ -197,11 +197,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Sink</apexClass>
+        <apexClass>Terminate</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SinkTest</apexClass>
+        <apexClass>TerminateTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

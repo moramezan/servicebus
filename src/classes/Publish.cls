@@ -43,14 +43,14 @@ public with sharing class Publish implements Process.Plugin {
         
         for (ChainStep__c step : steps) {
             Map<String,Object> clone = notification.clone();
-            //#47: Any messages properties affecting the SINK behaviour should be stripped from FLOW CONTROL
+            //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
             clone.put('eda__boomerangChainStepIds', null);
             clone.put('eda__sequence', step.Sequence__c);
             clone.put('eda__chainName', step.Chain__r.Name);
             notifications.add(clone);
         }
         
-        //original guy carries on... this is not a sink
+        //original guy carries on... this is not a Terminate
         notifications.add(notification);
         
         return Utility.convert(notifications);
