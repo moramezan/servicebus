@@ -1,25 +1,16 @@
 @isTest private class BrokerTest {
  
       static testMethod void testBrokerSurfacesExceptionThrownInsideofAnEdaProcess() {
-        //arrange 
-        List<String> names = new List<String>{'Wiretap'};   
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
-        insert processes;
-        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
-        for (Process__c p : processes) {
-           procecessNameToProcess.put(p.Name, p); 
-        }
-        Process__c errorProcess  = (Process__c )procecessNameToProcess.get('Wiretap');
- 
+        //arrange processes
+        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        
+        //arrange chain
         Chain__c chain = new Chain__c(Name = 'testChain');
         insert chain;
-
-        ChainStep__c step1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = errorProcess.Id);
-        List<ChainStep__c> chainSteps =  new List<ChainStep__c>{step1};  
-        insert chainSteps;         
- 
+        
+        //arrange steps
+        ChainStep__c wiretapStep = ChainSteps.generateOne(chain.Id, wiretapProcess.Id);
+        
         //act
         Test.startTest();
         Broker.enqueue(chain.Name, '000000000000000AAA');
@@ -31,25 +22,16 @@
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
-      static testMethod void testBrokerDoesNotSurfaceExceptionForProperlyInvokedProcessable() {
-        //arrange 
-        List<String> names = new List<String>{'Terminate'};   
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
-        insert processes;
-        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
-        for (Process__c p : processes) {
-           procecessNameToProcess.put(p.Name, p); 
-        }
-        Process__c noErrorProcess  = (Process__c )procecessNameToProcess.get('Terminate');
- 
+    static testMethod void testBrokerDoesNotSurfaceExceptionForProperlyInvokedProcessable() {
+        //arrange processes
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        
+        //arrange chain
         Chain__c chain = new Chain__c(Name = 'testChain');
         insert chain;
-
-        ChainStep__c step1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = noErrorProcess.Id);
-        List<ChainStep__c> chainSteps =  new List<ChainStep__c>{step1};  
-        insert chainSteps;         
+        
+        //arrange steps
+        ChainStep__c terminateStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
  
         //act
         Test.startTest();
@@ -64,29 +46,19 @@
 
  
     static testMethod void testNotificationIsCorrectlyWrittenToPersistentDatas() {
-        //arrange 
-        List<String> names = new List<String>{'Mark', 'Terminate'};   
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
-        insert processes;
-        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
-        for (Process__c p : processes) {
-           procecessNameToProcess.put(p.Name, p); 
-        }
-        Process__c markProcess  = (Process__c )procecessNameToProcess.get('Mark');
-        Process__c terminateProcess  = (Process__c )procecessNameToProcess.get('Terminate');
-                
- 
+        //arrange processes
+        Process__c markProcess = Processes.generateOne(Mark.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        
+        //arrange chain
         Chain__c chain = new Chain__c(Name = 'testChain');
         insert chain;
-
-        ChainStep__c step1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = markProcess.Id);
-        ChainStep__c step2 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 2, Process__c = markProcess.Id);
-        ChainStep__c step3 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 3, Process__c = terminateProcess.Id);
-        List<ChainStep__c> chainSteps =  new List<ChainStep__c>{step1, step2 , step3};
-        insert chainSteps;          
- 
+        
+        //arrange steps
+        ChainStep__c step1 = ChainSteps.generateOne(chain.Id, markProcess.Id);
+        ChainStep__c step2 = ChainSteps.generateOne(chain.Id, markProcess.Id);
+        ChainStep__c step3 = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
+        
         //act
         Test.startTest();
         Broker.enqueue(chain.Name, '000000000000000AAA');
@@ -189,29 +161,19 @@
  
     static testmethod void testDodgyProcess() {
         //arrange process
-        List<String> names = new List<String>{'Mark'};
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
-        insert processes;
-        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
-        for (Process__c p : processes) {
-           procecessNameToProcess.put(p.Name, p); 
-        }
-        Process__c process  = (Process__c )procecessNameToProcess.get('Mark');
- 
+        Process__c terminateProcess = Processes.generateOne(Mark.class);
         
         //arrange chain
         Chain__c chain = new Chain__c(Name = 'testChain');
         insert chain;
         
-        //arrange step
-        ChainStep__c step = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = process.Id);
+        //arrange steps
+        ChainStep__c step = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
         insert step;
         
-        // simulate dodgy process by deleting reference
-        process.FullyQualifiedClassName__c = null;
-        update process;
+        //simulate dodgy process by deleting reference
+        terminateProcess.FullyQualifiedClassName__c = null;
+        update terminateProcess;
         
         //act
         Test.startTest();
@@ -270,27 +232,18 @@
  
  
     static testMethod void testProcessWithoutClassThrowsThrowsExpectedException() {
-        //arrange (note there is no Process__c in database!)
-        List<String> names = new List<String>{'Terminate'};
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
-        insert processes;
-        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
-        for (Process__c p : processes) {
-           procecessNameToProcess.put(p.Name, p); 
-        }
-        Process__c process  = (Process__c )procecessNameToProcess.get('Terminate');
-
-        String chainName = 'TestChain';
+        //arrange processes
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        
+        //arrange chain
         Chain__c chain = new Chain__c(Name = 'TestChain');
         insert chain;
         
-        ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = process.Id);
-        insert chainStep;
+        //arrange steps
+        ChainStep__c chainStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
         
-        process.FullyQualifiedClassName__c = 'lalala';
-        update process; //pretend we deleted the class
+        terminateProcess.FullyQualifiedClassName__c = 'lalala';
+        update terminateProcess; //pretend we deleted the class
         
         //act
         Test.startTest();
@@ -307,26 +260,18 @@
     }
     
     static testMethod void testNonProcessPluginThrowsTypeException() {
-        //arrange (note there is no Process__c in database!) 
-        List<String> names = new List<String>{'Terminate'};
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
-        insert processes;
-        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
-        for (Process__c p : processes) {
-           procecessNameToProcess.put(p.Name, p); 
-        }
-        Process__c process  = (Process__c )procecessNameToProcess.get('Terminate');
+        //arrange processes
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
+        //arrange chain
         Chain__c chain = new Chain__c(Name = 'TestChain');
         insert chain;
         
-        ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = process.Id);
-        insert chainStep;
+        //arrange steps
+        ChainStep__c chainStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
         
-        process.FullyQualifiedClassName__c = 'Account';
-        update process; //this is definitely not a Process.Plugin
+        terminateProcess.FullyQualifiedClassName__c = 'Account';
+        update terminateProcess; //this is definitely not a Process.Plugin
         
         //act
         Test.startTest();

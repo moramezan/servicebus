@@ -2,12 +2,8 @@
     
     static testMethod void testCustomizableProcess() {
         //Arrange
-        String  className  = 'Wiretap';
-        List<String> names = new List<String>{className};
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
-        ApexPages.StandardController controller = new ApexPages.StandardController(processes[0]);
+        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        ApexPages.StandardController controller = new ApexPages.StandardController(wiretapProcess);
         ProcessExtensionCustomize extension = new ProcessExtensionCustomize(controller);
         
         // Act
@@ -20,12 +16,8 @@
 
     static testMethod void testUncustomizableProcess() {
         //Arrange
-        String  className  = 'Terminate';
-        List<String> names = new List<String>{className};
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
-        ApexPages.StandardController controller = new ApexPages.StandardController(processes[0]);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        ApexPages.StandardController controller = new ApexPages.StandardController(terminateProcess);
         ProcessExtensionCustomize extension = new ProcessExtensionCustomize(controller);
         
         // Act
@@ -33,7 +25,9 @@
         System.PageReference processPage = extension.initCustom();
         
         // Assert
-        System.assertEquals(null, processPage.getUrl());  
+        String expectedUrl = String.valueOf(terminateProcess.Id).left(15);
+        String actualUrl = processPage.getUrl();
+        System.assert(actualUrl.contains(expectedUrl));  
     }
     
 }

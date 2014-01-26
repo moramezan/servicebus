@@ -3,8 +3,6 @@
     <fullName>Event Driven Architecture</fullName>
     <types>
         <members>AbstractBroker</members>
-        <members>ApexClasses</members>
-        <members>ApexClassesTest</members>
         <members>Api</members>
         <members>AsyncApexJobs</members>
         <members>AsyncApexJobsTest</members>
@@ -38,6 +36,7 @@
         <members>ProcessGenerateExtensionTest</members>
         <members>ProcessRefreshBatch</members>
         <members>ProcessRefreshBatchTest</members>
+        <members>Processes</members>
         <members>ProxyBroker</members>
         <members>Publish</members>
         <members>PublishTest</members>

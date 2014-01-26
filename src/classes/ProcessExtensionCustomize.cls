@@ -17,9 +17,9 @@ public with sharing class ProcessExtensionCustomize {
         if (!String.isBlank(customizable)) {
             //customizable processes redirect to setting tab
             try {
-                SObject setting = (SObject)Type.forName( customizable ).newInstance();
+                SObject setting = (SObject)Type.forName(customizable).newInstance();
                 String prefix = setting.getSObjectType().getDescribe().getKeyPrefix();
-                pageReference =  new ApexPages.PageReference('/' + prefix + '/o');
+                pageReference = new ApexPages.PageReference('/' + prefix + '/o');
             } catch (Exception e) {
                 //
             }   

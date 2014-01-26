@@ -1,42 +1,37 @@
 @isTest private class BoomerangTest {
 
     static testMethod void canDetermineConfigurable() {
-        //arrange
-        String  className  = 'Boomerang';
-        List<String> names = new List<String>{className};
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
+        //arrange processes
+        Process__c boomerangProcess = Processes.generateOne(Boomerang.class);
         
         //act
-        String actualConfiguration = processes[0].Configurable__c;
+        String actualConfiguration = boomerangProcess.Configurable__c;
         
-        // Assert
+        //assert
         String expectedConfiguration = Schema.SobjectType.BoomerangConfiguration__c.Name;
         System.assertEquals(expectedConfiguration, actualConfiguration);  
     }
 
     static testMethod void testNotificationIsRedirected() {
-        // prepare process
-        Process__c processOrigin =  new Process__c(Name = 'Boomerang' );
-        Process__c processTarget =  new Process__c(Name = 'Terminate' );
-        insert processOrigin;
-        insert processTarget;  
-
-        //prepare chains in db
+        //arrange processes
+        Process__c boomerangProcess = Processes.generateOne(Boomerang.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        
+        //arrange chains
         Chain__c origin = new Chain__c(Name = 'originChain');
         insert origin;
-        ChainStep__c originChainStep = new ChainStep__c(Chain__c = origin.Id, Sequence__c = 1, Process__c = processOrigin.Id);
-        insert originChainStep;
+        ChainStep__c originChainStep = ChainSteps.generateOne(origin.Id, boomerangProcess.Id);
         
         Chain__c target = new Chain__c(Name = 'targetChain');
         insert target;
-        ChainStep__c targetChainStep = new ChainStep__c(Chain__c = target.Id, Sequence__c = 1, Process__c = processTarget.Id);
-        insert targetChainStep;
+        ChainStep__c targetChainStep = ChainSteps.generateOne(target.Id, terminateProcess.Id);
         
         //prepare configuration in db
-        BoomerangConfiguration__c config = new BoomerangConfiguration__c(Chain__c = target.Id);
-        insert config;
+        BoomerangConfiguration__c config = new BoomerangConfiguration__c(
+            Id = originChainStep.ConfigurationId__c,
+            Chain__c = target.Id
+        );
+        update config;
         
         //prepare notification
         Process.PluginRequest request = new Process.PluginRequest(new Map<String,Object>{

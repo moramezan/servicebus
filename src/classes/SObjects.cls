@@ -10,6 +10,10 @@ abstract public class SObjects {
         this.sobjects = sobjects;
     }
     
+    public Set<Id> keySet() {
+        return new Map<Id,SObject>(this.getSObjects()).keySet();
+    }
+    
     virtual public void onBeforeInsert() {
         //
     }

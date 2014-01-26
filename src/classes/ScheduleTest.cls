@@ -1,19 +1,16 @@
 @isTest private class ScheduleTest {
 
     static testMethod void testHeartbeatHandled() {
-        ApexClasses classes = ApexClasses.fromTypes(new List<Type>{
-            Terminate.class,
-            Schedule.class
-        });
+        //arrange processes
+        Process__c scheduleProcess = Processes.generateOne(Schedule.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        List<Process__c> processes = classes.regenerate();
-        insert processes;
-        
+        //arrange chain
         Chain__c chain = new Chain__c(Name = 'ScheduledChain');
         insert chain;
         
-        ChainStep__c scheduleStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = processes[0].Id);
-        insert scheduleStep;
+        //arrange steps
+        ChainStep__c scheduleStep = ChainSteps.generateOne(chain.Id, scheduleProcess.Id);
         
         ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c];
         scheduleConfiguration.Frequency__c = 'Weekly';
@@ -21,8 +18,7 @@
         scheduleConfiguration.FriendlyTimes__c = '09:00';
         update scheduleConfiguration;
         
-        ChainStep__c terminateStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 2, Process__c = processes[1].Id);
-        insert terminateStep;
+        ChainStep__c terminateStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
         
         //this guy will miss his schedule
         Map<String,Object> notification = new Map<String,Object>{

@@ -12,14 +12,17 @@
     }
     
     static testMethod void testOneScheduledChain() {
-        ApexClasses classes = ApexClasses.fromTypes(new List<Type>{Schedule.class, Terminate.class});
-        List<Process__c> processes = classes.regenerate();
-        insert processes;
+        //arrange processes
+        Process__c scheduleProcess = Processes.generateOne(Schedule.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
+        //arrange chain
         Chain__c one = new Chain__c(Name = 'One');
         insert one;
-        insert new ChainStep__c(Chain__c = one.Id, Sequence__c = 1, Process__c = processes[0].Id);
-        insert new ChainStep__c(Chain__c = one.Id, Sequence__c = 1, Process__c = processes[1].Id);
+        
+        //arrange steps
+        ChainSteps.generateOne(one.Id, scheduleProcess.Id);
+        ChainSteps.generateOne(one.Id, terminateProcess.Id);
         
         List<ScheduleConfiguration__c> scheduleConfigurations = [SELECT Id FROM ScheduleConfiguration__c];
         for (ScheduleConfiguration__c scheduleConfiguration : scheduleConfigurations) {

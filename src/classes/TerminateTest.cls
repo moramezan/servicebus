@@ -10,20 +10,23 @@ private class TerminateTest
         String data = 'data';
         String boomerangChainName = 'boomerang-chain';
         Decimal boomerangSequence = 2;
-
+        
+        //arrange processes
+        Process__c boomerangProcess = Processes.generateOne(Boomerang.class);
+        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        
+        //arrange chain
         Chain__c chain = new Chain__c(Name = boomerangChainName);
         insert chain;
         
-        Process__c process = new Process__c(Name = 'Boomerang');
-        insert process;
-        
-        ChainStep__c chainStep = new ChainStep__c ( Chain__c = chain.Id, Process__c = process.Id, Sequence__c = boomerangSequence);
-        insert chainStep;
+        //arrange steps
+        ChainStep__c chainStep1 = ChainSteps.generateOne(chain.Id, wiretapProcess.Id);
+        ChainStep__c chainStep2 = ChainSteps.generateOne(chain.Id, boomerangProcess.Id);
 
         Map<String,Object> notification = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__sequence' => sequence,
-            'eda__boomerangChainStepIds' => new List<Id>{chainStep.Id},
+            'eda__boomerangChainStepIds' => new List<Id>{chainStep2.Id},
             'data' => data
         };
 
@@ -93,14 +96,11 @@ private class TerminateTest
         Chain__c chain = new Chain__c(Name = boomerangChainName);
         insert chain;
         
-        Process__c process = new Process__c(Name = 'Boomerang');
-        insert process;
+        Process__c process = Processes.generateOne(Boomerang.class);
         
-        ChainStep__c chainStep01 = new ChainStep__c ( Chain__c = chain.Id, Process__c = process.Id, Sequence__c = boomerangSequence);
-        insert chainStep01;
-        ChainStep__c chainStep02 = new ChainStep__c ( Chain__c = chain.Id, Process__c = process.Id, Sequence__c = boomerangSequence);
-        insert chainStep02;
-
+        ChainStep__c chainStep01 = ChainSteps.generateOne(chain.Id, process.Id);
+        ChainStep__c chainStep02 = ChainSteps.generateOne(chain.Id, process.Id);
+        
         Id boomerangChainStepId01 = chainStep01.Id ;
         Id boomerangChainStepId02 = chainStep02.Id ; 
         List<Id> boomerangChainStepIds = new List<Id>();
@@ -157,35 +157,24 @@ private class TerminateTest
         Chain__c chainD = new Chain__c(Name = 'ChainD');
         insert chainD;    
         
-        Process__c terminateProcess  = new Process__c(Name = 'Sink');
-        insert terminateProcess;
-        Process__c wiretapProcess  = new Process__c(Name = 'Wiretap');
-        insert wiretapProcess;       
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         
         // Chain A - Ok
-        ChainStep__c chainStepA1 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c  = 1);
-        ChainStep__c chainStepA2 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = terminateProcess.Id, Sequence__c = 2);   
+        ChainStep__c chainStepA1 = ChainSteps.generateOne(chainA.Id, wireTapProcess.Id);
+        ChainStep__c chainStepA2 = ChainSteps.generateOne(chainA.Id, terminateProcess.Id);   
         
         // Chain B - Problem : Terminate Not last Step
-        ChainStep__c chainStepB1 =  new ChainStep__C(Chain__c = chainB.Id, Process__c = terminateProcess.Id, Sequence__c = 1);
-        ChainStep__c chainStepB2 =  new ChainStep__C(Chain__c = chainB.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);       
+        ChainStep__c chainStepB1 = ChainSteps.generateOne(chainB.Id, terminateProcess.Id);
+        ChainStep__c chainStepB2 = ChainSteps.generateOne(chainB.Id, wireTapProcess.Id);       
  
         // Chain C - Problem : More than One Terminate
-        ChainStep__c chainStepC1 =  new ChainStep__C(Chain__c = chainC.Id, Process__c = terminateProcess.Id, Sequence__c = 1);
-        ChainStep__c chainStepC2 =  new ChainStep__C(Chain__c = chainC.Id, Process__c = terminateProcess.Id, Sequence__c = 2); 
+        ChainStep__c chainStepC1 = ChainSteps.generateOne(chainC.Id, terminateProcess.Id);
+        ChainStep__c chainStepC2 = ChainSteps.generateOne(chainC.Id, terminateProcess.Id); 
         
         // Chain D - Problem : Zero Terminate
-        ChainStep__c chainStepD1 =  new ChainStep__C(Chain__c = chainD.Id, Process__c = wireTapProcess.Id, Sequence__c = 1);
-        ChainStep__c chainStepD2 =  new ChainStep__C(Chain__c = chainD.Id, Process__c = wireTapProcess.Id, Sequence__c = 2); 
-        insert new List<ChainStep__c>{
-                chainStepA1, 
-                chainStepA2, 
-                chainStepB1, 
-                chainStepB2, 
-                chainStepC1, 
-                chainStepC2, 
-                chainStepD1, 
-                chainStepD2};
+        ChainStep__c chainStepD1 = ChainSteps.generateOne(chainD.Id, wireTapProcess.Id);
+        ChainStep__c chainStepD2 = ChainSteps.generateOne(chainD.Id, wireTapProcess.Id); 
 
         // Act :
         List<HealthController.Health> terminateHealths =  Terminate.getHealth(); 

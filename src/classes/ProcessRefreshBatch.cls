@@ -7,8 +7,19 @@ public with sharing class ProcessRefreshBatch implements Database.Batchable<SObj
     }
     
     public void execute(Database.BatchableContext context, List<ApexClass> scope) {
-        List<Process__c> processes = new ApexClasses(scope).regenerate();
-        upsert processes Name; //will not duplicate existing processes
+        List<Process__c> edaProcesses = new List<Process__c>();
+        for (ApexClass apexClass : scope) {
+            Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
+            try {
+                Process__c edaProcess = Processes.fromType(reflector);
+                edaProcesses.add(edaProcess);
+            } catch (Exception e) {
+                //fuckup happened, probably
+                //callout from constructor
+            }
+        }
+        //will not duplicate existing processes
+        upsert edaProcesses Name;
     }
     
     public void finish(Database.BatchableContext context) {

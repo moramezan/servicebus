@@ -2,17 +2,13 @@
 private class IsChangedTest {
   
     private static  testMethod void canDetermineConfigurable () {
-        //arrange
-        String  className  = 'IsChanged';
-        List<String> names = new List<String>{className};
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
+        //arrange processes
+        Process__c isChangedProcess = Processes.generateOne(IsChanged.class);
         
         //act
-        String actualConfiguration = processes[0].Configurable__c;
+        String actualConfiguration = isChangedProcess.Configurable__c;
         
-        // Assert
+        //assert
         String expectedConfiguration = Schema.SobjectType.IsChangedConfiguration__c.Name;
         System.assertEquals(expectedConfiguration, actualConfiguration);  
     }
@@ -30,20 +26,15 @@ private class IsChangedTest {
         insert account;
         String accountId  = account.Id;
  
-        String  className  = 'IsChanged';
-        List<String> names = new List<String>{className};
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
-           Process__c isChangedProcess = processes[0];
-        insert processes;
-
+        //arrange processes
+        Process__c isChangedProcess = Processes.generateOne(IsChanged.class);
+        
+        //arrange chain
         Chain__c chain = new Chain__c(Name = 'IsChangedChain');
         insert chain;
         
-        ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 2, Process__c = isChangedProcess.Id);
-        insert chainStep;
-
+        //arrange steps
+        ChainStep__c chainStep = ChainSteps.generateOne(chain.Id, isChangedProcess.Id);
 
         IsChangedConfiguration__c configuration = [
             SELECT Id, NewHash__c, OldHash__c, NewId__c, OldId__c, NewValue__c, OldValue__c, FieldName__c
@@ -86,20 +77,16 @@ private class IsChangedTest {
         insert account;
         String accountId  = account.Id;
  
-        String  className  = 'IsChanged';
-        List<String> names = new List<String>{className};
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
-           Process__c isChangedProcess = processes[0];
-        insert processes;
-
+        //arrange processes
+        Process__c isChangedProcess = Processes.generateOne(IsChanged.class);
+        
+        //arrange chain
         Chain__c chain = new Chain__c(Name = 'IsChangedChain');
         insert chain;
         
-        ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 2, Process__c = isChangedProcess.Id);
-        insert chainStep;
-
+        //arrange steps
+        ChainStep__c chainStep = ChainSteps.generateOne(chain.Id, isChangedProcess.Id);
+        
         IsChangedConfiguration__c configuration = [
             SELECT Id, NewHash__c, OldHash__c, NewId__c, OldId__c, NewValue__c, OldValue__c, FieldName__c
             FROM IsChangedConfiguration__c

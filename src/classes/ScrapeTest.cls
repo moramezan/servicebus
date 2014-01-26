@@ -4,7 +4,7 @@ public class ScrapeTest {
    private static string endPoint = 'http://a-site.com';
     
     
-	public class MockHttpResponseGenerator implements HttpCalloutMock {
+    public class MockHttpResponseGenerator implements HttpCalloutMock {
         // Implement this interface method
         public HTTPResponse respond(HTTPRequest req) {  
             String expectedEndpoint = endPoint;
@@ -22,15 +22,11 @@ public class ScrapeTest {
     
     
     private static  testMethod void canDetermineConfigurable () {
-        //arrange
-        String  className  = 'Scrape';
-        List<String> names = new List<String>{className};
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
+        //arrange processes
+        Process__c scrapeProcess = Processes.generateOne(Scrape.class);
         
         //act
-        String actualConfiguration = processes[0].Configurable__c;
+        String actualConfiguration = scrapeProcess.Configurable__c;
         
         // Assert
         String expectedConfiguration = Schema.SobjectType.ScrapeConfiguration__c.Name;
@@ -38,29 +34,21 @@ public class ScrapeTest {
     }
     
     private static  testMethod void callingInvokeCreatesExpectedAttachment() {
-        //arrange
-        String  className  = 'Scrape';
-        List<String> names = new List<String>{className};
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
-       	Process__c scrapeProcess = processes[0];
-        insert processes;
-
+        //arrange processes
+        Process__c scrapeProcess = Processes.generateOne(Scrape.class);
+        
+        //arrange chain
         Chain__c chain = new Chain__c(Name = 'ScrapeChain');
         insert chain;
         
-        ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 2, Process__c = scrapeProcess.Id);
-        insert chainStep;
+        //arrange steps
+        ChainStep__c chainStep = ChainSteps.generateOne(chain.Id, scrapeProcess.Id);
+        Database.update(new ScrapeConfiguration__c(
+            Id = chainStep.ConfigurationId__c,
+            Endpoint__c = endPoint
+        ));
         
-        ScrapeConfiguration__c configuration = [
-            SELECT Id, Endpoint__c
-            FROM ScrapeConfiguration__c
-        ];
-        configuration.Endpoint__c = endPoint;
-        update configuration;
-
-        Map<String,Object> notification = new Map<String,Object>{'eda__configuration' => configuration.Id};
+        Map<String,Object> notification = new Map<String,Object>{'eda__configuration' => chainStep.ConfigurationId__c};
 
         //act
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
@@ -68,13 +56,13 @@ public class ScrapeTest {
         Scrape plugin = new Scrape();
         Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
         List<Map<String,Object>> results = Utility.convert(result);
-    	Test.stopTest();
+        Test.stopTest();
         
-       	// Assemble
+        // Assemble
         List<Attachment> attachments = [
             SELECT id, Name, ParentId, Body
             FROM Attachment 
-            WHERE ParentId = :configuration.Id
+            WHERE ParentId = :chainStep.ConfigurationId__c
         ];
         
         String actualBody = '';

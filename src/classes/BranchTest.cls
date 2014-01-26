@@ -1,17 +1,13 @@
 @isTest private class BranchTest {
 
     static testMethod void canDetermineConfigurable() {
-        //arrange
-        String  className  = 'Branch';
-        List<String> names = new List<String>{className};
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
+        //arrange processes
+        Process__c branchProcess = Processes.generateOne(Branch.class);
         
         //act
-        String actualConfiguration = processes[0].Configurable__c;
+        String actualConfiguration = branchProcess.Configurable__c;
         
-        // Assert
+        //assert
         String expectedConfiguration = Schema.SobjectType.BranchConfiguration__c.Name;
         System.assertEquals(expectedConfiguration, actualConfiguration);  
     }
