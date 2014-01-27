@@ -73,6 +73,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>FutureBroker</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Gate</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -142,10 +146,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>Processes</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ProxyBroker</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -337,6 +337,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>PersistentData__c.Status__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Process__c.ApexClass__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -518,6 +523,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>FutureBroker</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>Health</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -527,10 +536,6 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessGenerate</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>ProxyBroker</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

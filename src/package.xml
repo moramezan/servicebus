@@ -19,6 +19,7 @@
         <members>ChainStepsTest</members>
         <members>Chains</members>
         <members>ChainsTest</members>
+        <members>FutureBroker</members>
         <members>Gate</members>
         <members>GateTest</members>
         <members>HealthController</members>
@@ -37,7 +38,6 @@
         <members>ProcessRefreshBatch</members>
         <members>ProcessRefreshBatchTest</members>
         <members>Processes</members>
-        <members>ProxyBroker</members>
         <members>Publish</members>
         <members>PublishTest</members>
         <members>SObjects</members>
@@ -66,10 +66,10 @@
     <types>
         <members>ChainSorter</members>
         <members>ChainStepConfiguration</members>
+        <members>FutureBroker</members>
         <members>Health</members>
         <members>ProcessCustomization</members>
         <members>ProcessGenerate</members>
-        <members>ProxyBroker</members>
         <members>PublishConfigurationEdit</members>
         <members>SubscribeConfigurationEdit</members>
         <name>ApexPage</name>
@@ -105,11 +105,11 @@
         <members>JumpConfiguration__c.Chain__c</members>
         <members>KnifeSwitch__c.Url__c</members>
         <members>PersistentData__c.ChainStep__c</members>
-        <members>PersistentData__c.Status__c</members>
         <members>PersistentData__c.Chain__c</members>
         <members>PersistentData__c.Message__c</members>
         <members>PersistentData__c.Notification__c</members>
         <members>PersistentData__c.Process__c</members>
+        <members>PersistentData__c.Status__c</members>
         <members>Process__c.ApexClass__c</members>
         <members>Process__c.Configurable__c</members>
         <members>Process__c.Customizable__c</members>
