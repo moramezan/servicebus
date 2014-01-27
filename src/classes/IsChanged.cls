@@ -1,6 +1,7 @@
 public class IsChanged  implements Process.Plugin {
     
-    private static Integer truncateSize = 32768;
+    @TestVisible
+    private static Integer persistDuration = ( 60*24 ) * 7; // seven days
     
     public class Eda {
         public SObject configurable = IsChangedConfiguration__c.SObjectType.newSObject();
@@ -116,6 +117,9 @@ public class IsChanged  implements Process.Plugin {
             notifications.add(notification);
         }
         
+        // housekeeping
+        deleteOldAttachments( persistDuration );
+        
         return Utility.convert(notifications);
     }
  
@@ -162,4 +166,41 @@ public class IsChanged  implements Process.Plugin {
         attributes.put( 'newValueAsString', newValueAsString);
         attributes.put( 'newHash', newHash);
     }
+    
+    @TestVisible
+    private static void deleteOldAttachments(Integer persistDurationInMinutes) {
+        DateTime stampComparator = System.Now().addMinutes(-1 * persistDurationInMinutes);
+        
+       // Note : because you cannot update LastModifiedDate or CreateDate in testMethod 
+       //        we adjust the implementation to the more testable but less efficient 
+       //        approach
+        
+       // Most efficient approach
+       //List<Attachment> attachments = [
+       //    SELECT Id, Name 
+       //    FROM Attachment 
+       //    WHERE Name LIKE 'IsChanged-%'
+       //        AND LastModifiedDate < :stampComparator
+       //] ;
+       //List<Id> ids = new List<Id>( ( new Map<Id, Attachment>(attachments)).keySet() );
+       
+       // More testable approach 
+       List<Id> ids = new List<Id>();
+       List<Attachment> attachments = [
+           SELECT Id, Name 
+           FROM Attachment 
+           WHERE Name LIKE 'IsChanged-%'
+       ] ;
+       for (Attachment  attachment : attachments) {
+            DateTime lastModifiedDate = (DateTime)Json.deserialize('"' + attachment.Name.substringAfter('-')+ '"', DateTime.class);
+            if (lastModifiedDate < stampComparator) {
+                ids.add(attachment.Id);
+            }            
+       }
+
+        if (ids.size() > 0) {
+            Database.delete(ids);
+            Database.emptyRecycleBin(ids);
+        }
+     }
 }
