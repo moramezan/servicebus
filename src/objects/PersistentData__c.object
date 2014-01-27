@@ -64,6 +64,28 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Buffer</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Processing</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Reprocess</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
         <fullName>Chain__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
@@ -111,24 +133,6 @@
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Persistent Datas</pluralLabel>
-    <recordTypes>
-        <fullName>Buffer</fullName>
-        <active>true</active>
-        <description>Data marked as &quot;Buffer&quot; will be processed if there are fewer than 100 records stuck in &quot;Processing&quot;.</description>
-        <label>Buffer</label>
-    </recordTypes>
-    <recordTypes>
-        <fullName>Processing</fullName>
-        <active>true</active>
-        <description>Data is marked as &quot;Processing&quot; when the process begins to handle it. Failure of the process will leave the data in this state.</description>
-        <label>Processing</label>
-    </recordTypes>
-    <recordTypes>
-        <fullName>Reprocess</fullName>
-        <active>true</active>
-        <description>Data with this Record Type will skip the buffer and be processed immediately.</description>
-        <label>Reprocess</label>
-    </recordTypes>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
 </CustomObject>

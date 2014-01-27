@@ -96,11 +96,9 @@ abstract global class Broker {
      * @param persistentDataIds Set of Persistent Data Ids to update
      */
     global void mark(Set<Id> persistentDataIds) {
-        String processingId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Processing').RecordTypeId;
-        
         List<PersistentData__c> persistentDatas = [SELECT Id FROM PersistentData__c WHERE Id IN :persistentDataIds];
         for (PersistentData__c persistentData : persistentDatas) {
-            persistentData.RecordTypeId = processingId;
+            persistentData.Status__c = 'Processing';
         }
         
         update persistentDatas;
@@ -174,12 +172,11 @@ abstract global class Broker {
         
         //wrap each notification in a buffered persistent data  instance and 
         //add each persistent data a persistentDatas list 
-        String bufferId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Buffer').RecordTypeId;
         List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
         for (Map<String,Object> n : notifications) {
             persistentDatas.add(new PersistentData__c(
                 Notification__c = Json.serializePretty(n),
-                RecordTypeId = bufferId
+                Status__c = 'Buffer'
             ));
         }
         

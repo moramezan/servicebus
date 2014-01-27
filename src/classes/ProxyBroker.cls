@@ -97,7 +97,7 @@ public class ProxyBroker extends Broker {
         };
         
         List<PersistentData__c> persistentDatas = new List<PersistentData__c>{new PersistentData__c(
-            RecordTypeId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Buffer').RecordTypeId,
+            Status__c = 'Buffer',
             Notification__c = Json.serializePretty(notification)
         )};
         
