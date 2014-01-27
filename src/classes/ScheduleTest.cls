@@ -1,5 +1,45 @@
 @isTest private class ScheduleTest {
-
+    static testMethod void testPassThrueScenarioHandled() {
+        //arrange processes
+        Process__c scheduleProcess = Processes.generateOne(Schedule.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        
+        //arrange chain
+        Chain__c chain = new Chain__c(Name = 'ScheduledChain');
+        insert chain;
+        
+        //arrange steps
+        ChainStep__c scheduleStep = ChainSteps.generateOne(chain.Id, scheduleProcess.Id);
+        
+        ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c];
+        scheduleConfiguration.Frequency__c = 'Weekly';
+        scheduleConfiguration.FriendlyDates__c = 'Wednesday';
+        scheduleConfiguration.FriendlyTimes__c = '09:00';
+        update scheduleConfiguration;
+        
+        ChainStep__c terminateStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
+        
+        //this guy will miss his schedule
+        Map<String,Object> notification = new Map<String,Object>{
+           //-- NO eda__harbeatkey ::  'eda__heartbeat' => '2014-01-18T12:00:00.000Z', /
+            'eda__configuration' => [SELECT Id FROM ScheduleConfiguration__c].Id
+        };
+        
+        Schedule plugin = new Schedule();
+        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+        List<Map<String,Object>> results = Utility.convert(result);
+        
+ 
+        
+        //this guy will hit his schedule
+       ///-- NO eda__harbeatkey ::  notification.put('eda__heartbeat', '2014-01-15T09:00:00.000Z');  
+        result = plugin.invoke(new Process.PluginRequest(notification));
+        results = Utility.convert(result);
+        
+        Integer expectedHitCount = 1;
+        Integer actualHitCount = results.size();
+        System.assertEquals(expectedHitCount, actualHitCount);
+    }
     static testMethod void testHeartbeatHandled() {
         //arrange processes
         Process__c scheduleProcess = Processes.generateOne(Schedule.class);
