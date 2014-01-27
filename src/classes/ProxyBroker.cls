@@ -5,7 +5,7 @@
  * As opposed to the use of Batch and a QueryLocator which iterates over a limited number.
  * (Bounded... has to keep running until it finishes a set, then checks for more work)
  */
-public class ProxyBroker extends AbstractBroker {
+public class ProxyBroker extends Broker {
 
     /**
      * Spins up the appropriate Process.Plugin and handles a single notification, then
@@ -89,7 +89,7 @@ public class ProxyBroker extends AbstractBroker {
      * @param chainName Name of the chain he is destined for.
      * @param dataId    Id of some record that the chain will operate on.
      */
-    override public void enqueue(String chainName, Id dataId) {
+    override public void enqueueImpl(String chainName, Id dataId) {
         Map<String,Object> notification = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__sequence' => 0,  

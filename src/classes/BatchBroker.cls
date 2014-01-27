@@ -1,4 +1,4 @@
-public with sharing class BatchBroker extends AbstractBroker implements Database.Batchable<SObject>, Database.AllowsCallouts {
+public with sharing class BatchBroker extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts {
 
     public class BrokerException extends Exception {}
 
@@ -93,7 +93,7 @@ public with sharing class BatchBroker extends AbstractBroker implements Database
         writePersistentDatas (persistentDatas);
     }*/
     
-    override public void enqueue(String chainName, Id data) {
+    override public void enqueueImpl(String chainName, Id data) {
         Map<String,Object> notification = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__sequence' => 0,  

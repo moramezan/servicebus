@@ -86,8 +86,8 @@
  * |  ENQUEUE  |
  * +-----------+
  */
-abstract global class AbstractBroker {
-
+abstract global class Broker {
+    
     global class BrokerException extends Exception {}
     
     /**
@@ -244,6 +244,18 @@ abstract global class AbstractBroker {
      * @param chainName Name of target Chain
      * @param dataId    Id of SObject to operate upon
      */
-    abstract global void enqueue(String chainName, Id dataId);
-
+    abstract global void enqueueImpl(String chainName, Id dataId);
+    
+    static global void enqueue(String chainName, Id dataId) {
+        BrokerSettings__c settings = BrokerSettings__c.getInstance();
+        if (settings.BrokerClassName__c == null) {
+            //default
+            Broker broker = new BatchBroker();
+            broker.enqueueImpl(chainName, dataId);
+        } else {
+            //override
+            Broker broker = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
+            broker.enqueueImpl(chainName, dataId);
+        }
+    }
 }

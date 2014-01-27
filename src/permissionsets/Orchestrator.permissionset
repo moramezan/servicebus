@@ -5,10 +5,6 @@
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
-        <apexClass>AbstractBroker</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>Api</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -42,6 +38,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>BranchTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>Broker</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

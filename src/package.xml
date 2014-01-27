@@ -2,7 +2,6 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event Driven Architecture</fullName>
     <types>
-        <members>AbstractBroker</members>
         <members>Api</members>
         <members>AsyncApexJobs</members>
         <members>AsyncApexJobsTest</members>
@@ -12,6 +11,7 @@
         <members>BoomerangTest</members>
         <members>Branch</members>
         <members>BranchTest</members>
+        <members>Broker</members>
         <members>ChainSorterController</members>
         <members>ChainStepExtensionConfigure</members>
         <members>ChainStepExtensionConfigureTest</members>
@@ -87,6 +87,7 @@
     <types>
         <members>BoomerangConfiguration__c.Chain__c</members>
         <members>BranchConfiguration__c.Chain__c</members>
+        <members>BrokerSettings__c.BrokerClassName__c</members>
         <members>ChainStep__c.Chain__c</members>
         <members>ChainStep__c.ConfigurationId__c</members>
         <members>ChainStep__c.Process__c</members>
@@ -127,6 +128,7 @@
     <types>
         <members>BoomerangConfiguration__c</members>
         <members>BranchConfiguration__c</members>
+        <members>BrokerSettings__c</members>
         <members>ChainStep__c</members>
         <members>Chain__c</members>
         <members>EventType__c</members>

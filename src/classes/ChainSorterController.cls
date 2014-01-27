@@ -62,7 +62,7 @@ public with sharing class ChainSorterController {
     
     @RemoteAction static public String enqueue(Id chainId) {
         Chain__c chain = [SELECT Name FROM Chain__c WHERE Id = :chainId];
-        new BatchBroker().enqueue(chain.Name, UserInfo.getUserId());
+        Broker.enqueue(chain.Name, UserInfo.getUserId());
         return chain.Name;
     }
     
