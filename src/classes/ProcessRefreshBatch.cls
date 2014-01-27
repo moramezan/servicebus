@@ -19,7 +19,7 @@ public with sharing class ProcessRefreshBatch implements Database.Batchable<SObj
             }
         }
         //will not duplicate existing processes
-        upsert edaProcesses Name;
+        upsert edaProcesses FullyQualifiedClassName__c;
     }
     
     public void finish(Database.BatchableContext context) {
