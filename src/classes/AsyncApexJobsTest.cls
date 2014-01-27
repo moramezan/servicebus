@@ -9,8 +9,8 @@
         
         Test.startTest();
         
-        Id one = Database.executeBatch(new Broker(), 1);
-        Id two = Database.executeBatch(new Broker(), 1);
+        Id one = Database.executeBatch(new BatchBroker(), 1);
+        Id two = Database.executeBatch(new BatchBroker(), 1);
         AsyncApexJobs asyncApexJobs = new AsyncApexJobs(new List<AsyncApexJob>{
             new AsyncApexJob(Id = one),
             new AsyncApexJob(Id = two)
@@ -33,8 +33,8 @@
     
     static testMethod void testRunOneOnlyRunsJobOnce() {
         Test.startTest();
-        AsyncApexJobs one = AsyncApexJobs.runOne(Broker.class, 1);
-        AsyncApexJobs two = AsyncApexJobs.runOne(Broker.class, 1);
+        AsyncApexJobs one = AsyncApexJobs.runOne(BatchBroker.class, 1);
+        AsyncApexJobs two = AsyncApexJobs.runOne(BatchBroker.class, 1);
         Test.stopTest();
         
         Integer expectedRunning = 1;

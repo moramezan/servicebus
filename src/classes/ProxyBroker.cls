@@ -89,7 +89,7 @@ public class ProxyBroker extends AbstractBroker {
      * @param chainName Name of the chain he is destined for.
      * @param dataId    Id of some record that the chain will operate on.
      */
-    public void enqueue(String chainName, Id dataId) {
+    override public void enqueue(String chainName, Id dataId) {
         Map<String,Object> notification = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__sequence' => 0,  

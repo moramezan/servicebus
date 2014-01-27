@@ -1,6 +1,6 @@
-@isTest private class BrokerTest {
+@isTest private class BatchBrokerTest {
  
-      static testMethod void testBrokerSurfacesExceptionThrownInsideofAnEdaProcess() {
+      /*static testMethod void testBrokerSurfacesExceptionThrownInsideofAnEdaProcess() {
         //arrange processes
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         
@@ -20,9 +20,9 @@
         String actualMessage = persistentData.Message__c;
         String expectedMessage = 'eda processable error'; //-- if not configured , wiretap will throw an error
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
-    }
+    }*/
     
-    static testMethod void testBrokerDoesNotSurfaceExceptionForProperlyInvokedProcessable() {
+    /*static testMethod void testBrokerDoesNotSurfaceExceptionForProperlyInvokedProcessable() {
         //arrange processes
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
@@ -42,10 +42,10 @@
         String actualMessage = persistentData.Message__c;
         String expectedMessage = null;   // No Error expected   
         System.assertEquals(actualMessage, actualMessage); 
-    }
+    }*/
 
  
-    static testMethod void testNotificationIsCorrectlyWrittenToPersistentDatas() {
+    /*static testMethod void testNotificationIsCorrectlyWrittenToPersistentDatas() {
         //arrange processes
         Process__c markProcess = Processes.generateOne(Mark.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
@@ -89,7 +89,7 @@
         Id expectedChainStepId3 = step3.Id;
         Id actualChainStepId3 = persistentDatas[2].ChainStep__c;
         System.assertEquals(expectedChainStepId3, actualChainStepId3);
-    }
+    }*/
 
 
     /*static testMethod void testEnqueueByBlob() {
@@ -159,7 +159,7 @@
 
 
  
-    static testmethod void testDodgyProcess() {
+    /*static testmethod void testDodgyProcess() {
         //arrange process
         Process__c terminateProcess = Processes.generateOne(Mark.class);
         
@@ -187,9 +187,9 @@
         String expectedMessage = 'class missing';
         String actualMessage = persistentData.Message__c;
         System.assert(actualMessage.contains(expectedMessage));
-    }
+    }*/
     
-    static testMethod void testMalformedNotificationThrowsSystemJsonException() {
+    /*static testMethod void testMalformedNotificationThrowsSystemJsonException() {
         //arrange
         PersistentData__c persistentData = new PersistentData__c(Notification__c = '{"malformed":....}');
  
@@ -200,10 +200,10 @@
         String actualMessage = persistentData.Message__c;
         String expectedMessage = 'Could not deserialize json';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
-    }
+    }*/
 
     
-    static testMethod void testMissingSequenceThrowsExpectedException() {
+    /*static testMethod void testMissingSequenceThrowsExpectedException() {
         //arrange
         PersistentData__c persistentData = new PersistentData__c(Notification__c = '{"not_sequence": 0}');
   
@@ -214,9 +214,9 @@
         String actualMessage = persistentData.Message__c;
         String expectedMessage = 'sequence';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
-    }
+    }*/
     
-    static testMethod void testNoChainStepThrowsQueryException() {
+    /*static testMethod void testNoChainStepThrowsQueryException() {
         //arrange (note there is no ChainStep__c in database!)
         PersistentData__c persistentData = new PersistentData__c(Notification__c = '{"eda__chainName": "", "eda__sequence": 0}');
   
@@ -227,11 +227,11 @@
         String actualMessage = persistentData.Message__c;
         String expectedMessage = 'ChainStep';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
-    }
+    }*/
 
  
  
-    static testMethod void testProcessWithoutClassThrowsThrowsExpectedException() {
+    /*static testMethod void testProcessWithoutClassThrowsThrowsExpectedException() {
         //arrange processes
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
@@ -257,9 +257,9 @@
         String actualMessage = persistentData.Message__c;
         String expectedMessage = 'class missing';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
-    }
+    }*/
     
-    static testMethod void testNonProcessPluginThrowsTypeException() {
+    /*static testMethod void testNonProcessPluginThrowsTypeException() {
         //arrange processes
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
@@ -283,6 +283,6 @@
         String actualMessage = persistentData.Message__c;
         String expectedMessage = 'interface';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
-    } 
+    }*/
 
 }

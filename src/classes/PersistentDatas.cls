@@ -15,7 +15,7 @@ public class PersistentDatas extends SObjects {
     }
     
     @testVisible private void startBrokerBatch(Map<Id,SObject> objects) {
-        AsyncApexJobs.runOne(Broker.class, 1);
+        AsyncApexJobs.runOne(BatchBroker.class, 1);
     }
     
     @testVisible private void startBrokerBatchIfBufferOrReprocess(Map<Id,PersistentData__c> oldIdToOldPersistentData, Map<Id,PersistentData__c> newIdToNewPersistentData) {
@@ -42,7 +42,7 @@ public class PersistentDatas extends SObjects {
             }
         }
 
-        if (processing2bufferOrReprocess) AsyncApexJobs.runOne(Broker.class, 1);
+        if (processing2bufferOrReprocess) AsyncApexJobs.runOne(BatchBroker.class, 1);
     }
     
 }

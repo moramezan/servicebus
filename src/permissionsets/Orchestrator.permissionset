@@ -21,6 +21,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>BatchBroker</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>BatchBrokerTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Boomerang</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -34,14 +42,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>BranchTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>Broker</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>BrokerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

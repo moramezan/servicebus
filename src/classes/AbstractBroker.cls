@@ -86,14 +86,16 @@
  * |  ENQUEUE  |
  * +-----------+
  */
-abstract public class AbstractBroker {
+abstract global class AbstractBroker {
 
+    global class BrokerException extends Exception {}
+    
     /**
      * Sets many Persistent Datas statuses to 'Processing' and writes them away.
      *
      * @param persistentDataIds Set of Persistent Data Ids to update
      */
-    public void mark(Set<Id> persistentDataIds) {
+    global void mark(Set<Id> persistentDataIds) {
         String processingId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Processing').RecordTypeId;
         
         List<PersistentData__c> persistentDatas = [SELECT Id FROM PersistentData__c WHERE Id IN :persistentDataIds];
@@ -110,27 +112,65 @@ abstract public class AbstractBroker {
      * @param  persistentData One Persistent Data whose status should be Processing
      * @return                Many Persistent Datas whose status should be Buffer
      */
-    public List<PersistentData__c> execute(PersistentData__c persistentData) {
-        Map<String,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c);
-
-        ChainStep__c chainStep = [
-            SELECT Process__c, ConfigurationId__c, Process__r.Name, Process__r.FullyQualifiedClassName__c
-            FROM ChainStep__c
-            WHERE Id = :persistentData.ChainStep__c
-        ];
+    global List<PersistentData__c> execute(PersistentData__c persistentData) {
+        List<Map<String,Object>> notifications;
+        Map<String,Object> notification;
+        Process.Plugin plugin;
         
-        notification.put('eda__configuration', chainStep.ConfigurationId__c);
+        //OUR FUCKUPS
+        try {
+            notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c);
+    
+            ChainStep__c chainStep = [
+                SELECT Process__c, ConfigurationId__c, Process__r.Name, Process__r.FullyQualifiedClassName__c
+                FROM ChainStep__c
+                WHERE Id = :persistentData.ChainStep__c
+            ];
         
-        //instantiate processable instance  
-        Type reflector = Type.forName(chainStep.Process__r.FullyQualifiedClassName__c);
-        Process.Plugin processable = (Process.Plugin)reflector.newInstance();
+            notification.put('eda__configuration', chainStep.ConfigurationId__c);
         
-        //call invoke the processable instance
-        Process.PluginResult  results = processable.invoke(new Process.PluginRequest(notification));
-        List<Map<String,Object>> notifications = Utility.convert(results);
+            //instantiate processable instance  
+            Type reflector = Type.forName(chainStep.Process__r.FullyQualifiedClassName__c);
+            plugin = (Process.Plugin)reflector.newInstance();
+        } catch (Exception e) {
+            if (e instanceof System.JsonException) {
+                e.setMessage('Could not deserialize json (malformed notification)');
+            } else if (e instanceof System.NullPointerException) {
+                e.setMessage('Sequence null (key missing from notification) or Type null (class missing)');
+            } else if (e instanceof System.QueryException) {
+                e.setMessage('ChainStep unqueryable (bad chain name, sequence, missing terminate)');
+            } else if (e instanceof System.TypeException) {
+                e.setMessage('Could not cast Process.Plugin (interface unimplemented on process class)');
+            }
+            surfaceException(e, persistentData.Id);
+            return new List<PersistentData__c>(); //get out of dodge quick
+        }
+        
+        //THEIR FUCKUPS
+        try {
+            //call invoke the processable instance
+            Process.PluginResult results = plugin.invoke(new Process.PluginRequest(notification));
+            notifications = Utility.convert(results);
+        } catch (Exception e) {
+            surfaceException(e, persistentData.Id);
+            return new List<PersistentData__c>(); //get out of dodge quick
+        }
         
         //delete successfully processed notification
         delete persistentData;
+        
+        //Mark helper logic :
+        //if markCount not null, increment and  THEN put that value on notification
+        //if markCount equates to two, we assume the processing process was a splitter 
+        //  and therefore write the count of the notifications returned from this splitter 
+        //  as a property of the notification
+        Decimal markCount = (Decimal)notification.get('eda__markCount');
+        if (null != markCount) notification.put('eda__markCount', ++markCount);
+        if (2 == markCount) {
+            Integer count = notifications.size();
+            notification.put('eda__count', count);
+            if (count == 0) Database.delete(new List<Id>{(Id)notification.get('eda__gateGroupId')}); //tidy up split of 0
+        }
         
         //wrap each notification in a buffered persistent data  instance and 
         //add each persistent data a persistentDatas list 
@@ -158,7 +198,7 @@ abstract public class AbstractBroker {
      *
      * //TODO bulkify this
      */
-    public void resolve(List<PersistentData__c> persistentDatas) {
+    global void resolve(List<PersistentData__c> persistentDatas) {
         for (PersistentData__c  persistentData : persistentDatas ) {
             Map<String,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c); 
             notification.put('eda__sequence', (Decimal)notification.get('eda__sequence') + 1);
@@ -176,12 +216,34 @@ abstract public class AbstractBroker {
         }
     }
     
+    private static void surfaceException(Exception e, Id persistentDataId) { 
+        Map<String,Object> serializedException = new Map<String,Object>();
+        serializedException.put('cause', e.getCause());
+        serializedException.put('lineNumber', e.getLineNumber());
+        serializedException.put('message', e.getMessage());
+        serializedException.put('stackTraceString', e.getStackTraceString());
+        serializedException.put('typeName', e.getTypeName());
+        
+        //log exception summary on notification
+        Database.update(new PersistentData__c(
+            Id = persistentDataId,
+            Message__c = e.getMessage().left(255)
+        ));
+        
+        //log exception details over 255 bytes using note object
+        insert new Note(
+            ParentId = persistentDataId,
+            Title = e.getMessage().left(80),
+            Body = Json.serializePretty(serializedException).left(32000)
+        );
+    }
+    
     /**
      * Destines a single piece of data for a named chain.
      *
      * @param chainName Name of target Chain
      * @param dataId    Id of SObject to operate upon
      */
-    abstract void enqueue(String chainName, Id dataId);
+    abstract global void enqueue(String chainName, Id dataId);
 
 }

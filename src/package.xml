@@ -6,12 +6,12 @@
         <members>Api</members>
         <members>AsyncApexJobs</members>
         <members>AsyncApexJobsTest</members>
+        <members>BatchBroker</members>
+        <members>BatchBrokerTest</members>
         <members>Boomerang</members>
         <members>BoomerangTest</members>
         <members>Branch</members>
         <members>BranchTest</members>
-        <members>Broker</members>
-        <members>BrokerTest</members>
         <members>ChainSorterController</members>
         <members>ChainStepExtensionConfigure</members>
         <members>ChainStepExtensionConfigureTest</members>
