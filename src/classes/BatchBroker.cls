@@ -43,7 +43,7 @@ public with sharing class BatchBroker extends Broker implements Database.Batchab
         Integer persistentDatas = [
             SELECT COUNT()
             FROM PersistentData__c
-            WHERE RecordType.Name = 'Buffer'
+            WHERE Status__c = 'Buffer'
         ];
         
         if (persistentDatas > 0) {
@@ -85,7 +85,7 @@ public with sharing class BatchBroker extends Broker implements Database.Batchab
 
         List<PersistentData__c> persistentDatas = new List<PersistentData__c> { 
             new  PersistentData__c (
-                RecordTypeId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Buffer').RecordTypeId,
+                Status__c = 'Buffer',
                 Notification__c = Json.serializePretty(notification)
             ) 
         };
@@ -101,7 +101,7 @@ public with sharing class BatchBroker extends Broker implements Database.Batchab
         };
 
         List<PersistentData__c> persistentDatas = new List<PersistentData__c>{new PersistentData__c(
-            RecordTypeId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Buffer').RecordTypeId,
+            Status__c = 'Buffer',
             Notification__c = Json.serializePretty(notification)
         )};
 
@@ -111,34 +111,30 @@ public with sharing class BatchBroker extends Broker implements Database.Batchab
         //PERSIST
         insert persistentDatas;
     }
- 
     
     private static Integer getQueryLimit(Integer fuckedLimit) {
         Integer fuckedCount = [
             SELECT COUNT()
             FROM PersistentData__c
-            WHERE RecordType.Name = 'Processing'
+            WHERE Status__c = 'Processing'
         ];
         
         Integer reprocessCount = [
             SELECT COUNT()
             FROM PersistentData__c
-            WHERE RecordType.Name = 'Reprocess'
+            WHERE Status__c = 'Reprocess'
         ];
         
         return  Math.max(0, fuckedLimit - fuckedCount) + reprocessCount;
     }
- 
-
+    
     private Set<Id> markEligiblePersistentDatasAsProcessing(Integer queryLimit) { 
-        String processingId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Processing').RecordTypeId;
-        
         //find some Buffer work, or if there's too many in Processing, only find Reprocess work
         Set<Id> persistentDataIds = new Map<Id, PersistentData__c>([
             SELECT Id
             FROM PersistentData__c
-            WHERE RecordType.Name IN ('Reprocess', 'Buffer')
-            ORDER BY RecordType.Name DESC
+            WHERE Status__c IN ('Reprocess', 'Buffer')
+            ORDER BY Status__c DESC
             LIMIT :queryLimit
         ]).keySet();
         

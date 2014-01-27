@@ -541,18 +541,6 @@
         <apexPage>SubscribeConfigurationEdit</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
-    <recordTypeVisibilities>
-        <recordType>PersistentData__c.Buffer</recordType>
-        <visible>false</visible>
-    </recordTypeVisibilities>
-    <recordTypeVisibilities>
-        <recordType>PersistentData__c.Processing</recordType>
-        <visible>false</visible>
-    </recordTypeVisibilities>
-    <recordTypeVisibilities>
-        <recordType>PersistentData__c.Reprocess</recordType>
-        <visible>false</visible>
-    </recordTypeVisibilities>
     <tabSettings>
         <tab>Chain__c</tab>
         <visibility>Visible</visibility>

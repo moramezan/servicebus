@@ -19,20 +19,16 @@ public class PersistentDatas extends SObjects {
     }
     
     @testVisible private void startBrokerBatchIfBufferOrReprocess(Map<Id,PersistentData__c> oldIdToOldPersistentData, Map<Id,PersistentData__c> newIdToNewPersistentData) {
-        Id bufferId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Buffer').RecordTypeId;
-        Id reprocessId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Reprocess').RecordTypeId;
-        Id processingId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Processing').RecordTypeId;
-
         Boolean processing2bufferOrReprocess = false;
         
         for (PersistentData__c oldData : oldIdToOldPersistentData.values()) {
             PersistentData__c newData = newIdToNewPersistentData.get(oldData.Id);
             if (
-                oldData.RecordTypeId == processingId && newData.RecordTypeId == bufferId
+                oldData.Status__c == 'Processing' && newData.Status__c == 'Buffer'
                 ||
-                oldData.RecordTypeId == processingId && newData.RecordTypeId == reprocessId
+                oldData.Status__c == 'Processing' && newData.Status__c == 'Reprocess'
                 ||
-                oldData.RecordTypeId == bufferId && newData.RecordTypeId == reprocessId
+                oldData.Status__c == 'Buffer' && newData.Status__c == 'Reprocess'
             ) {
                 //if any persistent data changed from 'Processing' to 'Buffer',    let's start the munger
                 //if any persistent data changed from 'Processing' to 'Reprocess', let's start the munger

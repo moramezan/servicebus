@@ -28,7 +28,7 @@ public class ScheduleImplementation implements System.Schedulable {
             };
             
             PersistentData__c persistentData = new PersistentData__c(
-                RecordTypeId = SObjectType.PersistentData__c.RecordTypeInfosByName.get('Buffer').RecordTypeId,
+                Status__c = 'Buffer',
                 Notification__c = Json.serializePretty(notification)
             );
             

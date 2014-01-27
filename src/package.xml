@@ -105,6 +105,7 @@
         <members>JumpConfiguration__c.Chain__c</members>
         <members>KnifeSwitch__c.Url__c</members>
         <members>PersistentData__c.ChainStep__c</members>
+        <members>PersistentData__c.Status__c</members>
         <members>PersistentData__c.Chain__c</members>
         <members>PersistentData__c.Message__c</members>
         <members>PersistentData__c.Notification__c</members>
@@ -182,12 +183,6 @@
     <types>
         <members>Orchestrator</members>
         <name>PermissionSet</name>
-    </types>
-    <types>
-        <members>PersistentData__c.Buffer</members>
-        <members>PersistentData__c.Processing</members>
-        <members>PersistentData__c.Reprocess</members>
-        <name>RecordType</name>
     </types>
     <types>
         <members>ChainStepSorterZip</members>
