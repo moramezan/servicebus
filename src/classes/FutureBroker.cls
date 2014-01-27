@@ -5,13 +5,13 @@
  * As opposed to the use of Batch and a QueryLocator which iterates over a limited number.
  * (Bounded... has to keep running until it finishes a set, then checks for more work)
  */
-public class ProxyBroker extends Broker {
+public class FutureBroker extends Broker {
 
     /**
      * Spins up the appropriate Process.Plugin and handles a single notification, then
      * resolves, persists, marks, and destines his outputs for handling in their own threads.
      *
-     * NEVER CALLED. This occurs by consequence of 'viewing' the Visualforce Page 'ProxyBroker'
+     * NEVER CALLED. This occurs by consequence of 'viewing' the Visualforce Page 'FutureBroker'
      * This is a necessary evil, as @future alone doesn't prevent 'Callout loop not allowed'
      */
     public void handlePersistentData() {
@@ -65,7 +65,7 @@ public class ProxyBroker extends Broker {
      * Generates apex code that news up and evaluates a uniquely named page reference.
      * Note that Page.getContent is invoking handlePersistentData in order to 'render' the page.
      * 
-     * PageReference pra26b0000000PUe6 = new PageReference('/apex/eda__BrokerProxy');
+     * PageReference pra26b0000000PUe6 = new PageReference('/apex/eda__FutureBroker');
      * pra26b0000000PUe6.getParameters().put('persistentDataId', 'a26b0000000PUe6');
      * pra26b0000000PUe6.getContent();
      * 
@@ -75,9 +75,9 @@ public class ProxyBroker extends Broker {
     static private String buildHandlerCommand(Id persistentDataId) {
         String command = '';
         String identifier = 'pr'  + persistentDataId;
-        String brokerProxyUrl = Page.ProxyBroker.getUrl(); //full page name for anonymous context
+        String futureBrokerUrl = Page.FutureBroker.getUrl(); //full page name for anonymous context
         
-        command += 'PageReference ' + identifier + ' = new PageReference(\'' + brokerProxyUrl + '\');';
+        command += 'PageReference ' + identifier + ' = new PageReference(\'' + futureBrokerUrl + '\');';
         command += identifier + '.getParameters().put(\'persistentDataId\', \'' + persistentDataId + '\');';
         command += identifier + '.getContent();';
         return command;
