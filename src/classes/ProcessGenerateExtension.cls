@@ -6,6 +6,17 @@ public class ProcessGenerateExtension {
         this.controller = controller;
     }
     
+    public String getRetURL() {
+        if (ApexPages.currentPage().getParameters().get('retURL') == null) {
+            //could try ApexPages.currentPage().getHeaders().get('Referer');
+            String prefix = SObjectType.Process__c.KeyPrefix;
+            return new ApexPages.PageReference('/' + prefix + '/o').getUrl();
+        } else {
+            //could be '/apex/ChainSorter' when there were no processes
+            return ApexPages.currentPage().getParameters().get('retURL');
+        }
+    }
+    
     public AsyncApexJob getAsyncApexJob() {
         Id asyncApexJobId = ApexPages.currentPage().getParameters().get('asyncApexJobId');
         return readAsyncApexJobs(asyncApexJobId)[0];
@@ -17,7 +28,7 @@ public class ProcessGenerateExtension {
             AsyncApexJobs jobs = AsyncApexJobs.runOne(ProcessRefreshBatch.class, 1);
             PageReference processGenerate = Page.ProcessGenerate;
             processGenerate.getParameters().put('asyncApexJobId', jobs.getSObjects()[0].Id);
-            //System.assert(false, processGenerate.getUrl());
+            processGenerate.getParameters().put('retURL', ApexPages.currentPage().getParameters().get('retURL'));
             processGenerate.setRedirect(true);
             return processGenerate;
         } else {

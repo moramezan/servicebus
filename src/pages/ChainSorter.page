@@ -1,4 +1,4 @@
-<apex:page standardController="Chain__c" extensions="ChainSorterController">
+<apex:page standardController="Chain__c" extensions="ChainSorterController" action="{!doRedirect}">
     
     <c:bootstrapExt staticResource="{!$Resource.ChainStepSorterZip}" applicationName="Steps" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}" baseCSSPrefix="z-">
         Processes = {!Processes};

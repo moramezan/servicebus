@@ -21,8 +21,10 @@
         $RemoteAction.ProcessGenerateExtension.readProcesses = '{!$RemoteAction.ProcessGenerateExtension.readProcesses}';
         $RemoteAction.ProcessGenerateExtension.readAsyncApexJobs = '{!$RemoteAction.ProcessGenerateExtension.readAsyncApexJobs}';
         
+        retURL = '{!retURL}';
+        
         window.URLFOR = window.URLFOR || {};
-        URLFOR['/$ObjectType.Process__c'] = '{!URLFOR('/' + $ObjectType.Process__c)}';
+        URLFOR['{!retURL}'] = '{!URLFOR(retURL)}';
         
         window.AsyncApexJob = window.AsyncApexJob || {};
         AsyncApexJob.Id = '{!AsyncApexJob.Id}';

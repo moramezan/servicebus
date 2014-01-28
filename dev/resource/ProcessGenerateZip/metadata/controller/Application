@@ -65,10 +65,10 @@
                     "    } else {",
                     "        //quit polling",
                     "        Ext.log('[Generate.controller.Application] found isAsyncApexJobFinished, stop polling AsyncApexJob store');",
-                    "        ",
+                    "",
                     "        if (!jobAlreadyFinished && job.get('Status') == 'Completed') {",
-                    "            //job was busy, then job became Completed, so redirect to Processes list view",
-                    "            Ext.Function.defer(function() {window.location = URLFOR['/$ObjectType.Process__c'];}, 1000);",
+                    "            //job was busy, then job became Completed, so redirect to retURL (or Processes list view)",
+                    "            Ext.Function.defer(function() {window.location = URLFOR[retURL];}, 1000);",
                     "        }",
                     "    }",
                     "});"

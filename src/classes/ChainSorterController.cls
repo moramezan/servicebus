@@ -7,6 +7,19 @@ public with sharing class ChainSorterController {
         this.controller = controller;
     }
     
+    public PageReference doRedirect() {
+        Integer count = [SELECT COUNT() FROM Process__c];
+        if (count > 0) {
+            //continue per normal
+            return null;
+        } else {
+            //there are no processes! regenerate first
+            PageReference pr = Page.ProcessGenerate;
+            pr.getParameters().put('retURL', ApexPages.currentPage().getUrl());
+            return pr;
+        }
+    }
+    
     public String getProtocolAndHost() {
         return Url.getSalesforceBaseUrl().toExternalForm();
     }
