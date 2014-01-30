@@ -8,7 +8,7 @@ private class WiretapTest {
         System.assertNotEquals(null, wiretap.describe().Tag);
     }
     
-    static testMethod void callingInvokeThrowsExpectedExceptionWhenDefinedMetaCustomizableNOTSet() {
+    static testMethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnCustomizableNOTSet() {
         // Arrange :
         String chainName = 'the-chain';
         Integer chainStep = 1;
@@ -31,12 +31,12 @@ private class WiretapTest {
         try {
             Process.PluginResult results = wireTap.invoke(new Process.PluginRequest(notification)); 
         } catch (Exception e) {
-            actualFlagException = true;
+           actualFlagException = true;
         }
         
  
         // Assert
-        Boolean expectedFlagException = true;
+        Boolean expectedFlagException = false;
         System.assertEquals(expectedFlagException , actualFlagException );
     }  
    

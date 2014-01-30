@@ -23,7 +23,9 @@ public with sharing class Wiretap implements Process.Plugin {
             WiretapCustomization__c setting = WiretapCustomization__c.getInstance();
             userId = setting.UserId__c;
         } catch (Exception e) {
-            throw new WireTapException('Metadata-customizable (Id of user to receive wiretap messages not defined in ' + Schema.SObjectType.WiretapCustomization__c.Name + ' custom setting' );
+        }
+        if (userId == null) {
+            userId = UserInfo.getUserId();   
         }
 
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
