@@ -1,16 +1,14 @@
 <apex:page standardController="Chain__c" extensions="ChainSorterController" action="{!doRedirect}">
     
     <c:bootstrapExt staticResource="{!$Resource.ChainStepSorterZip}" applicationName="Steps" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}" baseCSSPrefix="z-">
-        Processes = {!Processes};
-        ProtocolAndHost = '{!ProtocolAndHost}';
-        
         window.$RemoteAction = window.$RemoteAction || {};
         $RemoteAction.ChainSorterController = $RemoteAction.ChainSorterController || {};
-        $RemoteAction.ChainSorterController.readChainSteps = '{!$RemoteAction.ChainSorterController.readChainSteps}';
-        $RemoteAction.ChainSorterController.updateChainSteps = '{!$RemoteAction.ChainSorterController.updateChainSteps}';
-        $RemoteAction.ChainSorterController.destroyChainSteps = '{!$RemoteAction.ChainSorterController.destroyChainSteps}';
+        $RemoteAction.ChainSorterController.fetchChainSteps = '{!$RemoteAction.ChainSorterController.fetchChainSteps}';
+        $RemoteAction.ChainSorterController.destroyChainStep = '{!$RemoteAction.ChainSorterController.destroyChainStep}';
         $RemoteAction.ChainSorterController.enqueue = '{!$RemoteAction.ChainSorterController.enqueue}';
-        $RemoteAction.ChainSorterController.newStep = '{!$RemoteAction.ChainSorterController.newStep}';
+        $RemoteAction.ChainSorterController.appendStep = '{!$RemoteAction.ChainSorterController.appendStep}';
+        $RemoteAction.ChainSorterController.moveChainStepBefore = '{!$RemoteAction.ChainSorterController.moveChainStepBefore}';
+        $RemoteAction.ChainSorterController.moveChainStepAfter = '{!$RemoteAction.ChainSorterController.moveChainStepAfter}';
         
         window.Chain__c = window.Chain__c || {};
         Chain__c.Id = '{!Chain__c.Id}';
@@ -45,6 +43,9 @@
         $ObjectType.Process__c.Fields.Icon__c = $ObjectType.Process__c.Fields.Icon__c || {};
         $ObjectType.Process__c.Fields.Icon__c.Name = '{!$ObjectType.Process__c.Fields.Icon__c.Name}';
 
+        ProtocolAndHost = '{!ProtocolAndHost}';
+        Processes = {!Processes};
+        ChainSteps = {!ChainSteps};
     </c:bootstrapExt>
 
 </apex:page>

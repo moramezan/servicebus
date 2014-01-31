@@ -12,7 +12,9 @@
         <members>Branch</members>
         <members>BranchTest</members>
         <members>Broker</members>
+        <members>Chain</members>
         <members>ChainSorterController</members>
+        <members>ChainStep</members>
         <members>ChainStepExtensionConfigure</members>
         <members>ChainStepExtensionConfigureTest</members>
         <members>ChainSteps</members>
@@ -41,6 +43,8 @@
         <members>Publish</members>
         <members>PublishTest</members>
         <members>SObjects</members>
+        <members>SalesforceObject</members>
+        <members>SalesforceObjects</members>
         <members>Schedule</members>
         <members>ScheduleDispatcher</members>
         <members>ScheduleDispatcherTest</members>

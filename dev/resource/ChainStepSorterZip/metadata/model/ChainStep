@@ -87,22 +87,33 @@
             "userConfig": {
                 "api": [
                     "{",
-                    "    read: $RemoteAction.ChainSorterController.readChainSteps,",
-                    "    update: $RemoteAction.ChainSorterController.updateChainSteps,",
-                    "    destroy: $RemoteAction.ChainSorterController.destroyChainSteps",
+                    "    read: $RemoteAction.ChainSorterController.fetchChainSteps,",
+                    "    destroy: $RemoteAction.ChainSorterController.destroyChainStep",
                     "}"
                 ],
                 "designer|createAlias": "vfremote",
                 "designer|displayName": "ChainStepProxy",
-                "directFn": null,
                 "extraParams": [
                     "{",
-                    "    Id: Chain__c.Id",
+                    "    \"chainId\": Chain__c.Id",
                     "}"
                 ]
             },
             "designerId": "3d7071ac-b992-48b4-9830-d535e317fd66",
             "cn": [
+                {
+                    "type": "Ext.data.writer.Json",
+                    "reference": {
+                        "name": "writer",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "ChainStepWriter",
+                        "nameProperty": "mapping"
+                    },
+                    "designerId": "33ec2ede-e45b-4c2c-8050-8975ae3fc8ff"
+                },
                 {
                     "type": "Ext.data.reader.Json",
                     "reference": {
@@ -113,21 +124,7 @@
                     "userConfig": {
                         "designer|displayName": "ChainStepReader"
                     },
-                    "designerId": "0f5bc8a3-4056-4b87-9524-3a2041c57f75"
-                },
-                {
-                    "type": "Ext.data.writer.Json",
-                    "reference": {
-                        "name": "writer",
-                        "type": "object"
-                    },
-                    "codeClass": null,
-                    "userConfig": {
-                        "allowSingle": false,
-                        "designer|displayName": "ChainStepWriter",
-                        "nameProperty": "mapping"
-                    },
-                    "designerId": "b452808f-4d48-42de-8847-174bfa39833a"
+                    "designerId": "6859069b-6c23-4610-a115-28282a280e2b"
                 }
             ]
         }

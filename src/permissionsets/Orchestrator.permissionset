@@ -45,7 +45,15 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>Chain</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ChainSorterController</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ChainStep</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -158,6 +166,14 @@
     </classAccesses>
     <classAccesses>
         <apexClass>SObjects</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SalesforceObject</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SalesforceObjects</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

@@ -11,6 +11,7 @@
         "designer|userClassName": "ChainStepGrid",
         "forceFit": true,
         "header": false,
+        "itemId": null,
         "requires": [
             "Ext.util.Point"
         ],
@@ -30,8 +31,12 @@
             "codeClass": null,
             "userConfig": {
                 "designer|displayName": "ChainStepGridView",
+                "loadMask": false,
                 "overItemCls": "",
                 "stripeRows": false
+            },
+            "configAlternates": {
+                "loadMask": "boolean"
             },
             "designerId": "db6df276-055a-46f2-a1e7-4e370c03e580",
             "cn": [
@@ -47,37 +52,6 @@
                         "dragText": "Drag and drop to reorganize"
                     },
                     "designerId": "61ed4250-d394-4586-913a-ff750d56b947"
-                },
-                {
-                    "type": "basiceventbinding",
-                    "reference": {
-                        "name": "listeners",
-                        "type": "array"
-                    },
-                    "codeClass": null,
-                    "userConfig": {
-                        "fn": "onViewDrop",
-                        "implHandler": [
-                            "var grid = this;",
-                            "",
-                            "var store = grid.getStore();",
-                            "",
-                            "store.each(function(model, index, total) {",
-                            "    model.set('Sequence', index + 1);",
-                            "});",
-                            "",
-                            "grid.mask(Ext.LoadMask.prototype.msg);",
-                            "",
-                            "store.sync({",
-                            "    callback: function() {",
-                            "        grid.unmask();",
-                            "    }",
-                            "});"
-                        ],
-                        "name": "drop",
-                        "scope": "me"
-                    },
-                    "designerId": "1bd9d5fc-1e94-4a54-89e0-0b91acb6a589"
                 }
             ]
         },
@@ -222,12 +196,14 @@
                                     "",
                                     "store.remove(record);",
                                     "",
-                                    "grid.mask(Ext.LoadMask.prototype.msg);",
                                     "",
+                                    "grid.mask('Deleting...');",
                                     "store.sync({",
                                     "    callback: function() {",
-                                    "        grid.unmask();",
-                                    "        store.load();",
+                                    "        grid.mask('Deleting...');",
+                                    "        store.load(function() {",
+                                    "            grid.unmask();",
+                                    "        });",
                                     "    }",
                                     "});"
                                 ]

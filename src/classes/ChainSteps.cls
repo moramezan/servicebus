@@ -92,7 +92,10 @@ public class ChainSteps extends SObjects {
         }
         
         //delete all the configuration records
-        Database.delete(ids);
-        Database.emptyRecycleBin(ids);
+        if (!ids.isEmpty()) {
+            //don't choke on steps with no config
+            Database.delete(ids);
+            Database.emptyRecycleBin(ids);
+        }
     } 
 }

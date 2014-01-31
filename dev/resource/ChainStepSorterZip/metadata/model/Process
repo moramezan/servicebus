@@ -59,32 +59,6 @@
                 "name": "Tag"
             },
             "designerId": "361710ec-3f4a-4b2c-af4c-60a773c3da49"
-        },
-        {
-            "type": "Ext.data.proxy.Memory",
-            "reference": {
-                "name": "proxy",
-                "type": "object"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "designer|displayName": "ProcessProxy"
-            },
-            "designerId": "02294de9-7da7-4dbb-b315-d1d99c42f40d",
-            "cn": [
-                {
-                    "type": "Ext.data.reader.Json",
-                    "reference": {
-                        "name": "reader",
-                        "type": "object"
-                    },
-                    "codeClass": null,
-                    "userConfig": {
-                        "designer|displayName": "ProcessReader"
-                    },
-                    "designerId": "86159e74-f1e4-4378-b0b9-2338ea8b7f86"
-                }
-            ]
         }
     ]
 }
