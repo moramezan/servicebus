@@ -21,6 +21,8 @@
         <members>ChainStepsTest</members>
         <members>Chains</members>
         <members>ChainsTest</members>
+        <members>Debouncer</members>
+        <members>DebouncerTest</members>
         <members>FutureBroker</members>
         <members>Gate</members>
         <members>GateTest</members>
@@ -97,6 +99,10 @@
         <members>ChainStep__c.Process__c</members>
         <members>ChainStep__c.Sequence__c</members>
         <members>Chain__c.ChainStepsCount__c</members>
+        <members>DebouncerConfiguration__c.MinimumHoursBetween__c</members>
+        <members>Debouncer__c.DebouncerConfiguration__c</members>
+        <members>Debouncer__c.Key__c</members>
+        <members>Debouncer__c.LastFiredDate__c</members>
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Notification__c</members>
         <members>IsChangedConfiguration__c.FieldName__c</members>
@@ -136,6 +142,8 @@
         <members>BrokerSettings__c</members>
         <members>ChainStep__c</members>
         <members>Chain__c</members>
+        <members>DebouncerConfiguration__c</members>
+        <members>Debouncer__c</members>
         <members>EventType__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
@@ -166,6 +174,8 @@
         <members>BranchConfiguration__c-Branch Configuration Layout</members>
         <members>ChainStep__c-ChainStep Layout</members>
         <members>Chain__c-Chain Layout</members>
+        <members>DebouncerConfiguration__c-Debouncer Configuration Layout</members>
+        <members>Debouncer__c-Debouncer Layout</members>
         <members>EventType__c-Event Type Layout</members>
         <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>
