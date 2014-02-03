@@ -1,3 +1,13 @@
 table#bodyTable td#bodyCell {
     padding: 10px 10px 10px 0;
 }
+
+.#{$prefix}grid-cell.drag {
+    background: url('icon_reorder.png') center no-repeat;
+    cursor: move;
+}
+
+.#{$prefix}grid-cell.drag img.#{$prefix}action-col-icon {
+    cursor: move;
+}
+

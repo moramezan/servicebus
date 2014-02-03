@@ -145,9 +145,11 @@
             },
             "codeClass": null,
             "userConfig": {
-                "border": null,
+                "bodyBorder": false,
+                "border": false,
                 "forceFit": true,
                 "header": false,
+                "hideHeaders": true,
                 "itemId": "steps",
                 "layout|flex": 1,
                 "scroll": "none",
@@ -191,19 +193,32 @@
                     ]
                 },
                 {
-                    "type": "Ext.grid.column.Column",
+                    "type": "Ext.grid.column.Action",
                     "reference": {
                         "name": "columns",
                         "type": "array"
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "dataIndex": "Sequence",
+                        "align": "center",
+                        "altText": null,
+                        "designer|displayName": "Drag",
+                        "emptyCellText": null,
                         "menuDisabled": true,
-                        "sortable": false,
-                        "text": "Sequence"
+                        "menuText": null,
+                        "tdCls": "drag",
+                        "text": "Order",
+                        "tooltip": null,
+                        "width": 20
                     },
-                    "designerId": "ac6491b8-d45e-4676-bd19-59f86106fc3c"
+                    "designerId": "dc032a05-935d-436c-85ed-c50c88d6102d",
+                    "customConfigs": [
+                        {
+                            "group": "(Custom Properties)",
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
                 },
                 {
                     "type": "Ext.grid.column.Column",
