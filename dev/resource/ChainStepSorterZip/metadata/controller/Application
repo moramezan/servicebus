@@ -48,6 +48,10 @@
                     "",
                     "    //iterate over each process",
                     "    Ext.each(tag2processes[tag], function(process) {",
+                    "        ",
+                    "        //TERMINATE step cannot be created",
+                    "        if(process.get('Name') == 'Terminate') return;",
+                    "",
                     "        var processItem = {",
                     "            itemId: process.get('Id'),",
                     "            text: process.get('Name'),",
@@ -182,6 +186,36 @@
                 "scope": "me"
             },
             "designerId": "f513ebc3-a6ba-46be-8bdc-ff93c33f3fc3"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#steps > gridview",
+                "designer|targetType": "Ext.grid.View",
+                "fn": "onViewViewReady",
+                "implHandler": [
+                    "/**",
+                    " * The application is snappier when all Chain Steps are already loaded when the page",
+                    " * displays, instead of fetching them for the first time with a RemoteAction call.",
+                    " * ",
+                    " * But since the RemoteAction invokes chain.terminate(), the Terminate Step will only",
+                    " * exist after the RemoteAction call fires! A freshly created Chain lacks a Terminate!",
+                    " *",
+                    " * So for freshly created chains, we explicitly re-load the store here, which gives",
+                    " * us back the Terminate step per RemoteAction.ChainSorterController.fetchChainSteps",
+                    " */",
+                    "var store = dataview.getStore();",
+                    "if (!store.getCount()) store.load();"
+                ],
+                "name": "viewready",
+                "scope": "me"
+            },
+            "designerId": "e43a14f2-5f05-4614-99a7-8a2b36a5205e"
         }
     ]
 }

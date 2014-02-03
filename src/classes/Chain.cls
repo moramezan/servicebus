@@ -32,6 +32,31 @@ public class Chain extends SalesforceObject {
         return new ChainStep(chainStep);
     }
     
+    /**
+     * If this chain contains no Terminate step, append one.
+     * (Invoked by the user interface when viewing a Chain for the first time)
+     */
+    public void terminate() {
+        Chain__c chain = (Chain__c)this.getSObject();
+        
+        Process__c terminateProcess = [
+            SELECT Id
+            FROM Process__c
+            WHERE FullyQualifiedClassName__c = :Terminate.class.getName()
+        ];
+        
+        try {
+            ChainStep__c terminateStep = [
+                SELECT Id
+                FROM ChainStep__c
+                WHERE Chain__c = :chain.Id AND Process__c = :terminateProcess.Id
+            ];
+        } catch (QueryException e) {
+            //chain contains no terminate step
+            this.appendStep(terminateProcess.Id);
+        }
+    }
+    
     public ChainStep deleteStep(Id stepId) {
         //validate and perform the delete
         Chain__c chain = (Chain__c)this.getSObject();

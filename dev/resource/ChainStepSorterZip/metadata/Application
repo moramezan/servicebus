@@ -21,10 +21,6 @@
         "stores": [
             "ChainSteps",
             "Processes"
-        ],
-        "views": [
-            "MyViewport",
-            "ChainStepGrid"
         ]
     },
     "designerId": "application",
@@ -39,7 +35,7 @@
             "userConfig": {
                 "fn": "launch",
                 "implHandler": [
-                    "Ext.create('Steps.view.MyViewport', {",
+                    "Ext.create('Steps.view.Main', {",
                     "    renderTo: 'bodyCell'",
                     "});"
                 ]

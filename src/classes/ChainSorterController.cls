@@ -36,8 +36,9 @@ public with sharing class ChainSorterController {
     }
     
     @RemoteAction static public List<ChainStep__c> fetchChainSteps(Id chainId) {
-        ChainSteps chainSteps = new Chain(new Chain__c(Id = chainId)).fetchSteps();
-        return chainSteps.getSObjects();
+        Chain chain = new Chain(new Chain__c(Id = chainId));
+        chain.terminate();
+        return chain.fetchSteps().getSObjects();
     }
     
     @RemoteAction static public ChainStep__c appendStep(Id chainId, Id processId) {

@@ -55,5 +55,4 @@ public class ChainStep extends SalesforceObject {
         for (ChainStep__c chainStep : writeChainSteps) chainStep.Sequence__c = sequence++;
         update writeChainSteps;
     }
-    
 }

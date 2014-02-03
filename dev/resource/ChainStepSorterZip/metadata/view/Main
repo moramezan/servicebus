@@ -1,0 +1,383 @@
+{
+    "type": "Ext.container.Container",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "container|align": "stretch",
+        "container|pack": "center",
+        "container|padding": null,
+        "defaults": null,
+        "designer|userClassName": "Main",
+        "height": null,
+        "layout": "vbox",
+        "requires": [
+            "Ext.util.Point"
+        ],
+        "style": [
+            "{",
+            "    background: 'none'",
+            "}"
+        ]
+    },
+    "designerId": "fc6f1f7c-e0d0-4f8d-9555-d433ffe11571",
+    "cn": [
+        {
+            "type": "Ext.container.Container",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "container|align": "stretch",
+                "container|defaultMargins": [
+                    "{",
+                    "    \"top\":0,",
+                    "    \"right\":10,",
+                    "    \"bottom\":10,",
+                    "    \"left\":0",
+                    "}"
+                ],
+                "container|pack": "center",
+                "designer|displayName": "toolbar",
+                "layout": "hbox",
+                "layout|flex": null
+            },
+            "designerId": "6114ff78-cfea-4b4f-a951-b0f848ce4eb8",
+            "cn": [
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "itemId": "newStep",
+                        "layout|flex": null,
+                        "maxWidth": null,
+                        "text": "New Step",
+                        "width": null
+                    },
+                    "designerId": "64f7b0a4-3c54-4c7d-847a-e00f5a63c489",
+                    "cn": [
+                        {
+                            "type": "Ext.menu.Menu",
+                            "reference": {
+                                "name": "menu",
+                                "type": "object"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|displayName": "Tags",
+                                "ignoreParentClicks": true,
+                                "minWidth": null,
+                                "plain": true,
+                                "showSeparator": false,
+                                "width": null
+                            },
+                            "designerId": "d90f1e8c-6e67-4a35-8407-05f20ddb4501"
+                        }
+                    ]
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "layout|flex": null,
+                        "layout|margins": null,
+                        "text": "Enqueue"
+                    },
+                    "designerId": "d9de5484-eb10-4150-a590-e49399071ecb",
+                    "cn": [
+                        {
+                            "type": "fixedfunction",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|params": [
+                                    "button",
+                                    "e"
+                                ],
+                                "fn": "handler",
+                                "implHandler": [
+                                    "function handler(response, event) {",
+                                    "    Ext.Msg.show({",
+                                    "        title: 'Enqueue',",
+                                    "        msg: 'Enqueued to Chain \"' + response + '\"',",
+                                    "        buttons: Ext.Msg.OK",
+                                    "    });",
+                                    "    button.enable();",
+                                    "    button.unmask();",
+                                    "}",
+                                    "",
+                                    "button.disable();",
+                                    "button.mask();",
+                                    "",
+                                    "Visualforce.remoting.Manager.invokeAction(",
+                                    "    $RemoteAction.ChainSorterController.enqueue,",
+                                    "    Chain__c.Id,",
+                                    "    handler",
+                                    ");"
+                                ]
+                            },
+                            "designerId": "4352d1e7-3bb9-4f0e-be49-8049ef94ee62"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "border": null,
+                "forceFit": true,
+                "header": false,
+                "itemId": "steps",
+                "layout|flex": 1,
+                "scroll": "none",
+                "simpleDrag": null,
+                "store": "ChainSteps",
+                "title": "Chain Steps"
+            },
+            "designerId": "159b2a40-6878-4949-b8a1-6478167fd3ea",
+            "cn": [
+                {
+                    "type": "Ext.grid.View",
+                    "reference": {
+                        "name": "viewConfig",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "ChainStepGridView",
+                        "loadMask": false,
+                        "overItemCls": "",
+                        "stripeRows": false
+                    },
+                    "configAlternates": {
+                        "loadMask": "boolean"
+                    },
+                    "designerId": "65773a8e-f421-47ba-b87a-b4632f3475db",
+                    "cn": [
+                        {
+                            "type": "Ext.grid.plugin.DragDrop",
+                            "reference": {
+                                "name": "plugins",
+                                "type": "array"
+                            },
+                            "codeClass": "Ext.grid.plugin.DragDrop",
+                            "userConfig": {
+                                "designer|displayName": "ChainStepGridPlugin",
+                                "dragText": "Drag and drop to reorganize"
+                            },
+                            "designerId": "47817ef8-6785-4c53-9771-cad9891aef0e"
+                        }
+                    ]
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "Sequence",
+                        "menuDisabled": true,
+                        "sortable": false,
+                        "text": "Sequence"
+                    },
+                    "designerId": "ac6491b8-d45e-4676-bd19-59f86106fc3c"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "Name",
+                        "menuDisabled": true,
+                        "sortable": false,
+                        "text": "Name"
+                    },
+                    "designerId": "eb113c8d-9ebb-4b9d-a378-d1c031311c90",
+                    "cn": [
+                        {
+                            "type": "fixedfunction",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|params": [
+                                    "value",
+                                    "metaData",
+                                    "record",
+                                    "rowIndex",
+                                    "colIndex",
+                                    "store",
+                                    "view"
+                                ],
+                                "fn": "renderer",
+                                "implHandler": [
+                                    "return '<a href=\"' + ProtocolAndHost + '/' + record.get('Id') + '\">' + record.get('Name') + '</a>';"
+                                ]
+                            },
+                            "designerId": "d233d436-e552-47f4-8fd5-e43251e8b33c"
+                        }
+                    ]
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "ProcessName",
+                        "menuDisabled": true,
+                        "sortable": false,
+                        "text": "Process"
+                    },
+                    "designerId": "c8a7f650-8193-44ba-98f0-a0b323e9da2c"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "ProcessDescription",
+                        "menuDisabled": true,
+                        "sortable": false,
+                        "text": "Description"
+                    },
+                    "designerId": "dc8883e2-1fed-4d7a-b917-c4dfec27e223"
+                },
+                {
+                    "type": "Ext.grid.column.Action",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "defaultWidth": null,
+                        "designer|displayName": "Actions",
+                        "maxWidth": 24,
+                        "menuDisabled": true,
+                        "width": null
+                    },
+                    "designerId": "187cba58-5be1-497a-b4e4-071d32ced82d",
+                    "cn": [
+                        {
+                            "type": "actioncolumnitem",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|displayName": "DeleteAction",
+                                "icon": null,
+                                "iconCls": "cross"
+                            },
+                            "designerId": "e1fc9c9b-b765-45c1-9515-1fb2d1e42ab4",
+                            "cn": [
+                                {
+                                    "type": "fixedfunction",
+                                    "reference": {
+                                        "name": "items",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "designer|params": [
+                                            "view",
+                                            "rowIndex",
+                                            "colIndex",
+                                            "item",
+                                            "e",
+                                            "record",
+                                            "row"
+                                        ],
+                                        "fn": "handler",
+                                        "implHandler": [
+                                            "var grid = view;",
+                                            "",
+                                            "var store = grid.getStore();",
+                                            "",
+                                            "store.remove(record);",
+                                            "",
+                                            "",
+                                            "grid.mask('Deleting...');",
+                                            "store.sync({",
+                                            "    callback: function() {",
+                                            "        grid.mask('Deleting...');",
+                                            "        store.load(function() {",
+                                            "            grid.unmask();",
+                                            "        });",
+                                            "    }",
+                                            "});"
+                                        ]
+                                    },
+                                    "designerId": "7080d2ea-4147-428a-a6e5-6c8146b40845"
+                                },
+                                {
+                                    "type": "basicfunction",
+                                    "reference": {
+                                        "name": "items",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "designer|params": [
+                                            "view",
+                                            "rowIdx",
+                                            "colIdx",
+                                            "item",
+                                            "record"
+                                        ],
+                                        "fn": "isDisabled",
+                                        "implHandler": [
+                                            "/**",
+                                            " * This function is not documented",
+                                            " * see Ext.grid.column.Action#290",
+                                            " */",
+                                            "",
+                                            "//TERMINATE step cannot be deleted",
+                                            "return record.get('ProcessName') == 'Terminate';"
+                                        ]
+                                    },
+                                    "designerId": "1329aa51-d133-44ce-a617-8fa092486f63"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
