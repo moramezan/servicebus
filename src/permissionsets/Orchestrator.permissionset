@@ -57,14 +57,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ChainStepExtensionConfigure</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ChainStepExtensionConfigureTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>ChainSteps</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -569,10 +561,6 @@
     </objectPermissions>
     <pageAccesses>
         <apexPage>ChainSorter</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>ChainStepConfiguration</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

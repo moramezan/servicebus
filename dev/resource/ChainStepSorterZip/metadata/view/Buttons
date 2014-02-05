@@ -1,0 +1,112 @@
+{
+    "type": "Ext.container.Container",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "container|align": "stretch",
+        "container|defaultMargins": [
+            "{",
+            "    top: 0,",
+            "    right: 10,",
+            "    bottom: 0,",
+            "    left:0",
+            "}"
+        ],
+        "container|pack": "center",
+        "designer|userClassName": "Buttons",
+        "layout": "hbox"
+    },
+    "designerId": "77d83ff9-c025-46b1-984f-9d55c330870d",
+    "cn": [
+        {
+            "type": "Ext.button.Button",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "itemId": "newStep",
+                "layout|flex": null,
+                "maxWidth": null,
+                "text": "New Step",
+                "width": null
+            },
+            "designerId": "64f7b0a4-3c54-4c7d-847a-e00f5a63c489",
+            "cn": [
+                {
+                    "type": "Ext.menu.Menu",
+                    "reference": {
+                        "name": "menu",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "Tags",
+                        "ignoreParentClicks": true,
+                        "minWidth": null,
+                        "plain": true,
+                        "showSeparator": false,
+                        "width": null
+                    },
+                    "designerId": "d90f1e8c-6e67-4a35-8407-05f20ddb4501"
+                }
+            ]
+        },
+        {
+            "type": "Ext.button.Button",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "layout|flex": null,
+                "layout|margins": null,
+                "text": "Enqueue"
+            },
+            "designerId": "d9de5484-eb10-4150-a590-e49399071ecb",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "button",
+                            "e"
+                        ],
+                        "fn": "handler",
+                        "implHandler": [
+                            "function handler(response, event) {",
+                            "    Ext.Msg.show({",
+                            "        title: 'Enqueue',",
+                            "        msg: 'Enqueued to Chain \"' + response + '\"',",
+                            "        buttons: Ext.Msg.OK",
+                            "    });",
+                            "    button.enable();",
+                            "    button.unmask();",
+                            "}",
+                            "",
+                            "button.disable();",
+                            "button.mask();",
+                            "",
+                            "Visualforce.remoting.Manager.invokeAction(",
+                            "    $RemoteAction.ChainSorterController.enqueue,",
+                            "    Chain__c.Id,",
+                            "    handler",
+                            ");"
+                        ]
+                    },
+                    "designerId": "4352d1e7-3bb9-4f0e-be49-8049ef94ee62"
+                }
+            ]
+        }
+    ]
+}

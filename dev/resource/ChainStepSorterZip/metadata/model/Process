@@ -19,7 +19,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Id"
+                "name": "Id",
+                "type": "auto"
             },
             "designerId": "de1724aa-2a72-4929-b86c-67bae062dfed"
         },
@@ -31,7 +32,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Name"
+                "name": "Name",
+                "type": "string"
             },
             "designerId": "4e0a7820-b7e5-4a22-8c04-ff309975aef4"
         },
@@ -43,7 +45,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Icon"
+                "name": "Description",
+                "type": "string"
             },
             "designerId": "b8ea5500-ae88-444b-b8f4-c419fc48dc0c"
         },
@@ -56,9 +59,23 @@
             "codeClass": null,
             "userConfig": {
                 "mapping": null,
-                "name": "Tag"
+                "name": "Tag",
+                "type": "string"
             },
             "designerId": "361710ec-3f4a-4b2c-af4c-60a773c3da49"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Icon",
+                "type": "string"
+            },
+            "designerId": "f794bf99-3332-4d43-b6e4-d363a2d3be5b"
         }
     ]
 }

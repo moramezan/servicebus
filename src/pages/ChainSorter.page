@@ -1,6 +1,16 @@
 <apex:page standardController="Chain__c" extensions="ChainSorterController" action="{!doRedirect}">
     
+    <apex:sectionHeader title="{!$ObjectType.Chain__c.Label}" subtitle="{!Chain__c.Name}" />
+    
+    <apex:pageBlock id="pageBlockId" title="{!$ObjectType.ChainStep__c.LabelPlural}">
+        <apex:pageBlockButtons location="top" id="pageBlockButtonsId" />
+    </apex:pageBlock>
+    
     <c:bootstrapExt staticResource="{!$Resource.ChainStepSorterZip}" applicationName="Steps" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}" baseCSSPrefix="z-">
+        window.$Component = window.$Component || {};
+        $Component.pageBlockId = '{!$Component.pageBlockId}';
+        $Component.pageBlockButtonsId = '{!$Component.pageBlockId.pageBlockButtonsId}';
+        
         window.$RemoteAction = window.$RemoteAction || {};
         $RemoteAction.ChainSorterController = $RemoteAction.ChainSorterController || {};
         $RemoteAction.ChainSorterController.fetchChainSteps = '{!$RemoteAction.ChainSorterController.fetchChainSteps}';
@@ -26,6 +36,8 @@
         $ObjectType.ChainStep__c.Fields.Chain__c.Name = '{!$ObjectType.ChainStep__c.Fields.Chain__c.Name}';
         $ObjectType.ChainStep__c.Fields.Sequence__c = $ObjectType.ChainStep__c.Fields.Sequence__c || {};
         $ObjectType.ChainStep__c.Fields.Sequence__c.Name = '{!$ObjectType.ChainStep__c.Fields.Sequence__c.Name}';
+        $ObjectType.ChainStep__c.Fields.ConfigurationId__c = $ObjectType.ChainStep__c.Fields.ConfigurationId__c || {};
+        $ObjectType.ChainStep__c.Fields.ConfigurationId__c.Name = '{!$ObjectType.ChainStep__c.Fields.ConfigurationId__c.Name}';
         $ObjectType.ChainStep__c.Fields.Process__c = $ObjectType.ChainStep__c.Fields.Process__c || {};
         $ObjectType.ChainStep__c.Fields.Process__c.Name = '{!$ObjectType.ChainStep__c.Fields.Process__c.Name}';
         $ObjectType.ChainStep__c.Fields.Process__c.RelationshipName = '{!$ObjectType.ChainStep__c.Fields.Process__c.RelationshipName}';

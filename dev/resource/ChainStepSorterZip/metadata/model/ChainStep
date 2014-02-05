@@ -78,6 +78,34 @@
             "designerId": "346d23b6-f53f-471b-8ac8-2556a7d59475"
         },
         {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "ProcessIcon",
+                "persist": false,
+                "type": "string"
+            },
+            "designerId": "ef9a9884-15b1-4d3f-9342-129452ba2f20"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "ConfigurationId",
+                "persist": false,
+                "type": "string"
+            },
+            "designerId": "c75e0f49-6728-4232-b02a-1bde47eff9cf"
+        },
+        {
             "type": "Ext.data.proxy.Direct",
             "reference": {
                 "name": "proxy",

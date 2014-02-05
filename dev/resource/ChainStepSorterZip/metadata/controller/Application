@@ -48,7 +48,7 @@
                     "",
                     "    //iterate over each process",
                     "    Ext.each(tag2processes[tag], function(process) {",
-                    "        ",
+                    "",
                     "        //TERMINATE step cannot be created",
                     "        if(process.get('Name') == 'Terminate') return;",
                     "",
@@ -140,7 +140,7 @@
                     "eOpts"
                 ],
                 "designer|targetType": "Ext.grid.View",
-                "fn": "onGridViewDrop",
+                "fn": "onDrop",
                 "implHandler": [
                     "var controller = this,",
                     "    grid = data.view.ownerCt,",
@@ -197,12 +197,12 @@
             "userConfig": {
                 "designer|controlQuery": "#steps > gridview",
                 "designer|targetType": "Ext.grid.View",
-                "fn": "onViewViewReady",
+                "fn": "onViewReady",
                 "implHandler": [
                     "/**",
                     " * The application is snappier when all Chain Steps are already loaded when the page",
                     " * displays, instead of fetching them for the first time with a RemoteAction call.",
-                    " * ",
+                    " *",
                     " * But since the RemoteAction invokes chain.terminate(), the Terminate Step will only",
                     " * exist after the RemoteAction call fires! A freshly created Chain lacks a Terminate!",
                     " *",
@@ -216,6 +216,176 @@
                 "scope": "me"
             },
             "designerId": "e43a14f2-5f05-4614-99a7-8a2b36a5205e"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#steps",
+                "designer|targetType": "Ext.grid.Panel",
+                "fn": "onLinkClick",
+                "implHandler": [
+                    "if ('viewlink' == e.target.className) {",
+                    "    this.onViewLinkClick.apply(this, arguments);",
+                    "} else if ('deletelink' == e.target.className) {",
+                    "    this.onDeleteLinkClick.apply(this, arguments);",
+                    "}",
+                    ""
+                ],
+                "name": "cellclick",
+                "scope": "me"
+            },
+            "designerId": "bf2114ae-966a-48d8-bb78-7cad2fbf3320"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "tableview",
+                    "td",
+                    "cellIndex",
+                    "record",
+                    "tr",
+                    "rowIndex",
+                    "e",
+                    "eOpts"
+                ],
+                "fn": "onViewLinkClick",
+                "implHandler": [
+                    "Ext.create('Steps.view.Config', {url: e.target.href}).show();"
+                ]
+            },
+            "designerId": "540df7c3-43c4-4c27-b109-a729235a017c"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "tableview",
+                    "td",
+                    "cellIndex",
+                    "record",
+                    "tr",
+                    "rowIndex",
+                    "e",
+                    "eOpts"
+                ],
+                "fn": "onDeleteLinkClick",
+                "implHandler": [
+                    "var grid = tableview;",
+                    "var store = grid.getStore();",
+                    "",
+                    "Ext.Msg.confirm('Delete Step', 'Are you sure?', function(btn) {",
+                    "    if (btn === 'yes') {",
+                    "        store.remove(record);",
+                    "        grid.mask('Deleting...');",
+                    "        store.sync({",
+                    "            callback: function() {",
+                    "                grid.mask('Deleting...');",
+                    "                store.load(function() {",
+                    "                    grid.unmask();",
+                    "                });",
+                    "            }",
+                    "        });",
+                    "    }",
+                    "}).setIcon(Ext.Msg.WARNING);"
+                ]
+            },
+            "designerId": "bee0e44c-933a-44bb-894f-338f40b879d3"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "gridpanel",
+                "designer|targetType": "Ext.grid.Panel",
+                "fn": "onDrag",
+                "implHandler": [
+                    "var view = tableview,",
+                    "    plugin = view.getPlugin('dragdrop');",
+                    "",
+                    "plugin.dragZone.dragText = 'Move ' + record.get('ProcessName') + ' step here';"
+                ],
+                "name": "beforecellmousedown",
+                "scope": "me"
+            },
+            "designerId": "bceecc07-2306-4a69-bf9b-b14ab590b636"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "gridpanel",
+                "designer|targetType": "Ext.grid.Panel",
+                "fn": "onCellDoubleClick",
+                "implHandler": [
+                    "/**",
+                    " * Double click behaves like hitting Edit",
+                    " */",
+                    "if (record.get('ConfigurationId')) {",
+                    "    e.target = Ext.get(tr).down('a.viewlink').dom;",
+                    "    this.onViewLinkClick.apply(this, arguments);",
+                    "}"
+                ],
+                "name": "celldblclick",
+                "scope": "me"
+            },
+            "designerId": "28b2df76-7cf7-434f-a61e-c109d0ed7335"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "menuitem",
+                "designer|targetType": "Ext.menu.Item",
+                "fn": "onMenuitemAfterRender",
+                "implHandler": [
+                    "/**",
+                    " * Displays a tooltip for each menu item under the 'New Step' button",
+                    " */",
+                    "var menuitem = component,",
+                    "    process = Ext.getStore('Processes').getById(menuitem.getItemId());",
+                    "",
+                    "//nothing to do if not a process",
+                    "if (!process) return;",
+                    "",
+                    "new Ext.ToolTip({",
+                    "    target: menuitem.el.dom,",
+                    "    html: process.get('Description'),",
+                    "    dismissDelay: 0,",
+                    "    shadow: true",
+                    "});"
+                ],
+                "name": "afterrender",
+                "scope": "me"
+            },
+            "designerId": "e11cc1d0-5197-4ece-b8bb-b4351e534f4f"
         }
     ]
 }

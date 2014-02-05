@@ -15,8 +15,6 @@
         <members>Chain</members>
         <members>ChainSorterController</members>
         <members>ChainStep</members>
-        <members>ChainStepExtensionConfigure</members>
-        <members>ChainStepExtensionConfigureTest</members>
         <members>ChainSteps</members>
         <members>ChainStepsTest</members>
         <members>Chains</members>
@@ -71,7 +69,6 @@
     </types>
     <types>
         <members>ChainSorter</members>
-        <members>ChainStepConfiguration</members>
         <members>FutureBroker</members>
         <members>Health</members>
         <members>ProcessCustomization</members>
@@ -208,7 +205,6 @@
         <name>ValidationRule</name>
     </types>
     <types>
-        <members>ChainStep__c.ConfigureInstance</members>
         <members>Process__c.Customize</members>
         <members>Process__c.Generate</members>
         <name>WebLink</name>
