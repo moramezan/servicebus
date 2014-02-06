@@ -38,6 +38,8 @@
         $ObjectType.ChainStep__c.Fields.Sequence__c.Name = '{!$ObjectType.ChainStep__c.Fields.Sequence__c.Name}';
         $ObjectType.ChainStep__c.Fields.ConfigurationId__c = $ObjectType.ChainStep__c.Fields.ConfigurationId__c || {};
         $ObjectType.ChainStep__c.Fields.ConfigurationId__c.Name = '{!$ObjectType.ChainStep__c.Fields.ConfigurationId__c.Name}';
+        $ObjectType.ChainStep__c.Fields.ConfigurationName__c = $ObjectType.ChainStep__c.Fields.ConfigurationName__c || {};
+        $ObjectType.ChainStep__c.Fields.ConfigurationName__c.Name = '{!$ObjectType.ChainStep__c.Fields.ConfigurationName__c.Name}';
         $ObjectType.ChainStep__c.Fields.Process__c = $ObjectType.ChainStep__c.Fields.Process__c || {};
         $ObjectType.ChainStep__c.Fields.Process__c.Name = '{!$ObjectType.ChainStep__c.Fields.Process__c.Name}';
         $ObjectType.ChainStep__c.Fields.Process__c.RelationshipName = '{!$ObjectType.ChainStep__c.Fields.Process__c.RelationshipName}';

@@ -229,8 +229,8 @@
                 "designer|targetType": "Ext.grid.Panel",
                 "fn": "onLinkClick",
                 "implHandler": [
-                    "if ('viewlink' == e.target.className) {",
-                    "    this.onViewLinkClick.apply(this, arguments);",
+                    "if ('configurelink' == e.target.className) {",
+                    "    this.onConfigureLinkClick.apply(this, arguments);",
                     "} else if ('deletelink' == e.target.className) {",
                     "    this.onDeleteLinkClick.apply(this, arguments);",
                     "}",
@@ -259,7 +259,7 @@
                     "e",
                     "eOpts"
                 ],
-                "fn": "onViewLinkClick",
+                "fn": "onConfigureLinkClick",
                 "implHandler": [
                     "Ext.create('Steps.view.Config', {url: e.target.href}).show();"
                 ]
@@ -345,8 +345,8 @@
                     " * Double click behaves like hitting Edit",
                     " */",
                     "if (record.get('ConfigurationId')) {",
-                    "    e.target = Ext.get(tr).down('a.viewlink').dom;",
-                    "    this.onViewLinkClick.apply(this, arguments);",
+                    "    e.target = Ext.get(tr).down('a.configurelink').dom;",
+                    "    this.onConfigureLinkClick.apply(this, arguments);",
                     "}"
                 ],
                 "name": "celldblclick",
@@ -386,6 +386,35 @@
                 "scope": "me"
             },
             "designerId": "e11cc1d0-5197-4ece-b8bb-b4351e534f4f"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "window",
+                "designer|targetType": "Ext.window.Window",
+                "fn": "onWindowClose",
+                "implHandler": [
+                    "/**",
+                    " * When user closes the configuration window, we reload the grid. Any",
+                    " * ConfigurationName changes will then be reflected for the user to see.",
+                    " */",
+                    "var store = Ext.getStore('ChainSteps'),",
+                    "    grid = this.getGrid();",
+                    "",
+                    "grid.mask('Loading...');",
+                    "store.load(function() {",
+                    "    grid.unmask();",
+                    "});"
+                ],
+                "name": "close",
+                "scope": "me"
+            },
+            "designerId": "3dec2a3e-fd7f-4018-b7f2-6b904f140e1e"
         }
     ]
 }

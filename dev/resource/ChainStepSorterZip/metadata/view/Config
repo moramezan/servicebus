@@ -18,7 +18,7 @@
         "modal": true,
         "overlapHeader": false,
         "resizable": false,
-        "title": "View Configuration",
+        "title": "Step Configuration",
         "width": null
     },
     "configAlternates": {
@@ -47,9 +47,10 @@
                     "config.items = [{",
                     "    xtype: 'component',",
                     "    autoEl: {",
-                    "        tag: 'iframe',",
-                    "        src: config.url,",
-                    "        scrolling: 'yes'",
+                    "        'tag': 'iframe',",
+                    "        'src': config.url,",
+                    "        'scrolling': 'yes',",
+                    "        'cls': 'twirly'",
                     "    }",
                     "}];"
                 ]

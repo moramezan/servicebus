@@ -56,7 +56,6 @@
         <externalId>false</externalId>
         <label>Chain</label>
         <referenceTo>Chain__c</referenceTo>
-        <relationshipLabel>ChainSteps</relationshipLabel>
         <relationshipName>ChainSteps</relationshipName>
         <relationshipOrder>0</relationshipOrder>
         <reparentableMasterDetail>false</reparentableMasterDetail>
@@ -68,7 +67,7 @@
         <fullName>ConfigurationId__c</fullName>
         <caseSensitive>true</caseSensitive>
         <externalId>true</externalId>
-        <label>Configuration</label>
+        <label>ConfigurationId</label>
         <length>18</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -76,12 +75,21 @@
         <unique>true</unique>
     </fields>
     <fields>
+        <fullName>ConfigurationName__c</fullName>
+        <externalId>false</externalId>
+        <label>ConfigurationName</label>
+        <length>80</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Process__c</fullName>
         <deleteConstraint>Restrict</deleteConstraint>
         <externalId>false</externalId>
         <label>Process</label>
         <referenceTo>Process__c</referenceTo>
-        <relationshipLabel>ChainSteps</relationshipLabel>
         <relationshipName>ChainSteps</relationshipName>
         <required>true</required>
         <trackTrending>false</trackTrending>
@@ -99,13 +107,13 @@
         <type>Number</type>
         <unique>false</unique>
     </fields>
-    <label>ChainStep</label>
+    <label>Chain Step</label>
     <nameField>
         <displayFormat>CS-{00000}</displayFormat>
         <label>Step Name</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>ChainSteps</pluralLabel>
+    <pluralLabel>Chain Steps</pluralLabel>
     <searchLayouts>
         <lookupDialogsAdditionalFields>Sequence__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>Process__c</lookupDialogsAdditionalFields>

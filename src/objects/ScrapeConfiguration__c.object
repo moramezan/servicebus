@@ -60,9 +60,8 @@
     </fields>
     <label>Scrape Configuration</label>
     <nameField>
-        <displayFormat>SC-{00000}</displayFormat>
-        <label>Scrape Configuration Name</label>
-        <type>AutoNumber</type>
+        <label>What does this step do?</label>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Scrape Configurations</pluralLabel>
     <searchLayouts/>

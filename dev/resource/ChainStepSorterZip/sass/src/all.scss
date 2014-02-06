@@ -48,3 +48,9 @@ table#bodyTable td#bodyCell {
     text-decoration: underline;
 }
 
+/**
+ * Twirly under Configuration window
+ */
+iframe.twirly {
+    background: url('images/tree/loading.gif') center no-repeat;
+}

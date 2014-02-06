@@ -18,6 +18,17 @@ public class Chain extends SalesforceObject {
         String chainId = this.getSObject().Id;
         String orderBy = SObjectType.ChainStep__c.Fields.Sequence__c.Name;
         List<ChainStep__c> chainSteps = Database.query('SELECT ' + String.join(fields, ',') + ' FROM ChainStep__c WHERE Chain__c = :chainId ORDER BY ' + orderBy);
+        
+        //ConfigurationName field from related configs
+        for (ChainStep__c chainStep : chainSteps) {
+            Id configurationId = chainStep.ConfigurationId__c;
+            if (null == configurationId) continue;
+            String objectType = configurationId.getSObjectType().getDescribe().getName();
+            SObject config = Database.query('SELECT Id, Name FROM ' + objectType + ' WHERE Id = :configurationId');
+            String configurationName = (String)config.get('Name');
+            chainStep.ConfigurationName__c = configurationName.left(80);
+        }
+        
         return new ChainSteps(chainSteps);
     }
     

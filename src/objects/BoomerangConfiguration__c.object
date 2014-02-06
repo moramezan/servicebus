@@ -65,9 +65,8 @@
     </fields>
     <label>Boomerang Configuration</label>
     <nameField>
-        <displayFormat>BOOM-{00000}</displayFormat>
-        <label>Boomerang Configuration Name</label>
-        <type>AutoNumber</type>
+        <label>What does this step do?</label>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Boomerang Configuration</pluralLabel>
     <searchLayouts/>

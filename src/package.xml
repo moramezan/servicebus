@@ -46,6 +46,7 @@
         <members>SalesforceObject</members>
         <members>SalesforceObjects</members>
         <members>Schedule</members>
+        <members>ScheduleConfigurations</members>
         <members>ScheduleDispatcher</members>
         <members>ScheduleDispatcherTest</members>
         <members>ScheduleImplementation</members>
@@ -73,14 +74,15 @@
         <members>Health</members>
         <members>ProcessCustomization</members>
         <members>ProcessGenerate</members>
-        <members>PublishConfigurationEdit</members>
-        <members>SubscribeConfigurationEdit</members>
+        <members>PublishConfigurationManageEventTypes</members>
+        <members>SubscribeConfigurationManageEventTypes</members>
         <name>ApexPage</name>
     </types>
     <types>
         <members>ChainStepTriggers</members>
         <members>ChainTriggers</members>
         <members>PersistentDataTriggers</members>
+        <members>ScheduleConfigurationTriggers</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -93,6 +95,7 @@
         <members>BrokerSettings__c.BrokerClassName__c</members>
         <members>ChainStep__c.Chain__c</members>
         <members>ChainStep__c.ConfigurationId__c</members>
+        <members>ChainStep__c.ConfigurationName__c</members>
         <members>ChainStep__c.Process__c</members>
         <members>ChainStep__c.Sequence__c</members>
         <members>Chain__c.ChainStepsCount__c</members>
@@ -202,20 +205,41 @@
     </types>
     <types>
         <members>Chain__c.UniqueName</members>
+        <members>DebouncerConfiguration__c.RequireMinimumHoursBetween</members>
+        <members>ScheduleConfiguration__c.RequireFriendlyDates</members>
+        <members>ScheduleConfiguration__c.RequireFriendlyTimes</members>
         <name>ValidationRule</name>
     </types>
     <types>
         <members>Process__c.Customize</members>
         <members>Process__c.Generate</members>
+        <members>PublishConfiguration__c.ManageEventTypes</members>
+        <members>SubscribeConfiguration__c.ManageEventTypes</members>
         <name>WebLink</name>
     </types>
     <types>
+        <members>BoomerangConfiguration__c.UpdateBoomerangConfigurationName</members>
+        <members>BranchConfiguration__c.UpdateBranchConfigurationName</members>
         <members>ChainStep__c.ChainStepSequenceUpdate</members>
+        <members>DebouncerConfiguration__c.UpdateDebouncerConfigurationName</members>
+        <members>IsChangedConfiguration__c.UpdateIsChangedConfigurationName</members>
+        <members>JumpConfiguration__c.UpdateJumpConfigurationName</members>
+        <members>PublishConfiguration__c.UpdatePublishConfigurationName</members>
+        <members>ScrapeConfiguration__c.UpdateScrapeConfigurationName</members>
+        <members>SubscribeConfiguration__c.UpdateSubscribeConfigurationName</members>
         <name>WorkflowFieldUpdate</name>
     </types>
     <types>
+        <members>BoomerangConfiguration__c.OnBoomerangConfigurationUpsert</members>
+        <members>BranchConfiguration__c.OnBranchConfigurationUpsert</members>
         <members>ChainStep__c.OnChainStepInsert</members>
+        <members>DebouncerConfiguration__c.OnDebouncerConfigurationUpsert</members>
+        <members>IsChangedConfiguration__c.OnIsChangedConfigurationUpsert</members>
+        <members>JumpConfiguration__c.OnJumpConfigurationUpsert</members>
         <members>PersistentData__c.OnPersistentDataError</members>
+        <members>PublishConfiguration__c.OnPublishConfigurationUpsert</members>
+        <members>ScrapeConfiguration__c.OnScrapeConfigurationUpsert</members>
+        <members>SubscribeConfiguration__c.OnSubscribeConfigurationUpsert</members>
         <name>WorkflowRule</name>
     </types>
     <version>29.0</version>

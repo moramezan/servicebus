@@ -181,6 +181,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ScheduleConfigurations</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ScheduleDispatcher</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -259,6 +263,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>ChainStep__c.ConfigurationId__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>ChainStep__c.ConfigurationName__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -580,12 +589,12 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>PublishConfigurationEdit</apexPage>
-        <enabled>true</enabled>
+        <apexPage>PublishConfigurationManageEventTypes</apexPage>
+        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SubscribeConfigurationEdit</apexPage>
-        <enabled>true</enabled>
+        <apexPage>SubscribeConfigurationManageEventTypes</apexPage>
+        <enabled>false</enabled>
     </pageAccesses>
     <tabSettings>
         <tab>Chain__c</tab>

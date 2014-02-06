@@ -97,7 +97,7 @@
                 "dataIndex": "ConfigurationId",
                 "defaultWidth": null,
                 "text": "Actions",
-                "width": 70
+                "width": 100
             },
             "designerId": "7313023d-6309-46f7-a3d1-0036734aa8ee",
             "cn": [
@@ -125,10 +125,10 @@
                             "//some processes have no configuration",
                             "if (record.get('ConfigurationId')) anchors.push(Ext.DomHelper.createHtml({",
                             "    'tag': 'a',",
-                            "    'html': 'View',",
-                            "    'class': 'viewlink',",
+                            "    'html': 'Configure',",
+                            "    'class': 'configurelink',",
                             "    'onclick': 'return false;',",
-                            "    'title': 'View Step Configuration',",
+                            "    'title': 'Configure Chain Step',",
                             "    'href': ProtocolAndHost + '/' + record.get('ConfigurationId') + '?isdtp=vw'",
                             "}));",
                             "",
@@ -229,13 +229,39 @@
             },
             "codeClass": null,
             "userConfig": {
-                "dataIndex": "ProcessDescription",
+                "dataIndex": "ConfigurationName",
                 "flex": 1,
                 "menuDisabled": true,
                 "sortable": false,
-                "text": "Description"
+                "text": "ConfigurationNameOrProcessDescription"
             },
-            "designerId": "dc8883e2-1fed-4d7a-b917-c4dfec27e223"
+            "designerId": "dc8883e2-1fed-4d7a-b917-c4dfec27e223",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "return record.get('ConfigurationName') || record.get('ProcessDescription');"
+                        ]
+                    },
+                    "designerId": "d54aa3ec-466a-4dc9-b1a8-eae50dd41c78"
+                }
+            ]
         }
     ]
 }
