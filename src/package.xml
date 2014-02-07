@@ -12,6 +12,7 @@
         <members>Branch</members>
         <members>BranchTest</members>
         <members>Broker</members>
+        <members>BrokerTest</members>
         <members>ChainSorterController</members>
         <members>ChainStepExtensionConfigure</members>
         <members>ChainStepExtensionConfigureTest</members>
@@ -21,7 +22,9 @@
         <members>ChainsTest</members>
         <members>Debouncer</members>
         <members>DebouncerTest</members>
+        <members>FailurePlugin</members>
         <members>FutureBroker</members>
+        <members>FutureBrokerTest</members>
         <members>Gate</members>
         <members>GateTest</members>
         <members>HealthController</members>
@@ -79,7 +82,6 @@
     <types>
         <members>ChainStepTriggers</members>
         <members>ChainTriggers</members>
-        <members>PersistentDataTriggers</members>
         <name>ApexTrigger</name>
     </types>
     <types>

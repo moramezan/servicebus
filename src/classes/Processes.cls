@@ -54,7 +54,10 @@ public class Processes extends SObjects {
         
         Process.Plugin plugin = (Process.Plugin)outerClass.newInstance();
         Process.PluginDescribeResult describeResult = plugin.describe();
-        Eda meta = (Eda)Json.deserialize(Json.serialize(innerClass.newInstance()), Eda.class);
+        Eda meta;
+        if (reflector.getName() != FailurePlugin.class.getName()) {
+            meta = (Eda)Json.deserialize(Json.serialize(innerClass.newInstance()), Eda.class);
+        }
         
         Process__c process = new Process__c(
             Name = describeResult.Name,
@@ -63,19 +66,21 @@ public class Processes extends SObjects {
             FullyQualifiedClassName__c = outerClass.getName()
         );
         
-        if (meta.customizable != null) {
-            //attempt to populate the name of the customization object
-            process.Customizable__c = meta.customizable.getSObjectType().getDescribe().getName();
-        }
-        
-        if (meta.configurable != null) {
-            //attempt to populate the name of the configuration object
-            process.Configurable__c = meta.configurable.getSObjectType().getDescribe().getName();
-        }
-        
-        if (meta.icon != null) {
-            //attempt to populate the css class name of the process icon
-            process.Icon__c = meta.icon;
+        if (meta != null) {
+            if (meta.customizable != null) {
+                //attempt to populate the name of the customization object
+                process.Customizable__c = meta.customizable.getSObjectType().getDescribe().getName();
+            }
+            
+            if (meta.configurable != null) {
+                //attempt to populate the name of the configuration object
+                process.Configurable__c = meta.configurable.getSObjectType().getDescribe().getName();
+            }
+            
+            if (meta.icon != null) {
+                //attempt to populate the css class name of the process icon
+                process.Icon__c = meta.icon;
+            }
         }
         
         return process;

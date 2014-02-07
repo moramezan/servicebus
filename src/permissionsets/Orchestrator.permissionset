@@ -45,6 +45,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>BrokerTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ChainSorterController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -81,7 +85,15 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>FailurePlugin</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>FutureBroker</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>FutureBrokerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

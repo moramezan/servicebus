@@ -1,287 +1,315 @@
-@isTest private class BatchBrokerTest {
+@isTest public class BatchBrokerTest {
  
-    static testMethod void testBrokerSurfacesExceptionThrownInsideofAnEdaProcess() {
-        //arrange processes
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+    static testMethod void callingMarkEligiblePersistentDatasAsProcessingCorrectlySetsStatusAsProcessing() {
+        //arrange                                                                     
+        Integer queryLimit = 2;
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'testChain');
-        insert chain;
+        List<PersistentData__c> persistentDatas =  new List<PersistentData__c>{
+            new PersistentData__c(Status__c = 'Buffer'),
+            new PersistentData__c(Status__c = 'Buffer'),
+            new PersistentData__c(Status__c = 'Buffer')  
+        };
+        insert persistentDatas;
         
-        //arrange steps
-        ChainStep__c wiretapStep = ChainSteps.generateOne(chain.Id, wiretapProcess.Id);
+        //act  
+        BatchBroker broker = new BatchBroker();                                                                                                                                                                   
+        Set<Id> persistentDataIds =  broker.markEligiblePersistentDatasAsProcessing(queryLimit) ;
         
-        //act
-        Test.startTest();
-        Broker.enqueue(chain.Name, '000000000000000AAA');
-        Test.stopTest();
-        
-        PersistentData__c persistentData = [SELECT Message__c FROM PersistentData__c];
-        String actualMessage = persistentData.Message__c;
-        String expectedMessage = 'eda processable error'; //-- if not configured , wiretap will throw an error
-        System.assert(actualMessage.contains(expectedMessage), actualMessage);
-    }
-    
-    static testMethod void testBrokerDoesNotSurfaceExceptionForProperlyInvokedProcessable() {
-        //arrange processes
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
-        
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'testChain');
-        insert chain;
-        
-        //arrange steps
-        ChainStep__c terminateStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
- 
-        //act
-        Test.startTest();
-        Broker.enqueue(chain.Name, '000000000000000AAA');
-        Test.stopTest();
-        
-        PersistentData__c persistentData = [SELECT Message__c FROM PersistentData__c];
-        String actualMessage = persistentData.Message__c;
-        String expectedMessage = null;   // No Error expected   
-        System.assertEquals(actualMessage, actualMessage); 
-    }
+        // assert
+        Integer actualCount = persistentDataIds.size();
+        Integer expectedCount = 2;
+        System.assertEquals(expectedCount, actualCount); 
+    }  
 
+    static testMethod void callingGetQueryLimitReturnsExpectedValue01() {
+        //arrange                                                                     
+        Integer fuckedLimit = 2;
+        
+        List<PersistentData__c> fuckedPersistentDatas =  new List<PersistentData__c>{
+            new PersistentData__c(Status__c = 'Processing'),
+            new PersistentData__c(Status__c = 'Processing') 
+        };
+        insert fuckedPersistentDatas;
+    
+        List<PersistentData__c> reprocessPersistentDatas =  new List<PersistentData__c>{
+            new PersistentData__c(Status__c = 'Reprocess'),
+            new PersistentData__c(Status__c = 'Reprocess') 
+        };
+        insert reprocessPersistentDatas;
  
-    static testMethod void testNotificationIsCorrectlyWrittenToPersistentDatas() {
+        //act                                                                                                                                                                    
+        Integer actualCount =   BatchBroker.getQueryLimit(fuckedLimit);
+        
+        // assert
+        Integer expectedCount = 2;
+        System.assertEquals(expectedCount, actualCount); 
+    } 
+
+    
+    
+     static testMethod void callingGetQueryLimitReturnsExpectedValue02() {
+        //arrange                                                                     
+        Integer fuckedLimit = 2;
+        
+        List<PersistentData__c> fuckedPersistentDatas =  new List<PersistentData__c>{
+            new PersistentData__c(Status__c = 'Processing'),
+            new PersistentData__c(Status__c = 'Processing') 
+        };
+        insert fuckedPersistentDatas;
+    
+        List<PersistentData__c> reprocessPersistentDatas =  new List<PersistentData__c>();
+        insert reprocessPersistentDatas; // Zero Reprocess
+ 
+        //act                                                                                                                                                                    
+        Integer actualCount =   BatchBroker.getQueryLimit(fuckedLimit);
+        
+        // assert
+        Integer expectedCount = 0;
+        System.assertEquals(expectedCount, actualCount); 
+    } 
+    
+    
+    
+     static testMethod void callingGetQueryLimitReturnsExpectedValue03() {
+        //arrange                                                                     
+        Integer fuckedLimit = 3;
+        
+        List<PersistentData__c> fuckedPersistentDatas =  new List<PersistentData__c>{
+            new PersistentData__c(Status__c = 'Processing'),
+            new PersistentData__c(Status__c = 'Processing') 
+        };
+        insert fuckedPersistentDatas;
+    
+        List<PersistentData__c> reprocessPersistentDatas =  new List<PersistentData__c>();
+        insert reprocessPersistentDatas; // Zero Reprocess
+ 
+        //act                                                                                                                                                                    
+        Integer actualCount =   BatchBroker.getQueryLimit(fuckedLimit);
+        
+        // assert
+        Integer expectedCount = 1;
+        System.assertEquals(expectedCount, actualCount); 
+    } 
+
+    
+       
+       
+    static testMethod void canCorrectlyResolveAndPersistPersistentDatas() {
         //arrange processes
         Process__c markProcess = Processes.generateOne(Mark.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
-        
+        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
+          
         //arrange chain
-        Chain__c chain = new Chain__c(Name = 'testChain');
-        insert chain;
-        
+        String  chainNameA = 'chainA';
+        Chain__c chainA = new Chain__c(Name = chainNameA);
+        insert chainA;
+ 
+                      
         //arrange steps
-        ChainStep__c step1 = ChainSteps.generateOne(chain.Id, markProcess.Id);
-        ChainStep__c step2 = ChainSteps.generateOne(chain.Id, markProcess.Id);
-        ChainStep__c step3 = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
-        
+        Integer sequenceA1 = 1;
+        Integer sequenceA2 = 2;
+        Integer sequenceA3 = 3;
+        ChainStep__c stepA1 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA1,Process__c = subscribeProcess.Id);
+        ChainStep__c stepA2 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA2,Process__c = markProcess.Id);
+        ChainStep__c stepA3 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA3,Process__c = terminateProcess.Id);
+        insert stepA1;
+        insert stepA2;
+        insert stepA3;
+
+
+        List<PersistentData__c> persistentDatas =  new List<PersistentData__c>{
+            new PersistentData__c(Notification__c = '{ "eda__chainName": "' + chainA.Name + '", "eda__sequence": ' + sequenceA1 + '}'),
+            new PersistentData__c(Notification__c = '{ "eda__chainName": "' + chainA.Name + '", "eda__sequence": ' + sequenceA2 + '}')
+        };
+            
         //act
+        BatchBroker broker = new BatchBroker();
+        broker.resolveAndPersist( persistentDatas);
+
+        // assemble
+        List<PersistentData__c> persistentDatasAfter = [
+            SELECT id, Notification__c, ChainStep__c, Process__c 
+            FROM PersistentData__c
+        ];
+
+        Boolean flagSequence01 = false;
+        Boolean flagSequence02 = false;
+        Boolean flagChainNameA = true;
+        Id actualChainStepId01;
+        Id actualChainStepId02;    
+        Id actualProcessId01;
+        Id actualProcessId02;
+        for (PersistentData__c persistentData : persistentDatasAfter) {
+            Map<String,Object> notification = (Map<String,Object>)System.Json.deserializeUntyped(persistentData.Notification__c);
+            String notificationChainName  = (String) notification.get('eda__chainName');
+            Integer notificationSequence  = (Integer) notification.get('eda__sequence'); 
+            if (notificationChainName != chainNameA) {
+                flagChainNameA = false;
+            }
+            if (notificationSequence == (sequenceA1 + 1))  {
+                flagSequence01 = true;
+                actualChainStepId01 =  persistentData.ChainStep__c;
+                actualProcessId01   =  persistentData.Process__c;         
+            }
+            if (notificationSequence == (sequenceA2 + 1))  {
+                flagSequence02 = true;
+                actualChainStepId02 =  persistentData.ChainStep__c;    
+                actualProcessId02   =  persistentData.Process__c;
+            }
+        }
+        
+        // assert
+        Integer expectedCount = 2;
+        Integer actualCount = persistentDatasAfter.size();
+        System.assertEquals(expectedCount, actualCount);
+
+        System.assert(flagChainNameA );
+        System.assert(flagSequence01 );
+        System.assert(flagSequence02 );
+
+        Id expectedChainStepId01 = stepA2.Id;
+        Id expectedChainStepId02 = stepA3.Id ;
+        Id expectedProcessId01   = markProcess.Id;
+        Id expectedProcessId02   = terminateProcess.Id;    
+        System.assertEquals(expectedChainStepId01, actualChainStepId01);
+        System.assertEquals(expectedChainStepId02, actualChainStepId02); 
+        System.assertEquals(expectedProcessId01  , actualProcessId01  );
+        System.assertEquals(expectedProcessId02  , actualProcessId02  );
+    }     
+ 
+    static testMethod void callingEnqueueSuccessfullyCallEnqueueImp() {
+        //arrange 
+        Process__c markProcess = Processes.generateOne(Mark.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        
+        String  chainNameA = 'chainA';
+        Chain__c chainA = new Chain__c(Name = chainNameA);
+        insert chainA;
+
+        Integer sequenceA1 = 1;
+        Integer sequenceA2 = 2;
+        ChainStep__c stepA1 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA1,Process__c = markProcess.Id);
+        ChainStep__c stepA2 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA2,Process__c = terminateProcess.Id);
+        insert stepA1;
+        insert stepA2;
+  
+ 
+        insert  new BrokerSettings__c(BrokerClassName__c  = BatchBroker.class.getName() );
+ 
+        //act 
         Test.startTest();
-        Broker.enqueue(chain.Name, '000000000000000AAA');
+        Broker.enqueue(chainNameA, '000000000000000AAA'); 
         Test.stopTest();
         
         // assemble
         List<PersistentData__c> persistentDatas = [
-            SELECT id, Notification__c, ChainStep__c  //, Process__c  
+            SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, isDeleted 
             FROM PersistentData__c 
-            ORDER BY Id ASC
+            WHERE isDeleted =  false
+            ALL ROWS
         ];
-      
- 
-        // assert
-        Integer expectedCount = 3;
+
         Integer actualCount = persistentDatas.size();
-        System.assertEquals(expectedCount, actualCount);
         
+        // assert
+        Integer expectedCount = 1; 
+        System.assertEquals(expectedCount , actualCount);  
  
-        Id expectedChainStepId1 = step1.Id;
-        Id actualChainStepId1 = persistentDatas[0].ChainStep__c;
-        System.assertEquals(expectedChainStepId1, actualChainStepId1);
-        
-        Id expectedChainStepId2 = step2.Id;
-        Id actualChainStepId2 = persistentDatas[1].ChainStep__c;
-        System.assertEquals(expectedChainStepId2, actualChainStepId2);
-        
-        Id expectedChainStepId3 = step3.Id;
-        Id actualChainStepId3 = persistentDatas[2].ChainStep__c;
-        System.assertEquals(expectedChainStepId3, actualChainStepId3);
-    }
-
-
-    /*static testMethod void testEnqueueByBlob() {
+     } 
+ 
+ 
+    static testMethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToPersistentData() {
         //arrange 
-        List<String> names = new List<String>{'Mark', 'Terminate'};   
-        List<ApexClass> objects = [SELECT NamespacePrefix, Name FROM ApexClass WHERE Name IN :Names];
-        ApexClasses apexClasses = new ApexClasses(objects);
-        List<Process__c> processes = apexClasses.regenerate();
-        insert processes;
-        Map<string,Process__c> procecessNameToProcess = new Map<string,Process__c>();
-        for (Process__c p : processes) {
-           procecessNameToProcess.put(p.Name, p); 
-        }
-        Process__c markProcess  = (Process__c )procecessNameToProcess.get('Mark');
-        Process__c terminateProcess  = (Process__c )procecessNameToProcess.get('Terminate');
-                
- 
-        Chain__c chain = new Chain__c(Name = 'testChain');
-        insert chain;
+        Process__c failureProcess = Processes.generateOne(FailurePlugin.class);
 
-        ChainStep__c step1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = markProcess.Id);
-        ChainStep__c step2 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 2, Process__c = sinkProcess.Id);
-        List<ChainStep__c> chainSteps =  new List<ChainStep__c>{step1, step2 };
-        insert chainSteps;          
+        String  chainNameA = 'chainA';
+        Chain__c chainA = new Chain__c(Name = chainNameA);
+        insert chainA;
 
-        String data = 'herpderp';
-        Blob dataBlob = Blob.valueOf(data);
+        Integer sequenceA1 = 1;
+        ChainStep__c stepA1 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA1,Process__c = failureProcess.Id);
+        insert stepA1;
+
+        insert  new BrokerSettings__c(BrokerClassName__c  = BatchBroker.class.getName() );
  
-        //act
+        //act 
         Test.startTest();
-        Broker.enqueue(chain.Name, dataBlob);
+        Broker.enqueue(chainNameA, '000000000000000AAA'); 
         Test.stopTest();
         
         // assemble
-        List<PersistentData__c>  persistentDatas  = [
-            SELECT id, Notification__c, ChainStep__c //, Process__c  
+        List<PersistentData__c> persistentDatas = [
+            SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, Message__c, isDeleted 
             FROM PersistentData__c 
-            WHERE ChainStep__r.Process__c = :markProcess.Id
+            WHERE isDeleted =  false
+            ALL ROWS
         ];
-        
-        List<Document> documents = [SELECT Id, Body FROM Document];
-        
-        Id expectedId  = null;
-        Id actualId  =  null;
-        String expectedData = data;
-        String actualData = null;
-        if ( documents.size() >  0 ) {
-            actualId  = documents[0].Id;
-            actualData = documents[0].Body.toString();        
-            
-        }   
-        if ( persistentDatas.size() >  0 ) {
-            Map<string,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentDatas[0].Notification__c);   
-            expectedId  =  (Id) notification.get('id');
-        }
-                
-        
-        //assert
-        Integer expectedCount = 1;
         Integer actualCount = persistentDatas.size();
-        System.assertEquals(expectedCount, actualCount);
         
-        System.assert(actualId != null);
-        System.assertEquals(expectedId, actualId);
-        System.assertEquals(expectedData, actualData);
-    }*/
-
-
- 
-    static testmethod void testDodgyProcess() {
-        //arrange process
-        Process__c terminateProcess = Processes.generateOne(Mark.class);
+        // assert
+        Integer expectedCount = 1; 
+        System.assertEquals(expectedCount , actualCount); 
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'testChain');
-        insert chain;
-        
-        //arrange steps
-        ChainStep__c step = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
-        insert step;
-        
-        //simulate dodgy process by deleting reference
-        terminateProcess.FullyQualifiedClassName__c = null;
-        update terminateProcess;
-        
-        //act
-        Test.startTest();
-        Broker.enqueue('testChain', '000000000000000AAA');
-        Test.stopTest();
-        
-        //arrange
-        PersistentData__c persistentData = [SELECT Id, Message__c FROM PersistentData__c];
-        
-        //asserts
-        String expectedMessage = 'class missing';
-        String actualMessage = persistentData.Message__c;
-        System.assert(actualMessage.contains(expectedMessage));
-    }
-    
-    static testMethod void testMalformedNotificationThrowsSystemJsonException() {
-        //arrange
-        PersistentData__c persistentData = new PersistentData__c(Notification__c = '{"malformed":....}');
- 
-        //act
-        //broker.doWork(persistentData);
+        String expectedProcessName = FailurePlugin.class.getName();
+        System.assertEquals(expectedProcessName, persistentDatas[0].Process__r.Name);
 
-        //assert
-        String actualMessage = persistentData.Message__c;
-        String expectedMessage = 'Could not deserialize json';
-        System.assert(actualMessage.contains(expectedMessage), actualMessage);
-    }
+        String expectedMessage = FailurePlugin.FailureMessage;
+        System.assertEquals(expectedMessage, persistentDatas[0].Message__c  );
+     } 
 
-    
-    static testMethod void testMissingSequenceThrowsExpectedException() {
-        //arrange
-        PersistentData__c persistentData = new PersistentData__c(Notification__c = '{"not_sequence": 0}');
-  
-        //act
-        //broker.doWork(persistentData);
-
-        //assert
-        String actualMessage = persistentData.Message__c;
-        String expectedMessage = 'sequence';
-        System.assert(actualMessage.contains(expectedMessage), actualMessage);
-    }
-    
-    static testMethod void testNoChainStepThrowsQueryException() {
-        //arrange (note there is no ChainStep__c in database!)
-        PersistentData__c persistentData = new PersistentData__c(Notification__c = '{"eda__chainName": "", "eda__sequence": 0}');
-  
-        //act
-        //broker.doWork(persistentData);
-
-        //assert
-        String actualMessage = persistentData.Message__c;
-        String expectedMessage = 'ChainStep';
-        System.assert(actualMessage.contains(expectedMessage), actualMessage);
-    }
-
- 
- 
-    static testMethod void testProcessWithoutClassThrowsThrowsExpectedException() {
-        //arrange processes
+    static testMethod void callingBrokerStartSuccessfullyCallsStartImp() {
+        //arrange 
+        Process__c markProcess = Processes.generateOne(Mark.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'TestChain');
-        insert chain;
-        
-        //arrange steps
-        ChainStep__c chainStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
-        
-        terminateProcess.FullyQualifiedClassName__c = 'lalala';
-        update terminateProcess; //pretend we deleted the class
-        
-        //act
-        Test.startTest();
-        Broker.enqueue(chain.Name, '000000000000000AAA');
-        Test.stopTest();
-        
-        //assemble
-        PersistentData__c persistentData = [SELECT Message__c FROM PersistentData__c];
-        
-        //assert
-        String actualMessage = persistentData.Message__c;
-        String expectedMessage = 'class missing';
-        System.assert(actualMessage.contains(expectedMessage), actualMessage);
-    }
-    
-    static testMethod void testNonProcessPluginThrowsTypeException() {
-        //arrange processes
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
-        
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'TestChain');
-        insert chain;
-        
-        //arrange steps
-        ChainStep__c chainStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
-        
-        terminateProcess.FullyQualifiedClassName__c = 'Account';
-        update terminateProcess; //this is definitely not a Process.Plugin
-        
-        //act
-        Test.startTest();
-        Broker.enqueue(chain.Name, '000000000000000AAA');
-        Test.stopTest();
+        String  chainNameA = 'chainA';
+        Chain__c chainA = new Chain__c(Name = chainNameA);
+        insert chainA;
 
-        //assert
-        PersistentData__c persistentData = [SELECT Message__c FROM PersistentData__c];
-        String actualMessage = persistentData.Message__c;
-        String expectedMessage = 'interface';
-        System.assert(actualMessage.contains(expectedMessage), actualMessage);
-    }
+        Integer sequenceA1 = 1;
+        Integer sequenceA2 = 2;
+        ChainStep__c stepA1 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA1,Process__c = markProcess.Id);
+        ChainStep__c stepA2 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA2,Process__c = terminateProcess.Id);
+        insert stepA1;
+        insert stepA2;
+  
+ 
+        insert  new BrokerSettings__c(BrokerClassName__c  = BatchBroker.class.getName() );
+
+        // scenario:
+        // resolved state , assume manual intervention to set status to 'Reprocess'
+        Map<String,Object> notification = new Map<String,Object> {
+            'eda__chainName' => chainNameA,
+            'eda__sequence' => 1,    // not zero !!!
+            'id' => '000000000000000AAA'
+        };
+        PersistentData__c persistentData = new PersistentData__c(
+            ChainStep__c = stepA1.Id,
+            Status__c = 'Reprocess',
+            Notification__c = Json.serializePretty(notification)
+        );
+        insert persistentData;
+        
+ 
+        //act 
+        Test.startTest();
+        Broker.start(); 
+        Test.stopTest();
+        
+        // assemble
+        List<PersistentData__c> persistentDatas = [
+            SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, isDeleted 
+            FROM PersistentData__c 
+            WHERE isDeleted =  false
+            ALL ROWS
+        ];
+
+        Integer actualCount = persistentDatas.size();
+        
+        // assert
+        Integer expectedCount = 1; 
+        System.assertEquals(expectedCount , actualCount);  
+     } 
+ 
 }

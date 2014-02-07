@@ -10,9 +10,14 @@
  *
  * +-----------+ (CONTEXT 1 FROM USER)
  * |  ENQUEUE  |
+ * |           |
+ * |  RESOLVE  |
+ * |  PERSIST  |
+ * |  MARK     |
  * +-----------+
  *
  * +-----------+ (CONTEXT 2)
+ * |  EXECUTE  | invokes [Wiretap]
  * |  RESOLVE  |
  * |  PERSIST  |
  * |  MARK     |
@@ -26,13 +31,6 @@
  * +-----------+
  *
  * +-----------+ (CONTEXT 4)
- * |  EXECUTE  | invokes [Wiretap]
- * |  RESOLVE  |
- * |  PERSIST  |
- * |  MARK     |
- * +-----------+
- *
- * +-----------+ (CONTEXT 5)
  * |  EXECUTE  | invokes [Terminate]
  * +-----------+
  *
@@ -88,14 +86,82 @@
  */
 abstract global class Broker {
     
-    global class BrokerException extends Exception {}
+    public class BrokerException extends Exception {}
+    
+    
+     /**
+     * Starts the Broker
+     *
+     */
+    static global void start() {
+        BrokerSettings__c settings = BrokerSettings__c.getInstance();
+        if (settings.BrokerClassName__c == null) {
+            //default
+            Broker broker = new BatchBroker();
+            broker.startImpl();
+        } else {
+            //override
+            Broker broker = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
+            broker.startImpl();
+        } 
+    }
+    
+    
+    /**
+     * Prepares data for processing at the start of a nominated chain 
+     * by wrapping the pointer to the data (an id) in a Persistent Data object
+     * This Persisted Data instance is saved to the database and the Broker is
+     * immeadiately invoked threreafter   
+     *
+     * @param chainName Name of the chain the data is destined for.
+     * @param dataId    Id of some record that the chain will operate on.
+     */ 
+    static global void enqueue(String chainName, Id dataId) {
+        BrokerSettings__c settings = BrokerSettings__c.getInstance();
+        if (settings.BrokerClassName__c == null) {
+            //default
+            Broker broker = new BatchBroker();
+            broker.enqueueImpl(chainName, dataId);
+        } else {
+            //override
+           Broker broker = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
+           broker.enqueueImpl(chainName, dataId);
+        }
+    }
+    
+    
+    /**
+     * Prepares Blob data for processing at the start of a nominated chain 
+     * by wrapping the pointer to the data (an id) in a Persistent Data object
+     * This Persisted Data instance is saved to the database and the Broker is
+     * immeadiately invoked threreafter   
+     *
+     * @param chainName Name of the chain the data is destined for.
+     * @param dataId    Blob representation of the data the chain will operate on.
+     */ 
+    static global void enqueue(String chainName, Blob data) {
+        //prepare a very generic container
+        Document document = new Document(
+            Name = String.valueOf(Datetime.now().getTime()),
+            Body = data,
+            FolderId = UserInfo.getUserId(),
+            ContentType = 'text/plain',
+            Type = 'txt'
+        );
+        
+        //store this data away and enqueue
+        insert document;
+        enqueue(chainName, document.Id);
+    } 
+    
+ 
     
     /**
      * Sets many Persistent Datas statuses to 'Processing' and writes them away.
      *
      * @param persistentDataIds Set of Persistent Data Ids to update
      */
-    global void mark(Set<Id> persistentDataIds) {
+    public void mark(Set<Id> persistentDataIds) {
         List<PersistentData__c> persistentDatas = [SELECT Id FROM PersistentData__c WHERE Id IN :persistentDataIds];
         for (PersistentData__c persistentData : persistentDatas) {
             persistentData.Status__c = 'Processing';
@@ -110,7 +176,7 @@ abstract global class Broker {
      * @param  persistentData One Persistent Data whose status should be Processing
      * @return                Many Persistent Datas whose status should be Buffer
      */
-    global List<PersistentData__c> execute(PersistentData__c persistentData) {
+    public List<PersistentData__c> execute(PersistentData__c persistentData) {
         List<Map<String,Object>> notifications;
         Map<String,Object> notification;
         Process.Plugin plugin;
@@ -156,30 +222,19 @@ abstract global class Broker {
         
         //delete successfully processed notification
         delete persistentData;
+        purgePersistentDatas();
         
         //Mark helper logic :
         //if markCount not null, increment and  THEN put that value on notification
         //if markCount equates to two, we assume the processing process was a splitter 
         //  and therefore write the count of the notifications returned from this splitter 
         //  as a property of the notification
-        Decimal markCount = (Decimal)notification.get('eda__markCount');
-        if (null != markCount) notification.put('eda__markCount', ++markCount);
-        if (2 == markCount) {
-            Integer count = notifications.size();
-            notification.put('eda__count', count);
-            if (count == 0) Database.delete(new List<Id>{(Id)notification.get('eda__gateGroupId')}); //tidy up split of 0
-        }
-        
+        markHelper( notification, notifications);
+ 
         //wrap each notification in a buffered persistent data  instance and 
         //add each persistent data a persistentDatas list 
-        List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
-        for (Map<String,Object> n : notifications) {
-            persistentDatas.add(new PersistentData__c(
-                Notification__c = Json.serializePretty(n),
-                Status__c = 'Buffer'
-            ));
-        }
-        
+        List<PersistentData__c> persistentDatas = wrapNotifications(notifications);
+ 
         return persistentDatas;
     }
 
@@ -193,26 +248,58 @@ abstract global class Broker {
      * 4B. resolve the the process (ie the process referenced by 4A's chainStep)
      * 5. only then can we correctly write to database with 4A (chainStepId) and 3 (notification with the incremented sequence)
      *
-     * //TODO bulkify this
+     * //TODO implement more efficient bulkified version 
      */
-    global void resolve(List<PersistentData__c> persistentDatas) {
+    @TestVisible    
+    public void resolve(List<PersistentData__c> persistentDatas) {
+        String delim = '###';
+        Map<String,Map<String,Object>> keyToDetail = new Map<String,Map<String,Object>> ();
+        Set<String> chainNames = new Set<String>();
+        Set<Decimal> sequences = new Set<Decimal>();
         for (PersistentData__c  persistentData : persistentDatas ) {
             Map<String,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c); 
-            notification.put('eda__sequence', (Decimal)notification.get('eda__sequence') + 1);
-            ChainStep__c chainStep = [
-                SELECT Id, Chain__r.Id, Process__r.Id
-                FROM ChainStep__c
-                WHERE Chain__r.Name = :(String)notification.get('eda__chainName')
-                AND Sequence__c = :(Decimal)notification.get('eda__sequence')
-            ];
+            String chainName = (String)notification.get('eda__chainName');
+            Decimal sequence = (Decimal)notification.get('eda__sequence') + 1;
+            notification.put('eda__sequence', sequence);
+            String key = chainName + delim + sequence; 
+            chainNames.add(chainName);
+            sequences.add(sequence);
+            Map<String,Object> keyToAttribute = new  Map<String,Object>{
+                'notification' =>  notification,
+                'persistentData' => persistentData
+            };
+            keyToDetail.put(key, keyToAttribute);
+         }
+    
+        Map<String, ChainStep__c> keyToChainStep = new Map<String, ChainStep__c> ();
+        List<ChainStep__c> chainSteps = [
+            SELECT Id, Chain__r.Id, Process__r.Id, Chain__r.Name, Sequence__c 
+            FROM ChainStep__c
+            WHERE Chain__r.Name IN :chainNames 
+            OR Sequence__c IN :sequences
+        ];
+        for (ChainStep__c chainStep : chainSteps) {
+            String key = chainStep.Chain__r.Name + delim + chainStep.Sequence__c; 
+            keyToChainStep.put(key , chainStep);
+        }
+        
+                
+        persistentDatas.clear();
+        for (String key :  keyToDetail.keySet()) {
+            ChainStep__c chainStep = (ChainStep__c) keyToChainStep.get(key);   
+            Map<String,Object> keyToAttribute = (Map<String,Object>) keyToDetail.get(key);
+            PersistentData__c persistentData =  (PersistentData__c) keyToAttribute.get('persistentData');
+            Map<String,Object> notification =   (Map<String,Object>) keyToAttribute.get('notification');
             
             persistentData.Notification__c = Json.serializePretty(notification);
             persistentData.Process__c = chainStep.Process__r.Id;
             persistentData.ChainStep__c = chainStep.Id;
             persistentData.Chain__c = chainStep.Chain__r.Id;
+            persistentDatas.add(persistentData); 
         }
     }
     
+    @TestVisible
     private static void surfaceException(Exception e, Id persistentDataId) { 
         Map<String,Object> serializedException = new Map<String,Object>();
         serializedException.put('cause', e.getCause());
@@ -235,24 +322,67 @@ abstract global class Broker {
         );
     }
     
+    
+    /*
+     * wrap each notification in a buffered persistent data  instance and 
+     * adds each persistent data a persistentDatas list 
+     */
+    @TestVisible
+    private static List<PersistentData__c>  wrapNotifications(List<Map<String,Object>>  notifications ) {
+        List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
+        for (Map<String,Object> n : notifications) {
+            persistentDatas.add(new PersistentData__c(
+                Notification__c = Json.serializePretty(n),
+                Status__c = 'Buffer'
+            ));
+        }
+        
+        return persistentDatas;
+     }
+            
+    
     /**
-     * Destines a single piece of data for a named chain.
+     * Mark helper logic :
+     * if markCount not null, increment and  THEN put that value on notification
+     * if markCount equates to two, we assume the  process.plugin was a splitter 
+     *   and therefore write the count of the notifications returned from this splitter 
+     *   as a property of the notification
+     */
+    @TestVisible
+    private static void  markHelper(Map<String,Object> notification,  List<Map<String,Object>>  notifications) {
+        Decimal markCount = (Decimal)notification.get('eda__markCount');
+        if (null != markCount) notification.put('eda__markCount', ++markCount);
+        if (2 == markCount) {
+            Integer count = notifications.size();
+            notification.put('eda__count', count);
+            if (count == 0) Database.delete(new List<Id>{(Id)notification.get('eda__gateGroupId')}); //tidy up split of 0
+        } 
+     }
+
+    /**
+     *  empties recycle bin to remove from recents
+     *  note : it appears that Database.emptyRecycleBin() does not work under 
+     *         a test eneviroment, hence no unit test for this method
+     */
+    @TestVisible
+    private static  void purgePersistentDatas() {      
+        List<PersistentData__c> pds = [SELECT Id FROM PersistentData__c WHERE IsDeleted = true ALL ROWS];
+        if (pds.size() > 0) Database.emptyRecycleBin(pds);
+    }
+    
+    
+    /**
+     * Persists a single piece of data in a named chain and
+     * immeadiately starts the (configured) Broker
      *
      * @param chainName Name of target Chain
      * @param dataId    Id of SObject to operate upon
      */
-    abstract global void enqueueImpl(String chainName, Id dataId);
-    
-    static global void enqueue(String chainName, Id dataId) {
-        BrokerSettings__c settings = BrokerSettings__c.getInstance();
-        if (settings.BrokerClassName__c == null) {
-            //default
-            Broker broker = new BatchBroker();
-            broker.enqueueImpl(chainName, dataId);
-        } else {
-            //override
-            Broker broker = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
-            broker.enqueueImpl(chainName, dataId);
-        }
-    }
+     abstract global void enqueueImpl(String chainName, Id dataId);
+ 
+     /**
+     * Starts the (configured) Broker
+     *
+     */    
+     abstract global void  startImpl() ;
 }
