@@ -52,11 +52,11 @@
     <enableReports>false</enableReports>
     <fields>
         <fullName>MinimumHoursBetween__c</fullName>
-        <defaultValue>0</defaultValue>
+        <defaultValue>1</defaultValue>
         <externalId>false</externalId>
         <label>Minimum Hours Between</label>
         <precision>3</precision>
-        <required>false</required>
+        <required>true</required>
         <scale>0</scale>
         <trackTrending>false</trackTrending>
         <type>Number</type>
@@ -64,11 +64,17 @@
     </fields>
     <label>Debouncer Configuration</label>
     <nameField>
-        <displayFormat>DC-{00000}</displayFormat>
-        <label>Debouncer Configuration Name</label>
-        <type>AutoNumber</type>
+        <label>What does this step do?</label>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Debouncer Configurations</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>RequireMinimumHoursBetween</fullName>
+        <active>true</active>
+        <errorConditionFormula>MinimumHoursBetween__c &lt;= 0</errorConditionFormula>
+        <errorDisplayField>MinimumHoursBetween__c</errorDisplayField>
+        <errorMessage>You must specify how many hours in between.</errorMessage>
+    </validationRules>
 </CustomObject>

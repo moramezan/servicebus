@@ -27,9 +27,11 @@
                 ],
                 "fn": "processProcesses",
                 "implHandler": [
-                    "//we pull the static list from the bridging components",
-                    "//the MemoryProxy and Reader does field mapping for us",
-                    "config.data = Processes;",
+                    "//use a temporary MemoryProxy (implicit JSON reader) to handle mapping of the static data",
+                    "var tempStore = Ext.create('Ext.data.Store', {model: 'Steps.model.Process', proxy: {type: 'memory'}});",
+                    "var mappedProcesses = tempStore.getProxy().getReader().readRecords(Processes).records;",
+                    "",
+                    "config.data = mappedProcesses;",
                     "return config;"
                 ]
             },

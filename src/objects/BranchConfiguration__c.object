@@ -65,9 +65,8 @@
     </fields>
     <label>Branch Configuration</label>
     <nameField>
-        <displayFormat>BC-{00000}</displayFormat>
-        <label>Branch Configuration Name</label>
-        <type>AutoNumber</type>
+        <label>What does this step do?</label>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Branch Configurations</pluralLabel>
     <searchLayouts/>

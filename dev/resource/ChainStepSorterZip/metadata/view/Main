@@ -1,0 +1,267 @@
+{
+    "type": "Ext.grid.Panel",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "bodyBorder": false,
+        "bodyCls": [
+            "steps"
+        ],
+        "border": false,
+        "designer|userClassName": "Main",
+        "forceFit": true,
+        "header": false,
+        "hideHeaders": true,
+        "itemId": "steps",
+        "scroll": "none",
+        "simpleDrag": null,
+        "store": "ChainSteps",
+        "title": "Chain Steps"
+    },
+    "designerId": "c643aa83-56f5-491f-8f25-056038befcfe",
+    "cn": [
+        {
+            "type": "Ext.grid.View",
+            "reference": {
+                "name": "viewConfig",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|displayName": "ChainStepGridView",
+                "loadMask": false,
+                "overItemCls": "",
+                "stripeRows": false
+            },
+            "configAlternates": {
+                "loadMask": "boolean"
+            },
+            "designerId": "65773a8e-f421-47ba-b87a-b4632f3475db",
+            "cn": [
+                {
+                    "type": "Ext.grid.plugin.DragDrop",
+                    "reference": {
+                        "name": "plugins",
+                        "type": "array"
+                    },
+                    "codeClass": "Ext.grid.plugin.DragDrop",
+                    "userConfig": {
+                        "designer|displayName": "ChainStepGridPlugin",
+                        "dragText": null,
+                        "pluginId": "dragdrop"
+                    },
+                    "designerId": "47817ef8-6785-4c53-9771-cad9891aef0e"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Action",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "altText": null,
+                "designer|displayName": null,
+                "emptyCellText": null,
+                "iconCls": "grippy",
+                "menuDisabled": true,
+                "menuText": null,
+                "tdCls": "grippy",
+                "text": "Order",
+                "tooltip": "Drag and drop to reorganize",
+                "width": 16
+            },
+            "designerId": "dc032a05-935d-436c-85ed-c50c88d6102d",
+            "customConfigs": [
+                {
+                    "group": "(Custom Properties)",
+                    "name": "text",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "align": "right",
+                "dataIndex": "ConfigurationId",
+                "defaultWidth": null,
+                "text": "Actions",
+                "width": 100
+            },
+            "designerId": "7313023d-6309-46f7-a3d1-0036734aa8ee",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "var anchors = [];",
+                            "",
+                            "//some processes have no configuration",
+                            "if (record.get('ConfigurationId')) anchors.push(Ext.DomHelper.createHtml({",
+                            "    'tag': 'a',",
+                            "    'html': 'Configure',",
+                            "    'class': 'configurelink',",
+                            "    'onclick': 'return false;',",
+                            "    'title': 'Configure Chain Step',",
+                            "    'href': ProtocolAndHost + '/' + record.get('ConfigurationId') + '?isdtp=vw'",
+                            "}));",
+                            "",
+                            "//TERMINATE step cannot be deleted",
+                            "if (record.get('ProcessName') != 'Terminate') anchors.push(Ext.DomHelper.createHtml({",
+                            "    'tag': 'a',",
+                            "    'html': 'Del',",
+                            "    'class': 'deletelink',",
+                            "    'onclick': 'return false;',",
+                            "    'title': 'Delete Step',",
+                            "    'href': ProtocolAndHost + '/setup/own/deleteredirect.jsp?delId=' + record.get('Id')",
+                            "}));",
+                            "",
+                            "return anchors.join(' | ');"
+                        ]
+                    },
+                    "designerId": "192b1959-cbfc-4185-93da-d826f14d7876"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Action",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "align": "center",
+                "designer|displayName": "Icon",
+                "tdCls": "icon",
+                "width": 25
+            },
+            "designerId": "ae3c9ae2-d54b-456d-9f75-77897e341390",
+            "cn": [
+                {
+                    "type": "actioncolumnitem",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "cog",
+                        "iconCls": "cog"
+                    },
+                    "designerId": "af5e7bc9-6567-4a54-997e-a1ad183f84a9"
+                },
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "//set the action column's icon from each process",
+                            "this.items[0].iconCls = record.get('ProcessIcon');"
+                        ]
+                    },
+                    "designerId": "3cd0cd3d-191f-442a-b957-8427c690eb4a"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "autoEl": null,
+                "dataIndex": "ProcessName",
+                "menuDisabled": true,
+                "sortable": false,
+                "text": "Process",
+                "width": 120
+            },
+            "designerId": "c8a7f650-8193-44ba-98f0-a0b323e9da2c"
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "dataIndex": "ConfigurationName",
+                "flex": 1,
+                "menuDisabled": true,
+                "sortable": false,
+                "text": "ConfigurationNameOrProcessDescription"
+            },
+            "designerId": "dc8883e2-1fed-4d7a-b917-c4dfec27e223",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "return record.get('ConfigurationName') || record.get('ProcessDescription');"
+                        ]
+                    },
+                    "designerId": "d54aa3ec-466a-4dc9-b1a8-eae50dd41c78"
+                }
+            ]
+        }
+    ]
+}

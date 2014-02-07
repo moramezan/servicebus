@@ -78,6 +78,48 @@
             "designerId": "346d23b6-f53f-471b-8ac8-2556a7d59475"
         },
         {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "ProcessIcon",
+                "persist": false,
+                "type": "string"
+            },
+            "designerId": "ef9a9884-15b1-4d3f-9342-129452ba2f20"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "ConfigurationId",
+                "persist": false,
+                "type": "string"
+            },
+            "designerId": "c75e0f49-6728-4232-b02a-1bde47eff9cf"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "ConfigurationName",
+                "persist": false,
+                "type": "string"
+            },
+            "designerId": "12a1c917-48e0-450e-bea5-13911185d9a7"
+        },
+        {
             "type": "Ext.data.proxy.Direct",
             "reference": {
                 "name": "proxy",
@@ -87,22 +129,33 @@
             "userConfig": {
                 "api": [
                     "{",
-                    "    read: $RemoteAction.ChainSorterController.readChainSteps,",
-                    "    update: $RemoteAction.ChainSorterController.updateChainSteps,",
-                    "    destroy: $RemoteAction.ChainSorterController.destroyChainSteps",
+                    "    read: $RemoteAction.ChainSorterController.fetchChainSteps,",
+                    "    destroy: $RemoteAction.ChainSorterController.destroyChainStep",
                     "}"
                 ],
                 "designer|createAlias": "vfremote",
                 "designer|displayName": "ChainStepProxy",
-                "directFn": null,
                 "extraParams": [
                     "{",
-                    "    Id: Chain__c.Id",
+                    "    \"chainId\": Chain__c.Id",
                     "}"
                 ]
             },
             "designerId": "3d7071ac-b992-48b4-9830-d535e317fd66",
             "cn": [
+                {
+                    "type": "Ext.data.writer.Json",
+                    "reference": {
+                        "name": "writer",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "ChainStepWriter",
+                        "nameProperty": "mapping"
+                    },
+                    "designerId": "33ec2ede-e45b-4c2c-8050-8975ae3fc8ff"
+                },
                 {
                     "type": "Ext.data.reader.Json",
                     "reference": {
@@ -113,21 +166,7 @@
                     "userConfig": {
                         "designer|displayName": "ChainStepReader"
                     },
-                    "designerId": "0f5bc8a3-4056-4b87-9524-3a2041c57f75"
-                },
-                {
-                    "type": "Ext.data.writer.Json",
-                    "reference": {
-                        "name": "writer",
-                        "type": "object"
-                    },
-                    "codeClass": null,
-                    "userConfig": {
-                        "allowSingle": false,
-                        "designer|displayName": "ChainStepWriter",
-                        "nameProperty": "mapping"
-                    },
-                    "designerId": "b452808f-4d48-42de-8847-174bfa39833a"
+                    "designerId": "6859069b-6c23-4610-a115-28282a280e2b"
                 }
             ]
         }

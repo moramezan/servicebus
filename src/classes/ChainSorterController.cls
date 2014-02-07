@@ -25,52 +25,41 @@ public with sharing class ChainSorterController {
     }
     
     public String getProcesses() {
-        List<Process__c> processes = [
-            SELECT Id, Name, Tag__c, Icon__c
-            FROM Process__c
-            ORDER BY Name ASC
-        ];
+        List<Process__c> processes = SalesforceObjects.fetchAll(Process__c.SObjectType);
         return Json.serializePretty(processes);
     }
     
-    @RemoteAction static public List<ChainStep__c> readChainSteps(Id chainId) {
-        return [
-            SELECT Id, Name, Chain__c, Sequence__c, Process__r.Name, Process__r.Description__c
-            FROM ChainStep__c
-            WHERE Chain__c = :chainId
-            ORDER BY Sequence__c
-        ];
+    public String getChainSteps() {
+        Chain chain = new Chain((Chain__c)this.controller.getRecord());
+        List<ChainStep__c> chainSteps = chain.fetchSteps().getSObjects();
+        return Json.serializePretty(chainSteps);
     }
     
-    @RemoteAction static public List<ChainStep__c> updateChainSteps(List<ChainStep__c> chainSteps) {
-        update chainSteps;
-        return chainSteps;
+    @RemoteAction static public List<ChainStep__c> fetchChainSteps(Id chainId) {
+        Chain chain = new Chain(new Chain__c(Id = chainId));
+        chain.terminate();
+        return chain.fetchSteps().getSObjects();
     }
     
-    @RemoteAction static public void destroyChainSteps(List<ChainStep__c> stepsToDelete) {
-        //first get a handle on the chain whose steps will reorder afterwards
-        Id chainId = [
-            SELECT Chain__c
-            FROM ChainStep__c
-            WHERE Id = :stepsToDelete[0].Id
-        ].Chain__c;
-        
-        //delete the intended steps
-        delete stepsToDelete;
-        
-        List<ChainStep__c> stepsToReorder = [
-            SELECT Id
-            FROM ChainStep__c
-            WHERE Chain__c = :chainId
-            ORDER BY Sequence__c
-        ];
-        
-        Integer sequence = 1;
-        for (ChainStep__c chainStep : stepsToReorder) {
-            chainStep.Sequence__c = sequence++;
-        }
-        
-        update stepsToReorder;
+    @RemoteAction static public ChainStep__c appendStep(Id chainId, Id processId) {
+        Chain chain = new Chain(new Chain__c(Id = chainId));
+        ChainStep step = chain.appendStep(processId);
+        return (ChainStep__c)step.getSObject();
+    }
+    
+    @RemoteAction static public void moveChainStepBefore(Id chainStepId, Id beforeStepId) {
+        ChainStep__c chainStep = (ChainStep__c)SalesforceObject.getById(chainStepId);
+        new ChainStep(chainStep).moveBefore(beforeStepId);
+    }
+    
+    @RemoteAction static public void moveChainStepAfter(Id chainStepId, Id afterStepId) {
+        ChainStep__c chainStep = (ChainStep__c)SalesforceObject.getById(chainStepId);
+        new ChainStep(chainStep).moveAfter(afterStepId);
+    }
+    
+    @RemoteAction static public void destroyChainStep(ChainStep__c chainStep) {
+        chainStep = (ChainStep__c)SalesforceObject.getById(chainStep.Id);
+        new Chain(new Chain__c(Id = chainStep.Chain__c)).deleteStep(chainStep.Id);
     }
     
     @RemoteAction static public String enqueue(Id chainId) {
@@ -78,22 +67,4 @@ public with sharing class ChainSorterController {
         Broker.enqueue(chain.Name, UserInfo.getUserId());
         return chain.Name;
     }
-    
-    @RemoteAction static public ChainStep__c newStep(Id chainId, Id processId) {
-        ChainStep__c chainStep = new ChainStep__c(
-            Chain__c = chainId,
-            Process__c = processId
-        );
-        
-        insert chainStep;
-        
-        chainStep = [
-            SELECT Id, Name, Sequence__c, ConfigurationId__c, Process__c, Chain__c
-            FROM ChainStep__c
-            WHERE Id = :chainStep.Id
-        ];
-        
-        return chainStep;
-    }
-    
 }

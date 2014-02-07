@@ -64,9 +64,8 @@
     </fields>
     <label>Jump Configuration</label>
     <nameField>
-        <displayFormat>JC-{00000}</displayFormat>
-        <label>Jump Configuration Name</label>
-        <type>AutoNumber</type>
+        <label>What does this step do?</label>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Jump Configurations</pluralLabel>
     <searchLayouts/>

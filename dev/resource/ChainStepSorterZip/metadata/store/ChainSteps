@@ -6,11 +6,36 @@
     },
     "codeClass": null,
     "userConfig": {
-        "autoLoad": true,
+        "autoLoad": false,
         "designer|userClassName": "ChainSteps",
         "model": "ChainStep",
         "remoteFilter": true,
         "storeId": "ChainSteps"
     },
-    "designerId": "a43ec6a5-795e-478c-8f9e-74b4f9cd36ec"
+    "designerId": "a43ec6a5-795e-478c-8f9e-74b4f9cd36ec",
+    "cn": [
+        {
+            "type": "processcfgfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "config"
+                ],
+                "fn": "processChainSteps",
+                "implHandler": [
+                    "//use a temporary MemoryProxy (implicit JSON reader) to handle mapping of the static data",
+                    "var tempStore = Ext.create('Ext.data.Store', {model: 'Steps.model.ChainStep', proxy: {type: 'memory'}});",
+                    "var mappedChainSteps = tempStore.getProxy().getReader().readRecords(ChainSteps).records;",
+                    "",
+                    "config.data = mappedChainSteps;",
+                    "return config;"
+                ]
+            },
+            "designerId": "af1370a9-9f6b-4031-8fc3-1c382b1e42f3"
+        }
+    ]
 }

@@ -6,7 +6,7 @@ public with sharing class Terminate implements Process.Plugin {
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'Mandatory process that terminates all chains.';
+        plugin.Description = 'Mandatory process that terminates each chain.';
         plugin.Tag = 'Event Driven Architecture';
         plugin.Name = 'Terminate';
         return plugin;

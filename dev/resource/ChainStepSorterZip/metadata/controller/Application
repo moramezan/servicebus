@@ -48,16 +48,20 @@
                     "",
                     "    //iterate over each process",
                     "    Ext.each(tag2processes[tag], function(process) {",
+                    "",
+                    "        //TERMINATE step cannot be created",
+                    "        if(process.get('Name') == 'Terminate') return;",
+                    "",
                     "        var processItem = {",
                     "            itemId: process.get('Id'),",
                     "            text: process.get('Name'),",
                     "            iconCls: process.get('Icon')",
                     "        };",
-                    "        ",
+                    "",
                     "        //add process item to tag",
                     "        tagItem.menu.items.push(processItem);",
                     "    });",
-                    "    ",
+                    "",
                     "    //add tag item to menu",
                     "    menu.add(tagItem);",
                     "});",
@@ -87,16 +91,16 @@
                     "    processId = item.getItemId(),",
                     "    chainId = Chain__c.Id;",
                     "",
-                    "//mask",
-                    "view.mask(Ext.LoadMask.prototype.msg);",
-                    "",
+                    "view.mask('Saving...');",
                     "Visualforce.remoting.Manager.invokeAction(",
-                    "    $RemoteAction.ChainSorterController.newStep,",
+                    "    $RemoteAction.ChainSorterController.appendStep,",
                     "    chainId,",
                     "    processId,",
                     "    function(chainStep) {",
-                    "        view.unmask();",
-                    "        store.load();",
+                    "        view.mask('Saving...');",
+                    "        store.load(function() {",
+                    "            view.unmask();",
+                    "        });",
                     "    }",
                     ");"
                 ],
@@ -118,6 +122,299 @@
                 "xtype": "Ext.grid.Panel"
             },
             "designerId": "41d85ef8-2f64-434f-9d0f-582d9481dacd"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#steps > gridview",
+                "designer|params": [
+                    "node",
+                    "data",
+                    "overModel",
+                    "dropPosition",
+                    "eOpts"
+                ],
+                "designer|targetType": "Ext.grid.View",
+                "fn": "onDrop",
+                "implHandler": [
+                    "var controller = this,",
+                    "    grid = data.view.ownerCt,",
+                    "    fromStep = data.records[0],",
+                    "    toStep = overModel,",
+                    "    store = grid.getStore();",
+                    "",
+                    "var beforeOrAfter;",
+                    "if ('before' == dropPosition) {",
+                    "    beforeOrAfter = $RemoteAction.ChainSorterController.moveChainStepBefore;",
+                    "} else if ('after' == dropPosition) {",
+                    "    beforeOrAfter = $RemoteAction.ChainSorterController.moveChainStepAfter;",
+                    "}",
+                    "",
+                    "grid.mask('Moving...');",
+                    "Visualforce.remoting.Manager.invokeAction(",
+                    "    beforeOrAfter,",
+                    "    fromStep.get('Id'),",
+                    "    toStep.get('Id'),",
+                    "    function(data) {",
+                    "        grid.mask('Moving...');",
+                    "        store.load(function() {",
+                    "            grid.unmask();",
+                    "        });",
+                    "    }",
+                    ");",
+                    "",
+                    "/*",
+                    "store.each(function(model, index, total) {",
+                    "    model.set('Sequence', index + 1);",
+                    "});",
+                    "",
+                    "",
+                    "",
+                    "store.sync({",
+                    "    callback: function() {",
+                    "        grid.unmask();",
+                    "    }",
+                    "});",
+                    "*/"
+                ],
+                "name": "drop",
+                "scope": "me"
+            },
+            "designerId": "f513ebc3-a6ba-46be-8bdc-ff93c33f3fc3"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#steps > gridview",
+                "designer|targetType": "Ext.grid.View",
+                "fn": "onViewReady",
+                "implHandler": [
+                    "/**",
+                    " * The application is snappier when all Chain Steps are already loaded when the page",
+                    " * displays, instead of fetching them for the first time with a RemoteAction call.",
+                    " *",
+                    " * But since the RemoteAction invokes chain.terminate(), the Terminate Step will only",
+                    " * exist after the RemoteAction call fires! A freshly created Chain lacks a Terminate!",
+                    " *",
+                    " * So for freshly created chains, we explicitly re-load the store here, which gives",
+                    " * us back the Terminate step per RemoteAction.ChainSorterController.fetchChainSteps",
+                    " */",
+                    "var store = dataview.getStore();",
+                    "if (!store.getCount()) store.load();"
+                ],
+                "name": "viewready",
+                "scope": "me"
+            },
+            "designerId": "e43a14f2-5f05-4614-99a7-8a2b36a5205e"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#steps",
+                "designer|targetType": "Ext.grid.Panel",
+                "fn": "onLinkClick",
+                "implHandler": [
+                    "if ('configurelink' == e.target.className) {",
+                    "    this.onConfigureLinkClick.apply(this, arguments);",
+                    "} else if ('deletelink' == e.target.className) {",
+                    "    this.onDeleteLinkClick.apply(this, arguments);",
+                    "}",
+                    ""
+                ],
+                "name": "cellclick",
+                "scope": "me"
+            },
+            "designerId": "bf2114ae-966a-48d8-bb78-7cad2fbf3320"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "tableview",
+                    "td",
+                    "cellIndex",
+                    "record",
+                    "tr",
+                    "rowIndex",
+                    "e",
+                    "eOpts"
+                ],
+                "fn": "onConfigureLinkClick",
+                "implHandler": [
+                    "Ext.create('Steps.view.Config', {url: e.target.href}).show();"
+                ]
+            },
+            "designerId": "540df7c3-43c4-4c27-b109-a729235a017c"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "tableview",
+                    "td",
+                    "cellIndex",
+                    "record",
+                    "tr",
+                    "rowIndex",
+                    "e",
+                    "eOpts"
+                ],
+                "fn": "onDeleteLinkClick",
+                "implHandler": [
+                    "var grid = tableview;",
+                    "var store = grid.getStore();",
+                    "",
+                    "Ext.Msg.confirm('Delete Step', 'Are you sure?', function(btn) {",
+                    "    if (btn === 'yes') {",
+                    "        store.remove(record);",
+                    "        grid.mask('Deleting...');",
+                    "        store.sync({",
+                    "            callback: function() {",
+                    "                grid.mask('Deleting...');",
+                    "                store.load(function() {",
+                    "                    grid.unmask();",
+                    "                });",
+                    "            }",
+                    "        });",
+                    "    }",
+                    "}).setIcon(Ext.Msg.WARNING);"
+                ]
+            },
+            "designerId": "bee0e44c-933a-44bb-894f-338f40b879d3"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "gridpanel",
+                "designer|targetType": "Ext.grid.Panel",
+                "fn": "onDrag",
+                "implHandler": [
+                    "var view = tableview,",
+                    "    plugin = view.getPlugin('dragdrop');",
+                    "",
+                    "plugin.dragZone.dragText = 'Move ' + record.get('ProcessName') + ' step here';"
+                ],
+                "name": "beforecellmousedown",
+                "scope": "me"
+            },
+            "designerId": "bceecc07-2306-4a69-bf9b-b14ab590b636"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "gridpanel",
+                "designer|targetType": "Ext.grid.Panel",
+                "fn": "onCellDoubleClick",
+                "implHandler": [
+                    "/**",
+                    " * Double click behaves like hitting Edit",
+                    " */",
+                    "if (record.get('ConfigurationId')) {",
+                    "    e.target = Ext.get(tr).down('a.configurelink').dom;",
+                    "    this.onConfigureLinkClick.apply(this, arguments);",
+                    "}"
+                ],
+                "name": "celldblclick",
+                "scope": "me"
+            },
+            "designerId": "28b2df76-7cf7-434f-a61e-c109d0ed7335"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "menuitem",
+                "designer|targetType": "Ext.menu.Item",
+                "fn": "onMenuitemAfterRender",
+                "implHandler": [
+                    "/**",
+                    " * Displays a tooltip for each menu item under the 'New Step' button",
+                    " */",
+                    "var menuitem = component,",
+                    "    process = Ext.getStore('Processes').getById(menuitem.getItemId());",
+                    "",
+                    "//nothing to do if not a process",
+                    "if (!process) return;",
+                    "",
+                    "new Ext.ToolTip({",
+                    "    target: menuitem.el.dom,",
+                    "    html: process.get('Description'),",
+                    "    dismissDelay: 0,",
+                    "    shadow: true",
+                    "});"
+                ],
+                "name": "afterrender",
+                "scope": "me"
+            },
+            "designerId": "e11cc1d0-5197-4ece-b8bb-b4351e534f4f"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "window",
+                "designer|targetType": "Ext.window.Window",
+                "fn": "onWindowClose",
+                "implHandler": [
+                    "/**",
+                    " * When user closes the configuration window, we reload the grid. Any",
+                    " * ConfigurationName changes will then be reflected for the user to see.",
+                    " */",
+                    "var store = Ext.getStore('ChainSteps'),",
+                    "    grid = this.getGrid();",
+                    "",
+                    "grid.mask('Loading...');",
+                    "store.load(function() {",
+                    "    grid.unmask();",
+                    "});"
+                ],
+                "name": "close",
+                "scope": "me"
+            },
+            "designerId": "3dec2a3e-fd7f-4018-b7f2-6b904f140e1e"
         }
     ]
 }

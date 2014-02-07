@@ -18,9 +18,7 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Edit</actionName>
-        <content>SubscribeConfigurationEdit</content>
-        <skipRecordTypeSelect>false</skipRecordTypeSelect>
-        <type>Visualforce</type>
+        <type>Default</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>Follow</actionName>
@@ -66,11 +64,28 @@
     </fields>
     <label>Subscribe Configuration</label>
     <nameField>
-        <displayFormat>SC-{0000000000}</displayFormat>
-        <label>Subscribe Configuration Name</label>
-        <type>AutoNumber</type>
+        <label>What does this step do?</label>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Subscribe Configurations</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>ManageEventTypes</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <hasMenubar>false</hasMenubar>
+        <hasScrollbars>true</hasScrollbars>
+        <hasToolbar>false</hasToolbar>
+        <height>600</height>
+        <isResizable>true</isResizable>
+        <linkType>page</linkType>
+        <masterLabel>Manage Event Types</masterLabel>
+        <openType>newWindow</openType>
+        <page>SubscribeConfigurationManageEventTypes</page>
+        <position>none</position>
+        <protected>false</protected>
+        <showsLocation>false</showsLocation>
+        <showsStatus>false</showsStatus>
+    </webLinks>
 </CustomObject>

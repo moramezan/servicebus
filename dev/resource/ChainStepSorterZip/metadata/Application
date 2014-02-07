@@ -16,15 +16,18 @@
         "name": "Steps",
         "requires": [
             "Ext.grid.plugin.DragDrop",
-            "Ext.Msg"
+            "Ext.Msg",
+            "Ext.window.Window",
+            "Ext.util.Point"
         ],
         "stores": [
             "ChainSteps",
             "Processes"
         ],
         "views": [
-            "MyViewport",
-            "ChainStepGrid"
+            "Config",
+            "Buttons",
+            "Main"
         ]
     },
     "designerId": "application",
@@ -39,9 +42,16 @@
             "userConfig": {
                 "fn": "launch",
                 "implHandler": [
-                    "Ext.create('Steps.view.MyViewport', {",
-                    "    renderTo: 'bodyCell'",
-                    "});"
+                    "Ext.create('Steps.view.Main', {",
+                    "    renderTo: $Component.pageBlockId",
+                    "});",
+                    "",
+                    "Ext.get($Component.pageBlockId).down('div.pbBody').remove();",
+                    "",
+                    "Ext.create('Steps.view.Buttons', {",
+                    "    renderTo: $Component.pageBlockButtonsId",
+                    "});",
+                    ""
                 ]
             },
             "designerId": "054a7704-822c-4c5d-afa4-c9e0f4a63749"
