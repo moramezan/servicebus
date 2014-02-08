@@ -49,10 +49,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ChainSorterController</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>Chain</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -269,6 +265,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>BranchConfiguration__c.Chain__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>ChainStep__c.ChainNameAndSequence__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>

@@ -247,55 +247,42 @@ abstract global class Broker {
      * 4A. resolve the chain step from the notification
      * 4B. resolve the the process (ie the process referenced by 4A's chainStep)
      * 5. only then can we correctly write to database with 4A (chainStepId) and 3 (notification with the incremented sequence)
-     *
-     * //TODO implement more efficient bulkified version 
      */
     @TestVisible    
     public void resolve(List<PersistentData__c> persistentDatas) {
-        String delim = '###';
-        Map<String,Map<String,Object>> keyToDetail = new Map<String,Map<String,Object>> ();
-        Set<String> chainNames = new Set<String>();
-        Set<Decimal> sequences = new Set<Decimal>();
-        for (PersistentData__c  persistentData : persistentDatas ) {
-            Map<String,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c); 
+        //assemble a map of next-step keys to persistent datas
+        Map<String,PersistentData__c> key2data = new Map<String,PersistentData__c>();
+        for (PersistentData__c persistentData : persistentDatas) {
+            Map<String,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c);
             String chainName = (String)notification.get('eda__chainName');
-            Decimal sequence = (Decimal)notification.get('eda__sequence') + 1;
+            Decimal sequence = (Decimal)notification.get('eda__sequence') + 1; //care
+            String key = chainName + '#' + sequence;
+            key2data.put(key, persistentData);
+            
+            //increment the sequence and put it back while we're at it
             notification.put('eda__sequence', sequence);
-            String key = chainName + delim + sequence; 
-            chainNames.add(chainName);
-            sequences.add(sequence);
-            Map<String,Object> keyToAttribute = new  Map<String,Object>{
-                'notification' =>  notification,
-                'persistentData' => persistentData
-            };
-            keyToDetail.put(key, keyToAttribute);
-         }
-    
-        Map<String, ChainStep__c> keyToChainStep = new Map<String, ChainStep__c> ();
-        List<ChainStep__c> chainSteps = [
-            SELECT Id, Chain__r.Id, Process__r.Id, Chain__r.Name, Sequence__c 
-            FROM ChainStep__c
-            WHERE Chain__r.Name IN :chainNames 
-            OR Sequence__c IN :sequences
-        ];
-        for (ChainStep__c chainStep : chainSteps) {
-            String key = chainStep.Chain__r.Name + delim + chainStep.Sequence__c; 
-            keyToChainStep.put(key , chainStep);
+            persistentData.Notification__c = Json.serializePretty(notification);
         }
         
-                
-        persistentDatas.clear();
-        for (String key :  keyToDetail.keySet()) {
-            ChainStep__c chainStep = (ChainStep__c) keyToChainStep.get(key);   
-            Map<String,Object> keyToAttribute = (Map<String,Object>) keyToDetail.get(key);
-            PersistentData__c persistentData =  (PersistentData__c) keyToAttribute.get('persistentData');
-            Map<String,Object> notification =   (Map<String,Object>) keyToAttribute.get('notification');
+        //resolve the next chain steps and processes
+        List<ChainStep__c> chainSteps = [
+            SELECT Id, Process__r.Id, Chain__r.Id, ChainNameAndSequence__c
+            FROM ChainStep__c
+            WHERE ChainNameAndSequence__c IN :key2data.keySet()
+        ];
+        
+        //assemble a map of next-step keys to steps
+        Map<String,ChainStep__c> key2step = new Map<String,ChainStep__c>();
+        for (ChainStep__c chainStep : chainSteps) key2step.put(chainStep.ChainNameAndSequence__c, chainStep);
+        
+        //now put the resolved chain/step/process on each persistentdata
+        for (String key : key2data.keySet()) {
+            ChainStep__c chainStep = key2step.get(key);
+            PersistentData__c persistentData = key2data.get(key);
             
-            persistentData.Notification__c = Json.serializePretty(notification);
+            persistentData.Chain__c = chainStep.Chain__r.Id;
             persistentData.Process__c = chainStep.Process__r.Id;
             persistentData.ChainStep__c = chainStep.Id;
-            persistentData.Chain__c = chainStep.Chain__r.Id;
-            persistentDatas.add(persistentData); 
         }
     }
     
