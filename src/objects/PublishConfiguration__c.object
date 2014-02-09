@@ -88,4 +88,15 @@
         <showsLocation>false</showsLocation>
         <showsStatus>false</showsStatus>
     </webLinks>
+    <webLinks>
+        <fullName>ShowStep</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Show Step</masterLabel>
+        <openType>sidebar</openType>
+        <page>PublishConfigurationShowStep</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>

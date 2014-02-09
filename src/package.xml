@@ -16,10 +16,12 @@
         <members>Chain</members>
         <members>ChainSorterController</members>
         <members>ChainStep</members>
+        <members>ChainStepShowConfigurationExtension</members>
         <members>ChainSteps</members>
         <members>ChainStepsTest</members>
         <members>Chains</members>
         <members>ChainsTest</members>
+        <members>ConfigurationShowStepExtension</members>
         <members>Debouncer</members>
         <members>DebouncerTest</members>
         <members>FailurePlugin</members>
@@ -72,13 +74,19 @@
         <name>ApexComponent</name>
     </types>
     <types>
+        <members>BoomerangConfigurationShowStep</members>
+        <members>BranchConfigurationShowStep</members>
         <members>ChainSorter</members>
+        <members>ChainStepShowConfiguration</members>
         <members>FutureBroker</members>
         <members>Health</members>
+        <members>JumpConfigurationShowStep</members>
         <members>ProcessCustomization</members>
         <members>ProcessGenerate</members>
         <members>PublishConfigurationManageEventTypes</members>
+        <members>PublishConfigurationShowStep</members>
         <members>SubscribeConfigurationManageEventTypes</members>
+        <members>SubscribeConfigurationShowStep</members>
         <name>ApexPage</name>
     </types>
     <types>
@@ -214,10 +222,16 @@
         <name>ValidationRule</name>
     </types>
     <types>
+        <members>BoomerangConfiguration__c.ShowStep</members>
+        <members>BranchConfiguration__c.ShowStep</members>
+        <members>ChainStep__c.ShowConfiguration</members>
+        <members>JumpConfiguration__c.ShowStep</members>
         <members>Process__c.Customize</members>
         <members>Process__c.Generate</members>
         <members>PublishConfiguration__c.ManageEventTypes</members>
+        <members>PublishConfiguration__c.ShowStep</members>
         <members>SubscribeConfiguration__c.ManageEventTypes</members>
+        <members>SubscribeConfiguration__c.ShowStep</members>
         <name>WebLink</name>
     </types>
     <types>

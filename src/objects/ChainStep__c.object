@@ -130,4 +130,15 @@
         <lookupDialogsAdditionalFields>Process__c</lookupDialogsAdditionalFields>
     </searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
+    <webLinks>
+        <fullName>ShowConfiguration</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Show Configuration</masterLabel>
+        <openType>sidebar</openType>
+        <page>ChainStepShowConfiguration</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>
