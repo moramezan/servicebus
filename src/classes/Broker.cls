@@ -83,6 +83,27 @@
  * +-----------+ (CONTEXT 10 batchable.finish)
  * |  ENQUEUE  |
  * +-----------+
+ * 
+ * 
+ *
+ * As used by a synchronous broker:
+ *
+ * +-----------+ (CONTEXT 1 FROM USER)
+ * |  ENQUEUE  |
+ * |           |
+ * |  RESOLVE  |
+ * |  PERSIST  |
+ * |  MARK     |
+ * |  EXECUTE  | invokes [Wiretap]
+ * |  RESOLVE  |
+ * |  PERSIST  |
+ * |  MARK     |
+ * |  EXECUTE  | invokes [Wiretap]
+ * |  RESOLVE  |
+ * |  PERSIST  |
+ * |  MARK     |
+ * |  EXECUTE  | invokes [Terminate]
+ * +-----------+
  */
 abstract global class Broker {
     
@@ -95,17 +116,11 @@ abstract global class Broker {
      */
     static global void start() {
         BrokerSettings__c settings = BrokerSettings__c.getInstance();
-        if (settings.BrokerClassName__c == null) {
-            //default
-            Broker broker = new BatchBroker();
-            broker.startImpl();
-        } else {
-            //override
-            Broker broker = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
-            broker.startImpl();
-        } 
+        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBroker.class.getName(); //default
+        
+        Broker broker = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
+        broker.startImpl();
     }
-    
     
     /**
      * Prepares data for processing at the start of a nominated chain 
@@ -118,15 +133,10 @@ abstract global class Broker {
      */ 
     static global void enqueue(String chainName, Id dataId) {
         BrokerSettings__c settings = BrokerSettings__c.getInstance();
-        if (settings.BrokerClassName__c == null) {
-            //default
-            Broker broker = new BatchBroker();
-            broker.enqueueImpl(chainName, dataId);
-        } else {
-            //override
-           Broker broker = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
-           broker.enqueueImpl(chainName, dataId);
-        }
+        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBroker.class.getName(); //default
+        
+        Broker broker = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
+        broker.enqueueImpl(chainName, dataId);
     }
     
     

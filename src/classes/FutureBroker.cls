@@ -6,7 +6,77 @@
  * (Bounded... has to keep running until it finishes a set, then checks for more work)
  */
 public class FutureBroker extends Broker {
-
+    
+    /**
+     * The only thing we are using this PageReference for is
+     * to workaround the "Callout loop not allowed" error.
+     */
+    public void doJob() {
+        //start
+        Integer fuckedLimit = 100;
+        
+        Integer fuckedCount = [
+            SELECT COUNT()
+            FROM PersistentData__c
+            WHERE Status__c = 'Processing'
+        ];
+        
+        Integer reprocessCount = [
+            SELECT COUNT()
+            FROM PersistentData__c
+            WHERE Status__c = 'Reprocess'
+        ];
+        
+        Integer queryLimit = Math.max(0, fuckedLimit - fuckedCount) + reprocessCount;
+        
+        if (queryLimit == 0) {
+            //nothing to do here
+            return;
+        }
+        
+        Set<Id> persistentDataIds = new Map<Id,PersistentData__c>([
+            SELECT Id
+            FROM PersistentData__c
+            WHERE Status__c IN ('Reprocess', 'Buffer')
+            ORDER BY Status__c DESC
+            LIMIT 5
+        ]).keySet();
+        
+        //MARK IN ONE EXECUTION CONTEXT
+        if (!persistentDataIds.isEmpty()) {
+            String command = '';
+            command += 'List<Id> persistentDataIds = (Set<Id>)Json.deserialize(\'' + Json.serialize(persistentDataIds) + '\', Set<Id>.class);';
+            command += 'new FutureBroker().mark(persistentDataIds);';
+            Api.Client client = new Api.Client();
+            client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
+            client.executeAnonymous(command);
+        }
+        
+        //EXECUTE (AND RESOLVE AND PERSIST) IN SEPARATE CONTEXT
+        for (Id persistentDataId : persistentDataIds) {
+            String command = '';
+            command += 'PersistentData__c persistentData = (PersistentData__c)SalesforceObject.getById(\'' + persistentDataId + '\');'; //hydrate for execution
+            command += 'List<PersistentData__c> persistentDatas = new FutureBroker().execute(persistentData);'; //EXECUTE
+            command += 'new FutureBroker().resolve(persistentDatas);'; //RESOLVE
+            command += 'insert persistentDatas;'; //PERSIST
+            Api.Client client = new Api.Client();
+            client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
+            client.executeAnonymous(command);
+        }
+        
+        //REQUEUE broker in a @future
+        Integer persistentDatasCount = [
+            SELECT COUNT()
+            FROM PersistentData__c
+            WHERE Status__c = 'Buffer'
+            OR Status__c = 'Reprocess'
+        ];
+        
+        if (persistentDatasCount > 0) {
+            FutureBroker.start(UserInfo.getSessionId());
+        }
+    }
+    
     /**
      * Resolves, persists and marks a single Persistent Data, then destines him for execution.
      * 
@@ -26,140 +96,55 @@ public class FutureBroker extends Broker {
         )};
         
         //RESOLVE
-        //PERSIST
-        resolveAndPersist(persistentDatas);
-        
-        //MARK
-        //EXECUTE (delegate)
-        markAndExecute(persistentDatas) ; 
-    }
-    
-    public override void startImpl() {
-        List<PersistentData__c> persistentDatas = [
-            SELECT Id, Name
-            FROM PersistentData__c
-            WHERE Status__c = 'Buffer'
-            OR Status__c = 'Reprocess'
-        ];
-
-        //MARK
-        //EXECUTE (delegate)
-        markAndExecute(persistentDatas) ;
-    }
-    
-    @TestVisible
-    private void resolveAndPersist(List<persistentData__c> persistentDatas) {
-        //RESOLVE
         super.resolve(persistentDatas);
         
         //PERSIST
-        insert persistentDatas; 
-    } 
-    
-    @TestVisible
-    private void markAndExecute(List<persistentData__c> persistentDatas) {
-        if (persistentDatas.size() > 0) {
-            //MARK
-            super.mark(new Map<Id,PersistentData__c>(persistentDatas).keySet()); //update inside
-            
-            //EXECUTE (delegate) 
-            Set<Id> persistentDataIds = new Map<Id,PersistentData__c>(persistentDatas).keySet();
-            if (Test.isRunningTest()) {
-                handleMarkedPersistentDatas(persistentDataIds);
-            } else {
-               handleMarkedPersistentDatas(persistentDataIds, UserInfo.getSessionId());
-            }
-        }
-    }
-    
-    /**
-    * Test Context  
-    * Note : This method will cause SOQL within a loop.
-    * 
-    * @param persistentDataIds Set of PersistentData records whose status is marked as Processing.
-    */
-    private void handleMarkedPersistentDatas(Set<Id> persistentDataIds ) {
-        for (Id persistentDataId : persistentDataIds) {
-            handlePersistentData(persistentDataId) ;
-        }
-    }
-    
-
-    /**
-    * Spins up the appropriate Process.Plugin and handles a single notification, then
-    * resolves, persists, marks, and destines his outputs for handling in their own threads.
-    *
-    * NEVER CALLED. This occurs by consequence of 'viewing' the Visualforce Page 'FutureBroker'
-    * This is a necessary evil, as @future alone doesn't prevent 'Callout loop not allowed'
-    */
-    public void handlePersistentData() {
-        Id persistentDataId = ApexPages.currentPage().getParameters().get('persistentDataId');
-        handlePersistentData(persistentDataId);
-    }
- 
-    
-    
-    /**
-    * Spins up many new threads to handle many Persistent Data marked as Processing.
-    * Of course, due to the Tooling API WebServiceCallout we cannot do DML here.
-    * 
-    * @param persistentDataIds Set of PersistentData records whose status is marked as Processing.
-    * @param sessionId         Session ID which will be used by Tooling API execute anonymous.
-    */
-    @future(callout=true) static private void handleMarkedPersistentDatas(Set<Id> persistentDataIds, String sessionId) {
-        //destine for execution
-        List<String> commands = new List<String>();
-        for (Id persistentDataId : persistentDataIds) {
-           commands.add(buildHandlerCommand(persistentDataId));
-        }
-     
-        //the eval does many Page.getContent() which achieves
-        //seperate execution contexts per persistent data id
-        Api.Client client = new Api.Client(sessionId);
-        client.executeAnonymous(String.join(commands, '\n'));
-    }
-   
-    private void handlePersistentData(Id persistentDataId) {
-        //hydrate for execution
-        PersistentData__c persistentData = [
-            SELECT Id, ChainStep__c, Notification__c
-            FROM PersistentData__c
-            WHERE Id = :persistentDataId
-        ];
-
-        //EXECUTE                                                                                                     
-        List<PersistentData__c> persistentDatas = super.execute(persistentData);                                      
-
-                                                                                      
-        //RESOLVE
-        //PERSIST
-        resolveAndPersist( persistentDatas);
-                                                                     
-        //MARK
-        //EXECUTE (delegate)
-        markAndExecute(persistentDatas) ;
-    }
-    
-    /**
-    * Generates apex code that news up and evaluates a uniquely named page reference.
-    * Note that Page.getContent is invoking handlePersistentData in order to 'render' the page.
-    * 
-    * PageReference pra26b0000000PUe6 = new PageReference('/apex/eda__FutureBroker');
-    * pra26b0000000PUe6.getParameters().put('persistentDataId', 'a26b0000000PUe6');
-    * pra26b0000000PUe6.getContent();
-    * 
-    * @param persistentDataId Id of the PersistentData that will be processed.
-    * @return                 String of the apex code that will be evaluated.
-    */
-    @TestVisible
-    static private String buildHandlerCommand(Id persistentDataId) {
-        String command = '';
-        String identifier = 'pr'  + persistentDataId;
-        String futureBrokerUrl = Page.FutureBroker.getUrl(); //full page name for anonymous context
+        insert persistentDatas;
         
-        command += 'PageReference ' + identifier + ' = new PageReference(\'' + futureBrokerUrl + '\');';
-        command += identifier + '.getParameters().put(\'persistentDataId\', \'' + persistentDataId + '\');';
-        command += identifier + '.getContent();';
-        return command;
+        this.startImpl();
     }
+    
+    /**
+     * Runs @future once
+     */
+    public override void startImpl() {
+        System.Type type = FutureBroker.class;
+        String namespacePrefix;
+        String name;
+        
+        if (type.getName().contains('.')) {
+            //managed (namespaceprefix.classname)
+            name = type.getName().substringBefore('.');
+            namespacePrefix = type.getName().substringAfter('.');
+        } else {
+            //unmanaged (classname)
+            name = type.getName();
+            namespacePrefix = '';
+        }
+        
+        //find existing futures
+        List<AsyncApexJob> existingFutures = [
+            SELECT ApexClassId, JobType
+            FROM AsyncApexJob
+            WHERE ApexClass.NamespacePrefix = :namespacePrefix AND ApexClass.Name = :name AND MethodName = 'start'
+            AND JobType = 'Future'
+            AND Status IN ('Queued', 'Processing', 'Preparing')
+        ];
+        
+        if (!existingFutures.isEmpty()) {
+            //future already exists
+            return;
+        }
+        
+        FutureBroker.start(UserInfo.getSessionId());
+    }
+    
+    @future(callout=true) static private void start(String sessionId) {
+        String futureBrokerUrl = Page.FutureBroker.getUrl(); //full page name for anonymous context
+        String command = 'new PageReference(\'' + futureBrokerUrl + '\').getContent();';
+        
+        Api.Client client = new Api.Client(sessionId);
+        client.executeAnonymous(command);
+    }
+    
 }

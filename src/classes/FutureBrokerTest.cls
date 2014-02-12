@@ -135,7 +135,7 @@ private class FutureBrokerTest {
     } 
 
 
-    static testMethod void callingBuildHandlerCommandReturnsExpectedCommand() {
+    /*static testMethod void callingBuildHandlerCommandReturnsExpectedCommand() {
         //arrange 
         PersistentData__c persistentData = new PersistentData__c( );
         insert persistentData;
@@ -149,5 +149,5 @@ private class FutureBrokerTest {
         
         // assert
         System.assert(actualCommand.contains(expectedCommand)); 
-    } 
+    }*/
 }
