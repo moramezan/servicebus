@@ -531,4 +531,24 @@ public class BrokerTest{
         String expectedMessage = 'interface';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
+    
+    
+    static testMethod void canGenerateUniqueIds() {
+        // arrange 
+        Integer uniqueTotal = 20000;
+        Integer len = 10; // for len=5, Expected: 10000, Actual: 9944
+        
+        // act
+        Set<String> uniqueIds =  new Set<String>();
+        Integer count = 1;
+        while (count <= uniqueTotal) {
+            uniqueIds.add(Broker.getNotificationId(len));
+            count++;
+        }
+
+        // assert
+        Integer expectedSize = uniqueTotal;
+        Integer actualSize = uniqueIds.size();
+        System.assertEquals(expectedSize, actualSize);
+    }
 }

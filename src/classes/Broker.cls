@@ -370,7 +370,10 @@ abstract global class Broker {
         if (pds.size() > 0) Database.emptyRecycleBin(pds);
     }
     
-    
+    @TestVisible
+    public static String getNotificationId(Integer size) {
+        return EncodingUtil.convertToHex(crypto.generateAesKey(128)).substring(0, size);
+    }
     /**
      * Persists a single piece of data in a named chain and
      * immeadiately starts the (configured) Broker

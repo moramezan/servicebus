@@ -32,6 +32,12 @@
         <members>IsChangedTest</members>
         <members>Jump</members>
         <members>JumpTest</members>
+        <members>LogConfigurationController</members>
+        <members>LogConfigurationControllerTest</members>
+        <members>LogInitializer</members>
+        <members>LogInitializerTest</members>
+        <members>LogWriter</members>
+        <members>LogWriterTest</members>
         <members>Mark</members>
         <members>MarkTest</members>
         <members>PersistentDatas</members>
@@ -75,6 +81,7 @@
         <members>ChainSorter</members>
         <members>FutureBroker</members>
         <members>Health</members>
+        <members>LogConfigurationListLogGroups</members>
         <members>ProcessCustomization</members>
         <members>ProcessGenerate</members>
         <members>PublishConfigurationManageEventTypes</members>
@@ -116,6 +123,20 @@
         <members>IsChangedConfiguration__c.OldValue__c</members>
         <members>JumpConfiguration__c.Chain__c</members>
         <members>KnifeSwitch__c.Url__c</members>
+        <members>LogConfiguration__c.GroupIdentifier__c</members>
+        <members>LogConfiguration__c.GroupInstruction__c</members>
+        <members>LogGroup__c.GroupIdentifier__c</members>
+        <members>LogGroup__c.LogConfiguration__c</members>
+        <members>LogGroup__c.Stamp__c</members>
+        <members>LogWriterEntry__c.ChainName__c</members>
+        <members>LogWriterEntry__c.ChainStep__c</members>
+        <members>LogWriterEntry__c.GroupIdentifier__c</members>
+        <members>LogWriterEntry__c.LogGroup__c</members>
+        <members>LogWriterEntry__c.NotificationId__c</members>
+        <members>LogWriterEntry__c.Notification__c</members>
+        <members>LogWriterEntry__c.Order__c</members>
+        <members>LogWriterEntry__c.Sequence__c</members>
+        <members>LogWriterEntry__c.Stamp__c</members>
         <members>PersistentData__c.ChainStep__c</members>
         <members>PersistentData__c.Chain__c</members>
         <members>PersistentData__c.Message__c</members>
@@ -152,6 +173,9 @@
         <members>IsChangedConfiguration__c</members>
         <members>JumpConfiguration__c</members>
         <members>KnifeSwitch__c</members>
+        <members>LogConfiguration__c</members>
+        <members>LogGroup__c</members>
+        <members>LogWriterEntry__c</members>
         <members>PersistentData__c</members>
         <members>Process__c</members>
         <members>PublishConfiguration__c</members>
@@ -183,6 +207,9 @@
         <members>GateItem__c-Gate Item Layout</members>
         <members>IsChangedConfiguration__c-IsChangedConfiguration Layout</members>
         <members>JumpConfiguration__c-Jump Configuration Layout</members>
+        <members>LogConfiguration__c-Log Initializer Configuration Layout</members>
+        <members>LogGroup__c-Log Initializer Layout</members>
+        <members>LogWriterEntry__c-Log Writer Entry Layout</members>
         <members>PersistentData__c-Persistent Data Layout</members>
         <members>Process__c-Process Layout</members>
         <members>PublishConfiguration__c-Publish Configuration Layout</members>
@@ -193,6 +220,7 @@
     </types>
     <types>
         <members>Chain__c.All</members>
+        <members>LogGroup__c.All</members>
         <members>Process__c.All</members>
         <name>ListView</name>
     </types>
@@ -213,6 +241,7 @@
         <name>ValidationRule</name>
     </types>
     <types>
+        <members>LogConfiguration__c.ListLogGroups</members>
         <members>Process__c.Customize</members>
         <members>Process__c.Generate</members>
         <members>PublishConfiguration__c.ManageEventTypes</members>
@@ -226,6 +255,7 @@
         <members>DebouncerConfiguration__c.UpdateDebouncerConfigurationName</members>
         <members>IsChangedConfiguration__c.UpdateIsChangedConfigurationName</members>
         <members>JumpConfiguration__c.UpdateJumpConfigurationName</members>
+        <members>LogConfiguration__c.UpdateLogConfigurationName</members>
         <members>PublishConfiguration__c.UpdatePublishConfigurationName</members>
         <members>ScrapeConfiguration__c.UpdateScrapeConfigurationName</members>
         <members>SubscribeConfiguration__c.UpdateSubscribeConfigurationName</members>
@@ -238,6 +268,7 @@
         <members>DebouncerConfiguration__c.OnDebouncerConfigurationUpsert</members>
         <members>IsChangedConfiguration__c.OnIsChangedConfigurationUpsert</members>
         <members>JumpConfiguration__c.OnJumpConfigurationUpsert</members>
+        <members>LogConfiguration__c.OnLogInitializerConfigurationUpsert</members>
         <members>PersistentData__c.OnPersistentDataError</members>
         <members>PublishConfiguration__c.OnPublishConfigurationUpsert</members>
         <members>ScrapeConfiguration__c.OnScrapeConfigurationUpsert</members>

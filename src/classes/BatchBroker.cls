@@ -70,6 +70,7 @@ public with sharing class BatchBroker extends Broker implements Database.Batchab
      */
     override public void enqueueImpl(String chainName, Id data) {
         Map<String,Object> notification = new Map<String,Object> {
+            'eda__notificationId' => Broker.getNotificationId(18),
             'eda__chainName' => chainName,
             'eda__sequence' => 0,  
             'id' => data
