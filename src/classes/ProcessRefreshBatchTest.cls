@@ -20,7 +20,7 @@
         String actualName = processes[0].Name;
         System.assert(actualName.contains(expectedName));
 
-        String expectedDescription = 'terminates all chains';
+        String expectedDescription = 'terminates each chain';
         String actualDescription = processes[0].Description__c;
         System.assert(actualDescription.contains(expectedDescription));
         

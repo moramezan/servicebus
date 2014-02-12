@@ -52,6 +52,17 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
+        <fullName>ChainNameAndSequence__c</fullName>
+        <externalId>false</externalId>
+        <formula>Chain__r.Name + &apos;#&apos; + TEXT(Sequence__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Chain Name and Sequence</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Chain__c</fullName>
         <externalId>false</externalId>
         <label>Chain</label>
@@ -119,4 +130,15 @@
         <lookupDialogsAdditionalFields>Process__c</lookupDialogsAdditionalFields>
     </searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
+    <webLinks>
+        <fullName>ShowConfiguration</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Show Configuration</masterLabel>
+        <openType>sidebar</openType>
+        <page>ChainStepShowConfiguration</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>
