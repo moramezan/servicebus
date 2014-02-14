@@ -61,7 +61,7 @@ virtual public class FutureBroker extends Broker {
     virtual override public void markImpl(Set<Id> persistentDataIds) {
         Api.Client client = new Api.Client();
         client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
-        String command = 'Broker.Mark(Json.deserialize(\'' + Json.serialize(persistentDataIds) + '\', Set<Id>.class));';
+        String command = 'Broker.mark((Set<Id>)Json.deserialize(\'' + Json.serialize(persistentDataIds) + '\', Set<Id>.class));';
         Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
         System.assert(result.success, result.compileProblem == null ? result.compileProblem : result.exceptionMessage);
     }

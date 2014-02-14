@@ -1,6 +1,8 @@
 @isTest
 public class BrokerTest{
 
+    public class BrokerException extends Exception {}
+
     static public Boolean flagRestartImpl = false;
     public class MockBroker extends Broker {
         override public Boolean isAlreadyRunning() {
@@ -168,7 +170,7 @@ public class BrokerTest{
         insert persistentData;
         
         String theMessage = 'balls';
-        Broker.BrokerException e = new Broker.BrokerException(theMessage);
+        BrokerException e = new BrokerException(theMessage);
         
         //act
         Id persistentDataId = persistentData.Id;
