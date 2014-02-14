@@ -90,7 +90,7 @@
         <length>32768</length>
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
-        <visibleLines>3</visibleLines>
+        <visibleLines>10</visibleLines>
     </fields>
     <fields>
         <fullName>Process__c</fullName>
@@ -127,6 +127,11 @@
         <type>Picklist</type>
     </fields>
     <label>Persistent Data</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
     <nameField>
         <displayFormat>N-{0000000000}</displayFormat>
         <label>Persistent Data Name</label>
@@ -135,4 +140,15 @@
     <pluralLabel>Persistent Datas</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>Reprocess</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Reprocess</masterLabel>
+        <openType>sidebar</openType>
+        <page>PersistentDataReprocess</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>

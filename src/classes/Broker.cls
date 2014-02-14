@@ -152,13 +152,16 @@ abstract global class Broker {
         //PERSIST
         insert persistentDatas;
         
+        Broker.process();
+    }
+    
+    static global void process() {
         BrokerSettings__c settings = BrokerSettings__c.getInstance();
         if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBroker.class.getName(); //default
         
         Broker impl = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
-        if (!impl.isAlreadyRunning()) impl.restartImpl();
+        if (!impl.isAlreadyRunning()) impl.restartIfWorkPending();
     }
-    
     
     /**
      * Prepares Blob data for processing at the start of a nominated chain 

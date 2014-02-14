@@ -165,6 +165,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>PersistentDataReprocessExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>PersistentDatas</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -716,11 +720,11 @@
     </objectPermissions>
     <pageAccesses>
         <apexPage>BoomerangConfigurationShowStep</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>BranchConfigurationShowStep</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>ChainSorter</apexPage>
@@ -728,7 +732,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>ChainStepShowConfiguration</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>FutureBroker</apexPage>
@@ -747,6 +751,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>PersistentDataReprocess</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>ProcessCustomization</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -756,22 +764,26 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>PublishConfigurationManageEventTypes</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>PublishConfigurationShowStep</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>SubscribeConfigurationManageEventTypes</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>SubscribeConfigurationShowStep</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <tabSettings>
         <tab>Chain__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>PersistentData__c</tab>
         <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>

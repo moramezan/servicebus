@@ -42,6 +42,7 @@
         <members>LogWriterTest</members>
         <members>Mark</members>
         <members>MarkTest</members>
+        <members>PersistentDataReprocessExtension</members>
         <members>PersistentDatas</members>
         <members>PersistentDatasTest</members>
         <members>ProcessExtensionCustomize</members>
@@ -88,6 +89,7 @@
         <members>Health</members>
         <members>JumpConfigurationShowStep</members>
         <members>LogConfigurationListLogGroups</members>
+        <members>PersistentDataReprocess</members>
         <members>ProcessCustomization</members>
         <members>ProcessGenerate</members>
         <members>PublishConfigurationManageEventTypes</members>
@@ -197,6 +199,7 @@
     </types>
     <types>
         <members>Chain__c</members>
+        <members>PersistentData__c</members>
         <members>Process__c</members>
         <name>CustomTab</name>
     </types>
@@ -231,6 +234,7 @@
     <types>
         <members>Chain__c.All</members>
         <members>LogGroup__c.All</members>
+        <members>PersistentData__c.All</members>
         <members>Process__c.All</members>
         <name>ListView</name>
     </types>
@@ -256,6 +260,7 @@
         <members>ChainStep__c.ShowConfiguration</members>
         <members>JumpConfiguration__c.ShowStep</members>
         <members>LogConfiguration__c.ListLogGroups</members>
+        <members>PersistentData__c.Reprocess</members>
         <members>Process__c.Customize</members>
         <members>Process__c.Generate</members>
         <members>PublishConfiguration__c.ManageEventTypes</members>
