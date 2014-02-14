@@ -1,0 +1,1 @@
+<apex:page standardController="LogConfiguration__c" extensions="LogConfigurationController" action="{!LogGroupView}" />

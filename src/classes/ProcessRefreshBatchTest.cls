@@ -45,6 +45,8 @@
         Type scrape = Type.forName('Scrape.Eda');
         Type isChanged = Type.forName('IsChanged.Eda');      
         Type debouncer = Type.forName('Debouncer.Eda'); 
+        Type logInitializer = Type.forName('LogInitializer.Eda');      
+        Type logWriter = Type.forName('LogWriter.Eda'); 
         
         // act
         Boolean actualGate = (gate != null);
@@ -59,6 +61,8 @@
         Boolean actualScrape = (scrape != null);
         Boolean actualIsChanged = (isChanged != null);
         Boolean actualDebouncer = (debouncer != null);
+        Boolean actualLogInitializer = (logInitializer != null); 
+        Boolean actualLogWriter = (logWriter != null); 
         
         // assert
         System.assert(actualBoomerang); 
@@ -73,6 +77,8 @@
         System.assert(actualScrape); 
         System.assert(actualIsChanged); 
         System.assert(actualDebouncer); 
+        System.assert(actualLogInitializer); 
+        System.assert(actualLogWriter); 
     }
    
 }
