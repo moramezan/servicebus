@@ -43,6 +43,7 @@
         <members>Mark</members>
         <members>MarkTest</members>
         <members>PersistentDataReprocessExtension</members>
+        <members>PersistentDataShowDataExtension</members>
         <members>PersistentDatas</members>
         <members>PersistentDatasTest</members>
         <members>ProcessExtensionCustomize</members>
@@ -90,6 +91,7 @@
         <members>JumpConfigurationShowStep</members>
         <members>LogConfigurationListLogGroups</members>
         <members>PersistentDataReprocess</members>
+        <members>PersistentDataShowData</members>
         <members>ProcessCustomization</members>
         <members>ProcessGenerate</members>
         <members>PublishConfigurationManageEventTypes</members>
@@ -261,6 +263,7 @@
         <members>JumpConfiguration__c.ShowStep</members>
         <members>LogConfiguration__c.ListLogGroups</members>
         <members>PersistentData__c.Reprocess</members>
+        <members>PersistentData__c.ShowData</members>
         <members>Process__c.Customize</members>
         <members>Process__c.Generate</members>
         <members>PublishConfiguration__c.ManageEventTypes</members>

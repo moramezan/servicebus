@@ -151,4 +151,15 @@
         <page>PersistentDataReprocess</page>
         <protected>false</protected>
     </webLinks>
+    <webLinks>
+        <fullName>ShowData</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Show Data</masterLabel>
+        <openType>sidebar</openType>
+        <page>PersistentDataShowData</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>

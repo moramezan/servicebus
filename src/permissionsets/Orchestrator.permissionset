@@ -169,6 +169,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>PersistentDataShowDataExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>PersistentDatas</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -752,6 +756,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>PersistentDataReprocess</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>PersistentDataShowData</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
