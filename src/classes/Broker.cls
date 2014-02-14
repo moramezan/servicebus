@@ -77,7 +77,7 @@
  */
 abstract global class Broker {
     
-    public class BrokerException extends Exception {}
+    global class BrokerException extends Exception {}
     
     /**
      * Determines which persistent datas are eligible to be moved into the Processing status (by finding Persistent

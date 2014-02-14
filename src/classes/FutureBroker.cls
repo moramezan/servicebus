@@ -24,7 +24,8 @@ virtual public class FutureBroker extends Broker {
         String command = 'new PageReference(\'' + futureBrokerUrl + '\').getContent();';
         
         Api.Client client = new Api.Client(sessionId);
-        client.executeAnonymous(command);
+        Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
+        System.assert(result.success, result.compileProblem == null ? result.compileProblem : result.exceptionMessage);
     }
     
     /**
@@ -44,7 +45,8 @@ virtual public class FutureBroker extends Broker {
             Api.Client client = new Api.Client();
             client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
             String command = 'Broker.executeResolvePersist(\'' + persistentData.Id + '\');'; //EXECUTE
-            client.executeAnonymous(command);
+            Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
+            System.assert(result.success, result.compileProblem == null ? result.compileProblem : result.exceptionMessage);
         }
         
         //finish (invokes broker in a @future)
@@ -60,7 +62,8 @@ virtual public class FutureBroker extends Broker {
         Api.Client client = new Api.Client();
         client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
         String command = 'Broker.Mark(Json.deserialize(\'' + Json.serialize(persistentDataIds) + '\', Set<Id>.class));';
-        client.executeAnonymous(command);
+        Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
+        System.assert(result.success, result.compileProblem == null ? result.compileProblem : result.exceptionMessage);
     }
     
     override public Boolean isAlreadyRunning() {
