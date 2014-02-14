@@ -69,6 +69,7 @@
         <members>ScrapeTest</members>
         <members>Subscribe</members>
         <members>SubscribeTest</members>
+        <members>SynchronousBroker</members>
         <members>Terminate</members>
         <members>TerminateTest</members>
         <members>Utility</members>

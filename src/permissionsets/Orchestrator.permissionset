@@ -273,6 +273,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>SynchronousBroker</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Terminate</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -760,7 +764,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>PersistentDataShowData</apexPage>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessCustomization</apexPage>
