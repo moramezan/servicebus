@@ -1,113 +1,69 @@
 /**
- * This implementation provides snappy processing where each handler spins up new threads.
- * (Unbounded... more execution contexts spawned on demand instantaneously)
- * 
- * As opposed to the use of Batch and a QueryLocator which iterates over a limited number.
- * (Bounded... has to keep running until it finishes a set, then checks for more work)
+ * The FutureBroker also provides a worker process that pulls a limited number of Persistent Data off the queue. But
+ * since he does not have his own 'execute' method contexts like a Batch Job, he relies upon callouts to the Tooling API
+ * to branch out more execution contexts. Added complexity, but restart performance tends to be very good, all the time.
  */
-public class FutureBroker extends Broker {
+virtual public class FutureBroker extends Broker {
     
     /**
-     * The only thing we are using this PageReference for is
-     * to workaround the "Callout loop not allowed" error.
+     * Each Broker implementation must provide the smarts of how to restart it.
+     * The FutureBroker chains another @Future invocation to run itself again.
      */
-    public void doJob() {
-        //start
-        Integer fuckedLimit = 100;
-        
-        Integer fuckedCount = [
-            SELECT COUNT()
-            FROM PersistentData__c
-            WHERE Status__c = 'Processing'
-        ];
-        
-        Integer reprocessCount = [
-            SELECT COUNT()
-            FROM PersistentData__c
-            WHERE Status__c = 'Reprocess'
-        ];
-        
-        Integer queryLimit = Math.max(0, fuckedLimit - fuckedCount) + reprocessCount;
-        
-        if (queryLimit == 0) {
-            //nothing to do here
-            return;
-        }
-        
-        Set<Id> persistentDataIds = new Map<Id,PersistentData__c>([
-            SELECT Id
-            FROM PersistentData__c
-            WHERE Status__c IN ('Reprocess', 'Buffer')
-            ORDER BY Status__c DESC
-            LIMIT 5
-        ]).keySet();
-        
-        //MARK IN ONE EXECUTION CONTEXT
-        if (!persistentDataIds.isEmpty()) {
-            String command = '';
-            command += 'List<Id> persistentDataIds = (Set<Id>)Json.deserialize(\'' + Json.serialize(persistentDataIds) + '\', Set<Id>.class);';
-            command += 'new FutureBroker().mark(persistentDataIds);';
-            Api.Client client = new Api.Client();
-            client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
-            client.executeAnonymous(command);
-        }
-        
-        //EXECUTE (AND RESOLVE AND PERSIST) IN SEPARATE CONTEXT
-        for (Id persistentDataId : persistentDataIds) {
-            String command = '';
-            command += 'PersistentData__c persistentData = (PersistentData__c)SalesforceObject.getById(\'' + persistentDataId + '\');'; //hydrate for execution
-            command += 'List<PersistentData__c> persistentDatas = new FutureBroker().execute(persistentData);'; //EXECUTE
-            command += 'new FutureBroker().resolve(persistentDatas);'; //RESOLVE
-            command += 'insert persistentDatas;'; //PERSIST
-            Api.Client client = new Api.Client();
-            client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
-            client.executeAnonymous(command);
-        }
-        
-        //REQUEUE broker in a @future
-        Integer persistentDatasCount = [
-            SELECT COUNT()
-            FROM PersistentData__c
-            WHERE Status__c = 'Buffer'
-            OR Status__c = 'Reprocess'
-        ];
-        
-        if (persistentDatasCount > 0) {
-            FutureBroker.start(UserInfo.getSessionId());
-        }
+    virtual override public void restartImpl() {
+        FutureBroker.restart(UserInfo.getSessionId());
     }
     
     /**
-     * Resolves, persists and marks a single Persistent Data, then destines him for execution.
-     * 
-     * @param chainName Name of the chain he is destined for.
-     * @param dataId    Id of some record that the chain will operate on.
+     * We would just LOVE to do new FutureBroker().start() here. But we cannot invoke a @future from a @future context,
+     * so we use a Tooling API callout to bust out of the @future context. We cannot do callout from a callin either.
      */
-    override public void enqueueImpl(String chainName, Id dataId) {
-        Map<String,Object> notification = new Map<String,Object> {
-            'eda__chainName' => chainName,
-            'eda__sequence' => 0,  
-            'id' => dataId
-        };
-
-        List<PersistentData__c> persistentDatas = new List<PersistentData__c>{new PersistentData__c(
-            Status__c = 'Buffer',
-            Notification__c = Json.serializePretty(notification)
-        )};
+    @future(callout=true) static private void restart(String sessionId) {
+        if (BrokerSettings__c.getInstance().Inhibit__c == true) System.assert(false, 'INHIBIT'); //INHIBIT
         
-        //RESOLVE
-        super.resolve(persistentDatas);
+        String futureBrokerUrl = Page.FutureBroker.getUrl(); //full page name for anonymous context
+        String command = 'new PageReference(\'' + futureBrokerUrl + '\').getContent();';
         
-        //PERSIST
-        insert persistentDatas;
-        
-        this.startImpl();
+        Api.Client client = new Api.Client(sessionId);
+        client.executeAnonymous(command);
     }
     
     /**
-     * Runs @future once
+     * So we use PageReference.getContent with an action method to circumvent 'Callout loop not allowed' error. When
+     * a FutureBroker is 'started', the mechanics look quite similar to BatchBroker in terms of execution contexts.
+     * THIS IS NEVER CALLED. Invoked by consequence of 'viewing' the Visualforce Page 'FutureBroker'.
      */
-    public override void startImpl() {
+    virtual public void start() {
+        //start (MARK)
+        Database.QueryLocator locator = this.locateMarkedWork(5); //note that markImpl is called inside this method
+        Database.QueryLocatorIterator iterator = locator.iterator();
+        
+        //execute (EXECUTE, RESOLVE, PERSIST)
+        while (iterator.hasNext()) {
+            //each in separate execution context
+            PersistentData__c persistentData = (PersistentData__c)iterator.next();
+            Api.Client client = new Api.Client();
+            client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
+            String command = 'Broker.executeResolvePersist(\'' + persistentData.Id + '\');'; //EXECUTE
+            client.executeAnonymous(command);
+        }
+        
+        //finish (invokes broker in a @future)
+        this.restartIfWorkPending();
+    }
+    
+    /**
+     * Normally the markImpl just performs DML that sets the 'Processing' status. But in this FutureBroker, we have
+     * callouts that follow locateMarkedWork() in the same execution context which would cause uncommitted DML error. So
+     * to avoid this, here we provide a 'special' mark implementation to do the DML in a separate Tooling API context.
+     */
+    virtual override public void markImpl(Set<Id> persistentDataIds) {
+        Api.Client client = new Api.Client();
+        client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
+        String command = 'Broker.Mark(Json.deserialize(\'' + Json.serialize(persistentDataIds) + '\', Set<Id>.class));';
+        client.executeAnonymous(command);
+    }
+    
+    override public Boolean isAlreadyRunning() {
         System.Type type = FutureBroker.class;
         String namespacePrefix;
         String name;
@@ -131,20 +87,7 @@ public class FutureBroker extends Broker {
             AND Status IN ('Queued', 'Processing', 'Preparing')
         ];
         
-        if (!existingFutures.isEmpty()) {
-            //future already exists
-            return;
-        }
-        
-        FutureBroker.start(UserInfo.getSessionId());
-    }
-    
-    @future(callout=true) static private void start(String sessionId) {
-        String futureBrokerUrl = Page.FutureBroker.getUrl(); //full page name for anonymous context
-        String command = 'new PageReference(\'' + futureBrokerUrl + '\').getContent();';
-        
-        Api.Client client = new Api.Client(sessionId);
-        client.executeAnonymous(command);
+        return !existingFutures.isEmpty();
     }
     
 }

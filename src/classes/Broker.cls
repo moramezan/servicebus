@@ -6,36 +6,6 @@
  * TestChain #2 [Wiretap]
  * TestChain #3 [Terminate]
  *
- * As used by a recursing broker:
- *
- * +-----------+ (CONTEXT 1 FROM USER)
- * |  ENQUEUE  |
- * |           |
- * |  RESOLVE  |
- * |  PERSIST  |
- * |  MARK     |
- * +-----------+
- *
- * +-----------+ (CONTEXT 2)
- * |  EXECUTE  | invokes [Wiretap]
- * |  RESOLVE  |
- * |  PERSIST  |
- * |  MARK     |
- * +-----------+
- *
- * +-----------+ (CONTEXT 3)
- * |  EXECUTE  | invokes [Wiretap]
- * |  RESOLVE  |
- * |  PERSIST  |
- * |  MARK     |
- * +-----------+
- *
- * +-----------+ (CONTEXT 4)
- * |  EXECUTE  | invokes [Terminate]
- * +-----------+
- *
- *
- *
  * As used by a queueing broker:
  *
  * +-----------+ (CONTEXT 1 FROM USER)
@@ -109,34 +79,84 @@ abstract global class Broker {
     
     public class BrokerException extends Exception {}
     
-    
-     /**
-     * Starts the Broker
+    /**
+     * Determines which persistent datas are eligible to be moved into the Processing status (by finding Persistent
+     * Datas with 'Reprocess' and 'Buffer' status). Note: too many fucked persistent datas would clog up the system,
+     * so we have a global fuckedLimit.
      *
+     * Persistent Datas that should be processed have their status marked as Processing in the database before being
+     * submitted the query locator. That way, if any given execution fails, those persistent data will remain in the
+     * easily identifiable 'Processing' state.
+     *
+     * @param workCount Maximum number of Persistent Datas to mark and locate (subject to fuckups)
+     * @return          Query Locator identifying the now-marked-as-Processing Persistent Datas.
      */
-    static global void start() {
-        BrokerSettings__c settings = BrokerSettings__c.getInstance();
-        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBroker.class.getName(); //default
+    public Database.QueryLocator locateMarkedWork(Integer workCount) {
+        Integer fuckedLimit = 100;
         
-        Broker broker = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
-        broker.startImpl();
+        Integer fuckedCount = [
+            SELECT COUNT()
+            FROM PersistentData__c
+            WHERE Status__c = 'Processing'
+        ];
+        
+        Integer reprocessCount = [
+            SELECT COUNT()
+            FROM PersistentData__c
+            WHERE Status__c = 'Reprocess'
+        ];
+        
+        //derives maximum number of Persistent Datas available for processing
+        Integer queryLimit = Math.max(0, fuckedLimit - fuckedCount) + reprocessCount;
+        
+        Set<Id> persistentDataIds = new Map<Id,PersistentData__c>([
+            SELECT Id
+            FROM PersistentData__c
+            WHERE Status__c IN ('Reprocess', 'Buffer')
+            ORDER BY Status__c DESC
+            LIMIT :Math.min(workCount, queryLimit)
+        ]).keySet();
+        
+        //MARK
+        this.markImpl(persistentDataIds);
+        
+        //query locator hands back only the persistent datas that were marked as processing
+        String commaDelimitedIds = '(\'' + String.join(new List<Id>(persistentDataIds), '\',\'') + '\')';
+        String queryString = 'SELECT Id, ChainStep__c, Notification__c FROM PersistentData__c WHERE Id IN ' + commaDelimitedIds;
+        return Database.getQueryLocator(queryString);
     }
     
     /**
-     * Prepares data for processing at the start of a nominated chain 
-     * by wrapping the pointer to the data (an id) in a Persistent Data object
-     * This Persisted Data instance is saved to the database and the Broker is
-     * immeadiately invoked threreafter   
+     * Prepares data for processing at the start of a nominated chain by wrapping the pointer to the data (an id) in a
+     * Persistent Data object. This Persistent Data instance is saved to the database and the Broker is immeadiately
+     * invoked if it is not already running.
      *
      * @param chainName Name of the chain the data is destined for.
      * @param dataId    Id of some record that the chain will operate on.
-     */ 
+     */
     static global void enqueue(String chainName, Id dataId) {
+        Map<String,Object> notification = new Map<String,Object> {
+            'eda__chainName' => chainName,
+            'eda__sequence' => 0,  
+            'id' => dataId
+        };
+        
+        List<PersistentData__c> persistentDatas = new List<PersistentData__c>{new PersistentData__c(
+            Status__c = 'Buffer',
+            Notification__c = Json.serializePretty(notification)
+        )};
+        
+        //RESOLVE
+        Broker.resolve(persistentDatas);
+        
+        //PERSIST
+        insert persistentDatas;
+        
         BrokerSettings__c settings = BrokerSettings__c.getInstance();
         if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBroker.class.getName(); //default
         
-        Broker broker = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
-        broker.enqueueImpl(chainName, dataId);
+        Broker impl = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
+        if (!impl.isAlreadyRunning()) impl.restartImpl();
     }
     
     
@@ -164,20 +184,24 @@ abstract global class Broker {
         enqueue(chainName, document.Id);
     } 
     
- 
-    
     /**
      * Sets many Persistent Datas statuses to 'Processing' and writes them away.
      *
      * @param persistentDataIds Set of Persistent Data Ids to update
      */
-    public void mark(Set<Id> persistentDataIds) {
-        List<PersistentData__c> persistentDatas = [SELECT Id FROM PersistentData__c WHERE Id IN :persistentDataIds];
-        for (PersistentData__c persistentData : persistentDatas) {
-            persistentData.Status__c = 'Processing';
+    static public void mark(Set<Id> persistentDataIds) {
+        List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
+        for (Id persistentDataId : persistentDataIds) {
+            persistentDatas.add(new PersistentData__c(
+                Id = persistentDataId,
+                Status__c = 'Processing'
+            ));
         }
-        
         update persistentDatas;
+    }
+    
+    virtual public void markImpl(Set<Id> persistentDataIds) {
+        Broker.mark(persistentDataIds);
     }
     
     /**
@@ -186,7 +210,8 @@ abstract global class Broker {
      * @param  persistentData One Persistent Data whose status should be Processing
      * @return                Many Persistent Datas whose status should be Buffer
      */
-    public List<PersistentData__c> execute(PersistentData__c persistentData) {
+    static public void executeResolvePersist(Id persistentDataId) {
+        PersistentData__c persistentData = (PersistentData__c)SalesforceObject.getById(persistentDataId);
         List<Map<String,Object>> notifications;
         Map<String,Object> notification;
         Process.Plugin plugin;
@@ -217,7 +242,7 @@ abstract global class Broker {
                 e.setMessage('Could not cast Process.Plugin (interface unimplemented on process class)');
             }
             surfaceException(e, persistentData.Id);
-            return new List<PersistentData__c>(); //get out of dodge quick
+            return; //get out of dodge quick
         }
         
         //THEIR FUCKUPS
@@ -227,25 +252,29 @@ abstract global class Broker {
             notifications = Utility.convert(results);
         } catch (Exception e) {
             surfaceException(e, persistentData.Id);
-            return new List<PersistentData__c>(); //get out of dodge quick
+            return; //get out of dodge quick
         }
         
         //delete successfully processed notification
         delete persistentData;
-        purgePersistentDatas();
+        Database.emptyRecycleBin(persistentData);
         
-        //Mark helper logic :
-        //if markCount not null, increment and  THEN put that value on notification
-        //if markCount equates to two, we assume the processing process was a splitter 
-        //  and therefore write the count of the notifications returned from this splitter 
-        //  as a property of the notification
-        markHelper( notification, notifications);
- 
-        //wrap each notification in a buffered persistent data  instance and 
-        //add each persistent data a persistentDatas list 
-        List<PersistentData__c> persistentDatas = wrapNotifications(notifications);
- 
-        return persistentDatas;
+        markHelper(notification, notifications);
+        
+        //wrap up notifications into Persistent Datas
+        List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
+        for (Map<String,Object> n : notifications) {
+            persistentDatas.add(new PersistentData__c(
+                Notification__c = Json.serializePretty(n),
+                Status__c = 'Buffer'
+            ));
+        }
+        
+        //RESOLVE
+        Broker.resolve(persistentDatas);
+        
+        //PERSIST
+        insert persistentDatas;
     }
 
     /**
@@ -258,8 +287,7 @@ abstract global class Broker {
      * 4B. resolve the the process (ie the process referenced by 4A's chainStep)
      * 5. only then can we correctly write to database with 4A (chainStepId) and 3 (notification with the incremented sequence)
      */
-    @TestVisible    
-    public void resolve(List<PersistentData__c> persistentDatas) {
+    static public void resolve(List<PersistentData__c> persistentDatas) {
         //assemble a map of next-step keys to persistent datas
         Map<String,PersistentData__c> key2data = new Map<String,PersistentData__c>();
         for (PersistentData__c persistentData : persistentDatas) {
@@ -319,31 +347,12 @@ abstract global class Broker {
         );
     }
     
-    
-    /*
-     * wrap each notification in a buffered persistent data  instance and 
-     * adds each persistent data a persistentDatas list 
-     */
-    @TestVisible
-    private static List<PersistentData__c>  wrapNotifications(List<Map<String,Object>>  notifications ) {
-        List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
-        for (Map<String,Object> n : notifications) {
-            persistentDatas.add(new PersistentData__c(
-                Notification__c = Json.serializePretty(n),
-                Status__c = 'Buffer'
-            ));
-        }
-        
-        return persistentDatas;
-     }
-            
-    
     /**
-     * Mark helper logic :
-     * if markCount not null, increment and  THEN put that value on notification
-     * if markCount equates to two, we assume the  process.plugin was a splitter 
-     *   and therefore write the count of the notifications returned from this splitter 
-     *   as a property of the notification
+     * The Mark helper logic is for the Gate process; it determines when a split occurs, and writes away the number of
+     * splitted notifications so that a future Gate process can know exactly how many notifications form a Gate Group.
+     *
+     * If markCount isn't null, then the preceding process was a Mark; increment THEN put that value on notification.
+     * If markCount equates to two, then the preceding process was a splitter; write the count of split notifications.
      */
     @TestVisible
     private static void  markHelper(Map<String,Object> notification,  List<Map<String,Object>>  notifications) {
@@ -355,31 +364,21 @@ abstract global class Broker {
             if (count == 0) Database.delete(new List<Id>{(Id)notification.get('eda__gateGroupId')}); //tidy up split of 0
         } 
      }
-
-    /**
-     *  empties recycle bin to remove from recents
-     *  note : it appears that Database.emptyRecycleBin() does not work under 
-     *         a test eneviroment, hence no unit test for this method
-     */
-    @TestVisible
-    private static  void purgePersistentDatas() {      
-        List<PersistentData__c> pds = [SELECT Id FROM PersistentData__c WHERE IsDeleted = true ALL ROWS];
-        if (pds.size() > 0) Database.emptyRecycleBin(pds);
+    
+    public void restartIfWorkPending() {
+        Integer worksPending = [
+            SELECT COUNT()
+            FROM PersistentData__c
+            WHERE Status__c = 'Buffer'
+            OR Status__c = 'Reprocess'
+        ];
+        
+        if (worksPending > 0) {
+            this.restartImpl();
+        }
     }
     
-    
-    /**
-     * Persists a single piece of data in a named chain and
-     * immeadiately starts the (configured) Broker
-     *
-     * @param chainName Name of target Chain
-     * @param dataId    Id of SObject to operate upon
-     */
-     abstract global void enqueueImpl(String chainName, Id dataId);
- 
-     /**
-     * Starts the (configured) Broker
-     *
-     */    
-     abstract global void  startImpl() ;
+    abstract global Boolean isAlreadyRunning();
+     
+    abstract global void restartImpl();
 }

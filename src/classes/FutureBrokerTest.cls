@@ -1,72 +1,113 @@
-@isTest
-private class FutureBrokerTest {
-
-    static testMethod void callingEnqueueSuccessfullyCallEnqueueImp() {
-        //arrange 
+@isTest private class FutureBrokerTest {
+    
+    static public Boolean flagRestartImpl = false;
+    class ToolingApiMock implements WebServiceMock {
+        public void doInvoke(Object stub, Object request, Map<String, Object> response, String endpoint, String soapAction, String requestName, String responseNS, String responseName, String responseType) {
+            flagRestartImpl = true;
+            Api.executeAnonymousResponse_element responseElement = new Api.executeAnonymousResponse_element();
+            responseElement.result = new Api.ExecuteAnonymousResult();
+            response.put('response_x', responseElement);
+        }
+    }
+    
+    public class MockFutureBroker extends FutureBroker {
+        override public void restartImpl() {
+            this.start();
+        }
+        
+        override public void start() {
+            //start (MARK)
+            Database.QueryLocator locator = this.locateMarkedWork(5); //note that markImpl is called inside this method
+            Database.QueryLocatorIterator iterator = locator.iterator();
+            
+            //execute (EXECUTE, RESOLVE, PERSIST)
+            while (iterator.hasNext()) {
+                PersistentData__c persistentData = (PersistentData__c)iterator.next();
+                Broker.executeResolvePersist(persistentData.Id);
+            }
+            
+            //finish (invokes broker in a @future)
+            this.restartIfWorkPending();
+        }
+        
+        override public void markImpl(Set<Id> persistentDataIds) {
+            Broker.Mark(persistentDataIds);
+        }
+    }
+    
+    static testMethod void callingEnqueueSuccessfullyCallRestartImp() {
+        //arrange processes
         Process__c markProcess = Processes.generateOne(Mark.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
+        //arrange chain
         String chainNameA = 'chainA';
         Chain__c chainA = new Chain__c(Name = chainNameA);
         insert chainA;
         
-        Integer sequenceA1 = 1;
-        Integer sequenceA2 = 2;
-        ChainStep__c stepA1 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA1,Process__c = markProcess.Id);
-        ChainStep__c stepA2 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA2,Process__c = terminateProcess.Id);
-        insert stepA1;
-        insert stepA2;
+        //arrange steps
+        ChainStep__c stepA1 = ChainSteps.generateOne(chainA.Id, markProcess.Id);
+        ChainStep__c stepA2 = ChainSteps.generateOne(chainA.Id, terminateProcess.Id);
+        Decimal sequenceA1 = stepA1.Sequence__c;
+        Decimal sequenceA2 = stepA2.Sequence__c;
         
+        //arrange concrete implementation
+        insert new BrokerSettings__c(BrokerClassName__c = FutureBroker.class.getName());
         
-        insert new BrokerSettings__c(BrokerClassName__c = FutureBroker.class.getName() );
+        //assert
+        Boolean expectedBeforeFlag = false;
+        Boolean actualBeforeFlag = flagRestartImpl;
+        System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
-        //act 
+        //act
         Test.startTest();
-        Broker.enqueue(chainNameA, '000000000000000AAA'); 
+        Test.setMock(WebServiceMock.class, new ToolingApiMock());
+        Broker.enqueue(chainNameA, '000000000000000AAA');
         Test.stopTest();
         
-        // assemble
+        //assert
+        Boolean expectedAfterFlag = true;
+        Boolean actualAfterFlag = flagRestartImpl;
+        System.assertEquals(expectedAfterFlag, actualAfterFlag);
+        
+        //assemble
         List<PersistentData__c> persistentDatas = [
-            SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, isDeleted 
-            FROM PersistentData__c 
-            WHERE isDeleted = false
+            SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, IsDeleted
+            FROM PersistentData__c
+            WHERE IsDeleted = false
             ALL ROWS
         ];
         
+        //assert (note: the execution won't happen in test mode because it takes place in a web service callout)
+        Integer expectedCount = 1; 
         Integer actualCount = persistentDatas.size();
-        
-        
-        // assert
-        // Note : Under FutureBroker we are not limited to one Broker execute
-        // but all broker executes take place under one execution context under test mode
-        Integer expectedCount = 0; 
         System.assertEquals(expectedCount , actualCount); 
-    } 
+    }
     
-    
-    static testMethod void callingBrokerStartSuccessfullyCallsStartImp() {
-        //arrange 
+    static testMethod void callingBrokerRestartSuccessfullyCallsRestartImpl() {
+        //arrange processes
         Process__c markProcess = Processes.generateOne(Mark.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
+        //arrange chain
         String chainNameA = 'chainA';
         Chain__c chainA = new Chain__c(Name = chainNameA);
         insert chainA;
         
-        Integer sequenceA1 = 1;
-        Integer sequenceA2 = 2;
-        ChainStep__c stepA1 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA1,Process__c = markProcess.Id);
-        ChainStep__c stepA2 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA2,Process__c = terminateProcess.Id);
-        insert stepA1;
-        insert stepA2;
-
-        insert new BrokerSettings__c(BrokerClassName__c = FutureBroker.class.getName() );
+        //arrange steps
+        ChainStep__c stepA1 = ChainSteps.generateOne(chainA.Id, markProcess.Id);
+        ChainStep__c stepA2 = ChainSteps.generateOne(chainA.Id, terminateProcess.Id);
+        Decimal sequenceA1 = stepA1.Sequence__c;
+        Decimal sequenceA2 = stepA2.Sequence__c;
+        
+        //arrange concrete broker implementation
+        insert new BrokerSettings__c(BrokerClassName__c = FutureBroker.class.getName());
         
         // scenario:
         // resolved state , assume manual intervention to set status to 'Reprocess'
         Map<String,Object> notification = new Map<String,Object> {
             'eda__chainName' => chainNameA,
-            'eda__sequence' => 1, // not zero !!!
+            'eda__sequence' => 1, //not zero!!!
             'id' => '000000000000000AAA'
         };
         PersistentData__c persistentData = new PersistentData__c(
@@ -76,11 +117,23 @@ private class FutureBrokerTest {
         );
         insert persistentData;
         
+        //assert
+        Boolean expectedBeforeFlag = false;
+        Boolean actualBeforeFlag = flagRestartImpl;
+        System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
-        //act 
-        Broker.start(); 
+        //act
+        Test.startTest();
+        Test.setMock(WebServiceMock.class, new ToolingApiMock());
+        new FutureBroker().restartIfWorkPending();
+        Test.stopTest();
         
-        // assemble
+        //assert
+        Boolean expectedAfterFlag = true;
+        Boolean actualAfterFlag = flagRestartImpl;
+        System.assertEquals(expectedAfterFlag, actualAfterFlag);
+        
+        //assemble
         List<PersistentData__c> persistentDatas = [
             SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, isDeleted 
             FROM PersistentData__c 
@@ -88,33 +141,34 @@ private class FutureBrokerTest {
             ALL ROWS
         ];
         
+        //assert (note: the execution won't happen in test mode because it takes place in a web service callout)
+        Integer expectedCount = 1;
         Integer actualCount = persistentDatas.size();
-        
-        // assert
-        Integer expectedCount = 0; 
-        System.assertEquals(expectedCount , actualCount); 
+        System.assertEquals(expectedCount, actualCount);
     } 
 
-
     static testMethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToPersistentData() {
-        //arrange 
+        //arrange process
         Process__c failureProcess = Processes.generateOne(FailurePlugin.class);
         
+        //arrange chain
         String chainNameA = 'chainA';
         Chain__c chainA = new Chain__c(Name = chainNameA);
         insert chainA;
         
-        Integer sequenceA1 = 1;
-        ChainStep__c stepA1 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA1,Process__c = failureProcess.Id);
-        insert stepA1;
+        //arrange step
+        ChainStep__c stepA1 = ChainSteps.generateOne(chainA.Id, failureProcess.Id);
+        Decimal sequenceA1 = stepA1.Sequence__c;
         
-        insert new BrokerSettings__c(BrokerClassName__c = FutureBroker.class.getName() );
+        //arrange specific broker implementation
+        insert new BrokerSettings__c(BrokerClassName__c = MockFutureBroker.class.getName() );
         
-        //act 
-        Broker.enqueue(chainNameA, '000000000000000AAA'); 
+        //act
+        Test.startTest();
+        Broker.enqueue(chainNameA, '000000000000000AAA');
+        Test.stopTest();
         
-        
-        // assemble
+        //assemble
         List<PersistentData__c> persistentDatas = [
             SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, Message__c, isDeleted 
             FROM PersistentData__c 
@@ -123,7 +177,7 @@ private class FutureBrokerTest {
         ];
         Integer actualCount = persistentDatas.size();
         
-        // assert
+        //assert
         Integer expectedCount = 1; 
         System.assertEquals(expectedCount , actualCount); 
         
@@ -132,22 +186,5 @@ private class FutureBrokerTest {
         
         String expectedMessage = FailurePlugin.FailureMessage;
         System.assertEquals(expectedMessage, persistentDatas[0].Message__c );
-    } 
-
-
-    /*static testMethod void callingBuildHandlerCommandReturnsExpectedCommand() {
-        //arrange 
-        PersistentData__c persistentData = new PersistentData__c( );
-        insert persistentData;
-        Id persistentDataId = persistentData.Id;
-        
-        //act 
-        String actualCommand = FutureBroker.buildHandlerCommand(persistentDataId);
-        
-        // assemble
-        String expectedCommand = persistentDataId;
-        
-        // assert
-        System.assert(actualCommand.contains(expectedCommand)); 
-    }*/
+    }
 }

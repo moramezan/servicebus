@@ -15,5 +15,14 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>Inhibit__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Make this TRUE to prevent thermal runaway and nuclear meltdown on the Broker.</description>
+        <externalId>false</externalId>
+        <label>Inhibit</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
     <label>Broker Settings</label>
 </CustomObject>
