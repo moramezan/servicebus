@@ -48,13 +48,13 @@ public class ScrapeTest {
             Endpoint__c = endPoint
         ));
         
-        Map<String,Object> notification = new Map<String,Object>{'eda__configuration' => chainStep.ConfigurationId__c};
+        Map<String,Object> parameters = new Map<String,Object>{'eda__configuration' => chainStep.ConfigurationId__c};
 
         //act
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
         Test.startTest();
         Scrape plugin = new Scrape();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> results = Utility.convert(result);
         Test.stopTest();
         

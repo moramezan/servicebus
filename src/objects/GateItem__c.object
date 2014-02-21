@@ -65,9 +65,9 @@
         <writeRequiresMasterRead>false</writeRequiresMasterRead>
     </fields>
     <fields>
-        <fullName>Notification__c</fullName>
+        <fullName>Parameters__c</fullName>
         <externalId>false</externalId>
-        <label>Notification</label>
+        <label>Parameters</label>
         <length>32768</length>
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>

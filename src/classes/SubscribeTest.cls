@@ -15,21 +15,21 @@
     static testMethod void testSubscribeProcessActsAsNoop() {
         //arrange
         String data = '{"herp":"derp"}';
-        Map<String,Object> notification = (Map<String,Object>)System.Json.deserializeUntyped(data);
+        Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         Subscribe process = new Subscribe();
         
         //act
-        Process.PluginResult result = process.invoke(new Process.PluginRequest(notification));
+        Process.PluginResult result = process.invoke(new Process.PluginRequest(parameters));
         
         //assert
-        List<Map<string, object>> notifications = Utility.convert(result);
+        List<Map<string, object>> parametersList = Utility.convert(result);
         
         integer expectedSize = 1;
-        integer actualSize = notifications.size();
+        integer actualSize = parametersList.size();
         System.assertEquals(expectedSize , actualSize);
         
         string expectedData = data;
-        string actualData = system.json.serialize( notifications [0] );
+        string actualData = system.json.serialize(parametersList[0]);
         System.assertEquals(expectedData, actualData);  
     }
 

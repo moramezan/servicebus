@@ -11,19 +11,19 @@ public class Debouncer implements Process.Plugin {
         Process.PluginDescribeResult result = new Process.PluginDescribeResult();
         result.Tag = 'Event Driven Architecture';
         result.Name = 'Debouncer';
-        result.Description = 'Swallows a notification unless the time elapsed since receiving a prior notification with the same key exceeds a min threshold';
+        result.Description = 'Swallows message unless the time elapsed since receiving a prior notification with the same key exceeds a min threshold';
         return result; 
     }
     
     public Process.PluginResult invoke(Process.PluginRequest pluginRequest) {
-        Map<String,Object> notification = pluginRequest.inputParameters;
-        List<Map<String,Object>> notifications = new List<Map<String,Object>>();
+        Map<String,Object> parameters = pluginRequest.inputParameters;
+        List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
-        String key = (String) notification.get('id'); //Note we sill treat null as a unique key with value [null]
-        Id configurationId = (Id)notification.get('eda__configuration');
+        String key = (String) parameters.get('id'); //Note we sill treat null as a unique key with value [null]
+        Id configurationId = (Id)parameters.get('eda__configuration');
         
         if (configurationId == null) {
-            throw new DebouncerException('Cannot invoke debouncer with null notification[eda__configuration]');
+            throw new DebouncerException('Cannot invoke debouncer with null parameters[eda__configuration]');
         }
         
         // retrieve minimum time between releases
@@ -45,14 +45,14 @@ public class Debouncer implements Process.Plugin {
         DateTime currentStamp = System.now();
         Boolean release = debounce( currentStamp, key, minimumHours, debouncers , configurationId );
         if (release) {
-            notifications.add(notification);
+            parametersList.add(parameters);
         } 
 
         // housekeeping 
         Integer twentyFourHours = 24; 
         deleteOldDebouncers(currentStamp, minimumHours, twentyFourHours) ;
         
-        return Utility.convert(notifications);
+        return Utility.convert(parametersList);
     } 
     
     @testVisible 

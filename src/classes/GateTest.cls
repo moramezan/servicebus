@@ -8,7 +8,7 @@ private  class GateTest {
         System.assertNotEquals(null, jump.describe().Tag);
     }
     
-    static testMethod void callingExecuteReturnsExpectedNotificationCollectionWhenGateItemsCountEqCount() {
+    static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenGateItemsCountEqCount() {
         // Arrange :
         String chainName = 'the-chain';
         Decimal sequence = 1;
@@ -19,7 +19,7 @@ private  class GateTest {
         insert gateGroup;
         Id gateGroupId = gateGroup.Id;
 
-        Map<String,Object> notification = new Map<String,Object> {
+        Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__sequence' => sequence,
             'eda__gateGroupId' => gateGroupId,
@@ -31,11 +31,11 @@ private  class GateTest {
         integer i = 1;
         while(i <= (count - 1)) // Adjust down by one (to allow the nth one inserted by execute() to equate with value in count)
         {
-            Map<String,Object> n = notification.clone();
+            Map<String,Object> n = parameters.clone();
             n.put('data' , 'x'+i);
             GateItem__c gateItem = new GateItem__c(
                 GateGroup__c = gateGroupId, 
-                Notification__c = json.serializePretty(n)
+                Parameters__c = json.serializePretty(n)
             );
             gateItems.add(gateItem);
             i++;
@@ -48,15 +48,15 @@ private  class GateTest {
 
         // Act
         Gate gate = new Gate();
-        Process.PluginResult results = gate.invoke(new Process.PluginRequest(notification));
-        List<Map<String,Object>> actualOutNotifications = Utility.convert(results);
+        Process.PluginResult results = gate.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> actualOutParametersList = Utility.convert(results);
 
         // prepare
-        Decimal actualSize = actualOutNotifications.size();
+        Decimal actualSize = actualOutParametersList.size();
         Id actualGateGroupId = null;
         if (actualSize > 0) {
-            Map<String,Object> actualNotification = actualOutNotifications[0];
-            actualGateGroupId = (Id) notification.get('id' );
+            Map<String,Object> actualParameters = actualOutParametersList[0];
+            actualGateGroupId = (Id) parameters.get('id' );
         }
         integer actualGateItemsSize = [SELECT Id FROM GateItem__c].size();
 
@@ -67,7 +67,7 @@ private  class GateTest {
     }
     
     
-    static testMethod void callingExecuteReturnsExpectedNotificationCollectionWhenGateItemsCountNotEqCount() {
+    static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenGateItemsCountNotEqCount() {
         // Arrange :
         String chainName = 'the-chain';
         Decimal sequence = 1;
@@ -79,7 +79,7 @@ private  class GateTest {
         insert gateGroup;
         Id gateGroupId = gateGroup.Id;
 
-        Map<String,Object> notification = new Map<String,Object> {
+        Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__sequence' => sequence,
             'eda__gateGroupId' => gateGroupId,
@@ -90,11 +90,11 @@ private  class GateTest {
         List<GateItem__c> gateItems = new List<GateItem__c> ();
         integer i = 1;
         while(i <= (count - 2)) {// Adjust down by TWO ( one inserted by execute() will NOT  equate with value in count)
-            Map<String,Object> n = notification.clone();
+            Map<String,Object> n = parameters.clone();
             n.put('data' , 'x'+i);
             GateItem__c gateItem = new GateItem__c(
                 GateGroup__c = gateGroupId , 
-                Notification__c = json.serializePretty(n)
+                Parameters__c = json.serializePretty(n)
             );
             gateItems.add(gateItem);
             i++;
@@ -106,11 +106,11 @@ private  class GateTest {
 
         // Act
         Gate gate = new Gate();
-        Process.PluginResult results = gate.invoke(new Process.PluginRequest(notification));
-        List<Map<String,Object>> actualOutNotifications = Utility.convert(results);
+        Process.PluginResult results = gate.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> actualOutParametersList = Utility.convert(results);
 
         // prepare
-        Decimal actualSize = actualOutNotifications.size();
+        Decimal actualSize = actualOutParametersList.size();
         integer actualGateItemsSize = [SELECT Id FROM GateItem__c].size();
 
         // Assert

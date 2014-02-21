@@ -14,29 +14,29 @@ public with sharing class Schedule implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> notification = request.inputParameters;
-        List<Map<String,Object>> notifications = new List<Map<String,Object>>();
+        Map<String,Object> parameters = request.inputParameters;
+        List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
-        Boolean isPassThru = String.isBlank((String)notification.get('eda__heartbeat'));
+        Boolean isPassThru = String.isBlank((String)parameters.get('eda__heartbeat'));
         
         if (isPassThru) {
-            notifications.add(notification);    
+            parametersList.add(parameters);    
         } else {  
             //DateTime is not a primitive Object
-            DateTime heartbeat = (DateTime)Json.deserialize('"' + (String)notification.get('eda__heartbeat') + '"', DateTime.class);
+            DateTime heartbeat = (DateTime)Json.deserialize('"' + (String)parameters.get('eda__heartbeat') + '"', DateTime.class);
             
             ScheduleConfiguration__c config = [
                 SELECT Id, Frequency__c, FriendlyDates__c, FriendlyTimes__c
                 FROM ScheduleConfiguration__c
-                WHERE Id = :(Id)notification.get('eda__configuration')
+                WHERE Id = :(Id)parameters.get('eda__configuration')
             ];
             
             if (isWithinWindow(heartbeat, config)) {
                 //this is one of the configured times, so carry on to next chain step
-                notifications.add(notification);
+                parametersList.add(parameters);
             }
         } 
-        return Utility.convert(notifications);
+        return Utility.convert(parametersList);
     }
     
     @testVisible static private Boolean isWithinWindow(DateTime heartbeat, ScheduleConfiguration__c config) {

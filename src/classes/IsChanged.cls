@@ -47,22 +47,22 @@ public class IsChanged  implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest pluginRequest) {
-        Map<String,Object> notification = pluginRequest.inputParameters;
-        List<Map<String,Object>> notifications = new List<Map<String,Object>>();
+        Map<String,Object> parameters = pluginRequest.inputParameters;
+        List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
         // retrieve state
         IsChangedConfiguration__c configuration = [
             SELECT Id, NewHash__c, OldHash__c, newBlobId__c, oldBlobId__c, NewValue__c, OldValue__c, FieldName__c
             FROM IsChangedConfiguration__c
-            WHERE Id = :(Id)notification.get('eda__configuration')
+            WHERE Id = :(Id)parameters.get('eda__configuration')
         ];
   
         // Is this the first run ?
         Boolean firstRun = (configuration.OldHash__c == null);
         
         // retrieve current value of object referenced by 'id'
-        // on notification
-        Id objectId = (Id)notification.get('id');    
+        // on parameters
+        Id objectId = (Id)parameters.get('id');    
         SObjectType objectType = objectId.getSObjectType();
         String objectName = objectType.getDescribe().getName();
         String fieldName = configuration.FieldName__c; 
@@ -108,19 +108,19 @@ public class IsChanged  implements Process.Plugin {
         configuration.NewHash__c = newHash;     
         update configuration;
         
-        // release notification if state has changed
+        // release parameters if state has changed
         if  (isChanged) {
-            notification.put('oldValue' , configuration.OldValue__c );
-            notification.put('newValue' , configuration.NewValue__c );    
-            notification.put('oldBlobId' , configuration.oldBlobId__c );
-            notification.put('newBlobId' , configuration.newBlobId__c);            
-            notifications.add(notification);
+            parameters.put('oldValue' , configuration.OldValue__c );
+            parameters.put('newValue' , configuration.NewValue__c );    
+            parameters.put('oldBlobId' , configuration.oldBlobId__c );
+            parameters.put('newBlobId' , configuration.newBlobId__c);            
+            parametersList.add(parameters);
         }
         
         // housekeeping
         deleteOldAttachments( persistDuration );
         
-        return Utility.convert(notifications);
+        return Utility.convert(parametersList);
     }
  
  

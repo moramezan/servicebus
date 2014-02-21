@@ -15,7 +15,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Notification__c</field>
+                <field>Parameters__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>

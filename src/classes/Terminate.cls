@@ -13,21 +13,21 @@ public with sharing class Terminate implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> notification = request.inputParameters;
+        Map<String,Object> parameters = request.inputParameters;
         
         //if we got here from a boomerang, back to where you came from!
-        List<Map<String,Object>> notifications = new List<Map<String,Object>>();
-        Object data = notification.get('eda__boomerangChainStepIds');
+        List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
+        Object data = parameters.get('eda__boomerangChainStepIds');
         
         if (data == null) {
             //no boomerangs
-            return Utility.convert(notifications);
+            return Utility.convert(parametersList);
         }
 
         List<Id> chainStepIds = (List<Id>)System.Json.deserialize(System.Json.serialize(data), List<Id>.class);
         if (chainStepIds.isEmpty()) {
             //boomerangs finished
-            return Utility.convert(notifications);
+            return Utility.convert(parametersList);
         }
         
         //pop one boomerang off stack
@@ -38,12 +38,12 @@ public with sharing class Terminate implements Process.Plugin {
             WHERE Id = :lastId
         ];
         
-        notification.put('eda__boomerangChainStepIds', chainStepIds);
-        notification.put('eda__chainName', chainStep.Chain__r.Name );
-        notification.put('eda__sequence', chainStep.Sequence__c );
-        notifications.add(notification);
+        parameters.put('eda__boomerangChainStepIds', chainStepIds);
+        parameters.put('eda__chainName', chainStep.Chain__r.Name );
+        parameters.put('eda__sequence', chainStep.Sequence__c );
+        parametersList.add(parameters);
 
-        return Utility.convert(notifications);
+        return Utility.convert(parametersList);
     }
 
     

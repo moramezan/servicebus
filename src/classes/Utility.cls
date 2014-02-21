@@ -9,19 +9,19 @@ public with sharing class Utility {
         return descriptions;
     }
     
-    static public Process.PluginResult convert(List<Map<String,Object>> notifications) {
+    static public Process.PluginResult convert(List<Map<String,Object>> parametersList) {
         Map<String,Object> results = new Map<String,Object>();
         
         Integer count = 0;
-        for (Map<String,Object> notification : notifications) {
-            results.put(String.valueOf(count++), notification);
+        for (Map<String,Object> parameters : parametersList) {
+            results.put(String.valueOf(count++), parameters);
         }
         
         return new Process.PluginResult(results);
     }
     
     static public List<Map<String,Object>> convert(Process.PluginResult results) {
-        List<Map<String,Object>> notifications = new List<Map<String,Object>>();
+        List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
         Integer count = 0;
         Integer size = results.outputParameters.size();
@@ -29,11 +29,11 @@ public with sharing class Utility {
         for (Integer i = 0; i < size; i++) {
             Object result = results.outputParameters.get(String.valueOf(i));
             String data = System.Json.serialize(result);
-            Map<String,Object> notification = (Map<String,Object>)System.Json.deserializeUntyped(data);
-            notifications.add(notification);
+            Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
+            parametersList.add(parameters);
         }
         
-        return notifications;
+        return parametersList;
     }
     
 }

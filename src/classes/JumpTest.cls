@@ -29,7 +29,7 @@
         insert new ChainStep__c(Chain__c = origin.Id, Sequence__c = 2, Process__c = terminate.Id);
         
         
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
             'eda__configurable' => configuration.Id,
             'eda__chainName' => 'origin',
             'eda__sequence' => 1,
@@ -38,23 +38,23 @@
         
         //act
         Jump process = new Jump();
-        List<Map<String,Object>> notifications = Utility.convert(process.invoke(new Process.PluginRequest(notification)));
+        List<Map<String,Object>> parametersList = Utility.convert(process.invoke(new Process.PluginRequest(parameters)));
         
         //assert
         Integer expectedSize = 1;
-        Integer actualSize = notifications.size();
+        Integer actualSize = parametersList.size();
         System.assertEquals(expectedSize, actualSize);
         
         String expectedChainName = 'target';
-        String actualChainName = (String)notifications[0].get('eda__chainName');
+        String actualChainName = (String)parametersList[0].get('eda__chainName');
         System.assertEquals(expectedChainName, actualChainName);
         
         Decimal expectedSequence = 0;
-        Decimal actualSequence = (Decimal)notifications[0].get('eda__sequence');
+        Decimal actualSequence = (Decimal)parametersList[0].get('eda__sequence');
         System.assertEquals(expectedSequence, actualSequence);
         
         String expectedPassThruData = 'herpderp';
-        String actualPassThruData = (String)notifications[0].get('data');
+        String actualPassThruData = (String)parametersList[0].get('data');
         System.assertEquals(expectedPassThruData, actualPassThruData);
     }
     

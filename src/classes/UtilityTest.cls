@@ -22,13 +22,13 @@
         System.assertEquals('derp', descriptions.get('two'));
     }
     
-    static testMethod void testNotifications2result() {
+    static testMethod void testParametersList2result() {
         //arrange
         String data = '[{"aaa":"1", "bbb":"foo"}, {"ccc":"2", "ddd":"bar"}]';
-        List<Map<String,String>> notifications = (List<Map<String,String>>)System.Json.deserialize(data, List<Map<String,String>>.class);
+        List<Map<String,String>> parametersList = (List<Map<String,String>>)System.Json.deserialize(data, List<Map<String,String>>.class);
         
         //act
-        Map<String,Object> results = Utility.convert(notifications).outputParameters;
+        Map<String,Object> results = Utility.convert(parametersList).outputParameters;
         
         //assert
         String expectedOne = System.Json.serialize(new Map<String,Object>{'aaa' => '1', 'bbb' => 'foo'});
@@ -38,7 +38,7 @@
         System.assertEquals(expectedTwo, System.Json.serialize(results.get('1')));
     }
     
-    static testMethod void testResult2Notification() {
+    static testMethod void testResult2ParametersList() {
         //arrange
         Process.PluginResult result = new Process.PluginResult(new Map<String,Object>{
             '0' => new Map<String,Object>{'aaa' => '1', 'bbb' => 'foo'},
@@ -46,20 +46,20 @@
         });
         
         //act
-        List<Map<String,Object>> notifications = Utility.convert(result);
-        System.debug(notifications);
+        List<Map<String,Object>> parametersList = Utility.convert(result);
+        System.debug(parametersList);
         
         //assert
-        for (Map<String,Object> notification : notifications) {
-            String data = System.Json.serialize(notification);
+        for (Map<String,Object> parameters : parametersList) {
+            String data = System.Json.serialize(parameters);
             if (data.startsWith('{"aaa"')) {
                 String expectedOne = '{"aaa":"1","bbb":"foo"}';
-                System.assertEquals(expectedOne, System.Json.serialize(notification));
+                System.assertEquals(expectedOne, System.Json.serialize(parameters));
             }
             
             if (data.startsWith('{"ccc"')) {
                 String expectedOne = '{"ccc":"2","ddd":"bar"}';
-                System.assertEquals(expectedOne, System.Json.serialize(notification));
+                System.assertEquals(expectedOne, System.Json.serialize(parameters));
             }
         }
     }

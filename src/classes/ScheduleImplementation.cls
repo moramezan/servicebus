@@ -18,10 +18,10 @@ public class ScheduleImplementation implements System.Schedulable {
             WHERE ConfigurationId__c IN :scheduleConfigurations.keySet()
         ];
         
-        //destine a timestamped notification for each chain step
+        //destine a timestamped parameters for each chain step
         List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
         for (ChainStep__c step : steps) {
-            Map<String,Object> notification = new Map<String,Object>{
+            Map<String,Object> parameters = new Map<String,Object>{
                 'eda__sequence' => 0,
                 'eda__chainName' => step.Chain__r.Name,
                 'eda__heartbeat' => DateTime.now()
@@ -29,13 +29,13 @@ public class ScheduleImplementation implements System.Schedulable {
             
             PersistentData__c persistentData = new PersistentData__c(
                 Status__c = 'Buffer',
-                Notification__c = Json.serializePretty(notification)
+                Parameters__c = Json.serializePretty(parameters)
             );
             
             persistentDatas.add(persistentData);
         }
         
-        //enqueue the notifications onto the buffer
+        //enqueue the message onto the buffer
         insert persistentDatas;
     }
     

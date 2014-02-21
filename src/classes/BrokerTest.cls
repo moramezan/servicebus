@@ -34,8 +34,8 @@ public class BrokerTest{
         Decimal sequenceA3 = stepA3.Sequence__c;
         
         List<PersistentData__c> persistentDatas =  new List<PersistentData__c>{
-            new PersistentData__c(Notification__c = '{"eda__chainName": "' + chainNameA + '", "eda__sequence": ' + sequenceA1 + '}'),
-            new PersistentData__c(Notification__c = '{"eda__chainName": "' + chainNameA + '", "eda__sequence": ' + sequenceA2 + '}')
+            new PersistentData__c(Parameters__c = '{"eda__chainName": "' + chainNameA + '", "eda__sequence": ' + sequenceA1 + '}'),
+            new PersistentData__c(Parameters__c = '{"eda__chainName": "' + chainNameA + '", "eda__sequence": ' + sequenceA2 + '}')
         };
         
         //act
@@ -44,7 +44,7 @@ public class BrokerTest{
         
         // assemble
         List<PersistentData__c> persistentDatasAfter = [
-            SELECT id, Notification__c, ChainStep__c, Process__c 
+            SELECT id, Parameters__c, ChainStep__c, Process__c 
             FROM PersistentData__c
         ];
         
@@ -56,18 +56,18 @@ public class BrokerTest{
         Id actualProcessId01;
         Id actualProcessId02;
         for (PersistentData__c persistentData : persistentDatasAfter) {
-            Map<String,Object> notification = (Map<String,Object>)System.Json.deserializeUntyped(persistentData.Notification__c);
-            String notificationChainName = (String)notification.get('eda__chainName');
-            Integer notificationSequence = (Integer)notification.get('eda__sequence');
-            if (notificationChainName != chainNameA) {
+            Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(persistentData.Parameters__c);
+            String parametersChainName = (String)parameters.get('eda__chainName');
+            Integer parametersSequence = (Integer)parameters.get('eda__sequence');
+            if (parametersChainName != chainNameA) {
                 flagChainNameA = false;
             }
-            if (notificationSequence == (sequenceA1 + 1))  {
+            if (parametersSequence == (sequenceA1 + 1))  {
                 flagSequence01 = true;
                 actualChainStepId01 = persistentData.ChainStep__c;
                 actualProcessId01 = persistentData.Process__c;
             }
-            if (notificationSequence == (sequenceA2 + 1))  {
+            if (parametersSequence == (sequenceA2 + 1))  {
                 flagSequence02 = true;
                 actualChainStepId02 = persistentData.ChainStep__c;
                 actualProcessId02 = persistentData.Process__c;
@@ -165,7 +165,7 @@ public class BrokerTest{
     static testMethod void callingSurfaceExceptionSurfacesExpectedMessageOnPersistentData() {
         //arrange
         PersistentData__c persistentData = new PersistentData__c(
-            Notification__c = '{"id":1, "eda__chainName":"crow", "eda__sequence":1}'
+            Parameters__c = '{"id":1, "eda__chainName":"crow", "eda__sequence":1}'
         );
         insert persistentData;
         
@@ -178,7 +178,7 @@ public class BrokerTest{
         
         //assemble
         List<PersistentData__c> persistentDatas = [
-            SELECT Id, Name, Notification__c, Message__c 
+            SELECT Id, Name, Parameters__c, Message__c 
             FROM PersistentData__c
         ];
         
@@ -233,10 +233,10 @@ public class BrokerTest{
         insert stepC2;
         
         List<PersistentData__c> persistentDatas = new List<PersistentData__c>{
-            new PersistentData__c(Notification__c = '{"id": 1, "eda__chainName": "' + chainA.Name + '", "eda__sequence": ' + sequenceA1 + '}'),
-            new PersistentData__c(Notification__c = '{"id": 2, "eda__chainName": "' + chainA.Name + '", "eda__sequence": ' + sequenceA2 + '}'),
-            new PersistentData__c(Notification__c = '{"id": 3, "eda__chainName": "' + chainB.Name + '", "eda__sequence": ' + sequenceB1 + '}'),
-            new PersistentData__c(Notification__c = '{"id": 4, "eda__chainName": "' + chainC.Name + '", "eda__sequence": ' + sequenceC1 + '}')
+            new PersistentData__c(Parameters__c = '{"id": 1, "eda__chainName": "' + chainA.Name + '", "eda__sequence": ' + sequenceA1 + '}'),
+            new PersistentData__c(Parameters__c = '{"id": 2, "eda__chainName": "' + chainA.Name + '", "eda__sequence": ' + sequenceA2 + '}'),
+            new PersistentData__c(Parameters__c = '{"id": 3, "eda__chainName": "' + chainB.Name + '", "eda__sequence": ' + sequenceB1 + '}'),
+            new PersistentData__c(Parameters__c = '{"id": 4, "eda__chainName": "' + chainC.Name + '", "eda__sequence": ' + sequenceC1 + '}')
         };
         
         // act
@@ -252,10 +252,10 @@ public class BrokerTest{
         Integer actualSequence3 = -1 ;
         Integer actualSequence4 = -1 ;
         for (PersistentData__c persistentData : persistentDatas) {
-            Map<String,Object> notification = (Map<String,Object>)System.Json.deserializeUntyped(persistentData.Notification__c);
-            Integer theId = (Integer) notification.get('id');
-            String theChainName = (String) notification.get('eda__chainName');
-            Integer theSequence = (Integer) notification.get('eda__sequence'); 
+            Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(persistentData.Parameters__c);
+            Integer theId = (Integer) parameters.get('id');
+            String theChainName = (String)parameters.get('eda__chainName');
+            Integer theSequence = (Integer)parameters.get('eda__sequence'); 
             if (theId == 1) {
                 actualChainName1 = theChainName;
                 actualSequence1 = theSequence;
@@ -384,74 +384,74 @@ public class BrokerTest{
         
     } 
     
-    static testMethod void callingMarkHelperCorrectlySetsCountOnNotificationWhenMarkCountIncrementsTo2() {
+    static testMethod void callingMarkHelperCorrectlySetsCountOnParametersWhenMarkCountIncrementsTo2() {
         //arrange 
         Integer markCount = 1;
-        Map<String,Object> notificationIn0 = new Map<String,Object> { 
+        Map<String,Object> parametersIn0 = new Map<String,Object> { 
             'id' => '0',
             'eda__markCount' => markCount
         }; 
         
-        Map<String,Object> notificationOut1 = new Map<String,Object> { 
+        Map<String,Object> parametersOut1 = new Map<String,Object> { 
             'id' => '1'
         }; 
         
-        Map<String,Object> notificationOut2 = new Map<String,Object> { 
+        Map<String,Object> parametersOut2 = new Map<String,Object> { 
             'id' => '2'
         }; 
         
-        Map<String,Object> notificationOut3 = new Map<String,Object> { 
+        Map<String,Object> parametersOut3 = new Map<String,Object> { 
             'id' => '3'
         };
         
-        List<Map<String,Object>> notificationsOut = new List<Map<String,Object>> { notificationOut1, notificationOut2, notificationOut3 };
+        List<Map<String,Object>> parametersListOut = new List<Map<String,Object>> { parametersOut1, parametersOut2, parametersOut3 };
         
         //act  
-        Broker.markHelper(notificationIn0, notificationsOut);
+        Broker.markHelper(parametersIn0, parametersListOut);
         
         //assemble 
-        Integer actualCount = (Integer)notificationIn0.get('eda__count');
+        Integer actualCount = (Integer)parametersIn0.get('eda__count');
         
         //assert
-        Integer expectedCount = notificationsOut.size();
+        Integer expectedCount = parametersListOut.size();
         System.assertEquals(expectedCount, actualCount); 
     } 
     
-    static testMethod void callingMarkHelperDoesNotSetCountOnNotificationWhenMarkCountIncrementsToOtherThan2() {
+    static testMethod void callingMarkHelperDoesNotSetCountOnParametersWhenMarkCountIncrementsToOtherThan2() {
         //arrange 
         Integer markCount = 0; //will not increment to 2
-        Map<String,Object> notificationIn0 = new Map<String,Object> { 
+        Map<String,Object> parametersIn0 = new Map<String,Object> { 
             'id' => '0',
             'eda__markCount' => markCount
         }; 
         
-        List<Map<String,Object>> notificationsOut = new List<Map<String,Object>>();
+        List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
         
         //act  
-        Broker.markHelper(notificationIn0, notificationsOut);
+        Broker.markHelper(parametersIn0, parametersListOut);
         
         //assemble 
-        Integer actualCount = (Integer)notificationIn0.get('eda__count');
+        Integer actualCount = (Integer)parametersIn0.get('eda__count');
         
         //assert
         Integer expectedCount = null;
         System.assertEquals(expectedCount, actualCount); 
     } 
     
-    static testMethod void callingMarkHelperDoesNotSetCountOnNotificationWhenMarkCountIsNull() {
+    static testMethod void callingMarkHelperDoesNotSetCountOnParametersWhenMarkCountIsNull() {
         //arrange 
-        Map<String,Object> notificationIn0 = new Map<String,Object> { 
+        Map<String,Object> parametersIn0 = new Map<String,Object> { 
             'id' => '0' 
             //'eda__markCount' => markCount //Not specified; key will return null
         }; 
         
-        List<Map<String,Object>> notificationsOut = new List<Map<String,Object>>();
+        List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
         
         //act  
-        Broker.markHelper(notificationIn0, notificationsOut);
+        Broker.markHelper(parametersIn0, parametersListOut);
         
         //assemble 
-        Integer actualCount = (Integer) notificationIn0.get('eda__count');
+        Integer actualCount = (Integer) parametersIn0.get('eda__count');
         
         //assert
         Integer expectedCount = null;
@@ -459,7 +459,7 @@ public class BrokerTest{
     }
     
     //TODO :: write test for this when you (NReid) understand this ( cant remember right now)
-    // if (count == 0) Database.delete(new List<Id>{(Id)notification.get('eda__gateGroupId')}); //tidy up split of 0
+    // if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('eda__gateGroupId')}); //tidy up split of 0
     
     /**
      * Bug with Salesforce:
@@ -516,9 +516,9 @@ public class BrokerTest{
     }
     */
         
-    static testMethod void testMalformedNotificationThrowsSystemJsonException() {
+    static testMethod void testMalformedParametersThrowsSystemJsonException() {
         //arrange
-        PersistentData__c persistentData = new PersistentData__c(Notification__c = '{"malformed":....}');
+        PersistentData__c persistentData = new PersistentData__c(Parameters__c = '{"malformed":....}');
         insert persistentData;
         
         //act
@@ -535,7 +535,7 @@ public class BrokerTest{
     
     static testMethod void testMissingSequenceThrowsExpectedException() {
         //arrange
-        PersistentData__c persistentData = new PersistentData__c(Notification__c = '{"not_sequence": 0}');
+        PersistentData__c persistentData = new PersistentData__c(Parameters__c = '{"not_sequence": 0}');
         insert persistentData;
         
         //act
@@ -552,7 +552,7 @@ public class BrokerTest{
     
     static testMethod void testNoChainStepThrowsQueryException() {
         //arrange (note there is no ChainStep__c in database!)
-        PersistentData__c persistentData = new PersistentData__c(Notification__c = '{"eda__chainName": "", "eda__sequence": 0}');
+        PersistentData__c persistentData = new PersistentData__c(Parameters__c = '{"eda__chainName": "", "eda__sequence": 0}');
         insert persistentData;
         
         //act

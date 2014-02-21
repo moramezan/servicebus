@@ -12,7 +12,7 @@
         System.assertEquals(expectedConfiguration, actualConfiguration);  
     }
 
-    static testMethod void testNotificationIsRedirected() {
+    static testMethod void testMessageIsRedirected() {
         //arrange processes
         Process__c boomerangProcess = Processes.generateOne(Boomerang.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
@@ -33,7 +33,7 @@
         );
         update config;
         
-        //prepare notification
+        //prepare message
         Process.PluginRequest request = new Process.PluginRequest(new Map<String,Object>{
             'eda__chainName' => 'originChain',
             'eda__sequence' => 1,
@@ -43,23 +43,23 @@
         //act
         Boomerang process = new Boomerang();
         Process.PluginResult result = process.invoke(request);
-        List<Map<String,Object>> notifications = Utility.convert(result);
+        List<Map<String,Object>> parametersList = Utility.convert(result);
         
         //asserts
         Decimal expectedSize = 1;
-        Decimal actualSize = notifications.size();
+        Decimal actualSize = parametersList.size();
         System.assertEquals(expectedSize, actualSize);
         
         String expectedChainName = 'targetChain';
-        String actualChainName = (String)notifications[0].get('eda__chainName');
+        String actualChainName = (String)parametersList[0].get('eda__chainName');
         System.assertEquals(expectedChainName, actualChainName);
         
         Decimal expectedSequence = 0;
-        Decimal actualSequence = (Decimal)notifications[0].get('eda__sequence');
+        Decimal actualSequence = (Decimal)parametersList[0].get('eda__sequence');
         System.assertEquals(expectedSequence, actualSequence);
 
         String expectedList = '["' + originChainStep.Id + '"]';
-        String actualList = System.Json.serialize(notifications[0].get('eda__boomerangChainStepIds'));
+        String actualList = System.Json.serialize(parametersList[0].get('eda__boomerangChainStepIds'));
         System.assertEquals(expectedList, actualList);
     }
     

@@ -2,7 +2,7 @@
 private class TerminateTest
 {
 
-    static testMethod void callingExecuteReturnsExpectedNotificationCollectionWhenBoomerangAttribsDefinedOnNotification()
+    static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenBoomerangAttribsDefinedOnParameters()
     {
         // Arrange :
         String chainName = 'the-chain';
@@ -23,7 +23,7 @@ private class TerminateTest
         ChainStep__c chainStep1 = ChainSteps.generateOne(chain.Id, wiretapProcess.Id);
         ChainStep__c chainStep2 = ChainSteps.generateOne(chain.Id, boomerangProcess.Id);
 
-        Map<String,Object> notification = new Map<String,Object> {
+        Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__sequence' => sequence,
             'eda__boomerangChainStepIds' => new List<Id>{chainStep2.Id},
@@ -37,17 +37,17 @@ private class TerminateTest
 
         // Act
         Terminate terminate = new Terminate();
-        Process.PluginResult results = terminate.invoke(new Process.PluginRequest(notification));
-        List<Map<String,Object>> actualOutNotifications = Utility.convert(results);
+        Process.PluginResult results = terminate.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> actualOutParametersList = Utility.convert(results);
 
         // prepare
-        Decimal actualSize = actualOutNotifications.size();
+        Decimal actualSize = actualOutParametersList.size();
         String actualChainName = null;
         Decimal actualSequence = null;
         if (actualSize > 0) {
-            Map<String,Object> actualNotification = actualOutNotifications[0];
-            actualChainName = (String)actualNotification.get('eda__chainName');
-            actualSequence = (Decimal)actualNotification.get('eda__sequence');
+            Map<String,Object> actualParameters = actualOutParametersList[0];
+            actualChainName = (String)actualParameters.get('eda__chainName');
+            actualSequence = (Decimal)actualParameters.get('eda__sequence');
         }
 
         // Assert
@@ -57,7 +57,7 @@ private class TerminateTest
     }
     
     static testMethod void 
-    callingExecuteReturnsExpectedNotificationCollectionWhenNoBoomerangAttribsDefinedOnNotification() {
+    callingExecuteReturnsExpectedParametersCollectionWhenNoBoomerangAttribsDefinedOnParameters() {
         // Arrange :
         String chainName = 'the-chain';
         Decimal sequence = 1;
@@ -65,7 +65,7 @@ private class TerminateTest
  
  
 
-        Map<String,Object> notification = new Map<String,Object> {
+        Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__sequence' => sequence,
             'data' => data
@@ -75,11 +75,11 @@ private class TerminateTest
  
         // Act
         Terminate terminate = new Terminate();
-        Process.PluginResult results = terminate.invoke(new Process.PluginRequest(notification));
-        List<Map<String,Object>> actualOutNotifications = Utility.convert(results);
+        Process.PluginResult results = terminate.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> actualOutParametersList = Utility.convert(results);
 
         // prepare
-        Decimal actualSize = actualOutNotifications.size();
+        Decimal actualSize = actualOutParametersList.size();
  
         // Assert
         System.assertEquals(expectedSize , actualSize );
@@ -107,7 +107,7 @@ private class TerminateTest
         boomerangChainStepIds.add(boomerangChainStepId01);
         boomerangChainStepIds.add(boomerangChainStepId02);
         
-        Map<String,Object> notificationFirst = new Map<String,Object> {
+        Map<String,Object> parametersFirst = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__sequence' => sequence,
             'eda__boomerangChainStepIds' => boomerangChainStepIds,
@@ -118,17 +118,17 @@ private class TerminateTest
         // Act
         Terminate terminate = new Terminate();
         
-        Process.PluginResult resultsInvokeFirst = terminate.invoke(new Process.PluginRequest(notificationFirst));
-        List<Map<String,Object>> actualOutNotificationsFirst = Utility.convert(resultsInvokeFirst);
+        Process.PluginResult resultsInvokeFirst = terminate.invoke(new Process.PluginRequest(parametersFirst));
+        List<Map<String,Object>> actualOutParametersListFirst = Utility.convert(resultsInvokeFirst);
         
-        Map<String,Object> notificationSecond = actualOutNotificationsFirst[0].clone(); //-- Terminate hands back one
+        Map<String,Object> parametersSecond = actualOutParametersListFirst[0].clone(); //-- Terminate hands back one
         
-        Process.PluginResult resultsInvokeSecond = terminate.invoke(new Process.PluginRequest(notificationSecond));
-        List<Map<String,Object>> actualOutNotificationsSecond = Utility.convert(resultsInvokeSecond);
+        Process.PluginResult resultsInvokeSecond = terminate.invoke(new Process.PluginRequest(parametersSecond));
+        List<Map<String,Object>> actualOutParametersListSecond = Utility.convert(resultsInvokeSecond);
         
         // prepare
-        List<Object> actualChainStepIdsAfterFirst = (List<Object>)actualOutNotificationsFirst[0].get('eda__boomerangChainStepIds'); 
-        List<Object> actualChainStepIdsAfterSecond = (List<Object>)actualOutNotificationsSecond[0].get('eda__boomerangChainStepIds');
+        List<Object> actualChainStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('eda__boomerangChainStepIds'); 
+        List<Object> actualChainStepIdsAfterSecond = (List<Object>)actualOutParametersListSecond[0].get('eda__boomerangChainStepIds');
         
         Integer actualSizeAfterFirst = actualChainStepIdsAfterFirst.size();
         Integer actualSizeAfterSecond = actualChainStepIdsAfterSecond.size();

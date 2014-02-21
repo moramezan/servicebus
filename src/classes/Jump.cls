@@ -14,19 +14,19 @@ public with sharing class Jump implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> notification = request.inputParameters;
+        Map<String,Object> parameters = request.inputParameters;
         
         //get destination from configuration
         JumpConfiguration__c configuration = [
             SELECT Id, Chain__r.Name
             FROM JumpConfiguration__c
-            WHERE Id = :(Id)notification.get('eda__configurable')
+            WHERE Id = :(Id)parameters.get('eda__configurable')
         ];
         
-        notification.put('eda__chainName', configuration.Chain__r.Name);
-        notification.put('eda__sequence', 0);
+        parameters.put('eda__chainName', configuration.Chain__r.Name);
+        parameters.put('eda__sequence', 0);
         
-        return Utility.convert(new List<Map<String,Object>>{notification});
+        return Utility.convert(new List<Map<String,Object>>{parameters});
     }
 
 }

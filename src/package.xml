@@ -128,7 +128,7 @@
         <members>Debouncer__c.Key__c</members>
         <members>Debouncer__c.LastFiredDate__c</members>
         <members>GateItem__c.GateGroup__c</members>
-        <members>GateItem__c.Notification__c</members>
+        <members>GateItem__c.Parameters__c</members>
         <members>IsChangedConfiguration__c.FieldName__c</members>
         <members>IsChangedConfiguration__c.NewBlobId__c</members>
         <members>IsChangedConfiguration__c.NewHash__c</members>
@@ -148,14 +148,14 @@
         <members>LogWriterEntry__c.GroupIdentifier__c</members>
         <members>LogWriterEntry__c.LogGroup__c</members>
         <members>LogWriterEntry__c.NotificationId__c</members>
-        <members>LogWriterEntry__c.Notification__c</members>
         <members>LogWriterEntry__c.Order__c</members>
+        <members>LogWriterEntry__c.Parameters__c</members>
         <members>LogWriterEntry__c.Sequence__c</members>
         <members>LogWriterEntry__c.Stamp__c</members>
         <members>PersistentData__c.ChainStep__c</members>
         <members>PersistentData__c.Chain__c</members>
         <members>PersistentData__c.Message__c</members>
-        <members>PersistentData__c.Notification__c</members>
+        <members>PersistentData__c.Parameters__c</members>
         <members>PersistentData__c.Process__c</members>
         <members>PersistentData__c.Status__c</members>
         <members>Process__c.ApexClass__c</members>

@@ -193,14 +193,14 @@ private class IsChangedTest {
         configuration.NewHash__c = null; //-- value before first run 
         update configuration;
 
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
         'eda__configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
         'id' => accountId
         };
         
         //act
         IsChanged plugin = new IsChanged();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> results = Utility.convert(result);
         
         // Assert
@@ -242,14 +242,14 @@ private class IsChangedTest {
         update configuration;
         
         
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
         'eda__configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
         'id' => accountId
         };
         
         //act
         IsChanged plugin = new IsChanged();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> results = Utility.convert(result);
         
         // Assert
@@ -291,14 +291,14 @@ private class IsChangedTest {
         update configuration;
         
         
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
         'eda__configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
         'id' => accountId
         };
         
         //act
         IsChanged plugin = new IsChanged();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> results = Utility.convert(result);
         
         // Assert

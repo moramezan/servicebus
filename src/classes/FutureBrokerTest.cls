@@ -106,7 +106,7 @@
         
         // scenario:
         // resolved state , assume manual intervention to set status to 'Reprocess'
-        Map<String,Object> notification = new Map<String,Object> {
+        Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainNameA,
             'eda__sequence' => 1, //not zero!!!
             'id' => '000000000000000AAA'
@@ -114,7 +114,7 @@
         PersistentData__c persistentData = new PersistentData__c(
             ChainStep__c = stepA1.Id,
             Status__c = 'Reprocess',
-            Notification__c = Json.serializePretty(notification)
+            Parameters__c = Json.serializePretty(parameters)
         );
         insert persistentData;
         

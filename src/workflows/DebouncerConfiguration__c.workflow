@@ -3,7 +3,7 @@
     <fieldUpdates>
         <fullName>UpdateDebouncerConfigurationName</fullName>
         <field>Name</field>
-        <formula>&quot;Throttles notifications to a maximum of one every &quot; + TEXT(MinimumHoursBetween__c) + IF(MinimumHoursBetween__c == 1, &quot; hour&quot;, &quot; hours&quot;) + &quot;.&quot;</formula>
+        <formula>&quot;Throttles messages to a maximum of one every &quot; + TEXT(MinimumHoursBetween__c) + IF(MinimumHoursBetween__c == 1, &quot; hour&quot;, &quot; hours&quot;) + &quot;.&quot;</formula>
         <name>Update Debouncer Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>

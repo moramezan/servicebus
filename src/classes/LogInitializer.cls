@@ -25,8 +25,8 @@ global class LogInitializer implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest pluginRequest) {
-        Map<String,Object> notification = pluginRequest.inputParameters;
-        List<Map<String,Object>> notifications = new List<Map<String,Object>>();
+        Map<String,Object> parameters = pluginRequest.inputParameters;
+        List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
         
         
@@ -34,8 +34,8 @@ global class LogInitializer implements Process.Plugin {
          List<ChainStep__c> chainSteps = [
              SELECT Id, Sequence__c, Chain__r.Name
              FROM ChainStep__c
-             WHERE Chain__r.Name = :(String)notification.get('eda__chainName')
-             AND Sequence__c = :(Decimal) notification.get('eda__sequence')
+             WHERE Chain__r.Name = :(String)parameters.get('eda__chainName')
+             AND Sequence__c = :(Decimal) parameters.get('eda__sequence')
          ];
          if (chainSteps.size() == 0) {
             throw new LogInitializerException('Unable to access the Chain Step Sequence and Chain Name');
@@ -46,7 +46,7 @@ global class LogInitializer implements Process.Plugin {
          List<LogConfiguration__c> configurations = [
              SELECT Id, GroupIdentifier__c , GroupInstruction__c
              FROM LogConfiguration__c
-             WHERE Id = :(Id)notification.get('eda__configuration')
+             WHERE Id = :(Id)parameters.get('eda__configuration')
          ];  
          if (configurations.size() == 0) {
             throw new LogInitializerException('Unable to access Log Configuration');
@@ -57,21 +57,21 @@ global class LogInitializer implements Process.Plugin {
          // the composite key comprises 
          // 1.  the date-time stamp
          // 2.  a (fairly unique ) business group value
-         Id dataId =  (Id)notification.get('id');
+         Id dataId =  (Id)parameters.get('id');
          String groupIdentifier = getBusinesGroupIdentifier(configuration, chainStep, dataId) ;                          
          LogGroup__c logGroup = new LogGroup__c( LogConfiguration__c = configuration.Id,  GroupIdentifier__c = groupIdentifier, Stamp__c = System.Now());
          insert logGroup;
 
-         // update outbound notification
-         List<Object> logGroupIds = (List<Object>)notification.get('eda__logGroupIds');
+         // update outbound message
+         List<Object> logGroupIds = (List<Object>)parameters.get('eda__logGroupIds');
          if (logGroupIds == null) {
              logGroupIds = new List<Object>();
          }
          logGroupIds.add(logGroup.Id);
-         notification.put('eda__logGroupIds', logGroupIds);
+         parameters.put('eda__logGroupIds', logGroupIds);
 
          
-         return Utility.convert(new List<Map<String,Object>>{notification});
+         return Utility.convert(new List<Map<String,Object>>{parameters});
     }
 
  

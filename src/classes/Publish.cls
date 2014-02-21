@@ -16,13 +16,13 @@ public with sharing class Publish implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> notification = request.InputParameters;
-        List<Map<String,Object>> notifications = new List<Map<string,object>>();
+        Map<String,Object> parameters = request.InputParameters;
+        List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         
         PublishConfiguration__c publishConfiguration = [
             SELECT Id, EventType__c 
             FROM PublishConfiguration__c
-            WHERE Id = :(Id)notification.get('eda__configuration')
+            WHERE Id = :(Id)parameters.get('eda__configuration')
         ];
         
         if (null == publishConfiguration.EventType__c) {
@@ -42,18 +42,18 @@ public with sharing class Publish implements Process.Plugin {
         ];
         
         for (ChainStep__c step : steps) {
-            Map<String,Object> clone = notification.clone();
+            Map<String,Object> clone = parameters.clone();
             //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
             clone.put('eda__boomerangChainStepIds', null);
             clone.put('eda__sequence', step.Sequence__c);
             clone.put('eda__chainName', step.Chain__r.Name);
-            notifications.add(clone);
+            parametersList.add(clone);
         }
         
         //original guy carries on... this is not a Terminate
-        notifications.add(notification);
+        parametersList.add(parameters);
         
-        return Utility.convert(notifications);
+        return Utility.convert(parametersList);
     }
     
     public static List<HealthController.Health> getHealth() {

@@ -122,7 +122,7 @@ abstract global class Broker {
         
         //query locator hands back only the persistent datas that were marked as processing
         String commaDelimitedIds = '(\'' + String.join(new List<Id>(persistentDataIds), '\',\'') + '\')';
-        String queryString = 'SELECT Id, ChainStep__c, Notification__c FROM PersistentData__c WHERE Id IN ' + commaDelimitedIds;
+        String queryString = 'SELECT Id, ChainStep__c, Parameters__c FROM PersistentData__c WHERE Id IN ' + commaDelimitedIds;
         return Database.getQueryLocator(queryString);
     }
     
@@ -135,7 +135,7 @@ abstract global class Broker {
      * @param dataId    Id of some record that the chain will operate on.
      */
     static global void enqueue(String chainName, Id dataId) {
-        Map<String,Object> notification = new Map<String,Object> {
+        Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__sequence' => 0,  
             'id' => dataId
@@ -143,7 +143,7 @@ abstract global class Broker {
         
         List<PersistentData__c> persistentDatas = new List<PersistentData__c>{new PersistentData__c(
             Status__c = 'Buffer',
-            Notification__c = Json.serializePretty(notification)
+            Parameters__c = Json.serializePretty(parameters)
         )};
         
         //RESOLVE
@@ -215,13 +215,13 @@ abstract global class Broker {
      */
     static public void executeResolvePersist(Id persistentDataId) {
         PersistentData__c persistentData = (PersistentData__c)SalesforceObject.getById(persistentDataId);
-        List<Map<String,Object>> notifications;
-        Map<String,Object> notification;
+        List<Map<String,Object>> parametersList;
+        Map<String,Object> parameters;
         Process.Plugin plugin;
         
         //OUR FUCKUPS
         try {
-            notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c);
+            parameters = (Map<String,Object>)Json.deserializeUntyped(persistentData.Parameters__c);
     
             ChainStep__c chainStep = [
                 SELECT Process__c, ConfigurationId__c, Process__r.Name, Process__r.FullyQualifiedClassName__c
@@ -229,16 +229,16 @@ abstract global class Broker {
                 WHERE Id = :persistentData.ChainStep__c
             ];
         
-            notification.put('eda__configuration', chainStep.ConfigurationId__c);
+            parameters.put('eda__configuration', chainStep.ConfigurationId__c);
         
             //instantiate processable instance  
             Type reflector = Type.forName(chainStep.Process__r.FullyQualifiedClassName__c);
             plugin = (Process.Plugin)reflector.newInstance();
         } catch (Exception e) {
             if (e instanceof System.JsonException) {
-                e.setMessage('Could not deserialize json (malformed notification)');
+                e.setMessage('Could not deserialize json (malformed parameters)');
             } else if (e instanceof System.NullPointerException) {
-                e.setMessage('Sequence null (key missing from notification) or Type null (class missing)');
+                e.setMessage('Sequence null (key missing from parameters) or Type null (class missing)');
             } else if (e instanceof System.QueryException) {
                 e.setMessage('ChainStep unqueryable (bad chain name, sequence, missing terminate)');
             } else if (e instanceof System.TypeException) {
@@ -251,24 +251,24 @@ abstract global class Broker {
         //THEIR FUCKUPS
         try {
             //call invoke the processable instance
-            Process.PluginResult results = plugin.invoke(new Process.PluginRequest(notification));
-            notifications = Utility.convert(results);
+            Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
+            parametersList = Utility.convert(results);
         } catch (Exception e) {
             surfaceException(e, persistentData.Id);
             return; //get out of dodge quick
         }
         
-        //delete successfully processed notification
+        //delete successfully processed parameters
         delete persistentData;
         Database.emptyRecycleBin(persistentData);
         
-        markHelper(notification, notifications);
+        markHelper(parameters, parametersList);
         
-        //wrap up notifications into Persistent Datas
+        //wrap up parametersList into Persistent Datas
         List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
-        for (Map<String,Object> n : notifications) {
+        for (Map<String,Object> n : parametersList) {
             persistentDatas.add(new PersistentData__c(
-                Notification__c = Json.serializePretty(n),
+                Parameters__c = Json.serializePretty(n),
                 Status__c = 'Buffer'
             ));
         }
@@ -281,28 +281,28 @@ abstract global class Broker {
     }
 
     /**
-     * Increments notifications then resolves their destined Chain, Step, and Process.
+     * Increments parameters then resolves their destined Chain, Step, and Process.
      *
-     * 1. hydrate the notification from persistent data
+     * 1. hydrate the parameters from persistent data
      * 2. increments the sequence by one, ready to resolve the next step in the chain
-     * 3. modify the notification properties to reflect the new sequence
-     * 4A. resolve the chain step from the notification
+     * 3. modify the parameters to reflect the new sequence
+     * 4A. resolve the chain step from the parameters
      * 4B. resolve the the process (ie the process referenced by 4A's chainStep)
-     * 5. only then can we correctly write to database with 4A (chainStepId) and 3 (notification with the incremented sequence)
+     * 5. only then can we correctly write to database with 4A (chainStepId) and 3 (parameters with the incremented sequence)
      */
     static public void resolve(List<PersistentData__c> persistentDatas) {
         //assemble a map of next-step keys to persistent datas
         Map<String,PersistentData__c> key2data = new Map<String,PersistentData__c>();
         for (PersistentData__c persistentData : persistentDatas) {
-            Map<String,Object> notification = (Map<String,Object>)Json.deserializeUntyped(persistentData.Notification__c);
-            String chainName = (String)notification.get('eda__chainName');
-            Decimal sequence = (Decimal)notification.get('eda__sequence') + 1; //care
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(persistentData.Parameters__c);
+            String chainName = (String)parameters.get('eda__chainName');
+            Decimal sequence = (Decimal)parameters.get('eda__sequence') + 1; //care
             String key = chainName + '#' + sequence;
             key2data.put(key, persistentData);
             
             //increment the sequence and put it back while we're at it
-            notification.put('eda__sequence', sequence);
-            persistentData.Notification__c = Json.serializePretty(notification);
+            parameters.put('eda__sequence', sequence);
+            persistentData.Parameters__c = Json.serializePretty(parameters);
         }
         
         //resolve the next chain steps and processes
@@ -336,7 +336,7 @@ abstract global class Broker {
         serializedException.put('stackTraceString', e.getStackTraceString());
         serializedException.put('typeName', e.getTypeName());
         
-        //log exception summary on notification
+        //log exception summary on parameters
         Database.update(new PersistentData__c(
             Id = persistentDataId,
             Message__c = e.getMessage().left(255)
@@ -352,19 +352,19 @@ abstract global class Broker {
     
     /**
      * The Mark helper logic is for the Gate process; it determines when a split occurs, and writes away the number of
-     * splitted notifications so that a future Gate process can know exactly how many notifications form a Gate Group.
+     * splitted parameter sets so that a future Gate process can know exactly how many parameter sets form a Gate Group.
      *
-     * If markCount isn't null, then the preceding process was a Mark; increment THEN put that value on notification.
-     * If markCount equates to two, then the preceding process was a splitter; write the count of split notifications.
+     * If markCount isn't null, then the preceding process was a Mark; increment THEN put that value on parameters.
+     * If markCount equates to two, then the preceding process was a splitter; write the count of split parameter sets.
      */
     @TestVisible
-    private static void  markHelper(Map<String,Object> notification,  List<Map<String,Object>>  notifications) {
-        Decimal markCount = (Decimal)notification.get('eda__markCount');
-        if (null != markCount) notification.put('eda__markCount', ++markCount);
+    private static void markHelper(Map<String,Object> parameters, List<Map<String,Object>> parametersList) {
+        Decimal markCount = (Decimal)parameters.get('eda__markCount');
+        if (null != markCount) parameters.put('eda__markCount', ++markCount);
         if (2 == markCount) {
-            Integer count = notifications.size();
-            notification.put('eda__count', count);
-            if (count == 0) Database.delete(new List<Id>{(Id)notification.get('eda__gateGroupId')}); //tidy up split of 0
+            Integer count = parametersList.size();
+            parameters.put('eda__count', count);
+            if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('eda__gateGroupId')}); //tidy up split of 0
         } 
      }
     

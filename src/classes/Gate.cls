@@ -6,20 +6,20 @@ public with sharing class Gate implements Process.Plugin {
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'Gate process allows you to aggregate marked notifications on a common grouping key.';
+        plugin.Description = 'Gate process allows you to aggregate marked messages on a common grouping key.';
         plugin.Tag = 'Event Driven Architecture';
         plugin.Name = 'Gate';
         
         plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
             new Process.PluginDescribeResult.InputParameter(
                 'eda__gateGroupId',
-                'Id of the GateGroup the marked notifications should belong to.',
+                'Id of the GateGroup the marked messages should belong to.',
                 Process.PluginDescribeResult.ParameterType.ID,
                 false
             ),
             new Process.PluginDescribeResult.InputParameter(
                 'eda__count',
-                'Number of marked notifications the gate should expect.',
+                'Number of marked messages the gate should expect.',
                 Process.PluginDescribeResult.ParameterType.INTEGER,
                 false
             )
@@ -37,14 +37,14 @@ public with sharing class Gate implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> notification = request.inputParameters;
+        Map<String,Object> parameters = request.inputParameters;
         
-        Id gateGroupId = (Id)notification.get('eda__gateGroupId');
-        Decimal count = (Decimal)notification.get('eda__count');
+        Id gateGroupId = (Id)parameters.get('eda__gateGroupId');
+        Decimal count = (Decimal)parameters.get('eda__count');
         
         insert new GateItem__c(
             GateGroup__c = gateGroupId,
-            Notification__c = Json.serialize(notification)
+            Parameters__c = Json.serialize(parameters)
         );
         
         List<GateItem__c> gateItems = [
@@ -59,9 +59,9 @@ public with sharing class Gate implements Process.Plugin {
         }   
         
         //this is the last item, let's release
-        notification.put('eda__id', gateGroupId);
+        parameters.put('eda__id', gateGroupId);
         
-        return Utility.convert(new List<Map<String,Object>>{notification});
+        return Utility.convert(new List<Map<String,Object>>{parameters});
     }
     
 }

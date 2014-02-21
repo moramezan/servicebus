@@ -10,13 +10,13 @@ public with sharing class Wiretap implements Process.Plugin {
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult describeResult = new Process.PluginDescribeResult();
         describeResult.Name = 'Wiretap';
-        describeResult.Description = 'Serializes the notification and emails it to the user.';
+        describeResult.Description = 'Serializes the parameters and emails it to the user.';
         describeResult.Tag = 'Event Driven Architecture';
         return describeResult;
     }
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> notification = request.inputParameters;
+        Map<String,Object> parameters = request.inputParameters;
         
         Id userId;
         try {
@@ -29,12 +29,12 @@ public with sharing class Wiretap implements Process.Plugin {
         }
 
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
-        message.setSubject('[Wiretap] ' + notification.get('eda__chainName') + '#' + notification.get('eda__sequence'));
-        message.setPlainTextBody(Json.serialize(notification));
+        message.setSubject('[Wiretap] ' + parameters.get('eda__chainName') + '#' + parameters.get('eda__sequence'));
+        message.setPlainTextBody(Json.serialize(parameters));
         message.setTargetObjectId(userId);
         message.setSaveAsActivity(false);
         Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{message});
         
-        return Utility.convert(new List<Map<String,Object>>{notification});
+        return Utility.convert(new List<Map<String,Object>>{parameters});
     }
 }

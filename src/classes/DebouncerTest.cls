@@ -153,7 +153,7 @@ private static testMethod void callingDeleteOldDebouncersDeletesExpectedDebounce
     System.Assert( !debouncerIdToDebouncer.keySet().contains(debouncer03.Id) );
 } 
 
-private static testMethod void callingInvokeWhenZeroDebuncersReleasesNotification() {
+private static testMethod void callingInvokeWhenZeroDebuncersReleasesParameters() {
     //arrange
     Account account = new Account (Name = 'Crow' );
     insert account;
@@ -176,14 +176,14 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesNotificatio
     update configuration;
     
     
-    Map<String,Object> notification = new Map<String,Object>{
+    Map<String,Object> parameters = new Map<String,Object>{
         'eda__configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
         'id' => accountId
     };
     
     //act
     Debouncer plugin = new Debouncer();
-    Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+    Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
     List<Map<String,Object>> results = Utility.convert(result);
     
     // Assert
@@ -192,7 +192,7 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesNotificatio
     System.assertEquals(expectedSize, actualSize); 
 }
 
-private static testMethod void callingInvokeWhenZeroDebuncersReleasesNotificationForOutsideMinimumWindow() {
+private static testMethod void callingInvokeWhenZeroDebuncersReleasesMessageForOutsideMinimumWindow() {
     //arrange
     Account account = new Account (Name = 'Crow' );
     insert account;
@@ -225,14 +225,14 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesNotificatio
     update configuration;
     
     
-    Map<String,Object> notification = new Map<String,Object>{
+    Map<String,Object> parameters = new Map<String,Object>{
         'eda__configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
         'id' => key
     };
     
     //act
     Debouncer plugin = new Debouncer();
-    Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+    Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
     List<Map<String,Object>> results = Utility.convert(result);
     
     // Assert
@@ -241,7 +241,7 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesNotificatio
     System.assertEquals(expectedSize, actualSize); 
 }
 
-private static testMethod void callingInvokeWhenZeroDebuncersSwallowsNotificationForInsideMinimumWindow() {
+private static testMethod void callingInvokeWhenZeroDebuncersSwallowsMessageForInsideMinimumWindow() {
     //arrange
     Account account = new Account (Name = 'Crow' );
     insert account;
@@ -274,14 +274,14 @@ private static testMethod void callingInvokeWhenZeroDebuncersSwallowsNotificatio
     update configuration;
     
     
-    Map<String,Object> notification = new Map<String,Object>{
+    Map<String,Object> parameters = new Map<String,Object>{
         'eda__configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
         'id' => key
     };
     
     //act
     Debouncer plugin = new Debouncer();
-    Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+    Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
     List<Map<String,Object>> results = Utility.convert(result);
     
     // Assert

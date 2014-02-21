@@ -33,7 +33,7 @@ private class LogInitializerTest {
         configuration.GroupIdentifier__c = null; // no identifier specified
         update configuration;
         
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
             'id' => theId,
             'eda__configuration' =>  configuration.Id,  
             'eda__chainName' => chainName,
@@ -42,7 +42,7 @@ private class LogInitializerTest {
         
         //act
         LogInitializer plugin = new LogInitializer();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> results = Utility.convert(result);
         
         //assemble
@@ -98,7 +98,7 @@ private class LogInitializerTest {
         configuration.GroupIdentifier__c = theIdentifier; // not null
         update configuration;
         
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
             'id' => theId,
             'eda__configuration' =>  configuration.Id,  
             'eda__chainName' => chainName,
@@ -107,7 +107,7 @@ private class LogInitializerTest {
         
         //act
         LogInitializer plugin = new LogInitializer();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> results = Utility.convert(result);
         
         //assemble
@@ -150,7 +150,7 @@ private class LogInitializerTest {
         Chain__c chain = new Chain__c(Name = chainName);
         insert chain;
     
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
             'id' => theId 
         };
         
@@ -159,7 +159,7 @@ private class LogInitializerTest {
         String actualMessage;
         try {
             LogInitializer plugin = new LogInitializer();
-            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
             List<Map<String,Object>> results = Utility.convert(result);
         } catch (Exception e) {
             actualFlagException =  true;
@@ -195,7 +195,7 @@ private class LogInitializerTest {
         ];
         delete configuration;
         
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
            'id' => theId   ,
            'eda__configuration' =>  configuration.Id,  
            'eda__chainName' => chainName,
@@ -207,7 +207,7 @@ private class LogInitializerTest {
         String actualMessage;
         try {
             LogInitializer plugin = new LogInitializer();
-            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
             List<Map<String,Object>> results = Utility.convert(result);
         } catch (Exception e) {
             actualFlagException =  true;

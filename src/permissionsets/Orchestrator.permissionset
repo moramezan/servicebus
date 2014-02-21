@@ -373,7 +373,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>GateItem__c.Notification__c</field>
+        <field>GateItem__c.Parameters__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -468,12 +468,12 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogWriterEntry__c.Notification__c</field>
+        <field>LogWriterEntry__c.Order__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogWriterEntry__c.Order__c</field>
+        <field>LogWriterEntry__c.Parameters__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -503,7 +503,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>PersistentData__c.Notification__c</field>
+        <field>PersistentData__c.Parameters__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>

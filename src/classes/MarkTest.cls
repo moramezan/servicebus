@@ -8,13 +8,13 @@ private class MarkTest {
         System.assertNotEquals(null, mark.describe().Tag);
     }
     
-    static testMethod void callingExecuteReturnsExpectedNotificationCollectio() {
+    static testMethod void callingExecuteReturnsExpectedParametersCollectio() {
         // Arrange :
         String chainName = 'the-chain';
         Decimal sequence = 1;
         String data = 'data';
 
-        Map<String,Object> notification = new Map<String,Object> {
+        Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__sequence' => sequence,
             'data' => data
@@ -27,17 +27,17 @@ private class MarkTest {
 
         // Act
         Mark mark = new Mark();
-        Process.PluginResult results = mark.invoke(new Process.PluginRequest(notification));
-        List<Map<String,Object>> actualOutNotifications = Utility.convert(results);
+        Process.PluginResult results = mark.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> actualOutParametersList = Utility.convert(results);
 
         // prepare
-        Decimal actualSize = actualOutNotifications.size();
+        Decimal actualSize = actualOutParametersList.size();
         Decimal actualMarkCount = null;
         Boolean actualGateGroupIdFlag = false;
         if (actualSize > 0) {
-            Map<String,Object> actualNotification = actualOutNotifications[0];
-            actualMarkCount = (Decimal) notification.get('eda__markCount' );
-            actualGateGroupIdFlag = ( notification.get('eda__gateGroupId' ) != null);
+            Map<String,Object> actualParameters = actualOutParametersList[0];
+            actualMarkCount = (Decimal) parameters.get('eda__markCount' );
+            actualGateGroupIdFlag = (parameters.get('eda__gateGroupId' ) != null);
         }
         integer actualGateGroupSize = [SELECT Id FROM GateGroup__C].size();
 

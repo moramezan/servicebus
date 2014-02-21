@@ -14,12 +14,12 @@ public class Scrape implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest pluginRequest) {
-        Map<String,Object> notification = pluginRequest.inputParameters;
+        Map<String,Object> parameters = pluginRequest.inputParameters;
         
         ScrapeConfiguration__c configuration = [
             SELECT Id, Endpoint__c
             FROM ScrapeConfiguration__c
-            WHERE Id = :(Id)notification.get('eda__configuration')
+            WHERE Id = :(Id)parameters.get('eda__configuration')
         ];
         
         HttpRequest request = new HttpRequest();
@@ -36,9 +36,9 @@ public class Scrape implements Process.Plugin {
         );
         
         insert attachment;
-        notification.put('id', attachment.Id);
+        parameters.put('id', attachment.Id);
         
-        List<Map<String,Object>> notifications = new List<Map<String,Object>>{notification};
-        return Utility.convert(notifications);
+        List<Map<String,Object>> parametersList = new List<Map<String,Object>>{parameters};
+        return Utility.convert(parametersList);
     }
 }

@@ -6,7 +6,7 @@
         <formula>IF(
     ISBLANK(Chain__c),
     &quot;This step must be configured.&quot;,
-    &quot;Fires chain &apos;&quot; + Chain__r.Name + &quot;&apos; in parallel with a cloned notification.&quot;
+    &quot;Fires chain &apos;&quot; + Chain__r.Name + &quot;&apos; in parallel with a cloned message.&quot;
 )</formula>
         <name>Update Branch Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>

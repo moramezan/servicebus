@@ -13,8 +13,8 @@ public with sharing class FailurePlugin implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> notification = request.inputParameters;
+        Map<String,Object> parameters = request.inputParameters;
         throw new FailurePluginException(FailureMessage);
-        return Utility.convert(new List<Map<String,Object>>{notification});
+        return Utility.convert(new List<Map<String,Object>>{parameters});
     }
 }

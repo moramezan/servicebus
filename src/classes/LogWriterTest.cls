@@ -11,7 +11,7 @@ private class LogWriterTest{
         Chain__c chain = new Chain__c(Name = chainName);
         insert chain;
     
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
             // 'eda__notificationId' => '1234567abcde',  // null notification Id
             'id' => theId 
         };
@@ -21,7 +21,7 @@ private class LogWriterTest{
         String actualMessage;
         try {
             LogWriter plugin = new LogWriter();
-            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
             List<Map<String,Object>> results = Utility.convert(result);
         } catch (Exception e) {
             actualFlagException =  true;
@@ -46,7 +46,7 @@ private class LogWriterTest{
         Chain__c chain = new Chain__c(Name = chainName);
         insert chain;
     
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
             'eda__notificationId' => '1234567abcde',  
             'id' => theId 
         };
@@ -56,7 +56,7 @@ private class LogWriterTest{
         String actualMessage;
         try {
             LogWriter plugin = new LogWriter();
-            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
             List<Map<String,Object>> results = Utility.convert(result);
         } catch (Exception e) {
             actualFlagException =  true;
@@ -114,7 +114,7 @@ private class LogWriterTest{
         
         List<Object> logGroupIds = new List<Object>{ logGroup1.Id, logGroup2.Id };
  
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
             'id' => theId, 
             'eda__notificationId' => '1234567abcde',  
             'eda__logGroupIds' => logGroupIds,
@@ -124,31 +124,31 @@ private class LogWriterTest{
         
         //act
         LogWriter plugin = new LogWriter();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> results = Utility.convert(result);
         
         //assemble
         List<LogWriterEntry__c> LogWriterEntries = [ 
-            SELECT id, Name, ChainStep__c,  LogGroup__c, Notification__c
+            SELECT id, Name, ChainStep__c,  LogGroup__c, Parameters__c
             FROM LogWriterEntry__c
         ];
         
         Boolean actualLogGroup1 = false;
         Boolean actualLogGroup2 = false; 
-        String actualNotificationSerialized1;
-        String actualNotificationSerialized2;
+        String actualParametersSerialized1;
+        String actualParametersSerialized2;
         for (LogWriterEntry__c  logWriterEntry : logWriterEntries) {
             if (logWriterEntry.LogGroup__c == logGroup1.Id) {
             	actualLogGroup1 = true;   
-                actualNotificationSerialized1 = logWriterEntry.Notification__c;
+                actualParametersSerialized1 = logWriterEntry.Parameters__c;
             }
             if (logWriterEntry.LogGroup__c == logGroup2.Id) {
             	actualLogGroup2 = true;
-                actualNotificationSerialized2 = logWriterEntry.Notification__c;
+                actualParametersSerialized2 = logWriterEntry.Parameters__c;
             }
         }
         String actualChainName;
-        Boolean actualNotification = ( actualNotificationSerialized2 != null);
+        Boolean actualParameters = ( actualParametersSerialized2 != null);
  
         
             
@@ -163,12 +163,12 @@ private class LogWriterTest{
 
         Boolean expectedLogGroup1 = true;
         Boolean expectedLogGroup2 = true;
-        Boolean expectedNotification = true;
+        Boolean expectedParameters = true;
         String expectedChainName = chainName;
         System.assertEquals(expectedLogGroup1, actualLogGroup1); 
         System.assertEquals(expectedLogGroup2, actualLogGroup2); 
-        System.assertEquals(expectedNotification, actualNotification);
-        System.assertEquals(actualNotificationSerialized1, actualNotificationSerialized2);
-        System.assert(actualNotificationSerialized1.contains(expectedChainName));     
+        System.assertEquals(expectedParameters, actualParameters);
+        System.assertEquals(actualParametersSerialized1, actualParametersSerialized2);
+        System.assert(actualParametersSerialized1.contains(expectedChainName));     
     }
 }

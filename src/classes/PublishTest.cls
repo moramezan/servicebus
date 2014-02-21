@@ -38,27 +38,27 @@
             EventType__c = eventType.Id
         ));
         
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
             'eda__configuration' => pubConfig.Id,
             'eda__boomerangChainStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Publish branch = new Publish();
-        List<Map<String,Object>> notifications = Utility.convert(branch.invoke(new Process.PluginRequest(notification)));
+        List<Map<String,Object>> parametersList = Utility.convert(branch.invoke(new Process.PluginRequest(parameters)));
         
         //should return one for sub, one for passthru
         Integer expectedSize = 2;
-        Integer actualSize = notifications.size();
+        Integer actualSize = parametersList.size();
         System.assertEquals(expectedSize, actualSize);
         
         //first one is for subscriber
         List<Object> expectedIds = null;
-        List<Object> actualIds = (List<Object>)notifications[0].get('eda__boomerangChainStepIds');
+        List<Object> actualIds = (List<Object>)parametersList[0].get('eda__boomerangChainStepIds');
         System.assertEquals(expectedIds, actualIds);
         
         //second one is original/passthru
         expectedIds = new List<Id>{'000000000000000AAA'};
-        actualIds = (List<Object>)notifications[1].get('eda__boomerangChainStepIds');
+        actualIds = (List<Object>)parametersList[1].get('eda__boomerangChainStepIds');
         System.assertEquals(expectedIds, actualIds);
     }
     
@@ -77,8 +77,8 @@
         insert config;
         
         Publish publishPlugin = new Publish();
-        Map<String,Object> notification = new Map<String,Object>{'eda__chainName' => 'TestChain', 'eda__sequence' => 1, 'eda__configuration' => config.Id};
-        Process.PluginRequest request = new Process.PluginRequest(notification);
+        Map<String,Object> parameters = new Map<String,Object>{'eda__chainName' => 'TestChain', 'eda__sequence' => 1, 'eda__configuration' => config.Id};
+        Process.PluginRequest request = new Process.PluginRequest(parameters);
         
         //act
         Boolean thrown = false;
@@ -89,7 +89,7 @@
         System.assert(thrown);
     }
     
-    static testMethod void testNoSubscribersStillReturnsOneNotification() {
+    static testMethod void testNoSubscribersStillReturnsOneMessage() {
         //arrange processes
         Process__c process = Processes.generateOne(Publish.class);
         
@@ -108,24 +108,24 @@
         ));
         
         String data = '{"eda__chainName":"TestChain","eda__sequence":1,"eda__configuration":"' + chainStep.ConfigurationId__c + '"}';
-        Map<String,Object> notification = (Map<String,Object>)System.Json.deserializeUntyped(data);
+        Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         Publish publishPlugin = new Publish();
         
         //act
-        Process.PluginResult results = publishPlugin.invoke(new Process.PluginRequest(notification));
-        List<Map<String,Object>> notifications = Utility.convert(results);
+        Process.PluginResult results = publishPlugin.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> parametersList = Utility.convert(results);
         
         //assert
         Integer expectedSize = 1;
-        Integer actualSize = notifications.size();
+        Integer actualSize = parametersList.size();
         System.assertEquals(expectedSize, actualSize);
         
         Integer expectedData = data.length();
-        Integer actualData = System.Json.serialize(notifications[0]).length();
+        Integer actualData = System.Json.serialize(parametersList[0]).length();
         System.assertEquals(expectedData, actualData);
     }
     
-    static testMethod void testSubscribersAffectNotificationsReturned() {
+    static testMethod void testSubscribersAffectParametersListReturned() {
         EventType__c eventType = new EventType__c(Name = 'TestEvent');
         insert eventType;
         
@@ -163,16 +163,16 @@
         ));
         
         //arrange
-        Map<String,Object> notification = new Map<String,Object>{'eda__chainName' => 'Publisher', 'eda__sequence' => 1, 'eda__configuration' => publisherStep.ConfigurationId__c};
+        Map<String,Object> parameters = new Map<String,Object>{'eda__chainName' => 'Publisher', 'eda__sequence' => 1, 'eda__configuration' => publisherStep.ConfigurationId__c};
         
         //act
         Publish process = new Publish();
-        Process.PluginResult results = process.invoke(new Process.PluginRequest(notification));
-        List<Map<String,Object>> notifications = Utility.convert(results);
+        Process.PluginResult results = process.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> parametersList = Utility.convert(results);
         
         //assert
         Integer expectedSize = 3;
-        Integer actualSize = notifications.size();
+        Integer actualSize = parametersList.size();
         System.assertEquals(expectedSize, actualSize);
     }
     

@@ -16,7 +16,7 @@ private class WiretapTest {
 
        //--NOT-DEFINED insert new WiretapCustomization__c ( UserId__c = UserInfo.getUserId());
 
-        Map<String,Object> notification = new Map<String,Object> {
+        Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__chainStep' => chainStep,
             'data' => data
@@ -29,7 +29,7 @@ private class WiretapTest {
         Wiretap wireTap = new Wiretap();
         Boolean actualFlagException = false;
         try {
-            Process.PluginResult results = wireTap.invoke(new Process.PluginRequest(notification)); 
+            Process.PluginResult results = wireTap.invoke(new Process.PluginRequest(parameters)); 
         } catch (Exception e) {
            actualFlagException = true;
         }
@@ -40,7 +40,7 @@ private class WiretapTest {
         System.assertEquals(expectedFlagException , actualFlagException );
     }  
    
-    static testMethod void callingExecuteReturnsExpectedNotificationCollectionWhenDefinedMetaCustomizableSet() {
+    static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenDefinedMetaCustomizableSet() {
         // Arrange :
         String chainName = 'the-chain';
         Integer chainStep = 1;
@@ -48,7 +48,7 @@ private class WiretapTest {
 
         insert new WiretapCustomization__c ( UserId__c = UserInfo.getUserId());
 
-        Map<String,Object> notification = new Map<String,Object> {
+        Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainName,
             'eda__chainStep' => chainStep,
             'data' => data
@@ -59,11 +59,11 @@ private class WiretapTest {
 
         // Act
         Wiretap wireTap = new Wiretap();
-        Process.PluginResult results = wireTap.invoke(new Process.PluginRequest(notification));
-        List<Map<String,Object>> actualNotifications = Utility.convert(results);
+        Process.PluginResult results = wireTap.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> actualParametersList = Utility.convert(results);
 
         // prepare
-        Integer actualSize = actualNotifications.size();
+        Integer actualSize = actualParametersList.size();
 
         // Assert
         System.assertEquals(expectedSize , actualSize );

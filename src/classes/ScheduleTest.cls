@@ -20,20 +20,20 @@
         ChainStep__c terminateStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
         
         //this guy will miss his schedule
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
            //-- NO eda__harbeatkey ::  'eda__heartbeat' => '2014-01-18T12:00:00.000Z', /
             'eda__configuration' => [SELECT Id FROM ScheduleConfiguration__c].Id
         };
         
         Schedule plugin = new Schedule();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> results = Utility.convert(result);
         
  
         
         //this guy will hit his schedule
-       ///-- NO eda__harbeatkey ::  notification.put('eda__heartbeat', '2014-01-15T09:00:00.000Z');  
-        result = plugin.invoke(new Process.PluginRequest(notification));
+       ///-- NO eda__harbeatkey ::  parameters.put('eda__heartbeat', '2014-01-15T09:00:00.000Z');  
+        result = plugin.invoke(new Process.PluginRequest(parameters));
         results = Utility.convert(result);
         
         Integer expectedHitCount = 1;
@@ -61,13 +61,13 @@
         ChainStep__c terminateStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
         
         //this guy will miss his schedule
-        Map<String,Object> notification = new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
             'eda__heartbeat' => '2014-01-18T12:00:00.000Z', //not Wednesday at 9:00
             'eda__configuration' => [SELECT Id FROM ScheduleConfiguration__c].Id
         };
         
         Schedule plugin = new Schedule();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(notification));
+        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> results = Utility.convert(result);
         
         Integer expectedMissCount = 0;
@@ -75,8 +75,8 @@
         System.assertEquals(expectedMissCount, actualMissCount);
         
         //this guy will hit his schedule
-        notification.put('eda__heartbeat', '2014-01-15T09:00:00.000Z'); //definitely a Wednesday at 9:00
-        result = plugin.invoke(new Process.PluginRequest(notification));
+        parameters.put('eda__heartbeat', '2014-01-15T09:00:00.000Z'); //definitely a Wednesday at 9:00
+        result = plugin.invoke(new Process.PluginRequest(parameters));
         results = Utility.convert(result);
         
         Integer expectedHitCount = 1;
