@@ -77,6 +77,8 @@
  */
 abstract global class Broker {
     
+    global class BrokerException extends Exception {}
+    
     /**
      * Determines which persistent datas are eligible to be moved into the Processing status (by finding Persistent
      * Datas with 'Reprocess' and 'Buffer' status). Note: too many fucked persistent datas would clog up the system,

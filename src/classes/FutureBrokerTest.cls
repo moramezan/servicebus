@@ -6,6 +6,7 @@
             flagRestartImpl = true;
             Api.executeAnonymousResponse_element responseElement = new Api.executeAnonymousResponse_element();
             responseElement.result = new Api.ExecuteAnonymousResult();
+            responseElement.result.success = true;
             response.put('response_x', responseElement);
         }
     }
