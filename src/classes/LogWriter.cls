@@ -27,17 +27,17 @@ public class LogWriter implements Process.Plugin {
             throw new LogWriterException('Unable to access the notification id');
         }
                 
-        //derive the ChainStep
-        List<ChainStep__c> chainSteps = [
+        //derive the Step
+        List<Step__c> steps = [
             SELECT Id, Sequence__c, Chain__c
-            FROM ChainStep__c
+            FROM Step__c
             WHERE Chain__r.Name = :(String)parameters.get('eda__chainName')
             AND Sequence__c = :(Decimal) parameters.get('eda__sequence')
         ];
-        if (chainSteps.size() == 0) {
-            throw new LogWriterException('Unable to access the Chain Step');
+        if (steps.size() == 0) {
+            throw new LogWriterException('Unable to access the Step');
         }
-        ChainStep__c chainStep = chainSteps[0];
+        Step__c step = steps[0];
 
 
     
@@ -56,7 +56,7 @@ public class LogWriter implements Process.Plugin {
             List<LogWriterEntry__c> logWriterEntries =  new List<LogWriterEntry__c>();
             for (Id logGroupId  : filteredLogGroupIds) {
                 logWriterEntries.add( new LogWriterEntry__c(
-                    ChainStep__c = chainStep.Id,
+                    Step__c = step.Id,
                     Order__c   = parametersOrder,
                     LogGroup__c     = logGroupId,
                     NotificationId__c = notificationId,

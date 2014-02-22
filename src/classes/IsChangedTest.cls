@@ -182,7 +182,7 @@ private class IsChangedTest {
         insert chain;
         
         //arrange steps
-        ChainStep__c chainStep = ChainSteps.generateOne(chain.Id, isChangedProcess.Id);
+        Step__c step = Steps.generateOne(chain.Id, isChangedProcess.Id);
         
         IsChangedConfiguration__c configuration = [
         SELECT Id, NewHash__c, OldHash__c, NewBlobId__c, OldBlobId__c, NewValue__c, OldValue__c, FieldName__c
@@ -230,7 +230,7 @@ private class IsChangedTest {
         insert chain;
         
         //arrange steps
-        ChainStep__c chainStep = ChainSteps.generateOne(chain.Id, isChangedProcess.Id);
+        Step__c step = Steps.generateOne(chain.Id, isChangedProcess.Id);
 
         IsChangedConfiguration__c configuration = [
         SELECT Id, NewHash__c, OldHash__c, NewBlobId__c, OldBlobId__c, NewValue__c, OldValue__c, FieldName__c
@@ -278,7 +278,7 @@ private class IsChangedTest {
         Chain__c chain = new Chain__c(Name = 'IsChangedChain');
         insert chain;
         
-        ChainStep__c chainStep = ChainSteps.generateOne(chain.Id, isChangedProcess.Id);
+        Step__c step = Steps.generateOne(chain.Id, isChangedProcess.Id);
 
         IsChangedConfiguration__c configuration = [
             SELECT Id, NewHash__c, OldHash__c, NewBlobId__c, OldBlobId__c, NewValue__c, OldValue__c, FieldName__c

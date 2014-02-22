@@ -18,15 +18,15 @@
         
         Chain__c target = new Chain__c(Name = 'target');
         insert target;
-        insert new ChainStep__c(Chain__c = target.Id, Sequence__c = 1, Process__c = terminate.Id);
+        insert new Step__c(Chain__c = target.Id, Sequence__c = 1, Process__c = terminate.Id);
         
         JumpConfiguration__c configuration = new JumpConfiguration__c(Chain__c = target.Id);
         insert configuration;
         
         Chain__c origin = new Chain__c(Name = 'origin');
         insert origin;
-        insert new ChainStep__c(Chain__c = origin.Id, Sequence__c = 1, Process__c = jump.Id, ConfigurationId__c = configuration.Id);
-        insert new ChainStep__c(Chain__c = origin.Id, Sequence__c = 2, Process__c = terminate.Id);
+        insert new Step__c(Chain__c = origin.Id, Sequence__c = 1, Process__c = jump.Id, ConfigurationId__c = configuration.Id);
+        insert new Step__c(Chain__c = origin.Id, Sequence__c = 2, Process__c = terminate.Id);
         
         
         Map<String,Object> parameters = new Map<String,Object>{

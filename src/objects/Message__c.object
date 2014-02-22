@@ -52,11 +52,11 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
-        <fullName>ChainStep__c</fullName>
+        <fullName>Step__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
-        <label>ChainStep</label>
-        <referenceTo>ChainStep__c</referenceTo>
+        <label>Step</label>
+        <referenceTo>Step__c</referenceTo>
         <relationshipLabel>Messages</relationshipLabel>
         <relationshipName>Messages</relationshipName>
         <required>false</required>

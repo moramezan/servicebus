@@ -30,7 +30,7 @@
         Chain__c target = new Chain__c(Name = 'target');
         insert target;
         
-        ChainStep__c subscribeStep = ChainSteps.generateOne(target.Id, subscribeProcess.Id);
+        Step__c subscribeStep = Steps.generateOne(target.Id, subscribeProcess.Id);
         
         //arrange subscribe config
         Database.update(new SubscribeConfiguration__c(
@@ -40,7 +40,7 @@
         
         Map<String,Object> parameters = new Map<String,Object>{
             'eda__configuration' => pubConfig.Id,
-            'eda__boomerangChainStepIds' => new List<Id>{'000000000000000AAA'}
+            'eda__boomerangStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Publish branch = new Publish();
@@ -53,12 +53,12 @@
         
         //first one is for subscriber
         List<Object> expectedIds = null;
-        List<Object> actualIds = (List<Object>)parametersList[0].get('eda__boomerangChainStepIds');
+        List<Object> actualIds = (List<Object>)parametersList[0].get('eda__boomerangStepIds');
         System.assertEquals(expectedIds, actualIds);
         
         //second one is original/passthru
         expectedIds = new List<Id>{'000000000000000AAA'};
-        actualIds = (List<Object>)parametersList[1].get('eda__boomerangChainStepIds');
+        actualIds = (List<Object>)parametersList[1].get('eda__boomerangStepIds');
         System.assertEquals(expectedIds, actualIds);
     }
     
@@ -71,7 +71,7 @@
         insert chain;
         
         //arrange steps
-        ChainStep__c chainStep = ChainSteps.generateOne(chain.Id, process.Id);
+        Step__c step = Steps.generateOne(chain.Id, process.Id);
         
         PublishConfiguration__c config = new PublishConfiguration__c();
         insert config;
@@ -101,13 +101,13 @@
         insert chain;
         
         //arrange steps
-        ChainStep__c chainStep = ChainSteps.generateOne(chain.Id, process.Id);
+        Step__c step = Steps.generateOne(chain.Id, process.Id);
         Database.update(new PublishConfiguration__c(
-            Id = chainStep.ConfigurationId__c,
+            Id = step.ConfigurationId__c,
             EventType__c = eventType.Id
         ));
         
-        String data = '{"eda__chainName":"TestChain","eda__sequence":1,"eda__configuration":"' + chainStep.ConfigurationId__c + '"}';
+        String data = '{"eda__chainName":"TestChain","eda__sequence":1,"eda__configuration":"' + step.ConfigurationId__c + '"}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         Publish publishPlugin = new Publish();
         
@@ -137,7 +137,7 @@
         Chain__c publisher = new Chain__c(Name = 'Publisher');
         insert publisher;
         
-        ChainStep__c publisherStep = ChainSteps.generateOne(publisher.Id, publishProcess.Id);
+        Step__c publisherStep = Steps.generateOne(publisher.Id, publishProcess.Id);
         Database.update(new PublishConfiguration__c(
             Id = publisherStep.ConfigurationId__c,
             EventType__c = eventType.Id
@@ -147,7 +147,7 @@
         Chain__c subscriber1 = new Chain__c(Name = 'Subscriber1');
         insert subscriber1;
         
-        ChainStep__c subscriber1step = ChainSteps.generateOne(subscriber1.Id, subscribeProcess.Id);
+        Step__c subscriber1step = Steps.generateOne(subscriber1.Id, subscribeProcess.Id);
         Database.update(new SubscribeConfiguration__c(
             Id = subscriber1step.ConfigurationId__c,
             EventType__c = eventType.Id
@@ -156,7 +156,7 @@
         Chain__c subscriber2 = new Chain__c(Name = 'Subscriber2');
         insert subscriber2;
         
-        ChainStep__c subscriber2step = ChainSteps.generateOne(subscriber2.Id, subscribeProcess.Id);
+        Step__c subscriber2step = Steps.generateOne(subscriber2.Id, subscribeProcess.Id);
         Database.update(new SubscribeConfiguration__c(
             Id = subscriber2step.ConfigurationId__c,
             EventType__c = eventType.Id
@@ -185,8 +185,8 @@
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         
         // Chain A
-        ChainStep__c chainStepA1 = ChainSteps.generateOne(chainA.Id, wiretapProcess.Id);
-        ChainStep__c chainStepA2 = ChainSteps.generateOne(chainA.Id, wiretapProcess.Id);
+        Step__c stepA1 = Steps.generateOne(chainA.Id, wiretapProcess.Id);
+        Step__c stepA2 = Steps.generateOne(chainA.Id, wiretapProcess.Id);
 
         // Act :
         List<HealthController.Health> PublishHealths = Publish.getHealth();
@@ -227,9 +227,9 @@
         Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
 
         // Chain Z - OK : Event is Subscribed
-        ChainStep__c chainStepZ1 = ChainSteps.generateOne(chainZ.Id, publishProcess.Id);
-        ChainStep__c chainStepZ2 = ChainSteps.generateOne(chainZ.Id, wiretapProcess.Id);
-        ChainStep__c chainStepZ3 = ChainSteps.generateOne(chainSubscribe.Id, subscribeProcess.Id);
+        Step__c stepZ1 = Steps.generateOne(chainZ.Id, publishProcess.Id);
+        Step__c stepZ2 = Steps.generateOne(chainZ.Id, wiretapProcess.Id);
+        Step__c stepZ3 = Steps.generateOne(chainSubscribe.Id, subscribeProcess.Id);
 
         // Event
         EventType__c eventTypeSubscribed = new EventType__c(Name = 'an-event-that-IS-Subscribed');
@@ -237,8 +237,8 @@
 
         // Config Subscribe
         Id SubscribeConfigurationIdZ3 = (Id) [SELECT Id, ConfigurationId__c
-            FROM ChainStep__c
-            WHERE Id = :chainStepZ3.Id LIMIT 1
+            FROM Step__c
+            WHERE Id = :stepZ3.Id LIMIT 1
         ].ConfigurationId__c;
             
         SubscribeConfiguration__c SubscribeConfigurationZ3 = [
@@ -253,8 +253,8 @@
         // Config Z1
         Id configurationIdZ1 = (Id) [
             SELECT Id, ConfigurationId__c
-            FROM ChainStep__c
-            WHERE Id = :chainStepZ1.Id LIMIT 1
+            FROM Step__c
+            WHERE Id = :stepZ1.Id LIMIT 1
         ].ConfigurationId__c;
         
         PublishConfiguration__c PublishConfigurationZ1 = [
@@ -299,8 +299,8 @@
         Process__c publishProcess = Processes.generateOne(Publish.class);
         
         // Chain A - Warning : Ok but event Not Subscribed
-        ChainStep__c chainStepA1 = ChainSteps.generateOne(chainA.Id, publishProcess.Id);
-        ChainStep__c chainStepA2 = ChainSteps.generateOne(chainA.Id, wiretapProcess.Id);
+        Step__c stepA1 = Steps.generateOne(chainA.Id, publishProcess.Id);
+        Step__c stepA2 = Steps.generateOne(chainA.Id, wiretapProcess.Id);
         
         // Event
         EventType__c eventTypeNotSubscribed = new EventType__c(Name = 'an-event-not-Subscribed');
@@ -309,8 +309,8 @@
         // Config A1
         Id configurationIdA1 = (Id) [
             SELECT Id, ConfigurationId__c
-            FROM ChainStep__c
-            WHERE Id = :chainStepA1.Id LIMIT 1
+            FROM Step__c
+            WHERE Id = :stepA1.Id LIMIT 1
         ].ConfigurationId__c;
     
         PublishConfiguration__c PublishConfigurationA1 = [
@@ -355,13 +355,13 @@
         Process__c publishProcess = Processes.generateOne(Publish.class);
         
         // Chain B - Problem : No Configuration
-        ChainStep__c chainStepB1 = ChainSteps.generateOne(chainB.Id, publishProcess.Id);
-        ChainStep__c chainStepB2 = ChainSteps.generateOne(chainB.Id, wiretapProcess.Id);
+        Step__c stepB1 = Steps.generateOne(chainB.Id, publishProcess.Id);
+        Step__c stepB2 = Steps.generateOne(chainB.Id, wiretapProcess.Id);
 
         Id configurationIdB1 = (Id) [
             SELECT Id, ConfigurationId__c
-            FROM ChainStep__c
-            WHERE Id = :chainStepB1.Id LIMIT 1
+            FROM Step__c
+            WHERE Id = :stepB1.Id LIMIT 1
          ].ConfigurationId__c;
         Database.delete(configurationIdB1);
         
@@ -399,8 +399,8 @@
         Process__c publishProcess = Processes.generateOne(Publish.class);
         
         // Chain B - Problem : No Configuration
-        ChainStep__c chainStepB1 = ChainSteps.generateOne(chainB.Id, publishProcess.Id);
-        ChainStep__c chainStepB2 = ChainSteps.generateOne(chainB.Id, wiretapProcess.Id);
+        Step__c stepB1 = Steps.generateOne(chainB.Id, publishProcess.Id);
+        Step__c stepB2 = Steps.generateOne(chainB.Id, wiretapProcess.Id);
         
         // Act :
         List<HealthController.Health> PublishHealths = Publish.getHealth();

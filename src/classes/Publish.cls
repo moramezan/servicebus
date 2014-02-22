@@ -35,16 +35,16 @@ public with sharing class Publish implements Process.Plugin {
             WHERE EventType__c = :publishConfiguration.EventType__c
         ]);
         
-        List<ChainStep__c> steps = [
+        List<Step__c> steps = [
             SELECT Id, Chain__r.Name, Sequence__c
-            FROM ChainStep__c
+            FROM Step__c
             WHERE ConfigurationId__c IN :subscribeConfigurations.keySet()
         ];
         
-        for (ChainStep__c step : steps) {
+        for (Step__c step : steps) {
             Map<String,Object> clone = parameters.clone();
             //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
-            clone.put('eda__boomerangChainStepIds', null);
+            clone.put('eda__boomerangStepIds', null);
             clone.put('eda__sequence', step.Sequence__c);
             clone.put('eda__chainName', step.Chain__r.Name);
             parametersList.add(clone);
@@ -61,8 +61,8 @@ public with sharing class Publish implements Process.Plugin {
             SELECT id,
             Name,
             (SELECT id, Name, Process__c, ConfigurationId__c
-            FROM ChainSteps__r
-            ORDER BY Sequence__c ASC) chainSteps
+            FROM Steps__r
+            ORDER BY Sequence__c ASC) steps
             FROM Chain__c
         ];
         
@@ -100,7 +100,7 @@ public with sharing class Publish implements Process.Plugin {
                 'Detail' => detailInitial,
                 'ChainId' => chain.Id,
                 'ChainName' => chain.Name,
-                'ChainSteps' => chain.ChainSteps__r
+                'Steps' => chain.Steps__r
             };
 
             Boolean requireSingleInstance = false;
@@ -110,8 +110,8 @@ public with sharing class Publish implements Process.Plugin {
 
             if ( resolvedProcess ) {
                 Integer publishOccurs = 0;
-                for (ChainStep__c chainStep : chain.ChainSteps__r) {
-                    if (chainStep.Process__c == PublishProcess.Id) {
+                for (Step__c step : chain.Steps__r) {
+                    if (step.Process__c == PublishProcess.Id) {
                         publishOccurs++;
                     }
                 }
@@ -122,10 +122,10 @@ public with sharing class Publish implements Process.Plugin {
                 if (hasPublish) {
                     requireSingleInstance = true;
                 
-                    for (ChainStep__c chainStep : chain.ChainSteps__r) {
-                        if (chainStep.Process__c == PublishProcess.Id) {
-                            Id chainStepId = chainStep.Id;
-                            Id publishConfigurationId = (Id) chainStep.ConfigurationId__c; // cast from string to Id
+                    for (Step__c step : chain.Steps__r) {
+                        if (step.Process__c == PublishProcess.Id) {
+                            Id stepId = step.Id;
+                            Id publishConfigurationId = (Id) step.ConfigurationId__c; // cast from string to Id
                              
                              String status;
                              String detail;
@@ -138,7 +138,7 @@ public with sharing class Publish implements Process.Plugin {
                                  if (publishConfiguration == null) {
                                      isOk = false;
                                      status = 'Error';
-                                     detail = 'Cannot resolve Publish configuration, chainStepId=['+chainStepId+']';
+                                     detail = 'Cannot resolve Publish configuration, stepId=['+stepId+']';
                                  }
                              }
                              if ( isOk ) {
@@ -146,7 +146,7 @@ public with sharing class Publish implements Process.Plugin {
                                  if (eventTypeId == null) {
                                      isOk = false;
                                      status = 'Error';
-                                     detail = 'No event type defined on Publish configuration=['+publishConfigurationId+'] for chainStepId=['+chainStepId+']';
+                                     detail = 'No event type defined on Publish configuration=['+publishConfigurationId+'] for stepId=['+stepId+']';
                                  }
                              }
                              if ( isOk ) {
@@ -162,7 +162,7 @@ public with sharing class Publish implements Process.Plugin {
                                      String eventTypeName = (eventType == null) ? '' : eventType.Name;
                                      isOk = false;
                                      status = 'Warning';
-                                     detail = 'No Subscriber is configured to subscribe to event=['+eventTypeName+'] published on chainStepId=['+chainStepId+']';
+                                     detail = 'No Subscriber is configured to subscribe to event=['+eventTypeName+'] published on stepId=['+stepId+']';
                                  }
                              }
 
@@ -173,11 +173,11 @@ public with sharing class Publish implements Process.Plugin {
                                     'Detail' => detail,
                                     'ChainId' => chain.Id,
                                     'ChainName' => chain.Name,
-                                    'ChainSteps' => chain.ChainSteps__r
+                                    'Steps' => chain.Steps__r
                                 });
                             }
-                        } // end: if (chainStep.Process__c == PublishProcess.Id)
-                    } // end:: for (ChainStep__c chainStep : chain.ChainSteps__r)
+                        } // end: if (step.Process__c == PublishProcess.Id)
+                    } // end:: for (Step__c step : chain.Steps__r)
                 } // end:: if (hasPublish)
             } // end: if ( resolvedProcess )
 

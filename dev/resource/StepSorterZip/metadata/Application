@@ -10,7 +10,7 @@
             "Application"
         ],
         "models": [
-            "ChainStep",
+            "Step",
             "Process"
         ],
         "name": "Steps",
@@ -21,7 +21,7 @@
             "Ext.util.Point"
         ],
         "stores": [
-            "ChainSteps",
+            "Steps",
             "Processes"
         ],
         "views": [

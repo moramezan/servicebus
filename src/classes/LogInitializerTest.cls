@@ -23,8 +23,8 @@ private class LogInitializerTest {
         Chain__c chain = new Chain__c(Name = chainName);
         insert chain;
         
-        ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = theSequence, Process__c = logInitializerProcess.Id);
-        insert chainStep;
+        Step__c step = new Step__c(Chain__c = chain.Id, Sequence__c = theSequence, Process__c = logInitializerProcess.Id);
+        insert step;
         
         LogConfiguration__c configuration = [
             SELECT Id, GroupIdentifier__c
@@ -88,8 +88,8 @@ private class LogInitializerTest {
         Chain__c chain = new Chain__c(Name = chainName);
         insert chain;
         
-        ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = theSequence, Process__c = logInitializerProcess.Id);
-        insert chainStep;
+        Step__c step = new Step__c(Chain__c = chain.Id, Sequence__c = theSequence, Process__c = logInitializerProcess.Id);
+        insert step;
         
         LogConfiguration__c configuration = [
             SELECT Id, GroupIdentifier__c
@@ -140,7 +140,7 @@ private class LogInitializerTest {
     }
 
     
-    private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessChainStep() {
+    private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
         //arrange
         String chainName  = 'LogInitializerChain';
         Integer theSequence =  1;
@@ -170,7 +170,7 @@ private class LogInitializerTest {
         Boolean expectedFlagException = true;
         System.assertEquals(expectedFlagException, actualFlagException);
         
-        String expectedMessage = 'Unable to access the Chain Step Sequence and Chain Name';
+        String expectedMessage = 'Unable to access the Step Sequence and Chain Name';
         System.assert( actualMessage.contains(expectedMessage) );
     }
 
@@ -186,8 +186,8 @@ private class LogInitializerTest {
         Chain__c chain = new Chain__c(Name = chainName);
         insert chain;
         
-        ChainStep__c chainStep = new ChainStep__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = logInitializerProcess.Id);
-        insert chainStep;
+        Step__c step = new Step__c(Chain__c = chain.Id, Sequence__c = 1, Process__c = logInitializerProcess.Id);
+        insert step;
         
         LogConfiguration__c configuration = [
             SELECT Id, GroupIdentifier__c

@@ -52,7 +52,7 @@
     <relatedLists>
         <excludeButtons>New</excludeButtons>
         <fields>Order__c</fields>
-        <fields>ChainStep__c</fields>
+        <fields>Step__c</fields>
         <fields>ChainName__c</fields>
         <fields>Sequence__c</fields>
         <fields>GroupIdentifier__c</fields>

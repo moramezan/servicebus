@@ -37,7 +37,7 @@ public with sharing class Branch implements Process.Plugin {
         Map<String,Object> clone = parameters.clone();
         
         //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
-        clone.put('eda__boomerangChainStepIds', null);
+        clone.put('eda__boomerangStepIds', null);
         clone.put('eda__chainName', branchTo);
         clone.put('eda__sequence', 0);
         

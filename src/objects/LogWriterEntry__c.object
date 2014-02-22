@@ -53,7 +53,7 @@
     <fields>
         <fullName>ChainName__c</fullName>
         <externalId>false</externalId>
-        <formula>ChainStep__r.Chain__r.Name</formula>
+        <formula>Step__r.Chain__r.Name</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Chain Name</label>
         <required>false</required>
@@ -62,11 +62,11 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>ChainStep__c</fullName>
+        <fullName>Step__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
-        <label>Chain Step</label>
-        <referenceTo>ChainStep__c</referenceTo>
+        <label>Step</label>
+        <referenceTo>Step__c</referenceTo>
         <relationshipLabel>Log Writer Entries</relationshipLabel>
         <relationshipName>Log_Writer_Entries</relationshipName>
         <required>false</required>
@@ -130,7 +130,7 @@
     <fields>
         <fullName>Sequence__c</fullName>
         <externalId>false</externalId>
-        <formula>ChainStep__r.Sequence__c</formula>
+        <formula>Step__r.Sequence__c</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Sequence</label>
         <precision>18</precision>

@@ -23,7 +23,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ChainStep__c</field>
+                <field>Step__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>

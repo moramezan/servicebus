@@ -1,0 +1,1 @@
+<apex:page standardController="Step__c" extensions="StepShowConfigurationExtension" action="{!doRedirect}" />

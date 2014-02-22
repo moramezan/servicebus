@@ -21,8 +21,8 @@ public with sharing class Subscribe implements Process.Plugin {
         List<Chain__c> chains = [SELECT id,
                                         Name,
                                         (SELECT id, Name, Process__c, ConfigurationId__c
-                                         FROM ChainSteps__r
-                                         ORDER BY Sequence__c ASC) chainSteps
+                                         FROM Steps__r
+                                         ORDER BY Sequence__c ASC) steps
                                  FROM Chain__c
                                 ];
         
@@ -56,27 +56,27 @@ public with sharing class Subscribe implements Process.Plugin {
                                                         'Detail' => detail,
                                                         'ChainId' => chain.Id,
                                                         'ChainName' => chain.Name,
-                                                        'ChainSteps' => chain.ChainSteps__r });
+                                                        'Steps' => chain.Steps__r });
         }
         
         if (resolvedProcess) {
             for (Map<String,Object> instanceDetail : instanceDetails) {
-                List<ChainStep__c> chainSteps = (List<ChainStep__c>) instanceDetail.get('ChainSteps');
+                List<Step__c> steps = (List<Step__c>) instanceDetail.get('Steps');
                 Integer subscribeOccurs = 0;
-                Integer step = 1;
+                Integer count = 1;
                 Boolean subscribeFirst = false;
-                Id chainStepId = null;
+                Id stepId = null;
                 Id subscribeConfigurationId = null;
-                for (ChainStep__c chainStep : chainSteps) {
-                    if (chainStep.Process__c == SubscribeProcess.Id) {
+                for (Step__c step : steps) {
+                    if (step.Process__c == SubscribeProcess.Id) {
                         subscribeOccurs++;
-                        if (step == 1) {
+                        if (count == 1) {
                             subscribeFirst = true;
-                            chainStepId = chainStep.Id;
-                            subscribeConfigurationId = (Id) chainStep.ConfigurationId__c; // cast from string to Id
+                            stepId = step.Id;
+                            subscribeConfigurationId = (Id) step.ConfigurationId__c; // cast from string to Id
                         }
                     }
-                    step++;
+                    count++;
                 }
                  
                 Boolean hasSubscribe = (subscribeOccurs > 0);

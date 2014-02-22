@@ -9,7 +9,7 @@
         insert chain;
         
         //arrange steps
-        ChainStep__c scheduleStep = ChainSteps.generateOne(chain.Id, scheduleProcess.Id);
+        Step__c scheduleStep = Steps.generateOne(chain.Id, scheduleProcess.Id);
         
         ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c];
         scheduleConfiguration.Frequency__c = 'Weekly';
@@ -17,7 +17,7 @@
         scheduleConfiguration.FriendlyTimes__c = '09:00';
         update scheduleConfiguration;
         
-        ChainStep__c terminateStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
+        Step__c terminateStep = Steps.generateOne(chain.Id, terminateProcess.Id);
         
         //this guy will miss his schedule
         Map<String,Object> parameters = new Map<String,Object>{
@@ -50,7 +50,7 @@
         insert chain;
         
         //arrange steps
-        ChainStep__c scheduleStep = ChainSteps.generateOne(chain.Id, scheduleProcess.Id);
+        Step__c scheduleStep = Steps.generateOne(chain.Id, scheduleProcess.Id);
         
         ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c];
         scheduleConfiguration.Frequency__c = 'Weekly';
@@ -58,7 +58,7 @@
         scheduleConfiguration.FriendlyTimes__c = '09:00';
         update scheduleConfiguration;
         
-        ChainStep__c terminateStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
+        Step__c terminateStep = Steps.generateOne(chain.Id, terminateProcess.Id);
         
         //this guy will miss his schedule
         Map<String,Object> parameters = new Map<String,Object>{

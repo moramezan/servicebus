@@ -57,19 +57,19 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ChainStep</apexClass>
+        <apexClass>Step</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ChainStepShowConfigurationExtension</apexClass>
+        <apexClass>StepShowConfigurationExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ChainSteps</apexClass>
+        <apexClass>Steps</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ChainStepsTest</apexClass>
+        <apexClass>StepsTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -313,37 +313,37 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>ChainStep__c.ChainNameAndSequence__c</field>
+        <field>Step__c.ChainNameAndSequence__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>ChainStep__c.Chain__c</field>
+        <field>Step__c.Chain__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>ChainStep__c.ConfigurationId__c</field>
+        <field>Step__c.ConfigurationId__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>ChainStep__c.ConfigurationName__c</field>
+        <field>Step__c.ConfigurationName__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>ChainStep__c.Process__c</field>
+        <field>Step__c.Process__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>ChainStep__c.Sequence__c</field>
+        <field>Step__c.Sequence__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Chain__c.ChainStepsCount__c</field>
+        <field>Chain__c.StepsCount__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -448,7 +448,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogWriterEntry__c.ChainStep__c</field>
+        <field>LogWriterEntry__c.Step__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -488,7 +488,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Message__c.ChainStep__c</field>
+        <field>Message__c.Step__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -606,7 +606,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>ChainStep__c</object>
+        <object>Step__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -739,7 +739,7 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ChainStepShowConfiguration</apexPage>
+        <apexPage>StepShowConfiguration</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

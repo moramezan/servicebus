@@ -7,16 +7,16 @@ public class ConfigurationShowStepExtension {
     }
     
     /**
-     * This resolves the Chain Step record for a given Configuration so that
+     * This resolves the Step record for a given Configuration so that
      * it can be accessed from the native interface via a Custom Button.
      */
     public PageReference doRedirect() {
-        ChainStep__c chainStep = [
+        Step__c step = [
             SELECT Id
-            FROM ChainStep__c
+            FROM Step__c
             WHERE ConfigurationId__c = :(Id)this.controller.getId()
         ];
-        return new ApexPages.StandardController(chainStep).view();
+        return new ApexPages.StandardController(step).view();
     }
     
 }

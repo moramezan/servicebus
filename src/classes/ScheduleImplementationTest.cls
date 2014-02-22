@@ -21,8 +21,8 @@
         insert one;
         
         //arrange steps
-        ChainSteps.generateOne(one.Id, scheduleProcess.Id);
-        ChainSteps.generateOne(one.Id, terminateProcess.Id);
+        Steps.generateOne(one.Id, scheduleProcess.Id);
+        Steps.generateOne(one.Id, terminateProcess.Id);
         
         List<ScheduleConfiguration__c> scheduleConfigurations = [SELECT Id FROM ScheduleConfiguration__c];
         for (ScheduleConfiguration__c scheduleConfiguration : scheduleConfigurations) {

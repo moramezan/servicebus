@@ -32,7 +32,7 @@ public with sharing class Schedule implements Process.Plugin {
             ];
             
             if (isWithinWindow(heartbeat, config)) {
-                //this is one of the configured times, so carry on to next chain step
+                //this is one of the configured times, so carry on to next step
                 parametersList.add(parameters);
             }
         }

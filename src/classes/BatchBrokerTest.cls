@@ -11,8 +11,8 @@
         insert chainA;
         
         //arrange steps
-        ChainStep__c stepA1 = ChainSteps.generateOne(chainA.Id, markProcess.Id);
-        ChainStep__c stepA2 = ChainSteps.generateOne(chainA.Id, terminateProcess.Id);
+        Step__c stepA1 = Steps.generateOne(chainA.Id, markProcess.Id);
+        Step__c stepA2 = Steps.generateOne(chainA.Id, terminateProcess.Id);
         Decimal sequenceA1 = stepA1.Sequence__c;
         Decimal sequenceA2 = stepA2.Sequence__c;
         
@@ -26,7 +26,7 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, ChainStep__c , Status__c, IsDeleted
+            SELECT Id, Name, Process__r.Name, Step__c , Status__c, IsDeleted
             FROM Message__c
             WHERE IsDeleted =  false
             ALL ROWS
@@ -50,7 +50,7 @@
         insert chainA;
         
         //arrange step
-        ChainStep__c stepA1 = ChainSteps.generateOne(chainA.Id, failureProcess.Id);
+        Step__c stepA1 = Steps.generateOne(chainA.Id, failureProcess.Id);
         Decimal sequenceA1 = stepA1.Sequence__c;
         
         //arrange specific broker implementation
@@ -63,7 +63,7 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, ChainStep__c , Status__c, Message__c, IsDeleted
+            SELECT Id, Name, Process__r.Name, Step__c , Status__c, Message__c, IsDeleted
             FROM Message__c
             WHERE IsDeleted =  false
             ALL ROWS
@@ -92,8 +92,8 @@
         insert chainA;
         
         //arrange steps
-        ChainStep__c stepA1 = ChainSteps.generateOne(chainA.Id, markProcess.Id);
-        ChainStep__c stepA2 = ChainSteps.generateOne(chainA.Id, terminateProcess.Id);
+        Step__c stepA1 = Steps.generateOne(chainA.Id, markProcess.Id);
+        Step__c stepA2 = Steps.generateOne(chainA.Id, terminateProcess.Id);
         Decimal sequenceA1 = stepA1.Sequence__c;
         Decimal sequenceA2 = stepA2.Sequence__c;
         
@@ -108,7 +108,7 @@
             'id' => '000000000000000AAA'
         };
         Message__c message = new Message__c(
-            ChainStep__c = stepA1.Id,
+            Step__c = stepA1.Id,
             Status__c = 'Reprocess',
             Parameters__c = Json.serializePretty(parameters)
         );
@@ -121,7 +121,7 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, IsDeleted
+            SELECT id, Name, Process__r.Name, Step__c , Status__c, IsDeleted
             FROM Message__c
             WHERE IsDeleted =  false
             ALL ROWS

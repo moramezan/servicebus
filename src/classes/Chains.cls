@@ -15,11 +15,11 @@ public class Chains extends SObjects {
      */
     @testVisible private void cascadeDeletionTriggers() {
         Set<Id> chainIds = new Map<Id,SObject>(this.getSObjects()).keySet();
-        List<ChainStep__c> chainSteps = [
+        List<Step__c> steps = [
             SELECT Id
-            FROM ChainStep__c
+            FROM Step__c
             WHERE Chain__c IN :chainIds
         ];
-        delete chainSteps;
+        delete steps;
     }
 }

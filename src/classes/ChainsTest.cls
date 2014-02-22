@@ -11,8 +11,8 @@
         insert chain;
         
         //arrange steps
-        ChainStep__c branchStep = ChainSteps.generateOne(chain.Id, branchProcess.Id);
-        ChainStep__c terminateStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
+        Step__c branchStep = Steps.generateOne(chain.Id, branchProcess.Id);
+        Step__c terminateStep = Steps.generateOne(chain.Id, terminateProcess.Id);
         
         Integer expectedConfigsBefore = 1;
         Integer actualConfigsBefore = [SELECT COUNT() FROM BranchConfiguration__c];

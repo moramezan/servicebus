@@ -1,7 +1,7 @@
-@isTest private class ChainStepsTest {
+@isTest private class StepsTest {
     
     //before insert test
-    static testMethod void testChainStepConfigurationIsCreatedWhenInserted() {
+    static testMethod void testStepConfigurationIsCreatedWhenInserted() {
         //arrange processes
         Process__c boomerangProcess = Processes.generateOne(Boomerang.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
@@ -11,8 +11,8 @@
         insert chain;
         
         //arrange steps
-        ChainStep__c boomerangStep = ChainSteps.generateOne(chain.Id, boomerangProcess.Id);
-        ChainStep__c terminateStep = ChainSteps.generateOne(chain.Id, terminateProcess.Id);
+        Step__c boomerangStep = Steps.generateOne(chain.Id, boomerangProcess.Id);
+        Step__c terminateStep = Steps.generateOne(chain.Id, terminateProcess.Id);
         
         //assert
         String expectedId = Schema.SObjectType.BoomerangConfiguration__c.KeyPrefix; //this needs to be some config record
@@ -33,26 +33,26 @@
         //arrange steps
         Integer SequenceGtZero1 = 1;
         Integer SequenceGtZero2 = 2;
-        ChainStep__c chainStep1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero1, Process__c = wiretapProcess.Id);
-        ChainStep__c chainStep2 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero2, Process__c = terminateProcess.Id);
+        Step__c step1 = new Step__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero1, Process__c = wiretapProcess.Id);
+        Step__c step2 = new Step__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero2, Process__c = terminateProcess.Id);
         
         //act
-        insert new List<ChainStep__c> {chainStep1, chainStep2};
+        insert new List<Step__c> {step1, step2};
         
         //assemble : requery after trigger
-        List<ChainStep__c> chainSteps = [SELECT Id, Chain__c, Sequence__c FROM ChainStep__c WHERE Chain__c = :chain.Id];
+        List<Step__c> steps = [SELECT Id, Chain__c, Sequence__c FROM Step__c WHERE Chain__c = :chain.Id];
         Integer actualSequence1 = -1;
         Integer actualSequence2 = -1;
         Integer offset = 1;
-        for (ChainStep__c chainStep : chainSteps ) {
-            if (offset == 1) actualSequence1 = (Integer) chainStep.Sequence__c;
-            if (offset == 2) actualSequence2 = (Integer) chainStep.Sequence__c;
+        for (Step__c step : steps ) {
+            if (offset == 1) actualSequence1 = (Integer) step.Sequence__c;
+            if (offset == 2) actualSequence2 = (Integer) step.Sequence__c;
             offset++;
         }
         
         //assert
         Integer expectedSize = 2;
-        Integer actualSize = chainSteps.size();
+        Integer actualSize = Steps.size();
         System.assertEquals(expectedSize, actualSize);
         
         Integer expectedSequence1 = SequenceGtZero1;
@@ -90,20 +90,20 @@
         //WireTap   3
         //WireTap   4
         
-        ChainStep__c chainStep1 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero1, Process__c = wiretapProcess.Id);
-        ChainStep__c chainStep2 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero2, Process__c = terminateProcess.Id);
-        ChainStep__c chainStep3 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = SequenceEqToZero3, Process__c = wiretapProcess.Id);
-        ChainStep__c chainStep4 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = SequenceEqToZero4, Process__c = wiretapProcess.Id);
-        insert chainStep1;
-        insert chainStep2;
-        insert chainStep3;
-        insert chainStep4;
+        Step__c step1 = new Step__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero1, Process__c = wiretapProcess.Id);
+        Step__c step2 = new Step__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero2, Process__c = terminateProcess.Id);
+        Step__c step3 = new Step__c(Chain__c = chain.Id, Sequence__c = SequenceEqToZero3, Process__c = wiretapProcess.Id);
+        Step__c step4 = new Step__c(Chain__c = chain.Id, Sequence__c = SequenceEqToZero4, Process__c = wiretapProcess.Id);
+        insert step1;
+        insert step2;
+        insert step3;
+        insert step4;
         
             
         //asemble : requery after trigger
-        List<ChainStep__c> chainSteps = [
+        List<Step__c> steps = [
             SELECT Id, Chain__c, Sequence__c
-            FROM ChainStep__c
+            FROM Step__c
             WHERE Chain__c = :chain.Id
             ORDER BY Id
         ];
@@ -112,18 +112,18 @@
         Integer actualSequence3 = -1;
         Integer actualSequence4 = -1;
         Integer offset = 1;
-        for (ChainStep__c chainStep : chainSteps ) {
-            if (offset == 1) actualSequence1 = (Integer) chainStep.Sequence__c;
-            if (offset == 2) actualSequence2 = (Integer) chainStep.Sequence__c;
-            if (offset == 3) actualSequence3 = (Integer) chainStep.Sequence__c;
-            if (offset == 4) actualSequence4 = (Integer) chainStep.Sequence__c;
+        for (Step__c step : steps ) {
+            if (offset == 1) actualSequence1 = (Integer) step.Sequence__c;
+            if (offset == 2) actualSequence2 = (Integer) step.Sequence__c;
+            if (offset == 3) actualSequence3 = (Integer) step.Sequence__c;
+            if (offset == 4) actualSequence4 = (Integer) step.Sequence__c;
             offset++;
         }
     
         
         //assert
         Integer expectedSize = 4;
-        Integer actualSize = chainSteps.size();
+        Integer actualSize = Steps.size();
         System.assertEquals(expectedSize, actualSize);
         
         Integer expectedSequence1 = SequenceGtZero1; // unaffected
@@ -137,7 +137,7 @@
     }
     
     //before delete test
-    static testMethod void firingChainStepBeforeDeleteDeletesConfig() {
+    static testMethod void firingStepBeforeDeleteDeletesConfig() {
         // Arrange :
         Decimal sequence  = 1;
         String  data      = 'data';
@@ -150,7 +150,7 @@
         insert chain;
         
         //arrange steps
-        ChainStep__c branchStep = ChainSteps.generateOne(chain.Id, branchProcess.Id);
+        Step__c branchStep = Steps.generateOne(chain.Id, branchProcess.Id);
         
         integer expectedSizeBefore =  1;
         integer expectedSizeAfter =   0;

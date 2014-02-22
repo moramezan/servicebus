@@ -16,7 +16,7 @@ global class LogInitializer implements Process.Plugin {
         plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter(
                 'eda__logGroupIds',
-                'An identifier that associates instances of chain steps.',
+                'An identifier that associates instances of steps.',
                 Process.PluginDescribeResult.ParameterType.String
             )
         };
@@ -31,16 +31,16 @@ global class LogInitializer implements Process.Plugin {
         
         
          //derive the ChainName and Sequence
-         List<ChainStep__c> chainSteps = [
+         List<Step__c> steps = [
              SELECT Id, Sequence__c, Chain__r.Name
-             FROM ChainStep__c
+             FROM Step__c
              WHERE Chain__r.Name = :(String)parameters.get('eda__chainName')
              AND Sequence__c = :(Decimal) parameters.get('eda__sequence')
          ];
-         if (chainSteps.size() == 0) {
-            throw new LogInitializerException('Unable to access the Chain Step Sequence and Chain Name');
+         if (steps.size() == 0) {
+            throw new LogInitializerException('Unable to access the Step Sequence and Chain Name');
          }
-         ChainStep__c  chainStep = chainSteps[0];
+         Step__c  step = steps[0];
  
          //get group identifier instruction from configuration
          List<LogConfiguration__c> configurations = [
@@ -58,7 +58,7 @@ global class LogInitializer implements Process.Plugin {
          // 1.  the date-time stamp
          // 2.  a (fairly unique ) business group value
          Id dataId =  (Id)parameters.get('id');
-         String groupIdentifier = getBusinesGroupIdentifier(configuration, chainStep, dataId) ;
+         String groupIdentifier = getBusinesGroupIdentifier(configuration, step, dataId) ;
          LogGroup__c logGroup = new LogGroup__c( LogConfiguration__c = configuration.Id,  GroupIdentifier__c = groupIdentifier, Stamp__c = System.Now());
          insert logGroup;
 
@@ -96,13 +96,13 @@ global class LogInitializer implements Process.Plugin {
     
     
     @TestVisible
-    private static String getBusinesGroupIdentifier(LogConfiguration__c configuration, ChainStep__c  chainStep,  Id dataId) {
+    private static String getBusinesGroupIdentifier(LogConfiguration__c configuration, Step__c  step,  Id dataId) {
 
         //  default :
         //
-        //  "chain name" and "chain step sequence"
+        //  "chain name" and "step sequence"
         //  (always use this if GroupIdentifier__c from configuration equates to null)
-        String defaultGroupIdentifier =  chainStep.Chain__r.Name + '-' + chainStep.Sequence__c;
+        String defaultGroupIdentifier =  step.Chain__r.Name + '-' + step.Sequence__c;
         
         
         //  preferred alternatives :

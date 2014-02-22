@@ -24,14 +24,14 @@
         
         Map<String,Object> parameters = new Map<String,Object>{
             'eda__configuration' => config.Id,
-            'eda__boomerangChainStepIds' => new List<Id>{'000000000000000AAA'}
+            'eda__boomerangStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Branch branch = new Branch();
         List<Map<String,Object>> parametersList = Utility.convert(branch.invoke(new Process.PluginRequest(parameters)));
         
         List<Object> expectedIds = null;
-        List<Object> actualIds = (List<Object>)parametersList[1].get('eda__boomerangChainStepIds');
+        List<Object> actualIds = (List<Object>)parametersList[1].get('eda__boomerangStepIds');
         System.assertEquals(expectedIds, actualIds);
     }
     

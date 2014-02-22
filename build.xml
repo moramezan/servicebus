@@ -18,13 +18,13 @@
     </target>
 
     <target name="sencha-steps" description="Builds Sencha application">
-        <delete file="src/staticresources/ChainStepSorterZip.resource" />
-        <delete dir="dev/resource/ChainStepSorterZip/packages/baf-theme-native" />
+        <delete file="src/staticresources/StepSorterZip.resource" />
+        <delete dir="dev/resource/StepSorterZip/packages/baf-theme-native" />
         <exec command="lib/sencha-cmd-4.0.1.45/sencha repository sync" />
-        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ChainStepSorterZip ant clean" />
-        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ChainStepSorterZip app refresh" />
-        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ChainStepSorterZip app build" />
-        <zip destfile="src/staticresources/ChainStepSorterZip.resource" basedir="dev/resource/ChainStepSorterZip/build/production/Steps" includes="**"/>
+        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/StepSorterZip ant clean" />
+        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/StepSorterZip app refresh" />
+        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/StepSorterZip app build" />
+        <zip destfile="src/staticresources/StepSorterZip.resource" basedir="dev/resource/StepSorterZip/build/production/Steps" includes="**"/>
     </target>
 
     <target name="sencha-generate" description="Builds Generate application">

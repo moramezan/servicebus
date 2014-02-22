@@ -54,10 +54,10 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
-        <fullName>ChainStepsCount__c</fullName>
+        <fullName>StepsCount__c</fullName>
         <externalId>false</externalId>
-        <label>ChainStepsCount</label>
-        <summaryForeignKey>ChainStep__c.Chain__c</summaryForeignKey>
+        <label>StepsCount</label>
+        <summaryForeignKey>Step__c.Chain__c</summaryForeignKey>
         <summaryOperation>count</summaryOperation>
         <trackTrending>false</trackTrending>
         <type>Summary</type>

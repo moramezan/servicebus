@@ -18,7 +18,7 @@
         "itemId": "steps",
         "scroll": "none",
         "simpleDrag": null,
-        "store": "ChainSteps",
+        "store": "Steps",
         "title": "Chain Steps"
     },
     "designerId": "c643aa83-56f5-491f-8f25-056038befcfe",
@@ -31,7 +31,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "designer|displayName": "ChainStepGridView",
+                "designer|displayName": "StepsGridView",
                 "loadMask": false,
                 "overItemCls": "",
                 "stripeRows": false
@@ -49,7 +49,7 @@
                     },
                     "codeClass": "Ext.grid.plugin.DragDrop",
                     "userConfig": {
-                        "designer|displayName": "ChainStepGridPlugin",
+                        "designer|displayName": "StepsGridPlugin",
                         "dragText": null,
                         "pluginId": "dragdrop"
                     },

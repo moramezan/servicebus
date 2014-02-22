@@ -53,7 +53,7 @@
         <fields>NAME</fields>
         <fields>Sequence__c</fields>
         <fields>Process__c</fields>
-        <relatedList>ChainStep__c.Chain__c</relatedList>
+        <relatedList>Step__c.Chain__c</relatedList>
         <sortField>Sequence__c</sortField>
         <sortOrder>Asc</sortOrder>
     </relatedLists>

@@ -17,30 +17,30 @@ public with sharing class Terminate implements Process.Plugin {
         
         //if we got here from a boomerang, back to where you came from!
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
-        Object data = parameters.get('eda__boomerangChainStepIds');
+        Object data = parameters.get('eda__boomerangStepIds');
         
         if (data == null) {
             //no boomerangs
             return Utility.convert(parametersList);
         }
 
-        List<Id> chainStepIds = (List<Id>)System.Json.deserialize(System.Json.serialize(data), List<Id>.class);
-        if (chainStepIds.isEmpty()) {
+        List<Id> stepIds = (List<Id>)System.Json.deserialize(System.Json.serialize(data), List<Id>.class);
+        if (stepIds.isEmpty()) {
             //boomerangs finished
             return Utility.convert(parametersList);
         }
         
         //pop one boomerang off stack
-        Id lastId = chainStepIds.remove(chainStepIds.size() - 1);
-        ChainStep__c chainStep = [
+        Id lastId = stepIds.remove(stepIds.size() - 1);
+        Step__c step = [
             SELECT Id, Chain__r.Name, Sequence__c
-            FROM ChainStep__c
+            FROM Step__c
             WHERE Id = :lastId
         ];
         
-        parameters.put('eda__boomerangChainStepIds', chainStepIds);
-        parameters.put('eda__chainName', chainStep.Chain__r.Name );
-        parameters.put('eda__sequence', chainStep.Sequence__c );
+        parameters.put('eda__boomerangStepIds', stepIds);
+        parameters.put('eda__chainName', step.Chain__r.Name );
+        parameters.put('eda__sequence', step.Sequence__c );
         parametersList.add(parameters);
 
         return Utility.convert(parametersList);
@@ -53,8 +53,8 @@ public with sharing class Terminate implements Process.Plugin {
         List<Chain__c> chains = [SELECT id,
                                          Name,
                                         (SELECT id, Name, Process__c
-                                         FROM ChainSteps__r
-                                         ORDER BY Sequence__c ASC) chainSteps
+                                         FROM Steps__r
+                                         ORDER BY Sequence__c ASC) steps
                                  FROM Chain__c
                                 ];
         
@@ -72,9 +72,9 @@ public with sharing class Terminate implements Process.Plugin {
         for (Chain__c  chain : chains)
         {
             Integer terminateCount = 0;
-            for (ChainStep__c chainStep : chain.ChainSteps__r) {
+            for (Step__c step : chain.Steps__r) {
                 if (resolvedProcess) {
-                    if (chainStep.Process__c == terminateProcess.Id) {
+                    if (step.Process__c == terminateProcess.Id) {
                         terminateCount++;
                     }
                 }
@@ -92,8 +92,8 @@ public with sharing class Terminate implements Process.Plugin {
                 
                 Boolean noTerminateError = (terminateCount == 0);
                 Boolean gtOneTerminateError = (terminateCount > 1);
-                Boolean terminateNotAtEndError = (chain.ChainSteps__r.size() > 0) ?
-                                            (chain.ChainSteps__r[chain.ChainSteps__r.size()-1].Process__c != terminateProcess.Id) :
+                Boolean terminateNotAtEndError = (chain.Steps__r.size() > 0) ?
+                                            (chain.Steps__r[chain.Steps__r.size()-1].Process__c != terminateProcess.Id) :
                                             false;
                 
                if (terminateNotAtEndError) {

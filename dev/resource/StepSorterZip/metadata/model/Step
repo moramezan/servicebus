@@ -6,7 +6,7 @@
     },
     "codeClass": null,
     "userConfig": {
-        "designer|userClassName": "ChainStep",
+        "designer|userClassName": "Step",
         "idProperty": "Id"
     },
     "designerId": "01cba15c-4d92-4182-b364-3a9245edcb47",
@@ -129,12 +129,12 @@
             "userConfig": {
                 "api": [
                     "{",
-                    "    read: $RemoteAction.ChainSorterController.fetchChainSteps,",
-                    "    destroy: $RemoteAction.ChainSorterController.destroyChainStep",
+                    "    read: $RemoteAction.ChainSorterController.fetchSteps,",
+                    "    destroy: $RemoteAction.ChainSorterController.destroyStep",
                     "}"
                 ],
                 "designer|createAlias": "vfremote",
-                "designer|displayName": "ChainStepProxy",
+                "designer|displayName": "StepProxy",
                 "extraParams": [
                     "{",
                     "    \"chainId\": Chain__c.Id",
@@ -151,7 +151,7 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "designer|displayName": "ChainStepWriter",
+                        "designer|displayName": "StepWriter",
                         "nameProperty": "mapping"
                     },
                     "designerId": "33ec2ede-e45b-4c2c-8050-8975ae3fc8ff"
@@ -164,7 +164,7 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "designer|displayName": "ChainStepReader"
+                        "designer|displayName": "StepReader"
                     },
                     "designerId": "6859069b-6c23-4610-a115-28282a280e2b"
                 }

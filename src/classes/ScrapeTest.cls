@@ -42,13 +42,13 @@ public class ScrapeTest {
         insert chain;
         
         //arrange steps
-        ChainStep__c chainStep = ChainSteps.generateOne(chain.Id, scrapeProcess.Id);
+        Step__c step = Steps.generateOne(chain.Id, scrapeProcess.Id);
         Database.update(new ScrapeConfiguration__c(
-            Id = chainStep.ConfigurationId__c,
+            Id = step.ConfigurationId__c,
             Endpoint__c = endPoint
         ));
         
-        Map<String,Object> parameters = new Map<String,Object>{'eda__configuration' => chainStep.ConfigurationId__c};
+        Map<String,Object> parameters = new Map<String,Object>{'eda__configuration' => step.ConfigurationId__c};
 
         //act
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
@@ -62,7 +62,7 @@ public class ScrapeTest {
         List<Attachment> attachments = [
             SELECT id, Name, ParentId, Body
             FROM Attachment
-            WHERE ParentId = :chainStep.ConfigurationId__c
+            WHERE ParentId = :step.ConfigurationId__c
         ];
         
         String actualBody = '';

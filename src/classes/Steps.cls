@@ -1,6 +1,6 @@
-public class ChainSteps extends SObjects {
+public class Steps extends SObjects {
     
-    public ChainSteps(List<ChainStep__c> sobjects) {
+    public Steps(List<Step__c> sobjects) {
         super(sobjects);
     }
     
@@ -12,20 +12,20 @@ public class ChainSteps extends SObjects {
         this.deleteConfigurations();
     }
     
-    @testVisible static private ChainStep__c generateOne(Id chainId, Id processId) {
-        ChainStep__c chainStep = new ChainStep__c(
+    @testVisible static private Step__c generateOne(Id chainId, Id processId) {
+        Step__c step = new Step__c(
             Chain__c = chainId,
             Process__c = processId
             //Sequence__c is automatic
         );
         
-        insert chainStep;
+        insert step;
         
         //requery
         return [
             SELECT Id, Chain__c, Sequence__c, Process__c, ConfigurationId__c
-            FROM ChainStep__c
-            WHERE Id = :chainStep.Id
+            FROM Step__c
+            WHERE Id = :step.Id
         ];
     }
     
@@ -35,12 +35,12 @@ public class ChainSteps extends SObjects {
      * for the first time, but that does DML from a Visualforce action and fails security review.)
      */
     private void insertConfigurations() {
-        //get all involved chain steps
-        List<ChainStep__c> chainSteps = this.getSObjects();
+        //get all involved steps
+        List<Step__c> steps = this.getSObjects();
         
         //and their respective process ids
         Set<Id> processIds = new Set<Id>();
-        for (ChainStep__c chainStep : chainSteps) processIds.add(chainStep.Process__c);
+        for (Step__c step : steps) processIds.add(step.Process__c);
         
         //query process ids to their configurables
         List<Process__c> processes = [SELECT Id, Configurable__c FROM Process__c WHERE Id IN :processIds];
@@ -49,46 +49,46 @@ public class ChainSteps extends SObjects {
         Map<Id,String> processId2configurable = new Map<Id,String>();
         for (Process__c process : processes) processId2configurable.put(process.Id, process.Configurable__c);
         
-        //we will do applicable chainsteps and configurations in tandem
-        List<ChainStep__c> configuredChainSteps = new List<ChainStep__c>();
+        //we will do applicable steps and configurations in tandem
+        List<Step__c> configuredSteps = new List<Step__c>();
         List<SObject> configurations = new List<SObject>();
         
-        //assemble applicable chainsteps and configurations
-        for (ChainStep__c chainStep : chainSteps) {
-            String configurable = processId2configurable.get(chainStep.Process__c);
+        //assemble applicable steps and configurations
+        for (Step__c step : steps) {
+            String configurable = processId2configurable.get(step.Process__c);
             if (configurable != null) {
                 SObject configuration = (SObject)Type.forName(configurable).newInstance();
-                configuredChainSteps.add(chainStep);
+                configuredSteps.add(step);
                 configurations.add(configuration);
             }
         }
         
         insert configurations;
         
-        //reconcile the configuration ids back onto the chain steps
-        for (Integer i = 0; i < configuredChainSteps.size(); i++) {
-            ChainStep__c chainStep = configuredChainSteps[i];
+        //reconcile the configuration ids back onto the steps
+        for (Integer i = 0; i < configuredsteps.size(); i++) {
+            Step__c step = configuredsteps[i];
             SObject configuration = configurations[i];
-            chainStep.ConfigurationId__c = configuration.Id;
+            step.ConfigurationId__c = configuration.Id;
         }
     }
     
     /**
      * If a step has configuration, there is a one-to-one relationship.
-     * ChainStepAfterInsert takes care of the creation of the configuration.
+     * StepAfterInsert takes care of the creation of the configuration.
      * This trigger takes care of the deletion of the configuration.
      */
     private void deleteConfigurations() {
-        Set<Id> chainStepIds = (new Map<Id,SObject>(this.sobjects)).keySet();
-        Map<Id,ChainStep__c> id2step = new Map<Id,ChainStep__c>([SELECT id, Name, ConfigurationId__c FROM ChainStep__c WHERE Id IN :chainStepIds]);
+        Set<Id> stepIds = (new Map<Id,SObject>(this.sobjects)).keySet();
+        Map<Id,Step__c> id2step = new Map<Id,Step__c>([SELECT id, Name, ConfigurationId__c FROM Step__c WHERE Id IN :stepIds]);
         
         //prepare list of configuration ids
         List<Id> ids = new List<Id>();
         
-        //enumerate chain steps to get configuration ids
-        for (ChainStep__c chainStep : id2step.values()) {
-            if (null == chainStep.ConfigurationId__c) continue;
-            ids.add(chainStep.ConfigurationId__c);
+        //enumerate steps to get configuration ids
+        for (Step__c step : id2step.values()) {
+            if (null == step.ConfigurationId__c) continue;
+            ids.add(step.ConfigurationId__c);
         }
         
         //delete all the configuration records

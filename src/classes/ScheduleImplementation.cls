@@ -12,15 +12,15 @@ public class ScheduleImplementation implements System.Schedulable {
         ]);
         
         //find associated chains from their steps
-        List<ChainStep__c> steps = [
+        List<Step__c> steps = [
             SELECT Id, Chain__r.Name, Sequence__c
-            FROM ChainStep__c
+            FROM Step__c
             WHERE ConfigurationId__c IN :scheduleConfigurations.keySet()
         ];
         
-        //destine a timestamped parameters for each chain step
+        //destine a timestamped parameters for each step
         List<Message__c> messages = new List<Message__c>();
-        for (ChainStep__c step : steps) {
+        for (Step__c step : steps) {
             Map<String,Object> parameters = new Map<String,Object>{
                 'eda__sequence' => 0,
                 'eda__chainName' => step.Chain__r.Name,

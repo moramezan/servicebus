@@ -76,7 +76,7 @@
     </layoutSections>
     <relatedLists>
         <fields>NAME</fields>
-        <relatedList>ChainStep__c.Process__c</relatedList>
+        <relatedList>Step__c.Process__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>

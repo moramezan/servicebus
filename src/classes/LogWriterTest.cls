@@ -36,7 +36,7 @@ private class LogWriterTest{
         System.assert( actualMessage.contains(expectedMessage) );
     }
     
-	private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessChainStep() {
+	private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
         //arrange
         String chainName  = 'LogWriterChain';
         Integer theSequence =  1;
@@ -67,7 +67,7 @@ private class LogWriterTest{
         Boolean expectedFlagException = true;
         System.assertEquals(expectedFlagException, actualFlagException);
         
-        String expectedMessage = 'Unable to access the Chain Step';
+        String expectedMessage = 'Unable to access the Step';
         System.assert( actualMessage.contains(expectedMessage) );
     }
     
@@ -85,8 +85,8 @@ private class LogWriterTest{
         Chain__c chain = new Chain__c(Name = chainName);
         insert chain;
         
-        ChainStep__c chainStepA2 = new ChainStep__c(Chain__c = chain.Id, Sequence__c = sequenceA2, Process__c = logWriterProcess.Id);
-        insert chainStepA2;
+        Step__c stepA2 = new Step__c(Chain__c = chain.Id, Sequence__c = sequenceA2, Process__c = logWriterProcess.Id);
+        insert stepA2;
  
         LogConfiguration__c configuration1  = new LogConfiguration__c(
             GroupIdentifier__c = theIdentifier1
@@ -129,7 +129,7 @@ private class LogWriterTest{
         
         //assemble
         List<LogWriterEntry__c> LogWriterEntries = [
-            SELECT id, Name, ChainStep__c,  LogGroup__c, Parameters__c
+            SELECT id, Name, Step__c,  LogGroup__c, Parameters__c
             FROM LogWriterEntry__c
         ];
         

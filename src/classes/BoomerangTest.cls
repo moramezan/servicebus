@@ -20,15 +20,15 @@
         //arrange chains
         Chain__c origin = new Chain__c(Name = 'originChain');
         insert origin;
-        ChainStep__c originChainStep = ChainSteps.generateOne(origin.Id, boomerangProcess.Id);
+        Step__c originStep = Steps.generateOne(origin.Id, boomerangProcess.Id);
         
         Chain__c target = new Chain__c(Name = 'targetChain');
         insert target;
-        ChainStep__c targetChainStep = ChainSteps.generateOne(target.Id, terminateProcess.Id);
+        Step__c targetStep = Steps.generateOne(target.Id, terminateProcess.Id);
         
         //prepare configuration in db
         BoomerangConfiguration__c config = new BoomerangConfiguration__c(
-            Id = originChainStep.ConfigurationId__c,
+            Id = originStep.ConfigurationId__c,
             Chain__c = target.Id
         );
         update config;
@@ -58,8 +58,8 @@
         Decimal actualSequence = (Decimal)parametersList[0].get('eda__sequence');
         System.assertEquals(expectedSequence, actualSequence);
 
-        String expectedList = '["' + originChainStep.Id + '"]';
-        String actualList = System.Json.serialize(parametersList[0].get('eda__boomerangChainStepIds'));
+        String expectedList = '["' + originStep.Id + '"]';
+        String actualList = System.Json.serialize(parametersList[0].get('eda__boomerangStepIds'));
         System.assertEquals(expectedList, actualList);
     }
     

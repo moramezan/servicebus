@@ -67,7 +67,7 @@
         <externalId>false</externalId>
         <label>Chain</label>
         <referenceTo>Chain__c</referenceTo>
-        <relationshipName>ChainSteps</relationshipName>
+        <relationshipName>Steps</relationshipName>
         <relationshipOrder>0</relationshipOrder>
         <reparentableMasterDetail>false</reparentableMasterDetail>
         <trackTrending>false</trackTrending>
@@ -101,7 +101,7 @@
         <externalId>false</externalId>
         <label>Process</label>
         <referenceTo>Process__c</referenceTo>
-        <relationshipName>ChainSteps</relationshipName>
+        <relationshipName>Steps</relationshipName>
         <required>true</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
@@ -118,13 +118,13 @@
         <type>Number</type>
         <unique>false</unique>
     </fields>
-    <label>Chain Step</label>
+    <label>Step</label>
     <nameField>
         <displayFormat>CS-{00000}</displayFormat>
         <label>Step Name</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Chain Steps</pluralLabel>
+    <pluralLabel>Steps</pluralLabel>
     <searchLayouts>
         <lookupDialogsAdditionalFields>Sequence__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>Process__c</lookupDialogsAdditionalFields>
@@ -138,7 +138,7 @@
         <linkType>page</linkType>
         <masterLabel>Show Configuration</masterLabel>
         <openType>sidebar</openType>
-        <page>ChainStepShowConfiguration</page>
+        <page>StepShowConfiguration</page>
         <protected>false</protected>
     </webLinks>
 </CustomObject>

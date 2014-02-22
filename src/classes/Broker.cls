@@ -122,7 +122,7 @@ abstract global class Broker {
         
         //query locator hands back only the messages that were marked as processing
         String commaDelimitedIds = '(\'' + String.join(new List<Id>(messageIds), '\',\'') + '\')';
-        String queryString = 'SELECT Id, ChainStep__c, Parameters__c FROM Message__c WHERE Id IN ' + commaDelimitedIds;
+        String queryString = 'SELECT Id, Step__c, Parameters__c FROM Message__c WHERE Id IN ' + commaDelimitedIds;
         return Database.getQueryLocator(queryString);
     }
     
@@ -223,16 +223,16 @@ abstract global class Broker {
         try {
             parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
     
-            ChainStep__c chainStep = [
+            Step__c step = [
                 SELECT Process__c, ConfigurationId__c, Process__r.Name, Process__r.FullyQualifiedClassName__c
-                FROM ChainStep__c
-                WHERE Id = :message.ChainStep__c
+                FROM Step__c
+                WHERE Id = :message.Step__c
             ];
         
-            parameters.put('eda__configuration', chainStep.ConfigurationId__c);
+            parameters.put('eda__configuration', Step.ConfigurationId__c);
         
             //instantiate processable instance
-            Type reflector = Type.forName(chainStep.Process__r.FullyQualifiedClassName__c);
+            Type reflector = Type.forName(Step.Process__r.FullyQualifiedClassName__c);
             plugin = (Process.Plugin)reflector.newInstance();
         } catch (Exception e) {
             if (e instanceof System.JsonException) {
@@ -240,7 +240,7 @@ abstract global class Broker {
             } else if (e instanceof System.NullPointerException) {
                 e.setMessage('Sequence null (key missing from parameters) or Type null (class missing)');
             } else if (e instanceof System.QueryException) {
-                e.setMessage('ChainStep unqueryable (bad chain name, sequence, missing terminate)');
+                e.setMessage('Step unqueryable (bad chain name, sequence, missing terminate)');
             } else if (e instanceof System.TypeException) {
                 e.setMessage('Could not cast Process.Plugin (interface unimplemented on process class)');
             }
@@ -286,9 +286,9 @@ abstract global class Broker {
      * 1. hydrate the parameters from message
      * 2. increments the sequence by one, ready to resolve the next step in the chain
      * 3. modify the parameters to reflect the new sequence
-     * 4A. resolve the chain step from the parameters
-     * 4B. resolve the the process (ie the process referenced by 4A's chainStep)
-     * 5. only then can we correctly write to database with 4A (chainStepId) and 3 (parameters with the incremented sequence)
+     * 4A. resolve the step from the parameters
+     * 4B. resolve the the process (ie the process referenced by 4A's step)
+     * 5. only then can we correctly write to database with 4A (stepId) and 3 (parameters with the incremented sequence)
      */
     static public void resolve(List<Message__c> messages) {
         //assemble a map of next-step keys to messages
@@ -305,25 +305,25 @@ abstract global class Broker {
             message.Parameters__c = Json.serializePretty(parameters);
         }
         
-        //resolve the next chain steps and processes
-        List<ChainStep__c> chainSteps = [
+        //resolve the next steps and processes
+        List<Step__c> steps = [
             SELECT Id, Process__r.Id, Chain__r.Id, ChainNameAndSequence__c
-            FROM ChainStep__c
+            FROM Step__c
             WHERE ChainNameAndSequence__c IN :key2data.keySet()
         ];
         
         //assemble a map of next-step keys to steps
-        Map<String,ChainStep__c> key2step = new Map<String,ChainStep__c>();
-        for (ChainStep__c chainStep : chainSteps) key2step.put(chainStep.ChainNameAndSequence__c, chainStep);
+        Map<String,Step__c> key2step = new Map<String,Step__c>();
+        for (Step__c step : steps) key2step.put(step.ChainNameAndSequence__c, step);
         
         //now put the resolved chain/step/process on each message
         for (String key : key2data.keySet()) {
-            ChainStep__c chainStep = key2step.get(key);
+            Step__c step = key2step.get(key);
             Message__c message = key2data.get(key);
             
-            message.Chain__c = chainStep.Chain__r.Id;
-            message.Process__c = chainStep.Process__r.Id;
-            message.ChainStep__c = chainStep.Id;
+            message.Chain__c = step.Chain__r.Id;
+            message.Process__c = step.Process__r.Id;
+            message.Step__c = step.Id;
         }
     }
     

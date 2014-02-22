@@ -44,8 +44,8 @@
         insert wiretapProcess;
         
         // Chain A
-        ChainStep__c chainStepA1 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c  = 1);
-        ChainStep__c chainStepA2 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);
+        Step__c stepA1 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c  = 1);
+        Step__c stepA2 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);
 
         // Act :
         List<HealthController.Health> SubscribeHealths =  Subscribe.getHealth();
@@ -90,9 +90,9 @@
         Process__c publishProcess = Processes.generateOne(Publish.class);
         
         // Chain Z - OK : Event is published
-        ChainStep__c chainStepZ1 = ChainSteps.generateOne(chainZ.Id, subscribeProcess.Id);
-        ChainStep__c chainStepZ2 = ChainSteps.generateOne(chainZ.Id, wiretapProcess.Id);
-        ChainStep__c chainStepZ3 = ChainSteps.generateOne(chainPublish.Id, publishProcess.Id);
+        Step__c stepZ1 = Steps.generateOne(chainZ.Id, subscribeProcess.Id);
+        Step__c stepZ2 = Steps.generateOne(chainZ.Id, wiretapProcess.Id);
+        Step__c stepZ3 = Steps.generateOne(chainPublish.Id, publishProcess.Id);
  
         // Event
         EventType__c  eventTypePublished  = new EventType__c(Name = 'an-event-that-IS-published');
@@ -101,8 +101,8 @@
 
         // Config Publish
         Id publishConfigurationIdZ3 = (Id) [SELECT Id, ConfigurationId__c
-                                     FROM ChainStep__c
-                                     WHERE Id = :chainStepZ3.Id LIMIT 1].ConfigurationId__c;
+                                     FROM Step__c
+                                     WHERE Id = :stepZ3.Id LIMIT 1].ConfigurationId__c;
         PublishConfiguration__c  publishConfigurationZ3 =  [SELECT Id, EventType__c
                                                               FROM PublishConfiguration__c
                                                               WHERE Id = :publishConfigurationIdZ3];
@@ -111,8 +111,8 @@
         
         // Config Z1
         Id configurationIdZ1 = (Id) [SELECT Id, ConfigurationId__c
-                                     FROM ChainStep__c
-                                     WHERE Id = :chainStepZ1.Id LIMIT 1].ConfigurationId__c;
+                                     FROM Step__c
+                                     WHERE Id = :stepZ1.Id LIMIT 1].ConfigurationId__c;
         SubscribeConfiguration__c  subscribeConfigurationZ1 =  [SELECT Id, EventType__c
                                                               FROM SubscribeConfiguration__c
                                                               WHERE Id = :configurationIdZ1];
@@ -157,8 +157,8 @@
         insert chainA;
         
         // Chain A - Warning : Ok but event Not published
-        ChainStep__c chainStepA1 = ChainSteps.generateOne(chainA.Id, subscribeProcess.Id);
-        ChainStep__c chainStepA2 = ChainSteps.generateOne(chainA.Id, wiretapProcess.Id);
+        Step__c stepA1 = Steps.generateOne(chainA.Id, subscribeProcess.Id);
+        Step__c stepA2 = Steps.generateOne(chainA.Id, wiretapProcess.Id);
 
         // Event
         EventType__c eventNotPublished = new EventType__c(Name = 'an-event-not-published');
@@ -166,8 +166,8 @@
        
         // Config A1
         Id configurationIdA1 = (Id) [SELECT Id, ConfigurationId__c
-                                     FROM ChainStep__c
-                                     WHERE Id = :chainStepA1.Id LIMIT 1].ConfigurationId__c;
+                                     FROM Step__c
+                                     WHERE Id = :stepA1.Id LIMIT 1].ConfigurationId__c;
         SubscribeConfiguration__c  subscribeConfigurationA1 =  [SELECT Id, EventType__c
                                                               FROM SubscribeConfiguration__c
                                                               WHERE Id = :configurationIdA1];
@@ -210,8 +210,8 @@
         insert chainB;
         
         // Chain B - Problem : Subscribe Not first Step
-        ChainStep__c chainStepB1 = ChainSteps.generateOne(chainB.Id, wiretapProcess.Id);
-        ChainStep__c chainStepB2 = ChainSteps.generateOne(chainB.Id, subscribeProcess.Id);
+        Step__c stepB1 = Steps.generateOne(chainB.Id, wiretapProcess.Id);
+        Step__c stepB2 = Steps.generateOne(chainB.Id, subscribeProcess.Id);
         
         // Act :
         List<HealthController.Health> SubscribeHealths =  Subscribe.getHealth();
@@ -245,8 +245,8 @@
         insert chainC;
         
         // Chain C - Problem : Subscribe Step Occurs more than once
-        ChainStep__c chainStepC1 = ChainSteps.generateOne(chainC.Id, subscribeProcess.Id);
-        ChainStep__c chainStepC2 = ChainSteps.generateOne(chainC.Id, subscribeProcess.Id);
+        Step__c stepC1 = Steps.generateOne(chainC.Id, subscribeProcess.Id);
+        Step__c stepC2 = Steps.generateOne(chainC.Id, subscribeProcess.Id);
             
         // Event
         EventType__c eventNotPublished = new EventType__c(Name = 'an-event-not-published');
@@ -257,8 +257,8 @@
         
         // Config C1
         Id configurationIdC1 = (Id) [SELECT Id, ConfigurationId__c
-                                   FROM ChainStep__c
-                                   WHERE Id = :chainStepC1.Id LIMIT 1].ConfigurationId__c;
+                                   FROM Step__c
+                                   WHERE Id = :stepC1.Id LIMIT 1].ConfigurationId__c;
         SubscribeConfiguration__c  subscribeConfigurationC1 =  [SELECT Id, EventType__c
                                                               FROM SubscribeConfiguration__c
                                                               WHERE Id = :configurationIdC1];
@@ -267,8 +267,8 @@
 
         // Config C2
         Id configurationIdC2 = (Id) [SELECT Id, ConfigurationId__c
-                                   FROM ChainStep__c
-                                   WHERE Id = :chainStepC2.Id LIMIT 1].ConfigurationId__c;
+                                   FROM Step__c
+                                   WHERE Id = :stepC2.Id LIMIT 1].ConfigurationId__c;
         SubscribeConfiguration__c  subscribeConfigurationC2 =  [SELECT Id, EventType__c
                                                               FROM SubscribeConfiguration__c
                                                               WHERE Id = :configurationIdC2];
@@ -311,12 +311,12 @@
         insert chainB;
 
         // Chain B - Problem : No Configuration
-        ChainStep__c chainStepB1 = ChainSteps.generateOne(chainB.Id, subscribeProcess.Id);
-        ChainStep__c chainStepB2 = ChainSteps.generateOne(chainB.Id, wiretapProcess.Id);
+        Step__c stepB1 = Steps.generateOne(chainB.Id, subscribeProcess.Id);
+        Step__c stepB2 = Steps.generateOne(chainB.Id, wiretapProcess.Id);
 
         Id configurationIdB1 = (Id) [SELECT Id, ConfigurationId__c
-                                     FROM ChainStep__c
-                                     WHERE Id = :chainStepB1.Id LIMIT 1].ConfigurationId__c;
+                                     FROM Step__c
+                                     WHERE Id = :stepB1.Id LIMIT 1].ConfigurationId__c;
         Database.delete(configurationIdB1);
         
         // Act :
@@ -352,8 +352,8 @@
         insert chainB;
         
         // Chain B - Problem : No Configuration
-        ChainStep__c chainStepB1 = ChainSteps.generateOne(chainB.Id, subscribeProcess.Id);
-        ChainStep__c chainStepB2 = ChainSteps.generateOne(chainB.Id, wiretapProcess.Id);
+        Step__c stepB1 = Steps.generateOne(chainB.Id, subscribeProcess.Id);
+        Step__c stepB2 = Steps.generateOne(chainB.Id, wiretapProcess.Id);
 
         // Act :
         List<HealthController.Health> SubscribeHealths =  Subscribe.getHealth();

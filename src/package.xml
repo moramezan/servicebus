@@ -15,10 +15,10 @@
         <members>BrokerTest</members>
         <members>Chain</members>
         <members>ChainSorterController</members>
-        <members>ChainStep</members>
-        <members>ChainStepShowConfigurationExtension</members>
-        <members>ChainSteps</members>
-        <members>ChainStepsTest</members>
+        <members>Step</members>
+        <members>StepShowConfigurationExtension</members>
+        <members>Steps</members>
+        <members>StepsTest</members>
         <members>Chains</members>
         <members>ChainsTest</members>
         <members>ConfigurationShowStepExtension</members>
@@ -86,7 +86,7 @@
         <members>BoomerangConfigurationShowStep</members>
         <members>BranchConfigurationShowStep</members>
         <members>ChainSorter</members>
-        <members>ChainStepShowConfiguration</members>
+        <members>StepShowConfiguration</members>
         <members>FutureBroker</members>
         <members>Health</members>
         <members>JumpConfigurationShowStep</members>
@@ -102,7 +102,7 @@
         <name>ApexPage</name>
     </types>
     <types>
-        <members>ChainStepTriggers</members>
+        <members>StepTriggers</members>
         <members>ChainTriggers</members>
         <members>ScheduleConfigurationTriggers</members>
         <name>ApexTrigger</name>
@@ -116,13 +116,13 @@
         <members>BranchConfiguration__c.Chain__c</members>
         <members>BrokerSettings__c.BrokerClassName__c</members>
         <members>BrokerSettings__c.Inhibit__c</members>
-        <members>ChainStep__c.ChainNameAndSequence__c</members>
-        <members>ChainStep__c.Chain__c</members>
-        <members>ChainStep__c.ConfigurationId__c</members>
-        <members>ChainStep__c.ConfigurationName__c</members>
-        <members>ChainStep__c.Process__c</members>
-        <members>ChainStep__c.Sequence__c</members>
-        <members>Chain__c.ChainStepsCount__c</members>
+        <members>Step__c.ChainNameAndSequence__c</members>
+        <members>Step__c.Chain__c</members>
+        <members>Step__c.ConfigurationId__c</members>
+        <members>Step__c.ConfigurationName__c</members>
+        <members>Step__c.Process__c</members>
+        <members>Step__c.Sequence__c</members>
+        <members>Chain__c.StepsCount__c</members>
         <members>DebouncerConfiguration__c.MinimumHoursBetween__c</members>
         <members>Debouncer__c.DebouncerConfiguration__c</members>
         <members>Debouncer__c.Key__c</members>
@@ -144,7 +144,7 @@
         <members>LogGroup__c.LogConfiguration__c</members>
         <members>LogGroup__c.Stamp__c</members>
         <members>LogWriterEntry__c.ChainName__c</members>
-        <members>LogWriterEntry__c.ChainStep__c</members>
+        <members>LogWriterEntry__c.Step__c</members>
         <members>LogWriterEntry__c.GroupIdentifier__c</members>
         <members>LogWriterEntry__c.LogGroup__c</members>
         <members>LogWriterEntry__c.NotificationId__c</members>
@@ -152,7 +152,7 @@
         <members>LogWriterEntry__c.Parameters__c</members>
         <members>LogWriterEntry__c.Sequence__c</members>
         <members>LogWriterEntry__c.Stamp__c</members>
-        <members>Message__c.ChainStep__c</members>
+        <members>Message__c.Step__c</members>
         <members>Message__c.Chain__c</members>
         <members>Message__c.Message__c</members>
         <members>Message__c.Parameters__c</members>
@@ -178,7 +178,7 @@
         <members>BoomerangConfiguration__c</members>
         <members>BranchConfiguration__c</members>
         <members>BrokerSettings__c</members>
-        <members>ChainStep__c</members>
+        <members>Step__c</members>
         <members>Chain__c</members>
         <members>DebouncerConfiguration__c</members>
         <members>Debouncer__c</members>
@@ -214,7 +214,7 @@
     <types>
         <members>BoomerangConfiguration__c-Boomerang Configuration Layout</members>
         <members>BranchConfiguration__c-Branch Configuration Layout</members>
-        <members>ChainStep__c-ChainStep Layout</members>
+        <members>Step__c-Step Layout</members>
         <members>Chain__c-Chain Layout</members>
         <members>DebouncerConfiguration__c-Debouncer Configuration Layout</members>
         <members>Debouncer__c-Debouncer Layout</members>
@@ -246,7 +246,7 @@
         <name>PermissionSet</name>
     </types>
     <types>
-        <members>ChainStepSorterZip</members>
+        <members>StepSorterZip</members>
         <members>ProcessGenerateZip</members>
         <name>StaticResource</name>
     </types>
@@ -260,7 +260,7 @@
     <types>
         <members>BoomerangConfiguration__c.ShowStep</members>
         <members>BranchConfiguration__c.ShowStep</members>
-        <members>ChainStep__c.ShowConfiguration</members>
+        <members>Step__c.ShowConfiguration</members>
         <members>JumpConfiguration__c.ShowStep</members>
         <members>LogConfiguration__c.ListLogGroups</members>
         <members>Message__c.Reprocess</members>
@@ -276,7 +276,7 @@
     <types>
         <members>BoomerangConfiguration__c.UpdateBoomerangConfigurationName</members>
         <members>BranchConfiguration__c.UpdateBranchConfigurationName</members>
-        <members>ChainStep__c.ChainStepSequenceUpdate</members>
+        <members>Step__c.StepSequenceUpdate</members>
         <members>DebouncerConfiguration__c.UpdateDebouncerConfigurationName</members>
         <members>IsChangedConfiguration__c.UpdateIsChangedConfigurationName</members>
         <members>JumpConfiguration__c.UpdateJumpConfigurationName</members>
@@ -289,7 +289,7 @@
     <types>
         <members>BoomerangConfiguration__c.OnBoomerangConfigurationUpsert</members>
         <members>BranchConfiguration__c.OnBranchConfigurationUpsert</members>
-        <members>ChainStep__c.OnChainStepInsert</members>
+        <members>Step__c.OnStepInsert</members>
         <members>DebouncerConfiguration__c.OnDebouncerConfigurationUpsert</members>
         <members>IsChangedConfiguration__c.OnIsChangedConfigurationUpsert</members>
         <members>JumpConfiguration__c.OnJumpConfigurationUpsert</members>

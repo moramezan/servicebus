@@ -29,37 +29,37 @@ public with sharing class ChainSorterController {
         return Json.serializePretty(processes);
     }
     
-    public String getChainSteps() {
+    public String getSteps() {
         Chain chain = new Chain((Chain__c)this.controller.getRecord());
-        List<ChainStep__c> chainSteps = chain.fetchSteps().getSObjects();
-        return Json.serializePretty(chainSteps);
+        List<Step__c> steps = chain.fetchSteps().getSObjects();
+        return Json.serializePretty(steps);
     }
     
-    @RemoteAction static public List<ChainStep__c> fetchChainSteps(Id chainId) {
+    @RemoteAction static public List<Step__c> fetchSteps(Id chainId) {
         Chain chain = new Chain(new Chain__c(Id = chainId));
         chain.terminate();
         return chain.fetchSteps().getSObjects();
     }
     
-    @RemoteAction static public ChainStep__c appendStep(Id chainId, Id processId) {
+    @RemoteAction static public Step__c appendStep(Id chainId, Id processId) {
         Chain chain = new Chain(new Chain__c(Id = chainId));
-        ChainStep step = chain.appendStep(processId);
-        return (ChainStep__c)step.getSObject();
+        Step step = chain.appendStep(processId);
+        return (Step__c)step.getSObject();
     }
     
-    @RemoteAction static public void moveChainStepBefore(Id chainStepId, Id beforeStepId) {
-        ChainStep__c chainStep = (ChainStep__c)SalesforceObject.getById(chainStepId);
-        new ChainStep(chainStep).moveBefore(beforeStepId);
+    @RemoteAction static public void moveStepBefore(Id stepId, Id beforeStepId) {
+        Step__c step = (Step__c)SalesforceObject.getById(stepId);
+        new Step(step).moveBefore(beforeStepId);
     }
     
-    @RemoteAction static public void moveChainStepAfter(Id chainStepId, Id afterStepId) {
-        ChainStep__c chainStep = (ChainStep__c)SalesforceObject.getById(chainStepId);
-        new ChainStep(chainStep).moveAfter(afterStepId);
+    @RemoteAction static public void moveStepAfter(Id stepId, Id afterStepId) {
+        Step__c step = (Step__c)SalesforceObject.getById(stepId);
+        new Step(step).moveAfter(afterStepId);
     }
     
-    @RemoteAction static public void destroyChainStep(ChainStep__c chainStep) {
-        chainStep = (ChainStep__c)SalesforceObject.getById(chainStep.Id);
-        new Chain(new Chain__c(Id = chainStep.Chain__c)).deleteStep(chainStep.Id);
+    @RemoteAction static public void destroyStep(Step__c step) {
+        step = (Step__c)SalesforceObject.getById(step.Id);
+        new Chain(new Chain__c(Id = step.Chain__c)).deleteStep(step.Id);
     }
     
     @RemoteAction static public String enqueue(Id chainId) {
