@@ -1,25 +1,25 @@
-public with sharing class Boomerang implements Process.Plugin {
+public with sharing class Subsequence implements Process.Plugin {
 
     public class Eda {
-        public SObject configurable = BoomerangConfiguration__c.SObjectType.newSObject();
+        public SObject configurable = SubsequenceConfiguration__c.SObjectType.newSObject();
         public String icon = 'arrow_undo';
     }
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'Boomerang process perverts execution.';
+        plugin.Description = 'Subsequence process perverts execution.';
         plugin.Tag = 'Event Driven Architecture';
-        plugin.Name = 'Boomerang';
+        plugin.Name = 'Subsequence';
         
         plugin.outputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter(
-                'eda__boomerangSequenceName',
-                'Marks the sequence name which the Boomerang returns to.',
+                'eda__subsequenceName',
+                'Marks the sequence name which the Subsequence returns to.',
                 Process.PluginDescribeResult.ParameterType.STRING
             ),
             new Process.PluginDescribeResult.OutputParameter(
-                'eda__boomerangPosition',
-                'Marks the position number which the Boomerang returns to.',
+                'eda__subsequencePosition',
+                'Marks the position number which the Subsequence returns to.',
                 Process.PluginDescribeResult.ParameterType.INTEGER
             )
         };
@@ -38,19 +38,19 @@ public with sharing class Boomerang implements Process.Plugin {
         ];
   
         //get destination from configuration
-        BoomerangConfiguration__c configuration = [
+        SubsequenceConfiguration__c configuration = [
             SELECT Id, Sequence__r.Name
-            FROM BoomerangConfiguration__c
+            FROM SubsequenceConfiguration__c
             WHERE Id = :(Id)parameters.get('eda__configuration')
         ];
         
-        List<Object> stepIds = (List<Object>)parameters.get('eda__boomerangStepIds');
+        List<Object> stepIds = (List<Object>)parameters.get('eda__subsequenceStepIds');
         if (stepIds == null) {
             stepIds = new List<Object>();
         }
         stepIds.add(step.Id);
         
-        parameters.put('eda__boomerangStepIds', stepIds);
+        parameters.put('eda__subsequenceStepIds', stepIds);
         parameters.put('eda__sequenceName', configuration.Sequence__r.Name);
         parameters.put('eda__position', 0);
         

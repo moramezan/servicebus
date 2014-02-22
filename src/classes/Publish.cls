@@ -44,7 +44,7 @@ public with sharing class Publish implements Process.Plugin {
         for (Step__c step : steps) {
             Map<String,Object> clone = parameters.clone();
             //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
-            clone.put('eda__boomerangStepIds', null);
+            clone.put('eda__subsequenceStepIds', null);
             clone.put('eda__position', step.Position__c);
             clone.put('eda__sequenceName', step.Sequence__r.Name);
             parametersList.add(clone);

@@ -7,8 +7,6 @@
         <members>AsyncApexJobsTest</members>
         <members>BatchBroker</members>
         <members>BatchBrokerTest</members>
-        <members>Boomerang</members>
-        <members>BoomerangTest</members>
         <members>Branch</members>
         <members>BranchTest</members>
         <members>Broker</members>
@@ -69,6 +67,8 @@
         <members>StepsTest</members>
         <members>Subscribe</members>
         <members>SubscribeTest</members>
+        <members>Subsequence</members>
+        <members>SubsequenceTest</members>
         <members>SynchronousBroker</members>
         <members>Terminate</members>
         <members>TerminateTest</members>
@@ -83,7 +83,6 @@
         <name>ApexComponent</name>
     </types>
     <types>
-        <members>BoomerangConfigurationShowStep</members>
         <members>BranchConfigurationShowStep</members>
         <members>FutureBroker</members>
         <members>Health</members>
@@ -99,6 +98,7 @@
         <members>StepShowConfiguration</members>
         <members>SubscribeConfigurationManageEventTypes</members>
         <members>SubscribeConfigurationShowStep</members>
+        <members>SubsequenceConfigurationShowStep</members>
         <name>ApexPage</name>
     </types>
     <types>
@@ -112,7 +112,6 @@
         <name>CustomApplication</name>
     </types>
     <types>
-        <members>BoomerangConfiguration__c.Sequence__c</members>
         <members>BranchConfiguration__c.Sequence__c</members>
         <members>BrokerSettings__c.BrokerClassName__c</members>
         <members>BrokerSettings__c.Inhibit__c</members>
@@ -171,11 +170,11 @@
         <members>Step__c.SequenceNameAndPosition__c</members>
         <members>Step__c.Sequence__c</members>
         <members>SubscribeConfiguration__c.EventType__c</members>
+        <members>SubsequenceConfiguration__c.Sequence__c</members>
         <members>WiretapCustomization__c.UserId__c</members>
         <name>CustomField</name>
     </types>
     <types>
-        <members>BoomerangConfiguration__c</members>
         <members>BranchConfiguration__c</members>
         <members>BrokerSettings__c</members>
         <members>DebouncerConfiguration__c</members>
@@ -197,6 +196,7 @@
         <members>Sequence__c</members>
         <members>Step__c</members>
         <members>SubscribeConfiguration__c</members>
+        <members>SubsequenceConfiguration__c</members>
         <members>WiretapCustomization__c</members>
         <name>CustomObject</name>
     </types>
@@ -212,7 +212,6 @@
         <name>Document</name>
     </types>
     <types>
-        <members>BoomerangConfiguration__c-Boomerang Configuration Layout</members>
         <members>BranchConfiguration__c-Branch Configuration Layout</members>
         <members>DebouncerConfiguration__c-Debouncer Configuration Layout</members>
         <members>Debouncer__c-Debouncer Layout</members>
@@ -232,6 +231,7 @@
         <members>Sequence__c-Sequence Layout</members>
         <members>Step__c-Step Layout</members>
         <members>SubscribeConfiguration__c-Subscribe Configuration Layout</members>
+        <members>SubsequenceConfiguration__c-Subsequence Configuration Layout</members>
         <name>Layout</name>
     </types>
     <types>
@@ -258,7 +258,6 @@
         <name>ValidationRule</name>
     </types>
     <types>
-        <members>BoomerangConfiguration__c.ShowStep</members>
         <members>BranchConfiguration__c.ShowStep</members>
         <members>JumpConfiguration__c.ShowStep</members>
         <members>LogConfiguration__c.ListLogGroups</members>
@@ -271,10 +270,10 @@
         <members>Step__c.ShowConfiguration</members>
         <members>SubscribeConfiguration__c.ManageEventTypes</members>
         <members>SubscribeConfiguration__c.ShowStep</members>
+        <members>SubsequenceConfiguration__c.ShowStep</members>
         <name>WebLink</name>
     </types>
     <types>
-        <members>BoomerangConfiguration__c.UpdateBoomerangConfigurationName</members>
         <members>BranchConfiguration__c.UpdateBranchConfigurationName</members>
         <members>DebouncerConfiguration__c.UpdateDebouncerConfigurationName</members>
         <members>IsChangedConfiguration__c.UpdateIsChangedConfigurationName</members>
@@ -284,10 +283,10 @@
         <members>ScrapeConfiguration__c.UpdateScrapeConfigurationName</members>
         <members>Step__c.StepPositionUpdate</members>
         <members>SubscribeConfiguration__c.UpdateSubscribeConfigurationName</members>
+        <members>SubsequenceConfiguration__c.UpdateSubsequenceConfigurationName</members>
         <name>WorkflowFieldUpdate</name>
     </types>
     <types>
-        <members>BoomerangConfiguration__c.OnBoomerangConfigurationUpsert</members>
         <members>BranchConfiguration__c.OnBranchConfigurationUpsert</members>
         <members>DebouncerConfiguration__c.OnDebouncerConfigurationUpsert</members>
         <members>IsChangedConfiguration__c.OnIsChangedConfigurationUpsert</members>
@@ -298,6 +297,7 @@
         <members>ScrapeConfiguration__c.OnScrapeConfigurationUpsert</members>
         <members>Step__c.OnStepInsert</members>
         <members>SubscribeConfiguration__c.OnSubscribeConfigurationUpsert</members>
+        <members>SubsequenceConfiguration__c.OnSubsequenceConfigurationUpsert</members>
         <name>WorkflowRule</name>
     </types>
     <version>29.0</version>

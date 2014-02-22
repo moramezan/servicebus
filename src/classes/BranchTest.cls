@@ -12,7 +12,7 @@
         System.assertEquals(expectedConfiguration, actualConfiguration);
     }
 
-    static testMethod void testBoomerangDropped() {
+    static testMethod void testSubsequenceDropped() {
         Sequence__c origin = new Sequence__c(Name = 'origin');
         insert origin;
         
@@ -24,14 +24,14 @@
         
         Map<String,Object> parameters = new Map<String,Object>{
             'eda__configuration' => config.Id,
-            'eda__boomerangStepIds' => new List<Id>{'000000000000000AAA'}
+            'eda__subsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Branch branch = new Branch();
         List<Map<String,Object>> parametersList = Utility.convert(branch.invoke(new Process.PluginRequest(parameters)));
         
         List<Object> expectedIds = null;
-        List<Object> actualIds = (List<Object>)parametersList[1].get('eda__boomerangStepIds');
+        List<Object> actualIds = (List<Object>)parametersList[1].get('eda__subsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
     }
     

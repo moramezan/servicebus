@@ -3,7 +3,7 @@
     //before insert test
     static testMethod void testStepConfigurationIsCreatedWhenInserted() {
         //arrange processes
-        Process__c boomerangProcess = Processes.generateOne(Boomerang.class);
+        Process__c subsequenceProcess = Processes.generateOne(Subsequence.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
         //arrange sequence
@@ -11,12 +11,12 @@
         insert sequence;
         
         //arrange steps
-        Step__c boomerangStep = Steps.generateOne(sequence.Id, boomerangProcess.Id);
+        Step__c subsequenceStep = Steps.generateOne(sequence.Id, subsequenceProcess.Id);
         Step__c terminateStep = Steps.generateOne(sequence.Id, terminateProcess.Id);
         
         //assert
-        String expectedId = Schema.SObjectType.BoomerangConfiguration__c.KeyPrefix; //this needs to be some config record
-        String actualId = boomerangStep.ConfigurationId__c;
+        String expectedId = Schema.SObjectType.SubsequenceConfiguration__c.KeyPrefix; //this needs to be some config record
+        String actualId = subsequenceStep.ConfigurationId__c;
         System.assert(actualId.startsWith(expectedId));
     }
 

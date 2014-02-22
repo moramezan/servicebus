@@ -40,7 +40,7 @@
         Type wiretap = Type.forName('Wiretap.Eda');
         Type publish = Type.forName('Publish.Eda');
         Type schedule = Type.forName('Schedule.Eda');
-        Type boomerang = Type.forName('Boomerang.Eda');
+        Type subsequence = Type.forName('Subsequence.Eda');
         Type subscribe = Type.forName('Subscribe.Eda');
         Type scrape = Type.forName('Scrape.Eda');
         Type isChanged = Type.forName('IsChanged.Eda');
@@ -56,7 +56,7 @@
         Boolean actualWiretap = (wiretap != null);
         Boolean actualPublish = (publish != null) ;
         Boolean actualSchedule = (schedule != null);
-        Boolean actualBoomerang = (boomerang != null);
+        Boolean actualSubsequence = (subsequence != null);
         Boolean actualSubscribe = (subscribe != null);
         Boolean actualScrape = (scrape != null);
         Boolean actualIsChanged = (isChanged != null);
@@ -65,7 +65,7 @@
         Boolean actualLogWriter = (logWriter != null);
         
         // assert
-        System.assert(actualBoomerang);
+        System.assert(actualSubsequence);
         System.assert(actualBranch);
         System.assert(actualGate);
         System.assert(actualMark);

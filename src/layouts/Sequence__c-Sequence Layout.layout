@@ -63,7 +63,7 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <relatedList>BoomerangConfiguration__c.Sequence__c</relatedList>
+        <relatedList>SubsequenceConfiguration__c.Sequence__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>

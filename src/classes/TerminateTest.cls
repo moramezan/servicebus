@@ -2,38 +2,38 @@
 private class TerminateTest
 {
 
-    static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenBoomerangAttribsDefinedOnParameters()
+    static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenSubsequenceAttribsDefinedOnParameters()
     {
         // Arrange :
         String sequenceName = 'the-sequence';
         Decimal position = 1;
         String data = 'data';
-        String boomerangSequenceName = 'boomerang-sequence';
-        Decimal boomerangPosition = 2;
+        String subsequenceName = 'the-subsequence';
+        Decimal subsequencePosition = 2;
         
         //arrange processes
-        Process__c boomerangProcess = Processes.generateOne(Boomerang.class);
+        Process__c subsequenceProcess = Processes.generateOne(Subsequence.class);
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         
         //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = boomerangSequenceName);
+        Sequence__c sequence = new Sequence__c(Name = subsequenceName);
         insert sequence;
         
         //arrange steps
         Step__c step1 = Steps.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c step2 = Steps.generateOne(sequence.Id, boomerangProcess.Id);
+        Step__c step2 = Steps.generateOne(sequence.Id, subsequenceProcess.Id);
 
         Map<String,Object> parameters = new Map<String,Object> {
             'eda__sequenceName' => sequenceName,
             'eda__position' => position,
-            'eda__boomerangStepIds' => new List<Id>{step2.Id},
+            'eda__subsequenceStepIds' => new List<Id>{step2.Id},
             'data' => data
         };
 
 
         Decimal expectedSize = 1;
-        String expectedSequenceName = boomerangSequenceName;
-        Decimal expectedPosition = boomerangPosition;
+        String expectedSequenceName = subsequenceName;
+        Decimal expectedPosition = subsequencePosition;
 
         // Act
         Terminate terminate = new Terminate();
@@ -57,7 +57,7 @@ private class TerminateTest
     }
     
     static testMethod void
-    callingExecuteReturnsExpectedParametersCollectionWhenNoBoomerangAttribsDefinedOnParameters() {
+    callingExecuteReturnsExpectedParametersCollectionWhenNoSubsequenceAttribsDefinedOnParameters() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Decimal position = 1;
@@ -85,32 +85,32 @@ private class TerminateTest
         System.assertEquals(expectedSize , actualSize );
     }
     
-    static testMethod void testMultipleBoomerangsGetPoppedOffStack() {
+    static testMethod void testMultipleSubsequencesGetPoppedOffStack() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Decimal position = 1;
         String data = 'data';
-        String boomerangSequenceName = 'boomerang-sequence';
-        Decimal boomerangPosition  = 2;
+        String subsequenceName = 'the-subsequence';
+        Decimal subsequencePosition  = 2;
 
-        Sequence__c sequence = new Sequence__c(Name = boomerangSequenceName);
+        Sequence__c sequence = new Sequence__c(Name = subsequenceName);
         insert sequence;
         
-        Process__c process = Processes.generateOne(Boomerang.class);
+        Process__c process = Processes.generateOne(Subsequence.class);
         
         Step__c step01 = Steps.generateOne(sequence.Id, process.Id);
         Step__c step02 = Steps.generateOne(sequence.Id, process.Id);
         
-        Id boomerangStepId01 = step01.Id ;
-        Id boomerangStepId02 = step02.Id ;
-        List<Id> boomerangStepIds = new List<Id>();
-        boomerangStepIds.add(boomerangStepId01);
-        boomerangStepIds.add(boomerangStepId02);
+        Id subsequenceStepId01 = step01.Id ;
+        Id subsequenceStepId02 = step02.Id ;
+        List<Id> subsequenceStepIds = new List<Id>();
+        subsequenceStepIds.add(subsequenceStepId01);
+        subsequenceStepIds.add(subsequenceStepId02);
         
         Map<String,Object> parametersFirst = new Map<String,Object> {
             'eda__sequenceName' => sequenceName,
             'eda__position' => position,
-            'eda__boomerangStepIds' => boomerangStepIds,
+            'eda__subsequenceStepIds' => subsequenceStepIds,
             'data' => data
         };
 
@@ -127,8 +127,8 @@ private class TerminateTest
         List<Map<String,Object>> actualOutParametersListSecond = Utility.convert(resultsInvokeSecond);
         
         // prepare
-        List<Object> actualStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('eda__boomerangStepIds');
-        List<Object> actualStepIdsAfterSecond = (List<Object>)actualOutParametersListSecond[0].get('eda__boomerangStepIds');
+        List<Object> actualStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('eda__subsequenceStepIds');
+        List<Object> actualStepIdsAfterSecond = (List<Object>)actualOutParametersListSecond[0].get('eda__subsequenceStepIds');
         
         Integer actualSizeAfterFirst = actualStepIdsAfterFirst.size();
         Integer actualSizeAfterSecond = actualStepIdsAfterSecond.size();

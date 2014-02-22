@@ -15,22 +15,22 @@ public with sharing class Terminate implements Process.Plugin {
     public Process.PluginResult invoke(Process.PluginRequest request) {
         Map<String,Object> parameters = request.inputParameters;
         
-        //if we got here from a boomerang, back to where you came from!
+        //if we got here from a subsequence, back to where you came from!
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
-        Object data = parameters.get('eda__boomerangStepIds');
+        Object data = parameters.get('eda__subsequenceStepIds');
         
         if (data == null) {
-            //no boomerangs
+            //no subsequences
             return Utility.convert(parametersList);
         }
 
         List<Id> stepIds = (List<Id>)System.Json.deserialize(System.Json.serialize(data), List<Id>.class);
         if (stepIds.isEmpty()) {
-            //boomerangs finished
+            //subsequences finished
             return Utility.convert(parametersList);
         }
         
-        //pop one boomerang off stack
+        //pop one subsequence off stack
         Id lastId = stepIds.remove(stepIds.size() - 1);
         Step__c step = [
             SELECT Id, Sequence__r.Name, Position__c
@@ -38,7 +38,7 @@ public with sharing class Terminate implements Process.Plugin {
             WHERE Id = :lastId
         ];
         
-        parameters.put('eda__boomerangStepIds', stepIds);
+        parameters.put('eda__subsequenceStepIds', stepIds);
         parameters.put('eda__sequenceName', step.Sequence__r.Name );
         parameters.put('eda__position', step.Position__c );
         parametersList.add(parameters);

@@ -1,1 +1,0 @@
-<apex:page standardController="BoomerangConfiguration__c" extensions="ConfigurationShowStepExtension" action="{!doRedirect}" />

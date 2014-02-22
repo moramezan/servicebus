@@ -57,18 +57,18 @@
         <externalId>false</externalId>
         <label>Sequence</label>
         <referenceTo>Sequence__c</referenceTo>
-        <relationshipLabel>Boomerang Configuration</relationshipLabel>
-        <relationshipName>BoomerangConfiguration</relationshipName>
+        <relationshipLabel>Subsequence Configuration</relationshipLabel>
+        <relationshipName>SubsequenceConfiguration</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
-    <label>Boomerang Configuration</label>
+    <label>Subsequence Configuration</label>
     <nameField>
         <label>What does this step do?</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Boomerang Configuration</pluralLabel>
+    <pluralLabel>Subsequence Configuration</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
@@ -79,7 +79,7 @@
         <linkType>page</linkType>
         <masterLabel>Show Step</masterLabel>
         <openType>noSidebar</openType>
-        <page>BoomerangConfigurationShowStep</page>
+        <page>SubsequenceConfigurationShowStep</page>
         <protected>false</protected>
     </webLinks>
 </CustomObject>

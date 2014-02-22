@@ -1,33 +1,33 @@
-@isTest private class BoomerangTest {
+@isTest private class SubsequenceTest {
 
     static testMethod void canDetermineConfigurable() {
         //arrange processes
-        Process__c boomerangProcess = Processes.generateOne(Boomerang.class);
+        Process__c subsequenceProcess = Processes.generateOne(Subsequence.class);
         
         //act
-        String actualConfiguration = boomerangProcess.Configurable__c;
+        String actualConfiguration = subsequenceProcess.Configurable__c;
         
         //assert
-        String expectedConfiguration = Schema.SobjectType.BoomerangConfiguration__c.Name;
+        String expectedConfiguration = Schema.SobjectType.SubsequenceConfiguration__c.Name;
         System.assertEquals(expectedConfiguration, actualConfiguration);
     }
 
     static testMethod void testMessageIsRedirected() {
         //arrange processes
-        Process__c boomerangProcess = Processes.generateOne(Boomerang.class);
+        Process__c subsequenceProcess = Processes.generateOne(Subsequence.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
         //arrange sequences
         Sequence__c origin = new Sequence__c(Name = 'originSequence');
         insert origin;
-        Step__c originStep = Steps.generateOne(origin.Id, boomerangProcess.Id);
+        Step__c originStep = Steps.generateOne(origin.Id, subsequenceProcess.Id);
         
         Sequence__c target = new Sequence__c(Name = 'targetSequence');
         insert target;
         Step__c targetStep = Steps.generateOne(target.Id, terminateProcess.Id);
         
         //prepare configuration in db
-        BoomerangConfiguration__c config = new BoomerangConfiguration__c(
+        SubsequenceConfiguration__c config = new SubsequenceConfiguration__c(
             Id = originStep.ConfigurationId__c,
             Sequence__c = target.Id
         );
@@ -41,7 +41,7 @@
         });
         
         //act
-        Boomerang process = new Boomerang();
+        Subsequence process = new Subsequence();
         Process.PluginResult result = process.invoke(request);
         List<Map<String,Object>> parametersList = Utility.convert(result);
         
@@ -59,7 +59,7 @@
         System.assertEquals(expectedPosition, actualPosition);
 
         String expectedList = '["' + originStep.Id + '"]';
-        String actualList = System.Json.serialize(parametersList[0].get('eda__boomerangStepIds'));
+        String actualList = System.Json.serialize(parametersList[0].get('eda__subsequenceStepIds'));
         System.assertEquals(expectedList, actualList);
     }
     

@@ -12,7 +12,7 @@
         System.assertEquals(expectedConfiguration, actualConfiguration);
     }
     
-    static testMethod void testBoomerangDropped() {
+    static testMethod void testSubsequenceDropped() {
         //arrange events
         EventType__c eventType = new EventType__c(Name = 'ready');
         insert eventType;
@@ -40,7 +40,7 @@
         
         Map<String,Object> parameters = new Map<String,Object>{
             'eda__configuration' => pubConfig.Id,
-            'eda__boomerangStepIds' => new List<Id>{'000000000000000AAA'}
+            'eda__subsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Publish branch = new Publish();
@@ -53,12 +53,12 @@
         
         //first one is for subscriber
         List<Object> expectedIds = null;
-        List<Object> actualIds = (List<Object>)parametersList[0].get('eda__boomerangStepIds');
+        List<Object> actualIds = (List<Object>)parametersList[0].get('eda__subsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
         
         //second one is original/passthru
         expectedIds = new List<Id>{'000000000000000AAA'};
-        actualIds = (List<Object>)parametersList[1].get('eda__boomerangStepIds');
+        actualIds = (List<Object>)parametersList[1].get('eda__subsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
     }
     

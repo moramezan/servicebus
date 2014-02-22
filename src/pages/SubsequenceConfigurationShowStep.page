@@ -1,0 +1,1 @@
+<apex:page standardController="SubsequenceConfiguration__c" extensions="ConfigurationShowStepExtension" action="{!doRedirect}" />
