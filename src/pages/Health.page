@@ -12,7 +12,7 @@
 
     <apex:form >
         
-        <apex:pageblock title="Chain Health"  id="theControl">
+        <apex:pageblock title="Sequence Health"  id="theControl">
          
             <apex:pageBlockButtons location="top">
                 <apex:commandButton action="{!Refresh}" value="Refresh Health" id="theRefreshButton"/>
@@ -23,8 +23,8 @@
             <apex:outputPanel rendered="{!DisplayDetails}">
                 <apex:pageblockTable title="Heath Details" value="{!Healths}" var="e">
 
-                    <apex:column width="16%"     headerValue="Chain Name">
-                        <apex:outputLink target="_blank" value="/{!e.ChainId}">{!e.ChainName}</apex:outputLink>
+                    <apex:column width="16%"     headerValue="Sequence Name">
+                        <apex:outputLink target="_blank" value="/{!e.SequenceId}">{!e.SequenceName}</apex:outputLink>
                     </apex:column>
 
                     <apex:column headerValue="Detail">

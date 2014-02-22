@@ -41,14 +41,14 @@
         Process__c markProcess = Processes.generateOne(Mark.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chain
-        String chainNameA = 'chainA';
-        Chain__c chainA = new Chain__c(Name = chainNameA);
-        insert chainA;
+        //arrange sequence
+        String sequenceNameA = 'sequenceA';
+        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
+        insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = Steps.generateOne(chainA.Id, markProcess.Id);
-        Step__c stepA2 = Steps.generateOne(chainA.Id, terminateProcess.Id);
+        Step__c stepA1 = Steps.generateOne(sequenceA.Id, markProcess.Id);
+        Step__c stepA2 = Steps.generateOne(sequenceA.Id, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         
@@ -63,7 +63,7 @@
         //act
         Test.startTest();
         Test.setMock(WebServiceMock.class, new ToolingApiMock());
-        Broker.enqueue(chainNameA, '000000000000000AAA');
+        Broker.enqueue(sequenceNameA, '000000000000000AAA');
         Test.stopTest();
         
         //assert
@@ -90,14 +90,14 @@
         Process__c markProcess = Processes.generateOne(Mark.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chain
-        String chainNameA = 'chainA';
-        Chain__c chainA = new Chain__c(Name = chainNameA);
-        insert chainA;
+        //arrange sequence
+        String sequenceNameA = 'sequenceA';
+        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
+        insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = Steps.generateOne(chainA.Id, markProcess.Id);
-        Step__c stepA2 = Steps.generateOne(chainA.Id, terminateProcess.Id);
+        Step__c stepA1 = Steps.generateOne(sequenceA.Id, markProcess.Id);
+        Step__c stepA2 = Steps.generateOne(sequenceA.Id, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         
@@ -107,7 +107,7 @@
         // scenario:
         // resolved state , assume manual intervention to set status to 'Reprocess'
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda__chainName' => chainNameA,
+            'eda__sequenceName' => sequenceNameA,
             'eda__position' => 1, //not zero!!!
             'id' => '000000000000000AAA'
         };
@@ -152,13 +152,13 @@
         //arrange process
         Process__c failureProcess = Processes.generateOne(FailurePlugin.class);
         
-        //arrange chain
-        String chainNameA = 'chainA';
-        Chain__c chainA = new Chain__c(Name = chainNameA);
-        insert chainA;
+        //arrange sequence
+        String sequenceNameA = 'sequenceA';
+        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
+        insert sequenceA;
         
         //arrange step
-        Step__c stepA1 = Steps.generateOne(chainA.Id, failureProcess.Id);
+        Step__c stepA1 = Steps.generateOne(sequenceA.Id, failureProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         
         //arrange specific broker implementation
@@ -166,7 +166,7 @@
         
         //act
         Test.startTest();
-        Broker.enqueue(chainNameA, '000000000000000AAA');
+        Broker.enqueue(sequenceNameA, '000000000000000AAA');
         Test.stopTest();
         
         //assemble

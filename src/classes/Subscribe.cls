@@ -18,12 +18,12 @@ public with sharing class Subscribe implements Process.Plugin {
     }
     
     public static List<HealthController.Health> getHealth() {
-        List<Chain__c> chains = [SELECT id,
+        List<Sequence__c> sequences = [SELECT id,
                                         Name,
                                         (SELECT id, Name, Process__c, ConfigurationId__c
                                          FROM Steps__r
                                          ORDER BY Position__c ASC) steps
-                                 FROM Chain__c
+                                 FROM Sequence__c
                                 ];
         
         List<Process__c> subscribeProcesses  = [SELECT id, Name
@@ -49,14 +49,14 @@ public with sharing class Subscribe implements Process.Plugin {
                
                            
         List<Map<String,Object>> instanceDetails = new List<Map<String,Object>>();
-        for (Chain__c  chain : chains)  {
+        for (Sequence__c  sequence : sequences)  {
             String status = resolvedProcess ? 'Ok' : 'Unknown';
             String detail = resolvedProcess ? 'Subscribe Check(s)' : 'Cannot resolve Id of Subscribe process';
             instanceDetails.add(new Map<String,Object>{ 'Status' => status,
                                                         'Detail' => detail,
-                                                        'ChainId' => chain.Id,
-                                                        'ChainName' => chain.Name,
-                                                        'Steps' => chain.Steps__r });
+                                                        'SequenceId' => sequence.Id,
+                                                        'SequenceName' => sequence.Name,
+                                                        'Steps' => sequence.Steps__r });
         }
         
         if (resolvedProcess) {
@@ -86,11 +86,11 @@ public with sharing class Subscribe implements Process.Plugin {
                     String detail;
                     if (! subscribeFirst) {
                         isError = true;
-                        detail = 'Subscribe process not  at front of chain';
+                        detail = 'Subscribe process not  at front of sequence';
                     }
                     if (subscribeOccurs > 1) {
                         isError = true;
-                        detail = 'Subscribe appears more than once in chain ['+subscribeOccurs+']';
+                        detail = 'Subscribe appears more than once in sequence ['+subscribeOccurs+']';
                     }
                     
                     if (isError) {
@@ -139,8 +139,8 @@ public with sharing class Subscribe implements Process.Plugin {
         List<HealthController.Health> healths = new List<HealthController.Health>();
         for (Map<String,Object> instanceDetail : instanceDetails) {
             HealthController.Health health = new HealthController.Health();
-            health.ChainId = (Id) instanceDetail.get('ChainId');
-            health.ChainName = (String) instanceDetail.get('ChainName');
+            health.SequenceId = (Id) instanceDetail.get('SequenceId');
+            health.SequenceName = (String) instanceDetail.get('SequenceName');
             health.Detail = (String) instanceDetail.get('Detail');
             health.Status = (String) instanceDetail.get('Status');
             healths.add(health);

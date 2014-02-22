@@ -1,6 +1,6 @@
-<apex:page standardController="Chain__c" extensions="ChainSorterController" action="{!doRedirect}">
+<apex:page standardController="Sequence__c" extensions="SequenceSorterController" action="{!doRedirect}">
     
-    <apex:sectionHeader title="{!$ObjectType.Chain__c.Label}" subtitle="{!Chain__c.Name}" />
+    <apex:sectionHeader title="{!$ObjectType.Sequence__c.Label}" subtitle="{!Sequence__c.Name}" />
     
     <apex:pageBlock id="pageBlockId" title="{!$ObjectType.Step__c.LabelPlural}">
         <apex:pageBlockButtons location="top" id="pageBlockButtonsId" />
@@ -12,17 +12,17 @@
         $Component.pageBlockButtonsId = '{!$Component.pageBlockId.pageBlockButtonsId}';
         
         window.$RemoteAction = window.$RemoteAction || {};
-        $RemoteAction.ChainSorterController = $RemoteAction.ChainSorterController || {};
-        $RemoteAction.ChainSorterController.fetchSteps = '{!$RemoteAction.ChainSorterController.fetchSteps}';
-        $RemoteAction.ChainSorterController.destroyStep = '{!$RemoteAction.ChainSorterController.destroyStep}';
-        $RemoteAction.ChainSorterController.enqueue = '{!$RemoteAction.ChainSorterController.enqueue}';
-        $RemoteAction.ChainSorterController.appendStep = '{!$RemoteAction.ChainSorterController.appendStep}';
-        $RemoteAction.ChainSorterController.moveStepBefore = '{!$RemoteAction.ChainSorterController.moveStepBefore}';
-        $RemoteAction.ChainSorterController.moveStepAfter = '{!$RemoteAction.ChainSorterController.moveStepAfter}';
+        $RemoteAction.SequenceSorterController = $RemoteAction.SequenceSorterController || {};
+        $RemoteAction.SequenceSorterController.fetchSteps = '{!$RemoteAction.SequenceSorterController.fetchSteps}';
+        $RemoteAction.SequenceSorterController.destroyStep = '{!$RemoteAction.SequenceSorterController.destroyStep}';
+        $RemoteAction.SequenceSorterController.enqueue = '{!$RemoteAction.SequenceSorterController.enqueue}';
+        $RemoteAction.SequenceSorterController.appendStep = '{!$RemoteAction.SequenceSorterController.appendStep}';
+        $RemoteAction.SequenceSorterController.moveStepBefore = '{!$RemoteAction.SequenceSorterController.moveStepBefore}';
+        $RemoteAction.SequenceSorterController.moveStepAfter = '{!$RemoteAction.SequenceSorterController.moveStepAfter}';
         
-        window.Chain__c = window.Chain__c || {};
-        Chain__c.Id = '{!Chain__c.Id}';
-        Chain__c.Name = '{!Chain__c.Name}';
+        window.Sequence__c = window.Sequence__c || {};
+        Sequence__c.Id = '{!Sequence__c.Id}';
+        Sequence__c.Name = '{!Sequence__c.Name}';
         
         window.$ObjectType = window.$ObjectType || {};
         $ObjectType.Step__c = $ObjectType.Step__c || {};
@@ -32,8 +32,8 @@
         $ObjectType.Step__c.Fields.Id.Name = '{!$ObjectType.Step__c.Fields.Id.Name}';
         $ObjectType.Step__c.Fields.Name = $ObjectType.Step__c.Fields.Name || {};
         $ObjectType.Step__c.Fields.Name.Name = '{!$ObjectType.Step__c.Fields.Name.Name}';
-        $ObjectType.Step__c.Fields.Chain__c = $ObjectType.Step__c.Fields.Chain__c || {};
-        $ObjectType.Step__c.Fields.Chain__c.Name = '{!$ObjectType.Step__c.Fields.Chain__c.Name}';
+        $ObjectType.Step__c.Fields.Sequence__c = $ObjectType.Step__c.Fields.Sequence__c || {};
+        $ObjectType.Step__c.Fields.Sequence__c.Name = '{!$ObjectType.Step__c.Fields.Sequence__c.Name}';
         $ObjectType.Step__c.Fields.Position__c = $ObjectType.Step__c.Fields.Position__c || {};
         $ObjectType.Step__c.Fields.Position__c.Name = '{!$ObjectType.Step__c.Fields.Position__c.Name}';
         $ObjectType.Step__c.Fields.ConfigurationId__c = $ObjectType.Step__c.Fields.ConfigurationId__c || {};

@@ -5,26 +5,26 @@ private class TerminateTest
     static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenBoomerangAttribsDefinedOnParameters()
     {
         // Arrange :
-        String chainName = 'the-chain';
+        String sequenceName = 'the-sequence';
         Decimal position = 1;
         String data = 'data';
-        String boomerangChainName = 'boomerang-chain';
+        String boomerangSequenceName = 'boomerang-sequence';
         Decimal boomerangPosition = 2;
         
         //arrange processes
         Process__c boomerangProcess = Processes.generateOne(Boomerang.class);
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = boomerangChainName);
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = boomerangSequenceName);
+        insert sequence;
         
         //arrange steps
-        Step__c step1 = Steps.generateOne(chain.Id, wiretapProcess.Id);
-        Step__c step2 = Steps.generateOne(chain.Id, boomerangProcess.Id);
+        Step__c step1 = Steps.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c step2 = Steps.generateOne(sequence.Id, boomerangProcess.Id);
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda__chainName' => chainName,
+            'eda__sequenceName' => sequenceName,
             'eda__position' => position,
             'eda__boomerangStepIds' => new List<Id>{step2.Id},
             'data' => data
@@ -32,7 +32,7 @@ private class TerminateTest
 
 
         Decimal expectedSize = 1;
-        String expectedChainName = boomerangChainName;
+        String expectedSequenceName = boomerangSequenceName;
         Decimal expectedPosition = boomerangPosition;
 
         // Act
@@ -42,31 +42,31 @@ private class TerminateTest
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
-        String actualChainName = null;
+        String actualSequenceName = null;
         Decimal actualPosition = null;
         if (actualSize > 0) {
             Map<String,Object> actualParameters = actualOutParametersList[0];
-            actualChainName = (String)actualParameters.get('eda__chainName');
+            actualSequenceName = (String)actualParameters.get('eda__sequenceName');
             actualPosition = (Decimal)actualParameters.get('eda__position');
         }
 
         // Assert
         System.assertEquals(expectedSize, actualSize);
-        System.assertEquals(expectedChainName, actualChainName);
+        System.assertEquals(expectedSequenceName, actualSequenceName);
         System.assertEquals(expectedPosition, actualPosition);
     }
     
     static testMethod void
     callingExecuteReturnsExpectedParametersCollectionWhenNoBoomerangAttribsDefinedOnParameters() {
         // Arrange :
-        String chainName = 'the-chain';
+        String sequenceName = 'the-sequence';
         Decimal position = 1;
         String data = 'data';
  
  
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda__chainName' => chainName,
+            'eda__sequenceName' => sequenceName,
             'eda__position' => position,
             'data' => data
         };
@@ -87,19 +87,19 @@ private class TerminateTest
     
     static testMethod void testMultipleBoomerangsGetPoppedOffStack() {
         // Arrange :
-        String chainName = 'the-chain';
+        String sequenceName = 'the-sequence';
         Decimal position = 1;
         String data = 'data';
-        String boomerangChainName = 'boomerang-chain';
+        String boomerangSequenceName = 'boomerang-sequence';
         Decimal boomerangPosition  = 2;
 
-        Chain__c chain = new Chain__c(Name = boomerangChainName);
-        insert chain;
+        Sequence__c sequence = new Sequence__c(Name = boomerangSequenceName);
+        insert sequence;
         
         Process__c process = Processes.generateOne(Boomerang.class);
         
-        Step__c step01 = Steps.generateOne(chain.Id, process.Id);
-        Step__c step02 = Steps.generateOne(chain.Id, process.Id);
+        Step__c step01 = Steps.generateOne(sequence.Id, process.Id);
+        Step__c step02 = Steps.generateOne(sequence.Id, process.Id);
         
         Id boomerangStepId01 = step01.Id ;
         Id boomerangStepId02 = step02.Id ;
@@ -108,7 +108,7 @@ private class TerminateTest
         boomerangStepIds.add(boomerangStepId02);
         
         Map<String,Object> parametersFirst = new Map<String,Object> {
-            'eda__chainName' => chainName,
+            'eda__sequenceName' => sequenceName,
             'eda__position' => position,
             'eda__boomerangStepIds' => boomerangStepIds,
             'data' => data
@@ -143,48 +143,48 @@ private class TerminateTest
     
     static testMethod void callingGetHeathReturnsExpectedList() {
         // #11 : Trivial error / health checker
-        // * Chain with no Terminate (error)
-        // * Chain with more than one Terminate (error)
+        // * Sequence with no Terminate (error)
+        // * Sequence with more than one Terminate (error)
         // * Terminate that's not at the end (error)
         
         // Arrange :
-        Chain__c chainA = new Chain__c(Name = 'ChainA');
-        insert chainA;
-        Chain__c chainB = new Chain__c(Name = 'ChainB');
-        insert chainB;
-        Chain__c chainC = new Chain__c(Name = 'ChainC');
-        insert chainC;
-        Chain__c chainD = new Chain__c(Name = 'ChainD');
-        insert chainD;
+        Sequence__c sequenceA = new Sequence__c(Name = 'SequenceA');
+        insert sequenceA;
+        Sequence__c sequenceB = new Sequence__c(Name = 'SequenceB');
+        insert sequenceB;
+        Sequence__c sequenceC = new Sequence__c(Name = 'SequenceC');
+        insert sequenceC;
+        Sequence__c sequenceD = new Sequence__c(Name = 'SequenceD');
+        insert sequenceD;
         
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         
-        // Chain A - Ok
-        Step__c stepA1 = Steps.generateOne(chainA.Id, wireTapProcess.Id);
-        Step__c stepA2 = Steps.generateOne(chainA.Id, terminateProcess.Id);
+        // Sequence A - Ok
+        Step__c stepA1 = Steps.generateOne(sequenceA.Id, wireTapProcess.Id);
+        Step__c stepA2 = Steps.generateOne(sequenceA.Id, terminateProcess.Id);
         
-        // Chain B - Problem : Terminate Not last Step
-        Step__c stepB1 = Steps.generateOne(chainB.Id, terminateProcess.Id);
-        Step__c stepB2 = Steps.generateOne(chainB.Id, wireTapProcess.Id);
+        // Sequence B - Problem : Terminate Not last Step
+        Step__c stepB1 = Steps.generateOne(sequenceB.Id, terminateProcess.Id);
+        Step__c stepB2 = Steps.generateOne(sequenceB.Id, wireTapProcess.Id);
  
-        // Chain C - Problem : More than One Terminate
-        Step__c stepC1 = Steps.generateOne(chainC.Id, terminateProcess.Id);
-        Step__c stepC2 = Steps.generateOne(chainC.Id, terminateProcess.Id);
+        // Sequence C - Problem : More than One Terminate
+        Step__c stepC1 = Steps.generateOne(sequenceC.Id, terminateProcess.Id);
+        Step__c stepC2 = Steps.generateOne(sequenceC.Id, terminateProcess.Id);
         
-        // Chain D - Problem : Zero Terminate
-        Step__c stepD1 = Steps.generateOne(chainD.Id, wireTapProcess.Id);
-        Step__c stepD2 = Steps.generateOne(chainD.Id, wireTapProcess.Id);
+        // Sequence D - Problem : Zero Terminate
+        Step__c stepD1 = Steps.generateOne(sequenceD.Id, wireTapProcess.Id);
+        Step__c stepD2 = Steps.generateOne(sequenceD.Id, wireTapProcess.Id);
 
         // Act :
         List<HealthController.Health> terminateHealths =  Terminate.getHealth();
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>();
+        Map<id,string> sequenceIdToDescription = new Map<id,string>();
         Integer actualOkCount = 0;
         Integer actualErrorCount = 0;
         for (HealthController.Health terminateHealth : terminateHealths ) {
-            chainIdToDescription.put(terminateHealth.ChainId, terminateHealth.Detail);
+            sequenceIdToDescription.put(terminateHealth.SequenceId, terminateHealth.Detail);
             if (terminateHealth.Status == 'Ok') {
                 actualOkCount++;
             }
@@ -204,42 +204,42 @@ private class TerminateTest
         Integer expectedErrorCount = 3;
         System.assertEquals(expectedErrorCount, actualErrorCount);
         
-        String actualChainTerminateNotLastStep = chainIdToDescription.get(chainB.Id);
-        String expectedChainTerminateNotLastStep = 'Terminate process not present at end of chain';
-        System.assertEquals(expectedChainTerminateNotLastStep, actualChainTerminateNotLastStep);
+        String actualSequenceTerminateNotLastStep = sequenceIdToDescription.get(sequenceB.Id);
+        String expectedSequenceTerminateNotLastStep = 'Terminate process not present at end of sequence';
+        System.assertEquals(expectedSequenceTerminateNotLastStep, actualSequenceTerminateNotLastStep);
         
-        String actualChainMoreThanOneTerminate = chainIdToDescription.get(chainC.Id);
-        String expectedChainMoreThanOneTerminate ='More than one Terminate found in chain';
-        System.assertEquals(expectedChainMoreThanOneTerminate, actualChainMoreThanOneTerminate);
+        String actualSequenceMoreThanOneTerminate = sequenceIdToDescription.get(sequenceC.Id);
+        String expectedSequenceMoreThanOneTerminate ='More than one Terminate found in sequence';
+        System.assertEquals(expectedSequenceMoreThanOneTerminate, actualSequenceMoreThanOneTerminate);
         
-        String actualChainZeroTerminates = chainIdToDescription.get(chainD.Id);
-        String  expectedChainZeroTerminates =  'No Terminate found in chain';
-        System.assertEquals(expectedChainZeroTerminates, actualChainZeroTerminates);
+        String actualSequenceZeroTerminates = sequenceIdToDescription.get(sequenceD.Id);
+        String  expectedSequenceZeroTerminates =  'No Terminate found in sequence';
+        System.assertEquals(expectedSequenceZeroTerminates, actualSequenceZeroTerminates);
     }
 
     
     static testMethod void callingGetHeathReturnsExpectedListWhenTerminateNotDefined() {
         
         // Arrange :
-        Chain__c chainA = new Chain__c(Name = 'ChainA');
-        insert chainA;
+        Sequence__c sequenceA = new Sequence__c(Name = 'SequenceA');
+        insert sequenceA;
  
         Process__c wiretapProcess  = new Process__c(Name = 'Wiretap');
         insert wiretapProcess;
         
-        // Chain A - Error but Terminate process not defined
-        Step__c stepA1 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Position__c  = 1);
-        Step__c stepA2 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Position__c = 2);
+        // Sequence A - Error but Terminate process not defined
+        Step__c stepA1 =  new Step__c(Sequence__c = sequenceA.Id, Process__c = wireTapProcess.Id, Position__c  = 1);
+        Step__c stepA2 =  new Step__c(Sequence__c = sequenceA.Id, Process__c = wireTapProcess.Id, Position__c = 2);
 
         // Act :
         List<HealthController.Health> terminateHealths =  Terminate.getHealth();
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>();
+        Map<id,string> sequenceIdToDescription = new Map<id,string>();
         Integer actualOkCount = 0;
         Integer actualUnknownCount = 0;
         for (HealthController.Health terminateHealth : terminateHealths ) {
-            chainIdToDescription.put(terminateHealth.ChainId, terminateHealth.Detail);
+            sequenceIdToDescription.put(terminateHealth.SequenceId, terminateHealth.Detail);
             if (terminateHealth.Status == 'Ok') {
                 actualOkCount++;
             }
@@ -259,7 +259,7 @@ private class TerminateTest
         Integer expectedUnknownCount = 1;
         System.assertEquals(expectedUnknownCount, actualUnknownCount);
         
-        String actualUnknown = chainIdToDescription.get(chainA.Id);
+        String actualUnknown = sequenceIdToDescription.get(sequenceA.Id);
         String expectedUnknown = 'Cannot resolve Id of Terminate process';
         System.assertEquals(expectedUnknown, actualUnknown);
     }

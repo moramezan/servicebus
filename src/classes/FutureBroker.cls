@@ -7,7 +7,7 @@ virtual public class FutureBroker extends Broker {
     
     /**
      * Each Broker implementation must provide the smarts of how to restart it.
-     * The FutureBroker chains another @Future invocation to run itself again.
+     * The FutureBroker sequences another @Future invocation to run itself again.
      */
     virtual override public void restartImpl() {
         FutureBroker.restart(UserInfo.getSessionId());

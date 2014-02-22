@@ -1,7 +1,7 @@
-public class Chain extends SalesforceObject {
+public class Sequence extends SalesforceObject {
 
-    public Chain(Chain__c chain) {
-        super(chain);
+    public Sequence(Sequence__c sequence) {
+        super(sequence);
     }
     
     public Steps fetchSteps() {
@@ -15,9 +15,9 @@ public class Chain extends SalesforceObject {
         Set<String> processFields = SObjectType.Process__c.Fields.getMap().keySet();
         for (String processField : SObjectType.Process__c.Fields.getMap().keySet()) fields.add(SObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + processField);
         
-        String chainId = this.getSObject().Id;
+        String sequenceId = this.getSObject().Id;
         String orderBy = SObjectType.Step__c.Fields.Position__c.Name;
-        List<Step__c> steps = Database.query('SELECT ' + String.join(fields, ',') + ' FROM Step__c WHERE Chain__c = :chainId ORDER BY ' + orderBy);
+        List<Step__c> steps = Database.query('SELECT ' + String.join(fields, ',') + ' FROM Step__c WHERE Sequence__c = :sequenceId ORDER BY ' + orderBy);
         
         //ConfigurationName field from related configs
         for (Step__c step : steps) {
@@ -34,7 +34,7 @@ public class Chain extends SalesforceObject {
     
     public Step appendStep(Id processId) {
         Step__c step = new Step__c(
-            Chain__c = this.getSObject().Id,
+            Sequence__c = this.getSObject().Id,
             Process__c = processId
             //Position__c is automatic
         );
@@ -44,11 +44,11 @@ public class Chain extends SalesforceObject {
     }
     
     /**
-     * If this chain contains no Terminate step, append one.
-     * (Invoked by the user interface when viewing a Chain for the first time)
+     * If this sequence contains no Terminate step, append one.
+     * (Invoked by the user interface when viewing a Sequence for the first time)
      */
     public void terminate() {
-        Chain__c chain = (Chain__c)this.getSObject();
+        Sequence__c sequence = (Sequence__c)this.getSObject();
         
         Process__c terminateProcess = [
             SELECT Id
@@ -60,26 +60,26 @@ public class Chain extends SalesforceObject {
             Step__c terminateStep = [
                 SELECT Id
                 FROM Step__c
-                WHERE Chain__c = :chain.Id AND Process__c = :terminateProcess.Id
+                WHERE Sequence__c = :sequence.Id AND Process__c = :terminateProcess.Id
             ];
         } catch (QueryException e) {
-            //chain contains no terminate step
+            //sequence contains no terminate step
             this.appendStep(terminateProcess.Id);
         }
     }
     
     public Step deleteStep(Id stepId) {
         //validate and perform the delete
-        Chain__c chain = (Chain__c)this.getSObject();
+        Sequence__c sequence = (Sequence__c)this.getSObject();
         Step__c step = (Step__c)SalesforceObject.getById(stepId);
-        System.assert(chain.Id == step.Chain__c, 'Cannot deleteStep from different chain ' + chain.Id + ' ' + step.Chain__c);
+        System.assert(sequence.Id == step.Sequence__c, 'Cannot deleteStep from different sequence ' + sequence.Id + ' ' + step.Sequence__c);
         delete step;
         
         //find the remaining steps
         List<Step__c> stepsToReorder = [
             SELECT Id
             FROM Step__c
-            WHERE Chain__c = :chain.Id
+            WHERE Sequence__c = :sequence.Id
             ORDER BY Position__c ASC
         ];
         

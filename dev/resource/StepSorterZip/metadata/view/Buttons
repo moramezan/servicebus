@@ -87,7 +87,7 @@
                             "function handler(response, event) {",
                             "    Ext.Msg.show({",
                             "        title: 'Enqueue',",
-                            "        msg: 'Enqueued to Chain \"' + response + '\"',",
+                            "        msg: 'Enqueued to Sequence \"' + response + '\"',",
                             "        buttons: Ext.Msg.OK",
                             "    });",
                             "    button.enable();",
@@ -98,8 +98,8 @@
                             "button.mask();",
                             "",
                             "Visualforce.remoting.Manager.invokeAction(",
-                            "    $RemoteAction.ChainSorterController.enqueue,",
-                            "    Chain__c.Id,",
+                            "    $RemoteAction.SequenceSorterController.enqueue,",
+                            "    Sequence__c.Id,",
                             "    handler",
                             ");"
                         ]

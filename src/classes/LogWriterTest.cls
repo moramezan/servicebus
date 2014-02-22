@@ -3,13 +3,13 @@ private class LogWriterTest{
 
             private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessNotificationId() {
         //arrange
-        String chainName  = 'LogWriterChain';
+        String sequenceName  = 'LogWriterSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
         Process__c logWriterProcess = Processes.generateOne(LogWriter.class);
         
-        Chain__c chain = new Chain__c(Name = chainName);
-        insert chain;
+        Sequence__c sequence = new Sequence__c(Name = sequenceName);
+        insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
             // 'eda__notificationId' => '1234567abcde',  // null notification Id
@@ -38,13 +38,13 @@ private class LogWriterTest{
     
 	private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
         //arrange
-        String chainName  = 'LogWriterChain';
+        String sequenceName  = 'LogWriterSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
         Process__c logWriterProcess = Processes.generateOne(LogWriter.class);
         
-        Chain__c chain = new Chain__c(Name = chainName);
-        insert chain;
+        Sequence__c sequence = new Sequence__c(Name = sequenceName);
+        insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
             'eda__notificationId' => '1234567abcde',
@@ -77,15 +77,15 @@ private class LogWriterTest{
         String theIdentifier1 = 'BALLS';
         String theIdentifier2 = 'CROW';
        
-        String chainName  = 'LogChain';
+        String sequenceName  = 'LogSequence';
         Integer positionA2 =  1;
         Id theId  = '000000000000000AAA';
         Process__c logWriterProcess = Processes.generateOne(LogWriter.class);
                
-        Chain__c chain = new Chain__c(Name = chainName);
-        insert chain;
+        Sequence__c sequence = new Sequence__c(Name = sequenceName);
+        insert sequence;
         
-        Step__c stepA2 = new Step__c(Chain__c = chain.Id, Position__c = positionA2, Process__c = logWriterProcess.Id);
+        Step__c stepA2 = new Step__c(Sequence__c = sequence.Id, Position__c = positionA2, Process__c = logWriterProcess.Id);
         insert stepA2;
  
         LogConfiguration__c configuration1  = new LogConfiguration__c(
@@ -118,7 +118,7 @@ private class LogWriterTest{
             'id' => theId,
             'eda__notificationId' => '1234567abcde',
             'eda__logGroupIds' => logGroupIds,
-            'eda__chainName' => chainName,
+            'eda__sequenceName' => sequenceName,
             'eda__position' => positionA2
         };
         
@@ -147,7 +147,7 @@ private class LogWriterTest{
                 actualParametersSerialized2 = logWriterEntry.Parameters__c;
             }
         }
-        String actualChainName;
+        String actualSequenceName;
         Boolean actualParameters = ( actualParametersSerialized2 != null);
  
         
@@ -164,11 +164,11 @@ private class LogWriterTest{
         Boolean expectedLogGroup1 = true;
         Boolean expectedLogGroup2 = true;
         Boolean expectedParameters = true;
-        String expectedChainName = chainName;
+        String expectedSequenceName = sequenceName;
         System.assertEquals(expectedLogGroup1, actualLogGroup1);
         System.assertEquals(expectedLogGroup2, actualLogGroup2);
         System.assertEquals(expectedParameters, actualParameters);
         System.assertEquals(actualParametersSerialized1, actualParametersSerialized2);
-        System.assert(actualParametersSerialized1.contains(expectedChainName));
+        System.assert(actualParametersSerialized1.contains(expectedSequenceName));
     }
 }

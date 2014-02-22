@@ -12,9 +12,9 @@ public class Steps extends SObjects {
         this.deleteConfigurations();
     }
     
-    @testVisible static private Step__c generateOne(Id chainId, Id processId) {
+    @testVisible static private Step__c generateOne(Id sequenceId, Id processId) {
         Step__c step = new Step__c(
-            Chain__c = chainId,
+            Sequence__c = sequenceId,
             Process__c = processId
             //Position__c is automatic
         );
@@ -23,7 +23,7 @@ public class Steps extends SObjects {
         
         //requery
         return [
-            SELECT Id, Chain__c, Position__c, Process__c, ConfigurationId__c
+            SELECT Id, Sequence__c, Position__c, Process__c, ConfigurationId__c
             FROM Step__c
             WHERE Id = :step.Id
         ];

@@ -6,7 +6,7 @@
         <formula>IF(
     ISBLANK(EventType__c),
     &quot;This step must be configured.&quot;,
-    &quot;Fires all chains subscribed to the &apos;&quot; + EventType__r.Name + &quot;&apos; event.&quot;
+    &quot;Fires all sequences subscribed to the &apos;&quot; + EventType__r.Name + &quot;&apos; event.&quot;
 )</formula>
         <name>Update Publish Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>

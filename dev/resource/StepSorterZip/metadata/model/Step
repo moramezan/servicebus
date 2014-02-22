@@ -129,15 +129,15 @@
             "userConfig": {
                 "api": [
                     "{",
-                    "    read: $RemoteAction.ChainSorterController.fetchSteps,",
-                    "    destroy: $RemoteAction.ChainSorterController.destroyStep",
+                    "    read: $RemoteAction.SequenceSorterController.fetchSteps,",
+                    "    destroy: $RemoteAction.SequenceSorterController.destroyStep",
                     "}"
                 ],
                 "designer|createAlias": "vfremote",
                 "designer|displayName": "StepProxy",
                 "extraParams": [
                     "{",
-                    "    \"chainId\": Chain__c.Id",
+                    "    \"sequenceId\": Sequence__c.Id",
                     "}"
                 ]
             },

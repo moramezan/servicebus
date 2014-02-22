@@ -42,7 +42,7 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>View</actionName>
-        <content>ChainSorter</content>
+        <content>SequenceSorter</content>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Visualforce</type>
     </actionOverrides>
@@ -57,36 +57,36 @@
         <fullName>StepsCount__c</fullName>
         <externalId>false</externalId>
         <label>StepsCount</label>
-        <summaryForeignKey>Step__c.Chain__c</summaryForeignKey>
+        <summaryForeignKey>Step__c.Sequence__c</summaryForeignKey>
         <summaryOperation>count</summaryOperation>
         <trackTrending>false</trackTrending>
         <type>Summary</type>
     </fields>
-    <label>Chain</label>
+    <label>Sequence</label>
     <listViews>
         <fullName>All</fullName>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
     <nameField>
-        <label>Chain Name</label>
+        <label>Sequence Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Chains</pluralLabel>
+    <pluralLabel>Sequences</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <validationRules>
         <fullName>UniqueName</fullName>
         <active>true</active>
         <errorConditionFormula>Name = VLOOKUP(
-  $ObjectType.Chain__c.Fields.Name,
-  $ObjectType.Chain__c.Fields.Name,
+  $ObjectType.Sequence__c.Fields.Name,
+  $ObjectType.Sequence__c.Fields.Name,
   Name
 )
 &amp;&amp;
 Id &lt;&gt; VLOOKUP(
-  $ObjectType.Chain__c.Fields.Id,
-  $ObjectType.Chain__c.Fields.Name,
+  $ObjectType.Sequence__c.Fields.Id,
+  $ObjectType.Sequence__c.Fields.Name,
   Name
 )</errorConditionFormula>
         <errorDisplayField>Name</errorDisplayField>

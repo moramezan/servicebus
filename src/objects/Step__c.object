@@ -52,29 +52,6 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
-        <fullName>ChainNameAndPosition__c</fullName>
-        <externalId>false</externalId>
-        <formula>Chain__r.Name + &apos;#&apos; + TEXT(Position__c)</formula>
-        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <label>Chain Name and Position</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Chain__c</fullName>
-        <externalId>false</externalId>
-        <label>Chain</label>
-        <referenceTo>Chain__c</referenceTo>
-        <relationshipName>Steps</relationshipName>
-        <relationshipOrder>0</relationshipOrder>
-        <reparentableMasterDetail>false</reparentableMasterDetail>
-        <trackTrending>false</trackTrending>
-        <type>MasterDetail</type>
-        <writeRequiresMasterRead>false</writeRequiresMasterRead>
-    </fields>
-    <fields>
         <fullName>ConfigurationId__c</fullName>
         <caseSensitive>true</caseSensitive>
         <externalId>true</externalId>
@@ -117,6 +94,29 @@
         <required>true</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>SequenceNameAndPosition__c</fullName>
+        <externalId>false</externalId>
+        <formula>Sequence__r.Name + &apos;#&apos; + TEXT(Position__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Sequence Name and Position</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Sequence__c</fullName>
+        <externalId>false</externalId>
+        <label>Sequence</label>
+        <referenceTo>Sequence__c</referenceTo>
+        <relationshipName>Steps</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
     </fields>
     <label>Step</label>
     <nameField>

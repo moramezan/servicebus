@@ -20,22 +20,22 @@ public class BrokerTest{
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
         
-        //arrange chain
-        String chainNameA = 'chainA';
-        Chain__c chainA = new Chain__c(Name = chainNameA);
-        insert chainA;
+        //arrange sequence
+        String sequenceNameA = 'sequenceA';
+        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
+        insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = Steps.generateOne(chainA.Id, subscribeProcess.Id);
-        Step__c stepA2 = Steps.generateOne(chainA.Id, markProcess.Id);
-        Step__c stepA3 = Steps.generateOne(chainA.Id, terminateProcess.Id);
+        Step__c stepA1 = Steps.generateOne(sequenceA.Id, subscribeProcess.Id);
+        Step__c stepA2 = Steps.generateOne(sequenceA.Id, markProcess.Id);
+        Step__c stepA3 = Steps.generateOne(sequenceA.Id, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         Decimal positionA3 = stepA3.Position__c;
         
         List<Message__c> messages =  new List<Message__c>{
-            new Message__c(Parameters__c = '{"eda__chainName": "' + chainNameA + '", "eda__position": ' + positionA1 + '}'),
-            new Message__c(Parameters__c = '{"eda__chainName": "' + chainNameA + '", "eda__position": ' + positionA2 + '}')
+            new Message__c(Parameters__c = '{"eda__sequenceName": "' + sequenceNameA + '", "eda__position": ' + positionA1 + '}'),
+            new Message__c(Parameters__c = '{"eda__sequenceName": "' + sequenceNameA + '", "eda__position": ' + positionA2 + '}')
         };
         
         //act
@@ -50,17 +50,17 @@ public class BrokerTest{
         
         Boolean flagPosition01 = false;
         Boolean flagPosition02 = false;
-        Boolean flagChainNameA = true;
+        Boolean flagSequenceNameA = true;
         Id actualStepId01;
         Id actualStepId02;
         Id actualProcessId01;
         Id actualProcessId02;
         for (Message__c message : messagesAfter) {
             Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
-            String parametersChainName = (String)parameters.get('eda__chainName');
+            String parametersSequenceName = (String)parameters.get('eda__sequenceName');
             Integer parametersPosition = (Integer)parameters.get('eda__position');
-            if (parametersChainName != chainNameA) {
-                flagChainNameA = false;
+            if (parametersSequenceName != sequenceNameA) {
+                flagSequenceNameA = false;
             }
             if (parametersPosition == (positionA1 + 1))  {
                 flagPosition01 = true;
@@ -79,7 +79,7 @@ public class BrokerTest{
         Integer actualCount = messagesAfter.size();
         System.assertEquals(expectedCount, actualCount);
 
-        System.assert(flagChainNameA);
+        System.assert(flagSequenceNameA);
         System.assert(flagPosition01);
         System.assert(flagPosition02);
 
@@ -165,7 +165,7 @@ public class BrokerTest{
     static testMethod void callingSurfaceExceptionSurfacesExpectedMessageOnMessage() {
         //arrange
         Message__c message = new Message__c(
-            Parameters__c = '{"id":1, "eda__chainName":"crow", "eda__position":1}'
+            Parameters__c = '{"id":1, "eda__sequenceName":"crow", "eda__position":1}'
         );
         insert message;
         
@@ -200,15 +200,15 @@ public class BrokerTest{
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
 
-        String chainNameA = 'chainA';
-        String chainNameB = 'chainB';
-        String chainNameC = 'chainC';
-        Chain__c chainA = new Chain__c(Name = chainNameA);
-        Chain__c chainB = new Chain__c(Name = chainNameB);
-        Chain__c chainC = new Chain__c(Name = chainNAmeC);
-        insert chainA;
-        insert chainB;
-        insert chainC;
+        String sequenceNameA = 'sequenceA';
+        String sequenceNameB = 'sequenceB';
+        String sequenceNameC = 'sequenceC';
+        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
+        Sequence__c sequenceB = new Sequence__c(Name = sequenceNameB);
+        Sequence__c sequenceC = new Sequence__c(Name = sequenceNAmeC);
+        insert sequenceA;
+        insert sequenceB;
+        insert sequenceC;
 
         Integer positionA1 = 1;
         Integer positionA2 = 2;
@@ -217,13 +217,13 @@ public class BrokerTest{
         Integer positionB2 = 2;
         Integer positionC1 = 1;
         Integer positionC2 = 2;
-        Step__c stepA1 = new Step__c(Chain__c = chainA.Id ,Position__c = positionA1,Process__c = subscribeProcess.Id);
-        Step__c stepA2 = new Step__c(Chain__c = chainA.Id ,Position__c = positionA2,Process__c = markProcess.Id);
-        Step__c stepA3 = new Step__c(Chain__c = chainA.Id ,Position__c = positionA3,Process__c = terminateProcess.Id);
-        Step__c stepB1 = new Step__c(Chain__c = chainB.Id ,Position__c = positionB1,Process__c = wiretapProcess.Id);
-        Step__c stepB2 = new Step__c(Chain__c = chainB.Id ,Position__c = positionB2,Process__c = terminateProcess.Id);
-        Step__c stepC1 = new Step__c(Chain__c = chainC.Id ,Position__c = positionC1,Process__c = markProcess.Id);
-        Step__c stepC2 = new Step__c(Chain__c = chainC.Id ,Position__c = positionC2,Process__c = terminateProcess.Id);
+        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = subscribeProcess.Id);
+        Step__c stepA2 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA2,Process__c = markProcess.Id);
+        Step__c stepA3 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA3,Process__c = terminateProcess.Id);
+        Step__c stepB1 = new Step__c(Sequence__c = sequenceB.Id ,Position__c = positionB1,Process__c = wiretapProcess.Id);
+        Step__c stepB2 = new Step__c(Sequence__c = sequenceB.Id ,Position__c = positionB2,Process__c = terminateProcess.Id);
+        Step__c stepC1 = new Step__c(Sequence__c = sequenceC.Id ,Position__c = positionC1,Process__c = markProcess.Id);
+        Step__c stepC2 = new Step__c(Sequence__c = sequenceC.Id ,Position__c = positionC2,Process__c = terminateProcess.Id);
         insert stepA1;
         insert stepA2;
         insert stepA3;
@@ -233,20 +233,20 @@ public class BrokerTest{
         insert stepC2;
         
         List<Message__c> messages = new List<Message__c>{
-            new Message__c(Parameters__c = '{"id": 1, "eda__chainName": "' + chainA.Name + '", "eda__position": ' + positionA1 + '}'),
-            new Message__c(Parameters__c = '{"id": 2, "eda__chainName": "' + chainA.Name + '", "eda__position": ' + positionA2 + '}'),
-            new Message__c(Parameters__c = '{"id": 3, "eda__chainName": "' + chainB.Name + '", "eda__position": ' + positionB1 + '}'),
-            new Message__c(Parameters__c = '{"id": 4, "eda__chainName": "' + chainC.Name + '", "eda__position": ' + positionC1 + '}')
+            new Message__c(Parameters__c = '{"id": 1, "eda__sequenceName": "' + sequenceA.Name + '", "eda__position": ' + positionA1 + '}'),
+            new Message__c(Parameters__c = '{"id": 2, "eda__sequenceName": "' + sequenceA.Name + '", "eda__position": ' + positionA2 + '}'),
+            new Message__c(Parameters__c = '{"id": 3, "eda__sequenceName": "' + sequenceB.Name + '", "eda__position": ' + positionB1 + '}'),
+            new Message__c(Parameters__c = '{"id": 4, "eda__sequenceName": "' + sequenceC.Name + '", "eda__position": ' + positionC1 + '}')
         };
         
         // act
         Broker.resolve(messages);
         
         // assemble
-        String actualChainName1 = '' ;
-        String actualChainName2 = '' ;
-        String actualChainName3 = '' ;
-        String actualChainName4 = '' ;
+        String actualSequenceName1 = '' ;
+        String actualSequenceName2 = '' ;
+        String actualSequenceName3 = '' ;
+        String actualSequenceName4 = '' ;
         Integer actualPosition1 = -1 ;
         Integer actualPosition2 = -1 ;
         Integer actualPosition3 = -1 ;
@@ -254,23 +254,23 @@ public class BrokerTest{
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
             Integer theId = (Integer) parameters.get('id');
-            String theChainName = (String)parameters.get('eda__chainName');
+            String theSequenceName = (String)parameters.get('eda__sequenceName');
             Integer thePosition = (Integer)parameters.get('eda__position');
             if (theId == 1) {
-                actualChainName1 = theChainName;
+                actualSequenceName1 = theSequenceName;
                 actualPosition1 = thePosition;
             }
             if (theId == 2) {
-                actualChainName2 = theChainName;
+                actualSequenceName2 = theSequenceName;
                 actualPosition2 = thePosition;
             
             }
             if (theId == 3) {
-                actualChainName3 = theChainName;
+                actualSequenceName3 = theSequenceName;
                 actualPosition3 = thePosition;
             }
             if (theId == 4) {
-                actualChainName4 = theChainName;
+                actualSequenceName4 = theSequenceName;
                 actualPosition4 = thePosition;
             }
         }
@@ -280,10 +280,10 @@ public class BrokerTest{
         Integer actualCount = messages.size();
         System.assertEquals(expectedCount, actualCount);
         
-        String expectedChainName1 = chainNameA;
-        String expectedChainName2 = chainNameA;
-        String expectedChainName3 = chainNameB;
-        String expectedChainName4 = chainNameC;
+        String expectedSequenceName1 = sequenceNameA;
+        String expectedSequenceName2 = sequenceNameA;
+        String expectedSequenceName3 = sequenceNameB;
+        String expectedSequenceName4 = sequenceNameC;
         Integer expectedPosition1 = positionA1 + 1;
         Integer expectedPosition2 = positionA2 + 1;
         Integer expectedPosition3 = positionB1 + 1;
@@ -292,25 +292,25 @@ public class BrokerTest{
         System.assertEquals(expectedPosition2, actualPosition2);
         System.assertEquals(expectedPosition3, actualPosition3);
         System.assertEquals(expectedPosition4, actualPosition4);
-        System.assertEquals(expectedChainName1, actualChainName1);
-        System.assertEquals(expectedChainName2, actualChainName2);
-        System.assertEquals(expectedChainName3, actualChainName3);
-        System.assertEquals(expectedChainName4, actualChainName4);
+        System.assertEquals(expectedSequenceName1, actualSequenceName1);
+        System.assertEquals(expectedSequenceName2, actualSequenceName2);
+        System.assertEquals(expectedSequenceName3, actualSequenceName3);
+        System.assertEquals(expectedSequenceName4, actualSequenceName4);
     }
     
     static testMethod void callingEnqueueSuccessfullyCallsRestartImpl() {
         //arrange processes
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'TestChain');
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        insert sequence;
         
         //arrange steps
-        Steps.generateOne(chain.Id, terminateProcess.Id);
+        Steps.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange broker implementation custom setting
-        String theChainName = 'TestChain';
+        String theSequenceName = 'TestSequence';
         Id theId = '000000000000000AAA';
         insert new BrokerSettings__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
         
@@ -320,7 +320,7 @@ public class BrokerTest{
         System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
         //act
-        Broker.enqueue(theChainName, theId);
+        Broker.enqueue(theSequenceName, theId);
         
         //assert
         Boolean expectedAfterFlag = true;
@@ -332,12 +332,12 @@ public class BrokerTest{
         //arrange processes
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'TestChain');
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        insert sequence;
         
         //arrange steps
-        Steps.generateOne(chain.Id, terminateProcess.Id);
+        Steps.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange
         insert new BrokerSettings__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
@@ -352,7 +352,7 @@ public class BrokerTest{
         System.assertEquals(expectedSizeBefore , actualSizeBefore);
         
         //act
-        Broker.enqueue('TestChain', Blob.valueOf('balls'));
+        Broker.enqueue('TestSequence', Blob.valueOf('balls'));
         
         //assert
         Integer expectedSizeAfter = 1;
@@ -481,17 +481,17 @@ public class BrokerTest{
         Process__c markProcess = Processes.generateOne(Mark.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        // arrange chain
-        String chainNameA = 'chainA';
-        Chain__c chainA = new Chain__c(Name = chainNameA);
-        insert chainA;
+        // arrange sequence
+        String sequenceNameA = 'sequenceA';
+        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
+        insert sequenceA;
         
         
         // arrange steps
         Integer positionA1 = 1;
         Integer positionA2 = 2;
-        Step__c stepA1 = new Step__c(Chain__c = chainA.Id ,Position__c = positionA1,Process__c = markProcess.Id);
-        Step__c stepA2 = new Step__c(Chain__c = chainA.Id ,Position__c = positionA2,Process__c = terminateProcess.Id);
+        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = markProcess.Id);
+        Step__c stepA2 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA2,Process__c = terminateProcess.Id);
         insert stepA1;
         insert stepA2;
         
@@ -503,7 +503,7 @@ public class BrokerTest{
         
         // act
         Test.startTest();
-        Broker.enqueue('testChain', '000000000000000AAA');
+        Broker.enqueue('testSequence', '000000000000000AAA');
         Test.stopTest();
         
         // arrange
@@ -552,7 +552,7 @@ public class BrokerTest{
     
     static testMethod void testNoStepThrowsQueryException() {
         //arrange (note there is no Step__c in database!)
-        Message__c message = new Message__c(Parameters__c = '{"eda__chainName": "", "eda__position": 0}');
+        Message__c message = new Message__c(Parameters__c = '{"eda__sequenceName": "", "eda__position": 0}');
         insert message;
         
         //act
@@ -571,19 +571,19 @@ public class BrokerTest{
         //arrange processes
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'TestChain');
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        insert sequence;
         
         //arrange steps
-        Steps.generateOne(chain.Id, terminateProcess.Id);
+        Steps.generateOne(sequence.Id, terminateProcess.Id);
         
         terminateProcess.FullyQualifiedClassName__c = 'lalala';
         update terminateProcess; //pretend we deleted the class
         
         //act
         Test.startTest();
-        Broker.enqueue(chain.Name, '000000000000000AAA');
+        Broker.enqueue(sequence.Name, '000000000000000AAA');
         Test.stopTest();
         
         //assemble
@@ -599,19 +599,19 @@ public class BrokerTest{
         //arrange processes
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'TestChain');
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        insert sequence;
         
         //arrange step
-        Steps.generateOne(chain.Id, terminateProcess.Id);
+        Steps.generateOne(sequence.Id, terminateProcess.Id);
         
         terminateProcess.FullyQualifiedClassName__c = 'Account';
         update terminateProcess; //Account is DEFINITELY not a Process.Plugin
         
         //act
         Test.startTest();
-        Broker.enqueue(chain.Name, '000000000000000AAA');
+        Broker.enqueue(sequence.Name, '000000000000000AAA');
         Test.stopTest();
         
         //assert

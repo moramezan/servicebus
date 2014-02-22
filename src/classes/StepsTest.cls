@@ -6,13 +6,13 @@
         Process__c boomerangProcess = Processes.generateOne(Boomerang.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'TestChain');
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        insert sequence;
         
         //arrange steps
-        Step__c boomerangStep = Steps.generateOne(chain.Id, boomerangProcess.Id);
-        Step__c terminateStep = Steps.generateOne(chain.Id, terminateProcess.Id);
+        Step__c boomerangStep = Steps.generateOne(sequence.Id, boomerangProcess.Id);
+        Step__c terminateStep = Steps.generateOne(sequence.Id, terminateProcess.Id);
         
         //assert
         String expectedId = Schema.SObjectType.BoomerangConfiguration__c.KeyPrefix; //this needs to be some config record
@@ -26,21 +26,21 @@
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'TestChain');
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        insert sequence;
         
         //arrange steps
         Integer PositionGtZero1 = 1;
         Integer PositionGtZero2 = 2;
-        Step__c step1 = new Step__c(Chain__c = chain.Id, Position__c = PositionGtZero1, Process__c = wiretapProcess.Id);
-        Step__c step2 = new Step__c(Chain__c = chain.Id, Position__c = PositionGtZero2, Process__c = terminateProcess.Id);
+        Step__c step1 = new Step__c(Sequence__c = sequence.Id, Position__c = PositionGtZero1, Process__c = wiretapProcess.Id);
+        Step__c step2 = new Step__c(Sequence__c = sequence.Id, Position__c = PositionGtZero2, Process__c = terminateProcess.Id);
         
         //act
         insert new List<Step__c> {step1, step2};
         
         //assemble : requery after trigger
-        List<Step__c> steps = [SELECT Id, Chain__c, Position__c FROM Step__c WHERE Chain__c = :chain.Id];
+        List<Step__c> steps = [SELECT Id, Sequence__c, Position__c FROM Step__c WHERE Sequence__c = :sequence.Id];
         Integer actualPosition1 = -1;
         Integer actualPosition2 = -1;
         Integer offset = 1;
@@ -73,9 +73,9 @@
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'TestChain');
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        insert sequence;
         
         //act
         //pre condition :
@@ -90,10 +90,10 @@
         //WireTap   3
         //WireTap   4
         
-        Step__c step1 = new Step__c(Chain__c = chain.Id, Position__c = PositionGtZero1, Process__c = wiretapProcess.Id);
-        Step__c step2 = new Step__c(Chain__c = chain.Id, Position__c = PositionGtZero2, Process__c = terminateProcess.Id);
-        Step__c step3 = new Step__c(Chain__c = chain.Id, Position__c = PositionEqToZero3, Process__c = wiretapProcess.Id);
-        Step__c step4 = new Step__c(Chain__c = chain.Id, Position__c = PositionEqToZero4, Process__c = wiretapProcess.Id);
+        Step__c step1 = new Step__c(Sequence__c = sequence.Id, Position__c = PositionGtZero1, Process__c = wiretapProcess.Id);
+        Step__c step2 = new Step__c(Sequence__c = sequence.Id, Position__c = PositionGtZero2, Process__c = terminateProcess.Id);
+        Step__c step3 = new Step__c(Sequence__c = sequence.Id, Position__c = PositionEqToZero3, Process__c = wiretapProcess.Id);
+        Step__c step4 = new Step__c(Sequence__c = sequence.Id, Position__c = PositionEqToZero4, Process__c = wiretapProcess.Id);
         insert step1;
         insert step2;
         insert step3;
@@ -102,9 +102,9 @@
             
         //asemble : requery after trigger
         List<Step__c> steps = [
-            SELECT Id, Chain__c, Position__c
+            SELECT Id, Sequence__c, Position__c
             FROM Step__c
-            WHERE Chain__c = :chain.Id
+            WHERE Sequence__c = :sequence.Id
             ORDER BY Id
         ];
         Integer actualPosition1 = -1;
@@ -145,12 +145,12 @@
         //arrange processes
         Process__c branchProcess = Processes.generateOne(Branch.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'the-chain');
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'the-sequence');
+        insert sequence;
         
         //arrange steps
-        Step__c branchStep = Steps.generateOne(chain.Id, branchProcess.Id);
+        Step__c branchStep = Steps.generateOne(sequence.Id, branchProcess.Id);
         
         integer expectedSizeBefore =  1;
         integer expectedSizeAfter =   0;

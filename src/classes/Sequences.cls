@@ -1,6 +1,6 @@
-public class Chains extends SObjects {
+public class Sequences extends SObjects {
 
-    public Chains(List<Chain__c> sobjects) {
+    public Sequences(List<Sequence__c> sobjects) {
         super(sobjects);
     }
     
@@ -14,11 +14,11 @@ public class Chains extends SObjects {
      * So we cascade the delete ourselves manually, to make sure they fire.
      */
     @testVisible private void cascadeDeletionTriggers() {
-        Set<Id> chainIds = new Map<Id,SObject>(this.getSObjects()).keySet();
+        Set<Id> sequenceIds = new Map<Id,SObject>(this.getSObjects()).keySet();
         List<Step__c> steps = [
             SELECT Id
             FROM Step__c
-            WHERE Chain__c IN :chainIds
+            WHERE Sequence__c IN :sequenceIds
         ];
         delete steps;
     }

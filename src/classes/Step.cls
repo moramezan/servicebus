@@ -12,7 +12,7 @@ public class Step extends SalesforceObject {
         List<Step__c> readSteps = [
             SELECT Id
             FROM Step__c
-            WHERE Chain__c = :stepToMove.Chain__c
+            WHERE Sequence__c = :stepToMove.Sequence__c
             AND Id != :stepToMove.Id
             ORDER BY Position__c ASC
         ];
@@ -38,7 +38,7 @@ public class Step extends SalesforceObject {
         List<Step__c> readSteps = [
             SELECT Id
             FROM Step__c
-            WHERE Chain__c = :stepToMove.Chain__c
+            WHERE Sequence__c = :stepToMove.Sequence__c
             AND Id != :stepToMove.Id
             ORDER BY Position__c ASC
         ];

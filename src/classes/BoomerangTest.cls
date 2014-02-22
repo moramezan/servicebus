@@ -17,25 +17,25 @@
         Process__c boomerangProcess = Processes.generateOne(Boomerang.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chains
-        Chain__c origin = new Chain__c(Name = 'originChain');
+        //arrange sequences
+        Sequence__c origin = new Sequence__c(Name = 'originSequence');
         insert origin;
         Step__c originStep = Steps.generateOne(origin.Id, boomerangProcess.Id);
         
-        Chain__c target = new Chain__c(Name = 'targetChain');
+        Sequence__c target = new Sequence__c(Name = 'targetSequence');
         insert target;
         Step__c targetStep = Steps.generateOne(target.Id, terminateProcess.Id);
         
         //prepare configuration in db
         BoomerangConfiguration__c config = new BoomerangConfiguration__c(
             Id = originStep.ConfigurationId__c,
-            Chain__c = target.Id
+            Sequence__c = target.Id
         );
         update config;
         
         //prepare message
         Process.PluginRequest request = new Process.PluginRequest(new Map<String,Object>{
-            'eda__chainName' => 'originChain',
+            'eda__sequenceName' => 'originSequence',
             'eda__position' => 1,
             'eda__configuration' => config.Id
         });
@@ -50,9 +50,9 @@
         Decimal actualSize = parametersList.size();
         System.assertEquals(expectedSize, actualSize);
         
-        String expectedChainName = 'targetChain';
-        String actualChainName = (String)parametersList[0].get('eda__chainName');
-        System.assertEquals(expectedChainName, actualChainName);
+        String expectedSequenceName = 'targetSequence';
+        String actualSequenceName = (String)parametersList[0].get('eda__sequenceName');
+        System.assertEquals(expectedSequenceName, actualSequenceName);
         
         Decimal expectedPosition = 0;
         Decimal actualPosition = (Decimal)parametersList[0].get('eda__position');

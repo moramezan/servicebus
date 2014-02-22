@@ -9,7 +9,7 @@ public with sharing class Jump implements Process.Plugin {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Tag = 'Event Driven Architecture';
         plugin.Name = 'Jump';
-        plugin.Description = 'Jumps to another Chain and does not return';
+        plugin.Description = 'Jumps to another Sequence and does not return';
         return plugin;
     }
     
@@ -18,12 +18,12 @@ public with sharing class Jump implements Process.Plugin {
         
         //get destination from configuration
         JumpConfiguration__c configuration = [
-            SELECT Id, Chain__r.Name
+            SELECT Id, Sequence__r.Name
             FROM JumpConfiguration__c
             WHERE Id = :(Id)parameters.get('eda__configurable')
         ];
         
-        parameters.put('eda__chainName', configuration.Chain__r.Name);
+        parameters.put('eda__sequenceName', configuration.Sequence__r.Name);
         parameters.put('eda__position', 0);
         
         return Utility.convert(new List<Map<String,Object>>{parameters});

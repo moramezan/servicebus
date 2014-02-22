@@ -4,9 +4,9 @@
         <fullName>UpdateBoomerangConfigurationName</fullName>
         <field>Name</field>
         <formula>IF(
-    ISBLANK(Chain__c),
+    ISBLANK(Sequence__c),
     &quot;This step must be configured.&quot;,
-    &quot;Fires chain &apos;&quot; + Chain__r.Name + &quot;&apos; in series then returns to this chain.&quot;
+    &quot;Fires sequence &apos;&quot; + Sequence__r.Name + &quot;&apos; in series then returns to this sequence.&quot;
 )</formula>
         <name>Update Boomerang Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>

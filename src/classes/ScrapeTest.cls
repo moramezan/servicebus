@@ -37,12 +37,12 @@ public class ScrapeTest {
         //arrange processes
         Process__c scrapeProcess = Processes.generateOne(Scrape.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'ScrapeChain');
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'ScrapeSequence');
+        insert sequence;
         
         //arrange steps
-        Step__c step = Steps.generateOne(chain.Id, scrapeProcess.Id);
+        Step__c step = Steps.generateOne(sequence.Id, scrapeProcess.Id);
         Database.update(new ScrapeConfiguration__c(
             Id = step.ConfigurationId__c,
             Endpoint__c = endPoint

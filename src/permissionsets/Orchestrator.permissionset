@@ -49,22 +49,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Chain</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ChainSorterController</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>Chains</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ChainsTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>ConfigurationShowStepExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -249,6 +233,22 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>Sequence</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SequenceSorterController</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>Sequences</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SequencesTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Step</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -300,20 +300,15 @@
         <apexClass>WiretapTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
-    <description>Allows orchestration of Chains, Steps and Processes as part of Event Driven Architecture.</description>
+    <description>Allows orchestration of Sequences, Steps and Processes as part of Event Driven Architecture.</description>
     <fieldPermissions>
         <editable>false</editable>
-        <field>BoomerangConfiguration__c.Chain__c</field>
+        <field>BoomerangConfiguration__c.Sequence__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>BranchConfiguration__c.Chain__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Chain__c.StepsCount__c</field>
+        <field>BranchConfiguration__c.Sequence__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -383,7 +378,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>JumpConfiguration__c.Chain__c</field>
+        <field>JumpConfiguration__c.Sequence__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -409,11 +404,6 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>LogGroup__c.Stamp__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>LogWriterEntry__c.ChainName__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -448,6 +438,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>LogWriterEntry__c.SequenceName__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>LogWriterEntry__c.Stamp__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -455,11 +450,6 @@
         <editable>false</editable>
         <field>LogWriterEntry__c.Step__c</field>
         <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Message__c.Chain__c</field>
-        <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
@@ -474,6 +464,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Message__c.Process__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Message__c.Sequence__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -548,12 +543,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Step__c.ChainNameAndPosition__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Step__c.Chain__c</field>
+        <field>Sequence__c.StepsCount__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -578,6 +568,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Step__c.SequenceNameAndPosition__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Step__c.Sequence__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>SubscribeConfiguration__c.EventType__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -598,15 +598,6 @@
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
         <object>BranchConfiguration__c</object>
-        <viewAllRecords>false</viewAllRecords>
-    </objectPermissions>
-    <objectPermissions>
-        <allowCreate>true</allowCreate>
-        <allowDelete>true</allowDelete>
-        <allowEdit>true</allowEdit>
-        <allowRead>true</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
-        <object>Chain__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -714,6 +705,15 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
+        <object>Sequence__c</object>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
         <object>Step__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
@@ -732,10 +732,6 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>BranchConfigurationShowStep</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>ChainSorter</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -779,6 +775,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>SequenceSorter</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>StepShowConfiguration</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -791,15 +791,15 @@
         <enabled>true</enabled>
     </pageAccesses>
     <tabSettings>
-        <tab>Chain__c</tab>
-        <visibility>Visible</visibility>
-    </tabSettings>
-    <tabSettings>
         <tab>Message__c</tab>
         <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>
         <tab>Process__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>Sequence__c</tab>
         <visibility>Visible</visibility>
     </tabSettings>
     <userPermissions>

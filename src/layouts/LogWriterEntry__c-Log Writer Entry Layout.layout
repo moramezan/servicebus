@@ -28,7 +28,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>ChainName__c</field>
+                <field>SequenceName__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>

@@ -15,15 +15,15 @@ private class LogInitializerTest {
     
     private static testMethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForConfigIdentifierEqNull() {
         //arrange
-        String chainName  = 'LogInitializerChain';
+        String sequenceName  = 'LogInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
         Process__c logInitializerProcess = Processes.generateOne(LogInitializer.class);
         
-        Chain__c chain = new Chain__c(Name = chainName);
-        insert chain;
+        Sequence__c sequence = new Sequence__c(Name = sequenceName);
+        insert sequence;
         
-        Step__c step = new Step__c(Chain__c = chain.Id, Position__c = thePosition, Process__c = logInitializerProcess.Id);
+        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = logInitializerProcess.Id);
         insert step;
         
         LogConfiguration__c configuration = [
@@ -36,7 +36,7 @@ private class LogInitializerTest {
         Map<String,Object> parameters = new Map<String,Object>{
             'id' => theId,
             'eda__configuration' =>  configuration.Id,
-            'eda__chainName' => chainName,
+            'eda__sequenceName' => sequenceName,
             'eda__position' => thePosition
         };
         
@@ -70,7 +70,7 @@ private class LogInitializerTest {
         Integer expectedLogGroupSize = 1;
         System.assertEquals(expectedLogGroupSize, actualLogGroupSize);
         
-        String expectedGroupIdentifier1 = chainName ;
+        String expectedGroupIdentifier1 = sequenceName ;
         String expectedGroupIdentifier2 = String.valueOf(thePosition) ;
         System.assert(actualGroupIdentifier.contains(expectedGroupIdentifier1));
         System.assert(actualGroupIdentifier.contains(expectedGroupIdentifier2));
@@ -80,15 +80,15 @@ private class LogInitializerTest {
     private static testMethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForConfigIdentifierNotNull() {
         //arrange
         String theIdentifier  = 'BALLS-SAID';
-        String chainName  = 'LogInitializerChain';
+        String sequenceName  = 'LogInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
         Process__c logInitializerProcess = Processes.generateOne(LogInitializer.class);
         
-        Chain__c chain = new Chain__c(Name = chainName);
-        insert chain;
+        Sequence__c sequence = new Sequence__c(Name = sequenceName);
+        insert sequence;
         
-        Step__c step = new Step__c(Chain__c = chain.Id, Position__c = thePosition, Process__c = logInitializerProcess.Id);
+        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = logInitializerProcess.Id);
         insert step;
         
         LogConfiguration__c configuration = [
@@ -101,7 +101,7 @@ private class LogInitializerTest {
         Map<String,Object> parameters = new Map<String,Object>{
             'id' => theId,
             'eda__configuration' =>  configuration.Id,
-            'eda__chainName' => chainName,
+            'eda__sequenceName' => sequenceName,
             'eda__position' => thePosition
         };
         
@@ -142,13 +142,13 @@ private class LogInitializerTest {
     
     private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
         //arrange
-        String chainName  = 'LogInitializerChain';
+        String sequenceName  = 'LogInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
         Process__c logInitializerProcess = Processes.generateOne(LogInitializer.class);
         
-        Chain__c chain = new Chain__c(Name = chainName);
-        insert chain;
+        Sequence__c sequence = new Sequence__c(Name = sequenceName);
+        insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
             'id' => theId
@@ -170,7 +170,7 @@ private class LogInitializerTest {
         Boolean expectedFlagException = true;
         System.assertEquals(expectedFlagException, actualFlagException);
         
-        String expectedMessage = 'Unable to access the Step Position and Chain Name';
+        String expectedMessage = 'Unable to access the Step Position and Sequence Name';
         System.assert( actualMessage.contains(expectedMessage) );
     }
 
@@ -178,15 +178,15 @@ private class LogInitializerTest {
         
     private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessConfig() {
         //arrange
-        String chainName  = 'LogInitializerChain';
+        String sequenceName  = 'LogInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
         Process__c logInitializerProcess = Processes.generateOne(LogInitializer.class);
         
-        Chain__c chain = new Chain__c(Name = chainName);
-        insert chain;
+        Sequence__c sequence = new Sequence__c(Name = sequenceName);
+        insert sequence;
         
-        Step__c step = new Step__c(Chain__c = chain.Id, Position__c = 1, Process__c = logInitializerProcess.Id);
+        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = 1, Process__c = logInitializerProcess.Id);
         insert step;
         
         LogConfiguration__c configuration = [
@@ -198,7 +198,7 @@ private class LogInitializerTest {
         Map<String,Object> parameters = new Map<String,Object>{
            'id' => theId   ,
            'eda__configuration' =>  configuration.Id,
-           'eda__chainName' => chainName,
+           'eda__sequenceName' => sequenceName,
            'eda__position' => thePosition
         };
         

@@ -53,25 +53,25 @@
         <fields>NAME</fields>
         <fields>Position__c</fields>
         <fields>Process__c</fields>
-        <relatedList>Step__c.Chain__c</relatedList>
+        <relatedList>Step__c.Sequence__c</relatedList>
         <sortField>Position__c</sortField>
         <sortOrder>Asc</sortOrder>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <relatedList>BranchConfiguration__c.Chain__c</relatedList>
+        <relatedList>BranchConfiguration__c.Sequence__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <relatedList>BoomerangConfiguration__c.Chain__c</relatedList>
+        <relatedList>BoomerangConfiguration__c.Sequence__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <relatedList>JumpConfiguration__c.Chain__c</relatedList>
+        <relatedList>JumpConfiguration__c.Sequence__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <relatedList>Message__c.Chain__c</relatedList>
+        <relatedList>Message__c.Sequence__c</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>

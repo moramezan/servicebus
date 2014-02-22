@@ -36,25 +36,25 @@
       static testMethod void callingGetHealthReturnsExpectedListContaingStausEqUnknown() {
 
         // Arrange :
-        Chain__c chainA = new Chain__c(Name = 'ChainA');
-        insert chainA;
+        Sequence__c sequenceA = new Sequence__c(Name = 'SequenceA');
+        insert sequenceA;
  
         // Processes :: Subscribe process not defined
         Process__c wiretapProcess  = new Process__c(Name = 'Wiretap');
         insert wiretapProcess;
         
-        // Chain A
-        Step__c stepA1 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Position__c  = 1);
-        Step__c stepA2 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Position__c = 2);
+        // Sequence A
+        Step__c stepA1 =  new Step__c(Sequence__c = sequenceA.Id, Process__c = wireTapProcess.Id, Position__c  = 1);
+        Step__c stepA2 =  new Step__c(Sequence__c = sequenceA.Id, Process__c = wireTapProcess.Id, Position__c = 2);
 
         // Act :
         List<HealthController.Health> SubscribeHealths =  Subscribe.getHealth();
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>();
+        Map<id,string> sequenceIdToDescription = new Map<id,string>();
         Integer actualUnknownCount = 0;
         for (HealthController.Health SubscribeHealth : SubscribeHealths ) {
-            chainIdToDescription.put(SubscribeHealth.ChainId, SubscribeHealth.Detail);
+            sequenceIdToDescription.put(SubscribeHealth.SequenceId, SubscribeHealth.Detail);
             if (SubscribeHealth.Status == 'Unknown') {
                 actualUnknownCount++;
             }
@@ -68,7 +68,7 @@
         Integer expectedUnknownCount = 1;
         System.assertEquals(expectedUnknownCount, actualUnknownCount);
         
-        String actualUnknown = chainIdToDescription.get(chainA.Id);
+        String actualUnknown = sequenceIdToDescription.get(sequenceA.Id);
         String expectedUnknown = 'Cannot resolve Id of Subscribe process';
         System.assertEquals(expectedUnknown, actualUnknown);
     }
@@ -79,20 +79,20 @@
 
 
         // Arrange :
-        Chain__c chainPublish = new Chain__c(Name = 'Publish');
-        insert chainPublish;
-        Chain__c chainZ = new Chain__c(Name = 'ChainZ');
-        insert chainZ;
+        Sequence__c sequencePublish = new Sequence__c(Name = 'Publish');
+        insert sequencePublish;
+        Sequence__c sequenceZ = new Sequence__c(Name = 'SequenceZ');
+        insert sequenceZ;
         
         //generate processes
         Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         Process__c publishProcess = Processes.generateOne(Publish.class);
         
-        // Chain Z - OK : Event is published
-        Step__c stepZ1 = Steps.generateOne(chainZ.Id, subscribeProcess.Id);
-        Step__c stepZ2 = Steps.generateOne(chainZ.Id, wiretapProcess.Id);
-        Step__c stepZ3 = Steps.generateOne(chainPublish.Id, publishProcess.Id);
+        // Sequence Z - OK : Event is published
+        Step__c stepZ1 = Steps.generateOne(sequenceZ.Id, subscribeProcess.Id);
+        Step__c stepZ2 = Steps.generateOne(sequenceZ.Id, wiretapProcess.Id);
+        Step__c stepZ3 = Steps.generateOne(sequencePublish.Id, publishProcess.Id);
  
         // Event
         EventType__c  eventTypePublished  = new EventType__c(Name = 'an-event-that-IS-published');
@@ -127,10 +127,10 @@
         
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>();
+        Map<id,string> sequenceIdToDescription = new Map<id,string>();
         Integer actualOkCount = 0;
         for (HealthController.Health SubscribeHealth : SubscribeHealths ) {
-            chainIdToDescription.put(SubscribeHealth.ChainId, SubscribeHealth.Detail);
+            sequenceIdToDescription.put(SubscribeHealth.SequenceId, SubscribeHealth.Detail);
             if (SubscribeHealth.Status == 'Ok') {
                 actualOkCount++;
             }
@@ -152,13 +152,13 @@
         Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         
-        //arrange chain
-        Chain__c chainA = new Chain__c(Name = 'ChainA');
-        insert chainA;
+        //arrange sequence
+        Sequence__c sequenceA = new Sequence__c(Name = 'SequenceA');
+        insert sequenceA;
         
-        // Chain A - Warning : Ok but event Not published
-        Step__c stepA1 = Steps.generateOne(chainA.Id, subscribeProcess.Id);
-        Step__c stepA2 = Steps.generateOne(chainA.Id, wiretapProcess.Id);
+        // Sequence A - Warning : Ok but event Not published
+        Step__c stepA1 = Steps.generateOne(sequenceA.Id, subscribeProcess.Id);
+        Step__c stepA2 = Steps.generateOne(sequenceA.Id, wiretapProcess.Id);
 
         // Event
         EventType__c eventNotPublished = new EventType__c(Name = 'an-event-not-published');
@@ -180,10 +180,10 @@
         
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>();
+        Map<id,string> sequenceIdToDescription = new Map<id,string>();
         Integer actualWarningCount = 0;
         for (HealthController.Health SubscribeHealth : SubscribeHealths ) {
-            chainIdToDescription.put(SubscribeHealth.ChainId, SubscribeHealth.Detail);
+            sequenceIdToDescription.put(SubscribeHealth.SequenceId, SubscribeHealth.Detail);
             if (SubscribeHealth.Status == 'Warning') {
                 actualWarningCount++;
             }
@@ -193,7 +193,7 @@
         Integer expectedWarningCount = 1;
         System.assertEquals(expectedWarningCount, actualWarningCount);
         
-        String actualDescription = chainIdToDescription.get(chainA.Id);
+        String actualDescription = sequenceIdToDescription.get(sequenceA.Id);
         String expectedDescription = 'No publisher is configured to publish';
         System.assert(actualDescription.contains(expectedDescription));
  
@@ -205,23 +205,23 @@
         Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         
-        //arrange chain
-        Chain__c chainB = new Chain__c(Name = 'ChainB');
-        insert chainB;
+        //arrange sequence
+        Sequence__c sequenceB = new Sequence__c(Name = 'SequenceB');
+        insert sequenceB;
         
-        // Chain B - Problem : Subscribe Not first Step
-        Step__c stepB1 = Steps.generateOne(chainB.Id, wiretapProcess.Id);
-        Step__c stepB2 = Steps.generateOne(chainB.Id, subscribeProcess.Id);
+        // Sequence B - Problem : Subscribe Not first Step
+        Step__c stepB1 = Steps.generateOne(sequenceB.Id, wiretapProcess.Id);
+        Step__c stepB2 = Steps.generateOne(sequenceB.Id, subscribeProcess.Id);
         
         // Act :
         List<HealthController.Health> SubscribeHealths =  Subscribe.getHealth();
         
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>();
+        Map<id,string> sequenceIdToDescription = new Map<id,string>();
         Integer actualErrorCount = 0;
         for (HealthController.Health SubscribeHealth : SubscribeHealths ) {
-            chainIdToDescription.put(SubscribeHealth.ChainId, SubscribeHealth.Detail);
+            sequenceIdToDescription.put(SubscribeHealth.SequenceId, SubscribeHealth.Detail);
             if (SubscribeHealth.Status == 'Error') {
                 actualErrorCount++;
             }
@@ -231,22 +231,22 @@
         Integer expectedErrorCount = 1;
         System.assertEquals(expectedErrorCount, actualErrorCount);
 
-        String actualChainSubscribeNotLastStep = chainIdToDescription.get(chainB.Id);
-        String expectedChainSubscribeNotLastStep = 'Subscribe process not  at front of chain';
-        System.assertEquals(expectedChainSubscribeNotLastStep, actualChainSubscribeNotLastStep);
+        String actualSequenceSubscribeNotLastStep = sequenceIdToDescription.get(sequenceB.Id);
+        String expectedSequenceSubscribeNotLastStep = 'Subscribe process not  at front of sequence';
+        System.assertEquals(expectedSequenceSubscribeNotLastStep, actualSequenceSubscribeNotLastStep);
     }
     
     static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorGtOne() {
         //arrange processes
         Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
         
-        //arrange chain
-        Chain__c chainC = new Chain__c(Name = 'ChainC');
-        insert chainC;
+        //arrange sequence
+        Sequence__c sequenceC = new Sequence__c(Name = 'SequenceC');
+        insert sequenceC;
         
-        // Chain C - Problem : Subscribe Step Occurs more than once
-        Step__c stepC1 = Steps.generateOne(chainC.Id, subscribeProcess.Id);
-        Step__c stepC2 = Steps.generateOne(chainC.Id, subscribeProcess.Id);
+        // Sequence C - Problem : Subscribe Step Occurs more than once
+        Step__c stepC1 = Steps.generateOne(sequenceC.Id, subscribeProcess.Id);
+        Step__c stepC2 = Steps.generateOne(sequenceC.Id, subscribeProcess.Id);
             
         // Event
         EventType__c eventNotPublished = new EventType__c(Name = 'an-event-not-published');
@@ -282,10 +282,10 @@
         
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>();
+        Map<id,string> sequenceIdToDescription = new Map<id,string>();
         Integer actualErrorCount = 0;
         for (HealthController.Health SubscribeHealth : SubscribeHealths ) {
-            chainIdToDescription.put(SubscribeHealth.ChainId, SubscribeHealth.Detail);
+            sequenceIdToDescription.put(SubscribeHealth.SequenceId, SubscribeHealth.Detail);
             if (SubscribeHealth.Status == 'Error') {
                 actualErrorCount++;
             }
@@ -295,8 +295,8 @@
         Integer expectedErrorCount = 1;
         System.assertEquals(expectedErrorCount, actualErrorCount);
 
-        String actualDescription = chainIdToDescription.get(chainC.Id);
-        String expectedDescription = 'Subscribe appears more than once in chain';
+        String actualDescription = sequenceIdToDescription.get(sequenceC.Id);
+        String expectedDescription = 'Subscribe appears more than once in sequence';
         System.assert(actualDescription.contains(expectedDescription));
     }
 
@@ -306,13 +306,13 @@
         Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         
-        //arrange chain
-        Chain__c chainB = new Chain__c(Name = 'ChainB');
-        insert chainB;
+        //arrange sequence
+        Sequence__c sequenceB = new Sequence__c(Name = 'SequenceB');
+        insert sequenceB;
 
-        // Chain B - Problem : No Configuration
-        Step__c stepB1 = Steps.generateOne(chainB.Id, subscribeProcess.Id);
-        Step__c stepB2 = Steps.generateOne(chainB.Id, wiretapProcess.Id);
+        // Sequence B - Problem : No Configuration
+        Step__c stepB1 = Steps.generateOne(sequenceB.Id, subscribeProcess.Id);
+        Step__c stepB2 = Steps.generateOne(sequenceB.Id, wiretapProcess.Id);
 
         Id configurationIdB1 = (Id) [SELECT Id, ConfigurationId__c
                                      FROM Step__c
@@ -324,10 +324,10 @@
         
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>();
+        Map<id,string> sequenceIdToDescription = new Map<id,string>();
         Integer actualErrorCount = 0;
         for (HealthController.Health SubscribeHealth : SubscribeHealths ) {
-            chainIdToDescription.put(SubscribeHealth.ChainId, SubscribeHealth.Detail);
+            sequenceIdToDescription.put(SubscribeHealth.SequenceId, SubscribeHealth.Detail);
             if (SubscribeHealth.Status == 'Error') {
                 actualErrorCount++;
             }
@@ -337,9 +337,9 @@
         Integer expectedErrorCount = 1;
         System.assertEquals(expectedErrorCount, actualErrorCount);
 
-        String actualChainSubscribeNotLastStep = chainIdToDescription.get(chainB.Id);
-        String expectedChainSubscribeNotLastStep = 'Cannot resolve subscribe configuration';
-        System.assertEquals(expectedChainSubscribeNotLastStep, actualChainSubscribeNotLastStep);
+        String actualSequenceSubscribeNotLastStep = sequenceIdToDescription.get(sequenceB.Id);
+        String expectedSequenceSubscribeNotLastStep = 'Cannot resolve subscribe configuration';
+        System.assertEquals(expectedSequenceSubscribeNotLastStep, actualSequenceSubscribeNotLastStep);
     }
     
     static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNoEventConfig() {
@@ -347,22 +347,22 @@
         Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         
-        //arrange chain
-        Chain__c chainB = new Chain__c(Name = 'ChainB');
-        insert chainB;
+        //arrange sequence
+        Sequence__c sequenceB = new Sequence__c(Name = 'SequenceB');
+        insert sequenceB;
         
-        // Chain B - Problem : No Configuration
-        Step__c stepB1 = Steps.generateOne(chainB.Id, subscribeProcess.Id);
-        Step__c stepB2 = Steps.generateOne(chainB.Id, wiretapProcess.Id);
+        // Sequence B - Problem : No Configuration
+        Step__c stepB1 = Steps.generateOne(sequenceB.Id, subscribeProcess.Id);
+        Step__c stepB2 = Steps.generateOne(sequenceB.Id, wiretapProcess.Id);
 
         // Act :
         List<HealthController.Health> SubscribeHealths =  Subscribe.getHealth();
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>();
+        Map<id,string> sequenceIdToDescription = new Map<id,string>();
         Integer actualErrorCount = 0;
         for (HealthController.Health SubscribeHealth : SubscribeHealths ) {
-            chainIdToDescription.put(SubscribeHealth.ChainId, SubscribeHealth.Detail);
+            sequenceIdToDescription.put(SubscribeHealth.SequenceId, SubscribeHealth.Detail);
             if (SubscribeHealth.Status == 'Error') {
                 actualErrorCount++;
             }
@@ -372,7 +372,7 @@
         Integer expectedErrorCount = 1;
         System.assertEquals(expectedErrorCount, actualErrorCount);
 
-        String actualDescription = chainIdToDescription.get(chainB.Id);
+        String actualDescription = sequenceIdToDescription.get(sequenceB.Id);
         String expectedDescription = 'No event type defined on subscribe configuration';
         System.assert(actualDescription.contains(expectedDescription));
     }

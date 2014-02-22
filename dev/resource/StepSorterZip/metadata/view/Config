@@ -18,7 +18,7 @@
         "modal": true,
         "overlapHeader": false,
         "resizable": false,
-        "title": "Step Configuration",
+        "title": "Configure Step",
         "width": null
     },
     "configAlternates": {

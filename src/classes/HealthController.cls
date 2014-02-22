@@ -1,8 +1,8 @@
 public class HealthController
 {
     public class Health    {
-        public Id ChainId   {get; set;}
-        public String ChainName {get; set;}
+        public Id SequenceId   {get; set;}
+        public String SequenceName {get; set;}
         public String Detail {get; set;}
         public String Status {get; set;}
     }
@@ -32,7 +32,7 @@ public class HealthController
         
         Map<string, List<Health>> sortkeyToHealths  = new Map<string, List<Health>>  ();
         for (Health  healthItem : unsortedHealths) {
-            String sortKey = healthItem.ChainName;
+            String sortKey = healthItem.SequenceName;
             List<Health> healths = (sortkeyToHealths.get(sortKey) == null) ? new List<Health>() : sortkeyToHealths.get(sortKey);
             healths.add(healthItem);
             sortkeyToHealths.put(sortKey, healths);

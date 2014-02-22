@@ -1,6 +1,6 @@
 @isTest private class ScheduleImplementationTest {
     
-    static testMethod void testNoScheduledChains() {
+    static testMethod void testNoScheduledSequences() {
         Test.startTest();
         ScheduleImplementation job = new ScheduleImplementation();
         job.execute(null);
@@ -11,13 +11,13 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testMethod void testOneScheduledChain() {
+    static testMethod void testOneScheduledSequence() {
         //arrange processes
         Process__c scheduleProcess = Processes.generateOne(Schedule.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chain
-        Chain__c one = new Chain__c(Name = 'One');
+        //arrange sequence
+        Sequence__c one = new Sequence__c(Name = 'One');
         insert one;
         
         //arrange steps

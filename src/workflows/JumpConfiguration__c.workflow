@@ -4,9 +4,9 @@
         <fullName>UpdateJumpConfigurationName</fullName>
         <field>Name</field>
         <formula>IF(
-    ISBLANK(Chain__c),
+    ISBLANK(Sequence__c),
     &quot;This step must be configured.&quot;,
-    &quot;Swallows the message and diverts it to chain &apos;&quot; + Chain__r.Name + &quot;&apos;.&quot;
+    &quot;Swallows the message and diverts it to sequence &apos;&quot; + Sequence__r.Name + &quot;&apos;.&quot;
 )</formula>
         <name>Update Jump Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>

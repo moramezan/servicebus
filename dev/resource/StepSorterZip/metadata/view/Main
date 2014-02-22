@@ -19,7 +19,7 @@
         "scroll": "none",
         "simpleDrag": null,
         "store": "Steps",
-        "title": "Chain Steps"
+        "title": null
     },
     "designerId": "c643aa83-56f5-491f-8f25-056038befcfe",
     "cn": [
@@ -128,7 +128,7 @@
                             "    'html': 'Configure',",
                             "    'class': 'configurelink',",
                             "    'onclick': 'return false;',",
-                            "    'title': 'Configure Chain Step',",
+                            "    'title': 'Configure Step',",
                             "    'href': ProtocolAndHost + '/' + record.get('ConfigurationId') + '?isdtp=vw'",
                             "}));",
                             "",

@@ -6,7 +6,7 @@ public with sharing class Terminate implements Process.Plugin {
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'Mandatory process that terminates each chain.';
+        plugin.Description = 'Mandatory process that terminates each sequence.';
         plugin.Tag = 'Event Driven Architecture';
         plugin.Name = 'Terminate';
         return plugin;
@@ -33,13 +33,13 @@ public with sharing class Terminate implements Process.Plugin {
         //pop one boomerang off stack
         Id lastId = stepIds.remove(stepIds.size() - 1);
         Step__c step = [
-            SELECT Id, Chain__r.Name, Position__c
+            SELECT Id, Sequence__r.Name, Position__c
             FROM Step__c
             WHERE Id = :lastId
         ];
         
         parameters.put('eda__boomerangStepIds', stepIds);
-        parameters.put('eda__chainName', step.Chain__r.Name );
+        parameters.put('eda__sequenceName', step.Sequence__r.Name );
         parameters.put('eda__position', step.Position__c );
         parametersList.add(parameters);
 
@@ -50,12 +50,12 @@ public with sharing class Terminate implements Process.Plugin {
     public static List<HealthController.Health> getHealth() {
         List<HealthController.Health> healths = new List<HealthController.Health>();
         
-        List<Chain__c> chains = [SELECT id,
+        List<Sequence__c> sequences = [SELECT id,
                                          Name,
                                         (SELECT id, Name, Process__c
                                          FROM Steps__r
                                          ORDER BY Position__c ASC) steps
-                                 FROM Chain__c
+                                 FROM Sequence__c
                                 ];
         
         List<Process__c> terminateProcesses  = [SELECT id, Name
@@ -66,13 +66,13 @@ public with sharing class Terminate implements Process.Plugin {
         Boolean resolvedProcess = (terminateProcess != null);
         
         // Error conditions:
-        // * Chain with no Terminate (error)
-        // * Chain with more than one Terminate (error)
+        // * Sequence with no Terminate (error)
+        // * Sequence with more than one Terminate (error)
         // * Terminate that's not at the end (error)
-        for (Chain__c  chain : chains)
+        for (Sequence__c  sequence : sequences)
         {
             Integer terminateCount = 0;
-            for (Step__c step : chain.Steps__r) {
+            for (Step__c step : sequence.Steps__r) {
                 if (resolvedProcess) {
                     if (step.Process__c == terminateProcess.Id) {
                         terminateCount++;
@@ -81,8 +81,8 @@ public with sharing class Terminate implements Process.Plugin {
             }
 
             HealthController.Health health = new HealthController.Health();
-            health.ChainId = chain.Id;
-            health.ChainName = chain.Name;
+            health.SequenceId = sequence.Id;
+            health.SequenceName = sequence.Name;
             health.Detail = 'Cannot resolve Id of Terminate process';
             health.Status = 'Unknown';
             if (resolvedProcess)
@@ -92,20 +92,20 @@ public with sharing class Terminate implements Process.Plugin {
                 
                 Boolean noTerminateError = (terminateCount == 0);
                 Boolean gtOneTerminateError = (terminateCount > 1);
-                Boolean terminateNotAtEndError = (chain.Steps__r.size() > 0) ?
-                                            (chain.Steps__r[chain.Steps__r.size()-1].Process__c != terminateProcess.Id) :
+                Boolean terminateNotAtEndError = (sequence.Steps__r.size() > 0) ?
+                                            (sequence.Steps__r[sequence.Steps__r.size()-1].Process__c != terminateProcess.Id) :
                                             false;
                 
                if (terminateNotAtEndError) {
-                    health.Detail = 'Terminate process not present at end of chain';
+                    health.Detail = 'Terminate process not present at end of sequence';
                     health.Status = 'Error';
                 }
                 if (noTerminateError) {
-                    health.Detail = 'No Terminate found in chain';
+                    health.Detail = 'No Terminate found in sequence';
                     health.Status = 'Error';
                 }
                 if (gtOneTerminateError) {
-                    health.Detail = 'More than one Terminate found in chain';
+                    health.Detail = 'More than one Terminate found in sequence';
                     health.Status = 'Error';
                 }
             }

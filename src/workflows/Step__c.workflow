@@ -4,7 +4,7 @@
         <fullName>StepPositionUpdate</fullName>
         <description>This position incrementer works for single inserts. Keep in mind that multiple 0-Position steps inserted in the same execution context will not increment separately.</description>
         <field>Position__c</field>
-        <formula>Chain__r.StepsCount__c + 1</formula>
+        <formula>Sequence__r.StepsCount__c + 1</formula>
         <name>StepPositionUpdate</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>

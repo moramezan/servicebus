@@ -13,13 +13,13 @@
     }
 
     static testMethod void testBoomerangDropped() {
-        Chain__c origin = new Chain__c(Name = 'origin');
+        Sequence__c origin = new Sequence__c(Name = 'origin');
         insert origin;
         
-        Chain__c target = new Chain__c(Name = 'target');
+        Sequence__c target = new Sequence__c(Name = 'target');
         insert target;
         
-        BranchConfiguration__c config = new BranchConfiguration__c(Chain__c = target.Id);
+        BranchConfiguration__c config = new BranchConfiguration__c(Sequence__c = target.Id);
         insert config;
         
         Map<String,Object> parameters = new Map<String,Object>{
@@ -36,19 +36,19 @@
     }
     
     static testMethod void testTwoParameterSetsReturned() {
-        //arrange chains
-        Chain__c origin = new Chain__c(Name = 'originChain');
-        Chain__c target = new Chain__c(Name = 'targetChain');
+        //arrange sequences
+        Sequence__c origin = new Sequence__c(Name = 'originSequence');
+        Sequence__c target = new Sequence__c(Name = 'targetSequence');
         insert origin;
         insert target;
         
         //arrange config
-        BranchConfiguration__c config = new BranchConfiguration__c(Chain__c = target.Id);
+        BranchConfiguration__c config = new BranchConfiguration__c(Sequence__c = target.Id);
         insert config;
         
         //arrange parameters
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda__chainName' => origin.Name,
+            'eda__sequenceName' => origin.Name,
             'eda__position' => 1,
             'eda__configuration' => config.Id
         };
@@ -69,21 +69,21 @@
         Map<String,Object> normalParameters = parametersList[0]; //the normal parameters continues to the next step
         
         //asserts
-        String expectedNormalChainName = origin.Name;
-        String actualNormalChainName = (String)normalParameters.get('eda__chainName');
-        System.assertEquals(expectedNormalChainName, actualNormalChainName);
+        String expectedNormalSequenceName = origin.Name;
+        String actualNormalSequenceName = (String)normalParameters.get('eda__sequenceName');
+        System.assertEquals(expectedNormalSequenceName, actualNormalSequenceName);
         
         Decimal expectedNormalPosition = 1;
         Decimal expectedActualPosition = (Decimal)normalParameters.get('eda__position');
         System.assertEquals(expectedNormalPosition, expectedActualPosition);
         
         //act
-        Map<String,Object> branchParameters = parametersList[1]; //the branch parameters goes to the top of another chain
+        Map<String,Object> branchParameters = parametersList[1]; //the branch parameters goes to the top of another sequence
         
         //asserts
-        String expectedBranchChainName = target.Name;
-        String actualBranchChainName = (String)branchParameters.get('eda__chainName');
-        System.assertEquals(expectedBranchChainName, actualBranchChainName);
+        String expectedBranchSequenceName = target.Name;
+        String actualBranchSequenceName = (String)branchParameters.get('eda__sequenceName');
+        System.assertEquals(expectedBranchSequenceName, actualBranchSequenceName);
         
         Decimal expectedBranchPosition = 0;
         Decimal actualBranchPosition = (Decimal)branchParameters.get('eda__position');
@@ -91,17 +91,17 @@
     }
     
     static testMethod void testInfiniteLoopFuckupGetsCaught() {
-        //arrange chains
-        Chain__c chain = new Chain__c(Name = 'originChain');
-        insert chain;
+        //arrange sequences
+        Sequence__c sequence = new Sequence__c(Name = 'originSequence');
+        insert sequence;
         
         //arrange config
-        BranchConfiguration__c config = new BranchConfiguration__c(Chain__c = chain.Id);
+        BranchConfiguration__c config = new BranchConfiguration__c(Sequence__c = sequence.Id);
         insert config;
         
         //arrange parameters
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda__chainName' => chain.Name,
+            'eda__sequenceName' => sequence.Name,
             'eda__position' => 1,
             'eda__configuration' => config.Id
         };

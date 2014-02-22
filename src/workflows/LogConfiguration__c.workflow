@@ -5,7 +5,7 @@
         <field>Name</field>
         <formula>IF (
     AND( ISBLANK(GroupInstruction__c)  , ISBLANK(GroupIdentifier__c) ),
-    &quot;Defines a Log Entry Grouping using the Chain Name&quot;,
+    &quot;Defines a Log Entry Grouping using the Sequence Name&quot;,
     IF (
         NOT( ISBLANK(GroupInstruction__c) ) ,
         &quot;Defines a Log Entry Grouping using the data object&apos;s &quot; + GroupInstruction__c + &quot; field&quot;,

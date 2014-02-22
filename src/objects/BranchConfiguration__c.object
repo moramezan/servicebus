@@ -52,11 +52,11 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
-        <fullName>Chain__c</fullName>
+        <fullName>Sequence__c</fullName>
         <deleteConstraint>Restrict</deleteConstraint>
         <externalId>false</externalId>
-        <label>Chain</label>
-        <referenceTo>Chain__c</referenceTo>
+        <label>Sequence</label>
+        <referenceTo>Sequence__c</referenceTo>
         <relationshipLabel>Branch Configurations</relationshipLabel>
         <relationshipName>BranchConfigurations</relationshipName>
         <required>false</required>

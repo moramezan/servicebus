@@ -177,12 +177,12 @@ private class IsChangedTest {
         //arrange processes
         Process__c isChangedProcess = Processes.generateOne(IsChanged.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'IsChangedChain');
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'IsChangedSequence');
+        insert sequence;
         
         //arrange steps
-        Step__c step = Steps.generateOne(chain.Id, isChangedProcess.Id);
+        Step__c step = Steps.generateOne(sequence.Id, isChangedProcess.Id);
         
         IsChangedConfiguration__c configuration = [
         SELECT Id, NewHash__c, OldHash__c, NewBlobId__c, OldBlobId__c, NewValue__c, OldValue__c, FieldName__c
@@ -225,12 +225,12 @@ private class IsChangedTest {
         //arrange processes
         Process__c isChangedProcess = Processes.generateOne(IsChanged.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'IsChangedChain');
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'IsChangedSequence');
+        insert sequence;
         
         //arrange steps
-        Step__c step = Steps.generateOne(chain.Id, isChangedProcess.Id);
+        Step__c step = Steps.generateOne(sequence.Id, isChangedProcess.Id);
 
         IsChangedConfiguration__c configuration = [
         SELECT Id, NewHash__c, OldHash__c, NewBlobId__c, OldBlobId__c, NewValue__c, OldValue__c, FieldName__c
@@ -275,10 +275,10 @@ private class IsChangedTest {
         
         Process__c isChangedProcess = Processes.generateOne(IsChanged.class);
         
-        Chain__c chain = new Chain__c(Name = 'IsChangedChain');
-        insert chain;
+        Sequence__c sequence = new Sequence__c(Name = 'IsChangedSequence');
+        insert sequence;
         
-        Step__c step = Steps.generateOne(chain.Id, isChangedProcess.Id);
+        Step__c step = Steps.generateOne(sequence.Id, isChangedProcess.Id);
 
         IsChangedConfiguration__c configuration = [
             SELECT Id, NewHash__c, OldHash__c, NewBlobId__c, OldBlobId__c, NewValue__c, OldValue__c, FieldName__c

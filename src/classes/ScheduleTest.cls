@@ -4,12 +4,12 @@
         Process__c scheduleProcess = Processes.generateOne(Schedule.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'ScheduledChain');
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
+        insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = Steps.generateOne(chain.Id, scheduleProcess.Id);
+        Step__c scheduleStep = Steps.generateOne(sequence.Id, scheduleProcess.Id);
         
         ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c];
         scheduleConfiguration.Frequency__c = 'Weekly';
@@ -17,7 +17,7 @@
         scheduleConfiguration.FriendlyTimes__c = '09:00';
         update scheduleConfiguration;
         
-        Step__c terminateStep = Steps.generateOne(chain.Id, terminateProcess.Id);
+        Step__c terminateStep = Steps.generateOne(sequence.Id, terminateProcess.Id);
         
         //this guy will miss his schedule
         Map<String,Object> parameters = new Map<String,Object>{
@@ -45,12 +45,12 @@
         Process__c scheduleProcess = Processes.generateOne(Schedule.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
-        //arrange chain
-        Chain__c chain = new Chain__c(Name = 'ScheduledChain');
-        insert chain;
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
+        insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = Steps.generateOne(chain.Id, scheduleProcess.Id);
+        Step__c scheduleStep = Steps.generateOne(sequence.Id, scheduleProcess.Id);
         
         ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c];
         scheduleConfiguration.Frequency__c = 'Weekly';
@@ -58,7 +58,7 @@
         scheduleConfiguration.FriendlyTimes__c = '09:00';
         update scheduleConfiguration;
         
-        Step__c terminateStep = Steps.generateOne(chain.Id, terminateProcess.Id);
+        Step__c terminateStep = Steps.generateOne(sequence.Id, terminateProcess.Id);
         
         //this guy will miss his schedule
         Map<String,Object> parameters = new Map<String,Object>{

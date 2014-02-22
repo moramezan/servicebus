@@ -17,7 +17,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>Chain__c</field>
+                <field>Sequence__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
@@ -53,7 +53,7 @@
     <relatedLists>
         <excludeButtons>New</excludeButtons>
         <fields>NAME</fields>
-        <fields>ChainName__c</fields>
+        <fields>SequenceName__c</fields>
         <fields>Position__c</fields>
         <fields>GroupIdentifier__c</fields>
         <fields>Stamp__c</fields>

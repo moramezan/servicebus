@@ -1,10 +1,10 @@
 /**
  * Very fundamental order:
  *
- * Example chain:
- * TestChain #1 [Wiretap]
- * TestChain #2 [Wiretap]
- * TestChain #3 [Terminate]
+ * Example sequence:
+ * TestSequence #1 [Wiretap]
+ * TestSequence #2 [Wiretap]
+ * TestSequence #3 [Terminate]
  *
  * As used by a queueing broker:
  *
@@ -127,16 +127,16 @@ abstract global class Broker {
     }
     
     /**
-     * Prepares data for processing at the start of a nominated chain by wrapping the pointer to the data (an id) in a
+     * Prepares data for processing at the start of a nominated sequence by wrapping the pointer to the data (an id) in a
      * Message object. This Message instance is saved to the database and the Broker is immeadiately
      * invoked if it is not already running.
      *
-     * @param chainName Name of the chain the data is destined for.
-     * @param dataId    Id of some record that the chain will operate on.
+     * @param sequenceName Name of the sequence the data is destined for.
+     * @param dataId    Id of some record that the sequence will operate on.
      */
-    static global void enqueue(String chainName, Id dataId) {
+    static global void enqueue(String sequenceName, Id dataId) {
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda__chainName' => chainName,
+            'eda__sequenceName' => sequenceName,
             'eda__position' => 0,
             'id' => dataId
         };
@@ -164,15 +164,15 @@ abstract global class Broker {
     }
     
     /**
-     * Prepares Blob data for processing at the start of a nominated chain
+     * Prepares Blob data for processing at the start of a nominated sequence
      * by wrapping the pointer to the data (an id) in a Message object
      * This Persisted Data instance is saved to the database and the Broker is
      * immeadiately invoked threreafter
      *
-     * @param chainName Name of the chain the data is destined for.
-     * @param dataId    Blob representation of the data the chain will operate on.
+     * @param sequenceName Name of the sequence the data is destined for.
+     * @param dataId    Blob representation of the data the sequence will operate on.
      */
-    static global void enqueue(String chainName, Blob data) {
+    static global void enqueue(String sequenceName, Blob data) {
         //prepare a very generic container
         Document document = new Document(
             Name = String.valueOf(Datetime.now().getTime()),
@@ -184,7 +184,7 @@ abstract global class Broker {
         
         //store this data away and enqueue
         insert document;
-        enqueue(chainName, document.Id);
+        enqueue(sequenceName, document.Id);
     }
     
     /**
@@ -240,7 +240,7 @@ abstract global class Broker {
             } else if (e instanceof System.NullPointerException) {
                 e.setMessage('Position null (key missing from parameters) or Type null (class missing)');
             } else if (e instanceof System.QueryException) {
-                e.setMessage('Step unqueryable (bad chain name, position, missing terminate)');
+                e.setMessage('Step unqueryable (bad sequence name, position, missing terminate)');
             } else if (e instanceof System.TypeException) {
                 e.setMessage('Could not cast Process.Plugin (interface unimplemented on process class)');
             }
@@ -281,10 +281,10 @@ abstract global class Broker {
     }
 
     /**
-     * Increments parameters then resolves their destined Chain, Step, and Process.
+     * Increments parameters then resolves their destined Sequence, Step, and Process.
      *
      * 1. hydrate the parameters from message
-     * 2. increments the position by one, ready to resolve the next step in the chain
+     * 2. increments the position by one, ready to resolve the next step in the sequence
      * 3. modify the parameters to reflect the new position
      * 4A. resolve the step from the parameters
      * 4B. resolve the the process (ie the process referenced by 4A's step)
@@ -295,9 +295,9 @@ abstract global class Broker {
         Map<String,Message__c> key2data = new Map<String,Message__c>();
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
-            String chainName = (String)parameters.get('eda__chainName');
+            String sequenceName = (String)parameters.get('eda__sequenceName');
             Decimal position = (Decimal)parameters.get('eda__position') + 1; //care
-            String key = chainName + '#' + position;
+            String key = sequenceName + '#' + position;
             key2data.put(key, message);
             
             //increment the position and put it back while we're at it
@@ -307,21 +307,21 @@ abstract global class Broker {
         
         //resolve the next steps and processes
         List<Step__c> steps = [
-            SELECT Id, Process__r.Id, Chain__r.Id, ChainNameAndPosition__c
+            SELECT Id, Process__r.Id, Sequence__r.Id, SequenceNameAndPosition__c
             FROM Step__c
-            WHERE ChainNameAndPosition__c IN :key2data.keySet()
+            WHERE SequenceNameAndPosition__c IN :key2data.keySet()
         ];
         
         //assemble a map of next-step keys to steps
         Map<String,Step__c> key2step = new Map<String,Step__c>();
-        for (Step__c step : steps) key2step.put(step.ChainNameAndPosition__c, step);
+        for (Step__c step : steps) key2step.put(step.SequenceNameAndPosition__c, step);
         
-        //now put the resolved chain/step/process on each message
+        //now put the resolved sequence/step/process on each message
         for (String key : key2data.keySet()) {
             Step__c step = key2step.get(key);
             Message__c message = key2data.get(key);
             
-            message.Chain__c = step.Chain__r.Id;
+            message.Sequence__c = step.Sequence__r.Id;
             message.Process__c = step.Process__r.Id;
             message.Step__c = step.Id;
         }

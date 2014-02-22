@@ -10,7 +10,7 @@ private  class GateTest {
     
     static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenGateItemsCountEqCount() {
         // Arrange :
-        String chainName = 'the-chain';
+        String sequenceName = 'the-sequence';
         Decimal position = 1;
         String data = 'data';
         Decimal count =  3 ;
@@ -20,7 +20,7 @@ private  class GateTest {
         Id gateGroupId = gateGroup.Id;
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda__chainName' => chainName,
+            'eda__sequenceName' => sequenceName,
             'eda__position' => position,
             'eda__gateGroupId' => gateGroupId,
             'eda__count' => count,
@@ -69,7 +69,7 @@ private  class GateTest {
     
     static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenGateItemsCountNotEqCount() {
         // Arrange :
-        String chainName = 'the-chain';
+        String sequenceName = 'the-sequence';
         Decimal position = 1;
         String data = 'data';
         Decimal count = 3 ;
@@ -80,7 +80,7 @@ private  class GateTest {
         Id gateGroupId = gateGroup.Id;
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda__chainName' => chainName,
+            'eda__sequenceName' => sequenceName,
             'eda__position' => position,
             'eda__gateGroupId' => gateGroupId,
             'eda__count' => count,

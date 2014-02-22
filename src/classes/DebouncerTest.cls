@@ -161,10 +161,10 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesParameters(
     
     Process__c DebouncerProcess = Processes.generateOne(Debouncer.class);
     
-    Chain__c chain = new Chain__c(Name = 'DebouncerChain');
-    insert chain;
+    Sequence__c sequence = new Sequence__c(Name = 'DebouncerSequence');
+    insert sequence;
     
-    Step__c step = Steps.generateOne(chain.Id, DebouncerProcess.Id);
+    Step__c step = Steps.generateOne(sequence.Id, DebouncerProcess.Id);
     
     DebouncerConfiguration__c configuration = [
         SELECT Id, MinimumHoursBetween__c
@@ -203,10 +203,10 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesMessageForO
     
     Process__c DebouncerProcess = Processes.generateOne(Debouncer.class);
     
-    Chain__c chain = new Chain__c(Name = 'DebouncerChain');
-    insert chain;
+    Sequence__c sequence = new Sequence__c(Name = 'DebouncerSequence');
+    insert sequence;
     
-    Step__c step = Steps.generateOne(chain.Id, DebouncerProcess.Id);
+    Step__c step = Steps.generateOne(sequence.Id, DebouncerProcess.Id);
     
     DebouncerConfiguration__c configuration = [
     SELECT Id, MinimumHoursBetween__c
@@ -252,10 +252,10 @@ private static testMethod void callingInvokeWhenZeroDebuncersSwallowsMessageForI
     
     Process__c DebouncerProcess = Processes.generateOne(Debouncer.class);
     
-    Chain__c chain = new Chain__c(Name = 'DebouncerChain');
-    insert chain;
+    Sequence__c sequence = new Sequence__c(Name = 'DebouncerSequence');
+    insert sequence;
     
-    Step__c step = Steps.generateOne(chain.Id, DebouncerProcess.Id);
+    Step__c step = Steps.generateOne(sequence.Id, DebouncerProcess.Id);
     
     DebouncerConfiguration__c configuration = [
         SELECT Id, MinimumHoursBetween__c

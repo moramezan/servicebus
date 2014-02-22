@@ -10,14 +10,14 @@ private class WiretapTest {
     
     static testMethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnCustomizableNOTSet() {
         // Arrange :
-        String chainName = 'the-chain';
+        String sequenceName = 'the-sequence';
         Integer step = 1;
         String data = 'data';
 
        //--NOT-DEFINED insert new WiretapCustomization__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda__chainName' => chainName,
+            'eda__sequenceName' => sequenceName,
             'eda__step' => step,
             'data' => data
         };
@@ -42,14 +42,14 @@ private class WiretapTest {
    
     static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenDefinedMetaCustomizableSet() {
         // Arrange :
-        String chainName = 'the-chain';
+        String sequenceName = 'the-sequence';
         Integer step = 1;
         String data = 'data';
 
         insert new WiretapCustomization__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda__chainName' => chainName,
+            'eda__sequenceName' => sequenceName,
             'eda__step' => step,
             'data' => data
         };

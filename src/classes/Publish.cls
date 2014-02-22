@@ -36,7 +36,7 @@ public with sharing class Publish implements Process.Plugin {
         ]);
         
         List<Step__c> steps = [
-            SELECT Id, Chain__r.Name, Position__c
+            SELECT Id, Sequence__r.Name, Position__c
             FROM Step__c
             WHERE ConfigurationId__c IN :subscribeConfigurations.keySet()
         ];
@@ -46,7 +46,7 @@ public with sharing class Publish implements Process.Plugin {
             //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
             clone.put('eda__boomerangStepIds', null);
             clone.put('eda__position', step.Position__c);
-            clone.put('eda__chainName', step.Chain__r.Name);
+            clone.put('eda__sequenceName', step.Sequence__r.Name);
             parametersList.add(clone);
         }
         
@@ -57,13 +57,13 @@ public with sharing class Publish implements Process.Plugin {
     }
     
     public static List<HealthController.Health> getHealth() {
-        List<Chain__c> chains = [
+        List<Sequence__c> sequences = [
             SELECT id,
             Name,
             (SELECT id, Name, Process__c, ConfigurationId__c
             FROM Steps__r
             ORDER BY Position__c ASC) steps
-            FROM Chain__c
+            FROM Sequence__c
         ];
         
         List<Process__c> publishProcesses = [
@@ -92,15 +92,15 @@ public with sharing class Publish implements Process.Plugin {
 
         List<Map<String,Object>> instanceDetails = new List<Map<String,Object>>();
 
-        for (Chain__c chain : chains) {
+        for (Sequence__c sequence : sequences) {
             String statusInitial = resolvedProcess ? 'Ok' : 'Unknown';
             String detailInitial = resolvedProcess ? 'Publish Check(s)' : 'Cannot resolve Id of Publish process';
             Map<String,Object> singleInstanceDetail = new Map<String,Object>{
                 'Status' => statusInitial,
                 'Detail' => detailInitial,
-                'ChainId' => chain.Id,
-                'ChainName' => chain.Name,
-                'Steps' => chain.Steps__r
+                'SequenceId' => sequence.Id,
+                'SequenceName' => sequence.Name,
+                'Steps' => sequence.Steps__r
             };
 
             Boolean requireSingleInstance = false;
@@ -110,7 +110,7 @@ public with sharing class Publish implements Process.Plugin {
 
             if ( resolvedProcess ) {
                 Integer publishOccurs = 0;
-                for (Step__c step : chain.Steps__r) {
+                for (Step__c step : sequence.Steps__r) {
                     if (step.Process__c == PublishProcess.Id) {
                         publishOccurs++;
                     }
@@ -122,7 +122,7 @@ public with sharing class Publish implements Process.Plugin {
                 if (hasPublish) {
                     requireSingleInstance = true;
                 
-                    for (Step__c step : chain.Steps__r) {
+                    for (Step__c step : sequence.Steps__r) {
                         if (step.Process__c == PublishProcess.Id) {
                             Id stepId = step.Id;
                             Id publishConfigurationId = (Id) step.ConfigurationId__c; // cast from string to Id
@@ -171,26 +171,26 @@ public with sharing class Publish implements Process.Plugin {
                                 instanceDetails.add(new Map<String,Object>{
                                     'Status' => status,
                                     'Detail' => detail,
-                                    'ChainId' => chain.Id,
-                                    'ChainName' => chain.Name,
-                                    'Steps' => chain.Steps__r
+                                    'SequenceId' => sequence.Id,
+                                    'SequenceName' => sequence.Name,
+                                    'Steps' => sequence.Steps__r
                                 });
                             }
                         } // end: if (step.Process__c == PublishProcess.Id)
-                    } // end:: for (Step__c step : chain.Steps__r)
+                    } // end:: for (Step__c step : sequence.Steps__r)
                 } // end:: if (hasPublish)
             } // end: if ( resolvedProcess )
 
             if (requireSingleInstance) {
                 instanceDetails.add(singleInstanceDetail);
             }
-        } // end: for (Chain__c chain : chains)
+        } // end: for (Sequence__c sequence : sequences)
              
         List<HealthController.Health> healths = new List<HealthController.Health>();
         for (Map<String,Object> instanceDetail : instanceDetails) {
             HealthController.Health health = new HealthController.Health();
-            health.ChainId = (Id) instanceDetail.get('ChainId');
-            health.ChainName = (String) instanceDetail.get('ChainName');
+            health.SequenceId = (Id) instanceDetail.get('SequenceId');
+            health.SequenceName = (String) instanceDetail.get('SequenceName');
             health.Detail = (String) instanceDetail.get('Detail');
             health.Status = (String) instanceDetail.get('Status');
             healths.add(health);

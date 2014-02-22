@@ -20,17 +20,17 @@ public with sharing class Branch implements Process.Plugin {
         
         //get step configuration
         BranchConfiguration__c configuration = [
-            SELECT Id, Chain__r.Name
+            SELECT Id, Sequence__r.Name
             FROM BranchConfiguration__c
             WHERE Id = :(Id)parameters.get('eda__configuration')
         ];
         
-        //get chain name
-        String branchTo = configuration.Chain__r.Name;
+        //get sequence name
+        String branchTo = configuration.Sequence__r.Name;
         
         //prevent recursion
-        if (branchTo == (String)parameters.get('eda__chainName')) {
-            throw new BranchException('Not allowed to branch to own chain!');
+        if (branchTo == (String)parameters.get('eda__sequenceName')) {
+            throw new BranchException('Not allowed to branch to own sequence!');
         }
         
         //careful: by returning 2 parameter sets, the broker may think the process was a splitter
@@ -38,13 +38,13 @@ public with sharing class Branch implements Process.Plugin {
         
         //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
         clone.put('eda__boomerangStepIds', null);
-        clone.put('eda__chainName', branchTo);
+        clone.put('eda__sequenceName', branchTo);
         clone.put('eda__position', 0);
         
         //TODO
-        //we might have an inbound document, where parallel chains are attempting
+        //we might have an inbound document, where parallel sequences are attempting
         //to transform the same data - if the pointer was the same they would content
-        //so the document is duplicated and the duplicate handed off to the chain
+        //so the document is duplicated and the duplicate handed off to the sequence
         //
         //String id = (String)parameters.get('id');
         //if (null != id && id.startsWith('015')) {

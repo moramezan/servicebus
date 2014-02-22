@@ -17,7 +17,7 @@ public class ScheduleConfigurations extends SObjects {
             if (null != scheduleConfiguration.FriendlyTimes__c) friendlyTimes = scheduleConfiguration.FriendlyTimes__c.split(';');
             if (null != scheduleConfiguration.FriendlyDates__c) friendlyDates = scheduleConfiguration.FriendlyDates__c.split(';');
             
-            String name = 'Fires this chain ';
+            String name = 'Fires this sequence ';
             
             //hourly
             if (new Set<String>(friendlyTimes).containsAll(everyHour)) {
