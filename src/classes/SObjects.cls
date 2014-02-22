@@ -36,5 +36,5 @@ abstract public class SObjects {
     
     virtual public void onAfterDelete() {
         //
-    }   
+    }
 }

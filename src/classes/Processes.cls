@@ -18,7 +18,7 @@ public class Processes extends SObjects {
         
         /**
          * Each Chain Step can have one associated configuration record. The type of the record depends on what process
-         * is living on the Chain Step. Process Authors must advertise the object type here, and the framework will 
+         * is living on the Chain Step. Process Authors must advertise the object type here, and the framework will
          * handle the record lifecycle (creating and deleting them in tandem with the appropriate Chain Step).
          */
         public SObject configurable;
@@ -44,7 +44,7 @@ public class Processes extends SObjects {
     
     /**
      * Generates an in-memory Process from a Type
-     * 
+     *
      * @param reflector Type of class whose process to generate
      * @return          In-memory process with all fields
      */

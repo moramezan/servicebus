@@ -32,7 +32,7 @@
  
         
         //this guy will hit his schedule
-       ///-- NO eda__harbeatkey ::  parameters.put('eda__heartbeat', '2014-01-15T09:00:00.000Z');  
+       ///-- NO eda__harbeatkey ::  parameters.put('eda__heartbeat', '2014-01-15T09:00:00.000Z');
         result = plugin.invoke(new Process.PluginRequest(parameters));
         results = Utility.convert(result);
         
@@ -130,7 +130,7 @@
         
         System.assert(!Schedule.isWithinHourlyWindow(preNoon, new Set<String>{'10:00','12:00'}));
         System.assert(Schedule.isWithinHourlyWindow(noon, new Set<String>{'12:00'}));
-        System.assert(!Schedule.isWithinHourlyWindow(postNoon, new Set<String>{'12:00','14:00'}));        
+        System.assert(!Schedule.isWithinHourlyWindow(postNoon, new Set<String>{'12:00','14:00'}));
     }
     
     static testMethod void testWindow() {

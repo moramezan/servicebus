@@ -186,19 +186,19 @@
         
         // Chain A
         ChainStep__c chainStepA1 = ChainSteps.generateOne(chainA.Id, wiretapProcess.Id);
-        ChainStep__c chainStepA2 = ChainSteps.generateOne(chainA.Id, wiretapProcess.Id);   
+        ChainStep__c chainStepA2 = ChainSteps.generateOne(chainA.Id, wiretapProcess.Id);
 
         // Act :
         List<HealthController.Health> PublishHealths = Publish.getHealth();
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>(); 
+        Map<id,string> chainIdToDescription = new Map<id,string>();
         Integer actualUnknownCount = 0;
         for (HealthController.Health PublishHealth : PublishHealths ) {
             chainIdToDescription.put(PublishHealth.ChainId, PublishHealth.Detail);
             if (PublishHealth.Status == 'Unknown') {
                 actualUnknownCount++;
-            }         
+            }
         }
         
         // Assert :
@@ -227,39 +227,39 @@
         Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
 
         // Chain Z - OK : Event is Subscribed
-        ChainStep__c chainStepZ1 = ChainSteps.generateOne(chainZ.Id, publishProcess.Id); 
+        ChainStep__c chainStepZ1 = ChainSteps.generateOne(chainZ.Id, publishProcess.Id);
         ChainStep__c chainStepZ2 = ChainSteps.generateOne(chainZ.Id, wiretapProcess.Id);
-        ChainStep__c chainStepZ3 = ChainSteps.generateOne(chainSubscribe.Id, subscribeProcess.Id); 
+        ChainStep__c chainStepZ3 = ChainSteps.generateOne(chainSubscribe.Id, subscribeProcess.Id);
 
         // Event
         EventType__c eventTypeSubscribed = new EventType__c(Name = 'an-event-that-IS-Subscribed');
         insert eventTypeSubscribed;
 
-        // Config Subscribe 
-        Id SubscribeConfigurationIdZ3 = (Id) [SELECT Id, ConfigurationId__c 
-            FROM ChainStep__c 
+        // Config Subscribe
+        Id SubscribeConfigurationIdZ3 = (Id) [SELECT Id, ConfigurationId__c
+            FROM ChainStep__c
             WHERE Id = :chainStepZ3.Id LIMIT 1
         ].ConfigurationId__c;
             
         SubscribeConfiguration__c SubscribeConfigurationZ3 = [
-            SELECT Id, EventType__c 
-            FROM SubscribeConfiguration__c 
+            SELECT Id, EventType__c
+            FROM SubscribeConfiguration__c
             WHERE Id = :SubscribeConfigurationIdZ3
         ];
         
         SubscribeConfigurationZ3.EventType__c = eventTypeSubscribed.Id;
-        update SubscribeConfigurationZ3;    
+        update SubscribeConfigurationZ3;
         
-        // Config Z1 
+        // Config Z1
         Id configurationIdZ1 = (Id) [
-            SELECT Id, ConfigurationId__c 
-            FROM ChainStep__c 
+            SELECT Id, ConfigurationId__c
+            FROM ChainStep__c
             WHERE Id = :chainStepZ1.Id LIMIT 1
         ].ConfigurationId__c;
         
         PublishConfiguration__c PublishConfigurationZ1 = [
-            SELECT Id, EventType__c 
-            FROM PublishConfiguration__c 
+            SELECT Id, EventType__c
+            FROM PublishConfiguration__c
             WHERE Id = :configurationIdZ1
         ];
         
@@ -267,11 +267,11 @@
         update PublishConfigurationZ1;
 
         // Act :
-        List<HealthController.Health> PublishHealths = Publish.getHealth(); 
+        List<HealthController.Health> PublishHealths = Publish.getHealth();
         
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>(); 
+        Map<id,string> chainIdToDescription = new Map<id,string>();
         Integer actualOkCount = 0;
         for (HealthController.Health PublishHealth : PublishHealths ) {
             chainIdToDescription.put(PublishHealth.ChainId, PublishHealth.Detail);
@@ -285,7 +285,7 @@
         Integer actualCount = PublishHealths.size();
         System.assertEquals(expectedCount, actualCount);
 
-        Integer expectedOkCount = 1; 
+        Integer expectedOkCount = 1;
         System.assertEquals(expectedOkCount, actualOkCount);
     }
 
@@ -299,7 +299,7 @@
         Process__c publishProcess = Processes.generateOne(Publish.class);
         
         // Chain A - Warning : Ok but event Not Subscribed
-        ChainStep__c chainStepA1 = ChainSteps.generateOne(chainA.Id, publishProcess.Id); 
+        ChainStep__c chainStepA1 = ChainSteps.generateOne(chainA.Id, publishProcess.Id);
         ChainStep__c chainStepA2 = ChainSteps.generateOne(chainA.Id, wiretapProcess.Id);
         
         // Event
@@ -308,13 +308,13 @@
 
         // Config A1
         Id configurationIdA1 = (Id) [
-            SELECT Id, ConfigurationId__c 
-            FROM ChainStep__c 
+            SELECT Id, ConfigurationId__c
+            FROM ChainStep__c
             WHERE Id = :chainStepA1.Id LIMIT 1
         ].ConfigurationId__c;
     
         PublishConfiguration__c PublishConfigurationA1 = [
-            SELECT Id, EventType__c 
+            SELECT Id, EventType__c
             FROM PublishConfiguration__c
             WHERE Id = :configurationIdA1
         ];
@@ -323,17 +323,17 @@
         update PublishConfigurationA1;
 
         // Act :
-        List<HealthController.Health> PublishHealths = Publish.getHealth(); 
+        List<HealthController.Health> PublishHealths = Publish.getHealth();
         
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>(); 
+        Map<id,string> chainIdToDescription = new Map<id,string>();
         Integer actualWarningCount = 0;
         for (HealthController.Health PublishHealth : PublishHealths ) {
             chainIdToDescription.put(PublishHealth.ChainId, PublishHealth.Detail);
             if (PublishHealth.Status == 'Warning') {
                 actualWarningCount++;
-            } 
+            }
         }
         
         // Assert :
@@ -359,24 +359,24 @@
         ChainStep__c chainStepB2 = ChainSteps.generateOne(chainB.Id, wiretapProcess.Id);
 
         Id configurationIdB1 = (Id) [
-            SELECT Id, ConfigurationId__c 
-            FROM ChainStep__c 
+            SELECT Id, ConfigurationId__c
+            FROM ChainStep__c
             WHERE Id = :chainStepB1.Id LIMIT 1
          ].ConfigurationId__c;
         Database.delete(configurationIdB1);
         
         // Act :
-        List<HealthController.Health> PublishHealths = Publish.getHealth(); 
+        List<HealthController.Health> PublishHealths = Publish.getHealth();
         
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>(); 
+        Map<id,string> chainIdToDescription = new Map<id,string>();
         Integer actualErrorCount = 0;
         for (HealthController.Health PublishHealth : PublishHealths ) {
             chainIdToDescription.put(PublishHealth.ChainId, PublishHealth.Detail);
             if (PublishHealth.Status == 'Error') {
                 actualErrorCount++;
-            }     
+            }
         }
         
         // Assert :
@@ -400,19 +400,19 @@
         
         // Chain B - Problem : No Configuration
         ChainStep__c chainStepB1 = ChainSteps.generateOne(chainB.Id, publishProcess.Id);
-        ChainStep__c chainStepB2 = ChainSteps.generateOne(chainB.Id, wiretapProcess.Id);       
+        ChainStep__c chainStepB2 = ChainSteps.generateOne(chainB.Id, wiretapProcess.Id);
         
         // Act :
-        List<HealthController.Health> PublishHealths = Publish.getHealth(); 
+        List<HealthController.Health> PublishHealths = Publish.getHealth();
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>(); 
+        Map<id,string> chainIdToDescription = new Map<id,string>();
         Integer actualErrorCount = 0;
         for (HealthController.Health PublishHealth : PublishHealths ) {
             chainIdToDescription.put(PublishHealth.ChainId, PublishHealth.Detail);
             if (PublishHealth.Status == 'Error') {
-                actualErrorCount++; 
-            }     
+                actualErrorCount++;
+            }
         }
         
         // Assert :
@@ -422,5 +422,5 @@
         String actualDescription = chainIdToDescription.get(chainB.Id);
         String expectedDescription = 'No event type defined on Publish configuration';
         System.assert(actualDescription.contains(expectedDescription));
-    } 
+    }
 }

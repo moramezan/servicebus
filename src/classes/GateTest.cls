@@ -34,7 +34,7 @@ private  class GateTest {
             Map<String,Object> n = parameters.clone();
             n.put('data' , 'x'+i);
             GateItem__c gateItem = new GateItem__c(
-                GateGroup__c = gateGroupId, 
+                GateGroup__c = gateGroupId,
                 Parameters__c = json.serializePretty(n)
             );
             gateItems.add(gateItem);
@@ -93,7 +93,7 @@ private  class GateTest {
             Map<String,Object> n = parameters.clone();
             n.put('data' , 'x'+i);
             GateItem__c gateItem = new GateItem__c(
-                GateGroup__c = gateGroupId , 
+                GateGroup__c = gateGroupId ,
                 Parameters__c = json.serializePretty(n)
             );
             gateItems.add(gateItem);

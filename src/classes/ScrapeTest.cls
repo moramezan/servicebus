@@ -6,7 +6,7 @@ public class ScrapeTest {
     
     public class MockHttpResponseGenerator implements HttpCalloutMock {
         // Implement this interface method
-        public HTTPResponse respond(HTTPRequest req) {  
+        public HTTPResponse respond(HTTPRequest req) {
             String expectedEndpoint = endPoint;
             System.assertEquals(expectedEndpoint, req.getEndpoint());
             System.assertEquals('GET', req.getMethod());
@@ -18,7 +18,7 @@ public class ScrapeTest {
             res.setStatusCode(200);
             return res;
         }
-    } 
+    }
     
     
     private static  testMethod void canDetermineConfigurable () {
@@ -30,7 +30,7 @@ public class ScrapeTest {
         
         // Assert
         String expectedConfiguration = Schema.SobjectType.ScrapeConfiguration__c.Name;
-        System.assertEquals(expectedConfiguration, actualConfiguration);  
+        System.assertEquals(expectedConfiguration, actualConfiguration);
     }
     
     private static  testMethod void callingInvokeCreatesExpectedAttachment() {
@@ -61,7 +61,7 @@ public class ScrapeTest {
         // Assemble
         List<Attachment> attachments = [
             SELECT id, Name, ParentId, Body
-            FROM Attachment 
+            FROM Attachment
             WHERE ParentId = :chainStep.ConfigurationId__c
         ];
         
@@ -72,6 +72,6 @@ public class ScrapeTest {
 
         // Assert
         String expectedBody = 'some content';
-        System.assertEquals(expectedBody, actualBody);  
-    }    
+        System.assertEquals(expectedBody, actualBody);
+    }
 }

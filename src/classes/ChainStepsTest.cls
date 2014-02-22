@@ -52,7 +52,7 @@
         
         //assert
         Integer expectedSize = 2;
-        Integer actualSize = chainSteps.size(); 
+        Integer actualSize = chainSteps.size();
         System.assertEquals(expectedSize, actualSize);
         
         Integer expectedSequence1 = SequenceGtZero1;
@@ -63,9 +63,9 @@
     
     //after insert test
     static testMethod void testResequencingOfStepsWhenOneOrMoreInsertedStepsHaveSequenceEqToZero() {
-        //arrange 
+        //arrange
         Integer SequenceGtZero1 = 1;
-        Integer SequenceGtZero2 = 2; 
+        Integer SequenceGtZero2 = 2;
         Integer SequenceEqToZero3 = 0;
         Integer SequenceEqToZero4 = 0;
         
@@ -104,8 +104,8 @@
         List<ChainStep__c> chainSteps = [
             SELECT Id, Chain__c, Sequence__c
             FROM ChainStep__c
-            WHERE Chain__c = :chain.Id 
-            ORDER BY Id 
+            WHERE Chain__c = :chain.Id
+            ORDER BY Id
         ];
         Integer actualSequence1 = -1;
         Integer actualSequence2 = -1;
@@ -123,7 +123,7 @@
         
         //assert
         Integer expectedSize = 4;
-        Integer actualSize = chainSteps.size(); 
+        Integer actualSize = chainSteps.size();
         System.assertEquals(expectedSize, actualSize);
         
         Integer expectedSequence1 = SequenceGtZero1; // unaffected
@@ -133,7 +133,7 @@
         Integer expectedSequence3 = 3; // resequence , max+1
         System.assertEquals(expectedSequence3, actualSequence3);
         Integer expectedSequence4 = 4; // resequence , max+1+1
-        System.assertEquals(expectedSequence4, actualSequence4); 
+        System.assertEquals(expectedSequence4, actualSequence4);
     }
     
     //before delete test

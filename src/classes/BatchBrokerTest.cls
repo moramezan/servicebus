@@ -21,13 +21,13 @@
         
         //act (will synchronously start() execute() finish() and reschedule too)
         Test.startTest();
-        Broker.enqueue(chainNameA, '000000000000000AAA'); 
+        Broker.enqueue(chainNameA, '000000000000000AAA');
         Test.stopTest();
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, ChainStep__c , Status__c, IsDeleted 
-            FROM Message__c 
+            SELECT Id, Name, Process__r.Name, ChainStep__c , Status__c, IsDeleted
+            FROM Message__c
             WHERE IsDeleted =  false
             ALL ROWS
         ];
@@ -35,8 +35,8 @@
         Integer actualCount = messages.size();
         
         //assert
-        Integer expectedCount = 0; 
-        System.assertEquals(expectedCount , actualCount);  
+        Integer expectedCount = 0;
+        System.assertEquals(expectedCount , actualCount);
  
     }
     
@@ -58,13 +58,13 @@
  
         //act (will synchronously start() execute() finish() and reschedule too)
         Test.startTest();
-        Broker.enqueue(chainNameA, '000000000000000AAA'); 
+        Broker.enqueue(chainNameA, '000000000000000AAA');
         Test.stopTest();
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, ChainStep__c , Status__c, Message__c, IsDeleted 
-            FROM Message__c 
+            SELECT Id, Name, Process__r.Name, ChainStep__c , Status__c, Message__c, IsDeleted
+            FROM Message__c
             WHERE IsDeleted =  false
             ALL ROWS
         ];
@@ -114,9 +114,9 @@
         );
         insert message;
         
-        //act 
+        //act
         Test.startTest();
-        new BatchBroker().restartIfWorkPending(); 
+        new BatchBroker().restartIfWorkPending();
         Test.stopTest();
         
         //assemble
@@ -130,7 +130,7 @@
         //assert
         Integer expectedCount = 0;
         Integer actualCount = messages.size();
-        System.assertEquals(expectedCount, actualCount);  
+        System.assertEquals(expectedCount, actualCount);
     }
     
 }

@@ -13,12 +13,12 @@ global class LogInitializer implements Process.Plugin {
         plugin.Description = 'Creates a grouping identifier which all subsequent LogWriter processes log against.';
         plugin.Tag = 'Event Driven Architecture';
         
-        plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{ 
+        plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter(
                 'eda__logGroupIds',
                 'An identifier that associates instances of chain steps.',
                 Process.PluginDescribeResult.ParameterType.String
-            )              
+            )
         };
 
         return plugin;
@@ -47,18 +47,18 @@ global class LogInitializer implements Process.Plugin {
              SELECT Id, GroupIdentifier__c , GroupInstruction__c
              FROM LogConfiguration__c
              WHERE Id = :(Id)parameters.get('eda__configuration')
-         ];  
+         ];
          if (configurations.size() == 0) {
             throw new LogInitializerException('Unable to access Log Configuration');
          }
          LogConfiguration__c configuration = configurations[0];
         
          // insert composite key values into log group :
-         // the composite key comprises 
+         // the composite key comprises
          // 1.  the date-time stamp
          // 2.  a (fairly unique ) business group value
          Id dataId =  (Id)parameters.get('id');
-         String groupIdentifier = getBusinesGroupIdentifier(configuration, chainStep, dataId) ;                          
+         String groupIdentifier = getBusinesGroupIdentifier(configuration, chainStep, dataId) ;
          LogGroup__c logGroup = new LogGroup__c( LogConfiguration__c = configuration.Id,  GroupIdentifier__c = groupIdentifier, Stamp__c = System.Now());
          insert logGroup;
 
@@ -82,10 +82,10 @@ global class LogInitializer implements Process.Plugin {
             Schema.describesobjectresult d = theId.getSObjectType().getDescribe();
             Map<String, Schema.SObjectField> m = d.fields.getMap();
             String soql = 'SELECT ' + String.join(new List<String>(m.keySet()), ',') + ' FROM ' + d.getName() + ' WHERE id =:theId';
-            return Database.query(soql); 
+            return Database.query(soql);
         } catch (Exception e) {
             throw new LogInitializerException('Cannot hydate SObject with Id=[' + theId + ']' + e.getStackTraceString());
-        }  
+        }
     }
 
 
@@ -99,18 +99,18 @@ global class LogInitializer implements Process.Plugin {
     private static String getBusinesGroupIdentifier(LogConfiguration__c configuration, ChainStep__c  chainStep,  Id dataId) {
 
         //  default :
-        //  
+        //
         //  "chain name" and "chain step sequence"
         //  (always use this if GroupIdentifier__c from configuration equates to null)
-        String defaultGroupIdentifier =  chainStep.Chain__r.Name + '-' + chainStep.Sequence__c; 
+        String defaultGroupIdentifier =  chainStep.Chain__r.Name + '-' + chainStep.Sequence__c;
         
         
         //  preferred alternatives :
         //
-        //     alternative 1  use non-null GroupIdentifier__c from configuration  
-        //     even better 
+        //     alternative 1  use non-null GroupIdentifier__c from configuration
+        //     even better
         //     alternative 2  attempt obtain a user friendly "business id" from the
-        //                    object by defining a field of that object in the 
+        //                    object by defining a field of that object in the
         //                    GroupInstruction__c field
         //                    if successful, any entry in GroupIdentifier__c is ignored
         
@@ -120,19 +120,19 @@ global class LogInitializer implements Process.Plugin {
         String businessId;
         if ( !String.isBlank(groupInstruction) ) {
             try {
-                businessId = getIdentifer(groupInstruction,   getHydrated(dataId)   ); 
+                businessId = getIdentifer(groupInstruction,   getHydrated(dataId)   );
             } catch (Exception e) {
                 // swallow / non-intrusive - default acceptable
-            }  
-        }      
+            }
+        }
               
         if ( String.isBlank(groupIdentifier) ) {
-            groupIdentifier = defaultGroupIdentifier; 
+            groupIdentifier = defaultGroupIdentifier;
         }
               
         if ( !String.isBlank(businessId) ) {
-            groupIdentifier = businessId; 
-        } 
+            groupIdentifier = businessId;
+        }
        
         return groupIdentifier;
     }

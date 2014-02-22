@@ -56,7 +56,7 @@ private class TerminateTest
         System.assertEquals(expectedSequence, actualSequence);
     }
     
-    static testMethod void 
+    static testMethod void
     callingExecuteReturnsExpectedParametersCollectionWhenNoBoomerangAttribsDefinedOnParameters() {
         // Arrange :
         String chainName = 'the-chain';
@@ -102,7 +102,7 @@ private class TerminateTest
         ChainStep__c chainStep02 = ChainSteps.generateOne(chain.Id, process.Id);
         
         Id boomerangChainStepId01 = chainStep01.Id ;
-        Id boomerangChainStepId02 = chainStep02.Id ; 
+        Id boomerangChainStepId02 = chainStep02.Id ;
         List<Id> boomerangChainStepIds = new List<Id>();
         boomerangChainStepIds.add(boomerangChainStepId01);
         boomerangChainStepIds.add(boomerangChainStepId02);
@@ -127,7 +127,7 @@ private class TerminateTest
         List<Map<String,Object>> actualOutParametersListSecond = Utility.convert(resultsInvokeSecond);
         
         // prepare
-        List<Object> actualChainStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('eda__boomerangChainStepIds'); 
+        List<Object> actualChainStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('eda__boomerangChainStepIds');
         List<Object> actualChainStepIdsAfterSecond = (List<Object>)actualOutParametersListSecond[0].get('eda__boomerangChainStepIds');
         
         Integer actualSizeAfterFirst = actualChainStepIdsAfterFirst.size();
@@ -151,46 +151,46 @@ private class TerminateTest
         Chain__c chainA = new Chain__c(Name = 'ChainA');
         insert chainA;
         Chain__c chainB = new Chain__c(Name = 'ChainB');
-        insert chainB;    
+        insert chainB;
         Chain__c chainC = new Chain__c(Name = 'ChainC');
-        insert chainC;    
+        insert chainC;
         Chain__c chainD = new Chain__c(Name = 'ChainD');
-        insert chainD;    
+        insert chainD;
         
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         
         // Chain A - Ok
         ChainStep__c chainStepA1 = ChainSteps.generateOne(chainA.Id, wireTapProcess.Id);
-        ChainStep__c chainStepA2 = ChainSteps.generateOne(chainA.Id, terminateProcess.Id);   
+        ChainStep__c chainStepA2 = ChainSteps.generateOne(chainA.Id, terminateProcess.Id);
         
         // Chain B - Problem : Terminate Not last Step
         ChainStep__c chainStepB1 = ChainSteps.generateOne(chainB.Id, terminateProcess.Id);
-        ChainStep__c chainStepB2 = ChainSteps.generateOne(chainB.Id, wireTapProcess.Id);       
+        ChainStep__c chainStepB2 = ChainSteps.generateOne(chainB.Id, wireTapProcess.Id);
  
         // Chain C - Problem : More than One Terminate
         ChainStep__c chainStepC1 = ChainSteps.generateOne(chainC.Id, terminateProcess.Id);
-        ChainStep__c chainStepC2 = ChainSteps.generateOne(chainC.Id, terminateProcess.Id); 
+        ChainStep__c chainStepC2 = ChainSteps.generateOne(chainC.Id, terminateProcess.Id);
         
         // Chain D - Problem : Zero Terminate
         ChainStep__c chainStepD1 = ChainSteps.generateOne(chainD.Id, wireTapProcess.Id);
-        ChainStep__c chainStepD2 = ChainSteps.generateOne(chainD.Id, wireTapProcess.Id); 
+        ChainStep__c chainStepD2 = ChainSteps.generateOne(chainD.Id, wireTapProcess.Id);
 
         // Act :
-        List<HealthController.Health> terminateHealths =  Terminate.getHealth(); 
+        List<HealthController.Health> terminateHealths =  Terminate.getHealth();
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>(); 
+        Map<id,string> chainIdToDescription = new Map<id,string>();
         Integer actualOkCount = 0;
         Integer actualErrorCount = 0;
         for (HealthController.Health terminateHealth : terminateHealths ) {
             chainIdToDescription.put(terminateHealth.ChainId, terminateHealth.Detail);
             if (terminateHealth.Status == 'Ok') {
-                actualOkCount++;   
+                actualOkCount++;
             }
             if (terminateHealth.Status == 'Error') {
-                actualErrorCount++;   
-            }         
+                actualErrorCount++;
+            }
         }
         
         // Assert :
@@ -225,27 +225,27 @@ private class TerminateTest
         insert chainA;
  
         Process__c wiretapProcess  = new Process__c(Name = 'Wiretap');
-        insert wiretapProcess;       
+        insert wiretapProcess;
         
         // Chain A - Error but Terminate process not defined
         ChainStep__c chainStepA1 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c  = 1);
-        ChainStep__c chainStepA2 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);   
+        ChainStep__c chainStepA2 =  new ChainStep__C(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);
 
         // Act :
         List<HealthController.Health> terminateHealths =  Terminate.getHealth();
         
         // Assemble :
-        Map<id,string> chainIdToDescription = new Map<id,string>(); 
+        Map<id,string> chainIdToDescription = new Map<id,string>();
         Integer actualOkCount = 0;
         Integer actualUnknownCount = 0;
         for (HealthController.Health terminateHealth : terminateHealths ) {
             chainIdToDescription.put(terminateHealth.ChainId, terminateHealth.Detail);
             if (terminateHealth.Status == 'Ok') {
-                actualOkCount++;   
+                actualOkCount++;
             }
             if (terminateHealth.Status == 'Unknown') {
-                actualUnknownCount++;   
-            }         
+                actualUnknownCount++;
+            }
         }
         
         // Assert :
@@ -262,5 +262,5 @@ private class TerminateTest
         String actualUnknown = chainIdToDescription.get(chainA.Id);
         String expectedUnknown = 'Cannot resolve Id of Terminate process';
         System.assertEquals(expectedUnknown, actualUnknown);
-    } 
+    }
 }

@@ -43,11 +43,11 @@ public class LogWriter implements Process.Plugin {
     
     
         //write log entry for every log group identifier
-        List<Object> collection = (List<Object>)parameters.get('eda__logGroupIds'); 
+        List<Object> collection = (List<Object>)parameters.get('eda__logGroupIds');
         if (collection != null) {
             List<Id> logGroupIds = new List<Id>();
             Set<Id> filteredLogGroupIds = (new Map<Id, LogGroup__c>([
-                SELECT Id, Name 
+                SELECT Id, Name
                 FROM LogGroup__c
                 WHERE Id IN :logGroupIds
             ])).keySet();
@@ -56,7 +56,7 @@ public class LogWriter implements Process.Plugin {
             List<LogWriterEntry__c> logWriterEntries =  new List<LogWriterEntry__c>();
             for (Id logGroupId  : filteredLogGroupIds) {
                 logWriterEntries.add( new LogWriterEntry__c(
-                    ChainStep__c = chainStep.Id, 
+                    ChainStep__c = chainStep.Id,
                     Order__c   = parametersOrder,
                     LogGroup__c     = logGroupId,
                     NotificationId__c = notificationId,

@@ -2,7 +2,7 @@ public class AsyncApexJobs extends SObjects {
     
     /**
      * Domain constructor
-     * 
+     *
      * Note the only writeable property of an AsyncApexJob is Id.
      *
      * @param asyncApexJobs List of AsyncApexJob.
@@ -22,7 +22,7 @@ public class AsyncApexJobs extends SObjects {
     
     /**
      * Run a batch job only if not running already.
-     * 
+     *
      * @param  type      Reflector of the batchable class to run (eg Broker.class).
      * @param  chunkSize Chunk size for each iteration of the query locator (eg 200).
      * @return           Domain instance holding multiple existing jobs or one started job.
@@ -43,7 +43,7 @@ public class AsyncApexJobs extends SObjects {
         
         //find existing jobs
         List<AsyncApexJob> existingJobs = [
-            SELECT ApexClassId, JobType, Status, ExtendedStatus, JobItemsProcessed, TotalJobItems, LastProcessed 
+            SELECT ApexClassId, JobType, Status, ExtendedStatus, JobItemsProcessed, TotalJobItems, LastProcessed
             FROM AsyncApexJob
             WHERE ApexClass.NamespacePrefix = :namespacePrefix AND ApexClass.Name = :name
             AND JobType IN ('BatchApex', 'ScheduledApex')

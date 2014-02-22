@@ -15,8 +15,8 @@
         <apex:pageblock title="Chain Health"  id="theControl">
          
             <apex:pageBlockButtons location="top">
-                <apex:commandButton action="{!Refresh}" value="Refresh Health" id="theRefreshButton"/>  
-            </apex:pageBlockButtons>  
+                <apex:commandButton action="{!Refresh}" value="Refresh Health" id="theRefreshButton"/>
+            </apex:pageBlockButtons>
                 
  
             
@@ -36,7 +36,7 @@
                     </apex:column>
 
                 </apex:pageblockTable>
-            </apex:outputPanel>   
+            </apex:outputPanel>
         </apex:pageBlock>
 
 

@@ -1,24 +1,24 @@
 @isTest
 private class LogConfigurationControllerTest{
-    private static testMethod void controllerCoverage ()  { 
+    private static testMethod void controllerCoverage ()  {
         // arrange
         LogConfiguration__c  logConfiguration = new LogConfiguration__c();
         insert logConfiguration;
         ApexPages.StandardController controller = new ApexPages.StandardController(logConfiguration);
         LogConfigurationController logConfigurationController =  new LogConfigurationController(controller);
         
-        // act 
-        System.PageReference pageRef = logConfigurationController.LogGroupView();    
+        // act
+        System.PageReference pageRef = logConfigurationController.LogGroupView();
     }
     
     
-    private static testMethod void callingGetLogGroupPageReferenceReturnsExpectedPageReference ()  { 
+    private static testMethod void callingGetLogGroupPageReferenceReturnsExpectedPageReference ()  {
     
         // arrange
         LogConfiguration__c  logConfiguration = new LogConfiguration__c();
         insert logConfiguration;
         Id logConfigurationId = logConfiguration.Id;
-        String logGroupKeyPrefix  = LogGroup__c.SObjectType.getDescribe().getKeyPrefix();  
+        String logGroupKeyPrefix  = LogGroup__c.SObjectType.getDescribe().getKeyPrefix();
         String fakeLookUpFieldId = '000000000000000';
           
         // act

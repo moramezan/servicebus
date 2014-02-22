@@ -20,8 +20,8 @@ public with sharing class Schedule implements Process.Plugin {
         Boolean isPassThru = String.isBlank((String)parameters.get('eda__heartbeat'));
         
         if (isPassThru) {
-            parametersList.add(parameters);    
-        } else {  
+            parametersList.add(parameters);
+        } else {
             //DateTime is not a primitive Object
             DateTime heartbeat = (DateTime)Json.deserialize('"' + (String)parameters.get('eda__heartbeat') + '"', DateTime.class);
             
@@ -35,7 +35,7 @@ public with sharing class Schedule implements Process.Plugin {
                 //this is one of the configured times, so carry on to next chain step
                 parametersList.add(parameters);
             }
-        } 
+        }
         return Utility.convert(parametersList);
     }
     

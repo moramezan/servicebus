@@ -19,7 +19,7 @@ public class ChainSteps extends SObjects {
             //Sequence__c is automatic
         );
         
-        insert chainStep; 
+        insert chainStep;
         
         //requery
         return [
@@ -97,5 +97,5 @@ public class ChainSteps extends SObjects {
             Database.delete(ids);
             Database.emptyRecycleBin(ids);
         }
-    } 
+    }
 }

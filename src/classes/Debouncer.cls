@@ -12,7 +12,7 @@ public class Debouncer implements Process.Plugin {
         result.Tag = 'Event Driven Architecture';
         result.Name = 'Debouncer';
         result.Description = 'Swallows message unless the time elapsed since receiving a prior notification with the same key exceeds a min threshold';
-        return result; 
+        return result;
     }
     
     public Process.PluginResult invoke(Process.PluginRequest pluginRequest) {
@@ -36,7 +36,7 @@ public class Debouncer implements Process.Plugin {
         
         // retrieve debouncer (if any)
         List<Debouncer__c> debouncers = [
-            SELECT Id, LastFiredDate__c, Key__c 
+            SELECT Id, LastFiredDate__c, Key__c
             FROM Debouncer__c
             WHERE DebouncerConfiguration__c = :configurationId
             AND Key__c = :key
@@ -46,40 +46,40 @@ public class Debouncer implements Process.Plugin {
         Boolean release = debounce( currentStamp, key, minimumHours, debouncers , configurationId );
         if (release) {
             parametersList.add(parameters);
-        } 
+        }
 
-        // housekeeping 
-        Integer twentyFourHours = 24; 
+        // housekeeping
+        Integer twentyFourHours = 24;
         deleteOldDebouncers(currentStamp, minimumHours, twentyFourHours) ;
         
         return Utility.convert(parametersList);
-    } 
+    }
     
-    @testVisible 
+    @testVisible
     private static Boolean debounce(
-        DateTime currentStamp, 
-        String key, 
-        Integer minimumHours, 
+        DateTime currentStamp,
+        String key,
+        Integer minimumHours,
         List<Debouncer__c> debouncers,
         Id debouncerConfigurationId
-    ) { 
+    ) {
         // normalize
         Debouncer__c debouncer;
-        Boolean keyInstance = (debouncers.size() > 0); 
+        Boolean keyInstance = (debouncers.size() > 0);
         if (!keyInstance) {
             debouncer = new Debouncer__c (
-                DebouncerConfiguration__c = debouncerConfigurationId, 
-                LastFiredDate__c = null, 
+                DebouncerConfiguration__c = debouncerConfigurationId,
+                LastFiredDate__c = null,
                 Key__c = key
             );
             insert debouncer;
         } else {
-            debouncer = debouncers[0]; 
+            debouncer = debouncers[0];
         }
     
     
         // decision and potential release
-        Boolean release = ( ! keyInstance ); 
+        Boolean release = ( ! keyInstance );
         if (!release) {
             DateTime cutOff = currentStamp.addHours(-1 * minimumHours);
             release = debouncers[0].LastFiredDate__c < cutOff;
@@ -96,20 +96,20 @@ public class Debouncer implements Process.Plugin {
     
     
     
-    @testVisible 
+    @testVisible
     private static void deleteOldDebouncers(
-        DateTime currentStamp, 
-        Integer minimumHours, 
+        DateTime currentStamp,
+        Integer minimumHours,
         Integer bufferHours
-    ) { 
+    ) {
     
-        DateTime staleStamp = currentStamp.AddHours( -1 * ( bufferHours + minimumHours) ) ; 
+        DateTime staleStamp = currentStamp.AddHours( -1 * ( bufferHours + minimumHours) ) ;
         List<Id> ids = new List<Id> (
         new Map<Id, Debouncer__c>([
-            SELECT Id 
+            SELECT Id
             FROM Debouncer__c
             WHERE LastFiredDate__c < :staleStamp
-        ]).keySet()); 
+        ]).keySet());
         
         if (ids.size() > 0) {
             Database.delete(ids);

@@ -56,7 +56,7 @@ public with sharing class Gate implements Process.Plugin {
         if (count != gateItems.size()) {
             //this is not the last item, so let's swallow
             return new Process.PluginResult(new Map<String,Object>());
-        }   
+        }
         
         //this is the last item, let's release
         parameters.put('eda__id', gateGroupId);

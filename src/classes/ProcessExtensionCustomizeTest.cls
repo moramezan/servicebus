@@ -21,13 +21,13 @@
         ProcessExtensionCustomize extension = new ProcessExtensionCustomize(controller);
         
         // Act
-        //button should redirect to /[process_id]  
+        //button should redirect to /[process_id]
         System.PageReference processPage = extension.initCustom();
         
         // Assert
         String expectedUrl = String.valueOf(terminateProcess.Id).left(15);
         String actualUrl = processPage.getUrl();
-        System.assert(actualUrl.contains(expectedUrl));  
+        System.assert(actualUrl.contains(expectedUrl));
     }
     
 }

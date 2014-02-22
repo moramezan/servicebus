@@ -10,7 +10,7 @@ public with sharing class BatchBroker extends Broker implements Database.Batchab
         return this.locateMarkedWork(100);
     }
     
-    public void execute(Database.BatchableContext context, List<Message__c> scope) {  
+    public void execute(Database.BatchableContext context, List<Message__c> scope) {
         Broker.executeResolvePersist(scope[0].Id);
     }
     
@@ -43,7 +43,7 @@ public with sharing class BatchBroker extends Broker implements Database.Batchab
         
         //find existing jobs
         List<AsyncApexJob> existingJobs = [
-            SELECT ApexClassId, JobType, Status, ExtendedStatus, JobItemsProcessed, TotalJobItems, LastProcessed 
+            SELECT ApexClassId, JobType, Status, ExtendedStatus, JobItemsProcessed, TotalJobItems, LastProcessed
             FROM AsyncApexJob
             WHERE ApexClass.NamespacePrefix = :namespacePrefix AND ApexClass.Name = :name
             AND JobType IN ('BatchApex')

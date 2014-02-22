@@ -25,7 +25,7 @@ public with sharing class Wiretap implements Process.Plugin {
         } catch (Exception e) {
         }
         if (userId == null) {
-            userId = UserInfo.getUserId();   
+            userId = UserInfo.getUserId();
         }
 
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();

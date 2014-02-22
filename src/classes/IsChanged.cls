@@ -14,7 +14,7 @@ public class IsChanged  implements Process.Plugin {
         plugin.Description = 'Detects if the value of a field has changed on an incoming SObject since the last time';
         plugin.Tag = 'Event Driven Architecture';
 
-        plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{ 
+        plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter(
                 'newBlobId',
                 'The id that points to a a blob representation of the current state of a changed topic. ' +
@@ -38,7 +38,7 @@ public class IsChanged  implements Process.Plugin {
                 'The value represnting the prior state of a changed topic.' +
                 '(Note: this will be null when oldBlobId is valued ). ',
                 Process.PluginDescribeResult.ParameterType.STRING
-            )           
+            )
                 
                 
         };
@@ -62,27 +62,27 @@ public class IsChanged  implements Process.Plugin {
         
         // retrieve current value of object referenced by 'id'
         // on parameters
-        Id objectId = (Id)parameters.get('id');    
+        Id objectId = (Id)parameters.get('id');
         SObjectType objectType = objectId.getSObjectType();
         String objectName = objectType.getDescribe().getName();
-        String fieldName = configuration.FieldName__c; 
+        String fieldName = configuration.FieldName__c;
         String query = 'SELECT ' + fieldName + ' FROM ' + objectName + ' WHERE Id = :objectId';
         SObject obj = Database.query(query);
         
 
-        // derive the following 'new' attributes : 
-        //  -  if current value is 
+        // derive the following 'new' attributes :
+        //  -  if current value is
         //     1. a blob
         //     2. 256 bytes or more
-        //     then assign  current value to  newValueAsBlob  , else set newValueAsBlob to null 
-        //  -  if current value is 
+        //     then assign  current value to  newValueAsBlob  , else set newValueAsBlob to null
+        //  -  if current value is
         //     1. not a blob
         //     2. and 255 bytes or less
-        //     then assign  current value to  newValueAsString  , else set newValueAsString to null    
+        //     then assign  current value to  newValueAsString  , else set newValueAsString to null
         //  -  assign a hash of the current value to newHash
         Map<string,Object> attributes =  new Map<string,Object> {
             'object' => obj.get(fieldName),
-            'configurationId' => configuration.Id,    
+            'configurationId' => configuration.Id,
             'newBlobId' => null,
             'newValueAsString' => null,
             'newHash' => null
@@ -91,29 +91,29 @@ public class IsChanged  implements Process.Plugin {
         deriveNewAttributes(  attributes ) ;
         
         String newHash = (String) attributes.get('newHash');
-        String newValueAsString = ( String ) attributes.get('newValueAsString'); 
+        String newValueAsString = ( String ) attributes.get('newValueAsString');
         Id newBlobId = ( Id ) attributes.get('newBlobId');
         
         
-        // detect a change 
+        // detect a change
         Boolean isChanged =  isChanged(configuration.NewHash__c, newHash,  firstRun);
         
         
         // push the state (new to old)
         configuration.oldBlobId__c = configuration.newBlobId__c;
-        configuration.newBlobId__c = newBlobId;     
+        configuration.newBlobId__c = newBlobId;
         configuration.OldValue__c = configuration.NewValue__c;
         configuration.NewValue__c = newValueAsString;
         configuration.OldHash__c = configuration.NewHash__c;
-        configuration.NewHash__c = newHash;     
+        configuration.NewHash__c = newHash;
         update configuration;
         
         // release parameters if state has changed
         if  (isChanged) {
             parameters.put('oldValue' , configuration.OldValue__c );
-            parameters.put('newValue' , configuration.NewValue__c );    
+            parameters.put('newValue' , configuration.NewValue__c );
             parameters.put('oldBlobId' , configuration.oldBlobId__c );
-            parameters.put('newBlobId' , configuration.newBlobId__c);            
+            parameters.put('newBlobId' , configuration.newBlobId__c);
             parametersList.add(parameters);
         }
         
@@ -140,11 +140,11 @@ public class IsChanged  implements Process.Plugin {
         Blob newValueAsBlob = (  isBlob ) ?  (Blob) attributes.get('object')  :  Blob.valueOf(  (String) attributes.get('object')  );
         String newHash = EncodingUtil.convertToHex(Crypto.generateDigest('MD5', newValueAsBlob));
         String  newValueAsString  = ( ! isBlob ) ?  (String)  attributes.get('object') :  null;
-        if ( ! isBlob ) { 
+        if ( ! isBlob ) {
             newValueAsBlob = null;
             if ( newValueAsString.length() > 255 ) {
                 newValueAsBlob = Blob.valueOf(  newValueAsString  );
-                newValueAsString  =  null; 
+                newValueAsString  =  null;
                 isBlob = true;
             }
         }
@@ -156,7 +156,7 @@ public class IsChanged  implements Process.Plugin {
                 Name = 'IsChanged-' + DateTime.Now().format('YYYY-MM-DD HH:mm:ss').replace(' ','T'),
                 Body = newValueAsBlob,
                 ParentId = (Id) attributes.get('configurationId')
-            );  
+            );
             insert attachment;
             newBlobId = attachment.Id;
         }
@@ -171,31 +171,31 @@ public class IsChanged  implements Process.Plugin {
     private static void deleteOldAttachments(Integer persistDurationInMinutes) {
         DateTime stampComparator = System.Now().addMinutes(-1 * persistDurationInMinutes);
         
-       // Note : because you cannot update LastModifiedDate or CreateDate in testMethod 
-       //        we adjust the implementation to the more testable but less efficient 
+       // Note : because you cannot update LastModifiedDate or CreateDate in testMethod
+       //        we adjust the implementation to the more testable but less efficient
        //        approach
         
        // Most efficient approach
        //List<Attachment> attachments = [
-       //    SELECT Id, Name 
-       //    FROM Attachment 
+       //    SELECT Id, Name
+       //    FROM Attachment
        //    WHERE Name LIKE 'IsChanged-%'
        //        AND LastModifiedDate < :stampComparator
        //] ;
        //List<Id> ids = new List<Id>( ( new Map<Id, Attachment>(attachments)).keySet() );
        
-       // More testable approach 
+       // More testable approach
        List<Id> ids = new List<Id>();
        List<Attachment> attachments = [
-           SELECT Id, Name 
-           FROM Attachment 
+           SELECT Id, Name
+           FROM Attachment
            WHERE Name LIKE 'IsChanged-%'
        ] ;
        for (Attachment  attachment : attachments) {
             DateTime lastModifiedDate = (DateTime)Json.deserialize('"' + attachment.Name.substringAfter('-')+ '"', DateTime.class);
             if (lastModifiedDate < stampComparator) {
                 ids.add(attachment.Id);
-            }            
+            }
        }
 
         if (ids.size() > 0) {

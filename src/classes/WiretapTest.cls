@@ -29,7 +29,7 @@ private class WiretapTest {
         Wiretap wireTap = new Wiretap();
         Boolean actualFlagException = false;
         try {
-            Process.PluginResult results = wireTap.invoke(new Process.PluginRequest(parameters)); 
+            Process.PluginResult results = wireTap.invoke(new Process.PluginRequest(parameters));
         } catch (Exception e) {
            actualFlagException = true;
         }
@@ -38,7 +38,7 @@ private class WiretapTest {
         // Assert
         Boolean expectedFlagException = false;
         System.assertEquals(expectedFlagException , actualFlagException );
-    }  
+    }
    
     static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenDefinedMetaCustomizableSet() {
         // Arrange :

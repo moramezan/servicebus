@@ -2,9 +2,9 @@ public class HealthController
 {
     public class Health    {
         public Id ChainId   {get; set;}
-        public String ChainName {get; set;} 
+        public String ChainName {get; set;}
         public String Detail {get; set;}
-        public String Status {get; set;}        
+        public String Status {get; set;}
     }
 
     public HealthController()
@@ -22,11 +22,11 @@ public class HealthController
             healthItems.addAll(Subscribe.getHealth());
             healthItems.addAll(Publish.getHealth());
             return getSortedHealths(healthItems) ;
-        } 
+        }
         private set;
     }
     
-    @testVisible 
+    @testVisible
     private List<Health> getSortedHealths(List<Health> unsortedHealths )  {
         List<Health> sortedHealths = new List<Health>();
         
@@ -45,7 +45,7 @@ public class HealthController
             sortedHealths.addAll(healths);
         }
           
-        return sortedHealths;    
+        return sortedHealths;
     }
 
     public Boolean DisplayDetails

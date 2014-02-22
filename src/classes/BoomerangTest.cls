@@ -9,7 +9,7 @@
         
         //assert
         String expectedConfiguration = Schema.SobjectType.BoomerangConfiguration__c.Name;
-        System.assertEquals(expectedConfiguration, actualConfiguration);  
+        System.assertEquals(expectedConfiguration, actualConfiguration);
     }
 
     static testMethod void testMessageIsRedirected() {

@@ -80,9 +80,9 @@
         ];
         
         //assert (note: the execution won't happen in test mode because it takes place in a web service callout)
-        Integer expectedCount = 1; 
+        Integer expectedCount = 1;
         Integer actualCount = messages.size();
-        System.assertEquals(expectedCount , actualCount); 
+        System.assertEquals(expectedCount , actualCount);
     }
     
     static testMethod void callingBrokerRestartSuccessfullyCallsRestartImpl() {
@@ -136,8 +136,8 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, isDeleted 
-            FROM Message__c 
+            SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, isDeleted
+            FROM Message__c
             WHERE isDeleted = false
             ALL ROWS
         ];
@@ -146,7 +146,7 @@
         Integer expectedCount = 1;
         Integer actualCount = messages.size();
         System.assertEquals(expectedCount, actualCount);
-    } 
+    }
 
     static testMethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToMessage() {
         //arrange process
@@ -171,16 +171,16 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, Message__c, isDeleted 
-            FROM Message__c 
+            SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, Message__c, isDeleted
+            FROM Message__c
             WHERE isDeleted = false
             ALL ROWS
         ];
         Integer actualCount = messages.size();
         
         //assert
-        Integer expectedCount = 1; 
-        System.assertEquals(expectedCount , actualCount); 
+        Integer expectedCount = 1;
+        System.assertEquals(expectedCount , actualCount);
         
         String expectedProcessName = FailurePlugin.class.getName();
         System.assertEquals(expectedProcessName, messages[0].Process__r.Name);

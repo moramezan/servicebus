@@ -1,6 +1,6 @@
 /**
  * Very fundamental order:
- * 
+ *
  * Example chain:
  * TestChain #1 [Wiretap]
  * TestChain #2 [Wiretap]
@@ -27,13 +27,13 @@
  * +-----------+
  *
  * +-----------+ (CONTEXT 5 batchable.start)
- * |  MARK     | 
+ * |  MARK     |
  * +-----------+
  *
  * +-----------+ (CONTEXT 6 batchable.execute)
  * |  EXECUTE  | invokes [Wiretap]
- * |  RESOLVE  | 
- * |  PERSIST  | 
+ * |  RESOLVE  |
+ * |  PERSIST  |
  * +-----------+
  *
  * +-----------+ (CONTEXT 7 batchable.finish)
@@ -41,20 +41,20 @@
  * +-----------+
  *
  * +-----------+ (CONTEXT 8 batchable.start)
- * |  MARK     | 
+ * |  MARK     |
  * +-----------+
  *
  * +-----------+ (CONTEXT 9 batchable.execute)
  * |  EXECUTE  | invokes [Terminate]
- * |  RESOLVE  | 
- * |  PERSIST  | 
+ * |  RESOLVE  |
+ * |  PERSIST  |
  * +-----------+
  *
  * +-----------+ (CONTEXT 10 batchable.finish)
  * |  ENQUEUE  |
  * +-----------+
- * 
- * 
+ *
+ *
  *
  * As used by a synchronous broker:
  *
@@ -137,7 +137,7 @@ abstract global class Broker {
     static global void enqueue(String chainName, Id dataId) {
         Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainName,
-            'eda__sequence' => 0,  
+            'eda__sequence' => 0,
             'id' => dataId
         };
         
@@ -164,14 +164,14 @@ abstract global class Broker {
     }
     
     /**
-     * Prepares Blob data for processing at the start of a nominated chain 
+     * Prepares Blob data for processing at the start of a nominated chain
      * by wrapping the pointer to the data (an id) in a Message object
      * This Persisted Data instance is saved to the database and the Broker is
-     * immeadiately invoked threreafter   
+     * immeadiately invoked threreafter
      *
      * @param chainName Name of the chain the data is destined for.
      * @param dataId    Blob representation of the data the chain will operate on.
-     */ 
+     */
     static global void enqueue(String chainName, Blob data) {
         //prepare a very generic container
         Document document = new Document(
@@ -185,7 +185,7 @@ abstract global class Broker {
         //store this data away and enqueue
         insert document;
         enqueue(chainName, document.Id);
-    } 
+    }
     
     /**
      * Sets many Messages statuses to 'Processing' and writes them away.
@@ -209,7 +209,7 @@ abstract global class Broker {
     
     /**
      * Resolves and invokes the Process.Plugin for one input, handing back an in-memory collection of outputs
-     * 
+     *
      * @param  message One Message whose status should be Processing
      * @return         Many Messages whose status should be Buffer
      */
@@ -231,7 +231,7 @@ abstract global class Broker {
         
             parameters.put('eda__configuration', chainStep.ConfigurationId__c);
         
-            //instantiate processable instance  
+            //instantiate processable instance
             Type reflector = Type.forName(chainStep.Process__r.FullyQualifiedClassName__c);
             plugin = (Process.Plugin)reflector.newInstance();
         } catch (Exception e) {
@@ -328,7 +328,7 @@ abstract global class Broker {
     }
     
     @TestVisible
-    private static void surfaceException(Exception e, Id messageId) { 
+    private static void surfaceException(Exception e, Id messageId) {
         Map<String,Object> serializedException = new Map<String,Object>();
         serializedException.put('cause', e.getCause());
         serializedException.put('lineNumber', e.getLineNumber());
@@ -365,7 +365,7 @@ abstract global class Broker {
             Integer count = parametersList.size();
             parameters.put('eda__count', count);
             if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('eda__gateGroupId')}); //tidy up split of 0
-        } 
+        }
      }
     
     public void restartIfWorkPending() {

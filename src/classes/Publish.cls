@@ -20,7 +20,7 @@ public with sharing class Publish implements Process.Plugin {
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         
         PublishConfiguration__c publishConfiguration = [
-            SELECT Id, EventType__c 
+            SELECT Id, EventType__c
             FROM PublishConfiguration__c
             WHERE Id = :(Id)parameters.get('eda__configuration')
         ];
@@ -30,7 +30,7 @@ public with sharing class Publish implements Process.Plugin {
         }
         
         Map<Id,SObject> subscribeConfigurations = new Map<Id,SObject>([
-            SELECT Id 
+            SELECT Id
             FROM SubscribeConfiguration__c
             WHERE EventType__c = :publishConfiguration.EventType__c
         ]);
@@ -58,21 +58,21 @@ public with sharing class Publish implements Process.Plugin {
     
     public static List<HealthController.Health> getHealth() {
         List<Chain__c> chains = [
-            SELECT id, 
-            Name, 
+            SELECT id,
+            Name,
             (SELECT id, Name, Process__c, ConfigurationId__c
-            FROM ChainSteps__r 
+            FROM ChainSteps__r
             ORDER BY Sequence__c ASC) chainSteps
             FROM Chain__c
         ];
         
         List<Process__c> publishProcesses = [
-            SELECT id, Name 
-            FROM Process__c 
+            SELECT id, Name
+            FROM Process__c
             WHERE Name = 'Publish'
         ];
         
-        Process__c publishProcess = (publishProcesses.size() > 0) ? publishProcesses[0] : null; 
+        Process__c publishProcess = (publishProcesses.size() > 0) ? publishProcesses[0] : null;
         Boolean resolvedProcess = (publishProcess != null);
 
         Map<Id,PublishConfiguration__c> publishConfigurationIdToPublishConfiguration = new Map<Id,PublishConfiguration__c>([
@@ -81,12 +81,12 @@ public with sharing class Publish implements Process.Plugin {
         ]);
 
         List<SubscribeConfiguration__c> SubscribeConfigurations = [
-            SELECT Id, Name, EventType__c 
+            SELECT Id, Name, EventType__c
             FROM SubscribeConfiguration__c
         ];
 
         Map<Id,EventType__c> eventTypeIdToEventType = new Map<Id,EventType__c>([
-            SELECT Id, Name 
+            SELECT Id, Name
             FROM EventType__c
         ]);
 
@@ -95,20 +95,20 @@ public with sharing class Publish implements Process.Plugin {
         for (Chain__c chain : chains) {
             String statusInitial = resolvedProcess ? 'Ok' : 'Unknown';
             String detailInitial = resolvedProcess ? 'Publish Check(s)' : 'Cannot resolve Id of Publish process';
-            Map<String,Object> singleInstanceDetail = new Map<String,Object>{ 
+            Map<String,Object> singleInstanceDetail = new Map<String,Object>{
                 'Status' => statusInitial,
                 'Detail' => detailInitial,
                 'ChainId' => chain.Id,
                 'ChainName' => chain.Name,
-                'ChainSteps' => chain.ChainSteps__r 
+                'ChainSteps' => chain.ChainSteps__r
             };
 
-            Boolean requireSingleInstance = false; 
+            Boolean requireSingleInstance = false;
             if ( !resolvedProcess ) {
                 requireSingleInstance = true;
-            } 
+            }
 
-            if ( resolvedProcess ) { 
+            if ( resolvedProcess ) {
                 Integer publishOccurs = 0;
                 for (ChainStep__c chainStep : chain.ChainSteps__r) {
                     if (chainStep.Process__c == PublishProcess.Id) {
@@ -168,17 +168,17 @@ public with sharing class Publish implements Process.Plugin {
 
                             if ( !isOk ) {
                                 requireSingleInstance = false;
-                                instanceDetails.add(new Map<String,Object>{ 
+                                instanceDetails.add(new Map<String,Object>{
                                     'Status' => status,
                                     'Detail' => detail,
                                     'ChainId' => chain.Id,
                                     'ChainName' => chain.Name,
-                                    'ChainSteps' => chain.ChainSteps__r 
+                                    'ChainSteps' => chain.ChainSteps__r
                                 });
                             }
                         } // end: if (chainStep.Process__c == PublishProcess.Id)
                     } // end:: for (ChainStep__c chainStep : chain.ChainSteps__r)
-                } // end:: if (hasPublish) 
+                } // end:: if (hasPublish)
             } // end: if ( resolvedProcess )
 
             if (requireSingleInstance) {
@@ -194,7 +194,7 @@ public with sharing class Publish implements Process.Plugin {
             health.Detail = (String) instanceDetail.get('Detail');
             health.Status = (String) instanceDetail.get('Status');
             healths.add(health);
-        } 
+        }
  
         return healths;
     }

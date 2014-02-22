@@ -22,7 +22,7 @@ public with sharing class ProcessExtensionCustomize {
                 pageReference = new ApexPages.PageReference('/' + prefix + '/o');
             } catch (Exception e) {
                 //
-            }   
+            }
         }
         
         return pageReference;

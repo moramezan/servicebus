@@ -13,7 +13,7 @@ private class LogWriterTest{
     
         Map<String,Object> parameters = new Map<String,Object>{
             // 'eda__notificationId' => '1234567abcde',  // null notification Id
-            'id' => theId 
+            'id' => theId
         };
         
         //act
@@ -30,10 +30,10 @@ private class LogWriterTest{
       
         // Assert
         Boolean expectedFlagException = true;
-        System.assertEquals(expectedFlagException, actualFlagException); 
+        System.assertEquals(expectedFlagException, actualFlagException);
         
         String expectedMessage = 'Unable to access the notification id';
-        System.assert( actualMessage.contains(expectedMessage) );    
+        System.assert( actualMessage.contains(expectedMessage) );
     }
     
 	private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessChainStep() {
@@ -47,8 +47,8 @@ private class LogWriterTest{
         insert chain;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda__notificationId' => '1234567abcde',  
-            'id' => theId 
+            'eda__notificationId' => '1234567abcde',
+            'id' => theId
         };
         
         //act
@@ -65,10 +65,10 @@ private class LogWriterTest{
       
         // Assert
         Boolean expectedFlagException = true;
-        System.assertEquals(expectedFlagException, actualFlagException); 
+        System.assertEquals(expectedFlagException, actualFlagException);
         
         String expectedMessage = 'Unable to access the Chain Step';
-        System.assert( actualMessage.contains(expectedMessage) );    
+        System.assert( actualMessage.contains(expectedMessage) );
     }
     
 
@@ -98,15 +98,15 @@ private class LogWriterTest{
         );
         insert configuration2;
         
-        LogGroup__c logGroup1  = new LogGroup__c( 
-            LogConfiguration__c = configuration1.Id,  
+        LogGroup__c logGroup1  = new LogGroup__c(
+            LogConfiguration__c = configuration1.Id,
             GroupIdentifier__c =  theIdentifier1,
             Stamp__c = System.Now()
         );
         insert logGroup1;
         
-        LogGroup__c logGroup2  = new LogGroup__c( 
-            LogConfiguration__c = configuration2.Id,  
+        LogGroup__c logGroup2  = new LogGroup__c(
+            LogConfiguration__c = configuration2.Id,
             GroupIdentifier__c =  theIdentifier2,
             Stamp__c = System.Now()
         );
@@ -115,8 +115,8 @@ private class LogWriterTest{
         List<Object> logGroupIds = new List<Object>{ logGroup1.Id, logGroup2.Id };
  
         Map<String,Object> parameters = new Map<String,Object>{
-            'id' => theId, 
-            'eda__notificationId' => '1234567abcde',  
+            'id' => theId,
+            'eda__notificationId' => '1234567abcde',
             'eda__logGroupIds' => logGroupIds,
             'eda__chainName' => chainName,
             'eda__sequence' => sequenceA2
@@ -128,18 +128,18 @@ private class LogWriterTest{
         List<Map<String,Object>> results = Utility.convert(result);
         
         //assemble
-        List<LogWriterEntry__c> LogWriterEntries = [ 
+        List<LogWriterEntry__c> LogWriterEntries = [
             SELECT id, Name, ChainStep__c,  LogGroup__c, Parameters__c
             FROM LogWriterEntry__c
         ];
         
         Boolean actualLogGroup1 = false;
-        Boolean actualLogGroup2 = false; 
+        Boolean actualLogGroup2 = false;
         String actualParametersSerialized1;
         String actualParametersSerialized2;
         for (LogWriterEntry__c  logWriterEntry : logWriterEntries) {
             if (logWriterEntry.LogGroup__c == logGroup1.Id) {
-            	actualLogGroup1 = true;   
+            	actualLogGroup1 = true;
                 actualParametersSerialized1 = logWriterEntry.Parameters__c;
             }
             if (logWriterEntry.LogGroup__c == logGroup2.Id) {
@@ -154,21 +154,21 @@ private class LogWriterTest{
             
         // Assert
         Integer expectedResultsSize = 1;
-        Integer actualResultsSize = results.size(); 
-        System.assertEquals(expectedResultsSize, actualResultsSize); 
+        Integer actualResultsSize = results.size();
+        System.assertEquals(expectedResultsSize, actualResultsSize);
         
         Integer expectedLogWriterEntrySize = 2;
-        Integer actualLogWriterEntrySize = LogWriterEntries.size(); 
-        System.assertEquals(expectedLogWriterEntrySize, actualLogWriterEntrySize); 
+        Integer actualLogWriterEntrySize = LogWriterEntries.size();
+        System.assertEquals(expectedLogWriterEntrySize, actualLogWriterEntrySize);
 
         Boolean expectedLogGroup1 = true;
         Boolean expectedLogGroup2 = true;
         Boolean expectedParameters = true;
         String expectedChainName = chainName;
-        System.assertEquals(expectedLogGroup1, actualLogGroup1); 
-        System.assertEquals(expectedLogGroup2, actualLogGroup2); 
+        System.assertEquals(expectedLogGroup1, actualLogGroup1);
+        System.assertEquals(expectedLogGroup2, actualLogGroup2);
         System.assertEquals(expectedParameters, actualParameters);
         System.assertEquals(actualParametersSerialized1, actualParametersSerialized2);
-        System.assert(actualParametersSerialized1.contains(expectedChainName));     
+        System.assert(actualParametersSerialized1.contains(expectedChainName));
     }
 }

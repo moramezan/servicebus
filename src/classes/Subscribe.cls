@@ -18,34 +18,34 @@ public with sharing class Subscribe implements Process.Plugin {
     }
     
     public static List<HealthController.Health> getHealth() {
-        List<Chain__c> chains = [SELECT id, 
-                                        Name, 
+        List<Chain__c> chains = [SELECT id,
+                                        Name,
                                         (SELECT id, Name, Process__c, ConfigurationId__c
-                                         FROM ChainSteps__r 
-                                         ORDER BY Sequence__c ASC) chainSteps  
+                                         FROM ChainSteps__r
+                                         ORDER BY Sequence__c ASC) chainSteps
                                  FROM Chain__c
                                 ];
         
-        List<Process__c> subscribeProcesses  = [SELECT id, Name 
-                                                FROM Process__c 
+        List<Process__c> subscribeProcesses  = [SELECT id, Name
+                                                FROM Process__c
                                                 WHERE Name = 'Subscribe'
                                                ];
-        Process__c subscribeProcess = (subscribeProcesses.size() > 0) ? subscribeProcesses[0] : null; 
-        Boolean resolvedProcess = (subscribeProcess != null);                
+        Process__c subscribeProcess = (subscribeProcesses.size() > 0) ? subscribeProcesses[0] : null;
+        Boolean resolvedProcess = (subscribeProcess != null);
 
      
-        Map<Id,SubscribeConfiguration__c> subscribeConfigurationIdToSubscribeConfiguration  
-                = new Map<Id,SubscribeConfiguration__c>([SELECT id, Name, EventType__c  
-                                                         FROM SubscribeConfiguration__c    
+        Map<Id,SubscribeConfiguration__c> subscribeConfigurationIdToSubscribeConfiguration
+                = new Map<Id,SubscribeConfiguration__c>([SELECT id, Name, EventType__c
+                                                         FROM SubscribeConfiguration__c
                                                         ]);
 
-        List<PublishConfiguration__c> publishConfigurations = [SELECT Id, Name, EventType__c 
-                                                             FROM PublishConfiguration__c    
+        List<PublishConfiguration__c> publishConfigurations = [SELECT Id, Name, EventType__c
+                                                             FROM PublishConfiguration__c
                                                              ];
                     
-        Map<Id,EventType__c> eventTypeIdToEventType = new Map<Id,EventType__c>([SELECT Id, Name 
-                                                                FROM EventType__c    
-                                                               ]);                                                
+        Map<Id,EventType__c> eventTypeIdToEventType = new Map<Id,EventType__c>([SELECT Id, Name
+                                                                FROM EventType__c
+                                                               ]);
                
                            
         List<Map<String,Object>> instanceDetails = new List<Map<String,Object>>();
@@ -56,8 +56,8 @@ public with sharing class Subscribe implements Process.Plugin {
                                                         'Detail' => detail,
                                                         'ChainId' => chain.Id,
                                                         'ChainName' => chain.Name,
-                                                        'ChainSteps' => chain.ChainSteps__r });                          
-        }          
+                                                        'ChainSteps' => chain.ChainSteps__r });
+        }
         
         if (resolvedProcess) {
             for (Map<String,Object> instanceDetail : instanceDetails) {
@@ -83,7 +83,7 @@ public with sharing class Subscribe implements Process.Plugin {
    
                 if (hasSubscribe)  {
                     Boolean isError = false;
-                    String detail;  
+                    String detail;
                     if (! subscribeFirst) {
                         isError = true;
                         detail = 'Subscribe process not  at front of chain';
@@ -96,7 +96,7 @@ public with sharing class Subscribe implements Process.Plugin {
                     if (isError) {
                         instanceDetail.put('Status', 'Error');
                         instanceDetail.put('Detail', detail);
-                    } 
+                    }
 
 
                     SubscribeConfiguration__c subscribeConfiguration;
@@ -144,7 +144,7 @@ public with sharing class Subscribe implements Process.Plugin {
             health.Detail = (String) instanceDetail.get('Detail');
             health.Status = (String) instanceDetail.get('Status');
             healths.add(health);
-        } 
+        }
           
         return healths;
     }

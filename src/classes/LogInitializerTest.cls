@@ -10,7 +10,7 @@ private class LogInitializerTest {
         
         // Assert
         String expectedConfiguration = Schema.SobjectType.LogConfiguration__c.Name;
-        System.assertEquals(expectedConfiguration, actualConfiguration); 
+        System.assertEquals(expectedConfiguration, actualConfiguration);
     }
     
     private static testMethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForConfigIdentifierEqNull() {
@@ -27,7 +27,7 @@ private class LogInitializerTest {
         insert chainStep;
         
         LogConfiguration__c configuration = [
-            SELECT Id, GroupIdentifier__c 
+            SELECT Id, GroupIdentifier__c
             FROM LogConfiguration__c
         ];
         configuration.GroupIdentifier__c = null; // no identifier specified
@@ -35,7 +35,7 @@ private class LogInitializerTest {
         
         Map<String,Object> parameters = new Map<String,Object>{
             'id' => theId,
-            'eda__configuration' =>  configuration.Id,  
+            'eda__configuration' =>  configuration.Id,
             'eda__chainName' => chainName,
             'eda__sequence' => theSequence
         };
@@ -48,7 +48,7 @@ private class LogInitializerTest {
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
         DateTime expectedStampFrom = System.Now().addSeconds(-1);
-        List<LogGroup__c> logGroups = [ 
+        List<LogGroup__c> logGroups = [
             SELECT id, Name, LogConfiguration__c,  GroupIdentifier__c, Stamp__c
             FROM LogGroup__c
             WHERE Stamp__c >= :expectedStampFrom
@@ -64,16 +64,16 @@ private class LogInitializerTest {
            
         // Assert
         Integer expectedResultsSize = 1;
-        Integer actualResultsSize = results.size(); 
-        System.assertEquals(expectedResultsSize, actualResultsSize); 
+        Integer actualResultsSize = results.size();
+        System.assertEquals(expectedResultsSize, actualResultsSize);
         
         Integer expectedLogGroupSize = 1;
-        System.assertEquals(expectedLogGroupSize, actualLogGroupSize); 
+        System.assertEquals(expectedLogGroupSize, actualLogGroupSize);
         
         String expectedGroupIdentifier1 = chainName ;
         String expectedGroupIdentifier2 = String.valueOf(theSequence) ;
         System.assert(actualGroupIdentifier.contains(expectedGroupIdentifier1));
-        System.assert(actualGroupIdentifier.contains(expectedGroupIdentifier2));      
+        System.assert(actualGroupIdentifier.contains(expectedGroupIdentifier2));
     }
     
     
@@ -92,7 +92,7 @@ private class LogInitializerTest {
         insert chainStep;
         
         LogConfiguration__c configuration = [
-            SELECT Id, GroupIdentifier__c 
+            SELECT Id, GroupIdentifier__c
             FROM LogConfiguration__c
         ];
         configuration.GroupIdentifier__c = theIdentifier; // not null
@@ -100,7 +100,7 @@ private class LogInitializerTest {
         
         Map<String,Object> parameters = new Map<String,Object>{
             'id' => theId,
-            'eda__configuration' =>  configuration.Id,  
+            'eda__configuration' =>  configuration.Id,
             'eda__chainName' => chainName,
             'eda__sequence' => theSequence
         };
@@ -113,7 +113,7 @@ private class LogInitializerTest {
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
         DateTime expectedStampFrom = System.Now().addSeconds(-1);
-        List<LogGroup__c> logGroups = [ 
+        List<LogGroup__c> logGroups = [
             SELECT id, Name, LogConfiguration__c,  GroupIdentifier__c, Stamp__c
             FROM LogGroup__c
             WHERE Stamp__c >= :expectedStampFrom
@@ -129,14 +129,14 @@ private class LogInitializerTest {
            
         // Assert
         Integer expectedResultsSize = 1;
-        Integer actualResultsSize = results.size(); 
-        System.assertEquals(expectedResultsSize, actualResultsSize); 
+        Integer actualResultsSize = results.size();
+        System.assertEquals(expectedResultsSize, actualResultsSize);
         
         Integer expectedLogGroupSize = 1;
-        System.assertEquals(expectedLogGroupSize, actualLogGroupSize); 
+        System.assertEquals(expectedLogGroupSize, actualLogGroupSize);
         
         String expectedGroupIdentifier1 = theIdentifier ;
-        System.assert(actualGroupIdentifier.contains(expectedGroupIdentifier1));     
+        System.assert(actualGroupIdentifier.contains(expectedGroupIdentifier1));
     }
 
     
@@ -151,7 +151,7 @@ private class LogInitializerTest {
         insert chain;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            'id' => theId 
+            'id' => theId
         };
         
         //act
@@ -168,10 +168,10 @@ private class LogInitializerTest {
       
         // Assert
         Boolean expectedFlagException = true;
-        System.assertEquals(expectedFlagException, actualFlagException); 
+        System.assertEquals(expectedFlagException, actualFlagException);
         
         String expectedMessage = 'Unable to access the Chain Step Sequence and Chain Name';
-        System.assert( actualMessage.contains(expectedMessage) );    
+        System.assert( actualMessage.contains(expectedMessage) );
     }
 
      
@@ -190,14 +190,14 @@ private class LogInitializerTest {
         insert chainStep;
         
         LogConfiguration__c configuration = [
-            SELECT Id, GroupIdentifier__c 
+            SELECT Id, GroupIdentifier__c
             FROM LogConfiguration__c
         ];
         delete configuration;
         
         Map<String,Object> parameters = new Map<String,Object>{
            'id' => theId   ,
-           'eda__configuration' =>  configuration.Id,  
+           'eda__configuration' =>  configuration.Id,
            'eda__chainName' => chainName,
            'eda__sequence' => theSequence
         };
@@ -216,16 +216,16 @@ private class LogInitializerTest {
  
         // Assert
         Boolean expectedFlagException = true;
-        System.assertEquals(expectedFlagException, actualFlagException); 
+        System.assertEquals(expectedFlagException, actualFlagException);
         
         String expectedMessage = 'Unable to access Log Configuration';
-        System.assert( actualMessage.contains(expectedMessage) );    
+        System.assert( actualMessage.contains(expectedMessage) );
     }
     
     
     private static testMethod void callingGetHydratedThrowsExpectedExceptionWhenIdInvalid() {
         //arrange
-        Id bullshitId = '000000000000000AAA';  
+        Id bullshitId = '000000000000000AAA';
 
         //act
         String actualMessage;
@@ -239,10 +239,10 @@ private class LogInitializerTest {
   
         // assert
         Boolean expectedExceptionFlag  = true;
-        String expectedMessage = 'Cannot hydate SObject';  
-        System.assertEquals( actualExceptionFlag, expectedExceptionFlag ); 
-        System.assert( actualMessage.contains(expectedMessage) );   
-    }                      
+        String expectedMessage = 'Cannot hydate SObject';
+        System.assertEquals( actualExceptionFlag, expectedExceptionFlag );
+        System.assert( actualMessage.contains(expectedMessage) );
+    }
                             
     private static testMethod void callingGetHydratedReturnsFullyHydratedSObject() {
         //arrange
@@ -260,9 +260,9 @@ private class LogInitializerTest {
         
         // assert
         String expectedMessage1 = theName;
-        String expectedMessage2 = theJigSaw;        
-        System.assert( actualMessage.contains(expectedMessage1) );   
-        System.assert( actualMessage.contains(expectedMessage2) );    
+        String expectedMessage2 = theJigSaw;
+        System.assert( actualMessage.contains(expectedMessage1) );
+        System.assert( actualMessage.contains(expectedMessage2) );
     }
 
     
@@ -277,7 +277,7 @@ private class LogInitializerTest {
         String actualIdentifier = LogInitializer.getIdentifer(fieldName ,so);
       
         // assert
-        String expectedIdentifier = theJigSaw; 
-        System.assertEquals(expectedIdentifier, actualIdentifier); 
+        String expectedIdentifier = theJigSaw;
+        System.assertEquals(expectedIdentifier, actualIdentifier);
     }
 }

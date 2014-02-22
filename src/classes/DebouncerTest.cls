@@ -10,11 +10,11 @@ private static testMethod void canDetermineConfigurable () {
     
     // Assert
     String expectedConfiguration = Schema.SobjectType.DebouncerConfiguration__c.Name;
-    System.assertEquals(expectedConfiguration, actualConfiguration); 
+    System.assertEquals(expectedConfiguration, actualConfiguration);
 }
 
 private static testMethod void callingDebounceReturnsTrueWhenNoInstanceRecordWithKey() {
-    //arrange 
+    //arrange
     Integer hours = 10;
     DebouncerConfiguration__c configuration = new DebouncerConfiguration__c( MinimumHoursBetween__c = hours );
     insert configuration;
@@ -31,13 +31,13 @@ private static testMethod void callingDebounceReturnsTrueWhenNoInstanceRecordWit
     
     // Assert
     Boolean expectedRelease = true;
-    System.assertEquals( expectedRelease, actualRelease ); 
+    System.assertEquals( expectedRelease, actualRelease );
 }
     
     
 private static testMethod void callingDebounceReturnsTrueWhenInstanceRecordFoundWithKeyAndOlderEnough() {
-    //arrange 
-    Integer minimumHours = 10;    
+    //arrange
+    Integer minimumHours = 10;
     DebouncerConfiguration__c configuration = new DebouncerConfiguration__c( MinimumHoursBetween__c = minimumHours );
     insert configuration;
     
@@ -48,9 +48,9 @@ private static testMethod void callingDebounceReturnsTrueWhenInstanceRecordFound
     
     List<Debouncer__c> debouncers = new List<Debouncer__c>(); // 0 instance records
     Debouncer__c debouncer1 = new Debouncer__c(
-        DebouncerConfiguration__c = configuration.Id, 
-        Key__c = key , 
-        LastFiredDate__c = veryOldLastFiredDate 
+        DebouncerConfiguration__c = configuration.Id,
+        Key__c = key ,
+        LastFiredDate__c = veryOldLastFiredDate
     );
     insert debouncer1;
     
@@ -63,12 +63,12 @@ private static testMethod void callingDebounceReturnsTrueWhenInstanceRecordFound
     
     // Assert
     Boolean expectedRelease = true;
-    System.assertEquals( expectedRelease, actualRelease ); 
+    System.assertEquals( expectedRelease, actualRelease );
 }
 
 private static testMethod void callingDebounceReturnsFalseWhenInstanceRecordFoundWithKeyAndVeryRecent() {
-    //arrange 
-    Integer minimumHours = 10;    
+    //arrange
+    Integer minimumHours = 10;
     DebouncerConfiguration__c configuration = new DebouncerConfiguration__c( MinimumHoursBetween__c = minimumHours );
     insert configuration;
     
@@ -79,9 +79,9 @@ private static testMethod void callingDebounceReturnsFalseWhenInstanceRecordFoun
     
     List<Debouncer__c> debouncers = new List<Debouncer__c>(); // 0 instance records
     Debouncer__c debouncer1 = new Debouncer__c(
-        DebouncerConfiguration__c = configuration.Id, 
-        Key__c = key , 
-        LastFiredDate__c = veryRecentLastFiredDate 
+        DebouncerConfiguration__c = configuration.Id,
+        Key__c = key ,
+        LastFiredDate__c = veryRecentLastFiredDate
     );
     insert debouncer1;
     
@@ -94,21 +94,21 @@ private static testMethod void callingDebounceReturnsFalseWhenInstanceRecordFoun
     
     // Assert
     Boolean expectedRelease = false;
-    System.assertEquals( expectedRelease, actualRelease ); 
-} 
+    System.assertEquals( expectedRelease, actualRelease );
+}
     
     
 private static testMethod void callingDeleteOldDebouncersDeletesExpectedDebouncers() {
-    //arrange 
+    //arrange
     DebouncerConfiguration__c configuration = new DebouncerConfiguration__c();
     insert configuration;
     
     String key = '1234';
-    DateTime currentStamp = System.Now(); 
+    DateTime currentStamp = System.Now();
     Integer minimumHours = 10;
     Integer bufferHours = 3;
     Integer persistDurationInHours = 6;
-    //+-----[NEW] 
+    //+-----[NEW]
     //---- now --------------
     //---- very recent ------
     DateTime lastFiredDate01 = currentStamp.addHours( -1 * (minimumHours-4) );
@@ -117,29 +117,29 @@ private static testMethod void callingDeleteOldDebouncersDeletesExpectedDebounce
     //---- minimumHours
     //--- bufferHours
     //---- very old ---------
-    DateTime lastFiredDate03 = currentStamp.addHours( -1 * (minimumHours + bufferHours + 2) );     
-    //+-----[OLD] 
+    DateTime lastFiredDate03 = currentStamp.addHours( -1 * (minimumHours + bufferHours + 2) );
+    //+-----[OLD]
     
     Debouncer__c debouncer01 = new Debouncer__c(
-    DebouncerConfiguration__c = configuration.Id, 
-    Key__c = key , 
+    DebouncerConfiguration__c = configuration.Id,
+    Key__c = key ,
     LastFiredDate__c = lastFiredDate01
-    ); 
+    );
     insert debouncer01;
     
     Debouncer__c debouncer02 = new Debouncer__c(
-    DebouncerConfiguration__c = configuration.Id, 
-    Key__c = key , 
+    DebouncerConfiguration__c = configuration.Id,
+    Key__c = key ,
     LastFiredDate__c = lastFiredDate02
-    ); 
+    );
     insert debouncer02;
     
     Debouncer__c debouncer03 = new Debouncer__c(
-    DebouncerConfiguration__c = configuration.Id, 
-    Key__c = key , 
+    DebouncerConfiguration__c = configuration.Id,
+    Key__c = key ,
     LastFiredDate__c = lastFiredDate03
-    ); 
-    insert debouncer03; 
+    );
+    insert debouncer03;
     
     //act
     Debouncer.deleteOldDebouncers( currentStamp, minimumHours, bufferHours ) ;
@@ -151,7 +151,7 @@ private static testMethod void callingDeleteOldDebouncersDeletesExpectedDebounce
     System.Assert( debouncerIdToDebouncer.keySet().contains(debouncer01.Id) );
     System.Assert( debouncerIdToDebouncer.keySet().contains(debouncer02.Id) );
     System.Assert( !debouncerIdToDebouncer.keySet().contains(debouncer03.Id) );
-} 
+}
 
 private static testMethod void callingInvokeWhenZeroDebuncersReleasesParameters() {
     //arrange
@@ -171,7 +171,7 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesParameters(
         FROM DebouncerConfiguration__c
     ];
     
-    Integer minimumHours = 10;    
+    Integer minimumHours = 10;
     configuration.MinimumHoursBetween__c = minimumHours;
     update configuration;
     
@@ -188,8 +188,8 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesParameters(
     
     // Assert
     Integer expectedSize = 1; //-- no pre-existing debouncers , so expect one
-    Integer actualSize = results.size(); 
-    System.assertEquals(expectedSize, actualSize); 
+    Integer actualSize = results.size();
+    System.assertEquals(expectedSize, actualSize);
 }
 
 private static testMethod void callingInvokeWhenZeroDebuncersReleasesMessageForOutsideMinimumWindow() {
@@ -214,10 +214,10 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesMessageForO
     ];
     
     Debouncer__c d = new Debouncer__c(
-        DebouncerConfiguration__c = configuration.Id, 
-        Key__c = key , 
+        DebouncerConfiguration__c = configuration.Id,
+        Key__c = key ,
         LastFiredDate__c = lastFiredDate
-    ); 
+    );
     insert d;
     
     
@@ -237,8 +237,8 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesMessageForO
     
     // Assert
     Integer expectedSize = 1; //-- one pre-existing debouncer outside window , so expect one
-    Integer actualSize = results.size(); 
-    System.assertEquals(expectedSize, actualSize); 
+    Integer actualSize = results.size();
+    System.assertEquals(expectedSize, actualSize);
 }
 
 private static testMethod void callingInvokeWhenZeroDebuncersSwallowsMessageForInsideMinimumWindow() {
@@ -263,10 +263,10 @@ private static testMethod void callingInvokeWhenZeroDebuncersSwallowsMessageForI
     ];
     
     Debouncer__c d = new Debouncer__c(
-        DebouncerConfiguration__c = configuration.Id, 
-        Key__c = key , 
+        DebouncerConfiguration__c = configuration.Id,
+        Key__c = key ,
         LastFiredDate__c = lastFiredDate
-    ); 
+    );
     insert d;
     
     
@@ -286,7 +286,7 @@ private static testMethod void callingInvokeWhenZeroDebuncersSwallowsMessageForI
     
     // Assert
     Integer expectedSize = 0; //-- one pre-existing debouncer inside window , so expect zero
-    Integer actualSize = results.size(); 
-    System.assertEquals(expectedSize, actualSize); 
+    Integer actualSize = results.size();
+    System.assertEquals(expectedSize, actualSize);
     }
 }

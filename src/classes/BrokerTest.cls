@@ -44,7 +44,7 @@ public class BrokerTest{
         
         // assemble
         List<Message__c> messagesAfter = [
-            SELECT id, Parameters__c, ChainStep__c, Process__c 
+            SELECT id, Parameters__c, ChainStep__c, Process__c
             FROM Message__c
         ];
         
@@ -52,7 +52,7 @@ public class BrokerTest{
         Boolean flagSequence02 = false;
         Boolean flagChainNameA = true;
         Id actualChainStepId01;
-        Id actualChainStepId02;    
+        Id actualChainStepId02;
         Id actualProcessId01;
         Id actualProcessId02;
         for (Message__c message : messagesAfter) {
@@ -86,9 +86,9 @@ public class BrokerTest{
         Id expectedChainStepId01 = stepA2.Id;
         Id expectedChainStepId02 = stepA3.Id ;
         Id expectedProcessId01 = markProcess.Id;
-        Id expectedProcessId02 = terminateProcess.Id;    
+        Id expectedProcessId02 = terminateProcess.Id;
         System.assertEquals(expectedChainStepId01, actualChainStepId01);
-        System.assertEquals(expectedChainStepId02, actualChainStepId02); 
+        System.assertEquals(expectedChainStepId02, actualChainStepId02);
         System.assertEquals(expectedProcessId01, actualProcessId01  );
         System.assertEquals(expectedProcessId02, actualProcessId02  );
     }
@@ -100,10 +100,10 @@ public class BrokerTest{
         insert new List<Message__c>{
             new Message__c(Status__c = 'Buffer'),
             new Message__c(Status__c = 'Buffer'),
-            new Message__c(Status__c = 'Buffer')  
+            new Message__c(Status__c = 'Buffer')
         };
         
-        //act  
+        //act
         MockBroker broker = new MockBroker();
         Database.QueryLocatorIterator iterator = broker.locateMarkedWork(queryLimit).iterator();
         List<Message__c> messages = new List<Message__c>();
@@ -112,7 +112,7 @@ public class BrokerTest{
         //assert
         Integer actualCount = messages.size();
         Integer expectedCount = 2;
-        System.assertEquals(expectedCount, actualCount); 
+        System.assertEquals(expectedCount, actualCount);
     }
     
     static testMethod void testLocatorOnlyMarksNonProcessingWork() {
@@ -124,7 +124,7 @@ public class BrokerTest{
             new Message__c(Status__c = 'Processing')
         };
     
-        //act                                                                                                                                                                    
+        //act
         Database.QueryLocatorIterator iterator = new MockBroker().locateMarkedWork(fuckedLimit).iterator();
         List<Message__c> messages = new List<Message__c>();
         while (iterator.hasNext()) messages.add((Message__c)iterator.next());
@@ -141,13 +141,13 @@ public class BrokerTest{
         //arrange fucked messages
         insert new List<Message__c>{
             new Message__c(Status__c = 'Processing'),
-            new Message__c(Status__c = 'Processing') 
+            new Message__c(Status__c = 'Processing')
         };
         
         //arrange reprocess messages
         insert new List<Message__c>{
             new Message__c(Status__c = 'Reprocess'),
-            new Message__c(Status__c = 'Reprocess') 
+            new Message__c(Status__c = 'Reprocess')
         };
         
         //act
@@ -159,7 +159,7 @@ public class BrokerTest{
         // assert
         Integer expectedCount = 2;
         Integer actualCount = messages.size();
-        System.assertEquals(expectedCount, actualCount); 
+        System.assertEquals(expectedCount, actualCount);
     }
     
     static testMethod void callingSurfaceExceptionSurfacesExpectedMessageOnMessage() {
@@ -178,7 +178,7 @@ public class BrokerTest{
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Parameters__c, Message__c 
+            SELECT Id, Name, Parameters__c, Message__c
             FROM Message__c
         ];
         
@@ -189,9 +189,9 @@ public class BrokerTest{
         
         
         String expectedMessage = theMessage;
-        String actualMessage = messages[0].Message__c; 
+        String actualMessage = messages[0].Message__c;
         System.assert(actualMessage.contains(expectedMessage));
-    } 
+    }
     
     static testMethod void canCorrectlyResolveMessages() {
         // arrange
@@ -221,9 +221,9 @@ public class BrokerTest{
         ChainStep__c stepA2 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA2,Process__c = markProcess.Id);
         ChainStep__c stepA3 = new ChainStep__c(Chain__c = chainA.Id ,Sequence__c = sequenceA3,Process__c = terminateProcess.Id);
         ChainStep__c stepB1 = new ChainStep__c(Chain__c = chainB.Id ,Sequence__c = sequenceB1,Process__c = wiretapProcess.Id);
-        ChainStep__c stepB2 = new ChainStep__c(Chain__c = chainB.Id ,Sequence__c = sequenceB2,Process__c = terminateProcess.Id); 
+        ChainStep__c stepB2 = new ChainStep__c(Chain__c = chainB.Id ,Sequence__c = sequenceB2,Process__c = terminateProcess.Id);
         ChainStep__c stepC1 = new ChainStep__c(Chain__c = chainC.Id ,Sequence__c = sequenceC1,Process__c = markProcess.Id);
-        ChainStep__c stepC2 = new ChainStep__c(Chain__c = chainC.Id ,Sequence__c = sequenceC2,Process__c = terminateProcess.Id); 
+        ChainStep__c stepC2 = new ChainStep__c(Chain__c = chainC.Id ,Sequence__c = sequenceC2,Process__c = terminateProcess.Id);
         insert stepA1;
         insert stepA2;
         insert stepA3;
@@ -255,7 +255,7 @@ public class BrokerTest{
             Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
             Integer theId = (Integer) parameters.get('id');
             String theChainName = (String)parameters.get('eda__chainName');
-            Integer theSequence = (Integer)parameters.get('eda__sequence'); 
+            Integer theSequence = (Integer)parameters.get('eda__sequence');
             if (theId == 1) {
                 actualChainName1 = theChainName;
                 actualSequence1 = theSequence;
@@ -272,7 +272,7 @@ public class BrokerTest{
             if (theId == 4) {
                 actualChainName4 = theChainName;
                 actualSequence4 = theSequence;
-            } 
+            }
         }
         
         // assert
@@ -291,12 +291,12 @@ public class BrokerTest{
         System.assertEquals(expectedSequence1, actualSequence1);
         System.assertEquals(expectedSequence2, actualSequence2);
         System.assertEquals(expectedSequence3, actualSequence3);
-        System.assertEquals(expectedSequence4, actualSequence4); 
+        System.assertEquals(expectedSequence4, actualSequence4);
         System.assertEquals(expectedChainName1, actualChainName1);
         System.assertEquals(expectedChainName2, actualChainName2);
         System.assertEquals(expectedChainName3, actualChainName3);
-        System.assertEquals(expectedChainName4, actualChainName4); 
-    } 
+        System.assertEquals(expectedChainName4, actualChainName4);
+    }
     
     static testMethod void callingEnqueueSuccessfullyCallsRestartImpl() {
         //arrange processes
@@ -311,21 +311,21 @@ public class BrokerTest{
         
         //arrange broker implementation custom setting
         String theChainName = 'TestChain';
-        Id theId = '000000000000000AAA'; 
+        Id theId = '000000000000000AAA';
         insert new BrokerSettings__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
         
         //assert
         Boolean expectedBeforeFlag = false;
         Boolean actualBeforeFlag = BrokerTest.flagRestartImpl;
-        System.assertEquals(expectedBeforeFlag, actualBeforeFlag); 
+        System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
         //act
-        Broker.enqueue(theChainName, theId); 
+        Broker.enqueue(theChainName, theId);
         
         //assert
         Boolean expectedAfterFlag = true;
         Boolean actualAfterFlag = flagRestartImpl;
-        System.assertEquals(expectedAfterFlag, actualAfterFlag); 
+        System.assertEquals(expectedAfterFlag, actualAfterFlag);
     }
     
     static testMethod void callingEnqueueSuccessfullyCallEnqueueImpAndCreatesDocument() {
@@ -349,10 +349,10 @@ public class BrokerTest{
         
         Integer expectedSizeBefore = 0;
         Integer actualSizeBefore = [SELECT Id FROM Document].size();
-        System.assertEquals(expectedSizeBefore , actualSizeBefore); 
+        System.assertEquals(expectedSizeBefore , actualSizeBefore);
         
-        //act  
-        Broker.enqueue('TestChain', Blob.valueOf('balls')); 
+        //act
+        Broker.enqueue('TestChain', Blob.valueOf('balls'));
         
         //assert
         Integer expectedSizeAfter = 1;
@@ -362,7 +362,7 @@ public class BrokerTest{
         Boolean expectedAfterFlag = true;
         Boolean actualAfterFlag = BrokerTest.flagRestartImpl;
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
-    } 
+    }
     
     static testMethod void callingRestartSuccessfullyCallsRestartImpl() {
         //arrange
@@ -372,7 +372,7 @@ public class BrokerTest{
         //assert
         Boolean expectedBeforeFlag = false;
         Boolean actualBeforeFlag = flagRestartImpl;
-        System.assertEquals(expectedBeforeFlag, actualBeforeFlag); 
+        System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
         //act
         new MockBroker().restartIfWorkPending();
@@ -380,82 +380,82 @@ public class BrokerTest{
         //assert
         Boolean expectedAfterFlag = true;
         Boolean actualAfterFlag = flagRestartImpl;
-        System.assertEquals(expectedAfterFlag, actualAfterFlag); 
+        System.assertEquals(expectedAfterFlag, actualAfterFlag);
         
-    } 
+    }
     
     static testMethod void callingMarkHelperCorrectlySetsCountOnParametersWhenMarkCountIncrementsTo2() {
-        //arrange 
+        //arrange
         Integer markCount = 1;
-        Map<String,Object> parametersIn0 = new Map<String,Object> { 
+        Map<String,Object> parametersIn0 = new Map<String,Object> {
             'id' => '0',
             'eda__markCount' => markCount
-        }; 
+        };
         
-        Map<String,Object> parametersOut1 = new Map<String,Object> { 
+        Map<String,Object> parametersOut1 = new Map<String,Object> {
             'id' => '1'
-        }; 
+        };
         
-        Map<String,Object> parametersOut2 = new Map<String,Object> { 
+        Map<String,Object> parametersOut2 = new Map<String,Object> {
             'id' => '2'
-        }; 
+        };
         
-        Map<String,Object> parametersOut3 = new Map<String,Object> { 
+        Map<String,Object> parametersOut3 = new Map<String,Object> {
             'id' => '3'
         };
         
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>> { parametersOut1, parametersOut2, parametersOut3 };
         
-        //act  
+        //act
         Broker.markHelper(parametersIn0, parametersListOut);
         
-        //assemble 
+        //assemble
         Integer actualCount = (Integer)parametersIn0.get('eda__count');
         
         //assert
         Integer expectedCount = parametersListOut.size();
-        System.assertEquals(expectedCount, actualCount); 
-    } 
+        System.assertEquals(expectedCount, actualCount);
+    }
     
     static testMethod void callingMarkHelperDoesNotSetCountOnParametersWhenMarkCountIncrementsToOtherThan2() {
-        //arrange 
+        //arrange
         Integer markCount = 0; //will not increment to 2
-        Map<String,Object> parametersIn0 = new Map<String,Object> { 
+        Map<String,Object> parametersIn0 = new Map<String,Object> {
             'id' => '0',
             'eda__markCount' => markCount
-        }; 
+        };
         
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
         
-        //act  
+        //act
         Broker.markHelper(parametersIn0, parametersListOut);
         
-        //assemble 
+        //assemble
         Integer actualCount = (Integer)parametersIn0.get('eda__count');
         
         //assert
         Integer expectedCount = null;
-        System.assertEquals(expectedCount, actualCount); 
-    } 
+        System.assertEquals(expectedCount, actualCount);
+    }
     
     static testMethod void callingMarkHelperDoesNotSetCountOnParametersWhenMarkCountIsNull() {
-        //arrange 
-        Map<String,Object> parametersIn0 = new Map<String,Object> { 
-            'id' => '0' 
+        //arrange
+        Map<String,Object> parametersIn0 = new Map<String,Object> {
+            'id' => '0'
             //'eda__markCount' => markCount //Not specified; key will return null
-        }; 
+        };
         
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
         
-        //act  
+        //act
         Broker.markHelper(parametersIn0, parametersListOut);
         
-        //assemble 
+        //assemble
         Integer actualCount = (Integer) parametersIn0.get('eda__count');
         
         //assert
         Integer expectedCount = null;
-        System.assertEquals(expectedCount , actualCount); 
+        System.assertEquals(expectedCount , actualCount);
     }
     
     //TODO :: write test for this when you (NReid) understand this ( cant remember right now)
@@ -470,10 +470,10 @@ public class BrokerTest{
     /**
      * TODO : this test will fail until we resolve issue #178
      * Since the different engines fundamentally persist at different points
-     * it will be difficult to do the try catch in the base class - each 
-     * broker implementation should  implement the try catch around the resolve 
+     * it will be difficult to do the try catch in the base class - each
+     * broker implementation should  implement the try catch around the resolve
      *  and if exception then 1. no deletion of input message
-     * 2. no persistence of returned messages collection 3. save 
+     * 2. no persistence of returned messages collection 3. save
      * error against input message
      */
     /*static testmethod void testDodgyProcess() {
@@ -524,7 +524,7 @@ public class BrokerTest{
         //act
         Broker.executeResolvePersist(message.Id);
         
-        //assemble 
+        //assemble
         Message__c messageActual = [SELECT id, Message__c FROM Message__c WHERE id = :message.Id];
         
         //assert
@@ -541,7 +541,7 @@ public class BrokerTest{
         //act
         Broker.executeResolvePersist(message.Id);
         
-        //assemble 
+        //assemble
         Message__c messageActual = [SELECT id, Message__c FROM Message__c WHERE id = :message.Id];
         
         //assert
@@ -558,7 +558,7 @@ public class BrokerTest{
         //act
         Broker.executeResolvePersist(message.Id);
         
-        //assemble 
+        //assemble
         Message__c messageActual = [SELECT id, Message__c FROM Message__c WHERE id = :message.Id];
         
         //assert
@@ -623,7 +623,7 @@ public class BrokerTest{
     
     
     static testMethod void canGenerateUniqueIds() {
-        // arrange 
+        // arrange
         Integer uniqueTotal = 20000;
         Integer len = 10; // for len=5, Expected: 10000, Actual: 9944
         

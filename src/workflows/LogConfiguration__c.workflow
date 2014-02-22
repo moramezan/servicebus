@@ -3,18 +3,18 @@
     <fieldUpdates>
         <fullName>UpdateLogConfigurationName</fullName>
         <field>Name</field>
-        <formula>IF ( 
+        <formula>IF (
     AND( ISBLANK(GroupInstruction__c)  , ISBLANK(GroupIdentifier__c) ),
     &quot;Defines a Log Entry Grouping using the Chain Name&quot;,
-    IF ( 
+    IF (
         NOT( ISBLANK(GroupInstruction__c) ) ,
         &quot;Defines a Log Entry Grouping using the data object&apos;s &quot; + GroupInstruction__c + &quot; field&quot;,
-        IF ( 
+        IF (
             NOT( ISBLANK(GroupIdentifier__c) ),
             &quot;Defines a Log Entry Grouping using the constant &quot; + GroupIdentifier__c,
             &quot;never gets here&quot;
-        ) 
-    )     
+        )
+    )
 )</formula>
         <name>Update Log Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>

@@ -32,9 +32,9 @@ public with sharing class Terminate implements Process.Plugin {
         
         //pop one boomerang off stack
         Id lastId = chainStepIds.remove(chainStepIds.size() - 1);
-        ChainStep__c chainStep = [ 
-            SELECT Id, Chain__r.Name, Sequence__c 
-            FROM ChainStep__c 
+        ChainStep__c chainStep = [
+            SELECT Id, Chain__r.Name, Sequence__c
+            FROM ChainStep__c
             WHERE Id = :lastId
         ];
         
@@ -50,26 +50,26 @@ public with sharing class Terminate implements Process.Plugin {
     public static List<HealthController.Health> getHealth() {
         List<HealthController.Health> healths = new List<HealthController.Health>();
         
-        List<Chain__c> chains = [SELECT id, 
-                                         Name, 
-                                        (SELECT id, Name, Process__c 
-                                         FROM ChainSteps__r 
-                                         ORDER BY Sequence__c ASC) chainSteps  
+        List<Chain__c> chains = [SELECT id,
+                                         Name,
+                                        (SELECT id, Name, Process__c
+                                         FROM ChainSteps__r
+                                         ORDER BY Sequence__c ASC) chainSteps
                                  FROM Chain__c
                                 ];
         
-        List<Process__c> terminateProcesses  = [SELECT id, Name 
-                                           FROM Process__c 
+        List<Process__c> terminateProcesses  = [SELECT id, Name
+                                           FROM Process__c
                                            WHERE Name = 'Terminate'
                                           ];
-        Process__c  terminateProcess = (terminateProcesses.size() > 0) ? terminateProcesses[0] : null; 
+        Process__c  terminateProcess = (terminateProcesses.size() > 0) ? terminateProcesses[0] : null;
         Boolean resolvedProcess = (terminateProcess != null);
         
         // Error conditions:
         // * Chain with no Terminate (error)
         // * Chain with more than one Terminate (error)
         // * Terminate that's not at the end (error)
-        for (Chain__c  chain : chains) 
+        for (Chain__c  chain : chains)
         {
             Integer terminateCount = 0;
             for (ChainStep__c chainStep : chain.ChainSteps__r) {
@@ -85,21 +85,21 @@ public with sharing class Terminate implements Process.Plugin {
             health.ChainName = chain.Name;
             health.Detail = 'Cannot resolve Id of Terminate process';
             health.Status = 'Unknown';
-            if (resolvedProcess) 
+            if (resolvedProcess)
             {
                 health.Detail = 'Terminate Check(s)';
-                health.Status = 'Ok'; 
+                health.Status = 'Ok';
                 
                 Boolean noTerminateError = (terminateCount == 0);
                 Boolean gtOneTerminateError = (terminateCount > 1);
-                Boolean terminateNotAtEndError = (chain.ChainSteps__r.size() > 0) ? 
+                Boolean terminateNotAtEndError = (chain.ChainSteps__r.size() > 0) ?
                                             (chain.ChainSteps__r[chain.ChainSteps__r.size()-1].Process__c != terminateProcess.Id) :
                                             false;
                 
                if (terminateNotAtEndError) {
                     health.Detail = 'Terminate process not present at end of chain';
                     health.Status = 'Error';
-                } 
+                }
                 if (noTerminateError) {
                     health.Detail = 'No Terminate found in chain';
                     health.Status = 'Error';
@@ -107,7 +107,7 @@ public with sharing class Terminate implements Process.Plugin {
                 if (gtOneTerminateError) {
                     health.Detail = 'More than one Terminate found in chain';
                     health.Status = 'Error';
-                }    
+                }
             }
 
             healths.add(health);
