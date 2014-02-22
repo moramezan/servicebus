@@ -36,7 +36,7 @@
         //prepare message
         Process.PluginRequest request = new Process.PluginRequest(new Map<String,Object>{
             'eda__chainName' => 'originChain',
-            'eda__sequence' => 1,
+            'eda__position' => 1,
             'eda__configuration' => config.Id
         });
         
@@ -54,9 +54,9 @@
         String actualChainName = (String)parametersList[0].get('eda__chainName');
         System.assertEquals(expectedChainName, actualChainName);
         
-        Decimal expectedSequence = 0;
-        Decimal actualSequence = (Decimal)parametersList[0].get('eda__sequence');
-        System.assertEquals(expectedSequence, actualSequence);
+        Decimal expectedPosition = 0;
+        Decimal actualPosition = (Decimal)parametersList[0].get('eda__position');
+        System.assertEquals(expectedPosition, actualPosition);
 
         String expectedList = '["' + originStep.Id + '"]';
         String actualList = System.Json.serialize(parametersList[0].get('eda__boomerangStepIds'));

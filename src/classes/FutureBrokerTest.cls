@@ -49,8 +49,8 @@
         //arrange steps
         Step__c stepA1 = Steps.generateOne(chainA.Id, markProcess.Id);
         Step__c stepA2 = Steps.generateOne(chainA.Id, terminateProcess.Id);
-        Decimal sequenceA1 = stepA1.Sequence__c;
-        Decimal sequenceA2 = stepA2.Sequence__c;
+        Decimal positionA1 = stepA1.Position__c;
+        Decimal positionA2 = stepA2.Position__c;
         
         //arrange concrete implementation
         insert new BrokerSettings__c(BrokerClassName__c = FutureBroker.class.getName());
@@ -98,8 +98,8 @@
         //arrange steps
         Step__c stepA1 = Steps.generateOne(chainA.Id, markProcess.Id);
         Step__c stepA2 = Steps.generateOne(chainA.Id, terminateProcess.Id);
-        Decimal sequenceA1 = stepA1.Sequence__c;
-        Decimal sequenceA2 = stepA2.Sequence__c;
+        Decimal positionA1 = stepA1.Position__c;
+        Decimal positionA2 = stepA2.Position__c;
         
         //arrange concrete broker implementation
         insert new BrokerSettings__c(BrokerClassName__c = FutureBroker.class.getName());
@@ -108,7 +108,7 @@
         // resolved state , assume manual intervention to set status to 'Reprocess'
         Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainNameA,
-            'eda__sequence' => 1, //not zero!!!
+            'eda__position' => 1, //not zero!!!
             'id' => '000000000000000AAA'
         };
         Message__c message = new Message__c(
@@ -159,7 +159,7 @@
         
         //arrange step
         Step__c stepA1 = Steps.generateOne(chainA.Id, failureProcess.Id);
-        Decimal sequenceA1 = stepA1.Sequence__c;
+        Decimal positionA1 = stepA1.Position__c;
         
         //arrange specific broker implementation
         insert new BrokerSettings__c(BrokerClassName__c = MockFutureBroker.class.getName() );

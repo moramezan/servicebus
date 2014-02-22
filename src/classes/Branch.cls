@@ -39,7 +39,7 @@ public with sharing class Branch implements Process.Plugin {
         //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
         clone.put('eda__boomerangStepIds', null);
         clone.put('eda__chainName', branchTo);
-        clone.put('eda__sequence', 0);
+        clone.put('eda__position', 0);
         
         //TODO
         //we might have an inbound document, where parallel chains are attempting

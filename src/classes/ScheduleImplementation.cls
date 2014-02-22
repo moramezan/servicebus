@@ -13,7 +13,7 @@ public class ScheduleImplementation implements System.Schedulable {
         
         //find associated chains from their steps
         List<Step__c> steps = [
-            SELECT Id, Chain__r.Name, Sequence__c
+            SELECT Id, Chain__r.Name, Position__c
             FROM Step__c
             WHERE ConfigurationId__c IN :scheduleConfigurations.keySet()
         ];
@@ -22,7 +22,7 @@ public class ScheduleImplementation implements System.Schedulable {
         List<Message__c> messages = new List<Message__c>();
         for (Step__c step : steps) {
             Map<String,Object> parameters = new Map<String,Object>{
-                'eda__sequence' => 0,
+                'eda__position' => 0,
                 'eda__chainName' => step.Chain__r.Name,
                 'eda__heartbeat' => DateTime.now()
             };

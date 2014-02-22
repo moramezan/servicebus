@@ -36,7 +36,7 @@ public with sharing class Publish implements Process.Plugin {
         ]);
         
         List<Step__c> steps = [
-            SELECT Id, Chain__r.Name, Sequence__c
+            SELECT Id, Chain__r.Name, Position__c
             FROM Step__c
             WHERE ConfigurationId__c IN :subscribeConfigurations.keySet()
         ];
@@ -45,7 +45,7 @@ public with sharing class Publish implements Process.Plugin {
             Map<String,Object> clone = parameters.clone();
             //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
             clone.put('eda__boomerangStepIds', null);
-            clone.put('eda__sequence', step.Sequence__c);
+            clone.put('eda__position', step.Position__c);
             clone.put('eda__chainName', step.Chain__r.Name);
             parametersList.add(clone);
         }
@@ -62,7 +62,7 @@ public with sharing class Publish implements Process.Plugin {
             Name,
             (SELECT id, Name, Process__c, ConfigurationId__c
             FROM Steps__r
-            ORDER BY Sequence__c ASC) steps
+            ORDER BY Position__c ASC) steps
             FROM Chain__c
         ];
         

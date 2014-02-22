@@ -22,7 +22,7 @@ public with sharing class Subscribe implements Process.Plugin {
                                         Name,
                                         (SELECT id, Name, Process__c, ConfigurationId__c
                                          FROM Steps__r
-                                         ORDER BY Sequence__c ASC) steps
+                                         ORDER BY Position__c ASC) steps
                                  FROM Chain__c
                                 ];
         

@@ -21,7 +21,7 @@
     }
 
     //after insert test
-    static testMethod void testNoResequencingOfStepsWhenAllInsertedStepsHaveASequenceGtZero() {
+    static testMethod void testNoResequencingOfStepsWhenAllInsertedStepsHaveAPositionGtZero() {
         //arrange processes
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
@@ -31,22 +31,22 @@
         insert chain;
         
         //arrange steps
-        Integer SequenceGtZero1 = 1;
-        Integer SequenceGtZero2 = 2;
-        Step__c step1 = new Step__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero1, Process__c = wiretapProcess.Id);
-        Step__c step2 = new Step__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero2, Process__c = terminateProcess.Id);
+        Integer PositionGtZero1 = 1;
+        Integer PositionGtZero2 = 2;
+        Step__c step1 = new Step__c(Chain__c = chain.Id, Position__c = PositionGtZero1, Process__c = wiretapProcess.Id);
+        Step__c step2 = new Step__c(Chain__c = chain.Id, Position__c = PositionGtZero2, Process__c = terminateProcess.Id);
         
         //act
         insert new List<Step__c> {step1, step2};
         
         //assemble : requery after trigger
-        List<Step__c> steps = [SELECT Id, Chain__c, Sequence__c FROM Step__c WHERE Chain__c = :chain.Id];
-        Integer actualSequence1 = -1;
-        Integer actualSequence2 = -1;
+        List<Step__c> steps = [SELECT Id, Chain__c, Position__c FROM Step__c WHERE Chain__c = :chain.Id];
+        Integer actualPosition1 = -1;
+        Integer actualPosition2 = -1;
         Integer offset = 1;
         for (Step__c step : steps ) {
-            if (offset == 1) actualSequence1 = (Integer) step.Sequence__c;
-            if (offset == 2) actualSequence2 = (Integer) step.Sequence__c;
+            if (offset == 1) actualPosition1 = (Integer) step.Position__c;
+            if (offset == 2) actualPosition2 = (Integer) step.Position__c;
             offset++;
         }
         
@@ -55,19 +55,19 @@
         Integer actualSize = Steps.size();
         System.assertEquals(expectedSize, actualSize);
         
-        Integer expectedSequence1 = SequenceGtZero1;
-        System.assertEquals(expectedSequence1, actualSequence1);
-        Integer expectedSequence2 = SequenceGtZero2;
-        System.assertEquals(expectedSequence2, actualSequence2);
+        Integer expectedPosition1 = PositionGtZero1;
+        System.assertEquals(expectedPosition1, actualPosition1);
+        Integer expectedPosition2 = PositionGtZero2;
+        System.assertEquals(expectedPosition2, actualPosition2);
     }
     
     //after insert test
-    static testMethod void testResequencingOfStepsWhenOneOrMoreInsertedStepsHaveSequenceEqToZero() {
+    static testMethod void testResequencingOfStepsWhenOneOrMoreInsertedStepsHavePositionEqToZero() {
         //arrange
-        Integer SequenceGtZero1 = 1;
-        Integer SequenceGtZero2 = 2;
-        Integer SequenceEqToZero3 = 0;
-        Integer SequenceEqToZero4 = 0;
+        Integer PositionGtZero1 = 1;
+        Integer PositionGtZero2 = 2;
+        Integer PositionEqToZero3 = 0;
+        Integer PositionEqToZero4 = 0;
         
         //arrange processes
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
@@ -90,10 +90,10 @@
         //WireTap   3
         //WireTap   4
         
-        Step__c step1 = new Step__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero1, Process__c = wiretapProcess.Id);
-        Step__c step2 = new Step__c(Chain__c = chain.Id, Sequence__c = SequenceGtZero2, Process__c = terminateProcess.Id);
-        Step__c step3 = new Step__c(Chain__c = chain.Id, Sequence__c = SequenceEqToZero3, Process__c = wiretapProcess.Id);
-        Step__c step4 = new Step__c(Chain__c = chain.Id, Sequence__c = SequenceEqToZero4, Process__c = wiretapProcess.Id);
+        Step__c step1 = new Step__c(Chain__c = chain.Id, Position__c = PositionGtZero1, Process__c = wiretapProcess.Id);
+        Step__c step2 = new Step__c(Chain__c = chain.Id, Position__c = PositionGtZero2, Process__c = terminateProcess.Id);
+        Step__c step3 = new Step__c(Chain__c = chain.Id, Position__c = PositionEqToZero3, Process__c = wiretapProcess.Id);
+        Step__c step4 = new Step__c(Chain__c = chain.Id, Position__c = PositionEqToZero4, Process__c = wiretapProcess.Id);
         insert step1;
         insert step2;
         insert step3;
@@ -102,21 +102,21 @@
             
         //asemble : requery after trigger
         List<Step__c> steps = [
-            SELECT Id, Chain__c, Sequence__c
+            SELECT Id, Chain__c, Position__c
             FROM Step__c
             WHERE Chain__c = :chain.Id
             ORDER BY Id
         ];
-        Integer actualSequence1 = -1;
-        Integer actualSequence2 = -1;
-        Integer actualSequence3 = -1;
-        Integer actualSequence4 = -1;
+        Integer actualPosition1 = -1;
+        Integer actualPosition2 = -1;
+        Integer actualPosition3 = -1;
+        Integer actualPosition4 = -1;
         Integer offset = 1;
         for (Step__c step : steps ) {
-            if (offset == 1) actualSequence1 = (Integer) step.Sequence__c;
-            if (offset == 2) actualSequence2 = (Integer) step.Sequence__c;
-            if (offset == 3) actualSequence3 = (Integer) step.Sequence__c;
-            if (offset == 4) actualSequence4 = (Integer) step.Sequence__c;
+            if (offset == 1) actualPosition1 = (Integer) step.Position__c;
+            if (offset == 2) actualPosition2 = (Integer) step.Position__c;
+            if (offset == 3) actualPosition3 = (Integer) step.Position__c;
+            if (offset == 4) actualPosition4 = (Integer) step.Position__c;
             offset++;
         }
     
@@ -126,20 +126,20 @@
         Integer actualSize = Steps.size();
         System.assertEquals(expectedSize, actualSize);
         
-        Integer expectedSequence1 = SequenceGtZero1; // unaffected
-        System.assertEquals(expectedSequence1, actualSequence1);
-        Integer expectedSequence2 = SequenceGtZero2; // unaffected
-        System.assertEquals(expectedSequence2, actualSequence2);
-        Integer expectedSequence3 = 3; // resequence , max+1
-        System.assertEquals(expectedSequence3, actualSequence3);
-        Integer expectedSequence4 = 4; // resequence , max+1+1
-        System.assertEquals(expectedSequence4, actualSequence4);
+        Integer expectedPosition1 = PositionGtZero1; // unaffected
+        System.assertEquals(expectedPosition1, actualPosition1);
+        Integer expectedPosition2 = PositionGtZero2; // unaffected
+        System.assertEquals(expectedPosition2, actualPosition2);
+        Integer expectedPosition3 = 3; // reposition , max+1
+        System.assertEquals(expectedPosition3, actualPosition3);
+        Integer expectedPosition4 = 4; // reposition , max+1+1
+        System.assertEquals(expectedPosition4, actualPosition4);
     }
     
     //before delete test
     static testMethod void firingStepBeforeDeleteDeletesConfig() {
         // Arrange :
-        Decimal sequence  = 1;
+        Decimal position  = 1;
         String  data      = 'data';
         
         //arrange processes

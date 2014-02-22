@@ -44,7 +44,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Sequence",
+                "name": "Position",
                 "type": "int"
             },
             "designerId": "fafaa9a2-e591-4ce3-bf17-89eb714230cf"

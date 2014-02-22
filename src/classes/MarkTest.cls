@@ -11,12 +11,12 @@ private class MarkTest {
     static testMethod void callingExecuteReturnsExpectedParametersCollectio() {
         // Arrange :
         String chainName = 'the-chain';
-        Decimal sequence = 1;
+        Decimal position = 1;
         String data = 'data';
 
         Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainName,
-            'eda__sequence' => sequence,
+            'eda__position' => position,
             'data' => data
         };
 

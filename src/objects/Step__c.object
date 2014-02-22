@@ -52,11 +52,11 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
-        <fullName>ChainNameAndSequence__c</fullName>
+        <fullName>ChainNameAndPosition__c</fullName>
         <externalId>false</externalId>
-        <formula>Chain__r.Name + &apos;#&apos; + TEXT(Sequence__c)</formula>
+        <formula>Chain__r.Name + &apos;#&apos; + TEXT(Position__c)</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <label>Chain Name and Sequence</label>
+        <label>Chain Name and Position</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -96,6 +96,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Position__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
+        <label>Position</label>
+        <precision>2</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Process__c</fullName>
         <deleteConstraint>Restrict</deleteConstraint>
         <externalId>false</externalId>
@@ -106,18 +118,6 @@
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
-    <fields>
-        <fullName>Sequence__c</fullName>
-        <defaultValue>0</defaultValue>
-        <externalId>false</externalId>
-        <label>Sequence</label>
-        <precision>2</precision>
-        <required>false</required>
-        <scale>0</scale>
-        <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
-    </fields>
     <label>Step</label>
     <nameField>
         <displayFormat>CS-{00000}</displayFormat>
@@ -126,7 +126,7 @@
     </nameField>
     <pluralLabel>Steps</pluralLabel>
     <searchLayouts>
-        <lookupDialogsAdditionalFields>Sequence__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Position__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>Process__c</lookupDialogsAdditionalFields>
     </searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>

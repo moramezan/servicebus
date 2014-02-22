@@ -21,7 +21,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>Sequence__c</field>
+                <field>Position__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns/>
@@ -54,7 +54,7 @@
         <excludeButtons>New</excludeButtons>
         <fields>NAME</fields>
         <fields>ChainName__c</fields>
-        <fields>Sequence__c</fields>
+        <fields>Position__c</fields>
         <fields>GroupIdentifier__c</fields>
         <fields>Stamp__c</fields>
         <fields>LogGroup__c</fields>

@@ -29,13 +29,13 @@ public class BrokerTest{
         Step__c stepA1 = Steps.generateOne(chainA.Id, subscribeProcess.Id);
         Step__c stepA2 = Steps.generateOne(chainA.Id, markProcess.Id);
         Step__c stepA3 = Steps.generateOne(chainA.Id, terminateProcess.Id);
-        Decimal sequenceA1 = stepA1.Sequence__c;
-        Decimal sequenceA2 = stepA2.Sequence__c;
-        Decimal sequenceA3 = stepA3.Sequence__c;
+        Decimal positionA1 = stepA1.Position__c;
+        Decimal positionA2 = stepA2.Position__c;
+        Decimal positionA3 = stepA3.Position__c;
         
         List<Message__c> messages =  new List<Message__c>{
-            new Message__c(Parameters__c = '{"eda__chainName": "' + chainNameA + '", "eda__sequence": ' + sequenceA1 + '}'),
-            new Message__c(Parameters__c = '{"eda__chainName": "' + chainNameA + '", "eda__sequence": ' + sequenceA2 + '}')
+            new Message__c(Parameters__c = '{"eda__chainName": "' + chainNameA + '", "eda__position": ' + positionA1 + '}'),
+            new Message__c(Parameters__c = '{"eda__chainName": "' + chainNameA + '", "eda__position": ' + positionA2 + '}')
         };
         
         //act
@@ -48,8 +48,8 @@ public class BrokerTest{
             FROM Message__c
         ];
         
-        Boolean flagSequence01 = false;
-        Boolean flagSequence02 = false;
+        Boolean flagPosition01 = false;
+        Boolean flagPosition02 = false;
         Boolean flagChainNameA = true;
         Id actualStepId01;
         Id actualStepId02;
@@ -58,17 +58,17 @@ public class BrokerTest{
         for (Message__c message : messagesAfter) {
             Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
             String parametersChainName = (String)parameters.get('eda__chainName');
-            Integer parametersSequence = (Integer)parameters.get('eda__sequence');
+            Integer parametersPosition = (Integer)parameters.get('eda__position');
             if (parametersChainName != chainNameA) {
                 flagChainNameA = false;
             }
-            if (parametersSequence == (sequenceA1 + 1))  {
-                flagSequence01 = true;
+            if (parametersPosition == (positionA1 + 1))  {
+                flagPosition01 = true;
                 actualStepId01 = message.Step__c;
                 actualProcessId01 = message.Process__c;
             }
-            if (parametersSequence == (sequenceA2 + 1))  {
-                flagSequence02 = true;
+            if (parametersPosition == (positionA2 + 1))  {
+                flagPosition02 = true;
                 actualStepId02 = message.Step__c;
                 actualProcessId02 = message.Process__c;
             }
@@ -80,8 +80,8 @@ public class BrokerTest{
         System.assertEquals(expectedCount, actualCount);
 
         System.assert(flagChainNameA);
-        System.assert(flagSequence01);
-        System.assert(flagSequence02);
+        System.assert(flagPosition01);
+        System.assert(flagPosition02);
 
         Id expectedStepId01 = stepA2.Id;
         Id expectedStepId02 = stepA3.Id ;
@@ -165,7 +165,7 @@ public class BrokerTest{
     static testMethod void callingSurfaceExceptionSurfacesExpectedMessageOnMessage() {
         //arrange
         Message__c message = new Message__c(
-            Parameters__c = '{"id":1, "eda__chainName":"crow", "eda__sequence":1}'
+            Parameters__c = '{"id":1, "eda__chainName":"crow", "eda__position":1}'
         );
         insert message;
         
@@ -210,20 +210,20 @@ public class BrokerTest{
         insert chainB;
         insert chainC;
 
-        Integer sequenceA1 = 1;
-        Integer sequenceA2 = 2;
-        Integer sequenceA3 = 3;
-        Integer sequenceB1 = 1;
-        Integer sequenceB2 = 2;
-        Integer sequenceC1 = 1;
-        Integer sequenceC2 = 2;
-        Step__c stepA1 = new Step__c(Chain__c = chainA.Id ,Sequence__c = sequenceA1,Process__c = subscribeProcess.Id);
-        Step__c stepA2 = new Step__c(Chain__c = chainA.Id ,Sequence__c = sequenceA2,Process__c = markProcess.Id);
-        Step__c stepA3 = new Step__c(Chain__c = chainA.Id ,Sequence__c = sequenceA3,Process__c = terminateProcess.Id);
-        Step__c stepB1 = new Step__c(Chain__c = chainB.Id ,Sequence__c = sequenceB1,Process__c = wiretapProcess.Id);
-        Step__c stepB2 = new Step__c(Chain__c = chainB.Id ,Sequence__c = sequenceB2,Process__c = terminateProcess.Id);
-        Step__c stepC1 = new Step__c(Chain__c = chainC.Id ,Sequence__c = sequenceC1,Process__c = markProcess.Id);
-        Step__c stepC2 = new Step__c(Chain__c = chainC.Id ,Sequence__c = sequenceC2,Process__c = terminateProcess.Id);
+        Integer positionA1 = 1;
+        Integer positionA2 = 2;
+        Integer positionA3 = 3;
+        Integer positionB1 = 1;
+        Integer positionB2 = 2;
+        Integer positionC1 = 1;
+        Integer positionC2 = 2;
+        Step__c stepA1 = new Step__c(Chain__c = chainA.Id ,Position__c = positionA1,Process__c = subscribeProcess.Id);
+        Step__c stepA2 = new Step__c(Chain__c = chainA.Id ,Position__c = positionA2,Process__c = markProcess.Id);
+        Step__c stepA3 = new Step__c(Chain__c = chainA.Id ,Position__c = positionA3,Process__c = terminateProcess.Id);
+        Step__c stepB1 = new Step__c(Chain__c = chainB.Id ,Position__c = positionB1,Process__c = wiretapProcess.Id);
+        Step__c stepB2 = new Step__c(Chain__c = chainB.Id ,Position__c = positionB2,Process__c = terminateProcess.Id);
+        Step__c stepC1 = new Step__c(Chain__c = chainC.Id ,Position__c = positionC1,Process__c = markProcess.Id);
+        Step__c stepC2 = new Step__c(Chain__c = chainC.Id ,Position__c = positionC2,Process__c = terminateProcess.Id);
         insert stepA1;
         insert stepA2;
         insert stepA3;
@@ -233,10 +233,10 @@ public class BrokerTest{
         insert stepC2;
         
         List<Message__c> messages = new List<Message__c>{
-            new Message__c(Parameters__c = '{"id": 1, "eda__chainName": "' + chainA.Name + '", "eda__sequence": ' + sequenceA1 + '}'),
-            new Message__c(Parameters__c = '{"id": 2, "eda__chainName": "' + chainA.Name + '", "eda__sequence": ' + sequenceA2 + '}'),
-            new Message__c(Parameters__c = '{"id": 3, "eda__chainName": "' + chainB.Name + '", "eda__sequence": ' + sequenceB1 + '}'),
-            new Message__c(Parameters__c = '{"id": 4, "eda__chainName": "' + chainC.Name + '", "eda__sequence": ' + sequenceC1 + '}')
+            new Message__c(Parameters__c = '{"id": 1, "eda__chainName": "' + chainA.Name + '", "eda__position": ' + positionA1 + '}'),
+            new Message__c(Parameters__c = '{"id": 2, "eda__chainName": "' + chainA.Name + '", "eda__position": ' + positionA2 + '}'),
+            new Message__c(Parameters__c = '{"id": 3, "eda__chainName": "' + chainB.Name + '", "eda__position": ' + positionB1 + '}'),
+            new Message__c(Parameters__c = '{"id": 4, "eda__chainName": "' + chainC.Name + '", "eda__position": ' + positionC1 + '}')
         };
         
         // act
@@ -247,31 +247,31 @@ public class BrokerTest{
         String actualChainName2 = '' ;
         String actualChainName3 = '' ;
         String actualChainName4 = '' ;
-        Integer actualSequence1 = -1 ;
-        Integer actualSequence2 = -1 ;
-        Integer actualSequence3 = -1 ;
-        Integer actualSequence4 = -1 ;
+        Integer actualPosition1 = -1 ;
+        Integer actualPosition2 = -1 ;
+        Integer actualPosition3 = -1 ;
+        Integer actualPosition4 = -1 ;
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
             Integer theId = (Integer) parameters.get('id');
             String theChainName = (String)parameters.get('eda__chainName');
-            Integer theSequence = (Integer)parameters.get('eda__sequence');
+            Integer thePosition = (Integer)parameters.get('eda__position');
             if (theId == 1) {
                 actualChainName1 = theChainName;
-                actualSequence1 = theSequence;
+                actualPosition1 = thePosition;
             }
             if (theId == 2) {
                 actualChainName2 = theChainName;
-                actualSequence2 = theSequence;
+                actualPosition2 = thePosition;
             
             }
             if (theId == 3) {
                 actualChainName3 = theChainName;
-                actualSequence3 = theSequence;
+                actualPosition3 = thePosition;
             }
             if (theId == 4) {
                 actualChainName4 = theChainName;
-                actualSequence4 = theSequence;
+                actualPosition4 = thePosition;
             }
         }
         
@@ -284,14 +284,14 @@ public class BrokerTest{
         String expectedChainName2 = chainNameA;
         String expectedChainName3 = chainNameB;
         String expectedChainName4 = chainNameC;
-        Integer expectedSequence1 = sequenceA1 + 1;
-        Integer expectedSequence2 = sequenceA2 + 1;
-        Integer expectedSequence3 = sequenceB1 + 1;
-        Integer expectedSequence4 = sequenceC1 + 1;
-        System.assertEquals(expectedSequence1, actualSequence1);
-        System.assertEquals(expectedSequence2, actualSequence2);
-        System.assertEquals(expectedSequence3, actualSequence3);
-        System.assertEquals(expectedSequence4, actualSequence4);
+        Integer expectedPosition1 = positionA1 + 1;
+        Integer expectedPosition2 = positionA2 + 1;
+        Integer expectedPosition3 = positionB1 + 1;
+        Integer expectedPosition4 = positionC1 + 1;
+        System.assertEquals(expectedPosition1, actualPosition1);
+        System.assertEquals(expectedPosition2, actualPosition2);
+        System.assertEquals(expectedPosition3, actualPosition3);
+        System.assertEquals(expectedPosition4, actualPosition4);
         System.assertEquals(expectedChainName1, actualChainName1);
         System.assertEquals(expectedChainName2, actualChainName2);
         System.assertEquals(expectedChainName3, actualChainName3);
@@ -488,10 +488,10 @@ public class BrokerTest{
         
         
         // arrange steps
-        Integer sequenceA1 = 1;
-        Integer sequenceA2 = 2;
-        Step__c stepA1 = new Step__c(Chain__c = chainA.Id ,Sequence__c = sequenceA1,Process__c = markProcess.Id);
-        Step__c stepA2 = new Step__c(Chain__c = chainA.Id ,Sequence__c = sequenceA2,Process__c = terminateProcess.Id);
+        Integer positionA1 = 1;
+        Integer positionA2 = 2;
+        Step__c stepA1 = new Step__c(Chain__c = chainA.Id ,Position__c = positionA1,Process__c = markProcess.Id);
+        Step__c stepA2 = new Step__c(Chain__c = chainA.Id ,Position__c = positionA2,Process__c = terminateProcess.Id);
         insert stepA1;
         insert stepA2;
         
@@ -533,9 +533,9 @@ public class BrokerTest{
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
-    static testMethod void testMissingSequenceThrowsExpectedException() {
+    static testMethod void testMissingPositionThrowsExpectedException() {
         //arrange
-        Message__c message = new Message__c(Parameters__c = '{"not_sequence": 0}');
+        Message__c message = new Message__c(Parameters__c = '{"not_position": 0}');
         insert message;
         
         //act
@@ -546,13 +546,13 @@ public class BrokerTest{
         
         //assert
         String actualMessage = messageActual.Message__c;
-        String expectedMessage = 'sequence';
+        String expectedMessage = 'position';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
     static testMethod void testNoStepThrowsQueryException() {
         //arrange (note there is no Step__c in database!)
-        Message__c message = new Message__c(Parameters__c = '{"eda__chainName": "", "eda__sequence": 0}');
+        Message__c message = new Message__c(Parameters__c = '{"eda__chainName": "", "eda__position": 0}');
         insert message;
         
         //act

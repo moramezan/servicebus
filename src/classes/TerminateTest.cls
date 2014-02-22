@@ -6,10 +6,10 @@ private class TerminateTest
     {
         // Arrange :
         String chainName = 'the-chain';
-        Decimal sequence = 1;
+        Decimal position = 1;
         String data = 'data';
         String boomerangChainName = 'boomerang-chain';
-        Decimal boomerangSequence = 2;
+        Decimal boomerangPosition = 2;
         
         //arrange processes
         Process__c boomerangProcess = Processes.generateOne(Boomerang.class);
@@ -25,7 +25,7 @@ private class TerminateTest
 
         Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainName,
-            'eda__sequence' => sequence,
+            'eda__position' => position,
             'eda__boomerangStepIds' => new List<Id>{step2.Id},
             'data' => data
         };
@@ -33,7 +33,7 @@ private class TerminateTest
 
         Decimal expectedSize = 1;
         String expectedChainName = boomerangChainName;
-        Decimal expectedSequence = boomerangSequence;
+        Decimal expectedPosition = boomerangPosition;
 
         // Act
         Terminate terminate = new Terminate();
@@ -43,31 +43,31 @@ private class TerminateTest
         // prepare
         Decimal actualSize = actualOutParametersList.size();
         String actualChainName = null;
-        Decimal actualSequence = null;
+        Decimal actualPosition = null;
         if (actualSize > 0) {
             Map<String,Object> actualParameters = actualOutParametersList[0];
             actualChainName = (String)actualParameters.get('eda__chainName');
-            actualSequence = (Decimal)actualParameters.get('eda__sequence');
+            actualPosition = (Decimal)actualParameters.get('eda__position');
         }
 
         // Assert
         System.assertEquals(expectedSize, actualSize);
         System.assertEquals(expectedChainName, actualChainName);
-        System.assertEquals(expectedSequence, actualSequence);
+        System.assertEquals(expectedPosition, actualPosition);
     }
     
     static testMethod void
     callingExecuteReturnsExpectedParametersCollectionWhenNoBoomerangAttribsDefinedOnParameters() {
         // Arrange :
         String chainName = 'the-chain';
-        Decimal sequence = 1;
+        Decimal position = 1;
         String data = 'data';
  
  
 
         Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainName,
-            'eda__sequence' => sequence,
+            'eda__position' => position,
             'data' => data
         };
 
@@ -88,10 +88,10 @@ private class TerminateTest
     static testMethod void testMultipleBoomerangsGetPoppedOffStack() {
         // Arrange :
         String chainName = 'the-chain';
-        Decimal sequence = 1;
+        Decimal position = 1;
         String data = 'data';
         String boomerangChainName = 'boomerang-chain';
-        Decimal boomerangSequence  = 2;
+        Decimal boomerangPosition  = 2;
 
         Chain__c chain = new Chain__c(Name = boomerangChainName);
         insert chain;
@@ -109,7 +109,7 @@ private class TerminateTest
         
         Map<String,Object> parametersFirst = new Map<String,Object> {
             'eda__chainName' => chainName,
-            'eda__sequence' => sequence,
+            'eda__position' => position,
             'eda__boomerangStepIds' => boomerangStepIds,
             'data' => data
         };
@@ -228,8 +228,8 @@ private class TerminateTest
         insert wiretapProcess;
         
         // Chain A - Error but Terminate process not defined
-        Step__c stepA1 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c  = 1);
-        Step__c stepA2 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);
+        Step__c stepA1 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Position__c  = 1);
+        Step__c stepA2 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Position__c = 2);
 
         // Act :
         List<HealthController.Health> terminateHealths =  Terminate.getHealth();

@@ -51,10 +51,10 @@
     </layoutSections>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>Sequence__c</fields>
+        <fields>Position__c</fields>
         <fields>Process__c</fields>
         <relatedList>Step__c.Chain__c</relatedList>
-        <sortField>Sequence__c</sortField>
+        <sortField>Position__c</sortField>
         <sortOrder>Asc</sortOrder>
     </relatedLists>
     <relatedLists>

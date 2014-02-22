@@ -29,7 +29,7 @@ public with sharing class Wiretap implements Process.Plugin {
         }
 
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
-        message.setSubject('[Wiretap] ' + parameters.get('eda__chainName') + '#' + parameters.get('eda__sequence'));
+        message.setSubject('[Wiretap] ' + parameters.get('eda__chainName') + '#' + parameters.get('eda__position'));
         message.setPlainTextBody(Json.serialize(parameters));
         message.setTargetObjectId(userId);
         message.setSaveAsActivity(false);

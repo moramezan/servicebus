@@ -137,7 +137,7 @@ abstract global class Broker {
     static global void enqueue(String chainName, Id dataId) {
         Map<String,Object> parameters = new Map<String,Object> {
             'eda__chainName' => chainName,
-            'eda__sequence' => 0,
+            'eda__position' => 0,
             'id' => dataId
         };
         
@@ -238,9 +238,9 @@ abstract global class Broker {
             if (e instanceof System.JsonException) {
                 e.setMessage('Could not deserialize json (malformed parameters)');
             } else if (e instanceof System.NullPointerException) {
-                e.setMessage('Sequence null (key missing from parameters) or Type null (class missing)');
+                e.setMessage('Position null (key missing from parameters) or Type null (class missing)');
             } else if (e instanceof System.QueryException) {
-                e.setMessage('Step unqueryable (bad chain name, sequence, missing terminate)');
+                e.setMessage('Step unqueryable (bad chain name, position, missing terminate)');
             } else if (e instanceof System.TypeException) {
                 e.setMessage('Could not cast Process.Plugin (interface unimplemented on process class)');
             }
@@ -284,11 +284,11 @@ abstract global class Broker {
      * Increments parameters then resolves their destined Chain, Step, and Process.
      *
      * 1. hydrate the parameters from message
-     * 2. increments the sequence by one, ready to resolve the next step in the chain
-     * 3. modify the parameters to reflect the new sequence
+     * 2. increments the position by one, ready to resolve the next step in the chain
+     * 3. modify the parameters to reflect the new position
      * 4A. resolve the step from the parameters
      * 4B. resolve the the process (ie the process referenced by 4A's step)
-     * 5. only then can we correctly write to database with 4A (stepId) and 3 (parameters with the incremented sequence)
+     * 5. only then can we correctly write to database with 4A (stepId) and 3 (parameters with the incremented position)
      */
     static public void resolve(List<Message__c> messages) {
         //assemble a map of next-step keys to messages
@@ -296,25 +296,25 @@ abstract global class Broker {
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
             String chainName = (String)parameters.get('eda__chainName');
-            Decimal sequence = (Decimal)parameters.get('eda__sequence') + 1; //care
-            String key = chainName + '#' + sequence;
+            Decimal position = (Decimal)parameters.get('eda__position') + 1; //care
+            String key = chainName + '#' + position;
             key2data.put(key, message);
             
-            //increment the sequence and put it back while we're at it
-            parameters.put('eda__sequence', sequence);
+            //increment the position and put it back while we're at it
+            parameters.put('eda__position', position);
             message.Parameters__c = Json.serializePretty(parameters);
         }
         
         //resolve the next steps and processes
         List<Step__c> steps = [
-            SELECT Id, Process__r.Id, Chain__r.Id, ChainNameAndSequence__c
+            SELECT Id, Process__r.Id, Chain__r.Id, ChainNameAndPosition__c
             FROM Step__c
-            WHERE ChainNameAndSequence__c IN :key2data.keySet()
+            WHERE ChainNameAndPosition__c IN :key2data.keySet()
         ];
         
         //assemble a map of next-step keys to steps
         Map<String,Step__c> key2step = new Map<String,Step__c>();
-        for (Step__c step : steps) key2step.put(step.ChainNameAndSequence__c, step);
+        for (Step__c step : steps) key2step.put(step.ChainNameAndPosition__c, step);
         
         //now put the resolved chain/step/process on each message
         for (String key : key2data.keySet()) {

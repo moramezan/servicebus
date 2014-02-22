@@ -77,7 +77,7 @@
         insert config;
         
         Publish publishPlugin = new Publish();
-        Map<String,Object> parameters = new Map<String,Object>{'eda__chainName' => 'TestChain', 'eda__sequence' => 1, 'eda__configuration' => config.Id};
+        Map<String,Object> parameters = new Map<String,Object>{'eda__chainName' => 'TestChain', 'eda__position' => 1, 'eda__configuration' => config.Id};
         Process.PluginRequest request = new Process.PluginRequest(parameters);
         
         //act
@@ -107,7 +107,7 @@
             EventType__c = eventType.Id
         ));
         
-        String data = '{"eda__chainName":"TestChain","eda__sequence":1,"eda__configuration":"' + step.ConfigurationId__c + '"}';
+        String data = '{"eda__chainName":"TestChain","eda__position":1,"eda__configuration":"' + step.ConfigurationId__c + '"}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         Publish publishPlugin = new Publish();
         
@@ -163,7 +163,7 @@
         ));
         
         //arrange
-        Map<String,Object> parameters = new Map<String,Object>{'eda__chainName' => 'Publisher', 'eda__sequence' => 1, 'eda__configuration' => publisherStep.ConfigurationId__c};
+        Map<String,Object> parameters = new Map<String,Object>{'eda__chainName' => 'Publisher', 'eda__position' => 1, 'eda__configuration' => publisherStep.ConfigurationId__c};
         
         //act
         Publish process = new Publish();

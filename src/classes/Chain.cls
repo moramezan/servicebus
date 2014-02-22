@@ -16,7 +16,7 @@ public class Chain extends SalesforceObject {
         for (String processField : SObjectType.Process__c.Fields.getMap().keySet()) fields.add(SObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + processField);
         
         String chainId = this.getSObject().Id;
-        String orderBy = SObjectType.Step__c.Fields.Sequence__c.Name;
+        String orderBy = SObjectType.Step__c.Fields.Position__c.Name;
         List<Step__c> steps = Database.query('SELECT ' + String.join(fields, ',') + ' FROM Step__c WHERE Chain__c = :chainId ORDER BY ' + orderBy);
         
         //ConfigurationName field from related configs
@@ -36,7 +36,7 @@ public class Chain extends SalesforceObject {
         Step__c step = new Step__c(
             Chain__c = this.getSObject().Id,
             Process__c = processId
-            //Sequence__c is automatic
+            //Position__c is automatic
         );
         
         insert step;
@@ -80,12 +80,12 @@ public class Chain extends SalesforceObject {
             SELECT Id
             FROM Step__c
             WHERE Chain__c = :chain.Id
-            ORDER BY Sequence__c ASC
+            ORDER BY Position__c ASC
         ];
         
-        //resequence them
-        Integer sequence = 1;
-        for (Step__c stepToReorder : stepsToReorder) stepToReorder.Sequence__c = sequence++;
+        //reposition them
+        Integer position = 1;
+        for (Step__c stepToReorder : stepsToReorder) stepToReorder.Position__c = position++;
         update stepsToReorder;
         
         //hand back wrapped deleted step

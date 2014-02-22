@@ -15,10 +15,6 @@
         <members>BrokerTest</members>
         <members>Chain</members>
         <members>ChainSorterController</members>
-        <members>Step</members>
-        <members>StepShowConfigurationExtension</members>
-        <members>Steps</members>
-        <members>StepsTest</members>
         <members>Chains</members>
         <members>ChainsTest</members>
         <members>ConfigurationShowStepExtension</members>
@@ -67,6 +63,10 @@
         <members>ScheduleTest</members>
         <members>Scrape</members>
         <members>ScrapeTest</members>
+        <members>Step</members>
+        <members>StepShowConfigurationExtension</members>
+        <members>Steps</members>
+        <members>StepsTest</members>
         <members>Subscribe</members>
         <members>SubscribeTest</members>
         <members>SynchronousBroker</members>
@@ -86,7 +86,6 @@
         <members>BoomerangConfigurationShowStep</members>
         <members>BranchConfigurationShowStep</members>
         <members>ChainSorter</members>
-        <members>StepShowConfiguration</members>
         <members>FutureBroker</members>
         <members>Health</members>
         <members>JumpConfigurationShowStep</members>
@@ -97,14 +96,15 @@
         <members>ProcessGenerate</members>
         <members>PublishConfigurationManageEventTypes</members>
         <members>PublishConfigurationShowStep</members>
+        <members>StepShowConfiguration</members>
         <members>SubscribeConfigurationManageEventTypes</members>
         <members>SubscribeConfigurationShowStep</members>
         <name>ApexPage</name>
     </types>
     <types>
-        <members>StepTriggers</members>
         <members>ChainTriggers</members>
         <members>ScheduleConfigurationTriggers</members>
+        <members>StepTriggers</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -116,12 +116,6 @@
         <members>BranchConfiguration__c.Chain__c</members>
         <members>BrokerSettings__c.BrokerClassName__c</members>
         <members>BrokerSettings__c.Inhibit__c</members>
-        <members>Step__c.ChainNameAndSequence__c</members>
-        <members>Step__c.Chain__c</members>
-        <members>Step__c.ConfigurationId__c</members>
-        <members>Step__c.ConfigurationName__c</members>
-        <members>Step__c.Process__c</members>
-        <members>Step__c.Sequence__c</members>
         <members>Chain__c.StepsCount__c</members>
         <members>DebouncerConfiguration__c.MinimumHoursBetween__c</members>
         <members>Debouncer__c.DebouncerConfiguration__c</members>
@@ -144,20 +138,20 @@
         <members>LogGroup__c.LogConfiguration__c</members>
         <members>LogGroup__c.Stamp__c</members>
         <members>LogWriterEntry__c.ChainName__c</members>
-        <members>LogWriterEntry__c.Step__c</members>
         <members>LogWriterEntry__c.GroupIdentifier__c</members>
         <members>LogWriterEntry__c.LogGroup__c</members>
         <members>LogWriterEntry__c.NotificationId__c</members>
         <members>LogWriterEntry__c.Order__c</members>
         <members>LogWriterEntry__c.Parameters__c</members>
-        <members>LogWriterEntry__c.Sequence__c</members>
+        <members>LogWriterEntry__c.Position__c</members>
         <members>LogWriterEntry__c.Stamp__c</members>
-        <members>Message__c.Step__c</members>
+        <members>LogWriterEntry__c.Step__c</members>
         <members>Message__c.Chain__c</members>
         <members>Message__c.Message__c</members>
         <members>Message__c.Parameters__c</members>
         <members>Message__c.Process__c</members>
         <members>Message__c.Status__c</members>
+        <members>Message__c.Step__c</members>
         <members>Process__c.ApexClass__c</members>
         <members>Process__c.Configurable__c</members>
         <members>Process__c.Customizable__c</members>
@@ -170,6 +164,12 @@
         <members>ScheduleConfiguration__c.FriendlyDates__c</members>
         <members>ScheduleConfiguration__c.FriendlyTimes__c</members>
         <members>ScrapeConfiguration__c.Endpoint__c</members>
+        <members>Step__c.ChainNameAndPosition__c</members>
+        <members>Step__c.Chain__c</members>
+        <members>Step__c.ConfigurationId__c</members>
+        <members>Step__c.ConfigurationName__c</members>
+        <members>Step__c.Position__c</members>
+        <members>Step__c.Process__c</members>
         <members>SubscribeConfiguration__c.EventType__c</members>
         <members>WiretapCustomization__c.UserId__c</members>
         <name>CustomField</name>
@@ -178,7 +178,6 @@
         <members>BoomerangConfiguration__c</members>
         <members>BranchConfiguration__c</members>
         <members>BrokerSettings__c</members>
-        <members>Step__c</members>
         <members>Chain__c</members>
         <members>DebouncerConfiguration__c</members>
         <members>Debouncer__c</members>
@@ -196,6 +195,7 @@
         <members>PublishConfiguration__c</members>
         <members>ScheduleConfiguration__c</members>
         <members>ScrapeConfiguration__c</members>
+        <members>Step__c</members>
         <members>SubscribeConfiguration__c</members>
         <members>WiretapCustomization__c</members>
         <name>CustomObject</name>
@@ -214,7 +214,6 @@
     <types>
         <members>BoomerangConfiguration__c-Boomerang Configuration Layout</members>
         <members>BranchConfiguration__c-Branch Configuration Layout</members>
-        <members>Step__c-Step Layout</members>
         <members>Chain__c-Chain Layout</members>
         <members>DebouncerConfiguration__c-Debouncer Configuration Layout</members>
         <members>Debouncer__c-Debouncer Layout</members>
@@ -231,6 +230,7 @@
         <members>PublishConfiguration__c-Publish Configuration Layout</members>
         <members>ScheduleConfiguration__c-Schedule Configuration Layout</members>
         <members>ScrapeConfiguration__c-Scrape Configuration Layout</members>
+        <members>Step__c-Step Layout</members>
         <members>SubscribeConfiguration__c-Subscribe Configuration Layout</members>
         <name>Layout</name>
     </types>
@@ -246,8 +246,8 @@
         <name>PermissionSet</name>
     </types>
     <types>
-        <members>StepSorterZip</members>
         <members>ProcessGenerateZip</members>
+        <members>StepSorterZip</members>
         <name>StaticResource</name>
     </types>
     <types>
@@ -260,7 +260,6 @@
     <types>
         <members>BoomerangConfiguration__c.ShowStep</members>
         <members>BranchConfiguration__c.ShowStep</members>
-        <members>Step__c.ShowConfiguration</members>
         <members>JumpConfiguration__c.ShowStep</members>
         <members>LogConfiguration__c.ListLogGroups</members>
         <members>Message__c.Reprocess</members>
@@ -269,6 +268,7 @@
         <members>Process__c.Generate</members>
         <members>PublishConfiguration__c.ManageEventTypes</members>
         <members>PublishConfiguration__c.ShowStep</members>
+        <members>Step__c.ShowConfiguration</members>
         <members>SubscribeConfiguration__c.ManageEventTypes</members>
         <members>SubscribeConfiguration__c.ShowStep</members>
         <name>WebLink</name>
@@ -276,20 +276,19 @@
     <types>
         <members>BoomerangConfiguration__c.UpdateBoomerangConfigurationName</members>
         <members>BranchConfiguration__c.UpdateBranchConfigurationName</members>
-        <members>Step__c.StepSequenceUpdate</members>
         <members>DebouncerConfiguration__c.UpdateDebouncerConfigurationName</members>
         <members>IsChangedConfiguration__c.UpdateIsChangedConfigurationName</members>
         <members>JumpConfiguration__c.UpdateJumpConfigurationName</members>
         <members>LogConfiguration__c.UpdateLogConfigurationName</members>
         <members>PublishConfiguration__c.UpdatePublishConfigurationName</members>
         <members>ScrapeConfiguration__c.UpdateScrapeConfigurationName</members>
+        <members>Step__c.StepPositionUpdate</members>
         <members>SubscribeConfiguration__c.UpdateSubscribeConfigurationName</members>
         <name>WorkflowFieldUpdate</name>
     </types>
     <types>
         <members>BoomerangConfiguration__c.OnBoomerangConfigurationUpsert</members>
         <members>BranchConfiguration__c.OnBranchConfigurationUpsert</members>
-        <members>Step__c.OnStepInsert</members>
         <members>DebouncerConfiguration__c.OnDebouncerConfigurationUpsert</members>
         <members>IsChangedConfiguration__c.OnIsChangedConfigurationUpsert</members>
         <members>JumpConfiguration__c.OnJumpConfigurationUpsert</members>
@@ -297,6 +296,7 @@
         <members>Message__c.OnMessageError</members>
         <members>PublishConfiguration__c.OnPublishConfigurationUpsert</members>
         <members>ScrapeConfiguration__c.OnScrapeConfigurationUpsert</members>
+        <members>Step__c.OnStepInsert</members>
         <members>SubscribeConfiguration__c.OnSubscribeConfigurationUpsert</members>
         <name>WorkflowRule</name>
     </types>

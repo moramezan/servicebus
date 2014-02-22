@@ -32,7 +32,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>Sequence__c</field>
+                <field>Position__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>

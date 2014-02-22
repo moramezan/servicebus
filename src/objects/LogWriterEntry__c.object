@@ -62,18 +62,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Step__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
-        <externalId>false</externalId>
-        <label>Step</label>
-        <referenceTo>Step__c</referenceTo>
-        <relationshipLabel>Log Writer Entries</relationshipLabel>
-        <relationshipName>Log_Writer_Entries</relationshipName>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Lookup</type>
-    </fields>
-    <fields>
         <fullName>GroupIdentifier__c</fullName>
         <externalId>false</externalId>
         <formula>LogGroup__r.GroupIdentifier__c</formula>
@@ -128,11 +116,11 @@
         <visibleLines>2</visibleLines>
     </fields>
     <fields>
-        <fullName>Sequence__c</fullName>
+        <fullName>Position__c</fullName>
         <externalId>false</externalId>
-        <formula>Step__r.Sequence__c</formula>
+        <formula>Step__r.Position__c</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <label>Sequence</label>
+        <label>Position</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
@@ -149,6 +137,18 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Step__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Step</label>
+        <referenceTo>Step__c</referenceTo>
+        <relationshipLabel>Log Writer Entries</relationshipLabel>
+        <relationshipName>Log_Writer_Entries</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
     </fields>
     <label>Log Writer Entry</label>
     <nameField>

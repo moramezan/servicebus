@@ -34,8 +34,8 @@
         $ObjectType.Step__c.Fields.Name.Name = '{!$ObjectType.Step__c.Fields.Name.Name}';
         $ObjectType.Step__c.Fields.Chain__c = $ObjectType.Step__c.Fields.Chain__c || {};
         $ObjectType.Step__c.Fields.Chain__c.Name = '{!$ObjectType.Step__c.Fields.Chain__c.Name}';
-        $ObjectType.Step__c.Fields.Sequence__c = $ObjectType.Step__c.Fields.Sequence__c || {};
-        $ObjectType.Step__c.Fields.Sequence__c.Name = '{!$ObjectType.Step__c.Fields.Sequence__c.Name}';
+        $ObjectType.Step__c.Fields.Position__c = $ObjectType.Step__c.Fields.Position__c || {};
+        $ObjectType.Step__c.Fields.Position__c.Name = '{!$ObjectType.Step__c.Fields.Position__c.Name}';
         $ObjectType.Step__c.Fields.ConfigurationId__c = $ObjectType.Step__c.Fields.ConfigurationId__c || {};
         $ObjectType.Step__c.Fields.ConfigurationId__c.Name = '{!$ObjectType.Step__c.Fields.ConfigurationId__c.Name}';
         $ObjectType.Step__c.Fields.ConfigurationName__c = $ObjectType.Step__c.Fields.ConfigurationName__c || {};

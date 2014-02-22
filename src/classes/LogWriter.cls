@@ -29,10 +29,10 @@ public class LogWriter implements Process.Plugin {
                 
         //derive the Step
         List<Step__c> steps = [
-            SELECT Id, Sequence__c, Chain__c
+            SELECT Id, Position__c, Chain__c
             FROM Step__c
             WHERE Chain__r.Name = :(String)parameters.get('eda__chainName')
-            AND Sequence__c = :(Decimal) parameters.get('eda__sequence')
+            AND Position__c = :(Decimal) parameters.get('eda__position')
         ];
         if (steps.size() == 0) {
             throw new LogWriterException('Unable to access the Step');

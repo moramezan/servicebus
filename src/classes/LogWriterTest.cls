@@ -4,7 +4,7 @@ private class LogWriterTest{
             private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessNotificationId() {
         //arrange
         String chainName  = 'LogWriterChain';
-        Integer theSequence =  1;
+        Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
         Process__c logWriterProcess = Processes.generateOne(LogWriter.class);
         
@@ -39,7 +39,7 @@ private class LogWriterTest{
 	private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
         //arrange
         String chainName  = 'LogWriterChain';
-        Integer theSequence =  1;
+        Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
         Process__c logWriterProcess = Processes.generateOne(LogWriter.class);
         
@@ -78,14 +78,14 @@ private class LogWriterTest{
         String theIdentifier2 = 'CROW';
        
         String chainName  = 'LogChain';
-        Integer sequenceA2 =  1;
+        Integer positionA2 =  1;
         Id theId  = '000000000000000AAA';
         Process__c logWriterProcess = Processes.generateOne(LogWriter.class);
                
         Chain__c chain = new Chain__c(Name = chainName);
         insert chain;
         
-        Step__c stepA2 = new Step__c(Chain__c = chain.Id, Sequence__c = sequenceA2, Process__c = logWriterProcess.Id);
+        Step__c stepA2 = new Step__c(Chain__c = chain.Id, Position__c = positionA2, Process__c = logWriterProcess.Id);
         insert stepA2;
  
         LogConfiguration__c configuration1  = new LogConfiguration__c(
@@ -119,7 +119,7 @@ private class LogWriterTest{
             'eda__notificationId' => '1234567abcde',
             'eda__logGroupIds' => logGroupIds,
             'eda__chainName' => chainName,
-            'eda__sequence' => sequenceA2
+            'eda__position' => positionA2
         };
         
         //act

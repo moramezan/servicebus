@@ -33,14 +33,14 @@ public with sharing class Terminate implements Process.Plugin {
         //pop one boomerang off stack
         Id lastId = stepIds.remove(stepIds.size() - 1);
         Step__c step = [
-            SELECT Id, Chain__r.Name, Sequence__c
+            SELECT Id, Chain__r.Name, Position__c
             FROM Step__c
             WHERE Id = :lastId
         ];
         
         parameters.put('eda__boomerangStepIds', stepIds);
         parameters.put('eda__chainName', step.Chain__r.Name );
-        parameters.put('eda__sequence', step.Sequence__c );
+        parameters.put('eda__position', step.Position__c );
         parametersList.add(parameters);
 
         return Utility.convert(parametersList);
@@ -54,7 +54,7 @@ public with sharing class Terminate implements Process.Plugin {
                                          Name,
                                         (SELECT id, Name, Process__c
                                          FROM Steps__r
-                                         ORDER BY Sequence__c ASC) steps
+                                         ORDER BY Position__c ASC) steps
                                  FROM Chain__c
                                 ];
         

@@ -30,15 +30,15 @@ global class LogInitializer implements Process.Plugin {
         
         
         
-         //derive the ChainName and Sequence
+         //derive the ChainName and Position
          List<Step__c> steps = [
-             SELECT Id, Sequence__c, Chain__r.Name
+             SELECT Id, Position__c, Chain__r.Name
              FROM Step__c
              WHERE Chain__r.Name = :(String)parameters.get('eda__chainName')
-             AND Sequence__c = :(Decimal) parameters.get('eda__sequence')
+             AND Position__c = :(Decimal) parameters.get('eda__position')
          ];
          if (steps.size() == 0) {
-            throw new LogInitializerException('Unable to access the Step Sequence and Chain Name');
+            throw new LogInitializerException('Unable to access the Step Position and Chain Name');
          }
          Step__c  step = steps[0];
  
@@ -100,9 +100,9 @@ global class LogInitializer implements Process.Plugin {
 
         //  default :
         //
-        //  "chain name" and "step sequence"
+        //  "chain name" and "step position"
         //  (always use this if GroupIdentifier__c from configuration equates to null)
-        String defaultGroupIdentifier =  step.Chain__r.Name + '-' + step.Sequence__c;
+        String defaultGroupIdentifier =  step.Chain__r.Name + '-' + step.Position__c;
         
         
         //  preferred alternatives :

@@ -14,7 +14,7 @@ public class Step extends SalesforceObject {
             FROM Step__c
             WHERE Chain__c = :stepToMove.Chain__c
             AND Id != :stepToMove.Id
-            ORDER BY Sequence__c ASC
+            ORDER BY Position__c ASC
         ];
         
         //normal case: inject the guy we are moving amongst the others
@@ -24,9 +24,9 @@ public class Step extends SalesforceObject {
             writeSteps.add(step);
         }
         
-        //resequence them
-        Integer sequence = 1;
-        for (Step__c step : writeSteps) step.Sequence__c = sequence++;
+        //reposition them
+        Integer position = 1;
+        for (Step__c step : writeSteps) step.Position__c = position++;
         update writeSteps;
     }
     
@@ -40,7 +40,7 @@ public class Step extends SalesforceObject {
             FROM Step__c
             WHERE Chain__c = :stepToMove.Chain__c
             AND Id != :stepToMove.Id
-            ORDER BY Sequence__c ASC
+            ORDER BY Position__c ASC
         ];
         
         //normal case: inject the guy we are moving amongst the others
@@ -50,9 +50,9 @@ public class Step extends SalesforceObject {
             if (step.Id == afterStep.Id) writeSteps.add(stepToMove);
         }
         
-        //resequence them
-        Integer sequence = 1;
-        for (Step__c step : writeSteps) step.Sequence__c = sequence++;
+        //reposition them
+        Integer position = 1;
+        for (Step__c step : writeSteps) step.Position__c = position++;
         update writeSteps;
     }
 }

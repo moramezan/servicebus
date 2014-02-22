@@ -16,14 +16,14 @@ public class Steps extends SObjects {
         Step__c step = new Step__c(
             Chain__c = chainId,
             Process__c = processId
-            //Sequence__c is automatic
+            //Position__c is automatic
         );
         
         insert step;
         
         //requery
         return [
-            SELECT Id, Chain__c, Sequence__c, Process__c, ConfigurationId__c
+            SELECT Id, Chain__c, Position__c, Process__c, ConfigurationId__c
             FROM Step__c
             WHERE Id = :step.Id
         ];

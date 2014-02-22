@@ -166,21 +166,7 @@
                     "            grid.unmask();",
                     "        });",
                     "    }",
-                    ");",
-                    "",
-                    "/*",
-                    "store.each(function(model, index, total) {",
-                    "    model.set('Sequence', index + 1);",
-                    "});",
-                    "",
-                    "",
-                    "",
-                    "store.sync({",
-                    "    callback: function() {",
-                    "        grid.unmask();",
-                    "    }",
-                    "});",
-                    "*/"
+                    ");\t"
                 ],
                 "name": "drop",
                 "scope": "me"

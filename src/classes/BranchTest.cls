@@ -49,7 +49,7 @@
         //arrange parameters
         Map<String,Object> parameters = new Map<String,Object>{
             'eda__chainName' => origin.Name,
-            'eda__sequence' => 1,
+            'eda__position' => 1,
             'eda__configuration' => config.Id
         };
         
@@ -73,9 +73,9 @@
         String actualNormalChainName = (String)normalParameters.get('eda__chainName');
         System.assertEquals(expectedNormalChainName, actualNormalChainName);
         
-        Decimal expectedNormalSequence = 1;
-        Decimal expectedActualSequence = (Decimal)normalParameters.get('eda__sequence');
-        System.assertEquals(expectedNormalSequence, expectedActualSequence);
+        Decimal expectedNormalPosition = 1;
+        Decimal expectedActualPosition = (Decimal)normalParameters.get('eda__position');
+        System.assertEquals(expectedNormalPosition, expectedActualPosition);
         
         //act
         Map<String,Object> branchParameters = parametersList[1]; //the branch parameters goes to the top of another chain
@@ -85,9 +85,9 @@
         String actualBranchChainName = (String)branchParameters.get('eda__chainName');
         System.assertEquals(expectedBranchChainName, actualBranchChainName);
         
-        Decimal expectedBranchSequence = 0;
-        Decimal actualBranchSequence = (Decimal)branchParameters.get('eda__sequence');
-        System.assertEquals(expectedBranchSequence, actualBranchSequence);
+        Decimal expectedBranchPosition = 0;
+        Decimal actualBranchPosition = (Decimal)branchParameters.get('eda__position');
+        System.assertEquals(expectedBranchPosition, actualBranchPosition);
     }
     
     static testMethod void testInfiniteLoopFuckupGetsCaught() {
@@ -102,7 +102,7 @@
         //arrange parameters
         Map<String,Object> parameters = new Map<String,Object>{
             'eda__chainName' => chain.Name,
-            'eda__sequence' => 1,
+            'eda__position' => 1,
             'eda__configuration' => config.Id
         };
         

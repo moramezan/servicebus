@@ -44,8 +44,8 @@
         insert wiretapProcess;
         
         // Chain A
-        Step__c stepA1 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c  = 1);
-        Step__c stepA2 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Sequence__c = 2);
+        Step__c stepA1 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Position__c  = 1);
+        Step__c stepA2 =  new Step__c(Chain__c = chainA.Id, Process__c = wireTapProcess.Id, Position__c = 2);
 
         // Act :
         List<HealthController.Health> SubscribeHealths =  Subscribe.getHealth();

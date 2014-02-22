@@ -18,21 +18,21 @@
         
         Chain__c target = new Chain__c(Name = 'target');
         insert target;
-        insert new Step__c(Chain__c = target.Id, Sequence__c = 1, Process__c = terminate.Id);
+        insert new Step__c(Chain__c = target.Id, Position__c = 1, Process__c = terminate.Id);
         
         JumpConfiguration__c configuration = new JumpConfiguration__c(Chain__c = target.Id);
         insert configuration;
         
         Chain__c origin = new Chain__c(Name = 'origin');
         insert origin;
-        insert new Step__c(Chain__c = origin.Id, Sequence__c = 1, Process__c = jump.Id, ConfigurationId__c = configuration.Id);
-        insert new Step__c(Chain__c = origin.Id, Sequence__c = 2, Process__c = terminate.Id);
+        insert new Step__c(Chain__c = origin.Id, Position__c = 1, Process__c = jump.Id, ConfigurationId__c = configuration.Id);
+        insert new Step__c(Chain__c = origin.Id, Position__c = 2, Process__c = terminate.Id);
         
         
         Map<String,Object> parameters = new Map<String,Object>{
             'eda__configurable' => configuration.Id,
             'eda__chainName' => 'origin',
-            'eda__sequence' => 1,
+            'eda__position' => 1,
             'data' => 'herpderp'
         };
         
@@ -49,9 +49,9 @@
         String actualChainName = (String)parametersList[0].get('eda__chainName');
         System.assertEquals(expectedChainName, actualChainName);
         
-        Decimal expectedSequence = 0;
-        Decimal actualSequence = (Decimal)parametersList[0].get('eda__sequence');
-        System.assertEquals(expectedSequence, actualSequence);
+        Decimal expectedPosition = 0;
+        Decimal actualPosition = (Decimal)parametersList[0].get('eda__position');
+        System.assertEquals(expectedPosition, actualPosition);
         
         String expectedPassThruData = 'herpderp';
         String actualPassThruData = (String)parametersList[0].get('data');

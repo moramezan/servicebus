@@ -18,8 +18,8 @@ public with sharing class Boomerang implements Process.Plugin {
                 Process.PluginDescribeResult.ParameterType.STRING
             ),
             new Process.PluginDescribeResult.OutputParameter(
-                'eda__boomerangSequence',
-                'Marks the sequence number which the Boomerang returns to.',
+                'eda__boomerangPosition',
+                'Marks the position number which the Boomerang returns to.',
                 Process.PluginDescribeResult.ParameterType.INTEGER
             )
         };
@@ -34,7 +34,7 @@ public with sharing class Boomerang implements Process.Plugin {
             SELECT Id
             FROM Step__c
             WHERE Chain__r.Name = :(String)parameters.get('eda__chainName')
-            AND Sequence__c = :(Decimal) parameters.get('eda__sequence')
+            AND Position__c = :(Decimal) parameters.get('eda__position')
         ];
   
         //get destination from configuration
@@ -52,7 +52,7 @@ public with sharing class Boomerang implements Process.Plugin {
         
         parameters.put('eda__boomerangStepIds', stepIds);
         parameters.put('eda__chainName', configuration.Chain__r.Name);
-        parameters.put('eda__sequence', 0);
+        parameters.put('eda__position', 0);
         
         return Utility.convert(new List<Map<String,Object>>{parameters});
     }
