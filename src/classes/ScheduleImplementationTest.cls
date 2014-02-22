@@ -7,7 +7,7 @@
         Test.stopTest();
         
         Integer expectedCount = 0;
-        Integer actualCount = [SELECT COUNT() FROM PersistentData__c];
+        Integer actualCount = [SELECT COUNT() FROM Message__c];
         System.assertEquals(expectedCount, actualCount);
     }
     
@@ -36,7 +36,7 @@
         Test.stopTest();
         
         Integer expectedCount = 1;
-        Integer actualCount = [SELECT COUNT() FROM PersistentData__c];
+        Integer actualCount = [SELECT COUNT() FROM Message__c];
         System.assertEquals(expectedCount, actualCount);
     }
 

@@ -42,10 +42,10 @@
         <members>LogWriterTest</members>
         <members>Mark</members>
         <members>MarkTest</members>
-        <members>PersistentDataReprocessExtension</members>
-        <members>PersistentDataShowDataExtension</members>
-        <members>PersistentDatas</members>
-        <members>PersistentDatasTest</members>
+        <members>MessageReprocessExtension</members>
+        <members>MessageShowDataExtension</members>
+        <members>Messages</members>
+        <members>MessagesTest</members>
         <members>ProcessExtensionCustomize</members>
         <members>ProcessExtensionCustomizeTest</members>
         <members>ProcessGenerateExtension</members>
@@ -91,8 +91,8 @@
         <members>Health</members>
         <members>JumpConfigurationShowStep</members>
         <members>LogConfigurationListLogGroups</members>
-        <members>PersistentDataReprocess</members>
-        <members>PersistentDataShowData</members>
+        <members>MessageReprocess</members>
+        <members>MessageShowData</members>
         <members>ProcessCustomization</members>
         <members>ProcessGenerate</members>
         <members>PublishConfigurationManageEventTypes</members>
@@ -152,12 +152,12 @@
         <members>LogWriterEntry__c.Parameters__c</members>
         <members>LogWriterEntry__c.Sequence__c</members>
         <members>LogWriterEntry__c.Stamp__c</members>
-        <members>PersistentData__c.ChainStep__c</members>
-        <members>PersistentData__c.Chain__c</members>
-        <members>PersistentData__c.Message__c</members>
-        <members>PersistentData__c.Parameters__c</members>
-        <members>PersistentData__c.Process__c</members>
-        <members>PersistentData__c.Status__c</members>
+        <members>Message__c.ChainStep__c</members>
+        <members>Message__c.Chain__c</members>
+        <members>Message__c.Message__c</members>
+        <members>Message__c.Parameters__c</members>
+        <members>Message__c.Process__c</members>
+        <members>Message__c.Status__c</members>
         <members>Process__c.ApexClass__c</members>
         <members>Process__c.Configurable__c</members>
         <members>Process__c.Customizable__c</members>
@@ -191,7 +191,7 @@
         <members>LogConfiguration__c</members>
         <members>LogGroup__c</members>
         <members>LogWriterEntry__c</members>
-        <members>PersistentData__c</members>
+        <members>Message__c</members>
         <members>Process__c</members>
         <members>PublishConfiguration__c</members>
         <members>ScheduleConfiguration__c</members>
@@ -202,7 +202,7 @@
     </types>
     <types>
         <members>Chain__c</members>
-        <members>PersistentData__c</members>
+        <members>Message__c</members>
         <members>Process__c</members>
         <name>CustomTab</name>
     </types>
@@ -226,7 +226,7 @@
         <members>LogConfiguration__c-Log Initializer Configuration Layout</members>
         <members>LogGroup__c-Log Initializer Layout</members>
         <members>LogWriterEntry__c-Log Writer Entry Layout</members>
-        <members>PersistentData__c-Persistent Data Layout</members>
+        <members>Message__c-Message Layout</members>
         <members>Process__c-Process Layout</members>
         <members>PublishConfiguration__c-Publish Configuration Layout</members>
         <members>ScheduleConfiguration__c-Schedule Configuration Layout</members>
@@ -237,7 +237,7 @@
     <types>
         <members>Chain__c.All</members>
         <members>LogGroup__c.All</members>
-        <members>PersistentData__c.All</members>
+        <members>Message__c.All</members>
         <members>Process__c.All</members>
         <name>ListView</name>
     </types>
@@ -263,8 +263,8 @@
         <members>ChainStep__c.ShowConfiguration</members>
         <members>JumpConfiguration__c.ShowStep</members>
         <members>LogConfiguration__c.ListLogGroups</members>
-        <members>PersistentData__c.Reprocess</members>
-        <members>PersistentData__c.ShowData</members>
+        <members>Message__c.Reprocess</members>
+        <members>Message__c.ShowData</members>
         <members>Process__c.Customize</members>
         <members>Process__c.Generate</members>
         <members>PublishConfiguration__c.ManageEventTypes</members>
@@ -294,7 +294,7 @@
         <members>IsChangedConfiguration__c.OnIsChangedConfigurationUpsert</members>
         <members>JumpConfiguration__c.OnJumpConfigurationUpsert</members>
         <members>LogConfiguration__c.OnLogInitializerConfigurationUpsert</members>
-        <members>PersistentData__c.OnPersistentDataError</members>
+        <members>Message__c.OnMessageError</members>
         <members>PublishConfiguration__c.OnPublishConfigurationUpsert</members>
         <members>ScrapeConfiguration__c.OnScrapeConfigurationUpsert</members>
         <members>SubscribeConfiguration__c.OnSubscribeConfigurationUpsert</members>

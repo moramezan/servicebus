@@ -19,7 +19,7 @@ public class ScheduleImplementation implements System.Schedulable {
         ];
         
         //destine a timestamped parameters for each chain step
-        List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
+        List<Message__c> messages = new List<Message__c>();
         for (ChainStep__c step : steps) {
             Map<String,Object> parameters = new Map<String,Object>{
                 'eda__sequence' => 0,
@@ -27,16 +27,16 @@ public class ScheduleImplementation implements System.Schedulable {
                 'eda__heartbeat' => DateTime.now()
             };
             
-            PersistentData__c persistentData = new PersistentData__c(
+            Message__c message = new Message__c(
                 Status__c = 'Buffer',
                 Parameters__c = Json.serializePretty(parameters)
             );
             
-            persistentDatas.add(persistentData);
+            messages.add(message);
         }
         
         //enqueue the message onto the buffer
-        insert persistentDatas;
+        insert messages;
     }
     
 }

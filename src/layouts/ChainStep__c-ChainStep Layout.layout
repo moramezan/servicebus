@@ -48,7 +48,7 @@
     </layoutSections>
     <relatedLists>
         <fields>NAME</fields>
-        <relatedList>PersistentData__c.ChainStep__c</relatedList>
+        <relatedList>Message__c.ChainStep__c</relatedList>
     </relatedLists>
     <relatedLists>
         <excludeButtons>New</excludeButtons>

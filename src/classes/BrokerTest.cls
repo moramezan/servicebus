@@ -14,7 +14,7 @@ public class BrokerTest{
         }
     }
     
-    static testMethod void canCorrectlyResolveAndPersistPersistentDatas() {
+    static testMethod void canCorrectlyResolveAndPersistMessages() {
         //arrange processes
         Process__c markProcess = Processes.generateOne(Mark.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
@@ -33,19 +33,19 @@ public class BrokerTest{
         Decimal sequenceA2 = stepA2.Sequence__c;
         Decimal sequenceA3 = stepA3.Sequence__c;
         
-        List<PersistentData__c> persistentDatas =  new List<PersistentData__c>{
-            new PersistentData__c(Parameters__c = '{"eda__chainName": "' + chainNameA + '", "eda__sequence": ' + sequenceA1 + '}'),
-            new PersistentData__c(Parameters__c = '{"eda__chainName": "' + chainNameA + '", "eda__sequence": ' + sequenceA2 + '}')
+        List<Message__c> messages =  new List<Message__c>{
+            new Message__c(Parameters__c = '{"eda__chainName": "' + chainNameA + '", "eda__sequence": ' + sequenceA1 + '}'),
+            new Message__c(Parameters__c = '{"eda__chainName": "' + chainNameA + '", "eda__sequence": ' + sequenceA2 + '}')
         };
         
         //act
-        Broker.resolve(persistentDatas);
-        insert persistentDatas; //persist
+        Broker.resolve(messages);
+        insert messages; //persist
         
         // assemble
-        List<PersistentData__c> persistentDatasAfter = [
+        List<Message__c> messagesAfter = [
             SELECT id, Parameters__c, ChainStep__c, Process__c 
-            FROM PersistentData__c
+            FROM Message__c
         ];
         
         Boolean flagSequence01 = false;
@@ -55,8 +55,8 @@ public class BrokerTest{
         Id actualChainStepId02;    
         Id actualProcessId01;
         Id actualProcessId02;
-        for (PersistentData__c persistentData : persistentDatasAfter) {
-            Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(persistentData.Parameters__c);
+        for (Message__c message : messagesAfter) {
+            Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
             String parametersChainName = (String)parameters.get('eda__chainName');
             Integer parametersSequence = (Integer)parameters.get('eda__sequence');
             if (parametersChainName != chainNameA) {
@@ -64,19 +64,19 @@ public class BrokerTest{
             }
             if (parametersSequence == (sequenceA1 + 1))  {
                 flagSequence01 = true;
-                actualChainStepId01 = persistentData.ChainStep__c;
-                actualProcessId01 = persistentData.Process__c;
+                actualChainStepId01 = message.ChainStep__c;
+                actualProcessId01 = message.Process__c;
             }
             if (parametersSequence == (sequenceA2 + 1))  {
                 flagSequence02 = true;
-                actualChainStepId02 = persistentData.ChainStep__c;
-                actualProcessId02 = persistentData.Process__c;
+                actualChainStepId02 = message.ChainStep__c;
+                actualProcessId02 = message.Process__c;
             }
         }
         
         // assert
         Integer expectedCount = 2;
-        Integer actualCount = persistentDatasAfter.size();
+        Integer actualCount = messagesAfter.size();
         System.assertEquals(expectedCount, actualCount);
 
         System.assert(flagChainNameA);
@@ -93,24 +93,24 @@ public class BrokerTest{
         System.assertEquals(expectedProcessId02, actualProcessId02  );
     }
     
-    static testMethod void testLocatorMarksCorrectNumberOfDatas() {
-        //arrange                                                                     
+    static testMethod void testLocatorMarksCorrectNumberOfMessages() {
+        //arrange
         Integer queryLimit = 2;
         
-        insert new List<PersistentData__c>{
-            new PersistentData__c(Status__c = 'Buffer'),
-            new PersistentData__c(Status__c = 'Buffer'),
-            new PersistentData__c(Status__c = 'Buffer')  
+        insert new List<Message__c>{
+            new Message__c(Status__c = 'Buffer'),
+            new Message__c(Status__c = 'Buffer'),
+            new Message__c(Status__c = 'Buffer')  
         };
         
         //act  
         MockBroker broker = new MockBroker();
         Database.QueryLocatorIterator iterator = broker.locateMarkedWork(queryLimit).iterator();
-        List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
-        while (iterator.hasNext()) persistentDatas.add((PersistentData__c)iterator.next());
+        List<Message__c> messages = new List<Message__c>();
+        while (iterator.hasNext()) messages.add((Message__c)iterator.next());
         
         //assert
-        Integer actualCount = persistentDatas.size();
+        Integer actualCount = messages.size();
         Integer expectedCount = 2;
         System.assertEquals(expectedCount, actualCount); 
     }
@@ -119,81 +119,81 @@ public class BrokerTest{
         //arrange
         Integer fuckedLimit = 2;
         
-        insert new List<PersistentData__c>{
-            new PersistentData__c(Status__c = 'Processing'),
-            new PersistentData__c(Status__c = 'Processing')
+        insert new List<Message__c>{
+            new Message__c(Status__c = 'Processing'),
+            new Message__c(Status__c = 'Processing')
         };
     
         //act                                                                                                                                                                    
         Database.QueryLocatorIterator iterator = new MockBroker().locateMarkedWork(fuckedLimit).iterator();
-        List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
-        while (iterator.hasNext()) persistentDatas.add((PersistentData__c)iterator.next());
+        List<Message__c> messages = new List<Message__c>();
+        while (iterator.hasNext()) messages.add((Message__c)iterator.next());
         
         //assert
         Integer expectedCount = 0;
-        Integer actualCount = persistentDatas.size();
+        Integer actualCount = messages.size();
         System.assertEquals(expectedCount, actualCount);
     }
     
     static testMethod void testLocatorReturnsOnlyReprocessWork() {
         Integer workCount = 2;
         
-        //arrange fucked persistent datas
-        insert new List<PersistentData__c>{
-            new PersistentData__c(Status__c = 'Processing'),
-            new PersistentData__c(Status__c = 'Processing') 
+        //arrange fucked messages
+        insert new List<Message__c>{
+            new Message__c(Status__c = 'Processing'),
+            new Message__c(Status__c = 'Processing') 
         };
         
-        //arrange reprocess persistent datas
-        insert new List<PersistentData__c>{
-            new PersistentData__c(Status__c = 'Reprocess'),
-            new PersistentData__c(Status__c = 'Reprocess') 
+        //arrange reprocess messages
+        insert new List<Message__c>{
+            new Message__c(Status__c = 'Reprocess'),
+            new Message__c(Status__c = 'Reprocess') 
         };
         
         //act
         MockBroker broker = new MockBroker();
         Database.QueryLocatorIterator iterator = broker.locateMarkedWork(workCount).iterator();
-        List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
-        while (iterator.hasNext()) persistentDatas.add((PersistentData__c)iterator.next());
+        List<Message__c> messages = new List<Message__c>();
+        while (iterator.hasNext()) messages.add((Message__c)iterator.next());
         
         // assert
         Integer expectedCount = 2;
-        Integer actualCount = persistentDatas.size();
+        Integer actualCount = messages.size();
         System.assertEquals(expectedCount, actualCount); 
     }
     
-    static testMethod void callingSurfaceExceptionSurfacesExpectedMessageOnPersistentData() {
+    static testMethod void callingSurfaceExceptionSurfacesExpectedMessageOnMessage() {
         //arrange
-        PersistentData__c persistentData = new PersistentData__c(
+        Message__c message = new Message__c(
             Parameters__c = '{"id":1, "eda__chainName":"crow", "eda__sequence":1}'
         );
-        insert persistentData;
+        insert message;
         
         String theMessage = 'balls';
         BrokerException e = new BrokerException(theMessage);
         
         //act
-        Id persistentDataId = persistentData.Id;
-        Broker.surfaceException(e, persistentDataId) ;
+        Id messageId = message.Id;
+        Broker.surfaceException(e, messageId) ;
         
         //assemble
-        List<PersistentData__c> persistentDatas = [
+        List<Message__c> messages = [
             SELECT Id, Name, Parameters__c, Message__c 
-            FROM PersistentData__c
+            FROM Message__c
         ];
         
         //assert
         Integer expectedSize = 1;
-        Integer actualSize = persistentDatas.size();
+        Integer actualSize = messages.size();
         System.assertEquals(expectedSize, actualSize);
         
         
         String expectedMessage = theMessage;
-        String actualMessage = persistentDatas[0].Message__c; 
+        String actualMessage = messages[0].Message__c; 
         System.assert(actualMessage.contains(expectedMessage));
     } 
     
-    static testMethod void canCorrectlyResolvePersistentDatas() {
+    static testMethod void canCorrectlyResolveMessages() {
         // arrange
         Process__c markProcess = Processes.generateOne(Mark.class);
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
@@ -232,15 +232,15 @@ public class BrokerTest{
         insert stepC1;
         insert stepC2;
         
-        List<PersistentData__c> persistentDatas = new List<PersistentData__c>{
-            new PersistentData__c(Parameters__c = '{"id": 1, "eda__chainName": "' + chainA.Name + '", "eda__sequence": ' + sequenceA1 + '}'),
-            new PersistentData__c(Parameters__c = '{"id": 2, "eda__chainName": "' + chainA.Name + '", "eda__sequence": ' + sequenceA2 + '}'),
-            new PersistentData__c(Parameters__c = '{"id": 3, "eda__chainName": "' + chainB.Name + '", "eda__sequence": ' + sequenceB1 + '}'),
-            new PersistentData__c(Parameters__c = '{"id": 4, "eda__chainName": "' + chainC.Name + '", "eda__sequence": ' + sequenceC1 + '}')
+        List<Message__c> messages = new List<Message__c>{
+            new Message__c(Parameters__c = '{"id": 1, "eda__chainName": "' + chainA.Name + '", "eda__sequence": ' + sequenceA1 + '}'),
+            new Message__c(Parameters__c = '{"id": 2, "eda__chainName": "' + chainA.Name + '", "eda__sequence": ' + sequenceA2 + '}'),
+            new Message__c(Parameters__c = '{"id": 3, "eda__chainName": "' + chainB.Name + '", "eda__sequence": ' + sequenceB1 + '}'),
+            new Message__c(Parameters__c = '{"id": 4, "eda__chainName": "' + chainC.Name + '", "eda__sequence": ' + sequenceC1 + '}')
         };
         
         // act
-        Broker.resolve(persistentDatas);
+        Broker.resolve(messages);
         
         // assemble
         String actualChainName1 = '' ;
@@ -251,8 +251,8 @@ public class BrokerTest{
         Integer actualSequence2 = -1 ;
         Integer actualSequence3 = -1 ;
         Integer actualSequence4 = -1 ;
-        for (PersistentData__c persistentData : persistentDatas) {
-            Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(persistentData.Parameters__c);
+        for (Message__c message : messages) {
+            Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
             Integer theId = (Integer) parameters.get('id');
             String theChainName = (String)parameters.get('eda__chainName');
             Integer theSequence = (Integer)parameters.get('eda__sequence'); 
@@ -277,7 +277,7 @@ public class BrokerTest{
         
         // assert
         Integer expectedCount = 4;
-        Integer actualCount = persistentDatas.size();
+        Integer actualCount = messages.size();
         System.assertEquals(expectedCount, actualCount);
         
         String expectedChainName1 = chainNameA;
@@ -367,7 +367,7 @@ public class BrokerTest{
     static testMethod void callingRestartSuccessfullyCallsRestartImpl() {
         //arrange
         insert new BrokerSettings__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
-        insert new PersistentData__c(Status__c = 'Reprocess');
+        insert new Message__c(Status__c = 'Reprocess');
         
         //assert
         Boolean expectedBeforeFlag = false;
@@ -472,9 +472,9 @@ public class BrokerTest{
      * Since the different engines fundamentally persist at different points
      * it will be difficult to do the try catch in the base class - each 
      * broker implementation should  implement the try catch around the resolve 
-     *  and if exception then 1. no deletion of input persistentData  
-     * 2. no persistence of returned persistedDatas collection 3. save 
-     * error against input persisted data's Message__c
+     *  and if exception then 1. no deletion of input message
+     * 2. no persistence of returned messages collection 3. save 
+     * error against input message
      */
     /*static testmethod void testDodgyProcess() {
         // arrange
@@ -507,62 +507,62 @@ public class BrokerTest{
         Test.stopTest();
         
         // arrange
-        PersistentData__c persistentData = [SELECT Id, Message__c FROM PersistentData__c];
+        Message__c message = [SELECT Id, Message__c FROM Message__c];
         
         // asserts
         String expectedMessage = 'class missing';
-        String actualMessage = persistentData.Message__c;
+        String actualMessage = message.Message__c;
         System.assert(actualMessage.contains(expectedMessage));
     }
     */
         
     static testMethod void testMalformedParametersThrowsSystemJsonException() {
         //arrange
-        PersistentData__c persistentData = new PersistentData__c(Parameters__c = '{"malformed":....}');
-        insert persistentData;
+        Message__c message = new Message__c(Parameters__c = '{"malformed":....}');
+        insert message;
         
         //act
-        Broker.executeResolvePersist(persistentData.Id);
+        Broker.executeResolvePersist(message.Id);
         
         //assemble 
-        PersistentData__c persistentDataActual = [SELECT id, Message__c FROM PersistentData__c WHERE id = :persistentData.Id];
+        Message__c messageActual = [SELECT id, Message__c FROM Message__c WHERE id = :message.Id];
         
         //assert
-        String actualMessage = persistentDataActual.Message__c;
+        String actualMessage = messageActual.Message__c;
         String expectedMessage = 'Could not deserialize json';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
     static testMethod void testMissingSequenceThrowsExpectedException() {
         //arrange
-        PersistentData__c persistentData = new PersistentData__c(Parameters__c = '{"not_sequence": 0}');
-        insert persistentData;
+        Message__c message = new Message__c(Parameters__c = '{"not_sequence": 0}');
+        insert message;
         
         //act
-        Broker.executeResolvePersist(persistentData.Id);
+        Broker.executeResolvePersist(message.Id);
         
         //assemble 
-        PersistentData__c persistentDataActual = [SELECT id, Message__c FROM PersistentData__c WHERE id = :persistentData.Id];
+        Message__c messageActual = [SELECT id, Message__c FROM Message__c WHERE id = :message.Id];
         
         //assert
-        String actualMessage = persistentDataActual.Message__c;
+        String actualMessage = messageActual.Message__c;
         String expectedMessage = 'sequence';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
     static testMethod void testNoChainStepThrowsQueryException() {
         //arrange (note there is no ChainStep__c in database!)
-        PersistentData__c persistentData = new PersistentData__c(Parameters__c = '{"eda__chainName": "", "eda__sequence": 0}');
-        insert persistentData;
+        Message__c message = new Message__c(Parameters__c = '{"eda__chainName": "", "eda__sequence": 0}');
+        insert message;
         
         //act
-        Broker.executeResolvePersist(persistentData.Id);
+        Broker.executeResolvePersist(message.Id);
         
         //assemble 
-        PersistentData__c persistentDataActual = [SELECT id, Message__c FROM PersistentData__c WHERE id = :persistentData.Id];
+        Message__c messageActual = [SELECT id, Message__c FROM Message__c WHERE id = :message.Id];
         
         //assert
-        String actualMessage = persistentDataActual.Message__c;
+        String actualMessage = messageActual.Message__c;
         String expectedMessage = 'ChainStep';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
@@ -587,10 +587,10 @@ public class BrokerTest{
         Test.stopTest();
         
         //assemble
-        PersistentData__c persistentData = [SELECT Message__c FROM PersistentData__c];
+        Message__c message = [SELECT Message__c FROM Message__c];
         
         //assert
-        String actualMessage = persistentData.Message__c;
+        String actualMessage = message.Message__c;
         String expectedMessage = 'class missing';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
@@ -615,8 +615,8 @@ public class BrokerTest{
         Test.stopTest();
         
         //assert
-        PersistentData__c persistentData = [SELECT Message__c FROM PersistentData__c];
-        String actualMessage = persistentData.Message__c;
+        Message__c message = [SELECT Message__c FROM Message__c];
+        String actualMessage = message.Message__c;
         String expectedMessage = 'interface';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }

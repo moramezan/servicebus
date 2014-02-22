@@ -23,16 +23,16 @@
             
             //execute (EXECUTE, RESOLVE, PERSIST)
             while (iterator.hasNext()) {
-                PersistentData__c persistentData = (PersistentData__c)iterator.next();
-                Broker.executeResolvePersist(persistentData.Id);
+                Message__c message = (Message__c)iterator.next();
+                Broker.executeResolvePersist(message.Id);
             }
             
             //finish (invokes broker in a @future)
             this.restartIfWorkPending();
         }
         
-        override public void markImpl(Set<Id> persistentDataIds) {
-            Broker.Mark(persistentDataIds);
+        override public void markImpl(Set<Id> messageIds) {
+            Broker.Mark(messageIds);
         }
     }
     
@@ -72,16 +72,16 @@
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
         
         //assemble
-        List<PersistentData__c> persistentDatas = [
+        List<Message__c> messages = [
             SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, IsDeleted
-            FROM PersistentData__c
+            FROM Message__c
             WHERE IsDeleted = false
             ALL ROWS
         ];
         
         //assert (note: the execution won't happen in test mode because it takes place in a web service callout)
         Integer expectedCount = 1; 
-        Integer actualCount = persistentDatas.size();
+        Integer actualCount = messages.size();
         System.assertEquals(expectedCount , actualCount); 
     }
     
@@ -111,12 +111,12 @@
             'eda__sequence' => 1, //not zero!!!
             'id' => '000000000000000AAA'
         };
-        PersistentData__c persistentData = new PersistentData__c(
+        Message__c message = new Message__c(
             ChainStep__c = stepA1.Id,
             Status__c = 'Reprocess',
             Parameters__c = Json.serializePretty(parameters)
         );
-        insert persistentData;
+        insert message;
         
         //assert
         Boolean expectedBeforeFlag = false;
@@ -135,20 +135,20 @@
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
         
         //assemble
-        List<PersistentData__c> persistentDatas = [
+        List<Message__c> messages = [
             SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, isDeleted 
-            FROM PersistentData__c 
+            FROM Message__c 
             WHERE isDeleted = false
             ALL ROWS
         ];
         
         //assert (note: the execution won't happen in test mode because it takes place in a web service callout)
         Integer expectedCount = 1;
-        Integer actualCount = persistentDatas.size();
+        Integer actualCount = messages.size();
         System.assertEquals(expectedCount, actualCount);
     } 
 
-    static testMethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToPersistentData() {
+    static testMethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToMessage() {
         //arrange process
         Process__c failureProcess = Processes.generateOne(FailurePlugin.class);
         
@@ -170,22 +170,22 @@
         Test.stopTest();
         
         //assemble
-        List<PersistentData__c> persistentDatas = [
+        List<Message__c> messages = [
             SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, Message__c, isDeleted 
-            FROM PersistentData__c 
+            FROM Message__c 
             WHERE isDeleted = false
             ALL ROWS
         ];
-        Integer actualCount = persistentDatas.size();
+        Integer actualCount = messages.size();
         
         //assert
         Integer expectedCount = 1; 
         System.assertEquals(expectedCount , actualCount); 
         
         String expectedProcessName = FailurePlugin.class.getName();
-        System.assertEquals(expectedProcessName, persistentDatas[0].Process__r.Name);
+        System.assertEquals(expectedProcessName, messages[0].Process__r.Name);
         
         String expectedMessage = FailurePlugin.FailureMessage;
-        System.assertEquals(expectedMessage, persistentDatas[0].Message__c );
+        System.assertEquals(expectedMessage, messages[0].Message__c );
     }
 }

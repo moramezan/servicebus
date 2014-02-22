@@ -5,5 +5,5 @@
     <logo>EventDrivenArchitecture/edaAppPng.png</logo>
     <tab>Chain__c</tab>
     <tab>Process__c</tab>
-    <tab>PersistentData__c</tab>
+    <tab>Message__c</tab>
 </CustomApplication>

@@ -1,5 +1,5 @@
 /**
- * This BatchBroker provides a worker process in Batch Apex that consumes off the Persistent Data queue. It will iterate
+ * This BatchBroker provides a worker process in Batch Apex that consumes off the Message queue. It will iterate
  * over a limited number, attempt to process those guys in their own execution context, and then restart the Batch Apex
  * job afterwards if more work remains. Simple in principle but can be very sluggish depending on resource availability.
  */
@@ -10,7 +10,7 @@ public with sharing class BatchBroker extends Broker implements Database.Batchab
         return this.locateMarkedWork(100);
     }
     
-    public void execute(Database.BatchableContext context, List<PersistentData__c> scope) {  
+    public void execute(Database.BatchableContext context, List<Message__c> scope) {  
         Broker.executeResolvePersist(scope[0].Id);
     }
     

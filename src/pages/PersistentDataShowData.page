@@ -1,1 +1,0 @@
-<apex:page standardController="PersistentData__c" extensions="PersistentDataShowDataExtension" action="{!doRedirect}" />

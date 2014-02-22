@@ -57,8 +57,8 @@
         <externalId>false</externalId>
         <label>ChainStep</label>
         <referenceTo>ChainStep__c</referenceTo>
-        <relationshipLabel>Persistent Datas</relationshipLabel>
-        <relationshipName>PersistentDatas</relationshipName>
+        <relationshipLabel>Messages</relationshipLabel>
+        <relationshipName>Messages</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
@@ -69,8 +69,8 @@
         <externalId>false</externalId>
         <label>Chain</label>
         <referenceTo>Chain__c</referenceTo>
-        <relationshipLabel>Persistent Datas</relationshipLabel>
-        <relationshipName>PersistentDatas</relationshipName>
+        <relationshipLabel>Messages</relationshipLabel>
+        <relationshipName>Messages</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
@@ -98,8 +98,8 @@
         <externalId>false</externalId>
         <label>Process</label>
         <referenceTo>Process__c</referenceTo>
-        <relationshipLabel>Persistent Datas</relationshipLabel>
-        <relationshipName>PersistentDatas</relationshipName>
+        <relationshipLabel>Messages</relationshipLabel>
+        <relationshipName>Messages</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
@@ -126,7 +126,7 @@
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
-    <label>Persistent Data</label>
+    <label>Message</label>
     <listViews>
         <fullName>All</fullName>
         <filterScope>Everything</filterScope>
@@ -134,10 +134,10 @@
     </listViews>
     <nameField>
         <displayFormat>N-{0000000000}</displayFormat>
-        <label>Persistent Data Name</label>
+        <label>Message Name</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Persistent Datas</pluralLabel>
+    <pluralLabel>Messages</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
@@ -148,7 +148,7 @@
         <linkType>page</linkType>
         <masterLabel>Reprocess</masterLabel>
         <openType>sidebar</openType>
-        <page>PersistentDataReprocess</page>
+        <page>MessageReprocess</page>
         <protected>false</protected>
     </webLinks>
     <webLinks>
@@ -159,7 +159,7 @@
         <linkType>page</linkType>
         <masterLabel>Show Data</masterLabel>
         <openType>sidebar</openType>
-        <page>PersistentDataShowData</page>
+        <page>MessageShowData</page>
         <protected>false</protected>
     </webLinks>
 </CustomObject>

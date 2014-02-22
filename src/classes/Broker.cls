@@ -18,7 +18,7 @@
  *
  * +-----------+ (CONTEXT 3 batchable.execute)
  * |  EXECUTE  | invokes [Wiretap]
- * |  RESOLVE  | ensures all generated persistentdatas never
+ * |  RESOLVE  | ensures all generated messages never
  * |  PERSIST  | exist in an unresolved state per issue #100
  * +-----------+
  *
@@ -80,55 +80,55 @@ abstract global class Broker {
     global class BrokerException extends Exception {}
     
     /**
-     * Determines which persistent datas are eligible to be moved into the Processing status (by finding Persistent
-     * Datas with 'Reprocess' and 'Buffer' status). Note: too many fucked persistent datas would clog up the system,
+     * Determines which messages are eligible to be moved into the Processing status (by finding Messages
+     * with 'Reprocess' and 'Buffer' status). Note: too many fucked messages would clog up the system,
      * so we have a global fuckedLimit.
      *
-     * Persistent Datas that should be processed have their status marked as Processing in the database before being
-     * submitted the query locator. That way, if any given execution fails, those persistent data will remain in the
+     * Messages that should be processed have their status marked as Processing in the database before being
+     * submitted the query locator. That way, if any given execution fails, those messages will remain in the
      * easily identifiable 'Processing' state.
      *
-     * @param workCount Maximum number of Persistent Datas to mark and locate (subject to fuckups)
-     * @return          Query Locator identifying the now-marked-as-Processing Persistent Datas.
+     * @param workCount Maximum number of Messages to mark and locate (subject to fuckups)
+     * @return          Query Locator identifying the now-marked-as-Processing Messages.
      */
     public Database.QueryLocator locateMarkedWork(Integer workCount) {
         Integer fuckedLimit = 100;
         
         Integer fuckedCount = [
             SELECT COUNT()
-            FROM PersistentData__c
+            FROM Message__c
             WHERE Status__c = 'Processing'
         ];
         
         Integer reprocessCount = [
             SELECT COUNT()
-            FROM PersistentData__c
+            FROM Message__c
             WHERE Status__c = 'Reprocess'
         ];
         
-        //derives maximum number of Persistent Datas available for processing
+        //derives maximum number of Messages available for processing
         Integer queryLimit = Math.max(0, fuckedLimit - fuckedCount) + reprocessCount;
         
-        Set<Id> persistentDataIds = new Map<Id,PersistentData__c>([
+        Set<Id> messageIds = new Map<Id,Message__c>([
             SELECT Id
-            FROM PersistentData__c
+            FROM Message__c
             WHERE Status__c IN ('Reprocess', 'Buffer')
             ORDER BY Status__c DESC
             LIMIT :Math.min(workCount, queryLimit)
         ]).keySet();
         
         //MARK
-        this.markImpl(persistentDataIds);
+        this.markImpl(messageIds);
         
-        //query locator hands back only the persistent datas that were marked as processing
-        String commaDelimitedIds = '(\'' + String.join(new List<Id>(persistentDataIds), '\',\'') + '\')';
-        String queryString = 'SELECT Id, ChainStep__c, Parameters__c FROM PersistentData__c WHERE Id IN ' + commaDelimitedIds;
+        //query locator hands back only the messages that were marked as processing
+        String commaDelimitedIds = '(\'' + String.join(new List<Id>(messageIds), '\',\'') + '\')';
+        String queryString = 'SELECT Id, ChainStep__c, Parameters__c FROM Message__c WHERE Id IN ' + commaDelimitedIds;
         return Database.getQueryLocator(queryString);
     }
     
     /**
      * Prepares data for processing at the start of a nominated chain by wrapping the pointer to the data (an id) in a
-     * Persistent Data object. This Persistent Data instance is saved to the database and the Broker is immeadiately
+     * Message object. This Message instance is saved to the database and the Broker is immeadiately
      * invoked if it is not already running.
      *
      * @param chainName Name of the chain the data is destined for.
@@ -141,16 +141,16 @@ abstract global class Broker {
             'id' => dataId
         };
         
-        List<PersistentData__c> persistentDatas = new List<PersistentData__c>{new PersistentData__c(
+        List<Message__c> messages = new List<Message__c>{new Message__c(
             Status__c = 'Buffer',
             Parameters__c = Json.serializePretty(parameters)
         )};
         
         //RESOLVE
-        Broker.resolve(persistentDatas);
+        Broker.resolve(messages);
         
         //PERSIST
-        insert persistentDatas;
+        insert messages;
         
         Broker.process();
     }
@@ -165,7 +165,7 @@ abstract global class Broker {
     
     /**
      * Prepares Blob data for processing at the start of a nominated chain 
-     * by wrapping the pointer to the data (an id) in a Persistent Data object
+     * by wrapping the pointer to the data (an id) in a Message object
      * This Persisted Data instance is saved to the database and the Broker is
      * immeadiately invoked threreafter   
      *
@@ -188,45 +188,45 @@ abstract global class Broker {
     } 
     
     /**
-     * Sets many Persistent Datas statuses to 'Processing' and writes them away.
+     * Sets many Messages statuses to 'Processing' and writes them away.
      *
-     * @param persistentDataIds Set of Persistent Data Ids to update
+     * @param messageIds Set of Message Ids to update
      */
-    static public void mark(Set<Id> persistentDataIds) {
-        List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
-        for (Id persistentDataId : persistentDataIds) {
-            persistentDatas.add(new PersistentData__c(
-                Id = persistentDataId,
+    static public void mark(Set<Id> messageIds) {
+        List<Message__c> messages = new List<Message__c>();
+        for (Id messageId : messageIds) {
+            messages.add(new Message__c(
+                Id = messageId,
                 Status__c = 'Processing'
             ));
         }
-        update persistentDatas;
+        update messages;
     }
     
-    virtual public void markImpl(Set<Id> persistentDataIds) {
-        Broker.mark(persistentDataIds);
+    virtual public void markImpl(Set<Id> messageIds) {
+        Broker.mark(messageIds);
     }
     
     /**
      * Resolves and invokes the Process.Plugin for one input, handing back an in-memory collection of outputs
      * 
-     * @param  persistentData One Persistent Data whose status should be Processing
-     * @return                Many Persistent Datas whose status should be Buffer
+     * @param  message One Message whose status should be Processing
+     * @return         Many Messages whose status should be Buffer
      */
-    static public void executeResolvePersist(Id persistentDataId) {
-        PersistentData__c persistentData = (PersistentData__c)SalesforceObject.getById(persistentDataId);
+    static public void executeResolvePersist(Id messageId) {
+        Message__c message = (Message__c)SalesforceObject.getById(messageId);
         List<Map<String,Object>> parametersList;
         Map<String,Object> parameters;
         Process.Plugin plugin;
         
         //OUR FUCKUPS
         try {
-            parameters = (Map<String,Object>)Json.deserializeUntyped(persistentData.Parameters__c);
+            parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
     
             ChainStep__c chainStep = [
                 SELECT Process__c, ConfigurationId__c, Process__r.Name, Process__r.FullyQualifiedClassName__c
                 FROM ChainStep__c
-                WHERE Id = :persistentData.ChainStep__c
+                WHERE Id = :message.ChainStep__c
             ];
         
             parameters.put('eda__configuration', chainStep.ConfigurationId__c);
@@ -244,7 +244,7 @@ abstract global class Broker {
             } else if (e instanceof System.TypeException) {
                 e.setMessage('Could not cast Process.Plugin (interface unimplemented on process class)');
             }
-            surfaceException(e, persistentData.Id);
+            surfaceException(e, message.Id);
             return; //get out of dodge quick
         }
         
@@ -254,55 +254,55 @@ abstract global class Broker {
             Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
             parametersList = Utility.convert(results);
         } catch (Exception e) {
-            surfaceException(e, persistentData.Id);
+            surfaceException(e, message.Id);
             return; //get out of dodge quick
         }
         
         //delete successfully processed parameters
-        delete persistentData;
-        Database.emptyRecycleBin(persistentData);
+        delete message;
+        Database.emptyRecycleBin(message);
         
         markHelper(parameters, parametersList);
         
-        //wrap up parametersList into Persistent Datas
-        List<PersistentData__c> persistentDatas = new List<PersistentData__c>();
+        //wrap up parametersList into Messages
+        List<Message__c> messages = new List<Message__c>();
         for (Map<String,Object> n : parametersList) {
-            persistentDatas.add(new PersistentData__c(
+            messages.add(new Message__c(
                 Parameters__c = Json.serializePretty(n),
                 Status__c = 'Buffer'
             ));
         }
         
         //RESOLVE
-        Broker.resolve(persistentDatas);
+        Broker.resolve(messages);
         
         //PERSIST
-        insert persistentDatas;
+        insert messages;
     }
 
     /**
      * Increments parameters then resolves their destined Chain, Step, and Process.
      *
-     * 1. hydrate the parameters from persistent data
+     * 1. hydrate the parameters from message
      * 2. increments the sequence by one, ready to resolve the next step in the chain
      * 3. modify the parameters to reflect the new sequence
      * 4A. resolve the chain step from the parameters
      * 4B. resolve the the process (ie the process referenced by 4A's chainStep)
      * 5. only then can we correctly write to database with 4A (chainStepId) and 3 (parameters with the incremented sequence)
      */
-    static public void resolve(List<PersistentData__c> persistentDatas) {
-        //assemble a map of next-step keys to persistent datas
-        Map<String,PersistentData__c> key2data = new Map<String,PersistentData__c>();
-        for (PersistentData__c persistentData : persistentDatas) {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(persistentData.Parameters__c);
+    static public void resolve(List<Message__c> messages) {
+        //assemble a map of next-step keys to messages
+        Map<String,Message__c> key2data = new Map<String,Message__c>();
+        for (Message__c message : messages) {
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
             String chainName = (String)parameters.get('eda__chainName');
             Decimal sequence = (Decimal)parameters.get('eda__sequence') + 1; //care
             String key = chainName + '#' + sequence;
-            key2data.put(key, persistentData);
+            key2data.put(key, message);
             
             //increment the sequence and put it back while we're at it
             parameters.put('eda__sequence', sequence);
-            persistentData.Parameters__c = Json.serializePretty(parameters);
+            message.Parameters__c = Json.serializePretty(parameters);
         }
         
         //resolve the next chain steps and processes
@@ -316,19 +316,19 @@ abstract global class Broker {
         Map<String,ChainStep__c> key2step = new Map<String,ChainStep__c>();
         for (ChainStep__c chainStep : chainSteps) key2step.put(chainStep.ChainNameAndSequence__c, chainStep);
         
-        //now put the resolved chain/step/process on each persistentdata
+        //now put the resolved chain/step/process on each message
         for (String key : key2data.keySet()) {
             ChainStep__c chainStep = key2step.get(key);
-            PersistentData__c persistentData = key2data.get(key);
+            Message__c message = key2data.get(key);
             
-            persistentData.Chain__c = chainStep.Chain__r.Id;
-            persistentData.Process__c = chainStep.Process__r.Id;
-            persistentData.ChainStep__c = chainStep.Id;
+            message.Chain__c = chainStep.Chain__r.Id;
+            message.Process__c = chainStep.Process__r.Id;
+            message.ChainStep__c = chainStep.Id;
         }
     }
     
     @TestVisible
-    private static void surfaceException(Exception e, Id persistentDataId) { 
+    private static void surfaceException(Exception e, Id messageId) { 
         Map<String,Object> serializedException = new Map<String,Object>();
         serializedException.put('cause', e.getCause());
         serializedException.put('lineNumber', e.getLineNumber());
@@ -337,14 +337,14 @@ abstract global class Broker {
         serializedException.put('typeName', e.getTypeName());
         
         //log exception summary on parameters
-        Database.update(new PersistentData__c(
-            Id = persistentDataId,
+        Database.update(new Message__c(
+            Id = messageId,
             Message__c = e.getMessage().left(255)
         ));
         
         //log exception details over 255 bytes using note object
         insert new Note(
-            ParentId = persistentDataId,
+            ParentId = messageId,
             Title = e.getMessage().left(80),
             Body = Json.serializePretty(serializedException).left(32000)
         );
@@ -371,7 +371,7 @@ abstract global class Broker {
     public void restartIfWorkPending() {
         Integer worksPending = [
             SELECT COUNT()
-            FROM PersistentData__c
+            FROM Message__c
             WHERE Status__c = 'Buffer'
             OR Status__c = 'Reprocess'
         ];

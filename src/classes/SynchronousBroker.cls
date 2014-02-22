@@ -15,8 +15,8 @@ public class SynchronousBroker extends Broker {
         //execute (EXECUTE, RESOLVE, PERSIST)
         while (iterator.hasNext()) {
             //each in separate execution context
-            PersistentData__c persistentData = (PersistentData__c)iterator.next();
-            Broker.executeResolvePersist(persistentData.Id); //EXECUTE
+            Message__c message = (Message__c)iterator.next();
+            Broker.executeResolvePersist(message.Id); //EXECUTE
         }
         
         //finish (invokes broker again in same context)

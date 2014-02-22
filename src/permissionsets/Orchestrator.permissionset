@@ -165,19 +165,19 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>PersistentDataReprocessExtension</apexClass>
+        <apexClass>MessageReprocessExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>PersistentDataShowDataExtension</apexClass>
+        <apexClass>MessageShowDataExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>PersistentDatas</apexClass>
+        <apexClass>Messages</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>PersistentDatasTest</apexClass>
+        <apexClass>MessagesTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -488,32 +488,32 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>PersistentData__c.ChainStep__c</field>
+        <field>Message__c.ChainStep__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>PersistentData__c.Chain__c</field>
+        <field>Message__c.Chain__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>PersistentData__c.Message__c</field>
+        <field>Message__c.Message__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>PersistentData__c.Parameters__c</field>
+        <field>Message__c.Parameters__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>PersistentData__c.Process__c</field>
+        <field>Message__c.Process__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>PersistentData__c.Status__c</field>
+        <field>Message__c.Status__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -759,11 +759,11 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>PersistentDataReprocess</apexPage>
+        <apexPage>MessageReprocess</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>PersistentDataShowData</apexPage>
+        <apexPage>MessageShowData</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -795,7 +795,7 @@
         <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>
-        <tab>PersistentData__c</tab>
+        <tab>Message__c</tab>
         <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>

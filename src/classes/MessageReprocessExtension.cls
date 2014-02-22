@@ -1,11 +1,11 @@
-public class PersistentDataReprocessExtension {
+public class MessageReprocessExtension {
     
-    static Id persistentDataId;
+    static Id messageId;
     
     private ApexPages.StandardController controller;
     
-    public PersistentDataReprocessExtension(ApexPages.StandardController controller) {
-        PersistentDataReprocessExtension.persistentDataId = controller.getId();
+    public MessageReprocessExtension(ApexPages.StandardController controller) {
+        MessageReprocessExtension.messageId = controller.getId();
         this.controller = controller;
     }
     
@@ -13,14 +13,14 @@ public class PersistentDataReprocessExtension {
         Type.forName(DoDml.class.getName()).newInstance();
         Broker.process();
         
-        String prefix = SObjectType.PersistentData__c.KeyPrefix;
+        String prefix = SObjectType.Message__c.KeyPrefix;
         return new ApexPages.PageReference('/' + prefix + '/o');
     }
 
     public class DoDml {
         public DoDml() {
-            Database.update(new PersistentData__c(
-                Id = persistentDataId,
+            Database.update(new Message__c(
+                Id = messageId,
                 Message__c = null,
                 Status__c = 'Reprocess'
             ));

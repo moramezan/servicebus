@@ -25,14 +25,14 @@
         Test.stopTest();
         
         //assemble
-        List<PersistentData__c> persistentDatas = [
+        List<Message__c> messages = [
             SELECT Id, Name, Process__r.Name, ChainStep__c , Status__c, IsDeleted 
-            FROM PersistentData__c 
+            FROM Message__c 
             WHERE IsDeleted =  false
             ALL ROWS
         ];
         
-        Integer actualCount = persistentDatas.size();
+        Integer actualCount = messages.size();
         
         //assert
         Integer expectedCount = 0; 
@@ -40,7 +40,7 @@
  
     }
     
-    static testMethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToPersistentData() {
+    static testMethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToMessage() {
         //arrange processes
         Process__c failureProcess = Processes.generateOne(FailurePlugin.class);
         
@@ -62,23 +62,23 @@
         Test.stopTest();
         
         //assemble
-        List<PersistentData__c> persistentDatas = [
+        List<Message__c> messages = [
             SELECT Id, Name, Process__r.Name, ChainStep__c , Status__c, Message__c, IsDeleted 
-            FROM PersistentData__c 
+            FROM Message__c 
             WHERE IsDeleted =  false
             ALL ROWS
         ];
-        Integer actualCount = persistentDatas.size();
+        Integer actualCount = messages.size();
         
         //assert
         Integer expectedCount = 1;
         System.assertEquals(expectedCount, actualCount);
         
         String expectedProcessName = FailurePlugin.class.getName();
-        System.assertEquals(expectedProcessName, persistentDatas[0].Process__r.Name);
+        System.assertEquals(expectedProcessName, messages[0].Process__r.Name);
         
         String expectedMessage = FailurePlugin.FailureMessage;
-        System.assertEquals(expectedMessage, persistentDatas[0].Message__c);
+        System.assertEquals(expectedMessage, messages[0].Message__c);
     }
 
     static testMethod void callingBrokerStartSuccessfullyCallsStartImp() {
@@ -107,12 +107,12 @@
             'eda__sequence' => 1, //not zero !!!
             'id' => '000000000000000AAA'
         };
-        PersistentData__c persistentData = new PersistentData__c(
+        Message__c message = new Message__c(
             ChainStep__c = stepA1.Id,
             Status__c = 'Reprocess',
             Parameters__c = Json.serializePretty(parameters)
         );
-        insert persistentData;
+        insert message;
         
         //act 
         Test.startTest();
@@ -120,16 +120,16 @@
         Test.stopTest();
         
         //assemble
-        List<PersistentData__c> persistentDatas = [
+        List<Message__c> messages = [
             SELECT id, Name, Process__r.Name, ChainStep__c , Status__c, IsDeleted
-            FROM PersistentData__c
+            FROM Message__c
             WHERE IsDeleted =  false
             ALL ROWS
         ];
         
         //assert
         Integer expectedCount = 0;
-        Integer actualCount = persistentDatas.size();
+        Integer actualCount = messages.size();
         System.assertEquals(expectedCount, actualCount);  
     }
     

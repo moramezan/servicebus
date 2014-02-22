@@ -1,5 +1,5 @@
 /**
- * The FutureBroker also provides a worker process that pulls a limited number of Persistent Data off the queue. But
+ * The FutureBroker also provides a worker process that pulls a limited number of Messages off the queue. But
  * since he does not have his own 'execute' method contexts like a Batch Job, he relies upon callouts to the Tooling API
  * to branch out more execution contexts. Added complexity, but restart performance tends to be very good, all the time.
  */
@@ -41,10 +41,10 @@ virtual public class FutureBroker extends Broker {
         //execute (EXECUTE, RESOLVE, PERSIST)
         while (iterator.hasNext()) {
             //each in separate execution context
-            PersistentData__c persistentData = (PersistentData__c)iterator.next();
+            Message__c message = (Message__c)iterator.next();
             Api.Client client = new Api.Client();
             client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
-            String command = 'Broker.executeResolvePersist(\'' + persistentData.Id + '\');'; //EXECUTE
+            String command = 'Broker.executeResolvePersist(\'' + message.Id + '\');'; //EXECUTE
             Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
             if(!result.success) throw new BrokerException(result.compileProblem == null ? result.compileProblem : result.exceptionMessage);
         }
@@ -58,10 +58,10 @@ virtual public class FutureBroker extends Broker {
      * callouts that follow locateMarkedWork() in the same execution context which would cause uncommitted DML error. So
      * to avoid this, here we provide a 'special' mark implementation to do the DML in a separate Tooling API context.
      */
-    virtual override public void markImpl(Set<Id> persistentDataIds) {
+    virtual override public void markImpl(Set<Id> messageIds) {
         Api.Client client = new Api.Client();
         client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
-        String command = 'Broker.mark((Set<Id>)Json.deserialize(\'' + Json.serialize(persistentDataIds) + '\', Set<Id>.class));';
+        String command = 'Broker.mark((Set<Id>)Json.deserialize(\'' + Json.serialize(messageIds) + '\', Set<Id>.class));';
         Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
         if (!result.success) throw new BrokerException(result.compileProblem == null ? result.compileProblem : result.exceptionMessage);
     }
