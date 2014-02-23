@@ -105,7 +105,7 @@
         Map<String,Object> parameters = new Map<String,Object> {
             'eda__sequenceName' => sequenceNameA,
             'eda__position' => 1, //not zero !!!
-            'id' => '000000000000000AAA'
+            'Id' => '000000000000000AAA'
         };
         Message__c message = new Message__c(
             Step__c = stepA1.Id,

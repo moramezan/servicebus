@@ -138,7 +138,7 @@ abstract global class Broker {
         Map<String,Object> parameters = new Map<String,Object> {
             'eda__sequenceName' => sequenceName,
             'eda__position' => 0,
-            'id' => dataId
+            'Id' => dataId
         };
         
         List<Message__c> messages = new List<Message__c>{new Message__c(

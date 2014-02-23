@@ -34,7 +34,7 @@ private class LogInitializerTest {
         update configuration;
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'id' => theId,
+            'Id' => theId,
             'eda__configuration' =>  configuration.Id,
             'eda__sequenceName' => sequenceName,
             'eda__position' => thePosition
@@ -99,7 +99,7 @@ private class LogInitializerTest {
         update configuration;
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'id' => theId,
+            'Id' => theId,
             'eda__configuration' =>  configuration.Id,
             'eda__sequenceName' => sequenceName,
             'eda__position' => thePosition
@@ -151,7 +151,7 @@ private class LogInitializerTest {
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            'id' => theId
+            'Id' => theId
         };
         
         //act
@@ -196,7 +196,7 @@ private class LogInitializerTest {
         delete configuration;
         
         Map<String,Object> parameters = new Map<String,Object>{
-           'id' => theId   ,
+           'Id' => theId   ,
            'eda__configuration' =>  configuration.Id,
            'eda__sequenceName' => sequenceName,
            'eda__position' => thePosition

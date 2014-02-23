@@ -165,7 +165,7 @@ public class BrokerTest{
     static testMethod void callingSurfaceExceptionSurfacesExpectedMessageOnMessage() {
         //arrange
         Message__c message = new Message__c(
-            Parameters__c = '{"id":1, "eda__sequenceName":"crow", "eda__position":1}'
+            Parameters__c = '{"Id":1, "eda__sequenceName":"crow", "eda__position":1}'
         );
         insert message;
         
@@ -233,10 +233,10 @@ public class BrokerTest{
         insert stepC2;
         
         List<Message__c> messages = new List<Message__c>{
-            new Message__c(Parameters__c = '{"id": 1, "eda__sequenceName": "' + sequenceA.Name + '", "eda__position": ' + positionA1 + '}'),
-            new Message__c(Parameters__c = '{"id": 2, "eda__sequenceName": "' + sequenceA.Name + '", "eda__position": ' + positionA2 + '}'),
-            new Message__c(Parameters__c = '{"id": 3, "eda__sequenceName": "' + sequenceB.Name + '", "eda__position": ' + positionB1 + '}'),
-            new Message__c(Parameters__c = '{"id": 4, "eda__sequenceName": "' + sequenceC.Name + '", "eda__position": ' + positionC1 + '}')
+            new Message__c(Parameters__c = '{"Id": 1, "eda__sequenceName": "' + sequenceA.Name + '", "eda__position": ' + positionA1 + '}'),
+            new Message__c(Parameters__c = '{"Id": 2, "eda__sequenceName": "' + sequenceA.Name + '", "eda__position": ' + positionA2 + '}'),
+            new Message__c(Parameters__c = '{"Id": 3, "eda__sequenceName": "' + sequenceB.Name + '", "eda__position": ' + positionB1 + '}'),
+            new Message__c(Parameters__c = '{"Id": 4, "eda__sequenceName": "' + sequenceC.Name + '", "eda__position": ' + positionC1 + '}')
         };
         
         // act
@@ -253,7 +253,7 @@ public class BrokerTest{
         Integer actualPosition4 = -1 ;
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
-            Integer theId = (Integer) parameters.get('id');
+            Integer theId = (Integer) parameters.get('Id');
             String theSequenceName = (String)parameters.get('eda__sequenceName');
             Integer thePosition = (Integer)parameters.get('eda__position');
             if (theId == 1) {
@@ -388,20 +388,20 @@ public class BrokerTest{
         //arrange
         Integer markCount = 1;
         Map<String,Object> parametersIn0 = new Map<String,Object> {
-            'id' => '0',
+            'Id' => '0',
             'eda__markCount' => markCount
         };
         
         Map<String,Object> parametersOut1 = new Map<String,Object> {
-            'id' => '1'
+            'Id' => '1'
         };
         
         Map<String,Object> parametersOut2 = new Map<String,Object> {
-            'id' => '2'
+            'Id' => '2'
         };
         
         Map<String,Object> parametersOut3 = new Map<String,Object> {
-            'id' => '3'
+            'Id' => '3'
         };
         
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>> { parametersOut1, parametersOut2, parametersOut3 };
@@ -421,7 +421,7 @@ public class BrokerTest{
         //arrange
         Integer markCount = 0; //will not increment to 2
         Map<String,Object> parametersIn0 = new Map<String,Object> {
-            'id' => '0',
+            'Id' => '0',
             'eda__markCount' => markCount
         };
         
@@ -441,7 +441,7 @@ public class BrokerTest{
     static testMethod void callingMarkHelperDoesNotSetCountOnParametersWhenMarkCountIsNull() {
         //arrange
         Map<String,Object> parametersIn0 = new Map<String,Object> {
-            'id' => '0'
+            'Id' => '0'
             //'eda__markCount' => markCount //Not specified; key will return null
         };
         

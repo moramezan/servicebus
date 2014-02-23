@@ -57,7 +57,7 @@ global class LogInitializer implements Process.Plugin {
          // the composite key comprises
          // 1.  the date-time stamp
          // 2.  a (fairly unique ) business group value
-         Id dataId =  (Id)parameters.get('id');
+         Id dataId =  (Id)parameters.get('Id');
          String groupIdentifier = getBusinesGroupIdentifier(configuration, step, dataId) ;
          LogGroup__c logGroup = new LogGroup__c( LogConfiguration__c = configuration.Id,  GroupIdentifier__c = groupIdentifier, Stamp__c = System.Now());
          insert logGroup;

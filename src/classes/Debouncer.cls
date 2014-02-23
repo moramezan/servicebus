@@ -19,7 +19,7 @@ public class Debouncer implements Process.Plugin {
         Map<String,Object> parameters = pluginRequest.inputParameters;
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
-        String key = (String) parameters.get('id'); //Note we sill treat null as a unique key with value [null]
+        String key = (String) parameters.get('Id'); //Note we sill treat null as a unique key with value [null]
         Id configurationId = (Id)parameters.get('eda__configuration');
         
         if (configurationId == null) {

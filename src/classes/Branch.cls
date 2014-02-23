@@ -46,12 +46,12 @@ public with sharing class Branch implements Process.Plugin {
         //to transform the same data - if the pointer was the same they would content
         //so the document is duplicated and the duplicate handed off to the sequence
         //
-        //String id = (String)parameters.get('id');
+        //String id = (String)parameters.get('Id');
         //if (null != id && id.startsWith('015')) {
         //  Document document = [SELECT Id, Body FROM Document WHERE Id = :id];
         //  Document clone = document.clone();
         //  insert clone;
-        //  event.put('id', clone.Id);
+        //  event.put('Id', clone.Id);
         //}
         
         return Utility.convert(new List<Map<String,Object>>{parameters, clone});

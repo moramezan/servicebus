@@ -56,7 +56,7 @@ private  class GateTest {
         Id actualGateGroupId = null;
         if (actualSize > 0) {
             Map<String,Object> actualParameters = actualOutParametersList[0];
-            actualGateGroupId = (Id) parameters.get('id' );
+            actualGateGroupId = (Id) parameters.get('Id' );
         }
         integer actualGateItemsSize = [SELECT Id FROM GateItem__c].size();
 

@@ -195,7 +195,7 @@ private class IsChangedTest {
 
         Map<String,Object> parameters = new Map<String,Object>{
         'eda__configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
-        'id' => accountId
+        'Id' => accountId
         };
         
         //act
@@ -244,7 +244,7 @@ private class IsChangedTest {
         
         Map<String,Object> parameters = new Map<String,Object>{
         'eda__configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
-        'id' => accountId
+        'Id' => accountId
         };
         
         //act
@@ -293,7 +293,7 @@ private class IsChangedTest {
         
         Map<String,Object> parameters = new Map<String,Object>{
         'eda__configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
-        'id' => accountId
+        'Id' => accountId
         };
         
         //act

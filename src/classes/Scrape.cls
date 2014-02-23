@@ -36,7 +36,7 @@ public class Scrape implements Process.Plugin {
         );
         
         insert attachment;
-        parameters.put('id', attachment.Id);
+        parameters.put('Id', attachment.Id);
         
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>{parameters};
         return Utility.convert(parametersList);

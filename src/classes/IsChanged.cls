@@ -60,9 +60,9 @@ public class IsChanged  implements Process.Plugin {
         // Is this the first run ?
         Boolean firstRun = (configuration.OldHash__c == null);
         
-        // retrieve current value of object referenced by 'id'
+        // retrieve current value of object referenced by 'Id'
         // on parameters
-        Id objectId = (Id)parameters.get('id');
+        Id objectId = (Id)parameters.get('Id');
         SObjectType objectType = objectId.getSObjectType();
         String objectName = objectType.getDescribe().getName();
         String fieldName = configuration.FieldName__c;

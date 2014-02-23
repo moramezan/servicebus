@@ -11,7 +11,7 @@ public class MessageShowDataExtension {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
         
         try {
-            Id dataId = (Id)parameters.get('id');
+            Id dataId = (Id)parameters.get('Id');
             SObject dataObject = SalesforceObject.getById(dataId);
             return new ApexPages.StandardController(dataObject).view();
         } catch (Exception e) {
