@@ -27,7 +27,7 @@ public with sharing class Gate implements Process.Plugin {
         
         plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter(
-                'eda__id',
+                'id',
                 'Id of the GateGroup whose members are now all present.',
                 Process.PluginDescribeResult.ParameterType.ID
             )
@@ -59,7 +59,7 @@ public with sharing class Gate implements Process.Plugin {
         }
         
         //this is the last item, let's release
-        parameters.put('eda__id', gateGroupId);
+        parameters.put('id', gateGroupId);
         
         return Utility.convert(new List<Map<String,Object>>{parameters});
     }
