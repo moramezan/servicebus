@@ -107,8 +107,8 @@
         // scenario:
         // resolved state , assume manual intervention to set status to 'Reprocess'
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda__sequenceName' => sequenceNameA,
-            'eda__position' => 1, //not zero!!!
+            'eda_sequenceName' => sequenceNameA,
+            'eda_position' => 1, //not zero!!!
             'Id' => '000000000000000AAA'
         };
         Message__c message = new Message__c(

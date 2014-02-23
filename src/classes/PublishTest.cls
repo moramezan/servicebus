@@ -39,8 +39,8 @@
         ));
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda__configuration' => pubConfig.Id,
-            'eda__subsequenceStepIds' => new List<Id>{'000000000000000AAA'}
+            'eda_configuration' => pubConfig.Id,
+            'eda_subsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Publish branch = new Publish();
@@ -53,12 +53,12 @@
         
         //first one is for subscriber
         List<Object> expectedIds = null;
-        List<Object> actualIds = (List<Object>)parametersList[0].get('eda__subsequenceStepIds');
+        List<Object> actualIds = (List<Object>)parametersList[0].get('eda_subsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
         
         //second one is original/passthru
         expectedIds = new List<Id>{'000000000000000AAA'};
-        actualIds = (List<Object>)parametersList[1].get('eda__subsequenceStepIds');
+        actualIds = (List<Object>)parametersList[1].get('eda_subsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
     }
     
@@ -77,7 +77,7 @@
         insert config;
         
         Publish publishPlugin = new Publish();
-        Map<String,Object> parameters = new Map<String,Object>{'eda__sequenceName' => 'TestSequence', 'eda__position' => 1, 'eda__configuration' => config.Id};
+        Map<String,Object> parameters = new Map<String,Object>{'eda_sequenceName' => 'TestSequence', 'eda_position' => 1, 'eda_configuration' => config.Id};
         Process.PluginRequest request = new Process.PluginRequest(parameters);
         
         //act
@@ -107,7 +107,7 @@
             EventType__c = eventType.Id
         ));
         
-        String data = '{"eda__sequenceName":"TestSequence","eda__position":1,"eda__configuration":"' + step.ConfigurationId__c + '"}';
+        String data = '{"eda_sequenceName":"TestSequence","eda_position":1,"eda_configuration":"' + step.ConfigurationId__c + '"}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         Publish publishPlugin = new Publish();
         
@@ -163,7 +163,7 @@
         ));
         
         //arrange
-        Map<String,Object> parameters = new Map<String,Object>{'eda__sequenceName' => 'Publisher', 'eda__position' => 1, 'eda__configuration' => publisherStep.ConfigurationId__c};
+        Map<String,Object> parameters = new Map<String,Object>{'eda_sequenceName' => 'Publisher', 'eda_position' => 1, 'eda_configuration' => publisherStep.ConfigurationId__c};
         
         //act
         Publish process = new Publish();

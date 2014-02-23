@@ -19,7 +19,7 @@ public class Scrape implements Process.Plugin {
         ScrapeConfiguration__c configuration = [
             SELECT Id, Endpoint__c
             FROM ScrapeConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda__configuration')
+            WHERE Id = :(Id)parameters.get('eda_configuration')
         ];
         
         HttpRequest request = new HttpRequest();

@@ -177,7 +177,7 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesParameters(
     
     
     Map<String,Object> parameters = new Map<String,Object>{
-        'eda__configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
+        'eda_configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
         'Id' => accountId
     };
     
@@ -226,7 +226,7 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesMessageForO
     
     
     Map<String,Object> parameters = new Map<String,Object>{
-        'eda__configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
+        'eda_configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
         'Id' => key
     };
     
@@ -275,7 +275,7 @@ private static testMethod void callingInvokeWhenZeroDebuncersSwallowsMessageForI
     
     
     Map<String,Object> parameters = new Map<String,Object>{
-        'eda__configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
+        'eda_configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
         'Id' => key
     };
     

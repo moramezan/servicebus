@@ -136,8 +136,8 @@ abstract global class Broker {
      */
     static global void enqueue(String sequenceName, Id dataId) {
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda__sequenceName' => sequenceName,
-            'eda__position' => 0,
+            'eda_sequenceName' => sequenceName,
+            'eda_position' => 0,
             'Id' => dataId
         };
         
@@ -229,7 +229,7 @@ abstract global class Broker {
                 WHERE Id = :message.Step__c
             ];
         
-            parameters.put('eda__configuration', Step.ConfigurationId__c);
+            parameters.put('eda_configuration', Step.ConfigurationId__c);
         
             //instantiate processable instance
             Type reflector = Type.forName(Step.Process__r.FullyQualifiedClassName__c);
@@ -295,13 +295,13 @@ abstract global class Broker {
         Map<String,Message__c> key2data = new Map<String,Message__c>();
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
-            String sequenceName = (String)parameters.get('eda__sequenceName');
-            Decimal position = (Decimal)parameters.get('eda__position') + 1; //care
+            String sequenceName = (String)parameters.get('eda_sequenceName');
+            Decimal position = (Decimal)parameters.get('eda_position') + 1; //care
             String key = sequenceName + '#' + position;
             key2data.put(key, message);
             
             //increment the position and put it back while we're at it
-            parameters.put('eda__position', position);
+            parameters.put('eda_position', position);
             message.Parameters__c = Json.serializePretty(parameters);
         }
         
@@ -359,12 +359,12 @@ abstract global class Broker {
      */
     @TestVisible
     private static void markHelper(Map<String,Object> parameters, List<Map<String,Object>> parametersList) {
-        Decimal markCount = (Decimal)parameters.get('eda__markCount');
-        if (null != markCount) parameters.put('eda__markCount', ++markCount);
+        Decimal markCount = (Decimal)parameters.get('eda_markCount');
+        if (null != markCount) parameters.put('eda_markCount', ++markCount);
         if (2 == markCount) {
             Integer count = parametersList.size();
-            parameters.put('eda__count', count);
-            if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('eda__gateGroupId')}); //tidy up split of 0
+            parameters.put('eda_count', count);
+            if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('eda_gateGroupId')}); //tidy up split of 0
         }
      }
     

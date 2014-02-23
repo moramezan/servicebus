@@ -54,7 +54,7 @@ public class IsChanged  implements Process.Plugin {
         IsChangedConfiguration__c configuration = [
             SELECT Id, NewHash__c, OldHash__c, newBlobId__c, oldBlobId__c, NewValue__c, OldValue__c, FieldName__c
             FROM IsChangedConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda__configuration')
+            WHERE Id = :(Id)parameters.get('eda_configuration')
         ];
   
         // Is this the first run ?

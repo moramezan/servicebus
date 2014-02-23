@@ -12,7 +12,7 @@ private class LogWriterTest{
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            // 'eda__notificationId' => '1234567abcde',  // null notification Id
+            // 'eda_notificationId' => '1234567abcde',  // null notification Id
             'Id' => theId
         };
         
@@ -47,7 +47,7 @@ private class LogWriterTest{
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda__notificationId' => '1234567abcde',
+            'eda_notificationId' => '1234567abcde',
             'Id' => theId
         };
         
@@ -116,10 +116,10 @@ private class LogWriterTest{
  
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda__notificationId' => '1234567abcde',
-            'eda__logGroupIds' => logGroupIds,
-            'eda__sequenceName' => sequenceName,
-            'eda__position' => positionA2
+            'eda_notificationId' => '1234567abcde',
+            'eda_logGroupIds' => logGroupIds,
+            'eda_sequenceName' => sequenceName,
+            'eda_position' => positionA2
         };
         
         //act

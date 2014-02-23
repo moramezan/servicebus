@@ -194,7 +194,7 @@ private class IsChangedTest {
         update configuration;
 
         Map<String,Object> parameters = new Map<String,Object>{
-        'eda__configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
+        'eda_configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
         'Id' => accountId
         };
         
@@ -243,7 +243,7 @@ private class IsChangedTest {
         
         
         Map<String,Object> parameters = new Map<String,Object>{
-        'eda__configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
+        'eda_configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
         'Id' => accountId
         };
         
@@ -292,7 +292,7 @@ private class IsChangedTest {
         
         
         Map<String,Object> parameters = new Map<String,Object>{
-        'eda__configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
+        'eda_configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
         'Id' => accountId
         };
         

@@ -19,10 +19,10 @@ public class LogWriter implements Process.Plugin {
         Map<String,Object> parameters = pluginRequest.inputParameters;
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
-        Integer parametersOrder = (Integer)parameters.get('eda__counter');
+        Integer parametersOrder = (Integer)parameters.get('eda_counter');
         parametersOrder = (parametersOrder != null) ? parametersOrder : 1;
         
-        String notificationId = (String)parameters.get('eda__notificationId');
+        String notificationId = (String)parameters.get('eda_notificationId');
         if (String.isBlank(notificationId)) {
             throw new LogWriterException('Unable to access the notification id');
         }
@@ -31,8 +31,8 @@ public class LogWriter implements Process.Plugin {
         List<Step__c> steps = [
             SELECT Id, Position__c, Sequence__c
             FROM Step__c
-            WHERE Sequence__r.Name = :(String)parameters.get('eda__sequenceName')
-            AND Position__c = :(Decimal) parameters.get('eda__position')
+            WHERE Sequence__r.Name = :(String)parameters.get('eda_sequenceName')
+            AND Position__c = :(Decimal) parameters.get('eda_position')
         ];
         if (steps.size() == 0) {
             throw new LogWriterException('Unable to access the Step');
@@ -43,7 +43,7 @@ public class LogWriter implements Process.Plugin {
     
     
         //write log entry for every log group identifier
-        List<Object> collection = (List<Object>)parameters.get('eda__logGroupIds');
+        List<Object> collection = (List<Object>)parameters.get('eda_logGroupIds');
         if (collection != null) {
             List<Id> logGroupIds = new List<Id>();
             Set<Id> filteredLogGroupIds = (new Map<Id, LogGroup__c>([

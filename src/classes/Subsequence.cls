@@ -13,12 +13,12 @@ public with sharing class Subsequence implements Process.Plugin {
         
         plugin.outputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter(
-                'eda__subsequenceName',
+                'eda_subsequenceName',
                 'Marks the sequence name which the Subsequence returns to.',
                 Process.PluginDescribeResult.ParameterType.STRING
             ),
             new Process.PluginDescribeResult.OutputParameter(
-                'eda__subsequencePosition',
+                'eda_subsequencePosition',
                 'Marks the position number which the Subsequence returns to.',
                 Process.PluginDescribeResult.ParameterType.INTEGER
             )
@@ -33,26 +33,26 @@ public with sharing class Subsequence implements Process.Plugin {
         Step__c step = [
             SELECT Id
             FROM Step__c
-            WHERE Sequence__r.Name = :(String)parameters.get('eda__sequenceName')
-            AND Position__c = :(Decimal) parameters.get('eda__position')
+            WHERE Sequence__r.Name = :(String)parameters.get('eda_sequenceName')
+            AND Position__c = :(Decimal) parameters.get('eda_position')
         ];
   
         //get destination from configuration
         SubsequenceConfiguration__c configuration = [
             SELECT Id, Sequence__r.Name
             FROM SubsequenceConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda__configuration')
+            WHERE Id = :(Id)parameters.get('eda_configuration')
         ];
         
-        List<Object> stepIds = (List<Object>)parameters.get('eda__subsequenceStepIds');
+        List<Object> stepIds = (List<Object>)parameters.get('eda_subsequenceStepIds');
         if (stepIds == null) {
             stepIds = new List<Object>();
         }
         stepIds.add(step.Id);
         
-        parameters.put('eda__subsequenceStepIds', stepIds);
-        parameters.put('eda__sequenceName', configuration.Sequence__r.Name);
-        parameters.put('eda__position', 0);
+        parameters.put('eda_subsequenceStepIds', stepIds);
+        parameters.put('eda_sequenceName', configuration.Sequence__r.Name);
+        parameters.put('eda_position', 0);
         
         return Utility.convert(new List<Map<String,Object>>{parameters});
     }

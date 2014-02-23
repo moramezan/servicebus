@@ -12,13 +12,13 @@ public with sharing class Gate implements Process.Plugin {
         
         plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
             new Process.PluginDescribeResult.InputParameter(
-                'eda__gateGroupId',
+                'eda_gateGroupId',
                 'Id of the GateGroup the marked messages should belong to.',
                 Process.PluginDescribeResult.ParameterType.ID,
                 false
             ),
             new Process.PluginDescribeResult.InputParameter(
-                'eda__count',
+                'eda_count',
                 'Number of marked messages the gate should expect.',
                 Process.PluginDescribeResult.ParameterType.INTEGER,
                 false
@@ -39,8 +39,8 @@ public with sharing class Gate implements Process.Plugin {
     public Process.PluginResult invoke(Process.PluginRequest request) {
         Map<String,Object> parameters = request.inputParameters;
         
-        Id gateGroupId = (Id)parameters.get('eda__gateGroupId');
-        Decimal count = (Decimal)parameters.get('eda__count');
+        Id gateGroupId = (Id)parameters.get('eda_gateGroupId');
+        Decimal count = (Decimal)parameters.get('eda_count');
         
         insert new GateItem__c(
             GateGroup__c = gateGroupId,

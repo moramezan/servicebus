@@ -9,7 +9,7 @@ public with sharing class Schedule implements Process.Plugin {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Tag = 'Event Driven Architecture';
         plugin.Name = 'Schedule';
-        Plugin.Description = 'Fires this sequence at controlled intervals {"eda__configurable":"' + Schema.SObjectType.ScheduleConfiguration__c.Name + '"}';
+        Plugin.Description = 'Fires this sequence at controlled intervals {"eda_configurable":"' + Schema.SObjectType.ScheduleConfiguration__c.Name + '"}';
         return plugin;
     }
     
@@ -17,18 +17,18 @@ public with sharing class Schedule implements Process.Plugin {
         Map<String,Object> parameters = request.inputParameters;
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
-        Boolean isPassThru = String.isBlank((String)parameters.get('eda__heartbeat'));
+        Boolean isPassThru = String.isBlank((String)parameters.get('eda_heartbeat'));
         
         if (isPassThru) {
             parametersList.add(parameters);
         } else {
             //DateTime is not a primitive Object
-            DateTime heartbeat = (DateTime)Json.deserialize('"' + (String)parameters.get('eda__heartbeat') + '"', DateTime.class);
+            DateTime heartbeat = (DateTime)Json.deserialize('"' + (String)parameters.get('eda_heartbeat') + '"', DateTime.class);
             
             ScheduleConfiguration__c config = [
                 SELECT Id, Frequency__c, FriendlyDates__c, FriendlyTimes__c
                 FROM ScheduleConfiguration__c
-                WHERE Id = :(Id)parameters.get('eda__configuration')
+                WHERE Id = :(Id)parameters.get('eda_configuration')
             ];
             
             if (isWithinWindow(heartbeat, config)) {

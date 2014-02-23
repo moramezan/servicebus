@@ -20,10 +20,10 @@ public class Debouncer implements Process.Plugin {
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
         String key = (String) parameters.get('Id'); //Note we sill treat null as a unique key with value [null]
-        Id configurationId = (Id)parameters.get('eda__configuration');
+        Id configurationId = (Id)parameters.get('eda_configuration');
         
         if (configurationId == null) {
-            throw new DebouncerException('Cannot invoke debouncer with null parameters[eda__configuration]');
+            throw new DebouncerException('Cannot invoke debouncer with null parameters[eda_configuration]');
         }
         
         // retrieve minimum time between releases

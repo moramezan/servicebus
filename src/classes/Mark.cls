@@ -12,12 +12,12 @@ public with sharing class Mark implements Process.Plugin {
         
         plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter(
-                'eda__markCount',
+                'eda_markCount',
                 'The broker will increment this to detect that the next process returned multiple messages.',
                 Process.PluginDescribeResult.ParameterType.INTEGER
             ),
             new Process.PluginDescribeResult.OutputParameter(
-                'eda__gateGroupId',
+                'eda_gateGroupId',
                 'The Id of the Gate Group that eventually associates all the marked notifications.',
                 Process.PluginDescribeResult.ParameterType.ID
             )
@@ -34,8 +34,8 @@ public with sharing class Mark implements Process.Plugin {
         insert gateGroup;
         
         //annotate this step as the marker, so the following step must be a splitter
-        parameters.put('eda__markCount', 0);
-        parameters.put('eda__gateGroupId', gateGroup.Id);
+        parameters.put('eda_markCount', 0);
+        parameters.put('eda_gateGroupId', gateGroup.Id);
         
         return new Process.PluginResult(new Map<String,Object>{'0' => parameters});
     }

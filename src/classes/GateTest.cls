@@ -20,10 +20,10 @@ private  class GateTest {
         Id gateGroupId = gateGroup.Id;
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda__sequenceName' => sequenceName,
-            'eda__position' => position,
-            'eda__gateGroupId' => gateGroupId,
-            'eda__count' => count,
+            'eda_sequenceName' => sequenceName,
+            'eda_position' => position,
+            'eda_gateGroupId' => gateGroupId,
+            'eda_count' => count,
             'data' => data
         };
 
@@ -80,10 +80,10 @@ private  class GateTest {
         Id gateGroupId = gateGroup.Id;
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda__sequenceName' => sequenceName,
-            'eda__position' => position,
-            'eda__gateGroupId' => gateGroupId,
-            'eda__count' => count,
+            'eda_sequenceName' => sequenceName,
+            'eda_position' => position,
+            'eda_gateGroupId' => gateGroupId,
+            'eda_count' => count,
             'data' => data
         };
 

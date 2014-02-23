@@ -48,7 +48,7 @@ public class ScrapeTest {
             Endpoint__c = endPoint
         ));
         
-        Map<String,Object> parameters = new Map<String,Object>{'eda__configuration' => step.ConfigurationId__c};
+        Map<String,Object> parameters = new Map<String,Object>{'eda_configuration' => step.ConfigurationId__c};
 
         //act
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());

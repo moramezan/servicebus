@@ -35,9 +35,9 @@ private class LogInitializerTest {
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda__configuration' =>  configuration.Id,
-            'eda__sequenceName' => sequenceName,
-            'eda__position' => thePosition
+            'eda_configuration' =>  configuration.Id,
+            'eda_sequenceName' => sequenceName,
+            'eda_position' => thePosition
         };
         
         //act
@@ -100,9 +100,9 @@ private class LogInitializerTest {
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda__configuration' =>  configuration.Id,
-            'eda__sequenceName' => sequenceName,
-            'eda__position' => thePosition
+            'eda_configuration' =>  configuration.Id,
+            'eda_sequenceName' => sequenceName,
+            'eda_position' => thePosition
         };
         
         //act
@@ -197,9 +197,9 @@ private class LogInitializerTest {
         
         Map<String,Object> parameters = new Map<String,Object>{
            'Id' => theId   ,
-           'eda__configuration' =>  configuration.Id,
-           'eda__sequenceName' => sequenceName,
-           'eda__position' => thePosition
+           'eda_configuration' =>  configuration.Id,
+           'eda_sequenceName' => sequenceName,
+           'eda_position' => thePosition
         };
         
         //act

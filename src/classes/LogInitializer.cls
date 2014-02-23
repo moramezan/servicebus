@@ -15,7 +15,7 @@ global class LogInitializer implements Process.Plugin {
         
         plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter(
-                'eda__logGroupIds',
+                'eda_logGroupIds',
                 'An identifier that associates instances of steps.',
                 Process.PluginDescribeResult.ParameterType.String
             )
@@ -34,8 +34,8 @@ global class LogInitializer implements Process.Plugin {
          List<Step__c> steps = [
              SELECT Id, Position__c, Sequence__r.Name
              FROM Step__c
-             WHERE Sequence__r.Name = :(String)parameters.get('eda__sequenceName')
-             AND Position__c = :(Decimal) parameters.get('eda__position')
+             WHERE Sequence__r.Name = :(String)parameters.get('eda_sequenceName')
+             AND Position__c = :(Decimal) parameters.get('eda_position')
          ];
          if (steps.size() == 0) {
             throw new LogInitializerException('Unable to access the Step Position and Sequence Name');
@@ -46,7 +46,7 @@ global class LogInitializer implements Process.Plugin {
          List<LogConfiguration__c> configurations = [
              SELECT Id, GroupIdentifier__c , GroupInstruction__c
              FROM LogConfiguration__c
-             WHERE Id = :(Id)parameters.get('eda__configuration')
+             WHERE Id = :(Id)parameters.get('eda_configuration')
          ];
          if (configurations.size() == 0) {
             throw new LogInitializerException('Unable to access Log Configuration');
@@ -63,12 +63,12 @@ global class LogInitializer implements Process.Plugin {
          insert logGroup;
 
          // update outbound message
-         List<Object> logGroupIds = (List<Object>)parameters.get('eda__logGroupIds');
+         List<Object> logGroupIds = (List<Object>)parameters.get('eda_logGroupIds');
          if (logGroupIds == null) {
              logGroupIds = new List<Object>();
          }
          logGroupIds.add(logGroup.Id);
-         parameters.put('eda__logGroupIds', logGroupIds);
+         parameters.put('eda_logGroupIds', logGroupIds);
 
          
          return Utility.convert(new List<Map<String,Object>>{parameters});

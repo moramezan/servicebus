@@ -35,9 +35,9 @@
         
         //prepare message
         Process.PluginRequest request = new Process.PluginRequest(new Map<String,Object>{
-            'eda__sequenceName' => 'originSequence',
-            'eda__position' => 1,
-            'eda__configuration' => config.Id
+            'eda_sequenceName' => 'originSequence',
+            'eda_position' => 1,
+            'eda_configuration' => config.Id
         });
         
         //act
@@ -51,15 +51,15 @@
         System.assertEquals(expectedSize, actualSize);
         
         String expectedSequenceName = 'targetSequence';
-        String actualSequenceName = (String)parametersList[0].get('eda__sequenceName');
+        String actualSequenceName = (String)parametersList[0].get('eda_sequenceName');
         System.assertEquals(expectedSequenceName, actualSequenceName);
         
         Decimal expectedPosition = 0;
-        Decimal actualPosition = (Decimal)parametersList[0].get('eda__position');
+        Decimal actualPosition = (Decimal)parametersList[0].get('eda_position');
         System.assertEquals(expectedPosition, actualPosition);
 
         String expectedList = '["' + originStep.Id + '"]';
-        String actualList = System.Json.serialize(parametersList[0].get('eda__subsequenceStepIds'));
+        String actualList = System.Json.serialize(parametersList[0].get('eda_subsequenceStepIds'));
         System.assertEquals(expectedList, actualList);
     }
     
