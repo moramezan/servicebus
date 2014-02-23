@@ -42,7 +42,7 @@
     
     static testMethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToMessage() {
         //arrange processes
-        Process__c failureProcess = Processes.generateOne(FailurePlugin.class);
+        Process__c failureProcess = Processes.generateOne(BrokerTest.FailurePlugin.class);
         
         //arrange sequence
         String  sequenceNameA = 'sequenceA';
@@ -63,7 +63,7 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Status__c, Message__c, IsDeleted
+            SELECT Id, Name, Process__r.FullyQualifiedClassName__c, Step__c , Status__c, Message__c, IsDeleted
             FROM Message__c
             WHERE IsDeleted =  false
             ALL ROWS
@@ -74,10 +74,10 @@
         Integer expectedCount = 1;
         System.assertEquals(expectedCount, actualCount);
         
-        String expectedProcessName = FailurePlugin.class.getName();
-        System.assertEquals(expectedProcessName, messages[0].Process__r.Name);
+        String expectedProcessName = BrokerTest.FailurePlugin.class.getName();
+        System.assertEquals(expectedProcessName, messages[0].Process__r.FullyQualifiedClassName__c);
         
-        String expectedMessage = FailurePlugin.FailureMessage;
+        String expectedMessage = BrokerTest.FailureMessage;
         System.assertEquals(expectedMessage, messages[0].Message__c);
     }
 
