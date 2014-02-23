@@ -307,6 +307,7 @@ private class IsChangedTest {
         System.assertEquals(expectedSize, actualSize);
     }
 
+ 
     private static testMethod void callingDeleteOldAttachmentsDeletesExpectedAttachments() {
         //arrange
         IsChangedConfiguration__c configuration = new IsChangedConfiguration__c();
@@ -316,35 +317,36 @@ private class IsChangedTest {
         //+-----[NEW]
         //---- now --------------
         //---- very recent ------
-		DateTime lastModifiedDate01 = System.Now().addMinutes( -1 * (persistDurationInMinutes-4) );
+        DateTime lastModifiedDate01 = System.Now().addMinutes( -1 * (persistDurationInMinutes-4) );
         //--- less recent -------
-		DateTime lastModifiedDate02 = System.Now().addMinutes( -1 * (persistDurationInMinutes-2)  );
+        DateTime lastModifiedDate02 = System.Now().addMinutes( -1 * (persistDurationInMinutes-2)  );
         //---- persistDurationInMinutes
         //---- very old ---------
-		DateTime lastModifiedDate03 = System.Now().addMinutes( -1 * (persistDurationInMinutes+5)  );	
+        DateTime lastModifiedDate03 = System.Now().addMinutes( -1 * (persistDurationInMinutes+5)  );    
         //+-----[OLD]
-            
+        
+ 
         Attachment attachment01 = new Attachment(
-            Name = 'IsChanged-' + lastModifiedDate01.format('YYYY-MM-DD HH:mm:ss').replace(' ','T'),
+            Name = 'IsChanged-' + lastModifiedDate01.format('yyyy-MM-dd HH:mm:ss').replace(' ','T'),
             Body = Blob.valueOf('balls'),
             ParentId = configuration.Id
         );
         insert attachment01;
- 
-		Attachment attachment02 = new Attachment(
-			Name = 'IsChanged-' + lastModifiedDate02.format('YYYY-MM-DD HH:mm:ss').replace(' ','T'),
-			Body = Blob.valueOf('balls'),
-			ParentId = configuration.Id
-		);
-		insert attachment02;
-		
-		Attachment attachment03 = new Attachment(
-			Name = 'IsChanged-' + lastModifiedDate03.format('YYYY-MM-DD HH:mm:ss').replace(' ','T'),
-			Body = Blob.valueOf('balls'),
-			ParentId = configuration.Id
-		);
-		insert attachment03;
- 
+  
+        Attachment attachment02 = new Attachment(
+            Name = 'IsChanged-' + lastModifiedDate02.format('yyyy-MM-dd HH:mm:ss').replace(' ','T'),
+            Body = Blob.valueOf('balls'),
+            ParentId = configuration.Id
+        );
+        insert attachment02;
+  
+        Attachment attachment03 = new Attachment(
+            Name = 'IsChanged-' + lastModifiedDate03.format('yyyy-MM-dd HH:mm:ss').replace(' ','T'),
+            Body = Blob.valueOf('balls'),
+            ParentId = configuration.Id
+        );
+        insert attachment03;
+  
         //act
         IsChanged.deleteOldAttachments(  persistDurationInMinutes) ;
         
@@ -352,8 +354,9 @@ private class IsChangedTest {
         Map<Id,Attachment> attachmentIdToAttachment = new Map<Id,Attachment> ( [SELECT Id, Name FROM Attachment] );
         
         // Assert
-		System.Assert(  attachmentIdToAttachment.keySet().contains(attachment01.Id) );
-		System.Assert(  attachmentIdToAttachment.keySet().contains(attachment02.Id) );
-		System.Assert( !attachmentIdToAttachment.keySet().contains(attachment03.Id) );
+        System.Assert(  attachmentIdToAttachment.keySet().contains(attachment01.Id) );
+        System.Assert(  attachmentIdToAttachment.keySet().contains(attachment02.Id) );
+        System.Assert( !attachmentIdToAttachment.keySet().contains(attachment03.Id) );
     }
+ 
 }
