@@ -53,10 +53,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>FailurePlugin</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>FutureBroker</apexClass>
         <enabled>false</enabled>
     </classAccesses>

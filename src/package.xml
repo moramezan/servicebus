@@ -14,7 +14,6 @@
         <members>ConfigurationShowStepExtension</members>
         <members>Debouncer</members>
         <members>DebouncerTest</members>
-        <members>FailurePlugin</members>
         <members>FutureBroker</members>
         <members>FutureBrokerTest</members>
         <members>Gate</members>
