@@ -38,14 +38,17 @@ public class LogWriter implements Process.Plugin {
             throw new LogWriterException('Unable to access the Step');
         }
         Step__c step = steps[0];
-
-
-    
-    
+ 
         //write log entry for every log group identifier
         List<Object> collection = (List<Object>)parameters.get('eda_logGroupIds');
+        
         if (collection != null) {
             List<Id> logGroupIds = new List<Id>();
+            for (Object c : collection) {
+                if  (c != null) {
+                  logGroupIds.add((Id) c );  
+                }
+            }
             Set<Id> filteredLogGroupIds = (new Map<Id, LogGroup__c>([
                 SELECT Id, Name
                 FROM LogGroup__c
