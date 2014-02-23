@@ -1,7 +1,7 @@
 @isTest
 private class LogWriterTest{
-
-            private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessNotificationId() {
+    
+    private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessNotificationId() {
         //arrange
         String sequenceName  = 'LogWriterSequence';
         Integer thePosition =  1;
@@ -70,7 +70,6 @@ private class LogWriterTest{
         String expectedMessage = 'Unable to access the Step';
         System.assert( actualMessage.contains(expectedMessage) );
     }
-    
 
     private static testMethod void callingInvokeInsertsExpectedLogWriterEntries() {
         //arrange
@@ -111,7 +110,7 @@ private class LogWriterTest{
             Stamp__c = System.Now()
         );
         insert logGroup2;
-        
+ 
         List<Object> logGroupIds = new List<Object>{ logGroup1.Id, logGroup2.Id };
  
         Map<String,Object> parameters = new Map<String,Object>{
@@ -128,11 +127,12 @@ private class LogWriterTest{
         List<Map<String,Object>> results = Utility.convert(result);
         
         //assemble
-        List<LogWriterEntry__c> LogWriterEntries = [
+        List<LogWriterEntry__c> logWriterEntries = [
             SELECT id, Name, Step__c,  LogGroup__c, Parameters__c
             FROM LogWriterEntry__c
         ];
         
+         
         Boolean actualLogGroup1 = false;
         Boolean actualLogGroup2 = false;
         String actualParametersSerialized1;
@@ -171,4 +171,5 @@ private class LogWriterTest{
         System.assertEquals(actualParametersSerialized1, actualParametersSerialized2);
         System.assert(actualParametersSerialized1.contains(expectedSequenceName));
     }
+
 }
