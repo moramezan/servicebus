@@ -9,6 +9,7 @@ public class Processes extends SObjects {
      * isn't appropriate for Tag, Description, InputParameters or OutputParameters. This inner class must be present
      * for an apex class to appear in the Process list.
      */
+    @testVisible
     private class Eda {
         /**
          * Each Process can have one associated customization in the form of a Custom Setting. Process Authors must

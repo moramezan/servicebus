@@ -41,6 +41,7 @@
         <members>ProcessGenerateExtensionTest</members>
         <members>ProcessRefreshBatch</members>
         <members>ProcessRefreshBatchTest</members>
+        <members>ProcessTest</members>
         <members>Processes</members>
         <members>Publish</members>
         <members>PublishTest</members>

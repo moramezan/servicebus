@@ -161,6 +161,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ProcessTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Processes</apexClass>
         <enabled>false</enabled>
     </classAccesses>
