@@ -1,5 +1,17 @@
 @isTest private class ProcessRefreshBatchTest {
     
+    public class MockApexClassProvider implements ProcessRefreshBatch.IApexClassProvider {
+        private List<ApexClass> apexClasses;
+        
+        public MockApexClassProvider(List<ApexClass> apexClasses) {
+          this.apexClasses = apexClasses; 
+        }
+        
+        public List<ApexClass> getApexClasses() {
+            return this.apexClasses;  
+        }
+    } 
+    
     static testMethod void testRecordCreatedForPluginAndStateful() {
         //arrange
         ProcessRefreshBatch batch = new ProcessRefreshBatch();
@@ -81,4 +93,112 @@
         System.assert(actualLogWriter);
     }
    
+    
+    static testMethod void callingGetProcessHealthReturnsOkForProcessWithApexClass() {
+        //arrange - 
+        String processName = 'Terminate';
+        Process__c process =  new Process__c(Name = processName, FullyQualifiedClassName__c = processName);
+        insert process;
+        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        insert sequence;
+        Step__c stepValid = new Step__c(Sequence__c = sequence.Id, Process__c = process.Id, Position__c = 1);
+        insert stepValid;
+ 
+        //act - 
+        ProcessRefreshBatch.IApexClassProvider apexClassProvider = new ProcessRefreshBatch.ApexClassProvider();
+        ProcessRefreshBatch.ProcessHealth processHealth = new ProcessRefreshBatch.ProcessHealth(apexClassProvider);
+        Map<Id, String> processHealthMap = processHealth.getProcessHealth() ;
+ 
+        //assert
+        String expectedValid = 'Ok';
+        String actualValid = processHealthMap.get(process.Id);
+        System.assertEquals(expectedValid, actualValid);
+    }
+
+  
+    static testMethod void callingGetProcessHealthReturnsDeleteForProcessWithoutApexClassAndNotUsedInAnySequences() {       
+        // arrange - 
+        String processName = 'Wiretap';
+        Process__c process =  new Process__c(Name = processName, FullyQualifiedClassName__c = processName);
+        insert process;
+        List<ApexClass> apexClasses = new List<ApexClass>{
+                //new ApexClass(Name ='Wiretap' ) ,   // implies deleted!
+                new ApexClass(Name ='Terminate' )  
+            } ;
+ 
+
+        //act - 
+        ProcessRefreshBatch.IApexClassProvider apexClassProvider = new MockApexClassProvider(apexClasses);
+        ProcessRefreshBatch.ProcessHealth processHealth = new ProcessRefreshBatch.ProcessHealth(apexClassProvider);
+        Map<Id, String> processHealthMap = processHealth.getProcessHealth() ;
+        
+ 
+        
+        //assert
+        String expectedProcess = 'Delete';
+        String actualProcess = processHealthMap.get(process.Id);
+        System.assertEquals(expectedProcess, actualProcess);      
+    
+    }
+
+    static testMethod void callingGetProcessHealthReturnsErroForProcessWithoutApexClassAndUsedOneOrMoreSequences() {
+
+         // arrange - 
+        String processName = 'Wiretap';
+        Process__c process =  new Process__c(Name = processName, FullyQualifiedClassName__c = processName);
+        insert process;
+        List<ApexClass> apexClasses = new List<ApexClass>{
+                //new ApexClass(Name ='Wiretap' ) ,   // implies deleted!
+                new ApexClass(Name ='Terminate' )  
+            } ;
+        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        insert sequence;
+        Step__c stepValid = new Step__c(Sequence__c = sequence.Id, Process__c = process.Id, Position__c = 1);
+        insert stepValid;     
+                
+ 
+        
+        //act - 
+        ProcessRefreshBatch.IApexClassProvider apexClassProvider = new MockApexClassProvider(apexClasses);
+        ProcessRefreshBatch.ProcessHealth processHealth = new ProcessRefreshBatch.ProcessHealth(apexClassProvider);
+        Map<Id, String> processHealthMap = processHealth.getProcessHealth() ;
+        
+        //assert
+        String expectedProcess = 'Error - Step with no Apex Class';
+        String actualProcess = processHealthMap.get(process.Id);
+        System.assertEquals(expectedProcess, actualProcess);      
+    }
+    
+    
+    static testMethod void callingDeleteInvalidUnusedProcessesDeletesExpectedProcesses() {
+        //arrange - 
+        String processNameKeep = 'Terminate';
+        Process__c processKeep =  new Process__c(Name = processNameKeep, FullyQualifiedClassName__c = processNameKeep);
+        insert processKeep;
+        
+        String processNameDelete = 'Wiretap';
+        Process__c processDelete =  new Process__c(Name = processNameDelete, FullyQualifiedClassName__c = processNameDelete);
+        insert processDelete;     
+
+        List<Process__c> processesBefore =  [SELECT Id, NAme FROM Process__c];
+        Integer actualProcessesBeforeSize = processesBefore.size();
+        Integer expectedProcessesBeforeSize = 2;
+        
+        Map<Id, String> processHealthMap = new Map<Id, String>{
+            processKeep.Id  => 'Ok',
+            processDelete.Id => 'Delete'    
+        };
+ 
+        //act 
+        ProcessRefreshBatch.deleteInvalidUnusedProcesses(processHealthMap);
+ 
+        //assemble
+        List<Process__c> processesAfter =  [SELECT Id, NAme FROM Process__c];
+        Integer actualProcessesAfterSize = processesAfter.size();
+        Integer expectedProcessesAfterSize = 1;
+        
+        //assert
+        System.assertEquals(expectedProcessesAfterSize, actualProcessesAfterSize);
+        System.assertEquals(expectedProcessesBeforeSize, actualProcessesBeforeSize); 
+    } 
 }
