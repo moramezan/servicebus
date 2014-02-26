@@ -69,6 +69,7 @@
         <members>Subsequence</members>
         <members>SubsequenceTest</members>
         <members>SynchronousBroker</members>
+        <members>SynchronousBrokerTest</members>
         <members>Terminate</members>
         <members>TerminateTest</members>
         <members>Utility</members>
