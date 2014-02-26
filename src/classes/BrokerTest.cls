@@ -631,7 +631,7 @@ public class BrokerTest{
         Set<String> uniqueIds =  new Set<String>();
         Integer count = 1;
         while (count <= uniqueTotal) {
-            uniqueIds.add(Broker.getNotificationId(len));
+            uniqueIds.add(Broker.getNotificationGuid(len));
             count++;
         }
 

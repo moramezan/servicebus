@@ -75,9 +75,9 @@
         <writeRequiresMasterRead>false</writeRequiresMasterRead>
     </fields>
     <fields>
-        <fullName>NotificationId__c</fullName>
+        <fullName>NotificationGuid__c</fullName>
         <externalId>false</externalId>
-        <label>Notification Id</label>
+        <label>Notification Guid</label>
         <length>18</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

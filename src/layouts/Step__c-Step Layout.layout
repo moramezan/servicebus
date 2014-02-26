@@ -58,7 +58,7 @@
         <fields>GroupIdentifier__c</fields>
         <fields>Stamp__c</fields>
         <fields>LogGroup__c</fields>
-        <fields>NotificationId__c</fields>
+        <fields>NotificationGuid__c</fields>
         <relatedList>LogWriterEntry__c.Step__c</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>

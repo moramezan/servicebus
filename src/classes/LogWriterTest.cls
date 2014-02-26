@@ -1,7 +1,7 @@
 @isTest
 private class LogWriterTest{
     
-    private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessNotificationId() {
+    private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessNotificationGuid() {
         //arrange
         String sequenceName  = 'LogWriterSequence';
         Integer thePosition =  1;
@@ -12,7 +12,7 @@ private class LogWriterTest{
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            // 'eda_notificationId' => '1234567abcde',  // null notification Id
+            // 'eda_notificationGuid' => '1234567abcde',  // null notification Guid
             'Id' => theId
         };
         
@@ -32,7 +32,7 @@ private class LogWriterTest{
         Boolean expectedFlagException = true;
         System.assertEquals(expectedFlagException, actualFlagException);
         
-        String expectedMessage = 'Unable to access the notification id';
+        String expectedMessage = 'Unable to access the notification Guid';
         System.assert( actualMessage.contains(expectedMessage) );
     }
     
@@ -47,7 +47,7 @@ private class LogWriterTest{
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_notificationId' => '1234567abcde',
+            'eda_notificationGuid' => '1234567abcde',
             'Id' => theId
         };
         
@@ -115,7 +115,7 @@ private class LogWriterTest{
  
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_notificationId' => '1234567abcde',
+            'eda_notificationGuid' => '1234567abcde',
             'eda_logGroupIds' => logGroupIds,
             'eda_sequenceName' => sequenceName,
             'eda_position' => positionA2

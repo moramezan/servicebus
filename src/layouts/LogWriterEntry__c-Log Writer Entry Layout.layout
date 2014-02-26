@@ -24,7 +24,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>NotificationId__c</field>
+                <field>NotificationGuid__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>

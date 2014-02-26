@@ -385,7 +385,7 @@ abstract global class Broker {
      
     abstract global void restartImpl();
     
-    @TestVisible public static String getNotificationId(Integer size) {
+    @TestVisible public static String getNotificationGuid(Integer size) {
         return EncodingUtil.convertToHex(crypto.generateAesKey(128)).substring(0, size);
     }
 }

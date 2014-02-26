@@ -409,7 +409,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogWriterEntry__c.NotificationId__c</field>
+        <field>LogWriterEntry__c.NotificationGuid__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
