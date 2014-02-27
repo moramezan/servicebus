@@ -1,5 +1,7 @@
 public class Sequence extends SalesforceObject {
 
+    public class SequenceException extends Exception {}
+    
     public Sequence(Sequence__c sequence) {
         super(sequence);
     }
@@ -72,7 +74,7 @@ public class Sequence extends SalesforceObject {
         //validate and perform the delete
         Sequence__c sequence = (Sequence__c)this.getSObject();
         Step__c step = (Step__c)SalesforceObject.getById(stepId);
-        System.assert(sequence.Id == step.Sequence__c, 'Cannot deleteStep from different sequence ' + sequence.Id + ' ' + step.Sequence__c);
+        if (sequence.Id != step.Sequence__c)   throw new SequenceException('Cannot deleteStep from different sequence ' + sequence.Id + ' ' + step.Sequence__c);
         delete step;
         
         //find the remaining steps

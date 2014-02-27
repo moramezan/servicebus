@@ -59,6 +59,7 @@
         <members>ScrapeTest</members>
         <members>Sequence</members>
         <members>SequenceSorterController</members>
+        <members>SequenceTest</members>
         <members>Sequences</members>
         <members>SequencesTest</members>
         <members>Step</members>
