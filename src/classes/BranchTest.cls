@@ -28,7 +28,7 @@
         };
         
         Branch branch = new Branch();
-        List<Map<String,Object>> parametersList = Utility.convert(branch.invoke(new Process.PluginRequest(parameters)));
+        List<Map<String,Object>> parametersList = EdaUtility.convert(branch.invoke(new Process.PluginRequest(parameters)));
         
         List<Object> expectedIds = null;
         List<Object> actualIds = (List<Object>)parametersList[1].get('eda_subsequenceStepIds');
@@ -58,7 +58,7 @@
         
         //act
         Process.PluginResult result = process.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> parametersList = Utility.convert(result);
+        List<Map<String,Object>> parametersList = EdaUtility.convert(result);
         
         //assert
         Decimal expectedSize = 2;
@@ -115,7 +115,7 @@
         //act
         try {
             Process.PluginResult result = process.invoke(new Process.PluginRequest(parameters));
-            List<Map<String,Object>> parametersList = Utility.convert(result);
+            List<Map<String,Object>> parametersList = EdaUtility.convert(result);
         } catch (Exception e) {
             exceptionThrown = true;
             System.assert(e instanceof Branch.BranchException);

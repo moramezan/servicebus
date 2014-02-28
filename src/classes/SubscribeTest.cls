@@ -22,7 +22,7 @@
         Process.PluginResult result = process.invoke(new Process.PluginRequest(parameters));
         
         //assert
-        List<Map<string, object>> parametersList = Utility.convert(result);
+        List<Map<string, object>> parametersList = EdaUtility.convert(result);
         
         integer expectedSize = 1;
         integer actualSize = parametersList.size();

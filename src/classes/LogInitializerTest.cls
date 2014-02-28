@@ -43,7 +43,7 @@ private class LogInitializerTest {
         //act
         LogInitializer plugin = new LogInitializer();
         Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> results = Utility.convert(result);
+        List<Map<String,Object>> results = EdaUtility.convert(result);
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -108,7 +108,7 @@ private class LogInitializerTest {
         //act
         LogInitializer plugin = new LogInitializer();
         Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> results = Utility.convert(result);
+        List<Map<String,Object>> results = EdaUtility.convert(result);
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -160,7 +160,7 @@ private class LogInitializerTest {
         try {
             LogInitializer plugin = new LogInitializer();
             Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-            List<Map<String,Object>> results = Utility.convert(result);
+            List<Map<String,Object>> results = EdaUtility.convert(result);
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -208,7 +208,7 @@ private class LogInitializerTest {
         try {
             LogInitializer plugin = new LogInitializer();
             Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-            List<Map<String,Object>> results = Utility.convert(result);
+            List<Map<String,Object>> results = EdaUtility.convert(result);
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();

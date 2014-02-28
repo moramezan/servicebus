@@ -252,7 +252,7 @@ abstract global class Broker {
         try {
             //call invoke the processable instance
             Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
-            parametersList = Utility.convert(results);
+            parametersList = EdaUtility.convert(results);
         } catch (Exception e) {
             surfaceException(e, message.Id);
             return; //get out of dodge quick

@@ -120,7 +120,7 @@ public class IsChanged  implements Process.Plugin {
         // housekeeping
         deleteOldAttachments( persistDuration );
         
-        return Utility.convert(parametersList);
+        return EdaUtility.convert(parametersList);
     }
  
  

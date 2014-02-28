@@ -36,7 +36,7 @@ public with sharing class Schedule implements Process.Plugin {
                 parametersList.add(parameters);
             }
         }
-        return Utility.convert(parametersList);
+        return EdaUtility.convert(parametersList);
     }
     
     @testVisible static private Boolean isWithinWindow(DateTime heartbeat, ScheduleConfiguration__c config) {

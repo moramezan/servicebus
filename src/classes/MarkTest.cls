@@ -28,7 +28,7 @@ private class MarkTest {
         // Act
         Mark mark = new Mark();
         Process.PluginResult results = mark.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> actualOutParametersList = Utility.convert(results);
+        List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();

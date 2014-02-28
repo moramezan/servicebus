@@ -21,13 +21,13 @@ public with sharing class Terminate implements Process.Plugin {
         
         if (data == null) {
             //no subsequences
-            return Utility.convert(parametersList);
+            return EdaUtility.convert(parametersList);
         }
 
         List<Id> stepIds = (List<Id>)System.Json.deserialize(System.Json.serialize(data), List<Id>.class);
         if (stepIds.isEmpty()) {
             //subsequences finished
-            return Utility.convert(parametersList);
+            return EdaUtility.convert(parametersList);
         }
         
         //pop one subsequence off stack
@@ -43,7 +43,7 @@ public with sharing class Terminate implements Process.Plugin {
         parameters.put('eda_position', step.Position__c );
         parametersList.add(parameters);
 
-        return Utility.convert(parametersList);
+        return EdaUtility.convert(parametersList);
     }
 
     

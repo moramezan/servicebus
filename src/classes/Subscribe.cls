@@ -14,7 +14,7 @@ public with sharing class Subscribe implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
-        return Utility.convert(new List<Map<String,Object>>{request.inputParameters});
+        return EdaUtility.convert(new List<Map<String,Object>>{request.inputParameters});
     }
     
     public static List<HealthController.Health> getHealth() {

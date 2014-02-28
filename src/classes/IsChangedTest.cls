@@ -201,7 +201,7 @@ private class IsChangedTest {
         //act
         IsChanged plugin = new IsChanged();
         Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> results = Utility.convert(result);
+        List<Map<String,Object>> results = EdaUtility.convert(result);
         
         // Assert
         Integer expectedSize = 0; //-- same value , so expect zero
@@ -250,7 +250,7 @@ private class IsChangedTest {
         //act
         IsChanged plugin = new IsChanged();
         Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> results = Utility.convert(result);
+        List<Map<String,Object>> results = EdaUtility.convert(result);
         
         // Assert
         Integer expectedSize = 0; //-- same value , so expect zero
@@ -299,7 +299,7 @@ private class IsChangedTest {
         //act
         IsChanged plugin = new IsChanged();
         Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> results = Utility.convert(result);
+        List<Map<String,Object>> results = EdaUtility.convert(result);
         
         // Assert
         Integer expectedSize = 1; //-- change detected , so expect one

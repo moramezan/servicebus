@@ -71,7 +71,7 @@ global class LogInitializer implements Process.Plugin {
          parameters.put('eda_logGroupIds', logGroupIds);
 
          
-         return Utility.convert(new List<Map<String,Object>>{parameters});
+         return EdaUtility.convert(new List<Map<String,Object>>{parameters});
     }
 
  

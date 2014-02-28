@@ -61,7 +61,7 @@ public with sharing class Gate implements Process.Plugin {
         //this is the last item, let's release
         parameters.put('Id', gateGroupId);
         
-        return Utility.convert(new List<Map<String,Object>>{parameters});
+        return EdaUtility.convert(new List<Map<String,Object>>{parameters});
     }
     
 }

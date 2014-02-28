@@ -22,7 +22,7 @@ private class LogWriterTest{
         try {
             LogWriter plugin = new LogWriter();
             Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-            List<Map<String,Object>> results = Utility.convert(result);
+            List<Map<String,Object>> results = EdaUtility.convert(result);
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -57,7 +57,7 @@ private class LogWriterTest{
         try {
             LogWriter plugin = new LogWriter();
             Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-            List<Map<String,Object>> results = Utility.convert(result);
+            List<Map<String,Object>> results = EdaUtility.convert(result);
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -124,7 +124,7 @@ private class LogWriterTest{
         //act
         LogWriter plugin = new LogWriter();
         Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> results = Utility.convert(result);
+        List<Map<String,Object>> results = EdaUtility.convert(result);
         
         //assemble
         List<LogWriterEntry__c> logWriterEntries = [

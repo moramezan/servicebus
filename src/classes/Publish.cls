@@ -53,7 +53,7 @@ public with sharing class Publish implements Process.Plugin {
         //original guy carries on... this is not a Terminate
         parametersList.add(parameters);
         
-        return Utility.convert(parametersList);
+        return EdaUtility.convert(parametersList);
     }
     
     public static List<HealthController.Health> getHealth() {

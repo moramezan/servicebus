@@ -26,7 +26,7 @@ public with sharing class Jump implements Process.Plugin {
         parameters.put('eda_sequenceName', configuration.Sequence__r.Name);
         parameters.put('eda_position', 0);
         
-        return Utility.convert(new List<Map<String,Object>>{parameters});
+        return EdaUtility.convert(new List<Map<String,Object>>{parameters});
     }
 
 }

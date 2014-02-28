@@ -1,4 +1,4 @@
-public with sharing class Utility {
+public with sharing class EdaUtility {
 
     static public Map<String,String> convert(List<Process.PluginDescribeResult.InputParameter> inputs) {
         //populate list into key-value map

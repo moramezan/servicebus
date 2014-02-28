@@ -44,7 +44,7 @@
         };
         
         Publish branch = new Publish();
-        List<Map<String,Object>> parametersList = Utility.convert(branch.invoke(new Process.PluginRequest(parameters)));
+        List<Map<String,Object>> parametersList = EdaUtility.convert(branch.invoke(new Process.PluginRequest(parameters)));
         
         //should return one for sub, one for passthru
         Integer expectedSize = 2;
@@ -113,7 +113,7 @@
         
         //act
         Process.PluginResult results = publishPlugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> parametersList = Utility.convert(results);
+        List<Map<String,Object>> parametersList = EdaUtility.convert(results);
         
         //assert
         Integer expectedSize = 1;
@@ -168,7 +168,7 @@
         //act
         Publish process = new Publish();
         Process.PluginResult results = process.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> parametersList = Utility.convert(results);
+        List<Map<String,Object>> parametersList = EdaUtility.convert(results);
         
         //assert
         Integer expectedSize = 3;

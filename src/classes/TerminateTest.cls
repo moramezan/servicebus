@@ -38,7 +38,7 @@ private class TerminateTest
         // Act
         Terminate terminate = new Terminate();
         Process.PluginResult results = terminate.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> actualOutParametersList = Utility.convert(results);
+        List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -76,7 +76,7 @@ private class TerminateTest
         // Act
         Terminate terminate = new Terminate();
         Process.PluginResult results = terminate.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> actualOutParametersList = Utility.convert(results);
+        List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -119,12 +119,12 @@ private class TerminateTest
         Terminate terminate = new Terminate();
         
         Process.PluginResult resultsInvokeFirst = terminate.invoke(new Process.PluginRequest(parametersFirst));
-        List<Map<String,Object>> actualOutParametersListFirst = Utility.convert(resultsInvokeFirst);
+        List<Map<String,Object>> actualOutParametersListFirst = EdaUtility.convert(resultsInvokeFirst);
         
         Map<String,Object> parametersSecond = actualOutParametersListFirst[0].clone(); //-- Terminate hands back one
         
         Process.PluginResult resultsInvokeSecond = terminate.invoke(new Process.PluginRequest(parametersSecond));
-        List<Map<String,Object>> actualOutParametersListSecond = Utility.convert(resultsInvokeSecond);
+        List<Map<String,Object>> actualOutParametersListSecond = EdaUtility.convert(resultsInvokeSecond);
         
         // prepare
         List<Object> actualStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('eda_subsequenceStepIds');

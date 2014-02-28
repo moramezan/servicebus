@@ -54,6 +54,6 @@ public with sharing class Branch implements Process.Plugin {
         //  event.put('Id', clone.Id);
         //}
         
-        return Utility.convert(new List<Map<String,Object>>{parameters, clone});
+        return EdaUtility.convert(new List<Map<String,Object>>{parameters, clone});
     }
 }

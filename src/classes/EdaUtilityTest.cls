@@ -1,4 +1,4 @@
-@isTest private class UtilityTest {
+@isTest private class EdaUtilityTest {
     static testMethod void testInputs2map() {
         //arrange
         List<Process.PluginDescribeResult.InputParameter> inputs = new List<Process.PluginDescribeResult.InputParameter>{
@@ -17,7 +17,7 @@
         };
         
         //act
-        Map<String,String> descriptions = Utility.convert(inputs);
+        Map<String,String> descriptions = EdaUtility.convert(inputs);
         System.assertEquals('herp', descriptions.get('one'));
         System.assertEquals('derp', descriptions.get('two'));
     }
@@ -28,7 +28,7 @@
         List<Map<String,String>> parametersList = (List<Map<String,String>>)System.Json.deserialize(data, List<Map<String,String>>.class);
         
         //act
-        Map<String,Object> results = Utility.convert(parametersList).outputParameters;
+        Map<String,Object> results = EdaUtility.convert(parametersList).outputParameters;
         
         //assert
         String expectedOne = System.Json.serialize(new Map<String,Object>{'aaa' => '1', 'bbb' => 'foo'});
@@ -46,7 +46,7 @@
         });
         
         //act
-        List<Map<String,Object>> parametersList = Utility.convert(result);
+        List<Map<String,Object>> parametersList = EdaUtility.convert(result);
         System.debug(parametersList);
         
         //assert

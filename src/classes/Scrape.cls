@@ -39,6 +39,6 @@ public class Scrape implements Process.Plugin {
         parameters.put('Id', attachment.Id);
         
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>{parameters};
-        return Utility.convert(parametersList);
+        return EdaUtility.convert(parametersList);
     }
 }

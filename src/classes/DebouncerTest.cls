@@ -184,7 +184,7 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesParameters(
     //act
     Debouncer plugin = new Debouncer();
     Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-    List<Map<String,Object>> results = Utility.convert(result);
+    List<Map<String,Object>> results = EdaUtility.convert(result);
     
     // Assert
     Integer expectedSize = 1; //-- no pre-existing debouncers , so expect one
@@ -233,7 +233,7 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesMessageForO
     //act
     Debouncer plugin = new Debouncer();
     Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-    List<Map<String,Object>> results = Utility.convert(result);
+    List<Map<String,Object>> results = EdaUtility.convert(result);
     
     // Assert
     Integer expectedSize = 1; //-- one pre-existing debouncer outside window , so expect one
@@ -282,7 +282,7 @@ private static testMethod void callingInvokeWhenZeroDebuncersSwallowsMessageForI
     //act
     Debouncer plugin = new Debouncer();
     Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-    List<Map<String,Object>> results = Utility.convert(result);
+    List<Map<String,Object>> results = EdaUtility.convert(result);
     
     // Assert
     Integer expectedSize = 0; //-- one pre-existing debouncer inside window , so expect zero

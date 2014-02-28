@@ -53,6 +53,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>EdaUtility</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>EdaUtilityTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>FutureBroker</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -290,14 +298,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>TerminateTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>Utility</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>UtilityTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

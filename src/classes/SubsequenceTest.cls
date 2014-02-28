@@ -43,7 +43,7 @@
         //act
         Subsequence process = new Subsequence();
         Process.PluginResult result = process.invoke(request);
-        List<Map<String,Object>> parametersList = Utility.convert(result);
+        List<Map<String,Object>> parametersList = EdaUtility.convert(result);
         
         //asserts
         Decimal expectedSize = 1;

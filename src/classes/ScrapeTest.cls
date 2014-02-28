@@ -55,7 +55,7 @@ public class ScrapeTest {
         Test.startTest();
         Scrape plugin = new Scrape();
         Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> results = Utility.convert(result);
+        List<Map<String,Object>> results = EdaUtility.convert(result);
         Test.stopTest();
         
         // Assemble

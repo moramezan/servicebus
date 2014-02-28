@@ -52,7 +52,7 @@ public class Debouncer implements Process.Plugin {
         Integer twentyFourHours = 24;
         deleteOldDebouncers(currentStamp, minimumHours, twentyFourHours) ;
         
-        return Utility.convert(parametersList);
+        return EdaUtility.convert(parametersList);
     }
     
     @testVisible

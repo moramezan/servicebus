@@ -653,7 +653,7 @@ public class BrokerTest{
         public Process.PluginResult invoke(Process.PluginRequest request) {
             Map<String,Object> parameters = request.inputParameters;
             throw new BrokerException(FailureMessage);
-            return Utility.convert(new List<Map<String,Object>>{parameters});
+            return EdaUtility.convert(new List<Map<String,Object>>{parameters});
         }
     }
 }

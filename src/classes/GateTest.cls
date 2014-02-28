@@ -49,7 +49,7 @@ private  class GateTest {
         // Act
         Gate gate = new Gate();
         Process.PluginResult results = gate.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> actualOutParametersList = Utility.convert(results);
+        List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -107,7 +107,7 @@ private  class GateTest {
         // Act
         Gate gate = new Gate();
         Process.PluginResult results = gate.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> actualOutParametersList = Utility.convert(results);
+        List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();

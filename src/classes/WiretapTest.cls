@@ -60,7 +60,7 @@ private class WiretapTest {
         // Act
         Wiretap wireTap = new Wiretap();
         Process.PluginResult results = wireTap.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> actualParametersList = Utility.convert(results);
+        List<Map<String,Object>> actualParametersList = EdaUtility.convert(results);
 
         // prepare
         Integer actualSize = actualParametersList.size();

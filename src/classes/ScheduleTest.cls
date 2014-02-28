@@ -27,14 +27,14 @@
         
         Schedule plugin = new Schedule();
         Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> results = Utility.convert(result);
+        List<Map<String,Object>> results = EdaUtility.convert(result);
         
  
         
         //this guy will hit his schedule
        ///-- NO eda_harbeatkey ::  parameters.put('eda_heartbeat', '2014-01-15T09:00:00.000Z');
         result = plugin.invoke(new Process.PluginRequest(parameters));
-        results = Utility.convert(result);
+        results = EdaUtility.convert(result);
         
         Integer expectedHitCount = 1;
         Integer actualHitCount = results.size();
@@ -68,7 +68,7 @@
         
         Schedule plugin = new Schedule();
         Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> results = Utility.convert(result);
+        List<Map<String,Object>> results = EdaUtility.convert(result);
         
         Integer expectedMissCount = 0;
         Integer actualMissCount = results.size();
@@ -77,7 +77,7 @@
         //this guy will hit his schedule
         parameters.put('eda_heartbeat', '2014-01-15T09:00:00.000Z'); //definitely a Wednesday at 9:00
         result = plugin.invoke(new Process.PluginRequest(parameters));
-        results = Utility.convert(result);
+        results = EdaUtility.convert(result);
         
         Integer expectedHitCount = 1;
         Integer actualHitCount = results.size();

@@ -35,6 +35,6 @@ public with sharing class Wiretap implements Process.Plugin {
         message.setSaveAsActivity(false);
         Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{message});
         
-        return Utility.convert(new List<Map<String,Object>>{parameters});
+        return EdaUtility.convert(new List<Map<String,Object>>{parameters});
     }
 }

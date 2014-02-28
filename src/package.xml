@@ -14,6 +14,8 @@
         <members>ConfigurationShowStepExtension</members>
         <members>Debouncer</members>
         <members>DebouncerTest</members>
+        <members>EdaUtility</members>
+        <members>EdaUtilityTest</members>
         <members>FutureBroker</members>
         <members>FutureBrokerTest</members>
         <members>Gate</members>
@@ -74,8 +76,6 @@
         <members>SynchronousBrokerTest</members>
         <members>Terminate</members>
         <members>TerminateTest</members>
-        <members>Utility</members>
-        <members>UtilityTest</members>
         <members>Wiretap</members>
         <members>WiretapTest</members>
         <name>ApexClass</name>
