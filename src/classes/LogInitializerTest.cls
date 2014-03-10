@@ -27,10 +27,10 @@ private class LogInitializerTest {
         insert step;
         
         LogConfiguration__c configuration = [
-            SELECT Id, GroupIdentifier__c
+            SELECT Id, StaticGroupIdentifier__c
             FROM LogConfiguration__c
         ];
-        configuration.GroupIdentifier__c = null; // no identifier specified
+        configuration.StaticGroupIdentifier__c = null; // no identifier specified
         update configuration;
         
         Map<String,Object> parameters = new Map<String,Object>{
@@ -92,10 +92,10 @@ private class LogInitializerTest {
         insert step;
         
         LogConfiguration__c configuration = [
-            SELECT Id, GroupIdentifier__c
+            SELECT Id, StaticGroupIdentifier__c
             FROM LogConfiguration__c
         ];
-        configuration.GroupIdentifier__c = theIdentifier; // not null
+        configuration.StaticGroupIdentifier__c = theIdentifier; // not null
         update configuration;
         
         Map<String,Object> parameters = new Map<String,Object>{
@@ -190,7 +190,7 @@ private class LogInitializerTest {
         insert step;
         
         LogConfiguration__c configuration = [
-            SELECT Id, GroupIdentifier__c
+            SELECT Id, StaticGroupIdentifier__c
             FROM LogConfiguration__c
         ];
         delete configuration;

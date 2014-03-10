@@ -51,11 +51,11 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
-        <fullName>GroupIdentifier__c</fullName>
-        <description>Enter any static business key (eg INVOICE, PAYSLIP, etc) to  describe the grouping.  Alternatively ,leave blank  to enable a system generated identifier.</description>
+        <fullName>DynamicGroupIdentifier__c</fullName>
+        <description>An object field name that is used to dynamically extract  the Grouping Identifier from the contents of the data arriving at this step</description>
         <externalId>false</externalId>
-        <inlineHelpText>Enter any static  business key (eg INVOICE, PAYSLIP, etc) to  describe the grouping.  Alternatively ,leave blank  to enable a system generated identifier.</inlineHelpText>
-        <label>Static Group Identifier</label>
+        <inlineHelpText>An object field name that is used to dynamically extract  the Grouping Identifier from the contents of the data arriving at this step</inlineHelpText>
+        <label>Dynamic Group Identifier</label>
         <length>80</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -63,11 +63,11 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>GroupInstruction__c</fullName>
-        <description>An instruction for dynamically extracting the Grouping Identifier from the contents of the data arriving at this step. For example use &quot;Field__c&quot;  to declare that Field__c should be used as the Grouping Identifier</description>
+        <fullName>StaticGroupIdentifier__c</fullName>
+        <description>Enter any static business key (eg INVOICE, PAYSLIP, etc) to  describe the grouping.  Alternatively ,leave blank  to enable a system generated identifier.</description>
         <externalId>false</externalId>
-        <inlineHelpText>An instruction for dynamically extracting the Grouping Identifier from the contents of the data arriving at this step. For example use &quot;Field__c&quot;  to declare that Field__c should be used as the Grouping Identifier</inlineHelpText>
-        <label>Dynamic Group Identifier</label>
+        <inlineHelpText>Enter any static business key (eg INVOICE, PAYSLIP, etc) to  describe the grouping.  Alternatively ,leave blank  to enable a system generated identifier.</inlineHelpText>
+        <label>Static Group Identifier</label>
         <length>80</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

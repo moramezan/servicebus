@@ -44,7 +44,7 @@ global class LogInitializer implements Process.Plugin {
  
          //get group identifier instruction from configuration
          List<LogConfiguration__c> configurations = [
-             SELECT Id, GroupIdentifier__c , GroupInstruction__c
+             SELECT Id, StaticGroupIdentifier__c , DynamicGroupIdentifier__c
              FROM LogConfiguration__c
              WHERE Id = :(Id)parameters.get('eda_configuration')
          ];
@@ -101,26 +101,26 @@ global class LogInitializer implements Process.Plugin {
         //  default :
         //
         //  "sequence name" and "step position"
-        //  (always use this if GroupIdentifier__c from configuration equates to null)
+        //  (always use this if StaticGroupIdentifier__c from configuration equates to null)
         String defaultGroupIdentifier =  step.Sequence__r.Name + '-' + step.Position__c;
         
         
         //  preferred alternatives :
         //
-        //     alternative 1  use non-null GroupIdentifier__c from configuration
+        //     alternative 1  use non-null StaticGroupIdentifier__c from configuration
         //     even better
         //     alternative 2  attempt obtain a user friendly "business id" from the
         //                    object by defining a field of that object in the
-        //                    GroupInstruction__c field
-        //                    if successful, any entry in GroupIdentifier__c is ignored
+        //                    DynamicGroupIdentifier__c field
+        //                    if successful, any entry in StaticGroupIdentifier__c is ignored
         
-        String groupIdentifier =  configuration.GroupIdentifier__c;
-        String groupInstruction =  configuration.GroupInstruction__c;
+        String groupIdentifier =  configuration.StaticGroupIdentifier__c;
+        String dynamicGroupIdentifier =  configuration.DynamicGroupIdentifier__c;
         
         String businessId;
-        if ( !String.isBlank(groupInstruction) ) {
+        if ( !String.isBlank(dynamicGroupIdentifier) ) {
             try {
-                businessId = getIdentifer(groupInstruction,   getHydrated(dataId)   );
+                businessId = getIdentifer(dynamicGroupIdentifier,   getHydrated(dataId)   );
             } catch (Exception e) {
                 // swallow / non-intrusive - default acceptable
             }

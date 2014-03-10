@@ -385,14 +385,14 @@
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
-        <field>LogConfiguration__c.GroupIdentifier__c</field>
-        <readable>true</readable>
+        <editable>false</editable>
+        <field>LogConfiguration__c.DynamicGroupIdentifier__c</field>
+        <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
-        <field>LogConfiguration__c.GroupInstruction__c</field>
-        <readable>true</readable>
+        <editable>false</editable>
+        <field>LogConfiguration__c.StaticGroupIdentifier__c</field>
+        <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>

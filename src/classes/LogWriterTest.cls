@@ -88,12 +88,12 @@ private class LogWriterTest{
         insert stepA2;
  
         LogConfiguration__c configuration1  = new LogConfiguration__c(
-            GroupIdentifier__c = theIdentifier1
+            StaticGroupIdentifier__c = theIdentifier1
         );
         insert configuration1;
          
         LogConfiguration__c configuration2  = new LogConfiguration__c(
-            GroupIdentifier__c = theIdentifier2
+            StaticGroupIdentifier__c = theIdentifier2
         );
         insert configuration2;
         

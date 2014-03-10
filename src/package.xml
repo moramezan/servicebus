@@ -132,8 +132,8 @@
         <members>IsChangedConfiguration__c.OldValue__c</members>
         <members>JumpConfiguration__c.Sequence__c</members>
         <members>KnifeSwitch__c.Url__c</members>
-        <members>LogConfiguration__c.GroupIdentifier__c</members>
-        <members>LogConfiguration__c.GroupInstruction__c</members>
+        <members>LogConfiguration__c.DynamicGroupIdentifier__c</members>
+        <members>LogConfiguration__c.StaticGroupIdentifier__c</members>
         <members>LogGroup__c.GroupIdentifier__c</members>
         <members>LogGroup__c.LogConfiguration__c</members>
         <members>LogGroup__c.Stamp__c</members>
