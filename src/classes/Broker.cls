@@ -77,6 +77,9 @@
  */
 abstract global class Broker {
     
+    @TestVisible
+    private static Integer stackDepthThreshold  = 500;
+    
     global class BrokerException extends Exception {}
     
     /**
@@ -250,8 +253,18 @@ abstract global class Broker {
         
         //THEIR FUCKUPS
         try {
+            //save important message properties (such as stackDepth) so that process authors 
+            //cannot pervert them  
+            //TODO : requires a more generic approach not specific to just the eda_stackDepth
+            //       property
+            Integer stackDepth = getStackDepth(parameters, stackDepthThreshold);
             //call invoke the processable instance
             Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
+            //write back save important message properties 
+            //TODO : requires a more generic approach to write back the "eda_" properties to 
+            //       the parameters collections in parametersList
+            results = applyStackDepth(results, stackDepth);
+            // convert to a list of parameter collections
             parametersList = EdaUtility.convert(results);
         } catch (Exception e) {
             surfaceException(e, message.Id);
@@ -349,6 +362,52 @@ abstract global class Broker {
             Body = Json.serializePretty(serializedException).left(32000)
         );
     }
+
+     /**
+     * Context:
+     * A message can pass through a limited number of steps. This "limit" is a fairly high arbitrary threshold.
+     * The intent is to prevent a never ending self referencing loop (we cannot control what the system configurators
+     * configure). A self referencing loop would eventually ring alarm bells with the Salesforce police with the
+     * possibility of the Munger being blacklisted
+     * An exception is thrown if the stackDepth threshold is reached
+     *
+     * We cannot simply increment  eda_stackDepth BEFORE calling invoke as a process writer could fuck with this parameter
+     * Instead we read and increment eda_stackDepth BEFORE calling invoke using getStackDepth()
+     * and assign to an Integer stackDepth variable
+     * We use applyStackDepth()  to apply the incremented stackDepth variable to the eda_stackDepth parameter of
+     * all messages returned from invoke()
+     */
+    @TestVisible
+    static private Process.PluginResult applyStackDepth(Process.PluginResult results, Integer stackDepth) {
+        List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
+
+        Integer count = 0;
+        Integer size = results.outputParameters.size();
+
+        for (Integer i = 0; i < size; i++) {
+            Object result = results.outputParameters.get(String.valueOf(i));
+            String data = System.Json.serialize(result);
+            Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
+            parameters.put('eda_stackDepth',stackDepth);
+            parametersList.add(parameters);
+        }
+
+        return EdaUtility.convert(parametersList);
+    }
+
+    /**
+     * See applyStackDepth() method for context and details.
+     */
+    @TestVisible
+    static private Integer getStackDepth(Map<String,Object> parameters, Integer threshold) {
+        Integer stackDepth = (parameters.get('eda_stackDepth') == null) ? 0 : (Integer) parameters.get('eda_stackDepth');
+        stackDepth++;
+        if (stackDepth > threshold) {
+            throw new BrokerException('Maximum Stack Depth exceeded - to resolve, manually set eda_stackDepth on parameters to 0');
+        }
+        return stackDepth;
+    }
+    
     
     /**
      * The Mark helper logic is for the Gate process; it determines when a split occurs, and writes away the number of

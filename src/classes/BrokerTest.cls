@@ -14,6 +14,157 @@ public class BrokerTest{
         }
     }
     
+    
+    static testMethod void stackDepthExceededWillHaltProcessingWithAppropriateMessageDetail() {
+        // arrange
+        Integer stackDepthThreshold = 3;
+        Broker.stackDepthThreshold  = stackDepthThreshold;
+
+        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+
+        String sequenceNameA = 'sequenceA';
+        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
+        insert sequenceA;
+
+
+        Integer positionA1 = 1;
+        Integer positionA2 = 2;
+        Integer positionA3 = 3;
+        Integer positionA4 = 4;
+        Integer positionA5 = 5;
+        Integer positionA6 = 6;
+
+        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = wiretapProcess.Id);
+        Step__c stepA2 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA2,Process__c = wiretapProcess.Id);
+        Step__c stepA3 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA3,Process__c = wiretapProcess.Id);
+        Step__c stepA4 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA4,Process__c = wiretapProcess.Id);
+        Step__c stepA5 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA5,Process__c = wiretapProcess.Id);
+        Step__c stepA6 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA6,Process__c = terminateProcess.Id);
+
+        insert stepA1;
+        insert stepA2;
+        insert stepA3;
+        insert stepA4;
+        insert stepA5;
+        insert stepA6;
+        
+        //arrange specific broker implementation
+        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        
+        //act 
+        Broker.enqueue(sequenceNameA, '000000000000000AAA');
+
+        
+        //assemble
+        List<Message__c> messages = [
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Message__c, IsDeleted
+            FROM Message__c
+            WHERE IsDeleted =  false
+            ALL ROWS
+        ];
+        
+        Integer actualStackDepth;
+        String actualDetail;
+        String actualStatus;
+        Integer actualCount = messages.size();
+        if (actualCount > 0) {
+            Map<String,Object> actualParameters = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Parameters__c);
+            actualStackDepth = (Integer) actualParameters.get('eda_stackDepth');
+            actualDetail = messages[0].Message__c;
+            actualStatus = messages[0].Status__c;
+        }
+   
+        // assert
+        Integer expectedCount = 1;
+        System.assertEquals( expectedCount, actualCount);
+        Integer expectedStackDepth = stackDepthThreshold;
+        System.assertEquals( expectedStackDepth, actualStackDepth);
+        String expectedDetail = 'Maximum Stack Depth exceeded';
+        System.assert(actualDetail.contains(expectedDetail)); 
+        String expectedStatus = 'Processing';
+        System.assertEquals( expectedStatus, actualStatus); 
+    }
+    
+    static testMethod void callingGetStackDepthReturnsExpectedValueWhenStackDepthParameterLtThreshold() {
+        //arrange
+        Map<String,Object> parameters = new Map<String,Object>();
+        Integer threshold = 10;
+        Integer stackDepth = 8;
+        String key  = 'eda_stackDepth';
+        parameters.put(key, stackDepth);
+        
+        //act
+        Integer actualStackDepth = Broker.getStackDepth(parameters, threshold);
+
+        //assert
+        Integer expectedStackDepth = stackDepth + 1;
+        System.assertEquals( expectedStackDepth, actualStackDepth);
+    }
+
+
+
+    static testMethod void callingGetStackDepthReturnsExpectedValueWhenStackDepthParameterNotDefined() {
+       //arrange
+        Map<String,Object> parameters = new Map<String,Object>();
+        Integer threshold = 10;
+        Integer stackDepth = 0;
+
+        //act
+        Integer actualStackDepth = Broker.getStackDepth(parameters, threshold);
+
+        //assert
+        Integer expectedStackDepth = stackDepth + 1;
+        System.assertEquals( expectedStackDepth, actualStackDepth);
+    }
+ 
+  
+    static testMethod void callingGetStackDepthThrowsExceptionWhenStackDepthParameterGtOrEqToThreshold() {
+       //arrange
+        Map<String,Object> parameters = new Map<String,Object>();
+        Integer threshold = 10;
+        Integer stackDepth = 10;
+        String key  = 'eda_stackDepth';
+        parameters.put(key, stackDepth);
+        
+        Boolean actualFlag = false;
+        try {
+            //act
+            Integer actualStackDepth = Broker.getStackDepth(parameters, threshold);
+        } catch (Exception e) {
+            actualFlag = true;
+        }
+
+        //assert
+        Boolean expectedFlag = true;
+        System.assertEquals( expectedFlag, actualFlag);
+    }
+    
+    
+    static testMethod void callingApplyStackDepthCorrectlyAppliesStackDepthToParameters() {
+        //arrange
+        Integer stackDepth = 8;
+        Map<String,Object> parameters = new Map<String,Object>();
+        List<Map<String,Object>>  parametersList = new List<Map<String,Object>>{ parameters };
+         Process.PluginResult results = EdaUtility.convert(parametersList);
+
+        //act
+        results =   Broker.applyStackDepth(results, stackDepth);
+
+        //assemble
+        Integer actualStackDepth = -1;
+        List<Map<String,Object>>  actualParametersList = EdaUtility.convert(results);
+        for (Map<String,Object> actualParameters : actualParametersList ) {
+            actualStackDepth = (Integer) actualParameters.get('eda_stackDepth');
+        }
+ 
+        //assert
+        Integer expectedStackDepth = stackDepth;
+        System.assertEquals( expectedStackDepth, actualStackDepth);
+    }
+    
+ 
+
     static testMethod void canCorrectlyResolveAndPersistMessages() {
         //arrange processes
         Process__c markProcess = Processes.generateOne(Mark.class);
@@ -457,6 +608,8 @@ public class BrokerTest{
         Integer expectedCount = null;
         System.assertEquals(expectedCount , actualCount);
     }
+
+ 
     
     //TODO :: write test for this when you (NReid) understand this ( cant remember right now)
     // if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('eda_gateGroupId')}); //tidy up split of 0
@@ -515,7 +668,8 @@ public class BrokerTest{
         System.assert(actualMessage.contains(expectedMessage));
     }
     */
-        
+
+  
     static testMethod void testMalformedParametersThrowsSystemJsonException() {
         //arrange
         Message__c message = new Message__c(Parameters__c = '{"malformed":....}');
@@ -656,4 +810,5 @@ public class BrokerTest{
             return EdaUtility.convert(new List<Map<String,Object>>{parameters});
         }
     }
+ 
 }
