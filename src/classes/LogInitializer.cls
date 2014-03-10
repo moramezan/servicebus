@@ -117,12 +117,16 @@ global class LogInitializer implements Process.Plugin {
         String groupIdentifier =  configuration.StaticGroupIdentifier__c;
         String dynamicGroupIdentifier =  configuration.DynamicGroupIdentifier__c;
         
+        Boolean flagBusinessIdOk = true;
         String businessId;
         if ( !String.isBlank(dynamicGroupIdentifier) ) {
             try {
                 businessId = getIdentifer(dynamicGroupIdentifier,   getHydrated(dataId)   );
+                if (businessId == null) {
+                    flagBusinessIdOk = false;
+                }
             } catch (Exception e) {
-                // swallow / non-intrusive - default acceptable
+                flagBusinessIdOk = false; //originally :: swallow / non-intrusive - default acceptable
             }
         }
               
@@ -133,7 +137,11 @@ global class LogInitializer implements Process.Plugin {
         if ( !String.isBlank(businessId) ) {
             groupIdentifier = businessId;
         }
-       
+
+        if (!flagBusinessIdOk) {
+            groupIdentifier = 'DYNAMIC-KEY-ON-'+defaultGroupIdentifier+'-NOT-FOUND';  
+        }
+        
         return groupIdentifier;
     }
 

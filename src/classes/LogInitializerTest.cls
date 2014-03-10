@@ -13,6 +13,68 @@ private class LogInitializerTest {
         System.assertEquals(expectedConfiguration, actualConfiguration);
     }
     
+    private static testMethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForXXXXXXXXX() {
+        //arrange
+        String sequenceName  = 'LogInitializerSequence';
+        Integer thePosition =  1;
+        Id theId  = '000000000000000AAA'; // no data present
+        Process__c logInitializerProcess = Processes.generateOne(LogInitializer.class);
+        
+        Sequence__c sequence = new Sequence__c(Name = sequenceName);
+        insert sequence;
+        
+        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = logInitializerProcess.Id);
+        insert step;
+        
+        LogConfiguration__c configuration = [
+            SELECT Id, StaticGroupIdentifier__c
+            FROM LogConfiguration__c
+        ];
+        configuration.StaticGroupIdentifier__c = null;
+        configuration.DynamicGroupIdentifier__c = 'Fld_Doesnt_Exist__c';
+        update configuration;
+        
+        Map<String,Object> parameters = new Map<String,Object>{
+            'Id' => theId,
+            'eda_configuration' =>  configuration.Id,
+            'eda_sequenceName' => sequenceName,
+            'eda_position' => thePosition
+        };
+        
+        //act
+        LogInitializer plugin = new LogInitializer();
+        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> results = EdaUtility.convert(result);
+        
+        //assemble
+        DateTime expectedStampTo = System.Now().addSeconds(1);
+        DateTime expectedStampFrom = System.Now().addSeconds(-1);
+        List<LogGroup__c> logGroups = [
+            SELECT id, Name, LogConfiguration__c,  GroupIdentifier__c, Stamp__c
+            FROM LogGroup__c
+            WHERE Stamp__c >= :expectedStampFrom
+            AND Stamp__c <=  :expectedStampTo
+        ];
+
+        String  actualGroupIdentifier = null;
+        Integer actualLogGroupSize = logGroups.size();
+        if (actualLogGroupSize > 0) {
+             actualGroupIdentifier =  logGroups[0].GroupIdentifier__c;
+        }
+        
+           
+        // Assert
+        Integer expectedResultsSize = 1;
+        Integer actualResultsSize = results.size();
+        System.assertEquals(expectedResultsSize, actualResultsSize);
+        
+        Integer expectedLogGroupSize = 1;
+        System.assertEquals(expectedLogGroupSize, actualLogGroupSize);
+        
+        String expectedGroupIdentifier1 = 'DYNAMIC-KEY-ON';
+        System.assert(actualGroupIdentifier.contains(expectedGroupIdentifier1));
+    }  
+    
     private static testMethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForConfigIdentifierEqNull() {
         //arrange
         String sequenceName  = 'LogInitializerSequence';
