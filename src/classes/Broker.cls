@@ -139,6 +139,7 @@ abstract global class Broker {
      */
     static global void enqueue(String sequenceName, Id dataId) {
         Map<String,Object> parameters = new Map<String,Object> {
+            'eda_notificationGuid' => getNotificationGuid(18),
             'eda_sequenceName' => sequenceName,
             'eda_position' => 0,
             'Id' => dataId
