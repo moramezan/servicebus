@@ -9,6 +9,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ApiTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>AsyncApexJobs</apexClass>
         <enabled>false</enabled>
     </classAccesses>
