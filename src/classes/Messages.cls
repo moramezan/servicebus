@@ -15,7 +15,7 @@ public class Messages extends SObjects {
     }
     
     @testVisible private void startBrokerBatch(Map<Id,SObject> objects) {
-        AsyncApexJobs.runOne(BatchBroker.class, 1);
+        AsyncApexJobs.runOne(BatchBrokerDispatcher.class, 1);  
     }
     
     @testVisible private void startBrokerBatchIfBufferOrReprocess(Map<Id,Message__c> oldIdToOldMessage, Map<Id,Message__c> newIdToNewMessage) {
@@ -38,7 +38,7 @@ public class Messages extends SObjects {
             }
         }
 
-        if (processing2bufferOrReprocess) AsyncApexJobs.runOne(BatchBroker.class, 1);
+        if (processing2bufferOrReprocess) AsyncApexJobs.runOne(BatchBrokerDispatcher.class, 1);   
     }
     
 }

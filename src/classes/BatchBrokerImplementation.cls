@@ -1,9 +1,4 @@
-/**
- * This BatchBroker provides a worker process in Batch Apex that consumes off the Message queue. It will iterate
- * over a limited number, attempt to process those guys in their own execution context, and then restart the Batch Apex
- * job afterwards if more work remains. Simple in principle but can be very sluggish depending on resource availability.
- */
-public with sharing class BatchBroker extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts {
+public with sharing class BatchBrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts {
     
     public Database.QueryLocator start(Database.BatchableContext context) {
         if (BrokerSettings__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
@@ -23,11 +18,11 @@ public with sharing class BatchBroker extends Broker implements Database.Batchab
      * The BatchBroker executes another Batch Apex job to run itself again.
      */
     override public void restartImpl() {
-        Database.executeBatch(new BatchBroker(), 1);
+        Database.executeBatch(new BatchBrokerDispatcher(), 1);
     }
     
     override public Boolean isAlreadyRunning() {
-        System.Type type = BatchBroker.class;
+        System.Type type = BatchBrokerDispatcher.class;
         String namespacePrefix;
         String name;
         
