@@ -20,7 +20,7 @@ public with sharing class Jump implements Process.Plugin {
         JumpConfiguration__c configuration = [
             SELECT Id, Sequence__r.Name
             FROM JumpConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda_configurable')
+            WHERE Id = :(Id)parameters.get('eda_configuration')
         ];
         
         parameters.put('eda_sequenceName', configuration.Sequence__r.Name);
