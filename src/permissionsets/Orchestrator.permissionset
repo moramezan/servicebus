@@ -229,6 +229,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>SchemaSelectorController</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SchemaSelectorControllerTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Scrape</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -370,6 +378,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>IsChangedConfiguration__c.ObjectName__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>IsChangedConfiguration__c.OldBlobId__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -386,6 +399,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>JumpConfiguration__c.Sequence__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>LogConfiguration__c.DynamicGroupIdentifierObjectName__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -751,11 +769,19 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>IsChangedConfigurationSchemaSelector</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>JumpConfigurationShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>LogConfigurationListLogGroups</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>LogConfigurationSchemaSelector</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -780,6 +806,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>PublishConfigurationShowStep</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>SchemaSelector</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

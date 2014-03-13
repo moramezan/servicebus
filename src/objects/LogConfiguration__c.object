@@ -51,6 +51,16 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
+        <fullName>DynamicGroupIdentifierObjectName__c</fullName>
+        <externalId>false</externalId>
+        <label>Dynamic Group Identifier Object Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>DynamicGroupIdentifier__c</fullName>
         <description>An object field name that is used to dynamically extract  the Grouping Identifier from the contents of the data arriving at this step</description>
         <externalId>false</externalId>
@@ -82,6 +92,16 @@
     <pluralLabel>Log Configurations</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>ChangeDynamicGroupIdentifier</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>page</linkType>
+        <masterLabel>Change Dynamic Group Identifier</masterLabel>
+        <openType>replace</openType>
+        <page>LogConfigurationSchemaSelector</page>
+        <protected>false</protected>
+    </webLinks>
     <webLinks>
         <fullName>ListLogGroups</fullName>
         <availability>online</availability>
