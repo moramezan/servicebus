@@ -43,7 +43,7 @@ public class ProcessGenerateExtension {
             SELECT Id, Name, Description__c, Tag__c, Icon__c, FullyQualifiedClassName__c
             FROM Process__c
             WHERE LastModifiedDate > :lastModifiedDate
-            ORDER BY Name ASC
+            ORDER BY Name DESC //per #240 so the new ones don't run off the bottom of the screen
         ];
     }
     
