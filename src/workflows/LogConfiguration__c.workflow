@@ -8,10 +8,10 @@
     &quot;Defines a Log Entry Grouping using the Sequence Name&quot;,
     IF (
         NOT( ISBLANK(DynamicGroupIdentifier__c) ) ,
-        &quot;Defines a Log Entry Grouping using the data object&apos;s &quot; + DynamicGroupIdentifier__c + &quot; field&quot;,
+        &quot;Creates a Log Group from the &apos;&quot; + DynamicGroupIdentifier__c + &quot;&apos; field on the message&apos;s data&quot;,
         IF (
             NOT( ISBLANK(StaticGroupIdentifier__c) ),
-            &quot;Defines a Log Entry Grouping using the constant &quot; + StaticGroupIdentifier__c,
+            &quot;Defines a Log Entry Grouping using the constant &apos;&quot; + StaticGroupIdentifier__c + &quot;&apos;&quot;,
             &quot;never gets here&quot;
         )
     )
