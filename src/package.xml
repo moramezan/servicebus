@@ -39,6 +39,10 @@
         <members>MessageShowDataExtension</members>
         <members>Messages</members>
         <members>MessagesTest</members>
+        <members>PostInstallClass</members>
+        <members>PostInstallClassTest</members>
+        <members>PostUninstallClass</members>
+        <members>PostUninstallClassTest</members>
         <members>ProcessExtensionCustomize</members>
         <members>ProcessExtensionCustomizeTest</members>
         <members>ProcessGenerateExtension</members>
