@@ -6,8 +6,9 @@
         <members>ApiTest</members>
         <members>AsyncApexJobs</members>
         <members>AsyncApexJobsTest</members>
-        <members>BatchBroker</members>
-        <members>BatchBrokerTest</members>
+        <members>BatchBrokerDispatcher</members>
+        <members>BatchBrokerImplementation</members>
+        <members>BatchBrokerImplementationTest</members>
         <members>Branch</members>
         <members>BranchTest</members>
         <members>Broker</members>

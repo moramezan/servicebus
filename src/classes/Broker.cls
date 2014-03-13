@@ -161,7 +161,7 @@ abstract global class Broker {
     
     static global void process() {
         BrokerSettings__c settings = BrokerSettings__c.getInstance();
-        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBroker.class.getName(); //default
+		if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBrokerImplementation.class.getName(); 
         
         Broker impl = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
         if (!impl.isAlreadyRunning()) impl.restartIfWorkPending();

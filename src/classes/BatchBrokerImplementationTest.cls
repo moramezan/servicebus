@@ -1,4 +1,4 @@
-@isTest public class BatchBrokerTest {
+@isTest public class BatchBrokerImplementationTest {
  
     static testMethod void callingRestartSuccessfullyCallsRestartImp() {
         //arrange processes
@@ -17,7 +17,7 @@
         Decimal positionA2 = stepA2.Position__c;
         
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = BatchBroker.class.getName());
+        insert new BrokerSettings__c(BrokerClassName__c = BatchBrokerImplementation.class.getName());
         
         //act (will synchronously start() execute() finish() and reschedule too)
         Test.startTest();
@@ -54,7 +54,7 @@
         Decimal positionA1 = stepA1.Position__c;
         
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = BatchBroker.class.getName());
+        insert new BrokerSettings__c(BrokerClassName__c = BatchBrokerImplementation.class.getName());
  
         //act (will synchronously start() execute() finish() and reschedule too)
         Test.startTest();
@@ -98,7 +98,7 @@
         Decimal positionA2 = stepA2.Position__c;
         
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = BatchBroker.class.getName());
+        insert new BrokerSettings__c(BrokerClassName__c = BatchBrokerImplementation.class.getName());
         
         //scenario:
         //resolved state, assume manual intervention to set status to 'Reprocess'
@@ -116,7 +116,7 @@
         
         //act
         Test.startTest();
-        new BatchBroker().restartIfWorkPending();
+        new BatchBrokerImplementation().restartIfWorkPending();
         Test.stopTest();
         
         //assemble

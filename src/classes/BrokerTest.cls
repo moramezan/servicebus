@@ -652,7 +652,7 @@ public class BrokerTest{
         markProcess.FullyQualifiedClassName__c = null;
         update markProcess;
         
-        insert new BrokerSettings__c(BrokerClassName__c = BatchBroker.class.getName() );
+        insert new BrokerSettings__c(BrokerClassName__c = BatchBrokerImplementation.class.getName() );
         
         // act
         Test.startTest();

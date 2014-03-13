@@ -30,7 +30,7 @@
         
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_configurable' => configuration.Id,
+            'eda_configuration' => configuration.Id,
             'eda_sequenceName' => 'origin',
             'eda_position' => 1,
             'data' => 'herpderp'

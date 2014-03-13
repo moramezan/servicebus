@@ -30,7 +30,7 @@ virtual public class FutureBroker extends Broker {
     
     /**
      * So we use PageReference.getContent with an action method to circumvent 'Callout loop not allowed' error. When
-     * a FutureBroker is 'started', the mechanics look quite similar to BatchBroker in terms of execution contexts.
+     * a FutureBroker is 'started', the mechanics look quite similar to BatchBrokerImplementation in terms of execution contexts.
      * THIS IS NEVER CALLED. Invoked by conposition of 'viewing' the Visualforce Page 'FutureBroker'.
      */
     virtual public void start() {

@@ -21,11 +21,15 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>BatchBroker</apexClass>
+        <apexClass>BatchBrokerDispatcher</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>BatchBrokerTest</apexClass>
+        <apexClass>BatchBrokerImplementation</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>BatchBrokerImplementationTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
