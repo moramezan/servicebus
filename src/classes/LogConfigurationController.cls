@@ -34,8 +34,9 @@ public class LogConfigurationController {
         String logGroupObjectName = logGroupDescribe.getName().replaceAll('__c','');
         String logConfigurationLookupFieldName = logConfigurationDescribe.getName().replaceAll('__c','');
         String logGroupKeyPrefix  = logGroupDescribe.getKeyPrefix();
-        
-        
+        logGroupObjectName = (logGroupObjectName.contains('__')) ? logGroupObjectName.substringAfter('__') : logGroupObjectName;
+        logConfigurationLookupFieldName =   (logConfigurationLookupFieldName.contains('__'))  ? logConfigurationLookupFieldName.substringAfter('__') : logConfigurationLookupFieldName;
+
         String lkid = '000000000000000';
         if (!Test.isRunningTest()) {
             Api.Client client = new Api.Client();
