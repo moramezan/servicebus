@@ -8,11 +8,11 @@ public class ProcessGenerateExtension {
     
     public String getRetURL() {
         if (ApexPages.currentPage().getParameters().get('retURL') == null) {
-            //could try ApexPages.currentPage().getHeaders().get('Referer');
+            //return to list view, could try ApexPages.currentPage().getHeaders().get('Referer');
             String prefix = SObjectType.Process__c.KeyPrefix;
-            return new ApexPages.PageReference('/' + prefix + '/o').getUrl();
+            return new ApexPages.PageReference('/' + prefix).getUrl();
         } else {
-            //could be '/apex/SequenceSorter' when there were no processes
+            //return to calling page, eg the SequenceSorter if it sent you here
             return ApexPages.currentPage().getParameters().get('retURL');
         }
     }
@@ -43,7 +43,7 @@ public class ProcessGenerateExtension {
             SELECT Id, Name, Description__c, Tag__c, Icon__c, FullyQualifiedClassName__c
             FROM Process__c
             WHERE LastModifiedDate > :lastModifiedDate
-            ORDER BY Name ASC
+            ORDER BY Name DESC //per #240 so the new ones don't run off the bottom of the screen
         ];
     }
     

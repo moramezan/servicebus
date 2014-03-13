@@ -56,11 +56,23 @@ public with sharing class SchemaSelectorController {
     public void populateFieldNameOptions() {
         Type reflector = Type.forName(this.ObjectName);
         SObject obj = (SObject)reflector.newInstance();
-        Set<String> fields = obj.getSObjectType().getDescribe().fields.getMap().keySet();
+        Map<String,Schema.SObjectField> key2field = obj.getSObjectType().getDescribe().fields.getMap();
+        
+        //turn map of SObjectFields into list of name strings from describes
+        List<String> describedNames = new List<String>();
+        
+        //we have to use the describe, because the getMap() keys are unqualified
+        for (String key : key2field.keySet()) {
+            if (Limits.getLimitFieldsDescribes() == 0) break; //limit to 100 available field describes
+            SObjectField field = key2field.get(key);
+            Schema.DescribeFieldResult description = field.getDescribe();
+            String name = description.getName();
+            describedNames.add(name);
+        }
         
         //prepare dehydrated lowercase object with explicit null values
         Map<String,Object> key2value = new Map<String,Object>();
-        for (String field : fields) key2value.put(field, null);
+        for (String name : describedNames) key2value.put(name, null);
         String data = Json.serialize(key2value);
         
         //hydrate and serialize again to obtain CamelCase field names
