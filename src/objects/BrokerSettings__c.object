@@ -10,7 +10,7 @@
         <externalId>false</externalId>
         <label>Broker Class Name</label>
         <length>56</length>
-        <required>true</required>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
