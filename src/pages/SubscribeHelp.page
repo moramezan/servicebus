@@ -1,0 +1,6 @@
+<apex:page >
+    <ul>
+        <li>In the Sequence lookup, enter the name of the Sequence that should be executed when execution flow reaches the SubSequence Step related to this configuration.</li>
+        <li>Upon reaching the Termination step of the named SubSequence, execution flow will return to the process step that immeadiately follows the the step related to this configuration.</li>
+    </ul>
+</apex:page>

@@ -104,6 +104,7 @@
         <members>MessageShowData</members>
         <members>ProcessCustomization</members>
         <members>ProcessGenerate</members>
+        <members>ProcessHelp</members>
         <members>PublishConfigurationManageEventTypes</members>
         <members>PublishConfigurationShowStep</members>
         <members>SchemaSelector</members>
@@ -111,6 +112,7 @@
         <members>StepShowConfiguration</members>
         <members>SubscribeConfigurationManageEventTypes</members>
         <members>SubscribeConfigurationShowStep</members>
+        <members>SubscribeHelp</members>
         <members>SubsequenceConfigurationShowStep</members>
         <name>ApexPage</name>
     </types>
@@ -170,6 +172,7 @@
         <members>Process__c.Customizable__c</members>
         <members>Process__c.Description__c</members>
         <members>Process__c.FullyQualifiedClassName__c</members>
+        <members>Process__c.HelpPageUrl__c</members>
         <members>Process__c.Icon__c</members>
         <members>Process__c.Tag__c</members>
         <members>PublishConfiguration__c.EventType__c</members>
@@ -282,6 +285,7 @@
         <members>Message__c.ShowData</members>
         <members>Process__c.Customize</members>
         <members>Process__c.Generate</members>
+        <members>Process__c.ProcessHelp</members>
         <members>PublishConfiguration__c.ManageEventTypes</members>
         <members>PublishConfiguration__c.ShowStep</members>
         <members>Step__c.ShowConfiguration</members>

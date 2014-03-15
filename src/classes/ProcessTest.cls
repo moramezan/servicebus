@@ -35,6 +35,7 @@
         Processes.Eda meta = (Processes.Eda)Json.deserialize(Json.serialize(innerClass.newInstance()), Processes.Eda.class);
         String expectedConfigurable = meta.configurable.getSObjectType().getDescribe().getName();
         String expectedIcon = meta.icon;
+        String expectedHelpPageUrl = Page.SubscribeHelp.getUrl();
         
         //act 
         Process__c process = Processes.fromType(actualType);
@@ -46,6 +47,7 @@
         String actualFullyQualifiedClassName = process.FullyQualifiedClassName__c; 
         String actualConfigurable = process.Configurable__c; 
         String actualIcon = process.Icon__c; 
+        String actualHelpPageUrl = process.HelpPageUrl__c;
 
         //assert
         System.assertEquals(expectedName , actualName );
@@ -54,5 +56,6 @@
         System.assertEquals(expectedFullyQualifiedClassName , actualFullyQualifiedClassName);
         System.assertEquals(expectedConfigurable , actualConfigurable );
         System.assertEquals(expectedIcon , actualIcon );
+        System.assertEquals(expectedHelpPageUrl, actualHelpPageUrl);
     }    
 }

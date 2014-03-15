@@ -102,6 +102,16 @@
         <unique>true</unique>
     </fields>
     <fields>
+        <fullName>HelpPageUrl__c</fullName>
+        <externalId>false</externalId>
+        <label>Help Page URL</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Icon__c</fullName>
         <externalId>false</externalId>
         <label>Icon</label>
@@ -164,5 +174,15 @@
         <page>ProcessGenerate</page>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
+    </webLinks>
+    <webLinks>
+        <fullName>ProcessHelp</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>page</linkType>
+        <masterLabel>Help for this Process</masterLabel>
+        <openType>replace</openType>
+        <page>ProcessHelp</page>
+        <protected>false</protected>
     </webLinks>
 </CustomObject>

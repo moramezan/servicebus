@@ -553,6 +553,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Process__c.HelpPageUrl__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Process__c.Icon__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -821,6 +826,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>ProcessHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>PublishConfigurationManageEventTypes</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -846,6 +855,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>SubscribeConfigurationShowStep</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>SubscribeHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

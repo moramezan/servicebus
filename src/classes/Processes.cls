@@ -29,6 +29,12 @@ public class Processes extends SObjects {
          * http://www.famfamfam.com/archive/silk-icons-thats-your-lot/
          */
         public String icon;
+        
+        /**
+         * Each Process can have one Visualforce Page for support and documentation purposes. Process Authors can
+         * populate the property with a default value like Page.MyProcessHelp.getUrl() to make this available to users.
+         */
+        public String helpPageUrl;
     }
     
     /**
@@ -80,6 +86,11 @@ public class Processes extends SObjects {
         if (meta.icon != null) {
             //attempt to populate the css class name of the process icon
             process.Icon__c = meta.icon;
+        }
+        
+        if (meta.helpPageUrl != null) {
+            //attempt to populate the visualforce help page url
+            process.HelpPageUrl__c = meta.helpPageUrl;
         }
         
         return process;
