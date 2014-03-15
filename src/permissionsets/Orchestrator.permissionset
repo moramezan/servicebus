@@ -528,11 +528,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Process__c.ApexClass__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Process__c.Configurable__c</field>
         <readable>false</readable>
     </fieldPermissions>
