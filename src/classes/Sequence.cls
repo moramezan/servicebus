@@ -23,6 +23,11 @@ public class Sequence extends SalesforceObject {
         
         //ConfigurationName field from related configs
         for (Step__c step : steps) {
+            //Yes, we are doing SOQL inside a for-loop here!
+            //We cannot SOQL or SOSL across multiple objects:
+            //http://salesforce.stackexchange.com/q/24877/320
+            //One improvement would be to use SOAP retrieve(),
+            //but the Remote Site Setting has post-install steps.
             Id configurationId = step.ConfigurationId__c;
             if (null == configurationId) continue;
             String objectType = configurationId.getSObjectType().getDescribe().getName();
