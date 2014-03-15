@@ -88,10 +88,9 @@ public class Processes extends SObjects {
             process.Icon__c = meta.icon;
         }
         
-        if (meta.helpPageUrl != null) {
-            //attempt to populate the visualforce help page url
-            process.HelpPageUrl__c = meta.helpPageUrl;
-        }
+        //attempt to populate the visualforce help page url (maybe at some point we can check it for validity)
+        //note: if a help page is removed and the key taken out of the Meta class, we allow null to be written
+        process.HelpPageUrl__c = meta.helpPageUrl;
         
         return process;
     }
