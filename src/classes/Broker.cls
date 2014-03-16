@@ -145,17 +145,26 @@ abstract global class Broker {
             'Id' => dataId
         };
         
-        List<Message__c> messages = new List<Message__c>{new Message__c(
-            Status__c = 'Buffer',
-            Parameters__c = Json.serializePretty(parameters)
-        )};
+        //create the message destined for the 0th step of the chain
+        Message__c message = new Message__c(Parameters__c = Json.serializePretty(parameters));
         
-        //RESOLVE
-        Broker.resolve(messages);
+        //fetch the custom setting or create an empty one
+        BrokerSettings__c setting = BrokerSettings__c.getOrgDefaults();
+        if (setting == null) setting = new BrokerSettings__c();
         
-        //PERSIST
-        insert messages;
+        if (setting.IsPaused__c) {
+            //system is paused
+            //Why aren't these Messages resolved?
+            //Because their pointers would be a misrepresentation of their destination
+            //if the system had been rearranged during the time it was paused.
+            message.Status__c = 'Queued';
+        } else {
+            //system is running
+            message.Status__c = 'Buffer';
+            Broker.resolve(new List<Message__c>{message}); //RESOLVE
+        }
         
+        insert message; //PERSIST
         Broker.process();
     }
     

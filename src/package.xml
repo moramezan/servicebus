@@ -35,7 +35,9 @@
         <members>LogWriterTest</members>
         <members>Mark</members>
         <members>MarkTest</members>
+        <members>MessagePauseQueueExtension</members>
         <members>MessageReprocessExtension</members>
+        <members>MessageResumeQueueExtension</members>
         <members>MessageShowDataExtension</members>
         <members>Messages</members>
         <members>MessagesTest</members>
@@ -100,7 +102,9 @@
         <members>JumpConfigurationShowStep</members>
         <members>LogConfigurationListLogGroups</members>
         <members>LogConfigurationSchemaSelector</members>
+        <members>MessagePauseQueue</members>
         <members>MessageReprocess</members>
+        <members>MessageResumeQueue</members>
         <members>MessageShowData</members>
         <members>ProcessCustomization</members>
         <members>ProcessGenerate</members>
@@ -130,6 +134,7 @@
         <members>BranchConfiguration__c.Sequence__c</members>
         <members>BrokerSettings__c.BrokerClassName__c</members>
         <members>BrokerSettings__c.Inhibit__c</members>
+        <members>BrokerSettings__c.IsPaused__c</members>
         <members>DebouncerConfiguration__c.MinimumHoursBetween__c</members>
         <members>Debouncer__c.DebouncerConfiguration__c</members>
         <members>Debouncer__c.Key__c</members>
@@ -280,7 +285,9 @@
         <members>JumpConfiguration__c.ShowStep</members>
         <members>LogConfiguration__c.ChangeDynamicGroupIdentifier</members>
         <members>LogConfiguration__c.ListLogGroups</members>
+        <members>Message__c.PauseQueue</members>
         <members>Message__c.Reprocess</members>
+        <members>Message__c.ResumeQueue</members>
         <members>Message__c.ShowData</members>
         <members>Process__c.Customize</members>
         <members>Process__c.Generate</members>

@@ -109,6 +109,10 @@
                 <fullName>Reprocess</fullName>
                 <default>false</default>
             </picklistValues>
+            <picklistValues>
+                <fullName>Queued</fullName>
+                <default>false</default>
+            </picklistValues>
             <sorted>false</sorted>
         </picklist>
         <trackTrending>false</trackTrending>
@@ -138,8 +142,23 @@
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Messages</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <listViewButtons>PauseQueue</listViewButtons>
+        <listViewButtons>ResumeQueue</listViewButtons>
+    </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>PauseQueue</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Pause Queue</masterLabel>
+        <openType>sidebar</openType>
+        <page>MessagePauseQueue</page>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+    </webLinks>
     <webLinks>
         <fullName>Reprocess</fullName>
         <availability>online</availability>
@@ -150,6 +169,18 @@
         <openType>sidebar</openType>
         <page>MessageReprocess</page>
         <protected>false</protected>
+    </webLinks>
+    <webLinks>
+        <fullName>ResumeQueue</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Resume Queue</masterLabel>
+        <openType>sidebar</openType>
+        <page>MessageResumeQueue</page>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
     </webLinks>
     <webLinks>
         <fullName>ShowData</fullName>
