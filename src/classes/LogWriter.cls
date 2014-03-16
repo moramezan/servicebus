@@ -2,7 +2,7 @@ public class LogWriter implements Process.Plugin {
     
     public class LogWriterException extends Exception {}
     
-    public class Eda {
+    public class Meta {
         public String icon = 'pencil_add';
     }
     

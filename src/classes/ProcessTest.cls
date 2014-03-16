@@ -31,8 +31,8 @@
         String expectedTag = describeResult.Tag;
         String expectedDescription = describeResult.Description;
         String expectedFullyQualifiedClassName = actualType.getName();
-        Type innerClass = Type.forName(actualType.getName() + '.' + 'Eda'); 
-        Processes.Eda meta = (Processes.Eda)Json.deserialize(Json.serialize(innerClass.newInstance()), Processes.Eda.class);
+        Type innerClass = Type.forName(actualType.getName() + '.' + 'Meta'); 
+        Processes.Meta meta = (Processes.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), Processes.Meta.class);
         String expectedConfigurable = meta.configurable.getSObjectType().getDescribe().getName();
         String expectedIcon = meta.icon;
         String expectedHelpPageUrl = Page.SubscribeHelp.getUrl();

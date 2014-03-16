@@ -1,6 +1,6 @@
 public with sharing class Mark implements Process.Plugin {
     
-    public class Eda {
+    public class Meta {
         public String icon = 'tag_blue';
     }
     

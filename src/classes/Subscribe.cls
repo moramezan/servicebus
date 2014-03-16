@@ -1,6 +1,6 @@
 public with sharing class Subscribe implements Process.Plugin {
 
-    public class Eda {
+    public class Meta {
         public SObject configurable = SubscribeConfiguration__c.SObjectType.newSObject();
         public String icon = 'eye';
         public String helpPageUrl = Page.SubscribeHelp.getUrl();

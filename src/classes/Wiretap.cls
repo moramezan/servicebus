@@ -2,7 +2,7 @@ public with sharing class Wiretap implements Process.Plugin {
    
     public class WiretapException extends Exception {}
       
-    public class Eda {
+    public class Meta {
         public SObject customizable = WiretapCustomization__c.SObjectType.newSObject();
         public String icon = 'email';
     }

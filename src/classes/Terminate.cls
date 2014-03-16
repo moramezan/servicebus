@@ -1,6 +1,6 @@
 public with sharing class Terminate implements Process.Plugin {
     
-    public class Eda {
+    public class Meta {
         public String icon = 'stop';
     }
     

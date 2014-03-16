@@ -1,6 +1,6 @@
 public with sharing class Schedule implements Process.Plugin {
     
-    public class Eda {
+    public class Meta {
         public String icon = 'clock';
         public SObject configurable = ScheduleConfiguration__c.SObjectType.newSObject();
     }

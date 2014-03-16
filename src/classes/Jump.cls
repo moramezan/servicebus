@@ -1,6 +1,6 @@
 public with sharing class Jump implements Process.Plugin {
 
-    public class Eda {
+    public class Meta {
         public SObject configurable = JumpConfiguration__c.SObjectType.newSObject();
         public String icon = 'arrow_switch';
     }

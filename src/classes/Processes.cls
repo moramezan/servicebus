@@ -10,7 +10,7 @@ public class Processes extends SObjects {
      * for an apex class to appear in the Process list.
      */
     @testVisible
-    private class Eda {
+    private class Meta {
         /**
          * Each Process can have one associated customization in the form of a Custom Setting. Process Authors must
          * advertise the custom setting type here, and the framework will provide a link from the Process detail page.
@@ -57,7 +57,7 @@ public class Processes extends SObjects {
      */
     static public Process__c fromType(Type reflector) {
         Type outerClass = reflector;
-        Type innerClass = Type.forName(reflector.getName() + '.' + 'Eda');
+        Type innerClass = Type.forName(reflector.getName() + '.' + 'Meta');
         
         Process.Plugin plugin = (Process.Plugin)outerClass.newInstance();
         Process.PluginDescribeResult describeResult = plugin.describe();
@@ -71,7 +71,7 @@ public class Processes extends SObjects {
         //special exception for BrokerTest.FailurePlugin as used in testing
         if (reflector.getName() == BrokerTest.FailurePlugin.class.getName()) return process;
         
-        Eda meta = (Eda)Json.deserialize(Json.serialize(innerClass.newInstance()), Eda.class);
+        Processes.Meta meta = (Processes.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), Processes.Meta.class);
         
         if (meta.customizable != null) {
             //attempt to populate the name of the customization object

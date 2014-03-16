@@ -1,6 +1,6 @@
 public with sharing class Subsequence implements Process.Plugin {
 
-    public class Eda {
+    public class Meta {
         public SObject configurable = SubsequenceConfiguration__c.SObjectType.newSObject();
         public String icon = 'arrow_undo';
     }

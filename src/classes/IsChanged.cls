@@ -3,7 +3,7 @@ public class IsChanged  implements Process.Plugin {
     @TestVisible
     private static Integer persistDuration = ( 60*24 ) * 7; // seven days
     
-    public class Eda {
+    public class Meta {
         public SObject configurable = IsChangedConfiguration__c.SObjectType.newSObject();
         public String icon = 'application_side_expand';
     }

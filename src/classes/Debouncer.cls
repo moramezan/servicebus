@@ -2,7 +2,7 @@ public class Debouncer implements Process.Plugin {
     
     public class DebouncerException extends Exception {}
     
-    public class Eda {
+    public class Meta {
         public SObject configurable = DebouncerConfiguration__c.SObjectType.newSobject();
         public String icon = 'key_go';
     }

@@ -2,7 +2,7 @@ public with sharing class Publish implements Process.Plugin {
     
     public class PublishException extends Exception {}
 
-    public class Eda {
+    public class Meta {
         public SObject configurable = PublishConfiguration__c.SObjectType.newSObject();
         public String icon = 'chart_organisation';
     }

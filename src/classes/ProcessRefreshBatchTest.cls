@@ -45,20 +45,20 @@
  
     static testMethod void testImplementsEdaSubclass() {
         // arrange
-        Type gate = Type.forName('Gate.Eda');
-        Type mark = Type.forName('Mark.Eda');
-        Type terminate = Type.forName('Terminate.Eda');
-        Type branch = Type.forName('Branch.Eda');
-        Type wiretap = Type.forName('Wiretap.Eda');
-        Type publish = Type.forName('Publish.Eda');
-        Type schedule = Type.forName('Schedule.Eda');
-        Type subsequence = Type.forName('Subsequence.Eda');
-        Type subscribe = Type.forName('Subscribe.Eda');
-        Type scrape = Type.forName('Scrape.Eda');
-        Type isChanged = Type.forName('IsChanged.Eda');
-        Type debouncer = Type.forName('Debouncer.Eda');
-        Type logInitializer = Type.forName('LogInitializer.Eda');
-        Type logWriter = Type.forName('LogWriter.Eda');
+        Type gate = Type.forName('Gate.Meta');
+        Type mark = Type.forName('Mark.Meta');
+        Type terminate = Type.forName('Terminate.Meta');
+        Type branch = Type.forName('Branch.Meta');
+        Type wiretap = Type.forName('Wiretap.Meta');
+        Type publish = Type.forName('Publish.Meta');
+        Type schedule = Type.forName('Schedule.Meta');
+        Type subsequence = Type.forName('Subsequence.Meta');
+        Type subscribe = Type.forName('Subscribe.Meta');
+        Type scrape = Type.forName('Scrape.Meta');
+        Type isChanged = Type.forName('IsChanged.Meta');
+        Type debouncer = Type.forName('Debouncer.Meta');
+        Type logInitializer = Type.forName('LogInitializer.Meta');
+        Type logWriter = Type.forName('LogWriter.Meta');
         
         // act
         Boolean actualGate = (gate != null);

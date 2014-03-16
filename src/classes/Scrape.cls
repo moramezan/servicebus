@@ -1,6 +1,6 @@
 public class Scrape implements Process.Plugin {
     
-    public class Eda {
+    public class Meta {
         public SObject configurable = ScrapeConfiguration__c.SObjectType.newSObject();
         public String icon = 'html';
     }

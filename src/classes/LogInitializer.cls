@@ -2,7 +2,7 @@ global class LogInitializer implements Process.Plugin {
     
     public class LogInitializerException extends Exception {}
     
-    public class Eda {
+    public class Meta {
         public SObject configurable = LogConfiguration__c.SObjectType.newSobject();
         public String icon = 'pencil';
     }
