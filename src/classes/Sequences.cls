@@ -1,4 +1,4 @@
-public class Sequences extends SObjects {
+public class Sequences extends SalesforceObjectSet {
 
     public Sequences(List<Sequence__c> sobjects) {
         super(sobjects);

@@ -17,5 +17,5 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <label>Wiretap Customization</label>
+    <label>Wiretap Settings</label>
 </CustomObject>

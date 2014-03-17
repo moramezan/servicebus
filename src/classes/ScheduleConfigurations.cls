@@ -1,4 +1,4 @@
-public class ScheduleConfigurations extends SObjects {
+public class ScheduleConfigurations extends SalesforceObjectSet {
     
     public ScheduleConfigurations(List<ScheduleConfiguration__c> sobjects) {
         super(sobjects);

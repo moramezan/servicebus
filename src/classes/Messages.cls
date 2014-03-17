@@ -1,15 +1,15 @@
-public class Messages extends SObjects {
+public class Messages extends SalesforceObjectSet {
 
     public Messages(List<Message__c> sobjects) {
         super(sobjects);
     }
     
     override public void onAfterInsert() {
-        this.startBrokerBatch(new Map<Id,SObject>(this.sobjects));
+        this.startBrokerBatch(new Map<Id,SObject>(this.getSObjects()));
     }
     
     override public void onAfterUpdate(List<Sobject> olds) {
-        Map<Id,Message__c> idToNew = new Map<Id,Message__c>((List<Message__c>)this.sobjects);
+        Map<Id,Message__c> idToNew = new Map<Id,Message__c>((List<Message__c>)this.getSObjects());
         Map<Id,Message__c> idToOld = new Map<Id,Message__c>((List<Message__c>)olds) ;
         this.startBrokerBatchIfBufferOrReprocess(idToOld, idToNew);
     }

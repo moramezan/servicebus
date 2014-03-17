@@ -3,7 +3,7 @@ public with sharing class Wiretap implements Process.Plugin {
     public class WiretapException extends Exception {}
       
     public class Meta {
-        public SObject customizable = WiretapCustomization__c.SObjectType.newSObject();
+        public SObject customizable = WiretapSettings__c.SObjectType.newSObject();
         public String icon = 'email';
     }
     
@@ -20,7 +20,7 @@ public with sharing class Wiretap implements Process.Plugin {
         
         Id userId;
         try {
-            WiretapCustomization__c setting = WiretapCustomization__c.getInstance();
+            WiretapSettings__c setting = WiretapSettings__c.getInstance();
             userId = setting.UserId__c;
         } catch (Exception e) {
         }

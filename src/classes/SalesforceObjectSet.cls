@@ -1,13 +1,19 @@
-abstract public class SObjects {
+abstract public class SalesforceObjectSet {
     
-    protected List<SObject> sobjects {get; private set;}
-    
+    private List<SObject> sobjs;
     public List<SObject> getSObjects() {
-        return this.sobjects;
+        return this.sobjs;
     }
     
-    public SObjects(List<SObject> sobjects) {
-        this.sobjects = sobjects;
+    public SalesforceObjectSet(List<SObject> sobjects) {
+        this.sobjs = sobjects;
+    }
+    
+    static public List<SObject> fetchAll(SObjectType type) {
+        DescribeSObjectResult describe = type.getDescribe();
+        String name = describe.getName();
+        List<String> fields = new List<String>(describe.fields.getMap().keySet());
+        return Database.query('SELECT ' + String.join(fields, ',') + ' FROM ' + name);
     }
     
     public Set<Id> keySet() {

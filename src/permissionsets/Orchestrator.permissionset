@@ -177,14 +177,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ProcessExtensionCustomize</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ProcessExtensionCustomizeTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>ProcessGenerateExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -217,15 +209,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SObjects</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>SalesforceObject</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SalesforceObjects</apexClass>
+        <apexClass>SalesforceObjectSet</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -829,15 +817,15 @@
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ProcessCustomization</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>ProcessGenerate</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>ProcessSettings</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

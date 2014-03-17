@@ -1,4 +1,4 @@
-public class AsyncApexJobs extends SObjects {
+public class AsyncApexJobs extends SalesforceObjectSet {
     
     /**
      * Domain constructor
