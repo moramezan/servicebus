@@ -14,7 +14,7 @@ private class WiretapTest {
         Integer step = 1;
         String data = 'data';
 
-       //--NOT-DEFINED insert new WiretapCustomization__c ( UserId__c = UserInfo.getUserId());
+       //--NOT-DEFINED insert new WiretapSettings__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
             'eda_sequenceName' => sequenceName,
@@ -46,7 +46,7 @@ private class WiretapTest {
         Integer step = 1;
         String data = 'data';
 
-        insert new WiretapCustomization__c ( UserId__c = UserInfo.getUserId());
+        insert new WiretapSettings__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
             'eda_sequenceName' => sequenceName,

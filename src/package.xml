@@ -104,9 +104,9 @@
         <members>MessageReprocess</members>
         <members>MessageResumeQueue</members>
         <members>MessageShowData</members>
-        <members>ProcessCustomization</members>
         <members>ProcessGenerate</members>
         <members>ProcessHelp</members>
+        <members>ProcessSettings</members>
         <members>PublishConfigurationManageEventTypes</members>
         <members>PublishConfigurationShowStep</members>
         <members>SchemaSelector</members>
@@ -191,7 +191,7 @@
         <members>Step__c.Sequence__c</members>
         <members>SubscribeConfiguration__c.EventType__c</members>
         <members>SubsequenceConfiguration__c.Sequence__c</members>
-        <members>WiretapCustomization__c.UserId__c</members>
+        <members>WiretapSettings__c.UserId__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -217,7 +217,7 @@
         <members>Step__c</members>
         <members>SubscribeConfiguration__c</members>
         <members>SubsequenceConfiguration__c</members>
-        <members>WiretapCustomization__c</members>
+        <members>WiretapSettings__c</members>
         <name>CustomObject</name>
     </types>
     <types>
@@ -287,9 +287,9 @@
         <members>Message__c.Reprocess</members>
         <members>Message__c.ResumeQueue</members>
         <members>Message__c.ShowData</members>
-        <members>Process__c.Customize</members>
         <members>Process__c.Generate</members>
         <members>Process__c.ProcessHelp</members>
+        <members>Process__c.Settings</members>
         <members>PublishConfiguration__c.ManageEventTypes</members>
         <members>PublishConfiguration__c.ShowStep</members>
         <members>Step__c.ShowConfiguration</members>
