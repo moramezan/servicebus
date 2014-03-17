@@ -11,7 +11,7 @@ public class Debouncer implements Process.Plugin {
         Process.PluginDescribeResult result = new Process.PluginDescribeResult();
         result.Tag = 'Event Driven Architecture';
         result.Name = 'Debouncer';
-        result.Description = 'Swallows message unless the time elapsed since receiving a prior notification with the same key exceeds a min threshold';
+        result.Description = 'Swallows message unless the time elapsed since receiving a prior message with the same key exceeds a min threshold';
         return result;
     }
     

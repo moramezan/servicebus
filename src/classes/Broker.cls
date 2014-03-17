@@ -139,7 +139,7 @@ abstract global class Broker {
      */
     static global void enqueue(String sequenceName, Id dataId) {
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda_notificationGuid' => getNotificationGuid(18),
+            'eda_messageGuid' => getMessageGuid(18),
             'eda_sequenceName' => sequenceName,
             'eda_position' => 0,
             'Id' => dataId
@@ -457,7 +457,7 @@ abstract global class Broker {
      
     abstract global void restartImpl();
     
-    @TestVisible public static String getNotificationGuid(Integer size) {
+    @TestVisible public static String getMessageGuid(Integer size) {
         return EncodingUtil.convertToHex(crypto.generateAesKey(128)).substring(0, size);
     }
 }
