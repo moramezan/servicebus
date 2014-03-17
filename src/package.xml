@@ -36,8 +36,10 @@
         <members>Mark</members>
         <members>MarkTest</members>
         <members>MessagePauseQueueExtension</members>
+        <members>MessagePauseQueueExtensionTest</members>
         <members>MessageProcessExtension</members>
         <members>MessageResumeQueueExtension</members>
+        <members>MessageResumeQueueExtensionTest</members>
         <members>MessageShowDataExtension</members>
         <members>Messages</members>
         <members>MessagesTest</members>

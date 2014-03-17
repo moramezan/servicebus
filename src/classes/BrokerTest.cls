@@ -13,8 +13,8 @@ public class BrokerTest{
             flagRestartImpl = true;
         }
     }
-    
-    
+
+
     static testMethod void stackDepthExceededWillHaltProcessingWithAppropriateMessageDetail() {
         // arrange
         Integer stackDepthThreshold = 3;
@@ -384,7 +384,8 @@ public class BrokerTest{
         insert stepC2;
         
         List<Message__c> messages = new List<Message__c>{
-            new Message__c(Parameters__c = '{"Id": 1, "eda_sequenceName": "' + sequenceA.Name + '", "eda_position": ' + positionA1 + '}'),
+            new Message__c(Parameters__c = '{"Id": 0, "eda_sequenceName": "' + sequenceA.Name + '", "eda_position": ' + positionA1 + '}'), // Same Sequence / Position
+            new Message__c(Parameters__c = '{"Id": 1, "eda_sequenceName": "' + sequenceA.Name + '", "eda_position": ' + positionA1 + '}'), // Same Sequence / Position
             new Message__c(Parameters__c = '{"Id": 2, "eda_sequenceName": "' + sequenceA.Name + '", "eda_position": ' + positionA2 + '}'),
             new Message__c(Parameters__c = '{"Id": 3, "eda_sequenceName": "' + sequenceB.Name + '", "eda_position": ' + positionB1 + '}'),
             new Message__c(Parameters__c = '{"Id": 4, "eda_sequenceName": "' + sequenceC.Name + '", "eda_position": ' + positionC1 + '}')
@@ -394,10 +395,12 @@ public class BrokerTest{
         Broker.resolve(messages);
         
         // assemble
+        String actualSequenceName0 = '' ;
         String actualSequenceName1 = '' ;
         String actualSequenceName2 = '' ;
         String actualSequenceName3 = '' ;
         String actualSequenceName4 = '' ;
+        Integer actualPosition0 = -1 ;     
         Integer actualPosition1 = -1 ;
         Integer actualPosition2 = -1 ;
         Integer actualPosition3 = -1 ;
@@ -407,6 +410,11 @@ public class BrokerTest{
             Integer theId = (Integer) parameters.get('Id');
             String theSequenceName = (String)parameters.get('eda_sequenceName');
             Integer thePosition = (Integer)parameters.get('eda_position');
+            if (theId == 0) {
+                actualSequenceName0 = theSequenceName;
+                actualPosition0 = thePosition;
+            }        
+          
             if (theId == 1) {
                 actualSequenceName1 = theSequenceName;
                 actualPosition1 = thePosition;
@@ -427,22 +435,26 @@ public class BrokerTest{
         }
         
         // assert
-        Integer expectedCount = 4;
+        Integer expectedCount = 5;
         Integer actualCount = messages.size();
         System.assertEquals(expectedCount, actualCount);
         
+        String expectedSequenceName0 = sequenceNameA;      
         String expectedSequenceName1 = sequenceNameA;
         String expectedSequenceName2 = sequenceNameA;
         String expectedSequenceName3 = sequenceNameB;
         String expectedSequenceName4 = sequenceNameC;
+        Integer expectedPosition0 = positionA1 + 1;
         Integer expectedPosition1 = positionA1 + 1;
         Integer expectedPosition2 = positionA2 + 1;
         Integer expectedPosition3 = positionB1 + 1;
         Integer expectedPosition4 = positionC1 + 1;
+        System.assertEquals(expectedPosition0, actualPosition0);     
         System.assertEquals(expectedPosition1, actualPosition1);
         System.assertEquals(expectedPosition2, actualPosition2);
         System.assertEquals(expectedPosition3, actualPosition3);
         System.assertEquals(expectedPosition4, actualPosition4);
+        System.assertEquals(expectedSequenceName0, actualSequenceName0);      
         System.assertEquals(expectedSequenceName1, actualSequenceName1);
         System.assertEquals(expectedSequenceName2, actualSequenceName2);
         System.assertEquals(expectedSequenceName3, actualSequenceName3);
@@ -668,8 +680,7 @@ public class BrokerTest{
         System.assert(actualMessage.contains(expectedMessage));
     }
     */
-
-  
+ 
     static testMethod void testMalformedParametersThrowsSystemJsonException() {
         //arrange
         Message__c message = new Message__c(Parameters__c = '{"malformed":....}');
@@ -811,4 +822,109 @@ public class BrokerTest{
         }
     }
  
+	static testMethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusQueued() {
+        // arrange
+        Boolean isPaused =  true;
+        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+
+        String sequenceNameA = 'sequenceA';
+        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
+        insert sequenceA;
+
+
+        Integer positionA1 = 1;
+        Integer positionA6 = 2;
+
+        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = wiretapProcess.Id);
+        Step__c stepA6 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA6,Process__c = terminateProcess.Id);
+
+        insert stepA1;
+        insert stepA6;
+
+        //arrange specific broker implementation
+        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        //insert new BrokerSettings__c();
+
+        //act
+        Broker.enqueue(sequenceNameA, '000000000000000AAA');
+
+
+        //assemble
+        List<Message__c> messages = [
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c, IsDeleted
+            FROM Message__c
+            WHERE IsDeleted =  false
+            ALL ROWS
+        ];
+
+
+        String actualStatus;
+        Integer actualCount = messages.size();
+        if (actualCount > 0) {
+            actualStatus = messages[0].Status__c;
+        }
+
+        // assert
+        Integer expectedCount = 1;
+        System.assertEquals( expectedCount, actualCount);
+        String expectedStatus = 'Queued';
+        System.assertEquals( expectedStatus, actualStatus);
+    }
+
+    static testMethod void callingEnqueueWhenBrokerIsNotPausedProcessesMessages() {
+        // arrange
+        Boolean isPaused =  false;
+        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+
+        String sequenceNameA = 'sequenceA';
+        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
+        insert sequenceA;
+
+
+        Integer positionA1 = 1;
+        Integer positionA2 = 2;
+        Integer positionA3 = 3;
+        Integer positionA4 = 4;
+        Integer positionA5 = 5;
+        Integer positionA6 = 6;
+
+        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = wiretapProcess.Id);
+        Step__c stepA2 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA2,Process__c = wiretapProcess.Id);
+        Step__c stepA3 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA3,Process__c = wiretapProcess.Id);
+        Step__c stepA4 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA4,Process__c = wiretapProcess.Id);
+        Step__c stepA5 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA5,Process__c = wiretapProcess.Id);
+        Step__c stepA6 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA6,Process__c = terminateProcess.Id);
+
+        insert stepA1;
+        insert stepA2;
+        insert stepA3;
+        insert stepA4;
+        insert stepA5;
+        insert stepA6;
+        
+        //arrange specific broker implementation
+        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        
+        //act 
+        Broker.enqueue(sequenceNameA, '000000000000000AAA');
+
+        
+        //assemble
+        List<Message__c> messages = [
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c, IsDeleted
+            FROM Message__c
+            WHERE IsDeleted =  true
+            ALL ROWS
+        ];
+
+        Integer actualCount = messages.size();
+
+   
+        // assert
+        Integer expectedCount = 6;
+        System.assertEquals( expectedCount, actualCount);
+    }
+   
 }

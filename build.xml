@@ -167,7 +167,9 @@
         <delete file="purge/workflows/Reply.workflow" />
         <delete file="purge/workflows/SocialPersona.workflow" />
         <delete file="purge/workflows/SocialPost.workflow" />
-        
+        <delete file="purge/pages/Exception.page" />
+        <delete file="purge/pages/Exception.page-meta.xml" />
+
         <!-- Name the package definition -->
         <replace file="purge/package.xml">
             <replacetoken><![CDATA[</version>]]></replacetoken>
