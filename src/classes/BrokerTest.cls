@@ -13,8 +13,8 @@ public class BrokerTest{
             flagRestartImpl = true;
         }
     }
-    
-    
+
+
     static testMethod void stackDepthExceededWillHaltProcessingWithAppropriateMessageDetail() {
         // arrange
         Integer stackDepthThreshold = 3;
@@ -811,4 +811,108 @@ public class BrokerTest{
         }
     }
  
+    static testMethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusQueued() {
+        // arrange
+        Boolean isPaused =  true;
+        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+
+        String sequenceNameA = 'sequenceA';
+        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
+        insert sequenceA;
+
+
+        Integer positionA1 = 1;
+        Integer positionA6 = 2;
+
+        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = wiretapProcess.Id);
+        Step__c stepA6 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA6,Process__c = terminateProcess.Id);
+
+        insert stepA1;
+        insert stepA6;
+
+        //arrange specific broker implementation
+        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        //insert new BrokerSettings__c();
+
+        //act
+        Broker.enqueue(sequenceNameA, '000000000000000AAA');
+
+
+        //assemble
+        List<Message__c> messages = [
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c, IsDeleted
+            FROM Message__c
+            WHERE IsDeleted =  false
+            ALL ROWS
+        ];
+
+
+        String actualStatus;
+        Integer actualCount = messages.size();
+        if (actualCount > 0) {
+            actualStatus = messages[0].Status__c;
+        }
+
+        // assert
+        Integer expectedCount = 1;
+        System.assertEquals( expectedCount, actualCount);
+        String expectedStatus = 'Queued';
+        System.assertEquals( expectedStatus, actualStatus);
+    }
+
+    static testMethod void callingEnqueueWhenBrokerIsNotPausedProcessesMessages() {
+        // arrange
+        Boolean isPaused =  false;
+        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+
+        String sequenceNameA = 'sequenceA';
+        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
+        insert sequenceA;
+
+
+        Integer positionA1 = 1;
+        Integer positionA2 = 2;
+        Integer positionA3 = 3;
+        Integer positionA4 = 4;
+        Integer positionA5 = 5;
+        Integer positionA6 = 6;
+
+        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = wiretapProcess.Id);
+        Step__c stepA2 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA2,Process__c = wiretapProcess.Id);
+        Step__c stepA3 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA3,Process__c = wiretapProcess.Id);
+        Step__c stepA4 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA4,Process__c = wiretapProcess.Id);
+        Step__c stepA5 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA5,Process__c = wiretapProcess.Id);
+        Step__c stepA6 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA6,Process__c = terminateProcess.Id);
+
+        insert stepA1;
+        insert stepA2;
+        insert stepA3;
+        insert stepA4;
+        insert stepA5;
+        insert stepA6;
+        
+        //arrange specific broker implementation
+        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        
+        //act 
+        Broker.enqueue(sequenceNameA, '000000000000000AAA');
+
+        
+        //assemble
+        List<Message__c> messages = [
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c, IsDeleted
+            FROM Message__c
+            WHERE IsDeleted =  true
+            ALL ROWS
+        ];
+
+        Integer actualCount = messages.size();
+
+   
+        // assert
+        Integer expectedCount = 6;
+        System.assertEquals( expectedCount, actualCount);
+    }
 }
