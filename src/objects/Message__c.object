@@ -160,14 +160,14 @@
         <requireRowSelection>false</requireRowSelection>
     </webLinks>
     <webLinks>
-        <fullName>Reprocess</fullName>
+        <fullName>Process</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>
-        <masterLabel>Reprocess</masterLabel>
+        <masterLabel>Process</masterLabel>
         <openType>sidebar</openType>
-        <page>MessageReprocess</page>
+        <page>MessageProcess</page>
         <protected>false</protected>
     </webLinks>
     <webLinks>
