@@ -384,7 +384,8 @@ public class BrokerTest{
         insert stepC2;
         
         List<Message__c> messages = new List<Message__c>{
-            new Message__c(Parameters__c = '{"Id": 1, "eda_sequenceName": "' + sequenceA.Name + '", "eda_position": ' + positionA1 + '}'),
+            new Message__c(Parameters__c = '{"Id": 0, "eda_sequenceName": "' + sequenceA.Name + '", "eda_position": ' + positionA1 + '}'), // Same Sequence / Position
+            new Message__c(Parameters__c = '{"Id": 1, "eda_sequenceName": "' + sequenceA.Name + '", "eda_position": ' + positionA1 + '}'), // Same Sequence / Position
             new Message__c(Parameters__c = '{"Id": 2, "eda_sequenceName": "' + sequenceA.Name + '", "eda_position": ' + positionA2 + '}'),
             new Message__c(Parameters__c = '{"Id": 3, "eda_sequenceName": "' + sequenceB.Name + '", "eda_position": ' + positionB1 + '}'),
             new Message__c(Parameters__c = '{"Id": 4, "eda_sequenceName": "' + sequenceC.Name + '", "eda_position": ' + positionC1 + '}')
@@ -394,10 +395,12 @@ public class BrokerTest{
         Broker.resolve(messages);
         
         // assemble
+        String actualSequenceName0 = '' ;
         String actualSequenceName1 = '' ;
         String actualSequenceName2 = '' ;
         String actualSequenceName3 = '' ;
         String actualSequenceName4 = '' ;
+        Integer actualPosition0 = -1 ;     
         Integer actualPosition1 = -1 ;
         Integer actualPosition2 = -1 ;
         Integer actualPosition3 = -1 ;
@@ -407,6 +410,11 @@ public class BrokerTest{
             Integer theId = (Integer) parameters.get('Id');
             String theSequenceName = (String)parameters.get('eda_sequenceName');
             Integer thePosition = (Integer)parameters.get('eda_position');
+            if (theId == 0) {
+                actualSequenceName0 = theSequenceName;
+                actualPosition0 = thePosition;
+            }        
+          
             if (theId == 1) {
                 actualSequenceName1 = theSequenceName;
                 actualPosition1 = thePosition;
@@ -427,22 +435,26 @@ public class BrokerTest{
         }
         
         // assert
-        Integer expectedCount = 4;
+        Integer expectedCount = 5;
         Integer actualCount = messages.size();
         System.assertEquals(expectedCount, actualCount);
         
+        String expectedSequenceName0 = sequenceNameA;      
         String expectedSequenceName1 = sequenceNameA;
         String expectedSequenceName2 = sequenceNameA;
         String expectedSequenceName3 = sequenceNameB;
         String expectedSequenceName4 = sequenceNameC;
+        Integer expectedPosition0 = positionA1 + 1;
         Integer expectedPosition1 = positionA1 + 1;
         Integer expectedPosition2 = positionA2 + 1;
         Integer expectedPosition3 = positionB1 + 1;
         Integer expectedPosition4 = positionC1 + 1;
+        System.assertEquals(expectedPosition0, actualPosition0);     
         System.assertEquals(expectedPosition1, actualPosition1);
         System.assertEquals(expectedPosition2, actualPosition2);
         System.assertEquals(expectedPosition3, actualPosition3);
         System.assertEquals(expectedPosition4, actualPosition4);
+        System.assertEquals(expectedSequenceName0, actualSequenceName0);      
         System.assertEquals(expectedSequenceName1, actualSequenceName1);
         System.assertEquals(expectedSequenceName2, actualSequenceName2);
         System.assertEquals(expectedSequenceName3, actualSequenceName3);
@@ -668,8 +680,7 @@ public class BrokerTest{
         System.assert(actualMessage.contains(expectedMessage));
     }
     */
-
-  
+ 
     static testMethod void testMalformedParametersThrowsSystemJsonException() {
         //arrange
         Message__c message = new Message__c(Parameters__c = '{"malformed":....}');
@@ -811,7 +822,7 @@ public class BrokerTest{
         }
     }
  
-    static testMethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusQueued() {
+	static testMethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusQueued() {
         // arrange
         Boolean isPaused =  true;
         Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
@@ -915,4 +926,5 @@ public class BrokerTest{
         Integer expectedCount = 6;
         System.assertEquals( expectedCount, actualCount);
     }
+   
 }
