@@ -340,10 +340,13 @@ abstract global class Broker {
         for (Step__c step : steps) key2step.put(step.SequenceNameAndPosition__c, step);
         
         //now put the resolved sequence/step/process on each message
-        for (String key : key2data.keySet()) {
-            Step__c step = key2step.get(key);
-            Message__c message = key2data.get(key);
+        for (Message__c message : messages) {
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+            String sequenceName = (String)parameters.get('eda_sequenceName');
+            Decimal position = (Decimal)parameters.get('eda_position'); //care
+            String key = sequenceName + '#' + position;
             
+            Step__c step = key2step.get(key);
             message.Sequence__c = step.Sequence__r.Id;
             message.Process__c = step.Process__r.Id;
             message.Step__c = step.Id;
