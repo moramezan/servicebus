@@ -52,9 +52,9 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
-        <fullName>Message__c</fullName>
+        <fullName>Exception__c</fullName>
         <externalId>false</externalId>
-        <label>Message</label>
+        <label>Exception</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>TextArea</type>

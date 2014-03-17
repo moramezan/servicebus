@@ -166,7 +166,7 @@
         <members>LogWriterEntry__c.SequenceName__c</members>
         <members>LogWriterEntry__c.Stamp__c</members>
         <members>LogWriterEntry__c.Step__c</members>
-        <members>Message__c.Message__c</members>
+        <members>Message__c.Exception__c</members>
         <members>Message__c.Parameters__c</members>
         <members>Message__c.Process__c</members>
         <members>Message__c.Sequence__c</members>

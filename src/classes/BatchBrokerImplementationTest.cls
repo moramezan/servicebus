@@ -63,7 +63,7 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.FullyQualifiedClassName__c, Step__c , Status__c, Message__c, IsDeleted
+            SELECT Id, Name, Process__r.FullyQualifiedClassName__c, Step__c , Status__c, Exception__c, IsDeleted
             FROM Message__c
             WHERE IsDeleted =  false
             ALL ROWS
@@ -78,7 +78,7 @@
         System.assertEquals(expectedProcessName, messages[0].Process__r.FullyQualifiedClassName__c);
         
         String expectedMessage = BrokerTest.FailureMessage;
-        System.assertEquals(expectedMessage, messages[0].Message__c);
+        System.assertEquals(expectedMessage, messages[0].Exception__c);
     }
 
     static testMethod void callingBrokerStartSuccessfullyCallsStartImp() {

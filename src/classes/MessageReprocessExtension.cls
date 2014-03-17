@@ -21,7 +21,7 @@ public class MessageReprocessExtension {
         public DoDml() {
             Database.update(new Message__c(
                 Id = messageId,
-                Message__c = null,
+                Exception__c = null,
                 Status__c = 'Reprocess'
             ));
         }

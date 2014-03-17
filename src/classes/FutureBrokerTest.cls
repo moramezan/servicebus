@@ -171,7 +171,7 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT id, Name, Process__r.FullyQualifiedClassName__c, Step__c , Status__c, Message__c, isDeleted
+            SELECT id, Name, Process__r.FullyQualifiedClassName__c, Step__c , Status__c, Exception__c, isDeleted
             FROM Message__c
             WHERE isDeleted = false
             ALL ROWS
@@ -186,6 +186,6 @@
         System.assertEquals(expectedProcessName, messages[0].Process__r.FullyQualifiedClassName__c);
         
         String expectedMessage = BrokerTest.FailureMessage;
-        System.assertEquals(expectedMessage, messages[0].Message__c );
+        System.assertEquals(expectedMessage, messages[0].Exception__c );
     }
 }

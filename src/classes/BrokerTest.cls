@@ -58,7 +58,7 @@ public class BrokerTest{
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Message__c, IsDeleted
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c, IsDeleted
             FROM Message__c
             WHERE IsDeleted =  false
             ALL ROWS
@@ -71,7 +71,7 @@ public class BrokerTest{
         if (actualCount > 0) {
             Map<String,Object> actualParameters = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Parameters__c);
             actualStackDepth = (Integer) actualParameters.get('eda_stackDepth');
-            actualDetail = messages[0].Message__c;
+            actualDetail = messages[0].Exception__c;
             actualStatus = messages[0].Status__c;
         }
    
@@ -329,7 +329,7 @@ public class BrokerTest{
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Parameters__c, Message__c
+            SELECT Id, Name, Parameters__c, Exception__c
             FROM Message__c
         ];
         
@@ -340,7 +340,7 @@ public class BrokerTest{
         
         
         String expectedMessage = theMessage;
-        String actualMessage = messages[0].Message__c;
+        String actualMessage = messages[0].Exception__c;
         System.assert(actualMessage.contains(expectedMessage));
     }
     
@@ -660,11 +660,11 @@ public class BrokerTest{
         Test.stopTest();
         
         // arrange
-        Message__c message = [SELECT Id, Message__c FROM Message__c];
+        Message__c message = [SELECT Id, Exception__c FROM Message__c];
         
         // asserts
         String expectedMessage = 'class missing';
-        String actualMessage = message.Message__c;
+        String actualMessage = message.Exception__c;
         System.assert(actualMessage.contains(expectedMessage));
     }
     */
@@ -679,10 +679,10 @@ public class BrokerTest{
         Broker.executeResolvePersist(message.Id);
         
         //assemble
-        Message__c messageActual = [SELECT id, Message__c FROM Message__c WHERE id = :message.Id];
+        Message__c messageActual = [SELECT Id, Exception__c FROM Message__c WHERE id = :message.Id];
         
         //assert
-        String actualMessage = messageActual.Message__c;
+        String actualMessage = messageActual.Exception__c;
         String expectedMessage = 'Could not deserialize json';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
@@ -696,10 +696,10 @@ public class BrokerTest{
         Broker.executeResolvePersist(message.Id);
         
         //assemble
-        Message__c messageActual = [SELECT id, Message__c FROM Message__c WHERE id = :message.Id];
+        Message__c messageActual = [SELECT Id, Exception__c FROM Message__c WHERE id = :message.Id];
         
         //assert
-        String actualMessage = messageActual.Message__c;
+        String actualMessage = messageActual.Exception__c;
         String expectedMessage = 'position';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
@@ -713,10 +713,10 @@ public class BrokerTest{
         Broker.executeResolvePersist(message.Id);
         
         //assemble
-        Message__c messageActual = [SELECT id, Message__c FROM Message__c WHERE id = :message.Id];
+        Message__c messageActual = [SELECT Id, Exception__c FROM Message__c WHERE id = :message.Id];
         
         //assert
-        String actualMessage = messageActual.Message__c;
+        String actualMessage = messageActual.Exception__c;
         String expectedMessage = 'Step';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
@@ -741,10 +741,10 @@ public class BrokerTest{
         Test.stopTest();
         
         //assemble
-        Message__c message = [SELECT Message__c FROM Message__c];
+        Message__c message = [SELECT Id, Exception__c FROM Message__c];
         
         //assert
-        String actualMessage = message.Message__c;
+        String actualMessage = message.Exception__c;
         String expectedMessage = 'class missing';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
@@ -769,8 +769,8 @@ public class BrokerTest{
         Test.stopTest();
         
         //assert
-        Message__c message = [SELECT Message__c FROM Message__c];
-        String actualMessage = message.Message__c;
+        Message__c message = [SELECT Id, Exception__c FROM Message__c];
+        String actualMessage = message.Exception__c;
         String expectedMessage = 'interface';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }

@@ -4,7 +4,7 @@
         <fullName>OnMessageError</fullName>
         <active>true</active>
         <criteriaItems>
-            <field>Message__c.Message__c</field>
+            <field>Message__c.Exception__c</field>
             <operation>notEqual</operation>
         </criteriaItems>
         <triggerType>onAllChanges</triggerType>

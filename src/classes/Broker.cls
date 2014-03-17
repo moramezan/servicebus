@@ -365,7 +365,7 @@ abstract global class Broker {
         //log exception summary on parameters
         Database.update(new Message__c(
             Id = messageId,
-            Message__c = e.getMessage().left(255)
+            Exception__c = e.getMessage().left(255)
         ));
         
         //log exception details over 255 bytes using note object
