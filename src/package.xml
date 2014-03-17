@@ -45,8 +45,6 @@
         <members>PostInstallClassTest</members>
         <members>PostUninstallClass</members>
         <members>PostUninstallClassTest</members>
-        <members>ProcessExtensionCustomize</members>
-        <members>ProcessExtensionCustomizeTest</members>
         <members>ProcessGenerateExtension</members>
         <members>ProcessGenerateExtensionTest</members>
         <members>ProcessRefreshBatch</members>

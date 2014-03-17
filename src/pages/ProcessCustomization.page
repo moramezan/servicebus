@@ -1,1 +1,3 @@
-<apex:page standardController="Process__c" extensions="ProcessExtensionCustomize" action="{!initCustom}" />
+<apex:page standardController="Process__c" action="{!IF(ISBLANK($ObjectType[Process__c.Customizable__c]), URLFOR($Action.Process__c.View, Id), '/' + $ObjectType[Process__c.Customizable__c].KeyPrefix)}">
+    <apex:outputField value="{!Process__c.Customizable__c}" rendered="false" />
+</apex:page>
