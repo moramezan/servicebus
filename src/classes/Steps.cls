@@ -1,4 +1,4 @@
-public class Steps extends SObjects {
+public class Steps extends SalesforceObjectSet {
     
     public Steps(List<Step__c> sobjects) {
         super(sobjects);
@@ -79,7 +79,7 @@ public class Steps extends SObjects {
      * This trigger takes care of the deletion of the configuration.
      */
     private void deleteConfigurations() {
-        Set<Id> stepIds = (new Map<Id,SObject>(this.sobjects)).keySet();
+        Set<Id> stepIds = (new Map<Id,SObject>(this.getSObjects())).keySet();
         Map<Id,Step__c> id2step = new Map<Id,Step__c>([SELECT id, Name, ConfigurationId__c FROM Step__c WHERE Id IN :stepIds]);
         
         //prepare list of configuration ids

@@ -25,7 +25,7 @@ public with sharing class SequenceSorterController {
     }
     
     public String getProcesses() {
-        List<Process__c> processes = SalesforceObjects.fetchAll(Process__c.SObjectType);
+        List<Process__c> processes = SalesforceObjectSet.fetchAll(Process__c.SObjectType);
         return Json.serializePretty(processes);
     }
     

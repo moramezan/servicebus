@@ -209,15 +209,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SObjects</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>SalesforceObject</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SalesforceObjects</apexClass>
+        <apexClass>SalesforceObjectSet</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

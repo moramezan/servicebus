@@ -1,4 +1,4 @@
-public class Processes extends SObjects {
+public class Processes extends SalesforceObjectSet {
     
     public Processes(List<Process__c> processes) {
         super(processes);

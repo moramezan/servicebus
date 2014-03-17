@@ -53,9 +53,8 @@
         <members>Processes</members>
         <members>Publish</members>
         <members>PublishTest</members>
-        <members>SObjects</members>
         <members>SalesforceObject</members>
-        <members>SalesforceObjects</members>
+        <members>SalesforceObjectSet</members>
         <members>Schedule</members>
         <members>ScheduleConfigurations</members>
         <members>ScheduleDispatcher</members>
