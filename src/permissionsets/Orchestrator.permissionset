@@ -141,7 +141,7 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageReprocessExtension</apexClass>
+        <apexClass>MessageProcessExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -805,7 +805,7 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>MessageReprocess</apexPage>
+        <apexPage>MessageProcess</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

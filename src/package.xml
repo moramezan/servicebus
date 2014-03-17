@@ -36,7 +36,7 @@
         <members>Mark</members>
         <members>MarkTest</members>
         <members>MessagePauseQueueExtension</members>
-        <members>MessageReprocessExtension</members>
+        <members>MessageProcessExtension</members>
         <members>MessageResumeQueueExtension</members>
         <members>MessageShowDataExtension</members>
         <members>Messages</members>
@@ -100,7 +100,7 @@
         <members>LogConfigurationListLogGroups</members>
         <members>LogConfigurationSchemaSelector</members>
         <members>MessagePauseQueue</members>
-        <members>MessageReprocess</members>
+        <members>MessageProcess</members>
         <members>MessageResumeQueue</members>
         <members>MessageShowData</members>
         <members>ProcessGenerate</members>
@@ -283,7 +283,7 @@
         <members>LogConfiguration__c.ChangeDynamicGroupIdentifier</members>
         <members>LogConfiguration__c.ListLogGroups</members>
         <members>Message__c.PauseQueue</members>
-        <members>Message__c.Reprocess</members>
+        <members>Message__c.Process</members>
         <members>Message__c.ResumeQueue</members>
         <members>Message__c.ShowData</members>
         <members>Process__c.Generate</members>
