@@ -139,7 +139,7 @@ abstract global class Broker {
      */
     static global void enqueue(String sequenceName, Id dataId) {
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda_notificationGuid' => getNotificationGuid(18),
+            'eda_MessageGuid' => getMessageGuid(18),
             'eda_SequenceName' => sequenceName,
             'eda_Position' => 0,
             'Id' => dataId
@@ -265,7 +265,7 @@ abstract global class Broker {
         try {
             //save important message properties (such as stackDepth) so that process authors 
             //cannot pervert them  
-            //TODO : requires a more generic approach not specific to just the eda_stackDepth
+            //TODO : requires a more generic approach not specific to just the eda_StackDepth
             //       property
             Integer stackDepth = getStackDepth(parameters, stackDepthThreshold);
             //call invoke the processable instance
@@ -384,10 +384,10 @@ abstract global class Broker {
      * possibility of the Munger being blacklisted
      * An exception is thrown if the stackDepth threshold is reached
      *
-     * We cannot simply increment  eda_stackDepth BEFORE calling invoke as a process writer could fuck with this parameter
-     * Instead we read and increment eda_stackDepth BEFORE calling invoke using getStackDepth()
+     * We cannot simply increment  eda_StackDepth BEFORE calling invoke as a process writer could fuck with this parameter
+     * Instead we read and increment eda_StackDepth BEFORE calling invoke using getStackDepth()
      * and assign to an Integer stackDepth variable
-     * We use applyStackDepth()  to apply the incremented stackDepth variable to the eda_stackDepth parameter of
+     * We use applyStackDepth()  to apply the incremented stackDepth variable to the eda_StackDepth parameter of
      * all messages returned from invoke()
      */
     @TestVisible
@@ -416,7 +416,7 @@ abstract global class Broker {
         Integer stackDepth = (parameters.get('eda_StackDepth') == null) ? 0 : (Integer) parameters.get('eda_StackDepth');
         stackDepth++;
         if (stackDepth > threshold) {
-            throw new BrokerException('Maximum Stack Depth exceeded - to resolve, manually set eda_stackDepth on parameters to 0');
+            throw new BrokerException('Maximum Stack Depth exceeded - to resolve, manually set eda_StackDepth on parameters to 0');
         }
         return stackDepth;
     }
@@ -457,7 +457,7 @@ abstract global class Broker {
      
     abstract global void restartImpl();
     
-    @TestVisible public static String getNotificationGuid(Integer size) {
+    @TestVisible public static String getMessageGuid(Integer size) {
         return EncodingUtil.convertToHex(crypto.generateAesKey(128)).substring(0, size);
     }
 }

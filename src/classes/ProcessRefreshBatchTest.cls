@@ -56,7 +56,7 @@
         Type subscribe = Type.forName('Subscribe.Meta');
         Type scrape = Type.forName('Scrape.Meta');
         Type isChanged = Type.forName('IsChanged.Meta');
-        Type debouncer = Type.forName('Debouncer.Meta');
+        Type isNewData = Type.forName('IsNewData.Meta');
         Type logInitializer = Type.forName('LogInitializer.Meta');
         Type logWriter = Type.forName('LogWriter.Meta');
         
@@ -72,7 +72,7 @@
         Boolean actualSubscribe = (subscribe != null);
         Boolean actualScrape = (scrape != null);
         Boolean actualIsChanged = (isChanged != null);
-        Boolean actualDebouncer = (debouncer != null);
+        Boolean actualIsNewData = (isNewData != null);
         Boolean actualLogInitializer = (logInitializer != null);
         Boolean actualLogWriter = (logWriter != null);
         
@@ -88,7 +88,7 @@
         System.assert(actualWiretap);
         System.assert(actualScrape);
         System.assert(actualIsChanged);
-        System.assert(actualDebouncer);
+        System.assert(actualIsNewData);
         System.assert(actualLogInitializer);
         System.assert(actualLogWriter);
     }

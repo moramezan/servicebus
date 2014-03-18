@@ -1,17 +1,17 @@
-public class Debouncer implements Process.Plugin {
-    
-    public class DebouncerException extends Exception {}
+public class IsNewData implements Process.Plugin {
+ 
+    public class IsNewDataException extends Exception {}
     
     public class Meta {
-        public SObject ConfigObject = DebouncerConfiguration__c.SObjectType.newSobject();
+        public SObject ConfigObject = IsNewDataConfiguration__c.SObjectType.newSobject();
         public String Icon = 'key_go';
     }
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult result = new Process.PluginDescribeResult();
         result.Tag = 'Event Driven Architecture';
-        result.Name = 'Debouncer';
-        result.Description = 'Swallows message unless the time elapsed since receiving a prior notification with the same key exceeds a min threshold';
+        result.Name = 'IsNewData';
+        result.Description = 'Swallows message unless the time elapsed since receiving a prior message with the same key exceeds a min threshold';
         return result;
     }
     
@@ -23,34 +23,34 @@ public class Debouncer implements Process.Plugin {
         Id configurationId = (Id)parameters.get('eda_ConfigObjectId');
         
         if (configurationId == null) {
-            throw new DebouncerException('Cannot invoke debouncer with null parameters[eda_configuration]');
+            throw new IsNewDataException('Cannot invoke IsNewData with null parameters[eda_ConfigObjectId]');
         }
         
         // retrieve minimum time between releases
-        DebouncerConfiguration__c configuration = [
+        IsNewDataConfiguration__c configuration = [
         SELECT Id, MinimumHoursBetween__c
-            FROM DebouncerConfiguration__c
+            FROM IsNewDataConfiguration__c
             WHERE Id = :configurationId
         ];
         Integer minimumHours = (configuration.MinimumHoursBetween__c == null) ? 0 : (Integer)configuration.MinimumHoursBetween__c;
         
-        // retrieve debouncer (if any)
-        List<Debouncer__c> debouncers = [
+        // retrieve IsNewData (if any)
+        List<IsNewDataInstance__c> IsNewDatas = [
             SELECT Id, LastFiredDate__c, Key__c
-            FROM Debouncer__c
-            WHERE DebouncerConfiguration__c = :configurationId
+            FROM IsNewDataInstance__c
+            WHERE IsNewDataConfiguration__c = :configurationId
             AND Key__c = :key
         ];
         
         DateTime currentStamp = System.now();
-        Boolean release = debounce( currentStamp, key, minimumHours, debouncers , configurationId );
+        Boolean release = debounce( currentStamp, key, minimumHours, IsNewDatas , configurationId );
         if (release) {
             parametersList.add(parameters);
         }
 
         // housekeeping
         Integer twentyFourHours = 24;
-        deleteOldDebouncers(currentStamp, minimumHours, twentyFourHours) ;
+        deleteOldIsNewDatas(currentStamp, minimumHours, twentyFourHours) ;
         
         return EdaUtility.convert(parametersList);
     }
@@ -60,21 +60,21 @@ public class Debouncer implements Process.Plugin {
         DateTime currentStamp,
         String key,
         Integer minimumHours,
-        List<Debouncer__c> debouncers,
-        Id debouncerConfigurationId
+        List<IsNewDataInstance__c> IsNewDatas,
+        Id IsNewDataConfigurationId
     ) {
         // normalize
-        Debouncer__c debouncer;
-        Boolean keyInstance = (debouncers.size() > 0);
+        IsNewDataInstance__c IsNewData;
+        Boolean keyInstance = (IsNewDatas.size() > 0);
         if (!keyInstance) {
-            debouncer = new Debouncer__c (
-                DebouncerConfiguration__c = debouncerConfigurationId,
+            IsNewData = new IsNewDataInstance__c (
+                IsNewDataConfiguration__c = IsNewDataConfigurationId,
                 LastFiredDate__c = null,
                 Key__c = key
             );
-            insert debouncer;
+            insert IsNewData;
         } else {
-            debouncer = debouncers[0];
+            IsNewData = IsNewDatas[0];
         }
     
     
@@ -82,13 +82,13 @@ public class Debouncer implements Process.Plugin {
         Boolean release = ( ! keyInstance );
         if (!release) {
             DateTime cutOff = currentStamp.addHours(-1 * minimumHours);
-            release = debouncers[0].LastFiredDate__c < cutOff;
+            release = IsNewDatas[0].LastFiredDate__c < cutOff;
         }
         
         // persist state
         if (release) {
-            debouncer.LastFiredDate__c = currentStamp;
-            update debouncer;
+            IsNewData.LastFiredDate__c = currentStamp;
+            update IsNewData;
         }
         
         return release;
@@ -97,7 +97,7 @@ public class Debouncer implements Process.Plugin {
     
     
     @testVisible
-    private static void deleteOldDebouncers(
+    private static void deleteOldIsNewDatas(
         DateTime currentStamp,
         Integer minimumHours,
         Integer bufferHours
@@ -105,9 +105,9 @@ public class Debouncer implements Process.Plugin {
     
         DateTime staleStamp = currentStamp.AddHours( -1 * ( bufferHours + minimumHours) ) ;
         List<Id> ids = new List<Id> (
-        new Map<Id, Debouncer__c>([
+        new Map<Id, IsNewDataInstance__c>([
             SELECT Id
-            FROM Debouncer__c
+            FROM IsNewDataInstance__c
             WHERE LastFiredDate__c < :staleStamp
         ]).keySet());
         

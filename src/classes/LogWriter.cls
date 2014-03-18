@@ -22,9 +22,9 @@ public class LogWriter implements Process.Plugin {
         Integer parametersOrder = (Integer)parameters.get('eda_Counter');
         parametersOrder = (parametersOrder != null) ? parametersOrder : 1;
         
-        String notificationGuid = (String)parameters.get('eda_notificationGuid');
-        if (String.isBlank(notificationGuid)) {
-            throw new LogWriterException('Unable to access the notification Guid');
+        String messageGuid = (String)parameters.get('eda_MessageGuid');
+        if (String.isBlank(messageGuid)) {
+            throw new LogWriterException('Unable to access the message Guid');
         }
                 
         //derive the Step
@@ -62,7 +62,7 @@ public class LogWriter implements Process.Plugin {
                     Step__c = step.Id,
                     Order__c   = parametersOrder,
                     LogGroup__c     = logGroupId,
-                  	NotificationGuid__c = notificationGuid,
+                    MessageGuid__c = messageGuid,
                     Parameters__c    = serializedParameters
                 ));
             }

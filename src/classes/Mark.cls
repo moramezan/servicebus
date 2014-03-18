@@ -18,7 +18,7 @@ public with sharing class Mark implements Process.Plugin {
             ),
             new Process.PluginDescribeResult.OutputParameter(
                 'eda_GateGroupId',
-                'The Id of the Gate Group that eventually associates all the marked notifications.',
+                'The Id of the Gate Group that eventually associates all the marked messages.',
                 Process.PluginDescribeResult.ParameterType.ID
             )
         };

@@ -185,8 +185,8 @@ public class BrokerTest{
         Decimal positionA3 = stepA3.Position__c;
         
         List<Message__c> messages =  new List<Message__c>{
-            new Message__c(Parameters__c = '{"eda_sequenceName": "' + sequenceNameA + '", "eda_position": ' + positionA1 + '}'),
-            new Message__c(Parameters__c = '{"eda_sequenceName": "' + sequenceNameA + '", "eda_position": ' + positionA2 + '}')
+            new Message__c(Parameters__c = '{"eda_SequenceName": "' + sequenceNameA + '", "eda_Position": ' + positionA1 + '}'),
+            new Message__c(Parameters__c = '{"eda_SequenceName": "' + sequenceNameA + '", "eda_Position": ' + positionA2 + '}')
         };
         
         //act
@@ -316,7 +316,7 @@ public class BrokerTest{
     static testMethod void callingSurfaceExceptionSurfacesExpectedMessageOnMessage() {
         //arrange
         Message__c message = new Message__c(
-            Parameters__c = '{"Id":1, "eda_sequenceName":"crow", "eda_position":1}'
+            Parameters__c = '{"Id":1, "eda_SequenceName":"crow", "eda_Position":1}'
         );
         insert message;
         
@@ -384,11 +384,11 @@ public class BrokerTest{
         insert stepC2;
         
         List<Message__c> messages = new List<Message__c>{
-            new Message__c(Parameters__c = '{"Id": 0, "eda_sequenceName": "' + sequenceA.Name + '", "eda_position": ' + positionA1 + '}'), // Same Sequence / Position
-            new Message__c(Parameters__c = '{"Id": 1, "eda_sequenceName": "' + sequenceA.Name + '", "eda_position": ' + positionA1 + '}'), // Same Sequence / Position
-            new Message__c(Parameters__c = '{"Id": 2, "eda_sequenceName": "' + sequenceA.Name + '", "eda_position": ' + positionA2 + '}'),
-            new Message__c(Parameters__c = '{"Id": 3, "eda_sequenceName": "' + sequenceB.Name + '", "eda_position": ' + positionB1 + '}'),
-            new Message__c(Parameters__c = '{"Id": 4, "eda_sequenceName": "' + sequenceC.Name + '", "eda_position": ' + positionC1 + '}')
+            new Message__c(Parameters__c = '{"Id": 0, "eda_SequenceName": "' + sequenceA.Name + '", "eda_Position": ' + positionA1 + '}'), // Same Sequence / Position
+            new Message__c(Parameters__c = '{"Id": 1, "eda_SequenceName": "' + sequenceA.Name + '", "eda_Position": ' + positionA1 + '}'), // Same Sequence / Position
+            new Message__c(Parameters__c = '{"Id": 2, "eda_SequenceName": "' + sequenceA.Name + '", "eda_Position": ' + positionA2 + '}'),
+            new Message__c(Parameters__c = '{"Id": 3, "eda_SequenceName": "' + sequenceB.Name + '", "eda_Position": ' + positionB1 + '}'),
+            new Message__c(Parameters__c = '{"Id": 4, "eda_SequenceName": "' + sequenceC.Name + '", "eda_Position": ' + positionC1 + '}')
         };
         
         // act
@@ -717,7 +717,7 @@ public class BrokerTest{
     
     static testMethod void testNoStepThrowsQueryException() {
         //arrange (note there is no Step__c in database!)
-        Message__c message = new Message__c(Parameters__c = '{"eda_sequenceName": "", "eda_position": 0}');
+        Message__c message = new Message__c(Parameters__c = '{"eda_SequenceName": "", "eda_Position": 0}');
         insert message;
         
         //act
@@ -796,7 +796,7 @@ public class BrokerTest{
         Set<String> uniqueIds =  new Set<String>();
         Integer count = 1;
         while (count <= uniqueTotal) {
-            uniqueIds.add(Broker.getNotificationGuid(len));
+            uniqueIds.add(Broker.getMessageGuid(len));
             count++;
         }
 

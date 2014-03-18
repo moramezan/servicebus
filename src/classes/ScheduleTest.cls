@@ -21,7 +21,7 @@
         
         //this guy will miss his schedule
         Map<String,Object> parameters = new Map<String,Object>{
-           //-- NO eda_harbeatkey ::  'eda_Heartbeat' => '2014-01-18T12:00:00.000Z', /
+           //-- NO eda_Heartbeat ::  'eda_Heartbeat' => '2014-01-18T12:00:00.000Z', /
             'eda_ConfigObjectId' => [SELECT Id FROM ScheduleConfiguration__c].Id
         };
         
@@ -32,7 +32,7 @@
  
         
         //this guy will hit his schedule
-       ///-- NO eda_harbeatkey ::  parameters.put('eda_Heartbeat', '2014-01-15T09:00:00.000Z');
+       ///-- NO eda_Heartbeat ::  parameters.put('eda_Heartbeat', '2014-01-15T09:00:00.000Z');
         result = plugin.invoke(new Process.PluginRequest(parameters));
         results = EdaUtility.convert(result);
         

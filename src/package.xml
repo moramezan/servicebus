@@ -14,8 +14,6 @@
         <members>Broker</members>
         <members>BrokerTest</members>
         <members>ConfigurationShowStepExtension</members>
-        <members>Debouncer</members>
-        <members>DebouncerTest</members>
         <members>EdaUtility</members>
         <members>EdaUtilityTest</members>
         <members>FutureBroker</members>
@@ -25,6 +23,8 @@
         <members>HealthController</members>
         <members>IsChanged</members>
         <members>IsChangedTest</members>
+        <members>IsNewData</members>
+        <members>IsNewDataTest</members>
         <members>Jump</members>
         <members>JumpTest</members>
         <members>LogConfigurationController</members>
@@ -134,10 +134,6 @@
         <members>BrokerSettings__c.BrokerClassName__c</members>
         <members>BrokerSettings__c.Inhibit__c</members>
         <members>BrokerSettings__c.IsPaused__c</members>
-        <members>DebouncerConfiguration__c.MinimumHoursBetween__c</members>
-        <members>Debouncer__c.DebouncerConfiguration__c</members>
-        <members>Debouncer__c.Key__c</members>
-        <members>Debouncer__c.LastFiredDate__c</members>
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Parameters__c</members>
         <members>IsChangedConfiguration__c.FieldName__c</members>
@@ -148,6 +144,10 @@
         <members>IsChangedConfiguration__c.OldBlobId__c</members>
         <members>IsChangedConfiguration__c.OldHash__c</members>
         <members>IsChangedConfiguration__c.OldValue__c</members>
+        <members>IsNewDataConfiguration__c.MinimumHoursBetween__c</members>
+        <members>IsNewDataInstance__c.IsNewDataConfiguration__c</members>
+        <members>IsNewDataInstance__c.Key__c</members>
+        <members>IsNewDataInstance__c.LastFiredDate__c</members>
         <members>JumpConfiguration__c.Sequence__c</members>
         <members>KnifeSwitch__c.Url__c</members>
         <members>LogConfiguration__c.DynamicGroupIdentifierObjectName__c</members>
@@ -158,7 +158,7 @@
         <members>LogGroup__c.Stamp__c</members>
         <members>LogWriterEntry__c.GroupIdentifier__c</members>
         <members>LogWriterEntry__c.LogGroup__c</members>
-        <members>LogWriterEntry__c.NotificationGuid__c</members>
+        <members>LogWriterEntry__c.MessageGuid__c</members>
         <members>LogWriterEntry__c.Order__c</members>
         <members>LogWriterEntry__c.Parameters__c</members>
         <members>LogWriterEntry__c.Position__c</members>
@@ -198,12 +198,12 @@
     <types>
         <members>BranchConfiguration__c</members>
         <members>BrokerSettings__c</members>
-        <members>DebouncerConfiguration__c</members>
-        <members>Debouncer__c</members>
         <members>EventType__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
         <members>IsChangedConfiguration__c</members>
+        <members>IsNewDataConfiguration__c</members>
+        <members>IsNewDataInstance__c</members>
         <members>JumpConfiguration__c</members>
         <members>KnifeSwitch__c</members>
         <members>LogConfiguration__c</members>
@@ -234,12 +234,12 @@
     </types>
     <types>
         <members>BranchConfiguration__c-Branch Configuration Layout</members>
-        <members>DebouncerConfiguration__c-Debouncer Configuration Layout</members>
-        <members>Debouncer__c-Debouncer Layout</members>
         <members>EventType__c-Event Type Layout</members>
         <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>
         <members>IsChangedConfiguration__c-IsChangedConfiguration Layout</members>
+        <members>IsNewDataConfiguration__c-IsNewData Configuration Layout</members>
+        <members>IsNewDataInstance__c-IsNewData Instance Layout</members>
         <members>JumpConfiguration__c-Jump Configuration Layout</members>
         <members>LogConfiguration__c-Log Initializer Configuration Layout</members>
         <members>LogGroup__c-Log Initializer Layout</members>
@@ -272,7 +272,7 @@
         <name>StaticResource</name>
     </types>
     <types>
-        <members>DebouncerConfiguration__c.RequireMinimumHoursBetween</members>
+        <members>IsNewDataConfiguration__c.RequireMinimumHoursBetween</members>
         <members>ScheduleConfiguration__c.RequireFriendlyDates</members>
         <members>ScheduleConfiguration__c.RequireFriendlyTimes</members>
         <members>Sequence__c.UniqueName</members>
@@ -301,8 +301,8 @@
     </types>
     <types>
         <members>BranchConfiguration__c.UpdateBranchConfigurationName</members>
-        <members>DebouncerConfiguration__c.UpdateDebouncerConfigurationName</members>
         <members>IsChangedConfiguration__c.UpdateIsChangedConfigurationName</members>
+        <members>IsNewDataConfiguration__c.UpdateIsNewDataConfigurationName</members>
         <members>JumpConfiguration__c.UpdateJumpConfigurationName</members>
         <members>LogConfiguration__c.UpdateLogConfigurationName</members>
         <members>PublishConfiguration__c.UpdatePublishConfigurationName</members>
@@ -314,8 +314,8 @@
     </types>
     <types>
         <members>BranchConfiguration__c.OnBranchConfigurationUpsert</members>
-        <members>DebouncerConfiguration__c.OnDebouncerConfigurationUpsert</members>
         <members>IsChangedConfiguration__c.OnIsChangedConfigurationUpsert</members>
+        <members>IsNewDataConfiguration__c.OnIsNewDataConfigurationUpsert</members>
         <members>JumpConfiguration__c.OnJumpConfigurationUpsert</members>
         <members>LogConfiguration__c.OnLogInitializerConfigurationUpsert</members>
         <members>Message__c.OnMessageError</members>

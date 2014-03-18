@@ -107,7 +107,7 @@
             EventType__c = eventType.Id
         ));
         
-        String data = '{"eda_sequenceName":"TestSequence","eda_position":1,"eda_configuration":"' + step.ConfigurationId__c + '"}';
+        String data = '{"eda_SequenceName":"TestSequence","eda_Position":1,"eda_ConfigObjectId":"' + step.ConfigurationId__c + '"}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         Publish publishPlugin = new Publish();
         

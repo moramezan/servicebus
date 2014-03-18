@@ -62,12 +62,12 @@
         <type>Number</type>
         <unique>false</unique>
     </fields>
-    <label>Debouncer Configuration</label>
+    <label>IsNewData Configuration</label>
     <nameField>
         <label>What does this step do?</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Debouncer Configurations</pluralLabel>
+    <pluralLabel>IsNewData Configurations</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <validationRules>
