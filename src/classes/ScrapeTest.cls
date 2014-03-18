@@ -21,12 +21,12 @@ public class ScrapeTest {
     }
     
     
-    private static  testMethod void canDetermineConfigurable () {
+    private static  testMethod void canDetermineConfigObject() {
         //arrange processes
         Process__c scrapeProcess = Processes.generateOne(Scrape.class);
         
         //act
-        String actualConfiguration = scrapeProcess.Configurable__c;
+        String actualConfiguration = scrapeProcess.ConfigObject__c;
         
         // Assert
         String expectedConfiguration = Schema.SobjectType.ScrapeConfiguration__c.Name;
@@ -48,7 +48,7 @@ public class ScrapeTest {
             Endpoint__c = endPoint
         ));
         
-        Map<String,Object> parameters = new Map<String,Object>{'eda_configuration' => step.ConfigurationId__c};
+        Map<String,Object> parameters = new Map<String,Object>{'eda_ConfigObjectId' => step.ConfigurationId__c};
 
         //act
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());

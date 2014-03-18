@@ -1,8 +1,8 @@
 public class Scrape implements Process.Plugin {
     
     public class Meta {
-        public SObject configurable = ScrapeConfiguration__c.SObjectType.newSObject();
-        public String icon = 'html';
+        public SObject ConfigObject = ScrapeConfiguration__c.SObjectType.newSObject();
+        public String Icon = 'html';
     }
     
     public Process.PluginDescribeResult describe() {
@@ -19,7 +19,7 @@ public class Scrape implements Process.Plugin {
         ScrapeConfiguration__c configuration = [
             SELECT Id, Endpoint__c
             FROM ScrapeConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda_configuration')
+            WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
         ];
         
         HttpRequest request = new HttpRequest();

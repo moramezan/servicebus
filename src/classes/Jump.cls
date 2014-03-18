@@ -1,8 +1,8 @@
 public with sharing class Jump implements Process.Plugin {
 
     public class Meta {
-        public SObject configurable = JumpConfiguration__c.SObjectType.newSObject();
-        public String icon = 'arrow_switch';
+        public SObject ConfigObject = JumpConfiguration__c.SObjectType.newSObject();
+        public String Icon = 'arrow_switch';
     }
     
     public Process.PluginDescribeResult describe() {
@@ -20,11 +20,11 @@ public with sharing class Jump implements Process.Plugin {
         JumpConfiguration__c configuration = [
             SELECT Id, Sequence__r.Name
             FROM JumpConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda_configuration')
+            WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
         ];
         
-        parameters.put('eda_sequenceName', configuration.Sequence__r.Name);
-        parameters.put('eda_position', 0);
+        parameters.put('eda_SequenceName', configuration.Sequence__r.Name);
+        parameters.put('eda_Position', 0);
         
         return EdaUtility.convert(new List<Map<String,Object>>{parameters});
     }

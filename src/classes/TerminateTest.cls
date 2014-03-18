@@ -24,9 +24,9 @@ private class TerminateTest
         Step__c step2 = Steps.generateOne(sequence.Id, subsequenceProcess.Id);
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda_sequenceName' => sequenceName,
-            'eda_position' => position,
-            'eda_subsequenceStepIds' => new List<Id>{step2.Id},
+            'eda_SequenceName' => sequenceName,
+            'eda_Position' => position,
+            'eda_SubsequenceStepIds' => new List<Id>{step2.Id},
             'data' => data
         };
 
@@ -46,8 +46,8 @@ private class TerminateTest
         Decimal actualPosition = null;
         if (actualSize > 0) {
             Map<String,Object> actualParameters = actualOutParametersList[0];
-            actualSequenceName = (String)actualParameters.get('eda_sequenceName');
-            actualPosition = (Decimal)actualParameters.get('eda_position');
+            actualSequenceName = (String)actualParameters.get('eda_SequenceName');
+            actualPosition = (Decimal)actualParameters.get('eda_Position');
         }
 
         // Assert
@@ -66,8 +66,8 @@ private class TerminateTest
  
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda_sequenceName' => sequenceName,
-            'eda_position' => position,
+            'eda_SequenceName' => sequenceName,
+            'eda_Position' => position,
             'data' => data
         };
 
@@ -108,9 +108,9 @@ private class TerminateTest
         subsequenceStepIds.add(subsequenceStepId02);
         
         Map<String,Object> parametersFirst = new Map<String,Object> {
-            'eda_sequenceName' => sequenceName,
-            'eda_position' => position,
-            'eda_subsequenceStepIds' => subsequenceStepIds,
+            'eda_SequenceName' => sequenceName,
+            'eda_Position' => position,
+            'eda_SubsequenceStepIds' => subsequenceStepIds,
             'data' => data
         };
 
@@ -127,8 +127,8 @@ private class TerminateTest
         List<Map<String,Object>> actualOutParametersListSecond = EdaUtility.convert(resultsInvokeSecond);
         
         // prepare
-        List<Object> actualStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('eda_subsequenceStepIds');
-        List<Object> actualStepIdsAfterSecond = (List<Object>)actualOutParametersListSecond[0].get('eda_subsequenceStepIds');
+        List<Object> actualStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('eda_SubsequenceStepIds');
+        List<Object> actualStepIdsAfterSecond = (List<Object>)actualOutParametersListSecond[0].get('eda_SubsequenceStepIds');
         
         Integer actualSizeAfterFirst = actualStepIdsAfterFirst.size();
         Integer actualSizeAfterSecond = actualStepIdsAfterSecond.size();

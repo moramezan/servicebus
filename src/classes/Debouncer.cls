@@ -3,8 +3,8 @@ public class Debouncer implements Process.Plugin {
     public class DebouncerException extends Exception {}
     
     public class Meta {
-        public SObject configurable = DebouncerConfiguration__c.SObjectType.newSobject();
-        public String icon = 'key_go';
+        public SObject ConfigObject = DebouncerConfiguration__c.SObjectType.newSobject();
+        public String Icon = 'key_go';
     }
     
     public Process.PluginDescribeResult describe() {
@@ -20,7 +20,7 @@ public class Debouncer implements Process.Plugin {
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
         String key = (String) parameters.get('Id'); //Note we sill treat null as a unique key with value [null]
-        Id configurationId = (Id)parameters.get('eda_configuration');
+        Id configurationId = (Id)parameters.get('eda_ConfigObjectId');
         
         if (configurationId == null) {
             throw new DebouncerException('Cannot invoke debouncer with null parameters[eda_configuration]');

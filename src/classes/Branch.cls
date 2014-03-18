@@ -1,8 +1,8 @@
 public with sharing class Branch implements Process.Plugin {
 
     public class Meta {
-        public SObject configurable = BranchConfiguration__c.SObjectType.newSObject();
-        public String icon = 'arrow_branch';
+        public SObject ConfigObject = BranchConfiguration__c.SObjectType.newSObject();
+        public String Icon = 'arrow_branch';
     }
     
     public class BranchException extends Exception {}
@@ -22,14 +22,14 @@ public with sharing class Branch implements Process.Plugin {
         BranchConfiguration__c configuration = [
             SELECT Id, Sequence__r.Name
             FROM BranchConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda_configuration')
+            WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
         ];
         
         //get sequence name
         String branchTo = configuration.Sequence__r.Name;
         
         //prevent recursion
-        if (branchTo == (String)parameters.get('eda_sequenceName')) {
+        if (branchTo == (String)parameters.get('eda_SequenceName')) {
             throw new BranchException('Not allowed to branch to own sequence!');
         }
         
@@ -37,9 +37,9 @@ public with sharing class Branch implements Process.Plugin {
         Map<String,Object> clone = parameters.clone();
         
         //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
-        clone.put('eda_subsequenceStepIds', null);
-        clone.put('eda_sequenceName', branchTo);
-        clone.put('eda_position', 0);
+        clone.put('eda_SubsequenceStepIds', null);
+        clone.put('eda_SequenceName', branchTo);
+        clone.put('eda_Position', 0);
         
         //TODO
         //we might have an inbound document, where parallel sequences are attempting

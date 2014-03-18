@@ -1,12 +1,12 @@
 @isTest
 private class IsChangedTest {
 
-    private static testMethod void canDetermineConfigurable () {
+    private static testMethod void canDetermineConfigObject() {
         //arrange processes
         Process__c isChangedProcess = Processes.generateOne(IsChanged.class);
         
         //act
-        String actualConfiguration = isChangedProcess.Configurable__c;
+        String actualConfiguration = isChangedProcess.ConfigObject__c;
         
         // Assert
         String expectedConfiguration = Schema.SobjectType.IsChangedConfiguration__c.Name;
@@ -194,7 +194,7 @@ private class IsChangedTest {
         update configuration;
 
         Map<String,Object> parameters = new Map<String,Object>{
-        'eda_configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
+        'eda_ConfigObjectId' => [SELECT id FROM IsChangedConfiguration__c].Id,
         'Id' => accountId
         };
         
@@ -243,7 +243,7 @@ private class IsChangedTest {
         
         
         Map<String,Object> parameters = new Map<String,Object>{
-        'eda_configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
+        'eda_ConfigObjectId' => [SELECT id FROM IsChangedConfiguration__c].Id,
         'Id' => accountId
         };
         
@@ -292,7 +292,7 @@ private class IsChangedTest {
         
         
         Map<String,Object> parameters = new Map<String,Object>{
-        'eda_configuration' => [SELECT id FROM IsChangedConfiguration__c].Id,
+        'eda_ConfigObjectId' => [SELECT id FROM IsChangedConfiguration__c].Id,
         'Id' => accountId
         };
         

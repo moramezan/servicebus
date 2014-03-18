@@ -1,7 +1,7 @@
 public with sharing class Terminate implements Process.Plugin {
     
     public class Meta {
-        public String icon = 'stop';
+        public String Icon = 'stop';
     }
     
     public Process.PluginDescribeResult describe() {
@@ -17,7 +17,7 @@ public with sharing class Terminate implements Process.Plugin {
         
         //if we got here from a subsequence, back to where you came from!
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
-        Object data = parameters.get('eda_subsequenceStepIds');
+        Object data = parameters.get('eda_SubsequenceStepIds');
         
         if (data == null) {
             //no subsequences
@@ -38,9 +38,9 @@ public with sharing class Terminate implements Process.Plugin {
             WHERE Id = :lastId
         ];
         
-        parameters.put('eda_subsequenceStepIds', stepIds);
-        parameters.put('eda_sequenceName', step.Sequence__r.Name );
-        parameters.put('eda_position', step.Position__c );
+        parameters.put('eda_SubsequenceStepIds', stepIds);
+        parameters.put('eda_SequenceName', step.Sequence__r.Name );
+        parameters.put('eda_Position', step.Position__c );
         parametersList.add(parameters);
 
         return EdaUtility.convert(parametersList);

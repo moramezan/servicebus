@@ -3,8 +3,8 @@ public with sharing class Wiretap implements Process.Plugin {
     public class WiretapException extends Exception {}
       
     public class Meta {
-        public SObject customizable = WiretapSettings__c.SObjectType.newSObject();
-        public String icon = 'email';
+        public SObject CustomSetting = WiretapSettings__c.SObjectType.newSObject();
+        public String Icon = 'email';
     }
     
     public Process.PluginDescribeResult describe() {
@@ -29,7 +29,7 @@ public with sharing class Wiretap implements Process.Plugin {
         }
 
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
-        message.setSubject('[Wiretap] ' + parameters.get('eda_sequenceName') + '#' + parameters.get('eda_position'));
+        message.setSubject('[Wiretap] ' + parameters.get('eda_SequenceName') + '#' + parameters.get('eda_Position'));
         message.setPlainTextBody(Json.serialize(parameters));
         message.setTargetObjectId(userId);
         message.setSaveAsActivity(false);

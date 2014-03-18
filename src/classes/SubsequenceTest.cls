@@ -1,11 +1,11 @@
 @isTest private class SubsequenceTest {
 
-    static testMethod void canDetermineConfigurable() {
+    static testMethod void canDetermineConfigObject() {
         //arrange processes
         Process__c subsequenceProcess = Processes.generateOne(Subsequence.class);
         
         //act
-        String actualConfiguration = subsequenceProcess.Configurable__c;
+        String actualConfiguration = subsequenceProcess.ConfigObject__c;
         
         //assert
         String expectedConfiguration = Schema.SobjectType.SubsequenceConfiguration__c.Name;
@@ -35,9 +35,9 @@
         
         //prepare message
         Process.PluginRequest request = new Process.PluginRequest(new Map<String,Object>{
-            'eda_sequenceName' => 'originSequence',
-            'eda_position' => 1,
-            'eda_configuration' => config.Id
+            'eda_SequenceName' => 'originSequence',
+            'eda_Position' => 1,
+            'eda_ConfigObjectId' => config.Id
         });
         
         //act
@@ -51,15 +51,15 @@
         System.assertEquals(expectedSize, actualSize);
         
         String expectedSequenceName = 'targetSequence';
-        String actualSequenceName = (String)parametersList[0].get('eda_sequenceName');
+        String actualSequenceName = (String)parametersList[0].get('eda_SequenceName');
         System.assertEquals(expectedSequenceName, actualSequenceName);
         
         Decimal expectedPosition = 0;
-        Decimal actualPosition = (Decimal)parametersList[0].get('eda_position');
+        Decimal actualPosition = (Decimal)parametersList[0].get('eda_Position');
         System.assertEquals(expectedPosition, actualPosition);
 
         String expectedList = '["' + originStep.Id + '"]';
-        String actualList = System.Json.serialize(parametersList[0].get('eda_subsequenceStepIds'));
+        String actualList = System.Json.serialize(parametersList[0].get('eda_SubsequenceStepIds'));
         System.assertEquals(expectedList, actualList);
     }
     

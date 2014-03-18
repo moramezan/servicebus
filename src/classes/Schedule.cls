@@ -1,8 +1,8 @@
 public with sharing class Schedule implements Process.Plugin {
     
     public class Meta {
-        public String icon = 'clock';
-        public SObject configurable = ScheduleConfiguration__c.SObjectType.newSObject();
+        public String Icon = 'clock';
+        public SObject ConfigObject = ScheduleConfiguration__c.SObjectType.newSObject();
     }
     
     public Process.PluginDescribeResult describe() {
@@ -17,18 +17,18 @@ public with sharing class Schedule implements Process.Plugin {
         Map<String,Object> parameters = request.inputParameters;
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
-        Boolean isPassThru = String.isBlank((String)parameters.get('eda_heartbeat'));
+        Boolean isPassThru = String.isBlank((String)parameters.get('eda_Heartbeat'));
         
         if (isPassThru) {
             parametersList.add(parameters);
         } else {
             //DateTime is not a primitive Object
-            DateTime heartbeat = (DateTime)Json.deserialize('"' + (String)parameters.get('eda_heartbeat') + '"', DateTime.class);
+            DateTime heartbeat = (DateTime)Json.deserialize('"' + (String)parameters.get('eda_Heartbeat') + '"', DateTime.class);
             
             ScheduleConfiguration__c config = [
                 SELECT Id, Frequency__c, FriendlyDates__c, FriendlyTimes__c
                 FROM ScheduleConfiguration__c
-                WHERE Id = :(Id)parameters.get('eda_configuration')
+                WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
             ];
             
             if (isWithinWindow(heartbeat, config)) {

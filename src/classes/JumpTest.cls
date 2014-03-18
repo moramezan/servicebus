@@ -30,9 +30,9 @@
         
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_configuration' => configuration.Id,
-            'eda_sequenceName' => 'origin',
-            'eda_position' => 1,
+            'eda_ConfigObjectId' => configuration.Id,
+            'eda_SequenceName' => 'origin',
+            'eda_Position' => 1,
             'data' => 'herpderp'
         };
         
@@ -46,11 +46,11 @@
         System.assertEquals(expectedSize, actualSize);
         
         String expectedSequenceName = 'target';
-        String actualSequenceName = (String)parametersList[0].get('eda_sequenceName');
+        String actualSequenceName = (String)parametersList[0].get('eda_SequenceName');
         System.assertEquals(expectedSequenceName, actualSequenceName);
         
         Decimal expectedPosition = 0;
-        Decimal actualPosition = (Decimal)parametersList[0].get('eda_position');
+        Decimal actualPosition = (Decimal)parametersList[0].get('eda_Position');
         System.assertEquals(expectedPosition, actualPosition);
         
         String expectedPassThruData = 'herpderp';

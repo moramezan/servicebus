@@ -15,26 +15,26 @@ public class Processes extends SalesforceObjectSet {
          * Each Process can have one associated customization in the form of a Custom Setting. Process Authors must
          * advertise the custom setting type here, and the framework will provide a link from the Process detail page.
          */
-        public SObject customizable;
+        public SObject CustomSetting;
         
         /**
          * Each Step can have one associated configuration record. The type of the record depends on what process
          * is living on the Step. Process Authors must advertise the object type here, and the framework will
          * handle the record lifecycle (creating and deleting them in tandem with the appropriate Step).
          */
-        public SObject configurable;
+        public SObject ConfigObject;
         
         /**
          * Each Process must name an icon (eg 'arrow_left') from the FamFamFam Silk library:
          * http://www.famfamfam.com/archive/silk-icons-thats-your-lot/
          */
-        public String icon;
+        public String Icon;
         
         /**
          * Each Process can have one Visualforce Page for support and documentation purposes. Process Authors can
          * populate the property with a default value like Page.MyProcessHelp.getUrl() to make this available to users.
          */
-        public String helpPageUrl;
+        public String HelpPageUrl;
     }
     
     /**
@@ -73,14 +73,14 @@ public class Processes extends SalesforceObjectSet {
         
         Processes.Meta meta = (Processes.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), Processes.Meta.class);
         
-        if (meta.customizable != null) {
+        if (meta.CustomSetting != null) {
             //attempt to populate the name of the customization object
-            process.Customizable__c = meta.customizable.getSObjectType().getDescribe().getName();
+            process.CustomSetting__c = meta.CustomSetting.getSObjectType().getDescribe().getName();
         }
         
-        if (meta.configurable != null) {
+        if (meta.ConfigObject != null) {
             //attempt to populate the name of the configuration object
-            process.Configurable__c = meta.configurable.getSObjectType().getDescribe().getName();
+            process.ConfigObject__c = meta.ConfigObject.getSObjectType().getDescribe().getName();
         }
         
         if (meta.icon != null) {

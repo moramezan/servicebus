@@ -1,12 +1,12 @@
 @isTest
 private class DebouncerTest{
 
-private static testMethod void canDetermineConfigurable () {
+private static testMethod void canDetermineConfigObject() {
     //arrange processes
     Process__c debouncerProcess = Processes.generateOne(Debouncer.class);
     
     //act
-    String actualConfiguration = debouncerProcess.Configurable__c;
+    String actualConfiguration = debouncerProcess.ConfigObject__c;
     
     // Assert
     String expectedConfiguration = Schema.SobjectType.DebouncerConfiguration__c.Name;
@@ -177,7 +177,7 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesParameters(
     
     
     Map<String,Object> parameters = new Map<String,Object>{
-        'eda_configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
+        'eda_ConfigObjectId' => [SELECT id FROM DebouncerConfiguration__c].Id,
         'Id' => accountId
     };
     
@@ -226,7 +226,7 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesMessageForO
     
     
     Map<String,Object> parameters = new Map<String,Object>{
-        'eda_configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
+        'eda_ConfigObjectId' => [SELECT id FROM DebouncerConfiguration__c].Id,
         'Id' => key
     };
     
@@ -275,7 +275,7 @@ private static testMethod void callingInvokeWhenZeroDebuncersSwallowsMessageForI
     
     
     Map<String,Object> parameters = new Map<String,Object>{
-        'eda_configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
+        'eda_ConfigObjectId' => [SELECT id FROM DebouncerConfiguration__c].Id,
         'Id' => key
     };
     

@@ -3,8 +3,8 @@ global class LogInitializer implements Process.Plugin {
     public class LogInitializerException extends Exception {}
     
     public class Meta {
-        public SObject configurable = LogConfiguration__c.SObjectType.newSobject();
-        public String icon = 'pencil';
+        public SObject ConfigObject = LogConfiguration__c.SObjectType.newSobject();
+        public String Icon = 'pencil';
     }
     
     public Process.PluginDescribeResult describe () {
@@ -15,7 +15,7 @@ global class LogInitializer implements Process.Plugin {
         
         plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter(
-                'eda_logGroupIds',
+                'eda_LogGroupIds',
                 'An identifier that associates instances of steps.',
                 Process.PluginDescribeResult.ParameterType.String
             )
@@ -34,8 +34,8 @@ global class LogInitializer implements Process.Plugin {
          List<Step__c> steps = [
              SELECT Id, Position__c, Sequence__r.Name
              FROM Step__c
-             WHERE Sequence__r.Name = :(String)parameters.get('eda_sequenceName')
-             AND Position__c = :(Decimal) parameters.get('eda_position')
+             WHERE Sequence__r.Name = :(String)parameters.get('eda_SequenceName')
+             AND Position__c = :(Decimal) parameters.get('eda_Position')
          ];
          if (steps.size() == 0) {
             throw new LogInitializerException('Unable to access the Step Position and Sequence Name');
@@ -46,7 +46,7 @@ global class LogInitializer implements Process.Plugin {
          List<LogConfiguration__c> configurations = [
              SELECT Id, StaticGroupIdentifier__c , DynamicGroupIdentifier__c
              FROM LogConfiguration__c
-             WHERE Id = :(Id)parameters.get('eda_configuration')
+             WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
          ];
          if (configurations.size() == 0) {
             throw new LogInitializerException('Unable to access Log Configuration');
@@ -63,12 +63,12 @@ global class LogInitializer implements Process.Plugin {
          insert logGroup;
 
          // update outbound message
-         List<Object> logGroupIds = (List<Object>)parameters.get('eda_logGroupIds');
+         List<Object> logGroupIds = (List<Object>)parameters.get('eda_LogGroupIds');
          if (logGroupIds == null) {
              logGroupIds = new List<Object>();
          }
          logGroupIds.add(logGroup.Id);
-         parameters.put('eda_logGroupIds', logGroupIds);
+         parameters.put('eda_LogGroupIds', logGroupIds);
 
          
          return EdaUtility.convert(new List<Map<String,Object>>{parameters});

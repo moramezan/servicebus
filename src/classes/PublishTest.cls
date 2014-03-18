@@ -1,11 +1,11 @@
 @isTest private class PublishTest {
 
-    static testMethod void canDetermineConfigurable() {
+    static testMethod void canDetermineConfigObject() {
         //arrange processes
         Process__c publishProcess = Processes.generateOne(Publish.class);
         
         //act
-        String actualConfiguration = publishProcess.Configurable__c;
+        String actualConfiguration = publishProcess.ConfigObject__c;
         
         //assert
         String expectedConfiguration = Schema.SObjectType.PublishConfiguration__c.Name;
@@ -39,8 +39,8 @@
         ));
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_configuration' => pubConfig.Id,
-            'eda_subsequenceStepIds' => new List<Id>{'000000000000000AAA'}
+            'eda_ConfigObjectId' => pubConfig.Id,
+            'eda_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Publish branch = new Publish();
@@ -53,12 +53,12 @@
         
         //first one is for subscriber
         List<Object> expectedIds = null;
-        List<Object> actualIds = (List<Object>)parametersList[0].get('eda_subsequenceStepIds');
+        List<Object> actualIds = (List<Object>)parametersList[0].get('eda_SubsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
         
         //second one is original/passthru
         expectedIds = new List<Id>{'000000000000000AAA'};
-        actualIds = (List<Object>)parametersList[1].get('eda_subsequenceStepIds');
+        actualIds = (List<Object>)parametersList[1].get('eda_SubsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
     }
     
@@ -77,7 +77,7 @@
         insert config;
         
         Publish publishPlugin = new Publish();
-        Map<String,Object> parameters = new Map<String,Object>{'eda_sequenceName' => 'TestSequence', 'eda_position' => 1, 'eda_configuration' => config.Id};
+        Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'TestSequence', 'eda_Position' => 1, 'eda_ConfigObjectId' => config.Id};
         Process.PluginRequest request = new Process.PluginRequest(parameters);
         
         //act
@@ -163,7 +163,7 @@
         ));
         
         //arrange
-        Map<String,Object> parameters = new Map<String,Object>{'eda_sequenceName' => 'Publisher', 'eda_position' => 1, 'eda_configuration' => publisherStep.ConfigurationId__c};
+        Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'Publisher', 'eda_Position' => 1, 'eda_ConfigObjectId' => publisherStep.ConfigurationId__c};
         
         //act
         Publish process = new Publish();

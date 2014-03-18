@@ -70,7 +70,7 @@ public class BrokerTest{
         Integer actualCount = messages.size();
         if (actualCount > 0) {
             Map<String,Object> actualParameters = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Parameters__c);
-            actualStackDepth = (Integer) actualParameters.get('eda_stackDepth');
+            actualStackDepth = (Integer) actualParameters.get('eda_StackDepth');
             actualDetail = messages[0].Exception__c;
             actualStatus = messages[0].Status__c;
         }
@@ -91,7 +91,7 @@ public class BrokerTest{
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
         Integer stackDepth = 8;
-        String key  = 'eda_stackDepth';
+        String key  = 'eda_StackDepth';
         parameters.put(key, stackDepth);
         
         //act
@@ -124,7 +124,7 @@ public class BrokerTest{
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
         Integer stackDepth = 10;
-        String key  = 'eda_stackDepth';
+        String key  = 'eda_StackDepth';
         parameters.put(key, stackDepth);
         
         Boolean actualFlag = false;
@@ -155,7 +155,7 @@ public class BrokerTest{
         Integer actualStackDepth = -1;
         List<Map<String,Object>>  actualParametersList = EdaUtility.convert(results);
         for (Map<String,Object> actualParameters : actualParametersList ) {
-            actualStackDepth = (Integer) actualParameters.get('eda_stackDepth');
+            actualStackDepth = (Integer) actualParameters.get('eda_StackDepth');
         }
  
         //assert
@@ -208,8 +208,8 @@ public class BrokerTest{
         Id actualProcessId02;
         for (Message__c message : messagesAfter) {
             Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
-            String parametersSequenceName = (String)parameters.get('eda_sequenceName');
-            Integer parametersPosition = (Integer)parameters.get('eda_position');
+            String parametersSequenceName = (String)parameters.get('eda_SequenceName');
+            Integer parametersPosition = (Integer)parameters.get('eda_Position');
             if (parametersSequenceName != sequenceNameA) {
                 flagSequenceNameA = false;
             }
@@ -408,8 +408,8 @@ public class BrokerTest{
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
             Integer theId = (Integer) parameters.get('Id');
-            String theSequenceName = (String)parameters.get('eda_sequenceName');
-            Integer thePosition = (Integer)parameters.get('eda_position');
+            String theSequenceName = (String)parameters.get('eda_SequenceName');
+            Integer thePosition = (Integer)parameters.get('eda_Position');
             if (theId == 0) {
                 actualSequenceName0 = theSequenceName;
                 actualPosition0 = thePosition;
@@ -552,7 +552,7 @@ public class BrokerTest{
         Integer markCount = 1;
         Map<String,Object> parametersIn0 = new Map<String,Object> {
             'Id' => '0',
-            'eda_markCount' => markCount
+            'eda_MarkCount' => markCount
         };
         
         Map<String,Object> parametersOut1 = new Map<String,Object> {
@@ -573,7 +573,7 @@ public class BrokerTest{
         Broker.markHelper(parametersIn0, parametersListOut);
         
         //assemble
-        Integer actualCount = (Integer)parametersIn0.get('eda_count');
+        Integer actualCount = (Integer)parametersIn0.get('eda_Count');
         
         //assert
         Integer expectedCount = parametersListOut.size();
@@ -585,7 +585,7 @@ public class BrokerTest{
         Integer markCount = 0; //will not increment to 2
         Map<String,Object> parametersIn0 = new Map<String,Object> {
             'Id' => '0',
-            'eda_markCount' => markCount
+            'eda_MarkCount' => markCount
         };
         
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
@@ -594,7 +594,7 @@ public class BrokerTest{
         Broker.markHelper(parametersIn0, parametersListOut);
         
         //assemble
-        Integer actualCount = (Integer)parametersIn0.get('eda_count');
+        Integer actualCount = (Integer)parametersIn0.get('eda_Count');
         
         //assert
         Integer expectedCount = null;
@@ -605,7 +605,7 @@ public class BrokerTest{
         //arrange
         Map<String,Object> parametersIn0 = new Map<String,Object> {
             'Id' => '0'
-            //'eda_markCount' => markCount //Not specified; key will return null
+            //'eda_MarkCount' => markCount //Not specified; key will return null
         };
         
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
@@ -614,7 +614,7 @@ public class BrokerTest{
         Broker.markHelper(parametersIn0, parametersListOut);
         
         //assemble
-        Integer actualCount = (Integer) parametersIn0.get('eda_count');
+        Integer actualCount = (Integer) parametersIn0.get('eda_Count');
         
         //assert
         Integer expectedCount = null;
@@ -624,7 +624,7 @@ public class BrokerTest{
  
     
     //TODO :: write test for this when you (NReid) understand this ( cant remember right now)
-    // if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('eda_gateGroupId')}); //tidy up split of 0
+    // if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('eda_GateGroupId')}); //tidy up split of 0
     
     /**
      * Bug with Salesforce:

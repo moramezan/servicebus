@@ -171,8 +171,8 @@
         <members>Message__c.Sequence__c</members>
         <members>Message__c.Status__c</members>
         <members>Message__c.Step__c</members>
-        <members>Process__c.Configurable__c</members>
-        <members>Process__c.Customizable__c</members>
+        <members>Process__c.ConfigObject__c</members>
+        <members>Process__c.CustomSetting__c</members>
         <members>Process__c.Description__c</members>
         <members>Process__c.FullyQualifiedClassName__c</members>
         <members>Process__c.HelpPageUrl__c</members>

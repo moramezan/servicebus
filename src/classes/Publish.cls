@@ -3,8 +3,8 @@ public with sharing class Publish implements Process.Plugin {
     public class PublishException extends Exception {}
 
     public class Meta {
-        public SObject configurable = PublishConfiguration__c.SObjectType.newSObject();
-        public String icon = 'chart_organisation';
+        public SObject ConfigObject = PublishConfiguration__c.SObjectType.newSObject();
+        public String Icon = 'chart_organisation';
     }
     
     public Process.PluginDescribeResult describe () {
@@ -22,7 +22,7 @@ public with sharing class Publish implements Process.Plugin {
         PublishConfiguration__c publishConfiguration = [
             SELECT Id, EventType__c
             FROM PublishConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda_configuration')
+            WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
         ];
         
         if (null == publishConfiguration.EventType__c) {
@@ -44,9 +44,9 @@ public with sharing class Publish implements Process.Plugin {
         for (Step__c step : steps) {
             Map<String,Object> clone = parameters.clone();
             //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
-            clone.put('eda_subsequenceStepIds', null);
-            clone.put('eda_position', step.Position__c);
-            clone.put('eda_sequenceName', step.Sequence__r.Name);
+            clone.put('eda_SubsequenceStepIds', null);
+            clone.put('eda_Position', step.Position__c);
+            clone.put('eda_SequenceName', step.Sequence__r.Name);
             parametersList.add(clone);
         }
         

@@ -1,11 +1,11 @@
 @isTest private class SubscribeTest{
     
-    static testMethod void canDetermineConfigurable() {
+    static testMethod void canDetermineConfigObject() {
         //arrange processes
         Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
         
         //act
-        String actualConfiguration = subscribeProcess.Configurable__c;
+        String actualConfiguration = subscribeProcess.ConfigObject__c;
         
         // Assert
         String expectedConfiguration = Schema.SobjectType.SubscribeConfiguration__c.Name;

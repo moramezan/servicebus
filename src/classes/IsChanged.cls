@@ -4,8 +4,8 @@ public class IsChanged  implements Process.Plugin {
     private static Integer persistDuration = ( 60*24 ) * 7; // seven days
     
     public class Meta {
-        public SObject configurable = IsChangedConfiguration__c.SObjectType.newSObject();
-        public String icon = 'application_side_expand';
+        public SObject ConfigObject = IsChangedConfiguration__c.SObjectType.newSObject();
+        public String Icon = 'application_side_expand';
     }
     
     public Process.PluginDescribeResult describe() {
@@ -54,7 +54,7 @@ public class IsChanged  implements Process.Plugin {
         IsChangedConfiguration__c configuration = [
             SELECT Id, NewHash__c, OldHash__c, newBlobId__c, oldBlobId__c, NewValue__c, OldValue__c, FieldName__c
             FROM IsChangedConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda_configuration')
+            WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
         ];
   
         // Is this the first run ?

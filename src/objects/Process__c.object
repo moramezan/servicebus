@@ -52,9 +52,9 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
-        <fullName>Configurable__c</fullName>
+        <fullName>ConfigObject__c</fullName>
         <externalId>false</externalId>
-        <label>Configurable</label>
+        <label>Config Object</label>
         <length>40</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -62,9 +62,9 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Customizable__c</fullName>
+        <fullName>CustomSetting__c</fullName>
         <externalId>false</externalId>
-        <label>Customizable</label>
+        <label>Custom Setting</label>
         <length>40</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -125,8 +125,8 @@
         <fullName>All</fullName>
         <columns>NAME</columns>
         <columns>Tag__c</columns>
-        <columns>Configurable__c</columns>
-        <columns>Customizable__c</columns>
+        <columns>ConfigObject__c</columns>
+        <columns>CustomSetting__c</columns>
         <columns>LAST_UPDATE</columns>
         <columns>Icon__c</columns>
         <filterScope>Everything</filterScope>

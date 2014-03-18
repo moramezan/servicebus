@@ -8,7 +8,7 @@ private class WiretapTest {
         System.assertNotEquals(null, wiretap.describe().Tag);
     }
     
-    static testMethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnCustomizableNOTSet() {
+    static testMethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnCustomSettingNOTSet() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Integer step = 1;
@@ -17,8 +17,8 @@ private class WiretapTest {
        //--NOT-DEFINED insert new WiretapSettings__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda_sequenceName' => sequenceName,
-            'eda_step' => step,
+            'eda_SequenceName' => sequenceName,
+            'eda_Step' => step,
             'data' => data
         };
         
@@ -40,7 +40,7 @@ private class WiretapTest {
         System.assertEquals(expectedFlagException , actualFlagException );
     }
    
-    static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenDefinedMetaCustomizableSet() {
+    static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenDefinedMetaCustomSettingSet() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Integer step = 1;
@@ -49,8 +49,8 @@ private class WiretapTest {
         insert new WiretapSettings__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda_sequenceName' => sequenceName,
-            'eda_step' => step,
+            'eda_SequenceName' => sequenceName,
+            'eda_Step' => step,
             'data' => data
         };
         

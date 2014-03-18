@@ -3,7 +3,7 @@ public class LogWriter implements Process.Plugin {
     public class LogWriterException extends Exception {}
     
     public class Meta {
-        public String icon = 'pencil_add';
+        public String Icon = 'pencil_add';
     }
     
     public Process.PluginDescribeResult describe() {
@@ -19,7 +19,7 @@ public class LogWriter implements Process.Plugin {
         Map<String,Object> parameters = pluginRequest.inputParameters;
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
-        Integer parametersOrder = (Integer)parameters.get('eda_counter');
+        Integer parametersOrder = (Integer)parameters.get('eda_Counter');
         parametersOrder = (parametersOrder != null) ? parametersOrder : 1;
         
         String notificationGuid = (String)parameters.get('eda_notificationGuid');
@@ -31,8 +31,8 @@ public class LogWriter implements Process.Plugin {
         List<Step__c> steps = [
             SELECT Id, Position__c, Sequence__c
             FROM Step__c
-            WHERE Sequence__r.Name = :(String)parameters.get('eda_sequenceName')
-            AND Position__c = :(Decimal) parameters.get('eda_position')
+            WHERE Sequence__r.Name = :(String)parameters.get('eda_SequenceName')
+            AND Position__c = :(Decimal) parameters.get('eda_Position')
         ];
         if (steps.size() == 0) {
             throw new LogWriterException('Unable to access the Step');
@@ -40,7 +40,7 @@ public class LogWriter implements Process.Plugin {
         Step__c step = steps[0];
  
         //write log entry for every log group identifier
-        List<Object> collection = (List<Object>)parameters.get('eda_logGroupIds');
+        List<Object> collection = (List<Object>)parameters.get('eda_LogGroupIds');
         
         if (collection != null) {
             List<Id> logGroupIds = new List<Id>();

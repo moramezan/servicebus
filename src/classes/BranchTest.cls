@@ -1,11 +1,11 @@
 @isTest private class BranchTest {
 
-    static testMethod void canDetermineConfigurable() {
+    static testMethod void canDetermineConfigObject() {
         //arrange processes
         Process__c branchProcess = Processes.generateOne(Branch.class);
         
         //act
-        String actualConfiguration = branchProcess.Configurable__c;
+        String actualConfiguration = branchProcess.ConfigObject__c;
         
         //assert
         String expectedConfiguration = Schema.SobjectType.BranchConfiguration__c.Name;
@@ -23,15 +23,15 @@
         insert config;
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_configuration' => config.Id,
-            'eda_subsequenceStepIds' => new List<Id>{'000000000000000AAA'}
+            'eda_ConfigObjectId' => config.Id,
+            'eda_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Branch branch = new Branch();
         List<Map<String,Object>> parametersList = EdaUtility.convert(branch.invoke(new Process.PluginRequest(parameters)));
         
         List<Object> expectedIds = null;
-        List<Object> actualIds = (List<Object>)parametersList[1].get('eda_subsequenceStepIds');
+        List<Object> actualIds = (List<Object>)parametersList[1].get('eda_SubsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
     }
     
@@ -48,9 +48,9 @@
         
         //arrange parameters
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_sequenceName' => origin.Name,
-            'eda_position' => 1,
-            'eda_configuration' => config.Id
+            'eda_SequenceName' => origin.Name,
+            'eda_Position' => 1,
+            'eda_ConfigObjectId' => config.Id
         };
         
         //arrange processable
@@ -70,11 +70,11 @@
         
         //asserts
         String expectedNormalSequenceName = origin.Name;
-        String actualNormalSequenceName = (String)normalParameters.get('eda_sequenceName');
+        String actualNormalSequenceName = (String)normalParameters.get('eda_SequenceName');
         System.assertEquals(expectedNormalSequenceName, actualNormalSequenceName);
         
         Decimal expectedNormalPosition = 1;
-        Decimal expectedActualPosition = (Decimal)normalParameters.get('eda_position');
+        Decimal expectedActualPosition = (Decimal)normalParameters.get('eda_Position');
         System.assertEquals(expectedNormalPosition, expectedActualPosition);
         
         //act
@@ -82,11 +82,11 @@
         
         //asserts
         String expectedBranchSequenceName = target.Name;
-        String actualBranchSequenceName = (String)branchParameters.get('eda_sequenceName');
+        String actualBranchSequenceName = (String)branchParameters.get('eda_SequenceName');
         System.assertEquals(expectedBranchSequenceName, actualBranchSequenceName);
         
         Decimal expectedBranchPosition = 0;
-        Decimal actualBranchPosition = (Decimal)branchParameters.get('eda_position');
+        Decimal actualBranchPosition = (Decimal)branchParameters.get('eda_Position');
         System.assertEquals(expectedBranchPosition, actualBranchPosition);
     }
     
@@ -101,9 +101,9 @@
         
         //arrange parameters
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_sequenceName' => sequence.Name,
-            'eda_position' => 1,
-            'eda_configuration' => config.Id
+            'eda_SequenceName' => sequence.Name,
+            'eda_Position' => 1,
+            'eda_ConfigObjectId' => config.Id
         };
         
         //arrange process

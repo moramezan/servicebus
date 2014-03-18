@@ -116,9 +116,9 @@ private class LogWriterTest{
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
             'eda_notificationGuid' => '1234567abcde',
-            'eda_logGroupIds' => logGroupIds,
-            'eda_sequenceName' => sequenceName,
-            'eda_position' => positionA2
+            'eda_LogGroupIds' => logGroupIds,
+            'eda_SequenceName' => sequenceName,
+            'eda_Position' => positionA2
         };
         
         //act

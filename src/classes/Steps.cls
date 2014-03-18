@@ -42,12 +42,12 @@ public class Steps extends SalesforceObjectSet {
         Set<Id> processIds = new Set<Id>();
         for (Step__c step : steps) processIds.add(step.Process__c);
         
-        //query process ids to their configurables
-        List<Process__c> processes = [SELECT Id, Configurable__c FROM Process__c WHERE Id IN :processIds];
+        //query process ids to their config objects
+        List<Process__c> processes = [SELECT Id, ConfigObject__c FROM Process__c WHERE Id IN :processIds];
         
-        //assemble a mapping of process ids to configurable strings
-        Map<Id,String> processId2configurable = new Map<Id,String>();
-        for (Process__c process : processes) processId2configurable.put(process.Id, process.Configurable__c);
+        //assemble a mapping of process ids to config object strings
+        Map<Id,String> processId2configObject = new Map<Id,String>();
+        for (Process__c process : processes) processId2configObject.put(process.Id, process.ConfigObject__c);
         
         //we will do applicable steps and configurations in tandem
         List<Step__c> configuredSteps = new List<Step__c>();
@@ -55,9 +55,9 @@ public class Steps extends SalesforceObjectSet {
         
         //assemble applicable steps and configurations
         for (Step__c step : steps) {
-            String configurable = processId2configurable.get(step.Process__c);
-            if (configurable != null) {
-                SObject configuration = (SObject)Type.forName(configurable).newInstance();
+            String configObject = processId2configObject.get(step.Process__c);
+            if (configObject != null) {
+                SObject configuration = (SObject)Type.forName(configObject).newInstance();
                 configuredSteps.add(step);
                 configurations.add(configuration);
             }

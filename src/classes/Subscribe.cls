@@ -1,9 +1,9 @@
 public with sharing class Subscribe implements Process.Plugin {
 
     public class Meta {
-        public SObject configurable = SubscribeConfiguration__c.SObjectType.newSObject();
-        public String icon = 'eye';
-        public String helpPageUrl = Page.SubscribeHelp.getUrl();
+        public SObject ConfigObject = SubscribeConfiguration__c.SObjectType.newSObject();
+        public String Icon = 'eye';
+        public String HelpPageUrl = Page.SubscribeHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe() {

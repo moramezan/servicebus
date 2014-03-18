@@ -22,9 +22,9 @@ public class ScheduleImplementation implements System.Schedulable {
         List<Message__c> messages = new List<Message__c>();
         for (Step__c step : steps) {
             Map<String,Object> parameters = new Map<String,Object>{
-                'eda_position' => 0,
-                'eda_sequenceName' => step.Sequence__r.Name,
-                'eda_heartbeat' => DateTime.now()
+                'eda_Position' => 0,
+                'eda_SequenceName' => step.Sequence__r.Name,
+                'eda_Heartbeat' => DateTime.now()
             };
             
             Message__c message = new Message__c(

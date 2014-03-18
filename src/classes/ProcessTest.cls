@@ -33,7 +33,7 @@
         String expectedFullyQualifiedClassName = actualType.getName();
         Type innerClass = Type.forName(actualType.getName() + '.' + 'Meta'); 
         Processes.Meta meta = (Processes.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), Processes.Meta.class);
-        String expectedConfigurable = meta.configurable.getSObjectType().getDescribe().getName();
+        String expectedConfigObject = meta.ConfigObject.getSObjectType().getDescribe().getName();
         String expectedIcon = meta.icon;
         String expectedHelpPageUrl = Page.SubscribeHelp.getUrl();
         
@@ -45,7 +45,7 @@
         String actualTag = process.Tag__c; 
         String actualDescription = process.Description__c; 
         String actualFullyQualifiedClassName = process.FullyQualifiedClassName__c; 
-        String actualConfigurable = process.Configurable__c; 
+        String actualConfigObject = process.ConfigObject__c; 
         String actualIcon = process.Icon__c; 
         String actualHelpPageUrl = process.HelpPageUrl__c;
 
@@ -54,7 +54,7 @@
         System.assertEquals(expectedTag , actualTag );
         System.assertEquals(expectedDescription , actualDescription );
         System.assertEquals(expectedFullyQualifiedClassName , actualFullyQualifiedClassName);
-        System.assertEquals(expectedConfigurable , actualConfigurable );
+        System.assertEquals(expectedConfigObject , actualConfigObject);
         System.assertEquals(expectedIcon , actualIcon );
         System.assertEquals(expectedHelpPageUrl, actualHelpPageUrl);
     }    

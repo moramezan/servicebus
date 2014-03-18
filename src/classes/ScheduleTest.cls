@@ -21,8 +21,8 @@
         
         //this guy will miss his schedule
         Map<String,Object> parameters = new Map<String,Object>{
-           //-- NO eda_harbeatkey ::  'eda_heartbeat' => '2014-01-18T12:00:00.000Z', /
-            'eda_configuration' => [SELECT Id FROM ScheduleConfiguration__c].Id
+           //-- NO eda_harbeatkey ::  'eda_Heartbeat' => '2014-01-18T12:00:00.000Z', /
+            'eda_ConfigObjectId' => [SELECT Id FROM ScheduleConfiguration__c].Id
         };
         
         Schedule plugin = new Schedule();
@@ -32,7 +32,7 @@
  
         
         //this guy will hit his schedule
-       ///-- NO eda_harbeatkey ::  parameters.put('eda_heartbeat', '2014-01-15T09:00:00.000Z');
+       ///-- NO eda_harbeatkey ::  parameters.put('eda_Heartbeat', '2014-01-15T09:00:00.000Z');
         result = plugin.invoke(new Process.PluginRequest(parameters));
         results = EdaUtility.convert(result);
         
@@ -62,8 +62,8 @@
         
         //this guy will miss his schedule
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_heartbeat' => '2014-01-18T12:00:00.000Z', //not Wednesday at 9:00
-            'eda_configuration' => [SELECT Id FROM ScheduleConfiguration__c].Id
+            'eda_Heartbeat' => '2014-01-18T12:00:00.000Z', //not Wednesday at 9:00
+            'eda_ConfigObjectId' => [SELECT Id FROM ScheduleConfiguration__c].Id
         };
         
         Schedule plugin = new Schedule();
@@ -75,7 +75,7 @@
         System.assertEquals(expectedMissCount, actualMissCount);
         
         //this guy will hit his schedule
-        parameters.put('eda_heartbeat', '2014-01-15T09:00:00.000Z'); //definitely a Wednesday at 9:00
+        parameters.put('eda_Heartbeat', '2014-01-15T09:00:00.000Z'); //definitely a Wednesday at 9:00
         result = plugin.invoke(new Process.PluginRequest(parameters));
         results = EdaUtility.convert(result);
         

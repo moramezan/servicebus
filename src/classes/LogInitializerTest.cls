@@ -1,12 +1,12 @@
 @isTest
 private class LogInitializerTest {
 
-        private static testMethod void canDetermineConfigurable () {
+        private static testMethod void canDetermineConfigObject() {
         //arrange processes
         Process__c logInitializerProcess = Processes.generateOne(LogInitializer.class);
         
         //act
-        String actualConfiguration = logInitializerProcess.Configurable__c;
+        String actualConfiguration = logInitializerProcess.ConfigObject__c;
         
         // Assert
         String expectedConfiguration = Schema.SobjectType.LogConfiguration__c.Name;
@@ -36,9 +36,9 @@ private class LogInitializerTest {
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_configuration' =>  configuration.Id,
-            'eda_sequenceName' => sequenceName,
-            'eda_position' => thePosition
+            'eda_ConfigObjectId' =>  configuration.Id,
+            'eda_SequenceName' => sequenceName,
+            'eda_Position' => thePosition
         };
         
         //act
@@ -97,9 +97,9 @@ private class LogInitializerTest {
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_configuration' =>  configuration.Id,
-            'eda_sequenceName' => sequenceName,
-            'eda_position' => thePosition
+            'eda_ConfigObjectId' =>  configuration.Id,
+            'eda_SequenceName' => sequenceName,
+            'eda_Position' => thePosition
         };
         
         //act
@@ -162,9 +162,9 @@ private class LogInitializerTest {
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_configuration' =>  configuration.Id,
-            'eda_sequenceName' => sequenceName,
-            'eda_position' => thePosition
+            'eda_ConfigObjectId' =>  configuration.Id,
+            'eda_SequenceName' => sequenceName,
+            'eda_Position' => thePosition
         };
         
         //act
@@ -259,9 +259,9 @@ private class LogInitializerTest {
         
         Map<String,Object> parameters = new Map<String,Object>{
            'Id' => theId   ,
-           'eda_configuration' =>  configuration.Id,
-           'eda_sequenceName' => sequenceName,
-           'eda_position' => thePosition
+           'eda_ConfigObjectId' =>  configuration.Id,
+           'eda_SequenceName' => sequenceName,
+           'eda_Position' => thePosition
         };
         
         //act
