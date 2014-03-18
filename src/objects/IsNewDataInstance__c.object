@@ -51,12 +51,12 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
-        <fullName>DebouncerConfiguration__c</fullName>
+        <fullName>IsNewDataConfiguration__c</fullName>
         <externalId>false</externalId>
-        <label>Debouncer Configuration</label>
-        <referenceTo>DebouncerConfiguration__c</referenceTo>
-        <relationshipLabel>Debouncers</relationshipLabel>
-        <relationshipName>Debouncers</relationshipName>
+        <label>IsNewData Configuration</label>
+        <referenceTo>IsNewDataConfiguration__c</referenceTo>
+        <relationshipLabel>IsNewDatas</relationshipLabel>
+        <relationshipName>IsNewDatas</relationshipName>
         <relationshipOrder>0</relationshipOrder>
         <reparentableMasterDetail>false</reparentableMasterDetail>
         <trackTrending>false</trackTrending>
@@ -81,13 +81,13 @@
         <trackTrending>false</trackTrending>
         <type>DateTime</type>
     </fields>
-    <label>Debouncer</label>
+    <label>IsNewData Instance</label>
     <nameField>
         <displayFormat>D-{0000000000}</displayFormat>
-        <label>Debouncer Name</label>
+        <label>IsNewData Name</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Debouncers</pluralLabel>
+    <pluralLabel>IsNewData Instances</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
 </CustomObject>

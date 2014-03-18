@@ -1,32 +1,32 @@
 @isTest
-private class DebouncerTest{
+private class IsNewDataTest{
 
 private static testMethod void canDetermineConfigurable () {
     //arrange processes
-    Process__c debouncerProcess = Processes.generateOne(Debouncer.class);
+    Process__c IsNewDataProcess = Processes.generateOne(IsNewData.class);
     
     //act
-    String actualConfiguration = debouncerProcess.Configurable__c;
+    String actualConfiguration = IsNewDataProcess.Configurable__c;
     
     // Assert
-    String expectedConfiguration = Schema.SobjectType.DebouncerConfiguration__c.Name;
+    String expectedConfiguration = Schema.SobjectType.IsNewDataConfiguration__c.Name;
     System.assertEquals(expectedConfiguration, actualConfiguration);
 }
 
-private static testMethod void callingDebounceReturnsTrueWhenNoInstanceRecordWithKey() {
+private static testMethod void callingIsNewDataeturnsTrueWhenNoInstanceRecordWithKey() {
     //arrange
     Integer hours = 10;
-    DebouncerConfiguration__c configuration = new DebouncerConfiguration__c( MinimumHoursBetween__c = hours );
+    IsNewDataConfiguration__c configuration = new IsNewDataConfiguration__c( MinimumHoursBetween__c = hours );
     insert configuration;
     
     Integer minimumHours = 10;
     String key = '1234';
     DateTime currentStamp = System.now();
     
-    List<Debouncer__c> debouncers = new List<Debouncer__c>(); // 0 instance records
+    List<IsNewDataInstance__c> IsNewDatas = new List<IsNewDataInstance__c>(); // 0 instance records
     
     //act
-    Boolean actualRelease = Debouncer.debounce(currentStamp, key, minimumHours, debouncers, configuration.Id);
+    Boolean actualRelease = IsNewData.debounce(currentStamp, key, minimumHours, IsNewDatas, configuration.Id);
     
     
     // Assert
@@ -35,10 +35,10 @@ private static testMethod void callingDebounceReturnsTrueWhenNoInstanceRecordWit
 }
     
     
-private static testMethod void callingDebounceReturnsTrueWhenInstanceRecordFoundWithKeyAndOlderEnough() {
+private static testMethod void callingIsNewDataeturnsTrueWhenInstanceRecordFoundWithKeyAndOlderEnough() {
     //arrange
     Integer minimumHours = 10;
-    DebouncerConfiguration__c configuration = new DebouncerConfiguration__c( MinimumHoursBetween__c = minimumHours );
+    IsNewDataConfiguration__c configuration = new IsNewDataConfiguration__c( MinimumHoursBetween__c = minimumHours );
     insert configuration;
     
     Integer extraHours = 5;
@@ -46,19 +46,19 @@ private static testMethod void callingDebounceReturnsTrueWhenInstanceRecordFound
     DateTime currentStamp = System.now();
     DateTime veryOldLastFiredDate =currentStamp.AddHours( -1 * minimumHours ).addHours(-1 * extraHours);
     
-    List<Debouncer__c> debouncers = new List<Debouncer__c>(); // 0 instance records
-    Debouncer__c debouncer1 = new Debouncer__c(
-        DebouncerConfiguration__c = configuration.Id,
+    List<IsNewDataInstance__c> IsNewDatas = new List<IsNewDataInstance__c>(); // 0 instance records
+    IsNewDataInstance__c IsNewData1 = new IsNewDataInstance__c(
+        IsNewDataConfiguration__c = configuration.Id,
         Key__c = key ,
         LastFiredDate__c = veryOldLastFiredDate
     );
-    insert debouncer1;
+    insert IsNewData1;
     
-    debouncers.add(debouncer1);
-    update debouncers;
+    IsNewDatas.add(IsNewData1);
+    update IsNewDatas;
     
     //act
-    Boolean actualRelease = Debouncer.debounce(currentStamp, key, minimumHours, debouncers, configuration.Id);
+    Boolean actualRelease = IsNewData.debounce(currentStamp, key, minimumHours, IsNewDatas, configuration.Id);
     
     
     // Assert
@@ -66,10 +66,10 @@ private static testMethod void callingDebounceReturnsTrueWhenInstanceRecordFound
     System.assertEquals( expectedRelease, actualRelease );
 }
 
-private static testMethod void callingDebounceReturnsFalseWhenInstanceRecordFoundWithKeyAndVeryRecent() {
+private static testMethod void callingIsNewDataeturnsFalseWhenInstanceRecordFoundWithKeyAndVeryRecent() {
     //arrange
     Integer minimumHours = 10;
-    DebouncerConfiguration__c configuration = new DebouncerConfiguration__c( MinimumHoursBetween__c = minimumHours );
+    IsNewDataConfiguration__c configuration = new IsNewDataConfiguration__c( MinimumHoursBetween__c = minimumHours );
     insert configuration;
     
     Integer extraHours = 5;
@@ -77,19 +77,19 @@ private static testMethod void callingDebounceReturnsFalseWhenInstanceRecordFoun
     DateTime currentStamp = System.now();
     DateTime veryRecentLastFiredDate =currentStamp.AddHours( -1 * minimumHours ).addHours( extraHours);
     
-    List<Debouncer__c> debouncers = new List<Debouncer__c>(); // 0 instance records
-    Debouncer__c debouncer1 = new Debouncer__c(
-        DebouncerConfiguration__c = configuration.Id,
+    List<IsNewDataInstance__c> IsNewDatas = new List<IsNewDataInstance__c>(); // 0 instance records
+    IsNewDataInstance__c IsNewData1 = new IsNewDataInstance__c(
+        IsNewDataConfiguration__c = configuration.Id,
         Key__c = key ,
         LastFiredDate__c = veryRecentLastFiredDate
     );
-    insert debouncer1;
+    insert IsNewData1;
     
-    debouncers.add(debouncer1);
-    update debouncers;
+    IsNewDatas.add(IsNewData1);
+    update IsNewDatas;
     
     //act
-    Boolean actualRelease = Debouncer.debounce(currentStamp, key, minimumHours, debouncers, configuration.Id);
+    Boolean actualRelease = IsNewData.debounce(currentStamp, key, minimumHours, IsNewDatas, configuration.Id);
     
     
     // Assert
@@ -98,9 +98,9 @@ private static testMethod void callingDebounceReturnsFalseWhenInstanceRecordFoun
 }
     
     
-private static testMethod void callingDeleteOldDebouncersDeletesExpectedDebouncers() {
+private static testMethod void callingDeleteOldIsNewDatasDeletesExpectedIsNewDatas() {
     //arrange
-    DebouncerConfiguration__c configuration = new DebouncerConfiguration__c();
+    IsNewDataConfiguration__c configuration = new IsNewDataConfiguration__c();
     insert configuration;
     
     String key = '1234';
@@ -120,37 +120,37 @@ private static testMethod void callingDeleteOldDebouncersDeletesExpectedDebounce
     DateTime lastFiredDate03 = currentStamp.addHours( -1 * (minimumHours + bufferHours + 2) );
     //+-----[OLD]
     
-    Debouncer__c debouncer01 = new Debouncer__c(
-    DebouncerConfiguration__c = configuration.Id,
+    IsNewDataInstance__c IsNewData01 = new IsNewDataInstance__c(
+    IsNewDataConfiguration__c = configuration.Id,
     Key__c = key ,
     LastFiredDate__c = lastFiredDate01
     );
-    insert debouncer01;
+    insert IsNewData01;
     
-    Debouncer__c debouncer02 = new Debouncer__c(
-    DebouncerConfiguration__c = configuration.Id,
+    IsNewDataInstance__c IsNewData02 = new IsNewDataInstance__c(
+    IsNewDataConfiguration__c = configuration.Id,
     Key__c = key ,
     LastFiredDate__c = lastFiredDate02
     );
-    insert debouncer02;
+    insert IsNewData02;
     
-    Debouncer__c debouncer03 = new Debouncer__c(
-    DebouncerConfiguration__c = configuration.Id,
+    IsNewDataInstance__c IsNewData03 = new IsNewDataInstance__c(
+    IsNewDataConfiguration__c = configuration.Id,
     Key__c = key ,
     LastFiredDate__c = lastFiredDate03
     );
-    insert debouncer03;
+    insert IsNewData03;
     
     //act
-    Debouncer.deleteOldDebouncers( currentStamp, minimumHours, bufferHours ) ;
+    IsNewData.deleteOldIsNewDatas( currentStamp, minimumHours, bufferHours ) ;
     
     //assemble
-    Map<Id,Debouncer__c> debouncerIdToDebouncer = new Map<Id,Debouncer__c> ( [SELECT Id, Name FROM Debouncer__c] );
+    Map<Id,IsNewDataInstance__c> IsNewDataIdToIsNewData = new Map<Id,IsNewDataInstance__c> ( [SELECT Id, Name FROM IsNewDataInstance__c] );
     
     // Assert
-    System.Assert( debouncerIdToDebouncer.keySet().contains(debouncer01.Id) );
-    System.Assert( debouncerIdToDebouncer.keySet().contains(debouncer02.Id) );
-    System.Assert( !debouncerIdToDebouncer.keySet().contains(debouncer03.Id) );
+    System.Assert( IsNewDataIdToIsNewData.keySet().contains(IsNewData01.Id) );
+    System.Assert( IsNewDataIdToIsNewData.keySet().contains(IsNewData02.Id) );
+    System.Assert( !IsNewDataIdToIsNewData.keySet().contains(IsNewData03.Id) );
 }
 
 private static testMethod void callingInvokeWhenZeroDebuncersReleasesParameters() {
@@ -159,16 +159,16 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesParameters(
     insert account;
     String accountId = account.Id;
     
-    Process__c DebouncerProcess = Processes.generateOne(Debouncer.class);
+    Process__c IsNewDataProcess = Processes.generateOne(IsNewData.class);
     
-    Sequence__c sequence = new Sequence__c(Name = 'DebouncerSequence');
+    Sequence__c sequence = new Sequence__c(Name = 'IsNewDataSequence');
     insert sequence;
     
-    Step__c step = Steps.generateOne(sequence.Id, DebouncerProcess.Id);
+    Step__c step = Steps.generateOne(sequence.Id, IsNewDataProcess.Id);
     
-    DebouncerConfiguration__c configuration = [
+    IsNewDataConfiguration__c configuration = [
         SELECT Id, MinimumHoursBetween__c
-        FROM DebouncerConfiguration__c
+        FROM IsNewDataConfiguration__c
     ];
     
     Integer minimumHours = 10;
@@ -177,17 +177,17 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesParameters(
     
     
     Map<String,Object> parameters = new Map<String,Object>{
-        'eda_configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
+        'eda_configuration' => [SELECT id FROM IsNewDataConfiguration__c].Id,
         'Id' => accountId
     };
     
     //act
-    Debouncer plugin = new Debouncer();
+    IsNewData plugin = new IsNewData();
     Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
     List<Map<String,Object>> results = EdaUtility.convert(result);
     
     // Assert
-    Integer expectedSize = 1; //-- no pre-existing debouncers , so expect one
+    Integer expectedSize = 1; //-- no pre-existing IsNewDatas , so expect one
     Integer actualSize = results.size();
     System.assertEquals(expectedSize, actualSize);
 }
@@ -201,20 +201,20 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesMessageForO
     Integer extraOutSideWindowHours = 5;
     DateTime lastFiredDate = System.Now().addHours( -1 * ( minimumHours + extraOutSideWindowHours ) );
     
-    Process__c DebouncerProcess = Processes.generateOne(Debouncer.class);
+    Process__c IsNewDataProcess = Processes.generateOne(IsNewData.class);
     
-    Sequence__c sequence = new Sequence__c(Name = 'DebouncerSequence');
+    Sequence__c sequence = new Sequence__c(Name = 'IsNewDataSequence');
     insert sequence;
     
-    Step__c step = Steps.generateOne(sequence.Id, DebouncerProcess.Id);
+    Step__c step = Steps.generateOne(sequence.Id, IsNewDataProcess.Id);
     
-    DebouncerConfiguration__c configuration = [
+    IsNewDataConfiguration__c configuration = [
     SELECT Id, MinimumHoursBetween__c
-    FROM DebouncerConfiguration__c
+    FROM IsNewDataConfiguration__c
     ];
     
-    Debouncer__c d = new Debouncer__c(
-        DebouncerConfiguration__c = configuration.Id,
+    IsNewDataInstance__c d = new IsNewDataInstance__c(
+        IsNewDataConfiguration__c = configuration.Id,
         Key__c = key ,
         LastFiredDate__c = lastFiredDate
     );
@@ -226,17 +226,17 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesMessageForO
     
     
     Map<String,Object> parameters = new Map<String,Object>{
-        'eda_configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
+        'eda_configuration' => [SELECT id FROM IsNewDataConfiguration__c].Id,
         'Id' => key
     };
     
     //act
-    Debouncer plugin = new Debouncer();
+    IsNewData plugin = new IsNewData();
     Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
     List<Map<String,Object>> results = EdaUtility.convert(result);
     
     // Assert
-    Integer expectedSize = 1; //-- one pre-existing debouncer outside window , so expect one
+    Integer expectedSize = 1; //-- one pre-existing IsNewData outside window , so expect one
     Integer actualSize = results.size();
     System.assertEquals(expectedSize, actualSize);
 }
@@ -250,20 +250,20 @@ private static testMethod void callingInvokeWhenZeroDebuncersSwallowsMessageForI
     Integer extraInSideWindowHours = 5;
     DateTime lastFiredDate = System.Now().addHours( -1 * ( minimumHours - extraInSideWindowHours ) );
     
-    Process__c DebouncerProcess = Processes.generateOne(Debouncer.class);
+    Process__c IsNewDataProcess = Processes.generateOne(IsNewData.class);
     
-    Sequence__c sequence = new Sequence__c(Name = 'DebouncerSequence');
+    Sequence__c sequence = new Sequence__c(Name = 'IsNewDataSequence');
     insert sequence;
     
-    Step__c step = Steps.generateOne(sequence.Id, DebouncerProcess.Id);
+    Step__c step = Steps.generateOne(sequence.Id, IsNewDataProcess.Id);
     
-    DebouncerConfiguration__c configuration = [
+    IsNewDataConfiguration__c configuration = [
         SELECT Id, MinimumHoursBetween__c
-        FROM DebouncerConfiguration__c
+        FROM IsNewDataConfiguration__c
     ];
     
-    Debouncer__c d = new Debouncer__c(
-        DebouncerConfiguration__c = configuration.Id,
+    IsNewDataInstance__c d = new IsNewDataInstance__c(
+        IsNewDataConfiguration__c = configuration.Id,
         Key__c = key ,
         LastFiredDate__c = lastFiredDate
     );
@@ -275,18 +275,19 @@ private static testMethod void callingInvokeWhenZeroDebuncersSwallowsMessageForI
     
     
     Map<String,Object> parameters = new Map<String,Object>{
-        'eda_configuration' => [SELECT id FROM DebouncerConfiguration__c].Id,
+        'eda_configuration' => [SELECT id FROM IsNewDataConfiguration__c].Id,
         'Id' => key
     };
     
     //act
-    Debouncer plugin = new Debouncer();
+    IsNewData plugin = new IsNewData();
     Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
     List<Map<String,Object>> results = EdaUtility.convert(result);
     
     // Assert
-    Integer expectedSize = 0; //-- one pre-existing debouncer inside window , so expect zero
+    Integer expectedSize = 0; //-- one pre-existing IsNewData inside window , so expect zero
     Integer actualSize = results.size();
     System.assertEquals(expectedSize, actualSize);
     }
+
 }
