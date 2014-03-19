@@ -12,7 +12,7 @@ public class IsChanged  implements Process.Plugin {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Name = 'IsChanged';
         plugin.Description = 'Detects if the value of a field has changed on an incoming SObject since the last time';
-        plugin.Tag = 'Event Driven Architecture';
+        plugin.Tag = 'Sample Processes';
 
         plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter(

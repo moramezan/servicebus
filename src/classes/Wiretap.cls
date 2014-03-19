@@ -11,7 +11,7 @@ public with sharing class Wiretap implements Process.Plugin {
         Process.PluginDescribeResult describeResult = new Process.PluginDescribeResult();
         describeResult.Name = 'Wiretap';
         describeResult.Description = 'Serializes the parameters and emails it to the user.';
-        describeResult.Tag = 'Event Driven Architecture';
+        describeResult.Tag = 'Sample Processes';
         return describeResult;
     }
     

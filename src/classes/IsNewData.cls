@@ -9,7 +9,7 @@ public class IsNewData implements Process.Plugin {
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult result = new Process.PluginDescribeResult();
-        result.Tag = 'Event Driven Architecture';
+        result.Tag = 'Sample Processes';
         result.Name = 'IsNewData';
         result.Description = 'Swallows message unless the time elapsed since receiving a prior message with the same key exceeds a min threshold';
         return result;

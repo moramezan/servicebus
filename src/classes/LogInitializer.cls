@@ -11,7 +11,7 @@ global class LogInitializer implements Process.Plugin {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Name = 'LogInitializer';
         plugin.Description = 'Creates a grouping identifier which all subsequent LogWriter processes log against.';
-        plugin.Tag = 'Event Driven Architecture';
+        plugin.Tag = 'Sample Processes';
         
         plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter(

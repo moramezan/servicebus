@@ -9,7 +9,7 @@ public class Scrape implements Process.Plugin {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Name = 'Scrape';
         plugin.Description = 'Does an HTTP GET and forwards the result as an Attachment Id';
-        plugin.Tag = 'Event Driven Architecture';
+        plugin.Tag = 'Sample Processes';
         return plugin;
     }
     
