@@ -170,7 +170,7 @@ abstract global class Broker {
     
     static global void process() {
         BrokerSettings__c settings = BrokerSettings__c.getInstance();
-		if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBrokerImplementation.class.getName(); 
+        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBrokerImplementation.class.getName(); 
         
         Broker impl = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
         if (!impl.isAlreadyRunning()) impl.restartIfWorkPending();
@@ -232,7 +232,7 @@ abstract global class Broker {
         Map<String,Object> parameters;
         Process.Plugin plugin;
         
-        //OUR FUCKUPS
+        //OUR FUCKUPS ( before invocation )
         try {
             parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
     
@@ -261,7 +261,7 @@ abstract global class Broker {
             return; //get out of dodge quick
         }
         
-        //THEIR FUCKUPS
+        //THEIR FUCKUPS (invocation)
         try {
             //save important message properties (such as stackDepth) so that process authors 
             //cannot pervert them  
@@ -280,27 +280,37 @@ abstract global class Broker {
             surfaceException(e, message.Id);
             return; //get out of dodge quick
         }
-        
-        //delete successfully processed parameters
-        delete message;
-        Database.emptyRecycleBin(message);
-        
-        markHelper(parameters, parametersList);
-        
-        //wrap up parametersList into Messages
-        List<Message__c> messages = new List<Message__c>();
-        for (Map<String,Object> n : parametersList) {
-            messages.add(new Message__c(
-                Parameters__c = Json.serializePretty(n),
-                Status__c = 'Buffer'
-            ));
+
+        //OUR FUCKUPS ( after invocation )
+        try {
+            //gate processing support method
+            markHelper(parameters, parametersList);
+            
+            //RESOLVE
+            //wrap up parametersList into Messages
+            List<Message__c> messages = new List<Message__c>();
+            for (Map<String,Object> n : parametersList) {
+                messages.add(new Message__c(
+                    Parameters__c = Json.serializePretty(n),
+                    Status__c = 'Buffer'
+                ));
+            }
+            
+            //resolution
+            Broker.resolve(messages);
+            
+            //PERSIST
+            // persist successfully resolved outbound message(s)
+            insert messages;
+                        
+            //delete successfully processed message
+            delete message;
+            Database.emptyRecycleBin(message);
+        } catch (Exception e) {
+            e.setMessage('Resolution Failure (check your sequence config) ' + e.getMessage());
+            surfaceException(e, message.Id);
+            return; //get out of dodge quick
         }
-        
-        //RESOLVE
-        Broker.resolve(messages);
-        
-        //PERSIST
-        insert messages;
     }
 
     /**
