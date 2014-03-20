@@ -101,6 +101,7 @@
         <members>JumpConfigurationShowStep</members>
         <members>LogConfigurationListLogGroups</members>
         <members>LogConfigurationSchemaSelector</members>
+        <members>MessageHelp</members>
         <members>MessagePauseQueue</members>
         <members>MessageProcess</members>
         <members>MessageResumeQueue</members>
@@ -223,6 +224,7 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>MessageHelp</members>
         <members>SequenceHelp</members>
         <name>CustomPageWebLink</name>
     </types>

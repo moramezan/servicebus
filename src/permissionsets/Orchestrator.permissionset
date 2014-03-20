@@ -809,6 +809,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>MessageHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>MessagePauseQueue</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -850,7 +854,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>SequenceHelp</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>SequenceSorter</apexPage>

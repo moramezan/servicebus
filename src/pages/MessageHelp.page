@@ -1,0 +1,8 @@
+<apex:page tabStyle="Message__c" showHeader="false">
+    
+    <p>Messages represent real-world events. These occur all the time, for example, a clock strikes midnight, or a bank account becomes empty, etc.</p>
+    
+    <p>A Message captures this data into a common structure that can be handed to different Processes to act on.</p>
+    
+    <p>All Messages enter a queue, which can be seen from the Messages tab.</p>
+</apex:page>
