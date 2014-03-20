@@ -166,7 +166,7 @@
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>
-        <masterLabel>Process</masterLabel>
+        <masterLabel>Process Message</masterLabel>
         <openType>sidebar</openType>
         <page>MessageProcess</page>
         <protected>false</protected>
