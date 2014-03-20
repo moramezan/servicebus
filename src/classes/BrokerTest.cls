@@ -632,55 +632,6 @@ public class BrokerTest{
      * http://salesforce.stackexchange.com/questions/27180/database-emptyrecyclebin-exhibits-unexpected-behaviour
      */
     
-    /**
-     * TODO : this test will fail until we resolve issue #178
-     * Since the different engines fundamentally persist at different points
-     * it will be difficult to do the try catch in the base class - each
-     * broker implementation should  implement the try catch around the resolve
-     *  and if exception then 1. no deletion of input message
-     * 2. no persistence of returned messages collection 3. save
-     * error against input message
-     */
-    /*static testmethod void testDodgyProcess() {
-        // arrange
-        Process__c markProcess = Processes.generateOne(Mark.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
-        
-        // arrange sequence
-        String sequenceNameA = 'sequenceA';
-        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
-        insert sequenceA;
-        
-        
-        // arrange steps
-        Integer positionA1 = 1;
-        Integer positionA2 = 2;
-        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = markProcess.Id);
-        Step__c stepA2 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA2,Process__c = terminateProcess.Id);
-        insert stepA1;
-        insert stepA2;
-        
-        //simulate dodgy process by deleting reference
-        markProcess.FullyQualifiedClassName__c = null;
-        update markProcess;
-        
-        insert new BrokerSettings__c(BrokerClassName__c = BatchBrokerImplementation.class.getName() );
-        
-        // act
-        Test.startTest();
-        Broker.enqueue('testSequence', '000000000000000AAA');
-        Test.stopTest();
-        
-        // arrange
-        Message__c message = [SELECT Id, Exception__c FROM Message__c];
-        
-        // asserts
-        String expectedMessage = 'class missing';
-        String actualMessage = message.Exception__c;
-        System.assert(actualMessage.contains(expectedMessage));
-    }
-    */
- 
     static testMethod void testMalformedParametersThrowsSystemJsonException() {
         //arrange
         Message__c message = new Message__c(Parameters__c = '{"malformed":....}');
@@ -926,5 +877,72 @@ public class BrokerTest{
         Integer expectedCount = 6;
         System.assertEquals( expectedCount, actualCount);
     }
-   
+ 
+    static testMethod void canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError() {
+        // arrange
+        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+
+        String sequenceNameA = 'sequenceA';
+        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
+        insert sequenceA;
+
+
+        Integer positionA1 = 1;
+        Integer positionA2 = 2;
+        Integer positionA3 = 3;
+        // deleted - implying a resolution issue
+        Integer positionA5 = 5;
+        Integer positionA6 = 6;
+
+        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = wiretapProcess.Id);
+        Step__c stepA2 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA2,Process__c = wiretapProcess.Id);
+        Step__c stepA3 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA3,Process__c = wiretapProcess.Id);
+        // deleted - implying a resolution issue
+        Step__c stepA5 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA5,Process__c = wiretapProcess.Id);
+        Step__c stepA6 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA6,Process__c = terminateProcess.Id);
+
+        insert stepA1;
+        insert stepA2;
+        insert stepA3;
+        // deleted - implying a resolution issue
+        insert stepA5;
+        insert stepA6;
+        
+        //arrange specific broker implementation
+        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = false);
+        
+        //act 
+        Broker.enqueue(sequenceNameA, '000000000000000AAA');
+
+        
+        //assemble
+        List<Message__c> messagesOk = [
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c, IsDeleted
+            FROM Message__c
+            WHERE IsDeleted =  true
+            ALL ROWS
+        ];
+        List<Message__c> messagesFailed = [
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c, IsDeleted
+            FROM Message__c
+            WHERE IsDeleted =  false
+            ALL ROWS
+        ];
+            
+        Integer actualCountOk = messagesOk.size();
+        Integer actualCountFailed = messagesFailed.size();
+        String actualExceptionMessage;
+        if (actualCountFailed == 1) {
+        	actualExceptionMessage = messagesFailed[0].Exception__c;
+        }
+
+        // assert
+        Integer expectedCountOk = 2;
+        System.assertEquals( expectedCountOk, actualCountOk);
+        Integer expectedCountFailed = 1;
+        System.assertEquals( expectedCountFailed, actualCountFailed);
+        String expectedExceptionMessage = 'Resolution Failure';
+        System.assert(actualExceptionMessage.contains(expectedExceptionMessage));         
+    }
 }
