@@ -225,6 +225,7 @@
     </types>
     <types>
         <members>MessageHelp</members>
+        <members>ProcessesHelp</members>
         <members>SequenceHelp</members>
         <name>CustomPageWebLink</name>
     </types>
