@@ -111,6 +111,7 @@
         <members>PublishConfigurationManageEventTypes</members>
         <members>PublishConfigurationShowStep</members>
         <members>SchemaSelector</members>
+        <members>SequenceHelp</members>
         <members>SequenceSorter</members>
         <members>StepShowConfiguration</members>
         <members>SubscribeConfigurationManageEventTypes</members>
@@ -222,6 +223,10 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>SequenceHelp</members>
+        <name>CustomPageWebLink</name>
+    </types>
+    <types>
         <members>Message__c</members>
         <members>Process__c</members>
         <members>Sequence__c</members>
@@ -267,6 +272,7 @@
         <name>PermissionSet</name>
     </types>
     <types>
+        <members>HelpZip</members>
         <members>ProcessGenerateZip</members>
         <members>StepSorterZip</members>
         <name>StaticResource</name>

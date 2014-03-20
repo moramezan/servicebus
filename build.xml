@@ -16,6 +16,11 @@
     <target name="package" description="Deploys all components to packaging org">
         <sf:deploy username="eda@countryskippers.com" password="CS42lkj1" serverurl="https://login.salesforce.com" deployRoot="src"/>
     </target>
+    
+    <target name="zip" description="Compresses misc zipped static resources">
+        <delete file="src/staticresources/HelpZip.resource" />
+        <zip destfile="src/staticresources/HelpZip.resource" basedir="dev/resource/HelpZip" />
+    </target>
 
     <target name="sencha-steps" description="Builds Sencha application">
         <delete file="src/staticresources/StepSorterZip.resource" />

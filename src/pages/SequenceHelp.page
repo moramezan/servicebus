@@ -1,0 +1,33 @@
+<apex:page tabStyle="Sequence__c" showHeader="false" standardStylesheets="true">
+    
+    <style>
+        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+    </style>
+    
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection title="About Sequences:" columns="1" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <ul>
+                    <li>A Sequence is an arrangement of multiple processing tasks called Steps.</li>
+                    <li>Each Sequence is known by a friendly name, for example 'ProcessInvoices', which should describe the nature of the work performed by its processing tasks or Steps.</li>
+                    <li>The EDA framework will advance Messages through the Steps of a Sequence in the order you arrange. A typical sequence will contain many steps. See below:</li>
+                </ul>
+                <img src="{!URLFOR($Resource.HelpZip, '/Sequence/notifyCompetitorActivity.png')}" />
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="When building a new Sequence:" columns="1" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <ul>
+                    <li>Any Steps after the Terminate Process will not be executed.</li>
+                    <li>Every Sequence must have the Terminate Process as its last Step.</li>
+                    <li>Each Step in the Sequence has an associated Process, a numbered Position, and potentially a Configuration.</li>
+                    <li>It is the orchestrator's responsibility to ensure the Terminate Process is the final Step in every Sequence. This is provided for you and cannot be deleted.</li>
+                </ul>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Click [Continue] to proceed." columns="1" collapsible="false" />
+    </apex:pageBlock>
+    
+</apex:page>

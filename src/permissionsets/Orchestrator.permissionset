@@ -849,6 +849,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>SequenceHelp</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>SequenceSorter</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
