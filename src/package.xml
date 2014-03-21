@@ -106,8 +106,8 @@
         <members>MessageProcess</members>
         <members>MessageResumeQueue</members>
         <members>MessageShowData</members>
+        <members>ProcessDocumentation</members>
         <members>ProcessGenerate</members>
-        <members>ProcessHelp</members>
         <members>ProcessSettings</members>
         <members>PublishConfigurationManageEventTypes</members>
         <members>PublishConfigurationShowStep</members>
@@ -176,8 +176,8 @@
         <members>Process__c.ConfigObject__c</members>
         <members>Process__c.CustomSetting__c</members>
         <members>Process__c.Description__c</members>
+        <members>Process__c.DocsPageUrl__c</members>
         <members>Process__c.FullyQualifiedClassName__c</members>
-        <members>Process__c.HelpPageUrl__c</members>
         <members>Process__c.Icon__c</members>
         <members>Process__c.Tag__c</members>
         <members>PublishConfiguration__c.EventType__c</members>
@@ -298,7 +298,7 @@
         <members>Message__c.ResumeQueue</members>
         <members>Message__c.ShowData</members>
         <members>Process__c.Generate</members>
-        <members>Process__c.ProcessHelp</members>
+        <members>Process__c.ProcessDocumentation</members>
         <members>Process__c.Settings</members>
         <members>PublishConfiguration__c.ManageEventTypes</members>
         <members>PublishConfiguration__c.ShowStep</members>

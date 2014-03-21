@@ -81,6 +81,16 @@
         <type>TextArea</type>
     </fields>
     <fields>
+        <fullName>DocsPageUrl__c</fullName>
+        <externalId>false</externalId>
+        <label>Help Page URL</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>FullyQualifiedClassName__c</fullName>
         <caseSensitive>false</caseSensitive>
         <externalId>true</externalId>
@@ -90,16 +100,6 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>true</unique>
-    </fields>
-    <fields>
-        <fullName>HelpPageUrl__c</fullName>
-        <externalId>false</externalId>
-        <label>Help Page URL</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Icon__c</fullName>
@@ -155,13 +155,13 @@
         <requireRowSelection>false</requireRowSelection>
     </webLinks>
     <webLinks>
-        <fullName>ProcessHelp</fullName>
+        <fullName>ProcessDocumentation</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
         <linkType>page</linkType>
-        <masterLabel>Help for this Process</masterLabel>
+        <masterLabel>View Documentation</masterLabel>
         <openType>replace</openType>
-        <page>ProcessHelp</page>
+        <page>ProcessDocumentation</page>
         <protected>false</protected>
     </webLinks>
     <webLinks>

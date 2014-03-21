@@ -5,6 +5,6 @@
     <linkType>page</linkType>
     <masterLabel>Processes Help</masterLabel>
     <openType>replace</openType>
-    <page>ProcessHelp</page>
+    <page>ProcessDocumentation</page>
     <protected>false</protected>
 </CustomPageWebLink>

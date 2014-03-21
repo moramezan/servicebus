@@ -547,12 +547,12 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Process__c.FullyQualifiedClassName__c</field>
+        <field>Process__c.DocsPageUrl__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Process__c.HelpPageUrl__c</field>
+        <field>Process__c.FullyQualifiedClassName__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -829,11 +829,11 @@
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ProcessGenerate</apexPage>
+        <apexPage>ProcessDocumentation</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ProcessHelp</apexPage>
+        <apexPage>ProcessGenerate</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

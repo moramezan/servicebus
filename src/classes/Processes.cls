@@ -32,9 +32,9 @@ public class Processes extends SalesforceObjectSet {
         
         /**
          * Each Process can have one Visualforce Page for support and documentation purposes. Process Authors can
-         * populate the property with a default value like Page.MyProcessHelp.getUrl() to make this available to users.
+         * populate the property with a default value like Page.MyProcessDocs.getUrl() to make this available to users.
          */
-        public String HelpPageUrl;
+        public String DocsPageUrl;
     }
     
     /**
@@ -90,7 +90,7 @@ public class Processes extends SalesforceObjectSet {
         
         //attempt to populate the visualforce help page url (maybe at some point we can check it for validity)
         //note: if a help page is removed and the key taken out of the Meta class, we allow null to be written
-        process.HelpPageUrl__c = meta.helpPageUrl;
+        process.DocsPageUrl__c = meta.DocsPageUrl;
         
         return process;
     }

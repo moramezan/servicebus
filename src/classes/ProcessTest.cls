@@ -35,7 +35,7 @@
         Processes.Meta meta = (Processes.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), Processes.Meta.class);
         String expectedConfigObject = meta.ConfigObject.getSObjectType().getDescribe().getName();
         String expectedIcon = meta.icon;
-        String expectedHelpPageUrl = Page.SubscribeHelp.getUrl();
+        String expectedDocsPageUrl = Page.SubscribeHelp.getUrl();
         
         //act 
         Process__c process = Processes.fromType(actualType);
@@ -47,7 +47,7 @@
         String actualFullyQualifiedClassName = process.FullyQualifiedClassName__c; 
         String actualConfigObject = process.ConfigObject__c; 
         String actualIcon = process.Icon__c; 
-        String actualHelpPageUrl = process.HelpPageUrl__c;
+        String actualDocsPageUrl = process.DocsPageUrl__c;
 
         //assert
         System.assertEquals(expectedName , actualName );
@@ -56,6 +56,6 @@
         System.assertEquals(expectedFullyQualifiedClassName , actualFullyQualifiedClassName);
         System.assertEquals(expectedConfigObject , actualConfigObject);
         System.assertEquals(expectedIcon , actualIcon );
-        System.assertEquals(expectedHelpPageUrl, actualHelpPageUrl);
+        System.assertEquals(expectedDocsPageUrl, actualDocsPageUrl);
     }    
 }
