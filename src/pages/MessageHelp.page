@@ -7,11 +7,9 @@
         <apex:pageBlock mode="maindetail">
             <apex:pageBlockSection title="About Messages:" columns="2" collapsible="false">
                 <apex:pageBlockSectionItem >
-                    <ul>
-                        <li>Messages represent real-world events. These occur all the time, for example, a clock strikes midnight, or a bank account becomes empty, etc.</li>
-                        <li>A Message captures this data into a common structure that can be handed to different Processes to act on.</li>
-                        <li>All Messages enter a queue, which can be seen from the Messages tab.</li>
-                    </ul>
+                    <p>Messages represent real-world events. These occur all the time, for example, a clock strikes midnight, or a bank account becomes empty, etc.</p>
+                    <p>A Message captures this data into a common structure that can be handed to different Processes to act on.</p>
+                    <p>All Messages enter a queue, which can be seen from the Messages tab.</p>
                 </apex:pageBlockSectionItem>
                 <apex:pageBlockSectionItem >
                     <apex:image width="360" value="{!URLFOR($Resource.HelpZip, '/Message/messageProcessFunnel.png')}" />
@@ -22,16 +20,13 @@
                 <apex:pageBlockSectionItem >
                     <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Message/pauseQueue.png')}" /> halts the processing of new Messages. New Messages will be Queued up outside of their destined Sequence. Old Messages already in a Sequence will filter through to completion.</p>
                     <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Message/resumeQueue.png')}" /> resumes the processing of all Messages.</p>
-                    <p>All Messages enter a queue, which can be seen from the Messages tab.</p>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
             
             <apex:pageBlockSection title="Detail Page Buttons:" columns="1" collapsible="false">
                 <apex:pageBlockSectionItem >
-                    <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Message/processMessage.png')}" /> forces this Message to be Processed immediately. You can use this when the system is paused to process individual Messages.</p>
-                    <p>Similarly, if a Message could not be processed, you can reprocess it.</p>
-                    <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Message/showData.png')}" /> takes you to the native view of the related data pointed to by the Message.</p>
-                    <p>This would be used to edit or audit the data that any Message hands into a given Process.</p>
+                    <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Message/processMessage.png')}" /> forces this Message to be Processed immediately. You can use this to process individual Messages when the system is paused, or to reprocess any Message that could not be processed.</p>
+                    <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Message/showData.png')}" /> takes you to the native view of the related data pointed to by the Message. This could be used to edit or audit the data that any Message hands into a given Process.</p>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
             
