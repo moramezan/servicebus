@@ -185,11 +185,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ProcessGenerateExtension</apexClass>
+        <apexClass>ProcessDiscoverExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ProcessGenerateExtensionTest</apexClass>
+        <apexClass>ProcessDiscoverExtensionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -829,11 +829,11 @@
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ProcessDocumentation</apexPage>
+        <apexPage>ProcessDiscover</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ProcessGenerate</apexPage>
+        <apexPage>ProcessDocumentation</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

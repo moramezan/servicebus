@@ -13,8 +13,8 @@ public with sharing class SequenceSorterController {
             //continue per normal
             return null;
         } else {
-            //there are no processes! regenerate first
-            PageReference pr = Page.ProcessGenerate;
+            //there are no processes! discover first
+            PageReference pr = Page.ProcessDiscover;
             pr.getParameters().put('retURL', ApexPages.currentPage().getUrl());
             return pr;
         }

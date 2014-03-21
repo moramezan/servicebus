@@ -47,8 +47,8 @@
         <members>PostInstallClassTest</members>
         <members>PostUninstallClass</members>
         <members>PostUninstallClassTest</members>
-        <members>ProcessGenerateExtension</members>
-        <members>ProcessGenerateExtensionTest</members>
+        <members>ProcessDiscoverExtension</members>
+        <members>ProcessDiscoverExtensionTest</members>
         <members>ProcessRefreshBatch</members>
         <members>ProcessRefreshBatchTest</members>
         <members>ProcessTest</members>
@@ -106,8 +106,8 @@
         <members>MessageProcess</members>
         <members>MessageResumeQueue</members>
         <members>MessageShowData</members>
+        <members>ProcessDiscover</members>
         <members>ProcessDocumentation</members>
-        <members>ProcessGenerate</members>
         <members>ProcessHelp</members>
         <members>ProcessSettings</members>
         <members>PublishConfigurationManageEventTypes</members>
@@ -277,7 +277,7 @@
     </types>
     <types>
         <members>HelpZip</members>
-        <members>ProcessGenerateZip</members>
+        <members>ProcessDiscoverZip</members>
         <members>StepSorterZip</members>
         <name>StaticResource</name>
     </types>
@@ -298,7 +298,7 @@
         <members>Message__c.Process</members>
         <members>Message__c.ResumeQueue</members>
         <members>Message__c.ShowData</members>
-        <members>Process__c.Generate</members>
+        <members>Process__c.Discover</members>
         <members>Process__c.ProcessDocumentation</members>
         <members>Process__c.Settings</members>
         <members>PublishConfiguration__c.ManageEventTypes</members>

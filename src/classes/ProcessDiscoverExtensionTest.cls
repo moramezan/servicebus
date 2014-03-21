@@ -1,10 +1,10 @@
-@isTest private class ProcessGenerateExtensionTest {
+@isTest private class ProcessDiscoverExtensionTest {
     
     static testMethod void testGetAsyncApexJob() {
         //arrange
-        ProcessGenerateExtension.jobs = new List<AsyncApexJob>{new AsyncApexJob(Id = '707000000000000AAA')};
+        ProcessDiscoverExtension.jobs = new List<AsyncApexJob>{new AsyncApexJob(Id = '707000000000000AAA')};
         ApexPages.StandardSetController controller = new ApexPages.StandardSetController(new List<Process__c>());
-        ProcessGenerateExtension extension = new ProcessGenerateExtension(controller);
+        ProcessDiscoverExtension extension = new ProcessDiscoverExtension(controller);
         Test.startTest();
         ProcessRefreshBatch batch = new ProcessRefreshBatch();
         batch.query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass WHERE Name = \'Terminate\' ORDER BY Name ASC LIMIT 1';
@@ -22,10 +22,10 @@
     
     static testMethod void testReadAsyncApexJobs() {
         //arrange
-        ProcessGenerateExtension.jobs = new List<AsyncApexJob>{new AsyncApexJob(Id = '707000000000000AAA')};
+        ProcessDiscoverExtension.jobs = new List<AsyncApexJob>{new AsyncApexJob(Id = '707000000000000AAA')};
         
         //act
-        List<AsyncApexJob> jobs = ProcessGenerateExtension.readAsyncApexJobs('707000000000000AAA');
+        List<AsyncApexJob> jobs = ProcessDiscoverExtension.readAsyncApexJobs('707000000000000AAA');
         
         //assert
         Id expectedId = '707000000000000AAA';
@@ -35,10 +35,10 @@
     
     static testMethod void testReadProcesses() {
         //arrange
-        ProcessGenerateExtension.processes = new List<Process__c>{new Process__c(Name = 'Test')};
+        ProcessDiscoverExtension.processes = new List<Process__c>{new Process__c(Name = 'Test')};
         
         //act
-        List<Process__c> processes = ProcessGenerateExtension.readProcesses(System.now());
+        List<Process__c> processes = ProcessDiscoverExtension.readProcesses(System.now());
         
         //assert
         Integer expectedSize = 1;
@@ -51,10 +51,10 @@
     }
     
     static testMethod void testNotRedirectedWhenViewingJob() {
-        PageReference generate = Page.ProcessGenerate;
-        generate.getParameters().put('asyncApexJobId', '707000000000000AAA');
-        Test.setCurrentPage(generate);
-        //generate.doRedirect
+        PageReference discover = Page.ProcessDiscover;
+        discover.getParameters().put('asyncApexJobId', '707000000000000AAA');
+        Test.setCurrentPage(discover);
+        //discover.doRedirect
     }
     
 }
