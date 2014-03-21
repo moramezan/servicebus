@@ -1,5 +1,5 @@
-<apex:page standardController="Process__c" recordSetVar="processes" extensions="ProcessGenerateExtension" action="{!doRedirect}">
-    <c:bootstrapExt applicationName="Generate" staticResource="{!$Resource.ProcessGenerateZip}" baseCSSPrefix="z-" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}">
+<apex:page standardController="Process__c" recordSetVar="processes" extensions="ProcessDiscoverExtension" action="{!doRedirect}">
+    <c:bootstrapExt applicationName="Discover" staticResource="{!$Resource.ProcessDiscoverZip}" baseCSSPrefix="z-" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}">
         window.$ObjectType = window.$ObjectType || {};
         $ObjectType.Process__c = $ObjectType.Process__c || {};
         $ObjectType.Process__c.Fields = $ObjectType.Process__c.Fields || {};
@@ -17,9 +17,9 @@
         $ObjectType.Process__c.Fields.FullyQualifiedClassName__c.Name = '{!$ObjectType.Process__c.Fields.FullyQualifiedClassName__c.Name}';
         
         window.$RemoteAction = window.$RemoteAction || {};
-        $RemoteAction.ProcessGenerateExtension = $RemoteAction.ProcessGenerateExtension || {};
-        $RemoteAction.ProcessGenerateExtension.readProcesses = '{!$RemoteAction.ProcessGenerateExtension.readProcesses}';
-        $RemoteAction.ProcessGenerateExtension.readAsyncApexJobs = '{!$RemoteAction.ProcessGenerateExtension.readAsyncApexJobs}';
+        $RemoteAction.ProcessDiscoverExtension = $RemoteAction.ProcessDiscoverExtension || {};
+        $RemoteAction.ProcessDiscoverExtension.readProcesses = '{!$RemoteAction.ProcessDiscoverExtension.readProcesses}';
+        $RemoteAction.ProcessDiscoverExtension.readAsyncApexJobs = '{!$RemoteAction.ProcessDiscoverExtension.readAsyncApexJobs}';
         
         retURL = '{!retURL}';
         

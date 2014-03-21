@@ -32,15 +32,15 @@
         <zip destfile="src/staticresources/StepSorterZip.resource" basedir="dev/resource/StepSorterZip/build/production/Steps" includes="**"/>
     </target>
 
-    <target name="sencha-generate" description="Builds Generate application">
-        <delete file="src/staticresources/ProcessGenerateZip.resource" />
-        <delete dir="dev/resource/ProcessGenerateZip/packages/baf-theme-native" />
+    <target name="sencha-discover" description="Builds Discover application">
+        <delete file="src/staticresources/ProcessDiscoverZip.resource" />
+        <delete dir="dev/resource/ProcessDiscoverZip/packages/baf-theme-native" />
         <exec command="lib/sencha-cmd-4.0.1.45/sencha repository sync" />
         <exec command="lib/sencha-cmd-4.0.1.45/sencha repository add --name bigassforce --address http://localhost/repository/lib/repo/pkgs/" />
-        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessGenerateZip ant clean" />
-        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessGenerateZip app refresh" />
-        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessGenerateZip app build" />
-        <zip destfile="src/staticresources/ProcessGenerateZip.resource" basedir="dev/resource/ProcessGenerateZip/build/production/Generate" includes="**"/>
+        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessDiscoverZip ant clean" />
+        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessDiscoverZip app refresh" />
+        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessDiscoverZip app build" />
+        <zip destfile="src/staticresources/ProcessDiscoverZip.resource" basedir="dev/resource/ProcessDiscoverZip/build/production/Generate" includes="**"/>
     </target>
     
     <target name="purge" description="Purges an organization of most customizations and components">

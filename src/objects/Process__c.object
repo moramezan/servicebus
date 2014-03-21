@@ -139,18 +139,18 @@
     </nameField>
     <pluralLabel>Processes</pluralLabel>
     <searchLayouts>
-        <listViewButtons>Generate</listViewButtons>
+        <listViewButtons>Discover</listViewButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
-        <fullName>Generate</fullName>
+        <fullName>Discover</fullName>
         <availability>online</availability>
         <displayType>massActionButton</displayType>
         <height>600</height>
         <linkType>page</linkType>
-        <masterLabel>Generate</masterLabel>
+        <masterLabel>Discover</masterLabel>
         <openType>sidebar</openType>
-        <page>ProcessGenerate</page>
+        <page>ProcessDiscover</page>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
     </webLinks>

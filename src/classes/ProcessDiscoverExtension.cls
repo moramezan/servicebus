@@ -1,8 +1,8 @@
-public class ProcessGenerateExtension {
+public class ProcessDiscoverExtension {
     
     private ApexPages.StandardSetController controller;
     
-    public ProcessGenerateExtension(ApexPages.StandardSetController controller) {
+    public ProcessDiscoverExtension(ApexPages.StandardSetController controller) {
         this.controller = controller;
     }
     
@@ -26,11 +26,11 @@ public class ProcessGenerateExtension {
         if (ApexPages.currentPage().getParameters().get('asyncApexJobId') == null) {
             //someone tried to view the page... start the batch job and show it
             AsyncApexJobs jobs = AsyncApexJobs.runOne(ProcessRefreshBatch.class, 1);
-            PageReference processGenerate = Page.ProcessGenerate;
-            processGenerate.getParameters().put('asyncApexJobId', jobs.getSObjects()[0].Id);
-            processGenerate.getParameters().put('retURL', ApexPages.currentPage().getParameters().get('retURL'));
-            processGenerate.setRedirect(true);
-            return processGenerate;
+            PageReference processDiscover = Page.ProcessDiscover;
+            processDiscover.getParameters().put('asyncApexJobId', jobs.getSObjects()[0].Id);
+            processDiscover.getParameters().put('retURL', ApexPages.currentPage().getParameters().get('retURL'));
+            processDiscover.setRedirect(true);
+            return processDiscover;
         } else {
             //we are trying to show the batch job... just display the page
             return null;
