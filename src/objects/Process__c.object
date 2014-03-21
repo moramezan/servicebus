@@ -175,4 +175,15 @@
         <page>ProcessSettings</page>
         <protected>false</protected>
     </webLinks>
+    <webLinks>
+        <fullName>ViewApexClass</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>View Apex Class</masterLabel>
+        <openType>sidebar</openType>
+        <page>ProcessApexClass</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>

@@ -47,6 +47,8 @@
         <members>PostInstallClassTest</members>
         <members>PostUninstallClass</members>
         <members>PostUninstallClassTest</members>
+        <members>ProcessApexClassExtension</members>
+        <members>ProcessApexClassExtensionTest</members>
         <members>ProcessDiscoverExtension</members>
         <members>ProcessDiscoverExtensionTest</members>
         <members>ProcessRefreshBatch</members>
@@ -106,6 +108,7 @@
         <members>MessageProcess</members>
         <members>MessageResumeQueue</members>
         <members>MessageShowData</members>
+        <members>ProcessApexClass</members>
         <members>ProcessDiscover</members>
         <members>ProcessDocumentation</members>
         <members>ProcessHelp</members>
@@ -301,6 +304,7 @@
         <members>Process__c.Discover</members>
         <members>Process__c.ProcessDocumentation</members>
         <members>Process__c.Settings</members>
+        <members>Process__c.ViewApexClass</members>
         <members>PublishConfiguration__c.ManageEventTypes</members>
         <members>PublishConfiguration__c.ShowStep</members>
         <members>Step__c.ShowConfiguration</members>

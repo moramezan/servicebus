@@ -185,6 +185,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ProcessApexClassExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ProcessApexClassExtensionTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ProcessDiscoverExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -826,6 +834,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>MessageShowData</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>ProcessApexClass</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
