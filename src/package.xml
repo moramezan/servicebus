@@ -108,6 +108,7 @@
         <members>MessageShowData</members>
         <members>ProcessDocumentation</members>
         <members>ProcessGenerate</members>
+        <members>ProcessHelp</members>
         <members>ProcessSettings</members>
         <members>PublishConfigurationManageEventTypes</members>
         <members>PublishConfigurationShowStep</members>
@@ -225,7 +226,7 @@
     </types>
     <types>
         <members>MessageHelp</members>
-        <members>ProcessesHelp</members>
+        <members>ProcessHelp</members>
         <members>SequenceHelp</members>
         <name>CustomPageWebLink</name>
     </types>

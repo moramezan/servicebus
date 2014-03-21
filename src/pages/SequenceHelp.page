@@ -6,12 +6,12 @@
     
     <apex:pageBlock mode="maindetail">
         <apex:pageBlockSection title="About Sequences:" columns="2" collapsible="false">
-            <apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
                 <p>A Sequence is an arrangement of multiple processing tasks called Steps.</p>
                 <p>Each Sequence is known by a friendly name, for example 'ProcessInvoices', which should describe the nature of the work performed by its processing tasks or Steps.</p>
                 <p>The EDA framework will advance Messages through the Steps of a Sequence in the order you arrange. A typical sequence will contain many steps. See below:</p>
             </apex:pageBlockSectionItem>
-            <apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
                 <apex:image width="440" value="{!URLFOR($Resource.HelpZip, '/Sequence/notifyCompetitorActivity.png')}" />
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
