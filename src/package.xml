@@ -122,6 +122,7 @@
         <members>SubscribeConfigurationManageEventTypes</members>
         <members>SubscribeConfigurationShowStep</members>
         <members>SubscribeHelp</members>
+        <members>SubsequenceConfigurationHelp</members>
         <members>SubsequenceConfigurationShowStep</members>
         <name>ApexPage</name>
     </types>

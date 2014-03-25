@@ -893,6 +893,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>SubsequenceConfigurationHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>SubsequenceConfigurationShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
