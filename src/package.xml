@@ -96,6 +96,7 @@
         <name>ApexComponent</name>
     </types>
     <types>
+        <members>BranchConfigurationHelp</members>
         <members>BranchConfigurationShowStep</members>
         <members>FutureBroker</members>
         <members>Health</members>

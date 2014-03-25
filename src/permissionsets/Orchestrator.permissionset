@@ -789,6 +789,10 @@
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <pageAccesses>
+        <apexPage>BranchConfigurationHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>BranchConfigurationShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>

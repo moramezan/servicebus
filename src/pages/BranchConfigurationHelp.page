@@ -1,0 +1,19 @@
+<apex:page tabStyle="BranchConfiguration__c" showHeader="false" standardStylesheets="true">
+    
+    <style>
+        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+    </style>
+    
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection title="Configuring Branches:" columns="2" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <p>When execution flow is broken into more than one sequence a need arises to connect these sequences</p>
+                <p>The Branch process splits execution flow to the first step in a specified Sequence and remaining steps in the current Sequence.</p>
+                <p>Unlike the Jump process, steps in the Sequence following the Branch step associated with this configuration WILL be executed.</p>
+                <p>To specify the Sequence to branch to, enter the name of the Sequence in the Sequence field.</p>
+                <p><img width="440" src="{!URLFOR($Resource.HelpZip, '/BranchConfiguration/branch.png')}" /></p>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+</apex:page>
