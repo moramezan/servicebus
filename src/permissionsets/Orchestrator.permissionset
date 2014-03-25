@@ -838,7 +838,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessApexClass</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessDiscover</apexPage>
