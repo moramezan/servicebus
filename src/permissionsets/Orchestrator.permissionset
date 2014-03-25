@@ -873,6 +873,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>ScrapeConfigurationHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>SequenceHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>

@@ -117,6 +117,7 @@
         <members>PublishConfigurationManageEventTypes</members>
         <members>PublishConfigurationShowStep</members>
         <members>SchemaSelector</members>
+        <members>ScrapeConfigurationHelp</members>
         <members>SequenceHelp</members>
         <members>SequenceSorter</members>
         <members>StepShowConfiguration</members>
