@@ -40,7 +40,7 @@
         <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessDiscoverZip ant clean" />
         <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessDiscoverZip app refresh" />
         <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/ProcessDiscoverZip app build" />
-        <zip destfile="src/staticresources/ProcessDiscoverZip.resource" basedir="dev/resource/ProcessDiscoverZip/build/production/Generate" includes="**"/>
+        <zip destfile="src/staticresources/ProcessDiscoverZip.resource" basedir="dev/resource/ProcessDiscoverZip/build/production/Discover" includes="**"/>
     </target>
     
     <target name="purge" description="Purges an organization of most customizations and components">

@@ -25,12 +25,12 @@
                 "implHandler": [
                     "if (records[0].get('JobItemsProcessed') > 0) {",
                     "    //batch job has started for real",
-                    "    Generate.getApplication().fireEvent('asyncapexjobstart', store, records, successful, eOpts);",
+                    "    Discover.getApplication().fireEvent('asyncapexjobstart', store, records, successful, eOpts);",
                     "}",
                     "",
                     "if (Ext.Array.contains(['Aborted', 'Completed', 'Failed'], records[0].get('Status'))) {",
                     "    //batch job has finished for real",
-                    "    Generate.getApplication().fireEvent('asyncapexjobfinish', store, records, successful, eOpts);",
+                    "    Discover.getApplication().fireEvent('asyncapexjobfinish', store, records, successful, eOpts);",
                     "}"
                 ],
                 "name": "load",

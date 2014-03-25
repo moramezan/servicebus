@@ -194,7 +194,7 @@
             "codeClass": null,
             "userConfig": {
                 "api": [
-                    "{read: $RemoteAction.ProcessGenerateExtension.readAsyncApexJobs}"
+                    "{read: $RemoteAction.ProcessDiscoverExtension.readAsyncApexJobs}"
                 ],
                 "designer|createAlias": "vfremote",
                 "designer|displayName": "AsyncApexJobProxy",
@@ -226,7 +226,7 @@
                     "//46% at 100 seconds",
                     "//69% at 1000 seconds",
                     "var queuePortion = Math.log(job.countElapsedSeconds() + 1) / 10;",
-                    "Ext.log('[Generate.model.AsyncApexJob] queuePortion ' + queuePortion);",
+                    "Ext.log('[Discover.model.AsyncApexJob] queuePortion ' + queuePortion);",
                     "",
                     "//part real progress, eg at 100 seconds in:",
                     "//46% at 0 of 100",
@@ -235,7 +235,7 @@
                     "//73% at 50 of 100",
                     "//95% at 90 of 100",
                     "var itemsPortion = (job.get('JobItemsProcessed') / job.get('TotalJobItems') || 0) * (1 - queuePortion); //uses || 0 to prevent NaN on divide by zero (Queued jobs have zero total items)",
-                    "Ext.log('[Generate.model.AsyncApexJob] itemsPortion ' + itemsPortion);",
+                    "Ext.log('[Discover.model.AsyncApexJob] itemsPortion ' + itemsPortion);",
                     "",
                     "//add the bullshit part and the real part together",
                     "var value = queuePortion + itemsPortion;",
@@ -283,7 +283,7 @@
                 "fn": "mask",
                 "implHandler": [
                     "var elapsedSeconds = this.countElapsedSeconds();",
-                    "var msg = 'Generation time ' + Ext.Date.format(new Date(elapsedSeconds * 1000), 'i:s');",
+                    "var msg = 'Discovery time ' + Ext.Date.format(new Date(elapsedSeconds * 1000), 'i:s');",
                     "",
                     "//we mask the grid, not the view, because the store",
                     "//load() method periodically unmasks the gridView",

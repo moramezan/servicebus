@@ -1,5 +1,5 @@
 Ext.define('Override.model.Process', {
-    override: 'Generate.model.Process'
+    override: 'Discover.model.Process'
 }, function() {
     fields = Ext.Array.toValueMap(this.getFields(), 'name');
     fields.Id.mapping = $ObjectType.Process__c.Fields.Id.Name;
