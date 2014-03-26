@@ -873,6 +873,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>ScheduleConfigurationHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>SchemaSelector</apexPage>
         <enabled>true</enabled>
     </pageAccesses>

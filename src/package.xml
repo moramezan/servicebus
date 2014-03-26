@@ -117,6 +117,7 @@
         <members>ProcessSettings</members>
         <members>PublishConfigurationManageEventTypes</members>
         <members>PublishConfigurationShowStep</members>
+        <members>ScheduleConfigurationHelp</members>
         <members>SchemaSelector</members>
         <members>ScrapeConfigurationHelp</members>
         <members>SequenceHelp</members>

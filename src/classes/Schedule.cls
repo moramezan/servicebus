@@ -3,6 +3,7 @@ public with sharing class Schedule implements Process.Plugin {
     public class Meta {
         public String Icon = 'clock';
         public SObject ConfigObject = ScheduleConfiguration__c.SObjectType.newSObject();
+        public String DocsPageUrl = Page.ScheduleConfigurationHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe() {
