@@ -55,7 +55,8 @@ virtual public class FutureBroker extends Broker {
             Message__c message = (Message__c)iterator.next();
             Api.Client client = new Api.Client();
             client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
-            String command = 'new PageReference(\'' + Page.FutureBroker.getUrl() + '?id=' + message.Id + '\').getContent();'; //EXECUTE
+            String futureBrokerUrl = Page.FutureBroker.getUrl(); //full page name for anonymous context
+            String command = 'new PageReference(\'' + futureBrokerUrl + '?id=' + message.Id + '\').getContent();'; //EXECUTE
             Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
             if(!result.success) throw new BrokerException(result.compileProblem == null ? result.compileProblem : result.exceptionMessage);
         }
@@ -81,7 +82,8 @@ virtual public class FutureBroker extends Broker {
     virtual override public void markImpl(Set<Id> messageIds) {
         Api.Client client = new Api.Client();
         client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
-        String command = 'Broker.mark((Set<Id>)Json.deserialize(\'' + Json.serialize(messageIds) + '\', Set<Id>.class));';
+        String brokerClassName = Broker.class.getName(); //full class name for anonymous context
+        String command = brokerClassName + '.mark((Set<Id>)Json.deserialize(\'' + Json.serialize(messageIds) + '\', Set<Id>.class));';
         Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
         if (!result.success) throw new BrokerException(result.compileProblem == null ? result.compileProblem : result.exceptionMessage);
     }
