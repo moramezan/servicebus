@@ -865,6 +865,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>ProcessDiscoveryTutorial</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>ProcessDocumentation</apexPage>
         <enabled>true</enabled>
     </pageAccesses>

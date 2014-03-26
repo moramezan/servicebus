@@ -115,6 +115,7 @@
         <members>MessageShowData</members>
         <members>ProcessApexClass</members>
         <members>ProcessDiscover</members>
+        <members>ProcessDiscoveryTutorial</members>
         <members>ProcessDocumentation</members>
         <members>ProcessHelp</members>
         <members>ProcessSettings</members>
