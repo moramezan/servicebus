@@ -4,8 +4,8 @@
         body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
     </style>
     
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection title="About Processes:" columns="2" collapsible="false">
+    <apex:pageBlock mode="maindetail" title="Introducing Processes">
+        <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p>A Process is a single, logical program with inputs and outputs in the form of Messages.</p>
                 <p>Logic that splits data (map) or combines data (reduce) should be encapsulated in distinct Processes.</p>

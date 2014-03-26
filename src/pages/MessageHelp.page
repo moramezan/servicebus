@@ -4,8 +4,8 @@
         body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
     </style>
     <apex:form >
-        <apex:pageBlock mode="maindetail">
-            <apex:pageBlockSection title="About Messages:" columns="2" collapsible="false">
+        <apex:pageBlock mode="maindetail" title="Introducing Messages">
+            <apex:pageBlockSection columns="2" collapsible="false">
                 <apex:pageBlockSectionItem >
                     <p>Messages represent real-world events. These occur all the time, for example, a clock strikes midnight, or a bank account becomes empty, etc.</p>
                     <p>A Message captures this data into a common structure that can be handed to different Processes to act on.</p>
