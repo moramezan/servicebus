@@ -1,7 +1,7 @@
 <apex:page tabStyle="Process__c" showHeader="false">
     
     <style>
-        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+        body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
     </style>
     
     <apex:pageBlock mode="maindetail" title="Introducing Processes">
