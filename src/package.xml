@@ -98,6 +98,7 @@
     <types>
         <members>BranchConfigurationHelp</members>
         <members>BranchConfigurationShowStep</members>
+        <members>ConfirmSetupTutorial</members>
         <members>FutureBroker</members>
         <members>Health</members>
         <members>IsChangedConfigurationHelp</members>

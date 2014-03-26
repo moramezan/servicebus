@@ -797,6 +797,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>ConfirmSetupTutorial</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>FutureBroker</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
