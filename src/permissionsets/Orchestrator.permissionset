@@ -817,6 +817,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>LogConfigurationHelp</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>LogConfigurationListLogGroups</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
