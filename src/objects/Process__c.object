@@ -143,6 +143,17 @@
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
+        <fullName>ApexClass</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>View Apex Class</masterLabel>
+        <openType>sidebar</openType>
+        <page>ProcessApexClass</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
         <fullName>Discover</fullName>
         <availability>online</availability>
         <displayType>massActionButton</displayType>
@@ -155,7 +166,7 @@
         <requireRowSelection>false</requireRowSelection>
     </webLinks>
     <webLinks>
-        <fullName>ProcessDocumentation</fullName>
+        <fullName>Documentation</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
         <linkType>page</linkType>
@@ -170,20 +181,9 @@
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>
-        <masterLabel>Settings</masterLabel>
+        <masterLabel>View Settings</masterLabel>
         <openType>sidebar</openType>
         <page>ProcessSettings</page>
-        <protected>false</protected>
-    </webLinks>
-    <webLinks>
-        <fullName>ViewApexClass</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>View Apex Class</masterLabel>
-        <openType>sidebar</openType>
-        <page>ProcessApexClass</page>
         <protected>false</protected>
     </webLinks>
 </CustomObject>

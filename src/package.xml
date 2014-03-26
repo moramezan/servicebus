@@ -309,10 +309,10 @@
         <members>Message__c.Process</members>
         <members>Message__c.ResumeQueue</members>
         <members>Message__c.ShowData</members>
+        <members>Process__c.ApexClass</members>
         <members>Process__c.Discover</members>
-        <members>Process__c.ProcessDocumentation</members>
+        <members>Process__c.Documentation</members>
         <members>Process__c.Settings</members>
-        <members>Process__c.ViewApexClass</members>
         <members>PublishConfiguration__c.ManageEventTypes</members>
         <members>PublishConfiguration__c.ShowStep</members>
         <members>Step__c.ShowConfiguration</members>
