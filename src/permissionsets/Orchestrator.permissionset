@@ -873,6 +873,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>PublishConfigurationHelp</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>PublishConfigurationManageEventTypes</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -903,6 +907,10 @@
     <pageAccesses>
         <apexPage>StepShowConfiguration</apexPage>
         <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>SubscribeConfigurationHelp</apexPage>
+        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>SubscribeConfigurationManageEventTypes</apexPage>

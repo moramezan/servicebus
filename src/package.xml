@@ -117,6 +117,7 @@
         <members>ProcessDocumentation</members>
         <members>ProcessHelp</members>
         <members>ProcessSettings</members>
+        <members>PublishConfigurationHelp</members>
         <members>PublishConfigurationManageEventTypes</members>
         <members>PublishConfigurationShowStep</members>
         <members>ScheduleConfigurationHelp</members>
@@ -125,6 +126,7 @@
         <members>SequenceHelp</members>
         <members>SequenceSorter</members>
         <members>StepShowConfiguration</members>
+        <members>SubscribeConfigurationHelp</members>
         <members>SubscribeConfigurationManageEventTypes</members>
         <members>SubscribeConfigurationShowStep</members>
         <members>SubscribeHelp</members>

@@ -1,0 +1,35 @@
+<apex:page tabStyle="PublishConfiguration__c" showHeader="false" standardStylesheets="true">
+    
+    <style>
+        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+    </style>
+    <apex:form >
+        <apex:pageBlock mode="maindetail">
+            <apex:pageBlockSection title="About Publish Configuration:" columns="2" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <p>The Publish and Subscribe processes work together to link two or more Sequences.</p>
+                    <p>To facilitate the link, both the Subscribe and Publish processes must share a common Named Event.</p>
+                    <p>At runtime, the Publish process directs a message to it's configured Named Event and  in turn, apropriately configured Subscribe process(es) retrieve the published message from the same Named Event.</p>
+                
+                    <p><img width="480" src="{!URLFOR($Resource.HelpZip, '/PublishConfiguration/PubSubConfiguration.png')}" /></p>
+                </apex:pageBlockSectionItem>
+                
+                <!--
+                <apex:pageBlockSectionItem >
+                    <apex:image width="360" value="{!URLFOR($Resource.HelpZip, '/Publish/PublishProcessFunnel.png')}" />
+                </apex:pageBlockSectionItem>
+                -->
+            </apex:pageBlockSection>
+
+ 
+            <apex:pageBlockSection title="Configure Buttons:" columns="1" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <p>To Publish to a specific Named Event,  select that Named Event from the Event Type lookup field.</p>
+                    <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/PublishConfiguration/ManageEventTypes.png')}" />  takes you to a native list of all previously defined event types. To add a new event type , press the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/PublishConfiguration/NewEventType.png')}" /> button.</p>
+                    <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/PublishConfiguration/ShowStep.png')}" />   takes you to the native view of the underlying Sequence Step hosting the Publish process.</p>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
