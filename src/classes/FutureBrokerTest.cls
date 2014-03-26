@@ -13,10 +13,10 @@
     
     public class MockFutureBroker extends FutureBroker {
         override public void restartImpl() {
-            this.start();
+            this.handleStart();
         }
         
-        override public void start() {
+        override public void handleStart() {
             //start (MARK)
             Database.QueryLocator locator = this.locateMarkedWork(5); //note that markImpl is called inside this method
             Database.QueryLocatorIterator iterator = locator.iterator();

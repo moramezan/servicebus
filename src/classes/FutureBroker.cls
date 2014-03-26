@@ -28,12 +28,23 @@ virtual public class FutureBroker extends Broker {
         if (!result.success) throw new BrokerException(result.compileProblem == null ? result.compileProblem : result.exceptionMessage);
     }
     
+    virtual public void handle() {
+        Id messageId = ApexPages.currentPage().getParameters().get('id');
+        if (messageId == null) {
+            //using getContent to decouple Tooling API callout
+            handleStart();
+        } else {
+            //using getContent to decouple process invokation
+            handleMessage(messageId);
+        }
+    }
+    
     /**
      * So we use PageReference.getContent with an action method to circumvent 'Callout loop not allowed' error. When
      * a FutureBroker is 'started', the mechanics look quite similar to BatchBrokerImplementation in terms of execution contexts.
-     * THIS IS NEVER CALLED. Invoked by conposition of 'viewing' the Visualforce Page 'FutureBroker'.
+     * THIS IS NEVER CALLED. Invoked by consequence of 'viewing' the Visualforce Page 'FutureBroker' WITHOUT an Id.
      */
-    virtual public void start() {
+     virtual public void handleStart() {
         //start (MARK)
         Database.QueryLocator locator = this.locateMarkedWork(5); //note that markImpl is called inside this method
         Database.QueryLocatorIterator iterator = locator.iterator();
@@ -44,13 +55,22 @@ virtual public class FutureBroker extends Broker {
             Message__c message = (Message__c)iterator.next();
             Api.Client client = new Api.Client();
             client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
-            String command = 'Broker.executeResolvePersist(\'' + message.Id + '\');'; //EXECUTE
+            String command = 'new PageReference(\'' + Page.FutureBroker.getUrl() + '?id=' + message.Id + '\').getContent();'; //EXECUTE
             Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
             if(!result.success) throw new BrokerException(result.compileProblem == null ? result.compileProblem : result.exceptionMessage);
         }
         
         //finish (invokes broker in a @future)
         this.restartIfWorkPending();
+    }
+    
+    /**
+     * Similarly, we must circumvent 'Callout loop not allowed error' when a process uses a WebService or HttpRequest by
+     * using the Page.getContent trick. We can't just call Broker.executeResolvePersist() using execute anonymous.
+     * THIS IS NEVER CALLED. Invoked by consequence of 'viewing' the Visualforce Page 'FutureBroker' WITH an Id.
+     */
+    virtual public void handleMessage(Id messageId) {
+        Broker.executeResolvePersist(messageId);
     }
     
     /**
