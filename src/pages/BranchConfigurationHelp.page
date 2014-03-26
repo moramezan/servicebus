@@ -4,8 +4,8 @@
         body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
     </style>
     
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection title="Configuring Branches:" columns="2" collapsible="false">
+    <apex:pageBlock mode="maindetail" title="Introducing Branches">
+        <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p>When execution flow is broken into more than one sequence a need arises to connect these sequences</p>
                 <p>The Branch process splits execution flow to the first step in a specified Sequence and remaining steps in the current Sequence.</p>

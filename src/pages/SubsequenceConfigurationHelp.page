@@ -4,8 +4,8 @@
         body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
     </style>
     
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection title="Configuring Subsequences:" columns="2" collapsible="false">
+    <apex:pageBlock mode="maindetail" title="Introducing Subsequences">
+        <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p>The Subsequence Process allows you to choose another Sequence to be executed when a Message reaches this Step. This allows you to re-use functionality in more than one place.</p>
                 <p>Messages will detour to your chosen subsequence. After all those Steps are executed, the Message will return to the next Step of the original Sequence.</p>

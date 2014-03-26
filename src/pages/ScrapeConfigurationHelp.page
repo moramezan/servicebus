@@ -4,8 +4,8 @@
         body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
     </style>
     
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection title="Configuring Branches:" columns="2" collapsible="false">
+    <apex:pageBlock mode="maindetail" title="Introducing Branches">
+        <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p>A Scrape Process retrieves the contents of a web page, inserts it into an Attachment and passes the Attachment Id to the next step.</p>
                 <p>To configure, enter the full URL of the web page to be scraped in the endpoint field.</p>
