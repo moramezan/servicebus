@@ -13,7 +13,7 @@
                 <p>A schedule is defined by one or more hourly time intervals defining when the schedule should fire. This hourly schedule is filtered by frequency and run dates.</p>
                 <p>In the Run Times field, select one or more hourly time intervals that specify when the schedule should fire.</p>
                 <p>In the Frequency field , select the frequency from Daily, Weekly or Monthly. The value selected defines the available values under the Run dates picklist.</p>
-                <p><img width="440" src="{!URLFOR($Resource.HelpZip, '/ScheduleConfiguration/schedule.png')}" /></p>
+                <p><img width="480" src="{!URLFOR($Resource.HelpZip, '/ScheduleConfiguration/schedule.png')}" /></p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
     </apex:pageBlock>

@@ -11,7 +11,7 @@
                 <p>The Branch process splits execution flow to the first step in a specified Sequence and remaining steps in the current Sequence.</p>
                 <p>Unlike the Jump process, steps in the Sequence following the Branch step associated with this configuration WILL be executed.</p>
                 <p>To specify the Sequence to branch to, enter the name of the Sequence in the Sequence field.</p>
-                <p><img width="440" src="{!URLFOR($Resource.HelpZip, '/BranchConfiguration/branch.png')}" /></p>
+                <p><img width="480" src="{!URLFOR($Resource.HelpZip, '/BranchConfiguration/branch.png')}" /></p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
     </apex:pageBlock>
