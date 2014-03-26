@@ -1,0 +1,19 @@
+<apex:page tabStyle="IsChangedConfiguration__c" showHeader="false" standardStylesheets="true">
+    
+    <style>
+        body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
+    </style>
+    
+    <apex:pageBlock mode="maindetail" title="Introducing the IsChanged Process">
+        <apex:pageBlockSection columns="2" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <p>A need often arises to discard messages that reference business data that has NOT changed.</p>
+                <p>The IsChanged process discards a message unless a specified field on the business data pointed at by that message has changed. (Compared to the same field on the business data pointed at by the previous message.)</p>
+                <p>Unlike the IsNewData Process, no time constraint is applied.</p>
+                <p>To configure, choose the field name of the underlying business data that should be monitored for changes.</p>
+                <p><img src="{!URLFOR($Resource.HelpZip, '/IsChangedConfiguration/isChanged.png')}" /></p>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+</apex:page>

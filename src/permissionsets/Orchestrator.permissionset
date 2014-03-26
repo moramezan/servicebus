@@ -805,12 +805,16 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>IsChangedConfigurationHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>IsChangedConfigurationSchemaSelector</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>IsNewDataConfigurationHelp</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>JumpConfigurationHelp</apexPage>
@@ -873,10 +877,6 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>PublishConfigurationHelp</apexPage>
-        <enabled>false</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>PublishConfigurationManageEventTypes</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -907,10 +907,6 @@
     <pageAccesses>
         <apexPage>StepShowConfiguration</apexPage>
         <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>SubscribeConfigurationHelp</apexPage>
-        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>SubscribeConfigurationManageEventTypes</apexPage>
