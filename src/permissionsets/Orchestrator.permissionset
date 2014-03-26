@@ -809,6 +809,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>JumpConfigurationHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>JumpConfigurationShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>

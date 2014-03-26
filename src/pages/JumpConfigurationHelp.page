@@ -1,0 +1,19 @@
+<apex:page tabStyle="JumpConfiguration__c" showHeader="false" standardStylesheets="true">
+    
+    <style>
+        body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
+    </style>
+
+    <apex:pageBlock mode="maindetail" title="Introducing the Jump Process">
+        <apex:pageBlockSection columns="2" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <p>When execution flow is broken into more than one sequence a need arises to connect these sequences.</p>
+                <p>The Jump process directs execution flow to the first step in a specified Sequence.</p>
+                <p>Unlike the Branch process, steps in the Sequence following a Jump step associated with this configuration will therefore not be executed.</p>
+                <p>To specify the Sequence to jump to, enter the name of the sequence in the Sequence field.</p>
+                <p><img width="440" src="{!URLFOR($Resource.HelpZip, '/JumpConfiguration/jump.png')}" /></p>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+</apex:page>
