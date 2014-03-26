@@ -101,6 +101,7 @@
         <members>FutureBroker</members>
         <members>Health</members>
         <members>IsChangedConfigurationSchemaSelector</members>
+        <members>IsNewDataConfigurationHelp</members>
         <members>JumpConfigurationHelp</members>
         <members>JumpConfigurationShowStep</members>
         <members>LogConfigurationHelp</members>

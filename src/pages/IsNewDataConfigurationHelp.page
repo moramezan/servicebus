@@ -1,0 +1,19 @@
+<apex:page tabStyle="IsNewDataConfiguration__c" showHeader="false" standardStylesheets="true">
+    
+    <style>
+        body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
+    </style>
+    
+    <apex:pageBlock mode="maindetail" title="Introducing the Is New Data Process">
+        <apex:pageBlockSection columns="2" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <p>A need often arises to discard messages that reference the same business data over a time period.</p>
+                <p>The IsNewData process will discard any second and subsequent identical notifications, unless the threshold time has elapsed.</p>
+                <p>Unlike the IsChanged process, a time constraint is specifically applied when monitoring business key changes.</p>
+                <p>To configure, enter the minimum number of hours that are permitted between messages with the same business data.</p>
+                <p><img src="{!URLFOR($Resource.HelpZip, '/IsNewDataConfiguration/isNewData.png')}" /></p>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+</apex:page>
