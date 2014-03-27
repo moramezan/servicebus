@@ -19,10 +19,6 @@ public with sharing class SequenceBuilderController {
         }
     }
     
-    public String getProtocolAndHost() {
-        return Url.getSalesforceBaseUrl().toExternalForm();
-    }
-    
     public String getProcesses() {
         List<Process__c> processes = SalesforceObjectSet.fetchAll(Process__c.SObjectType);
         return Json.serializePretty(processes);

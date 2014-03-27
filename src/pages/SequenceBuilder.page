@@ -57,9 +57,11 @@
         $ObjectType.Process__c.Fields.Icon__c = $ObjectType.Process__c.Fields.Icon__c || {};
         $ObjectType.Process__c.Fields.Icon__c.Name = '{!$ObjectType.Process__c.Fields.Icon__c.Name}';
 
-        ProtocolAndHost = '{!ProtocolAndHost}';
         Processes = {!Processes};
         Steps = {!Steps};
+        
+        window.URLFOR = window.URLFOR || {};
+        URLFOR['/'] = '{!URLFOR("/")}';
     </c:bootstrapExt>
 
 </apex:page>

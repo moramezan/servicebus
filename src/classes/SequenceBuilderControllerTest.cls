@@ -40,18 +40,6 @@
         System.assert(redirect == null);
     }
     
-    static testMethod void testGetProtocolAndHost() {
-        //arrange controller and extension
-        ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c());
-        SequenceBuilderController extension = new SequenceBuilderController(controller);
-        
-        //act
-        String url = extension.getProtocolAndHost();
-        
-        //assert
-        System.assert(url.contains('salesforce'));
-    }
-    
     static testMethod void testGetProcesses() {
         //arrange sequence, controller and extension
         Id sequenceId = setupSequence();

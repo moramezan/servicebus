@@ -129,7 +129,7 @@
                             "    'class': 'configurelink',",
                             "    'onclick': 'return false;',",
                             "    'title': 'Configure Step',",
-                            "    'href': ProtocolAndHost + '/' + record.get('ConfigurationId') + '?isdtp=vw'",
+                            "    'href': URLFOR['/'] + record.get('ConfigurationId') + '?isdtp=vw'",
                             "}));",
                             "",
                             "//TERMINATE step cannot be deleted",
@@ -139,7 +139,7 @@
                             "    'class': 'deletelink',",
                             "    'onclick': 'return false;',",
                             "    'title': 'Delete Step',",
-                            "    'href': ProtocolAndHost + '/setup/own/deleteredirect.jsp?delId=' + record.get('Id')",
+                            "    'href': URLFOR['/'] + 'setup/own/deleteredirect.jsp?delId=' + record.get('Id')",
                             "}));",
                             "",
                             "return anchors.join(' | ');"
