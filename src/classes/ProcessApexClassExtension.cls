@@ -20,17 +20,24 @@ public class ProcessApexClassExtension {
             throw new ProcessApexClassExtensionException('Cannot determine fully qualified class name from empty field on process id =['+processId+']');
         }     
         
-        String clause;
+        String namespacePrefix;
+        String name;
+        
         if (fullyQualifiedClassName.contains('.')) {
             //managed (namespaceprefix.classname)
-            clause = '(NamespacePrefix = \'' + fullyQualifiedClassName.substringAfter('.') + '\' AND Name = \'' + fullyQualifiedClassName.substringAfter('.') + '\')';
+            namespacePrefix = fullyQualifiedClassName.substringBefore('.');
+            name = fullyQualifiedClassName.substringAfter('.');
         } else {
             //unmanaged (classname)
-            clause = '(Name = \'' + fullyQualifiedClassName + '\')';
-        }   
-        List<SOBject> apexClasses = Database.query('SELECT Id FROM ApexClass WHERE ' + clause);
+            namespacePrefix = '';
+            name = fullyQualifiedClassName;
+        }
+        
+        String query = 'SELECT Id FROM ApexClass WHERE NamespacePrefix = :namespacePrefix AND Name = :name';
+        List<ApexClass> apexClasses = Database.query(query);
+        
         if (apexClasses.size() == 0) { 
-            throw new ProcessApexClassExtensionException('Cannot derive apex class from ['+clause+']');
+            throw new ProcessApexClassExtensionException('Cannot derive apex class from [' + fullyQualifiedClassName + ']');
         }
         
         Id apexClassId  = apexClasses[0].Id;

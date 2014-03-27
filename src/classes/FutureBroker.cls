@@ -101,12 +101,12 @@ virtual public class FutureBroker extends Broker {
         
         if (type.getName().contains('.')) {
             //managed (namespaceprefix.classname)
-            name = type.getName().substringBefore('.');
-            namespacePrefix = type.getName().substringAfter('.');
+            namespacePrefix = type.getName().substringBefore('.');
+            name = type.getName().substringAfter('.');
         } else {
             //unmanaged (classname)
-            name = type.getName();
             namespacePrefix = '';
+            name = type.getName();
         }
         
         //find existing futures
