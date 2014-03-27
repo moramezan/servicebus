@@ -313,6 +313,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>StepTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Steps</apexClass>
         <enabled>false</enabled>
     </classAccesses>

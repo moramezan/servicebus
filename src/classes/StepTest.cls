@@ -1,0 +1,63 @@
+@isTest public class StepTest {
+    
+    static testMethod void testMoveStepBefore() {
+        //arrange processes
+        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        
+        //arrange sequences
+        Sequence__c sequence = new Sequence__c(Name = 'SequenceBuilderControllerTest');
+        insert sequence;
+        
+        //arrange steps
+        Step__c wiretapStep = Steps.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = Steps.generateOne(sequence.Id, terminateProcess.Id);
+        
+        //assert before state
+        System.assertEquals(1, wiretapStep.Position__c);
+        System.assertEquals(2, terminateStep.Position__c);
+            
+        //act
+        Step step = new Step(terminateStep);
+        step.moveBefore(wiretapStep.Id);
+        
+        //assemble
+        wiretapStep = [SELECT Id, Position__c FROM Step__c WHERE Id = :wiretapStep.Id];
+        terminateStep = [SELECT Id, Position__c FROM Step__c WHERE Id = :terminateStep.Id];
+        
+        //assert after state
+        System.assertEquals(1, terminateStep.Position__c);
+        System.assertEquals(2, wiretapStep.Position__c);
+    }
+    
+    static testMethod void testMoveStepAfter() {
+        //arrange processes
+        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        
+        //arrange sequences
+        Sequence__c sequence = new Sequence__c(Name = 'SequenceBuilderControllerTest');
+        insert sequence;
+        
+        //arrange steps
+        Step__c wiretapStep = Steps.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = Steps.generateOne(sequence.Id, terminateProcess.Id);
+        
+        //assert before state
+        System.assertEquals(1, wiretapStep.Position__c);
+        System.assertEquals(2, terminateStep.Position__c);
+            
+        //act
+        Step step = new Step(wiretapStep);
+        step.moveAfter(terminateStep.Id);
+        
+        //assemble
+        wiretapStep = [SELECT Id, Position__c FROM Step__c WHERE Id = :wiretapStep.Id];
+        terminateStep = [SELECT Id, Position__c FROM Step__c WHERE Id = :terminateStep.Id];
+        
+        //assert after state
+        System.assertEquals(1, terminateStep.Position__c);
+        System.assertEquals(2, wiretapStep.Position__c);
+    }
+    
+}
