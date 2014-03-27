@@ -11,9 +11,9 @@ abstract public class SalesforceObjectSet {
     
     static public List<SObject> fetchAll(SObjectType type) {
         DescribeSObjectResult describe = type.getDescribe();
-        String name = describe.getName();
+        String objectName = describe.getName();
         List<String> fields = new List<String>(describe.fields.getMap().keySet());
-        return Database.query('SELECT ' + String.join(fields, ',') + ' FROM ' + name);
+        return Database.query('SELECT ' + String.join(fields, ',') + ' FROM ' + objectName + ' ORDER BY Name ASC');
     }
     
     public Set<Id> keySet() {
