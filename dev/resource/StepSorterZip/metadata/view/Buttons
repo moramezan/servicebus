@@ -66,7 +66,7 @@
             "userConfig": {
                 "layout|flex": null,
                 "layout|margins": null,
-                "text": "Enqueue"
+                "text": "Inject Test Message"
             },
             "designerId": "d9de5484-eb10-4150-a590-e49399071ecb",
             "cn": [
