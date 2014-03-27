@@ -5,8 +5,8 @@ public with sharing class BatchBrokerImplementation extends Broker implements Da
         return this.locateMarkedWork(100);
     }
     
-    public void execute(Database.BatchableContext context, List<Message__c> scope) {
-        Broker.executeResolvePersist(scope[0].Id);
+    public void execute(Database.BatchableContext context, List<Message__c> scopes) {
+        for (Message__c scope : scopes) Broker.executeResolvePersist(scope.Id);
     }
     
     public void finish(Database.BatchableContext context) {
