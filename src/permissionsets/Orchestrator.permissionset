@@ -289,6 +289,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>SequenceBuilderControllerTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>SequenceTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>

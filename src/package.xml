@@ -73,6 +73,7 @@
         <members>ScrapeTest</members>
         <members>Sequence</members>
         <members>SequenceBuilderController</members>
+        <members>SequenceBuilderControllerTest</members>
         <members>SequenceTest</members>
         <members>Sequences</members>
         <members>SequencesTest</members>
