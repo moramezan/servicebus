@@ -17,7 +17,7 @@ public class LogConfigurationController {
      * The custom URL takes the following format
      * https://<sf-pod>/<list-prefix>?rlid=<the-lookup-field-id>&id=<the-given-parent-Id>
      * where
-     *   <sf-pod> =  salesforce-pod (eg eu2.salesforce.com )
+     *   <sf-pod> =  salesforce-pod (eg pod.salesforce.com )
      *   <list-prefix> = 3 character prefix of the LogGroup list
      *   <the-lookup-field-id> = the 15 character field id of the field that lookups up to the parent LogConfiguration - it's derived via the tooling api
      *   <the-given-parent-Id> = the 18 character LogConfiguration Id whose child LogGroup records we are interested in

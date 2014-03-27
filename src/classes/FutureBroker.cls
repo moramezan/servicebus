@@ -5,6 +5,12 @@
  */
 virtual public class FutureBroker extends Broker {
     
+    private String toolingEndpoint;
+    
+    public FutureBroker() {
+        this.toolingEndpoint= this.podProtocolAndHost() + '/services/Soap/T/29.0';
+    }
+    
     /**
      * Each Broker implementation must provide the smarts of how to restart it.
      * The FutureBroker sequences another @Future invocation to run itself again.
@@ -54,7 +60,7 @@ virtual public class FutureBroker extends Broker {
             //each in separate execution context
             Message__c message = (Message__c)iterator.next();
             Api.Client client = new Api.Client();
-            client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
+            client.endpoint_x = this.toolingEndpoint;
             String futureBrokerUrl = Page.FutureBroker.getUrl(); //full page name for anonymous context
             String command = 'new PageReference(\'' + futureBrokerUrl + '?id=' + message.Id + '\').getContent();'; //EXECUTE
             Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
@@ -81,7 +87,7 @@ virtual public class FutureBroker extends Broker {
      */
     virtual override public void markImpl(Set<Id> messageIds) {
         Api.Client client = new Api.Client();
-        client.endpoint_x = 'https://eu2.salesforce.com/services/Soap/T/29.0';
+        client.endpoint_x = this.toolingEndpoint;
         String brokerClassName = Broker.class.getName(); //full class name for anonymous context
         String command = brokerClassName + '.mark((Set<Id>)Json.deserialize(\'' + Json.serialize(messageIds) + '\', Set<Id>.class));';
         Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
@@ -115,4 +121,51 @@ virtual public class FutureBroker extends Broker {
         return !existingFutures.isEmpty();
     }
     
+    public class IdentityResult {
+        public String id;
+        public String asserted_user;
+        public String user_id;
+        public String organization_id;
+        public String username;
+        public String nick_name;
+        public String display_name;
+        public String email;
+        public String first_name;
+        public String last_name;
+        //public Map<String,Object> status;
+        public Map<String,String> photos;
+        public Map<String,String> urls;
+        public Boolean active;
+        public String user_type;
+        public String language;
+        public String locale;
+        public Integer utcOffset;
+        public DateTime last_modified_date;
+    }
+    
+    /**
+     * eg "https://pod.salesforce.com"
+     */
+    public String podProtocolAndHost() {
+        String orgId = UserInfo.getOrganizationId();
+        String userId = UserInfo.getUserId();
+        
+        System.PageReference pr = new System.PageReference('/id/' + orgId + '/' + userId);
+        pr.getParameters().put('oauth_token', UserInfo.getSessionId());
+        pr.getParameters().put('format', 'json');
+        
+        String data;
+        if (!Test.isRunningTest()) {
+            //fetch real identity
+            data = pr.getContent().toString();
+        } else {
+            //fake test identity
+            data = '{"urls": {"rest": "' + Url.getSalesforceBaseUrl().toExternalForm() + '"}}';
+        }
+        IdentityResult result = (IdentityResult)Json.deserialize(data, IdentityResult.class);
+        
+        Url rest = new Url(result.urls.get('rest'));
+        String protocolAndHost = rest.getProtocol() + '://' + rest.getHost();
+        return protocolAndHost;
+    }
 }
