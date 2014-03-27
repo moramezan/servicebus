@@ -96,7 +96,7 @@
     
     static testMethod void callingGetProcessHealthReturnsOkForProcessWithApexClass() {
         //arrange - 
-        String processName = 'Terminate';
+        String processName = Terminate.class.getName();
         Process__c process =  new Process__c(Name = processName, FullyQualifiedClassName__c = processName);
         insert process;
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
@@ -118,7 +118,7 @@
   
     static testMethod void callingGetProcessHealthReturnsDeleteForProcessWithoutApexClassAndNotUsedInAnySequences() {       
         // arrange - 
-        String processName = 'Wiretap';
+        String processName = Wiretap.class.getName();
         Process__c process =  new Process__c(Name = processName, FullyQualifiedClassName__c = processName);
         insert process;
         List<ApexClass> apexClasses = new List<ApexClass>{
@@ -144,7 +144,7 @@
     static testMethod void callingGetProcessHealthReturnsErroForProcessWithoutApexClassAndUsedOneOrMoreSequences() {
 
          // arrange - 
-        String processName = 'Wiretap';
+        String processName = Wiretap.class.getName();
         Process__c process =  new Process__c(Name = processName, FullyQualifiedClassName__c = processName);
         insert process;
         List<ApexClass> apexClasses = new List<ApexClass>{
@@ -172,11 +172,11 @@
     
     static testMethod void callingDeleteInvalidUnusedProcessesDeletesExpectedProcesses() {
         //arrange - 
-        String processNameKeep = 'Terminate';
+        String processNameKeep = Terminate.class.getName();
         Process__c processKeep =  new Process__c(Name = processNameKeep, FullyQualifiedClassName__c = processNameKeep);
         insert processKeep;
         
-        String processNameDelete = 'Wiretap';
+        String processNameDelete = Wiretap.class.getName();
         Process__c processDelete =  new Process__c(Name = processNameDelete, FullyQualifiedClassName__c = processNameDelete);
         insert processDelete;     
 

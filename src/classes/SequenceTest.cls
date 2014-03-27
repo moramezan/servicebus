@@ -47,20 +47,20 @@ private class  SequenceTest {
         Step actualStep = sequence.appendStep(markProcess.Id);
         
         // assemble
-        List<Step__c> soSteps = [SELECT Id, Name, Process__r.Name, Position__c FROM Step__c WHERE Sequence__c = :soSequenceId];
+        List<Step__c> soSteps = [SELECT Id, Name, Process__r.FullyQualifiedClassName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequenceId];
         Integer actualStepCount  = soSteps.size();
         // SObject soStep = actualStep.getSObject();
         String actualProcessName;
         Decimal actualPosition; 
         if (soSteps.size() > 0) {
-            actualProcessName = soSteps[0].Process__r.Name;
+            actualProcessName = soSteps[0].Process__r.FullyQualifiedClassName__c;
             actualPosition = soSteps[0].Position__c;
         }
         
         // assert
         Decimal expectedPosition = 1;
         System.assertEquals( expectedPosition , actualPosition  );
-        String expectedProcessName = markProcess.Name;
+        String expectedProcessName = Mark.class.getName();
         System.assertEquals( expectedProcessName , actualProcessName  );
         Integer expectedStepCount = 1;
         System.assertEquals( expectedStepCount , actualStepCount  );  
@@ -80,12 +80,12 @@ private class  SequenceTest {
         sequence.terminate();
         
         // assemble
-        List<Step__c> soSteps = [SELECT Id, Name, Process__r.Name, Position__c FROM Step__c WHERE Sequence__c = :soSequenceId];
+        List<Step__c> soSteps = [SELECT Id, Name, Process__r.FullyQualifiedClassName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequenceId];
         Integer actualStepCount  = soSteps.size();
         String actualProcessName;
         Decimal actualPosition; 
         if (soSteps.size() > 0) {
-            actualProcessName = soSteps[0].Process__r.Name;
+            actualProcessName = soSteps[0].Process__r.FullyQualifiedClassName__c;
             actualPosition = soSteps[0].Position__c;
         }
         
@@ -115,12 +115,12 @@ private class  SequenceTest {
         sequence.terminate(); // and again!
         
         // assemble
-        List<Step__c> soSteps = [SELECT Id, Name, Process__r.Name, Position__c FROM Step__c WHERE Sequence__c = :soSequenceId];
+        List<Step__c> soSteps = [SELECT Id, Name, Process__r.FullyQualifiedClassName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequenceId];
         Integer actualStepCount  = soSteps.size();
         String actualProcessName;
         Decimal actualPosition; 
         if (soSteps.size() > 0) {
-            actualProcessName = soSteps[0].Process__r.Name;
+            actualProcessName = soSteps[0].Process__r.FullyQualifiedClassName__c;
             actualPosition = soSteps[0].Position__c;
         }
         
@@ -187,12 +187,12 @@ private class  SequenceTest {
  
         
         // assemble
-        List<Step__c> soSteps = [SELECT Id, Name, Process__r.Name, Position__c FROM Step__c];
+        List<Step__c> soSteps = [SELECT Id, Name, Process__r.FullyQualifiedClassName__c, Position__c FROM Step__c];
         Integer actualStepCount  = soSteps.size();
         String actualProcessName;
         Decimal actualPosition; 
         if (soSteps.size() > 0) {
-            actualProcessName = soSteps[0].Process__r.Name;
+            actualProcessName = soSteps[0].Process__r.FullyQualifiedClassName__c;
             actualPosition = soSteps[0].Position__c;
         }
    
