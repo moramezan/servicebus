@@ -1,5 +1,12 @@
 @isTest private class FutureBrokerTest {
     
+    static testMethod void testPodProtocolAndHost() {
+        FutureBroker.IdentityResult result = new FutureBroker.IdentityResult();
+        String expectedProtocolAndHost = Url.getSalesforceBaseUrl().toExternalForm();
+        String actualProtocolAndHost = new FutureBroker().podProtocolAndHost();
+        System.assertEquals(expectedProtocolAndHost, actualProtocolAndHost);
+    }
+    
     static public Boolean flagRestartImpl = false;
     class ToolingApiMock implements WebServiceMock {
         public void doInvoke(Object stub, Object request, Map<String, Object> response, String endpoint, String soapAction, String requestName, String responseNS, String responseName, String responseType) {
