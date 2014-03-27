@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="Steps" default=".help">
+<project name="Builder" default=".help">
     <!--
     The build-impl.xml file imported here contains the guts of the build process. It is
     a great idea to read that file to understand how the process works, but it is best to
@@ -40,6 +40,6 @@
     -->
     <target name="-after-build">
         <!-- don't let ext framework trample body styles -->
-        <replace dir="${basedir}/build/production/Steps/resources" includes="*.css" token="z-body" value="zzz-body" />
+        <replace dir="${basedir}/build/production/Builder/resources" includes="*.css" token="z-body" value="zzz-body" />
     </target>
 </project>

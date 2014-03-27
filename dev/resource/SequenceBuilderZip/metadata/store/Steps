@@ -28,7 +28,7 @@
                 "fn": "processSteps",
                 "implHandler": [
                     "//use a temporary MemoryProxy (implicit JSON reader) to handle mapping of the static data",
-                    "var tempStore = Ext.create('Ext.data.Store', {model: 'Steps.model.Step', proxy: {type: 'memory'}});",
+                    "var tempStore = Ext.create('Ext.data.Store', {model: 'Builder.model.Step', proxy: {type: 'memory'}});",
                     "var mappedSteps = tempStore.getProxy().getReader().readRecords(Steps).records;",
                     "",
                     "config.data = mappedSteps;",

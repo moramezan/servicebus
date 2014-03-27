@@ -285,7 +285,7 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SequenceSorterController</apexClass>
+        <apexClass>SequenceBuilderController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -909,11 +909,11 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SequenceHelp</apexPage>
+        <apexPage>SequenceBuilder</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SequenceSorter</apexPage>
+        <apexPage>SequenceHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

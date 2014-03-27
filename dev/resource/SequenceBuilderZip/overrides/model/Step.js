@@ -1,5 +1,5 @@
 Ext.define('Override.model.Step', {
-    override: 'Steps.model.Step'
+    override: 'Builder.model.Step'
 }, function() {
     fields = Ext.Array.toValueMap(this.getFields(), 'name');
     fields.Id.mapping = $ObjectType.Step__c.Fields.Id.Name;

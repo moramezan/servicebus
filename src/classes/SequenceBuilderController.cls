@@ -1,8 +1,8 @@
-public with sharing class SequenceSorterController {
+public with sharing class SequenceBuilderController {
     
     ApexPages.StandardController controller;
     
-    public SequenceSorterController(ApexPages.StandardController controller) {
+    public SequenceBuilderController(ApexPages.StandardController controller) {
         controller.addFields(new List<String>{'Name'});
         this.controller = controller;
     }

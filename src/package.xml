@@ -72,7 +72,7 @@
         <members>Scrape</members>
         <members>ScrapeTest</members>
         <members>Sequence</members>
-        <members>SequenceSorterController</members>
+        <members>SequenceBuilderController</members>
         <members>SequenceTest</members>
         <members>Sequences</members>
         <members>SequencesTest</members>
@@ -126,8 +126,8 @@
         <members>ScheduleConfigurationHelp</members>
         <members>SchemaSelector</members>
         <members>ScrapeConfigurationHelp</members>
+        <members>SequenceBuilder</members>
         <members>SequenceHelp</members>
-        <members>SequenceSorter</members>
         <members>StepShowConfiguration</members>
         <members>SubscribeConfigurationManageEventTypes</members>
         <members>SubscribeConfigurationShowStep</members>
@@ -292,7 +292,7 @@
     <types>
         <members>HelpZip</members>
         <members>ProcessDiscoverZip</members>
-        <members>StepSorterZip</members>
+        <members>SequenceBuilderZip</members>
         <name>StaticResource</name>
     </types>
     <types>

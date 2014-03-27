@@ -98,7 +98,7 @@
                             "button.mask();",
                             "",
                             "Visualforce.remoting.Manager.invokeAction(",
-                            "    $RemoteAction.SequenceSorterController.enqueue,",
+                            "    $RemoteAction.SequenceBuilderController.enqueue,",
                             "    Sequence__c.Id,",
                             "    handler",
                             ");"

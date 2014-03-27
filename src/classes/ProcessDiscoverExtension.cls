@@ -12,7 +12,7 @@ public class ProcessDiscoverExtension {
             String prefix = SObjectType.Process__c.KeyPrefix;
             return new ApexPages.PageReference('/' + prefix).getUrl();
         } else {
-            //return to calling page, eg the SequenceSorter if it sent you here
+            //return to calling page, eg the SequenceBuilder if it sent you here
             return ApexPages.currentPage().getParameters().get('retURL');
         }
     }

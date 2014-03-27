@@ -93,7 +93,7 @@
                     "",
                     "view.mask('Saving...');",
                     "Visualforce.remoting.Manager.invokeAction(",
-                    "    $RemoteAction.SequenceSorterController.appendStep,",
+                    "    $RemoteAction.SequenceBuilderController.appendStep,",
                     "    sequenceId,",
                     "    processId,",
                     "    function(step) {",
@@ -150,9 +150,9 @@
                     "",
                     "var beforeOrAfter;",
                     "if ('before' == dropPosition) {",
-                    "    beforeOrAfter = $RemoteAction.SequenceSorterController.moveStepBefore;",
+                    "    beforeOrAfter = $RemoteAction.SequenceBuilderController.moveStepBefore;",
                     "} else if ('after' == dropPosition) {",
-                    "    beforeOrAfter = $RemoteAction.SequenceSorterController.moveStepAfter;",
+                    "    beforeOrAfter = $RemoteAction.SequenceBuilderController.moveStepAfter;",
                     "}",
                     "",
                     "grid.mask('Moving...');",
@@ -193,7 +193,7 @@
                     " * exist after the RemoteAction call fires! A freshly created Sequence lacks a Terminate!",
                     " *",
                     " * So for freshly created sequences, we explicitly re-load the store here, which gives",
-                    " * us back the Terminate step per RemoteAction.SequenceSorterController.fetchSteps",
+                    " * us back the Terminate step per RemoteAction.SequenceBuilderController.fetchSteps",
                     " */",
                     "var store = dataview.getStore();",
                     "if (!store.getCount()) store.load();"
@@ -247,7 +247,7 @@
                 ],
                 "fn": "onConfigureLinkClick",
                 "implHandler": [
-                    "Ext.create('Steps.view.Config', {url: e.target.href}).show();"
+                    "Ext.create('Builder.view.Config', {url: e.target.href}).show();"
                 ]
             },
             "designerId": "540df7c3-43c4-4c27-b109-a729235a017c"

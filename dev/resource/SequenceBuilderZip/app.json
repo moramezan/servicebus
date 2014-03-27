@@ -1,5 +1,5 @@
 {
-   "name": "Steps",
+   "name": "Builder",
    "requires": [
       "fflib-ext-common",
       "baf-theme-native"

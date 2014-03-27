@@ -129,8 +129,8 @@
             "userConfig": {
                 "api": [
                     "{",
-                    "    read: $RemoteAction.SequenceSorterController.fetchSteps,",
-                    "    destroy: $RemoteAction.SequenceSorterController.destroyStep",
+                    "    read: $RemoteAction.SequenceBuilderController.fetchSteps,",
+                    "    destroy: $RemoteAction.SequenceBuilderController.destroyStep",
                     "}"
                 ],
                 "designer|createAlias": "vfremote",
