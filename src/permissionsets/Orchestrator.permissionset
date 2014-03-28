@@ -953,6 +953,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>ScrapeWebPageTutorial</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>SequenceBuilder</apexPage>
         <enabled>true</enabled>
     </pageAccesses>

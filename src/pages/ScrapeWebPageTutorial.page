@@ -1,0 +1,333 @@
+<apex:page showHeader="false" standardStylesheets="true">
+    
+    <style>
+        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+        a {text-decoration:none;}
+    </style>
+
+         <br />
+         
+        <apex:pageBlock title="Tutorial : Regularly Scrape a Web Page" mode="maindetail">
+
+         <br />
+         
+            <apex:pageBlockSection title="Objective :" columns="1" collapsible="false">
+               <apex:pageBlockSectionItem >
+                    <p>There is often a need to retrieve changed data from an external source.</p>
+                    <p>Consider the example of obtaining changing stock price data. 
+                       <br/>There is no native mechanism for detecting these change events in Salesforce . 
+                       <br/>Under these circumstances, stock price change events are simulated by polling  a stock price data source.
+                    </p>
+                    <br/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <p><b>Expected Duration : </b> 25 Minutes.</p>   
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+             
+
+            <apex:pageBlockSection title="Scenario :" columns="1" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <p> <b> Requirement : </b> 
+                        <ul>
+                        <li>At least four times a day retrieve  the price data of your favourite stock  which is of course CRM (Salesforce).
+                        </li>
+                        </ul>
+                    </p> 
+                    <p>  <b> Implementation Overview :</b> 
+                         <ul>
+                         <li>Configure a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Schedule.png')}" /> <b>]</b> process to fire  four times a day.
+                         </li>
+                         <li>Configure a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Scrape.png')}" /> <b>]</b> process to retrieve the contents of  <span class="link"><a href="http://finance.yahoo.com/q?s=crm">http://finance.yahoo.com/q?s=CRM</a> </span> .
+                         </li>
+                         <li> Engage the services of a force.com developer to create a custom stock parsing process <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" /> <b>]</b>.
+                              <br/> ( This process will extract CRM price data into a json structure ).
+                         </li>
+                         </ul>
+                    </p>  
+                    <p> <b> Testing :</b> 
+                         <ul>
+                         <li> Insert a   <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>  
+                              process towards the end of the Sequence.
+                         </li>
+                         <li>Enqueue a test message.
+                         </li>
+                         <li>Inspect the output of this process to confirm that the Sequence is correctly configured.
+                          </li>
+                          </ul>
+                    </p>
+                </apex:pageBlockSectionItem>
+             </apex:pageBlockSection>
+             
+             
+             
+            <apex:pageBlockSection title="Detailed Instructions :" columns="1" collapsible="false">
+                <apex:pageBlockSectionItem >
+                <ol>         
+                    <li> Create and register the Yahoo <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" /> <b>]</b> process. 
+                         <br/>Create a new apex class by clicking <b>  Setup | Develop | Apex Classes | New </b>
+                         <br/><br/> Paste  and save the following code :
+                        
+                         <br/> <br/>
+ 
+<div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">
+
+<span style="color: #008800; font-weight: bold">public</span> with sharing <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">StockParse</span> <span style="color: #008800; font-weight: bold">implements</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">Plugin</span> <span style="color: #333333">{</span>                                                       
+                                                                                                   
+    <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">StockParseException</span> <span style="color: #008800; font-weight: bold">extends</span> Exception <span style="color: #333333">{}</span>                                                              
+                                                                                                       
+    <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">Meta</span> <span style="color: #333333">{</span>                                                                                                                             
+        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;wrench&#39;</span><span style="color: #333333">;</span>                                                                                
+    <span style="color: #333333">}</span>                                                                                                                  
+                                                                                                       
+    <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> <span style="color: #0066BB; font-weight: bold">describe</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>                                                                   
+        Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> describeResult <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">();</span>                              
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;StockParse&#39;</span><span style="color: #333333">;</span>                                                                            
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Description</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;Extacts stock price from Yahoo Finance page content&#39;</span><span style="color: #333333">;</span>              
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Tag</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;Example&#39;</span><span style="color: #333333">;</span>                                                                                
+        <span style="color: #008800; font-weight: bold">return</span> describeResult<span style="color: #333333">;</span>                                                                                         
+    <span style="color: #333333">}</span>                                                                                                                  
+                                                                                                       
+    <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> <span style="color: #0066BB; font-weight: bold">invoke</span><span style="color: #333333">(</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginRequest</span> request<span style="color: #333333">)</span> <span style="color: #333333">{</span>                                                
+        Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> request<span style="color: #333333">.</span><span style="color: #0000CC">inputParameters</span><span style="color: #333333">;</span>                                                       
+       
+        <span style="color: #888888">//retrieve (yahoo finance) page content as a Blob</span>
+        Id dataId <span style="color: #333333">=</span> <span style="color: #333333">(</span>Id<span style="color: #333333">)</span> parameters<span style="color: #333333">.</span><span style="color: #0000CC">get</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;Id&#39;</span><span style="color: #333333">);</span>   
+        List<span style="color: #333333">&lt;</span>Attachment<span style="color: #333333">&gt;</span> attachments <span style="color: #333333">=</span> <span style="color: #333333">[</span>SELECT Body FROM Attachment WHERE Id <span style="color: #333333">=</span> <span style="color: #333333">:</span>dataId<span style="color: #333333">];</span> 
+        <span style="color: #008800; font-weight: bold">if</span> <span style="color: #333333">(</span>attachments<span style="color: #333333">.</span><span style="color: #0000CC">size</span><span style="color: #333333">()</span> <span style="color: #333333">==</span> <span style="color: #0000DD; font-weight: bold">0</span><span style="color: #333333">)</span> <span style="color: #333333">{</span>
+            <span style="color: #008800; font-weight: bold">throw</span> <span style="color: #008800; font-weight: bold">new</span> <span style="color: #0066BB; font-weight: bold">StockParseException</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;Unable to load yahoo finance page content&#39;</span><span style="color: #333333">);</span>
+        <span style="color: #333333">}</span> 
+        Attachment attachment <span style="color: #333333">=</span> attachments<span style="color: #333333">[</span><span style="color: #0000DD; font-weight: bold">0</span><span style="color: #333333">];</span>  
+         
+        <span style="color: #888888">// parse out ticker and price                                                                                        </span>
+        String data  <span style="color: #333333">=</span>  attachment<span style="color: #333333">.</span><span style="color: #0000CC">Body</span><span style="color: #333333">.</span><span style="color: #0000CC">toString</span><span style="color: #333333">().</span><span style="color: #0000CC">replaceAll</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;\n&#39;</span><span style="color: #333333">,</span><span style="background-color: #fff0f0">&#39;&#39;</span><span style="color: #333333">).</span><span style="color: #0000CC">replaceAll</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39; &#39;</span><span style="color: #333333">,</span><span style="background-color: #fff0f0">&#39;&#39;</span><span style="color: #333333">)</span> <span style="color: #333333">;</span>
+        String price <span style="color: #333333">=</span> data<span style="color: #333333">.</span><span style="color: #0000CC">substringAfter</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;class=&quot;time_rtq_ticker&quot;&gt;&#39;</span><span style="color: #333333">).</span><span style="color: #0000CC">substringBefore</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;&lt;/span&gt;&#39;</span><span style="color: #333333">).</span><span style="color: #0000CC">substringAfter</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;&gt;&#39;</span><span style="color: #333333">);</span>
+        String ticker <span style="color: #333333">=</span> data<span style="color: #333333">.</span><span style="color: #0000CC">substringAfter</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;symbol=&#39;</span><span style="color: #333333">).</span><span style="color: #0000CC">substringBefore</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;;&#39;</span><span style="color: #333333">);</span>                                                                                
+        data <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;{&quot;Stock__c&quot;:  [ {&quot;ticker__c&quot;: &quot;&#39;</span><span style="color: #333333">+</span>ticker<span style="color: #333333">+</span><span style="background-color: #fff0f0">&#39;&quot;, &quot;price__c&quot;: &#39;</span><span style="color: #333333">+</span>price<span style="color: #333333">+</span><span style="background-color: #fff0f0">&#39;} ] }&#39;</span><span style="color: #333333">;</span>
+
+
+        <span style="color: #888888">//updates:</span>
+        <span style="color: #888888">//(1) blob with json ticker/price structure                                                                                    </span>
+        attachment<span style="color: #333333">.</span><span style="color: #0000CC">Body</span> <span style="color: #333333">=</span> Blob<span style="color: #333333">.</span><span style="color: #0000CC">valueOf</span><span style="color: #333333">(</span>data<span style="color: #333333">);</span> 
+        update attachment<span style="color: #333333">;</span> 
+        
+        <span style="color: #888888">//(2) surface price data as a parameter on message for demo purposes</span>
+        parameters<span style="color: #333333">.</span><span style="color: #0000CC">put</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;priceData&#39;</span><span style="color: #333333">,</span>data<span style="color: #333333">);</span>
+        
+                                                                     
+        <span style="color: #008800; font-weight: bold">return</span> EdaUtility<span style="color: #333333">.</span><span style="color: #0000CC">convert</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;{</span>parameters<span style="color: #333333">});</span>                                         
+    <span style="color: #333333">}</span>                                                                                                                
+<span style="color: #333333">}</span>
+
+</pre></div>
+
+
+
+                    </li>
+                    
+                    <br/><br/><br/>
+                    
+                    <li> Click on the list view of the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Processes.png')}" /> tab and click the  <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Discover.png')}" />  button to include the recently created <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" /> <b>]</b> process in the framework 
+                         <br/> ( see XXX for help in discovering processes.)
+                     </li>
+                    <br />
+                    
+                    <li> Set up a remote site for the Yahoo finance domain.
+                         <br/> Cick <b> Setup | Security Controls | RemoteSite Settings </b> and enter the  Remote Site URL <a   href="http://finance.yahoo.com ">http://finance.yahoo.com </a>   </li>                   
+                         <br /> 
+                         <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/RemoteSiteDetails.png')}" /> 
+                         <br /> <br /><br />
+                    <li> Create a new Sequence.
+                          <br/> Click the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/EventDrivenArchitectureApplication.png')}" /> application  , select the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Sequences.png')}" />  tab . 
+                         <br/>Then click [ New ] and call the new sequence  "WebScrape". 
+                         <br/>Finally click [ Save ] 
+                         <br/> A new sequence is presented that includes a default <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Terminate.png')}" />  <b>]</b> process.  
+                    </li> 
+                    
+                    <br/><br/><br/>
+                    
+
+                    <li> Add process steps to the Sequence.
+                         <br/>Click <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/NewStep.png')}" />   five times. 
+                         <br />From the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ExtEda.png')}" />  <b>]</b> tab , select a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Schedule.png')}" />  <b>]</b> process,  a  <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>  and a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Publish.png')}" />  <b>]</b> process
+                         <br />From the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ExtSample.png')}" />  <b>]</b> tab , select a  <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Scrape.png')}" />  <b>]</b> process
+                         <br />From the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ExtExample.png')}" />  <b>]</b>  tab select a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" />  <b>]</b> process.
+                    </li>
+                    
+                    <br/><br/><br/>
+                    
+                    <li> Arrange the process steps so that the sequence appears as follows: 
+                        <br /> <br />
+                        <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Sequence.png')}" /> 
+                        <br /> <br />
+                    </li>
+                    
+                    <br/><br/><br/>
+                    
+                    <li> Configure the Schedule process.
+                         <br/>Click the  <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ConfigureLink.png')}" />  link next to the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Schedule.png')}" />  <b>]</b> process and set the schedule to fire 4 times a day during weekdays adjusted for time zone differences to the NYSE
+                         <!--
+                         <br /> <br />
+                         <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ScheduleConfiguration.png')}" /> 
+                         <br /> <br />
+                         -->
+                         
+                         <br /> 
+                         <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ScheduleConfigurationComplete.png')}" /> 
+                         <br /> <br /> 
+                          
+                         <br/>Click save and then exit the configure screen.
+                    </li>
+                    
+                    <br/><br/><br/>
+                    
+                    <li> Configure the Scrape process.
+                         <br/>Click the  <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ConfigureLink.png')}" />  link next to the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Scrape.png')}" />  <b>]</b> process  and enter http://finance.yahoo.com/q?s=crm  as the endpoint. 
+                         <br/>Click save and then exit the configure screen.
+                    </li>
+                    
+                    <br/><br/><br/>
+                    
+                    <li> Create a Named Event type.
+                         <br/>Click the  <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ConfigureLink.png')}" />  link next to the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Publish.png')}" />  <b>]</b> process.
+                         <br/>We create  an event type to publish to - let's call it "YAHOO". 
+                         <br/>Click the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ManageEventTypes.png')}" />  button , click the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/NewEventType.png')}" /> button and in the event type name insert the value "YAHOO". 
+                         <!--
+                         <br/> 
+                         <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/EventTypeYahoo.png')}" /> 
+                         <br/><br/>
+                         -->
+                         <br/>Finally click [ Save ].
+                    </li>
+ 
+                    <br/><br/><br/>
+                    
+                    <li> Configure the Publish process.
+                         <br/>On the Publish Configuration, assign the recently created "YAHOO" event type in the event type lookup field. 
+                         <br/>
+                         <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/PublishConfigurationYahoo.png')}" /> 
+                         
+                         <br/> Click [ Save ] to return to the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Sequences.png')}" />  page.
+                    </li>
+                    
+                    <br/><br/><br/>
+                    
+                    <li> Test the Sequence.
+                         <br/>To test this sequence, we enqueue a message  by pressing the Enqueue button
+                         <br/>Note that under production conditions, a message will be enqueued  four times a day as defined in the configuraton of the 
+                         <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Schedule.png')}" /> <b>]</b>
+                          process.
+                    </li> 
+                    
+                    <br/><br/><br/>
+                    
+                    <li>  
+                        The 
+                        <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>
+                        process towards the end of the Sequence will eventually send an email to the account associated with the user running the test.
+                        <br/>The email body will contain the values of all message parameters at the point of email transmission from the 
+                        <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>
+                        process. 
+                        <br/>The formatted body should approximate the following.
+                        <br/><br/>
+                        
+                        <div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.1em .1em;"><pre style="margin: 0; line-height: 125%">
+                        
+        {
+            <span style="color: #007700">&quot;eda_Position&quot;</span>: <span style="color: #0000DD; font-weight: bold">4</span>,
+            <span style="color: #007700">&quot;eda_SequenceName&quot;</span>: <span style="background-color: #fff0f0">&quot;WebScrape&quot;</span>,
+            <span style="color: #007700">&quot;Id&quot;</span>: <span style="background-color: #fff0f0">&quot;00Pb0000003dhGUEAY&quot;</span>,
+            <span style="color: #007700">&quot;eda_MessageGuid&quot;</span>: <span style="background-color: #fff0f0">&quot;db1a234a8d9f5f9304&quot;</span>,
+            <span style="color: #007700">&quot;eda_StackDepth&quot;</span>: <span style="color: #0000DD; font-weight: bold">3</span>,
+            <span style="color: #007700">&quot;eda_ConfigObjectId&quot;</span>: <span style="color: #008800; font-weight: bold">null</span>,
+            <span style="color: #007700">&quot;priceData&quot;</span>: <span style="background-color: #fff0f0">&quot;{\&quot;Stock__c\&quot;:  [ {\&quot;ticker__c\&quot;: \&quot;CRM\&quot;, \&quot;price__c\&quot;: 55.97} ] }&quot;</span>
+        }
+                        </pre></div>  
+                        <br/>Visually confirm the Sequence worked as expected by inspecting the "priceData" parameter injected into the message by the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" /> <b>]</b> process.                    
+                    </li>
+                    <br />
+                    
+                </ol>
+                </apex:pageBlockSectionItem>
+             </apex:pageBlockSection>
+             
+             
+             
+            <apex:pageBlockSection title="Additional Exercises :" columns="1" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    The <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Publish.png')}" /> <b>]</b> process in the Sequence publishes a "YAHOO" Named Event. 
+                    <br/>One or more new or pre-existing Sequences can now subscribe to that Named Event.
+                    <br/><br/>
+                    <br/> <b> Exercise 1 : </b> consider subscribing to the "YAHOO" Named Event : 
+                    <ul>
+                        <li>Create an additional Sequence (call it "YahooData") with an initiating <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Subscribe.png')}" /> <b>]</b> process.
+                         </li>
+                        <li>Configure the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Subscribe.png')}" /> <b>]</b> process so the it subscribes to the "YAHOO" Named Event.
+                        </li>
+                        <li>Add a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b> process to the Sequence.
+                        </li>
+                        <li>Arrange the  Sequence in the following order :
+                        <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Subscribe.png')}" /> <b>]</b> - 
+                        <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b> - 
+                        <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Terminate.png')}" /> <b>]</b>
+                        <br/><br/>
+                        <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/YahooDataSequence.png')}" />                         
+                        <br/>
+                        </li>
+                        <li>If all processes are correctly configured , sending a  new test  message to the original "WebScrape" Sequence will trigger  an additional email from the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b> process on the subscribing "YahooData" Sequence.
+                        </li>
+                    </ul>
+                   
+                    
+                    <br/><br/>
+                    
+                   
+                    <br/>  <b> Exercise 2 : </b>  consider persisting the price data in a Stock__c SObject : 
+                    <ul>
+                        <li>On the Stock__c SObject , create two fields  Ticker__c (Text) and Price__c  (Numeric 10,2) 
+                        </li>
+                        <li>Construct a new Event Driven process to persist the price data in the Stock__c SObject. 
+                             <br/><br/>  <b><i>Hint :</i> </b> Use the following code snippet to assist in building your 
+                             <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Persist.png')}" /> <b>]</b>
+                             process.
+                             <br/><br/>
+                        
+<div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">     Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> request<span style="color: #333333">.</span><span style="color: #0000CC">inputParameters</span><span style="color: #333333">;</span>                                                       
+    
+     String data <span style="color: #333333">=</span> <span style="color: #333333">(</span>String<span style="color: #333333">)</span> parameters<span style="color: #333333">.</span><span style="color: #0000CC">get</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;priceData&#39;</span><span style="color: #333333">);</span>
+     String collectionType <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;List&lt;&#39;</span><span style="color: #333333">+</span>   data<span style="color: #333333">.</span><span style="color: #0000CC">substringBefore</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;&quot;:&#39;</span><span style="color: #333333">).</span><span style="color: #0000CC">substringAfter</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;&quot;&#39;</span><span style="color: #333333">)</span> <span style="color: #333333">+</span><span style="background-color: #fff0f0">&#39;&gt;&#39;</span><span style="color: #333333">;</span>
+     String collectionList <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;[&#39;</span> <span style="color: #333333">+</span> data<span style="color: #333333">.</span><span style="color: #0000CC">substringAfter</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;[&#39;</span><span style="color: #333333">).</span><span style="color: #0000CC">substringBefore</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;]&#39;</span><span style="color: #333333">)</span> <span style="color: #333333">+</span><span style="background-color: #fff0f0">&#39;]&#39;</span><span style="color: #333333">;</span>
+     Type t <span style="color: #333333">=</span>  Type<span style="color: #333333">.</span><span style="color: #0000CC">forname</span><span style="color: #333333">(</span>collectionType<span style="color: #333333">);</span>
+     List<span style="color: #333333">&lt;</span>SObject<span style="color: #333333">&gt;</span> sobjects <span style="color: #333333">=</span> <span style="color: #333333">(</span>List<span style="color: #333333">&lt;</span>SObject<span style="color: #333333">&gt;</span> <span style="color: #333333">)</span> json<span style="color: #333333">.</span><span style="color: #0000CC">deserializeStrict</span><span style="color: #333333">(</span>collectionList<span style="color: #333333">,</span> t<span style="color: #333333">);</span>
+     insert sobjects<span style="color: #333333">;</span>
+                                                                  
+     <span style="color: #008800; font-weight: bold">return</span> EdaUtility<span style="color: #333333">.</span><span style="color: #0000CC">convert</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;{</span>parameters<span style="color: #333333">});</span> 
+
+</pre></div>
+                        <br/>
+                         
+                        </li>
+                        <li>On the  <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Processes.png')}" />  tab, click the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Discover.png')}" />   button to make the process available for configuration
+                        </li>
+                        <li>Modify the "YahooData" Sequence by adding the newly available <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Persist.png')}" /> <b>]</b> process as a sequence step.
+                        </li>
+                        <li>Arrange the Sequence in the following order :  
+                          <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Subscribe.png')}" /> <b>]</b> - 
+                          <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Persist.png')}" /> <b>]</b> - 
+                          <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b> - 
+                          <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Terminate.png')}" /> <b>]</b>.
+                          <br/><br/>
+                          <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/YahooDataPersistSequence.png')}" /> 
+                          <br/> <br/>
+                        </li>
+                        <li>If all processes are correctly configured , sending a  new test  message to the original "WebScrape" Sequence will insert a dynamic price record in the Stock__c SObject.
+                        </li>
+                    </ul>
+                  
+                  
+                </apex:pageBlockSectionItem>
+             </apex:pageBlockSection>
+
+        </apex:pageBlock> 
+</apex:page>
