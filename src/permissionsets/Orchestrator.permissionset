@@ -889,6 +889,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>LogUnderCommonIdentifierTutorial</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>MessageHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>

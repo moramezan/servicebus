@@ -112,6 +112,7 @@
         <members>LogConfigurationHelp</members>
         <members>LogConfigurationListLogGroups</members>
         <members>LogConfigurationSchemaSelector</members>
+        <members>LogUnderCommonIdentifierTutorial</members>
         <members>MessageHelp</members>
         <members>MessagePauseQueue</members>
         <members>MessageProcess</members>
