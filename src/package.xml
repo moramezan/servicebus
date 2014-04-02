@@ -119,6 +119,7 @@
         <members>MessageResumeQueue</members>
         <members>MessageShowData</members>
         <members>ProcessApexClass</members>
+        <members>ProcessDevelopersGuide</members>
         <members>ProcessDiscover</members>
         <members>ProcessDiscoveryTutorial</members>
         <members>ProcessDocumentation</members>

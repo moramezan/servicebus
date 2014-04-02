@@ -1,0 +1,1088 @@
+<apex:page showHeader="false" standardStylesheets="true">
+    
+    <style>
+        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+        a {text-decoration:none;}
+        code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:112%;}
+
+    </style>
+
+    <br />
+    
+  
+    <apex:pageBlock title="Process Developer's Guide" mode="maindetail">
+        <br/>
+        <apex:pageBlockSection columns="1"  collapsible="false" >
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b> Intended Audience  : </b> Salesforce Apex Developer
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+           
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b> About This Guide  : </b>  
+                <br/>
+                <ul>
+                    <li>This guide is intended for Salesforce Apex Developers who are tasked with providing functionality not provided in the out-of-the-box Event Driven Architectue framework. 
+                    </li>
+                    <br/>
+                    <li>The purpose of this guide is to:
+                        
+                        <ol>
+                        <br/>
+                            <li>Explain basic <code> Process.Plugin </code> concepts as they pertain to the Event Driven Architecture framework.
+                            </li>
+                            <li>Describe how to create a <code> Process.Plugin </code>  to enable processing functionality not directly provided for in the Event Driven Architectue framework.
+                            </li>
+                        </ol>
+                    </li>
+                    <br/>
+                    <li>This guide does not cover configuration and operation aspects related to the of the Event Driven Architectue framework. 
+                    <br/> ( These topics is described in separate guides - see XXXXXXX  )
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+ 
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b> Chapter Summary : </b>  
+                <br/>
+                <ul>
+                    <li> <b>CHAPTER 01 : </b>  Concepts : Messaging and Events
+                    </li>
+                    <li> <b>CHAPTER 02 : </b>  Concepts : Process and Processing 
+                    </li>
+                    <li> <b>CHAPTER 03 : </b>  Development : Getting Started
+                    </li>
+                    <li> <b>CHAPTER 04 : </b>  Development : Define the Process
+                    </li>
+                    <li> <b>CHAPTER 05 : </b>  Development : Build the Process and Tests
+                    </li>
+                    <li> <b>CHAPTER 06 : </b>  Development : Post Build Steps
+                    </li>
+                    
+                    <br/>
+                    
+                    <li> <b>APPENDIX I : </b> Anatomy of a Process
+                    </li>
+                </ul>
+           </apex:pageBlockSectionItem>
+           
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b> Contact Us  : </b>  
+                <br/>
+                <ul>
+                    <li> <b>Email address : </b> :: RATSAAS-EMAIL ::
+                    </li>
+                    <li> <b>Phone number : </b> :: RATSAAS-PHONE ::
+                    </li>
+                </ul>
+           </apex:pageBlockSectionItem>                    
+        </apex:pageBlockSection>        
+    </apex:pageBlock>    
+
+    
+    
+    <apex:pageBlock mode="maindetail">
+        <br/>
+        <apex:pageBlockSection title="CHAPTER 01 : Concepts : Messaging and Events" columns="1"  collapsible="false" >
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Event is a Message :</b><br/>
+                <ul>
+                <li>In the world events occur all the time. (For example the clock strikes twelve pm, the fuel tank reaches empty, etc)
+                </li>
+                <li>To represent real world events in a computer system, we create a data structure called a <code> message </code> which would contain details of the event
+                </li>
+                <li>Event and Message are therefore used interchangeably but mean the same thing for our purposes
+                </li>
+                <li>The primary purpose of a message is to provide a useful mechanism to communicate between processes.
+                </li>
+                <li>A traffic cop process delivers a specific event message to the correct process.
+                </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+ 
+        
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Event Based Architecture :</b><br/>
+                <ul>
+                <li>Breaking up work into processes that respond to event messages is called Event Driven Architecture.
+                </li>
+                <li>the Event Driven framework is based on Event Driven Architecture ( "EDA" )
+                </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+   
+        
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Events :</b><br/> 
+                <ul>
+                <li>Events in the Event Driven framework are represented as  <code> work-instruction </code>  messages
+                </li>
+                <li>These  <code> work-instruction </code>  messages are handed to processes which in turn cause the apex code contained within each respective process to execute
+                </li>
+                <li>More accurately: the occurrence of an event causes a process that has previously registered it's interest in that event to perform it's apex logic and to respond with zero, one or many message events.
+                </li>
+                <li>This is a clean model that limits complexity in the system to just the apex implementation details of any given process
+                </li>
+                <li>It is the purpose of this document to expand on the implementation details of a Event Driven process.
+                </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>    
+
+ 
+
+
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection columns="1" title="CHAPTER 02 : Concepts : Process and Processing "  collapsible="false" >
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Processing :</b> <br/>
+                <ul>
+                    <li>Work on the Event Driven is broken up into many specific tasks
+                    </li>
+                    <li>Each task is implemented as an Apex class and is made available to the Event Driven framework as a process.
+                    </li>
+                    <li>A process executes logic in a single execution context.
+                    </li>
+                    <li>All Event Driven processes adhere to a standard structure ( or more specifically, all Event Driven processes implement the Salesforce  <code> Process.Plugin  </code> interface)
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+           
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Process :</b> <br/>
+                <ul>
+                    <li>All Event Driven processes have a main() method that takes a  <code> Work-Instruction </code>  and returns a list of zero, one or many  <code> Work-Instruction(s) </code> 
+                    </li>
+                    <li>We call this main method invoke() and can illustrate the concept in pseudo code below:
+                    </li>
+                    <li>  <code> List(Work-Instruction) workInstructions = process.invoke( Work-Instruction workInstruction );  </code> 
+                    </li>
+                    <li>The Event Driven framework is designed so that the  <code> Work-Instruction </code>  output(s) from a process can be fed into the  <code> Work-Instruction </code>  input of the very next process.
+                    </li>
+                    <li>The Event Driven framework has by default a number of ready made processes that can be sequenced together so that useful work can be completed.
+                    </li>
+                    <li>These ready made processes include XXX, XXX, XXX
+                    </li>
+                    <li>Additional processes can be easily created to implement tasks specific to a particular requirement
+                    </li>
+                    <li>The focus of this guide is to provide detailed guidance for the creation of these processes.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+
+
+ 
+
+
+
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection columns="1"  title="CHAPTER 03 : Development : Getting Started"  collapsible="false" >
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Prerequisites :</b> <br/>
+                <ul>
+                    <li>Before creating your first Event Driven process plugin, it is assumed that the Event Driven framework has been installed in you development org.
+                    </li>
+                    <li>Note that this requirement facilitates the visual testing of newly created Event Driven processes.
+                    </li>
+                    <li>Note further that the Event Driven framework has deliberately been architected in a manner so that custom Process Plugins do NOT take a dependency on the Event Driven framework
+                    </li>
+                    <li>Create the  <code> EdaUtility  </code>  class by copying the code in :: APPENDIX X ::. This class facilitates collection transforms and simplifies coding logic.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+           
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Overview :</b> <br/>
+                <ul>
+                    <li>The list below describes the order of activities for creating , testing and deploying your Event Driven process:
+                    </li>
+                    <li>Define the input event
+                    </li>
+                    <li>Define the response event(s) (if any)
+                    </li>
+                    <li>Define the process activity ( Note that these three steps may be performed by the System Orchestrator, a BA or similar and presented to the process author in the form of a spec)
+                    </li>
+                    <li>Development : Build the Process and Tests - page NNN.
+                    </li>
+                    <li>Visually test the Event Driven process - page NNN.
+                    </li>
+                    <li>Create a managed package containing your Event Driven process and install in the Sandbox. - page NNN.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>        
+
+
+
+
+
+
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection columns="1"  title="CHAPTER 04 : Development : Define the Process"  collapsible="false" >
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Define the input event :</b> <br/>
+                <ul>
+                    <li> Every input event message takes the form of the Salesforce built in structure  <code> Process.PluginRequest </code>  which in turn contains a collection of parameters.
+                    </li>
+                    <li> The parameters collection takes the form of a map of string object pairs.
+                    </li>
+                    <li> Of particular importance in the collection is the  <code> "Eda__DataId"  </code>  parameter.
+                    </li>
+                    <li> The  <code> "Eda__DataId"  </code> parameter points at the underying data structure for the event.
+                    </li>
+                    <li> The process author should be familiar with the nature of the data so that he/she can adequately retrieve and/write to this object.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+ 
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Define the response event(s) :</b> <br/>
+                <ul>
+                    <li> A process can return zero, one or more event messages
+                    </li>
+                    <li> Similar to the input event message, the output event messages are contained in a built-in Salesforce type.
+                    </li>
+                    <li> The returned built-in Salesforce type is  <code> Process.PluginResult  </code>  and it wraps zero, one or more parameter collections.
+                    </li>
+                    <li> Each parameter collection represents a response event.
+                    </li>
+                    <li> If a process has more than one response, it will have more than one paramater collection.
+                    </li>
+                    <li> Normally however, the response events collection will simply contain a single parameter collection, namely the re-purposed input event
+                    </li>
+                    <li> For an example of a response events collection containing more than a single parameter collection, refer to XXXX
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+ 
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Define the process activity :</b> <br/>
+                <ul>
+                    <li> The process activity is the focused logic that is unavailable on the Event Driven framework, either because
+                        <ol>
+                        <li> such logic is is not represented by one of the standard built in processes provided by the framework ..or..
+                        </li>
+                        <li> such logic has not been previously created and/or registered
+                        </li>
+                        </ol> 
+                    </li>
+                    <li> The process activity should be as focussed as possible
+                    </li>
+                    <li> An example of focused activity might be converting unix line terminators to windows line terminators
+                    </li>
+                    <li> An example of un-focused activity might be the counting of word occurrences in a file, the xxx, the Eda , and finally yyy
+                    </li>
+                    <li> Un-focused activities should be re-specified into separate focused activites. This is important for two reasons
+                        <ol> 
+                        <li> testing : the more focused an activity , the easier it becomes to write comprehensive , reliable unit tests
+                        </li>
+                        <li> re-use : the more focused an activity , the easier it becomes to re-purpose the process in other sequences cutting down on programmer effort and the potential for bugs (less code)
+                        </li>
+                        </ol> 
+                    </li>  
+                    <li> A focused activity implied focused behaviour NOT focused data. 
+                         <br/>To facilitate this, the Event Driven framework surfaces the notion of process parameters via configuration and customization
+                    </li>
+                    <li> Customization allows an activity to make use of a single set of parameters regardless of where that process is used. 
+                         <br/>These parameters are defined in Custom Settings for that activity
+                    </li>
+                    <li> Configuration allows an activity to make use of parameters having values configured specific to the sequence step where that process is invoked.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>     
+
+
+
+
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection columns="1" title="CHAPTER 05 : Development : Build the Process and Tests" collapsible="false" >
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Custom Process creation :</b> <br/>
+                <ul>
+                    <li>In a development org , create a new public class
+                    </li>
+                    <li>Confirm that the class follows the expected Event Driven process structure as set out under XXX (Anatomy of a Process).
+                    </li>
+                    <li>Build appropriate unit tests as recommended by Salesforce.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+           
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Example :</b> <br/>
+                <ul>
+                    <li>The Wiretap process is a built-in no-operation process that sends an email to an interested user whenever it receives an event message
+                    </li>
+                    <li>The email contains details about the sequence step hosting the wiretap process as well as the injected message parameters
+                    </li>
+                    <li>As an alternative to the the Wiretap process, we will construct a new process called  <code> ChatterTap  </code> 
+                    </li>
+                    <li>Instead of emailing an interested user , the same detail will instead be surfaced on that user's chatter feed
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+           
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Activity Specification :</b> <br/>
+                <ul>
+                    <li>The focused activity specification is very similar to that of the Wiretap 
+                        <br/> (1) The activity has no side effects on processing, therefore return the untouched inbound event message as the only item in return collection 
+                        <br/> (2) The chatter feed to surface the inbound event detail is defined by a user id held on the ChatterTap Customization custom setting xxxx 
+                        <br/> (3) If no User Id has been enetered inth custom setting, default to the Id of the user runnning the current execution context
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+           
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Prerequisistes :</b> <br/>
+                <ul>
+                    <li>Create the custom setting to hold the ChatterTap customization - Click  <code> Setup|Develope|Custom Setting|New  </code>                     
+                        <br/><br/>
+                        <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ProcessDevelopersGuide/CustomSetttingDefinition.png')}" />  
+                        <br/><br/> 
+                    </li>
+                    <li>Create the custom setting to hold the User Id of the chatter feed 
+                        <br/><br/>
+                        <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ProcessDevelopersGuide/CustomSettingUserId.png')}" />
+                        <br/><br/>         
+                    </li>    
+                     
+                     <br/> <br/>
+                    <li>Finally , ensure that chatter is enabled for your org. Click <code>  Setup|Chatter|Settings </code>  and check the enable box             
+                      <br/><br/>
+                      <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ProcessDevelopersGuide/ChatterSettings.png')}" /> 
+                      <br/><br/>
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+             
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Build the class :</b> <br/>
+                <ul>
+                    <li>Create a new class in the development org that follows the Process template.
+                    
+                    <br/>
+
+<!----------- PART 1 ::  BEG ---------------------------------      
+------------------------------------------------------------->
+<div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">001
+002
+003
+004
+005
+006
+007
+008
+009
+010
+011
+012
+013
+014
+015
+016</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-weight: bold">public</span> with sharing <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">ChatterTap</span> <span style="color: #008800; font-weight: bold">implements</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">Plugin</span> <span style="color: #333333">{</span>
+
+  <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">Meta</span> <span style="color: #333333">{</span>
+      <span style="color: #888888">// TODO</span>
+  <span style="color: #333333">}</span>
+
+  <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> <span style="color: #0066BB; font-weight: bold">describe</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
+      <span style="color: #888888">// TODO</span>
+      <span style="color: #008800; font-weight: bold">return</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">();</span>
+  <span style="color: #333333">}</span>
+
+  <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> <span style="color: #0066BB; font-weight: bold">invoke</span><span style="color: #333333">(</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginRequest</span> request<span style="color: #333333">)</span> <span style="color: #333333">{</span>
+      <span style="color: #888888">// TODO</span>
+      <span style="color: #008800; font-weight: bold">return</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;());</span>
+    <span style="color: #333333">}</span>
+<span style="color: #333333">}</span>
+</pre></td></tr></table></div>
+<!---------------------------------------
+--------------- PART 1 :: END ----------->   
+
+                    </li>
+                </ul>
+                
+                <br/>
+                
+                <ul>
+                    <b>Notes :</b> <br/>
+                    <br/>
+                    <li> <b> 001 : </b> the class implements the Salesforce interface Process.Plugin.
+                    </li>
+                    <li> <b> 005 - 042 : </b> there are three sections, namely the inner Meta class, and the two implemetation methods  <code> describe()  </code>  and  <code> invoke()  </code>  required by the  <code> Process.Plugin  </code> contract
+                    </li>
+                    <li> <b> 005 : </b> the inner  <code> Meta  </code> class exposes important properties about the custom process thereby facilitating correct integration into the event driven framework
+                    </li>
+                    <li> <b> 010 : </b>  the  <code> describe()  </code> method is required by the  <code> Process.Plugin  </code> interface and describes both the process as well as changes, additions and deletions to the parameters collection(s) returned by the process This method is purely descriptive and has no influence on the correct funtioning of the process.
+                    </li>
+                    <li> <b> 018 : </b>  the  <code> invoke()  </code> method is required by the  <code> Process.Plugin  </code> interface and it is here that the specified focused activity is coded. The method receives in a single event message. The method emits / returns zero , one or more event messages.
+                    </li>
+                    
+                    <br/><br/><br/>
+                    
+                    <li>Expand the ChatterTap class by introducing implementation details
+        
+                    <br/><br/>
+                    
+<!----------- PART 2 ::  BEG ---------------------------------  
+------------------------------------------------------------->
+<div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">001
+002
+003
+004
+005
+006
+007
+008
+009
+010
+011
+012
+013
+014
+015
+016
+017
+018
+019
+020
+021</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-weight: bold">public</span> with sharing <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">ChatterTap</span> <span style="color: #008800; font-weight: bold">implements</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">Plugin</span> <span style="color: #333333">{</span>
+
+    <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">ChatterTapException</span> <span style="color: #008800; font-weight: bold">extends</span> Exception <span style="color: #333333">{}</span>
+    
+    <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">Meta</span> <span style="color: #333333">{</span>
+        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;comment&#39;</span><span style="color: #333333">;</span>
+    <span style="color: #333333">}</span>
+    
+    <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> <span style="color: #0066BB; font-weight: bold">describe</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
+        Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> describeResult <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">();</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;ChatterTap&#39;</span><span style="color: #333333">;</span>
+        <span style="color: #888888">// TODO</span>
+        <span style="color: #008800; font-weight: bold">return</span> describeResult<span style="color: #333333">;</span>
+    <span style="color: #333333">}</span>
+    
+    <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> <span style="color: #0066BB; font-weight: bold">invoke</span><span style="color: #333333">(</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginRequest</span> request<span style="color: #333333">)</span> <span style="color: #333333">{</span>
+        Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> request<span style="color: #333333">.</span><span style="color: #0000CC">inputParameters</span><span style="color: #333333">;</span>
+        <span style="color: #888888">// TODO</span>
+        <span style="color: #008800; font-weight: bold">return</span> MetaUtility<span style="color: #333333">.</span><span style="color: #0000CC">convert</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;{</span>parameters<span style="color: #333333">});</span>
+    <span style="color: #333333">}</span>
+<span style="color: #333333">}</span>
+</pre></td></tr></table></div>
+<!---------------------------------------
+--------------- PART 2 :: END ----------->   
+  
+                      
+                      </li>
+                 </ul>  
+
+                <br/>
+                
+                <ul>
+                    <b>Notes :</b> <br/>
+                    <br/>
+                    <li> <b> 003 : </b>  introduce a  <code> ChatterTapException </code>  class to surface errors specific to the  <code> ChatterTap </code>  process.
+                    </li>
+                    <li> <b> 007 : </b>  add an appropriate icon ( <code> comment </code> ) to the process by selecting one and using it's name from the famfam collection found here : http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png
+                    </li>
+                    <li> <b> 008 : </b>  provide an appropriate name for the process on the  <code> Process.PluginDescribeResult  </code>  return instance. This name will normally match the class name ( <code> ChatterTap </code> )
+                    </li>
+                    <li> <b> 019 : </b>  Extract the input message from the containg request instance and assign to a more usable string/object parameters collection
+                    </li>
+                    <li> <b> 041 : </b>  Convert the return statement to a more usable  <code> EdaUtility.convert() </code>  method. This method takes a list collection of output event messages. 
+                                         <br/> Because the  <code> ChatterTap  </code> is a pass through no opertation process, we simply assign add the input message ("parameters") to the output message collection
+                    </li>
+                    
+                    
+                    <br/><br/><br/>
+                    
+                    
+                    <li>Complete the class description
+ 
+                    <br/><br/>
+                          
+<!----------- PART 3 ::  BEG --------------------------------- 
+ ------------------------------------------------------------->
+<div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">001
+002
+003
+004
+005
+006
+007
+008
+009
+010
+011
+012
+013
+014
+015
+016
+017
+018
+019
+020
+021
+022
+023</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-weight: bold">public</span> with sharing <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">ChatterTap</span> <span style="color: #008800; font-weight: bold">implements</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">Plugin</span> <span style="color: #333333">{</span>
+
+    <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">ChatterTapException</span> <span style="color: #008800; font-weight: bold">extends</span> Exception <span style="color: #333333">{}</span>
+    
+    <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">Meta</span> <span style="color: #333333">{</span>
+        <span style="color: #008800; font-weight: bold">public</span> SObject customizable <span style="color: #333333">=</span> ChatterTapCustomization__c<span style="color: #333333">.</span><span style="color: #0000CC">SObjectType</span><span style="color: #333333">.</span><span style="color: #0000CC">newSObject</span><span style="color: #333333">();</span>
+        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;comment&#39;</span><span style="color: #333333">;</span>
+    <span style="color: #333333">}</span>
+    
+    <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> <span style="color: #0066BB; font-weight: bold">describe</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
+        Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> describeResult <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">();</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;ChatterTap&#39;</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Description</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;Serializes the parameters and posts it on the users chatter feed.&#39;</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Tag</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;Example&#39;</span><span style="color: #333333">;</span>
+        <span style="color: #008800; font-weight: bold">return</span> describeResult<span style="color: #333333">;</span>
+    <span style="color: #333333">}</span>
+    
+    <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> <span style="color: #0066BB; font-weight: bold">invoke</span><span style="color: #333333">(</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginRequest</span> request<span style="color: #333333">)</span> <span style="color: #333333">{</span>
+        Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> request<span style="color: #333333">.</span><span style="color: #0000CC">inputParameters</span><span style="color: #333333">;</span>
+        <span style="color: #888888">// TODO</span>
+        <span style="color: #008800; font-weight: bold">return</span> MetaUtility<span style="color: #333333">.</span><span style="color: #0000CC">convert</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;{</span>parameters<span style="color: #333333">});</span>
+    <span style="color: #333333">}</span>
+<span style="color: #333333">}</span>
+</pre></td></tr></table></div>
+<!---------------------------------------
+--------------- PART 3 :: END ----------->   
+
+                     
+                     </li>
+                 </ul>  
+               
+                <br/>         
+
+                
+                <ul>
+                    <b>Notes :</b> <br/>
+                    <br/>
+                    <li> <b> 006 : </b>  Assign an instance of the custom setting ( <code> ChatterTapCustomization__c </code> ) to the public  <code> customizable </code>  SObject 
+                                         <br/> This assignment binds the correct custom setting collection to this process
+                    </li>
+                    <li> <b> 013 : </b>  Provide an appropriate description for the process. This description will be surfaced in the framework GUI
+                    </li>
+                    <li> <b> 014 : </b>  Provide an appropriate tag for the process. The tag is a user defined string that can be used to group related processes in the framework GUI
+                    </li>
+               
+                    
+                    <br/><br/><br/>
+                    
+                    
+                    <li>Complete the class by implementing the specified focused activity in the  <code> invoke()  </code> method
+                     
+                    <br/><br/>
+                    
+<!----------- PART 4 ::  BEG --------------------------------- 
+------------------------------------------------------------->
+<div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">001
+002
+003
+004
+005
+006
+007
+008
+009
+010
+011
+012
+013
+014
+015
+016
+017
+018
+019
+020
+021
+022
+023
+024
+025
+026
+027
+028
+029
+030
+031
+032
+033
+034
+035
+036
+037
+038
+039
+040
+041
+042
+043</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-weight: bold">public</span> with sharing <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">ChatterTap</span> <span style="color: #008800; font-weight: bold">implements</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">Plugin</span> <span style="color: #333333">{</span>
+
+    <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">ChatterTapException</span> <span style="color: #008800; font-weight: bold">extends</span> Exception <span style="color: #333333">{}</span>
+    
+    <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">Meta</span> <span style="color: #333333">{</span>
+        <span style="color: #008800; font-weight: bold">public</span> SObject customizable <span style="color: #333333">=</span> ChatterTapCustomization__c<span style="color: #333333">.</span><span style="color: #0000CC">SObjectType</span><span style="color: #333333">.</span><span style="color: #0000CC">newSObject</span><span style="color: #333333">();</span>
+        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;comment&#39;</span><span style="color: #333333">;</span>
+    <span style="color: #333333">}</span>
+    
+    <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> <span style="color: #0066BB; font-weight: bold">describe</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
+        Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> describeResult <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">();</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;ChatterTap&#39;</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Description</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;Serializes the parameters and posts it on the users chatter feed.&#39;</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Tag</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;Example&#39;</span><span style="color: #333333">;</span>
+        <span style="color: #008800; font-weight: bold">return</span> describeResult<span style="color: #333333">;</span>
+    <span style="color: #333333">}</span>
+    
+    <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> <span style="color: #0066BB; font-weight: bold">invoke</span><span style="color: #333333">(</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginRequest</span> request<span style="color: #333333">)</span> <span style="color: #333333">{</span>
+        Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> request<span style="color: #333333">.</span><span style="color: #0000CC">inputParameters</span><span style="color: #333333">;</span>
+        
+        String message  <span style="color: #333333">=</span>
+            <span style="background-color: #fff0f0">&#39;[Wiretap] &#39;</span> <span style="color: #333333">+</span>
+            parameters<span style="color: #333333">.</span><span style="color: #0000CC">get</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;Eda_SequenceName&#39;</span><span style="color: #333333">)</span> <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&#39;#&#39;</span> <span style="color: #333333">+</span>
+            parameters<span style="color: #333333">.</span><span style="color: #0000CC">get</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;Eda_Position&#39;</span><span style="color: #333333">)</span> <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&#39;\n&#39;</span> <span style="color: #333333">+</span>
+            Json<span style="color: #333333">.</span><span style="color: #0000CC">serialize</span><span style="color: #333333">(</span>parameters<span style="color: #333333">)</span> <span style="color: #333333">;</span>
+        
+        Id userId<span style="color: #333333">;</span>
+        <span style="color: #008800; font-weight: bold">try</span> <span style="color: #333333">{</span>
+            ChatterTapCustomization__c setting <span style="color: #333333">=</span> ChatterTapCustomization__c<span style="color: #333333">.</span><span style="color: #0000CC">getInstance</span><span style="color: #333333">();</span>
+            userId <span style="color: #333333">=</span> setting<span style="color: #333333">.</span><span style="color: #0000CC">UserId__c</span><span style="color: #333333">;</span>
+        <span style="color: #333333">}</span> <span style="color: #008800; font-weight: bold">catch</span> <span style="color: #333333">(</span>Exception e<span style="color: #333333">)</span> <span style="color: #333333">{</span>
+        <span style="color: #333333">}</span>
+        <span style="color: #008800; font-weight: bold">if</span> <span style="color: #333333">(</span>userId <span style="color: #333333">==</span> <span style="color: #008800; font-weight: bold">null</span><span style="color: #333333">)</span> <span style="color: #333333">{</span>
+            userId <span style="color: #333333">=</span> UserInfo<span style="color: #333333">.</span><span style="color: #0000CC">getUserId</span><span style="color: #333333">();</span>
+        <span style="color: #333333">}</span>
+        
+        FeedItem post <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> FeedItem<span style="color: #333333">(</span>ParentId <span style="color: #333333">=</span> userId<span style="color: #333333">,</span> Body <span style="color: #333333">=</span> message<span style="color: #333333">);</span>
+        insert post<span style="color: #333333">;</span>
+        
+        
+        <span style="color: #008800; font-weight: bold">return</span> MetaUtility<span style="color: #333333">.</span><span style="color: #0000CC">convert</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;{</span>parameters<span style="color: #333333">});</span>
+    <span style="color: #333333">}</span>
+<span style="color: #333333">}</span> 
+</pre></td></tr></table></div>
+<!---------------------------------------
+--------------- PART 4 :: END ----------->   
+
+                     
+                     
+                     </li>
+                 </ul>  
+
+                <br/>
+                
+                <ul>
+                    <b>Notes :</b> <br/>
+                    <br/>
+                    <li> <b> 021 - 025 : </b>  Create the chatter post content comprising the sequence,  the step position as well as the parameter values of the input message event
+                    </li>
+                    <li> <b> 027 - 035 : </b>  Retrieve the user id from the correct custom setting instance. 
+                                               <br/>If the user setting has not been defined, default to the current user id. 
+                                               <br/>Use this id as the parentId of the chatter post
+                    </li>
+                    <li> <b> 037 - 038 : </b>  Create the chatter post
+                    </li>
+
+                    
+                    <br/><br/><br/>
+                    
+                    
+                    
+                    <li>Write unit tests for  <code> ChatterTap </code> .
+                     
+                    <br/><br/>
+                    
+<!----------- PART 5 ::  BEG ---------------------------------   
+  ------------------------------------------------------------->
+ <div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">001
+ 002
+ 003
+ 004
+ 005
+ 006
+ 007
+ 008
+ 009
+ 010
+ 011
+ 012
+ 013
+ 014
+ 015
+ 016
+ 017
+ 018
+ 019
+ 020
+ 021
+ 022
+ 023
+ 024
+ 025
+ 026
+ 027
+ 028
+ 029
+ 030
+ 031
+ 032
+ 033
+ 034
+ 035
+ 036
+ 037
+ 038
+ 039
+ 040
+ 041
+ 042
+ 043
+ 044
+ 045
+ 046
+ 047
+ 048
+ 049
+ 050
+ 051
+ 052
+ 053
+ 054
+ 055
+ 056
+ 057
+ 058
+ 059
+ 060
+ 061
+ 062
+ 063
+ 064
+ 065</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #555555; font-weight: bold">@isTest</span>
+ <span style="color: #008800; font-weight: bold">private</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">ChatterTapTest</span> <span style="color: #333333">{</span>
+ 
+     <span style="color: #008800; font-weight: bold">static</span> testMethod <span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">testProcessIsDescribed</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
+         ChatterTap ChatterTap <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> ChatterTap<span style="color: #333333">();</span>
+         System<span style="color: #333333">.</span><span style="color: #0000CC">assertNotEquals</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">null</span><span style="color: #333333">,</span> ChatterTap<span style="color: #333333">.</span><span style="color: #0000CC">describe</span><span style="color: #333333">().</span><span style="color: #0000CC">Name</span><span style="color: #333333">);</span>
+         System<span style="color: #333333">.</span><span style="color: #0000CC">assertNotEquals</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">null</span><span style="color: #333333">,</span> ChatterTap<span style="color: #333333">.</span><span style="color: #0000CC">describe</span><span style="color: #333333">().</span><span style="color: #0000CC">Description</span><span style="color: #333333">);</span>
+         System<span style="color: #333333">.</span><span style="color: #0000CC">assertNotEquals</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">null</span><span style="color: #333333">,</span> ChatterTap<span style="color: #333333">.</span><span style="color: #0000CC">describe</span><span style="color: #333333">().</span><span style="color: #0000CC">Tag</span><span style="color: #333333">);</span>
+     <span style="color: #333333">}</span>
+     
+     <span style="color: #008800; font-weight: bold">static</span> testMethod <span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">callingInvokeWillNOTThrowExpectedWhenUserIdOnCustomizableNOTSet</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
+         <span style="color: #888888">// Arrange :</span>
+         String sequenceName <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;the-sequence&#39;</span><span style="color: #333333">;</span>
+         Integer step <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1</span><span style="color: #333333">;</span>
+         String data <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;data&#39;</span><span style="color: #333333">;</span>
+         
+         Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> <span style="color: #333333">{</span>
+             <span style="background-color: #fff0f0">&#39;Eda_SequenceName&#39;</span> <span style="color: #333333">=&gt;</span> sequenceName<span style="color: #333333">,</span>
+             <span style="background-color: #fff0f0">&#39;Eda_Step&#39;</span> <span style="color: #333333">=&gt;</span> step<span style="color: #333333">,</span>
+             <span style="background-color: #fff0f0">&#39;data&#39;</span> <span style="color: #333333">=&gt;</span> data
+         <span style="color: #333333">};</span>
+         
+         <span style="color: #888888">// Act</span>
+         ChatterTap ChatterTap <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> ChatterTap<span style="color: #333333">();</span>
+         Boolean actualFlagException <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">false</span><span style="color: #333333">;</span>
+         <span style="color: #008800; font-weight: bold">try</span> <span style="color: #333333">{</span>
+             Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> results <span style="color: #333333">=</span> ChatterTap<span style="color: #333333">.</span><span style="color: #0000CC">invoke</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginRequest</span><span style="color: #333333">(</span>parameters<span style="color: #333333">));</span>
+         <span style="color: #333333">}</span> <span style="color: #008800; font-weight: bold">catch</span> <span style="color: #333333">(</span>Exception e<span style="color: #333333">)</span> <span style="color: #333333">{</span>
+             actualFlagException <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">true</span><span style="color: #333333">;</span>
+         <span style="color: #333333">}</span>
+         
+         
+         <span style="color: #888888">// Assert</span>
+         Boolean expectedFlagException <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">false</span><span style="color: #333333">;</span>
+         System<span style="color: #333333">.</span><span style="color: #0000CC">assertEquals</span><span style="color: #333333">(</span>expectedFlagException <span style="color: #333333">,</span> actualFlagException <span style="color: #333333">);</span>
+     <span style="color: #333333">}</span>
+     
+     <span style="color: #008800; font-weight: bold">static</span> testMethod <span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">callingExecuteReturnsExpectedParametersCollectionWhenDefinedMetaCustomizableSet</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
+         <span style="color: #888888">// Arrange :</span>
+         String sequenceName <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;the-sequence&#39;</span><span style="color: #333333">;</span>
+         Integer step <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1</span><span style="color: #333333">;</span>
+         String data <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;data&#39;</span><span style="color: #333333">;</span>
+         
+         insert <span style="color: #008800; font-weight: bold">new</span> <span style="color: #0066BB; font-weight: bold">ChatterTapCustomization__c</span> <span style="color: #333333">(</span> UserId__c <span style="color: #333333">=</span> UserInfo<span style="color: #333333">.</span><span style="color: #0000CC">getUserId</span><span style="color: #333333">());</span>
+         
+         Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> <span style="color: #333333">{</span>
+             <span style="background-color: #fff0f0">&#39;Eda_SequenceName&#39;</span> <span style="color: #333333">=&gt;</span> sequenceName<span style="color: #333333">,</span>
+             <span style="background-color: #fff0f0">&#39;Eda_Step&#39;</span> <span style="color: #333333">=&gt;</span> step<span style="color: #333333">,</span>
+             <span style="background-color: #fff0f0">&#39;data&#39;</span> <span style="color: #333333">=&gt;</span> data
+         <span style="color: #333333">};</span>
+         
+         Integer expectedSize <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1</span><span style="color: #333333">;</span>
+         
+         <span style="color: #888888">// Act</span>
+         ChatterTap ChatterTap <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> ChatterTap<span style="color: #333333">();</span>
+         Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> results <span style="color: #333333">=</span> ChatterTap<span style="color: #333333">.</span><span style="color: #0000CC">invoke</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginRequest</span><span style="color: #333333">(</span>parameters<span style="color: #333333">));</span>
+         List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;</span> actualParametersList <span style="color: #333333">=</span> MetaUtility<span style="color: #333333">.</span><span style="color: #0000CC">convert</span><span style="color: #333333">(</span>results<span style="color: #333333">);</span>
+         
+         <span style="color: #888888">// assemble</span>
+         Integer actualSize <span style="color: #333333">=</span> actualParametersList<span style="color: #333333">.</span><span style="color: #0000CC">size</span><span style="color: #333333">();</span>
+         
+         <span style="color: #888888">// Assert</span>
+         System<span style="color: #333333">.</span><span style="color: #0000CC">assertEquals</span><span style="color: #333333">(</span>expectedSize <span style="color: #333333">,</span> actualSize <span style="color: #333333">);</span>
+     <span style="color: #333333">}</span>
+ <span style="color: #333333">}</span>
+ </pre></td></tr></table></div>
+ <!---------------------------------------
+--------------- PART 5 :: END ----------->                 
+
+                     
+                     
+                     </li>
+                </ul>  
+                 
+                <br/>
+                
+                <ul>
+                    <b>Notes :</b> <br/>
+                    <br/>
+                    <li> <b> 004 - 009 : </b>  This test verifies that the descriptive elements of the class have been correctly set
+                    </li>
+                    <li> <b> 011 - 041 : </b>  This test confirms that a default user id will be used for the chatter post when a specific user id has not been set
+                    </li>
+                    <li> <b> 043 - 071 : </b>  This test confirms the count of output event messages exactly one A more detailed unit test may validate the existence and value of each expected parameter on this output message
+                    </li>
+                 </ul>  
+                
+                
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+           
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+
+ 
+
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection columns="1"   title="CHAPTER 06 : Development : Post Build Steps"  collapsible="false" >
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Visually test the Event Driven process :</b> <br/>
+                <ul>
+                    <li>Once the Apex class has successfully compiled, it can be registered in the Event Driven framework
+                    </li>
+                    <li>To register an Apex class in the Event Driven framework, select the list view on Processes tab to reveal the [Generate] button
+                    </li>
+                    <li>Press the [Generate] button and depending on the availability of the Salesforce servers, your new Apex class will present itself in the list of available processes (For further details on the generation process , see page NNN. )
+                    </li>
+                    <li>Create a suitable Sequence to test your processes by pressing the Sequences tab (For further details on creating and testing sequences, see page NNN. ) ***
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+           
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b>Create a managed package containing your Event Driven process :</b> <br/>
+                <ul>
+                    <li>Create a managed package by following standard Salesforce recommendations - see XXX
+                    </li>
+                    <li>Add you Apex class to the package along with unit tests and associated dependencies and upload.
+                    </li>
+                    <li>This compiled process logic can now be installed in any Developer, Sandbox or Production org using the the package link.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+      
+        </apex:pageBlockSection>
+    </apex:pageBlock>        
+
+
+
+
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection columns="1" title="APPENDIX I : Anatomy of a Process" collapsible="false" >
+            <apex:pageBlockSectionItem >
+                <br/>
+                <ul>
+                    <li>Before a custom Event Driven process can be registered in the Event Driven framework, the code representing the process must conform structurally to a specific Event Driven template
+                    </li>
+                    <li>The template is based in part on the Salesforce  <code> Process.Plugin  </code> interface and such the process must implement  <code> Process.Plugin  </code> 
+                    </li>
+                    <li>In addition, the Event Driven framework expects that the process will publicly expose an inner class called  <code> Meta  </code>  and certain associated Meta properties.
+                    </li>
+                    <li>Below is an annotated example of a custom Event Driven process called  <code> MyProcess  </code>  which adheres to the required template
+                    
+                    <br/><br/>
+                    
+<!----------- PART 6 ::  BEG ---------------------------------   
+------------------------------------------------------------->
+<div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">001
+002
+003
+004
+005
+006
+007
+008
+009
+010
+011
+012
+013
+014
+015
+016
+017
+018
+019
+020
+021
+022
+023
+024
+025
+026
+027
+028
+029
+030
+031
+032
+033
+034
+035
+036</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-weight: bold">public</span> with sharing <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">MyProcess</span> <span style="color: #008800; font-weight: bold">implements</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">Plugin</span> <span style="color: #333333">{</span>
+
+    <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">MyProcessException</span> <span style="color: #008800; font-weight: bold">extends</span> Exception <span style="color: #333333">{}</span>
+
+    <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">Meta</span> <span style="color: #333333">{</span>
+        <span style="color: #008800; font-weight: bold">public</span> SObject customizable <span style="color: #333333">=</span> MyProcessCustomization__c<span style="color: #333333">.</span><span style="color: #0000CC">SObjectType</span><span style="color: #333333">.</span><span style="color: #0000CC">newSObject</span><span style="color: #333333">();</span>
+        <span style="color: #008800; font-weight: bold">public</span> SObject configurable <span style="color: #333333">=</span> MyProcessConfiguration__c<span style="color: #333333">.</span><span style="color: #0000CC">SObjectType</span><span style="color: #333333">.</span><span style="color: #0000CC">newSobject</span><span style="color: #333333">();</span>
+        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;lightning&quot;</span><span style="color: #333333">;</span>
+    <span style="color: #333333">}</span>
+
+    <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> <span style="color: #0066BB; font-weight: bold">describe</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
+        Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> describeResult <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">();</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;MyProcess&quot;</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Description</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;Tags the message with an urgency level&quot;</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Tag</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;My Category&quot;</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">OutputParameters</span> <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> List<span style="color: #333333">&lt;</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">.</span><span style="color: #0000CC">OutputParameter</span><span style="color: #333333">&gt;{</span>
+            <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">.</span><span style="color: #0000CC">OutputParameter</span><span style="color: #333333">(</span>
+                <span style="background-color: #fff0f0">&quot;urgency&quot;</span><span style="color: #333333">,</span>
+                <span style="background-color: #fff0f0">&quot;Indicates the level of urgency  [high,medium,low]&quot;</span><span style="color: #333333">,</span>
+                Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">.</span><span style="color: #0000CC">ParameterType</span><span style="color: #333333">.</span><span style="color: #0000CC">String</span>
+            <span style="color: #333333">)</span>
+        <span style="color: #333333">};</span>
+
+        <span style="color: #008800; font-weight: bold">return</span> describeResult<span style="color: #333333">;</span>
+    <span style="color: #333333">}</span>
+
+    <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> <span style="color: #0066BB; font-weight: bold">invoke</span><span style="color: #333333">(</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginRequest</span> request<span style="color: #333333">)</span> <span style="color: #333333">{</span>
+        Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> request<span style="color: #333333">.</span><span style="color: #0000CC">inputParameters</span><span style="color: #333333">;</span>
+
+        String theUrgency<span style="color: #333333">;</span>
+        <span style="color: #888888">//logic to derive theUrgency here ...</span>
+        parameters<span style="color: #333333">.</span><span style="color: #0000CC">put</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&quot;urgency&quot;</span><span style="color: #333333">,</span> theUrgency<span style="color: #333333">);</span>
+
+        <span style="color: #008800; font-weight: bold">return</span> EdaUtility<span style="color: #333333">.</span><span style="color: #0000CC">convert</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;{</span>parameters<span style="color: #333333">});</span>
+    <span style="color: #333333">}</span>
+<span style="color: #333333">}</span>
+</pre></td></tr></table></div>
+<!---------------------------------------
+--------------- PART 6 :: END ----------->                    
+                    </li>
+                </ul>
+
+                <br/>
+                
+                <ul>
+                    <b>Notes :</b> <br/>
+                    <br/>
+                    <li> <b> 001 : </b>  the class  <code> MyProcess </code>  must implement the Salesforce interface  <code> Process.Plugin  </code> 
+                    </li>
+                    <li> <b> 003 : </b>  declare a custom exception  <code> MyProcessException  </code>  that extends  <code> Exception  </code>  to surface know errors within your process [*]
+                    </li>
+                    <li> <b> 005 - 009 : </b>  the inner <code>Meta</code> class - the presence of this class along with the implements Process.Plugin sgnals to the Event Driven framework that this class is a process
+                    </li>
+                    <li> <b> 006 : </b>   <code> customizable  </code> - An SObject instance ....
+                    </li>
+                    <li> <b> 006 : </b>   <code> configurable  </code> - An SObject instance ...
+                    </li>
+                    <li> <b> 008 : </b>   <code>  icon  </code>  - A string representing a user selectable icon for the process as descibed by famfam icon set - see http://xxx
+                    </li>
+                    <li> <b> 011 : </b>   <code> describe()n </code>  - describes the process and returns a  <code> Process.PluginDescribeResult  </code>  as defined by the  <code> Process.Plugin  </code> interface.
+                    </li>
+                    <li> <b> 013 : </b>   <code> Name  </code>  is the name of the custom process class
+                    </li>
+                    <li> <b> 014 : </b>   <code> Description  </code>  is a description of the custom process functionality
+                    </li>
+                    <li> <b> 015 : </b>   <code> Tag  </code> is a classification mechanism. All custom processes with the same tag will be presented together under this tag in the GUI process selection mechanism
+                    </li>
+                    <li> <b> 016 : </b>   <code> OutputParameters </code>  is a list of  <code>  OutputParameter  </code> . If the process adds deletes or modifies a parameter on the message, this would be the place to describe the change
+                    </li>
+                    <li> <b> 018 : </b>  The parameter name
+                    </li>
+                    <li> <b> 019 : </b>  The parameter description
+                    </li>
+                    <li> <b> 020 : </b>  The parameter type (  <code> String </code> ,  <code> Boolean  </code> , etc)
+                    </li>
+                    <li> <b> 027 - 035 : </b>   <code> invoke()  </code> - invokes the process taking a single input message event and returning zero, one or more message events as defined by the  <code>  Process.Plugin  </code> interface.
+                    </li>
+                    <li> <b> 028 : </b>  Explicitly expose the injected parameter collection as a  <code> string  </code> -  <code> object  </code>  map. Always include this code immediately after in the  <code> invoke()  </code>  signature
+                    </li>
+                    <li> <b> 030 - 032 : </b>  Perform custom actions and work - this is where the custom process developer focuses his or her efforts
+                    </li>
+                    <li> <b> 034 : </b>  return a  <code> Process.PluginDescribeResult </code> . 
+                                         <br/> In practice return a call to  <code> EdaUtility.convert()  </code>  passing in a list that contains zero, one or more parameter collections. 
+                                         Normally, the inbound parameter collection wll be returned.
+                    </li> 
+                     
+                    <br/> <br/>
+                    <i> [*] - exceptions will appear as records in the message object </i>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+ 
+
+</apex:page>

@@ -917,6 +917,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>ProcessDevelopersGuide</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>ProcessDiscover</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
