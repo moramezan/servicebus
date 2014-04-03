@@ -1,4 +1,4 @@
-<apex:page standardController="Sequence__c" extensions="SequenceBuilderController" action="{!doRedirect}">
+<apex:page standardController="Sequence__c" extensions="SequenceBuilderExtension" action="{!doRedirect}">
     
     <apex:sectionHeader title="{!$ObjectType.Sequence__c.Label}" subtitle="{!Sequence__c.Name}" />
     
@@ -12,13 +12,13 @@
         $Component.pageBlockButtonsId = '{!$Component.pageBlockId.pageBlockButtonsId}';
         
         window.$RemoteAction = window.$RemoteAction || {};
-        $RemoteAction.SequenceBuilderController = $RemoteAction.SequenceBuilderController || {};
-        $RemoteAction.SequenceBuilderController.fetchSteps = '{!$RemoteAction.SequenceBuilderController.fetchSteps}';
-        $RemoteAction.SequenceBuilderController.destroyStep = '{!$RemoteAction.SequenceBuilderController.destroyStep}';
-        $RemoteAction.SequenceBuilderController.enqueue = '{!$RemoteAction.SequenceBuilderController.enqueue}';
-        $RemoteAction.SequenceBuilderController.appendStep = '{!$RemoteAction.SequenceBuilderController.appendStep}';
-        $RemoteAction.SequenceBuilderController.moveStepBefore = '{!$RemoteAction.SequenceBuilderController.moveStepBefore}';
-        $RemoteAction.SequenceBuilderController.moveStepAfter = '{!$RemoteAction.SequenceBuilderController.moveStepAfter}';
+        $RemoteAction.SequenceBuilderExtension = $RemoteAction.SequenceBuilderExtension || {};
+        $RemoteAction.SequenceBuilderExtension.fetchSteps = '{!$RemoteAction.SequenceBuilderExtension.fetchSteps}';
+        $RemoteAction.SequenceBuilderExtension.destroyStep = '{!$RemoteAction.SequenceBuilderExtension.destroyStep}';
+        $RemoteAction.SequenceBuilderExtension.enqueue = '{!$RemoteAction.SequenceBuilderExtension.enqueue}';
+        $RemoteAction.SequenceBuilderExtension.appendStep = '{!$RemoteAction.SequenceBuilderExtension.appendStep}';
+        $RemoteAction.SequenceBuilderExtension.moveStepBefore = '{!$RemoteAction.SequenceBuilderExtension.moveStepBefore}';
+        $RemoteAction.SequenceBuilderExtension.moveStepAfter = '{!$RemoteAction.SequenceBuilderExtension.moveStepAfter}';
         
         window.Sequence__c = window.Sequence__c || {};
         Sequence__c.Id = '{!Sequence__c.Id}';

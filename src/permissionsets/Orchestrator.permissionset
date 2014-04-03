@@ -285,11 +285,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SequenceBuilderController</apexClass>
+        <apexClass>SequenceBuilderExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SequenceBuilderControllerTest</apexClass>
+        <apexClass>SequenceBuilderExtensionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

@@ -6,7 +6,7 @@
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
         //arrange sequences
-        Sequence__c sequence = new Sequence__c(Name = 'SequenceBuilderControllerTest');
+        Sequence__c sequence = new Sequence__c(Name = 'StepTest');
         insert sequence;
         
         //arrange steps
@@ -36,7 +36,7 @@
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
         //arrange sequences
-        Sequence__c sequence = new Sequence__c(Name = 'SequenceBuilderControllerTest');
+        Sequence__c sequence = new Sequence__c(Name = 'StepTest');
         insert sequence;
         
         //arrange steps

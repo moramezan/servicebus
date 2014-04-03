@@ -72,8 +72,8 @@
         <members>Scrape</members>
         <members>ScrapeTest</members>
         <members>Sequence</members>
-        <members>SequenceBuilderController</members>
-        <members>SequenceBuilderControllerTest</members>
+        <members>SequenceBuilderExtension</members>
+        <members>SequenceBuilderExtensionTest</members>
         <members>SequenceTest</members>
         <members>Sequences</members>
         <members>SequencesTest</members>

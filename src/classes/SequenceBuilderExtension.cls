@@ -1,8 +1,8 @@
-public with sharing class SequenceBuilderController {
+public with sharing class SequenceBuilderExtension {
     
     ApexPages.StandardController controller;
     
-    public SequenceBuilderController(ApexPages.StandardController controller) {
+    public SequenceBuilderExtension(ApexPages.StandardController controller) {
         this.controller = controller;
     }
     

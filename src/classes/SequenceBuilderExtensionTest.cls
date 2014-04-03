@@ -1,4 +1,4 @@
-@isTest public class SequenceBuilderControllerTest {
+@isTest public class SequenceBuilderExtensionTest {
     
     static private Id setupSequence() {
         //arrange processes
@@ -6,7 +6,7 @@
         Process__c terminateProcess = Processes.generateOne(Terminate.class);
         
         //arrange sequences
-        Sequence__c sequence = new Sequence__c(Name = 'SequenceBuilderControllerTest');
+        Sequence__c sequence = new Sequence__c(Name = 'SequenceBuilderExtensionTest');
         insert sequence;
         
         //arrange steps
@@ -20,7 +20,7 @@
         //arrange redirect, controller and extension
         PageReference redirect;
         ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c());
-        SequenceBuilderController extension = new SequenceBuilderController(controller);
+        SequenceBuilderExtension extension = new SequenceBuilderExtension(controller);
         
         //act in the absence of any processes
         redirect = extension.doRedirect();
@@ -44,7 +44,7 @@
         //arrange sequence, controller and extension
         Id sequenceId = setupSequence();
         ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c(Id = sequenceId));
-        SequenceBuilderController extension = new SequenceBuilderController(controller);
+        SequenceBuilderExtension extension = new SequenceBuilderExtension(controller);
         
         //act
         String data = extension.getProcesses();
@@ -62,7 +62,7 @@
         //arrange sequence, controller and extension
         Id sequenceId = setupSequence();
         ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c(Id = sequenceId));
-        SequenceBuilderController extension = new SequenceBuilderController(controller);
+        SequenceBuilderExtension extension = new SequenceBuilderExtension(controller);
         
         //act
         String data = extension.getSteps();
@@ -81,7 +81,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        List<Step__c> sequenceSteps = SequenceBuilderController.fetchSteps(sequenceId);
+        List<Step__c> sequenceSteps = SequenceBuilderExtension.fetchSteps(sequenceId);
         
         //assert
         Integer expectedCount = 2;
@@ -97,7 +97,7 @@
         Process__c publishProcess = Processes.generateOne(Publish.class);
         
         //act
-        SequenceBuilderController.appendStep(sequenceId, publishProcess.Id);
+        SequenceBuilderExtension.appendStep(sequenceId, publishProcess.Id);
         
         //assert
         List<Step__c> steps = new Sequence(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
@@ -115,7 +115,7 @@
         Step__c terminateStep = steps.get(1);
         
         //act
-        SequenceBuilderController.moveStepBefore(terminateStep.Id, wiretapStep.Id);
+        SequenceBuilderExtension.moveStepBefore(terminateStep.Id, wiretapStep.Id);
         
         //assemble
         steps = new Sequence(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
@@ -140,7 +140,7 @@
         Step__c terminateStep = steps.get(1);
         
         //act
-        SequenceBuilderController.moveStepAfter(wiretapStep.Id, terminateStep.Id);
+        SequenceBuilderExtension.moveStepAfter(wiretapStep.Id, terminateStep.Id);
         
         //assemble
         steps = new Sequence(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
@@ -164,7 +164,7 @@
         Step__c wiretapStep = steps.get(0);
         
         //act
-        SequenceBuilderController.destroyStep(wiretapStep);
+        SequenceBuilderExtension.destroyStep(wiretapStep);
         
         //assemble
         steps = new Sequence(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
