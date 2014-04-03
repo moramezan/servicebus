@@ -78,7 +78,6 @@
         <members>Sequences</members>
         <members>SequencesTest</members>
         <members>Step</members>
-        <members>StepShowConfigurationExtension</members>
         <members>StepTest</members>
         <members>Steps</members>
         <members>StepsTest</members>
