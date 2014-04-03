@@ -3,11 +3,7 @@ public with sharing class MessageProcessExtension {
     static private Message__c message;
     
     public MessageProcessExtension(ApexPages.StandardController controller) {
-        message = [
-            SELECT Id, Status__c, Parameters__c
-            FROM Message__c
-            WHERE Id = :controller.getId()
-        ];
+        message = (Message__c)SalesforceObject.getById(controller.getId());
     }
     
     public PageReference doProcess() {

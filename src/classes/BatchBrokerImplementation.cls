@@ -37,14 +37,14 @@ public with sharing class BatchBrokerImplementation extends Broker implements Da
         }
         
         //find existing jobs
-        List<AsyncApexJob> existingJobs = [
-            SELECT ApexClassId, JobType, Status, ExtendedStatus, JobItemsProcessed, TotalJobItems, LastProcessed
+        Integer existingJobsCount = [
+            SELECT COUNT()
             FROM AsyncApexJob
             WHERE ApexClass.NamespacePrefix = :namespacePrefix AND ApexClass.Name = :name
             AND JobType IN ('BatchApex')
             AND Status IN ('Queued', 'Processing', 'Preparing')
         ];
         
-        return !existingJobs.isEmpty();
+        return existingJobsCount != 0;
     }
 }

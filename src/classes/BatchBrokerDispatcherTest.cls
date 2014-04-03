@@ -29,10 +29,11 @@
         
         //act
         dispatcher.finish(null);
-        List<Message__c> messages = [SELECT Id FROM Message__c];
         
         //assert
-        System.assert(messages.isEmpty());
+        Integer expectedCount = 0;
+        Integer actualcount = [SELECT COUNT() FROM Message__c];
+        System.assertEquals(expectedCount, actualCount);
     }
     
     

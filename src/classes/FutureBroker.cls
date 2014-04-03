@@ -110,15 +110,15 @@ virtual public class FutureBroker extends Broker {
         }
         
         //find existing futures
-        List<AsyncApexJob> existingFutures = [
-            SELECT ApexClassId, JobType
+        Integer existingFuturesCount = [
+            SELECT COUNT()
             FROM AsyncApexJob
             WHERE ApexClass.NamespacePrefix = :namespacePrefix AND ApexClass.Name = :name AND MethodName = 'start'
             AND JobType = 'Future'
             AND Status IN ('Queued', 'Processing', 'Preparing')
         ];
         
-        return !existingFutures.isEmpty();
+        return existingFuturesCount != 0;
     }
     
     public class IdentityResult {

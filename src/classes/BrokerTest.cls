@@ -194,10 +194,7 @@ public class BrokerTest{
         insert messages; //persist
         
         // assemble
-        List<Message__c> messagesAfter = [
-            SELECT id, Parameters__c, Step__c, Process__c
-            FROM Message__c
-        ];
+        List<Message__c> messagesAfter = SalesforceObjectSet.listAll(Message__c.SObjectType);
         
         Boolean flagPosition01 = false;
         Boolean flagPosition02 = false;
@@ -511,7 +508,7 @@ public class BrokerTest{
         System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
         Integer expectedSizeBefore = 0;
-        Integer actualSizeBefore = [SELECT Id FROM Document].size();
+        Integer actualSizeBefore = [SELECT COUNT() FROM Document];
         System.assertEquals(expectedSizeBefore , actualSizeBefore);
         
         //act
@@ -519,7 +516,7 @@ public class BrokerTest{
         
         //assert
         Integer expectedSizeAfter = 1;
-        Integer actualSizeAfter = [SELECT id FROM Document].size();
+        Integer actualSizeAfter = [SELECT COUNT() FROM Document];
         System.assertEquals(expectedSizeAfter, actualSizeAfter);
         
         Boolean expectedAfterFlag = true;
@@ -641,7 +638,7 @@ public class BrokerTest{
         Broker.executeResolvePersist(message.Id);
         
         //assemble
-        Message__c messageActual = [SELECT Id, Exception__c FROM Message__c WHERE id = :message.Id];
+        Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
         
         //assert
         String actualMessage = messageActual.Exception__c;
@@ -658,7 +655,7 @@ public class BrokerTest{
         Broker.executeResolvePersist(message.Id);
         
         //assemble
-        Message__c messageActual = [SELECT Id, Exception__c FROM Message__c WHERE id = :message.Id];
+        Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
         
         //assert
         String actualMessage = messageActual.Exception__c;
@@ -675,7 +672,7 @@ public class BrokerTest{
         Broker.executeResolvePersist(message.Id);
         
         //assemble
-        Message__c messageActual = [SELECT Id, Exception__c FROM Message__c WHERE id = :message.Id];
+        Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
         
         //assert
         String actualMessage = messageActual.Exception__c;

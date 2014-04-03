@@ -100,23 +100,15 @@
         
 
         // Config Publish
-        Id publishConfigurationIdZ3 = (Id) [SELECT Id, ConfigurationId__c
-                                     FROM Step__c
-                                     WHERE Id = :stepZ3.Id LIMIT 1].ConfigurationId__c;
-        PublishConfiguration__c  publishConfigurationZ3 =  [SELECT Id, EventType__c
-                                                              FROM PublishConfiguration__c
-                                                              WHERE Id = :publishConfigurationIdZ3];
-        publishConfigurationZ3.EventType__c =  eventTypePublished .Id;
+        Id publishConfigurationIdZ3 = ((Step__c)SalesforceObject.getById(stepZ3.Id)).ConfigurationId__c;
+        PublishConfiguration__c publishConfigurationZ3 = (PublishConfiguration__c)SalesforceObject.getById(publishConfigurationIdZ3);
+        publishConfigurationZ3.EventType__c = eventTypePublished.Id;
         update publishConfigurationZ3;
         
         // Config Z1
-        Id configurationIdZ1 = (Id) [SELECT Id, ConfigurationId__c
-                                     FROM Step__c
-                                     WHERE Id = :stepZ1.Id LIMIT 1].ConfigurationId__c;
-        SubscribeConfiguration__c  subscribeConfigurationZ1 =  [SELECT Id, EventType__c
-                                                              FROM SubscribeConfiguration__c
-                                                              WHERE Id = :configurationIdZ1];
-        subscribeConfigurationZ1.EventType__c =  eventTypePublished .Id;
+        Id configurationIdZ1 = ((Step__c)SalesforceObject.getById(stepZ1.Id)).ConfigurationId__c;
+        SubscribeConfiguration__c subscribeConfigurationZ1 = (SubscribeConfiguration__c)SalesforceObject.getById(configurationIdZ1);
+        subscribeConfigurationZ1.EventType__c = eventTypePublished.Id;
         update subscribeConfigurationZ1;
         
   
@@ -165,12 +157,8 @@
         insert eventNotPublished;
        
         // Config A1
-        Id configurationIdA1 = (Id) [SELECT Id, ConfigurationId__c
-                                     FROM Step__c
-                                     WHERE Id = :stepA1.Id LIMIT 1].ConfigurationId__c;
-        SubscribeConfiguration__c  subscribeConfigurationA1 =  [SELECT Id, EventType__c
-                                                              FROM SubscribeConfiguration__c
-                                                              WHERE Id = :configurationIdA1];
+        Id configurationIdA1 = ((Step__c)SalesforceObject.getById(stepA1.Id)).ConfigurationId__c;
+        SubscribeConfiguration__c subscribeConfigurationA1 = (SubscribeConfiguration__c)SalesforceObject.getById(configurationIdA1);
         subscribeConfigurationA1.EventType__c = eventNotPublished.Id;
         update subscribeConfigurationA1;
  
@@ -256,22 +244,14 @@
 
         
         // Config C1
-        Id configurationIdC1 = (Id) [SELECT Id, ConfigurationId__c
-                                   FROM Step__c
-                                   WHERE Id = :stepC1.Id LIMIT 1].ConfigurationId__c;
-        SubscribeConfiguration__c  subscribeConfigurationC1 =  [SELECT Id, EventType__c
-                                                              FROM SubscribeConfiguration__c
-                                                              WHERE Id = :configurationIdC1];
+        Id configurationIdC1 = ((Step__c)SalesforceObject.getById(stepC1.Id)).ConfigurationId__c;
+        SubscribeConfiguration__c subscribeConfigurationC1 = (SubscribeConfiguration__c)SalesforceObject.getById(configurationIdC1);
         subscribeConfigurationC1.EventType__c = eventNotPublished.Id;
         update subscribeConfigurationC1;
 
         // Config C2
-        Id configurationIdC2 = (Id) [SELECT Id, ConfigurationId__c
-                                   FROM Step__c
-                                   WHERE Id = :stepC2.Id LIMIT 1].ConfigurationId__c;
-        SubscribeConfiguration__c  subscribeConfigurationC2 =  [SELECT Id, EventType__c
-                                                              FROM SubscribeConfiguration__c
-                                                              WHERE Id = :configurationIdC2];
+        Id configurationIdC2 = ((Step__c)SalesforceObject.getById(stepC2.Id)).ConfigurationId__c;
+        SubscribeConfiguration__c subscribeConfigurationC2 = (SubscribeConfiguration__c)SalesforceObject.getById(configurationIdC2);
         subscribeConfigurationC2.EventType__c = eventNotPublished.Id;
         update subscribeConfigurationC2;
         
@@ -314,9 +294,7 @@
         Step__c stepB1 = Steps.generateOne(sequenceB.Id, subscribeProcess.Id);
         Step__c stepB2 = Steps.generateOne(sequenceB.Id, wiretapProcess.Id);
 
-        Id configurationIdB1 = (Id) [SELECT Id, ConfigurationId__c
-                                     FROM Step__c
-                                     WHERE Id = :stepB1.Id LIMIT 1].ConfigurationId__c;
+        Id configurationIdB1 = ((Step__c)SalesforceObject.getById(stepB1.Id)).ConfigurationId__c;
         Database.delete(configurationIdB1);
         
         // Act :

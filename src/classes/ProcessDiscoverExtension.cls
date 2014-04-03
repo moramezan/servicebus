@@ -49,11 +49,7 @@ public class ProcessDiscoverExtension {
     
     @testVisible static private List<AsyncApexJob> jobs;
     @RemoteAction static public List<AsyncApexJob> readAsyncApexJobs(Id asyncApexJobId) {
-        return jobs != null ? jobs : [
-            SELECT Id, CompletedDate, CreatedDate, ExtendedStatus, JobItemsProcessed, JobType, LastProcessed, LastProcessedOffset, NumberOfErrors, Status, TotalJobItems
-            FROM AsyncApexJob
-            WHERE Id = :asyncApexJobId
-        ];
+        return jobs != null ? jobs : new List<AsyncApexJob>{(AsyncApexJob)SalesforceObject.getById(asyncApexJobId)};
     }
 
 }

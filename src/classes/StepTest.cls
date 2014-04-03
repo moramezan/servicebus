@@ -22,8 +22,8 @@
         step.moveBefore(wiretapStep.Id);
         
         //assemble
-        wiretapStep = [SELECT Id, Position__c FROM Step__c WHERE Id = :wiretapStep.Id];
-        terminateStep = [SELECT Id, Position__c FROM Step__c WHERE Id = :terminateStep.Id];
+        wiretapStep = (Step__c)SalesforceObject.getById(wiretapStep.Id);
+        terminateStep = (Step__c)SalesforceObject.getById(terminateStep.Id);
         
         //assert after state
         System.assertEquals(1, terminateStep.Position__c);
@@ -52,8 +52,8 @@
         step.moveAfter(terminateStep.Id);
         
         //assemble
-        wiretapStep = [SELECT Id, Position__c FROM Step__c WHERE Id = :wiretapStep.Id];
-        terminateStep = [SELECT Id, Position__c FROM Step__c WHERE Id = :terminateStep.Id];
+        wiretapStep = (Step__c)SalesforceObject.getById(wiretapStep.Id);
+        terminateStep = (Step__c)SalesforceObject.getById(terminateStep.Id);
         
         //assert after state
         System.assertEquals(1, terminateStep.Position__c);

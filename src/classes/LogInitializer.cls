@@ -43,16 +43,13 @@ global class LogInitializer implements Process.Plugin {
          }
          Step__c  step = steps[0];
  
-         //get group identifier instruction from configuration
-         List<LogConfiguration__c> configurations = [
-             SELECT Id, StaticGroupIdentifier__c , DynamicGroupIdentifier__c
-             FROM LogConfiguration__c
-             WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
-         ];
-         if (configurations.size() == 0) {
+        //get group identifier instruction from configuration
+        LogConfiguration__c configuration;
+        try {
+            configuration = (LogConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
+        } catch (System.QueryException e) {
             throw new LogInitializerException('Unable to access Log Configuration');
-         }
-         LogConfiguration__c configuration = configurations[0];
+        }
         
          // insert composite key values into log group :
          // the composite key comprises
@@ -80,10 +77,7 @@ global class LogInitializer implements Process.Plugin {
     @TestVisible
     private static SObject getHydrated(Id theId) {
         try {
-            Schema.describesobjectresult d = theId.getSObjectType().getDescribe();
-            Map<String, Schema.SObjectField> m = d.fields.getMap();
-            String soql = 'SELECT ' + String.join(new List<String>(m.keySet()), ',') + ' FROM ' + d.getName() + ' WHERE id =:theId';
-            return Database.query(soql);
+            return SalesforceObject.getById(theId);
         } catch (Exception e) {
             throw new LogInitializerException('Cannot hydate SObject with Id=[' + theId + ']' + e.getStackTraceString());
         }

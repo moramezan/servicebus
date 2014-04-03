@@ -10,14 +10,16 @@ public class ProcessApexClassExtension {
     }
  
     public System.PageReference ViewPage() {
-        List<Process__c> processes = [SELECT FullyQualifiedClassName__c FROM Process__c WHERE Id = :processId];
-        if (processes.size() == 0) { 
-            throw new ProcessApexClassExtensionException('Cannot determine fully qualified class name from process id =['+processId+']');
+        Process__c proc;
+        try {
+            proc = (Process__c)SalesforceObject.getById(this.processId);
+        } catch (System.QueryException e) {
+            throw new ProcessApexClassExtensionException('Cannot determine fully qualified class name from process id =['+this.processId+']');
         }
         
-        String fullyQualifiedClassName  = processes[0].FullyQualifiedClassName__c;
+        String fullyQualifiedClassName  = proc.FullyQualifiedClassName__c;
         if (String.IsBlank(fullyQualifiedClassName)) { 
-            throw new ProcessApexClassExtensionException('Cannot determine fully qualified class name from empty field on process id =['+processId+']');
+            throw new ProcessApexClassExtensionException('Cannot determine fully qualified class name from empty field on process id =['+this.processId+']');
         }     
         
         String namespacePrefix;

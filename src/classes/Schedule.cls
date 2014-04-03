@@ -26,11 +26,7 @@ public with sharing class Schedule implements Process.Plugin {
             //DateTime is not a primitive Object
             DateTime heartbeat = (DateTime)Json.deserialize('"' + (String)parameters.get('eda_Heartbeat') + '"', DateTime.class);
             
-            ScheduleConfiguration__c config = [
-                SELECT Id, Frequency__c, FriendlyDates__c, FriendlyTimes__c
-                FROM ScheduleConfiguration__c
-                WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
-            ];
+            ScheduleConfiguration__c config = (ScheduleConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
             
             if (isWithinWindow(heartbeat, config)) {
                 //this is one of the configured times, so carry on to next step

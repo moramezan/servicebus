@@ -18,13 +18,10 @@ public with sharing class Jump implements Process.Plugin {
         Map<String,Object> parameters = request.inputParameters;
         
         //get destination from configuration
-        JumpConfiguration__c configuration = [
-            SELECT Id, Sequence__r.Name
-            FROM JumpConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
-        ];
+        JumpConfiguration__c configuration = (JumpConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
+        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(configuration.Sequence__c);
         
-        parameters.put('eda_SequenceName', configuration.Sequence__r.Name);
+        parameters.put('eda_SequenceName', sequence.Name);
         parameters.put('eda_Position', 0);
         
         return EdaUtility.convert(new List<Map<String,Object>>{parameters});

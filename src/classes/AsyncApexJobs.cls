@@ -59,13 +59,9 @@ public class AsyncApexJobs extends SalesforceObjectSet {
         Id jobId = Database.executeBatch((Database.Batchable<Object>)type.newInstance(), chunkSize);
         
         //find started job
-        List<AsyncApexJob> newJobs = [
-            SELECT ApexClassId, JobType, Status, ExtendedStatus, JobItemsProcessed, TotalJobItems, LastProcessed
-            FROM AsyncApexJob
-            WHERE Id = :jobId
-        ];
+        AsyncApexJob job = (AsyncApexJob)SalesforceObject.getById(jobId);
         
         //return started job
-        return new AsyncApexJobs(newJobs);
+        return new AsyncApexJobs(new List<AsyncApexJob>{job});
     }
 }

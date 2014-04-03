@@ -152,15 +152,15 @@
         //arrange steps
         Step__c branchStep = Steps.generateOne(sequence.Id, branchProcess.Id);
         
-        integer expectedSizeBefore =  1;
-        integer expectedSizeAfter =   0;
-        integer actualSizeBefore = [SELECT Id FROM BranchConfiguration__c].size();
+        Integer expectedSizeBefore =  1;
+        Integer expectedSizeAfter =   0;
+        Integer actualSizeBefore = [SELECT COUNT() FROM BranchConfiguration__c];
         
         //Act
         delete branchStep;
         
         //Prepare
-        integer actualSizeAfter =  [SELECT id FROM BranchConfiguration__c].size();
+        Integer actualSizeAfter = [SELECT COUNT() FROM BranchConfiguration__c];
         
         //Assert
         System.assertEquals(expectedSizeBefore, actualSizeBefore);

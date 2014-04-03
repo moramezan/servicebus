@@ -351,7 +351,7 @@ private class IsChangedTest {
         IsChanged.deleteOldAttachments(  persistDurationInMinutes) ;
         
         //assemble
-        Map<Id,Attachment> attachmentIdToAttachment = new Map<Id,Attachment> ( [SELECT Id, Name FROM Attachment] );
+        Map<Id,SObject> attachmentIdToAttachment = SalesforceObjectSet.mapAll(Attachment.SObjectType);
         
         // Assert
         System.Assert(  attachmentIdToAttachment.keySet().contains(attachment01.Id) );

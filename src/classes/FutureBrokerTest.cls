@@ -78,17 +78,9 @@
         Boolean actualAfterFlag = flagRestartImpl;
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
         
-        //assemble
-        List<Message__c> messages = [
-            SELECT id, Name, Process__r.Name, Step__c , Status__c, IsDeleted
-            FROM Message__c
-            WHERE IsDeleted = false
-            ALL ROWS
-        ];
-        
         //assert (note: the execution won't happen in test mode because it takes place in a web service callout)
         Integer expectedCount = 1;
-        Integer actualCount = messages.size();
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE IsDeleted = false ALL ROWS];
         System.assertEquals(expectedCount , actualCount);
     }
     
@@ -141,17 +133,9 @@
         Boolean actualAfterFlag = flagRestartImpl;
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
         
-        //assemble
-        List<Message__c> messages = [
-            SELECT id, Name, Process__r.Name, Step__c , Status__c, isDeleted
-            FROM Message__c
-            WHERE isDeleted = false
-            ALL ROWS
-        ];
-        
         //assert (note: the execution won't happen in test mode because it takes place in a web service callout)
         Integer expectedCount = 1;
-        Integer actualCount = messages.size();
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE isDeleted = false ALL ROWS];
         System.assertEquals(expectedCount, actualCount);
     }
 

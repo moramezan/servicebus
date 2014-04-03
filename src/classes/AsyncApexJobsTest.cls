@@ -41,8 +41,8 @@
         Integer actualRunning = [SELECT COUNT() FROM AsyncApexJob];
         System.assertEquals(expectedRunning, actualRunning);
         
-        String serializedOne = System.Json.serializePretty(one);
-        String serializedTwo = System.Json.serializePretty(two);
+        String serializedOne = System.Json.serializePretty(one.getSObjects()[0].Id);
+        String serializedTwo = System.Json.serializePretty(two.getSObjects()[0].Id);
         System.assertEquals(serializedOne, serializedTwo);
     }
 

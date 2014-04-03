@@ -58,7 +58,7 @@ private  class GateTest {
             Map<String,Object> actualParameters = actualOutParametersList[0];
             actualGateGroupId = (Id) parameters.get('Id' );
         }
-        integer actualGateItemsSize = [SELECT Id FROM GateItem__c].size();
+        integer actualGateItemsSize = [SELECT COUNT() FROM GateItem__c];
 
         // Assert
         System.assertEquals(expectedSize , actualSize );
@@ -111,7 +111,7 @@ private  class GateTest {
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
-        integer actualGateItemsSize = [SELECT Id FROM GateItem__c].size();
+        Integer actualGateItemsSize = [SELECT COUNT() FROM GateItem__c];
 
         // Assert
         System.assertEquals(expectedSize , actualSize );

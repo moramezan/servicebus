@@ -9,11 +9,16 @@ abstract public class SalesforceObjectSet {
         this.sobjs = sobjects;
     }
     
-    static public List<SObject> fetchAll(SObjectType type) {
-        DescribeSObjectResult describe = type.getDescribe();
-        String objectName = describe.getName();
-        List<String> fields = new List<String>(describe.fields.getMap().keySet());
-        return Database.query('SELECT ' + String.join(fields, ',') + ' FROM ' + objectName + ' ORDER BY Name ASC');
+    static public List<SObject> listAll(SObjectType type) {
+        DescribeSObjectResult description = type.getDescribe();
+        String name = description.getName();
+        String fields = String.join(new List<String>(description.fields.getMap().keySet()), ',');
+        return Database.query('SELECT ' + fields + ' FROM ' + name + ' ORDER BY Name ASC');
+    }
+    
+    static public Map<Id,SObject> mapAll(SObjectType type) {
+        List<SObject> objects = listAll(type);
+        return new Map<Id,SObject>(objects);
     }
     
     public Set<Id> keySet() {

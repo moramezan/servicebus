@@ -34,21 +34,10 @@ public with sharing class Subscribe implements Process.Plugin {
         Process__c subscribeProcess = (subscribeProcesses.size() > 0) ? subscribeProcesses[0] : null;
         Boolean resolvedProcess = (subscribeProcess != null);
 
-     
-        Map<Id,SubscribeConfiguration__c> subscribeConfigurationIdToSubscribeConfiguration
-                = new Map<Id,SubscribeConfiguration__c>([SELECT id, Name, EventType__c
-                                                         FROM SubscribeConfiguration__c
-                                                        ]);
-
-        List<PublishConfiguration__c> publishConfigurations = [SELECT Id, Name, EventType__c
-                                                             FROM PublishConfiguration__c
-                                                             ];
-                    
-        Map<Id,EventType__c> eventTypeIdToEventType = new Map<Id,EventType__c>([SELECT Id, Name
-                                                                FROM EventType__c
-                                                               ]);
-               
-                           
+        Map<Id,SObject> subscribeConfigurationIdToSubscribeConfiguration = SalesforceObjectSet.mapAll(SubscribeConfiguration__c.SObjectType);
+        List<PublishConfiguration__c> publishConfigurations = SalesforceObjectSet.listAll(PublishConfiguration__c.SObjectType);
+        Map<Id,SObject> eventTypeIdToEventType = SalesforceObjectSet.mapAll(EventType__c.SObjectType);
+        
         List<Map<String,Object>> instanceDetails = new List<Map<String,Object>>();
         for (Sequence__c  sequence : sequences)  {
             String status = resolvedProcess ? 'Ok' : 'Unknown';
@@ -103,7 +92,7 @@ public with sharing class Subscribe implements Process.Plugin {
                     SubscribeConfiguration__c subscribeConfiguration;
                     Id eventId;
                     if ( !isError ) {
-                        subscribeConfiguration = subscribeConfigurationIdToSubscribeConfiguration.get(subscribeConfigurationId);
+                        subscribeConfiguration = (SubscribeConfiguration__c)subscribeConfigurationIdToSubscribeConfiguration.get(subscribeConfigurationId);
                         if (subscribeConfiguration == null) {
                             isError = true;
                             instanceDetail.put('Status', 'Error');
@@ -126,7 +115,7 @@ public with sharing class Subscribe implements Process.Plugin {
                             }
                         }
                         if (!publisherFound) {
-                            EventType__c eventType = eventTypeIdToEventType.get(eventId);
+                            EventType__c eventType = (EventType__c)eventTypeIdToEventType.get(eventId);
                             String eventTypeName  = (eventType == null) ? '' : eventType.Name;
                             instanceDetail.put('Status', 'Warning');
                             instanceDetail.put('Detail', 'No publisher is configured to publish event=['+eventTypeName+']');

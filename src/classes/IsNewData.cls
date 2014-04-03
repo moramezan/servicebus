@@ -28,11 +28,7 @@ public class IsNewData implements Process.Plugin {
         }
         
         // retrieve minimum time between releases
-        IsNewDataConfiguration__c configuration = [
-        SELECT Id, MinimumHoursBetween__c
-            FROM IsNewDataConfiguration__c
-            WHERE Id = :configurationId
-        ];
+        IsNewDataConfiguration__c configuration = (IsNewDataConfiguration__c)SalesforceObject.getById(configurationId);
         Integer minimumHours = (configuration.MinimumHoursBetween__c == null) ? 0 : (Integer)configuration.MinimumHoursBetween__c;
         
         // retrieve IsNewData (if any)

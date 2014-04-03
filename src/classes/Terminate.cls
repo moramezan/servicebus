@@ -32,14 +32,11 @@ public with sharing class Terminate implements Process.Plugin {
         
         //pop one subsequence off stack
         Id lastId = stepIds.remove(stepIds.size() - 1);
-        Step__c step = [
-            SELECT Id, Sequence__r.Name, Position__c
-            FROM Step__c
-            WHERE Id = :lastId
-        ];
+        Step__c step = (Step__c)SalesforceObject.getById(lastId);
+        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(step.Sequence__c);
         
         parameters.put('eda_SubsequenceStepIds', stepIds);
-        parameters.put('eda_SequenceName', step.Sequence__r.Name );
+        parameters.put('eda_SequenceName', sequence.Name );
         parameters.put('eda_Position', step.Position__c );
         parametersList.add(parameters);
 

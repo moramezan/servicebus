@@ -24,7 +24,7 @@
         Steps.generateOne(one.Id, scheduleProcess.Id);
         Steps.generateOne(one.Id, terminateProcess.Id);
         
-        List<ScheduleConfiguration__c> scheduleConfigurations = [SELECT Id FROM ScheduleConfiguration__c];
+        List<ScheduleConfiguration__c> scheduleConfigurations = SalesforceObjectSet.listAll(ScheduleConfiguration__c.SObjectType);
         for (ScheduleConfiguration__c scheduleConfiguration : scheduleConfigurations) {
             scheduleConfiguration.Frequency__c = 'Weekly';
         }

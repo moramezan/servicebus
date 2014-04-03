@@ -22,11 +22,7 @@ public class Steps extends SalesforceObjectSet {
         insert step;
         
         //requery
-        return [
-            SELECT Id, Sequence__c, Position__c, Process__c, ConfigurationId__c
-            FROM Step__c
-            WHERE Id = :step.Id
-        ];
+        return (Step__c)SalesforceObject.getById(step.Id);
     }
     
     /**

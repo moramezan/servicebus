@@ -19,11 +19,7 @@ public with sharing class Publish implements Process.Plugin {
         Map<String,Object> parameters = request.InputParameters;
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         
-        PublishConfiguration__c publishConfiguration = [
-            SELECT Id, EventType__c
-            FROM PublishConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
-        ];
+        PublishConfiguration__c publishConfiguration = (PublishConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
         
         if (null == publishConfiguration.EventType__c) {
             throw new PublishException('Publish Configuration ' + publishConfiguration.Id + ' has no Event type');
@@ -75,20 +71,9 @@ public with sharing class Publish implements Process.Plugin {
         Process__c publishProcess = (publishProcesses.size() > 0) ? publishProcesses[0] : null;
         Boolean resolvedProcess = (publishProcess != null);
 
-        Map<Id,PublishConfiguration__c> publishConfigurationIdToPublishConfiguration = new Map<Id,PublishConfiguration__c>([
-            SELECT id, Name, EventType__c
-            FROM PublishConfiguration__c
-        ]);
-
-        List<SubscribeConfiguration__c> SubscribeConfigurations = [
-            SELECT Id, Name, EventType__c
-            FROM SubscribeConfiguration__c
-        ];
-
-        Map<Id,EventType__c> eventTypeIdToEventType = new Map<Id,EventType__c>([
-            SELECT Id, Name
-            FROM EventType__c
-        ]);
+        Map<Id,SObject> publishConfigurationIdToPublishConfiguration = SalesforceObjectSet.mapAll(PublishConfiguration__c.SObjectType);
+        List<SubscribeConfiguration__c> SubscribeConfigurations = SalesforceObjectSet.listAll(SubscribeConfiguration__c.SObjectType);
+        Map<Id,SObject> eventTypeIdToEventType = SalesforceObjectSet.mapAll(EventType__c.SObjectType);
 
         List<Map<String,Object>> instanceDetails = new List<Map<String,Object>>();
 
@@ -134,7 +119,7 @@ public with sharing class Publish implements Process.Plugin {
                              
                              Boolean isOk = true;
                              if ( isOk) {
-                                 publishConfiguration = publishConfigurationIdToPublishConfiguration.get(publishConfigurationId);
+                                 publishConfiguration = (PublishConfiguration__c)publishConfigurationIdToPublishConfiguration.get(publishConfigurationId);
                                  if (publishConfiguration == null) {
                                      isOk = false;
                                      status = 'Error';
@@ -158,7 +143,7 @@ public with sharing class Publish implements Process.Plugin {
                                  }
                                  if (!subscriberFound) {
                                      isOk = false;
-                                     EventType__c eventType = eventTypeIdToEventType.get(eventTypeId);
+                                     EventType__c eventType = (EventType__c)eventTypeIdToEventType.get(eventTypeId);
                                      String eventTypeName = (eventType == null) ? '' : eventType.Name;
                                      isOk = false;
                                      status = 'Warning';

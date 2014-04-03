@@ -46,10 +46,7 @@ public with sharing class ProcessRefreshBatch implements Database.Batchable<SObj
     
     public class ApexClassProvider implements IApexClassProvider {
         public List<ApexClass> getApexClasses() {
-            return [
-                SELECT Id, Name, NamespacePrefix 
-                FROM ApexClass 
-            ];   
+            return SalesforceObjectSet.listAll(ApexClass.SObjectType);
         }
     } 
     
@@ -71,14 +68,16 @@ public with sharing class ProcessRefreshBatch implements Database.Batchable<SObj
             
             // obtain a list of process Ids used in sequences
             Set<Id> usedProcessIds = new Set<Id>();
-            for (Step__c  step : [SELECT Id, Process__c FROM Step__c] ) {
+            List<Step__c> allSteps = SalesforceObjectSet.listAll(Step__c.SObjectType);
+            for (Step__c step : allSteps) {
                 if (step.Process__c != null) {
                     usedProcessIds.add(step.Process__c);    
                 }
             }
     
             Map<Id,String> processIdToHealth = new  Map<Id,String>();
-            for (Process__c process : [SELECT Id, Name , FullyQualifiedClassName__c FROM Process__c] ) {
+            List<Process__c> allProcesses = SalesforceObjectSet.listAll(Process__c.SObjectType);
+            for (Process__c process : allProcesses) {
                 Boolean hasApexClass = fullyQualifiedClassNames.contains(process.FullyQualifiedClassName__c);
                 Boolean hasStep  = usedProcessIds.contains(process.Id);
                 String health = 'Ok';

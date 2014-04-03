@@ -20,8 +20,8 @@ public with sharing class SequenceBuilderExtension {
     }
     
     public String getProcesses() {
-        List<Process__c> processes = SalesforceObjectSet.fetchAll(Process__c.SObjectType);
-        return Json.serializePretty(processes);
+        List<Process__c> procs = SalesforceObjectSet.listAll(Process__c.SObjectType);
+        return Json.serializePretty(procs);
     }
     
     public String getSteps() {
@@ -58,7 +58,7 @@ public with sharing class SequenceBuilderExtension {
     }
     
     @RemoteAction static public String enqueue(Id sequenceId) {
-        Sequence__c sequence = [SELECT Name FROM Sequence__c WHERE Id = :sequenceId];
+        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(sequenceId);
         Broker.enqueue(sequence.Name, UserInfo.getUserId());
         return sequence.Name;
     }

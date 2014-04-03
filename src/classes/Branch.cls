@@ -20,14 +20,11 @@ public with sharing class Branch implements Process.Plugin {
         Map<String,Object> parameters = request.inputParameters;
         
         //get step configuration
-        BranchConfiguration__c configuration = [
-            SELECT Id, Sequence__r.Name
-            FROM BranchConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
-        ];
+        BranchConfiguration__c configuration = (BranchConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
+        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(configuration.Sequence__c);
         
         //get sequence name
-        String branchTo = configuration.Sequence__r.Name;
+        String branchTo = sequence.Name;
         
         //prevent recursion
         if (branchTo == (String)parameters.get('eda_SequenceName')) {

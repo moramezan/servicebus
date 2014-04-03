@@ -2,14 +2,14 @@
 
     static testMethod void callingGenerateOneInsertsExpectedProcess() {
         //arrange 
-        List<Process__c> processesBefore = [SELECT Id, Name FROM Process__c];
+        List<Process__c> processesBefore = SalesforceObjectSet.listAll(Process__c.SObjectType);
         Integer actualProcessesBeforeCount = processesBefore.size();  
 
         //act  
         Process__c markProcess = Processes.generateOne(Mark.class);
  
         //assemble
-        List<Process__c> processesAfter = [SELECT Id, Name FROM Process__c];
+        List<Process__c> processesAfter = SalesforceObjectSet.listAll(Process__c.SObjectType);
         Integer actualProcessesAfterCount = processesAfter.size();
         
         //assert

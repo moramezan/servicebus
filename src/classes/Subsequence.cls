@@ -39,11 +39,8 @@ public with sharing class Subsequence implements Process.Plugin {
         ];
   
         //get destination from configuration
-        SubsequenceConfiguration__c configuration = [
-            SELECT Id, Sequence__r.Name
-            FROM SubsequenceConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
-        ];
+        SubsequenceConfiguration__c configuration = (SubsequenceConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
+        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(configuration.Sequence__c);
         
         List<Object> stepIds = (List<Object>)parameters.get('eda_SubsequenceStepIds');
         if (stepIds == null) {
@@ -52,7 +49,7 @@ public with sharing class Subsequence implements Process.Plugin {
         stepIds.add(step.Id);
         
         parameters.put('eda_SubsequenceStepIds', stepIds);
-        parameters.put('eda_SequenceName', configuration.Sequence__r.Name);
+        parameters.put('eda_SequenceName', sequence.Name);
         parameters.put('eda_Position', 0);
         
         return EdaUtility.convert(new List<Map<String,Object>>{parameters});

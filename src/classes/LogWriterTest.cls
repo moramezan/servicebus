@@ -127,10 +127,7 @@ private class LogWriterTest{
         List<Map<String,Object>> results = EdaUtility.convert(result);
         
         //assemble
-        List<LogWriterEntry__c> logWriterEntries = [
-            SELECT id, Name, Step__c,  LogGroup__c, Parameters__c
-            FROM LogWriterEntry__c
-        ];
+        List<LogWriterEntry__c> logWriterEntries = SalesforceObjectSet.listAll(LogWriterEntry__c.SObjectType);
         
          
         Boolean actualLogGroup1 = false;

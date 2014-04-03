@@ -52,24 +52,14 @@ public class IsChanged  implements Process.Plugin {
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
         // retrieve state
-        IsChangedConfiguration__c configuration = [
-            SELECT Id, NewHash__c, OldHash__c, newBlobId__c, oldBlobId__c, NewValue__c, OldValue__c, FieldName__c
-            FROM IsChangedConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
-        ];
+        IsChangedConfiguration__c configuration = (IsChangedConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
   
         // Is this the first run ?
         Boolean firstRun = (configuration.OldHash__c == null);
         
         // retrieve current value of object referenced by 'Id'
         // on parameters
-        Id objectId = (Id)parameters.get('Id');
-        SObjectType objectType = objectId.getSObjectType();
-        String objectName = objectType.getDescribe().getName();
-        String fieldName = configuration.FieldName__c;
-        String query = 'SELECT ' + fieldName + ' FROM ' + objectName + ' WHERE Id = :objectId';
-        SObject obj = Database.query(query);
-        
+        SObject obj = SalesforceObject.getById((Id)parameters.get('Id'));
 
         // derive the following 'new' attributes :
         //  -  if current value is
@@ -82,7 +72,7 @@ public class IsChanged  implements Process.Plugin {
         //     then assign  current value to  newValueAsString  , else set newValueAsString to null
         //  -  assign a hash of the current value to newHash
         Map<string,Object> attributes =  new Map<string,Object> {
-            'object' => obj.get(fieldName),
+            'object' => obj.get(configuration.FieldName__c),
             'configurationId' => configuration.Id,
             'newBlobId' => null,
             'newValueAsString' => null,

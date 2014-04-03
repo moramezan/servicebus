@@ -17,11 +17,7 @@ public class Scrape implements Process.Plugin {
     public Process.PluginResult invoke(Process.PluginRequest pluginRequest) {
         Map<String,Object> parameters = pluginRequest.inputParameters;
         
-        ScrapeConfiguration__c configuration = [
-            SELECT Id, Endpoint__c
-            FROM ScrapeConfiguration__c
-            WHERE Id = :(Id)parameters.get('eda_ConfigObjectId')
-        ];
+        ScrapeConfiguration__c configuration = (ScrapeConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
         
         HttpRequest request = new HttpRequest();
         request.setMethod('GET');

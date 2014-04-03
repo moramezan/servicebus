@@ -24,19 +24,10 @@
         Broker.enqueue(sequenceNameA, '000000000000000AAA');
         Test.stopTest();
         
-        //assemble
-        List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Status__c, IsDeleted
-            FROM Message__c
-            WHERE IsDeleted =  false
-            ALL ROWS
-        ];
-        
-        Integer actualCount = messages.size();
-        
         //assert
         Integer expectedCount = 0;
-        System.assertEquals(expectedCount , actualCount);
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE IsDeleted =  false ALL ROWS];
+        System.assertEquals(expectedCount, actualCount);
  
     }
     
@@ -119,17 +110,9 @@
         new BatchBrokerImplementation().restartIfWorkPending();
         Test.stopTest();
         
-        //assemble
-        List<Message__c> messages = [
-            SELECT id, Name, Process__r.Name, Step__c , Status__c, IsDeleted
-            FROM Message__c
-            WHERE IsDeleted =  false
-            ALL ROWS
-        ];
-        
         //assert
         Integer expectedCount = 0;
-        Integer actualCount = messages.size();
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE IsDeleted = false ALL ROWS];
         System.assertEquals(expectedCount, actualCount);
     }
     

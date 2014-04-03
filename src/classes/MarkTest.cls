@@ -39,7 +39,7 @@ private class MarkTest {
             actualMarkCount = (Decimal) parameters.get('eda_MarkCount' );
             actualGateGroupIdFlag = (parameters.get('eda_GateGroupId' ) != null);
         }
-        integer actualGateGroupSize = [SELECT Id FROM GateGroup__C].size();
+        Integer actualGateGroupSize = [SELECT COUNT() FROM GateGroup__c];
 
         // Assert
         System.assertEquals(expectedSize , actualSize );
