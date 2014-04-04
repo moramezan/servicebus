@@ -13,16 +13,16 @@
     
     static testMethod void testOneScheduledSequence() {
         //arrange processes
-        Process__c scheduleProcess = Processes.generateOne(Schedule.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c scheduleProcess = ProcessSet.generateOne(Schedule.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c one = new Sequence__c(Name = 'One');
         insert one;
         
         //arrange steps
-        Steps.generateOne(one.Id, scheduleProcess.Id);
-        Steps.generateOne(one.Id, terminateProcess.Id);
+        StepSet.generateOne(one.Id, scheduleProcess.Id);
+        StepSet.generateOne(one.Id, terminateProcess.Id);
         
         List<ScheduleConfiguration__c> scheduleConfigurations = SalesforceObjectSet.listAll(ScheduleConfiguration__c.SObjectType);
         for (ScheduleConfiguration__c scheduleConfiguration : scheduleConfigurations) {

@@ -1,18 +1,18 @@
-@isTest private class SequencesTest {
+@isTest private class SequenceSetTest {
 
     //before delete
     static testMethod void testDeleteTriggersAreCascaded() {
         //arrange process
-        Process__c branchProcess = Processes.generateOne(Branch.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c branchProcess = ProcessSet.generateOne(Branch.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'testSequence');
         insert sequence;
         
         //arrange steps
-        Step__c branchStep = Steps.generateOne(sequence.Id, branchProcess.Id);
-        Step__c terminateStep = Steps.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c branchStep = StepSet.generateOne(sequence.Id, branchProcess.Id);
+        Step__c terminateStep = StepSet.generateOne(sequence.Id, terminateProcess.Id);
         
         Integer expectedConfigsBefore = 1;
         Integer actualConfigsBefore = [SELECT COUNT() FROM BranchConfiguration__c];

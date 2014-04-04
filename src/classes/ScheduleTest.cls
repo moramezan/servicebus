@@ -1,15 +1,15 @@
 @isTest private class ScheduleTest {
     static testMethod void testPassThrueScenarioHandled() {
         //arrange processes
-        Process__c scheduleProcess = Processes.generateOne(Schedule.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c scheduleProcess = ProcessSet.generateOne(Schedule.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = Steps.generateOne(sequence.Id, scheduleProcess.Id);
+        Step__c scheduleStep = StepSet.generateOne(sequence.Id, scheduleProcess.Id);
         
         ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c];
         scheduleConfiguration.Frequency__c = 'Weekly';
@@ -17,7 +17,7 @@
         scheduleConfiguration.FriendlyTimes__c = '09:00';
         update scheduleConfiguration;
         
-        Step__c terminateStep = Steps.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c terminateStep = StepSet.generateOne(sequence.Id, terminateProcess.Id);
         
         //this guy will miss his schedule
         Map<String,Object> parameters = new Map<String,Object>{
@@ -42,15 +42,15 @@
     }
     static testMethod void testHeartbeatHandled() {
         //arrange processes
-        Process__c scheduleProcess = Processes.generateOne(Schedule.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c scheduleProcess = ProcessSet.generateOne(Schedule.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = Steps.generateOne(sequence.Id, scheduleProcess.Id);
+        Step__c scheduleStep = StepSet.generateOne(sequence.Id, scheduleProcess.Id);
         
         ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c];
         scheduleConfiguration.Frequency__c = 'Weekly';
@@ -58,7 +58,7 @@
         scheduleConfiguration.FriendlyTimes__c = '09:00';
         update scheduleConfiguration;
         
-        Step__c terminateStep = Steps.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c terminateStep = StepSet.generateOne(sequence.Id, terminateProcess.Id);
         
         //this guy will miss his schedule
         Map<String,Object> parameters = new Map<String,Object>{

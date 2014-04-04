@@ -1,6 +1,6 @@
-public class Processes extends SalesforceObjectSet {
+public class ProcessSet extends SalesforceObjectSet {
     
-    public Processes(List<Process__c> processes) {
+    public ProcessSet(List<Process__c> processes) {
         super(processes);
     }
     
@@ -71,7 +71,7 @@ public class Processes extends SalesforceObjectSet {
         //special exception for BrokerTest.FailurePlugin as used in testing
         if (reflector.getName() == BrokerTest.FailurePlugin.class.getName()) return process;
         
-        Processes.Meta meta = (Processes.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), Processes.Meta.class);
+        ProcessSet.Meta meta = (ProcessSet.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessSet.Meta.class);
         
         if (meta.CustomSetting != null) {
             //attempt to populate the name of the customization object

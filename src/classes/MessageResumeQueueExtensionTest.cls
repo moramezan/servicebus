@@ -4,8 +4,8 @@ private class MessageResumeQueueExtensionTest {
    static testMethod void  callingDoDmlCtorCorrectlyResolvesFromQueuedToBufferAndCorrectlySetsPause() {
         // arrange
         Boolean isPaused =  true;
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -66,8 +66,8 @@ private class MessageResumeQueueExtensionTest {
    static testMethod void  callingDoResumeOnQueuedMessagesProcessesMessages() {
         // arrange
         Boolean isPaused =  true;
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);

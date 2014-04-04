@@ -2,7 +2,7 @@
 
     static testMethod void canDetermineConfigObject() {
         //arrange processes
-        Process__c branchProcess = Processes.generateOne(Branch.class);
+        Process__c branchProcess = ProcessSet.generateOne(Branch.class);
         
         //act
         String actualConfiguration = branchProcess.ConfigObject__c;

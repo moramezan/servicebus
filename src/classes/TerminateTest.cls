@@ -12,16 +12,16 @@ private class TerminateTest
         Decimal subsequencePosition = 2;
         
         //arrange processes
-        Process__c subsequenceProcess = Processes.generateOne(Subsequence.class);
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c subsequenceProcess = ProcessSet.generateOne(Subsequence.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = subsequenceName);
         insert sequence;
         
         //arrange steps
-        Step__c step1 = Steps.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c step2 = Steps.generateOne(sequence.Id, subsequenceProcess.Id);
+        Step__c step1 = StepSet.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c step2 = StepSet.generateOne(sequence.Id, subsequenceProcess.Id);
 
         Map<String,Object> parameters = new Map<String,Object> {
             'eda_SequenceName' => sequenceName,
@@ -96,10 +96,10 @@ private class TerminateTest
         Sequence__c sequence = new Sequence__c(Name = subsequenceName);
         insert sequence;
         
-        Process__c process = Processes.generateOne(Subsequence.class);
+        Process__c process = ProcessSet.generateOne(Subsequence.class);
         
-        Step__c step01 = Steps.generateOne(sequence.Id, process.Id);
-        Step__c step02 = Steps.generateOne(sequence.Id, process.Id);
+        Step__c step01 = StepSet.generateOne(sequence.Id, process.Id);
+        Step__c step02 = StepSet.generateOne(sequence.Id, process.Id);
         
         Id subsequenceStepId01 = step01.Id ;
         Id subsequenceStepId02 = step02.Id ;
@@ -157,24 +157,24 @@ private class TerminateTest
         Sequence__c sequenceD = new Sequence__c(Name = 'SequenceD');
         insert sequenceD;
         
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
         
         // Sequence A - Ok
-        Step__c stepA1 = Steps.generateOne(sequenceA.Id, wireTapProcess.Id);
-        Step__c stepA2 = Steps.generateOne(sequenceA.Id, terminateProcess.Id);
+        Step__c stepA1 = StepSet.generateOne(sequenceA.Id, wireTapProcess.Id);
+        Step__c stepA2 = StepSet.generateOne(sequenceA.Id, terminateProcess.Id);
         
         // Sequence B - Problem : Terminate Not last Step
-        Step__c stepB1 = Steps.generateOne(sequenceB.Id, terminateProcess.Id);
-        Step__c stepB2 = Steps.generateOne(sequenceB.Id, wireTapProcess.Id);
+        Step__c stepB1 = StepSet.generateOne(sequenceB.Id, terminateProcess.Id);
+        Step__c stepB2 = StepSet.generateOne(sequenceB.Id, wireTapProcess.Id);
  
         // Sequence C - Problem : More than One Terminate
-        Step__c stepC1 = Steps.generateOne(sequenceC.Id, terminateProcess.Id);
-        Step__c stepC2 = Steps.generateOne(sequenceC.Id, terminateProcess.Id);
+        Step__c stepC1 = StepSet.generateOne(sequenceC.Id, terminateProcess.Id);
+        Step__c stepC2 = StepSet.generateOne(sequenceC.Id, terminateProcess.Id);
         
         // Sequence D - Problem : Zero Terminate
-        Step__c stepD1 = Steps.generateOne(sequenceD.Id, wireTapProcess.Id);
-        Step__c stepD2 = Steps.generateOne(sequenceD.Id, wireTapProcess.Id);
+        Step__c stepD1 = StepSet.generateOne(sequenceD.Id, wireTapProcess.Id);
+        Step__c stepD2 = StepSet.generateOne(sequenceD.Id, wireTapProcess.Id);
 
         // Act :
         List<HealthController.Health> terminateHealths =  Terminate.getHealth();

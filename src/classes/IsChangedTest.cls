@@ -3,7 +3,7 @@ private class IsChangedTest {
 
     private static testMethod void canDetermineConfigObject() {
         //arrange processes
-        Process__c isChangedProcess = Processes.generateOne(IsChanged.class);
+        Process__c isChangedProcess = ProcessSet.generateOne(IsChanged.class);
         
         //act
         String actualConfiguration = isChangedProcess.ConfigObject__c;
@@ -175,14 +175,14 @@ private class IsChangedTest {
         String accountId = account.Id;
         
         //arrange processes
-        Process__c isChangedProcess = Processes.generateOne(IsChanged.class);
+        Process__c isChangedProcess = ProcessSet.generateOne(IsChanged.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'IsChangedSequence');
         insert sequence;
         
         //arrange steps
-        Step__c step = Steps.generateOne(sequence.Id, isChangedProcess.Id);
+        Step__c step = StepSet.generateOne(sequence.Id, isChangedProcess.Id);
         
         IsChangedConfiguration__c configuration = [
         SELECT Id, NewHash__c, OldHash__c, NewBlobId__c, OldBlobId__c, NewValue__c, OldValue__c, FieldName__c
@@ -223,14 +223,14 @@ private class IsChangedTest {
         String accountId = account.Id;
         
         //arrange processes
-        Process__c isChangedProcess = Processes.generateOne(IsChanged.class);
+        Process__c isChangedProcess = ProcessSet.generateOne(IsChanged.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'IsChangedSequence');
         insert sequence;
         
         //arrange steps
-        Step__c step = Steps.generateOne(sequence.Id, isChangedProcess.Id);
+        Step__c step = StepSet.generateOne(sequence.Id, isChangedProcess.Id);
 
         IsChangedConfiguration__c configuration = [
         SELECT Id, NewHash__c, OldHash__c, NewBlobId__c, OldBlobId__c, NewValue__c, OldValue__c, FieldName__c
@@ -273,12 +273,12 @@ private class IsChangedTest {
         insert account;
         String accountId = account.Id;
         
-        Process__c isChangedProcess = Processes.generateOne(IsChanged.class);
+        Process__c isChangedProcess = ProcessSet.generateOne(IsChanged.class);
         
         Sequence__c sequence = new Sequence__c(Name = 'IsChangedSequence');
         insert sequence;
         
-        Step__c step = Steps.generateOne(sequence.Id, isChangedProcess.Id);
+        Step__c step = StepSet.generateOne(sequence.Id, isChangedProcess.Id);
 
         IsChangedConfiguration__c configuration = [
             SELECT Id, NewHash__c, OldHash__c, NewBlobId__c, OldBlobId__c, NewValue__c, OldValue__c, FieldName__c

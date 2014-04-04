@@ -2,16 +2,16 @@
     
     static private Id setupSequence() {
         //arrange processes
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
         //arrange sequences
         Sequence__c sequence = new Sequence__c(Name = 'SequenceBuilderExtensionTest');
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = Steps.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c terminateStep = Steps.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c wiretapStep = StepSet.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = StepSet.generateOne(sequence.Id, terminateProcess.Id);
         
         return sequence.Id;
     }
@@ -94,7 +94,7 @@
         Id sequenceId = setupSequence();
         
         //arrange process to append
-        Process__c publishProcess = Processes.generateOne(Publish.class);
+        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
         
         //act
         SequenceBuilderExtension.appendStep(sequenceId, publishProcess.Id);

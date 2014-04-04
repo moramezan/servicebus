@@ -3,7 +3,7 @@ private class LogInitializerTest {
 
         private static testMethod void canDetermineConfigObject() {
         //arrange processes
-        Process__c logInitializerProcess = Processes.generateOne(LogInitializer.class);
+        Process__c logInitializerProcess = ProcessSet.generateOne(LogInitializer.class);
         
         //act
         String actualConfiguration = logInitializerProcess.ConfigObject__c;
@@ -18,7 +18,7 @@ private class LogInitializerTest {
         String sequenceName  = 'LogInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA'; // no data present
-        Process__c logInitializerProcess = Processes.generateOne(LogInitializer.class);
+        Process__c logInitializerProcess = ProcessSet.generateOne(LogInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -80,7 +80,7 @@ private class LogInitializerTest {
         String sequenceName  = 'LogInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logInitializerProcess = Processes.generateOne(LogInitializer.class);
+        Process__c logInitializerProcess = ProcessSet.generateOne(LogInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -145,7 +145,7 @@ private class LogInitializerTest {
         String sequenceName  = 'LogInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logInitializerProcess = Processes.generateOne(LogInitializer.class);
+        Process__c logInitializerProcess = ProcessSet.generateOne(LogInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -207,7 +207,7 @@ private class LogInitializerTest {
         String sequenceName  = 'LogInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logInitializerProcess = Processes.generateOne(LogInitializer.class);
+        Process__c logInitializerProcess = ProcessSet.generateOne(LogInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -243,7 +243,7 @@ private class LogInitializerTest {
         String sequenceName  = 'LogInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logInitializerProcess = Processes.generateOne(LogInitializer.class);
+        Process__c logInitializerProcess = ProcessSet.generateOne(LogInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;

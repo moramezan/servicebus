@@ -1,6 +1,6 @@
-public class Messages extends SalesforceObjectSet {
+public class MessageSet extends SalesforceObjectSet {
 
-    public Messages(List<Message__c> sobjects) {
+    public MessageSet(List<Message__c> sobjects) {
         super(sobjects);
     }
     

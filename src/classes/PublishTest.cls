@@ -2,7 +2,7 @@
 
     static testMethod void canDetermineConfigObject() {
         //arrange processes
-        Process__c publishProcess = Processes.generateOne(Publish.class);
+        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
         
         //act
         String actualConfiguration = publishProcess.ConfigObject__c;
@@ -18,7 +18,7 @@
         insert eventType;
         
         //arrange processes
-        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
+        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
         
         //arrange publish config
         PublishConfiguration__c pubConfig = new PublishConfiguration__c(
@@ -30,7 +30,7 @@
         Sequence__c target = new Sequence__c(Name = 'target');
         insert target;
         
-        Step__c subscribeStep = Steps.generateOne(target.Id, subscribeProcess.Id);
+        Step__c subscribeStep = StepSet.generateOne(target.Id, subscribeProcess.Id);
         
         //arrange subscribe config
         Database.update(new SubscribeConfiguration__c(
@@ -64,14 +64,14 @@
     
     static testMethod void testUnconfiguredPublishProcessThrowsException() {
         //arrange processes
-        Process__c process = Processes.generateOne(Publish.class);
+        Process__c process = ProcessSet.generateOne(Publish.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        Step__c step = Steps.generateOne(sequence.Id, process.Id);
+        Step__c step = StepSet.generateOne(sequence.Id, process.Id);
         
         PublishConfiguration__c config = new PublishConfiguration__c();
         insert config;
@@ -91,7 +91,7 @@
     
     static testMethod void testNoSubscribersStillReturnsOneMessage() {
         //arrange processes
-        Process__c process = Processes.generateOne(Publish.class);
+        Process__c process = ProcessSet.generateOne(Publish.class);
         
         EventType__c eventType = new EventType__c(Name = 'TestEvent');
         insert eventType;
@@ -101,7 +101,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = Steps.generateOne(sequence.Id, process.Id);
+        Step__c step = StepSet.generateOne(sequence.Id, process.Id);
         Database.update(new PublishConfiguration__c(
             Id = step.ConfigurationId__c,
             EventType__c = eventType.Id
@@ -130,14 +130,14 @@
         insert eventType;
         
         //arrange processes
-        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
-        Process__c publishProcess = Processes.generateOne(Publish.class);
+        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
+        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
         
         //arrange publish sequences and steps
         Sequence__c publisher = new Sequence__c(Name = 'Publisher');
         insert publisher;
         
-        Step__c publisherStep = Steps.generateOne(publisher.Id, publishProcess.Id);
+        Step__c publisherStep = StepSet.generateOne(publisher.Id, publishProcess.Id);
         Database.update(new PublishConfiguration__c(
             Id = publisherStep.ConfigurationId__c,
             EventType__c = eventType.Id
@@ -147,7 +147,7 @@
         Sequence__c subscriber1 = new Sequence__c(Name = 'Subscriber1');
         insert subscriber1;
         
-        Step__c subscriber1step = Steps.generateOne(subscriber1.Id, subscribeProcess.Id);
+        Step__c subscriber1step = StepSet.generateOne(subscriber1.Id, subscribeProcess.Id);
         Database.update(new SubscribeConfiguration__c(
             Id = subscriber1step.ConfigurationId__c,
             EventType__c = eventType.Id
@@ -156,7 +156,7 @@
         Sequence__c subscriber2 = new Sequence__c(Name = 'Subscriber2');
         insert subscriber2;
         
-        Step__c subscriber2step = Steps.generateOne(subscriber2.Id, subscribeProcess.Id);
+        Step__c subscriber2step = StepSet.generateOne(subscriber2.Id, subscribeProcess.Id);
         Database.update(new SubscribeConfiguration__c(
             Id = subscriber2step.ConfigurationId__c,
             EventType__c = eventType.Id
@@ -181,12 +181,12 @@
         Sequence__c sequenceA = new Sequence__c(Name = 'SequenceA');
         insert sequenceA;
  
-        // Processes :: Publish process not defined
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        // ProcessSet :: Publish process not defined
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
         
         // Sequence A
-        Step__c stepA1 = Steps.generateOne(sequenceA.Id, wiretapProcess.Id);
-        Step__c stepA2 = Steps.generateOne(sequenceA.Id, wiretapProcess.Id);
+        Step__c stepA1 = StepSet.generateOne(sequenceA.Id, wiretapProcess.Id);
+        Step__c stepA2 = StepSet.generateOne(sequenceA.Id, wiretapProcess.Id);
 
         // Act :
         List<HealthController.Health> PublishHealths = Publish.getHealth();
@@ -222,14 +222,14 @@
         insert sequenceZ;
 
         //arrange processes
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c publishProcess = Processes.generateOne(Publish.class);
-        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
+        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
 
         // Sequence Z - OK : Event is Subscribed
-        Step__c stepZ1 = Steps.generateOne(sequenceZ.Id, publishProcess.Id);
-        Step__c stepZ2 = Steps.generateOne(sequenceZ.Id, wiretapProcess.Id);
-        Step__c stepZ3 = Steps.generateOne(sequenceSubscribe.Id, subscribeProcess.Id);
+        Step__c stepZ1 = StepSet.generateOne(sequenceZ.Id, publishProcess.Id);
+        Step__c stepZ2 = StepSet.generateOne(sequenceZ.Id, wiretapProcess.Id);
+        Step__c stepZ3 = StepSet.generateOne(sequenceSubscribe.Id, subscribeProcess.Id);
 
         // Event
         EventType__c eventTypeSubscribed = new EventType__c(Name = 'an-event-that-IS-Subscribed');
@@ -280,12 +280,12 @@
         insert sequenceA;
 
         //arrange proceses
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c publishProcess = Processes.generateOne(Publish.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
         
         // Sequence A - Warning : Ok but event Not Subscribed
-        Step__c stepA1 = Steps.generateOne(sequenceA.Id, publishProcess.Id);
-        Step__c stepA2 = Steps.generateOne(sequenceA.Id, wiretapProcess.Id);
+        Step__c stepA1 = StepSet.generateOne(sequenceA.Id, publishProcess.Id);
+        Step__c stepA2 = StepSet.generateOne(sequenceA.Id, wiretapProcess.Id);
         
         // Event
         EventType__c eventTypeNotSubscribed = new EventType__c(Name = 'an-event-not-Subscribed');
@@ -328,12 +328,12 @@
         insert sequenceB;
 
         //arrange processes
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c publishProcess = Processes.generateOne(Publish.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
         
         // Sequence B - Problem : No Configuration
-        Step__c stepB1 = Steps.generateOne(sequenceB.Id, publishProcess.Id);
-        Step__c stepB2 = Steps.generateOne(sequenceB.Id, wiretapProcess.Id);
+        Step__c stepB1 = StepSet.generateOne(sequenceB.Id, publishProcess.Id);
+        Step__c stepB2 = StepSet.generateOne(sequenceB.Id, wiretapProcess.Id);
 
         Id configurationIdB1 = ((Step__c)SalesforceObject.getById(stepB1.Id)).ConfigurationId__c;
         Database.delete(configurationIdB1);
@@ -368,12 +368,12 @@
         insert sequenceB;
 
         //arrange processes
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c publishProcess = Processes.generateOne(Publish.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
         
         // Sequence B - Problem : No Configuration
-        Step__c stepB1 = Steps.generateOne(sequenceB.Id, publishProcess.Id);
-        Step__c stepB2 = Steps.generateOne(sequenceB.Id, wiretapProcess.Id);
+        Step__c stepB1 = StepSet.generateOne(sequenceB.Id, publishProcess.Id);
+        Step__c stepB2 = StepSet.generateOne(sequenceB.Id, wiretapProcess.Id);
         
         // Act :
         List<HealthController.Health> PublishHealths = Publish.getHealth();

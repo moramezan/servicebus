@@ -20,8 +20,8 @@ public class BrokerTest{
         Integer stackDepthThreshold = 3;
         Broker.stackDepthThreshold  = stackDepthThreshold;
 
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -167,9 +167,9 @@ public class BrokerTest{
 
     static testMethod void canCorrectlyResolveAndPersistMessages() {
         //arrange processes
-        Process__c markProcess = Processes.generateOne(Mark.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
-        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
+        Process__c markProcess = ProcessSet.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
         
         //arrange sequence
         String sequenceNameA = 'sequenceA';
@@ -177,9 +177,9 @@ public class BrokerTest{
         insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = Steps.generateOne(sequenceA.Id, subscribeProcess.Id);
-        Step__c stepA2 = Steps.generateOne(sequenceA.Id, markProcess.Id);
-        Step__c stepA3 = Steps.generateOne(sequenceA.Id, terminateProcess.Id);
+        Step__c stepA1 = StepSet.generateOne(sequenceA.Id, subscribeProcess.Id);
+        Step__c stepA2 = StepSet.generateOne(sequenceA.Id, markProcess.Id);
+        Step__c stepA3 = StepSet.generateOne(sequenceA.Id, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         Decimal positionA3 = stepA3.Position__c;
@@ -343,10 +343,10 @@ public class BrokerTest{
     
     static testMethod void canCorrectlyResolveMessages() {
         // arrange
-        Process__c markProcess = Processes.generateOne(Mark.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
+        Process__c markProcess = ProcessSet.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
 
         String sequenceNameA = 'sequenceA';
         String sequenceNameB = 'sequenceB';
@@ -460,14 +460,14 @@ public class BrokerTest{
     
     static testMethod void callingEnqueueSuccessfullyCallsRestartImpl() {
         //arrange processes
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        Steps.generateOne(sequence.Id, terminateProcess.Id);
+        StepSet.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange broker implementation custom setting
         String theSequenceName = 'TestSequence';
@@ -490,14 +490,14 @@ public class BrokerTest{
     
     static testMethod void callingEnqueueSuccessfullyCallEnqueueImpAndCreatesDocument() {
         //arrange processes
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        Steps.generateOne(sequence.Id, terminateProcess.Id);
+        StepSet.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange
         insert new BrokerSettings__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
@@ -682,14 +682,14 @@ public class BrokerTest{
     
     static testMethod void testProcessWithoutClassThrowsThrowsExpectedException() {
         //arrange processes
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        Steps.generateOne(sequence.Id, terminateProcess.Id);
+        StepSet.generateOne(sequence.Id, terminateProcess.Id);
         
         terminateProcess.FullyQualifiedClassName__c = 'lalala';
         update terminateProcess; //pretend we deleted the class
@@ -710,14 +710,14 @@ public class BrokerTest{
     
     static testMethod void testNonProcessPluginThrowsTypeException() {
         //arrange processes
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange step
-        Steps.generateOne(sequence.Id, terminateProcess.Id);
+        StepSet.generateOne(sequence.Id, terminateProcess.Id);
         
         terminateProcess.FullyQualifiedClassName__c = 'Account';
         update terminateProcess; //Account is DEFINITELY not a Process.Plugin
@@ -773,8 +773,8 @@ public class BrokerTest{
 	static testMethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusQueued() {
         // arrange
         Boolean isPaused =  true;
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -820,11 +820,11 @@ public class BrokerTest{
         System.assertEquals( expectedStatus, actualStatus);
     }
 
-    static testMethod void callingEnqueueWhenBrokerIsNotPausedProcessesMessages() {
+    static testMethod void callingEnqueueWhenBrokerIsNotPausedProcessSetMessages() {
         // arrange
         Boolean isPaused =  false;
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -877,8 +877,8 @@ public class BrokerTest{
  
     static testMethod void canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError() {
         // arrange
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);

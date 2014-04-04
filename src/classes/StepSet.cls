@@ -1,6 +1,6 @@
-public class Steps extends SalesforceObjectSet {
+public class StepSet extends SalesforceObjectSet {
     
-    public Steps(List<Step__c> sobjects) {
+    public StepSet(List<Step__c> sobjects) {
         super(sobjects);
     }
     

@@ -1,6 +1,6 @@
-public class Sequences extends SalesforceObjectSet {
+public class SequenceSet extends SalesforceObjectSet {
 
-    public Sequences(List<Sequence__c> sobjects) {
+    public SequenceSet(List<Sequence__c> sobjects) {
         super(sobjects);
     }
     

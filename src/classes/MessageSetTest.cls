@@ -1,4 +1,4 @@
-@isTest private class MessagesTest {
+@isTest private class MessageSetTest {
     
     //after insert
     

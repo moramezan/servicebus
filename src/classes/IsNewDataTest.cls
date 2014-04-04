@@ -3,7 +3,7 @@ private class IsNewDataTest{
 
 private static testMethod void canDetermineConfigObject() {
     //arrange processes
-    Process__c IsNewDataProcess = Processes.generateOne(IsNewData.class);
+    Process__c IsNewDataProcess = ProcessSet.generateOne(IsNewData.class);
     
     //act
     String actualConfiguration = IsNewDataProcess.ConfigObject__c;
@@ -159,12 +159,12 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesParameters(
     insert account;
     String accountId = account.Id;
     
-    Process__c IsNewDataProcess = Processes.generateOne(IsNewData.class);
+    Process__c IsNewDataProcess = ProcessSet.generateOne(IsNewData.class);
     
     Sequence__c sequence = new Sequence__c(Name = 'IsNewDataSequence');
     insert sequence;
     
-    Step__c step = Steps.generateOne(sequence.Id, IsNewDataProcess.Id);
+    Step__c step = StepSet.generateOne(sequence.Id, IsNewDataProcess.Id);
     
     IsNewDataConfiguration__c configuration = [
         SELECT Id, MinimumHoursBetween__c
@@ -201,12 +201,12 @@ private static testMethod void callingInvokeWhenZeroDebuncersReleasesMessageForO
     Integer extraOutSideWindowHours = 5;
     DateTime lastFiredDate = System.Now().addHours( -1 * ( minimumHours + extraOutSideWindowHours ) );
     
-    Process__c IsNewDataProcess = Processes.generateOne(IsNewData.class);
+    Process__c IsNewDataProcess = ProcessSet.generateOne(IsNewData.class);
     
     Sequence__c sequence = new Sequence__c(Name = 'IsNewDataSequence');
     insert sequence;
     
-    Step__c step = Steps.generateOne(sequence.Id, IsNewDataProcess.Id);
+    Step__c step = StepSet.generateOne(sequence.Id, IsNewDataProcess.Id);
     
     IsNewDataConfiguration__c configuration = [
     SELECT Id, MinimumHoursBetween__c
@@ -250,12 +250,12 @@ private static testMethod void callingInvokeWhenZeroDebuncersSwallowsMessageForI
     Integer extraInSideWindowHours = 5;
     DateTime lastFiredDate = System.Now().addHours( -1 * ( minimumHours - extraInSideWindowHours ) );
     
-    Process__c IsNewDataProcess = Processes.generateOne(IsNewData.class);
+    Process__c IsNewDataProcess = ProcessSet.generateOne(IsNewData.class);
     
     Sequence__c sequence = new Sequence__c(Name = 'IsNewDataSequence');
     insert sequence;
     
-    Step__c step = Steps.generateOne(sequence.Id, IsNewDataProcess.Id);
+    Step__c step = StepSet.generateOne(sequence.Id, IsNewDataProcess.Id);
     
     IsNewDataConfiguration__c configuration = [
         SELECT Id, MinimumHoursBetween__c

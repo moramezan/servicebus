@@ -2,16 +2,16 @@
     
     static testMethod void testMoveStepBefore() {
         //arrange processes
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
         //arrange sequences
         Sequence__c sequence = new Sequence__c(Name = 'StepTest');
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = Steps.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c terminateStep = Steps.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c wiretapStep = StepSet.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = StepSet.generateOne(sequence.Id, terminateProcess.Id);
         
         //assert before state
         System.assertEquals(1, wiretapStep.Position__c);
@@ -32,16 +32,16 @@
     
     static testMethod void testMoveStepAfter() {
         //arrange processes
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
         //arrange sequences
         Sequence__c sequence = new Sequence__c(Name = 'StepTest');
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = Steps.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c terminateStep = Steps.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c wiretapStep = StepSet.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = StepSet.generateOne(sequence.Id, terminateProcess.Id);
         
         //assert before state
         System.assertEquals(1, wiretapStep.Position__c);

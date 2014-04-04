@@ -41,9 +41,9 @@
         <members>MessageProcessExtension</members>
         <members>MessageResumeQueueExtension</members>
         <members>MessageResumeQueueExtensionTest</members>
+        <members>MessageSet</members>
+        <members>MessageSetTest</members>
         <members>MessageShowDataExtension</members>
-        <members>Messages</members>
-        <members>MessagesTest</members>
         <members>PostInstallClass</members>
         <members>PostInstallClassTest</members>
         <members>PostUninstallClass</members>
@@ -54,8 +54,8 @@
         <members>ProcessDiscoverExtensionTest</members>
         <members>ProcessRefreshBatch</members>
         <members>ProcessRefreshBatchTest</members>
-        <members>ProcessTest</members>
-        <members>Processes</members>
+        <members>ProcessSet</members>
+        <members>ProcessSetTest</members>
         <members>Publish</members>
         <members>PublishTest</members>
         <members>SalesforceObject</members>
@@ -74,13 +74,13 @@
         <members>Sequence</members>
         <members>SequenceBuilderExtension</members>
         <members>SequenceBuilderExtensionTest</members>
+        <members>SequenceSet</members>
+        <members>SequenceSetTest</members>
         <members>SequenceTest</members>
-        <members>Sequences</members>
-        <members>SequencesTest</members>
         <members>Step</members>
+        <members>StepSet</members>
+        <members>StepSetTest</members>
         <members>StepTest</members>
-        <members>Steps</members>
-        <members>StepsTest</members>
         <members>Subscribe</members>
         <members>SubscribeTest</members>
         <members>Subsequence</members>

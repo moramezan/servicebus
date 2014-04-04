@@ -6,7 +6,7 @@ public class Sequence extends SalesforceObject {
         super(sequence);
     }
     
-    public Steps fetchSteps() {
+    public StepSet fetchSteps() {
         List<String> fields = new List<String>();
         
         //step fields
@@ -36,7 +36,7 @@ public class Sequence extends SalesforceObject {
             step.ConfigurationName__c = configurationName.left(80);
         }
         
-        return new Steps(steps);
+        return new StepSet(steps);
     }
     
     public Step appendStep(Id processId) {

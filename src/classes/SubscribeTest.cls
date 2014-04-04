@@ -2,7 +2,7 @@
     
     static testMethod void canDetermineConfigObject() {
         //arrange processes
-        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
+        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
         
         //act
         String actualConfiguration = subscribeProcess.ConfigObject__c;
@@ -85,14 +85,14 @@
         insert sequenceZ;
         
         //generate processes
-        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
-        Process__c publishProcess = Processes.generateOne(Publish.class);
+        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
         
         // Sequence Z - OK : Event is published
-        Step__c stepZ1 = Steps.generateOne(sequenceZ.Id, subscribeProcess.Id);
-        Step__c stepZ2 = Steps.generateOne(sequenceZ.Id, wiretapProcess.Id);
-        Step__c stepZ3 = Steps.generateOne(sequencePublish.Id, publishProcess.Id);
+        Step__c stepZ1 = StepSet.generateOne(sequenceZ.Id, subscribeProcess.Id);
+        Step__c stepZ2 = StepSet.generateOne(sequenceZ.Id, wiretapProcess.Id);
+        Step__c stepZ3 = StepSet.generateOne(sequencePublish.Id, publishProcess.Id);
  
         // Event
         EventType__c  eventTypePublished  = new EventType__c(Name = 'an-event-that-IS-published');
@@ -141,16 +141,16 @@
 
     static testMethod void callingGetHealthReturnsExpectedListContaningStatusEqWarning() {
         //arrange processes
-        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
         
         //arrange sequence
         Sequence__c sequenceA = new Sequence__c(Name = 'SequenceA');
         insert sequenceA;
         
         // Sequence A - Warning : Ok but event Not published
-        Step__c stepA1 = Steps.generateOne(sequenceA.Id, subscribeProcess.Id);
-        Step__c stepA2 = Steps.generateOne(sequenceA.Id, wiretapProcess.Id);
+        Step__c stepA1 = StepSet.generateOne(sequenceA.Id, subscribeProcess.Id);
+        Step__c stepA2 = StepSet.generateOne(sequenceA.Id, wiretapProcess.Id);
 
         // Event
         EventType__c eventNotPublished = new EventType__c(Name = 'an-event-not-published');
@@ -190,16 +190,16 @@
     
     static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNotFirst() {
         //arrange processes
-        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
         
         //arrange sequence
         Sequence__c sequenceB = new Sequence__c(Name = 'SequenceB');
         insert sequenceB;
         
         // Sequence B - Problem : Subscribe Not first Step
-        Step__c stepB1 = Steps.generateOne(sequenceB.Id, wiretapProcess.Id);
-        Step__c stepB2 = Steps.generateOne(sequenceB.Id, subscribeProcess.Id);
+        Step__c stepB1 = StepSet.generateOne(sequenceB.Id, wiretapProcess.Id);
+        Step__c stepB2 = StepSet.generateOne(sequenceB.Id, subscribeProcess.Id);
         
         // Act :
         List<HealthController.Health> SubscribeHealths =  Subscribe.getHealth();
@@ -226,15 +226,15 @@
     
     static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorGtOne() {
         //arrange processes
-        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
+        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
         
         //arrange sequence
         Sequence__c sequenceC = new Sequence__c(Name = 'SequenceC');
         insert sequenceC;
         
         // Sequence C - Problem : Subscribe Step Occurs more than once
-        Step__c stepC1 = Steps.generateOne(sequenceC.Id, subscribeProcess.Id);
-        Step__c stepC2 = Steps.generateOne(sequenceC.Id, subscribeProcess.Id);
+        Step__c stepC1 = StepSet.generateOne(sequenceC.Id, subscribeProcess.Id);
+        Step__c stepC2 = StepSet.generateOne(sequenceC.Id, subscribeProcess.Id);
             
         // Event
         EventType__c eventNotPublished = new EventType__c(Name = 'an-event-not-published');
@@ -283,16 +283,16 @@
 
     static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNoConfig() {
         //arrange processes
-        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
         
         //arrange sequence
         Sequence__c sequenceB = new Sequence__c(Name = 'SequenceB');
         insert sequenceB;
 
         // Sequence B - Problem : No Configuration
-        Step__c stepB1 = Steps.generateOne(sequenceB.Id, subscribeProcess.Id);
-        Step__c stepB2 = Steps.generateOne(sequenceB.Id, wiretapProcess.Id);
+        Step__c stepB1 = StepSet.generateOne(sequenceB.Id, subscribeProcess.Id);
+        Step__c stepB2 = StepSet.generateOne(sequenceB.Id, wiretapProcess.Id);
 
         Id configurationIdB1 = ((Step__c)SalesforceObject.getById(stepB1.Id)).ConfigurationId__c;
         Database.delete(configurationIdB1);
@@ -322,16 +322,16 @@
     
     static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNoEventConfig() {
         //arrange processes
-        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
-        Process__c wiretapProcess = Processes.generateOne(Wiretap.class);
+        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
+        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
         
         //arrange sequence
         Sequence__c sequenceB = new Sequence__c(Name = 'SequenceB');
         insert sequenceB;
         
         // Sequence B - Problem : No Configuration
-        Step__c stepB1 = Steps.generateOne(sequenceB.Id, subscribeProcess.Id);
-        Step__c stepB2 = Steps.generateOne(sequenceB.Id, wiretapProcess.Id);
+        Step__c stepB1 = StepSet.generateOne(sequenceB.Id, subscribeProcess.Id);
+        Step__c stepB2 = StepSet.generateOne(sequenceB.Id, wiretapProcess.Id);
 
         // Act :
         List<HealthController.Health> SubscribeHealths =  Subscribe.getHealth();

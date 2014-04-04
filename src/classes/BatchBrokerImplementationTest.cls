@@ -2,8 +2,8 @@
  
     static testMethod void callingRestartSuccessfullyCallsRestartImp() {
         //arrange processes
-        Process__c markProcess = Processes.generateOne(Mark.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c markProcess = ProcessSet.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
         //arrange sequence
         String sequenceNameA = 'sequenceA';
@@ -11,8 +11,8 @@
         insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = Steps.generateOne(sequenceA.Id, markProcess.Id);
-        Step__c stepA2 = Steps.generateOne(sequenceA.Id, terminateProcess.Id);
+        Step__c stepA1 = StepSet.generateOne(sequenceA.Id, markProcess.Id);
+        Step__c stepA2 = StepSet.generateOne(sequenceA.Id, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         
@@ -33,7 +33,7 @@
     
     static testMethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToMessage() {
         //arrange processes
-        Process__c failureProcess = Processes.generateOne(BrokerTest.FailurePlugin.class);
+        Process__c failureProcess = ProcessSet.generateOne(BrokerTest.FailurePlugin.class);
         
         //arrange sequence
         String  sequenceNameA = 'sequenceA';
@@ -41,7 +41,7 @@
         insert sequenceA;
         
         //arrange step
-        Step__c stepA1 = Steps.generateOne(sequenceA.Id, failureProcess.Id);
+        Step__c stepA1 = StepSet.generateOne(sequenceA.Id, failureProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         
         //arrange specific broker implementation
@@ -74,8 +74,8 @@
 
     static testMethod void callingBrokerStartSuccessfullyCallsStartImp() {
         //arrange processes
-        Process__c markProcess = Processes.generateOne(Mark.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c markProcess = ProcessSet.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
         //arrange sequence
         String  sequenceNameA = 'sequenceA';
@@ -83,8 +83,8 @@
         insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = Steps.generateOne(sequenceA.Id, markProcess.Id);
-        Step__c stepA2 = Steps.generateOne(sequenceA.Id, terminateProcess.Id);
+        Step__c stepA1 = StepSet.generateOne(sequenceA.Id, markProcess.Id);
+        Step__c stepA2 = StepSet.generateOne(sequenceA.Id, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         

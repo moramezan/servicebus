@@ -11,7 +11,7 @@ public with sharing class ProcessRefreshBatch implements Database.Batchable<SObj
         for (ApexClass apexClass : scope) {
             Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
             try {
-                Process__c edaProcess = Processes.fromType(reflector);
+                Process__c edaProcess = ProcessSet.fromType(reflector);
                 edaProcesses.add(edaProcess);
             } catch (Exception e) {
                 //fuckup happened, probably

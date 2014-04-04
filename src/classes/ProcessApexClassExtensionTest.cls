@@ -2,7 +2,7 @@
 private class ProcessApexClassExtensionTest{
     private static testMethod void callingViewPageReturnsExpectedUrl ()  {
         // arrange
-        Process__c process = Processes.generateOne(Publish.class);
+        Process__c process = ProcessSet.generateOne(Publish.class);
         ApexPages.StandardController controller = new ApexPages.StandardController(process);
         ProcessApexClassExtension ProcessApexClassExtension =  new ProcessApexClassExtension(controller);
         

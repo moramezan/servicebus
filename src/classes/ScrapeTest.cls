@@ -23,7 +23,7 @@ public class ScrapeTest {
     
     private static  testMethod void canDetermineConfigObject() {
         //arrange processes
-        Process__c scrapeProcess = Processes.generateOne(Scrape.class);
+        Process__c scrapeProcess = ProcessSet.generateOne(Scrape.class);
         
         //act
         String actualConfiguration = scrapeProcess.ConfigObject__c;
@@ -35,14 +35,14 @@ public class ScrapeTest {
     
     private static  testMethod void callingInvokeCreatesExpectedAttachment() {
         //arrange processes
-        Process__c scrapeProcess = Processes.generateOne(Scrape.class);
+        Process__c scrapeProcess = ProcessSet.generateOne(Scrape.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'ScrapeSequence');
         insert sequence;
         
         //arrange steps
-        Step__c step = Steps.generateOne(sequence.Id, scrapeProcess.Id);
+        Step__c step = StepSet.generateOne(sequence.Id, scrapeProcess.Id);
         Database.update(new ScrapeConfiguration__c(
             Id = step.ConfigurationId__c,
             Endpoint__c = endPoint

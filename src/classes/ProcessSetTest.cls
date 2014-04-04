@@ -1,4 +1,4 @@
-@isTest public class ProcessTest {
+@isTest public class ProcessSetTest {
 
     static testMethod void callingGenerateOneInsertsExpectedProcess() {
         //arrange 
@@ -6,7 +6,7 @@
         Integer actualProcessesBeforeCount = processesBefore.size();  
 
         //act  
-        Process__c markProcess = Processes.generateOne(Mark.class);
+        Process__c markProcess = ProcessSet.generateOne(Mark.class);
  
         //assemble
         List<Process__c> processesAfter = SalesforceObjectSet.listAll(Process__c.SObjectType);
@@ -32,13 +32,13 @@
         String expectedDescription = describeResult.Description;
         String expectedFullyQualifiedClassName = actualType.getName();
         Type innerClass = Type.forName(actualType.getName() + '.' + 'Meta'); 
-        Processes.Meta meta = (Processes.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), Processes.Meta.class);
+        ProcessSet.Meta meta = (ProcessSet.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessSet.Meta.class);
         String expectedConfigObject = meta.ConfigObject.getSObjectType().getDescribe().getName();
         String expectedIcon = meta.icon;
         String expectedDocsPageUrl = Page.SubscribeHelp.getUrl();
         
         //act 
-        Process__c process = Processes.fromType(actualType);
+        Process__c process = ProcessSet.fromType(actualType);
         
         //assemble
         String actualName = process.Name; 

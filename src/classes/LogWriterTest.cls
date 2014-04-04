@@ -6,7 +6,7 @@ private class LogWriterTest{
         String sequenceName  = 'LogWriterSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logWriterProcess = Processes.generateOne(LogWriter.class);
+        Process__c logWriterProcess = ProcessSet.generateOne(LogWriter.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -41,7 +41,7 @@ private class LogWriterTest{
         String sequenceName  = 'LogWriterSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logWriterProcess = Processes.generateOne(LogWriter.class);
+        Process__c logWriterProcess = ProcessSet.generateOne(LogWriter.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -79,7 +79,7 @@ private class LogWriterTest{
         String sequenceName  = 'LogSequence';
         Integer positionA2 =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logWriterProcess = Processes.generateOne(LogWriter.class);
+        Process__c logWriterProcess = ProcessSet.generateOne(LogWriter.class);
                
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;

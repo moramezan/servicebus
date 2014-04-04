@@ -3,25 +3,25 @@ private class  SequenceTest {
             
     private static testMethod void  callingFetchStepsReturnsExpectedStepCollection() {
         // arrange
-        Process__c markProcess = Processes.generateOne(Mark.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
-        Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
+        Process__c markProcess = ProcessSet.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
          
         String sequenceName = 'theSequence';   
         Sequence__c soSequence = new Sequence__c(Name = sequenceName);
         insert soSequence;
         Id soSequenceId = soSequence.Id;
 
-        Step__c stepA1 = Steps.generateOne(soSequenceId, subscribeProcess.Id);
-        Step__c stepA2 = Steps.generateOne(soSequenceId, markProcess.Id);
-        Step__c stepA3 = Steps.generateOne(soSequenceId, terminateProcess.Id);
+        Step__c stepA1 = StepSet.generateOne(soSequenceId, subscribeProcess.Id);
+        Step__c stepA2 = StepSet.generateOne(soSequenceId, markProcess.Id);
+        Step__c stepA3 = StepSet.generateOne(soSequenceId, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         Decimal positionA3 = stepA3.Position__c;
 
         // act 
         Sequence sequence = new Sequence(soSequence);
-        Steps actualSteps  = sequence.fetchSteps();
+        StepSet actualSteps  = sequence.fetchSteps();
         
         // assemble
         List<Step__c> soSteps = actualSteps.getSObjects();
@@ -35,7 +35,7 @@ private class  SequenceTest {
     
     private static testMethod void callingAppendStepAddStepWithExpectedProcessInExpectedPosition() {
         // arrange
-        Process__c markProcess = Processes.generateOne(Mark.class);
+        Process__c markProcess = ProcessSet.generateOne(Mark.class);
 
         String sequenceName = 'theSequence';   
         Sequence__c soSequence = new Sequence__c(Name = sequenceName);
@@ -68,7 +68,7 @@ private class  SequenceTest {
 
    	private static testMethod void callingTerminateAddsTerminateStepIfNoTerminateStepExists() {
         // arrange
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
 
         String sequenceName = 'theSequence';   
         Sequence__c soSequence = new Sequence__c(Name = sequenceName);
@@ -100,9 +100,9 @@ private class  SequenceTest {
     
     private static testMethod void callingTerminateDoesNotAddTerminateStepIfTerminateStepExists() {
         // arrange
-        //Process__c markProcess = Processes.generateOne(Mark.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
-        //Process__c subscribeProcess = Processes.generateOne(Subscribe.class);
+        //Process__c markProcess = ProcessSet.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        //Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
          
         String sequenceName = 'theSequence';   
         Sequence__c soSequence = new Sequence__c(Name = sequenceName);
@@ -135,22 +135,22 @@ private class  SequenceTest {
  
     private static testMethod void callingDeleteStepWillNotDeleteStepOnADifferentSequence() {
         // arrange
-        Process__c markProcess = Processes.generateOne(Mark.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c markProcess = ProcessSet.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
  
         String sequenceNameA = 'theSequenceA';   
         Sequence__c soSequenceA = new Sequence__c(Name = sequenceNameA);
         insert soSequenceA;
         Id soSequenceAId = soSequenceA.Id;
-        Step__c stepA1 = Steps.generateOne(soSequenceAId, markProcess.Id);
-        Step__c stepA2 = Steps.generateOne(soSequenceAId, terminateProcess.Id);
+        Step__c stepA1 = StepSet.generateOne(soSequenceAId, markProcess.Id);
+        Step__c stepA2 = StepSet.generateOne(soSequenceAId, terminateProcess.Id);
 
         String sequenceNameB = 'theSequenceB';   
         Sequence__c soSequenceB = new Sequence__c(Name = sequenceNameB);
         insert soSequenceB;
         Id soSequenceBId = soSequenceB.Id;
-        Step__c stepB1 = Steps.generateOne(soSequenceBId, markProcess.Id);
-        Step__c stepB2 = Steps.generateOne(soSequenceBId, terminateProcess.Id);
+        Step__c stepB1 = StepSet.generateOne(soSequenceBId, markProcess.Id);
+        Step__c stepB2 = StepSet.generateOne(soSequenceBId, terminateProcess.Id);
 
         // act 
         Id notStepAId =  stepB1.Id;
@@ -169,15 +169,15 @@ private class  SequenceTest {
 
         private static testMethod void callingDeleteStepWillDeleteStepOnThisSequence() {
         // arrange
-        Process__c markProcess = Processes.generateOne(Mark.class);
-        Process__c terminateProcess = Processes.generateOne(Terminate.class);
+        Process__c markProcess = ProcessSet.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
  
         String sequenceNameA = 'theSequenceA';   
         Sequence__c soSequenceA = new Sequence__c(Name = sequenceNameA);
         insert soSequenceA;
         Id soSequenceAId = soSequenceA.Id;
-        Step__c stepA1 = Steps.generateOne(soSequenceAId, markProcess.Id);
-        Step__c stepA2 = Steps.generateOne(soSequenceAId, terminateProcess.Id);
+        Step__c stepA1 = StepSet.generateOne(soSequenceAId, markProcess.Id);
+        Step__c stepA2 = StepSet.generateOne(soSequenceAId, terminateProcess.Id);
  
 
         // act 
