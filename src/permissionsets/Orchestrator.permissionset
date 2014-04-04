@@ -901,6 +901,10 @@
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>OrchestratorsGuide</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>ProcessApexClass</apexPage>
         <enabled>true</enabled>
     </pageAccesses>

@@ -115,6 +115,7 @@
         <members>MessageProcess</members>
         <members>MessageResumeQueue</members>
         <members>MessageShowData</members>
+        <members>OrchestratorsGuide</members>
         <members>ProcessApexClass</members>
         <members>ProcessDevelopersGuide</members>
         <members>ProcessDiscover</members>

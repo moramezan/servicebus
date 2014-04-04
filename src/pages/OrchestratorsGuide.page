@@ -1,0 +1,465 @@
+<apex:page showHeader="false" standardStylesheets="true">
+    
+    <style>
+        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+        a {text-decoration:none;}
+        code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:112%;}
+
+    </style>
+
+    <br />
+    
+  
+    <apex:pageBlock title="Orchestrator's Guide" mode="maindetail">
+        <br/>
+        <apex:pageBlockSection columns="1"  collapsible="false" >
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b> Intended Audience  : </b> Configurator / Business Analyst / Salesforce System Administrator 
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+           
+            <apex:pageBlockSectionItem >
+                <br/>
+                <b> About This Guide  : </b>  
+                <br/>
+                <ul>
+                    <li> This guide is intended for Business Analysts and System Administrators who  primarily make use of point and click actions to operate, configure, and maintain the Event Driven Architecture application.
+                    </li>
+                    <br/>
+                    <li>The purpose of this guide is to:
+                        <ol>
+                        <br/>                        
+                            <li>Explain basic messaging and communication concepts and terminology.
+                            </li>
+                            <li>Describe how to use point and click  as a tool to configure event driven processing sequences.
+                            </li>
+                            <li>Describe how to use use point and click  to operate and monitor the Event Driven Architecture application.
+                            </li>
+                        </ol>
+                    </li>
+                    <br/>
+                    <li> This guide does not cover designing building and deploying custom event driven processes. 
+                    <br/>( This topic is described in a separate guide - see XXXX )
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+ 
+
+ 
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b> Chapter Summary : </b>  
+                <br/>
+                <ul>
+                    <li> <b>CHAPTER 01 : </b>  Introduction to  Point and Click activities 
+                    </li>
+                    <li> <b>CHAPTER 02 : </b>  Messaging Concepts and EDA
+                    </li>
+                    <li> <b>CHAPTER 03 : </b>  Event Driven Architecture Concepts
+                    </li>
+                    <li> <b>CHAPTER 04 : </b>  Framework Boundaries
+                    </li>
+                    <li> <b>CHAPTER 05 : </b>  Getting Started 
+                    </li>
+                </ul>
+           </apex:pageBlockSectionItem>
+           
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b> Contact Us  : </b>  
+                <br/>
+                <ul>
+                    <li> <b>Email address : </b> :: RATSAAS-EMAIL ::
+                    </li>
+                    <li> <b>Phone number : </b> :: RATSAAS-PHONE ::
+                    </li>
+                </ul>
+           </apex:pageBlockSectionItem>                    
+        </apex:pageBlockSection>        
+    </apex:pageBlock>    
+
+
+    
+ 
+
+
+     
+ 
+
+
+                        
+    
+    <apex:pageBlock mode="maindetail">
+        <br/>
+        <apex:pageBlockSection title="CHAPTER 01 : Introduction to  Point and Click activities ." columns="1"  collapsible="false" >
+        
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <br/> You can use Point and Click to design and configure your Event Driven processing sequences : 
+                <br/>
+                <ul>
+                    <li>Arrange processing steps into a logical processing sequence
+                    </li>
+                    <li>Combine two or more processing sequences by using PubSub or Branching techniques.
+                    </li>
+                    <li>Register custom event driven process delivered via third party Salesforce packages 
+                    </li>
+                    <li>Enqueue a  test message to  a specific Sequence.
+                    </li>
+                </ul>
+
+
+                <br/>
+                
+                
+                <br/> You can use Point and Click to operate and monitor your Event Driven processing sequences : 
+                <br/>
+                <ul>
+                    <li>Start and Stop the framework.
+                    </li>
+                    <li>Restart corrected messages.
+                    </li>
+                    <li>Monitor the system health.
+                    </li>
+                    <li>Monitor related messages.
+                    </li>
+                    <li>Monitor processing details within a processing sequence
+                    </li>
+                </ul>
+           </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>    
+
+ 
+    <apex:pageBlock mode="maindetail">
+        <br/>
+        <apex:pageBlockSection title="CHAPTER 02 : Messaging Concepts and EDA" columns="1"  collapsible="false" >
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Messages and Events :</b><br/>
+                <ul>
+                    <li>Events occur all the time. (For example: the clock strikes twelve, the fuel tank reaches empty)
+                    </li>
+                    <li>To represent details about an event in a computer system, we use a special object called a "message"; 
+                    </li> 
+                    <li>The primary purpose of a message is to provide a useful mechanism to communicate between processes that a particular event has occurred.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+ 
+        
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Event Based Architecture :</b><br/>
+                <ul>
+                    <li>Specific events are only relevant to specific processes - for this reason a system "broker"  routes specific event messages to specific processes within the system.
+                    </li> 
+                    <li>Combinations of specific Event-Messages to specific Processes can be reduced to a table called a "routing table". The routing table is used by the "broker".
+                    </li> 
+                    <li>Breaking up work into specific processes that respond to specific event messages is called Event Driven Architecture. ("EDA")
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+ 
+        
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Command Response Architecture : </b><br/>
+                <ul>
+                    <li>Most implementations on Salesforce make use of an alternative to EDA call "command-response architecture".
+                    </li> 
+                    <li>Under this model, work is centrally directed from a command such as a [button click] or a  [trigger action].
+                    </li> 
+                    <li>Complexity quickly grows in an exponential manner as possible execution paths and exception handling paths are added to the logic directly attached to the command.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+                 
+                 
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Event Driven Processes :</b><br/>
+                <ul>
+                    <li>As previously mentioned, Events in Event Driven Architecture  are represented as messages
+                    </li> 
+                    <li>A message received by a  process that has previously registered it's interest in that Event causes it's underlying Apex logic to execute
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+ 
+        
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Processing Sequence :</b><br/>
+                <ul>
+                    <li>As previously mentioned, Event Driven Architecture allows useful work to take place on the Salesforce platform by processes that have previously registered their interest the occurrence of a specific Event.
+                    </li> 
+                    <li>In practise this means that a process registers it's interest in events emitted from the process that immediately precedes it.
+                    </li> 
+                    <li>A register of interest containing sufficient number of processes will naturally resemble a Sequence of processing steps
+                    </li> 
+                    <li>This  register is called a "Sequence" and the sequential processing steps within it are called "Sequence steps"
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+ 
+        
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Summary :</b><br/>
+                <ul>
+                    <li>Event Driven Architecture provides a framework that logically maps  processing steps to an underlying business requirement.
+                        <br/>Emphasis is placed on  narrowly defined , composable units of work , each of which responding to a specific event that has occurred. 
+                        <br/>It provides a clean model that limits complexity in the system to just the testable apex implementation details of any given process.
+                    </li>
+                    <br/>
+                    <li>In contrast to EDA, the command-response paradigm attempts to attach all possible logical code paths and associated exception handling to a single specific command. 
+                        <br/>This creates code complexity that is not easily tested or modified.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+
+    <apex:pageBlock mode="maindetail">
+        <br/>
+        <apex:pageBlockSection title="CHAPTER 03 : Event Driven Architecture Concepts" columns="1"  collapsible="false" >
+            <apex:pageBlockSectionItem > 
+                <br/>
+                The Event Driven Architecture concepts described in this chapter are:<br/>
+                <ul> 
+                    <li>Processing
+                    </li>
+                    <li>Event Driven Process
+                    </li>
+                    <li>Routing
+                    </li>
+                    <li>Configuration
+                    </li>
+                    <li>Logging
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+ 
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Processing :</b><br/>
+                <ul> 
+                    <li>Work in  Event Driven Architecture is broken up into many specific tasks
+                    </li>
+                    <li>Each task is implemented as an Apex class and is called an Event Driven Process.
+                    </li>
+                    <li>Logically related processes are assembled by the System Configurator / Business Analyst into Sequential Processing Steps called a Sequence
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+           
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Event Driven Process  :</b><br/>
+                <ul> 
+                    <li>Every Event Driven Process responds to an input event message by emmiting a list of zero or more output  messages
+                    </li>
+                    <li>The EDA framework is designed so that output  messages from a process automatically feed the input stream of the very next process in a Processing Sequence.
+                    </li>
+                    <li>The EDA framework has by default a number of ready made processes that can be sequenced together so that useful work can be completed.
+                    </li>
+                    <li>These ready made processes include: 
+                             Wiretap ,
+                             Jump  ,
+                             Branch ,
+                             SubSequence ,
+                             Publish and
+                             Subscribe
+                    </li>         
+                    <li>Additional processes can be easily created to implement tasks specific to your particular requirement(s) -- detailed instructions for building processes can be found here XXXX.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+ 
+ 
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Routing :</b><br/>
+                <ul> 
+                    <li>Routing is the term used to denote the marshalling event messages between  event driven  processes.
+                    </li>
+                    <li>As previously mentioned, the assembling or linking of processes in a specific order via point and click creates a sequence of processing steps.
+                    </li>
+                    <li>Each Processing Step  in the Sequence has a definitive Position associated with it.
+                    </li>
+                    <li>The first step in the Sequence has a position of "1", the second has a position of "2" and so forth
+                    </li>
+                    <li>Using the ordered position of each step, the framework is able to "route" an event messages along it's  Processing Sequence
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+           
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Configuration :</b><br/>
+                <ul> 
+                    <li>The EDA framework envisages a clear distinction between :
+                        <ol>
+                            <li>  WHAT is to be performed (declarative point and click assembling of processes) and 
+                            </li>
+                            <li>  HOW it is performed ( apex code contained within any given event driven process and the subject of this XXX guide)
+                            </li>
+                        </ol>
+                    </li>
+                    
+                    <br/>
+                    
+                    <li>Assembling  processes in a useful sequence and thereby fulfilling the intent of the  underlying business requirement is the domain of the business analyst and not necessarily the Apex Developer.
+                        <br/>
+                        <br/>It therefore the role of the System Orchestrator / Business Analyst to configure the EDA framework  :
+                        <ol>
+                            <li>  by linking event driven  processes together in a Processing Sequences using  friendly names that adequately describe the collective nature of the work being preformed (for example "ProcessInvoices" )
+                            </li>
+                            <li>  by identifying tasks in a Sequence that have no corresponding Event Driven Architecture process ("missing processes")
+                            </li>
+                            <li>  to specify and provision missing event driven  processes by securing the services of a suitable Force.com developer where necessary
+                            </li>
+                        </ol>
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+ 
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Logging :</b><br/>
+                    <br/>Salesforce prevents writing to the system log in a Production environment.
+                    <br/>As a useful substitute, the EDA framework  provides two out-of-the box logging mechanisms :  
+                <ul> 
+                    <li><b>WireTap </b>
+                        <br/>A Wiretap process acts a no-operation pass through process and has no side effects. 
+                        <br/>Wiretap will however send an email containing the current event message to a nominated user. 
+                    </li>
+                    
+                    <br/>
+                    
+                    <li> <b>LogWriter</b>
+                        <br/>LogWriter acts a no-operation pass through process and has no side effects. 
+                        <br/>LogWriter will however store the event message under a useful business identifier. 
+                        <br/>Many LogWriter processes placed at strategic steps in a Sequence can usefully track and relate the progress of event messages using a common business identifier.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+
+        </apex:pageBlockSection>
+    </apex:pageBlock>  
+      
+
+    <apex:pageBlock mode="maindetail">
+        <br/>
+        <apex:pageBlockSection title="CHAPTER 04 : Framework Boundaries" columns="1"  collapsible="false" >
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>External Boundary - Inbound :</b><br/>
+                <ul>
+                    <li>An external event (for example "Time is 12:01" , "Stock price changed" ) is not directly consumable by the event driven framework.
+                    </li>
+                    <li>Instead, EDA framework configurators make use of the enqueue() method to transform  an external event  into an event message which is injected into the EDA framework.
+                    </li>
+                    <li>The EDA framework supports two variations of the enqueue() method, namely 
+                        <ol>
+                            <li>  Enqueue(String SequenceName, Id id ) and 
+                            </li>
+                            <li>  Enqueue(String SequenceName, Blob data )
+                            </li>
+                        </ol>
+                        <br/><b>Usage:</b>
+                        <br/>The  "SequenceName" parameter defines which Processing Sequence configured  in the EDA framework will react to the injected event message
+                        <br/>Use the Enqueue(String SequenceName, Id id ) method whenever the data related to the external event is retrievable as an Salesforce object by passing in that object's Id.
+                        <br/>Use the Enqueue(String SequenceName, Blob data ) method whenever the data related to the external event is a blob of data not yet persisted in Salesforce by passing in the Blob.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+           
+           
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>External Boundary - Outbound :</b><br/>
+                <ul>
+                    <li>Any process is free to communicate outside the framework boundary via an http callout, the invocation of a workflow rule DML operations and / or the sending of one or more email messages.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+                
+                
+                
+            <apex:pageBlockSectionItem > 
+                <br/>
+                <b>Internal Boundary :</b><br/>
+                <ul>
+                    <li>All Sequences have a "Terminator" process as their last processing step. (Conceptually this is very similar to a "buffer stop" at the end of a railway line)
+                    </li>
+                    <li>A terminator processing step is automatically inserted when the Processing Sequence is created.
+                    </li>
+                    <li>Sequences may interact with one another via one of four standard pre-packaged processes, namely Jump, Branch, Subroutine , or Publish/Subscribe - see section XXXX for further details
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>      
+        </apex:pageBlockSection>    
+    </apex:pageBlock>    
+
+ 
+ 
+ 
+    <apex:pageBlock mode="maindetail">
+        <br/>
+        <apex:pageBlockSection title="CHAPTER 05 : Getting Started" columns="1"  collapsible="false" >       
+            <apex:pageBlockSectionItem > 
+                <br/> The list below describes the order of activities for setting up and using your Event Driven system with references to other parts of this guide:
+                <br/><br/>
+                <b>System Installation :</b><br/>    
+                <ul>
+                    <li>Install the Event Driven Architecture package. This is described in the Installation Guide.
+                    </li>
+                    <li>Click configure button
+                    </li>
+                    <li>Define Orchestrator user(s). See page NNN.
+                    </li>
+                    <li>Confirm that the system has been correctly setup - see APPENDIX X , Tutorial NNN
+                    </li>
+                </ul>
+                
+                <br/>
+                
+                <b>Application Design and Configuration :</b><br/>    
+                <ul>
+                    <li>Analyse your messaging application
+                    </li>
+                    <li>Define the receive events, and the injection of those events into the Event Driven Architecture This is described in the XXX guides.
+                    </li>
+                    <li>Design your own conversion processes as needed. See page NNN.
+                    </li>
+                    <li>Configure Sequences and Sequence Steps, as needed. See page NNN.
+                    </li>
+                    <li>Monitor the system using the Wiretap and LogWriter processes. See page NNN.
+                    </li>
+                </ul>
+                <br/><br/>
+           </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+</apex:page>
