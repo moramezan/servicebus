@@ -41,8 +41,6 @@
         <members>MessageProcessExtension</members>
         <members>MessageResumeQueueExtension</members>
         <members>MessageResumeQueueExtensionTest</members>
-        <members>MessageSet</members>
-        <members>MessageSetTest</members>
         <members>MessageShowDataExtension</members>
         <members>PostInstallClass</members>
         <members>PostInstallClassTest</members>
