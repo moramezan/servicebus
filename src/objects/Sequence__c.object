@@ -57,7 +57,7 @@
     <fields>
         <fullName>StepsCount__c</fullName>
         <externalId>false</externalId>
-        <label>StepsCount</label>
+        <label>Number Of Steps</label>
         <summaryForeignKey>Step__c.Sequence__c</summaryForeignKey>
         <summaryOperation>count</summaryOperation>
         <trackTrending>false</trackTrending>
@@ -66,6 +66,8 @@
     <label>Sequence</label>
     <listViews>
         <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>StepsCount__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
@@ -74,7 +76,10 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>Sequences</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+    </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <validationRules>
         <fullName>UniqueName</fullName>

@@ -5,8 +5,8 @@
         <field>Name</field>
         <formula>IF(
     ISBLANK(Sequence__c),
-    &quot;This step must be configured.&quot;,
-    &quot;Fires sequence &apos;&quot; + Sequence__r.Name + &quot;&apos; in series then returns to this sequence.&quot;
+    &quot;This step must be configured&quot;,
+    &quot;Fires sequence &apos;&quot; + Sequence__r.Name + &quot;&apos; in series then returns to this sequence&quot;
 )</formula>
         <name>Update Subsequence Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>

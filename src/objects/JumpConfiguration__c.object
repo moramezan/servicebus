@@ -69,7 +69,11 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>Jump Configurations</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+    </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
         <fullName>ShowStep</fullName>

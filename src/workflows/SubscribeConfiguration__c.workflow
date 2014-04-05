@@ -5,8 +5,8 @@
         <field>Name</field>
         <formula>IF(
     ISBLANK(EventType__c),
-    &quot;This step must be configured.&quot;,
-    &quot;Fires when the &apos;&quot; + EventType__r.Name + &quot;&apos; event is published.&quot;
+    &quot;This step must be configured&quot;,
+    &quot;Fires when the &apos;&quot; + EventType__r.Name + &quot;&apos; event is published&quot;
 )</formula>
         <name>Update Subscribe Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>

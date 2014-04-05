@@ -94,7 +94,7 @@
         <fullName>FullyQualifiedClassName__c</fullName>
         <caseSensitive>false</caseSensitive>
         <externalId>true</externalId>
-        <label>Fully qualified class name</label>
+        <label>Fully Qualified Class Name</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -124,12 +124,9 @@
     <label>Process</label>
     <listViews>
         <fullName>All</fullName>
-        <columns>NAME</columns>
         <columns>Tag__c</columns>
-        <columns>ConfigObject__c</columns>
-        <columns>CustomSetting__c</columns>
-        <columns>LAST_UPDATE</columns>
-        <columns>Icon__c</columns>
+        <columns>NAME</columns>
+        <columns>Description__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
@@ -139,6 +136,9 @@
     </nameField>
     <pluralLabel>Processes</pluralLabel>
     <searchLayouts>
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <listViewButtons>Discover</listViewButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>

@@ -5,7 +5,7 @@
         <field>Name</field>
         <formula>IF(
     ISBLANK(Endpoint__c),
-    &quot;This step must be configured.&quot;,
+    &quot;This step must be configured&quot;,
     &quot;Downloads &quot; + Endpoint__c
 )</formula>
         <name>Update Scrape Configuration Name</name>

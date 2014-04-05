@@ -65,7 +65,7 @@
     <fields>
         <fullName>NewBlobId__c</fullName>
         <externalId>false</externalId>
-        <label>NewBlobId</label>
+        <label>New Blob Id</label>
         <length>18</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -75,7 +75,7 @@
     <fields>
         <fullName>NewHash__c</fullName>
         <externalId>false</externalId>
-        <label>NewHash</label>
+        <label>New Hash</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -85,7 +85,7 @@
     <fields>
         <fullName>NewValue__c</fullName>
         <externalId>false</externalId>
-        <label>NewValue</label>
+        <label>New Value</label>
         <length>32768</length>
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
@@ -104,7 +104,7 @@
     <fields>
         <fullName>OldBlobId__c</fullName>
         <externalId>false</externalId>
-        <label>OldBlobId</label>
+        <label>Old Blob Id</label>
         <length>18</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -114,7 +114,7 @@
     <fields>
         <fullName>OldHash__c</fullName>
         <externalId>false</externalId>
-        <label>OldHash</label>
+        <label>Old Hash</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -124,7 +124,7 @@
     <fields>
         <fullName>OldValue__c</fullName>
         <externalId>false</externalId>
-        <label>OldValue</label>
+        <label>Old Value</label>
         <length>32768</length>
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
@@ -136,7 +136,11 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>IsChanged Configuration</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+    </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
         <fullName>SchemaSelector</fullName>

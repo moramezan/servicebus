@@ -90,7 +90,11 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>Log Configurations</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+    </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
         <fullName>ChangeDynamicGroupIdentifier</fullName>
