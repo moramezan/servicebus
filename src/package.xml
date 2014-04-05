@@ -187,6 +187,7 @@
         <members>LogWriterEntry__c.Stamp__c</members>
         <members>LogWriterEntry__c.Step__c</members>
         <members>Message__c.Exception__c</members>
+        <members>Message__c.IsOverdue__c</members>
         <members>Message__c.Parameters__c</members>
         <members>Message__c.Process__c</members>
         <members>Message__c.Sequence__c</members>
@@ -285,7 +286,9 @@
     <types>
         <members>LogGroup__c.All</members>
         <members>Message__c.All</members>
+        <members>Message__c.Overdue</members>
         <members>Process__c.All</members>
+        <members>Process__c.EventDrivenArchitecture</members>
         <members>Sequence__c.All</members>
         <name>ListView</name>
     </types>

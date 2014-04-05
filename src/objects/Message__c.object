@@ -61,6 +61,16 @@
         <type>TextArea</type>
     </fields>
     <fields>
+        <fullName>IsOverdue__c</fullName>
+        <externalId>false</externalId>
+        <formula>/* Shows messages not processed within one hour */
+NOW() &gt; LastModifiedDate + (1/24)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Overdue</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Parameters__c</fullName>
         <externalId>false</externalId>
         <label>Parameters</label>
@@ -139,8 +149,25 @@
         <columns>Exception__c</columns>
         <columns>Sequence__c</columns>
         <columns>Process__c</columns>
+        <columns>IsOverdue__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>Overdue</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>Exception__c</columns>
+        <columns>Sequence__c</columns>
+        <columns>Process__c</columns>
+        <columns>IsOverdue__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>IsOverdue__c</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <label>Overdue</label>
     </listViews>
     <nameField>
         <displayFormat>N-{0000000000}</displayFormat>

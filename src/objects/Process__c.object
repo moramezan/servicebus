@@ -130,6 +130,19 @@
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
+    <listViews>
+        <fullName>EventDrivenArchitecture</fullName>
+        <columns>Tag__c</columns>
+        <columns>NAME</columns>
+        <columns>Description__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Tag__c</field>
+            <operation>equals</operation>
+            <value>Event Driven Architecture</value>
+        </filters>
+        <label>Event Driven Architecture</label>
+    </listViews>
     <nameField>
         <label>Process Name</label>
         <type>Text</type>
