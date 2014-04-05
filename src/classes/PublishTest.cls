@@ -43,8 +43,8 @@
             'eda_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
-        Publish branch = new Publish();
-        List<Map<String,Object>> parametersList = EdaUtility.convert(branch.invoke(new Process.PluginRequest(parameters)));
+        Publish plugin = new Publish();
+        List<Map<String,Object>> parametersList = EdaUtility.convert(plugin.invoke(new Process.PluginRequest(parameters)));
         
         //should return one for sub, one for passthru
         Integer expectedSize = 2;
@@ -64,25 +64,25 @@
     
     static testMethod void testUnconfiguredPublishProcessThrowsException() {
         //arrange processes
-        Process__c process = ProcessSet.generateOne(Publish.class);
+        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        Step__c step = StepSet.generateOne(sequence.Id, process.Id);
+        Step__c step = StepSet.generateOne(sequence.Id, publishProcess.Id);
         
         PublishConfiguration__c config = new PublishConfiguration__c();
         insert config;
         
-        Publish publishPlugin = new Publish();
+        Publish plugin = new Publish();
         Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'TestSequence', 'eda_Position' => 1, 'eda_ConfigObjectId' => config.Id};
         Process.PluginRequest request = new Process.PluginRequest(parameters);
         
         //act
         Boolean thrown = false;
-        try {publishPlugin.invoke(request);}
+        try {plugin.invoke(request);}
         catch (Publish.PublishException e) {thrown = true;}
         
         //assert
@@ -91,7 +91,7 @@
     
     static testMethod void testNoSubscribersStillReturnsOneMessage() {
         //arrange processes
-        Process__c process = ProcessSet.generateOne(Publish.class);
+        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
         
         EventType__c eventType = new EventType__c(Name = 'TestEvent');
         insert eventType;
@@ -101,7 +101,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = StepSet.generateOne(sequence.Id, process.Id);
+        Step__c step = StepSet.generateOne(sequence.Id, publishProcess.Id);
         Database.update(new PublishConfiguration__c(
             Id = step.ConfigurationId__c,
             EventType__c = eventType.Id
@@ -109,10 +109,10 @@
         
         String data = '{"eda_SequenceName":"TestSequence","eda_Position":1,"eda_ConfigObjectId":"' + step.ConfigurationId__c + '"}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
-        Publish publishPlugin = new Publish();
+        Publish plugin = new Publish();
         
         //act
-        Process.PluginResult results = publishPlugin.invoke(new Process.PluginRequest(parameters));
+        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> parametersList = EdaUtility.convert(results);
         
         //assert
@@ -166,8 +166,8 @@
         Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'Publisher', 'eda_Position' => 1, 'eda_ConfigObjectId' => publisherStep.ConfigurationId__c};
         
         //act
-        Publish process = new Publish();
-        Process.PluginResult results = process.invoke(new Process.PluginRequest(parameters));
+        Publish plugin = new Publish();
+        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> parametersList = EdaUtility.convert(results);
         
         //assert
@@ -181,7 +181,7 @@
         Sequence__c sequenceA = new Sequence__c(Name = 'SequenceA');
         insert sequenceA;
  
-        // ProcessSet :: Publish process not defined
+        // Process :: Publish process not defined
         Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
         
         // Sequence A

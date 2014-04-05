@@ -16,10 +16,10 @@
         //arrange
         String data = '{"herp":"derp"}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
-        Subscribe process = new Subscribe();
+        Subscribe plugin = new Subscribe();
         
         //act
-        Process.PluginResult result = process.invoke(new Process.PluginRequest(parameters));
+        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
         
         //assert
         List<Map<string, object>> parametersList = EdaUtility.convert(result);
@@ -33,7 +33,7 @@
         System.assertEquals(expectedData, actualData);
     }
 
-      static testMethod void callingGetHealthReturnsExpectedListContaingStausEqUnknown() {
+      static testMethod void callingGetHealthReturnsExpectedListContaingStatusEqUnknown() {
 
         // Arrange :
         Sequence__c sequenceA = new Sequence__c(Name = 'SequenceA');

@@ -41,8 +41,8 @@
         });
         
         //act
-        Subsequence process = new Subsequence();
-        Process.PluginResult result = process.invoke(request);
+        Subsequence plugin = new Subsequence();
+        Process.PluginResult result = plugin.invoke(request);
         List<Map<String,Object>> parametersList = EdaUtility.convert(result);
         
         //asserts

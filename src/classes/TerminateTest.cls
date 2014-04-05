@@ -36,8 +36,8 @@ private class TerminateTest
         Decimal expectedPosition = subsequencePosition;
 
         // Act
-        Terminate terminate = new Terminate();
-        Process.PluginResult results = terminate.invoke(new Process.PluginRequest(parameters));
+        Terminate plugin = new Terminate();
+        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
 
         // prepare
@@ -74,8 +74,8 @@ private class TerminateTest
         Decimal expectedSize = 0;
  
         // Act
-        Terminate terminate = new Terminate();
-        Process.PluginResult results = terminate.invoke(new Process.PluginRequest(parameters));
+        Terminate plugin = new Terminate();
+        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
 
         // prepare
@@ -96,10 +96,10 @@ private class TerminateTest
         Sequence__c sequence = new Sequence__c(Name = subsequenceName);
         insert sequence;
         
-        Process__c process = ProcessSet.generateOne(Subsequence.class);
+        Process__c subsequenceProcess = ProcessSet.generateOne(Subsequence.class);
         
-        Step__c step01 = StepSet.generateOne(sequence.Id, process.Id);
-        Step__c step02 = StepSet.generateOne(sequence.Id, process.Id);
+        Step__c step01 = StepSet.generateOne(sequence.Id, subsequenceProcess.Id);
+        Step__c step02 = StepSet.generateOne(sequence.Id, subsequenceProcess.Id);
         
         Id subsequenceStepId01 = step01.Id ;
         Id subsequenceStepId02 = step02.Id ;
@@ -116,14 +116,14 @@ private class TerminateTest
 
 
         // Act
-        Terminate terminate = new Terminate();
+        Terminate plugin = new Terminate();
         
-        Process.PluginResult resultsInvokeFirst = terminate.invoke(new Process.PluginRequest(parametersFirst));
+        Process.PluginResult resultsInvokeFirst = plugin.invoke(new Process.PluginRequest(parametersFirst));
         List<Map<String,Object>> actualOutParametersListFirst = EdaUtility.convert(resultsInvokeFirst);
         
         Map<String,Object> parametersSecond = actualOutParametersListFirst[0].clone(); //-- Terminate hands back one
         
-        Process.PluginResult resultsInvokeSecond = terminate.invoke(new Process.PluginRequest(parametersSecond));
+        Process.PluginResult resultsInvokeSecond = plugin.invoke(new Process.PluginRequest(parametersSecond));
         List<Map<String,Object>> actualOutParametersListSecond = EdaUtility.convert(resultsInvokeSecond);
         
         // prepare

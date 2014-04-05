@@ -27,8 +27,8 @@
             'eda_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
-        Branch branch = new Branch();
-        List<Map<String,Object>> parametersList = EdaUtility.convert(branch.invoke(new Process.PluginRequest(parameters)));
+        Branch plugin = new Branch();
+        List<Map<String,Object>> parametersList = EdaUtility.convert(plugin.invoke(new Process.PluginRequest(parameters)));
         
         List<Object> expectedIds = null;
         List<Object> actualIds = (List<Object>)parametersList[1].get('eda_SubsequenceStepIds');
@@ -54,10 +54,10 @@
         };
         
         //arrange processable
-        Branch process = new Branch();
+        Branch plugin = new Branch();
         
         //act
-        Process.PluginResult result = process.invoke(new Process.PluginRequest(parameters));
+        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> parametersList = EdaUtility.convert(result);
         
         //assert
@@ -107,14 +107,14 @@
         };
         
         //arrange process
-        Branch process = new Branch();
+        Branch plugin = new Branch();
         
         //arrange exception
         Boolean exceptionThrown = false;
         
         //act
         try {
-            Process.PluginResult result = process.invoke(new Process.PluginRequest(parameters));
+            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
             List<Map<String,Object>> parametersList = EdaUtility.convert(result);
         } catch (Exception e) {
             exceptionThrown = true;

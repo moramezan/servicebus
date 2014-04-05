@@ -26,10 +26,10 @@ private class WiretapTest {
    
 
         // Act
-        Wiretap wireTap = new Wiretap();
+        Wiretap plugin = new Wiretap();
         Boolean actualFlagException = false;
         try {
-            Process.PluginResult results = wireTap.invoke(new Process.PluginRequest(parameters));
+            Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
         } catch (Exception e) {
            actualFlagException = true;
         }
@@ -58,8 +58,8 @@ private class WiretapTest {
         Integer expectedSize = 1;
 
         // Act
-        Wiretap wireTap = new Wiretap();
-        Process.PluginResult results = wireTap.invoke(new Process.PluginRequest(parameters));
+        Wiretap plugin = new Wiretap();
+        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> actualParametersList = EdaUtility.convert(results);
 
         // prepare

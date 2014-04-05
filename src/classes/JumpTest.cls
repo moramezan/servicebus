@@ -37,8 +37,8 @@
         };
         
         //act
-        Jump process = new Jump();
-        List<Map<String,Object>> parametersList = EdaUtility.convert(process.invoke(new Process.PluginRequest(parameters)));
+        Jump plugin = new Jump();
+        List<Map<String,Object>> parametersList = EdaUtility.convert(plugin.invoke(new Process.PluginRequest(parameters)));
         
         //assert
         Integer expectedSize = 1;

@@ -38,16 +38,16 @@
         String expectedDocsPageUrl = Page.SubscribeHelp.getUrl();
         
         //act 
-        Process__c process = ProcessSet.fromType(actualType);
+        Process__c subscribeProcess = ProcessSet.fromType(actualType);
         
         //assemble
-        String actualName = process.Name; 
-        String actualTag = process.Tag__c; 
-        String actualDescription = process.Description__c; 
-        String actualFullyQualifiedClassName = process.FullyQualifiedClassName__c; 
-        String actualConfigObject = process.ConfigObject__c; 
-        String actualIcon = process.Icon__c; 
-        String actualDocsPageUrl = process.DocsPageUrl__c;
+        String actualName = subscribeProcess.Name; 
+        String actualTag = subscribeProcess.Tag__c; 
+        String actualDescription = subscribeProcess.Description__c; 
+        String actualFullyQualifiedClassName = subscribeProcess.FullyQualifiedClassName__c; 
+        String actualConfigObject = subscribeProcess.ConfigObject__c; 
+        String actualIcon = subscribeProcess.Icon__c; 
+        String actualDocsPageUrl = subscribeProcess.DocsPageUrl__c;
 
         //assert
         System.assertEquals(expectedName , actualName );

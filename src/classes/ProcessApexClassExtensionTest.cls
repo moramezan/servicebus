@@ -2,8 +2,8 @@
 private class ProcessApexClassExtensionTest{
     private static testMethod void callingViewPageReturnsExpectedUrl ()  {
         // arrange
-        Process__c process = ProcessSet.generateOne(Publish.class);
-        ApexPages.StandardController controller = new ApexPages.StandardController(process);
+        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
+        ApexPages.StandardController controller = new ApexPages.StandardController(publishProcess);
         ProcessApexClassExtension ProcessApexClassExtension =  new ProcessApexClassExtension(controller);
         
         List<ApexClass> apexClasses = [SELECT Id FROM ApexClass WHERE Name = 'Publish'];

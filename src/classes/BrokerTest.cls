@@ -820,7 +820,7 @@ public class BrokerTest{
         System.assertEquals( expectedStatus, actualStatus);
     }
 
-    static testMethod void callingEnqueueWhenBrokerIsNotPausedProcessSetMessages() {
+    static testMethod void callingEnqueueWhenBrokerIsNotPausedProcessesMessages() {
         // arrange
         Boolean isPaused =  false;
         Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);

@@ -26,8 +26,8 @@ private class MarkTest {
         Boolean expectedGateGroupIdFlag = true;
 
         // Act
-        Mark mark = new Mark();
-        Process.PluginResult results = mark.invoke(new Process.PluginRequest(parameters));
+        Mark plugin = new Mark();
+        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
 
         // prepare

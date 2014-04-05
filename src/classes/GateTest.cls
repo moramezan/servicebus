@@ -47,8 +47,8 @@ private  class GateTest {
         Integer expectedGateItemsSize = (Integer) count;
 
         // Act
-        Gate gate = new Gate();
-        Process.PluginResult results = gate.invoke(new Process.PluginRequest(parameters));
+        Gate plugin = new Gate();
+        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
 
         // prepare
@@ -105,8 +105,8 @@ private  class GateTest {
         Integer expectedGateItemsSize = (Integer) ( count - 1) ;
 
         // Act
-        Gate gate = new Gate();
-        Process.PluginResult results = gate.invoke(new Process.PluginRequest(parameters));
+        Gate plugin = new Gate();
+        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
         List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
 
         // prepare
