@@ -99,6 +99,7 @@
         <members>BranchConfigurationHelp</members>
         <members>BranchConfigurationShowStep</members>
         <members>ConfirmSetupTutorial</members>
+        <members>CoreProcessesGuide</members>
         <members>FutureBroker</members>
         <members>Health</members>
         <members>IsChangedConfigurationHelp</members>
