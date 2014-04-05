@@ -347,7 +347,7 @@
         <members>IsNewDataConfiguration__c.OnIsNewDataConfigurationUpsert</members>
         <members>JumpConfiguration__c.OnJumpConfigurationUpsert</members>
         <members>LogConfiguration__c.OnLogInitializerConfigurationUpsert</members>
-        <members>Message__c.OnMessageError</members>
+        <members>Message__c.OnError</members>
         <members>PublishConfiguration__c.OnPublishConfigurationUpsert</members>
         <members>ScrapeConfiguration__c.OnScrapeConfigurationUpsert</members>
         <members>Step__c.OnStepInsert</members>
