@@ -1,6 +1,5 @@
-@isTest
-private class LogConfigurationControllerTest{
-    private static testMethod void controllerCoverage ()  {
+@isTest private class LogConfigurationControllerTest{
+    static testMethod void controllerCoverage ()  {
         // arrange
         LogConfiguration__c  logConfiguration = new LogConfiguration__c();
         insert logConfiguration;
@@ -11,9 +10,14 @@ private class LogConfigurationControllerTest{
         System.PageReference pageRef = logConfigurationController.LogGroupView();
     }
     
+    static testMethod void testPodProtocolAndHost() {
+        LogConfigurationController.IdentityResult result = new LogConfigurationController.IdentityResult();
+        String expectedProtocolAndHost = Url.getSalesforceBaseUrl().toExternalForm();
+        String actualProtocolAndHost = LogConfigurationController.podProtocolAndHost();
+        System.assertEquals(expectedProtocolAndHost, actualProtocolAndHost);
+    }
     
-    private static testMethod void callingGetLogGroupPageReferenceReturnsExpectedPageReference ()  {
-    
+    static testMethod void callingGetLogGroupPageReferenceReturnsExpectedPageReference ()  {
         // arrange
         LogConfiguration__c  logConfiguration = new LogConfiguration__c();
         insert logConfiguration;
