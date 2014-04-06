@@ -1014,6 +1014,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>TerminateHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>WiretapHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>

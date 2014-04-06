@@ -1,0 +1,18 @@
+<apex:page tabStyle="Process__c" showHeader="false" standardStylesheets="true">
+    
+    <style>
+        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+    </style>
+    <apex:form >
+        <apex:pageBlock mode="maindetail">
+            <apex:pageBlockSection title="Introducing the Terminate Process" columns="2" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <p>Every Sequence must have a Terminate Process.</p>
+                    <p>A Terminate process is automatically inserted as a step when a Sequence is created.</p>
+                    <p>It is the orchestrator's responsibility to ensure the termination process is the final step in the Sequence.</p>
+                    <p>Any processes after the Termination step will not be executed.</p>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

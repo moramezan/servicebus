@@ -2,6 +2,7 @@ public with sharing class Terminate implements Process.Plugin {
     
     public class Meta {
         public String Icon = 'stop';
+        public String DocsPageUrl = Page.TerminateHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe() {
