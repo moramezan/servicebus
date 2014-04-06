@@ -942,6 +942,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>PublishConfigurationHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>PublishConfigurationManageEventTypes</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
