@@ -3,7 +3,7 @@ public with sharing class Branch implements Process.Plugin {
     public class Meta {
         public SObject ConfigObject = BranchConfiguration__c.SObjectType.newSObject();
         public String Icon = 'arrow_branch';
-        public String DocsPageUrl = Page.BranchConfigurationHelp.getUrl();
+        public String DocsPageUrl = Page.BranchHelp.getUrl();
     }
     
     public class BranchException extends Exception {}

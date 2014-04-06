@@ -5,7 +5,7 @@ global class LogInitializer implements Process.Plugin {
     public class Meta {
         public SObject ConfigObject = LogConfiguration__c.SObjectType.newSobject();
         public String Icon = 'pencil';
-        public String DocsPageUrl = Page.LogConfigurationHelp.getUrl();
+        public String DocsPageUrl = Page.LogHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe () {

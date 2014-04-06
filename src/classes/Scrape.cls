@@ -3,7 +3,7 @@ public class Scrape implements Process.Plugin {
     public class Meta {
         public SObject ConfigObject = ScrapeConfiguration__c.SObjectType.newSObject();
         public String Icon = 'html';
-        public String DocsPageUrl = Page.ScrapeConfigurationHelp.getUrl();
+        public String DocsPageUrl = Page.ScrapeHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe() {

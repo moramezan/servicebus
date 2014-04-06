@@ -838,11 +838,11 @@
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <pageAccesses>
-        <apexPage>BranchConfigurationHelp</apexPage>
+        <apexPage>BranchConfigurationShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>BranchConfigurationShowStep</apexPage>
+        <apexPage>BranchHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -866,19 +866,15 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>IsChangedConfigurationHelp</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>IsChangedConfigurationSchemaSelector</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>IsNewDataConfigurationHelp</apexPage>
+        <apexPage>IsChangedHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>JumpConfigurationHelp</apexPage>
+        <apexPage>IsNewDataHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -886,8 +882,8 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>LogConfigurationHelp</apexPage>
-        <enabled>false</enabled>
+        <apexPage>JumpHelp</apexPage>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>LogConfigurationListLogGroups</apexPage>
@@ -895,6 +891,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>LogConfigurationSchemaSelector</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>LogHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -954,10 +954,6 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>PublishConfigurationHelp</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>PublishConfigurationManageEventTypes</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -966,7 +962,11 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ScheduleConfigurationHelp</apexPage>
+        <apexPage>PublishHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>ScheduleHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -974,7 +974,7 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ScrapeConfigurationHelp</apexPage>
+        <apexPage>ScrapeHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -1006,11 +1006,11 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SubsequenceConfigurationHelp</apexPage>
+        <apexPage>SubsequenceConfigurationShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SubsequenceConfigurationShowStep</apexPage>
+        <apexPage>SubsequenceHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

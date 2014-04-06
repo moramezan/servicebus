@@ -98,21 +98,21 @@
         <name>ApexComponent</name>
     </types>
     <types>
-        <members>BranchConfigurationHelp</members>
         <members>BranchConfigurationShowStep</members>
+        <members>BranchHelp</members>
         <members>Configure</members>
         <members>ConfirmSetupTutorial</members>
         <members>CoreProcessesGuide</members>
         <members>FutureBroker</members>
         <members>Health</members>
-        <members>IsChangedConfigurationHelp</members>
         <members>IsChangedConfigurationSchemaSelector</members>
-        <members>IsNewDataConfigurationHelp</members>
-        <members>JumpConfigurationHelp</members>
+        <members>IsChangedHelp</members>
+        <members>IsNewDataHelp</members>
         <members>JumpConfigurationShowStep</members>
-        <members>LogConfigurationHelp</members>
+        <members>JumpHelp</members>
         <members>LogConfigurationListLogGroups</members>
         <members>LogConfigurationSchemaSelector</members>
+        <members>LogHelp</members>
         <members>LogUnderCommonIdentifierTutorial</members>
         <members>MessageHelp</members>
         <members>MessagePauseQueue</members>
@@ -127,12 +127,12 @@
         <members>ProcessDocumentation</members>
         <members>ProcessHelp</members>
         <members>ProcessSettings</members>
-        <members>PublishConfigurationHelp</members>
         <members>PublishConfigurationManageEventTypes</members>
         <members>PublishConfigurationShowStep</members>
-        <members>ScheduleConfigurationHelp</members>
+        <members>PublishHelp</members>
+        <members>ScheduleHelp</members>
         <members>SchemaSelector</members>
-        <members>ScrapeConfigurationHelp</members>
+        <members>ScrapeHelp</members>
         <members>ScrapeWebPageTutorial</members>
         <members>SequenceBuilder</members>
         <members>SequenceHelp</members>
@@ -140,8 +140,8 @@
         <members>SubscribeConfigurationManageEventTypes</members>
         <members>SubscribeConfigurationShowStep</members>
         <members>SubscribeHelp</members>
-        <members>SubsequenceConfigurationHelp</members>
         <members>SubsequenceConfigurationShowStep</members>
+        <members>SubsequenceHelp</members>
         <members>WiretapHelp</members>
         <name>ApexPage</name>
     </types>

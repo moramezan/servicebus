@@ -127,8 +127,8 @@
     <pluralLabel>Steps</pluralLabel>
     <searchLayouts>
         <excludedStandardButtons>New</excludedStandardButtons>
-        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <lookupDialogsAdditionalFields>Position__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>Process__c</lookupDialogsAdditionalFields>
     </searchLayouts>

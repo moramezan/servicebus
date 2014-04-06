@@ -70,8 +70,8 @@
     <pluralLabel>Subscribe Configurations</pluralLabel>
     <searchLayouts>
         <excludedStandardButtons>New</excludedStandardButtons>
-        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
