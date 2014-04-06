@@ -1,16 +1,15 @@
-@isTest
-private class PostUninstallClassTest {
+@isTest private class PostUninstallHandlerTest {
 
     static testMethod void callingUnInstallScheduleCorrectlyUnInstallsSchedule() {
 
         //arrange
         String  name = 'Eda Heartbeat';
-        PostInstallClass.InstallSchedule();
+        PostInstallHandler.InstallSchedule();
         List<CronJobDetail>  cronJobDetailsBefore = [SELECT  Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
         Integer actualSizeBefore = cronJobDetailsBefore.size();
 
         //act
-        PostUnInstallClass.UnInstallSchedule();
+        PostUninstallHandler.uninstallSchedule();
 
         //assemble
         List<CronJobDetail>  cronJobDetailsAfter = [SELECT  Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];

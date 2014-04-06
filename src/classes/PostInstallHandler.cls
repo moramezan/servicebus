@@ -1,4 +1,4 @@
-public class PostInstallClass implements InstallHandler {
+public class PostInstallHandler implements InstallHandler {
 
     /**
      * Id organizationId();

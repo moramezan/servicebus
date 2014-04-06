@@ -1,4 +1,4 @@
-public class PostUninstallClass implements UnInstallHandler {
+public class PostUninstallHandler implements UnInstallHandler {
 
     public void onUninstall(UninstallContext context) {
         unInstallSchedule();
@@ -6,7 +6,7 @@ public class PostUninstallClass implements UnInstallHandler {
 
 
     @TestVisible
-    private static void unInstallSchedule() {
+    private static void uninstallSchedule() {
         String  name = 'Eda Heartbeat';
         List<CronJobDetail>  cronJobDetails = [SELECT   Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
         if (cronJobDetails.size() > 0) {

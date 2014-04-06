@@ -44,10 +44,10 @@
         <members>MessageResumeQueueExtension</members>
         <members>MessageResumeQueueExtensionTest</members>
         <members>MessageShowDataExtension</members>
-        <members>PostInstallClass</members>
-        <members>PostInstallClassTest</members>
-        <members>PostUninstallClass</members>
-        <members>PostUninstallClassTest</members>
+        <members>PostInstallHandler</members>
+        <members>PostInstallHandlerTest</members>
+        <members>PostUninstallHandler</members>
+        <members>PostUninstallHandlerTest</members>
         <members>ProcessApexClassExtension</members>
         <members>ProcessApexClassExtensionTest</members>
         <members>ProcessDiscoverBatch</members>

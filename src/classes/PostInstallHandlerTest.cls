@@ -1,5 +1,4 @@
-@isTest
-private class PostInstallClassTest {
+@isTest private class PostInstallHandlerTest {
     static testMethod void callingInstallScheduleCorrectlyInstallsSchedule() {
         //arrange
         String  name = 'Eda Heartbeat';
@@ -10,7 +9,7 @@ private class PostInstallClassTest {
         System.assertEquals(expectedSizeBefore, actualSizeBefore);
         
         //act
-        PostInstallClass.InstallSchedule();
+        PostInstallHandler.InstallSchedule();
         
         //assert
         Integer expectedSizeAfter = 1;
@@ -26,7 +25,7 @@ private class PostInstallClassTest {
         System.assertEquals(expectedInvocationsBefore, actualInvocationsBefore);
         
         //act
-        InstallHandler handler = new PostInstallClass();
+        InstallHandler handler = new PostInstallHandler();
         Test.testInstall(handler, new Version(1, 0));
         
         //assert

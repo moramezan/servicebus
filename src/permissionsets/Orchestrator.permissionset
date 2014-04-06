@@ -173,19 +173,19 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>PostInstallClass</apexClass>
+        <apexClass>PostInstallHandler</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>PostInstallClassTest</apexClass>
+        <apexClass>PostInstallHandlerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>PostUninstallClass</apexClass>
+        <apexClass>PostUninstallHandler</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>PostUninstallClassTest</apexClass>
+        <apexClass>PostUninstallHandlerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
