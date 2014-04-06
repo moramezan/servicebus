@@ -180,9 +180,9 @@ NOW() &gt; LastModifiedDate + (1/24)</formula>
         <customTabListAdditionalFields>Exception__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Sequence__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Process__c</customTabListAdditionalFields>
-        <excludedStandardButtons>New</excludedStandardButtons>
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>
         <listViewButtons>PauseQueue</listViewButtons>
         <listViewButtons>ResumeQueue</listViewButtons>
     </searchLayouts>

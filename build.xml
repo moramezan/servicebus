@@ -7,6 +7,7 @@
 
     <target name="pull" description="Retrieves all package components to dev org">
         <sf:retrieve username="${sf.username}" password="${sf.password}" serverurl="https://login.salesforce.com" retrieveTarget="src" packageNames="Event Driven Architecture"/>
+        <antcall target="alphabetize-searchlayouts" />
     </target>
 
     <target name="push" description="Deploys all package components to dev org">
@@ -223,6 +224,48 @@
         
         <!-- Tidy up after ourselves -->
         <delete dir="purge" />
+    </target>
+
+    <!-- Very annoying, see https://success.salesforce.com/ideaView?id=08730000000XqgoAAC -->
+    <target name="alphabetize-searchlayouts" description="Normalizes standard button exclusions in custom object XML">
+        <replace dir="src/objects">
+            <replacetoken><![CDATA[
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>]]></replacetoken>
+            <replacevalue><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>]]></replacevalue>
+        </replace>
+        <replace dir="src/objects">
+            <replacetoken><![CDATA[
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>]]></replacetoken>
+            <replacevalue><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>]]></replacevalue>
+        </replace>
+        <replace dir="src/objects">
+            <replacetoken><![CDATA[
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>]]></replacetoken>
+            <replacevalue><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>]]></replacevalue>
+        </replace>
+        <replace dir="src/objects">
+            <replacetoken><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>]]></replacetoken>
+            <replacevalue><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>]]></replacevalue>
+        </replace>
     </target>
 
     <target name="usage">

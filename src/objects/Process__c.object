@@ -149,9 +149,9 @@
     </nameField>
     <pluralLabel>Processes</pluralLabel>
     <searchLayouts>
-        <excludedStandardButtons>New</excludedStandardButtons>
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>
         <listViewButtons>Discover</listViewButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>

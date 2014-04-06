@@ -98,9 +98,9 @@
     </nameField>
     <pluralLabel>Log Groups</pluralLabel>
     <searchLayouts>
-        <excludedStandardButtons>New</excludedStandardButtons>
-        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>
         <lookupDialogsAdditionalFields>GroupIdentifier__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>Stamp__c</lookupDialogsAdditionalFields>
         <lookupPhoneDialogsAdditionalFields>GroupIdentifier__c</lookupPhoneDialogsAdditionalFields>
