@@ -15,6 +15,8 @@
         <members>Broker</members>
         <members>BrokerTest</members>
         <members>ConfigurationShowStepExtension</members>
+        <members>ConfigureController</members>
+        <members>ConfigureControllerTest</members>
         <members>EdaUtility</members>
         <members>EdaUtilityTest</members>
         <members>FutureBroker</members>
@@ -98,6 +100,7 @@
     <types>
         <members>BranchConfigurationHelp</members>
         <members>BranchConfigurationShowStep</members>
+        <members>Configure</members>
         <members>ConfirmSetupTutorial</members>
         <members>CoreProcessesGuide</members>
         <members>FutureBroker</members>

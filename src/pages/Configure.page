@@ -1,0 +1,72 @@
+<apex:page controller="ConfigureController" action="{!doRedirect}">
+    <apex:pageMessages />
+    
+    <style>
+        div.gist .gist-meta {display: none;}
+        div.gist .gist-file {border: none;}
+        div.gist .gist-file .gist-data {background: none; border: none;}
+        div.gist .line-numbers {display: none;}
+    </style>
+    
+
+    <apex:sectionHeader title="Thanks for installing Event Driven Architecture" />
+
+    <p>For more in depth analysis and insight:
+       <ul> 
+           <li>  Business Analysts may wish to consult the  <a href="OrchestratorsGuide" target="_blank" style="color: #00f;">Orchestrator's Guide</a>
+           </li>
+           <li> Force.com custom  process authors may wish to consult the <a href="ProcessDevelopersGuide" target="_blank" style="color: #00f;">Process Developer's Guide</a>
+           </li>
+       </ul>
+    </p>
+
+    <p>To get started, follow the four tutorial links immediately below :</p>
+    
+    <apex:pageBlock mode="maindetail">
+        <!--
+        <apex:pageBlockButtons >
+            <apex:form >
+                <apex:commandButton onclick="window.open('{!URLFOR('/_ui/common/apex/debug/ApexCSIPage')}');return false;" value="Follow this tutorial in Developer Console" />
+            </apex:form>
+            
+        </apex:pageBlockButtons>
+        --->
+        <apex:pageBlockSection columns="1" title="TUTORIAL 1: Confirm Event Driven Architecture is Correctly Setup" collapsible="false">
+            <p>
+                To verify that the Event Driven Package has been correctly installed and configured, click
+                <a href="ConfirmSetupTutorial" target="_blank" style="color: #00f;">here</a>
+            </p>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection columns="1" title="TUTORIAL 2: Discover Event Driven Processes" collapsible="false">
+            <p>
+                Click
+                <a href="ProcessDiscoveryTutorial" target="_blank" style="color: #00f;">here</a>
+                to see how custom event driven logic written in Apex is discovered by the Event Driven framework. 
+            </p>    
+        </apex:pageBlockSection>
+        <apex:pageBlockSection columns="1" title="TUTORIAL 3: Log Message Events Under a Common Identifier" collapsible="false">
+            <p>
+                Click
+                <a href="LogUnderCommonIdentifierTutorial" target="_blank" style="color: #00f;">here</a>
+                to see how the Event Driven framework enables the common requirement of grouping related messages under a common tag.
+            </p>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection columns="1" title="TUTORIAL 4: Regularly Scrape a Web Page" collapsible="false">
+            <p>
+                Click
+                <a href="ScrapeWebPageTutorial" target="_blank" style="color: #00f;">here</a>
+                to see how to assemble a collection of event driven processing Steps into a useful sequence
+                that regularly polls  
+                <a href="http://finance.yahoo.com/q?s=CRM" target="_blank" style="color: #00f;">Yahoo Finance</a>
+                for the ticker price of CRM (Salesforce)
+            </p>
+            </apex:pageBlockSection>
+       
+    <br/><br/>
+            
+    <p>
+       For general comments or support, please contact <i> webmaster@bigass.io </i> or  <i>  <a href="ContactUs" target="_blank" style="color: #00f;">www.bigassforce.io</a> </i>
+    </p>
+    
+    </apex:pageBlock>
+</apex:page>

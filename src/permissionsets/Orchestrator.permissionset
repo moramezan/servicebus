@@ -57,6 +57,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ConfigureController</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ConfigureControllerTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>EdaUtility</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -835,6 +843,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>BranchConfigurationShowStep</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>Configure</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
