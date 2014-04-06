@@ -20,7 +20,8 @@ table#bodyTable td#bodyCell {
 /**
  * NO cursor on other icons
  */
-.#{$prefix}action-col-icon {
+.#{$prefix}action-col-cell .#{$prefix}action-col-icon,
+.#{$prefix}action-col-cell .#{$prefix}action-col-icon img {
     cursor: auto;
 }
 
@@ -46,6 +47,13 @@ table#bodyTable td#bodyCell {
  */
 .#{$prefix}grid-body.steps td.#{$prefix}grid-cell a:hover {
     text-decoration: underline;
+}
+
+/**
+ * Steps grid documentation links are small
+ */
+.#{$prefix}grid-body.steps a.documentationlink {
+    font-size: 11px;
 }
 
 /**

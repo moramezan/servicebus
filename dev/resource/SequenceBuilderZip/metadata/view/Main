@@ -262,6 +262,58 @@
                     "designerId": "d54aa3ec-466a-4dc9-b1a8-eae50dd41c78"
                 }
             ]
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "align": "right",
+                "text": "DocsPageUrl",
+                "width": 125
+            },
+            "designerId": "be5e3c6d-982a-42c8-9281-ac9fa9cc6031",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "//process may not have docs",
+                            "var html;",
+                            "",
+                            "if (record.get('ProcessDocsPageUrl')) html = Ext.DomHelper.createHtml({",
+                            "    'tag': 'a',",
+                            "    'html': 'Help for this Process',",
+                            "    'class': 'documentationlink',",
+                            "    'title': 'Configure Step',",
+                            "    'href': record.get('ProcessDocsPageUrl'),",
+                            "    'target': '_blank'",
+                            "});",
+                            "",
+                            "return html;"
+                        ]
+                    },
+                    "designerId": "9eb70e15-c80f-4abe-aae9-85c9b9881cc3"
+                }
+            ]
         }
     ]
 }

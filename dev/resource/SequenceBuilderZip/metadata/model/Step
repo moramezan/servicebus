@@ -99,6 +99,19 @@
             },
             "codeClass": null,
             "userConfig": {
+                "name": "ProcessDocsPageUrl",
+                "type": "string"
+            },
+            "designerId": "68289f71-7cf6-46ab-8b22-93378c814c8f"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
                 "name": "ConfigurationId",
                 "persist": false,
                 "type": "string"

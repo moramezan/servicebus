@@ -7,4 +7,5 @@ Ext.define('Override.model.Process', {
     fields.Tag.mapping = $ObjectType.Process__c.Fields.Tag__c.Name;
     fields.Icon.mapping = $ObjectType.Process__c.Fields.Icon__c.Name;
     fields.Description.mapping = $ObjectType.Process__c.Fields.Description__c.Name;
+    fields.DocsPageUrl.mapping = $ObjectType.Process__c.Fields.DocsPageUrl__c.Name;
 });
