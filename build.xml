@@ -266,6 +266,26 @@
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <excludedStandardButtons>New</excludedStandardButtons>]]></replacevalue>
         </replace>
+        <replace dir="src/objects">
+            <replacetoken><![CDATA[
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>]]></replacetoken>
+            <replacevalue><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>]]></replacevalue>
+        </replace>
+        <replace dir="src/objects">
+            <replacetoken><![CDATA[
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>]]></replacetoken>
+            <replacevalue><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>]]></replacevalue>
+        </replace>
     </target>
 
     <target name="usage">
