@@ -19,4 +19,20 @@ private class PostInstallClassTest {
         
     }
 
+    static testMethod void testOnInstallSendsEmail() {
+        //assert
+        Integer expectedInvocationsBefore = 0;
+        Integer actualInvocationsBefore = Limits.getEmailInvocations();
+        System.assertEquals(expectedInvocationsBefore, actualInvocationsBefore);
+        
+        //act
+        InstallHandler handler = new PostInstallClass();
+        Test.testInstall(handler, new Version(1, 0));
+        
+        //assert
+        Integer expectedInvocationsAfter = 1;
+        Integer actualInvocationsAfter = Limits.getEmailInvocations();
+        System.assertEquals(expectedInvocationsAfter, actualInvocationsAfter);
+    }
+
 }
