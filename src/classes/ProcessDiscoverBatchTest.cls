@@ -1,6 +1,6 @@
-@isTest private class ProcessRefreshBatchTest {
+@isTest private class ProcessDiscoverBatchTest {
     
-    public class MockApexClassProvider implements ProcessRefreshBatch.IApexClassProvider {
+    public class MockApexClassProvider implements ProcessDiscoverBatch.IApexClassProvider {
         private List<ApexClass> apexClasses;
         
         public MockApexClassProvider(List<ApexClass> apexClasses) {
@@ -14,7 +14,7 @@
     
     static testMethod void testRecordCreatedForPluginAndStateful() {
         //arrange
-        ProcessRefreshBatch batch = new ProcessRefreshBatch();
+        ProcessDiscoverBatch batch = new ProcessDiscoverBatch();
         batch.query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass WHERE Name = \'Terminate\' ORDER BY Name ASC LIMIT 1';
         
         //act
@@ -105,8 +105,8 @@
         insert stepValid;
  
         //act - 
-        ProcessRefreshBatch.IApexClassProvider apexClassProvider = new ProcessRefreshBatch.ApexClassProvider();
-        ProcessRefreshBatch.ProcessHealth processHealth = new ProcessRefreshBatch.ProcessHealth(apexClassProvider);
+        ProcessDiscoverBatch.IApexClassProvider apexClassProvider = new ProcessDiscoverBatch.ApexClassProvider();
+        ProcessDiscoverBatch.ProcessHealth processHealth = new ProcessDiscoverBatch.ProcessHealth(apexClassProvider);
         Map<Id, String> processHealthMap = processHealth.getProcessHealth() ;
  
         //assert
@@ -128,8 +128,8 @@
  
 
         //act - 
-        ProcessRefreshBatch.IApexClassProvider apexClassProvider = new MockApexClassProvider(apexClasses);
-        ProcessRefreshBatch.ProcessHealth processHealth = new ProcessRefreshBatch.ProcessHealth(apexClassProvider);
+        ProcessDiscoverBatch.IApexClassProvider apexClassProvider = new MockApexClassProvider(apexClasses);
+        ProcessDiscoverBatch.ProcessHealth processHealth = new ProcessDiscoverBatch.ProcessHealth(apexClassProvider);
         Map<Id, String> processHealthMap = processHealth.getProcessHealth() ;
         
  
@@ -159,8 +159,8 @@
  
         
         //act - 
-        ProcessRefreshBatch.IApexClassProvider apexClassProvider = new MockApexClassProvider(apexClasses);
-        ProcessRefreshBatch.ProcessHealth processHealth = new ProcessRefreshBatch.ProcessHealth(apexClassProvider);
+        ProcessDiscoverBatch.IApexClassProvider apexClassProvider = new MockApexClassProvider(apexClasses);
+        ProcessDiscoverBatch.ProcessHealth processHealth = new ProcessDiscoverBatch.ProcessHealth(apexClassProvider);
         Map<Id, String> processHealthMap = processHealth.getProcessHealth() ;
         
         //assert
@@ -190,7 +190,7 @@
         };
  
         //act 
-        ProcessRefreshBatch.deleteInvalidUnusedProcesses(processHealthMap);
+        ProcessDiscoverBatch.deleteInvalidUnusedProcesses(processHealthMap);
  
         //assemble
         List<Process__c> processesAfter = SalesforceObjectSet.listAll(Process__c.SObjectType);

@@ -25,7 +25,7 @@ public class ProcessDiscoverExtension {
     public System.PageReference doRedirect() {
         if (ApexPages.currentPage().getParameters().get('asyncApexJobId') == null) {
             //someone tried to view the page... start the batch job and show it
-            AsyncApexJobs jobs = AsyncApexJobs.runOne(ProcessRefreshBatch.class, 1);
+            AsyncApexJobs jobs = AsyncApexJobs.runOne(ProcessDiscoverBatch.class, 1);
             PageReference processDiscover = Page.ProcessDiscover;
             processDiscover.getParameters().put('asyncApexJobId', jobs.getSObjects()[0].Id);
             processDiscover.getParameters().put('retURL', ApexPages.currentPage().getParameters().get('retURL'));

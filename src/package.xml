@@ -50,10 +50,10 @@
         <members>PostUninstallClassTest</members>
         <members>ProcessApexClassExtension</members>
         <members>ProcessApexClassExtensionTest</members>
+        <members>ProcessDiscoverBatch</members>
+        <members>ProcessDiscoverBatchTest</members>
         <members>ProcessDiscoverExtension</members>
         <members>ProcessDiscoverExtensionTest</members>
-        <members>ProcessRefreshBatch</members>
-        <members>ProcessRefreshBatchTest</members>
         <members>ProcessSet</members>
         <members>ProcessSetTest</members>
         <members>Publish</members>

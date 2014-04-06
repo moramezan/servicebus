@@ -6,7 +6,7 @@
         ApexPages.StandardSetController controller = new ApexPages.StandardSetController(new List<Process__c>());
         ProcessDiscoverExtension extension = new ProcessDiscoverExtension(controller);
         Test.startTest();
-        ProcessRefreshBatch batch = new ProcessRefreshBatch();
+        ProcessDiscoverBatch batch = new ProcessDiscoverBatch();
         batch.query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass WHERE Name = \'Terminate\' ORDER BY Name ASC LIMIT 1';
         Database.executeBatch(batch, 1);
         Test.stopTest();
