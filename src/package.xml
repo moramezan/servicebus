@@ -142,6 +142,7 @@
         <members>SubscribeHelp</members>
         <members>SubsequenceConfigurationHelp</members>
         <members>SubsequenceConfigurationShowStep</members>
+        <members>WiretapHelp</members>
         <name>ApexPage</name>
     </types>
     <types>

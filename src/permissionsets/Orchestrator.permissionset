@@ -1013,6 +1013,10 @@
         <apexPage>SubsequenceConfigurationShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
+    <pageAccesses>
+        <apexPage>WiretapHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
     <tabSettings>
         <tab>Message__c</tab>
         <visibility>Visible</visibility>

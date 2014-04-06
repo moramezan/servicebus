@@ -1,0 +1,26 @@
+<apex:page tabStyle="WiretapSettings__c" showHeader="false" standardStylesheets="true">
+    
+    <style>
+        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+    </style>
+    <apex:form >
+        <apex:pageBlock mode="maindetail">
+            <apex:pageBlockSection title="Introducing the Wiretap Process" columns="2" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <p>The Wiretap Process will send you an email containing all the message parameters it sees from its step in a Sequence.</p>
+                    <p>Wiretap is a 'pass-through' process which does not alter the message parameters or have any other side effects. You can use it as a learning and debugging tool.</p>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Settings" columns="2" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <p>The email will be sent to the user under which the EDA framework is running.</p>
+                    <p>Alternatively, a specific user can be nominated to receive these emails.</p>
+                    <p>To specify the Wiretap recipient, select the Wiretap process from the list of Processes and on the detail view, click the [View Settings] button.</p>
+                    <p>Pressing the [View Settings] button will take you the to the Wiretap Settings view.</p>
+                    <p>Here you can create an organization-wide setting with the User Id of the nominated user that will receive Wiretap emails.</p>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
