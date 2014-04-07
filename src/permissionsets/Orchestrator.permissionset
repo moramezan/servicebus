@@ -1259,10 +1259,6 @@
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
-        <name>ManageCssUsers</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
         <name>ManageCustomReportTypes</name>
     </userPermissions>
     <userPermissions>
@@ -1316,10 +1312,6 @@
     <userPermissions>
         <enabled>false</enabled>
         <name>ManageRemoteAccess</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageSelfService</name>
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>

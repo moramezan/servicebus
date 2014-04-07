@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Event Driven Architecture</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
+    <namespacePrefix>eda</namespacePrefix>
+    <postInstallClass>PostInstallHandler</postInstallClass>
     <types>
         <members>Api</members>
         <members>ApiTest</members>
@@ -364,5 +368,6 @@
         <members>SubsequenceConfiguration__c.OnSubsequenceConfigurationUpsert</members>
         <name>WorkflowRule</name>
     </types>
+    <uninstallClass>PostUninstallHandler</uninstallClass>
     <version>29.0</version>
 </Package>
