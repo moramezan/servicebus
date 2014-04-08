@@ -885,7 +885,15 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>EventTypeHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>FutureBroker</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>GateHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -965,6 +973,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>ProcessDiscoverHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>ProcessDiscoveryTutorial</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -1013,7 +1025,15 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>SequenceBuilderHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>SequenceHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>StepHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

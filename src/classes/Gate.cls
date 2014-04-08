@@ -2,6 +2,7 @@ public with sharing class Gate implements Process.Plugin {
     
     public class Meta {
         public String Icon = 'arrow_join';
+        public String DocsPageUrl = Page.GateHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe() {

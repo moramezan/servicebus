@@ -1,0 +1,1 @@
+<apex:page tabStyle="Process__c" action="{!URLFOR($Page.ProcessHelp)}" />

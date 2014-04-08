@@ -108,7 +108,9 @@
         <members>Configure</members>
         <members>ConfirmSetupTutorial</members>
         <members>CoreProcessesGuide</members>
+        <members>EventTypeHelp</members>
         <members>FutureBroker</members>
+        <members>GateHelp</members>
         <members>Health</members>
         <members>IsChangedConfigurationSchemaSelector</members>
         <members>IsChangedHelp</members>
@@ -128,6 +130,7 @@
         <members>ProcessApexClass</members>
         <members>ProcessDevelopersGuide</members>
         <members>ProcessDiscover</members>
+        <members>ProcessDiscoverHelp</members>
         <members>ProcessDiscoveryTutorial</members>
         <members>ProcessDocumentation</members>
         <members>ProcessHelp</members>
@@ -140,7 +143,9 @@
         <members>ScrapeHelp</members>
         <members>ScrapeWebPageTutorial</members>
         <members>SequenceBuilder</members>
+        <members>SequenceBuilderHelp</members>
         <members>SequenceHelp</members>
+        <members>StepHelp</members>
         <members>StepShowConfiguration</members>
         <members>SubscribeConfigurationManageEventTypes</members>
         <members>SubscribeConfigurationShowStep</members>

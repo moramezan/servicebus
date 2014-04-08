@@ -26,6 +26,9 @@
         window.URLFOR = window.URLFOR || {};
         URLFOR['{!retURL}'] = '{!URLFOR(retURL)}';
         
+        window.$Page = window.$Page || {};
+        $Page.ProcessDiscoverHelp = '{!$Page.ProcessDiscoverHelp}';
+        
         window.AsyncApexJob = window.AsyncApexJob || {};
         AsyncApexJob.Id = '{!AsyncApexJob.Id}';
         AsyncApexJob.CompletedDate = '{!AsyncApexJob.CompletedDate}';

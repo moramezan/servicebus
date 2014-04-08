@@ -1,6 +1,6 @@
 <apex:page standardController="Sequence__c" extensions="SequenceBuilderExtension" action="{!doRedirect}">
     
-    <apex:sectionHeader title="{!$ObjectType.Sequence__c.Label}" subtitle="{!Sequence__c.Name}" />
+    <apex:sectionHeader help="{!URLFOR($Page.SequenceBuilderHelp)}" title="{!$ObjectType.Sequence__c.Label}" subtitle="{!Sequence__c.Name}" />
     
     <apex:pageBlock id="pageBlockId" title="{!$ObjectType.Step__c.LabelPlural}">
         <apex:pageBlockButtons location="top" id="pageBlockButtonsId" />
