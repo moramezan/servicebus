@@ -4,7 +4,7 @@
         body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
     </style>
     
-    <apex:pageBlock mode="maindetail" title="Introducing the IsChanged Process">
+    <apex:pageBlock mode="maindetail" title="About the IsChanged Process">
         <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p>A need often arises to discard messages that reference business data that has NOT changed.</p>

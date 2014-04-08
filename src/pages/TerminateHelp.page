@@ -5,7 +5,7 @@
     </style>
     <apex:form >
         <apex:pageBlock mode="maindetail">
-            <apex:pageBlockSection title="Introducing the Terminate Process" columns="2" collapsible="false">
+            <apex:pageBlockSection title="About the Terminate Process" columns="2" collapsible="false">
                 <apex:pageBlockSectionItem >
                     <p>Every Sequence must have a Terminate Process.</p>
                     <p>A Terminate process is automatically inserted as a step when a Sequence is created.</p>

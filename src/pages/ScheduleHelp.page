@@ -4,7 +4,7 @@
         body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
     </style>
 
-    <apex:pageBlock mode="maindetail" title="Introducing the Schedule Process">
+    <apex:pageBlock mode="maindetail" title="About the Schedule Process">
         <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p>Certain events are time based.</p>

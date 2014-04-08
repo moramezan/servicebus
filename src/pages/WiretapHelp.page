@@ -5,7 +5,7 @@
     </style>
     <apex:form >
         <apex:pageBlock mode="maindetail">
-            <apex:pageBlockSection title="Introducing the Wiretap Process" columns="2" collapsible="false">
+            <apex:pageBlockSection title="About the Wiretap Process" columns="2" collapsible="false">
                 <apex:pageBlockSectionItem >
                     <p>The Wiretap Process will send you an email containing all the message parameters it sees from its step in a Sequence.</p>
                     <p>Wiretap is a 'pass-through' process which does not alter the message parameters or have any other side effects. You can use it as a learning and debugging tool.</p>

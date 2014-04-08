@@ -16,14 +16,14 @@
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
-        <apex:pageBlockSection title="List View Buttons:" columns="1" collapsible="false">
+        <apex:pageBlockSection title="List View Buttons" columns="1" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Message/pauseQueue.png')}" /> halts the processing of new Messages. New Messages will be Queued up outside of their destined Sequence. Old Messages already in a Sequence will filter through to completion.</p>
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Message/resumeQueue.png')}" /> resumes the processing of all Messages.</p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
-        <apex:pageBlockSection title="Detail Page Buttons:" columns="1" collapsible="false">
+        <apex:pageBlockSection title="Detail Page Buttons" columns="1" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Message/processMessage.png')}" /> forces this Message to be Processed immediately. You can use this to process individual Messages when the system is paused, or to reprocess any Message that could not be processed.</p>
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Message/showData.png')}" /> takes you to the native view of the related data pointed to by the Message. This could be used to edit or audit the data that any Message hands into a given Process.</p>

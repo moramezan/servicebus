@@ -14,7 +14,7 @@
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
-        <apex:pageBlockSection title="When building a new Sequence:" columns="1" collapsible="false">
+        <apex:pageBlockSection title="When building a new Sequence" columns="1" collapsible="false">
             <apex:pageBlockSectionItem >
                 <ul>
                     <li>Any Steps after the Terminate Process will not be executed.</li>

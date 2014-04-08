@@ -5,7 +5,7 @@
     </style>
 
         <apex:pageBlock mode="maindetail">
-            <apex:pageBlockSection title="About Log Configuration:" columns="2" collapsible="false">
+            <apex:pageBlockSection title="About the Log Processes" columns="2" collapsible="false">
                 <apex:pageBlockSectionItem >
                     <p>By making use of a meaningful grouping key, the LogWriter process and LogInitializer process work together to surface the status of a message at various points in one or more Sequence(s) </p>
                     <p>The Log Initializer process defines the grouping key.</p>
@@ -25,7 +25,7 @@
             </apex:pageBlockSection>
 
  
-            <apex:pageBlockSection title="Implicit Key Configuration :" columns="1" collapsible="false">
+            <apex:pageBlockSection title="Implicit Key Configuration" columns="1" collapsible="false">
                 <apex:pageBlockSectionItem >
                     <p>When no explicit definition of the business identifier has been configured on the LogInitializer process, the business identifier will be a a composite of the LogInitializer's Sequence name and Sequence Position.
                        Whenever a message passes through a LogInitializer process with an Implicit Key Configuration , a log grouping record will be created immediately using this default composite Group Identifier.
@@ -33,7 +33,7 @@
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
       
-            <apex:pageBlockSection title="Explicit Static Key Configuration:" columns="1" collapsible="false">
+            <apex:pageBlockSection title="Explicit Static Key Configuration" columns="1" collapsible="false">
                 <apex:pageBlockSectionItem >
                 
                     <p>Under this configuration, the business identifier is statically defined in the form of a meaningful constant (eg INVOICE, WEB-DATA-FROM-YAHOO) 
@@ -45,7 +45,7 @@
             </apex:pageBlockSection>
              
              
-            <apex:pageBlockSection title="Explicit Dynamic Key Configuration:" columns="1" collapsible="false">
+            <apex:pageBlockSection title="Explicit Dynamic Key Configuration" columns="1" collapsible="false">
                 <apex:pageBlockSectionItem >
                     <p>Under this configuration, the business identifier is dynamically extracted from the SObject using the field name  defined in the Dynamic Group Identifier.
                        Whenever a message passes through a LogInitializer process with an Explicit Dynamic Key Configuration, a log grouping record will be created immediately using a data property of that specific message as defined by the Dynamic Group Identifier.

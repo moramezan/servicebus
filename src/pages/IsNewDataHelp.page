@@ -4,7 +4,7 @@
         body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
     </style>
     
-    <apex:pageBlock mode="maindetail" title="Introducing the Is New Data Process">
+    <apex:pageBlock mode="maindetail" title="About the IsNewData Process">
         <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p>A need often arises to discard messages that reference the same business data over a time period.</p>

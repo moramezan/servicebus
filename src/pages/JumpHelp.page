@@ -4,7 +4,7 @@
         body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
     </style>
 
-    <apex:pageBlock mode="maindetail" title="Introducing the Jump Process">
+    <apex:pageBlock mode="maindetail" title="About the Jump Process">
         <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p>When execution flow is broken into more than one sequence a need arises to connect these sequences.</p>

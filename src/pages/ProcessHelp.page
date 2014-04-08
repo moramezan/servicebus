@@ -26,13 +26,13 @@
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
-        <apex:pageBlockSection title="List View Buttons:" columns="1" collapsible="false">
+        <apex:pageBlockSection title="List View Buttons" columns="1" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Process/discoverProcesses.png')}" /> can be used to find new Processes. Click this button after authoring or installing Processes to make them available.</p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
-        <apex:pageBlockSection title="Detail Page Buttons:" columns="1" collapsible="false">
+        <apex:pageBlockSection title="Detail Page Buttons" columns="1" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Process/viewApexClass.png')}" /> will show you the Apex Class that contains the underlying logic for any given Process.</p>
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Process/viewSettings.png')}" /> takes you to the available Settings for a Process. (If applicable. Not all process have Settings)</p>
