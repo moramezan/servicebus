@@ -5,6 +5,7 @@
     <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
     <namespacePrefix>eda</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
+    <setupWeblink>Configure</setupWeblink>
     <types>
         <members>Api</members>
         <members>ApiTest</members>
@@ -254,6 +255,7 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>Configure</members>
         <members>MessageHelp</members>
         <members>ProcessHelp</members>
         <members>SequenceHelp</members>

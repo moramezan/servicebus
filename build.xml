@@ -30,9 +30,11 @@
     <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
     <namespacePrefix>eda</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
+    <setupWeblink>Configure</setupWeblink>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
     <fullName>Event Driven Architecture</fullName>
+    <setupWeblink>Configure</setupWeblink>
     <types>]]></replacevalue>
         </replace>
         <replace file="src/package.xml" encoding="UTF-8">
@@ -98,6 +100,7 @@
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
     <fullName>Event Driven Architecture</fullName>
+    <setupWeblink>Configure</setupWeblink>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
     <fullName>Event Driven Architecture</fullName>
@@ -105,6 +108,7 @@
     <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
     <namespacePrefix>eda</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
+    <setupWeblink>Configure</setupWeblink>
     <types>]]></replacevalue>
         </replace>
         <replace file="src/package.xml" encoding="UTF-8">
