@@ -100,6 +100,7 @@
             "codeClass": null,
             "userConfig": {
                 "name": "ProcessDocsPageUrl",
+                "persist": false,
                 "type": "string"
             },
             "designerId": "68289f71-7cf6-46ab-8b22-93378c814c8f"
