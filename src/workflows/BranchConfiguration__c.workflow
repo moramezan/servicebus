@@ -5,8 +5,8 @@
         <field>Name</field>
         <formula>IF(
     ISBLANK(Sequence__c),
-    &quot;This step must be configured&quot;,
-    &quot;Fires sequence &apos;&quot; + Sequence__r.Name + &quot;&apos; in parallel with a cloned message&quot;
+    LEFT(&quot;This step must be configured&quot;, 80),
+    LEFT(&quot;Copies the message to sequence &apos;&quot; + Sequence__r.Name + &quot;&apos;&quot;, 80)
 )</formula>
         <name>Update Branch Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>

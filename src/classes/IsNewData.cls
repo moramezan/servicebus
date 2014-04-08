@@ -12,7 +12,7 @@ public class IsNewData implements Process.Plugin {
         Process.PluginDescribeResult result = new Process.PluginDescribeResult();
         result.Tag = 'Sample Processes';
         result.Name = 'IsNewData';
-        result.Description = 'Swallows message unless the time elapsed since receiving a prior message with the same key exceeds a min threshold';
+        result.Description = 'Detects if a certain time has elapsed since receiving a message with the same data';
         return result;
     }
     

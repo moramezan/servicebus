@@ -5,8 +5,8 @@
         <field>Name</field>
         <formula>IF(
     ISBLANK(FieldName__c),
-    &quot;This step must be configured&quot;,
-    &quot;Continues only if &apos;&quot; + FieldName__c + &quot;&apos; has changed on the messages&apos;s data&quot;
+    LEFT(&quot;This step must be configured&quot;, 80),
+    LEFT(&quot;Continues only if &apos;&quot; + FieldName__c + &quot;&apos; has changed&quot;, 80)
 )</formula>
         <name>Update IsChanged Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>

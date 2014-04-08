@@ -10,7 +10,7 @@ public with sharing class Jump implements Process.Plugin {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Tag = 'Event Driven Architecture';
         plugin.Name = 'Jump';
-        plugin.Description = 'Jumps to another Sequence and does not return';
+        plugin.Description = 'Permanently diverts the message to another sequence, never to return';
         return plugin;
     }
     

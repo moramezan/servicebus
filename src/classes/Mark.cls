@@ -6,7 +6,7 @@ public with sharing class Mark implements Process.Plugin {
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'Marks splitted messages with an association key. Next process must be a split.';
+        plugin.Description = 'Marks the message with a correlation key, for splitting into a collection';
         plugin.Tag = 'Event Driven Architecture';
         plugin.Name = 'Mark';
         

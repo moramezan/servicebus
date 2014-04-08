@@ -6,7 +6,7 @@
         <formula>IF(
     ISBLANK(Sequence__c),
     &quot;This step must be configured&quot;,
-    &quot;Swallows the message and diverts it to sequence &apos;&quot; + Sequence__r.Name + &quot;&apos;&quot;
+    &quot;Diverts message to sequence &apos;&quot; + Sequence__r.Name + &quot;&apos;, never to return&quot;
 )</formula>
         <name>Update Jump Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>

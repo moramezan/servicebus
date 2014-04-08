@@ -32,7 +32,7 @@
         String actualName = processes[0].Name;
         System.assert(actualName.contains(expectedName));
 
-        String expectedDescription = 'terminates each sequence';
+        String expectedDescription = 'end of this sequence';
         String actualDescription = processes[0].Description__c;
         System.assert(actualDescription.contains(expectedDescription));
         

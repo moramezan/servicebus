@@ -3,7 +3,7 @@
     <fieldUpdates>
         <fullName>UpdateIsNewDataConfigurationName</fullName>
         <field>Name</field>
-        <formula>&quot;Throttles messages to a maximum of one every &quot; + TEXT(MinimumHoursBetween__c) + IF(MinimumHoursBetween__c == 1, &quot; hour&quot;, &quot; hours&quot;)</formula>
+        <formula>&quot;Continues only if the message data changed or &quot; + TEXT(MinimumHoursBetween__c) + IF(MinimumHoursBetween__c == 1, &quot; hour elapsed&quot;, &quot; hours elapsed&quot;)</formula>
         <name>Update IsNewData Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>

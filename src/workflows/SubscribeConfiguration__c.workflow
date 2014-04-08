@@ -5,8 +5,8 @@
         <field>Name</field>
         <formula>IF(
     ISBLANK(EventType__c),
-    &quot;This step must be configured&quot;,
-    &quot;Fires when the &apos;&quot; + EventType__r.Name + &quot;&apos; event is published&quot;
+    LEFT(&quot;This step must be configured&quot;, 80),
+    LEFT(&quot;Listens for any message published to &apos;&quot; + EventType__r.Name + &quot;&apos;&quot;, 80)
 )</formula>
         <name>Update Subscribe Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>

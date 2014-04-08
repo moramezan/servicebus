@@ -5,8 +5,8 @@
         <field>Name</field>
         <formula>IF(
     ISBLANK(EventType__c),
-    &quot;This step must be configured&quot;,
-    &quot;Fires all sequences subscribed to the &apos;&quot; + EventType__r.Name + &quot;&apos; event&quot;
+    LEFT(&quot;This step must be configured&quot;, 80),
+    LEFT(&quot;Broadcasts the message to all sequences subscribed to &apos;&quot; + EventType__r.Name + &quot;&apos;&quot;, 80)
 )</formula>
         <name>Update Publish Configuration Name</name>
         <notifyAssignee>false</notifyAssignee>
