@@ -73,7 +73,8 @@ public with sharing class SequenceBuilderExtension {
     }
     
     public Boolean getIsFrameBlocked() {
-        PageReference pr = new PageReference('/_ui/system/security/SessionSettings');
+        String base = Url.getSalesforceBaseUrl().toExternalForm();
+        PageReference pr = new PageReference(base + '/_ui/system/security/SessionSettings');
         String html = pr.getContent().toString();
         if (html.contains('Insufficient Privileges')) {
             //we don't know
