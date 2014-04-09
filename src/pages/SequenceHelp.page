@@ -9,8 +9,11 @@
             <apex:pageBlockSectionItem >
                 <p>A Sequence is an arrangement of multiple processing tasks called Steps.</p>
                 <p>Each Sequence is known by a friendly name, for example 'ProcessInvoices', which should describe the nature of the work performed by its processing tasks or Steps.</p>
-                <p>The EDA framework will advance Messages through the Steps of a Sequence in the order you arrange. A typical sequence will contain many steps. See below:</p>
-                <p><img width="480" src="{!URLFOR($Resource.HelpZip, '/Sequence/sequenceSteps.png')}" /></p>
+                <p>The EDA framework will advance Messages through the Steps of a Sequence in the order you arrange. A typical sequence will contain many steps. See diagram:</p>
+                
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:image width="480" value="{!URLFOR($Resource.HelpZip, '/Sequence/sequenceSteps.png')}" />
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
@@ -21,6 +24,13 @@
                     <li>Each Step in the Sequence has an associated Process, a numbered Position, and potentially a Configuration.</li>
                     <li>It is the orchestrator's responsibility to ensure the Terminate Process is the final Step in every Sequence. This is provided for you and cannot be deleted.</li>
                 </ul>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Detail Page Buttons" columns="1" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Sequence/newStep.png')}" /> will append a new step (holding your chosen process) to the sequence. You can drag and drop to reposition each step.</p>
+                <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Sequence/injectTestMessage.png')}" /> enqueues a message (carrying your user record) to this sequence. The message will progress through all the steps.</p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
