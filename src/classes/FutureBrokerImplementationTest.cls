@@ -1,5 +1,5 @@
 @isTest private class FutureBrokerImplementationTest {
-    /*
+    
     static testMethod void testPodProtocolAndHost() {
         FutureBrokerImplementation.IdentityResult result = new FutureBrokerImplementation.IdentityResult();
         String expectedProtocolAndHost = Url.getSalesforceBaseUrl().toExternalForm();
@@ -179,5 +179,5 @@
         String expectedMessage = BrokerTest.FailureMessage;
         System.assertEquals(expectedMessage, messages[0].Exception__c );
     }
-    */
+    
 }

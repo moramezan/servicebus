@@ -9,7 +9,7 @@
         <description>Fully qualified name of Broker subclass.</description>
         <externalId>false</externalId>
         <label>Broker Class Name</label>
-        <length>56</length>
+        <length>97</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
