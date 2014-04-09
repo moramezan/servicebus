@@ -24,8 +24,10 @@
         <members>ConfigureControllerTest</members>
         <members>EdaUtility</members>
         <members>EdaUtilityTest</members>
-        <members>FutureBroker</members>
-        <members>FutureBrokerTest</members>
+        <members>FutureBrokerDispatcher</members>
+        <members>FutureBrokerDispatcherTest</members>
+        <members>FutureBrokerImplementation</members>
+        <members>FutureBrokerImplementationTest</members>
         <members>Gate</members>
         <members>GateTest</members>
         <members>HealthController</members>

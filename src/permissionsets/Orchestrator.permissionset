@@ -73,11 +73,19 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>FutureBroker</apexClass>
+        <apexClass>FutureBrokerDispatcher</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>FutureBrokerTest</apexClass>
+        <apexClass>FutureBrokerDispatcherTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>FutureBrokerImplementation</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>FutureBrokerImplementationTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
