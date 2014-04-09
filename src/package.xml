@@ -325,6 +325,7 @@
         <members>IsNewDataConfiguration__c.RequireMinimumHoursBetween</members>
         <members>ScheduleConfiguration__c.RequireFriendlyDates</members>
         <members>ScheduleConfiguration__c.RequireFriendlyTimes</members>
+        <members>Sequence__c.FixedName</members>
         <members>Sequence__c.UniqueName</members>
         <name>ValidationRule</name>
     </types>

@@ -82,6 +82,14 @@
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <validationRules>
+        <fullName>FixedName</fullName>
+        <active>true</active>
+        <description>Name cannot be changed</description>
+        <errorConditionFormula>Name != PRIORVALUE(Name)</errorConditionFormula>
+        <errorDisplayField>Name</errorDisplayField>
+        <errorMessage>Name must be fixed</errorMessage>
+    </validationRules>
+    <validationRules>
         <fullName>UniqueName</fullName>
         <active>true</active>
         <errorConditionFormula>Name = VLOOKUP(
