@@ -16,25 +16,25 @@
             <apex:pageBlockSection title="Objective :" columns="1" collapsible="false">
                <apex:pageBlockSectionItem >
 
-                    <p>This tutorial demonstrates the grouping related messages under a common tag.
+                    <p>This tutorial demonstrates the grouping of related messages under a common tag.
                     </p>
                     
-                    <p>  <ol>
-                        <li> <b> Related  Messages :</b>
-                        <br/>Consider a valid <code>Supplier Invoice</code>  that must  be paid via a <code>Funds Transfer Instruction</code>. 
+                    <p><ol>
+                        <li><b>Related Messages:</b>
+                        <br/>Consider a valid <code>Supplier Invoice</code> that must be paid via a <code>Funds Transfer Instruction</code>. 
                         <br/>The <code>Supplier Invoice</code> and the <code>Funds Transfer Instruction</code> are two separate source documents
                              generated on different systems. 
-                         <br/>Both documents  are however related by the payment process and therefore require grouping under a common tag.
+                        <br/>Both documents are however related by the payment process and therefore require grouping under a common tag.
                         </li>
                          
-                         <br/><br/>
+                        <br/><br/>
                          
-                        <li> <b> Common Tag :</b>
-                        <br/>An internal Salesforce ID  such as <code> 066b0000001RJct </code> is not  useful from an end user perspective.
-                        <br/>An identifier such as <code>INVOICE-123</code> or <code>PMT2345</code> conveys  useful meaning and is therefore a better choice for a common tag.
+                        <li><b>Common Tag:</b>
+                        <br/>An internal Salesforce ID such as <code>066b0000001RJct</code> may not be useful from an end user perspective.
+                        <br/>An identifier such as <code>INVOICE-123</code> or <code>PMT2345</code> conveys useful meaning and is therefore a better choice for a common tag.
                         <br/><code>Business identifiers</code> naturally vary on a case by case basis.
-                        <br/> It is for this reason that the framework  relies the system configurator to define what part 
-                              of structured data will act as the common identifier across disparate source documents..
+                        <br/>It is for this reason that the framework enables the system configurator to define what part 
+                             of structured data will act as the common identifier across disparate source documents.
                         </li>
                     </ol>  </p>
 
@@ -456,10 +456,8 @@
                               <b> [ </b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/LogWriter.png')}" /> <b> ] </b> 
                               process is encountered
                             <br/><br/>
-                            <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/LogWriterEntriesPay.png')}" /> 
-                            <br/><br/>
-                            <br/><br/>
-                            <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/LogWriterEntriesPurchase.png')}" /> 
+                            <!--<img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/LogWriterEntriesPay.png')}" />-->
+                            <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/LogWriterEntriesPurchase.png')}" /> 
                             <br/><br/>
                          </li>
                     </ul>
