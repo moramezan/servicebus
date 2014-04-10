@@ -1,7 +1,7 @@
 @isTest
 private class LogWriterTest{
     
-    private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessMessageGuid() {
+    private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessEntryPointGuid() {
         //arrange
         String sequenceName  = 'LogWriterSequence';
         Integer thePosition =  1;
@@ -12,7 +12,7 @@ private class LogWriterTest{
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            // 'eda_MessageGuid' => '1234567abcde',  // null message Guid
+            // 'eda_EntryPointGuid' => '1234567abcde',  // null EntryPointGuid
             'Id' => theId
         };
         
@@ -32,7 +32,7 @@ private class LogWriterTest{
         Boolean expectedFlagException = true;
         System.assertEquals(expectedFlagException, actualFlagException);
         
-        String expectedMessage = 'Unable to access the message Guid';
+        String expectedMessage = 'Unable to access the Entry Point GUID';
         System.assert( actualMessage.contains(expectedMessage) );
     }
     
@@ -47,7 +47,7 @@ private class LogWriterTest{
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_MessageGuid' => '1234567abcde',
+            'eda_EntryPointGuid' => '1234567abcde',
             'Id' => theId
         };
         
@@ -115,7 +115,7 @@ private class LogWriterTest{
  
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_MessageGuid' => '1234567abcde',
+            'eda_EntryPointGuid' => '1234567abcde',
             'eda_LogGroupIds' => logGroupIds,
             'eda_SequenceName' => sequenceName,
             'eda_Position' => positionA2

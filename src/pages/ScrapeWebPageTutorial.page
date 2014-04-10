@@ -309,7 +309,7 @@
             <span style="color: #007700">&quot;eda_Position&quot;</span>: <span style="color: #0000DD; font-weight: bold">4</span>,
             <span style="color: #007700">&quot;eda_SequenceName&quot;</span>: <span style="background-color: #fff0f0">&quot;WebScrape&quot;</span>,
             <span style="color: #007700">&quot;Id&quot;</span>: <span style="background-color: #fff0f0">&quot;00Pb0000003dhGUEAY&quot;</span>,
-            <span style="color: #007700">&quot;eda_MessageGuid&quot;</span>: <span style="background-color: #fff0f0">&quot;db1a234a8d9f5f9304&quot;</span>,
+            <span style="color: #007700">&quot;eda_EntryPointGuid&quot;</span>: <span style="background-color: #fff0f0">&quot;db1a234a8d9f5f9304&quot;</span>,
             <span style="color: #007700">&quot;eda_StackDepth&quot;</span>: <span style="color: #0000DD; font-weight: bold">3</span>,
             <span style="color: #007700">&quot;eda_ConfigObjectId&quot;</span>: <span style="color: #008800; font-weight: bold">null</span>,
             <span style="color: #007700">&quot;priceData&quot;</span>: <span style="background-color: #fff0f0">&quot;{\&quot;Stock__c\&quot;:  [ {\&quot;ticker__c\&quot;: \&quot;CRM\&quot;, \&quot;price__c\&quot;: 55.97} ] }&quot;</span>

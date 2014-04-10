@@ -491,7 +491,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogWriterEntry__c.MessageGuid__c</field>
+        <field>LogWriterEntry__c.EntryPointGuid__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>

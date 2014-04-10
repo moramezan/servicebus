@@ -197,7 +197,7 @@
         <members>LogGroup__c.Stamp__c</members>
         <members>LogWriterEntry__c.GroupIdentifier__c</members>
         <members>LogWriterEntry__c.LogGroup__c</members>
-        <members>LogWriterEntry__c.MessageGuid__c</members>
+        <members>LogWriterEntry__c.EntryPointGuid__c</members>
         <members>LogWriterEntry__c.Order__c</members>
         <members>LogWriterEntry__c.Parameters__c</members>
         <members>LogWriterEntry__c.Position__c</members>
