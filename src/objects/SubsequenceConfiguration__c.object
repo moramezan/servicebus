@@ -56,6 +56,7 @@
         <fullName>Sequence__c</fullName>
         <deleteConstraint>Restrict</deleteConstraint>
         <externalId>false</externalId>
+        <inlineHelpText>Through which sequence should messages be diverted, before they progress to the next step?</inlineHelpText>
         <label>Sequence</label>
         <referenceTo>Sequence__c</referenceTo>
         <relationshipLabel>Subsequence Configuration</relationshipLabel>

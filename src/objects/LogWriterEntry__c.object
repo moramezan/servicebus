@@ -56,6 +56,7 @@
         <externalId>false</externalId>
         <formula>LogGroup__r.GroupIdentifier__c</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>XXX</inlineHelpText>
         <label>Group Identifier</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -65,6 +66,7 @@
     <fields>
         <fullName>LogGroup__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What Log Group is this entry written into?</inlineHelpText>
         <label>Log Group</label>
         <referenceTo>LogGroup__c</referenceTo>
         <relationshipLabel>Log Writer Entries</relationshipLabel>
@@ -78,6 +80,7 @@
     <fields>
         <fullName>MessageGuid__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What was the entry point guid assigned to this message when it first entered a sequence?</inlineHelpText>
         <label>Message Guid</label>
         <length>18</length>
         <required>false</required>
@@ -88,6 +91,7 @@
     <fields>
         <fullName>Order__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What position in the Log Group is this entry?</inlineHelpText>
         <label>Order</label>
         <precision>4</precision>
         <required>false</required>
@@ -99,6 +103,7 @@
     <fields>
         <fullName>Parameters__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What were the message parameters saved by the LogWriter Process?</inlineHelpText>
         <label>Parameters</label>
         <length>32768</length>
         <trackTrending>false</trackTrending>
@@ -110,6 +115,7 @@
         <externalId>false</externalId>
         <formula>Step__r.Position__c</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>What position in the sequence was the LogWriter Step that the message passed through?</inlineHelpText>
         <label>Position</label>
         <precision>18</precision>
         <required>false</required>
@@ -123,6 +129,7 @@
         <externalId>false</externalId>
         <formula>Step__r.Sequence__r.Name</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>What is the name of the sequence containing the LogWriter Step?</inlineHelpText>
         <label>Sequence Name</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -134,6 +141,7 @@
         <externalId>false</externalId>
         <formula>LogGroup__r.Stamp__c</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>XXX</inlineHelpText>
         <label>Stamp</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -143,10 +151,11 @@
         <fullName>Step__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
+        <inlineHelpText>What LogWriter Step did the message pass through?</inlineHelpText>
         <label>Step</label>
         <referenceTo>Step__c</referenceTo>
         <relationshipLabel>Log Writer Entries</relationshipLabel>
-        <relationshipName>Log_Writer_Entries</relationshipName>
+        <relationshipName>LogWriterEntries</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>

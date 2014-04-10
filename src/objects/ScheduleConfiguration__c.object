@@ -54,6 +54,7 @@
     <fields>
         <fullName>Frequency__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Does this schedule run daily, weekly or monthly?</inlineHelpText>
         <label>Frequency</label>
         <picklist>
             <picklistValues>
@@ -76,6 +77,7 @@
     <fields>
         <fullName>FriendlyDates__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What pattern of days does the schedule run?</inlineHelpText>
         <label>Run Dates</label>
         <picklist>
             <controllingField>Frequency__c</controllingField>
@@ -283,6 +285,7 @@
     <fields>
         <fullName>FriendlyTimes__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What pattern of times does the schedule run?</inlineHelpText>
         <label>Run Times</label>
         <picklist>
             <picklistValues>

@@ -55,6 +55,7 @@
         <fullName>Sequence__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
+        <inlineHelpText>To which sequence should messages be permanently diverted, permanently?</inlineHelpText>
         <label>Sequence</label>
         <referenceTo>Sequence__c</referenceTo>
         <relationshipLabel>Jump Configurations</relationshipLabel>

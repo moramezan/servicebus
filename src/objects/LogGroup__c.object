@@ -54,6 +54,7 @@
     <fields>
         <fullName>GroupIdentifier__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>XXX</inlineHelpText>
         <label>Group Identifier</label>
         <length>80</length>
         <required>false</required>
@@ -64,6 +65,7 @@
     <fields>
         <fullName>LogConfiguration__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What record configures the Log Initializer Step that the message was passing through?</inlineHelpText>
         <label>Log Configuration</label>
         <referenceTo>LogConfiguration__c</referenceTo>
         <relationshipLabel>Log Groups</relationshipLabel>
@@ -78,6 +80,7 @@
         <fullName>Stamp__c</fullName>
         <defaultValue>NOW()</defaultValue>
         <externalId>false</externalId>
+        <inlineHelpText>XXX</inlineHelpText>
         <label>Stamp</label>
         <required>false</required>
         <trackTrending>false</trackTrending>

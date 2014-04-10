@@ -54,6 +54,7 @@
     <fields>
         <fullName>Endpoint__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What is the full URL of the page to download?</inlineHelpText>
         <label>Endpoint</label>
         <required>false</required>
         <trackTrending>false</trackTrending>

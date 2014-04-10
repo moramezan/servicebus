@@ -55,6 +55,7 @@
     <fields>
         <fullName>Exception__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>If the process threw an exception when handling this message, what was the error text?</inlineHelpText>
         <label>Exception</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -66,6 +67,7 @@
         <formula>/* Shows messages not processed within one hour */
 NOW() &gt; LastModifiedDate + (1/24)</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Is this message stalled or otherwise not processing correctly?</inlineHelpText>
         <label>Overdue</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
@@ -73,6 +75,7 @@ NOW() &gt; LastModifiedDate + (1/24)</formula>
     <fields>
         <fullName>Parameters__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What is the JSON object representing the parameters carried by this message?</inlineHelpText>
         <label>Parameters</label>
         <length>32768</length>
         <trackTrending>false</trackTrending>
@@ -83,6 +86,7 @@ NOW() &gt; LastModifiedDate + (1/24)</formula>
         <fullName>Process__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
+        <inlineHelpText>What Process will handle this message?</inlineHelpText>
         <label>Process</label>
         <referenceTo>Process__c</referenceTo>
         <relationshipLabel>Messages</relationshipLabel>
@@ -95,6 +99,7 @@ NOW() &gt; LastModifiedDate + (1/24)</formula>
         <fullName>Sequence__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
+        <inlineHelpText>Which Sequence is this message progressing through?</inlineHelpText>
         <label>Sequence</label>
         <referenceTo>Sequence__c</referenceTo>
         <relationshipLabel>Messages</relationshipLabel>
@@ -106,6 +111,7 @@ NOW() &gt; LastModifiedDate + (1/24)</formula>
     <fields>
         <fullName>Status__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What stage of its lifecycle is this message at?</inlineHelpText>
         <label>Status</label>
         <picklist>
             <picklistValues>
@@ -133,6 +139,7 @@ NOW() &gt; LastModifiedDate + (1/24)</formula>
         <fullName>Step__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
+        <inlineHelpText>Which Step is this message destined for?</inlineHelpText>
         <label>Step</label>
         <referenceTo>Step__c</referenceTo>
         <relationshipLabel>Messages</relationshipLabel>

@@ -55,6 +55,7 @@
         <fullName>MinimumHoursBetween__c</fullName>
         <defaultValue>1</defaultValue>
         <externalId>false</externalId>
+        <inlineHelpText>How many hours should it wait between messages if the message data has not changed?</inlineHelpText>
         <label>Minimum Hours Between</label>
         <precision>3</precision>
         <required>true</required>

@@ -55,6 +55,7 @@
     <fields>
         <fullName>GateGroup__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Which Gate Group does this item belong in?</inlineHelpText>
         <label>Gate Group</label>
         <referenceTo>GateGroup__c</referenceTo>
         <relationshipLabel>Gate Items</relationshipLabel>
@@ -68,6 +69,7 @@
     <fields>
         <fullName>Parameters__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What were the message parameters saved by the Gate Process?</inlineHelpText>
         <label>Parameters</label>
         <length>32768</length>
         <trackTrending>false</trackTrending>

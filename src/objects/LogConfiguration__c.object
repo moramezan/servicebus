@@ -54,6 +54,7 @@
     <fields>
         <fullName>DynamicGroupIdentifierObjectName__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What type of object did the field name come from?</inlineHelpText>
         <label>Dynamic Group Identifier Object Name</label>
         <length>255</length>
         <required>false</required>
@@ -63,9 +64,8 @@
     </fields>
     <fields>
         <fullName>DynamicGroupIdentifier__c</fullName>
-        <description>An object field name that is used to dynamically extract  the Grouping Identifier from the contents of the data arriving at this step</description>
         <externalId>false</externalId>
-        <inlineHelpText>An object field name that is used to dynamically extract  the Grouping Identifier from the contents of the data arriving at this step</inlineHelpText>
+        <inlineHelpText>What field name from the message data arriving at this step, will be used to name the Log Group?</inlineHelpText>
         <label>Dynamic Group Identifier</label>
         <length>80</length>
         <required>false</required>
@@ -77,7 +77,7 @@
         <fullName>StaticGroupIdentifier__c</fullName>
         <description>Enter any static business key (eg INVOICE, PAYSLIP, etc) to  describe the grouping.  Alternatively ,leave blank  to enable a system generated identifier.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Enter any static business key (eg INVOICE, PAYSLIP, etc) to  describe the grouping.  Alternatively ,leave blank  to enable a system generated identifier.</inlineHelpText>
+        <inlineHelpText>What text (eg INVOICE, PAYSLIP, etc) will be used to name the Log Groups created at this step?</inlineHelpText>
         <label>Static Group Identifier</label>
         <length>80</length>
         <required>false</required>

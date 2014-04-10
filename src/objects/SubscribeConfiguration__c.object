@@ -55,6 +55,7 @@
         <fullName>EventType__c</fullName>
         <deleteConstraint>Restrict</deleteConstraint>
         <externalId>false</externalId>
+        <inlineHelpText>What event type should this step listen to messages from?</inlineHelpText>
         <label>Event Type</label>
         <referenceTo>EventType__c</referenceTo>
         <relationshipLabel>Subscribe Configurations</relationshipLabel>

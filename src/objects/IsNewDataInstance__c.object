@@ -54,6 +54,7 @@
     <fields>
         <fullName>IsNewDataConfiguration__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What record configures the IsNewData Step that the message was passing through?</inlineHelpText>
         <label>IsNewData Configuration</label>
         <referenceTo>IsNewDataConfiguration__c</referenceTo>
         <relationshipLabel>IsNewDatas</relationshipLabel>
@@ -67,6 +68,7 @@
     <fields>
         <fullName>Key__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What is the message data Id that will determine if the data is new?</inlineHelpText>
         <label>Key</label>
         <length>255</length>
         <required>false</required>
@@ -77,6 +79,7 @@
     <fields>
         <fullName>LastFiredDate__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>What is the date and time of the last released message, to be used for throttling?</inlineHelpText>
         <label>Last Fired Date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
