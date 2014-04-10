@@ -18,13 +18,20 @@ public class ScheduleImplementation implements System.Schedulable {
             WHERE ConfigurationId__c IN :scheduleConfigurations.keySet()
         ];
         
+        //prepare a hour-aligned datetime
+        DateTime now = DateTime.now();
+        DateTime heartbeat = DateTime.newInstanceGmt(
+            now.year(), now.month(), now.day(), //date
+            now.hour(), 0, 0 //hour-aligned time
+        );
+        
         //destine a timestamped parameters for each step
         List<Message__c> messages = new List<Message__c>();
         for (Step__c step : steps) {
             Map<String,Object> parameters = new Map<String,Object>{
                 'eda_Position' => 0,
                 'eda_SequenceName' => step.Sequence__r.Name,
-                'eda_Heartbeat' => DateTime.now()
+                'eda_Heartbeat' => heartbeat
             };
             
             Message__c message = new Message__c(
