@@ -1,8 +1,17 @@
 <apex:page showHeader="false" standardStylesheets="true">
     
     <style>
-        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+           body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+           
+           code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:112%;}
+           .contact {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; 
+                     font-size:112%;
+                     text-align:center}
+            .contact.dot {font-weight:bold;}         
+           a {text-decoration:none;}
     </style>
+        
+        
          <br />
          
         <apex:pageBlock title="Tutorial : Confirm Setup" mode="maindetail">
@@ -12,7 +21,9 @@
             <apex:pageBlockSection title="Objective :" columns="1" collapsible="false">
 
                 <apex:pageBlockSectionItem >
-                    <p>Confirm that the Event Driven framework has been correctly setup.</p>   
+                    <p>Confirm that the Event Driven Architecture application  has been correctly configured by making use of  a simple <code>Sequence</code> containing  
+                     <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>
+                    processes.</p>   
                 </apex:pageBlockSectionItem>
                 
                <apex:pageBlockSectionItem >
@@ -28,33 +39,71 @@
                 <apex:pageBlockSectionItem >
                     <ul>
                         <li>Click the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/EventDrivenArchitectureApplication.png')}" /> Application icon on the top right of the screen.</li>
-                        <li>Create a new Sequence by clicking the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Sequences.png')}" /> tab and filling [ Test ] in the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/SequenceName.png')}" /> text box.</li>
+                        <li>Create a new Sequence by clicking the 
+                            <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Sequences.png')}" /> 
+                             tab and inserting <code>Test</code> in the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/SequenceName.png')}" /> text box.</li>
                         <li>Clicking <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Save.png')}" />   will surface a drag and drop canvas upon which Sequence steps can be added and deleted. 
-                           Note that the special <b>[</b> <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Terminate.png')}" /> <b>]</b> process is automatically added as a Sequence step.
+                            <br/> ( <b>Note</b> that the special 
+                            <b>[</b> <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Terminate.png')}" /> <b>]</b> 
+                            process is automatically added as a sequence step.)
                         </li>
-                        <li>Click on the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/NewStep.png')}" /> button to add a new Sequence Step. 
-                           Select the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/EventDrivenArchitectureCategory.png')}" /> category which will reveal a list of available processes to select from. 
-                           <br /><br />
-                           <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/EventDrivenArchitectureGroup.png')}" /> 
-                           <br /><br />
-                           Select a <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Wiretap.png')}" /> process. Repeat this step three times.
+                        
+                        <br/>
+                         
+                        <li> <i> Repeat three times : </i>
+                            <br/>
+                            <br/> &nbsp; - Click on the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/NewStep.png')}" /> button to add a new <code>Sequence Step</code>. 
+                            <br/>
+                            <br/> &nbsp; - Select the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/EventDrivenArchitectureCategory.png')}" /> category which will reveal a list of available processes to select from. 
+                            <br />
+                            <br />&nbsp;&nbsp;&nbsp;<img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/EventDrivenArchitectureGroup.png')}" /> 
+                            <br />
+                            <br/> &nbsp; - Select a <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Wiretap.png')}" /> process.
                         </li>
-                        <li>Using drag and drop, reorder the three Wiretap processes added in the step above so that the <b>[</b> <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Terminate.png')}" /> <b>]</b> process is the last step in the Sequence.
-                           <br /><br />
-                           <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Steps.png')}" /> 
-                           <br /><br />
+                        
+                        <br/>
+                        
+                        <li>Using drag and drop, reorder the three 
+                            <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>
+                            processes added in the step above so that the
+                             <b>[</b> <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Terminate.png')}" /> <b>]</b> 
+                            process occupies the last position the <code>Sequence</code>.
+                            <br/> Your <code>Test</code> sequence should now approximate the following:
+                            <br /><br />
+                            <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Steps.png')}" /> 
+                            <br /><br />
                         </li>
-                        <li>You are now ready to execute the steps in the Sequence by clicking the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Enqueue.png')}" /> button.</li>
-                        <li>A message appears indicating that processing has started. 
+                        
+                        <br/><br/><br/>
+                        
+                        <li> <b>Testing : </b>
+                            
+                            <br/>You are now ready to execute the steps in the <code>Test</code> sequence by clicking the
+                            <span style="color: #00f;">TODO - Inject Test Message -- TODO</span>
+                            <!---
+                              <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Enqueue.png')}" />
+                              --->
+                              button.
+                        </li>
+                        
+                        <br/>
+                        
+                        <li>A pop-up appears indicating that processing has started. 
                            <br /><br />
                            <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/EnqueueMessage.png')}" /> 
                            <br /><br />
                         </li>
-                        <li>From your email client , you should now receive three wiretap messages. 
-                           <br /><br />
-                           <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Email.png')}" />
-                           <br /><br />
-                           Each wiretap message represents the work message entering and exiting a Wiretap Sequence step.
+                        <li>Your email client will receive one email from each of the three 
+                            <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>
+                            processes. 
+                            <br /><br />
+                            <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial/Email.png')}" />
+                            <br /><br />
+                            Each 
+                            <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>
+                            email represents the message entering and exiting a 
+                            <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>
+                            sequence step.
                         </li>  
                     </ul>
                 </apex:pageBlockSectionItem>
@@ -62,4 +111,6 @@
 
         </apex:pageBlock>
 
+
+ 
 </apex:page>

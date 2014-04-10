@@ -6,18 +6,21 @@
 
         <apex:pageBlock title="Tutorial : Process Discovery" mode="maindetail">
 
- 
             <apex:pageBlockSection title="Objective :" columns="1" collapsible="false">
                 <apex:pageBlockSectionItem >
-                    <p>Discover and import processes written in Apex that adhere to the Event Driven Architecture specification.</p>   
+                    <p>Discover event driven processes.</p>   
                 </apex:pageBlockSectionItem>
-
+                
+               <apex:pageBlockSectionItem >
+                    <p><b>Expected Duration : </b> 5 Minutes.</p>   
+                </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
-            
+           
+
             <apex:pageBlockSection title="Context :" columns="1" collapsible="false">
                 <apex:pageBlockSectionItem >
-                    <p> The configurator / orchestrator must first import a process before it can be used as a step in a Sequence. 
-                        There is an automated mechanism for doing this  and it is initiated by clicking the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ProcessDiscoverTutorial/Discover.png')}" />  button.
+                    <p> Before a process written in Apex can be referenced as a step in a sequence, it must first be discovered and registered in the Event Driven framework.
+                        <br/> There is an automated mechanism for doing this  and is initiated by clicking the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ProcessDiscoverTutorial/Discover.png')}" />  button.
                     </p>   
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>       

@@ -2,9 +2,13 @@
     
     <style>
         body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
-        a {text-decoration:none;}
+        
         code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:112%;}
-
+        .contact {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; 
+                  font-size:112%;
+                  text-align:center}
+         .contact.dot {font-weight:bold;}         
+        a {text-decoration:none;}          
     </style>
 
     <br />
@@ -33,26 +37,20 @@
                     </li>
                     <li>The intended audience is  System Configurators, Business Analysts as well as Force.com Apex Developers.
                     </li>
-                    <li> This guide does not cover designing building and deploying custom event driven processes.  This topic is described in a separate guide - see XXXX  
+                    <li> This guide does not cover designing building and deploying custom event driven processes.  This topic is described in the  separate 
+                         <a href="ProcessDevelopersGuide"            style="color: #00f;">Process Developer's Guide</a> 
+                         guide.
                     </li>
-                    <li> This guide does not cover configuring or monitoring the Event Driven Application.  This topic is described in a separate guide - see XXXX  
+                    <li> This guide does not cover configuring or monitoring the Event Driven Application.  This topic is described in the separate 
+                         <a href="OrchestratorsGuide"                style="color: #00f;">Orchestrator's Guide</a>
+                         guide. 
                     </li>
                 </ul>
                 <br/><br/>
            </apex:pageBlockSectionItem>
  
- 
-            <apex:pageBlockSectionItem > 
-                <b> Contact Us  : </b>  
-                <br/>
-                <ul>
-                    <li> <b>Email address : </b> :: RATSAAS-EMAIL ::
-                    </li>
-                    <li> <b>Phone number : </b> :: RATSAAS-PHONE ::
-                    </li>
-                </ul>
-           </apex:pageBlockSectionItem>  
-                             
+                    
+
             <apex:pageBlockSectionItem > 
                 <b> Overview : </b>  
                 <br/>
@@ -61,9 +59,9 @@
                     </li> 
                     <li> These pre-packaged processes are classified under the group Event Driven Architecture
                     </li> 
-                    <li> Some processes work in isolation (for example "Wiretap" ) while other processes work in tandem (for example "Publish" and "Subscribe")
+                    <li> Some processes work in isolation (for example <code>Wiretap</code> ) while other processes work in tandem (for example <code>Publish</code> and <code>Subscribe</code>)
                     </li>  
-                    <li> Note that some processes are no-operation or pass through In nature. In other words these no-op process simply forward on the worker message to the next step in the Sequence
+                    <li> Note that some processes are no-operation or pass-through In nature. In other words these no-op processes simply forward on the worker messages to the next step in the Sequence
                     </li> 
                 </ul>
            </apex:pageBlockSectionItem>                    
@@ -77,7 +75,7 @@
                 <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Terminate.png')}" />
                 <b> Terminate  :</b><br/>
                  <ul>         
-                    <li>Every Sequence must have a [Termination] process.
+                    <li>Every Sequence must have a <code>Termination</code> process.
                     </li>
                     <li>A [Termination] process is automatically inserted as a sequence step when a Processing Sequence is created.
                     </li>
@@ -99,7 +97,7 @@
                 <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Wiretap.png')}" />
                 <b> Wiretap  :</b><br/>    
                  <ul>         
-                    <li> A Wiretap process is a pass through process that emails the notification details of the current step in a Processing Sequence.
+                    <li> A <code>Wiretap</code> process is a pass through process that emails the message details of the current step in a Processing Sequence.
                     </li> 
                  </ul> 
            </apex:pageBlockSectionItem>                    
@@ -110,15 +108,15 @@
                 <br/>
                 <b> Customization and Configuration  :</b><br/>    
                 <ul>
-                    <li> The email will be sent to the user under which the :: MUNGER :: framework is running.
+                    <li> The email will be sent to the user under which the Event Driven framework is running.
                     </li> 
                     <li> Alternatively, a specific user can be nominated to receive these emails.
                     </li> 
-                    <li> To specify the Wiretap recipient, select the Wiretap process from the list of processes and on the detailed view, press the Customize button.
+                    <li> To specify the <code>Wiretap</code> recipient, select the <code>Wiretap</code> process from the list of processes and on the detailed view, press the [Customize] button.
                     </li> 
-                    <li> Pressing the "Customize" button will redirect the to the WireTap customization view
+                    <li> Pressing the [Customize] button will redirect the to the <code>WireTap</code> customization view
                     </li> 
-                    <li> On the WireTap customization view, enter the User Id of the nominated user that will receive wiretap emails in the custom setting "User Id"
+                    <li> On the WireTap customization view, enter the <code>User Id</code> of the nominated user that will receive <code>Wiretap</code> emails in the custom setting <code>User Id</code>
                     </li>  
                 </ul>
            </apex:pageBlockSectionItem>                    
@@ -127,7 +125,9 @@
             
             <apex:pageBlockSectionItem > 
                 <br/>
-                <b> Usage Example: </b> see Tutorial NNN ( :: Tutorial 01 :: ) <br/>   
+                <b> Usage Example: </b> see 
+                     <a href="ScrapeWebPageTutorial"             style="color: #00f;">Scrape Web Page, Tutorial 04</a> 
+                    <br/>   
                 <br/>
            </apex:pageBlockSectionItem>                    
         </apex:pageBlockSection>
@@ -144,13 +144,13 @@
                 <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/LogInitializer.png')}" />
                 <b> LogInitializer  :</b><br/>    
                  <ul> 
-                    <li> The LogWriter and LogInitializer in tandem so that the underlying data at various steps in one or more Sequence(s) can be related under a meaningful, common grouping reference key
+                    <li> The <code>LogWriter</code> and <code>LogInitializer</code> work in tandem so that the underlying data at various steps in one or more Sequence(s) can be related under a meaningful, common grouping reference key
                     </li> 
-                    <li> The Log Initializer process defines a new business grouping key.
+                    <li> The <code>LogInitializer</code> process defines a new business grouping key.
                     </li> 
-                    <li> Any notification passing through this LogInitializer process will have its state persisted under this business grouping key whenever the notification passes through subsequent LogWriter processes
+                    <li> Any message passing through this <code>LogInitializer</code> process will have its state persisted under this business grouping key whenever the message passes through subsequent <code>LogWriter</code> processes
                     </li> 
-                    <li> Note that a notification can carry more than one business grouping key. In such cases , the Log Writer process will persist a notification under every business grouping key found in the notification
+                    <li> Note that a message can carry more than one business grouping key. In such cases , the <code>LogWriter</code> process will persist a message under every business grouping key found in the message
                     </li> 
                 </ul>
 
@@ -176,9 +176,9 @@
                 <b> Implicit configuration :</b><br/>    
                 <br/>
                  <ul>         
-                    <li> This is the default mechanism for defining the business identifier when no explicit definition has been configured on the LogInitializer process.
+                    <li> This is the default mechanism for defining the business identifier when no explicit definition has been configured on the <code>LogInitializer</code> process.
                     </li> 
-                    <li> Under this mode, the business identifier will be a composite of the LogInitializer's Sequence mane and Sequence Position
+                    <li> Under this mode, the business identifier will be a composite of the LogInitializer's Sequence Name and Sequence Position
                     </li> 
                  </ul> 
  
@@ -187,11 +187,11 @@
                 <b> Static Configuration :</b><br/>    
                 <br/>
                  <ul>         
-                    <li> To specify the a static business identifier , click the "Configure" link next to a LogInitializer process
+                    <li> To specify the a static business identifier , click the [Configure] link next to a LogInitializer process
                     </li> 
-                    <li> Pressing the configure link will surface the configuration screen for the LogInitializer process
+                    <li> Pressing the configure link will surface the configuration screen for the <code>LogInitializer</code> process
                     </li> 
-                    <li> In the Static Group Identifier field, enter a meaningful static value (eg INVOICE, WEB-DATA-FROM-YAHOO) which will form the grouping identifier
+                    <li> In the Static Group Identifier field, enter a meaningful static value (eg <code>INVOICE</code>, <code>WEB-DATA-FROM-YAHOO</code>) which will form the grouping identifier
                     </li> 
                  </ul> 
 
@@ -199,21 +199,22 @@
                 <b> Dynamic Configuration  :</b><br/>    
                 <br/>
                 <ul>    
-                    <li> To specify the a dynamic business identifier , click the "Configure" link next to a LogInitializer process
+                    <li> To specify the a dynamic business identifier , click the [Configure] link next to a LogInitializer process
                     </li> 
                     <li> Pressing the configure link will surface the configuration screen for the LogInitializer process
                     </li> 
-                    <li> In the Dynamic Group Identifier field, enter the field name of the underlying data (eg PartNumber__c, DunsRef__c)
+                    <li> In the Dynamic Group Identifier field, enter the field name of the underlying data (eg <code>PartNumber__c</code>, <code>DunsRef__c</code>)
                     </li> 
-                    <li> A notification passing the LogInitializer process will have its underlying data inspected and the value of this dynamic field extracted
+                    <li> A message passing the <code>LogInitializer</code> process will have its underlying data inspected and the value of this dynamic field extracted
                     </li>  
                 </ul>
            </apex:pageBlockSectionItem>                    
 
             <apex:pageBlockSectionItem > 
                 <br/>
-                <b> Usage Example: </b> see Tutorial NNN ( :: Tutorial 01 :: ) <br/>   
-                <br/>
+                <b> Usage Example: </b> see 
+                    <a href="LogUnderCommonIdentifierTutorial"  style="color: #00f;">Log Under Common Identifier, Tutorial 03</a>
+                <br/>   
            </apex:pageBlockSectionItem>                    
         </apex:pageBlockSection>
     </apex:pageBlock>
@@ -229,13 +230,13 @@
                 <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Subscribe.png')}" />
                 <b> Subscribe  :</b><br/>   
                  <ul> 
-                    <li> The Publish and Subscribe processes work in tandem to provide a loose coupling of a Sequence steps.
+                    <li> The <code>Publish</code> and <code>Subscribe</code> processes work in tandem to provide a loose coupling of a Sequence steps.
                     </li> 
-                    <li> The loose coupling is achieved by specifying a common named event that is shared between both the Publish and Subscribe processes
+                    <li> The loose coupling is achieved by specifying a common Named Event that is shared between both the <code>Publish</code> and <code>Subscribe</code> processes
                     </li> 
-                    <li> The Publish process directs the notification to the common named event and the Subscribe process retrieves from the common named event.
+                    <li> The Publish process directs the message to the common named event and the Subscribe process retrieves from the common Named Event.
                     </li> 
-                    <li> Because of this indirection, more than one Subscribe process can retrieve from the same named event.
+                    <li> Because of this indirection, more than one <code>Subscribe</code> process can retrieve from the same Named Event.
                     </li> 
                     <li> Note that a subscribe process must be the first process in a Sequence
                     </li> 
@@ -247,25 +248,25 @@
                 <br/>
                 <b> Customization and Configuration  :</b><br/>    
                 <ul>
-                    <li> A named event must be specified for both the Subscribe and Publish processes.
+                    <li> A named event must be specified for both the <code>Subscribe</code> and <code>Publish</code> processes.
                     </li> 
-                    <li> A named event is created from the configuration screen of either Publish or Subscribe process
+                    <li> A named event is created from the configuration screen of either <code>Publish</code> or <code>Subscribe</code> process
                     </li> 
-                    <li> To specify the named event , click the Configure link next to either a Publish or Subscribe Sequence step
+                    <li> To specify the named event , click the [Configure] link next to either a <code>Publish</code> or <code>Subscribe</code> Sequence step
                     </li> 
-                    <li> Clicking the "Configure" link will redirect to the configuration view
+                    <li> Clicking the [Configure] link will redirect to the configuration view
                     </li> 
                     <li> On the configuration view, press the Manage Event Types button to create a new named event
                     </li> 
                     <li> To publish to a named event, click the Configure link next to a Publish Sequence step.
                     </li> 
-                    <li> Clicking the "Configure" link will redirect to the Publish configuration view
+                    <li> Clicking the [Configure] link will redirect to the Publish configuration view
                     </li> 
                     <li> Select a named event to publish to by clicking the Event Type lookup field.
                     </li> 
                     <li> To publish to a named event, click the Configure link next to a Subscribe Sequence step.
                     </li> 
-                    <li> Clicking the "Configure" link will redirect to the Subscribe configuration view
+                    <li> Clicking the [Configure] link will redirect to the Subscribe configuration view
                     </li> 
                     <li> Select a named event to subscribe from by clicking the Event Type lookup field.
                     </li> 
@@ -275,9 +276,10 @@
 
             <apex:pageBlockSectionItem > 
                 <br/>
-                <b> Usage Example: </b> see Tutorial NNN ( :: Tutorial 01 :: ) <br/>   
-                <br/>
-           </apex:pageBlockSectionItem>                    
+                <b> Usage Example: </b> see 
+                    <a href="ScrapeWebPageTutorial"             style="color: #00f;">Scrape Web Page, Tutorial 04</a>  
+                <br/>   
+           </apex:pageBlockSectionItem>                       
         </apex:pageBlockSection>
     </apex:pageBlock> 
     
@@ -292,19 +294,19 @@
                 <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Gate.png')}" />
                 <b> Gate  :</b><br/>  
                  <ul>
-                    <li> A related collection of notifications may follow different execution paths.
+                    <li> A related collection of messages may follow different execution paths.
                     </li> 
-                    <li> A need may arise for a given process to act on these notifications in a single transaction context even though one or more of these notifications may have proceeded down a different execution path.
+                    <li> A need may arise for a given process to act on these messages in a single transaction context even though one or more of these messages may have proceeded down a different execution path.
                     </li> 
-                    <li> This pattern is commonly known as Map-Reduce and the Mark and Gate processes work in tandem to achieve this.
+                    <li> This pattern is commonly known as Map-Reduce and the <code>Mark</code> and <code>Gate</code> processes work in tandem to achieve this.
                     </li> 
-                    <li> The Mark process flags a notification with a unique grouping key
+                    <li> The <code>Mark</code> process flags a message with a unique grouping key
                     </li> 
-                    <li> The process following the Mark process is assumed to be a process that fans out the notification in some manner (for example, splitting the underlying data pointed at by the notification)
+                    <li> The process following the Mark process is assumed to be a process that fans out the message in some manner (for example, splitting the underlying data pointed at by the message)
                     </li> 
-                    <li> Using the unique grouping key , the Gate process in a subsequent Sequence step buffers logically related notifications.
+                    <li> Using the unique grouping key , the <code>Gate</code> process in a subsequent Sequence step buffers logically related messages.
                     </li> 
-                    <li> When all notifications for a given grouping key are received, they are all simultaneously released to the next step in the Sequence in a single execution context
+                    <li> When all messages for a given grouping key are received, they are all simultaneously released to the next step in the Sequence in a single execution context
                     </li> 
                 </ul>
            </apex:pageBlockSectionItem>                    
@@ -314,19 +316,20 @@
                 <br/>
                 <b> Customization and Configuration  :</b><br/>    
                 <ul>
-                    <li> Insert a Mark process immediately before a fan-out process in a Sequence.
+                    <li> Insert a <code>Mark</code> process immediately before a fan-out process in a Sequence.
                     </li> 
-                    <li> Insert a Gate process at some point after the fan-out process
+                    <li> Insert a <code>Gate</code> process at some point after the fan-out process
                     </li> 
                 </ul>
            </apex:pageBlockSectionItem>                    
 
-
+            <!-- PENDING 
             <apex:pageBlockSectionItem > 
                 <br/>
                 <b> Usage Example: </b> see Tutorial NNN ( :: Tutorial 01 :: ) <br/>   
                 <br/>
-           </apex:pageBlockSectionItem>                    
+           </apex:pageBlockSectionItem>     
+           -->
         </apex:pageBlockSection>
     </apex:pageBlock>
      
@@ -345,13 +348,13 @@
                  <ul>
                     <li> Sometimes execution logic is composed into seperate Sequences and a need arises to connect the logic one or more Sequences
                     </li> 
-                    <li> The SubSequence, Branch and Jump processes allow Sequences messages to transition between Sequences
+                    <li> The <code>SubSequence</code>, Branch and Jump processes allow Sequences messages to transition between Sequences
                     </li> 
-                    <li> The Jump process directs execution flow to the first step in a specified Sequence. Steps in the Sequence following a jump step will therefore not be executed.
+                    <li> The <code>Jump</code> process directs execution flow to the first step in a specified Sequence. Steps in the Sequence following a jump step will therefore not be executed.
                     </li> 
-                    <li> The Branch process splits execution flow to the first step in a specified Sequence AND remaining steps in the current Sequence. Unlike the Jump process,steps in the Sequence following a Branch step WILL be executed.
+                    <li> The <code>Branch</code> process splits execution flow to the first step in a specified Sequence AND remaining steps in the current Sequence. Unlike the Jump process,steps in the Sequence following a Branch step WILL be executed.
                     </li> 
-                    <li> The SubSequence process directs execution flow to the first step in a specified Sequence. When execution flow reaches the terminate step in the specified Sequence, execution flow returns to the step immeadiately following the SunPosition step.
+                    <li> The <code>SubSequence</code> process directs execution flow to the first step in a specified Sequence. When execution flow reaches the terminate step in the specified Sequence, execution flow returns to the step immeadiately following the SunPosition step.
                     </li>
                 </ul>
            </apex:pageBlockSectionItem>                    
@@ -361,35 +364,34 @@
                 <br/>
                 <b> Customization and Configuration  :</b><br/>    
                 <ul>
-                    <li> To specify the Sequence to jump to, click the Configure link next to a Jump Sequence step.
+                    <li> To specify the Sequence to jump to, click the [Configure] link next to a Jump Sequence step.
                     </li> 
-                    <li> Clicking the "Configure" link will redirect to the Jump configuration view
+                    <li> Clicking the [Configure] link will redirect to the Jump configuration view
                     </li> 
                     <li> In the Sequence field, enter the name of the Sequence to jump to .
                     </li> 
-                    <li> To specify the Sequence to branch to, click the Configure link next to a Branch Sequence step.
+                    <li> To specify the Sequence to branch to, click the [Configure] link next to a Branch Sequence step.
                     </li> 
-                    <li> Clicking the "Configure" link will redirect to the Branch configuration view
+                    <li> Clicking the [Configure] link will redirect to the Branch configuration view
                     </li> 
-                    <li> In the Sequence field, enter the name of the Sequence to branch to .
+                    <li> In the <code>Sequence</code> field, enter the name of the Sequence to branch to .
                     </li> 
-                    <li> To specify the Sequence to execute before returning, click the Configure link next to a SubSequence Sequence step.
+                    <li> To specify the Sequence to execute before returning, click the [Configure] link next to a SubSequence Sequence step.
                     </li> 
-                    <li> Clicking the "Configure" link will redirect to the SubSequence configuration view
+                    <li> Clicking the [Configure] link will redirect to the SubSequence configuration view
                     </li> 
-                    <li> In the Sequence field, enter the name of the Sequence to execute.
-                    </li> 
-                    <li> Usage Example: see Tutorial NNN
+                    <li> In the <code>Sequence</code> field, enter the name of the Sequence to execute.
                     </li> 
                 </ul>
            </apex:pageBlockSectionItem>                    
 
-
+            <!--
             <apex:pageBlockSectionItem > 
                 <br/>
                 <b> Usage Example: </b> see Tutorial NNN ( :: Tutorial 01 :: ) <br/>   
                 <br/>
-           </apex:pageBlockSectionItem>                    
+           </apex:pageBlockSectionItem>     
+           -->
         </apex:pageBlockSection>
     </apex:pageBlock>
     
@@ -400,15 +402,15 @@
                 <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Schedule.png')}" />
                 <b> Schedule :</b><br/>    
                  <ul>
-                    <li> Certain events are time based. For example, 12:00 pm, Monday.
+                    <li> Certain events are time based. 
                     </li> 
-                    <li> Time is a continuous flow but in practise, most systems are interested in the occurrence of discreet time events 12:00 pm, Monday.
+                    <li> Time is a continuous flow but in practise, most systems are interested in the occurrence of discreet time events such as 12:00 pm, Monday.
                     </li> 
                     <li> The Schedule process has a configurable schedule to register interest in the occurrence of discrete future time based events. This register is called a schedule.
                     </li> 
-                    <li> The Schedule process emits a message whenever a a schedule event has occurred.
+                    <li> The <code>Schedule</code> process emits a message whenever a a schedule event has occurred.
                     </li> 
-                    <li> Note that the Schedule process must be the first step in a Sequence.
+                    <li> <b>Note:</b> that the <code>Schedule</code> process must be the first step in a Sequence.
                     </li>
                 </ul>
            </apex:pageBlockSectionItem>                    
@@ -420,13 +422,15 @@
                 <ul>
                     <li> To specify a schedule, click the Configure link next to a Schedule Sequence step.
                     </li> 
-                    <li> Clicking the "Configure" link will redirect to the Schedule configuration view
+                    <li> Clicking the [Configure] link will redirect to the Schedule configuration view
                     </li> 
-                    <li> A schedule is defined by one or more hourly time intervals defining when the schedule should fire. This hourly schedule is filtered by frequency and run dates.
+                    <li> A schedule is defined by one or more hourly time intervals defining when the schedule should fire. 
+                         This hourly schedule is filtered by frequency and run dates.
                     </li> 
                     <li> In the Run Times field , select one or more hourly time intervals that specify when the schedule should fire.
                     </li> 
-                    <li> In the Frequency field , select the frequency from Daily, Weekly or Monthly. The value selected defines the available values under the Run dates picklist
+                    <li> In the <code>Frequency</code> field , select the frequency from <code>Daily</code>, <code>Weekly</code> or <code>Monthly</code>. 
+                         The value selected defines the available values under the Run dates picklist
                     </li> 
                 </ul>
            </apex:pageBlockSectionItem>                    
@@ -434,9 +438,18 @@
 
             <apex:pageBlockSectionItem > 
                 <br/>
-                <b> Usage Example: </b> see Tutorial NNN ( :: Tutorial 01 :: ) <br/>   
-                <br/>
+                <b> Usage Example: </b> see 
+                    <a href="ScrapeWebPageTutorial" style="color: #00f;">Scrape Web Page, Tutorial 04</a>  
+                <br/>   
            </apex:pageBlockSectionItem>                    
         </apex:pageBlockSection>
     </apex:pageBlock>    
+
+
+    <div class="contact">
+                 webmaster@cloudeda.com
+        &#183;  (+44) 07545169989
+        &#183;  <a href="www.cloudeda.com" target="_blank"   style="color: #00f;"> www.cloudeda.com </a>  
+    </div>
+    <br/><br/>
 </apex:page>

@@ -1,8 +1,14 @@
 <apex:page showHeader="false" standardStylesheets="true">
     
     <style>
-        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
-        a {text-decoration:none;}
+           body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+           
+           code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:112%;}
+           .contact {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; 
+                     font-size:112%;
+                     text-align:center}
+            .contact.dot {font-weight:bold;}         
+           a {text-decoration:none;}
     </style>
 
          <br />
@@ -13,12 +19,14 @@
          
             <apex:pageBlockSection title="Objective :" columns="1" collapsible="false">
                <apex:pageBlockSectionItem >
-                    <p>There is often a need to retrieve changed data from an external source.</p>
-                    <p>Consider the example of obtaining changing stock price data. 
-                       <br/>There is no native mechanism for detecting these change events in Salesforce . 
-                       <br/>Under these circumstances, stock price change events are simulated by polling  a stock price data source.
+               <ul>
+                    <p>A common requirement is the ability to retrieve data from an external source as and when it changes.
+                       <br/>In Salesforce, there is no native mechanism for easily detecting and acting on such changes.
+                       <br/>Consider for example, retrieving and saving a particular stock's  updated price data from a financial web site. 
                     </p>
-                    <br/>
+                    <p>This tutorial will demonstrate how Event Driven Architecture can easily simulate changed stock price events by polling <a href="http://finance.yahoo.com" target="_blank" style="color: #00f;">Yahoo Finance</a>  .
+                    </p> 
+                </ul>
                 </apex:pageBlockSectionItem>
                 
                 <apex:pageBlockSectionItem >
@@ -31,17 +39,22 @@
                 <apex:pageBlockSectionItem >
                     <p> <b> Requirement : </b> 
                         <ul>
-                        <li>At least four times a day retrieve  the price data of your favourite stock  which is of course CRM (Salesforce).
+                        <li>At least four times a day retrieve  the price data of your favourite stock  which is of course <a href="http://finance.yahoo.com/q?s=CRM" target="_blank" style="color: #00f;">CRM</a>   (Salesforce).
                         </li>
                         </ul>
                     </p> 
                     <p>  <b> Implementation Overview :</b> 
                          <ul>
-                         <li>Configure a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Schedule.png')}" /> <b>]</b> process to fire  four times a day.
+                         <li>Configure a 
+                              <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Schedule.png')}" /> <b>]</b> 
+                              process to fire  four times a day.
                          </li>
-                         <li>Configure a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Scrape.png')}" /> <b>]</b> process to retrieve the contents of  <span class="link"><a href="http://finance.yahoo.com/q?s=crm">http://finance.yahoo.com/q?s=CRM</a> </span> .
+                         <li>Configure a
+                             <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Scrape.png')}" /> <b>]</b> 
+                             process to retrieve the contents of  
+                             <span style="color: #00f;">http://finance.yahoo.com/q?s=CRM</span>  .
                          </li>
-                         <li> Engage the services of a force.com developer to create a custom stock parsing process <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" /> <b>]</b>.
+                         <li> Simulate engaging the services of a Force.com developer to create a custom stock parsing process <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" /> <b>]</b>.
                               <br/> ( This process will extract CRM price data into a json structure ).
                          </li>
                          </ul>
@@ -49,24 +62,37 @@
                     <p> <b> Testing :</b> 
                          <ul>
                          <li> Insert a   <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>  
-                              process towards the end of the Sequence.
+                              process towards the end the <code>Sequence</code>.
                          </li>
                          <li>Enqueue a test message.
                          </li>
-                         <li>Inspect the output of this process to confirm that the Sequence is correctly configured.
+                         <li>Inspect the output of this process to confirm that the <code>Sequence</code> is correctly configured.
                           </li>
                           </ul>
                     </p>
                 </apex:pageBlockSectionItem>
              </apex:pageBlockSection>
              
-             
+ 
+            <apex:pageBlockSection title="Prerequisites :" columns="1" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <ul>
+                         <li> Confirm that the EDA environment is correctly setup by completing
+                              <a href="ConfirmSetupTutorial" style="color: #00f;">Tutorial 01</a>   
+                         </li>
+                         <li> Ensure that your test Org has a compiled version of the <code> EdaUtility </code> Apex class - see
+                              <a href="ProcessDevelopersGuide" style="color: #00f;">Process Developer's Guide, APPENDIX II </a>
+                         </li>
+                      </ul> 
+                </apex:pageBlockSectionItem>
+             </apex:pageBlockSection>
+
              
             <apex:pageBlockSection title="Detailed Instructions :" columns="1" collapsible="false">
                 <apex:pageBlockSectionItem >
                 <ol>         
                     <li> Create and register the Yahoo <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" /> <b>]</b> process. 
-                         <br/>Create a new apex class by clicking <b>  Setup | Develop | Apex Classes | New </b>
+                         <br/>Create a new apex class by clicking <b>  Setup|Develop|Apex Classes|New </b>
                          <br/><br/> Paste  and save the following code :
                         
                          <br/> <br/>
@@ -128,36 +154,58 @@
                     
                     <br/><br/><br/>
                     
-                    <li> Click on the list view of the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Processes.png')}" /> tab and click the  <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Discover.png')}" />  button to include the recently created <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" /> <b>]</b> process in the framework 
-                         <br/> ( see XXX for help in discovering processes.)
+                    <li> Click on the list view of the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Processes.png')}" /> tab.
+                         <br/> Click the  <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Discover.png')}" />  
+                               button so that the EDA framework dicovers and includes the recently created
+                               <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" /> <b>]</b> 
+                               process.
+                         <br/> For futher details, refer to the 
+                         <a href="ProcessDiscoveryTutorial" style="color: #00f;">Process Discovery Tutorial</a>.
                      </li>
                     <br />
                     
                     <li> Set up a remote site for the Yahoo finance domain.
-                         <br/> Cick <b> Setup | Security Controls | RemoteSite Settings </b> and enter the  Remote Site URL <a   href="http://finance.yahoo.com ">http://finance.yahoo.com </a>   </li>                   
+                         <br/> Cick <b> Setup|Security Controls|RemoteSite Settings </b> and enter the  Remote Site URL <a   href="http://finance.yahoo.com ">http://finance.yahoo.com </a>   </li>                   
                          <br /> 
                          <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/RemoteSiteDetails.png')}" /> 
                          <br /> <br /><br />
+                    <!--
                     <li> Create a new Sequence.
                           <br/> Click the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/EventDrivenArchitectureApplication.png')}" /> application  , select the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Sequences.png')}" />  tab . 
                          <br/>Then click [ New ] and call the new sequence  "WebScrape". 
                          <br/>Finally click [ Save ] 
                          <br/> A new sequence is presented that includes a default <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Terminate.png')}" />  <b>]</b> process.  
                     </li> 
-                    
+                    -->
+                    <li> Create a new <code>Sequence</code>.
+                          <br/> Click the 
+                                <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/EventDrivenArchitectureApplication.png')}" /> 
+                                application  , select the 
+                                <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Sequences.png')}" />  
+                                tab . 
+                         <br/>Then click [ New ] and name the new sequence  <code>WebScrape</code>. 
+                         <br/>Finally click [ Save ] 
+                         <br/>You will be presented with a new sequence that includes a default 
+                              <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Terminate.png')}" />  <b>]</b> 
+                              process.  
+                    </li> 
+                          
                     <br/><br/><br/>
                     
 
-                    <li> Add process steps to the Sequence.
-                         <br/>Click <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/NewStep.png')}" />   five times. 
-                         <br />From the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ExtEda.png')}" />  <b>]</b> tab , select a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Schedule.png')}" />  <b>]</b> process,  a  <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>  and a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Publish.png')}" />  <b>]</b> process
-                         <br />From the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ExtSample.png')}" />  <b>]</b> tab , select a  <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Scrape.png')}" />  <b>]</b> process
-                         <br />From the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ExtExample.png')}" />  <b>]</b>  tab select a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" />  <b>]</b> process.
+                    <li> Add <code>Process Steps</code> to the Sequence.
+                         <br/>Click  the 
+                              <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/NewStep.png')}" />  
+                               repeatedly :  
+                         <br />&nbsp; &nbsp; &nbsp; - From the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ExtEda.png')}" />  <b>]</b> tab , select a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Schedule.png')}" />  <b>]</b> process,  a  <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>  and a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Publish.png')}" />  <b>]</b> process
+                         <br />&nbsp; &nbsp; &nbsp; - From the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ExtSample.png')}" />  <b>]</b> tab , select a  <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Scrape.png')}" />  <b>]</b> process
+                         <br />&nbsp; &nbsp; &nbsp; - From the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ExtExample.png')}" />  <b>]</b>  tab select a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" />  <b>]</b> process.
                     </li>
                     
                     <br/><br/><br/>
                     
-                    <li> Arrange the process steps so that the sequence appears as follows: 
+                    <li> Arrange the <code>Process Steps</code>.
+                        <br/> Arrange the process steps in the following order: 
                         <br /> <br />
                         <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Sequence.png')}" /> 
                         <br /> <br />
@@ -165,73 +213,96 @@
                     
                     <br/><br/><br/>
                     
-                    <li> Configure the Schedule process.
-                         <br/>Click the  <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ConfigureLink.png')}" />  link next to the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Schedule.png')}" />  <b>]</b> process and set the schedule to fire 4 times a day during weekdays adjusted for time zone differences to the NYSE
-                         <!--
-                         <br /> <br />
-                         <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ScheduleConfiguration.png')}" /> 
-                         <br /> <br />
-                         -->
-                         
+                    <li> Configure the <code>Schedule</code> process.
+                         <br/>Click the  
+                              <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ConfigureLink.png')}" />  
+                              link next to the 
+                              <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Schedule.png')}" />  <b>]</b> 
+                               process and set the schedule to fire an arbitrary number of times  during weekdays.
+                         <br/> (<b>Note</b> : Care should be taken to align scheduled times with trading hours of the New York Stock Exchange after accounting for time zone differences)
                          <br /> 
                          <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ScheduleConfigurationComplete.png')}" /> 
-                         <br /> <br /> 
-                          
-                         <br/>Click save and then exit the configure screen.
+                         <br /> 
+                         <br/>Click [Save] and  exit the configure screen.
                     </li>
                     
                     <br/><br/><br/>
                     
-                    <li> Configure the Scrape process.
-                         <br/>Click the  <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ConfigureLink.png')}" />  link next to the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Scrape.png')}" />  <b>]</b> process  and enter http://finance.yahoo.com/q?s=crm  as the endpoint. 
-                         <br/>Click save and then exit the configure screen.
+                    <li> Configure the <code>Scrape</code> process.
+                         <br/>Click the  
+                          <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ConfigureLink.png')}" />  
+                          link next to the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Scrape.png')}" />  <b>]</b> 
+                          process  and 
+                          <span  style="color: #00f;">http://finance.yahoo.com/q?s=CRM</span> 
+                          as the endpoint. 
+                         <br/>Click [Save] and  exit the configure screen.
                     </li>
                     
                     <br/><br/><br/>
                     
-                    <li> Create a Named Event type.
-                         <br/>Click the  <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ConfigureLink.png')}" />  link next to the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Publish.png')}" />  <b>]</b> process.
-                         <br/>We create  an event type to publish to - let's call it "YAHOO". 
-                         <br/>Click the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ManageEventTypes.png')}" />  button , click the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/NewEventType.png')}" /> button and in the event type name insert the value "YAHOO". 
-                         <!--
-                         <br/> 
-                         <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/EventTypeYahoo.png')}" /> 
-                         <br/><br/>
-                         -->
+                    <li> Create a <code>Named Event</code> type.
+                         <br/>An Event Type is simply a moniker that is shared between the  
+                              <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Publish.png')}" /> <b>]</b>
+                              and 
+                              <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Subscribe.png')}" /> <b>]</b>
+                              processes 
+                         <br/>(An Event Type represents a common bridge that can be published  or subscribed to)
+                         <br/>
+                         <br/>Click the  <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ConfigureLink.png')}" />  
+                             link next to the 
+                             <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Publish.png')}" />  <b>]</b> 
+                             process.
+                         <br/>Create  an <code>Event Type</code> to publish to - name it <code>YAHOO</code> to reflect the nature of the message being published. 
+                         <br/>Click the 
+                             <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/ManageEventTypes.png')}" />  
+                             button , click the 
+                             <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/NewEventType.png')}" /> 
+                             button and in the<code>Event Type</code> name insert the value <code>YAHOO</code>. 
                          <br/>Finally click [ Save ].
                     </li>
  
                     <br/><br/><br/>
                     
-                    <li> Configure the Publish process.
-                         <br/>On the Publish Configuration, assign the recently created "YAHOO" event type in the event type lookup field. 
+                    <li> Configure the <code>Publish</code> process.
+                         <br/>From the <code>Publish</code> configuration, assign the recently created <code>YAHOO</code> event type in the event type lookup field. 
                          <br/>
                          <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/PublishConfigurationYahoo.png')}" /> 
                          
-                         <br/> Click [ Save ] to return to the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Sequences.png')}" />  page.
+                         <br/> Click [ Save ] to return to the 
+                               <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Sequences.png')}" />  
+                               page.
                     </li>
                     
                     <br/><br/><br/>
                     
                     <li> Test the Sequence.
-                         <br/>To test this sequence, we enqueue a message  by pressing the Enqueue button
-                         <br/>Note that under production conditions, a message will be enqueued  four times a day as defined in the configuraton of the 
+ 
+                         <br/>To test this sequence,  enqueue a message  by pressing the
+                         <span  style="color: #00f;"> //TODO -- Inject Test Message </span> 
+                         button
+                         <br/>(<b>Note</b> : under production conditions, one or more polling messages will be enqueued as defined in the configuraton of the 
                          <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Schedule.png')}" /> <b>]</b>
-                          process.
-                    </li> 
+                          process.)
+                       
+                            
+                        <br/><br/>
+                        
+                        Each step in the sequence will run inside it's own execution context once the process in the preceding step has completed.
+
                     
-                    <br/><br/><br/>
-                    
-                    <li>  
+                        <br/><br/>
+                        
+                                   
                         The 
                         <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>
-                        process towards the end of the Sequence will eventually send an email to the account associated with the user running the test.
+                        process towards the end of the Sequence will  send an email to the account associated with the user running the test.
                         <br/>The email body will contain the values of all message parameters at the point of email transmission from the 
                         <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b>
                         process. 
                         <br/>The formatted body should approximate the following.
                         <br/><br/>
-                        
+                      
+                            
                         <div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.1em .1em;"><pre style="margin: 0; line-height: 125%">
                         
         {
@@ -244,7 +315,7 @@
             <span style="color: #007700">&quot;priceData&quot;</span>: <span style="background-color: #fff0f0">&quot;{\&quot;Stock__c\&quot;:  [ {\&quot;ticker__c\&quot;: \&quot;CRM\&quot;, \&quot;price__c\&quot;: 55.97} ] }&quot;</span>
         }
                         </pre></div>  
-                        <br/>Visually confirm the Sequence worked as expected by inspecting the "priceData" parameter injected into the message by the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" /> <b>]</b> process.                    
+                        <br/>Visually confirm the Sequence worked as expected by inspecting the <code>priceData</code> parameter injected into the message by the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/StockParse.png')}" /> <b>]</b> process.                    
                     </li>
                     <br />
                     
@@ -256,14 +327,16 @@
              
             <apex:pageBlockSection title="Additional Exercises :" columns="1" collapsible="false">
                 <apex:pageBlockSectionItem >
-                    The <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Publish.png')}" /> <b>]</b> process in the Sequence publishes a "YAHOO" Named Event. 
-                    <br/>One or more new or pre-existing Sequences can now subscribe to that Named Event.
+                    <br/>
+                    The <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Publish.png')}" /> <b>]</b>
+                        process in the  <code>WebScrape</code> sequence publishes to the <code>YAHOO</code> Named Event. 
+                    <br/> Any new or existing sequence can now subscribe to that Named Event .
                     <br/><br/>
-                    <br/> <b> Exercise 1 : </b> consider subscribing to the "YAHOO" Named Event : 
+                    <br/> <b> Exercise 1 : </b> consider subscribing to the <code>YAHOO</code> Named Event : 
                     <ul>
-                        <li>Create an additional Sequence (call it "YahooData") with an initiating <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Subscribe.png')}" /> <b>]</b> process.
+                        <li>Create an additional Sequence (name it <code>YahooData</code>) with an initiating <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Subscribe.png')}" /> <b>]</b> process.
                          </li>
-                        <li>Configure the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Subscribe.png')}" /> <b>]</b> process so the it subscribes to the "YAHOO" Named Event.
+                        <li>Configure the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Subscribe.png')}" /> <b>]</b> process so the it subscribes to the <code>YAHOO</code> Named Event.
                         </li>
                         <li>Add a <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b> process to the Sequence.
                         </li>
@@ -275,7 +348,7 @@
                         <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/YahooDataSequence.png')}" />                         
                         <br/>
                         </li>
-                        <li>If all processes are correctly configured , sending a  new test  message to the original "WebScrape" Sequence will trigger  an additional email from the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b> process on the subscribing "YahooData" Sequence.
+                        <li><b> <i>Testing</i> : </b> Injecting a new test message into the original <code>WebScrape</code> sequence will trigger  an  email from the <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b> process on the subscribing <code>YahooData</code> sequence.
                         </li>
                     </ul>
                    
@@ -285,9 +358,9 @@
                    
                     <br/>  <b> Exercise 2 : </b>  consider persisting the price data in a Stock__c SObject : 
                     <ul>
-                        <li>On the Stock__c SObject , create two fields  Ticker__c (Text) and Price__c  (Numeric 10,2) 
+                        <li>On the <code>Stock__c</code>  SObject , create two fields : <code>Ticker__c</code> (Text) and <code>Price__c</code>   (Numeric 10,2) 
                         </li>
-                        <li>Construct a new Event Driven process to persist the price data in the Stock__c SObject. 
+                        <li>Construct a new event driven process to persist the stock price  in the <code>Stock__c</code>  SObject. 
                              <br/><br/>  <b><i>Hint :</i> </b> Use the following code snippet to assist in building your 
                              <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Persist.png')}" /> <b>]</b>
                              process.
@@ -308,11 +381,17 @@
                         <br/>
                          
                         </li>
-                        <li>On the  <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Processes.png')}" />  tab, click the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Discover.png')}" />   button to make the process available for configuration
+                        <li>On the  
+                            <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Processes.png')}" />  
+                            tab, click the 
+                            <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Discover.png')}" />  
+                            button to make the 
+                            <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Persist.png')}" /> <b>]</b>
+                            process available for configuration
                         </li>
-                        <li>Modify the "YahooData" Sequence by adding the newly available <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Persist.png')}" /> <b>]</b> process as a sequence step.
+                        <li>Modify the <code>YahooData</code> sequence by adding the newly available <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Persist.png')}" /> <b>]</b> process as a sequence step.
                         </li>
-                        <li>Arrange the Sequence in the following order :  
+                        <li>Arrange the <code>YahooData</code> sequence  in the following order :  
                           <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Subscribe.png')}" /> <b>]</b> - 
                           <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Persist.png')}" /> <b>]</b> - 
                           <b>[</b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/Wiretap.png')}" /> <b>]</b> - 
@@ -321,7 +400,7 @@
                           <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial/YahooDataPersistSequence.png')}" /> 
                           <br/> <br/>
                         </li>
-                        <li>If all processes are correctly configured , sending a  new test  message to the original "WebScrape" Sequence will insert a dynamic price record in the Stock__c SObject.
+                        <li><b> <i>Testing</i> : </b> Injecting a new test message into the original <code>WebScrape</code> sequence will insert a dynamic stock price into the <code>Stock__c</code> SObject.
                         </li>
                     </ul>
                   

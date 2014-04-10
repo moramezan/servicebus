@@ -2,6 +2,7 @@
     
     <style>
         body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
+        a {text-decoration:none;}
     </style>
     
     <apex:pageBlock mode="maindetail" title="Introducing Processes">
@@ -39,6 +40,17 @@
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Process/viewDocumentation.png')}" /> shows the supporting documentation provided by the author of a given Process.</p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
+
+        <br/>
+        
+        <apex:pageBlockSection title="Tutorial :" columns="1" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <ul>
+                    <li> How to discover event driven <a href="ProcessDiscoveryTutorial"  style="color: #00f;">Processes</a> .
+                    </li>
+                </ul>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>  
         
         <apex:pageBlockSection title="Click [Continue] to proceed." columns="1" collapsible="false" />
     </apex:pageBlock>

@@ -1,10 +1,15 @@
 <apex:page showHeader="false" standardStylesheets="true">
     
+    
     <style>
         body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
-        a {text-decoration:none;}
+        
         code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:112%;}
-
+        .contact {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; 
+                  font-size:112%;
+                  text-align:center}
+         .contact.dot {font-weight:bold;}         
+        a {text-decoration:none;}          
     </style>
 
     <br />
@@ -38,8 +43,9 @@
                         </ol>
                     </li>
                     <br/>
-                    <li>This guide does not cover configuration and operation aspects related to the of the Event Driven Architectue framework. 
-                    <br/> ( These topics is described in separate guides - see XXXXXXX  )
+                    <li> This guide does not cover configuring or monitoring the Event Driven Application.  This topic is described in the separate 
+                         <a href="OrchestratorsGuide"     style="color: #00f;">Orchestrator's Guide</a>
+                         guide. 
                     </li>
                 </ul>
                 <br/><br/>
@@ -66,21 +72,11 @@
                     <br/>
                     
                     <li> <b>APPENDIX I : </b> Anatomy of a Process
+                    </li>        
+                    <li> <b>APPENDIX II : </b> EdaUtility Class
                     </li>
                 </ul>
-           </apex:pageBlockSectionItem>
-           
-            <apex:pageBlockSectionItem > 
-                <br/>
-                <b> Contact Us  : </b>  
-                <br/>
-                <ul>
-                    <li> <b>Email address : </b> :: RATSAAS-EMAIL ::
-                    </li>
-                    <li> <b>Phone number : </b> :: RATSAAS-PHONE ::
-                    </li>
-                </ul>
-           </apex:pageBlockSectionItem>                    
+           </apex:pageBlockSectionItem>                   
         </apex:pageBlockSection>        
     </apex:pageBlock>    
 
@@ -174,9 +170,22 @@
                     </li>
                     <li>The Event Driven framework is designed so that the  <code> Work-Instruction </code>  output(s) from a process can be fed into the  <code> Work-Instruction </code>  input of the very next process.
                     </li>
-                    <li>The Event Driven framework has by default a number of ready made processes that can be sequenced together so that useful work can be completed.
+                    <li>The Event Driven framework has by default a number of pre-packaged core processes that can be sequenced together so that useful work can be completed.
                     </li>
-                    <li>These ready made processes include XXX, XXX, XXX
+                    <li>These rpre-packaged processes include
+                        <code> Branch      </code>, 
+                        <code> Gate        </code>,
+                        <code> Jump        </code>,
+                        <code> LogInitializer  </code>,
+                        <code> LogWriter   </code>, 
+                        <code> Mark        </code>,
+                        <code> Publish     </code>,
+                        <code> Schedule    </code>,
+                        <code> Subscribe   </code>, 
+                        <code> Subsequence </code>, 
+                        <code> Terminate   </code>
+                        and
+                        <code> Wiretap     </code>  
                     </li>
                     <li>Additional processes can be easily created to implement tasks specific to a particular requirement
                     </li>
@@ -205,7 +214,10 @@
                     </li>
                     <li>Note further that the Event Driven framework has deliberately been architected in a manner so that custom Process Plugins do NOT take a dependency on the Event Driven framework
                     </li>
-                    <li>Create the  <code> EdaUtility  </code>  class by copying the code in :: APPENDIX X ::. This class facilitates collection transforms and simplifies coding logic.
+                    <li> To facilitate collection transforms and the simplification of custom process development in general,
+                         create an  <code> EdaUtility  </code>  class in the Org by  copying and pasting the Apex code found in 
+                         <a href="#APPENDIXII"     style="color: #00f;"> APPENDIX II </a>
+                         at the bottom of this page.
                     </li>
                 </ul>
                 <br/><br/>
@@ -221,13 +233,17 @@
                     </li>
                     <li>Define the response event(s) (if any)
                     </li>
-                    <li>Define the process activity ( Note that these three steps may be performed by the System Orchestrator, a BA or similar and presented to the process author in the form of a spec)
+                    <li>Define 
+                        <a href="#CHAPTER04"     style="color: #00f;"> the process activity </a> in the form of a process specification.
+                        ( Note this step would normally be  performed by the System Orchestrator or a Business Analyst.
+                                A Force.com developer would then convert the specification  into a event driven process.)
+                       
                     </li>
-                    <li>Development : Build the Process and Tests - page NNN.
+                    <li>Development : Build the Process and Tests - see <a href="#CHAPTER05"  style="color: #00f;"> Chapter 05 </a>
                     </li>
-                    <li>Visually test the Event Driven process - page NNN.
+                    <li>Visually test the Event Driven process - see <a href="#CHAPTER06"  style="color: #00f;"> Chapter 06 </a>
                     </li>
-                    <li>Create a managed package containing your Event Driven process and install in the Sandbox. - page NNN.
+                    <li>Create a managed package containing your Event Driven process and install in the Sandbox. - see <a href="#CHAPTER06" style="color: #00f;"> Chapter 06 </a>
                     </li>
                 </ul>
                 <br/><br/>
@@ -238,7 +254,7 @@
 
 
 
-
+   <div id="CHAPTER04" />
 
     <apex:pageBlock mode="maindetail">
         <apex:pageBlockSection columns="1"  title="CHAPTER 04 : Development : Define the Process"  collapsible="false" >
@@ -252,7 +268,7 @@
                     </li>
                     <li> Of particular importance in the collection is the  <code> "Eda__DataId"  </code>  parameter.
                     </li>
-                    <li> The  <code> "Eda__DataId"  </code> parameter points at the underying data structure for the event.
+                    <li> The  <code> "Eda__DataId"  </code> parameter points at the underlying data structure for the event.
                     </li>
                     <li> The process author should be familiar with the nature of the data so that he/she can adequately retrieve and/write to this object.
                     </li>
@@ -272,11 +288,11 @@
                     </li>
                     <li> Each parameter collection represents a response event.
                     </li>
-                    <li> If a process has more than one response, it will have more than one paramater collection.
+                    <li> If a process has more than one response, it will have more than one parameter collection.
                     </li>
                     <li> Normally however, the response events collection will simply contain a single parameter collection, namely the re-purposed input event
                     </li>
-                    <li> For an example of a response events collection containing more than a single parameter collection, refer to XXXX
+                    <li> For an example of a response events collection containing more than a single parameter collection, refer to - see <a href="#????"  style="color: #00f;"> TODO </a>
                     </li>
                 </ul>
                 <br/><br/>
@@ -298,9 +314,9 @@
                     </li>
                     <li> An example of focused activity might be converting unix line terminators to windows line terminators
                     </li>
-                    <li> An example of un-focused activity might be the counting of word occurrences in a file, the xxx, the Eda , and finally yyy
+                    <li> An example of un-focused activity might be the counting of word occurrences in a file, alphabetising  the summary counts by word and finally reporting the results
                     </li>
-                    <li> Un-focused activities should be re-specified into separate focused activites. This is important for two reasons
+                    <li> Un-focused activities should be re-specified into separate focused activites. Using the example above , one could entertain three separate activities (count, sort and report)
                         <ol> 
                         <li> testing : the more focused an activity , the easier it becomes to write comprehensive , reliable unit tests
                         </li>
@@ -323,7 +339,7 @@
     </apex:pageBlock>     
 
 
-
+   <div id="CHAPTER05" />
 
     <apex:pageBlock mode="maindetail">
         <apex:pageBlockSection columns="1" title="CHAPTER 05 : Development : Build the Process and Tests" collapsible="false" >
@@ -333,7 +349,9 @@
                 <ul>
                     <li>In a development org , create a new public class
                     </li>
-                    <li>Confirm that the class follows the expected Event Driven process structure as set out under XXX (Anatomy of a Process).
+                    <li>Confirm that the class follows the expected Event Driven process structure as set out under
+                        <a href="APPENDIX"     style="color: #00f;">Anatomy of a Process</a>
+                        .
                     </li>
                     <li>Build appropriate unit tests as recommended by Salesforce.
                     </li>
@@ -363,7 +381,7 @@
                 <ul>
                     <li>The focused activity specification is very similar to that of the Wiretap 
                         <br/> (1) The activity has no side effects on processing, therefore return the untouched inbound event message as the only item in return collection 
-                        <br/> (2) The chatter feed to surface the inbound event detail is defined by a user id held on the ChatterTap Customization custom setting xxxx 
+                        <br/> (2) The chatter feed to surface the inbound event detail is defined by a user id held on the ChatterTap Customization custom setting
                         <br/> (3) If no User Id has been enetered inth custom setting, default to the Id of the user runnning the current execution context
                     </li>
                 </ul>
@@ -897,7 +915,8 @@
         </apex:pageBlockSection>
     </apex:pageBlock>
 
- 
+
+   <div id="CHAPTER06" />
 
     <apex:pageBlock mode="maindetail">
         <apex:pageBlockSection columns="1"   title="CHAPTER 06 : Development : Post Build Steps"  collapsible="false" >
@@ -921,7 +940,9 @@
                 <br/>
                 <b>Create a managed package containing your Event Driven process :</b> <br/>
                 <ul>
-                    <li>Create a managed package by following standard Salesforce recommendations - see XXX
+                    <li>Create a managed package 
+                        <a href="http://www.salesforce.com/us/developer/docs/packagingGuide/index_Left.htm#StartTopic=Content/packaging_testing.htm"  target="_blank"   style="color: #00f;"> managed package  </a>
+                        by following standard Salesforce recommendations.
                     </li>
                     <li>Add you Apex class to the package along with unit tests and associated dependencies and upload.
                     </li>
@@ -936,7 +957,8 @@
 
 
 
-
+   <div id="APPENDIXI" />
+   
     <apex:pageBlock mode="maindetail">
         <apex:pageBlockSection columns="1" title="APPENDIX I : Anatomy of a Process" collapsible="false" >
             <apex:pageBlockSectionItem >
@@ -1078,11 +1100,77 @@
                     <br/> <br/>
                     <i> [*] - exceptions will appear as records in the message object </i>
                 </ul>
-                <br/><br/>
            </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
     </apex:pageBlock>
-    
- 
+    <div id="APPENDIXII" />
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection columns="1" title="APPENDIX II : EdaUtility Class" collapsible="false" >
+            <apex:pageBlockSectionItem >
+                <br/>
+                <ul>
+                    <li>In order to complete many of the EDA tutorials and facilitate custom process development,
+                        the following  Apex class should be copied and pasted as is into the org hosting the Event Driven Architecture application
 
+           
+                    <br/><br/>
+                    
+<!----------- PART 7 ::  BEG ---------------------------------   
+  ------------------------------------------------------------->   
+ <div style="background: #ffffff; overflow:auto;width:70%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">
+  
+<span style="color: #008800; font-weight: bold">public</span> with sharing <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">EdaUtility</span> <span style="color: #333333">{</span>
+
+    <span style="color: #008800; font-weight: bold">static</span> <span style="color: #008800; font-weight: bold">public</span> Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>String<span style="color: #333333">&gt;</span> convert<span style="color: #333333">(</span>List<span style="color: #333333">&lt;</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">.</span><span style="color: #0000CC">InputParameter</span><span style="color: #333333">&gt;</span> inputs<span style="color: #333333">)</span> <span style="color: #333333">{</span>
+        <span style="color: #888888">//populate list into key-value map</span>
+        Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>String<span style="color: #333333">&gt;</span> descriptions <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>String<span style="color: #333333">&gt;();</span>
+        <span style="color: #008800; font-weight: bold">for</span> <span style="color: #333333">(</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">.</span><span style="color: #0000CC">InputParameter</span> inputParameter <span style="color: #333333">:</span> inputs<span style="color: #333333">)</span> <span style="color: #333333">{</span>
+            descriptions<span style="color: #333333">.</span><span style="color: #0000CC">put</span><span style="color: #333333">(</span>inputParameter<span style="color: #333333">.</span><span style="color: #0000CC">Name</span><span style="color: #333333">,</span> inputParameter<span style="color: #333333">.</span><span style="color: #0000CC">Description</span><span style="color: #333333">);</span>
+        <span style="color: #333333">}</span>
+        <span style="color: #008800; font-weight: bold">return</span> descriptions<span style="color: #333333">;</span>
+    <span style="color: #333333">}</span>
+    
+    <span style="color: #008800; font-weight: bold">static</span> <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> <span style="color: #0066BB; font-weight: bold">convert</span><span style="color: #333333">(</span>List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;</span> parametersList<span style="color: #333333">)</span> <span style="color: #333333">{</span>
+        Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> results <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;();</span>
+        
+        Integer count <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span><span style="color: #333333">;</span>
+        <span style="color: #008800; font-weight: bold">for</span> <span style="color: #333333">(</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">:</span> parametersList<span style="color: #333333">)</span> <span style="color: #333333">{</span>
+            results<span style="color: #333333">.</span><span style="color: #0000CC">put</span><span style="color: #333333">(</span>String<span style="color: #333333">.</span><span style="color: #0000CC">valueOf</span><span style="color: #333333">(</span>count<span style="color: #333333">++),</span> parameters<span style="color: #333333">);</span>
+        <span style="color: #333333">}</span>
+        
+        <span style="color: #008800; font-weight: bold">return</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span><span style="color: #333333">(</span>results<span style="color: #333333">);</span>
+    <span style="color: #333333">}</span>
+    
+    <span style="color: #008800; font-weight: bold">static</span> <span style="color: #008800; font-weight: bold">public</span> List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;</span> convert<span style="color: #333333">(</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> results<span style="color: #333333">)</span> <span style="color: #333333">{</span>
+        List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;</span> parametersList <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;();</span>
+        
+        Integer count <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span><span style="color: #333333">;</span>
+        Integer size <span style="color: #333333">=</span> results<span style="color: #333333">.</span><span style="color: #0000CC">outputParameters</span><span style="color: #333333">.</span><span style="color: #0000CC">size</span><span style="color: #333333">();</span>
+        
+        <span style="color: #008800; font-weight: bold">for</span> <span style="color: #333333">(</span>Integer i <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span><span style="color: #333333">;</span> i <span style="color: #333333">&lt;</span> size<span style="color: #333333">;</span> i<span style="color: #333333">++)</span> <span style="color: #333333">{</span>
+            Object result <span style="color: #333333">=</span> results<span style="color: #333333">.</span><span style="color: #0000CC">outputParameters</span><span style="color: #333333">.</span><span style="color: #0000CC">get</span><span style="color: #333333">(</span>String<span style="color: #333333">.</span><span style="color: #0000CC">valueOf</span><span style="color: #333333">(</span>i<span style="color: #333333">));</span>
+            String data <span style="color: #333333">=</span> System<span style="color: #333333">.</span><span style="color: #0000CC">Json</span><span style="color: #333333">.</span><span style="color: #0000CC">serialize</span><span style="color: #333333">(</span>result<span style="color: #333333">);</span>
+            Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> <span style="color: #333333">(</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;)</span>System<span style="color: #333333">.</span><span style="color: #0000CC">Json</span><span style="color: #333333">.</span><span style="color: #0000CC">deserializeUntyped</span><span style="color: #333333">(</span>data<span style="color: #333333">);</span>
+            parametersList<span style="color: #333333">.</span><span style="color: #0000CC">add</span><span style="color: #333333">(</span>parameters<span style="color: #333333">);</span>
+        <span style="color: #333333">}</span>
+        
+        <span style="color: #008800; font-weight: bold">return</span> parametersList<span style="color: #333333">;</span>
+    <span style="color: #333333">}</span>
+    
+<span style="color: #333333">}</span>
+ 
+</pre></div>
+                    </li>
+                </ul>
+ 
+           </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+
+    <div class="contact">
+                 webmaster@cloudeda.com
+        &#183;  (+44) 07545169989
+        &#183;  <a href="www.cloudeda.com" target="_blank"   style="color: #00f;"> www.cloudeda.com </a>  
+    </div>
+    <br/><br/>
 </apex:page>

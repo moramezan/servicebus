@@ -2,9 +2,13 @@
     
     <style>
         body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
-        a {text-decoration:none;}
+        
         code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:112%;}
-
+        .contact {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; 
+                  font-size:112%;
+                  text-align:center}
+         .contact.dot {font-weight:bold;}         
+        a {text-decoration:none;}          
     </style>
 
     <br />
@@ -24,7 +28,7 @@
                 <b> About This Guide  : </b>  
                 <br/>
                 <ul>
-                    <li> This guide is intended for Business Analysts and System Administrators who  primarily make use of point and click actions to operate, configure, and maintain the Event Driven Architecture application.
+                    <li> This guide is intended for Business Analysts and System Administrators who  primarily make use of point and click actions to operate, configure, and maintain the event driven applications.
                     </li>
                     <br/>
                     <li>The purpose of this guide is to:
@@ -39,9 +43,10 @@
                         </ol>
                     </li>
                     <br/>
-                    <li> This guide does not cover designing building and deploying custom event driven processes. 
-                    <br/>( This topic is described in a separate guide - see XXXX )
-                    </li>
+                        <li> This guide does not cover designing building and deploying custom event driven processes.  This topic is described in the  separate 
+                            <a href="ProcessDevelopersGuide"            style="color: #00f;">Process Developer's Guide</a> 
+                            guide.
+                        </li>
                 </ul>
                 <br/><br/>
            </apex:pageBlockSectionItem>
@@ -53,9 +58,9 @@
                 <b> Chapter Summary : </b>  
                 <br/>
                 <ul>
-                    <li> <b>CHAPTER 01 : </b>  Introduction to  Point and Click activities 
+                    <li> <b>CHAPTER 01 : </b>  Configuration and Overview 
                     </li>
-                    <li> <b>CHAPTER 02 : </b>  Messaging Concepts and EDA
+                    <li> <b>CHAPTER 02 : </b>  Messaging Concepts  
                     </li>
                     <li> <b>CHAPTER 03 : </b>  Event Driven Architecture Concepts
                     </li>
@@ -66,17 +71,7 @@
                 </ul>
            </apex:pageBlockSectionItem>
            
-            <apex:pageBlockSectionItem > 
-                <br/>
-                <b> Contact Us  : </b>  
-                <br/>
-                <ul>
-                    <li> <b>Email address : </b> :: RATSAAS-EMAIL ::
-                    </li>
-                    <li> <b>Phone number : </b> :: RATSAAS-PHONE ::
-                    </li>
-                </ul>
-           </apex:pageBlockSectionItem>                    
+                    
         </apex:pageBlockSection>        
     </apex:pageBlock>    
 
@@ -93,11 +88,11 @@
     
     <apex:pageBlock mode="maindetail">
         <br/>
-        <apex:pageBlockSection title="CHAPTER 01 : Introduction to  Point and Click activities ." columns="1"  collapsible="false" >
+        <apex:pageBlockSection title="CHAPTER 01 : Configuration and Overview ." columns="1"  collapsible="false" >
         
             <apex:pageBlockSectionItem > 
                 <br/>
-                <br/> You can use Point and Click to design and configure your Event Driven processing sequences : 
+                <br/> You can use point and click to design and configure your Event Driven processing sequences : 
                 <br/>
                 <ul>
                     <li>Arrange processing steps into a logical processing sequence
@@ -114,7 +109,7 @@
                 <br/>
                 
                 
-                <br/> You can use Point and Click to operate and monitor your Event Driven processing sequences : 
+                <br/> You can use point and click to operate and monitor your Event Driven processing sequences : 
                 <br/>
                 <ul>
                     <li>Start and Stop the framework.
@@ -135,14 +130,14 @@
  
     <apex:pageBlock mode="maindetail">
         <br/>
-        <apex:pageBlockSection title="CHAPTER 02 : Messaging Concepts and EDA" columns="1"  collapsible="false" >
+        <apex:pageBlockSection title="CHAPTER 02 : Messaging Concepts" columns="1"  collapsible="false" >
             <apex:pageBlockSectionItem > 
                 <br/>
                 <b>Messages and Events :</b><br/>
                 <ul>
                     <li>Events occur all the time. (For example: the clock strikes twelve, the fuel tank reaches empty)
                     </li>
-                    <li>To represent details about an event in a computer system, we use a special object called a "message"; 
+                    <li>To represent details about an event in a computer system, we use a special object called a <code>message</code>
                     </li> 
                     <li>The primary purpose of a message is to provide a useful mechanism to communicate between processes that a particular event has occurred.
                     </li>
@@ -155,9 +150,9 @@
                 <br/>
                 <b>Event Based Architecture :</b><br/>
                 <ul>
-                    <li>Specific events are only relevant to specific processes - for this reason a system "broker"  routes specific event messages to specific processes within the system.
+                    <li>Specific events are only relevant to specific processes - for this reason a <code>system broker</code> routes specific event messages to specific processes within the system.
                     </li> 
-                    <li>Combinations of specific Event-Messages to specific Processes can be reduced to a table called a "routing table". The routing table is used by the "broker".
+                    <li>Combinations of specific event messages to specific Processes can be reduced to a table called a <code>routing table</code>. The routing table is used by the <code>broker</code>.
                     </li> 
                     <li>Breaking up work into specific processes that respond to specific event messages is called Event Driven Architecture. ("EDA")
                     </li>
@@ -202,9 +197,9 @@
                     </li> 
                     <li>In practise this means that a process registers it's interest in events emitted from the process that immediately precedes it.
                     </li> 
-                    <li>A register of interest containing sufficient number of processes will naturally resemble a Sequence of processing steps
+                    <li>A register of interest containing sufficient number of processes will naturally resemble a <code>Sequence</code> of processing steps
                     </li> 
-                    <li>This  register is called a "Sequence" and the sequential processing steps within it are called "Sequence steps"
+                    <li>This register is called a <code>Sequence</code> and the sequential processing steps within it are called <code>Sequence Steps</code>
                     </li>
                 </ul>
                 <br/><br/>
@@ -259,7 +254,7 @@
                     </li>
                     <li>Each task is implemented as an Apex class and is called an Event Driven Process.
                     </li>
-                    <li>Logically related processes are assembled by the System Configurator / Business Analyst into Sequential Processing Steps called a Sequence
+                    <li>Logically related processes are assembled by the System Configurator / Business Analyst into sequential processing steps called a <code>Processing Sequence</code>
                     </li>
                 </ul>
                 <br/><br/>
@@ -269,21 +264,23 @@
                 <br/>
                 <b>Event Driven Process  :</b><br/>
                 <ul> 
-                    <li>Every Event Driven Process responds to an input event message by emmiting a list of zero or more output  messages
+                    <li>Every Event Driven Process responds to an input event message by emitting a list of zero or more output  messages
                     </li>
-                    <li>The EDA framework is designed so that output  messages from a process automatically feed the input stream of the very next process in a Processing Sequence.
+                    <li>The EDA framework is designed so that output  messages from a process automatically feed the input stream of the very next process in a <code>Processing Sequence</code>.
                     </li>
                     <li>The EDA framework has by default a number of ready made processes that can be sequenced together so that useful work can be completed.
                     </li>
                     <li>These ready made processes include: 
-                             Wiretap ,
-                             Jump  ,
-                             Branch ,
-                             SubSequence ,
-                             Publish and
-                             Subscribe
+                             <code>Wiretap</code> ,
+                             <code>Jump</code>  ,
+                             <code>Branch</code> ,
+                             <code>SubSequence</code> ,
+                             <code>Publish</code> and
+                             <code>Subscribe</code>
                     </li>         
-                    <li>Additional processes can be easily created to implement tasks specific to your particular requirement(s) -- detailed instructions for building processes can be found here XXXX.
+                    <li>Additional processes can be easily created to implement tasks specific to your particular requirement(s). 
+                        Detailed instructions for building processes can be found
+                        <a href="ProcessDevelopersGuide"  style="color: #00f;">here</a>  
                     </li>
                 </ul>
                 <br/><br/>
@@ -296,13 +293,13 @@
                 <ul> 
                     <li>Routing is the term used to denote the marshalling event messages between  event driven  processes.
                     </li>
-                    <li>As previously mentioned, the assembling or linking of processes in a specific order via point and click creates a sequence of processing steps.
+                    <li>As previously mentioned, the assembling or linking of processes in a specific order via point and click creates a sequence of <code>Processing Steps</code>.
                     </li>
-                    <li>Each Processing Step  in the Sequence has a definitive Position associated with it.
+                    <li>Each <code>Processing Step</code> in the Sequence has a definitive position associated with it.
                     </li>
                     <li>The first step in the Sequence has a position of "1", the second has a position of "2" and so forth
                     </li>
-                    <li>Using the ordered position of each step, the framework is able to "route" an event messages along it's  Processing Sequence
+                    <li>Using the ordered position of each step, the framework is able to route an event messages along it's   <code>Processing Sequence </code>
                     </li>
                 </ul>
                 <br/><br/>
@@ -314,9 +311,11 @@
                 <ul> 
                     <li>The EDA framework envisages a clear distinction between :
                         <ol>
-                            <li>  WHAT is to be performed (declarative point and click assembling of processes) and 
+                            <li>  <i>WHAT</i> is to be performed (declarative point and click assembling of processes)  and 
                             </li>
-                            <li>  HOW it is performed ( apex code contained within any given event driven process and the subject of this XXX guide)
+                            <li>  <i>HOW</i> it is performed 
+                                    (imperative  Apex code defining each event driven process - 
+                                   see <a href="ProcessDevelopersGuide"  style="color: #00f;">Process Developer's Guide</a> for further details.  )
                             </li>
                         </ol>
                     </li>
@@ -346,16 +345,16 @@
                     <br/>As a useful substitute, the EDA framework  provides two out-of-the box logging mechanisms :  
                 <ul> 
                     <li><b>WireTap </b>
-                        <br/>A Wiretap process acts a no-operation pass through process and has no side effects. 
-                        <br/>Wiretap will however send an email containing the current event message to a nominated user. 
+                        <br/>A <code>Wiretap</code> process acts a no-operation pass through process and has no side effects. 
+                        <br/>A <code>Wiretap</code> process   will however send an email containing the current event message to a nominated user. 
                     </li>
                     
                     <br/>
                     
                     <li> <b>LogWriter</b>
-                        <br/>LogWriter acts a no-operation pass through process and has no side effects. 
-                        <br/>LogWriter will however store the event message under a useful business identifier. 
-                        <br/>Many LogWriter processes placed at strategic steps in a Sequence can usefully track and relate the progress of event messages using a common business identifier.
+                        <br/>A <code>LogWriter</code> process  acts a no-operation pass through process and has no side effects. 
+                        <br/>A <code>LogWriter</code> will however store the event message under a useful business identifier. 
+                        <br/>Many  <code>LogWriter</code> processes placed at strategic steps in a <code>Sequence</code> can usefully track and relate the progress of event messages using a common business identifier.
                     </li>
                 </ul>
                 <br/><br/>
@@ -409,11 +408,17 @@
                 <br/>
                 <b>Internal Boundary :</b><br/>
                 <ul>
-                    <li>All Sequences have a "Terminator" process as their last processing step. (Conceptually this is very similar to a "buffer stop" at the end of a railway line)
+                    <li>All Sequences have a <code>Terminator</code> process as their last processing step. (Conceptually this is very similar to a "buffer stop" at the end of a railway line)
                     </li>
-                    <li>A terminator processing step is automatically inserted when the Processing Sequence is created.
+                    <li>A <code>Terminator</code> processing step is automatically inserted when the Processing Sequence is created.
                     </li>
-                    <li>Sequences may interact with one another via one of four standard pre-packaged processes, namely Jump, Branch, Subroutine , or Publish/Subscribe - see section XXXX for further details
+                    <li>Sequences may interact with one another via one of four standard pre-packaged processes, namely 
+                        <code>Jump</code>, 
+                        <code>Branch</code>, 
+                        <code>Subroutine</code> 
+                        or 
+                        <code>Publish/Subscribe</code>
+                        - see <a href="ProcessHelp"  style="color: #00f;">Process Help</a> for further details. 
                     </li>
                 </ul>
                 <br/><br/>
@@ -432,13 +437,15 @@
                 <br/><br/>
                 <b>System Installation :</b><br/>    
                 <ul>
-                    <li>Install the Event Driven Architecture package. This is described in the Installation Guide.
+                    <li>Install the Event Driven Architecture package. This is described in the <a href="InstallationGuide"  style="color: #00f;"> [TODO] </a> .
                     </li>
                     <li>Click configure button
                     </li>
-                    <li>Define Orchestrator user(s). See page NNN.
+                    <li>Assign Orchestrator permissions to specified user(s). See <a href="DefineOrchestrator"  style="color: #00f;"> [TODO] </a>
                     </li>
-                    <li>Confirm that the system has been correctly setup - see APPENDIX X , Tutorial NNN
+                    <li>Confirm that the system has been correctly by completing the 
+                        <a href="ConfirmSetupTutorial" style="color: #00f;">Confirm Setup</a>
+                        tutorial.
                     </li>
                 </ul>
                 
@@ -450,16 +457,30 @@
                     </li>
                     <li>Define the receive events, and the injection of those events into the Event Driven Architecture This is described in the XXX guides.
                     </li>
-                    <li>Design your own conversion processes as needed. See page NNN.
+                    <li>Design your own conversion processes as needed.
+                        This topic is described in the detail the  separate 
+                        <a href="ProcessDevelopersGuide"            style="color: #00f;">Process Developer's Guide</a> 
+                        guide.
                     </li>
-                    <li>Configure Sequences and Sequence Steps, as needed. See page NNN.
+                    <li>Configure Sequences and sequence Steps as needed. 
+                        For more details, refer   <a href="SequenceHelp"  style="color: #00f;"> here </a>.
                     </li>
-                    <li>Monitor the system using the Wiretap and LogWriter processes. See page NNN.
+                    <li>Monitor the system using the Wiretap and LogWriter processes. 
+                        For further details complete the Logging and Web Scraping tutorials located 
+                        <a href="LogUnderCommonIdentifierTutorial" style="color: #00f;"> here </a>
+                        and 
+                        <a href="ScrapeWebPageTutorial"            style="color: #00f;"> here </a> .
                     </li>
                 </ul>
-                <br/><br/>
            </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
     </apex:pageBlock>
     
+ 
+    <div class="contact">
+                 webmaster@cloudeda.com
+        &#183;  (+44) 07545169989
+        &#183;  <a href="www.cloudeda.com" target="_blank"   style="color: #00f;"> www.cloudeda.com </a>  
+    </div>
+    <br/><br/>
 </apex:page>

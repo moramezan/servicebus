@@ -16,25 +16,25 @@
             <apex:pageBlockSection title="Objective :" columns="1" collapsible="false">
                <apex:pageBlockSectionItem >
 
-                    <p>This tutorial demonstrates how the framework enables the common  requirement of grouping  related  messages under a common tag.
+                    <p>This tutorial demonstrates the grouping related messages under a common tag.
                     </p>
                     
                     <p>  <ol>
                         <li> <b> Related  Messages :</b>
-                        <br/>Consider a valid invoice from a supplier that must  be paid. 
+                        <br/>Consider a valid <code>Supplier Invoice</code>  that must  be paid via a <code>Funds Transfer Instruction</code>. 
                         <br/>The <code>Supplier Invoice</code> and the <code>Funds Transfer Instruction</code> are two separate source documents
                              generated on different systems. 
-                         <br/>However both are related by the payment process and therefore require  grouping under a common tag.
+                         <br/>Both documents  are however related by the payment process and therefore require grouping under a common tag.
                         </li>
                          
                          <br/><br/>
                          
                         <li> <b> Common Tag :</b>
-                        <br/>An internal Salesforce ID  such as <code> 066b0000001RJct </code> is not  useful from a user perspective.
-                        <br/>A business identifier with useful meaning such as <code>INVOICE-123</code> or <code>PMT:2345</code> is a better choice for a common tag.
-                        <br/>Business identifiers vary on a case by case basis.
-                        <br/> It is for this reason that the framework therefore relies the system configurator to define what part of structured data will act 
-                             as the common identifier across disparate source documents.
+                        <br/>An internal Salesforce ID  such as <code> 066b0000001RJct </code> is not  useful from an end user perspective.
+                        <br/>An identifier such as <code>INVOICE-123</code> or <code>PMT2345</code> conveys  useful meaning and is therefore a better choice for a common tag.
+                        <br/><code>Business identifiers</code> naturally vary on a case by case basis.
+                        <br/> It is for this reason that the framework  relies the system configurator to define what part 
+                              of structured data will act as the common identifier across disparate source documents..
                         </li>
                     </ol>  </p>
 
@@ -49,18 +49,27 @@
             <apex:pageBlockSection title="Scenario :" columns="1" collapsible="false">
                 <apex:pageBlockSectionItem >
                     <ul>
-                    <li> We will model the   receipt of a Purchase Invoice and the   Payment of that Purchase Invoice and attempt to relate these two documents by their respective business references using the
-                        <b> [ </b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/LogWriter.png')}" /> <b> ] </b> 
-                        and 
-                        <b> [ </b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/LogInitializer.png')}" /> <b> ] </b> 
-                        processes.
-                    </li>
-                    <li> To achieve this we will create two custom objects : <code> PurchaseInvoice__c </code>  and <code> Payment__c  </code>  and a   
-                        <b> [ </b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/PayInvoice.png')}" /> <b> ] </b> 
-                       process
-                    </li>
-                    <li> We will make use of the  Purchase Invoice Reference ( <code> PurchaseRef___c </code> ) and the Payment Reference (<code> PaymentRef__c </code> ) to as our business identifiers
-                    </li>
+                        <li> We will model 
+                            <br/>&nbsp; - the <i>receipt</i> of a <code>Purchase Invoice</code> , 
+                            <br/>&nbsp; - the <i>payment</i> of that <code>Purchase Invoice</code> using a <code>Funds Transfer Instruction</code> 
+                            <br/>&nbsp; - the relationship between these two documents using their respective business references 
+                        </li>
+                        
+                        <br/>
+                        
+                        <li> To achieve this, we will :
+                             <br/>&nbsp; - create two custom objects : <code> PurchaseInvoice__c </code>  and <code> Payment__c  </code>  
+                             <br/>&nbsp; - create an event driven  
+                             <b> [ </b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/PayInvoice.png')}" /> <b> ] </b> 
+                             process that simulates the payment of supplier invoices. 
+                             <br/>&nbsp; - use the
+                             <b> [ </b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/LogWriter.png')}" /> <b> ] </b>
+                             and 
+                             <b> [ </b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/LogInitializer.png')}" /> <b> ] </b> 
+                             processes to relate
+                             the  Purchase Invoice Reference ( <code> PurchaseRef___c </code> ) and 
+                             the Payment Reference (<code> PaymentRef__c </code> ) business identifiers.
+                        </li>
                     </ul>
                 </apex:pageBlockSectionItem>
              </apex:pageBlockSection>
@@ -69,17 +78,22 @@
  
             <apex:pageBlockSection title="Detailed Step - Pre-requisites :" columns="1" collapsible="false">
                 <apex:pageBlockSectionItem >
-                    <ul>
-                        <li> Note: The creation of custom objects and processes will normally be carried out by the developer(s) in your organisation. For detailed instructions on creating processes , see XXXX
+                
+                  <br/> <b> Note : </b> The creation of custom objects and processes will normally be carried out by the developer(s) in your organisation. 
+                  <br/> ( For detailed instructions on creating processes , see
+                       <a href="ProcessDevelopersGuide"     style="color: #00f;">Process Developer's Guide</a>.   )
+                  
+                  <br/><br/>
+                                        
+                    <ol>
+
+                        
+                        <li> Create the Purchase Invoice object with a Reference field.  
+                             <br/> Click <code> Setup|Create|Objects|New Custom Object </code> .
                         </li>
                         
-                        <br/><br/><br/>
                         
-                        <li> Create the Purchase Invoice object with a Reference field.  Click <code> Setup|Create|Objects|New Custom Object </code> .
-                        </li>
-                        
-                        
-                        <br/><br/><br/>
+                        <br/><br/>
                         
                         
                         <li> Name the object <code> PurchaseInvoice </code>  
@@ -88,7 +102,7 @@
                             <br/><br/> 
                         </li>
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
                         <li> Make sure it has a auto number <code> Name </code> field  
                            <br/><br/>      
@@ -97,44 +111,43 @@
                         </li>
                         
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
                         
-                        <li> Create a single text Reference field called Invoice Reference  
+                        <li> Create a single text Reference field called <code>Invoice Reference</code> 
                             <br/><br/> 
                             <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/PurchaseInvoiceReference.png ')}" />  
                             <br/><br/> 
                         </li>
                         
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
-                        
-                        <li> Create a tab for the "PurchaseInvoice" object. Select <code>  Setup|Create|Tabs|New </code>.
+                        <li>Create a tab for the <code>PurchaseInvoice</code> object.
+                            <br/> 
+                            <br/> Select <code> Setup|Create|Tabs|New </code> 
+                            <br/> Select a tab style  and  choose <code> PurchaseInvoice </code>  for the Object  
+                            <br/><br/>  
+                            &nbsp; &nbsp; <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/PurchaseInvoiceTab.png ')}" /> 
+                            <br/>
+                            <br/>Click [Next] ,  click [Next].
+                            <br/>On the applications screen ,  ensure that only the <code>Event Driven Architecture</code> Application is selected. 
+                            <br/><br/>
+                            &nbsp; &nbsp; <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/EdaAppSelected.png')}" />  
+                            <br/>
+                            <br/>Click [Save].  
                         </li>
                         
-                        <br/><br/><br/>
+    
+                        
+                        <br/><br/>
                         
                         
-                        <li> Select a tab style  and  choose PurchaseInvoice for the Object   
-                            <br/><br/> 
-                            <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/PurchaseInvoiceTab.png ')}" /> 
-                            <br/><br/> 
-                        </li>
-                        
-                        <br/><br/><br/>
-                        
-                        
-                        <li> Click next, click next and on the applications screen,  ensure that only the Eda App is selected. Then click [Save].  
-                        </li>
-                        
-                        <br/><br/><br/>
-                        
-                        
-                        <li> Create the Payment object with a reference field.  Click <code> Setup|Create|Objects|New Custom Object </code> .   
+                        <li> Create the <code> Payment </code> object with a reference field.  
+                             <br/> Click <code> Setup|Create|Objects|New Custom Object </code> .   
                         </li>    
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
                         <li> Name the object <code> Payment </code> 
                             <br/><br/> 
@@ -142,53 +155,47 @@
                             <br/><br/>  
                         </li>
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
-                        <li> Make sure it has a Auto Number <code> Name </code> field  
+                        <li> Make sure the <code> Payment </code> object has a Auto Number <code> Name </code> field  
                             <br/><br/> 
                             <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/PaymentAutoNumber.png')}" />  
                             <br/><br/> 
                         </li>
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
                         
-                        <li> Create a single text Reference field called PaymentReference  
+                        <li> Create a single text Reference field called <code>PaymentReference</code> 
                             <br/><br/>  
                             <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/PaymentReference.png')}" /> 
                             <br/><br/>  
                         </li>
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
                         
-                        <li> Create a tab for the <code> Payment </code>  object. Select <code> Setup|Create|Tabs|New </code> 
-
-                        </li>
-                        
-                        <br/><br/><br/>
-                        
-                        <li> Select a tab style  and  choose <code> Payment </code>  for the Object  
+                        <li> Create a tab for the <code> Payment </code>  object. 
+                            <br/> 
+                            <br/> Select <code> Setup|Create|Tabs|New </code> 
+                            <br/> Select a tab style  and  choose <code> Payment </code>  for the Object  
                             <br/><br/>  
-                            <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/PaymentTab.png')}" />  
-                            <br/><br/> 
-                        </li>
-                        
-                        <br/><br/><br/>
-                        
-                        
-                        <li> Click next, click next and on the applications screen,  ensure that only the <code>Event Driven Data</code> Application is selected. Then click "Save".  
+                            &nbsp; &nbsp; <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/PaymentTab.png')}" />  
+                            <br/>
+                            <br/>Click [Next] ,  click [Next].
+                            <br/>On the applications screen ,  ensure that only the <code>Event Driven Architecture</code> Application is selected. 
                             <br/><br/>
-                            <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/EdaAppSelected.png')}" />  
-                            <br/><br/>  
+                            &nbsp; &nbsp; <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/EdaAppSelected.png')}" />  
+                            <br/>
+                            <br/>Click [Save]. 
                         </li>
                         
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
                         <li> Create the   
                              <b> [ </b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/PayInvoice.png')}" /> <b> ] </b>
-                             process that simulates the payment of an inbound Purchase Invoice.  
+                             process that simulates the payment of a hypothetical inbound <code> Purchase Invoice </code>.  
                              <br/> Click Setup <code> |Develop|Apex Classes|New </code>  .
                              <br/> Paste the following code into the code window, then click [Save].            
                              <br/><br/>
@@ -233,7 +240,7 @@
 
                         <br/>
                         </li>     
-                     </ul>
+                     </ol>
                </apex:pageBlockSectionItem>
              </apex:pageBlockSection>
              
@@ -241,10 +248,11 @@
             <apex:pageBlockSection title="Detailed Steps - Configuration :" columns="1" collapsible="false">
                 <apex:pageBlockSectionItem >
                     <ul>
-                        <li> Refresh the catalogue of available processes so that the   <b> [ </b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/PayInvoice.png')}" /> <b> ] </b> created earlier will be available for selection during Sequence creation - see Turorial NNN
+                        <li> Refresh the catalogue of available processes so that the   <b> [ </b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/PayInvoice.png')}" /> <b> ] </b> created earlier will be available for selection during Sequence creation 
+                             For specific details, refer to the  <a href="ProcessDiscoveryTutorial" target="_blank"         style="color: #00f;">Process Discovery Tutorial</a>
                         </li>
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
                         <li> Create the <code>  Purchase </code>  Sequence  
                             <br/><br/>
@@ -252,7 +260,7 @@
                             <br/><br/>
                         </li>
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
                         <li> Using the New Step button, add the following steps to the <code>  Purchase </code>  Sequence : 
                             <b> [ </b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/LogInitializer.png')}" /> <b> ] </b>
@@ -269,7 +277,7 @@
                             <br/><br/>
                         </li>
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
                         <li> Create a <code> Pay </code>  Sequence  
                             <br/><br/>
@@ -277,7 +285,7 @@
                             <br/><br/>
                         </li>
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
                         <li> Using the New Step button, add the  the following steps to the <code> Pay </code> Sequence :
                             <b> [ </b> <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/PayInvoice.png')}" />  <b> ] </b> 
@@ -295,7 +303,7 @@
                             <br/><br/>
                         </li>
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
                         <li>    
                             On the <code>  Purchase </code>  Sequence, click the <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial/ConfigureLink.png')}"  /> next to the
@@ -318,7 +326,7 @@
                         </li>
                         
                         
-                        <br/><br/><br/>
+                        <br/><br/>
                         
                         <li> 
                             On the <code> Purchase </code> Sequence, Click the 
@@ -335,7 +343,7 @@
                             button at the top right corner  of the pop-up.
                         </li>
 
-                        <br/><br/><br/>
+                        <br/><br/>
 
                         
                         <li>    

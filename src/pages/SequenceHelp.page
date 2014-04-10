@@ -2,6 +2,7 @@
     
     <style>
         body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
+        a {text-decoration:none;}
     </style>
     
     <apex:pageBlock mode="maindetail" title="Introducing Sequences">
@@ -33,6 +34,19 @@
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Sequence/injectTestMessage.png')}" /> enqueues a message (carrying your user record) to this sequence. The message will progress through all the steps.</p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Tutorials :" columns="1" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <ul>
+                    <li> Build a simple  <a href="ConfirmSetupTutorial"   style="color: #00f;">WireTap</a> sequence.
+                    </li>
+                    <li> Build a simple <a href="ScrapeWebPageTutorial"  style="color: #00f;">Web Scrape</a> sequence.
+                    </li>
+                    <li> Build a sequence that groups messages under a <a href="LogUnderCommonIdentifierTutorial"   style="color: #00f;">Common Identifier</a>.
+                    </li>
+                </ul>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>  
         
         <apex:pageBlockSection title="Click [Continue] to proceed." columns="1" collapsible="false" />
     </apex:pageBlock>
