@@ -45,7 +45,7 @@ public with sharing class Gate implements Process.Plugin {
         
         insert new GateItem__c(
             GateGroup__c = gateGroupId,
-            Parameters__c = Json.serialize(parameters)
+            Parameters__c = Json.serializePretty(parameters)
         );
         
         List<GateItem__c> gateItems = [
