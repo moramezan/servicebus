@@ -10,19 +10,18 @@ table#bodyTable td#bodyCell {
 }
 
 /**
- * DRAG cursor on grippy cell and icon
+ * NO cursor on other icons
  */
-.#{$prefix}grid-cell.grippy,
-.#{$prefix}action-col-icon.grippy {
-    cursor: move;
+.#{$prefix}action-col-cell .#{$prefix}action-col-icon {
+    cursor: auto;
 }
 
 /**
- * NO cursor on other icons
+ * DRAG cursor on grippy cell and icon
  */
-.#{$prefix}action-col-cell .#{$prefix}action-col-icon,
-.#{$prefix}action-col-cell .#{$prefix}action-col-icon img {
-    cursor: auto;
+.#{$prefix}action-col-cell.grippy,
+.#{$prefix}action-col-cell.grippy .#{$prefix}action-col-icon.grippy {
+  cursor: move;
 }
 
 .#{$prefix}grid-body.steps td.#{$prefix}grid-cell {
