@@ -6,7 +6,7 @@ public class IsChanged  implements Process.Plugin {
     public class Meta {
         public SObject ConfigObject = IsChangedConfiguration__c.SObjectType.newSObject();
         public String Icon = 'application_side_expand';
-        public String DocsPageUrl = Page.IsChangedHelp.getUrl();
+        public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.IsChangedHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe() {

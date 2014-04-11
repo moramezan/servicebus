@@ -2,7 +2,7 @@ public with sharing class Mark implements Process.Plugin {
     
     public class Meta {
         public String Icon = 'tag_blue';
-        public String DocsPageUrl = Page.GateHelp.getUrl();
+        public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.GateHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe() {

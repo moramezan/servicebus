@@ -5,7 +5,7 @@ public with sharing class Publish implements Process.Plugin {
     public class Meta {
         public SObject ConfigObject = PublishConfiguration__c.SObjectType.newSObject();
         public String Icon = 'chart_organisation';
-        public String DocsPageUrl = Page.PublishHelp.getUrl();
+        public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.PublishHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe () {

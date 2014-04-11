@@ -3,7 +3,7 @@ public with sharing class Subsequence implements Process.Plugin {
     public class Meta {
         public SObject ConfigObject = SubsequenceConfiguration__c.SObjectType.newSObject();
         public String Icon = 'arrow_undo';
-        public String DocsPageUrl = Page.SubsequenceHelp.getUrl();
+        public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubsequenceHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe() {

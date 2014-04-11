@@ -5,7 +5,7 @@ public with sharing class Wiretap implements Process.Plugin {
     public class Meta {
         public SObject CustomSetting = WiretapSettings__c.SObjectType.newSObject();
         public String Icon = 'email';
-        public String DocsPageUrl = Page.WiretapHelp.getUrl();
+        public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.WiretapHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe() {

@@ -5,7 +5,7 @@ public class IsNewData implements Process.Plugin {
     public class Meta {
         public SObject ConfigObject = IsNewDataConfiguration__c.SObjectType.newSobject();
         public String Icon = 'key_go';
-        public String DocsPageUrl = Page.IsNewDataHelp.getUrl();
+        public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.IsNewDataHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe() {

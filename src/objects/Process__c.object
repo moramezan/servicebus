@@ -88,11 +88,9 @@
         <externalId>false</externalId>
         <inlineHelpText>Where is the supporting documentation provided by the author of this process?</inlineHelpText>
         <label>Docs Page URL</label>
-        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
+        <type>Url</type>
     </fields>
     <fields>
         <fullName>FullyQualifiedClassName__c</fullName>

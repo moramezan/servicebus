@@ -3,7 +3,7 @@ public with sharing class Jump implements Process.Plugin {
     public class Meta {
         public SObject ConfigObject = JumpConfiguration__c.SObjectType.newSObject();
         public String Icon = 'arrow_switch';
-        public String DocsPageUrl = Page.JumpHelp.getUrl();
+        public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.JumpHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe() {

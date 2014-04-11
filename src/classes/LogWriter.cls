@@ -4,7 +4,7 @@ public class LogWriter implements Process.Plugin {
     
     public class Meta {
         public String Icon = 'pencil_add';
-        public String DocsPageUrl = Page.LogHelp.getUrl();
+        public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.LogHelp.getUrl();
     }
     
     public Process.PluginDescribeResult describe() {
