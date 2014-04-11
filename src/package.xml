@@ -68,7 +68,7 @@
         <members>SalesforceObject</members>
         <members>SalesforceObjectSet</members>
         <members>Schedule</members>
-        <members>ScheduleConfigurations</members>
+        <members>ScheduleConfigurationSet</members>
         <members>ScheduleDispatcher</members>
         <members>ScheduleDispatcherTest</members>
         <members>ScheduleImplementation</members>

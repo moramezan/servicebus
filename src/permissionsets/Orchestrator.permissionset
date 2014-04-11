@@ -249,7 +249,7 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ScheduleConfigurations</apexClass>
+        <apexClass>ScheduleConfigurationSet</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
