@@ -55,8 +55,6 @@
         <members>PostInstallHandlerTest</members>
         <members>PostUninstallHandler</members>
         <members>PostUninstallHandlerTest</members>
-        <members>ProcessApexClassExtension</members>
-        <members>ProcessApexClassExtensionTest</members>
         <members>ProcessDiscoverBatch</members>
         <members>ProcessDiscoverBatchTest</members>
         <members>ProcessDiscoverExtension</members>
@@ -211,6 +209,7 @@
         <members>Message__c.Sequence__c</members>
         <members>Message__c.Status__c</members>
         <members>Message__c.Step__c</members>
+        <members>Process__c.ApexClassId__c</members>
         <members>Process__c.ConfigObject__c</members>
         <members>Process__c.CustomSetting__c</members>
         <members>Process__c.Description__c</members>

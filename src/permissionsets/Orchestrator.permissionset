@@ -197,14 +197,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ProcessApexClassExtension</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ProcessApexClassExtensionTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>ProcessDiscoverBatch</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -557,6 +549,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Message__c.Step__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Process__c.ApexClassId__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>

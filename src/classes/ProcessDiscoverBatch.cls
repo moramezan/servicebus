@@ -12,6 +12,7 @@ public with sharing class ProcessDiscoverBatch implements Database.Batchable<SOb
             Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
             try {
                 Process__c edaProcess = ProcessSet.fromType(reflector);
+                edaProcess.ApexClassId__c = apexClass.Id;
                 edaProcesses.add(edaProcess);
             } catch (Exception e) {
                 //fuckup happened, probably
