@@ -110,8 +110,6 @@ public with sharing class Terminate implements Process.Plugin {
 
             healths.add(health);
         }
-            
-        System.debug(json.serializePretty(healths));
         return healths;
     }
 }

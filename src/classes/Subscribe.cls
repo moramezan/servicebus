@@ -125,7 +125,6 @@ public with sharing class Subscribe implements Process.Plugin {
             }
         }
 
-        system.debug(json.serializePretty(instanceDetails));
         List<HealthController.Health> healths = new List<HealthController.Health>();
         for (Map<String,Object> instanceDetail : instanceDetails) {
             HealthController.Health health = new HealthController.Health();

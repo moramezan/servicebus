@@ -47,7 +47,6 @@
         
         //act
         List<Map<String,Object>> parametersList = EdaUtility.convert(result);
-        System.debug(parametersList);
         
         //assert
         for (Map<String,Object> parameters : parametersList) {
