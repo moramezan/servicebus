@@ -11,6 +11,16 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
+    /**
+     * We need the DoNothing Broker because ScheduleImplementation.execute
+     * no longer inserts message, it actually causes the Broker to process
+     * via enqueue. Gotta count the messages without them being processed!
+     */
+    public class DoNothingBroker extends Broker {
+        override public void restartImpl() {}
+        override public Boolean isAlreadyRunning() {return true;}
+    }
+    
     static testMethod void testOneScheduledSequence() {
         //arrange processes
         Process__c scheduleProcess = ProcessSet.generateOne(Schedule.class);
@@ -30,9 +40,12 @@
         }
         update scheduleConfigurations;
         
+        insert new BrokerSettings__c(BrokerClassName__c = DoNothingBroker.class.getName());
         Test.startTest();
         ScheduleImplementation job = new ScheduleImplementation();
-        job.execute(null);
+        SchedulableContext context = (SchedulableContext)Json.deserialize('{"Id": "08e000000000000"}', SchedulableContextImpl.class);
+        Schedule.cronTrigger = (CronTrigger)Json.deserialize('{"PreviousFireTime": "2014-01-18T12:00:00.000Z"}', CronTrigger.class);
+        job.execute(context);
         Test.stopTest();
         
         Integer expectedCount = 1;

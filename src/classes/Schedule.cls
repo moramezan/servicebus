@@ -14,17 +14,27 @@ public with sharing class Schedule implements Process.Plugin {
         return plugin;
     }
     
+    @TestVisible static private CronTrigger cronTrigger;
+    static public CronTrigger findCronTrigger(Id cronTriggerId) {
+        return cronTrigger != null ? cronTrigger : [
+            SELECT PreviousFireTime
+            FROM CronTrigger
+            WHERE Id = :cronTriggerId
+        ];
+    }
+    
     public Process.PluginResult invoke(Process.PluginRequest request) {
         Map<String,Object> parameters = request.inputParameters;
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
-        Boolean isPassThru = String.isBlank((String)parameters.get('eda_Heartbeat'));
+        String cronTriggerId = (String)parameters.get('Id');
+        Boolean isPassThru = (cronTriggerId == null) || !cronTriggerId.startsWith('08e');
         
         if (isPassThru) {
             parametersList.add(parameters);
         } else {
             //DateTime is not a primitive Object
-            DateTime heartbeat = (DateTime)Json.deserialize('"' + (String)parameters.get('eda_Heartbeat') + '"', DateTime.class);
+            DateTime heartbeat = findCronTrigger(cronTriggerId).PreviousFireTime;
             
             ScheduleConfiguration__c config = (ScheduleConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
             

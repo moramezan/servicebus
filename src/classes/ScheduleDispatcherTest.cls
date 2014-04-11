@@ -3,7 +3,7 @@
     static testMethod void coverExecuteMethod() {
         Test.startTest();
         ScheduleDispatcher dispatcher = new ScheduleDispatcher();
-        System.schedule('TestJob', '0 0 * * * ?', dispatcher);
+        System.schedule('ScheduleDispatcherTest', '0 0 * * * ?', dispatcher);
         //at 0 seconds
         //at 0 minutes
         //every hour

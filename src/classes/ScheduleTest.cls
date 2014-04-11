@@ -60,9 +60,10 @@
         
         Step__c terminateStep = StepSet.generateOne(sequence.Id, terminateProcess.Id);
         
-        //this guy will miss his schedule
+        //this guy will miss his schedule (it is not Wednesday at 9:00)
+        Schedule.cronTrigger = (CronTrigger)Json.deserialize('{"PreviousFireTime": "2014-01-18T12:00:00.000Z"}', CronTrigger.class);
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_Heartbeat' => '2014-01-18T12:00:00.000Z', //not Wednesday at 9:00
+            'Id' => '08e000000000000',
             'eda_ConfigObjectId' => [SELECT Id FROM ScheduleConfiguration__c].Id
         };
         
@@ -75,7 +76,7 @@
         System.assertEquals(expectedMissCount, actualMissCount);
         
         //this guy will hit his schedule
-        parameters.put('eda_Heartbeat', '2014-01-15T09:00:00.000Z'); //definitely a Wednesday at 9:00
+        Schedule.cronTrigger = (CronTrigger)Json.deserialize('{"PreviousFireTime": "2014-01-15T09:00:00.000Z"}', CronTrigger.class); //definitely a Wednesday at 9:00
         result = plugin.invoke(new Process.PluginRequest(parameters));
         results = EdaUtility.convert(result);
         
