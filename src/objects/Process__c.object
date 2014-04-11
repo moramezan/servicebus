@@ -109,9 +109,7 @@
     <fields>
         <fullName>Icon__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>What is the name of the icon that represents this process?
-
-(From http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png)</inlineHelpText>
+        <inlineHelpText>What is the name of the icon that represents this process? (From http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png)</inlineHelpText>
         <label>Icon</label>
         <length>255</length>
         <required>false</required>

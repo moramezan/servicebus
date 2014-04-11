@@ -64,8 +64,7 @@
     <fields>
         <fullName>IsOverdue__c</fullName>
         <externalId>false</externalId>
-        <formula>/* Shows messages not processed within one hour */
-NOW() &gt; LastModifiedDate + (1/24)</formula>
+        <formula>NOW() &gt; LastModifiedDate + (1/24) /* Shows messages not processed within one hour */</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <inlineHelpText>Is this message stalled or otherwise not processing correctly?</inlineHelpText>
         <label>Overdue</label>

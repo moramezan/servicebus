@@ -481,17 +481,17 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>LogWriterEntry__c.EntryPointGuid__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>LogWriterEntry__c.GroupIdentifier__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
         <field>LogWriterEntry__c.LogGroup__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>LogWriterEntry__c.EntryPointGuid__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
