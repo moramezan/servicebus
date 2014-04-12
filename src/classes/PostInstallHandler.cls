@@ -10,8 +10,16 @@ public class PostInstallHandler implements InstallHandler {
     public void onInstall(InstallContext context) {
         installSchedule();
         sendRemoteSiteSettingNag(context);
+        executeProcessDiscoverBatch();
     }
-
+    
+    /**
+     * Kick off process discovery in the background
+     */
+    @TestVisible static private void executeProcessDiscoverBatch() {
+        AsyncApexJobs jobs = AsyncApexJobs.runOne(ProcessDiscoverBatch.class, 1);
+    }
+    
     @TestVisible
     private static void installSchedule() {
         String  name = 'Eda Heartbeat';
