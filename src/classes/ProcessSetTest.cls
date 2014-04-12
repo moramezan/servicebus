@@ -35,7 +35,7 @@
         ProcessSet.Meta meta = (ProcessSet.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessSet.Meta.class);
         String expectedConfigObject = meta.ConfigObject.getSObjectType().getDescribe().getName();
         String expectedIcon = meta.icon;
-        String expectedDocsPageUrl = Page.SubscribeHelp.getUrl();
+        String expectedDocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubscribeHelp.getUrl();
         
         //act 
         Process__c subscribeProcess = ProcessSet.fromType(actualType);
