@@ -1,9 +1,12 @@
 public with sharing class ProcessDiscoverBatch implements Database.Batchable<SObject> {
     
-    @testVisible private String query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass ORDER BY Name ASC';
-
-    public Database.QueryLocator start(Database.BatchableContext context) {
-        return Database.getQueryLocator(query);
+    @TestVisible static private List<ApexClass> classes;
+    public Iterable<SObject> start(Database.BatchableContext context) {
+        return classes != null ? classes : [
+            SELECT Id, Name, NamespacePrefix
+            FROM ApexClass
+            ORDER BY Name ASC
+        ];
     }
     
     public void execute(Database.BatchableContext context, List<ApexClass> scope) {

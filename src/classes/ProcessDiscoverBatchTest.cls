@@ -14,8 +14,14 @@
     
     static testMethod void testRecordCreatedForPluginAndStateful() {
         //arrange
+        ProcessDiscoverBatch.classes = [
+            SELECT Id, Name, NamespacePrefix
+            FROM ApexClass
+            WHERE Name = 'Terminate'
+            ORDER BY Name ASC
+            LIMIT 1
+        ];
         ProcessDiscoverBatch batch = new ProcessDiscoverBatch();
-        batch.query = 'SELECT Id, NamespacePrefix, Name FROM ApexClass WHERE Name = \'Terminate\' ORDER BY Name ASC LIMIT 1';
         
         //act
         Test.startTest();
