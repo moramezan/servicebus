@@ -1,4 +1,4 @@
-public class PostUninstallHandler implements UnInstallHandler {
+public without sharing class PostUninstallHandler implements UnInstallHandler {
 
     public void onUninstall(UninstallContext context) {
         unInstallSchedule();
@@ -7,7 +7,7 @@ public class PostUninstallHandler implements UnInstallHandler {
 
     @TestVisible
     private static void uninstallSchedule() {
-        String  name = 'Eda Heartbeat';
+        String  name = 'Heartbeat (do not delete)';
         List<CronJobDetail>  cronJobDetails = [SELECT   Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
         if (cronJobDetails.size() > 0) {
             Id cronJobDetailId = cronJobDetails[0].Id;

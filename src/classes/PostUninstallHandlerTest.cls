@@ -3,8 +3,8 @@
     static testMethod void callingUnInstallScheduleCorrectlyUnInstallsSchedule() {
 
         //arrange
-        String  name = 'Eda Heartbeat';
-        PostInstallHandler.InstallSchedule();
+        String  name = 'Heartbeat (do not delete)';
+        PostInstallHandler.InstallSchedule(UserInfo.getUserId());
         List<CronJobDetail>  cronJobDetailsBefore = [SELECT  Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
         Integer actualSizeBefore = cronJobDetailsBefore.size();
 

@@ -3,7 +3,7 @@
  * since he does not have his own 'execute' method contexts like a Batch Job, he relies upon callouts to the Tooling API
  * to branch out more execution contexts. Added complexity, but restart performance tends to be very good, all the time.
  */
-virtual public class FutureBrokerImplementation extends Broker implements FutureBrokerDispatcher.Restartable {
+virtual public without sharing class FutureBrokerImplementation extends Broker implements FutureBrokerDispatcher.Restartable {
     
     private String sessionId = UserInfo.getSessionId();
     

@@ -1,4 +1,4 @@
-public class FutureBrokerDispatcher {
+public without sharing class FutureBrokerDispatcher {
     
     public interface Restartable {
         void restart(String sessionId);

@@ -1,7 +1,7 @@
 /**
  * Skinny with no need to upgrade.
  */
-public class ScheduleDispatcher implements System.Schedulable {
+public without sharing class ScheduleDispatcher implements System.Schedulable {
 
     public void execute(System.SchedulableContext context) {
         Type reflector = Type.forName(ScheduleImplementation.class.getName());

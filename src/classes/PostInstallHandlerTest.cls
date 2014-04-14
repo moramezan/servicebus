@@ -1,7 +1,7 @@
 @isTest private class PostInstallHandlerTest {
     static testMethod void callingInstallScheduleCorrectlyInstallsSchedule() {
         //arrange
-        String  name = 'Eda Heartbeat';
+        String  name = 'Heartbeat (do not delete)';
         
         //assert
         Integer expectedSizeBefore = 0;
@@ -9,7 +9,7 @@
         System.assertEquals(expectedSizeBefore, actualSizeBefore);
         
         //act
-        PostInstallHandler.InstallSchedule();
+        PostInstallHandler.InstallSchedule(UserInfo.getUserId());
         
         //assert
         Integer expectedSizeAfter = 1;

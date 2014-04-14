@@ -1,4 +1,4 @@
-public with sharing class Schedule implements Process.Plugin {
+public without sharing class Schedule implements Process.Plugin {
     
     public class Meta {
         public String Icon = 'clock';
@@ -33,8 +33,11 @@ public with sharing class Schedule implements Process.Plugin {
         if (isPassThru) {
             parametersList.add(parameters);
         } else {
-            //DateTime is not a primitive Object
-            DateTime heartbeat = findCronTrigger(cronTriggerId).PreviousFireTime;
+            DateTime pft = findCronTrigger(cronTriggerId).PreviousFireTime;
+            DateTime heartbeat = DateTime.newInstanceGmt(
+                pft.year(), pft.month(), pft.day(), //date
+                pft.hour(), 0, 0 //align time to nearest hour
+            );
             
             ScheduleConfiguration__c config = (ScheduleConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
             

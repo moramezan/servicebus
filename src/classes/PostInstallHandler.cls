@@ -1,4 +1,4 @@
-public class PostInstallHandler implements InstallHandler {
+public without sharing class PostInstallHandler implements InstallHandler {
 
     /**
      * Id organizationId();
@@ -8,8 +8,11 @@ public class PostInstallHandler implements InstallHandler {
      * Version previousVersion();
      */
     public void onInstall(InstallContext context) {
-        installSchedule();
+        //push upgrades run under the pushing user, not the local user, so keep it simple
+        if (!context.isPush()) installSchedule(context.installerId());
+        
         sendRemoteSiteSettingNag(context);
+        
         executeProcessDiscoverBatch();
     }
     
@@ -20,15 +23,22 @@ public class PostInstallHandler implements InstallHandler {
         AsyncApexJobs jobs = AsyncApexJobs.runOne(ProcessDiscoverBatch.class, 1);
     }
     
-    @TestVisible
-    private static void installSchedule() {
-        String  name = 'Eda Heartbeat';
-        List<CronJobDetail>  cronJobDetails = [SELECT  Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
-        if (cronJobDetails.size() == 0) {
-           String chron_exp = '0 0 * * * ?';
-           ScheduleDispatcher scheduleDispatcher = new ScheduleDispatcher();
-           System.schedule(name ,chron_exp,scheduleDispatcher);
-        }
+    /**
+     * Creates the hourly cron job used by Schedule process steps.
+     * Also makes sure the cron job will use the Batch Broker.
+     * 
+     * @param userId The real user id of the person who installed the package.
+     */
+    @TestVisible private static void installSchedule(Id userId) {
+        String name = 'Heartbeat (do not delete)';
+        List<CronJobDetail> cronJobDetails = [SELECT Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
+        
+        //job already scheduled, nothing to do
+        if (!cronJobDetails.isEmpty()) return;
+        
+        String cronExpr = '0 0 * * * ?';
+        ScheduleDispatcher schedulable = new ScheduleDispatcher();
+        System.schedule(name, cronExpr, schedulable);
     }
     
     /**
@@ -66,7 +76,7 @@ public class PostInstallHandler implements InstallHandler {
             + '\n\n'
             + '    your Event Driven Architecture package has installed alright.'
             + '\n\n'
-            + 'It\'s crucial to click the [CONFIGURE] button and then follow'
+            + 'But now you must click [Configure] on the package and follow'
             + '\nthe on-screen instructions if you have not already done so:'
             + '\n\n'
             + Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:') + Page.Configure.getUrl()

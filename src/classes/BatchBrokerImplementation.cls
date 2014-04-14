@@ -1,4 +1,4 @@
-public with sharing class BatchBrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts {
+public without sharing class BatchBrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts {
     
     public Database.QueryLocator start(Database.BatchableContext context) {
         if (BrokerSettings__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
