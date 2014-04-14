@@ -1,4 +1,4 @@
-public without sharing class ConfigureController {
+public class ConfigureController {
     
     String endpoint = Url.getSalesforceBaseUrl().toExternalForm();
     

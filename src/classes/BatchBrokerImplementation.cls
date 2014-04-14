@@ -1,3 +1,9 @@
+/**
+ * DO NOT ENQUEUE THIS JOB EVER
+ * see http://salesforce.stackexchange.com/a/24448/320
+ * 
+ * This class is WITHOUT SHARING to ensure the process can execute regardless of running user context.
+ */
 public without sharing class BatchBrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts {
     
     public Database.QueryLocator start(Database.BatchableContext context) {

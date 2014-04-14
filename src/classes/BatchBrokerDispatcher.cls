@@ -1,3 +1,6 @@
+/**
+ * This class is WITHOUT SHARING to ensure the process can execute regardless of running user context.
+ */
 public without sharing class BatchBrokerDispatcher implements Database.Batchable<SObject>, Database.AllowsCallouts {
     public Database.QueryLocator start(Database.BatchableContext context) {
         Database.Batchable<SObject> batch = (Database.Batchable<SObject>)Type.forName(BatchBrokerImplementation.class.getName()).newInstance();

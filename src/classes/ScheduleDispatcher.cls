@@ -1,5 +1,6 @@
 /**
- * Skinny with no need to upgrade.
+ * This class is WITHOUT SHARING to ensure the InstallHandler user context can access ApexClass etc
+ * See http://salesforce.stackexchange.com/q/258/320 and http://salesforce.stackexchange.com/q/32607/320
  */
 public without sharing class ScheduleDispatcher implements System.Schedulable {
 

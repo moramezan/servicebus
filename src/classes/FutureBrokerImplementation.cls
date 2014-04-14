@@ -1,7 +1,12 @@
 /**
- * The FutureBroker also provides a worker process that pulls a limited number of Messages off the queue. But
- * since he does not have his own 'execute' method contexts like a Batch Job, he relies upon callouts to the Tooling API
+ * DO NOT DEFER THIS METHOD EVER
+ * see http://salesforce.stackexchange.com/a/24448/320
+ *
+ * The FutureBroker provides a worker process that pulls a limited number of Messages off the queue. But
+ * since he does not have his own 'execute' method contexts like a Batch Job, he relies upon PageReference invocations
  * to branch out more execution contexts. Added complexity, but restart performance tends to be very good, all the time.
+ * 
+ * This class is WITHOUT SHARING to ensure the process can execute regardless of running user context.
  */
 virtual public without sharing class FutureBrokerImplementation extends Broker implements FutureBrokerDispatcher.Restartable {
     
