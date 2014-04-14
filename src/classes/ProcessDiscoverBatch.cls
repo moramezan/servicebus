@@ -1,4 +1,4 @@
-public with sharing class ProcessDiscoverBatch implements Database.Batchable<SObject> {
+public without sharing class ProcessDiscoverBatch implements Database.Batchable<SObject> {
     
     @TestVisible static private List<ApexClass> classes;
     public Iterable<SObject> start(Database.BatchableContext context) {

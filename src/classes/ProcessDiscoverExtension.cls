@@ -1,4 +1,4 @@
-public class ProcessDiscoverExtension {
+public without sharing class ProcessDiscoverExtension {
     
     private ApexPages.StandardSetController controller;
     
