@@ -61,8 +61,8 @@
         <members>PostUninstallHandlerTest</members>
         <members>ProcessDiscoverBatch</members>
         <members>ProcessDiscoverBatchTest</members>
-        <members>ProcessDiscoverExtension</members>
-        <members>ProcessDiscoverExtensionTest</members>
+        <members>ProcessDiscoverController</members>
+        <members>ProcessDiscoverControllerTest</members>
         <members>ProcessSet</members>
         <members>ProcessSetTest</members>
         <members>Publish</members>

@@ -114,7 +114,7 @@
             "codeClass": null,
             "userConfig": {
                 "api": [
-                    "{read: $RemoteAction.ProcessDiscoverExtension.readProcesses}"
+                    "{read: $RemoteAction.ProcessDiscoverController.readProcesses}"
                 ],
                 "designer|createAlias": "vfremote",
                 "designer|displayName": "ProcessProxy",

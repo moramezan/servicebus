@@ -194,7 +194,7 @@
             "codeClass": null,
             "userConfig": {
                 "api": [
-                    "{read: $RemoteAction.ProcessDiscoverExtension.readAsyncApexJobs}"
+                    "{read: $RemoteAction.ProcessDiscoverController.readAsyncApexJobs}"
                 ],
                 "designer|createAlias": "vfremote",
                 "designer|displayName": "AsyncApexJobProxy",

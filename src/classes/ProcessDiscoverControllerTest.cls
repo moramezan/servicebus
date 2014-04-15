@@ -1,10 +1,9 @@
-@isTest private class ProcessDiscoverExtensionTest {
+@isTest private class ProcessDiscoverControllerTest {
     
     static testMethod void testGetAsyncApexJob() {
         //arrange
-        ProcessDiscoverExtension.jobs = new List<AsyncApexJob>{new AsyncApexJob(Id = '707000000000000AAA')};
-        ApexPages.StandardSetController controller = new ApexPages.StandardSetController(new List<Process__c>());
-        ProcessDiscoverExtension extension = new ProcessDiscoverExtension(controller);
+        ProcessDiscoverController.jobs = new List<AsyncApexJob>{new AsyncApexJob(Id = '707000000000000AAA')};
+        ProcessDiscoverController extension = new ProcessDiscoverController();
         Test.startTest();
         ProcessDiscoverBatch.classes = [
             SELECT Id, Name, NamespacePrefix
@@ -28,10 +27,10 @@
     
     static testMethod void testReadAsyncApexJobs() {
         //arrange
-        ProcessDiscoverExtension.jobs = new List<AsyncApexJob>{new AsyncApexJob(Id = '707000000000000AAA')};
+        ProcessDiscoverController.jobs = new List<AsyncApexJob>{new AsyncApexJob(Id = '707000000000000AAA')};
         
         //act
-        List<AsyncApexJob> jobs = ProcessDiscoverExtension.readAsyncApexJobs('707000000000000AAA');
+        List<AsyncApexJob> jobs = ProcessDiscoverController.readAsyncApexJobs('707000000000000AAA');
         
         //assert
         Id expectedId = '707000000000000AAA';
@@ -41,10 +40,10 @@
     
     static testMethod void testReadProcesses() {
         //arrange
-        ProcessDiscoverExtension.processes = new List<Process__c>{new Process__c(Name = 'Test')};
+        ProcessDiscoverController.processes = new List<Process__c>{new Process__c(Name = 'Test')};
         
         //act
-        List<Process__c> processes = ProcessDiscoverExtension.readProcesses(System.now());
+        List<Process__c> processes = ProcessDiscoverController.readProcesses(System.now());
         
         //assert
         Integer expectedSize = 1;

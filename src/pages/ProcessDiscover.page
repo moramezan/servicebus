@@ -1,4 +1,4 @@
-<apex:page standardController="Process__c" recordSetVar="processes" extensions="ProcessDiscoverExtension" action="{!doRedirect}">
+<apex:page tabStyle="Process__c" controller="ProcessDiscoverController" action="{!doRedirect}">
     <c:bootstrapExt applicationName="Discover" staticResource="{!$Resource.ProcessDiscoverZip}" baseCSSPrefix="z-" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}">
         window.$ObjectType = window.$ObjectType || {};
         $ObjectType.Process__c = $ObjectType.Process__c || {};
@@ -17,9 +17,9 @@
         $ObjectType.Process__c.Fields.FullyQualifiedClassName__c.Name = '{!$ObjectType.Process__c.Fields.FullyQualifiedClassName__c.Name}';
         
         window.$RemoteAction = window.$RemoteAction || {};
-        $RemoteAction.ProcessDiscoverExtension = $RemoteAction.ProcessDiscoverExtension || {};
-        $RemoteAction.ProcessDiscoverExtension.readProcesses = '{!$RemoteAction.ProcessDiscoverExtension.readProcesses}';
-        $RemoteAction.ProcessDiscoverExtension.readAsyncApexJobs = '{!$RemoteAction.ProcessDiscoverExtension.readAsyncApexJobs}';
+        $RemoteAction.ProcessDiscoverController = $RemoteAction.ProcessDiscoverController || {};
+        $RemoteAction.ProcessDiscoverController.readProcesses = '{!$RemoteAction.ProcessDiscoverController.readProcesses}';
+        $RemoteAction.ProcessDiscoverController.readAsyncApexJobs = '{!$RemoteAction.ProcessDiscoverController.readAsyncApexJobs}';
         
         retURL = '{!retURL}';
         
