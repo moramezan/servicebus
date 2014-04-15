@@ -1,2 +1,25 @@
 @import 'body';
 @import 'icons';
+
+.#{$prefix}grid-body.processes td.#{$prefix}grid-cell {
+  font-family:'Arial';
+  font-size: 12px;
+  line-height: 13px;
+  padding-top: 2px;
+  padding-bottom: 0px;
+}
+
+/**
+ * Steps grid links are blue
+ */
+.#{$prefix}grid-body.processes a {
+  color: #015ba7;
+  text-decoration: none;
+}
+
+/**
+ * Steps grid links underline on hover
+ */
+.#{$prefix}grid-body.processes td.#{$prefix}grid-cell a:hover {
+  text-decoration: underline;
+}

@@ -84,6 +84,9 @@
             "codeClass": null,
             "userConfig": {
                 "bodyBorder": false,
+                "bodyCls": [
+                    "processes"
+                ],
                 "bodyStyle": [
                     "{",
                     "    \"border-radius\": \"5px\"",
@@ -202,13 +205,44 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "dataIndex": "Tag",
-                        "defaultWidth": null,
+                        "dataIndex": "Name",
                         "sortable": false,
-                        "text": "Tag",
-                        "width": 140
+                        "text": "Name",
+                        "width": 120
                     },
-                    "designerId": "3582dd85-dd2e-4e87-8ada-c32bffd17df4"
+                    "designerId": "d4be4972-1c85-49d9-ac3a-910a076ed375",
+                    "cn": [
+                        {
+                            "type": "fixedfunction",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|params": [
+                                    "value",
+                                    "metaData",
+                                    "record",
+                                    "rowIndex",
+                                    "colIndex",
+                                    "store",
+                                    "view"
+                                ],
+                                "fn": "renderer",
+                                "implHandler": [
+                                    "return Ext.DomHelper.createHtml({",
+                                    "    'tag': 'a',",
+                                    "    'html': value,",
+                                    "    'class': 'namelink',",
+                                    "    'title': 'View Process',",
+                                    "    'href': URLFOR['/'] + record.getId()",
+                                    "});"
+                                ]
+                            },
+                            "designerId": "4a85a894-c90a-42e1-b698-a3ff3e0be1f0"
+                        }
+                    ]
                 },
                 {
                     "type": "Ext.grid.column.Column",
@@ -218,12 +252,13 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "dataIndex": "Name",
+                        "dataIndex": "Tag",
+                        "defaultWidth": null,
                         "sortable": false,
-                        "text": "Name",
-                        "width": 80
+                        "text": "Tag",
+                        "width": 160
                     },
-                    "designerId": "d4be4972-1c85-49d9-ac3a-910a076ed375"
+                    "designerId": "3582dd85-dd2e-4e87-8ada-c32bffd17df4"
                 },
                 {
                     "type": "Ext.grid.column.Column",
@@ -249,6 +284,7 @@
                     "codeClass": null,
                     "userConfig": {
                         "dataIndex": "FullyQualifiedClassName",
+                        "hidden": true,
                         "text": "FullyQualifiedClassName",
                         "width": 100
                     },

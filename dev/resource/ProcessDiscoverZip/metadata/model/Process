@@ -19,7 +19,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Id"
+                "name": "Id",
+                "type": "auto"
             },
             "designerId": "9a727c15-e592-42b9-b974-a6f1c48b9783"
         },
@@ -31,7 +32,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Name"
+                "name": "Name",
+                "type": "string"
             },
             "designerId": "b675c6bf-7bb0-4140-8bb8-7b2a092699b7"
         },
@@ -43,7 +45,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Description"
+                "name": "Description",
+                "type": "string"
             },
             "designerId": "21e4919a-d068-4d32-9d39-a852548d8070"
         },
@@ -55,7 +58,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Icon"
+                "name": "Icon",
+                "type": "string"
             },
             "designerId": "ff0ece21-7d40-4627-a282-3a750e3f6c67"
         },
@@ -67,7 +71,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Tag"
+                "name": "Tag",
+                "type": "string"
             },
             "designerId": "866854e7-397e-4de8-86e6-e827f1ec9c91"
         },
@@ -79,7 +84,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "FullyQualifiedClassName"
+                "name": "FullyQualifiedClassName",
+                "type": "string"
             },
             "designerId": "a9dcb4c5-d880-40b4-be38-8ad5ba1bcae1",
             "cn": [

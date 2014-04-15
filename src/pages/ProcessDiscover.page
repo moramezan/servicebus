@@ -24,6 +24,7 @@
         retURL = '{!retURL}';
         
         window.URLFOR = window.URLFOR || {};
+        URLFOR['/'] = '{!URLFOR("/")}';
         URLFOR['{!retURL}'] = '{!URLFOR(retURL)}';
         
         window.$Page = window.$Page || {};

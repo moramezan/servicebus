@@ -19,7 +19,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Id"
+                "name": "Id",
+                "type": "auto"
             },
             "designerId": "2af62978-06b5-4791-8594-86db06a41086"
         },
@@ -31,7 +32,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "CompletedDate"
+                "name": "CompletedDate",
+                "type": "date"
             },
             "designerId": "11870b70-b0a8-4846-bd90-1bf489b4479f",
             "cn": [
@@ -64,7 +66,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "CreatedDate"
+                "name": "CreatedDate",
+                "type": "date"
             },
             "designerId": "e59bed06-750e-445c-8aa7-cd6c0505f464",
             "cn": [
@@ -97,7 +100,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "ExtendedStatus"
+                "name": "ExtendedStatus",
+                "type": "string"
             },
             "designerId": "306b0358-a842-430a-8491-68f79b5e5917"
         },
@@ -109,7 +113,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "JobItemsProcessed"
+                "name": "JobItemsProcessed",
+                "type": "int"
             },
             "designerId": "5c248486-d9c6-40b6-b35d-38dbcbf6efaf"
         },
@@ -121,7 +126,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "JobType"
+                "name": "JobType",
+                "type": "string"
             },
             "designerId": "8642c1ae-5c24-4799-9c2d-91fd6cd7fc17"
         },
@@ -133,7 +139,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "LastProcessed"
+                "name": "LastProcessed",
+                "type": "string"
             },
             "designerId": "c0552a32-d3d0-4796-8498-8cae271a6153"
         },
@@ -145,7 +152,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "LastProcessedOffset"
+                "name": "LastProcessedOffset",
+                "type": "int"
             },
             "designerId": "e1131955-5953-4dbe-afed-750375f05c85"
         },
@@ -157,7 +165,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "NumberOfErrors"
+                "name": "NumberOfErrors",
+                "type": "int"
             },
             "designerId": "4c84ac8b-6a65-4adf-837f-0e87a9cfedbb"
         },
@@ -169,7 +178,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Status"
+                "name": "Status",
+                "type": "string"
             },
             "designerId": "4fcf93ea-357c-44cf-b113-c043fe0c39c4"
         },
@@ -181,7 +191,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "TotalJobItems"
+                "name": "TotalJobItems",
+                "type": "int"
             },
             "designerId": "dd67e7e9-a8c8-410c-9379-ac6dc7a39357"
         },
