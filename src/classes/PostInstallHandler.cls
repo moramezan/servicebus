@@ -18,7 +18,8 @@ public without sharing class PostInstallHandler implements InstallHandler {
         //permission set assignments must be made on the local user, not the pushing user
         if (!context.isPush()) assignPermissionSet(context.installerId());
         
-        sendRemoteSiteSettingNag(context);
+        //only nag about the remote site setting on first install
+        if (!context.isUpgrade()) sendRemoteSiteSettingNag(context.installerId());
         
         executeProcessDiscoverBatch();
     }
@@ -81,25 +82,13 @@ public without sharing class PostInstallHandler implements InstallHandler {
     /**
      * Notify them (and us) on package install
      */
-    static private void sendRemoteSiteSettingNag(InstallContext context) {
-        User user;
-        if (context.isPush()) {
-            //push upgrade should notify sysadmins
-            user = [
-                SELECT Id, FirstName, Email
-                FROM User
-                WHERE Profile.Name = 'System Administrator'
-                ORDER BY LastLoginDate DESC
-                LIMIT 1
-            ];
-        } else {
-            //normal install should notify installer
-            user = [
-                SELECT Id, FirstName, Email
-                FROM User
-                WHERE Id = :context.installerId()
-            ];
-        }
+    static private void sendRemoteSiteSettingNag(Id userId) {
+        //notify the installing user
+        User user = [
+            SELECT Id, FirstName, Email
+            FROM User
+            WHERE Id = :userId
+        ];
         
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
         message.setSenderDisplayName('Eeyore');
