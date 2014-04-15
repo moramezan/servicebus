@@ -15,9 +15,42 @@ public without sharing class PostInstallHandler implements InstallHandler {
         //push upgrades run under the pushing user, not the local user, so keep it simple
         if (!context.isPush()) installSchedule(context.installerId());
         
+        //permission set assignments must be made on the local user, not the pushing user
+        if (!context.isPush()) assignPermissionSet(context.installerId());
+        
         sendRemoteSiteSettingNag(context);
         
         executeProcessDiscoverBatch();
+    }
+    
+    /**
+     * Assign Orchestrator permission set to the installer
+     */
+    @TestVisible static private void assignPermissionSet(Id userId) {
+        //resolve package namespace prefix
+        String namespacePrefix = PostInstallHandler.class.getName().substringBefore('PostInstallHandler').substringBefore('.');
+        
+        //find installed permission set
+        PermissionSet ps = [
+            SELECT Id
+            FROM PermissionSet
+            WHERE NamespacePrefix = :namespacePrefix
+            AND Name = 'Orchestrator'
+        ];
+        
+        //determine if it has been assigned already
+        Integer psas = [
+            SELECT COUNT()
+            FROM PermissionSetAssignment
+            WHERE PermissionSetId = :ps.Id
+            AND AssigneeId = :userId
+        ];
+        
+        //if not, assign it to whoever installs the package
+        if (psas == 0) insert new PermissionSetAssignment(
+            PermissionSetId = ps.Id,
+            AssigneeId = userId
+        );
     }
     
     /**
