@@ -31,6 +31,10 @@
         <members>Gate</members>
         <members>GateTest</members>
         <members>HealthController</members>
+        <members>HeartbeatDispatcher</members>
+        <members>HeartbeatDispatcherTest</members>
+        <members>HeartbeatImplementation</members>
+        <members>HeartbeatImplementationTest</members>
         <members>IsChanged</members>
         <members>IsChangedTest</members>
         <members>IsNewData</members>
@@ -67,10 +71,6 @@
         <members>SalesforceObjectSet</members>
         <members>Schedule</members>
         <members>ScheduleConfigurationSet</members>
-        <members>ScheduleDispatcher</members>
-        <members>ScheduleDispatcherTest</members>
-        <members>ScheduleImplementation</members>
-        <members>ScheduleImplementationTest</members>
         <members>ScheduleTest</members>
         <members>SchemaSelectorController</members>
         <members>SchemaSelectorControllerTest</members>

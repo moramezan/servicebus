@@ -1,9 +1,9 @@
-@isTest private class ScheduleDispatcherTest {
-	
+@isTest private class HeartbeatDispatcherTest {
+    
     static testMethod void coverExecuteMethod() {
         Test.startTest();
-        ScheduleDispatcher dispatcher = new ScheduleDispatcher();
-        System.schedule('ScheduleDispatcherTest', '0 0 * * * ?', dispatcher);
+        HeartbeatDispatcher dispatcher = new HeartbeatDispatcher();
+        System.schedule('HeartbeatDispatcherTest', '0 0 * * * ?', dispatcher);
         //at 0 seconds
         //at 0 minutes
         //every hour

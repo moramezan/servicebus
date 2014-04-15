@@ -41,7 +41,7 @@ public without sharing class PostInstallHandler implements InstallHandler {
         if (!cronJobDetails.isEmpty()) return;
         
         String cronExpr = '0 0 * * * ?';
-        ScheduleDispatcher schedulable = new ScheduleDispatcher();
+        HeartbeatDispatcher schedulable = new HeartbeatDispatcher();
         System.schedule(name, cronExpr, schedulable);
     }
     

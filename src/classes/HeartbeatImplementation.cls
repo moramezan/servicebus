@@ -5,7 +5,7 @@
  * This class is WITHOUT SHARING to ensure the InstallHandler user context can access ApexClass etc
  * See http://salesforce.stackexchange.com/q/258/320 and http://salesforce.stackexchange.com/q/32607/320
  */
-public without sharing class ScheduleImplementation implements System.Schedulable {
+public without sharing class HeartbeatImplementation implements System.Schedulable {
 
     public void execute(System.SchedulableContext context) {
         //find valid schedule configurations

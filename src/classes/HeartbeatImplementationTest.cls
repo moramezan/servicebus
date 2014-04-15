@@ -1,8 +1,8 @@
-@isTest private class ScheduleImplementationTest {
+@isTest private class HeartbeatImplementationTest {
     
     static testMethod void testNoScheduledSequences() {
         Test.startTest();
-        ScheduleImplementation job = new ScheduleImplementation();
+        HeartbeatImplementation job = new HeartbeatImplementation();
         job.execute(null);
         Test.stopTest();
         
@@ -12,7 +12,7 @@
     }
     
     /**
-     * We need the DoNothing Broker because ScheduleImplementation.execute
+     * We need the DoNothing Broker because HeartbeatImplementation.execute
      * no longer inserts message, it actually causes the Broker to process
      * via enqueue. Gotta count the messages without them being processed!
      */
@@ -42,7 +42,7 @@
         
         insert new BrokerSettings__c(BrokerClassName__c = DoNothingBroker.class.getName());
         Test.startTest();
-        ScheduleImplementation job = new ScheduleImplementation();
+        HeartbeatImplementation job = new HeartbeatImplementation();
         SchedulableContext context = (SchedulableContext)Json.deserialize('{"Id": "08e000000000000"}', SchedulableContextImpl.class);
         Schedule.cronTrigger = (CronTrigger)Json.deserialize('{"PreviousFireTime": "2014-01-18T12:00:00.000Z"}', CronTrigger.class);
         job.execute(context);
