@@ -7,16 +7,21 @@ public with sharing class SequenceBuilderExtension {
     }
     
     public PageReference doRedirect() {
+        PageReference pr;
+        
+        //first confirm the remote site setting exists
+        ConfigureController controller = new ConfigureController();
+        pr = controller.doRedirect();
+        if (pr != null) return pr;
+        
+        //then check if process discovery needs to run
+        pr = Page.ProcessDiscover;
+        pr.getParameters().put('retURL', ApexPages.currentPage().getUrl());
         Integer count = [SELECT COUNT() FROM Process__c];
-        if (count > 0) {
-            //continue per normal
-            return null;
-        } else {
-            //there are no processes! discover first
-            PageReference pr = Page.ProcessDiscover;
-            pr.getParameters().put('retURL', ApexPages.currentPage().getUrl());
-            return pr;
-        }
+        if (count == 0) return pr;
+        
+        //all systems go
+        return null;
     }
     
     public String getProcesses() {

@@ -58,14 +58,11 @@ public class ConfigureController {
     }
     
     @testVisible System.PageReference buildSetupPage() {
-        //prepare a link to our configuration/tutorial page which tests it
-        System.PageReference configure = Page.Configure;
-        configure.getParameters().put('endpoint', this.endpoint);
-        
         //prepare a link to pre-populated remote site setting
         System.PageReference setup = new System.PageReference('/0rp/e');
         setup.getParameters().putAll(new Map<String,String>{
-            'saveURL' => configure.getUrl(), //redirects to our configuration/tutorial after save
+            'save' => '1', //displays a prompt to save in red text
+            'saveURL' => ApexPages.currentPage().getUrl(), //redirects to our configuration/tutorial after save
             'SiteName' => 'EDA_' + this.endpoint.replaceAll('[^A-Za-z0-9]+', '_').left(30),
             'EndpointUrl' => this.endpoint,
             'ProtocolMismatch' => '1',
