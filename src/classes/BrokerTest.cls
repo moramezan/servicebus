@@ -680,7 +680,7 @@ public class BrokerTest{
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
-    static testMethod void testProcessWithoutClassThrowsThrowsExpectedException() {
+    static testMethod void testProcessWithoutClassThrowsExpectedException() {
         //arrange processes
         Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
         
@@ -693,6 +693,9 @@ public class BrokerTest{
         
         terminateProcess.FullyQualifiedClassName__c = 'lalala';
         update terminateProcess; //pretend we deleted the class
+        
+        //arrange specific broker implementation
+        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act
         Test.startTest();
@@ -721,6 +724,9 @@ public class BrokerTest{
         
         terminateProcess.FullyQualifiedClassName__c = 'Account';
         update terminateProcess; //Account is DEFINITELY not a Process.Plugin
+        
+        //arrange specific broker implementation
+        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act
         Test.startTest();
