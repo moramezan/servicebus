@@ -16,10 +16,13 @@ public without sharing class PostInstallHandler implements InstallHandler {
         if (!context.isPush()) installSchedule(context.installerId());
         
         //permission set assignments must be made on the local user, not the pushing user
-        if (!context.isPush()) assignPermissionSet(context.installerId());
+        //if (!context.isPush()) assignPermissionSet(context.installerId()); //MIXED_DML_OPERATION
         
         //only nag about the remote site setting on first install
         if (!context.isUpgrade()) sendRemoteSiteSettingNag(context.installerId());
+        
+        //wiretap should send to sysadmin, to prevent confusion with schedule processes
+        if (!context.isPush()) createWiretapSettings(context.installerId());
         
         executeProcessDiscoverBatch();
     }
@@ -120,5 +123,18 @@ public without sharing class PostInstallHandler implements InstallHandler {
         } catch (Exception e) {
             //eg sandbox with no access to send email
         }
+    }
+    
+    /**
+     * Set the Wiretap Settings
+     */
+    @TestVisible static private void createWiretapSettings(Id userId) {
+        //fetch custom setting or create it for the first time
+        WiretapSettings__c setting = WiretapSettings__c.getOrgDefaults();
+        if (setting == null) setting = new WiretapSettings__c();
+        
+        //write the values
+        setting.UserId__c = userId;
+        upsert setting;
     }
 }
