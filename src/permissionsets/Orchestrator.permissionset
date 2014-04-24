@@ -1124,6 +1124,10 @@
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
+        <name>CustomMobileAppsAccess</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>false</enabled>
         <name>CustomSidebarOnAllPages</name>
     </userPermissions>
     <userPermissions>
@@ -1368,6 +1372,10 @@
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
+        <name>PermitImpersonation</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>false</enabled>
         <name>PublishPackaging</name>
     </userPermissions>
     <userPermissions>
@@ -1436,10 +1444,18 @@
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
+        <name>ViewHelpLink</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>false</enabled>
         <name>ViewMyTeamsDashboards</name>
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
         <name>ViewSetup</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>XOrgProxyUser</name>
     </userPermissions>
 </PermissionSet>
