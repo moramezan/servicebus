@@ -17,7 +17,7 @@ public with sharing class SequenceBuilderExtension {
         //then check if process discovery needs to run
         pr = Page.ProcessDiscover;
         pr.getParameters().put('retURL', ApexPages.currentPage().getUrl());
-        Integer count = [SELECT COUNT() FROM Process__c];
+        Integer count = [SELECT COUNT() FROM Process__c WHERE FullyQualifiedClassName__c = :Terminate.class.getName()];
         if (count == 0) return pr;
         
         //all systems go
