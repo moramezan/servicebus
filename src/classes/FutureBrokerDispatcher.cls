@@ -8,7 +8,7 @@ public without sharing class FutureBrokerDispatcher {
     }
     
     @future(callout=true) static public void restart(String sessionId) {
-        Restartable future = (Restartable)Type.forName(FutureBrokerImplementation.class.getName()).newInstance();
+        Restartable future = (Restartable)Type.forName('FutureBrokerImplementation').newInstance();
         future.restart(sessionId);
     }
     
