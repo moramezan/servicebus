@@ -267,8 +267,12 @@ abstract global class Broker {
             return; //get out of dodge quick
         }
         
+        SavePoint sp;
         //THEIR FUCKUPS (invocation)
         try {
+            //if there is a fuckup we must rollback!
+            sp = Database.setSavePoint();
+            
             //save important message properties (such as stackDepth) so that process authors 
             //cannot pervert them  
             //TODO : requires a more generic approach not specific to just the eda_StackDepth
@@ -283,6 +287,9 @@ abstract global class Broker {
             // convert to a list of parameter collections
             parametersList = EdaUtility.convert(results);
         } catch (Exception e) {
+            //no emails or database activity thanks!
+            Database.rollback(sp);
+            
             surfaceException(e, message.Id);
             return; //get out of dodge quick
         }
