@@ -173,7 +173,7 @@ abstract global class Broker {
         BrokerSettings__c settings = BrokerSettings__c.getInstance();
         
         //if there is no setting, use the snappy future broker
-        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = FutureBrokerImplementation.class.getName(); 
+        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBrokerImplementation.class.getName(); 
         
         //except when we are scheduled, then use batch broker which doesn't need a session id
         if (System.isScheduled()) settings.BrokerClassName__c = BatchBrokerImplementation.class.getName();

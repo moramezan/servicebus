@@ -24,10 +24,6 @@
         <members>ConfigureControllerTest</members>
         <members>EdaUtility</members>
         <members>EdaUtilityTest</members>
-        <members>FutureBrokerDispatcher</members>
-        <members>FutureBrokerDispatcherTest</members>
-        <members>FutureBrokerImplementation</members>
-        <members>FutureBrokerImplementationTest</members>
         <members>Gate</members>
         <members>GateTest</members>
         <members>HealthController</members>
@@ -109,7 +105,6 @@
         <members>ConfirmSetupTutorial</members>
         <members>CoreProcessesGuide</members>
         <members>EventTypeHelp</members>
-        <members>FutureBroker</members>
         <members>GateHelp</members>
         <members>Health</members>
         <members>IsChangedConfigurationSchemaSelector</members>

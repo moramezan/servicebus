@@ -22,6 +22,67 @@
         <sf:deploy username="eda@countryskippers.com" password="CS42lkj1" serverurl="https://login.salesforce.com" deployRoot="src"/>
     </target>
     
+    <target name="package-futurebroker" description="Deploys all components to future broker extension package org">
+        <sf:deploy username="eda_fb@countryskippers.com" password="CS42lkj1" serverurl="https://login.salesforce.com" deployRoot="futurebroker"/>
+    </target>
+
+    <target name="deploy-futurebroker" description="Deploys all package components to dev org">
+        <antcall target="remove-futurebroker-artifacts" />
+        <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="https://login.salesforce.com" deployRoot="futurebroker"/>
+        <antcall target="restore-futurebroker-artifacts" />
+    </target>
+
+    <target name="retrieve-futurebroker" description="Retrieves all package components to dev org">
+        <sf:retrieve username="${sf.username}" password="${sf.password}" serverurl="https://login.salesforce.com" retrieveTarget="futurebroker" unpackaged="futurebroker/package.xml" />
+        <antcall target="restore-futurebroker-artifacts" />
+    </target>
+    
+    <target name="remove-futurebroker-artifacts">
+        <replace file="futurebroker/package.xml" encoding="UTF-8">
+            <replacetoken><![CDATA[
+    <fullName>Event Driven Architecture Future Broker</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <description>Low latency asynchronous messaging backbone.</description>
+    <namespacePrefix>eda_fb</namespacePrefix>
+    <types>]]></replacetoken>
+            <replacevalue><![CDATA[
+    <fullName>Event Driven Architecture Future Broker</fullName>
+    <description>Low latency asynchronous messaging backbone.</description>
+    <types>]]></replacevalue>
+        </replace>
+        <replace file="futurebroker/classes/FutureBrokerImplementation.cls" encoding="UTF-8">
+            <replacetoken>FutureBrokerImplementation extends eda.Broker</replacetoken>
+            <replacevalue>FutureBrokerImplementation extends Broker</replacevalue>
+        </replace>
+        <replace file="futurebroker/classes/FutureBrokerImplementation.cls" encoding="UTF-8">
+            <replacetoken>eda__BrokerSettings__c.getInstance().eda__Inhibit__c</replacetoken>
+            <replacevalue>BrokerSettings__c.getInstance().Inhibit__c</replacevalue>
+        </replace>
+    </target>
+    
+    <target name="restore-futurebroker-artifacts">
+        <replace file="futurebroker/package.xml" encoding="UTF-8">
+            <replacetoken><![CDATA[
+    <fullName>Event Driven Architecture Future Broker</fullName>
+    <description>Low latency asynchronous messaging backbone.</description>
+    <types>]]></replacetoken>
+            <replacevalue><![CDATA[
+    <fullName>Event Driven Architecture Future Broker</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <description>Low latency asynchronous messaging backbone.</description>
+    <namespacePrefix>eda_fb</namespacePrefix>
+    <types>]]></replacevalue>
+        </replace>
+        <replace file="futurebroker/classes/FutureBrokerImplementation.cls" encoding="UTF-8">
+            <replacetoken>FutureBrokerImplementation extends Broker</replacetoken>
+            <replacevalue>FutureBrokerImplementation extends eda.Broker</replacevalue>
+        </replace>
+        <replace file="futurebroker/classes/FutureBrokerImplementation.cls" encoding="UTF-8">
+            <replacetoken>BrokerSettings__c.getInstance().Inhibit__c</replacetoken>
+            <replacevalue>eda__BrokerSettings__c.getInstance().eda__Inhibit__c</replacevalue>
+        </replace>
+    </target>
+    
     <target name="remove-artifacts" description="Removes namespace and management artifacts prior to unmanaged deploy.">
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
@@ -34,6 +95,7 @@
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
     <fullName>Event Driven Architecture</fullName>
+    <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacevalue>
         </replace>
@@ -100,6 +162,7 @@
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
     <fullName>Event Driven Architecture</fullName>
+    <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[

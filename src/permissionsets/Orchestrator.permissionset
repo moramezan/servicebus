@@ -73,22 +73,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>FutureBrokerDispatcher</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>FutureBrokerDispatcherTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>FutureBrokerImplementation</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>FutureBrokerImplementationTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>Gate</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -864,10 +848,6 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>EventTypeHelp</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>FutureBroker</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
