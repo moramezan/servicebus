@@ -94,7 +94,7 @@ abstract global class Broker {
      * @param workCount Maximum number of Messages to mark and locate (subject to fuckups)
      * @return          Query Locator identifying the now-marked-as-Processing Messages.
      */
-    public Database.QueryLocator locateMarkedWork(Integer workCount) {
+    global Database.QueryLocator locateMarkedWork(Integer workCount) {
         Integer fuckedLimit = 100;
         
         Integer fuckedCount = [
@@ -211,7 +211,7 @@ abstract global class Broker {
      *
      * @param messageIds Set of Message Ids to update
      */
-    static public void mark(Set<Id> messageIds) {
+    static global void mark(Set<Id> messageIds) {
         List<Message__c> messages = new List<Message__c>();
         for (Id messageId : messageIds) {
             messages.add(new Message__c(
@@ -222,7 +222,7 @@ abstract global class Broker {
         update messages;
     }
     
-    virtual public void markImpl(Set<Id> messageIds) {
+    virtual global void markImpl(Set<Id> messageIds) {
         Broker.mark(messageIds);
     }
     
@@ -232,7 +232,7 @@ abstract global class Broker {
      * @param  message One Message whose status should be Processing
      * @return         Many Messages whose status should be Buffer
      */
-    static public void executeResolvePersist(Id messageId) {
+    static global void executeResolvePersist(Id messageId) {
         Message__c message = (Message__c)SalesforceObject.getById(messageId);
         List<Map<String,Object>> parametersList;
         Map<String,Object> parameters;
@@ -336,7 +336,7 @@ abstract global class Broker {
      * 4B. resolve the the process (ie the process referenced by 4A's step)
      * 5. only then can we correctly write to database with 4A (stepId) and 3 (parameters with the incremented position)
      */
-    static public void resolve(List<Message__c> messages) {
+    static global void resolve(List<Message__c> messages) {
         //assemble a map of next-step keys to messages
         Map<String,Message__c> key2data = new Map<String,Message__c>();
         for (Message__c message : messages) {
@@ -463,7 +463,7 @@ abstract global class Broker {
         }
      }
     
-    public void restartIfWorkPending() {
+    global void restartIfWorkPending() {
         Integer worksPending = [
             SELECT COUNT()
             FROM Message__c
@@ -480,7 +480,7 @@ abstract global class Broker {
      
     abstract global void restartImpl();
     
-    @TestVisible public static String getEntryPointGuid(Integer size) {
+    @TestVisible static private String getEntryPointGuid(Integer size) {
         return EncodingUtil.convertToHex(crypto.generateAesKey(128)).substring(0, size);
     }
 }
