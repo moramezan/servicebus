@@ -1,4 +1,4 @@
-public class HealthController
+public with sharing class HealthController
 {
     public class Health    {
         public Id SequenceId   {get; set;}

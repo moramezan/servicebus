@@ -1,8 +1,4 @@
-/**
- * This class is WITHOUT SHARING to ensure any running user context can access ApexClass etc
- * See http://salesforce.stackexchange.com/q/258/320 and http://salesforce.stackexchange.com/q/32607/320
- */
-public without sharing class ProcessDiscoverController {
+public with sharing class ProcessDiscoverController {
     
     public String getRetURL() {
         if (ApexPages.currentPage().getParameters().get('retURL') == null) {

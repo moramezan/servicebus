@@ -1,4 +1,4 @@
-public class MessageShowDataExtension {
+public with sharing class MessageShowDataExtension {
     
     private ApexPages.StandardController controller;
     
