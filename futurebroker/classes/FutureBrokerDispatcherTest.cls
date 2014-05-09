@@ -12,12 +12,10 @@
     }
     
     static public Boolean isCalled = false;
-    class ToolingApiMock implements WebServiceMock {
+    class FutureBrokerClientMock implements WebServiceMock {
         public void doInvoke(Object stub, Object request, Map<String, Object> response, String endpoint, String soapAction, String requestName, String responseNS, String responseName, String responseType) {
             isCalled = true;
-            Api.executeAnonymousResponse_element responseElement = new Api.executeAnonymousResponse_element();
-            responseElement.result = new Api.ExecuteAnonymousResult();
-            responseElement.result.success = true;
+            FutureBrokerClient.doStartResponse responseElement = new FutureBrokerClient.doStartResponse();
             response.put('response_x', responseElement);
         }
     }
@@ -25,7 +23,7 @@
     static testMethod void testRestart() {
         //act
         Test.startTest();
-        Test.setMock(WebServiceMock.class, new ToolingApiMock());
+        Test.setMock(WebServiceMock.class, new FutureBrokerClientMock());
         FutureBrokerDispatcher.restart(UserInfo.getSessionId());
         Test.stopTest();
         

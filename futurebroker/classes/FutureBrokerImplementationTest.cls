@@ -8,12 +8,10 @@
     }
     
     static public Boolean flagRestartImpl = false;
-    class ToolingApiMock implements WebServiceMock {
+    class FutureBrokerClientMock implements WebServiceMock {
         public void doInvoke(Object stub, Object request, Map<String, Object> response, String endpoint, String soapAction, String requestName, String responseNS, String responseName, String responseType) {
             flagRestartImpl = true;
-            Api.executeAnonymousResponse_element responseElement = new Api.executeAnonymousResponse_element();
-            responseElement.result = new Api.ExecuteAnonymousResult();
-            responseElement.result.success = true;
+            FutureBrokerClient.doStartResponse responseElement = new FutureBrokerClient.doStartResponse();
             response.put('response_x', responseElement);
         }
     }
@@ -69,7 +67,7 @@
         
         //act
         Test.startTest();
-        Test.setMock(WebServiceMock.class, new ToolingApiMock());
+        Test.setMock(WebServiceMock.class, new FutureBrokerClientMock());
         Broker.enqueue(sequenceNameA, '000000000000000AAA');
         Test.stopTest();
         
@@ -124,7 +122,7 @@
         
         //act
         Test.startTest();
-        Test.setMock(WebServiceMock.class, new ToolingApiMock());
+        Test.setMock(WebServiceMock.class, new FutureBrokerClientMock());
         new FutureBrokerImplementation().restartIfWorkPending();
         Test.stopTest();
         

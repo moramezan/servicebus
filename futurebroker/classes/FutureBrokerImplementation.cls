@@ -31,12 +31,8 @@ virtual public without sharing class FutureBrokerImplementation extends Broker i
         //but this session must be set explicitly because we are in Future Context (no session id)
         this.sessionId = sessionId;
         
-        String futureBrokerUrl = Page.FutureBroker.getUrl(); //full page name for anonymous context
-        String command = 'new PageReference(\'' + futureBrokerUrl + '\').getContent();';
-        
-        Api.Client client = new Api.Client(sessionId);
-        Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
-        if (!result.success) throw new BrokerException(result.compileProblem == null ? result.compileProblem : result.exceptionMessage);
+        FutureBrokerClient.Impl client = new FutureBrokerClient.Impl(sessionId);
+        client.doStart();
     }
     
     virtual public void handle() {
@@ -64,14 +60,11 @@ virtual public without sharing class FutureBrokerImplementation extends Broker i
         while (iterator.hasNext()) {
             //each in separate execution context
             Message__c message = (Message__c)iterator.next();
-            Api.Client client = new Api.Client();
+            FutureBrokerClient.Impl client = new FutureBrokerClient.Impl(UserInfo.getSessionId());
             
             //endpoint must be derived because we are in Visualforce Context (c.pod.visual.force.com)
-            client.endpoint_x = this.podProtocolAndHost() + '/services/Soap/T/29.0';
-            String futureBrokerUrl = Page.FutureBroker.getUrl(); //full page name for anonymous context
-            String command = 'new PageReference(\'' + futureBrokerUrl + '?id=' + message.Id + '\').getContent();'; //EXECUTE
-            Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
-            if(!result.success) throw new BrokerException(result.compileProblem == null ? result.compileProblem : result.exceptionMessage);
+            client.endpoint = this.podProtocolAndHost() + '/services/Soap/class/FutureBrokerService';
+            client.doHandle(message.Id);
         }
         
         //finish (invokes broker in a @future)
@@ -93,14 +86,11 @@ virtual public without sharing class FutureBrokerImplementation extends Broker i
      * to avoid this, here we provide a 'special' mark implementation to do the DML in a separate Tooling API context.
      */
     virtual override public void markImpl(Set<Id> messageIds) {
-        Api.Client client = new Api.Client();
+        FutureBrokerClient.Impl client = new FutureBrokerClient.Impl(UserInfo.getSessionId());
         
         //endpoint must be derived because we are in Visualforce Context (c.pod.visual.force.com)
-        client.endpoint_x = this.podProtocolAndHost() + '/services/Soap/T/29.0';
-        String brokerClassName = Broker.class.getName(); //full class name for anonymous context
-        String command = brokerClassName + '.mark((Set<Id>)Json.deserialize(\'' + Json.serialize(messageIds) + '\', Set<Id>.class));';
-        Api.ExecuteAnonymousResult result = client.executeAnonymous(command);
-        if (!result.success) throw new BrokerException(result.compileProblem == null ? result.compileProblem : result.exceptionMessage);
+        client.endpoint = this.podProtocolAndHost() + '/services/Soap/class/FutureBrokerService';
+        client.doMark(new List<Id>(messageIds));
     }
     
     override public Boolean isAlreadyRunning() {
