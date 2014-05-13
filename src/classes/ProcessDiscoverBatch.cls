@@ -10,6 +10,7 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
             SELECT Id, Name, NamespacePrefix
             FROM ApexClass
             ORDER BY Name ASC
+            LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
         ];
     }
     

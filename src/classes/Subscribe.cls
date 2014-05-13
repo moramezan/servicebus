@@ -19,18 +19,18 @@ public with sharing class Subscribe implements Process.Plugin {
     }
     
     public static List<HealthController.Health> getHealth() {
-        List<Sequence__c> sequences = [SELECT id,
-                                        Name,
-                                        (SELECT id, Name, Process__c, ConfigurationId__c
-                                         FROM Steps__r
-                                         ORDER BY Position__c ASC) steps
-                                 FROM Sequence__c
-                                ];
+        List<Sequence__c> sequences = [
+            SELECT Id, Name,
+            (SELECT Id, Name, Process__c, ConfigurationId__c FROM Steps__r ORDER BY Position__c ASC) steps
+            FROM Sequence__c
+            LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
+        ];
         
-        List<Process__c> subscribeProcesses  = [SELECT id, Name
-                                                FROM Process__c
-                                                WHERE Name = 'Subscribe'
-                                               ];
+        List<Process__c> subscribeProcesses = [
+            SELECT Id
+            FROM Process__c
+            WHERE FullyQualifiedClassName__c = :Subscribe.class.getName()
+        ];
         Process__c subscribeProcess = (subscribeProcesses.size() > 0) ? subscribeProcesses[0] : null;
         Boolean resolvedProcess = (subscribeProcess != null);
 

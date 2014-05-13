@@ -55,18 +55,16 @@ public with sharing class Publish implements Process.Plugin {
     
     public static List<HealthController.Health> getHealth() {
         List<Sequence__c> sequences = [
-            SELECT id,
-            Name,
-            (SELECT id, Name, Process__c, ConfigurationId__c
-            FROM Steps__r
-            ORDER BY Position__c ASC) steps
+            SELECT Id, Name,
+            (SELECT id, Name, Process__c, ConfigurationId__c FROM Steps__r ORDER BY Position__c ASC) steps
             FROM Sequence__c
+            LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
         ];
         
         List<Process__c> publishProcesses = [
-            SELECT id, Name
+            SELECT Id
             FROM Process__c
-            WHERE Name = 'Publish'
+            WHERE FullyQualifiedClassName__c = :Publish.class.getName()
         ];
         
         Process__c publishProcess = (publishProcesses.size() > 0) ? publishProcesses[0] : null;

@@ -48,18 +48,18 @@ public with sharing class Terminate implements Process.Plugin {
     public static List<HealthController.Health> getHealth() {
         List<HealthController.Health> healths = new List<HealthController.Health>();
         
-        List<Sequence__c> sequences = [SELECT id,
-                                         Name,
-                                        (SELECT id, Name, Process__c
-                                         FROM Steps__r
-                                         ORDER BY Position__c ASC) steps
-                                 FROM Sequence__c
-                                ];
+        List<Sequence__c> sequences = [
+            SELECT Id, Name,
+            (SELECT id, Name, Process__c FROM Steps__r ORDER BY Position__c ASC) steps
+            FROM Sequence__c
+            LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
+        ];
         
-        List<Process__c> terminateProcesses  = [SELECT id, Name
-                                           FROM Process__c
-                                           WHERE Name = 'Terminate'
-                                          ];
+        List<Process__c> terminateProcesses = [
+            SELECT Id
+            FROM Process__c
+            WHERE FullyQualifiedClassName__c = :Terminate.class.getName()
+        ];
         Process__c  terminateProcess = (terminateProcesses.size() > 0) ? terminateProcesses[0] : null;
         Boolean resolvedProcess = (terminateProcess != null);
         
