@@ -1,14 +1,4 @@
 @isTest private class LogConfigurationControllerTest{
-    static testMethod void controllerCoverage ()  {
-        // arrange
-        LogConfiguration__c  logConfiguration = new LogConfiguration__c();
-        insert logConfiguration;
-        ApexPages.StandardController controller = new ApexPages.StandardController(logConfiguration);
-        LogConfigurationController logConfigurationController =  new LogConfigurationController(controller);
-        
-        // act
-        System.PageReference pageRef = logConfigurationController.LogGroupView();
-    }
     
     static testMethod void testPodProtocolAndHost() {
         LogConfigurationController.IdentityResult result = new LogConfigurationController.IdentityResult();

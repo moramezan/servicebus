@@ -55,11 +55,4 @@
         System.assertEquals(expectedName, actualName);
     }
     
-    static testMethod void testNotRedirectedWhenViewingJob() {
-        PageReference discover = Page.ProcessDiscover;
-        discover.getParameters().put('asyncApexJobId', '707000000000000AAA');
-        Test.setCurrentPage(discover);
-        //discover.doRedirect
-    }
-    
 }
