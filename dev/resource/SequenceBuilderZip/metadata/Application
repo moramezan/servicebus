@@ -25,7 +25,6 @@
             "Processes"
         ],
         "views": [
-            "Config",
             "Buttons",
             "Main"
         ]

@@ -67,29 +67,4 @@ public with sharing class SequenceBuilderExtension {
         Broker.enqueue(sequence.Name, UserInfo.getUserId());
         return sequence.Name;
     }
-    
-    public String getSessionSettingsLink() {
-        String retURL = ApexPages.currentPage().getUrl();
-        PageReference sessionSettings = new PageReference('/_ui/system/security/SessionSettings');
-        sessionSettings.getParameters().put('p9', '0');
-        sessionSettings.getParameters().put('save', '1');
-        sessionSettings.getParameters().put('retURL', retURL);
-        return sessionSettings.getUrl();
-    }
-    
-    public Boolean getIsFrameBlocked() {
-        String base = Url.getSalesforceBaseUrl().toExternalForm();
-        PageReference pr = new PageReference(base + '/_ui/system/security/SessionSettings');
-        String html = pr.getContent().toString();
-        if (html.contains('Insufficient Privileges')) {
-            //we don't know
-            return null;
-        } else if (html.contains('checked="checked" id="p9"')) {
-            //definitely blocked
-            return true;
-        } else {
-            //probably not blocked
-            return false;
-        }
-    }
 }

@@ -59,14 +59,11 @@
         $ObjectType.Process__c.Fields.DocsPageUrl__c = $ObjectType.Process__c.Fields.DocsPageUrl__c || {};
         $ObjectType.Process__c.Fields.DocsPageUrl__c.Name = '{!$ObjectType.Process__c.Fields.DocsPageUrl__c.Name}';
 
-        SessionSettingsLink = '{!SessionSettingsLink}';
-        IsFrameBlocked = {!IsFrameBlocked};
         Processes = {!Processes};
         Steps = {!Steps};
         
         window.URLFOR = window.URLFOR || {};
         URLFOR['/'] = '{!URLFOR("/")}';
-        URLFOR[SessionSettingsLink] = '{!URLFOR(SessionSettingsLink)}';
     </c:bootstrapExt>
 
 </apex:page>

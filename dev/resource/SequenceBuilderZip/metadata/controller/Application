@@ -6,9 +6,22 @@
     },
     "codeClass": null,
     "userConfig": {
-        "designer|userClassName": "Application"
+        "designer|userClassName": "Application",
+        "popup": [
+            "null"
+        ]
+    },
+    "configAlternates": {
+        "popup": "object"
     },
     "designerId": "30321ebb-d159-427a-9ebf-87c303155eb7",
+    "customConfigs": [
+        {
+            "group": "(Custom Properties)",
+            "name": "popup",
+            "type": "string"
+        }
+    ],
     "cn": [
         {
             "type": "controlleraction",
@@ -196,7 +209,17 @@
                     " * us back the Terminate step per RemoteAction.SequenceBuilderExtension.fetchSteps",
                     " */",
                     "var store = dataview.getStore();",
-                    "if (!store.getCount()) store.load();"
+                    "if (!store.getCount()) store.load();",
+                    "",
+                    "/**",
+                    " * COUPLES TO Builder.controller.Application#onConfigureLinkClick()",
+                    " * This closes the config popup if the clicks outside it.",
+                    " */",
+                    "var controller = this;",
+                    "Ext.fly(window).on('focus', function() {",
+                    "    Ext.getBody().unmask();",
+                    "    if (controller.popup) controller.popup.close();",
+                    "});"
                 ],
                 "name": "viewready",
                 "scope": "me"
@@ -247,7 +270,27 @@
                 ],
                 "fn": "onConfigureLinkClick",
                 "implHandler": [
-                    "Ext.create('Builder.view.Config', {url: e.target.href}).show();"
+                    "var me = this, //controller",
+                    "    y = window.screenTop || window.screenY,",
+                    "    x = window.screenLeft || window.screenX,",
+                    "    top = Math.round(Ext.Element.getViewportHeight() * 0.15) + y,",
+                    "    left = Math.round(Ext.Element.getViewportWidth() * 0.1) + x,",
+                    "    width = Math.round(Ext.Element.getViewportWidth() * 0.8),",
+                    "    height = Math.round(Ext.Element.getViewportHeight() * 0.8)",
+                    ";",
+                    "",
+                    "/**",
+                    " * COUPLES TO Builder.controller.Application#onViewReady()",
+                    " * This opens the config popup without any Clickjack issues.",
+                    " */",
+                    "Ext.getBody().mask();",
+                    "me.popup = window.open(",
+                    "    e.target.href,",
+                    "    'eda_config',",
+                    "    'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top + ',toolbar=no,status=no,directories=no,menubar=no,resizable=yes'",
+                    ");",
+                    "",
+                    ""
                 ]
             },
             "designerId": "540df7c3-43c4-4c27-b109-a729235a017c"
