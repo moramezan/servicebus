@@ -1,4 +1,4 @@
-<apex:page tabStyle="SubscribeConfiguration__c" showHeader="false" standardStylesheets="true">
+<apex:page controller="SubscribeHelpController" action="{!findProblems}" tabStyle="SubscribeConfiguration__c" showHeader="false" standardStylesheets="true">
     
     <style>
         body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
@@ -15,12 +15,9 @@
                 
                 </apex:pageBlockSectionItem>
                 
-                
-                <!--
-                <apex:pageBlockSectionItem >
-                    <apex:image width="360" value="{!URLFOR($Resource.HelpZip, '/Subscribe/SubscribeProcessFunnel.png')}" />
+                <apex:pageBlockSectionItem dataStyle="padding-right:10px;" >
+                    <apex:pageMessages />
                 </apex:pageBlockSectionItem>
-                -->
             </apex:pageBlockSection>
 
 

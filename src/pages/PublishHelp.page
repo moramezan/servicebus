@@ -1,4 +1,4 @@
-<apex:page tabStyle="PublishConfiguration__c" showHeader="false" standardStylesheets="true">
+<apex:page controller="PublishHelpController" action="{!findProblems}" tabStyle="PublishConfiguration__c" showHeader="false" standardStylesheets="true">
     
     <style>
         body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
@@ -14,14 +14,11 @@
                     <p><img width="480" src="{!URLFOR($Resource.HelpZip, '/PublishConfiguration/PubSubConfiguration.png')}" /></p>
                 </apex:pageBlockSectionItem>
                 
-                <!--
-                <apex:pageBlockSectionItem >
-                    <apex:image width="360" value="{!URLFOR($Resource.HelpZip, '/Publish/PublishProcessFunnel.png')}" />
+                <apex:pageBlockSectionItem dataStyle="padding-right:10px;">
+                    <apex:pageMessages />
                 </apex:pageBlockSectionItem>
-                -->
             </apex:pageBlockSection>
-
- 
+            
             <apex:pageBlockSection title="Configure Buttons" columns="1" collapsible="false">
                 <apex:pageBlockSectionItem >
                     <p>To Publish to a specific Named Event,  select that Named Event from the Event Type lookup field.</p>

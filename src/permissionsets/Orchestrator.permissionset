@@ -81,10 +81,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>HealthController</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>HeartbeatDispatcher</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -225,6 +221,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>PublishHelpController</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>PublishHelpControllerTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>PublishTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -309,6 +313,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>SubscribeHelpController</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SubscribeHelpControllerTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>SubscribeTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -330,6 +342,14 @@
     </classAccesses>
     <classAccesses>
         <apexClass>Terminate</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>TerminateHelpController</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>TerminateHelpControllerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -852,10 +872,6 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>GateHelp</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>Health</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

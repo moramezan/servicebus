@@ -26,7 +26,6 @@
         <members>EdaUtilityTest</members>
         <members>Gate</members>
         <members>GateTest</members>
-        <members>HealthController</members>
         <members>HeartbeatDispatcher</members>
         <members>HeartbeatDispatcherTest</members>
         <members>HeartbeatImplementation</members>
@@ -62,6 +61,8 @@
         <members>ProcessSet</members>
         <members>ProcessSetTest</members>
         <members>Publish</members>
+        <members>PublishHelpController</members>
+        <members>PublishHelpControllerTest</members>
         <members>PublishTest</members>
         <members>SalesforceObject</members>
         <members>SalesforceObjectSet</members>
@@ -83,12 +84,16 @@
         <members>StepSetTest</members>
         <members>StepTest</members>
         <members>Subscribe</members>
+        <members>SubscribeHelpController</members>
+        <members>SubscribeHelpControllerTest</members>
         <members>SubscribeTest</members>
         <members>Subsequence</members>
         <members>SubsequenceTest</members>
         <members>SynchronousBroker</members>
         <members>SynchronousBrokerTest</members>
         <members>Terminate</members>
+        <members>TerminateHelpController</members>
+        <members>TerminateHelpControllerTest</members>
         <members>TerminateTest</members>
         <members>Wiretap</members>
         <members>WiretapTest</members>
@@ -106,7 +111,6 @@
         <members>CoreProcessesGuide</members>
         <members>EventTypeHelp</members>
         <members>GateHelp</members>
-        <members>Health</members>
         <members>IsChangedConfigurationSchemaSelector</members>
         <members>IsChangedHelp</members>
         <members>IsNewDataHelp</members>

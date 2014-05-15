@@ -1,4 +1,4 @@
-<apex:page tabStyle="Process__c" showHeader="false" standardStylesheets="true">
+<apex:page controller="TerminateHelpController" action="{!findProblems}" tabStyle="Process__c" showHeader="false" standardStylesheets="true">
     
     <style>
         body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
@@ -12,7 +12,12 @@
                     <p>It is the orchestrator's responsibility to ensure the termination process is the final step in the Sequence.</p>
                     <p>Any processes after the Termination step will not be executed.</p>
                 </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem dataStyle="padding-right:10px;">
+                    <apex:pageMessages />
+                </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
+            
         </apex:pageBlock>
     </apex:form>
 </apex:page>
