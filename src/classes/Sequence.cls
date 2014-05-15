@@ -75,12 +75,24 @@ public class Sequence extends SalesforceObject {
         }
     }
     
-    public Step deleteStep(Id stepId) {
-        //validate and perform the delete
+    public StepSet destroySteps(Set<Id> stepIds) {
         Sequence__c sequence = (Sequence__c)this.getSObject();
-        Step__c step = (Step__c)SalesforceObject.getById(stepId);
-        if (sequence.Id != step.Sequence__c)   throw new SequenceException('Cannot deleteStep from different sequence ' + sequence.Id + ' ' + step.Sequence__c);
-        delete step;
+        
+        List<Step__c> stepsToDelete = [
+            SELECT Id, Sequence__c
+            FROM Step__c
+            WHERE Id IN :stepIds
+        ];
+        
+        //validate
+        for (Step__c stepToDelete : stepsToDelete) {
+            if (stepToDelete.Sequence__c != sequence.Id) {
+                throw new SequenceException('Cannot destroy step ' + stepToDelete.Id + ' from different sequence ' + sequence.Id);
+            }
+        }
+        
+        //perform the delete
+        delete stepsToDelete;
         
         //find the remaining steps
         List<Step__c> stepsToReorder = [
@@ -95,8 +107,8 @@ public class Sequence extends SalesforceObject {
         for (Step__c stepToReorder : stepsToReorder) stepToReorder.Position__c = position++;
         update stepsToReorder;
         
-        //hand back wrapped deleted step
-        return new Step(step);
+        //hand back wrapped deleted steps
+        return new StepSet(stepsToDelete);
     }
 
 }

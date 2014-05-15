@@ -169,7 +169,7 @@
         Step__c wiretapStep = steps.get(0);
         
         //act
-        SequenceBuilderExtension.destroyStep(wiretapStep);
+        SequenceBuilderExtension.destroySteps(new List<Step__c>{wiretapStep});
         
         //assemble
         steps = new Sequence(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();

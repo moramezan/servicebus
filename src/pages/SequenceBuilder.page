@@ -14,7 +14,7 @@
         window.$RemoteAction = window.$RemoteAction || {};
         $RemoteAction.SequenceBuilderExtension = $RemoteAction.SequenceBuilderExtension || {};
         $RemoteAction.SequenceBuilderExtension.fetchSteps = '{!$RemoteAction.SequenceBuilderExtension.fetchSteps}';
-        $RemoteAction.SequenceBuilderExtension.destroyStep = '{!$RemoteAction.SequenceBuilderExtension.destroyStep}';
+        $RemoteAction.SequenceBuilderExtension.destroySteps = '{!$RemoteAction.SequenceBuilderExtension.destroySteps}';
         $RemoteAction.SequenceBuilderExtension.enqueue = '{!$RemoteAction.SequenceBuilderExtension.enqueue}';
         $RemoteAction.SequenceBuilderExtension.appendStep = '{!$RemoteAction.SequenceBuilderExtension.appendStep}';
         $RemoteAction.SequenceBuilderExtension.moveStepBefore = '{!$RemoteAction.SequenceBuilderExtension.moveStepBefore}';

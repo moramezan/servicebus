@@ -57,9 +57,11 @@ public with sharing class SequenceBuilderExtension {
         new Step(step).moveAfter(afterStepId);
     }
     
-    @RemoteAction static public void destroyStep(Step__c step) {
-        step = (Step__c)SalesforceObject.getById(step.Id);
-        new Sequence(new Sequence__c(Id = step.Sequence__c)).deleteStep(step.Id);
+    @RemoteAction static public void destroySteps(List<Step__c> steps) {
+        //requery first step to get sequence id, since it is not transmitted
+        Step__c step = (Step__c)SalesforceObject.getById(steps[0].Id);
+        Sequence sequence = new Sequence(new Sequence__c(Id = step.Sequence__c));
+        sequence.destroySteps(new Map<Id,Step__c>(steps).keySet());
     }
     
     @RemoteAction static public String enqueue(Id sequenceId) {

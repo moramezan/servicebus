@@ -144,7 +144,7 @@
                 "api": [
                     "{",
                     "    read: $RemoteAction.SequenceBuilderExtension.fetchSteps,",
-                    "    destroy: $RemoteAction.SequenceBuilderExtension.destroyStep",
+                    "    destroy: $RemoteAction.SequenceBuilderExtension.destroySteps",
                     "}"
                 ],
                 "designer|createAlias": "vfremote",
@@ -165,6 +165,7 @@
                     },
                     "codeClass": null,
                     "userConfig": {
+                        "allowSingle": false,
                         "designer|displayName": "StepWriter",
                         "nameProperty": "mapping"
                     },

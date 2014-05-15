@@ -157,7 +157,7 @@ private class  SequenceTest {
         Sequence sequenceA = new Sequence(soSequenceA);
         Boolean actualFlag = false;
         try {
-            Step actualStep = sequenceA.deleteStep(notStepAId);
+            StepSet actualSteps = sequenceA.destroySteps(new Set<Id>{notStepAId});
         } catch (Exception e) {   
             actualFlag = true;
         }
@@ -183,12 +183,12 @@ private class  SequenceTest {
         // act 
         Id deletedStepId =  stepA1.Id;
         Sequence sequenceA = new Sequence(soSequenceA);
-        Step actualStep = sequenceA.deleteStep(deletedStepId);
+        StepSet actualSteps = sequenceA.destroySteps(new Set<Id>{deletedStepId});
  
         
         // assemble
         List<Step__c> soSteps = [SELECT Id, Name, Process__r.FullyQualifiedClassName__c, Position__c FROM Step__c];
-        Integer actualStepCount  = soSteps.size();
+        Integer actualStepsCount  = soSteps.size();
         String actualProcessName;
         Decimal actualPosition; 
         if (soSteps.size() > 0) {
@@ -202,6 +202,6 @@ private class  SequenceTest {
         String expectedProcessName = Terminate.class.getName();
         System.assertEquals( expectedProcessName , actualProcessName  );
         Integer expectedStepCount = 1;
-        System.assertEquals( expectedStepCount , actualStepCount  );  
+        System.assertEquals( expectedStepCount , actualStepsCount  );  
     }
 }
