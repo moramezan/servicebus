@@ -217,8 +217,7 @@
                     " */",
                     "var controller = this;",
                     "Ext.fly(window).on('focus', function() {",
-                    "    Ext.getBody().unmask();",
-                    "    if (controller.popup) controller.popup.close();",
+                    "    controller.getApplication().fireEvent('mainwindowfocus', controller);",
                     "});"
                 ],
                 "name": "viewready",
@@ -289,8 +288,7 @@
                     "    'eda_config',",
                     "    'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top + ',toolbar=no,status=no,directories=no,menubar=no,resizable=yes'",
                     ");",
-                    "",
-                    ""
+                    "me.popup.focus();"
                 ]
             },
             "designerId": "540df7c3-43c4-4c27-b109-a729235a017c"
@@ -417,33 +415,41 @@
             "designerId": "e11cc1d0-5197-4ece-b8bb-b4351e534f4f"
         },
         {
-            "type": "controlleraction",
+            "type": "applicationaction",
             "reference": {
-                "name": "listeners",
+                "name": "items",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "designer|controlQuery": "window",
-                "designer|targetType": "Ext.window.Window",
-                "fn": "onWindowClose",
+                "designer|params": [
+                    "controller"
+                ],
+                "fn": "onMainWindowFocus",
                 "implHandler": [
-                    "/**",
-                    " * When user closes the configuration window, we reload the grid. Any",
-                    " * ConfigurationName changes will then be reflected for the user to see.",
-                    " */",
                     "var store = Ext.getStore('Steps'),",
                     "    grid = this.getGrid();",
                     "",
-                    "grid.mask('Loading...');",
-                    "store.load(function() {",
-                    "    grid.unmask();",
-                    "});"
+                    "Ext.getBody().unmask();",
+                    "",
+                    "/**",
+                    " * When user closes the configuration window, we reload the grid. Any",
+                    " * ConfigurationName changes will then be reflected for the user to see.",
+                    " * The main window is always refocussed by closing the configuration window.",
+                    " */",
+                    "if (!controller.popup.closed) {",
+                    "    controller.popup.close();",
+                    "",
+                    "    grid.mask('Loading...');",
+                    "    store.load(function() {",
+                    "        grid.unmask();",
+                    "    });",
+                    "}"
                 ],
-                "name": "close",
-                "scope": "me"
+                "name": "mainwindowfocus",
+                "scope": "this"
             },
-            "designerId": "3dec2a3e-fd7f-4018-b7f2-6b904f140e1e"
+            "designerId": "e8985047-d5ae-4d80-abf8-ff1f41fbb7af"
         }
     ]
 }
