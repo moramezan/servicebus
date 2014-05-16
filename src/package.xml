@@ -30,10 +30,6 @@
         <members>HeartbeatDispatcherTest</members>
         <members>HeartbeatImplementation</members>
         <members>HeartbeatImplementationTest</members>
-        <members>IsChanged</members>
-        <members>IsChangedTest</members>
-        <members>IsNewData</members>
-        <members>IsNewDataTest</members>
         <members>Jump</members>
         <members>JumpTest</members>
         <members>LogConfigurationController</members>
@@ -70,9 +66,6 @@
         <members>ScheduleConfigurationSet</members>
         <members>ScheduleTest</members>
         <members>SchemaSelectorController</members>
-        <members>SchemaSelectorControllerTest</members>
-        <members>Scrape</members>
-        <members>ScrapeTest</members>
         <members>Sequence</members>
         <members>SequenceBuilderExtension</members>
         <members>SequenceBuilderExtensionTest</members>
@@ -111,9 +104,6 @@
         <members>CoreProcessesGuide</members>
         <members>EventTypeHelp</members>
         <members>GateHelp</members>
-        <members>IsChangedConfigurationSchemaSelector</members>
-        <members>IsChangedHelp</members>
-        <members>IsNewDataHelp</members>
         <members>JumpConfigurationShowStep</members>
         <members>JumpHelp</members>
         <members>LogConfigurationListLogGroups</members>
@@ -139,8 +129,6 @@
         <members>PublishHelp</members>
         <members>ScheduleHelp</members>
         <members>SchemaSelector</members>
-        <members>ScrapeHelp</members>
-        <members>ScrapeWebPageTutorial</members>
         <members>SequenceBuilder</members>
         <members>SequenceBuilderHelp</members>
         <members>SequenceHelp</members>
@@ -172,18 +160,6 @@
         <members>BrokerSettings__c.IsPaused__c</members>
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Parameters__c</members>
-        <members>IsChangedConfiguration__c.FieldName__c</members>
-        <members>IsChangedConfiguration__c.NewBlobId__c</members>
-        <members>IsChangedConfiguration__c.NewHash__c</members>
-        <members>IsChangedConfiguration__c.NewValue__c</members>
-        <members>IsChangedConfiguration__c.ObjectName__c</members>
-        <members>IsChangedConfiguration__c.OldBlobId__c</members>
-        <members>IsChangedConfiguration__c.OldHash__c</members>
-        <members>IsChangedConfiguration__c.OldValue__c</members>
-        <members>IsNewDataConfiguration__c.MinimumHoursBetween__c</members>
-        <members>IsNewDataInstance__c.IsNewDataConfiguration__c</members>
-        <members>IsNewDataInstance__c.Key__c</members>
-        <members>IsNewDataInstance__c.LastFiredDate__c</members>
         <members>JumpConfiguration__c.Sequence__c</members>
         <members>KnifeSwitch__c.Url__c</members>
         <members>LogConfiguration__c.DynamicGroupIdentifierObjectName__c</members>
@@ -220,7 +196,6 @@
         <members>ScheduleConfiguration__c.Frequency__c</members>
         <members>ScheduleConfiguration__c.FriendlyDates__c</members>
         <members>ScheduleConfiguration__c.FriendlyTimes__c</members>
-        <members>ScrapeConfiguration__c.Endpoint__c</members>
         <members>Sequence__c.StepsCount__c</members>
         <members>Step__c.ConfigurationId__c</members>
         <members>Step__c.ConfigurationName__c</members>
@@ -239,9 +214,6 @@
         <members>EventType__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
-        <members>IsChangedConfiguration__c</members>
-        <members>IsNewDataConfiguration__c</members>
-        <members>IsNewDataInstance__c</members>
         <members>JumpConfiguration__c</members>
         <members>KnifeSwitch__c</members>
         <members>LogConfiguration__c</members>
@@ -251,7 +223,6 @@
         <members>Process__c</members>
         <members>PublishConfiguration__c</members>
         <members>ScheduleConfiguration__c</members>
-        <members>ScrapeConfiguration__c</members>
         <members>Sequence__c</members>
         <members>Step__c</members>
         <members>SubscribeConfiguration__c</members>
@@ -282,9 +253,6 @@
         <members>EventType__c-Event Type Layout</members>
         <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>
-        <members>IsChangedConfiguration__c-IsChangedConfiguration Layout</members>
-        <members>IsNewDataConfiguration__c-IsNewData Configuration Layout</members>
-        <members>IsNewDataInstance__c-IsNewData Instance Layout</members>
         <members>JumpConfiguration__c-Jump Configuration Layout</members>
         <members>LogConfiguration__c-Log Initializer Configuration Layout</members>
         <members>LogGroup__c-Log Initializer Layout</members>
@@ -293,7 +261,6 @@
         <members>Process__c-Process Layout</members>
         <members>PublishConfiguration__c-Publish Configuration Layout</members>
         <members>ScheduleConfiguration__c-Schedule Configuration Layout</members>
-        <members>ScrapeConfiguration__c-Scrape Configuration Layout</members>
         <members>Sequence__c-Sequence Layout</members>
         <members>Step__c-Step Layout</members>
         <members>SubscribeConfiguration__c-Subscribe Configuration Layout</members>
@@ -320,7 +287,6 @@
         <name>StaticResource</name>
     </types>
     <types>
-        <members>IsNewDataConfiguration__c.RequireMinimumHoursBetween</members>
         <members>ScheduleConfiguration__c.RequireFriendlyDates</members>
         <members>ScheduleConfiguration__c.RequireFriendlyTimes</members>
         <members>Sequence__c.FixedName</members>
@@ -329,7 +295,6 @@
     </types>
     <types>
         <members>BranchConfiguration__c.ShowStep</members>
-        <members>IsChangedConfiguration__c.SchemaSelector</members>
         <members>JumpConfiguration__c.ShowStep</members>
         <members>LogConfiguration__c.ChangeDynamicGroupIdentifier</members>
         <members>LogConfiguration__c.ListLogGroups</members>
@@ -351,12 +316,9 @@
     </types>
     <types>
         <members>BranchConfiguration__c.UpdateBranchConfigurationName</members>
-        <members>IsChangedConfiguration__c.UpdateIsChangedConfigurationName</members>
-        <members>IsNewDataConfiguration__c.UpdateIsNewDataConfigurationName</members>
         <members>JumpConfiguration__c.UpdateJumpConfigurationName</members>
         <members>LogConfiguration__c.UpdateLogConfigurationName</members>
         <members>PublishConfiguration__c.UpdatePublishConfigurationName</members>
-        <members>ScrapeConfiguration__c.UpdateScrapeConfigurationName</members>
         <members>Step__c.StepPositionUpdate</members>
         <members>SubscribeConfiguration__c.UpdateSubscribeConfigurationName</members>
         <members>SubsequenceConfiguration__c.UpdateSubsequenceConfigurationName</members>
@@ -364,13 +326,10 @@
     </types>
     <types>
         <members>BranchConfiguration__c.OnBranchConfigurationUpsert</members>
-        <members>IsChangedConfiguration__c.OnIsChangedConfigurationUpsert</members>
-        <members>IsNewDataConfiguration__c.OnIsNewDataConfigurationUpsert</members>
         <members>JumpConfiguration__c.OnJumpConfigurationUpsert</members>
         <members>LogConfiguration__c.OnLogInitializerConfigurationUpsert</members>
         <members>Message__c.OnError</members>
         <members>PublishConfiguration__c.OnPublishConfigurationUpsert</members>
-        <members>ScrapeConfiguration__c.OnScrapeConfigurationUpsert</members>
         <members>Step__c.OnStepInsert</members>
         <members>SubscribeConfiguration__c.OnSubscribeConfigurationUpsert</members>
         <members>SubsequenceConfiguration__c.OnSubsequenceConfigurationUpsert</members>

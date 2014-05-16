@@ -60,9 +60,6 @@
         Type schedule = Type.forName('Schedule.Meta');
         Type subsequence = Type.forName('Subsequence.Meta');
         Type subscribe = Type.forName('Subscribe.Meta');
-        Type scrape = Type.forName('Scrape.Meta');
-        Type isChanged = Type.forName('IsChanged.Meta');
-        Type isNewData = Type.forName('IsNewData.Meta');
         Type logInitializer = Type.forName('LogInitializer.Meta');
         Type logWriter = Type.forName('LogWriter.Meta');
         
@@ -76,9 +73,6 @@
         Boolean actualSchedule = (schedule != null);
         Boolean actualSubsequence = (subsequence != null);
         Boolean actualSubscribe = (subscribe != null);
-        Boolean actualScrape = (scrape != null);
-        Boolean actualIsChanged = (isChanged != null);
-        Boolean actualIsNewData = (isNewData != null);
         Boolean actualLogInitializer = (logInitializer != null);
         Boolean actualLogWriter = (logWriter != null);
         
@@ -92,9 +86,6 @@
         System.assert(actualTerminate);
         System.assert(actualSubscribe);
         System.assert(actualWiretap);
-        System.assert(actualScrape);
-        System.assert(actualIsChanged);
-        System.assert(actualIsNewData);
         System.assert(actualLogInitializer);
         System.assert(actualLogWriter);
     }

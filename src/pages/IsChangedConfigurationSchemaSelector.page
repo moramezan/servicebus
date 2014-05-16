@@ -1,1 +1,0 @@
-<apex:page standardController="IsChangedConfiguration__c" action="{!URLFOR($Page.SchemaSelector, null, ['id'=id,'objectSchemaKey'=$ObjectType.IsChangedConfiguration__c.Fields.ObjectName__c.Name,'fieldSchemaKey'=$ObjectType.IsChangedConfiguration__c.Fields.FieldName__c.Name,'retURL'=URLFOR($Action.IsChangedConfiguration__c.View, id)])}" />
