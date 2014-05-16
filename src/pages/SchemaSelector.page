@@ -5,27 +5,38 @@
             <apex:pageBlockSection collapsible="false" columns="1">
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel for="$Component.objectNames" value="Choose Object Name" />
-                    <apex:selectList size="1" value="{!ObjectName}" id="objectNames" onchange="handleFindFields();">
+                    <apex:selectList size="1" value="{!ObjectName}" id="objectNames">
                         <apex:selectOption itemLabel="--None--" itemValue="" rendered="{!ISBLANK(ObjectName)}" />
                         <apex:selectOptions value="{!ObjectNameOptions}" />
+                        <apex:actionSupport event="onchange" action="{!populateFieldNameOptions}" rerender="fieldNames" status="busy" />
                     </apex:selectList>
                 </apex:pageBlockSectionItem>
                 
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection collapsible="false" columns="1">
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel for="$Component.fieldNames" value="Choose Field Name" />
-                    <apex:selectList size="1" value="{!FieldName}" id="fieldNames" onchange="handleFindFields();" disabled="{!ISBLANK(ObjectName)}">
+                    <apex:selectList size="1" value="{!FieldName}" id="fieldNames" disabled="{!ISBLANK(ObjectName)}">
                         <apex:selectOption itemLabel="--None--" itemValue="" />
                         <apex:selectOptions value="{!FieldNameOptions}" />
+                        <apex:actionSupport event="onchange" action="{!populateFieldNameOptions}" rerender="saveButton" status="busy" />
                     </apex:selectList>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
             
-            <apex:actionFunction action="{!populateFieldNameOptions}" name="handleFindFields" rerender="fieldNames,objectNames" />
-            <apex:actionFunction action="{!populateFieldNameOptions}" name="handleFindFields" rerender="fieldNames,saveButton" />
-            
             <apex:pageBlockButtons location="bottom">
-                <apex:commandButton action="{!doSave}" id="saveButton" value="Save Field" disabled="{!ISBLANK(FieldName)}" />
-                <apex:commandButton action="{!doCancel}" value="Cancel" />
+                <apex:actionStatus id="busy">
+                    <apex:facet name="start">
+                        <apex:image value="/img/loading.gif" />
+                    </apex:facet>
+                    <apex:facet name="stop">
+                        <apex:outputPanel layout="none">
+                            <apex:commandButton action="{!doSave}" id="saveButton" value="Save Field" disabled="{!ISBLANK(FieldName)}" />
+                            <apex:commandButton action="{!doCancel}" value="Cancel" />
+                        </apex:outputPanel>
+                    </apex:facet>
+                </apex:actionStatus>
             </apex:pageBlockButtons>
         </apex:pageBlock>
     </apex:form>
