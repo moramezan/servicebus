@@ -146,7 +146,7 @@ global class Api {
             this.SessionHeader.sessionId = sessionId;
         }
         
-        global String endpoint_x = System.Url.getSalesforceBaseUrl().toExternalForm() + '/services/Soap/T/29.0';
+        global String endpoint_x = System.Url.getSalesforceBaseUrl().toExternalForm() + '/services/Soap/T/30.0';
         global Map<String,String> inputHttpHeaders_x;
         global Map<String,String> outputHttpHeaders_x;
         global String clientCertName_x;
