@@ -336,5 +336,5 @@
         <name>WorkflowRule</name>
     </types>
     <uninstallClass>PostUninstallHandler</uninstallClass>
-    <version>29.0</version>
+    <version>30.0</version>
 </Package>
