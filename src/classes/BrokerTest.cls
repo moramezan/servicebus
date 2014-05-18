@@ -1,6 +1,21 @@
-@isTest
-public class BrokerTest{
-
+@IsTest public class BrokerTest implements Process.Plugin { //formerly FailurePlugin
+    
+    public static String FailureMessage = 'Fake Error Thrown in FailurePlugin';
+    
+    public Process.PluginDescribeResult describe() {
+        Process.PluginDescribeResult describeResult = new Process.PluginDescribeResult();
+        describeResult.Name = 'Failure Plugin';
+        describeResult.Description = 'A Process.Plugin that throws an exception for testing purposes. (Will not be listed)';
+        describeResult.Tag = 'Event Driven Architecture';
+        return describeResult;
+    }
+    
+    public Process.PluginResult invoke(Process.PluginRequest request) {
+        Map<String,Object> parameters = request.inputParameters;
+        throw new BrokerException(FailureMessage);
+        return EdaUtility.convert(new List<Map<String,Object>>{parameters});
+    }
+    
     public class BrokerException extends Exception {}
 
     static public Boolean flagRestartImpl = false;
@@ -760,23 +775,7 @@ public class BrokerTest{
         System.assertEquals(expectedSize, actualSize);
     }
     
-    public static String FailureMessage = 'Fake Error Thrown in FailurePlugin';
-    public with sharing class FailurePlugin implements Process.Plugin {
-        public Process.PluginDescribeResult describe() {
-            Process.PluginDescribeResult describeResult = new Process.PluginDescribeResult();
-            describeResult.Name = 'Failure Plugin';
-            describeResult.Description = 'A Process.Plugin that throws an exception for testing purposes. (Will not be listed)';
-            describeResult.Tag = 'Event Driven Architecture';
-            return describeResult;
-        }
-        public Process.PluginResult invoke(Process.PluginRequest request) {
-            Map<String,Object> parameters = request.inputParameters;
-            throw new BrokerException(FailureMessage);
-            return EdaUtility.convert(new List<Map<String,Object>>{parameters});
-        }
-    }
- 
-	static testMethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusQueued() {
+    static testMethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusQueued() {
         // arrange
         Boolean isPaused =  true;
         Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);

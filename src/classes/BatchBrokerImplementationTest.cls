@@ -33,7 +33,7 @@
     
     static testMethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToMessage() {
         //arrange processes
-        Process__c failureProcess = ProcessSet.generateOne(BrokerTest.FailurePlugin.class);
+        Process__c failureProcess = ProcessSet.generateOne(BrokerTest.class);
         
         //arrange sequence
         String  sequenceNameA = 'sequenceA';
@@ -65,7 +65,7 @@
         Integer expectedCount = 1;
         System.assertEquals(expectedCount, actualCount);
         
-        String expectedProcessName = BrokerTest.FailurePlugin.class.getName();
+        String expectedProcessName = BrokerTest.class.getName();
         System.assertEquals(expectedProcessName, messages[0].Process__r.FullyQualifiedClassName__c);
         
         String expectedMessage = BrokerTest.FailureMessage;
