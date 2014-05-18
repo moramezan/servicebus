@@ -1,8 +1,11 @@
-<apex:page showHeader="false" standardStylesheets="true">
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><script src="/faces/a4j/g/3_3_3.Finalorg.ajax4jsf.javascript.AjaxScript?rel=1400083731000" type="text/javascript"></script><script src="/static/111213/js/perf/stub.js"></script><script src="/static/111213/js/functions.js" type="text/javascript"></script><script src="/jslibrary/1398894194000/sfdc/main.js" type="text/javascript"></script><script src="/jslibrary/jslabels/1399588760000/en_US.js" type="text/javascript"></script><script src="/static/111213/desktop/desktopAjax.js" type="text/javascript"></script><script src="/static/111213/js/picklist.js" type="text/javascript"></script><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/zen-componentsCompatible.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/elements.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/common.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1398193090000/Theme3/gc/dStandard.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1400249746000/Theme3/00Db0000000d3oV/005b0000000vx4E/gc/dCustom0.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/extended.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/setup.css" rel="stylesheet" type="text/css" /></head><body>
     
     
     <style>
-        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+        body {background: url('./inPageClouds.png') top left no-repeat;}
         
         code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:112%;}
         .contact {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; 
@@ -12,49 +15,39 @@
         a {text-decoration:none;}          
     </style>
 
-    <br />
-    
-  
-    <apex:pageBlock title="Process Developer's Guide" mode="maindetail">
-        <br/>
-        <apex:pageBlockSection columns="1"  collapsible="false" >
-            <apex:pageBlockSectionItem > 
-                <br/>
+    <br /><script> if(!window.sfdcPage) { window.sfdcPage = new ApexPage(); }UserContext.initialize({"networkId":"","labelLastModified":"1399588760000","locale":"en_GB","isDefaultNetwork":true,"timeFormat":"HH:mm","today":"18/05/2014 22:09","orgPreferences":[{"index":257,"name":"TabOrganizer","value":true}],"userPreferences":[{"index":112,"name":"HideInlineEditSplash","value":false},{"index":114,"name":"OverrideTaskSendNotification","value":false},{"index":115,"name":"DefaultTaskSendNotification","value":false},{"index":119,"name":"HideUserLayoutStdFieldInfo","value":false},{"index":116,"name":"HideRPPWarning","value":false},{"index":87,"name":"HideInlineSchedulingSplash","value":false},{"index":88,"name":"HideCRUCNotification","value":false},{"index":89,"name":"HideNewPLESplash","value":false},{"index":90,"name":"HideNewPLEWarnIE6","value":false},{"index":122,"name":"HideOverrideSharingMessage","value":false},{"index":91,"name":"HideProfileILEWarn","value":false},{"index":93,"name":"HideProfileElvVideo","value":false},{"index":97,"name":"ShowPicklistEditSplash","value":false},{"index":92,"name":"HideDataCategorySplash","value":false},{"index":128,"name":"ShowDealView","value":false},{"index":129,"name":"HideDealViewGuidedTour","value":false},{"index":132,"name":"HideKnowledgeFirstTimeSetupMsg","value":false},{"index":104,"name":"DefaultOffEntityPermsMsg","value":false},{"index":135,"name":"HideNewCsnSplash","value":true},{"index":101,"name":"HideBrowserWarning","value":false},{"index":139,"name":"HideDashboardBuilderGuidedTour","value":false},{"index":140,"name":"HideSchedulingGuidedTour","value":false},{"index":180,"name":"HideReportBuilderGuidedTour","value":false},{"index":183,"name":"HideAssociationQueueCallout","value":false},{"index":194,"name":"HideQTEBanner","value":false},{"index":193,"name":"HideChatterOnboardingSplash","value":false},{"index":195,"name":"HideSecondChatterOnboardingSplash","value":false},{"index":270,"name":"HideIDEGuidedTour","value":true},{"index":282,"name":"HideQueryToolGuidedTour","value":true},{"index":196,"name":"HideCSIGuidedTour","value":true},{"index":271,"name":"HideFewmetGuidedTour","value":false},{"index":272,"name":"HideEditorGuidedTour","value":true},{"index":205,"name":"HideApexTestGuidedTour","value":false},{"index":206,"name":"HideSetupProfileHeaderTour","value":false},{"index":207,"name":"HideSetupProfileObjectsAndTabsTour","value":false},{"index":213,"name":"DefaultOffArticleTypeEntityPermMsg","value":false},{"index":214,"name":"HideSelfInfluenceGetStarted","value":false},{"index":215,"name":"HideOtherInfluenceGetStarted","value":false},{"index":216,"name":"HideFeedToggleGuidedTour","value":false},{"index":268,"name":"ShowChatterTab178GuidedTour","value":false},{"index":275,"name":"HidePeopleTabDeprecationMsg","value":false},{"index":276,"name":"HideGroupTabDeprecationMsg","value":false},{"index":224,"name":"HideUnifiedSearchGuidedTour","value":false},{"index":226,"name":"ShowDevContextMenu","value":true},{"index":227,"name":"HideWhatRecommenderForActivityQueues","value":false},{"index":228,"name":"HideLiveAgentFirstTimeSetupMsg","value":false},{"index":232,"name":"HideGroupAllowsGuestsMsgOnMemberWidget","value":false},{"index":233,"name":"HideGroupAllowsGuestsMsg","value":false},{"index":234,"name":"HideWhatAreGuestsMsg","value":false},{"index":235,"name":"HideNowAllowGuestsMsg","value":false},{"index":236,"name":"HideSocialAccountsAndContactsGuidedTour","value":false},{"index":237,"name":"HideAnalyticsHomeGuidedTour","value":false},{"index":238,"name":"ShowQuickCreateGuidedTour","value":false},{"index":245,"name":"HideFilePageGuidedTour","value":false},{"index":250,"name":"HideForecastingGuidedTour","value":false},{"index":251,"name":"HideBucketFieldGuide","value":false},{"index":263,"name":"HideSmartSearchCallOut","value":false},{"index":265,"name":"HideSocialProfilesKloutSplashScreen","value":false},{"index":273,"name":"ShowForecastingQuotaAttainment","value":false},{"index":280,"name":"HideForecastingQuotaColumn","value":false},{"index":301,"name":"HideManyWhoGuidedTour","value":false},{"index":284,"name":"HideExternalSharingModelGuidedTour","value":false},{"index":298,"name":"HideFileSyncBannerMsg","value":false},{"index":299,"name":"HideTestConsoleGuidedTour","value":false},{"index":300,"name":"HideNetworkSetupOverlayGettingStarted","value":false},{"index":302,"name":"HideManyWhoInlineEditTip","value":false},{"index":303,"name":"HideSetupV2WelcomeMessage","value":false},{"index":312,"name":"ForecastingShowQuantity","value":false},{"index":313,"name":"HideDataImporterIntroMsg","value":false},{"index":314,"name":"HideEnvironmentHubLightbox","value":false},{"index":316,"name":"HideSetupV2GuidedTour","value":false},{"index":317,"name":"HideFileSyncMobileDownloadDialog","value":false},{"index":318,"name":"HideHelpBannerQuickActionList","value":false},{"index":321,"name":"HideCustomEntityQuickActionCallout","value":true},{"index":322,"name":"HideEnhancedProfileHelpBubble","value":false},{"index":328,"name":"ForecastingHideZeroRows","value":false},{"index":330,"name":"HideEmbeddedComponentsFeatureCallout","value":true},{"index":341,"name":"HideDedupeMatchResultCallout","value":false},{"index":340,"name":"HideS1BrowserUI","value":false}],"startOfWeek":"2","isAccessibleMode":false,"ampm":["AM","PM"],"renderMode":"RETRO","userId":"005b0000000vx4E","dateTimeFormat":"dd/MM/yyyy HH:mm","dateFormat":"dd/MM/yyyy","uiSkin":"Theme3","language":"en_US","siteUrlPrefix":""});
+</script><div class="apexp"><div id="j_id0:j_id2" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbHeader"><table border="0" cellpadding="0" cellspacing="0"><tr><td class="pbTitle"><h2 class="mainTitle">Process Developer&#39;s Guide</h2></td><td>&nbsp;</td></tr></table></div><div class="pbBody">
+        <br /><div id="j_id0:j_id2:j_id4"><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2"> 
+                <br />
                 <b> Intended Audience  : </b> Salesforce Apex Developer
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-           
-            <apex:pageBlockSectionItem > 
-                <br/>
+                <br /><br /></td></tr><tr><td class="data2Col " colSpan="2"> 
+                <br />
                 <b> About This Guide  : </b>  
-                <br/>
+                <br />
                 <ul>
                     <li>This guide is intended for Salesforce Apex Developers who are tasked with providing functionality not provided in the out-of-the-box Event Driven Architectue framework. 
                     </li>
-                    <br/>
+                    <br />
                     <li>The purpose of this guide is to:
                         
                         <ol>
-                        <br/>
+                        <br />
                             <li>Explain basic <code> Process.Plugin </code> concepts as they pertain to the Event Driven Architecture framework.
                             </li>
                             <li>Describe how to create a <code> Process.Plugin </code>  to enable processing functionality not directly provided for in the Event Driven Architectue framework.
                             </li>
                         </ol>
                     </li>
-                    <br/>
+                    <br />
                     <li> This guide does not cover configuring or monitoring the Event Driven Application.  This topic is described in the separate 
-                         <a href="OrchestratorsGuide"     style="color: #00f;">Orchestrator's Guide</a>
+                         <a href="OrchestratorsGuide" style="color: #00f;">Orchestrator's Guide</a>
                          guide. 
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
- 
-            <apex:pageBlockSectionItem > 
-                <br/>
+                <br /><br /></td></tr><tr><td class="data2Col  last " colSpan="2"> 
+                <br />
                 <b> Chapter Summary : </b>  
-                <br/>
+                <br />
                 <ul>
                     <li> <b>CHAPTER 01 : </b>  Concepts : Messaging and Events
                     </li>
@@ -69,25 +62,16 @@
                     <li> <b>CHAPTER 06 : </b>  Development : Post Build Steps
                     </li>
                     
-                    <br/>
+                    <br />
                     
                     <li> <b>APPENDIX I : </b> Anatomy of a Process
                     </li>        
                     <li> <b>APPENDIX II : </b> EdaUtility Class
                     </li>
-                </ul>
-           </apex:pageBlockSectionItem>                   
-        </apex:pageBlockSection>        
-    </apex:pageBlock>    
-
-    
-    
-    <apex:pageBlock mode="maindetail">
-        <br/>
-        <apex:pageBlockSection title="CHAPTER 01 : Concepts : Messaging and Events" columns="1"  collapsible="false" >
-            <apex:pageBlockSectionItem > 
-                <br/>
-                <b>Event is a Message :</b><br/>
+                </ul></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div><div class="apexp"><div id="j_id0:j_id11" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody">
+        <br /><div id="j_id0:j_id11:j_id13"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3>CHAPTER 01 : Concepts : Messaging and Events</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2"> 
+                <br />
+                <b>Event is a Message :</b><br />
                 <ul>
                 <li>In the world events occur all the time. (For example the clock strikes twelve pm, the fuel tank reaches empty, etc)
                 </li>
@@ -100,26 +84,18 @@
                 <li>A traffic cop process delivers a specific event message to the correct process.
                 </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
- 
-        
-            <apex:pageBlockSectionItem > 
-                <br/>
-                <b>Event Based Architecture :</b><br/>
+                <br /><br /></td></tr><tr><td class="data2Col " colSpan="2"> 
+                <br />
+                <b>Event Based Architecture :</b><br />
                 <ul>
                 <li>Breaking up work into processes that respond to event messages is called Event Driven Architecture.
                 </li>
                 <li>the Event Driven framework is based on Event Driven Architecture ( "EDA" )
                 </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-   
-        
-            <apex:pageBlockSectionItem > 
-                <br/>
-                <b>Events :</b><br/> 
+                <br /><br /></td></tr><tr><td class="data2Col  last " colSpan="2"> 
+                <br />
+                <b>Events :</b><br /> 
                 <ul>
                 <li>Events in the Event Driven framework are represented as  <code> work-instruction </code>  messages
                 </li>
@@ -132,19 +108,9 @@
                 <li>It is the purpose of this document to expand on the implementation details of a Event Driven process.
                 </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-        </apex:pageBlockSection>
-    </apex:pageBlock>    
-
- 
-
-
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection columns="1" title="CHAPTER 02 : Concepts : Process and Processing "  collapsible="false" >
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Processing :</b> <br/>
+                <br /><br /></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div><div class="apexp"><div id="j_id0:j_id20" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id20:j_id21"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3>CHAPTER 02 : Concepts : Process and Processing </h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2">
+                <br />
+                <b>Processing :</b> <br />
                 <ul>
                     <li>Work on the Event Driven is broken up into many specific tasks
                     </li>
@@ -155,12 +121,9 @@
                     <li>All Event Driven processes adhere to a standard structure ( or more specifically, all Event Driven processes implement the Salesforce  <code> Process.Plugin  </code> interface)
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-           
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Process :</b> <br/>
+                <br /><br /></td></tr><tr><td class="data2Col  last " colSpan="2">
+                <br />
+                <b>Process :</b> <br />
                 <ul>
                     <li>All Event Driven processes have a main() method that takes a  <code> Work-Instruction </code>  and returns a list of zero, one or many  <code> Work-Instruction(s) </code> 
                     </li>
@@ -192,21 +155,9 @@
                     <li>The focus of this guide is to provide detailed guidance for the creation of these processes.
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-        </apex:pageBlockSection>
-    </apex:pageBlock>
-
-
- 
-
-
-
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection columns="1"  title="CHAPTER 03 : Development : Getting Started"  collapsible="false" >
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Prerequisites :</b> <br/>
+                <br /><br /></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div><div class="apexp"><div id="j_id0:j_id26" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id26:j_id27"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3>CHAPTER 03 : Development : Getting Started</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2">
+                <br />
+                <b>Prerequisites :</b> <br />
                 <ul>
                     <li>Before creating your first Event Driven process plugin, it is assumed that the Event Driven framework has been installed in you development org.
                     </li>
@@ -216,16 +167,13 @@
                     </li>
                     <li> To facilitate collection transforms and the simplification of custom process development in general,
                          create an  <code> EdaUtility  </code>  class in the Org by  copying and pasting the Apex code found in 
-                         <a href="#APPENDIXII"     style="color: #00f;"> APPENDIX II </a>
+                         <a href="#APPENDIXII" style="color: #00f;"> APPENDIX II </a>
                          at the bottom of this page.
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-           
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Overview :</b> <br/>
+                <br /><br /></td></tr><tr><td class="data2Col  last " colSpan="2">
+                <br />
+                <b>Overview :</b> <br />
                 <ul>
                     <li>The list below describes the order of activities for creating , testing and deploying your Event Driven process:
                     </li>
@@ -234,33 +182,26 @@
                     <li>Define the response event(s) (if any)
                     </li>
                     <li>Define 
-                        <a href="#CHAPTER04"     style="color: #00f;"> the process activity </a> in the form of a process specification.
+                        <a href="#CHAPTER04" style="color: #00f;"> the process activity </a> in the form of a process specification.
                         ( Note this step would normally be  performed by the System Orchestrator or a Business Analyst.
                                 A Force.com developer would then convert the specification  into a event driven process.)
                        
                     </li>
-                    <li>Development : Build the Process and Tests - see <a href="#CHAPTER05"  style="color: #00f;"> Chapter 05 </a>
+                    <li>Development : Build the Process and Tests - see <a href="#CHAPTER05" style="color: #00f;"> Chapter 05 </a>
                     </li>
-                    <li>Visually test the Event Driven process - see <a href="#CHAPTER06"  style="color: #00f;"> Chapter 06 </a>
+                    <li>Visually test the Event Driven process - see <a href="#CHAPTER06" style="color: #00f;"> Chapter 06 </a>
                     </li>
                     <li>Create a managed package containing your Event Driven process and install in the Sandbox. - see <a href="#CHAPTER06" style="color: #00f;"> Chapter 06 </a>
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-        </apex:pageBlockSection>
-    </apex:pageBlock>        
+                <br /><br /></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div>        
 
 
 
 
-   <div id="CHAPTER04" />
-
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection columns="1"  title="CHAPTER 04 : Development : Define the Process"  collapsible="false" >
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Define the input event :</b> <br/>
+   <div id="CHAPTER04"></div><div class="apexp"><div id="j_id0:j_id33" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id33:j_id34"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3>CHAPTER 04 : Development : Define the Process</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2">
+                <br />
+                <b>Define the input event :</b> <br />
                 <ul>
                     <li> Every input event message takes the form of the Salesforce built in structure  <code> Process.PluginRequest </code>  which in turn contains a collection of parameters.
                     </li>
@@ -273,12 +214,9 @@
                     <li> The process author should be familiar with the nature of the data so that he/she can adequately retrieve and/write to this object.
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
- 
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Define the response event(s) :</b> <br/>
+                <br /><br /></td></tr><tr><td class="data2Col " colSpan="2">
+                <br />
+                <b>Define the response event(s) :</b> <br />
                 <ul>
                     <li> A process can return zero, one or more event messages
                     </li>
@@ -292,15 +230,12 @@
                     </li>
                     <li> Normally however, the response events collection will simply contain a single parameter collection, namely the re-purposed input event
                     </li>
-                    <li> For an example of a response events collection containing more than a single parameter collection, refer to - see <a href="#????"  style="color: #00f;"> TODO </a>
+                    <li> For an example of a response events collection containing more than a single parameter collection, refer to - see <a href="#????" style="color: #00f;"> TODO </a>
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
- 
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Define the process activity :</b> <br/>
+                <br /><br /></td></tr><tr><td class="data2Col  last " colSpan="2">
+                <br />
+                <b>Define the process activity :</b> <br />
                 <ul>
                     <li> The process activity is the focused logic that is unavailable on the Event Driven framework, either because
                         <ol>
@@ -325,43 +260,33 @@
                         </ol> 
                     </li>  
                     <li> A focused activity implied focused behaviour NOT focused data. 
-                         <br/>To facilitate this, the Event Driven framework surfaces the notion of process parameters via configuration and customization
+                         <br />To facilitate this, the Event Driven framework surfaces the notion of process parameters via configuration and customization
                     </li>
                     <li> Customization allows an activity to make use of a single set of parameters regardless of where that process is used. 
-                         <br/>These parameters are defined in Custom Settings for that activity
+                         <br />These parameters are defined in Custom Settings for that activity
                     </li>
                     <li> Configuration allows an activity to make use of parameters having values configured specific to the sequence step where that process is invoked.
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-        </apex:pageBlockSection>
-    </apex:pageBlock>     
+                <br /><br /></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div>     
 
 
-   <div id="CHAPTER05" />
-
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection columns="1" title="CHAPTER 05 : Development : Build the Process and Tests" collapsible="false" >
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Custom Process creation :</b> <br/>
+   <div id="CHAPTER05"></div><div class="apexp"><div id="j_id0:j_id42" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id42:j_id43"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3>CHAPTER 05 : Development : Build the Process and Tests</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2">
+                <br />
+                <b>Custom Process creation :</b> <br />
                 <ul>
                     <li>In a development org , create a new public class
                     </li>
                     <li>Confirm that the class follows the expected Event Driven process structure as set out under
-                        <a href="APPENDIX"     style="color: #00f;">Anatomy of a Process</a>
+                        <a href="APPENDIX" style="color: #00f;">Anatomy of a Process</a>
                         .
                     </li>
                     <li>Build appropriate unit tests as recommended by Salesforce.
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-           
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Example :</b> <br/>
+                <br /><br /></td></tr><tr><td class="data2Col " colSpan="2">
+                <br />
+                <b>Example :</b> <br />
                 <ul>
                     <li>The Wiretap process is a built-in no-operation process that sends an email to an interested user whenever it receives an event message
                     </li>
@@ -372,57 +297,47 @@
                     <li>Instead of emailing an interested user , the same detail will instead be surfaced on that user's chatter feed
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-           
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Activity Specification :</b> <br/>
+                <br /><br /></td></tr><tr><td class="data2Col " colSpan="2">
+                <br />
+                <b>Activity Specification :</b> <br />
                 <ul>
                     <li>The focused activity specification is very similar to that of the Wiretap 
-                        <br/> (1) The activity has no side effects on processing, therefore return the untouched inbound event message as the only item in return collection 
-                        <br/> (2) The chatter feed to surface the inbound event detail is defined by a user id held on the ChatterTap Customization custom setting
-                        <br/> (3) If no User Id has been enetered inth custom setting, default to the Id of the user runnning the current execution context
+                        <br /> (1) The activity has no side effects on processing, therefore return the untouched inbound event message as the only item in return collection 
+                        <br /> (2) The chatter feed to surface the inbound event detail is defined by a user id held on the ChatterTap Customization custom setting
+                        <br /> (3) If no User Id has been enetered inth custom setting, default to the Id of the user runnning the current execution context
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-           
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Prerequisistes :</b> <br/>
+                <br /><br /></td></tr><tr><td class="data2Col " colSpan="2">
+                <br />
+                <b>Prerequisistes :</b> <br />
                 <ul>
                     <li>Create the custom setting to hold the ChatterTap customization - Click  <code> Setup|Develope|Custom Setting|New  </code>                     
-                        <br/><br/>
-                        <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ProcessDevelopersGuide/CustomSetttingDefinition.png')}" />  
-                        <br/><br/> 
+                        <br /><br />
+                        <img src="./ProcessDevelopersGuide/CustomSetttingDefinition.png" style="vertical-align:middle;" />  
+                        <br /><br /> 
                     </li>
                     <li>Create the custom setting to hold the User Id of the chatter feed 
-                        <br/><br/>
-                        <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ProcessDevelopersGuide/CustomSettingUserId.png')}" />
-                        <br/><br/>         
+                        <br /><br />
+                        <img src="./ProcessDevelopersGuide/CustomSettingUserId.png" style="vertical-align:middle;" />
+                        <br /><br />         
                     </li>    
                      
-                     <br/> <br/>
+                     <br /> <br />
                     <li>Finally , ensure that chatter is enabled for your org. Click <code>  Setup|Chatter|Settings </code>  and check the enable box             
-                      <br/><br/>
-                      <img   style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/ProcessDevelopersGuide/ChatterSettings.png')}" /> 
-                      <br/><br/>
+                      <br /><br />
+                      <img src="./ProcessDevelopersGuide/ChatterSettings.png" style="vertical-align:middle;" /> 
+                      <br /><br />
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-             
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Build the class :</b> <br/>
+                <br /><br /></td></tr><tr><td class="data2Col  last " colSpan="2">
+                <br />
+                <b>Build the class :</b> <br />
                 <ul>
                     <li>Create a new class in the development org that follows the Process template.
                     
-                    <br/>
+                    <br />
 
-<!----------- PART 1 ::  BEG ---------------------------------      
-------------------------------------------------------------->
+
 <div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">001
 002
 003
@@ -455,17 +370,16 @@
     <span style="color: #333333">}</span>
 <span style="color: #333333">}</span>
 </pre></td></tr></table></div>
-<!---------------------------------------
---------------- PART 1 :: END ----------->   
+   
 
                     </li>
                 </ul>
                 
-                <br/>
+                <br />
                 
                 <ul>
-                    <b>Notes :</b> <br/>
-                    <br/>
+                    <b>Notes :</b> <br />
+                    <br />
                     <li> <b> 001 : </b> the class implements the Salesforce interface Process.Plugin.
                     </li>
                     <li> <b> 005 - 042 : </b> there are three sections, namely the inner Meta class, and the two implemetation methods  <code> describe()  </code>  and  <code> invoke()  </code>  required by the  <code> Process.Plugin  </code> contract
@@ -477,14 +391,13 @@
                     <li> <b> 018 : </b>  the  <code> invoke()  </code> method is required by the  <code> Process.Plugin  </code> interface and it is here that the specified focused activity is coded. The method receives in a single event message. The method emits / returns zero , one or more event messages.
                     </li>
                     
-                    <br/><br/><br/>
+                    <br /><br /><br />
                     
                     <li>Expand the ChatterTap class by introducing implementation details
         
-                    <br/><br/>
+                    <br /><br />
                     
-<!----------- PART 2 ::  BEG ---------------------------------  
-------------------------------------------------------------->
+
 <div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">001
 002
 003
@@ -510,12 +423,12 @@
     <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">ChatterTapException</span> <span style="color: #008800; font-weight: bold">extends</span> Exception <span style="color: #333333">{}</span>
     
     <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">Meta</span> <span style="color: #333333">{</span>
-        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;comment&#39;</span><span style="color: #333333">;</span>
+        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'comment'</span><span style="color: #333333">;</span>
     <span style="color: #333333">}</span>
     
     <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> <span style="color: #0066BB; font-weight: bold">describe</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
         Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> describeResult <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">();</span>
-        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;ChatterTap&#39;</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'ChatterTap'</span><span style="color: #333333">;</span>
         <span style="color: #888888">// TODO</span>
         <span style="color: #008800; font-weight: bold">return</span> describeResult<span style="color: #333333">;</span>
     <span style="color: #333333">}</span>
@@ -527,18 +440,17 @@
     <span style="color: #333333">}</span>
 <span style="color: #333333">}</span>
 </pre></td></tr></table></div>
-<!---------------------------------------
---------------- PART 2 :: END ----------->   
+   
   
                       
                       </li>
                  </ul>  
 
-                <br/>
+                <br />
                 
                 <ul>
-                    <b>Notes :</b> <br/>
-                    <br/>
+                    <b>Notes :</b> <br />
+                    <br />
                     <li> <b> 003 : </b>  introduce a  <code> ChatterTapException </code>  class to surface errors specific to the  <code> ChatterTap </code>  process.
                     </li>
                     <li> <b> 007 : </b>  add an appropriate icon ( <code> comment </code> ) to the process by selecting one and using it's name from the famfam collection found here : http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png
@@ -548,19 +460,18 @@
                     <li> <b> 019 : </b>  Extract the input message from the containg request instance and assign to a more usable string/object parameters collection
                     </li>
                     <li> <b> 041 : </b>  Convert the return statement to a more usable  <code> EdaUtility.convert() </code>  method. This method takes a list collection of output event messages. 
-                                         <br/> Because the  <code> ChatterTap  </code> is a pass through no opertation process, we simply assign add the input message ("parameters") to the output message collection
+                                         <br /> Because the  <code> ChatterTap  </code> is a pass through no opertation process, we simply assign add the input message ("parameters") to the output message collection
                     </li>
                     
                     
-                    <br/><br/><br/>
+                    <br /><br /><br />
                     
                     
                     <li>Complete the class description
  
-                    <br/><br/>
+                    <br /><br />
                           
-<!----------- PART 3 ::  BEG --------------------------------- 
- ------------------------------------------------------------->
+
 <div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">001
 002
 003
@@ -589,14 +500,14 @@
     
     <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">Meta</span> <span style="color: #333333">{</span>
         <span style="color: #008800; font-weight: bold">public</span> SObject customizable <span style="color: #333333">=</span> ChatterTapCustomization__c<span style="color: #333333">.</span><span style="color: #0000CC">SObjectType</span><span style="color: #333333">.</span><span style="color: #0000CC">newSObject</span><span style="color: #333333">();</span>
-        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;comment&#39;</span><span style="color: #333333">;</span>
+        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'comment'</span><span style="color: #333333">;</span>
     <span style="color: #333333">}</span>
     
     <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> <span style="color: #0066BB; font-weight: bold">describe</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
         Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> describeResult <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">();</span>
-        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;ChatterTap&#39;</span><span style="color: #333333">;</span>
-        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Description</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;Serializes the parameters and posts it on the users chatter feed.&#39;</span><span style="color: #333333">;</span>
-        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Tag</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;Example&#39;</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'ChatterTap'</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Description</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'Serializes the parameters and posts it on the users chatter feed.'</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Tag</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'Example'</span><span style="color: #333333">;</span>
         <span style="color: #008800; font-weight: bold">return</span> describeResult<span style="color: #333333">;</span>
     <span style="color: #333333">}</span>
     
@@ -607,21 +518,20 @@
     <span style="color: #333333">}</span>
 <span style="color: #333333">}</span>
 </pre></td></tr></table></div>
-<!---------------------------------------
---------------- PART 3 :: END ----------->   
+   
 
                      
                      </li>
                  </ul>  
                
-                <br/>         
+                <br />         
 
                 
                 <ul>
-                    <b>Notes :</b> <br/>
-                    <br/>
+                    <b>Notes :</b> <br />
+                    <br />
                     <li> <b> 006 : </b>  Assign an instance of the custom setting ( <code> ChatterTapCustomization__c </code> ) to the public  <code> customizable </code>  SObject 
-                                         <br/> This assignment binds the correct custom setting collection to this process
+                                         <br /> This assignment binds the correct custom setting collection to this process
                     </li>
                     <li> <b> 013 : </b>  Provide an appropriate description for the process. This description will be surfaced in the framework GUI
                     </li>
@@ -629,15 +539,14 @@
                     </li>
                
                     
-                    <br/><br/><br/>
+                    <br /><br /><br />
                     
                     
                     <li>Complete the class by implementing the specified focused activity in the  <code> invoke()  </code> method
                      
-                    <br/><br/>
+                    <br /><br />
                     
-<!----------- PART 4 ::  BEG --------------------------------- 
-------------------------------------------------------------->
+
 <div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">001
 002
 003
@@ -686,14 +595,14 @@
     
     <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">Meta</span> <span style="color: #333333">{</span>
         <span style="color: #008800; font-weight: bold">public</span> SObject customizable <span style="color: #333333">=</span> ChatterTapCustomization__c<span style="color: #333333">.</span><span style="color: #0000CC">SObjectType</span><span style="color: #333333">.</span><span style="color: #0000CC">newSObject</span><span style="color: #333333">();</span>
-        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;comment&#39;</span><span style="color: #333333">;</span>
+        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'comment'</span><span style="color: #333333">;</span>
     <span style="color: #333333">}</span>
     
     <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> <span style="color: #0066BB; font-weight: bold">describe</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
         Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> describeResult <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">();</span>
-        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;ChatterTap&#39;</span><span style="color: #333333">;</span>
-        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Description</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;Serializes the parameters and posts it on the users chatter feed.&#39;</span><span style="color: #333333">;</span>
-        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Tag</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;Example&#39;</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'ChatterTap'</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Description</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'Serializes the parameters and posts it on the users chatter feed.'</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Tag</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'Example'</span><span style="color: #333333">;</span>
         <span style="color: #008800; font-weight: bold">return</span> describeResult<span style="color: #333333">;</span>
     <span style="color: #333333">}</span>
     
@@ -701,9 +610,9 @@
         Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> request<span style="color: #333333">.</span><span style="color: #0000CC">inputParameters</span><span style="color: #333333">;</span>
         
         String message  <span style="color: #333333">=</span>
-            <span style="background-color: #fff0f0">&#39;[Wiretap] &#39;</span> <span style="color: #333333">+</span>
-            parameters<span style="color: #333333">.</span><span style="color: #0000CC">get</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;Eda_SequenceName&#39;</span><span style="color: #333333">)</span> <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&#39;#&#39;</span> <span style="color: #333333">+</span>
-            parameters<span style="color: #333333">.</span><span style="color: #0000CC">get</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&#39;Eda_Position&#39;</span><span style="color: #333333">)</span> <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&#39;\n&#39;</span> <span style="color: #333333">+</span>
+            <span style="background-color: #fff0f0">'[Wiretap] '</span> <span style="color: #333333">+</span>
+            parameters<span style="color: #333333">.</span><span style="color: #0000CC">get</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">'Eda_SequenceName'</span><span style="color: #333333">)</span> <span style="color: #333333">+</span> <span style="background-color: #fff0f0">'#'</span> <span style="color: #333333">+</span>
+            parameters<span style="color: #333333">.</span><span style="color: #0000CC">get</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">'Eda_Position'</span><span style="color: #333333">)</span> <span style="color: #333333">+</span> <span style="background-color: #fff0f0">'\n'</span> <span style="color: #333333">+</span>
             Json<span style="color: #333333">.</span><span style="color: #0000CC">serialize</span><span style="color: #333333">(</span>parameters<span style="color: #333333">)</span> <span style="color: #333333">;</span>
         
         Id userId<span style="color: #333333">;</span>
@@ -724,39 +633,37 @@
     <span style="color: #333333">}</span>
 <span style="color: #333333">}</span> 
 </pre></td></tr></table></div>
-<!---------------------------------------
---------------- PART 4 :: END ----------->   
+   
 
                      
                      
                      </li>
                  </ul>  
 
-                <br/>
+                <br />
                 
                 <ul>
-                    <b>Notes :</b> <br/>
-                    <br/>
+                    <b>Notes :</b> <br />
+                    <br />
                     <li> <b> 021 - 025 : </b>  Create the chatter post content comprising the sequence,  the step position as well as the parameter values of the input message event
                     </li>
                     <li> <b> 027 - 035 : </b>  Retrieve the user id from the correct custom setting instance. 
-                                               <br/>If the user setting has not been defined, default to the current user id. 
-                                               <br/>Use this id as the parentId of the chatter post
+                                               <br />If the user setting has not been defined, default to the current user id. 
+                                               <br />Use this id as the parentId of the chatter post
                     </li>
                     <li> <b> 037 - 038 : </b>  Create the chatter post
                     </li>
 
                     
-                    <br/><br/><br/>
+                    <br /><br /><br />
                     
                     
                     
                     <li>Write unit tests for  <code> ChatterTap </code> .
                      
-                    <br/><br/>
+                    <br /><br />
                     
-<!----------- PART 5 ::  BEG ---------------------------------   
-  ------------------------------------------------------------->
+
  <div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">001
  002
  003
@@ -833,14 +740,14 @@
      
      <span style="color: #008800; font-weight: bold">static</span> testMethod <span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">callingInvokeWillNOTThrowExpectedWhenUserIdOnCustomizableNOTSet</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
          <span style="color: #888888">// Arrange :</span>
-         String sequenceName <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;the-sequence&#39;</span><span style="color: #333333">;</span>
+         String sequenceName <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'the-sequence'</span><span style="color: #333333">;</span>
          Integer step <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1</span><span style="color: #333333">;</span>
-         String data <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;data&#39;</span><span style="color: #333333">;</span>
+         String data <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'data'</span><span style="color: #333333">;</span>
          
          Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> <span style="color: #333333">{</span>
-             <span style="background-color: #fff0f0">&#39;Eda_SequenceName&#39;</span> <span style="color: #333333">=&gt;</span> sequenceName<span style="color: #333333">,</span>
-             <span style="background-color: #fff0f0">&#39;Eda_Step&#39;</span> <span style="color: #333333">=&gt;</span> step<span style="color: #333333">,</span>
-             <span style="background-color: #fff0f0">&#39;data&#39;</span> <span style="color: #333333">=&gt;</span> data
+             <span style="background-color: #fff0f0">'Eda_SequenceName'</span> <span style="color: #333333">=&gt;</span> sequenceName<span style="color: #333333">,</span>
+             <span style="background-color: #fff0f0">'Eda_Step'</span> <span style="color: #333333">=&gt;</span> step<span style="color: #333333">,</span>
+             <span style="background-color: #fff0f0">'data'</span> <span style="color: #333333">=&gt;</span> data
          <span style="color: #333333">};</span>
          
          <span style="color: #888888">// Act</span>
@@ -860,16 +767,16 @@
      
      <span style="color: #008800; font-weight: bold">static</span> testMethod <span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">callingExecuteReturnsExpectedParametersCollectionWhenDefinedMetaCustomizableSet</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
          <span style="color: #888888">// Arrange :</span>
-         String sequenceName <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;the-sequence&#39;</span><span style="color: #333333">;</span>
+         String sequenceName <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'the-sequence'</span><span style="color: #333333">;</span>
          Integer step <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1</span><span style="color: #333333">;</span>
-         String data <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;data&#39;</span><span style="color: #333333">;</span>
+         String data <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'data'</span><span style="color: #333333">;</span>
          
          insert <span style="color: #008800; font-weight: bold">new</span> <span style="color: #0066BB; font-weight: bold">ChatterTapCustomization__c</span> <span style="color: #333333">(</span> UserId__c <span style="color: #333333">=</span> UserInfo<span style="color: #333333">.</span><span style="color: #0000CC">getUserId</span><span style="color: #333333">());</span>
          
          Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> <span style="color: #333333">{</span>
-             <span style="background-color: #fff0f0">&#39;Eda_SequenceName&#39;</span> <span style="color: #333333">=&gt;</span> sequenceName<span style="color: #333333">,</span>
-             <span style="background-color: #fff0f0">&#39;Eda_Step&#39;</span> <span style="color: #333333">=&gt;</span> step<span style="color: #333333">,</span>
-             <span style="background-color: #fff0f0">&#39;data&#39;</span> <span style="color: #333333">=&gt;</span> data
+             <span style="background-color: #fff0f0">'Eda_SequenceName'</span> <span style="color: #333333">=&gt;</span> sequenceName<span style="color: #333333">,</span>
+             <span style="background-color: #fff0f0">'Eda_Step'</span> <span style="color: #333333">=&gt;</span> step<span style="color: #333333">,</span>
+             <span style="background-color: #fff0f0">'data'</span> <span style="color: #333333">=&gt;</span> data
          <span style="color: #333333">};</span>
          
          Integer expectedSize <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1</span><span style="color: #333333">;</span>
@@ -887,19 +794,18 @@
      <span style="color: #333333">}</span>
  <span style="color: #333333">}</span>
  </pre></td></tr></table></div>
- <!---------------------------------------
---------------- PART 5 :: END ----------->                 
+                  
 
                      
                      
                      </li>
                 </ul>  
                  
-                <br/>
+                <br />
                 
                 <ul>
-                    <b>Notes :</b> <br/>
-                    <br/>
+                    <b>Notes :</b> <br />
+                    <br />
                     <li> <b> 004 - 009 : </b>  This test verifies that the descriptive elements of the class have been correctly set
                     </li>
                     <li> <b> 011 - 041 : </b>  This test confirms that a default user id will be used for the chatter post when a specific user id has not been set
@@ -909,20 +815,12 @@
                  </ul>  
                 
                 
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-           
-        </apex:pageBlockSection>
-    </apex:pageBlock>
+                <br /><br /></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div>
 
 
-   <div id="CHAPTER06" />
-
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection columns="1"   title="CHAPTER 06 : Development : Post Build Steps"  collapsible="false" >
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Visually test the Event Driven process :</b> <br/>
+   <div id="CHAPTER06"></div><div class="apexp"><div id="j_id0:j_id55" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id55:j_id56"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3>CHAPTER 06 : Development : Post Build Steps</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2">
+                <br />
+                <b>Visually test the Event Driven process :</b> <br />
                 <ul>
                     <li>Once the Apex class has successfully compiled, it can be registered in the Event Driven framework
                     </li>
@@ -933,15 +831,12 @@
                     <li>Create a suitable Sequence to test your processes by pressing the Sequences tab (For further details on creating and testing sequences, see page NNN. ) ***
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-           
-            <apex:pageBlockSectionItem >
-                <br/>
-                <b>Create a managed package containing your Event Driven process :</b> <br/>
+                <br /><br /></td></tr><tr><td class="data2Col  last " colSpan="2">
+                <br />
+                <b>Create a managed package containing your Event Driven process :</b> <br />
                 <ul>
                     <li>Create a managed package 
-                        <a href="http://www.salesforce.com/us/developer/docs/packagingGuide/index_Left.htm#StartTopic=Content/packaging_testing.htm"  target="_blank"   style="color: #00f;"> managed package  </a>
+                        <a href="http://www.salesforce.com/us/developer/docs/packagingGuide/index_Left.htm#StartTopic=Content/packaging_testing.htm" style="color: #00f;" target="_blank"> managed package  </a>
                         by following standard Salesforce recommendations.
                     </li>
                     <li>Add you Apex class to the package along with unit tests and associated dependencies and upload.
@@ -949,20 +844,12 @@
                     <li>This compiled process logic can now be installed in any Developer, Sandbox or Production org using the the package link.
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
-      
-        </apex:pageBlockSection>
-    </apex:pageBlock>        
+                <br /><br /></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div>        
 
 
 
-   <div id="APPENDIXI" />
-   
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection columns="1" title="APPENDIX I : Anatomy of a Process" collapsible="false" >
-            <apex:pageBlockSectionItem >
-                <br/>
+   <div id="APPENDIXI"></div><div class="apexp"><div id="j_id0:j_id62" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id62:j_id63"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3>APPENDIX I : Anatomy of a Process</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first  last " colSpan="2">
+                <br />
                 <ul>
                     <li>Before a custom Event Driven process can be registered in the Event Driven framework, the code representing the process must conform structurally to a specific Event Driven template
                     </li>
@@ -972,10 +859,9 @@
                     </li>
                     <li>Below is an annotated example of a custom Event Driven process called  <code> MyProcess  </code>  which adheres to the required template
                     
-                    <br/><br/>
+                    <br /><br />
                     
-<!----------- PART 6 ::  BEG ---------------------------------   
-------------------------------------------------------------->
+
 <div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">001
 002
 003
@@ -1018,18 +904,18 @@
     <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">Meta</span> <span style="color: #333333">{</span>
         <span style="color: #008800; font-weight: bold">public</span> SObject customizable <span style="color: #333333">=</span> MyProcessCustomization__c<span style="color: #333333">.</span><span style="color: #0000CC">SObjectType</span><span style="color: #333333">.</span><span style="color: #0000CC">newSObject</span><span style="color: #333333">();</span>
         <span style="color: #008800; font-weight: bold">public</span> SObject configurable <span style="color: #333333">=</span> MyProcessConfiguration__c<span style="color: #333333">.</span><span style="color: #0000CC">SObjectType</span><span style="color: #333333">.</span><span style="color: #0000CC">newSobject</span><span style="color: #333333">();</span>
-        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;lightning&quot;</span><span style="color: #333333">;</span>
+        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">"lightning"</span><span style="color: #333333">;</span>
     <span style="color: #333333">}</span>
 
     <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> <span style="color: #0066BB; font-weight: bold">describe</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
         Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> describeResult <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">();</span>
-        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;MyProcess&quot;</span><span style="color: #333333">;</span>
-        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Description</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;Tags the message with an urgency level&quot;</span><span style="color: #333333">;</span>
-        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Tag</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;My Category&quot;</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">"MyProcess"</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Description</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">"Tags the message with an urgency level"</span><span style="color: #333333">;</span>
+        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Tag</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">"My Category"</span><span style="color: #333333">;</span>
         describeResult<span style="color: #333333">.</span><span style="color: #0000CC">OutputParameters</span> <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> List<span style="color: #333333">&lt;</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">.</span><span style="color: #0000CC">OutputParameter</span><span style="color: #333333">&gt;{</span>
             <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">.</span><span style="color: #0000CC">OutputParameter</span><span style="color: #333333">(</span>
-                <span style="background-color: #fff0f0">&quot;urgency&quot;</span><span style="color: #333333">,</span>
-                <span style="background-color: #fff0f0">&quot;Indicates the level of urgency  [high,medium,low]&quot;</span><span style="color: #333333">,</span>
+                <span style="background-color: #fff0f0">"urgency"</span><span style="color: #333333">,</span>
+                <span style="background-color: #fff0f0">"Indicates the level of urgency  [high,medium,low]"</span><span style="color: #333333">,</span>
                 Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">.</span><span style="color: #0000CC">ParameterType</span><span style="color: #333333">.</span><span style="color: #0000CC">String</span>
             <span style="color: #333333">)</span>
         <span style="color: #333333">};</span>
@@ -1042,22 +928,21 @@
 
         String theUrgency<span style="color: #333333">;</span>
         <span style="color: #888888">//logic to derive theUrgency here ...</span>
-        parameters<span style="color: #333333">.</span><span style="color: #0000CC">put</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">&quot;urgency&quot;</span><span style="color: #333333">,</span> theUrgency<span style="color: #333333">);</span>
+        parameters<span style="color: #333333">.</span><span style="color: #0000CC">put</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">"urgency"</span><span style="color: #333333">,</span> theUrgency<span style="color: #333333">);</span>
 
         <span style="color: #008800; font-weight: bold">return</span> EdaUtility<span style="color: #333333">.</span><span style="color: #0000CC">convert</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;{</span>parameters<span style="color: #333333">});</span>
     <span style="color: #333333">}</span>
 <span style="color: #333333">}</span>
 </pre></td></tr></table></div>
-<!---------------------------------------
---------------- PART 6 :: END ----------->                    
+                    
                     </li>
                 </ul>
 
-                <br/>
+                <br />
                 
                 <ul>
-                    <b>Notes :</b> <br/>
-                    <br/>
+                    <b>Notes :</b> <br />
+                    <br />
                     <li> <b> 001 : </b>  the class  <code> MyProcess </code>  must implement the Salesforce interface  <code> Process.Plugin  </code> 
                     </li>
                     <li> <b> 003 : </b>  declare a custom exception  <code> MyProcessException  </code>  that extends  <code> Exception  </code>  to surface know errors within your process [*]
@@ -1093,30 +978,23 @@
                     <li> <b> 030 - 032 : </b>  Perform custom actions and work - this is where the custom process developer focuses his or her efforts
                     </li>
                     <li> <b> 034 : </b>  return a  <code> Process.PluginDescribeResult </code> . 
-                                         <br/> In practice return a call to  <code> EdaUtility.convert()  </code>  passing in a list that contains zero, one or more parameter collections. 
+                                         <br /> In practice return a call to  <code> EdaUtility.convert()  </code>  passing in a list that contains zero, one or more parameter collections. 
                                          Normally, the inbound parameter collection wll be returned.
                     </li> 
                      
-                    <br/> <br/>
+                    <br /> <br />
                     <i> [*] - exceptions will appear as records in the message object </i>
-                </ul>
-           </apex:pageBlockSectionItem>
-        </apex:pageBlockSection>
-    </apex:pageBlock>
-    <div id="APPENDIXII" />
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection columns="1" title="APPENDIX II : EdaUtility Class" collapsible="false" >
-            <apex:pageBlockSectionItem >
-                <br/>
+                </ul></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div>
+    <div id="APPENDIXII"></div><div class="apexp"><div id="j_id0:j_id67" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id67:j_id68"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3>APPENDIX II : EdaUtility Class</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first  last " colSpan="2">
+                <br />
                 <ul>
                     <li>In order to complete many of the EDA tutorials and facilitate custom process development,
                         the following  Apex class should be copied and pasted as is into the org hosting the Event Driven Architecture application
 
            
-                    <br/><br/>
+                    <br /><br />
                     
-<!----------- PART 7 ::  BEG ---------------------------------   
-  ------------------------------------------------------------->   
+   
  <div style="background: #ffffff; overflow:auto;width:70%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">
   
 <span style="color: #008800; font-weight: bold">public</span> with sharing <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">EdaUtility</span> <span style="color: #333333">{</span>
@@ -1161,16 +1039,11 @@
  
 </pre></div>
                     </li>
-                </ul>
- 
-           </apex:pageBlockSectionItem>
-        </apex:pageBlockSection>
-    </apex:pageBlock>
+                </ul></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div>
 
     <div class="contact">
                  webmaster@cloudeda.com
-        &#183;  (+44) 07545169989
-        &#183;  <a href="www.cloudeda.com" target="_blank"   style="color: #00f;"> www.cloudeda.com </a>  
+        &middot;  (+44) 07545169989
+        &middot;  <a href="www.cloudeda.com" style="color: #00f;" target="_blank"> www.cloudeda.com </a>  
     </div>
-    <br/><br/>
-</apex:page>
+    <br /><br /></body></html>

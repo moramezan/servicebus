@@ -100,8 +100,6 @@
         <members>BranchConfigurationShowStep</members>
         <members>BranchHelp</members>
         <members>Configure</members>
-        <members>ConfirmSetupTutorial</members>
-        <members>CoreProcessesGuide</members>
         <members>EventTypeHelp</members>
         <members>GateHelp</members>
         <members>JumpConfigurationShowStep</members>
@@ -109,18 +107,14 @@
         <members>LogConfigurationListLogGroups</members>
         <members>LogConfigurationSchemaSelector</members>
         <members>LogHelp</members>
-        <members>LogUnderCommonIdentifierTutorial</members>
         <members>MessageHelp</members>
         <members>MessagePauseQueue</members>
         <members>MessageProcess</members>
         <members>MessageResumeQueue</members>
         <members>MessageShowData</members>
-        <members>OrchestratorsGuide</members>
         <members>ProcessApexClass</members>
-        <members>ProcessDevelopersGuide</members>
         <members>ProcessDiscover</members>
         <members>ProcessDiscoverHelp</members>
-        <members>ProcessDiscoveryTutorial</members>
         <members>ProcessDocumentation</members>
         <members>ProcessHelp</members>
         <members>ProcessSettings</members>

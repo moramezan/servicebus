@@ -1,7 +1,10 @@
-<apex:page showHeader="false" standardStylesheets="true">
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><script src="/faces/a4j/g/3_3_3.Finalorg.ajax4jsf.javascript.AjaxScript?rel=1400083731000" type="text/javascript"></script><script src="/static/111213/js/perf/stub.js"></script><script src="/static/111213/js/functions.js" type="text/javascript"></script><script src="/jslibrary/1398894194000/sfdc/main.js" type="text/javascript"></script><script src="/jslibrary/jslabels/1399588760000/en_US.js" type="text/javascript"></script><script src="/static/111213/desktop/desktopAjax.js" type="text/javascript"></script><script src="/static/111213/js/picklist.js" type="text/javascript"></script><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/zen-componentsCompatible.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/elements.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/common.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1398193090000/Theme3/gc/dStandard.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1400249746000/Theme3/00Db0000000d3oV/005b0000000vx4E/gc/dCustom0.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/extended.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/setup.css" rel="stylesheet" type="text/css" /></head><body>
     
     <style>
-        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
+        body {background: url('./inPageClouds.png') top left no-repeat;}
         
         code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:112%;}
         .contact {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; 
@@ -11,49 +14,37 @@
         a {text-decoration:none;}          
     </style>
 
-    <br />
-    
-  
-    <apex:pageBlock title="Core Processes Guide" mode="maindetail">
-        <br/>
-        <apex:pageBlockSection columns="1"  collapsible="false" >
-            <apex:pageBlockSectionItem > 
-                <br/>
+    <br /><script> if(!window.sfdcPage) { window.sfdcPage = new ApexPage(); }UserContext.initialize({"networkId":"","labelLastModified":"1399588760000","locale":"en_GB","isDefaultNetwork":true,"timeFormat":"HH:mm","today":"18/05/2014 22:10","orgPreferences":[{"index":257,"name":"TabOrganizer","value":true}],"userPreferences":[{"index":112,"name":"HideInlineEditSplash","value":false},{"index":114,"name":"OverrideTaskSendNotification","value":false},{"index":115,"name":"DefaultTaskSendNotification","value":false},{"index":119,"name":"HideUserLayoutStdFieldInfo","value":false},{"index":116,"name":"HideRPPWarning","value":false},{"index":87,"name":"HideInlineSchedulingSplash","value":false},{"index":88,"name":"HideCRUCNotification","value":false},{"index":89,"name":"HideNewPLESplash","value":false},{"index":90,"name":"HideNewPLEWarnIE6","value":false},{"index":122,"name":"HideOverrideSharingMessage","value":false},{"index":91,"name":"HideProfileILEWarn","value":false},{"index":93,"name":"HideProfileElvVideo","value":false},{"index":97,"name":"ShowPicklistEditSplash","value":false},{"index":92,"name":"HideDataCategorySplash","value":false},{"index":128,"name":"ShowDealView","value":false},{"index":129,"name":"HideDealViewGuidedTour","value":false},{"index":132,"name":"HideKnowledgeFirstTimeSetupMsg","value":false},{"index":104,"name":"DefaultOffEntityPermsMsg","value":false},{"index":135,"name":"HideNewCsnSplash","value":true},{"index":101,"name":"HideBrowserWarning","value":false},{"index":139,"name":"HideDashboardBuilderGuidedTour","value":false},{"index":140,"name":"HideSchedulingGuidedTour","value":false},{"index":180,"name":"HideReportBuilderGuidedTour","value":false},{"index":183,"name":"HideAssociationQueueCallout","value":false},{"index":194,"name":"HideQTEBanner","value":false},{"index":193,"name":"HideChatterOnboardingSplash","value":false},{"index":195,"name":"HideSecondChatterOnboardingSplash","value":false},{"index":270,"name":"HideIDEGuidedTour","value":true},{"index":282,"name":"HideQueryToolGuidedTour","value":true},{"index":196,"name":"HideCSIGuidedTour","value":true},{"index":271,"name":"HideFewmetGuidedTour","value":false},{"index":272,"name":"HideEditorGuidedTour","value":true},{"index":205,"name":"HideApexTestGuidedTour","value":false},{"index":206,"name":"HideSetupProfileHeaderTour","value":false},{"index":207,"name":"HideSetupProfileObjectsAndTabsTour","value":false},{"index":213,"name":"DefaultOffArticleTypeEntityPermMsg","value":false},{"index":214,"name":"HideSelfInfluenceGetStarted","value":false},{"index":215,"name":"HideOtherInfluenceGetStarted","value":false},{"index":216,"name":"HideFeedToggleGuidedTour","value":false},{"index":268,"name":"ShowChatterTab178GuidedTour","value":false},{"index":275,"name":"HidePeopleTabDeprecationMsg","value":false},{"index":276,"name":"HideGroupTabDeprecationMsg","value":false},{"index":224,"name":"HideUnifiedSearchGuidedTour","value":false},{"index":226,"name":"ShowDevContextMenu","value":true},{"index":227,"name":"HideWhatRecommenderForActivityQueues","value":false},{"index":228,"name":"HideLiveAgentFirstTimeSetupMsg","value":false},{"index":232,"name":"HideGroupAllowsGuestsMsgOnMemberWidget","value":false},{"index":233,"name":"HideGroupAllowsGuestsMsg","value":false},{"index":234,"name":"HideWhatAreGuestsMsg","value":false},{"index":235,"name":"HideNowAllowGuestsMsg","value":false},{"index":236,"name":"HideSocialAccountsAndContactsGuidedTour","value":false},{"index":237,"name":"HideAnalyticsHomeGuidedTour","value":false},{"index":238,"name":"ShowQuickCreateGuidedTour","value":false},{"index":245,"name":"HideFilePageGuidedTour","value":false},{"index":250,"name":"HideForecastingGuidedTour","value":false},{"index":251,"name":"HideBucketFieldGuide","value":false},{"index":263,"name":"HideSmartSearchCallOut","value":false},{"index":265,"name":"HideSocialProfilesKloutSplashScreen","value":false},{"index":273,"name":"ShowForecastingQuotaAttainment","value":false},{"index":280,"name":"HideForecastingQuotaColumn","value":false},{"index":301,"name":"HideManyWhoGuidedTour","value":false},{"index":284,"name":"HideExternalSharingModelGuidedTour","value":false},{"index":298,"name":"HideFileSyncBannerMsg","value":false},{"index":299,"name":"HideTestConsoleGuidedTour","value":false},{"index":300,"name":"HideNetworkSetupOverlayGettingStarted","value":false},{"index":302,"name":"HideManyWhoInlineEditTip","value":false},{"index":303,"name":"HideSetupV2WelcomeMessage","value":false},{"index":312,"name":"ForecastingShowQuantity","value":false},{"index":313,"name":"HideDataImporterIntroMsg","value":false},{"index":314,"name":"HideEnvironmentHubLightbox","value":false},{"index":316,"name":"HideSetupV2GuidedTour","value":false},{"index":317,"name":"HideFileSyncMobileDownloadDialog","value":false},{"index":318,"name":"HideHelpBannerQuickActionList","value":false},{"index":321,"name":"HideCustomEntityQuickActionCallout","value":true},{"index":322,"name":"HideEnhancedProfileHelpBubble","value":false},{"index":328,"name":"ForecastingHideZeroRows","value":false},{"index":330,"name":"HideEmbeddedComponentsFeatureCallout","value":true},{"index":341,"name":"HideDedupeMatchResultCallout","value":false},{"index":340,"name":"HideS1BrowserUI","value":false}],"startOfWeek":"2","isAccessibleMode":false,"ampm":["AM","PM"],"renderMode":"RETRO","userId":"005b0000000vx4E","dateTimeFormat":"dd/MM/yyyy HH:mm","dateFormat":"dd/MM/yyyy","uiSkin":"Theme3","language":"en_US","siteUrlPrefix":""});
+</script><div class="apexp"><div id="j_id0:j_id2" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbHeader"><table border="0" cellpadding="0" cellspacing="0"><tr><td class="pbTitle"><h2 class="mainTitle">Core Processes Guide</h2></td><td>&nbsp;</td></tr></table></div><div class="pbBody">
+        <br /><div id="j_id0:j_id2:j_id4"><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2"> 
+                <br />
                 <b> Intended Audience  : </b> 
-                <br/>
+                <br />
                 <ul>                      
                     <li>Configurator / Business Analyst / Salesforce System Administrator 
                     </li>
                     <li>Force.com Apex Developers
                     </li>
-                </ul> 
-           </apex:pageBlockSectionItem>
-           
-            <apex:pageBlockSectionItem >
+                </ul></td></tr><tr><td class="data2Col " colSpan="2">
                 <b> About This Guide  : </b>  
-                <br/>
+                <br />
                 <ul>
                     <li>The purpose of this guide is to explain the use and configuration of every pre-packaged process in the Event Driven framework.
                     </li>
                     <li>The intended audience is  System Configurators, Business Analysts as well as Force.com Apex Developers.
                     </li>
                     <li> This guide does not cover designing building and deploying custom event driven processes.  This topic is described in the  separate 
-                         <a href="ProcessDevelopersGuide"            style="color: #00f;">Process Developer's Guide</a> 
+                         <a href="ProcessDevelopersGuide" style="color: #00f;">Process Developer's Guide</a> 
                          guide.
                     </li>
                     <li> This guide does not cover configuring or monitoring the Event Driven Application.  This topic is described in the separate 
-                         <a href="OrchestratorsGuide"                style="color: #00f;">Orchestrator's Guide</a>
+                         <a href="OrchestratorsGuide" style="color: #00f;">Orchestrator's Guide</a>
                          guide. 
                     </li>
                 </ul>
-                <br/><br/>
-           </apex:pageBlockSectionItem>
- 
-                    
-
-            <apex:pageBlockSectionItem > 
+                <br /><br /></td></tr><tr><td class="data2Col  last " colSpan="2"> 
                 <b> Overview : </b>  
-                <br/>
+                <br />
                 <ul>
                     <li> The Event Driven framework has NNN pre-packaged processes.
                     </li> 
@@ -63,17 +54,9 @@
                     </li>  
                     <li> Note that some processes are no-operation or pass-through In nature. In other words these no-op processes simply forward on the worker messages to the next step in the Sequence
                     </li> 
-                </ul>
-           </apex:pageBlockSectionItem>                    
-        </apex:pageBlockSection>        
-    </apex:pageBlock>    
-
-
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection title=" " columns="1"  collapsible="false" >       
-            <apex:pageBlockSectionItem > 
-                <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Terminate.png')}" />
-                <b> Terminate  :</b><br/>
+                </ul></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div><div class="apexp"><div id="j_id0:j_id11" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id11:j_id12"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3> </h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first  last " colSpan="2"> 
+                <img src="./CoreProcessesGuide/Terminate.png" style="vertical-align:middle;" />
+                <b> Terminate  :</b><br />
                  <ul>         
                     <li>Every Sequence must have a <code>Termination</code> process.
                     </li>
@@ -83,30 +66,15 @@
                     </li>
                     <li>Any processes after the Termination step will not be executed.
                     </li> 
-                 </ul> 
-           </apex:pageBlockSectionItem>                                      
-        </apex:pageBlockSection>
-    </apex:pageBlock>
-     
-     
-     
- 
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection title=" " columns="1"  collapsible="false" >       
-            <apex:pageBlockSectionItem > 
-                <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Wiretap.png')}" />
-                <b> Wiretap  :</b><br/>    
+                 </ul></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div><div class="apexp"><div id="j_id0:j_id15" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id15:j_id16"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3> </h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2"> 
+                <img src="./CoreProcessesGuide/Wiretap.png" style="vertical-align:middle;" />
+                <b> Wiretap  :</b><br />    
                  <ul>         
                     <li> A <code>Wiretap</code> process is a pass through process that emails the message details of the current step in a Processing Sequence.
                     </li> 
-                 </ul> 
-           </apex:pageBlockSectionItem>                    
-
-              
-                
-            <apex:pageBlockSectionItem > 
-                <br/>
-                <b> Customization and Configuration  :</b><br/>    
+                 </ul></td></tr><tr><td class="data2Col " colSpan="2"> 
+                <br />
+                <b> Customization and Configuration  :</b><br />    
                 <ul>
                     <li> The email will be sent to the user under which the Event Driven framework is running.
                     </li> 
@@ -118,31 +86,16 @@
                     </li> 
                     <li> On the WireTap customization view, enter the <code>User Id</code> of the nominated user that will receive <code>Wiretap</code> emails in the custom setting <code>User Id</code>
                     </li>  
-                </ul>
-           </apex:pageBlockSectionItem>                    
-
-   
-            
-            <apex:pageBlockSectionItem > 
-                <br/>
+                </ul></td></tr><tr><td class="data2Col  last " colSpan="2"> 
+                <br />
                 <b> Usage Example: </b> see 
-                     <a href="ScrapeWebPageTutorial"             style="color: #00f;">Scrape Web Page, Tutorial 04</a> 
-                    <br/>   
-                <br/>
-           </apex:pageBlockSectionItem>                    
-        </apex:pageBlockSection>
-    </apex:pageBlock>
-    
-    
- 
-    <apex:pageBlock mode="maindetail">
-
-        <apex:pageBlockSection title=" " columns="1"  collapsible="false" >       
-            <apex:pageBlockSectionItem > 
-                <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/LogWriter.png')}" />
-                <b> LogWriter  :</b><br/>    
-                <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/LogInitializer.png')}" />
-                <b> LogInitializer  :</b><br/>    
+                     <a href="ScrapeWebPageTutorial" style="color: #00f;">Scrape Web Page, Tutorial 04</a> 
+                    <br />   
+                <br /></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div><div class="apexp"><div id="j_id0:j_id23" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id23:j_id24"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3> </h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2"> 
+                <img src="./CoreProcessesGuide/LogWriter.png" style="vertical-align:middle;" />
+                <b> LogWriter  :</b><br />    
+                <img src="./CoreProcessesGuide/LogInitializer.png" style="vertical-align:middle;" />
+                <b> LogInitializer  :</b><br />    
                  <ul> 
                     <li> The <code>LogWriter</code> and <code>LogInitializer</code> work in tandem so that the underlying data at various steps in one or more Sequence(s) can be related under a meaningful, common grouping reference key
                     </li> 
@@ -154,7 +107,7 @@
                     </li> 
                 </ul>
 
-                <br/>
+                <br />
                 
                 A business grouping key is a composite of  :    
                 <ul>
@@ -162,19 +115,14 @@
                     </li> 
                     <li> A Business Identifier
                     </li> 
-                </ul>
-           </apex:pageBlockSectionItem>                    
-
- 
-             
-            <apex:pageBlockSectionItem > 
-                <br/>
+                </ul></td></tr><tr><td class="data2Col " colSpan="2"> 
+                <br />
                 <b>  Customization and Configuration :</b> The business identifier (the non-time stamp portion of the business grouping key) can be configured in be one of the three ways:                                                              
-                <br/>
+                <br />
  
-                <br/>
-                <b> Implicit configuration :</b><br/>    
-                <br/>
+                <br />
+                <b> Implicit configuration :</b><br />    
+                <br />
                  <ul>         
                     <li> This is the default mechanism for defining the business identifier when no explicit definition has been configured on the <code>LogInitializer</code> process.
                     </li> 
@@ -183,9 +131,9 @@
                  </ul> 
  
  
-                <br/>
-                <b> Static Configuration :</b><br/>    
-                <br/>
+                <br />
+                <b> Static Configuration :</b><br />    
+                <br />
                  <ul>         
                     <li> To specify the a static business identifier , click the [Configure] link next to a LogInitializer process
                     </li> 
@@ -195,9 +143,9 @@
                     </li> 
                  </ul> 
 
-                <br/>
-                <b> Dynamic Configuration  :</b><br/>    
-                <br/>
+                <br />
+                <b> Dynamic Configuration  :</b><br />    
+                <br />
                 <ul>    
                     <li> To specify the a dynamic business identifier , click the [Configure] link next to a LogInitializer process
                     </li> 
@@ -207,28 +155,15 @@
                     </li> 
                     <li> A message passing the <code>LogInitializer</code> process will have its underlying data inspected and the value of this dynamic field extracted
                     </li>  
-                </ul>
-           </apex:pageBlockSectionItem>                    
-
-            <apex:pageBlockSectionItem > 
-                <br/>
+                </ul></td></tr><tr><td class="data2Col  last " colSpan="2"> 
+                <br />
                 <b> Usage Example: </b> see 
-                    <a href="LogUnderCommonIdentifierTutorial"  style="color: #00f;">Log Under Common Identifier, Tutorial 03</a>
-                <br/>   
-           </apex:pageBlockSectionItem>                    
-        </apex:pageBlockSection>
-    </apex:pageBlock>
-     
-     
-     
- 
-    <apex:pageBlock mode="maindetail">       
-        <apex:pageBlockSection title=" " columns="1"  collapsible="false" >       
-            <apex:pageBlockSectionItem > 
-                <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Publish.png')}" />
-                <b> Publish  :</b><br/>    
-                <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Subscribe.png')}" />
-                <b> Subscribe  :</b><br/>   
+                    <a href="LogUnderCommonIdentifierTutorial" style="color: #00f;">Log Under Common Identifier, Tutorial 03</a>
+                <br /></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div><div class="apexp"><div id="j_id0:j_id31" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id31:j_id32"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3> </h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2"> 
+                <img src="./CoreProcessesGuide/Publish.png" style="vertical-align:middle;" />
+                <b> Publish  :</b><br />    
+                <img src="./CoreProcessesGuide/Subscribe.png" style="vertical-align:middle;" />
+                <b> Subscribe  :</b><br />   
                  <ul> 
                     <li> The <code>Publish</code> and <code>Subscribe</code> processes work in tandem to provide a loose coupling of a Sequence steps.
                     </li> 
@@ -240,13 +175,9 @@
                     </li> 
                     <li> Note that a subscribe process must be the first process in a Sequence
                     </li> 
-                </ul>
-           </apex:pageBlockSectionItem>                    
-
-
-            <apex:pageBlockSectionItem > 
-                <br/>
-                <b> Customization and Configuration  :</b><br/>    
+                </ul></td></tr><tr><td class="data2Col " colSpan="2"> 
+                <br />
+                <b> Customization and Configuration  :</b><br />    
                 <ul>
                     <li> A named event must be specified for both the <code>Subscribe</code> and <code>Publish</code> processes.
                     </li> 
@@ -270,29 +201,15 @@
                     </li> 
                     <li> Select a named event to subscribe from by clicking the Event Type lookup field.
                     </li> 
-                </ul>
-           </apex:pageBlockSectionItem>                    
-
-
-            <apex:pageBlockSectionItem > 
-                <br/>
+                </ul></td></tr><tr><td class="data2Col  last " colSpan="2"> 
+                <br />
                 <b> Usage Example: </b> see 
-                    <a href="ScrapeWebPageTutorial"             style="color: #00f;">Scrape Web Page, Tutorial 04</a>  
-                <br/>   
-           </apex:pageBlockSectionItem>                       
-        </apex:pageBlockSection>
-    </apex:pageBlock> 
-    
-
-
-    
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection title=" " columns="1"  collapsible="false" >       
-            <apex:pageBlockSectionItem > 
-                <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Mark.png')}" />
-                <b> Mark  :</b><br/>   
-                <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Gate.png')}" />
-                <b> Gate  :</b><br/>  
+                    <a href="ScrapeWebPageTutorial" style="color: #00f;">Scrape Web Page, Tutorial 04</a>  
+                <br /></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div><div class="apexp"><div id="j_id0:j_id39" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id39:j_id40"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3> </h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2"> 
+                <img src="./CoreProcessesGuide/Mark.png" style="vertical-align:middle;" />
+                <b> Mark  :</b><br />   
+                <img src="./CoreProcessesGuide/Gate.png" style="vertical-align:middle;" />
+                <b> Gate  :</b><br />  
                  <ul>
                     <li> A related collection of messages may follow different execution paths.
                     </li> 
@@ -308,43 +225,21 @@
                     </li> 
                     <li> When all messages for a given grouping key are received, they are all simultaneously released to the next step in the Sequence in a single execution context
                     </li> 
-                </ul>
-           </apex:pageBlockSectionItem>                    
-
-  
-            <apex:pageBlockSectionItem > 
-                <br/>
-                <b> Customization and Configuration  :</b><br/>    
+                </ul></td></tr><tr><td class="data2Col  last " colSpan="2"> 
+                <br />
+                <b> Customization and Configuration  :</b><br />    
                 <ul>
                     <li> Insert a <code>Mark</code> process immediately before a fan-out process in a Sequence.
                     </li> 
                     <li> Insert a <code>Gate</code> process at some point after the fan-out process
                     </li> 
-                </ul>
-           </apex:pageBlockSectionItem>                    
-
-            <!-- PENDING 
-            <apex:pageBlockSectionItem > 
-                <br/>
-                <b> Usage Example: </b> see Tutorial NNN ( :: Tutorial 01 :: ) <br/>   
-                <br/>
-           </apex:pageBlockSectionItem>     
-           -->
-        </apex:pageBlockSection>
-    </apex:pageBlock>
-     
-     
-     
- 
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection title=" " columns="1"  collapsible="false" >       
-            <apex:pageBlockSectionItem > 
-                <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/SubSequence.png')}" />
-                <b> SubSequence  :</b><br/>    
-                <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Branch.png')}" />
-                <b> Branch  :</b><br/>           
-                <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Jump.png')}" />
-                <b> Jump  :</b><br/>      
+                </ul></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div><div class="apexp"><div id="j_id0:j_id45" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id45:j_id46"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3> </h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2"> 
+                <img src="./CoreProcessesGuide/SubSequence.png" style="vertical-align:middle;" />
+                <b> SubSequence  :</b><br />    
+                <img src="./CoreProcessesGuide/Branch.png" style="vertical-align:middle;" />
+                <b> Branch  :</b><br />           
+                <img src="./CoreProcessesGuide/Jump.png" style="vertical-align:middle;" />
+                <b> Jump  :</b><br />      
                  <ul>
                     <li> Sometimes execution logic is composed into seperate Sequences and a need arises to connect the logic one or more Sequences
                     </li> 
@@ -356,13 +251,9 @@
                     </li> 
                     <li> The <code>SubSequence</code> process directs execution flow to the first step in a specified Sequence. When execution flow reaches the terminate step in the specified Sequence, execution flow returns to the step immeadiately following the SunPosition step.
                     </li>
-                </ul>
-           </apex:pageBlockSectionItem>                    
-
-
-            <apex:pageBlockSectionItem > 
-                <br/>
-                <b> Customization and Configuration  :</b><br/>    
+                </ul></td></tr><tr><td class="data2Col  last " colSpan="2"> 
+                <br />
+                <b> Customization and Configuration  :</b><br />    
                 <ul>
                     <li> To specify the Sequence to jump to, click the [Configure] link next to a Jump Sequence step.
                     </li> 
@@ -382,25 +273,9 @@
                     </li> 
                     <li> In the <code>Sequence</code> field, enter the name of the Sequence to execute.
                     </li> 
-                </ul>
-           </apex:pageBlockSectionItem>                    
-
-            <!--
-            <apex:pageBlockSectionItem > 
-                <br/>
-                <b> Usage Example: </b> see Tutorial NNN ( :: Tutorial 01 :: ) <br/>   
-                <br/>
-           </apex:pageBlockSectionItem>     
-           -->
-        </apex:pageBlockSection>
-    </apex:pageBlock>
-    
-    
-    <apex:pageBlock mode="maindetail">  
-        <apex:pageBlockSection title=" " columns="1"  collapsible="false" >       
-            <apex:pageBlockSectionItem > 
-                <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide/Schedule.png')}" />
-                <b> Schedule :</b><br/>    
+                </ul></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div><div class="apexp"><div id="j_id0:j_id51" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbBody"><div id="j_id0:j_id51:j_id52"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3> </h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2"> 
+                <img src="./CoreProcessesGuide/Schedule.png" style="vertical-align:middle;" />
+                <b> Schedule :</b><br />    
                  <ul>
                     <li> Certain events are time based. 
                     </li> 
@@ -412,13 +287,9 @@
                     </li> 
                     <li> <b>Note:</b> that the <code>Schedule</code> process must be the first step in a Sequence.
                     </li>
-                </ul>
-           </apex:pageBlockSectionItem>                    
-
-
-            <apex:pageBlockSectionItem > 
-                <br/>
-                <b> Customization and Configuration  :</b><br/>    
+                </ul></td></tr><tr><td class="data2Col " colSpan="2"> 
+                <br />
+                <b> Customization and Configuration  :</b><br />    
                 <ul>
                     <li> To specify a schedule, click the Configure link next to a Schedule Sequence step.
                     </li> 
@@ -432,24 +303,16 @@
                     <li> In the <code>Frequency</code> field , select the frequency from <code>Daily</code>, <code>Weekly</code> or <code>Monthly</code>. 
                          The value selected defines the available values under the Run dates picklist
                     </li> 
-                </ul>
-           </apex:pageBlockSectionItem>                    
-
-
-            <apex:pageBlockSectionItem > 
-                <br/>
+                </ul></td></tr><tr><td class="data2Col  last " colSpan="2"> 
+                <br />
                 <b> Usage Example: </b> see 
                     <a href="ScrapeWebPageTutorial" style="color: #00f;">Scrape Web Page, Tutorial 04</a>  
-                <br/>   
-           </apex:pageBlockSectionItem>                    
-        </apex:pageBlockSection>
-    </apex:pageBlock>    
+                <br /></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div>    
 
 
     <div class="contact">
                  webmaster@cloudeda.com
-        &#183;  (+44) 07545169989
-        &#183;  <a href="www.cloudeda.com" target="_blank"   style="color: #00f;"> www.cloudeda.com </a>  
+        &middot;  (+44) 07545169989
+        &middot;  <a href="www.cloudeda.com" style="color: #00f;" target="_blank"> www.cloudeda.com </a>  
     </div>
-    <br/><br/>
-</apex:page>
+    <br /><br /></body></html>
