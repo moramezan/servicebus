@@ -13,9 +13,9 @@
 
     <p>For more in depth analysis and insight:
        <ul> 
-           <li>  Business Analysts may wish to consult the  <a href="OrchestratorsGuide" target="_blank" style="color: #00f;">Orchestrator's Guide</a>
+           <li>  Business Analysts may wish to consult the <a href="{!URLFOR($Resource.HelpZip, '/OrchestratorsGuide.html')}" target="_blank" style="color: #00f;">Orchestrator's Guide</a> and <a href="{!URLFOR($Resource.HelpZip, '/CoreProcessesGuide.html')}" target="_blank" style="color: #00f;">Core Processes Guide</a>
            </li>
-           <li> Force.com custom  process authors may wish to consult the <a href="ProcessDevelopersGuide" target="_blank" style="color: #00f;">Process Developer's Guide</a>
+           <li> Force.com custom  process authors may wish to consult the <a href="{!URLFOR($Resource.HelpZip, '/ProcessDevelopersGuide.html')}" target="_blank" style="color: #00f;">Process Developer's Guide</a>
            </li>
        </ul>
     </p>
@@ -34,27 +34,27 @@
         <apex:pageBlockSection columns="1" title="TUTORIAL 1: Confirm Event Driven Architecture is Correctly Setup" collapsible="false">
             <p>
                 To verify that the Event Driven Package has been correctly installed and configured, click
-                <a href="ConfirmSetupTutorial" target="_blank" style="color: #00f;">here</a>
+                <a href="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial.html')}" target="_blank" style="color: #00f;">here</a>
             </p>
         </apex:pageBlockSection>
         <apex:pageBlockSection columns="1" title="TUTORIAL 2: Discover Event Driven Processes" collapsible="false">
             <p>
                 Click
-                <a href="ProcessDiscoveryTutorial" target="_blank" style="color: #00f;">here</a>
+                <a href="{!URLFOR($Resource.HelpZip, '/ProcessDiscoveryTutorial.html')}" target="_blank" style="color: #00f;">here</a>
                 to see how custom event driven logic written in Apex is discovered by the Event Driven framework. 
             </p>    
         </apex:pageBlockSection>
         <apex:pageBlockSection columns="1" title="TUTORIAL 3: Log Message Events Under a Common Identifier" collapsible="false">
             <p>
                 Click
-                <a href="LogUnderCommonIdentifierTutorial" target="_blank" style="color: #00f;">here</a>
+                <a href="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial.html')}" target="_blank" style="color: #00f;">here</a>
                 to see how the Event Driven framework enables the common requirement of grouping related messages under a common tag.
             </p>
         </apex:pageBlockSection>
         <apex:pageBlockSection columns="1" title="TUTORIAL 4: Regularly Scrape a Web Page" collapsible="false">
             <p>
                 Click
-                <a href="ScrapeWebPageTutorial" target="_blank" style="color: #00f;">here</a>
+                <a href="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial.html')}" target="_blank" style="color: #00f;">here</a>
                 to see how to assemble a collection of event driven processing Steps into a useful sequence
                 that regularly polls  
                 <a href="http://finance.yahoo.com/q?s=CRM" target="_blank" style="color: #00f;">Yahoo Finance</a>
@@ -65,7 +65,7 @@
     <br/><br/>
             
     <p>
-       For general comments or support, please contact <i> webmaster@bigass.io </i> or  <i>  <a href="ContactUs" target="_blank" style="color: #00f;">www.bigassforce.io</a> </i>
+       For general comments or support, please contact <i>webmaster@bigassforce.com</i> or <i><a href="http://www.bigassforce.com/" target="_blank" style="color: #00f;">www.bigassforce.com</a></i>
     </p>
     
     </apex:pageBlock>
