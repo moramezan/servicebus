@@ -5,14 +5,6 @@
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
-        <apexClass>Api</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ApiTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>AsyncApexJobs</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -102,14 +94,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>JumpTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>LogConfigurationController</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>LogConfigurationControllerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

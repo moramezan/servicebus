@@ -1,1 +1,9 @@
-<apex:page standardController="LogConfiguration__c" extensions="LogConfigurationController" action="{!LogGroupView}" />
+<apex:page standardController="LogConfiguration__c">
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection columns="1" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <apex:relatedList list="LogGroups__r" />
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:page>

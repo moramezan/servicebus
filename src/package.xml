@@ -7,8 +7,6 @@
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>
-        <members>Api</members>
-        <members>ApiTest</members>
         <members>AsyncApexJobs</members>
         <members>AsyncApexJobsTest</members>
         <members>BatchBrokerDispatcher</members>
@@ -32,8 +30,6 @@
         <members>HeartbeatImplementationTest</members>
         <members>Jump</members>
         <members>JumpTest</members>
-        <members>LogConfigurationController</members>
-        <members>LogConfigurationControllerTest</members>
         <members>LogInitializer</members>
         <members>LogInitializerTest</members>
         <members>LogWriter</members>
