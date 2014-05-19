@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <customSettingsType>Hierarchy</customSettingsType>
-    <customSettingsVisibility>Public</customSettingsVisibility>
-    <description>Powertrain control module</description>
+    <customSettingsVisibility>Protected</customSettingsVisibility>
+    <description>Controls which broker implementation to use and whether it should run at all.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>BrokerClassName__c</fullName>
-        <description>Fully qualified name of Broker subclass.</description>
+        <description>Fully qualified name of Broker subclass (eg eda_fb.FutureBroker)</description>
         <externalId>false</externalId>
         <label>Broker Class Name</label>
         <length>97</length>
@@ -18,7 +18,7 @@
     <fields>
         <fullName>Inhibit__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Make this TRUE to prevent thermal runaway and nuclear meltdown on the Broker.</description>
+        <description>Set this TRUE to interrupt a haywire Broker during development.</description>
         <externalId>false</externalId>
         <label>Inhibit</label>
         <trackTrending>false</trackTrending>
