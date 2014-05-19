@@ -96,8 +96,60 @@
                 "align": "right",
                 "dataIndex": "ConfigurationId",
                 "defaultWidth": null,
-                "text": "Actions",
-                "width": 100
+                "tdCls": "link",
+                "text": "Configure",
+                "width": 70
+            },
+            "designerId": "3b7e5904-59af-4e82-bbd5-b83fa44b6680",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "//some processes have no configuration",
+                            "if (record.get('ConfigurationId')) return Ext.DomHelper.createHtml({",
+                            "    'tag': 'a',",
+                            "    'html': 'Configure',",
+                            "    'class': 'configurelink',",
+                            "    'onclick': 'return false;',",
+                            "    'title': 'Configure Step',",
+                            "    'href': URLFOR['/'] + record.get('ConfigurationId') + '?isdtp=vw'",
+                            "}) + ' |';"
+                        ]
+                    },
+                    "designerId": "edcb3349-9653-4068-ae36-d07e359f5485"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "align": "center",
+                "dataIndex": "ConfigurationId",
+                "defaultWidth": null,
+                "tdCls": "link",
+                "text": "Delete",
+                "width": 26
             },
             "designerId": "7313023d-6309-46f7-a3d1-0036734aa8ee",
             "cn": [
@@ -120,32 +172,74 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
-                            "var anchors = [];",
-                            "",
-                            "//some processes have no configuration",
-                            "if (record.get('ConfigurationId')) anchors.push(Ext.DomHelper.createHtml({",
-                            "    'tag': 'a',",
-                            "    'html': 'Configure',",
-                            "    'class': 'configurelink',",
-                            "    'onclick': 'return false;',",
-                            "    'title': 'Configure Step',",
-                            "    'href': URLFOR['/'] + record.get('ConfigurationId') + '?isdtp=vw'",
-                            "}));",
-                            "",
                             "//TERMINATE step cannot be deleted",
-                            "if (record.get('ProcessName') != 'Terminate') anchors.push(Ext.DomHelper.createHtml({",
+                            "if (record.get('ProcessName') != 'Terminate') return Ext.DomHelper.createHtml({",
                             "    'tag': 'a',",
                             "    'html': 'Del',",
                             "    'class': 'deletelink',",
                             "    'onclick': 'return false;',",
                             "    'title': 'Delete Step',",
                             "    'href': URLFOR['/'] + 'setup/own/deleteredirect.jsp?delId=' + record.get('Id')",
-                            "}));",
-                            "",
-                            "return anchors.join(' | ');"
+                            "}); else return Ext.DomHelper.createHtml({",
+                            "    'tag': 'a',",
+                            "    'html': 'Del',",
+                            "    'class': 'terminatelink',",
+                            "    'onclick': 'return false;',",
+                            "    'title': 'The Terminate step must appear at the end of all sequences and cannot be deleted.'",
+                            "});"
                         ]
                     },
                     "designerId": "192b1959-cbfc-4185-93da-d826f14d7876"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "dataIndex": "ConfigurationId",
+                "defaultWidth": null,
+                "tdCls": "link",
+                "text": "Settings",
+                "width": 60
+            },
+            "designerId": "958ae9fa-1117-4d84-94a5-2e1b24e43eb7",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "//some processes have no settings",
+                            "if (record.get('ProcessCustomSetting')) return '| ' + Ext.DomHelper.createHtml({",
+                            "    'tag': 'a',",
+                            "    'html': 'Settings',",
+                            "    'class': 'settingslink',",
+                            "    'onclick': 'return false;',",
+                            "    'title': 'Process Settings',",
+                            "    'href': URLFOR[$Page.ProcessSettings] + '?id=' + record\t.get('ProcessId')",
+                            "});"
+                        ]
+                    },
+                    "designerId": "82161303-89bf-4707-8ee6-b7f8882c11d7"
                 }
             ]
         },

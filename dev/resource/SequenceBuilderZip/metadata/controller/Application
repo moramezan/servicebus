@@ -239,6 +239,8 @@
                 "implHandler": [
                     "if ('configurelink' == e.target.className) {",
                     "    this.onConfigureLinkClick.apply(this, arguments);",
+                    "} else if ('settingslink' == e.target.className) {",
+                    "    this.onSettingsLinkClick.apply(this, arguments);",
                     "} else if ('deletelink' == e.target.className) {",
                     "    this.onDeleteLinkClick.apply(this, arguments);",
                     "}",
@@ -292,6 +294,50 @@
                 ]
             },
             "designerId": "540df7c3-43c4-4c27-b109-a729235a017c"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "tableview",
+                    "td",
+                    "cellIndex",
+                    "record",
+                    "tr",
+                    "rowIndex",
+                    "e",
+                    "eOpts"
+                ],
+                "fn": "onSettingsLinkClick",
+                "implHandler": [
+                    "var me = this, //controller",
+                    "    y = window.screenTop || window.screenY,",
+                    "    x = window.screenLeft || window.screenX,",
+                    "    top = Math.round(Ext.Element.getViewportHeight() * 0.15) + y,",
+                    "    left = Math.round(Ext.Element.getViewportWidth() * 0.1) + x,",
+                    "    width = Math.round(Ext.Element.getViewportWidth() * 0.8),",
+                    "    height = Math.round(Ext.Element.getViewportHeight() * 0.8)",
+                    ";",
+                    "",
+                    "/**",
+                    " * COUPLES TO Builder.controller.Application#onViewReady()",
+                    " * This opens the config popup without any Clickjack issues.",
+                    " */",
+                    "Ext.getBody().mask();",
+                    "me.popup = window.open(",
+                    "    e.target.href,",
+                    "    'eda_config',",
+                    "    'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top + ',toolbar=no,status=no,directories=no,menubar=no,resizable=yes'",
+                    ");",
+                    "me.popup.focus();"
+                ]
+            },
+            "designerId": "3e61f28b-bed5-461a-9164-30932990072f"
         },
         {
             "type": "basicfunction",
@@ -437,7 +483,7 @@
                     " * ConfigurationName changes will then be reflected for the user to see.",
                     " * The main window is always refocussed by closing the configuration window.",
                     " */",
-                    "if (!controller.popup.closed) {",
+                    "if (controller.popup && !controller.popup.closed) {",
                     "    controller.popup.close();",
                     "",
                     "    grid.mask('Loading...');",

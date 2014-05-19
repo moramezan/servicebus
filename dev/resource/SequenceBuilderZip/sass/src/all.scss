@@ -17,6 +17,15 @@ table#bodyTable td#bodyCell {
 }
 
 /**
+ * Grey text with less padding on link columns
+ */
+td.#{$prefix}grid-cell.link div.#{$prefix}grid-cell-inner  {
+    color: #999; /* for the | separators */
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/**
  * DRAG cursor on grippy cell and icon
  */
 .#{$prefix}action-col-cell.grippy,
@@ -38,6 +47,16 @@ table#bodyTable td#bodyCell {
  */
 .#{$prefix}grid-body.steps a {
     color: #015ba7;
+    text-decoration: none;
+}
+
+/**
+ * Steps grid links underline on hover
+ */
+.#{$prefix}grid-body.steps a.terminatelink,
+.#{$prefix}grid-body.steps td.#{$prefix}grid-cell a.terminatelink:hover {
+    color: #999;
+    cursor: auto;
     text-decoration: none;
 }
 

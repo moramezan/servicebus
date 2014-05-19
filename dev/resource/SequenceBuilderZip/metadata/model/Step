@@ -57,6 +57,20 @@
             },
             "codeClass": null,
             "userConfig": {
+                "name": "ProcessId",
+                "persist": false,
+                "type": "string"
+            },
+            "designerId": "fd03ad7d-a9d0-446c-80a7-d588d259c0d6"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
                 "name": "ProcessName",
                 "persist": false,
                 "type": "string"
@@ -104,6 +118,20 @@
                 "type": "string"
             },
             "designerId": "68289f71-7cf6-46ab-8b22-93378c814c8f"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "ProcessCustomSetting",
+                "persist": false,
+                "type": "string"
+            },
+            "designerId": "c87a81ec-521f-45c1-8b4d-6161094046df"
         },
         {
             "type": "Ext.data.Field",

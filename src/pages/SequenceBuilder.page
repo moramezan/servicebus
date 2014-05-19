@@ -20,6 +20,9 @@
         $RemoteAction.SequenceBuilderExtension.moveStepBefore = '{!$RemoteAction.SequenceBuilderExtension.moveStepBefore}';
         $RemoteAction.SequenceBuilderExtension.moveStepAfter = '{!$RemoteAction.SequenceBuilderExtension.moveStepAfter}';
         
+        window.$Page = window.$Page || {};
+        $Page.ProcessSettings = '{!$Page.ProcessSettings}';
+        
         window.Sequence__c = window.Sequence__c || {};
         Sequence__c.Id = '{!Sequence__c.Id}';
         Sequence__c.Name = '{!Sequence__c.Name}';
@@ -58,12 +61,15 @@
         $ObjectType.Process__c.Fields.Icon__c.Name = '{!$ObjectType.Process__c.Fields.Icon__c.Name}';
         $ObjectType.Process__c.Fields.DocsPageUrl__c = $ObjectType.Process__c.Fields.DocsPageUrl__c || {};
         $ObjectType.Process__c.Fields.DocsPageUrl__c.Name = '{!$ObjectType.Process__c.Fields.DocsPageUrl__c.Name}';
+        $ObjectType.Process__c.Fields.CustomSetting__c = $ObjectType.Process__c.Fields.CustomSetting__c || {};
+        $ObjectType.Process__c.Fields.CustomSetting__c.Name = '{!$ObjectType.Process__c.Fields.CustomSetting__c.Name}';
 
         Processes = {!Processes};
         Steps = {!Steps};
         
         window.URLFOR = window.URLFOR || {};
         URLFOR['/'] = '{!URLFOR("/")}';
+        URLFOR[$Page.ProcessSettings] = '{!URLFOR($Page.ProcessSettings)}';
     </c:bootstrapExt>
 
 </apex:page>
