@@ -69,7 +69,7 @@ public class ProcessSet extends SalesforceObjectSet {
         );
         
         //special exception for BrokerTest.FailurePlugin as used in testing
-        if (reflector.getName() == BrokerTest.FailurePlugin.class.getName()) return process;
+        if (reflector.getName() == BrokerTest.class.getName()) return process;
         
         ProcessSet.Meta meta = (ProcessSet.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessSet.Meta.class);
         
