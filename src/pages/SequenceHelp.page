@@ -38,11 +38,11 @@
         <apex:pageBlockSection title="Tutorials :" columns="1" collapsible="false">
             <apex:pageBlockSectionItem >
                 <ul>
-                    <li> Build a simple  <a href="ConfirmSetupTutorial"   style="color: #00f;">WireTap</a> sequence.
+                    <li> Build a simple <a href="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial.html')}" style="color: #00f;">WireTap</a> sequence.
                     </li>
-                    <li> Build a simple <a href="ScrapeWebPageTutorial"  style="color: #00f;">Web Scrape</a> sequence.
+                    <li> Build a simple <a href="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial.html')}" style="color: #00f;">Web Scrape</a> sequence.
                     </li>
-                    <li> Build a sequence that groups messages under a <a href="LogUnderCommonIdentifierTutorial"   style="color: #00f;">Common Identifier</a>.
+                    <li> Build a sequence that groups messages under a <a href="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial.html')}" style="color: #00f;">Common Identifier</a>.
                     </li>
                 </ul>
             </apex:pageBlockSectionItem>

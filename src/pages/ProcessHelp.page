@@ -46,7 +46,7 @@
         <apex:pageBlockSection title="Tutorial :" columns="1" collapsible="false">
             <apex:pageBlockSectionItem >
                 <ul>
-                    <li> How to discover event driven <a href="ProcessDiscoveryTutorial"  style="color: #00f;">Processes</a> .
+                    <li> How to discover event driven <a href="{!URLFOR($Resource.HelpZip, '/ProcessDiscoveryTutorial.html')}"  style="color: #00f;">Processes</a> .
                     </li>
                 </ul>
             </apex:pageBlockSectionItem>
