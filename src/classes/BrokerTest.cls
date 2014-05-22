@@ -2,16 +2,18 @@
     
     @TestVisible static private String FailureMessage = 'Fake Error Thrown in FailurePlugin';
     
-    @TestVisible public Process.PluginDescribeResult describe() {
+    public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult describeResult = new Process.PluginDescribeResult();
         describeResult.Name = 'Failure Plugin';
         describeResult.Description = 'A Process.Plugin that throws an exception for testing purposes. (Will not be listed)';
         describeResult.Tag = 'Event Driven Architecture';
+        System.assert(describeResult.Name.contains('Failure'));
         return describeResult;
     }
     
-    @TestVisible public Process.PluginResult invoke(Process.PluginRequest request) {
+    public Process.PluginResult invoke(Process.PluginRequest request) {
         Map<String,Object> parameters = request.inputParameters;
+        System.assert(this.describe().Name.contains('Failure'));
         throw new BrokerException(FailureMessage);
         return EdaUtility.convert(new List<Map<String,Object>>{parameters});
     }
