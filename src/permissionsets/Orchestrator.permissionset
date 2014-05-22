@@ -153,6 +153,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>MessageShowDataExtensionTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>PostInstallHandler</apexClass>
         <enabled>false</enabled>
     </classAccesses>
