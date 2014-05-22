@@ -16,7 +16,7 @@ public without sharing class PostInstallHandler implements InstallHandler {
         if (!context.isPush()) installSchedule(context.installerId());
         
         //permission set assignments must be made on the local user, not the pushing user
-        //if (!context.isPush()) assignPermissionSet(context.installerId()); //MIXED_DML_OPERATION
+        if (!context.isPush()) assignPermissionSet(context.installerId());
         
         //only nag about the remote site setting on first install
         if (!context.isUpgrade()) sendRemoteSiteSettingNag(context.installerId());
@@ -29,8 +29,9 @@ public without sharing class PostInstallHandler implements InstallHandler {
     
     /**
      * Assign Orchestrator permission set to the installer
+     * (Performed in a FUTURE method to prevent MIXED_DML_OPERATION exception)
      */
-    @TestVisible static private void assignPermissionSet(Id userId) {
+    @TestVisible @Future static private void assignPermissionSet(Id userId) {
         //resolve package namespace prefix
         String namespacePrefix = PostInstallHandler.class.getName().substringBefore('PostInstallHandler').substringBefore('.');
         
@@ -127,8 +128,9 @@ public without sharing class PostInstallHandler implements InstallHandler {
     
     /**
      * Set the Wiretap Settings
+     * (Performed in a FUTURE method to prevent MIXED_DML_OPERATION exception)
      */
-    @TestVisible static private void createWiretapSettings(Id userId) {
+    @TestVisible @Future static private void createWiretapSettings(Id userId) {
         //fetch custom setting or create it for the first time
         WiretapSettings__c setting = WiretapSettings__c.getOrgDefaults();
         if (setting == null) setting = new WiretapSettings__c();
