@@ -18,6 +18,7 @@
         <members>Broker</members>
         <members>BrokerTest</members>
         <members>ConfigurationShowStepExtension</members>
+        <members>ConfigurationShowStepExtensionTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
         <members>EdaUtility</members>
