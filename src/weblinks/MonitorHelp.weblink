@@ -3,8 +3,8 @@
     <availability>online</availability>
     <displayType>link</displayType>
     <linkType>page</linkType>
-    <masterLabel>Processes Help</masterLabel>
+    <masterLabel>Monitor Help</masterLabel>
     <openType>replace</openType>
-    <page>ProcessHelp</page>
+    <page>MonitorHelp</page>
     <protected>true</protected>
 </CustomPageWebLink>

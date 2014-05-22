@@ -737,6 +737,14 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>Monitor</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>MonitorHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>ProcessApexClass</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -831,6 +839,10 @@
     <tabSettings>
         <tab>Message__c</tab>
         <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>Monitor</tab>
+        <visibility>None</visibility>
     </tabSettings>
     <tabSettings>
         <tab>Process__c</tab>

@@ -1,0 +1,5 @@
+<apex:page >
+
+    <apex:include pageName="{!$Page.Configure}" />
+    
+</apex:page>

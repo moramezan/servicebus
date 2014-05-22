@@ -5,7 +5,7 @@
     <height>600</height>
     <linkType>page</linkType>
     <masterLabel>Configure</masterLabel>
-    <openType>sidebar</openType>
+    <openType>noSidebar</openType>
     <page>Configure</page>
     <protected>true</protected>
 </CustomPageWebLink>

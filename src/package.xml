@@ -108,6 +108,8 @@
         <members>MessageProcess</members>
         <members>MessageResumeQueue</members>
         <members>MessageShowData</members>
+        <members>Monitor</members>
+        <members>MonitorHelp</members>
         <members>ProcessApexClass</members>
         <members>ProcessDiscover</members>
         <members>ProcessDiscoverHelp</members>
@@ -223,12 +225,14 @@
     <types>
         <members>Configure</members>
         <members>MessageHelp</members>
+        <members>MonitorHelp</members>
         <members>ProcessHelp</members>
         <members>SequenceHelp</members>
         <name>CustomPageWebLink</name>
     </types>
     <types>
         <members>Message__c</members>
+        <members>Monitor</members>
         <members>Process__c</members>
         <members>Sequence__c</members>
         <name>CustomTab</name>
