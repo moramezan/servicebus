@@ -40,6 +40,7 @@
         <members>MessagePauseQueueExtension</members>
         <members>MessagePauseQueueExtensionTest</members>
         <members>MessageProcessExtension</members>
+        <members>MessageProcessExtensionTest</members>
         <members>MessageResumeQueueExtension</members>
         <members>MessageResumeQueueExtensionTest</members>
         <members>MessageShowDataExtension</members>

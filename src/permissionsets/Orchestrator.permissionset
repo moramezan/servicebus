@@ -137,6 +137,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>MessageProcessExtensionTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>MessageResumeQueueExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>

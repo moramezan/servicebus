@@ -1,6 +1,6 @@
 public with sharing class MessageProcessExtension {
     
-    static private Message__c message;
+    @TestVisible static private Message__c message;
     
     public MessageProcessExtension(ApexPages.StandardController controller) {
         message = (Message__c)SalesforceObject.getById(controller.getId());
