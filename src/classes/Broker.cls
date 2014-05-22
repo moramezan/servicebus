@@ -75,7 +75,7 @@
  * |  EXECUTE  | invokes [Terminate]
  * +-----------+
  */
-abstract global class Broker {
+abstract global without sharing class Broker {
     
     @TestVisible
     private static Integer stackDepthThreshold  = 500;
