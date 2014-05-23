@@ -225,7 +225,7 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ScheduleConfigurationSet</apexClass>
+        <apexClass>ScheduleConfigurationObjectSet</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
