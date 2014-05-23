@@ -237,10 +237,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Sequence</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>SequenceBuilderExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -249,15 +245,19 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SequenceSet</apexClass>
+        <apexClass>SequenceObject</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SequenceSetTest</apexClass>
+        <apexClass>SequenceObjectSet</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SequenceTest</apexClass>
+        <apexClass>SequenceObjectSetTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SequenceObjectTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

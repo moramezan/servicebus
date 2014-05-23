@@ -1,8 +1,8 @@
-public class Sequence extends SalesforceObject {
+public class SequenceObject extends SalesforceObject {
 
     public class SequenceException extends Exception {}
     
-    public Sequence(Sequence__c sequence) {
+    public SequenceObject(Sequence__c sequence) {
         super(sequence);
     }
     

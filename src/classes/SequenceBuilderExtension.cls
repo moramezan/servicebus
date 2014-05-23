@@ -30,19 +30,19 @@ public with sharing class SequenceBuilderExtension {
     }
     
     public String getSteps() {
-        Sequence sequence = new Sequence((Sequence__c)this.controller.getRecord());
+        SequenceObject sequence = new SequenceObject((Sequence__c)this.controller.getRecord());
         List<Step__c> steps = sequence.fetchSteps().getSObjects();
         return Json.serializePretty(steps);
     }
     
     @RemoteAction static public List<Step__c> fetchSteps(Id sequenceId) {
-        Sequence sequence = new Sequence(new Sequence__c(Id = sequenceId));
+        SequenceObject sequence = new SequenceObject(new Sequence__c(Id = sequenceId));
         sequence.terminate();
         return sequence.fetchSteps().getSObjects();
     }
     
     @RemoteAction static public Step__c appendStep(Id sequenceId, Id processId) {
-        Sequence sequence = new Sequence(new Sequence__c(Id = sequenceId));
+        SequenceObject sequence = new SequenceObject(new Sequence__c(Id = sequenceId));
         StepObject step = sequence.appendStep(processId);
         return (Step__c)step.getSObject();
     }
@@ -60,7 +60,7 @@ public with sharing class SequenceBuilderExtension {
     @RemoteAction static public void destroySteps(List<Step__c> steps) {
         //requery first step to get sequence id, since it is not transmitted
         Step__c step = (Step__c)SalesforceObject.getById(steps[0].Id);
-        Sequence sequence = new Sequence(new Sequence__c(Id = step.Sequence__c));
+        SequenceObject sequence = new SequenceObject(new Sequence__c(Id = step.Sequence__c));
         sequence.destroySteps(new Map<Id,Step__c>(steps).keySet());
     }
     

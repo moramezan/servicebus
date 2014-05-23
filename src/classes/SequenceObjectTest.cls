@@ -1,5 +1,5 @@
 @isTest
-private class  SequenceTest {
+private class SequenceObjectTest {
             
     private static testMethod void  callingFetchStepsReturnsExpectedStepCollection() {
         // arrange
@@ -20,7 +20,7 @@ private class  SequenceTest {
         Decimal positionA3 = stepA3.Position__c;
 
         // act 
-        Sequence sequence = new Sequence(soSequence);
+        SequenceObject sequence = new SequenceObject(soSequence);
         StepObjectSet actualSteps  = sequence.fetchSteps();
         
         // assemble
@@ -43,7 +43,7 @@ private class  SequenceTest {
         Id soSequenceId = soSequence.Id;
 
         // act 
-        Sequence sequence = new Sequence(soSequence);
+        SequenceObject sequence = new SequenceObject(soSequence);
         StepObject actualStep = sequence.appendStep(markProcess.Id);
         
         // assemble
@@ -76,7 +76,7 @@ private class  SequenceTest {
         Id soSequenceId = soSequence.Id;
 
         // act 
-        Sequence sequence = new Sequence(soSequence);
+        SequenceObject sequence = new SequenceObject(soSequence);
         sequence.terminate();
         
         // assemble
@@ -110,7 +110,7 @@ private class  SequenceTest {
         Id soSequenceId = soSequence.Id;
 
         // act 
-        Sequence sequence = new Sequence(soSequence);
+        SequenceObject sequence = new SequenceObject(soSequence);
         sequence.terminate(); // once ( terminate will now exist)
         sequence.terminate(); // and again!
         
@@ -154,7 +154,7 @@ private class  SequenceTest {
 
         // act 
         Id notStepAId =  stepB1.Id;
-        Sequence sequenceA = new Sequence(soSequenceA);
+        SequenceObject sequenceA = new SequenceObject(soSequenceA);
         Boolean actualFlag = false;
         try {
             StepObjectSet actualSteps = sequenceA.destroySteps(new Set<Id>{notStepAId});
@@ -182,7 +182,7 @@ private class  SequenceTest {
 
         // act 
         Id deletedStepId =  stepA1.Id;
-        Sequence sequenceA = new Sequence(soSequenceA);
+        SequenceObject sequenceA = new SequenceObject(soSequenceA);
         StepObjectSet actualSteps = sequenceA.destroySteps(new Set<Id>{deletedStepId});
  
         

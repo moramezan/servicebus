@@ -105,7 +105,7 @@
         SequenceBuilderExtension.appendStep(sequenceId, publishProcess.Id);
         
         //assert
-        List<Step__c> steps = new Sequence(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        List<Step__c> steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
         Step__c lastStep = steps.get(2);
         String expectedClassName = Publish.class.getName();
         String actualClassName = lastStep.Process__r.FullyQualifiedClassName__c;
@@ -115,7 +115,7 @@
     static testMethod void testMoveStepBefore() {
         //arrange sequence
         Id sequenceId = setupSequence();
-        List<Step__c> steps = new Sequence(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        List<Step__c> steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
         Step__c wiretapStep = steps.get(0);
         Step__c terminateStep = steps.get(1);
         
@@ -123,7 +123,7 @@
         SequenceBuilderExtension.moveStepBefore(terminateStep.Id, wiretapStep.Id);
         
         //assemble
-        steps = new Sequence(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
         terminateStep = steps.get(0);
         wiretapStep = steps.get(1);
         
@@ -140,7 +140,7 @@
     static testMethod void testMoveStepAfter() {
         //arrange sequence
         Id sequenceId = setupSequence();
-        List<Step__c> steps = new Sequence(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        List<Step__c> steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
         Step__c wiretapStep = steps.get(0);
         Step__c terminateStep = steps.get(1);
         
@@ -148,7 +148,7 @@
         SequenceBuilderExtension.moveStepAfter(wiretapStep.Id, terminateStep.Id);
         
         //assemble
-        steps = new Sequence(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
         terminateStep = steps.get(0);
         wiretapStep = steps.get(1);
         
@@ -165,14 +165,14 @@
     static testMethod void testDestroyStep() {
         //arrange
         Id sequenceId = setupSequence();
-        List<Step__c> steps = new Sequence(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        List<Step__c> steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
         Step__c wiretapStep = steps.get(0);
         
         //act
         SequenceBuilderExtension.destroySteps(new List<Step__c>{wiretapStep});
         
         //assemble
-        steps = new Sequence(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
         
         //assert
         Integer expectedSize = 1;

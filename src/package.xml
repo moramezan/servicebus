@@ -65,12 +65,12 @@
         <members>ScheduleConfigurationSet</members>
         <members>ScheduleTest</members>
         <members>SchemaSelectorController</members>
-        <members>Sequence</members>
         <members>SequenceBuilderExtension</members>
         <members>SequenceBuilderExtensionTest</members>
-        <members>SequenceSet</members>
-        <members>SequenceSetTest</members>
-        <members>SequenceTest</members>
+        <members>SequenceObject</members>
+        <members>SequenceObjectSet</members>
+        <members>SequenceObjectSetTest</members>
+        <members>SequenceObjectTest</members>
         <members>StepObject</members>
         <members>StepObjectSet</members>
         <members>StepObjectSetTest</members>
