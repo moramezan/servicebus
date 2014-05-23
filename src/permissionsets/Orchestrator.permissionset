@@ -870,7 +870,7 @@
     </tabSettings>
     <tabSettings>
         <tab>Monitor</tab>
-        <visibility>None</visibility>
+        <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>
         <tab>Process__c</tab>
