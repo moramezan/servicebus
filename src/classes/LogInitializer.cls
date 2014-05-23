@@ -74,8 +74,7 @@ public class LogInitializer implements Process.Plugin {
 
  
     
-    @TestVisible
-    private static SObject getHydrated(Id theId) {
+    @TestVisible private static SObject getHydrated(Id theId) {
         try {
             return SalesforceObject.getById(theId);
         } catch (Exception e) {
@@ -84,14 +83,12 @@ public class LogInitializer implements Process.Plugin {
     }
 
 
-    @TestVisible
-    private static String getIdentifer(String key, SObject so) {
+    @TestVisible private static String getIdentifer(String key, SObject so) {
         return (String) so.get(key);
     }
     
     
-    @TestVisible
-    private static String getBusinesGroupIdentifier(LogConfiguration__c configuration, Step__c  step,  Id dataId) {
+    @TestVisible private static String getBusinesGroupIdentifier(LogConfiguration__c configuration, Step__c  step,  Id dataId) {
 
         //  default :
         //

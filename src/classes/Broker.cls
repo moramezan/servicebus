@@ -77,8 +77,7 @@
  */
 abstract global without sharing class Broker {
     
-    @TestVisible
-    private static Integer stackDepthThreshold  = 500;
+    @TestVisible private static Integer stackDepthThreshold  = 500;
     
     global class BrokerException extends Exception {}
     
@@ -376,8 +375,7 @@ abstract global without sharing class Broker {
         }
     }
     
-    @TestVisible
-    private static void surfaceException(Exception e, Id messageId) {
+    @TestVisible private static void surfaceException(Exception e, Id messageId) {
         Map<String,Object> serializedException = new Map<String,Object>();
         serializedException.put('cause', e.getCause());
         serializedException.put('lineNumber', e.getLineNumber());
@@ -413,8 +411,7 @@ abstract global without sharing class Broker {
      * We use applyStackDepth()  to apply the incremented stackDepth variable to the eda_StackDepth parameter of
      * all messages returned from invoke()
      */
-    @TestVisible
-    static private Process.PluginResult applyStackDepth(Process.PluginResult results, Integer stackDepth) {
+    @TestVisible static private Process.PluginResult applyStackDepth(Process.PluginResult results, Integer stackDepth) {
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
 
         Integer count = 0;
@@ -434,8 +431,7 @@ abstract global without sharing class Broker {
     /**
      * See applyStackDepth() method for context and details.
      */
-    @TestVisible
-    static private Integer getStackDepth(Map<String,Object> parameters, Integer threshold) {
+    @TestVisible static private Integer getStackDepth(Map<String,Object> parameters, Integer threshold) {
         Integer stackDepth = (parameters.get('eda_StackDepth') == null) ? 0 : (Integer) parameters.get('eda_StackDepth');
         stackDepth++;
         if (stackDepth > threshold) {
@@ -452,8 +448,7 @@ abstract global without sharing class Broker {
      * If markCount isn't null, then the preceding process was a Mark; increment THEN put that value on parameters.
      * If markCount equates to two, then the preceding process was a splitter; write the count of split parameter sets.
      */
-    @TestVisible
-    private static void markHelper(Map<String,Object> parameters, List<Map<String,Object>> parametersList) {
+    @TestVisible private static void markHelper(Map<String,Object> parameters, List<Map<String,Object>> parametersList) {
         Decimal markCount = (Decimal)parameters.get('eda_MarkCount');
         if (null != markCount) parameters.put('eda_MarkCount', ++markCount);
         if (2 == markCount) {
