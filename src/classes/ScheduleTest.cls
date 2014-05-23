@@ -1,8 +1,8 @@
 @isTest private class ScheduleTest {
     static testMethod void testPassThrueScenarioHandled() {
         //arrange processes
-        Process__c scheduleProcess = ProcessSet.generateOne(Schedule.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
@@ -42,8 +42,8 @@
     }
     static testMethod void testHeartbeatHandled() {
         //arrange processes
-        Process__c scheduleProcess = ProcessSet.generateOne(Schedule.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');

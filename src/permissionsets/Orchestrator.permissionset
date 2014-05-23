@@ -189,11 +189,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ProcessSet</apexClass>
+        <apexClass>ProcessObject</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ProcessSetTest</apexClass>
+        <apexClass>ProcessObjectTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

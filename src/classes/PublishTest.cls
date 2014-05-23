@@ -2,7 +2,7 @@
 
     static testMethod void canDetermineConfigObject() {
         //arrange processes
-        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
+        Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
         //act
         String actualConfiguration = publishProcess.ConfigObject__c;
@@ -18,7 +18,7 @@
         insert eventType;
         
         //arrange processes
-        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
+        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
         
         //arrange publish config
         PublishConfiguration__c pubConfig = new PublishConfiguration__c(
@@ -64,7 +64,7 @@
     
     static testMethod void testUnconfiguredPublishProcessThrowsException() {
         //arrange processes
-        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
+        Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
@@ -91,7 +91,7 @@
     
     static testMethod void testNoSubscribersStillReturnsOneMessage() {
         //arrange processes
-        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
+        Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
         EventType__c eventType = new EventType__c(Name = 'TestEvent');
         insert eventType;
@@ -130,8 +130,8 @@
         insert eventType;
         
         //arrange processes
-        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
-        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
+        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
+        Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
         //arrange publish sequences and steps
         Sequence__c publisher = new Sequence__c(Name = 'Publisher');

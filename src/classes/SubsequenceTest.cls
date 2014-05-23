@@ -2,7 +2,7 @@
 
     static testMethod void canDetermineConfigObject() {
         //arrange processes
-        Process__c subsequenceProcess = ProcessSet.generateOne(Subsequence.class);
+        Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
         
         //act
         String actualConfiguration = subsequenceProcess.ConfigObject__c;
@@ -14,8 +14,8 @@
 
     static testMethod void testMessageIsRedirected() {
         //arrange processes
-        Process__c subsequenceProcess = ProcessSet.generateOne(Subsequence.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequences
         Sequence__c origin = new Sequence__c(Name = 'originSequence');

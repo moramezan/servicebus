@@ -2,8 +2,8 @@
     
     static testMethod void testMoveStepBefore() {
         //arrange processes
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequences
         Sequence__c sequence = new Sequence__c(Name = 'StepTest');
@@ -32,8 +32,8 @@
     
     static testMethod void testMoveStepAfter() {
         //arrange processes
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequences
         Sequence__c sequence = new Sequence__c(Name = 'StepTest');

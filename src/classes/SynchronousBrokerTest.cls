@@ -3,8 +3,8 @@ private class SynchronousBrokerTest{
 
     private static testMethod void callingEnqueueSuccessfullyExecutesStepsInSequence() {
         //arrange processes
-        Process__c markProcess = ProcessSet.generateOne(Mark.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c markProcess = ProcessObject.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         String sequenceNameA = 'sequenceA';

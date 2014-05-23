@@ -6,8 +6,8 @@
         insert sequenceA;
         
         //arrange proceses
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
-        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
         // Sequence A - Warning : Ok but event Not Subscribed
         Step__c stepA1 = StepObjectSet.generateOne(sequenceA.Id, publishProcess.Id);
@@ -48,8 +48,8 @@
         insert sequenceB;
         
         //arrange processes
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
-        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
         // Sequence B - Problem : No Configuration
         Step__c stepB1 = StepObjectSet.generateOne(sequenceB.Id, publishProcess.Id);

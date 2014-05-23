@@ -2,8 +2,8 @@
  
     static testMethod void callingRestartSuccessfullyCallsRestartImp() {
         //arrange processes
-        Process__c markProcess = ProcessSet.generateOne(Mark.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c markProcess = ProcessObject.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         String sequenceNameA = 'sequenceA';
@@ -33,7 +33,7 @@
     
     static testMethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToMessage() {
         //arrange processes
-        Process__c failureProcess = ProcessSet.generateOne(BrokerTest.class);
+        Process__c failureProcess = ProcessObject.generateOne(BrokerTest.class);
         
         //arrange sequence
         String  sequenceNameA = 'sequenceA';
@@ -74,8 +74,8 @@
 
     static testMethod void callingBrokerStartSuccessfullyCallsStartImp() {
         //arrange processes
-        Process__c markProcess = ProcessSet.generateOne(Mark.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c markProcess = ProcessObject.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         String  sequenceNameA = 'sequenceA';

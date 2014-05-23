@@ -2,7 +2,7 @@
 
     static testMethod void testRedirectOccurs() {
         //arrange process, sequence and step
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;

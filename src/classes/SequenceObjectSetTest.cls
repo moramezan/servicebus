@@ -3,8 +3,8 @@
     //before delete
     static testMethod void testDeleteTriggersAreCascaded() {
         //arrange process
-        Process__c branchProcess = ProcessSet.generateOne(Branch.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c branchProcess = ProcessObject.generateOne(Branch.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'testSequence');

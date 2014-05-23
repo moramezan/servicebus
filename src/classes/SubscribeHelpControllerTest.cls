@@ -2,8 +2,8 @@
     
     static testMethod void callingGetHealthReturnsExpectedListContaningStatusEqWarning() {
         //arrange processes
-        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
         
         //arrange sequence
         Sequence__c sequenceA = new Sequence__c(Name = 'SequenceA');
@@ -44,8 +44,8 @@
     
     static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNotFirst() {
         //arrange processes
-        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
         
         //arrange sequence
         Sequence__c sequenceB = new Sequence__c(Name = 'SequenceB');
@@ -75,7 +75,7 @@
     
     static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorGtOne() {
         //arrange processes
-        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
+        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
         
         //arrange sequence
         Sequence__c sequenceC = new Sequence__c(Name = 'SequenceC');
@@ -121,8 +121,8 @@
 
     static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNoEventConfig() {
         //arrange processes
-        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
         
         //arrange sequence
         Sequence__c sequenceB = new Sequence__c(Name = 'SequenceB');

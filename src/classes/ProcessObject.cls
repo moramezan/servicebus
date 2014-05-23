@@ -1,7 +1,7 @@
-public class ProcessSet extends SalesforceObjectSet {
+public class ProcessObject extends SalesforceObject {
     
-    public ProcessSet(List<Process__c> processes) {
-        super(processes);
+    public ProcessObject(Process__c process) {
+        super(process);
     }
     
     /**
@@ -9,8 +9,7 @@ public class ProcessSet extends SalesforceObjectSet {
      * isn't appropriate for Tag, Description, InputParameters or OutputParameters. This inner class must be present
      * for an apex class to appear in the Process list.
      */
-    @testVisible
-    private class Meta {
+    @TestVisible private class Meta {
         /**
          * Each Process can have one associated customization in the form of a Custom Setting. Process Authors must
          * advertise the custom setting type here, and the framework will provide a link from the Process detail page.
@@ -71,7 +70,7 @@ public class ProcessSet extends SalesforceObjectSet {
         //special exception for BrokerTest.FailurePlugin as used in testing
         if (reflector.getName() == BrokerTest.class.getName()) return process;
         
-        ProcessSet.Meta meta = (ProcessSet.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessSet.Meta.class);
+        ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
         
         if (meta.CustomSetting != null) {
             //attempt to populate the name of the customization object

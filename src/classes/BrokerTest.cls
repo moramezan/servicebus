@@ -37,8 +37,8 @@
         Integer stackDepthThreshold = 3;
         Broker.stackDepthThreshold  = stackDepthThreshold;
 
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -184,9 +184,9 @@
 
     static testMethod void canCorrectlyResolveAndPersistMessages() {
         //arrange processes
-        Process__c markProcess = ProcessSet.generateOne(Mark.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
-        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
+        Process__c markProcess = ProcessObject.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
         
         //arrange sequence
         String sequenceNameA = 'sequenceA';
@@ -360,10 +360,10 @@
     
     static testMethod void canCorrectlyResolveMessages() {
         // arrange
-        Process__c markProcess = ProcessSet.generateOne(Mark.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
-        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
+        Process__c markProcess = ProcessObject.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
 
         String sequenceNameA = 'sequenceA';
         String sequenceNameB = 'sequenceB';
@@ -477,7 +477,7 @@
     
     static testMethod void callingEnqueueSuccessfullyCallsRestartImpl() {
         //arrange processes
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
@@ -507,7 +507,7 @@
     
     static testMethod void callingEnqueueSuccessfullyCallEnqueueImpAndCreatesDocument() {
         //arrange processes
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
@@ -699,7 +699,7 @@
     
     static testMethod void testProcessWithoutClassThrowsExpectedException() {
         //arrange processes
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
@@ -730,7 +730,7 @@
     
     static testMethod void testNonProcessPluginThrowsTypeException() {
         //arrange processes
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
@@ -780,8 +780,8 @@
     static testMethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusQueued() {
         // arrange
         Boolean isPaused =  true;
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -830,8 +830,8 @@
     static testMethod void callingEnqueueWhenBrokerIsNotPausedProcessesMessages() {
         // arrange
         Boolean isPaused =  false;
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -884,8 +884,8 @@
  
     static testMethod void canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError() {
         // arrange
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);

@@ -23,8 +23,8 @@
     
     static testMethod void testOneScheduledSequence() {
         //arrange processes
-        Process__c scheduleProcess = ProcessSet.generateOne(Schedule.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c one = new Sequence__c(Name = 'One');

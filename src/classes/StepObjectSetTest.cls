@@ -3,8 +3,8 @@
     //before insert test
     static testMethod void testStepConfigurationIsCreatedWhenInserted() {
         //arrange processes
-        Process__c subsequenceProcess = ProcessSet.generateOne(Subsequence.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
@@ -23,8 +23,8 @@
     //after insert test
     static testMethod void testNoResequencingOfStepsWhenAllInsertedStepsHaveAPositionGtZero() {
         //arrange processes
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
@@ -70,8 +70,8 @@
         Integer PositionEqToZero4 = 0;
         
         //arrange processes
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
@@ -143,7 +143,7 @@
         String  data      = 'data';
         
         //arrange processes
-        Process__c branchProcess = ProcessSet.generateOne(Branch.class);
+        Process__c branchProcess = ProcessObject.generateOne(Branch.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'the-sequence');

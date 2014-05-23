@@ -53,8 +53,8 @@
         <members>ProcessDiscoverBatchTest</members>
         <members>ProcessDiscoverController</members>
         <members>ProcessDiscoverControllerTest</members>
-        <members>ProcessSet</members>
-        <members>ProcessSetTest</members>
+        <members>ProcessObject</members>
+        <members>ProcessObjectTest</members>
         <members>Publish</members>
         <members>PublishHelpController</members>
         <members>PublishHelpControllerTest</members>

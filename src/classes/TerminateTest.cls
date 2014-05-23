@@ -12,8 +12,8 @@ private class TerminateTest
         Decimal subsequencePosition = 2;
         
         //arrange processes
-        Process__c subsequenceProcess = ProcessSet.generateOne(Subsequence.class);
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = subsequenceName);
@@ -96,7 +96,7 @@ private class TerminateTest
         Sequence__c sequence = new Sequence__c(Name = subsequenceName);
         insert sequence;
         
-        Process__c subsequenceProcess = ProcessSet.generateOne(Subsequence.class);
+        Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
         
         Step__c step01 = StepObjectSet.generateOne(sequence.Id, subsequenceProcess.Id);
         Step__c step02 = StepObjectSet.generateOne(sequence.Id, subsequenceProcess.Id);

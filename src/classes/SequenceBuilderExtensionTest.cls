@@ -2,8 +2,8 @@
     
     static private Id setupSequence() {
         //arrange processes
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange sequences
         Sequence__c sequence = new Sequence__c(Name = 'SequenceBuilderExtensionTest');
@@ -99,7 +99,7 @@
         Id sequenceId = setupSequence();
         
         //arrange process to append
-        Process__c publishProcess = ProcessSet.generateOne(Publish.class);
+        Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
         //act
         SequenceBuilderExtension.appendStep(sequenceId, publishProcess.Id);

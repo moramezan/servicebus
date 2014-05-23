@@ -16,8 +16,8 @@
         Sequence__c sequenceD = new Sequence__c(Name = 'SequenceD');
         insert sequenceD;
         
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
-        Process__c wiretapProcess = ProcessSet.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
         
         // Sequence A - Ok
         Step__c stepA1 = StepObjectSet.generateOne(sequenceA.Id, wireTapProcess.Id);

@@ -2,7 +2,7 @@
     
     static testMethod void canDetermineConfigObject() {
         //arrange processes
-        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
+        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
         
         //act
         String actualConfiguration = subscribeProcess.ConfigObject__c;

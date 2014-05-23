@@ -19,7 +19,7 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
         for (ApexClass apexClass : scope) {
             Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
             try {
-                Process__c edaProcess = ProcessSet.fromType(reflector);
+                Process__c edaProcess = ProcessObject.fromType(reflector);
                 edaProcess.ApexClassId__c = apexClass.Id;
                 edaProcesses.add(edaProcess);
             } catch (Exception e) {

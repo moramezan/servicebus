@@ -3,9 +3,9 @@ private class SequenceObjectTest {
             
     private static testMethod void  callingFetchStepsReturnsExpectedStepCollection() {
         // arrange
-        Process__c markProcess = ProcessSet.generateOne(Mark.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
-        Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
+        Process__c markProcess = ProcessObject.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
          
         String sequenceName = 'theSequence';   
         Sequence__c soSequence = new Sequence__c(Name = sequenceName);
@@ -35,7 +35,7 @@ private class SequenceObjectTest {
     
     private static testMethod void callingAppendStepAddStepWithExpectedProcessInExpectedPosition() {
         // arrange
-        Process__c markProcess = ProcessSet.generateOne(Mark.class);
+        Process__c markProcess = ProcessObject.generateOne(Mark.class);
 
         String sequenceName = 'theSequence';   
         Sequence__c soSequence = new Sequence__c(Name = sequenceName);
@@ -68,7 +68,7 @@ private class SequenceObjectTest {
 
    	private static testMethod void callingTerminateAddsTerminateStepIfNoTerminateStepExists() {
         // arrange
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
 
         String sequenceName = 'theSequence';   
         Sequence__c soSequence = new Sequence__c(Name = sequenceName);
@@ -100,9 +100,9 @@ private class SequenceObjectTest {
     
     private static testMethod void callingTerminateDoesNotAddTerminateStepIfTerminateStepExists() {
         // arrange
-        //Process__c markProcess = ProcessSet.generateOne(Mark.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
-        //Process__c subscribeProcess = ProcessSet.generateOne(Subscribe.class);
+        //Process__c markProcess = ProcessObject.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        //Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
          
         String sequenceName = 'theSequence';   
         Sequence__c soSequence = new Sequence__c(Name = sequenceName);
@@ -135,8 +135,8 @@ private class SequenceObjectTest {
  
     private static testMethod void callingDeleteStepWillNotDeleteStepOnADifferentSequence() {
         // arrange
-        Process__c markProcess = ProcessSet.generateOne(Mark.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c markProcess = ProcessObject.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
  
         String sequenceNameA = 'theSequenceA';   
         Sequence__c soSequenceA = new Sequence__c(Name = sequenceNameA);
@@ -169,8 +169,8 @@ private class SequenceObjectTest {
 
         private static testMethod void callingDeleteStepWillDeleteStepOnThisSequence() {
         // arrange
-        Process__c markProcess = ProcessSet.generateOne(Mark.class);
-        Process__c terminateProcess = ProcessSet.generateOne(Terminate.class);
+        Process__c markProcess = ProcessObject.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
  
         String sequenceNameA = 'theSequenceA';   
         Sequence__c soSequenceA = new Sequence__c(Name = sequenceNameA);
