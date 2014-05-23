@@ -65,6 +65,7 @@
         <members>SalesforceObjectTest</members>
         <members>Schedule</members>
         <members>ScheduleConfigurationObjectSet</members>
+        <members>ScheduleConfigurationObjectSetTest</members>
         <members>ScheduleTest</members>
         <members>SchemaSelectorController</members>
         <members>SequenceBuilderExtension</members>
