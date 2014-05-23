@@ -13,7 +13,7 @@ public class SequenceObjectSet extends SalesforceObjectSet {
      * https://success.salesforce.com/ideaView?id=08730000000BqSJ
      * So we cascade the delete ourselves manually, to make sure they fire.
      */
-    @testVisible private void cascadeDeletionTriggers() {
+    @TestVisible private void cascadeDeletionTriggers() {
         Set<Id> sequenceIds = new Map<Id,SObject>(this.getSObjects()).keySet();
         List<Step__c> steps = [
             SELECT Id

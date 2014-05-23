@@ -1,6 +1,6 @@
-@isTest private class HeartbeatImplementationTest {
+@IsTest private class HeartbeatImplementationTest {
     
-    static testMethod void testNoScheduledSequences() {
+    static testmethod void testNoScheduledSequences() {
         Test.startTest();
         HeartbeatImplementation job = new HeartbeatImplementation();
         job.execute(null);
@@ -21,7 +21,7 @@
         override public Boolean isAlreadyRunning() {return true;}
     }
     
-    static testMethod void testOneScheduledSequence() {
+    static testmethod void testOneScheduledSequence() {
         //arrange processes
         Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);

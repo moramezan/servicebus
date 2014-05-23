@@ -1,6 +1,6 @@
-@isTest public class BatchBrokerImplementationTest {
+@IsTest public class BatchBrokerImplementationTest {
  
-    static testMethod void callingRestartSuccessfullyCallsRestartImp() {
+    static testmethod void callingRestartSuccessfullyCallsRestartImp() {
         //arrange processes
         Process__c markProcess = ProcessObject.generateOne(Mark.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -31,7 +31,7 @@
  
     }
     
-    static testMethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToMessage() {
+    static testmethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToMessage() {
         //arrange processes
         Process__c failureProcess = ProcessObject.generateOne(BrokerTest.class);
         
@@ -72,7 +72,7 @@
         System.assertEquals(expectedMessage, messages[0].Exception__c);
     }
 
-    static testMethod void callingBrokerStartSuccessfullyCallsStartImp() {
+    static testmethod void callingBrokerStartSuccessfullyCallsStartImp() {
         //arrange processes
         Process__c markProcess = ProcessObject.generateOne(Mark.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);

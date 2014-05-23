@@ -1,6 +1,6 @@
-@isTest private class PublishTest {
+@IsTest private class PublishTest {
 
-    static testMethod void canDetermineConfigObject() {
+    static testmethod void canDetermineConfigObject() {
         //arrange processes
         Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
@@ -12,7 +12,7 @@
         System.assertEquals(expectedConfiguration, actualConfiguration);
     }
     
-    static testMethod void testSubsequenceDropped() {
+    static testmethod void testSubsequenceDropped() {
         //arrange events
         EventType__c eventType = new EventType__c(Name = 'ready');
         insert eventType;
@@ -62,7 +62,7 @@
         System.assertEquals(expectedIds, actualIds);
     }
     
-    static testMethod void testUnconfiguredPublishProcessThrowsException() {
+    static testmethod void testUnconfiguredPublishProcessThrowsException() {
         //arrange processes
         Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
@@ -89,7 +89,7 @@
         System.assert(thrown);
     }
     
-    static testMethod void testNoSubscribersStillReturnsOneMessage() {
+    static testmethod void testNoSubscribersStillReturnsOneMessage() {
         //arrange processes
         Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
@@ -125,7 +125,7 @@
         System.assertEquals(expectedData, actualData);
     }
     
-    static testMethod void testSubscribersAffectParametersListReturned() {
+    static testmethod void testSubscribersAffectParametersListReturned() {
         EventType__c eventType = new EventType__c(Name = 'TestEvent');
         insert eventType;
         

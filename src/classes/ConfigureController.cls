@@ -50,14 +50,14 @@ public class ConfigureController {
         return protocolAndHost;
     }
     
-    @testVisible void attemptCallout(String endpoint) {
+    @TestVisible void attemptCallout(String endpoint) {
         System.HttpRequest request = new System.HttpRequest();
         request.setMethod('GET');
         request.setEndpoint(endpoint);
         new System.Http().send(request);
     }
     
-    @testVisible System.PageReference buildSetupPage() {
+    @TestVisible System.PageReference buildSetupPage() {
         //prepare a link to pre-populated remote site setting
         System.PageReference setup = new System.PageReference('/0rp/e');
         setup.getParameters().putAll(new Map<String,String>{

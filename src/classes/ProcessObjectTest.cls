@@ -1,6 +1,6 @@
-@isTest public class ProcessObjectTest {
+@IsTest public class ProcessObjectTest {
 
-    static testMethod void callingGenerateOneInsertsExpectedProcess() {
+    static testmethod void callingGenerateOneInsertsExpectedProcess() {
         //arrange 
         List<Process__c> processesBefore = SalesforceObjectSet.listAll(Process__c.SObjectType);
         Integer actualProcessesBeforeCount = processesBefore.size();  
@@ -21,7 +21,7 @@
     }
     
 
-    static testMethod void callingFromTypeReturnsProcessWithExpectedValues() {
+    static testmethod void callingFromTypeReturnsProcessWithExpectedValues() {
         //arrange 
         Type actualType = Subscribe.class;
         

@@ -1,6 +1,6 @@
-@isTest private class AsyncApexJobsTest {
+@IsTest private class AsyncApexJobsTest {
     
-    static testMethod void testAbortJobs() {
+    static testmethod void testAbortJobs() {
         
         //before
         Integer expectedBefore = 0;
@@ -31,7 +31,7 @@
         System.assertEquals(expectedStopped, actualStopped);
     }
     
-    static testMethod void testRunOneOnlyRunsJobOnce() {
+    static testmethod void testRunOneOnlyRunsJobOnce() {
         Test.startTest();
         AsyncApexJobs one = AsyncApexJobs.runOne(BatchBrokerImplementation.class, 1);
         AsyncApexJobs two = AsyncApexJobs.runOne(BatchBrokerImplementation.class, 1);

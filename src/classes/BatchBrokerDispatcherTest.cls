@@ -1,6 +1,6 @@
-@isTest public class BatchBrokerDispatcherTest {
+@IsTest public class BatchBrokerDispatcherTest {
 
-    static testMethod void coverStart() {
+    static testmethod void coverStart() {
         //arrange
         BatchBrokerDispatcher dispatcher = new BatchBrokerDispatcher();
         
@@ -11,7 +11,7 @@
         System.assert(queryLocator instanceof Database.QueryLocator);
     }
     
-    static testMethod void coverExecute() {
+    static testmethod void coverExecute() {
         //arrange
         List<Message__c> scope = new List<Message__c>();
         BatchBrokerDispatcher dispatcher = new BatchBrokerDispatcher();
@@ -23,7 +23,7 @@
         System.assert(scope.isEmpty());
     }
     
-    static testMethod void coverFinish() {
+    static testmethod void coverFinish() {
         //arrange
         BatchBrokerDispatcher dispatcher = new BatchBrokerDispatcher();
         

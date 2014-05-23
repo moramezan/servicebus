@@ -1,7 +1,6 @@
-@isTest
-private class SynchronousBrokerTest{
+@IsTest private class SynchronousBrokerTest{
 
-    private static testMethod void callingEnqueueSuccessfullyExecutesStepsInSequence() {
+    private static testmethod void callingEnqueueSuccessfullyExecutesStepsInSequence() {
         //arrange processes
         Process__c markProcess = ProcessObject.generateOne(Mark.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);

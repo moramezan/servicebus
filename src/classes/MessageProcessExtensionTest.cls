@@ -1,6 +1,6 @@
 @IsTest public class MessageProcessExtensionTest {
 
-    static testMethod void testDml() {
+    static testmethod void testDml() {
         //arrange message
         Message__c message = new Message__c(Status__c = 'Queued');
         insert message;

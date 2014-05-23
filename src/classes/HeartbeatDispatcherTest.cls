@@ -1,6 +1,6 @@
-@isTest private class HeartbeatDispatcherTest {
+@IsTest private class HeartbeatDispatcherTest {
     
-    static testMethod void coverExecuteMethod() {
+    static testmethod void coverExecuteMethod() {
         Test.startTest();
         HeartbeatDispatcher dispatcher = new HeartbeatDispatcher();
         System.schedule('HeartbeatDispatcherTest', '0 0 * * * ?', dispatcher);

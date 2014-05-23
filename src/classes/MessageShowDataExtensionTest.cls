@@ -1,6 +1,6 @@
 @IsTest public class MessageShowDataExtensionTest {
 
-    static testMethod void testRedirect() {
+    static testmethod void testRedirect() {
         //arrange
         String parameters = Json.serialize(new Map<String,Object>{'Id' => UserInfo.getUserId()});
         Message__c message = new Message__c(Parameters__c = parameters);

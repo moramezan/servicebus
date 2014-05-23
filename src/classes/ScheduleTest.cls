@@ -1,5 +1,5 @@
-@isTest private class ScheduleTest {
-    static testMethod void testPassThrueScenarioHandled() {
+@IsTest private class ScheduleTest {
+    static testmethod void testPassThrueScenarioHandled() {
         //arrange processes
         Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -40,7 +40,7 @@
         Integer actualHitCount = results.size();
         System.assertEquals(expectedHitCount, actualHitCount);
     }
-    static testMethod void testHeartbeatHandled() {
+    static testmethod void testHeartbeatHandled() {
         //arrange processes
         Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -85,7 +85,7 @@
         System.assertEquals(expectedHitCount, actualHitCount);
     }
     
-    static testMethod void testMonthlyWindow() {
+    static testmethod void testMonthlyWindow() {
         DateTime christmasMorning = DateTime.newInstanceGmt(2014, 12, 25, 9, 0, 0);
         System.assert(Schedule.isWithinMonthlyWindow(christmasMorning, new Set<String>{'24', '25', '26'}));
         
@@ -96,7 +96,7 @@
         System.assert(Schedule.isWithinMonthlyWindow(independenceDay, new Set<String>{'4'}));
     }
     
-    static testMethod void testWeeklyWindow() {
+    static testmethod void testWeeklyWindow() {
         DateTime wednesday = DateTime.newInstanceGmt(2014, 1, 15, 9, 0, 0); //15th Jan 2014 is a Wednesday
         System.assert(Schedule.isWithinWeeklyWindow(wednesday, new Set<String>{'Tuesday', 'Wednesday', 'Thursday'}));
         
@@ -114,7 +114,7 @@
         System.assert(!Schedule.isWithinWeeklyWindow(saturdayNight, new Set<String>{'Sunday'}));
     }
     
-    static testMethod void testDailyWindow() {
+    static testmethod void testDailyWindow() {
         DateTime sundayNight = DateTime.newInstanceGmt(2014, 1, 19, 23, 59, 59); //19th Jan 2014 is a Sunday
         System.assert(!Schedule.isWithinDailyWindow(sundayNight, new Set<String>{'Working days only'}));
         System.assert(Schedule.isWithinDailyWindow(sundayNight, new Set<String>{'Weekends and holidays'}));
@@ -124,7 +124,7 @@
         System.assert(Schedule.isWithinDailyWindow(sundayNight, new Set<String>{'Working days only','Weekends and holidays'}));
     }
     
-    static testMethod void testHourlyWindow() {
+    static testmethod void testHourlyWindow() {
         DateTime preNoon = DateTime.newInstanceGmt(2014, 12, 25, 11, 0, 0);
         DateTime noon = DateTime.newInstanceGmt(2014, 12, 25, 12, 0, 0);
         DateTime postNoon = DateTime.newInstanceGmt(2014, 12, 25, 13, 0, 0);
@@ -134,7 +134,7 @@
         System.assert(!Schedule.isWithinHourlyWindow(postNoon, new Set<String>{'12:00','14:00'}));
     }
     
-    static testMethod void testWindow() {
+    static testmethod void testWindow() {
         DateTime christmasMorning = DateTime.newInstanceGmt(2013, 12, 25, 9, 0, 0); //christmas was a wednesday
         ScheduleConfiguration__c config = new ScheduleConfiguration__c(Frequency__c = 'Weekly', FriendlyDates__c = 'Wednesday');
         

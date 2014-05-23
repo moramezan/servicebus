@@ -53,7 +53,7 @@ public without sharing class Schedule implements Process.Plugin {
         return EdaUtility.convert(parametersList);
     }
     
-    @testVisible static private Boolean isWithinWindow(DateTime heartbeat, ScheduleConfiguration__c config) {
+    @TestVisible static private Boolean isWithinWindow(DateTime heartbeat, ScheduleConfiguration__c config) {
         String frequency = config.Frequency__c;
         Set<String> details = new Set<String>(config.FriendlyDates__c.split(';'));
         Set<String> runTimes = new Set<String>(config.FriendlyTimes__c.split(';'));
@@ -78,7 +78,7 @@ public without sharing class Schedule implements Process.Plugin {
         return false;
     }
     
-    @testVisible static private Boolean isWithinDailyWindow(DateTime heartbeat, Set<String> details) {
+    @TestVisible static private Boolean isWithinDailyWindow(DateTime heartbeat, Set<String> details) {
         String day = heartbeat.format('EEEE');
         
         Set<String> days = new Set<String>();
@@ -103,12 +103,12 @@ public without sharing class Schedule implements Process.Plugin {
         return days.contains(day);
     }
     
-    @testVisible static private Boolean isWithinWeeklyWindow(DateTime heartbeat, Set<String> details) {
+    @TestVisible static private Boolean isWithinWeeklyWindow(DateTime heartbeat, Set<String> details) {
         String day = heartbeat.formatGmt('EEEE');
         return details.contains(day);
     }
     
-    @testVisible static private Boolean isWithinMonthlyWindow(DateTime heartbeat, Set<String> details) {
+    @TestVisible static private Boolean isWithinMonthlyWindow(DateTime heartbeat, Set<String> details) {
         //convert ['1', '2', '3'] to [1, 2, 3]
         Set<Integer> days = new Set<Integer>();
         for (String detail : details) days.add(Integer.valueOf(detail));
@@ -116,7 +116,7 @@ public without sharing class Schedule implements Process.Plugin {
         return days.contains(today);
     }
     
-    @testVisible static private Boolean isWithinHourlyWindow(DateTime heartbeat, Set<String> runTimes) {
+    @TestVisible static private Boolean isWithinHourlyWindow(DateTime heartbeat, Set<String> runTimes) {
         //convert ['01:00', '02:00', '03:00'] to [1:00, 2:00, 3:00]
         Set<Time> times = new Set<Time>();
         for (String runTime : runTimes) times.add(Time.newInstance(Integer.valueOf(runTime.left(2)), 0, 0, 0));

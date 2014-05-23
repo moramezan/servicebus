@@ -1,14 +1,14 @@
-@isTest //-- no view of org data
+@IsTest //-- no view of org data
 private class MarkTest {
 
-    static testMethod void testProcessIsDescribed() {
+    static testmethod void testProcessIsDescribed() {
         Mark mark = new Mark();
         System.assertNotEquals(null, mark.describe().Name);
         System.assertNotEquals(null, mark.describe().Description);
         System.assertNotEquals(null, mark.describe().Tag);
     }
     
-    static testMethod void callingExecuteReturnsExpectedParametersCollectio() {
+    static testmethod void callingExecuteReturnsExpectedParametersCollectio() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Decimal position = 1;

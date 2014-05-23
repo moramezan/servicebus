@@ -1,6 +1,6 @@
-@isTest public class StepObjectTest {
+@IsTest public class StepObjectTest {
     
-    static testMethod void testMoveStepBefore() {
+    static testmethod void testMoveStepBefore() {
         //arrange processes
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -30,7 +30,7 @@
         System.assertEquals(2, wiretapStep.Position__c);
     }
     
-    static testMethod void testMoveStepAfter() {
+    static testmethod void testMoveStepAfter() {
         //arrange processes
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);

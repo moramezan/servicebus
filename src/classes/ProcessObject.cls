@@ -42,7 +42,7 @@ public class ProcessObject extends SalesforceObject {
      * @param reflector Type of class whose process to generate
      * @return          Inserted process with all fields
      */
-    @testVisible static private Process__c generateOne(Type reflector) {
+    @TestVisible static private Process__c generateOne(Type reflector) {
         Process__c process = fromType(reflector);
         insert process;
         return process;

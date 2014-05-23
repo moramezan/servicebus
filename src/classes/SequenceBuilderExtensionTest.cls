@@ -1,4 +1,4 @@
-@isTest public class SequenceBuilderExtensionTest {
+@IsTest public class SequenceBuilderExtensionTest {
     
     static private Id setupSequence() {
         //arrange processes
@@ -21,7 +21,7 @@
      * that ConfigureController.doRedirect() cannot be tested. Can't remember what that
      * is exactly... maybe to do with difficulty mocking the callout response.
      */
-    /*static testMethod void testDoRedirect() {
+    /*static testmethod void testDoRedirect() {
         //arrange redirect, controller and extension
         PageReference redirect;
         ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c());
@@ -45,7 +45,7 @@
         System.assert(redirect == null);
     }*/
     
-    static testMethod void testGetProcesses() {
+    static testmethod void testGetProcesses() {
         //arrange sequence, controller and extension
         Id sequenceId = setupSequence();
         ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c(Id = sequenceId));
@@ -63,7 +63,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testMethod void testGetSteps() {
+    static testmethod void testGetSteps() {
         //arrange sequence, controller and extension
         Id sequenceId = setupSequence();
         ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c(Id = sequenceId));
@@ -81,7 +81,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testMethod void testFetchSteps() {
+    static testmethod void testFetchSteps() {
         //arrange
         Id sequenceId = setupSequence();
         
@@ -94,7 +94,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testMethod void testAppendStep() {
+    static testmethod void testAppendStep() {
         //arrange sequence
         Id sequenceId = setupSequence();
         
@@ -112,7 +112,7 @@
         System.assertEquals(expectedClassName, actualClassName);
     }
     
-    static testMethod void testMoveStepBefore() {
+    static testmethod void testMoveStepBefore() {
         //arrange sequence
         Id sequenceId = setupSequence();
         List<Step__c> steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
@@ -137,7 +137,7 @@
         System.assertEquals(wiretapExpectedClassName, wiretapActualClassName);
     }
     
-    static testMethod void testMoveStepAfter() {
+    static testmethod void testMoveStepAfter() {
         //arrange sequence
         Id sequenceId = setupSequence();
         List<Step__c> steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
@@ -162,7 +162,7 @@
         System.assertEquals(wiretapExpectedClassName, wiretapActualClassName);
     }
     
-    static testMethod void testDestroyStep() {
+    static testmethod void testDestroyStep() {
         //arrange
         Id sequenceId = setupSequence();
         List<Step__c> steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();

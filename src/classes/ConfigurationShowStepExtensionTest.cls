@@ -1,6 +1,6 @@
 @IsTest public class ConfigurationShowStepExtensionTest {
 
-    static testMethod void testRedirectOccurs() {
+    static testmethod void testRedirectOccurs() {
         //arrange process, sequence and step
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         

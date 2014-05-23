@@ -12,7 +12,7 @@ public class StepObjectSet extends SalesforceObjectSet {
         this.deleteConfigurations();
     }
     
-    @testVisible static private Step__c generateOne(Id sequenceId, Id processId) {
+    @TestVisible static private Step__c generateOne(Id sequenceId, Id processId) {
         Step__c step = new Step__c(
             Sequence__c = sequenceId,
             Process__c = processId

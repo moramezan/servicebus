@@ -1,7 +1,6 @@
-@isTest
-private class MessagePauseQueueExtensionTest {
+@IsTest private class MessagePauseQueueExtensionTest {
     
-    static testMethod void  callingDoDmlCtorCorrectlySetsPauseFlag() {
+    static testmethod void callingDoDmlCtorCorrectlySetsPauseFlag() {
         // arrange
         Boolean isPaused =  false;
         insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
@@ -19,7 +18,7 @@ private class MessagePauseQueueExtensionTest {
     }
     
     
-   static testMethod void  callingDoPauseOnQueuedMessagesProcessesMessages() {
+   static testmethod void  callingDoPauseOnQueuedMessagesProcessesMessages() {
         // arrange
         Boolean isPaused =  false;
         insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);

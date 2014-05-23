@@ -31,7 +31,7 @@ public with sharing class ProcessDiscoverController {
         }
     }
     
-    @testVisible static private List<Process__c> processes;
+    @TestVisible static private List<Process__c> processes;
     @RemoteAction static public List<Process__c> readProcesses(DateTime lastModifiedDate) {
         return processes != null ? processes : [
             SELECT Id, Name, Description__c, Tag__c, Icon__c, FullyQualifiedClassName__c
@@ -41,7 +41,7 @@ public with sharing class ProcessDiscoverController {
         ];
     }
     
-    @testVisible static private List<AsyncApexJob> jobs;
+    @TestVisible static private List<AsyncApexJob> jobs;
     @RemoteAction static public List<AsyncApexJob> readAsyncApexJobs(Id asyncApexJobId) {
         return jobs != null ? jobs : new List<AsyncApexJob>{(AsyncApexJob)SalesforceObject.getById(asyncApexJobId)};
     }

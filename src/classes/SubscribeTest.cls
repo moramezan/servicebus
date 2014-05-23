@@ -1,6 +1,6 @@
-@isTest private class SubscribeTest{
+@IsTest private class SubscribeTest{
     
-    static testMethod void canDetermineConfigObject() {
+    static testmethod void canDetermineConfigObject() {
         //arrange processes
         Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
         
@@ -12,7 +12,7 @@
         System.assertEquals(expectedConfiguration, actualConfiguration);
     }
     
-    static testMethod void testSubscribeProcessActsAsNoop() {
+    static testmethod void testSubscribeProcessActsAsNoop() {
         //arrange
         String data = '{"herp":"derp"}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);

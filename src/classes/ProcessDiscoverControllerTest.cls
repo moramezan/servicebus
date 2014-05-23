@@ -1,6 +1,6 @@
-@isTest private class ProcessDiscoverControllerTest {
+@IsTest private class ProcessDiscoverControllerTest {
     
-    static testMethod void testGetAsyncApexJob() {
+    static testmethod void testGetAsyncApexJob() {
         //arrange
         ProcessDiscoverController.jobs = new List<AsyncApexJob>{new AsyncApexJob(Id = '707000000000000AAA')};
         ProcessDiscoverController extension = new ProcessDiscoverController();
@@ -25,7 +25,7 @@
         System.assertEquals(expectedId, actualId);
     }
     
-    static testMethod void testReadAsyncApexJobs() {
+    static testmethod void testReadAsyncApexJobs() {
         //arrange
         ProcessDiscoverController.jobs = new List<AsyncApexJob>{new AsyncApexJob(Id = '707000000000000AAA')};
         
@@ -38,7 +38,7 @@
         System.assertEquals(expectedId, actualId);
     }
     
-    static testMethod void testReadProcesses() {
+    static testmethod void testReadProcesses() {
         //arrange
         ProcessDiscoverController.processes = new List<Process__c>{new Process__c(Name = 'Test')};
         

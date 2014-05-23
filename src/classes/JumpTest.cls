@@ -1,6 +1,6 @@
-@isTest private class JumpTest {
+@IsTest private class JumpTest {
 
-    static testMethod void testProcessIsDescribed() {
+    static testmethod void testProcessIsDescribed() {
         Jump jump = new Jump();
         System.assertNotEquals(null, jump.describe().Name);
         System.assertNotEquals(null, jump.describe().Description);
@@ -8,7 +8,7 @@
     }
     
     
-    static testMethod void testJumpPervertsExecution() {
+    static testmethod void testJumpPervertsExecution() {
         //arrange
         Process__c jump = new Process__c(Name = 'Jump');
         insert jump;

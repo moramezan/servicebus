@@ -1,6 +1,6 @@
 @IsTest public class PublishHelpControllerTest {
     
-    static testMethod void callingGetHealthReturnsExpectedListContaningStatusEqWarning() {
+    static testmethod void callingGetHealthReturnsExpectedListContaningStatusEqWarning() {
         // Arrange :
         Sequence__c sequenceA = new Sequence__c(Name = 'SequenceA');
         insert sequenceA;
@@ -42,7 +42,7 @@
         System.assert(actualDescription.contains(expectedDescription));
     }
     
-    static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNoEventConfig() {
+    static testmethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNoEventConfig() {
         // Arrange :
         Sequence__c sequenceB = new Sequence__c(Name = 'SequenceB');
         insert sequenceB;

@@ -1,14 +1,14 @@
-@isTest //-- no view of org data
+@IsTest //-- no view of org data
 private class WiretapTest {
     
-    static testMethod void testProcessIsDescribed() {
+    static testmethod void testProcessIsDescribed() {
         Wiretap wiretap = new Wiretap();
         System.assertNotEquals(null, wiretap.describe().Name);
         System.assertNotEquals(null, wiretap.describe().Description);
         System.assertNotEquals(null, wiretap.describe().Tag);
     }
     
-    static testMethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnCustomSettingNOTSet() {
+    static testmethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnCustomSettingNOTSet() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Integer step = 1;
@@ -40,7 +40,7 @@ private class WiretapTest {
         System.assertEquals(expectedFlagException , actualFlagException );
     }
    
-    static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenDefinedMetaCustomSettingSet() {
+    static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenDefinedMetaCustomSettingSet() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Integer step = 1;

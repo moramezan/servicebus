@@ -1,6 +1,6 @@
 @IsTest public class SubscribeHelpControllerTest {
     
-    static testMethod void callingGetHealthReturnsExpectedListContaningStatusEqWarning() {
+    static testmethod void callingGetHealthReturnsExpectedListContaningStatusEqWarning() {
         //arrange processes
         Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
@@ -42,7 +42,7 @@
         System.assert(messages[0].getSummary().contains(expectedDescription));
     }
     
-    static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNotFirst() {
+    static testmethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNotFirst() {
         //arrange processes
         Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
@@ -73,7 +73,7 @@
         System.assert(messages[0].getSummary().contains(actualSequenceSubscribeNotLastStep));
     }
     
-    static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorGtOne() {
+    static testmethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorGtOne() {
         //arrange processes
         Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
         
@@ -119,7 +119,7 @@
         System.assert(messages[0].getSummary().contains(actualDescription));
     }
 
-    static testMethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNoEventConfig() {
+    static testmethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNoEventConfig() {
         //arrange processes
         Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);

@@ -1,6 +1,6 @@
 @IsTest public class TerminateHelpControllerTest{
     
-    static testMethod void callingGetHeathReturnsExpectedList() {
+    static testmethod void callingGetHeathReturnsExpectedList() {
         // #11 : Trivial error / health checker
         // * Sequence with no Terminate (error)
         // * Sequence with more than one Terminate (error)

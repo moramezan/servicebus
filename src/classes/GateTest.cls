@@ -1,14 +1,14 @@
-@isTest  //-- no view of org data
+@IsTest  //-- no view of org data
 private  class GateTest {
 
-    static testMethod void testProcessIsDescribed() {
+    static testmethod void testProcessIsDescribed() {
         Jump jump = new Jump();
         System.assertNotEquals(null, jump.describe().Name);
         System.assertNotEquals(null, jump.describe().Description);
         System.assertNotEquals(null, jump.describe().Tag);
     }
     
-    static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenGateItemsCountEqCount() {
+    static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenGateItemsCountEqCount() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Decimal position = 1;
@@ -67,7 +67,7 @@ private  class GateTest {
     }
     
     
-    static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenGateItemsCountNotEqCount() {
+    static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenGateItemsCountNotEqCount() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Decimal position = 1;

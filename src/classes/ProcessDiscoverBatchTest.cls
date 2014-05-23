@@ -1,4 +1,4 @@
-@isTest private class ProcessDiscoverBatchTest {
+@IsTest private class ProcessDiscoverBatchTest {
     
     public class MockApexClassProvider implements ProcessDiscoverBatch.IApexClassProvider {
         private List<ApexClass> apexClasses;
@@ -12,7 +12,7 @@
         }
     } 
     
-    static testMethod void testRecordCreatedForPluginAndStateful() {
+    static testmethod void testRecordCreatedForPluginAndStateful() {
         //arrange
         ProcessDiscoverBatch.classes = [
             SELECT Id, Name, NamespacePrefix
@@ -49,7 +49,7 @@
     
 
  
-    static testMethod void testImplementsEdaSubclass() {
+    static testmethod void testImplementsEdaSubclass() {
         // arrange
         Type gate = Type.forName('Gate.Meta');
         Type mark = Type.forName('Mark.Meta');
@@ -91,7 +91,7 @@
     }
    
     
-    static testMethod void callingGetProcessHealthReturnsOkForProcessWithApexClass() {
+    static testmethod void callingGetProcessHealthReturnsOkForProcessWithApexClass() {
         //arrange - 
         String processName = Terminate.class.getName();
         Process__c process =  new Process__c(Name = processName, FullyQualifiedClassName__c = processName);
@@ -113,7 +113,7 @@
     }
 
   
-    static testMethod void callingGetProcessHealthReturnsDeleteForProcessWithoutApexClassAndNotUsedInAnySequences() {       
+    static testmethod void callingGetProcessHealthReturnsDeleteForProcessWithoutApexClassAndNotUsedInAnySequences() {       
         // arrange - 
         String processName = Wiretap.class.getName();
         Process__c process =  new Process__c(Name = processName, FullyQualifiedClassName__c = processName);
@@ -138,7 +138,7 @@
     
     }
 
-    static testMethod void callingGetProcessHealthReturnsErroForProcessWithoutApexClassAndUsedOneOrMoreSequences() {
+    static testmethod void callingGetProcessHealthReturnsErroForProcessWithoutApexClassAndUsedOneOrMoreSequences() {
 
          // arrange - 
         String processName = Wiretap.class.getName();
@@ -167,7 +167,7 @@
     }
     
     
-    static testMethod void callingDeleteInvalidUnusedProcessesDeletesExpectedProcesses() {
+    static testmethod void callingDeleteInvalidUnusedProcessesDeletesExpectedProcesses() {
         //arrange - 
         String processNameKeep = Terminate.class.getName();
         Process__c processKeep =  new Process__c(Name = processNameKeep, FullyQualifiedClassName__c = processNameKeep);

@@ -1,7 +1,6 @@
-@isTest
-private class SequenceObjectTest {
+@IsTest private class SequenceObjectTest {
             
-    private static testMethod void  callingFetchStepsReturnsExpectedStepCollection() {
+    private static testmethod void  callingFetchStepsReturnsExpectedStepCollection() {
         // arrange
         Process__c markProcess = ProcessObject.generateOne(Mark.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -33,7 +32,7 @@ private class SequenceObjectTest {
         System.assertEquals( expectedStepCount , actualStepCount  );
     }
     
-    private static testMethod void callingAppendStepAddStepWithExpectedProcessInExpectedPosition() {
+    private static testmethod void callingAppendStepAddStepWithExpectedProcessInExpectedPosition() {
         // arrange
         Process__c markProcess = ProcessObject.generateOne(Mark.class);
 
@@ -66,7 +65,7 @@ private class SequenceObjectTest {
         System.assertEquals( expectedStepCount , actualStepCount  );  
     } 
 
-   	private static testMethod void callingTerminateAddsTerminateStepIfNoTerminateStepExists() {
+   	private static testmethod void callingTerminateAddsTerminateStepIfNoTerminateStepExists() {
         // arrange
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
 
@@ -98,7 +97,7 @@ private class SequenceObjectTest {
         System.assertEquals( expectedStepCount , actualStepCount  ); 
     }
     
-    private static testMethod void callingTerminateDoesNotAddTerminateStepIfTerminateStepExists() {
+    private static testmethod void callingTerminateDoesNotAddTerminateStepIfTerminateStepExists() {
         // arrange
         //Process__c markProcess = ProcessObject.generateOne(Mark.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -133,7 +132,7 @@ private class SequenceObjectTest {
         System.assertEquals( expectedStepCount , actualStepCount  ); 
     }
  
-    private static testMethod void callingDeleteStepWillNotDeleteStepOnADifferentSequence() {
+    private static testmethod void callingDeleteStepWillNotDeleteStepOnADifferentSequence() {
         // arrange
         Process__c markProcess = ProcessObject.generateOne(Mark.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -167,7 +166,7 @@ private class SequenceObjectTest {
         System.assertEquals( expectedFlag , actualFlag  ); 
     }    
 
-        private static testMethod void callingDeleteStepWillDeleteStepOnThisSequence() {
+        private static testmethod void callingDeleteStepWillDeleteStepOnThisSequence() {
         // arrange
         Process__c markProcess = ProcessObject.generateOne(Mark.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);

@@ -1,6 +1,6 @@
-@isTest private class BranchTest {
+@IsTest private class BranchTest {
 
-    static testMethod void canDetermineConfigObject() {
+    static testmethod void canDetermineConfigObject() {
         //arrange processes
         Process__c branchProcess = ProcessObject.generateOne(Branch.class);
         
@@ -12,7 +12,7 @@
         System.assertEquals(expectedConfiguration, actualConfiguration);
     }
 
-    static testMethod void testSubsequenceDropped() {
+    static testmethod void testSubsequenceDropped() {
         Sequence__c origin = new Sequence__c(Name = 'origin');
         insert origin;
         
@@ -35,7 +35,7 @@
         System.assertEquals(expectedIds, actualIds);
     }
     
-    static testMethod void testTwoParameterSetsReturned() {
+    static testmethod void testTwoParameterSetsReturned() {
         //arrange sequences
         Sequence__c origin = new Sequence__c(Name = 'originSequence');
         Sequence__c target = new Sequence__c(Name = 'targetSequence');
@@ -90,7 +90,7 @@
         System.assertEquals(expectedBranchPosition, actualBranchPosition);
     }
     
-    static testMethod void testInfiniteLoopFuckupGetsCaught() {
+    static testmethod void testInfiniteLoopFuckupGetsCaught() {
         //arrange sequences
         Sequence__c sequence = new Sequence__c(Name = 'originSequence');
         insert sequence;

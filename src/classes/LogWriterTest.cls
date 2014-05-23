@@ -1,7 +1,6 @@
-@isTest
-private class LogWriterTest{
+@IsTest private class LogWriterTest{
     
-    private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessEntryPointGuid() {
+    private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessEntryPointGuid() {
         //arrange
         String sequenceName  = 'LogWriterSequence';
         Integer thePosition =  1;
@@ -36,7 +35,7 @@ private class LogWriterTest{
         System.assert( actualMessage.contains(expectedMessage) );
     }
     
-	private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
+	private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
         //arrange
         String sequenceName  = 'LogWriterSequence';
         Integer thePosition =  1;
@@ -71,7 +70,7 @@ private class LogWriterTest{
         System.assert( actualMessage.contains(expectedMessage) );
     }
 
-    private static testMethod void callingInvokeInsertsExpectedLogWriterEntries() {
+    private static testmethod void callingInvokeInsertsExpectedLogWriterEntries() {
         //arrange
         String theIdentifier1 = 'BALLS';
         String theIdentifier2 = 'CROW';

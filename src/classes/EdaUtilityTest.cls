@@ -1,5 +1,5 @@
-@isTest private class EdaUtilityTest {
-    static testMethod void testInputs2map() {
+@IsTest private class EdaUtilityTest {
+    static testmethod void testInputs2map() {
         //arrange
         List<Process.PluginDescribeResult.InputParameter> inputs = new List<Process.PluginDescribeResult.InputParameter>{
             new Process.PluginDescribeResult.InputParameter(
@@ -22,7 +22,7 @@
         System.assertEquals('derp', descriptions.get('two'));
     }
     
-    static testMethod void testParametersList2result() {
+    static testmethod void testParametersList2result() {
         //arrange
         String data = '[{"aaa":"1", "bbb":"foo"}, {"ccc":"2", "ddd":"bar"}]';
         List<Map<String,String>> parametersList = (List<Map<String,String>>)System.Json.deserialize(data, List<Map<String,String>>.class);
@@ -38,7 +38,7 @@
         System.assertEquals(expectedTwo, System.Json.serialize(results.get('1')));
     }
     
-    static testMethod void testResult2ParametersList() {
+    static testmethod void testResult2ParametersList() {
         //arrange
         Process.PluginResult result = new Process.PluginResult(new Map<String,Object>{
             '0' => new Map<String,Object>{'aaa' => '1', 'bbb' => 'foo'},

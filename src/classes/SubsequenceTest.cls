@@ -1,6 +1,6 @@
-@isTest private class SubsequenceTest {
+@IsTest private class SubsequenceTest {
 
-    static testMethod void canDetermineConfigObject() {
+    static testmethod void canDetermineConfigObject() {
         //arrange processes
         Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
         
@@ -12,7 +12,7 @@
         System.assertEquals(expectedConfiguration, actualConfiguration);
     }
 
-    static testMethod void testMessageIsRedirected() {
+    static testmethod void testMessageIsRedirected() {
         //arrange processes
         Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);

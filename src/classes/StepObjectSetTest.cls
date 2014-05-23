@@ -1,7 +1,7 @@
-@isTest private class StepObjectSetTest {
+@IsTest private class StepObjectSetTest {
     
     //before insert test
-    static testMethod void testStepConfigurationIsCreatedWhenInserted() {
+    static testmethod void testStepConfigurationIsCreatedWhenInserted() {
         //arrange processes
         Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -21,7 +21,7 @@
     }
 
     //after insert test
-    static testMethod void testNoResequencingOfStepsWhenAllInsertedStepsHaveAPositionGtZero() {
+    static testmethod void testNoResequencingOfStepsWhenAllInsertedStepsHaveAPositionGtZero() {
         //arrange processes
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -62,7 +62,7 @@
     }
     
     //after insert test
-    static testMethod void testResequencingOfStepsWhenOneOrMoreInsertedStepsHavePositionEqToZero() {
+    static testmethod void testResequencingOfStepsWhenOneOrMoreInsertedStepsHavePositionEqToZero() {
         //arrange
         Integer PositionGtZero1 = 1;
         Integer PositionGtZero2 = 2;
@@ -137,7 +137,7 @@
     }
     
     //before delete test
-    static testMethod void firingStepBeforeDeleteDeletesConfig() {
+    static testmethod void firingStepBeforeDeleteDeletesConfig() {
         // Arrange :
         Decimal position  = 1;
         String  data      = 'data';

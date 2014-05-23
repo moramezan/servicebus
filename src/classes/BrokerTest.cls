@@ -32,7 +32,7 @@
     }
 
 
-    static testMethod void stackDepthExceededWillHaltProcessingWithAppropriateMessageDetail() {
+    static testmethod void stackDepthExceededWillHaltProcessingWithAppropriateMessageDetail() {
         // arrange
         Integer stackDepthThreshold = 3;
         Broker.stackDepthThreshold  = stackDepthThreshold;
@@ -103,7 +103,7 @@
         System.assertEquals( expectedStatus, actualStatus); 
     }
     
-    static testMethod void callingGetStackDepthReturnsExpectedValueWhenStackDepthParameterLtThreshold() {
+    static testmethod void callingGetStackDepthReturnsExpectedValueWhenStackDepthParameterLtThreshold() {
         //arrange
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
@@ -121,7 +121,7 @@
 
 
 
-    static testMethod void callingGetStackDepthReturnsExpectedValueWhenStackDepthParameterNotDefined() {
+    static testmethod void callingGetStackDepthReturnsExpectedValueWhenStackDepthParameterNotDefined() {
        //arrange
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
@@ -136,7 +136,7 @@
     }
  
   
-    static testMethod void callingGetStackDepthThrowsExceptionWhenStackDepthParameterGtOrEqToThreshold() {
+    static testmethod void callingGetStackDepthThrowsExceptionWhenStackDepthParameterGtOrEqToThreshold() {
        //arrange
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
@@ -158,7 +158,7 @@
     }
     
     
-    static testMethod void callingApplyStackDepthCorrectlyAppliesStackDepthToParameters() {
+    static testmethod void callingApplyStackDepthCorrectlyAppliesStackDepthToParameters() {
         //arrange
         Integer stackDepth = 8;
         Map<String,Object> parameters = new Map<String,Object>();
@@ -182,7 +182,7 @@
     
  
 
-    static testMethod void canCorrectlyResolveAndPersistMessages() {
+    static testmethod void canCorrectlyResolveAndPersistMessages() {
         //arrange processes
         Process__c markProcess = ProcessObject.generateOne(Mark.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -258,7 +258,7 @@
         System.assertEquals(expectedProcessId02, actualProcessId02  );
     }
     
-    static testMethod void testLocatorMarksCorrectNumberOfMessages() {
+    static testmethod void testLocatorMarksCorrectNumberOfMessages() {
         //arrange
         Integer queryLimit = 2;
         
@@ -280,7 +280,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testMethod void testLocatorOnlyMarksNonProcessingWork() {
+    static testmethod void testLocatorOnlyMarksNonProcessingWork() {
         //arrange
         Integer fuckedLimit = 2;
         
@@ -300,7 +300,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testMethod void testLocatorReturnsOnlyReprocessWork() {
+    static testmethod void testLocatorReturnsOnlyReprocessWork() {
         Integer workCount = 2;
         
         //arrange fucked messages
@@ -327,7 +327,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testMethod void callingSurfaceExceptionSurfacesExpectedMessageOnMessage() {
+    static testmethod void callingSurfaceExceptionSurfacesExpectedMessageOnMessage() {
         //arrange
         Message__c message = new Message__c(
             Parameters__c = '{"Id":1, "eda_SequenceName":"crow", "eda_Position":1}'
@@ -358,7 +358,7 @@
         System.assert(actualMessage.contains(expectedMessage));
     }
     
-    static testMethod void canCorrectlyResolveMessages() {
+    static testmethod void canCorrectlyResolveMessages() {
         // arrange
         Process__c markProcess = ProcessObject.generateOne(Mark.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -475,7 +475,7 @@
         System.assertEquals(expectedSequenceName4, actualSequenceName4);
     }
     
-    static testMethod void callingEnqueueSuccessfullyCallsRestartImpl() {
+    static testmethod void callingEnqueueSuccessfullyCallsRestartImpl() {
         //arrange processes
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
@@ -505,7 +505,7 @@
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
     }
     
-    static testMethod void callingEnqueueSuccessfullyCallEnqueueImpAndCreatesDocument() {
+    static testmethod void callingEnqueueSuccessfullyCallEnqueueImpAndCreatesDocument() {
         //arrange processes
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
@@ -541,7 +541,7 @@
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
     }
     
-    static testMethod void callingRestartSuccessfullyCallsRestartImpl() {
+    static testmethod void callingRestartSuccessfullyCallsRestartImpl() {
         //arrange
         insert new BrokerSettings__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
         insert new Message__c(Status__c = 'Reprocess');
@@ -561,7 +561,7 @@
         
     }
     
-    static testMethod void callingMarkHelperCorrectlySetsCountOnParametersWhenMarkCountIncrementsTo2() {
+    static testmethod void callingMarkHelperCorrectlySetsCountOnParametersWhenMarkCountIncrementsTo2() {
         //arrange
         Integer markCount = 1;
         Map<String,Object> parametersIn0 = new Map<String,Object> {
@@ -594,7 +594,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testMethod void callingMarkHelperDoesNotSetCountOnParametersWhenMarkCountIncrementsToOtherThan2() {
+    static testmethod void callingMarkHelperDoesNotSetCountOnParametersWhenMarkCountIncrementsToOtherThan2() {
         //arrange
         Integer markCount = 0; //will not increment to 2
         Map<String,Object> parametersIn0 = new Map<String,Object> {
@@ -615,7 +615,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testMethod void callingMarkHelperDoesNotSetCountOnParametersWhenMarkCountIsNull() {
+    static testmethod void callingMarkHelperDoesNotSetCountOnParametersWhenMarkCountIsNull() {
         //arrange
         Map<String,Object> parametersIn0 = new Map<String,Object> {
             'Id' => '0'
@@ -646,7 +646,7 @@
      * http://salesforce.stackexchange.com/questions/27180/database-emptyrecyclebin-exhibits-unexpected-behaviour
      */
     
-    static testMethod void testMalformedParametersThrowsSystemJsonException() {
+    static testmethod void testMalformedParametersThrowsSystemJsonException() {
         //arrange
         Message__c message = new Message__c(Parameters__c = '{"malformed":....}');
         insert message;
@@ -663,7 +663,7 @@
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
-    static testMethod void testMissingPositionThrowsExpectedException() {
+    static testmethod void testMissingPositionThrowsExpectedException() {
         //arrange
         Message__c message = new Message__c(Parameters__c = '{"not_position": 0}');
         insert message;
@@ -680,7 +680,7 @@
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
-    static testMethod void testNoStepThrowsQueryException() {
+    static testmethod void testNoStepThrowsQueryException() {
         //arrange (note there is no Step__c in database!)
         Message__c message = new Message__c(Parameters__c = '{"eda_SequenceName": "", "eda_Position": 0}');
         insert message;
@@ -697,7 +697,7 @@
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
-    static testMethod void testProcessWithoutClassThrowsExpectedException() {
+    static testmethod void testProcessWithoutClassThrowsExpectedException() {
         //arrange processes
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
@@ -728,7 +728,7 @@
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
-    static testMethod void testNonProcessPluginThrowsTypeException() {
+    static testmethod void testNonProcessPluginThrowsTypeException() {
         //arrange processes
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
@@ -758,7 +758,7 @@
     }
     
     
-    static testMethod void canGenerateUniqueIds() {
+    static testmethod void canGenerateUniqueIds() {
         // arrange
         Integer uniqueTotal = 20000;
         Integer len = 10; // for len=5, Expected: 10000, Actual: 9944
@@ -777,7 +777,7 @@
         System.assertEquals(expectedSize, actualSize);
     }
     
-    static testMethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusQueued() {
+    static testmethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusQueued() {
         // arrange
         Boolean isPaused =  true;
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
@@ -827,7 +827,7 @@
         System.assertEquals( expectedStatus, actualStatus);
     }
 
-    static testMethod void callingEnqueueWhenBrokerIsNotPausedProcessesMessages() {
+    static testmethod void callingEnqueueWhenBrokerIsNotPausedProcessesMessages() {
         // arrange
         Boolean isPaused =  false;
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
@@ -882,7 +882,7 @@
         System.assertEquals( expectedCount, actualCount);
     }
  
-    static testMethod void canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError() {
+    static testmethod void canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError() {
         // arrange
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);

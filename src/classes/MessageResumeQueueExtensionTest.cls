@@ -1,7 +1,6 @@
-@isTest
-private class MessageResumeQueueExtensionTest {
+@IsTest private class MessageResumeQueueExtensionTest {
 
-   static testMethod void  callingDoDmlCtorCorrectlyResolvesFromQueuedToBufferAndCorrectlySetsPause() {
+   static testmethod void  callingDoDmlCtorCorrectlyResolvesFromQueuedToBufferAndCorrectlySetsPause() {
         // arrange
         Boolean isPaused =  true;
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
@@ -63,7 +62,7 @@ private class MessageResumeQueueExtensionTest {
     
 
         
-   static testMethod void  callingDoResumeOnQueuedMessagesProcessesMessages() {
+   static testmethod void  callingDoResumeOnQueuedMessagesProcessesMessages() {
         // arrange
         Boolean isPaused =  true;
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);

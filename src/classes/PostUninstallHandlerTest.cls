@@ -1,6 +1,6 @@
-@isTest private class PostUninstallHandlerTest {
+@IsTest private class PostUninstallHandlerTest {
 
-    static testMethod void callingUnInstallScheduleCorrectlyUnInstallsSchedule() {
+    static testmethod void callingUnInstallScheduleCorrectlyUnInstallsSchedule() {
 
         //arrange
         String  name = 'Heartbeat (do not delete)';

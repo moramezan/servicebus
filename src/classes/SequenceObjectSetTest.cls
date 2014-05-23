@@ -1,7 +1,7 @@
-@isTest private class SequenceObjectSetTest {
+@IsTest private class SequenceObjectSetTest {
 
     //before delete
-    static testMethod void testDeleteTriggersAreCascaded() {
+    static testmethod void testDeleteTriggersAreCascaded() {
         //arrange process
         Process__c branchProcess = ProcessObject.generateOne(Branch.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);

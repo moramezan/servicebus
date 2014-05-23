@@ -1,5 +1,5 @@
-@isTest private class PostInstallHandlerTest {
-    static testMethod void callingInstallScheduleCorrectlyInstallsSchedule() {
+@IsTest private class PostInstallHandlerTest {
+    static testmethod void callingInstallScheduleCorrectlyInstallsSchedule() {
         //arrange
         String  name = 'Heartbeat (do not delete)';
         
@@ -18,7 +18,7 @@
         
     }
 
-    static testMethod void testOnInstallSendsEmail() {
+    static testmethod void testOnInstallSendsEmail() {
         //assert
         Integer expectedInvocationsBefore = 0;
         Integer actualInvocationsBefore = Limits.getEmailInvocations();
@@ -35,7 +35,7 @@
         System.assertEquals(expectedInvocationsAfter, actualInvocationsAfter);
     }
     
-    static testMethod void testPermissionSetAssignmentCreated() {
+    static testmethod void testPermissionSetAssignmentCreated() {
         //arrange new user
         User user = new User(
             ProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator'].Id,
@@ -65,7 +65,7 @@
         }
     }
     
-    static testMethod void testWiretapSettingsCreated() {
+    static testmethod void testWiretapSettingsCreated() {
         //arrange user
         Id userId = UserInfo.getUserId();
         

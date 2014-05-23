@@ -1,8 +1,8 @@
-@isTest //-- no view of org data
+@IsTest //-- no view of org data
 private class TerminateTest
 {
 
-    static testMethod void callingExecuteReturnsExpectedParametersCollectionWhenSubsequenceAttribsDefinedOnParameters()
+    static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenSubsequenceAttribsDefinedOnParameters()
     {
         // Arrange :
         String sequenceName = 'the-sequence';
@@ -56,7 +56,7 @@ private class TerminateTest
         System.assertEquals(expectedPosition, actualPosition);
     }
     
-    static testMethod void
+    static testmethod void
     callingExecuteReturnsExpectedParametersCollectionWhenNoSubsequenceAttribsDefinedOnParameters() {
         // Arrange :
         String sequenceName = 'the-sequence';
@@ -85,7 +85,7 @@ private class TerminateTest
         System.assertEquals(expectedSize , actualSize );
     }
     
-    static testMethod void testMultipleSubsequencesGetPoppedOffStack() {
+    static testmethod void testMultipleSubsequencesGetPoppedOffStack() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Decimal position = 1;

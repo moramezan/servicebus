@@ -1,7 +1,6 @@
-@isTest
-private class LogInitializerTest {
+@IsTest private class LogInitializerTest {
 
-        private static testMethod void canDetermineConfigObject() {
+    private static testmethod void canDetermineConfigObject() {
         //arrange processes
         Process__c logInitializerProcess = ProcessObject.generateOne(LogInitializer.class);
         
@@ -13,7 +12,7 @@ private class LogInitializerTest {
         System.assertEquals(expectedConfiguration, actualConfiguration);
     }
     
-    private static testMethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForXXXXXXXXX() {
+    private static testmethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForXXXXXXXXX() {
         //arrange
         String sequenceName  = 'LogInitializerSequence';
         Integer thePosition =  1;
@@ -75,7 +74,7 @@ private class LogInitializerTest {
         System.assert(actualGroupIdentifier.contains(expectedGroupIdentifier1));
     }  
     
-    private static testMethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForConfigIdentifierEqNull() {
+    private static testmethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForConfigIdentifierEqNull() {
         //arrange
         String sequenceName  = 'LogInitializerSequence';
         Integer thePosition =  1;
@@ -139,7 +138,7 @@ private class LogInitializerTest {
     }
     
     
-    private static testMethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForConfigIdentifierNotNull() {
+    private static testmethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForConfigIdentifierNotNull() {
         //arrange
         String theIdentifier  = 'BALLS-SAID';
         String sequenceName  = 'LogInitializerSequence';
@@ -202,7 +201,7 @@ private class LogInitializerTest {
     }
 
     
-    private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
+    private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
         //arrange
         String sequenceName  = 'LogInitializerSequence';
         Integer thePosition =  1;
@@ -238,7 +237,7 @@ private class LogInitializerTest {
 
      
         
-    private static testMethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessConfig() {
+    private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessConfig() {
         //arrange
         String sequenceName  = 'LogInitializerSequence';
         Integer thePosition =  1;
@@ -285,7 +284,7 @@ private class LogInitializerTest {
     }
     
     
-    private static testMethod void callingGetHydratedThrowsExpectedExceptionWhenIdInvalid() {
+    private static testmethod void callingGetHydratedThrowsExpectedExceptionWhenIdInvalid() {
         //arrange
         Id bullshitId = '000000000000000AAA';
 
@@ -306,7 +305,7 @@ private class LogInitializerTest {
         System.assert( actualMessage.contains(expectedMessage) );
     }
                             
-    private static testMethod void callingGetHydratedReturnsFullyHydratedSObject() {
+    private static testmethod void callingGetHydratedReturnsFullyHydratedSObject() {
         //arrange
         String theName = 'BALLS';
         String theJigSaw = '12345';
@@ -328,7 +327,7 @@ private class LogInitializerTest {
     }
 
     
-   private static testMethod void callingGetIdentiferReturnsExpectedIdentifier() {
+   private static testmethod void callingGetIdentiferReturnsExpectedIdentifier() {
         //arrange
         String theName = 'BALLS';
         String theJigsaw = '12345';
