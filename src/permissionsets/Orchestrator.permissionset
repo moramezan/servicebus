@@ -221,6 +221,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>SalesforceObjectSetTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>SalesforceObjectTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>

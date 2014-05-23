@@ -61,6 +61,7 @@
         <members>PublishTest</members>
         <members>SalesforceObject</members>
         <members>SalesforceObjectSet</members>
+        <members>SalesforceObjectSetTest</members>
         <members>SalesforceObjectTest</members>
         <members>Schedule</members>
         <members>ScheduleConfigurationObjectSet</members>
