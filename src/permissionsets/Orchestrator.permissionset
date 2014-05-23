@@ -249,6 +249,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>SchemaSelectorControllerTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>SequenceBuilderExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>

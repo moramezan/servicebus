@@ -68,6 +68,7 @@
         <members>ScheduleConfigurationObjectSetTest</members>
         <members>ScheduleTest</members>
         <members>SchemaSelectorController</members>
+        <members>SchemaSelectorControllerTest</members>
         <members>SequenceBuilderExtension</members>
         <members>SequenceBuilderExtensionTest</members>
         <members>SequenceObject</members>
