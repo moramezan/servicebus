@@ -7,7 +7,7 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c terminateStep = StepSet.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c terminateStep = StepObjectSet.generateOne(sequence.Id, terminateProcess.Id);
         
         JumpConfiguration__c configuration = new JumpConfiguration__c();
         ApexPages.StandardController controller = new ApexPages.StandardController(configuration);

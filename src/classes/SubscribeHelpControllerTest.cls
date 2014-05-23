@@ -10,8 +10,8 @@
         insert sequenceA;
         
         // Sequence A - Warning : Ok but event Not published
-        Step__c stepA1 = StepSet.generateOne(sequenceA.Id, subscribeProcess.Id);
-        Step__c stepA2 = StepSet.generateOne(sequenceA.Id, wiretapProcess.Id);
+        Step__c stepA1 = StepObjectSet.generateOne(sequenceA.Id, subscribeProcess.Id);
+        Step__c stepA2 = StepObjectSet.generateOne(sequenceA.Id, wiretapProcess.Id);
 
         // Event
         EventType__c eventNotPublished = new EventType__c(Name = 'an-event-not-published');
@@ -52,8 +52,8 @@
         insert sequenceB;
         
         // Sequence B - Problem : Subscribe Not first Step
-        Step__c stepB1 = StepSet.generateOne(sequenceB.Id, wiretapProcess.Id);
-        Step__c stepB2 = StepSet.generateOne(sequenceB.Id, subscribeProcess.Id);
+        Step__c stepB1 = StepObjectSet.generateOne(sequenceB.Id, wiretapProcess.Id);
+        Step__c stepB2 = StepObjectSet.generateOne(sequenceB.Id, subscribeProcess.Id);
         
         // Act :
         SubscribeHelpController controller = new SubscribeHelpController();
@@ -82,8 +82,8 @@
         insert sequenceC;
         
         // Sequence C - Problem : Subscribe Step Occurs more than once
-        Step__c stepC1 = StepSet.generateOne(sequenceC.Id, subscribeProcess.Id);
-        Step__c stepC2 = StepSet.generateOne(sequenceC.Id, subscribeProcess.Id);
+        Step__c stepC1 = StepObjectSet.generateOne(sequenceC.Id, subscribeProcess.Id);
+        Step__c stepC2 = StepObjectSet.generateOne(sequenceC.Id, subscribeProcess.Id);
             
         // Event
         EventType__c eventNotPublished = new EventType__c(Name = 'an-event-not-published');
@@ -129,8 +129,8 @@
         insert sequenceB;
         
         // Sequence B - Problem : No Configuration
-        Step__c stepB1 = StepSet.generateOne(sequenceB.Id, subscribeProcess.Id);
-        Step__c stepB2 = StepSet.generateOne(sequenceB.Id, wiretapProcess.Id);
+        Step__c stepB1 = StepObjectSet.generateOne(sequenceB.Id, subscribeProcess.Id);
+        Step__c stepB2 = StepObjectSet.generateOne(sequenceB.Id, wiretapProcess.Id);
 
         // Act :
         SubscribeHelpController controller = new SubscribeHelpController();

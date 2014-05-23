@@ -20,11 +20,11 @@
         //arrange sequences
         Sequence__c origin = new Sequence__c(Name = 'originSequence');
         insert origin;
-        Step__c originStep = StepSet.generateOne(origin.Id, subsequenceProcess.Id);
+        Step__c originStep = StepObjectSet.generateOne(origin.Id, subsequenceProcess.Id);
         
         Sequence__c target = new Sequence__c(Name = 'targetSequence');
         insert target;
-        Step__c targetStep = StepSet.generateOne(target.Id, terminateProcess.Id);
+        Step__c targetStep = StepObjectSet.generateOne(target.Id, terminateProcess.Id);
         
         //prepare configuration in db
         SubsequenceConfiguration__c config = new SubsequenceConfiguration__c(

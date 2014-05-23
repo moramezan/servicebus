@@ -1,6 +1,6 @@
-public class Step extends SalesforceObject {
+public class StepObject extends SalesforceObject {
 
-    public Step(Step__c step) {
+    public StepObject(Step__c step) {
         super(step);
     }
     

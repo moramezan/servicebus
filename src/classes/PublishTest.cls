@@ -30,7 +30,7 @@
         Sequence__c target = new Sequence__c(Name = 'target');
         insert target;
         
-        Step__c subscribeStep = StepSet.generateOne(target.Id, subscribeProcess.Id);
+        Step__c subscribeStep = StepObjectSet.generateOne(target.Id, subscribeProcess.Id);
         
         //arrange subscribe config
         Database.update(new SubscribeConfiguration__c(
@@ -71,7 +71,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = StepSet.generateOne(sequence.Id, publishProcess.Id);
+        Step__c step = StepObjectSet.generateOne(sequence.Id, publishProcess.Id);
         
         PublishConfiguration__c config = new PublishConfiguration__c();
         insert config;
@@ -101,7 +101,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = StepSet.generateOne(sequence.Id, publishProcess.Id);
+        Step__c step = StepObjectSet.generateOne(sequence.Id, publishProcess.Id);
         Database.update(new PublishConfiguration__c(
             Id = step.ConfigurationId__c,
             EventType__c = eventType.Id
@@ -137,7 +137,7 @@
         Sequence__c publisher = new Sequence__c(Name = 'Publisher');
         insert publisher;
         
-        Step__c publisherStep = StepSet.generateOne(publisher.Id, publishProcess.Id);
+        Step__c publisherStep = StepObjectSet.generateOne(publisher.Id, publishProcess.Id);
         Database.update(new PublishConfiguration__c(
             Id = publisherStep.ConfigurationId__c,
             EventType__c = eventType.Id
@@ -147,7 +147,7 @@
         Sequence__c subscriber1 = new Sequence__c(Name = 'Subscriber1');
         insert subscriber1;
         
-        Step__c subscriber1step = StepSet.generateOne(subscriber1.Id, subscribeProcess.Id);
+        Step__c subscriber1step = StepObjectSet.generateOne(subscriber1.Id, subscribeProcess.Id);
         Database.update(new SubscribeConfiguration__c(
             Id = subscriber1step.ConfigurationId__c,
             EventType__c = eventType.Id
@@ -156,7 +156,7 @@
         Sequence__c subscriber2 = new Sequence__c(Name = 'Subscriber2');
         insert subscriber2;
         
-        Step__c subscriber2step = StepSet.generateOne(subscriber2.Id, subscribeProcess.Id);
+        Step__c subscriber2step = StepObjectSet.generateOne(subscriber2.Id, subscribeProcess.Id);
         Database.update(new SubscribeConfiguration__c(
             Id = subscriber2step.ConfigurationId__c,
             EventType__c = eventType.Id

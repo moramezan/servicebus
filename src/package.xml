@@ -71,10 +71,10 @@
         <members>SequenceSet</members>
         <members>SequenceSetTest</members>
         <members>SequenceTest</members>
-        <members>Step</members>
-        <members>StepSet</members>
-        <members>StepSetTest</members>
-        <members>StepTest</members>
+        <members>StepObject</members>
+        <members>StepObjectSet</members>
+        <members>StepObjectSetTest</members>
+        <members>StepObjectTest</members>
         <members>Subscribe</members>
         <members>SubscribeHelpController</members>
         <members>SubscribeHelpControllerTest</members>

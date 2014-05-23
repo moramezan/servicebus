@@ -12,16 +12,16 @@ private class  SequenceTest {
         insert soSequence;
         Id soSequenceId = soSequence.Id;
 
-        Step__c stepA1 = StepSet.generateOne(soSequenceId, subscribeProcess.Id);
-        Step__c stepA2 = StepSet.generateOne(soSequenceId, markProcess.Id);
-        Step__c stepA3 = StepSet.generateOne(soSequenceId, terminateProcess.Id);
+        Step__c stepA1 = StepObjectSet.generateOne(soSequenceId, subscribeProcess.Id);
+        Step__c stepA2 = StepObjectSet.generateOne(soSequenceId, markProcess.Id);
+        Step__c stepA3 = StepObjectSet.generateOne(soSequenceId, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         Decimal positionA3 = stepA3.Position__c;
 
         // act 
         Sequence sequence = new Sequence(soSequence);
-        StepSet actualSteps  = sequence.fetchSteps();
+        StepObjectSet actualSteps  = sequence.fetchSteps();
         
         // assemble
         List<Step__c> soSteps = actualSteps.getSObjects();
@@ -44,7 +44,7 @@ private class  SequenceTest {
 
         // act 
         Sequence sequence = new Sequence(soSequence);
-        Step actualStep = sequence.appendStep(markProcess.Id);
+        StepObject actualStep = sequence.appendStep(markProcess.Id);
         
         // assemble
         List<Step__c> soSteps = [SELECT Id, Name, Process__r.FullyQualifiedClassName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequenceId];
@@ -142,22 +142,22 @@ private class  SequenceTest {
         Sequence__c soSequenceA = new Sequence__c(Name = sequenceNameA);
         insert soSequenceA;
         Id soSequenceAId = soSequenceA.Id;
-        Step__c stepA1 = StepSet.generateOne(soSequenceAId, markProcess.Id);
-        Step__c stepA2 = StepSet.generateOne(soSequenceAId, terminateProcess.Id);
+        Step__c stepA1 = StepObjectSet.generateOne(soSequenceAId, markProcess.Id);
+        Step__c stepA2 = StepObjectSet.generateOne(soSequenceAId, terminateProcess.Id);
 
         String sequenceNameB = 'theSequenceB';   
         Sequence__c soSequenceB = new Sequence__c(Name = sequenceNameB);
         insert soSequenceB;
         Id soSequenceBId = soSequenceB.Id;
-        Step__c stepB1 = StepSet.generateOne(soSequenceBId, markProcess.Id);
-        Step__c stepB2 = StepSet.generateOne(soSequenceBId, terminateProcess.Id);
+        Step__c stepB1 = StepObjectSet.generateOne(soSequenceBId, markProcess.Id);
+        Step__c stepB2 = StepObjectSet.generateOne(soSequenceBId, terminateProcess.Id);
 
         // act 
         Id notStepAId =  stepB1.Id;
         Sequence sequenceA = new Sequence(soSequenceA);
         Boolean actualFlag = false;
         try {
-            StepSet actualSteps = sequenceA.destroySteps(new Set<Id>{notStepAId});
+            StepObjectSet actualSteps = sequenceA.destroySteps(new Set<Id>{notStepAId});
         } catch (Exception e) {   
             actualFlag = true;
         }
@@ -176,14 +176,14 @@ private class  SequenceTest {
         Sequence__c soSequenceA = new Sequence__c(Name = sequenceNameA);
         insert soSequenceA;
         Id soSequenceAId = soSequenceA.Id;
-        Step__c stepA1 = StepSet.generateOne(soSequenceAId, markProcess.Id);
-        Step__c stepA2 = StepSet.generateOne(soSequenceAId, terminateProcess.Id);
+        Step__c stepA1 = StepObjectSet.generateOne(soSequenceAId, markProcess.Id);
+        Step__c stepA2 = StepObjectSet.generateOne(soSequenceAId, terminateProcess.Id);
  
 
         // act 
         Id deletedStepId =  stepA1.Id;
         Sequence sequenceA = new Sequence(soSequenceA);
-        StepSet actualSteps = sequenceA.destroySteps(new Set<Id>{deletedStepId});
+        StepObjectSet actualSteps = sequenceA.destroySteps(new Set<Id>{deletedStepId});
  
         
         // assemble

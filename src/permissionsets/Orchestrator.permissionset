@@ -261,19 +261,19 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Step</apexClass>
+        <apexClass>StepObject</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>StepSet</apexClass>
+        <apexClass>StepObjectSet</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>StepSetTest</apexClass>
+        <apexClass>StepObjectSetTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>StepTest</apexClass>
+        <apexClass>StepObjectTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

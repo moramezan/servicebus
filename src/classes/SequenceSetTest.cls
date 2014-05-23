@@ -11,8 +11,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c branchStep = StepSet.generateOne(sequence.Id, branchProcess.Id);
-        Step__c terminateStep = StepSet.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c branchStep = StepObjectSet.generateOne(sequence.Id, branchProcess.Id);
+        Step__c terminateStep = StepObjectSet.generateOne(sequence.Id, terminateProcess.Id);
         
         Integer expectedConfigsBefore = 1;
         Integer actualConfigsBefore = [SELECT COUNT() FROM BranchConfiguration__c];

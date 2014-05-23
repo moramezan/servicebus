@@ -194,9 +194,9 @@
         insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = StepSet.generateOne(sequenceA.Id, subscribeProcess.Id);
-        Step__c stepA2 = StepSet.generateOne(sequenceA.Id, markProcess.Id);
-        Step__c stepA3 = StepSet.generateOne(sequenceA.Id, terminateProcess.Id);
+        Step__c stepA1 = StepObjectSet.generateOne(sequenceA.Id, subscribeProcess.Id);
+        Step__c stepA2 = StepObjectSet.generateOne(sequenceA.Id, markProcess.Id);
+        Step__c stepA3 = StepObjectSet.generateOne(sequenceA.Id, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         Decimal positionA3 = stepA3.Position__c;
@@ -484,7 +484,7 @@
         insert sequence;
         
         //arrange steps
-        StepSet.generateOne(sequence.Id, terminateProcess.Id);
+        StepObjectSet.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange broker implementation custom setting
         String theSequenceName = 'TestSequence';
@@ -514,7 +514,7 @@
         insert sequence;
         
         //arrange steps
-        StepSet.generateOne(sequence.Id, terminateProcess.Id);
+        StepObjectSet.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange
         insert new BrokerSettings__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
@@ -706,7 +706,7 @@
         insert sequence;
         
         //arrange steps
-        StepSet.generateOne(sequence.Id, terminateProcess.Id);
+        StepObjectSet.generateOne(sequence.Id, terminateProcess.Id);
         
         terminateProcess.FullyQualifiedClassName__c = 'lalala';
         update terminateProcess; //pretend we deleted the class
@@ -737,7 +737,7 @@
         insert sequence;
         
         //arrange step
-        StepSet.generateOne(sequence.Id, terminateProcess.Id);
+        StepObjectSet.generateOne(sequence.Id, terminateProcess.Id);
         
         terminateProcess.FullyQualifiedClassName__c = 'Account';
         update terminateProcess; //Account is DEFINITELY not a Process.Plugin

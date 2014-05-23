@@ -1,4 +1,4 @@
-@isTest public class StepTest {
+@isTest public class StepObjectTest {
     
     static testMethod void testMoveStepBefore() {
         //arrange processes
@@ -10,15 +10,15 @@
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = StepSet.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c terminateStep = StepSet.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c wiretapStep = StepObjectSet.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = StepObjectSet.generateOne(sequence.Id, terminateProcess.Id);
         
         //assert before state
         System.assertEquals(1, wiretapStep.Position__c);
         System.assertEquals(2, terminateStep.Position__c);
             
         //act
-        Step step = new Step(terminateStep);
+        StepObject step = new StepObject(terminateStep);
         step.moveBefore(wiretapStep.Id);
         
         //assemble
@@ -40,15 +40,15 @@
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = StepSet.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c terminateStep = StepSet.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c wiretapStep = StepObjectSet.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = StepObjectSet.generateOne(sequence.Id, terminateProcess.Id);
         
         //assert before state
         System.assertEquals(1, wiretapStep.Position__c);
         System.assertEquals(2, terminateStep.Position__c);
             
         //act
-        Step step = new Step(wiretapStep);
+        StepObject step = new StepObject(wiretapStep);
         step.moveAfter(terminateStep.Id);
         
         //assemble

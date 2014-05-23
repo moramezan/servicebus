@@ -6,7 +6,7 @@ public class Sequence extends SalesforceObject {
         super(sequence);
     }
     
-    public StepSet fetchSteps() {
+    public StepObjectSet fetchSteps() {
         List<String> fields = new List<String>();
         
         //step fields
@@ -36,10 +36,10 @@ public class Sequence extends SalesforceObject {
             step.ConfigurationName__c = configurationName.left(80);
         }
         
-        return new StepSet(steps);
+        return new StepObjectSet(steps);
     }
     
-    public Step appendStep(Id processId) {
+    public StepObject appendStep(Id processId) {
         Step__c step = new Step__c(
             Sequence__c = this.getSObject().Id,
             Process__c = processId
@@ -47,7 +47,7 @@ public class Sequence extends SalesforceObject {
         );
         
         insert step;
-        return new Step(step);
+        return new StepObject(step);
     }
     
     /**
@@ -75,7 +75,7 @@ public class Sequence extends SalesforceObject {
         }
     }
     
-    public StepSet destroySteps(Set<Id> stepIds) {
+    public StepObjectSet destroySteps(Set<Id> stepIds) {
         Sequence__c sequence = (Sequence__c)this.getSObject();
         
         List<Step__c> stepsToDelete = [
@@ -108,7 +108,7 @@ public class Sequence extends SalesforceObject {
         update stepsToReorder;
         
         //hand back wrapped deleted steps
-        return new StepSet(stepsToDelete);
+        return new StepObjectSet(stepsToDelete);
     }
 
 }

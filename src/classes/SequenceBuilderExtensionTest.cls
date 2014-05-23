@@ -10,8 +10,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = StepSet.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c terminateStep = StepSet.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c wiretapStep = StepObjectSet.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = StepObjectSet.generateOne(sequence.Id, terminateProcess.Id);
         
         return sequence.Id;
     }

@@ -43,18 +43,18 @@ public with sharing class SequenceBuilderExtension {
     
     @RemoteAction static public Step__c appendStep(Id sequenceId, Id processId) {
         Sequence sequence = new Sequence(new Sequence__c(Id = sequenceId));
-        Step step = sequence.appendStep(processId);
+        StepObject step = sequence.appendStep(processId);
         return (Step__c)step.getSObject();
     }
     
     @RemoteAction static public void moveStepBefore(Id stepId, Id beforeStepId) {
         Step__c step = (Step__c)SalesforceObject.getById(stepId);
-        new Step(step).moveBefore(beforeStepId);
+        new StepObject(step).moveBefore(beforeStepId);
     }
     
     @RemoteAction static public void moveStepAfter(Id stepId, Id afterStepId) {
         Step__c step = (Step__c)SalesforceObject.getById(stepId);
-        new Step(step).moveAfter(afterStepId);
+        new StepObject(step).moveAfter(afterStepId);
     }
     
     @RemoteAction static public void destroySteps(List<Step__c> steps) {
