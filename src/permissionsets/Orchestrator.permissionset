@@ -221,6 +221,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>SalesforceObjectTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Schedule</apexClass>
         <enabled>false</enabled>
     </classAccesses>
