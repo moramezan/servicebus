@@ -8,11 +8,15 @@
     <apex:pageBlock mode="maindetail" title="Introducing Processes">
         <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
-                <p>A Process is a single, logical program with inputs and outputs in the form of Messages.</p>
-                <p>Logic that splits data (map) or combines data (reduce) should be encapsulated in distinct Processes.</p>
-                <p>When Processes receive and act on a message, they may output multiple new Messages that go to subsequent Processes.</p>
-                <p>Processes are implemented as Apex Classes just like Visual Workflow plugins.</p>
-                <p>Event Driven Architecture contains by default a number of ready-made processes, including:</p>
+                <p>
+                    A Process is a single, logical program with inputs and outputs in the form of Messages.
+                    Logic that splits data (map) or combines data (reduce) should be encapsulated in distinct Processes.
+                    When Processes receive and act on a message, they may output multiple new Messages that go to subsequent Processes.
+                </p>
+                <p>
+                    Processes are implemented as Apex Classes just like Visual Workflow plugins.
+                    Event Driven Architecture contains by default a number of ready-made processes, including:
+                </p>
                 <ul>
                     <li>Schedule</li>
                     <li>Publish and Subscribe</li>
@@ -24,6 +28,9 @@
             </apex:pageBlockSectionItem>
             <apex:pageBlockSectionItem >
                 <apex:image value="{!URLFOR($Resource.HelpZip, '/Process/processArtifacts.png')}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <p>See the tutorial: <a href="{!URLFOR($Resource.HelpZip, '/ProcessDiscoveryTutorial.html')}"  style="color: #00f;">How to discover EDA Processes</a>.</p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
@@ -38,17 +45,6 @@
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Process/viewApexClass.png')}" /> will show you the Apex Class that contains the underlying logic for any given Process.</p>
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Process/viewSettings.png')}" /> takes you to the available Settings for a Process. (If applicable. Not all process have Settings)</p>
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Process/viewDocumentation.png')}" /> shows the supporting documentation provided by the author of a given Process.</p>
-            </apex:pageBlockSectionItem>
-        </apex:pageBlockSection>
-
-        <br/>
-        
-        <apex:pageBlockSection title="Tutorial :" columns="1" collapsible="false">
-            <apex:pageBlockSectionItem >
-                <ul>
-                    <li> How to discover event driven <a href="{!URLFOR($Resource.HelpZip, '/ProcessDiscoveryTutorial.html')}"  style="color: #00f;">Processes</a> .
-                    </li>
-                </ul>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>  
         

@@ -4,7 +4,7 @@
         body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
     </style>
     
-    <apex:pageBlock mode="maindetail">
+    <apex:pageBlock mode="maindetail" title="Introducing the Monitor">
         <apex:pageBlockSection columns="1" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p>

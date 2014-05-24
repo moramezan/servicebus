@@ -8,13 +8,22 @@
     <apex:pageBlock mode="maindetail" title="Introducing Sequences">
         <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
-                <p>A Sequence is an arrangement of multiple processing tasks called Steps.</p>
-                <p>Each Sequence is known by a friendly name, for example 'ProcessInvoices', which should describe the nature of the work performed by its processing tasks or Steps.</p>
+                <p>
+                    A Sequence is an arrangement of multiple processing tasks called Steps.
+                    Each Sequence is known by a friendly name, for example 'ProcessInvoices', which should describe the nature of the work performed by its processing tasks or Steps.
+                </p>
                 <p>The EDA framework will advance Messages through the Steps of a Sequence in the order you arrange. A typical sequence will contain many steps. See diagram:</p>
-                
+                <p><br /><br /><br />See the following tutorials:</p>
             </apex:pageBlockSectionItem>
             <apex:pageBlockSectionItem >
                 <apex:image width="480" value="{!URLFOR($Resource.HelpZip, '/Sequence/sequenceSteps.png')}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <ul>
+                    <li>Build a simple <a href="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial.html')}" style="color: #00f;">WireTap</a> sequence.</li>
+                    <li>Build a simple <a href="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial.html')}" style="color: #00f;">Web Scrape</a> sequence.</li>
+                    <li>Build a sequence that groups messages under a <a href="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial.html')}" style="color: #00f;">Common Identifier</a>.</li>
+                </ul>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
@@ -34,19 +43,6 @@
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Sequence/injectTestMessage.png')}" /> enqueues a message (carrying your user record) to this sequence. The message will progress through all the steps.</p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
-        
-        <apex:pageBlockSection title="Tutorials :" columns="1" collapsible="false">
-            <apex:pageBlockSectionItem >
-                <ul>
-                    <li> Build a simple <a href="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial.html')}" style="color: #00f;">WireTap</a> sequence.
-                    </li>
-                    <li> Build a simple <a href="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial.html')}" style="color: #00f;">Web Scrape</a> sequence.
-                    </li>
-                    <li> Build a sequence that groups messages under a <a href="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial.html')}" style="color: #00f;">Common Identifier</a>.
-                    </li>
-                </ul>
-            </apex:pageBlockSectionItem>
-        </apex:pageBlockSection>  
         
         <apex:pageBlockSection title="Click [Continue] to proceed." columns="1" collapsible="false" />
     </apex:pageBlock>
