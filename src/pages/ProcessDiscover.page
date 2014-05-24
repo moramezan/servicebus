@@ -22,6 +22,7 @@
         $RemoteAction.ProcessDiscoverController.readAsyncApexJobs = '{!$RemoteAction.ProcessDiscoverController.readAsyncApexJobs}';
         
         retURL = '{!retURL}';
+        IsTerminatePresent = Boolean({!IsTerminatePresent});
         
         window.$Page = window.$Page || {};
         $Page.ProcessDiscoverHelp = '{!$Page.ProcessDiscoverHelp}';
