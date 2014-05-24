@@ -96,7 +96,7 @@
         <label>All</label>
     </listViews>
     <nameField>
-        <displayFormat>LG-{0000000000}</displayFormat>
+        <displayFormat>LOG-{0000000000}</displayFormat>
         <label>Log Group Name</label>
         <type>AutoNumber</type>
     </nameField>

@@ -176,7 +176,7 @@
         <label>Overdue</label>
     </listViews>
     <nameField>
-        <displayFormat>N-{0000000000}</displayFormat>
+        <displayFormat>MSG-{0000000000}</displayFormat>
         <label>Message Name</label>
         <type>AutoNumber</type>
     </nameField>
