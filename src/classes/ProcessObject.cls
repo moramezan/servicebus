@@ -1,5 +1,7 @@
 public class ProcessObject extends SalesforceObject {
     
+    public class ProcessException extends Exception {}
+    
     public ProcessObject(Process__c process) {
         super(process);
     }
@@ -87,9 +89,13 @@ public class ProcessObject extends SalesforceObject {
             process.Icon__c = meta.Icon;
         }
         
-        //attempt to populate the visualforce help page url (maybe at some point we can check it for validity)
-        //note: if a help page is removed and the key taken out of the Meta class, we allow null to be written
-        process.DocsPageUrl__c = meta.DocsPageUrl;
+        if (meta.DocsPageUrl != null) {
+            //populate the help page url
+            process.DocsPageUrl__c = meta.DocsPageUrl;
+        } else {
+            //EVERY PROCESS MUST PROVIDE A HELP PAGE
+            throw new ProcessException('Process "' + process.FullyQualifiedClassName__c + '" must provide Meta.DocsPageUrl');
+        }
         
         return process;
     }

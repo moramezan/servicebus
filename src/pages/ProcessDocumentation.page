@@ -1,3 +1,3 @@
-<apex:page standardController="Process__c" action="{!IF(ISBLANK(Process__c.DocsPageUrl__c), '/' + Id, URLFOR(Process__c.DocsPageUrl__c))}">
+<apex:page standardController="Process__c" action="{!URLFOR(Process__c.DocsPageUrl__c)}">
     <apex:outputField value="{!Process__c.DocsPageUrl__c}" rendered="false" />
 </apex:page>
