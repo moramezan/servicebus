@@ -1,1 +1,26 @@
-<apex:page action="{!URLFOR($Page.Monitor)}" />
+<apex:page tabStyle="Monitor__tab" showHeader="false" standardStylesheets="true">
+    
+    <style>
+        body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
+    </style>
+    
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection columns="1" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <p>
+                    A monitoring page is provided so you can see system health at a glance. Below is an example.
+                	<br />From the <strong style="color:#090;">green</strong> areas you can deduce there is a lot of <strong>Publish/Subscribe</strong> activity currently.
+            		<br />The <strong style="color:#900;">red</strong> area indicates there is very likely a problem with the <strong>Scrape</strong><!--FetchStockPrice--> process.
+                </p>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection columns="1" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <apex:image width="800" value="{!URLFOR($Resource.HelpZip, '/Monitor/statistics.png')}" />
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Click [Continue] to proceed." columns="1" collapsible="false" />
+    </apex:pageBlock>
+</apex:page>

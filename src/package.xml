@@ -45,6 +45,8 @@
         <members>MessageResumeQueueExtensionTest</members>
         <members>MessageShowDataExtension</members>
         <members>MessageShowDataExtensionTest</members>
+        <members>MonitorController</members>
+        <members>MonitorControllerTest</members>
         <members>PostInstallHandler</members>
         <members>PostInstallHandlerTest</members>
         <members>PostUninstallHandler</members>
