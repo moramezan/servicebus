@@ -284,6 +284,10 @@
         <name>PermissionSet</name>
     </types>
     <types>
+        <members>EventType__c.Simple</members>
+        <name>RecordType</name>
+    </types>
+    <types>
         <members>HelpZip</members>
         <members>ProcessDiscoverZip</members>
         <members>SequenceBuilderZip</members>

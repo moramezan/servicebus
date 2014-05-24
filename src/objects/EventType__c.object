@@ -57,6 +57,12 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>Event Types</pluralLabel>
+    <recordTypes>
+        <fullName>Simple</fullName>
+        <active>true</active>
+        <description>Simple event</description>
+        <label>Simple</label>
+    </recordTypes>
     <searchLayouts>
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
