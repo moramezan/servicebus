@@ -17,6 +17,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
+        <description>Allows us to auto-increment the Step Position within a Sequence if it is unspecified. Does not affect data imports where Position is specified.</description>
         <formula>Position__c == 0</formula>
         <triggerType>onCreateOnly</triggerType>
     </rules>
