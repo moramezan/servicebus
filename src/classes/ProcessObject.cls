@@ -82,9 +82,9 @@ public class ProcessObject extends SalesforceObject {
             process.ConfigObject__c = meta.ConfigObject.getSObjectType().getDescribe().getName();
         }
         
-        if (meta.icon != null) {
+        if (meta.Icon != null) {
             //attempt to populate the css class name of the process icon
-            process.Icon__c = meta.icon;
+            process.Icon__c = meta.Icon;
         }
         
         //attempt to populate the visualforce help page url (maybe at some point we can check it for validity)
