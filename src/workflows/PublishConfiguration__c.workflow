@@ -2,6 +2,7 @@
 <Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
     <fieldUpdates>
         <fullName>UpdatePublishConfigurationName</fullName>
+        <description>Generates a friendly description of the configured behaviour.</description>
         <field>Name</field>
         <formula>IF(
     ISBLANK(EventType__c),
@@ -20,6 +21,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
+        <description>Generates a friendly description of the configured behaviour.</description>
         <formula>true</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>

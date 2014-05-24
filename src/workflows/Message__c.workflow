@@ -7,6 +7,7 @@
             <field>Message__c.Exception__c</field>
             <operation>notEqual</operation>
         </criteriaItems>
+        <description>Use this hook to react to messages that encountered errors during processing. For example, you could send an email to the EDA Orchestrator.</description>
         <triggerType>onAllChanges</triggerType>
     </rules>
 </Workflow>

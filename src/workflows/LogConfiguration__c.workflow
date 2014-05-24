@@ -2,6 +2,7 @@
 <Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
     <fieldUpdates>
         <fullName>UpdateLogConfigurationName</fullName>
+        <description>Generates a friendly description of the configured behaviour.</description>
         <field>Name</field>
         <formula>IF (
     AND(ISBLANK(DynamicGroupIdentifier__c), ISBLANK(StaticGroupIdentifier__c)),
@@ -28,6 +29,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
+        <description>Generates a friendly description of the configured behaviour.</description>
         <formula>true</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
