@@ -23,12 +23,13 @@
         
         retURL = '{!retURL}';
         
-        window.URLFOR = window.URLFOR || {};
-        URLFOR['/'] = '{!URLFOR("/")}';
-        URLFOR['{!retURL}'] = '{!URLFOR(retURL)}';
-        
         window.$Page = window.$Page || {};
         $Page.ProcessDiscoverHelp = '{!$Page.ProcessDiscoverHelp}';
+        
+        window.URLFOR = window.URLFOR || {};
+        URLFOR['/'] = '{!URLFOR("/")}';
+        URLFOR[retURL] = '{!URLFOR(retURL)}';
+        URLFOR[$Page.ProcessDiscoverHelp] = '{!URLFOR($Page.ProcessDiscoverHelp)}';
         
         window.AsyncApexJob = window.AsyncApexJob || {};
         AsyncApexJob.Id = '{!AsyncApexJob.Id}';
