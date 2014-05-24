@@ -335,7 +335,7 @@
         <members>BranchConfiguration__c.OnBranchConfigurationUpsert</members>
         <members>JumpConfiguration__c.OnJumpConfigurationUpsert</members>
         <members>LogConfiguration__c.OnLogInitializerConfigurationUpsert</members>
-        <members>Message__c.OnError</members>
+        <members>Message__c.OnMessageError</members>
         <members>PublishConfiguration__c.OnPublishConfigurationUpsert</members>
         <members>Step__c.OnStepInsert</members>
         <members>SubscribeConfiguration__c.OnSubscribeConfigurationUpsert</members>
