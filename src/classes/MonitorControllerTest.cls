@@ -8,20 +8,17 @@
         insert new Message__c(Status__c = 'Queued', Process__c = wiretapProcess.Id);
         insert new Message__c(Status__c = 'Buffer', Process__c = terminateProcess.Id);
         
-        MonitorController controller = new MonitorController();
-        
         //act
-        controller.doInit();
+        List<MonitorController.Statistic> statistics = MonitorController.getStatistics();
         
         //assert
         Integer expectedCount = 2;
-        Integer actualCount = controller.Statistics.size();
+        Integer actualCount = statistics.size();
         System.assertEquals(expectedCount, actualCount);
     }
     
     static testmethod void coverDummyData() {
-        MonitorController controller = new MonitorController();
-        Integer count = controller.getTestStatistics().size();
+        Integer count = MonitorController.getTestStatistics().size();
         System.assert(count > 1);
     }
 

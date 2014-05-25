@@ -1,6 +1,6 @@
 public with sharing class MonitorController {
     
-    class Statistic {
+    public class Statistic {
         public Statistic(String name, Integer queued, Integer buffer, Integer processing, Integer reprocess, Integer overdue) {
             this.Name = name;
             this.Queued = queued;
@@ -18,7 +18,7 @@ public with sharing class MonitorController {
         public Integer Overdue {get; set;}
     }
     
-    public List<Statistic> getTestStatistics() {
+    @RemoteAction static public List<Statistic> getTestStatistics() {
         return new List<Statistic>{
             new Statistic('Branch',          1,  1,  0,  0,  0),
             new Statistic('Publish',         2, 14,  0,  0,  0),
@@ -30,17 +30,12 @@ public with sharing class MonitorController {
             new Statistic('Schedule',        1,  1,  0,  0,  0),
             new Statistic('LogWriter',       0,  1,  0,  0,  0),
             new Statistic('Gate',            1,  1,  0,  0,  0),
-            new Statistic('Scrape',          0,  0 , 44,  0, 44),
+            new Statistic('Scrape',          0,  0, 44,  0, 44),
             new Statistic('Mark',            0,  1,  0,  0,  0)
         };
     }
     
-    public List<Statistic> Statistics {get; set;}
-    
-    public void doInit() {
-        //initialize the 2D results list
-        //this.Statistics = new List<Statistic>();
-        
+    @RemoteAction static public List<Statistic> getStatistics() {
         //we need to be able to populate the scattered statuses by process id
         Map<Id,Statistic> id2statistic = new Map<Id,Statistic>();
         
@@ -70,7 +65,7 @@ public with sharing class MonitorController {
             id2statistic.get((Id)result.get('processId')).Overdue = (Integer)result.get('total');
         }
         
-        this.Statistics = id2statistic.values();
+        return id2statistic.values();
     }
     
 }
