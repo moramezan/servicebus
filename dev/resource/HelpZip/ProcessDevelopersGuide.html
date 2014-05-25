@@ -218,20 +218,13 @@
                 <br />
                 <b>Define the response event(s) :</b> <br />
                 <ul>
-                    <li> A process can return zero, one or more event messages
-                    </li>
-                    <li> Similar to the input event message, the output event messages are contained in a built-in Salesforce type.
-                    </li>
-                    <li> The returned built-in Salesforce type is  <code> Process.PluginResult  </code>  and it wraps zero, one or more parameter collections.
-                    </li>
-                    <li> Each parameter collection represents a response event.
-                    </li>
-                    <li> If a process has more than one response, it will have more than one parameter collection.
-                    </li>
-                    <li> Normally however, the response events collection will simply contain a single parameter collection, namely the re-purposed input event
-                    </li>
-                    <li> For an example of a response events collection containing more than a single parameter collection, refer to - see <a href="#????" style="color: #00f;"> TODO </a>
-                    </li>
+                    <li>A process can return zero, one or more event messages</li>
+                    <li>Similar to the input event message, the output event messages are contained in a built-in Salesforce type.</li>
+                    <li>The returned built-in Salesforce type is  <code> Process.PluginResult  </code>  and it wraps zero, one or more parameter collections.</li>
+                    <li>Each parameter collection represents a response event.</li>
+                    <li>If a process has more than one response, it will have more than one parameter collection.</li>
+                    <li>Normally however, the response events collection will simply contain a single parameter collection, namely the re-purposed input event</li>
+                    <!--<li>For an example of a response events collection containing more than a single parameter collection, refer to - see <a href="#????" style="color: #00f;"> TODO </a></li>-->
                 </ul>
                 <br /><br /></td></tr><tr><td class="data2Col  last " colSpan="2">
                 <br />
@@ -356,16 +349,16 @@
 016</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-weight: bold">public</span> with sharing <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">ChatterTap</span> <span style="color: #008800; font-weight: bold">implements</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">Plugin</span> <span style="color: #333333">{</span>
 
   <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">Meta</span> <span style="color: #333333">{</span>
-      <span style="color: #888888">// TODO</span>
+      <span style="color: #888888">// ...</span>
   <span style="color: #333333">}</span>
 
   <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> <span style="color: #0066BB; font-weight: bold">describe</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
-      <span style="color: #888888">// TODO</span>
+      <span style="color: #888888">// ...</span>
       <span style="color: #008800; font-weight: bold">return</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">();</span>
   <span style="color: #333333">}</span>
 
   <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> <span style="color: #0066BB; font-weight: bold">invoke</span><span style="color: #333333">(</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginRequest</span> request<span style="color: #333333">)</span> <span style="color: #333333">{</span>
-      <span style="color: #888888">// TODO</span>
+      <span style="color: #888888">// ...</span>
       <span style="color: #008800; font-weight: bold">return</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;());</span>
     <span style="color: #333333">}</span>
 <span style="color: #333333">}</span>
@@ -429,13 +422,13 @@
     <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> <span style="color: #0066BB; font-weight: bold">describe</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
         Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> describeResult <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">();</span>
         describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'ChatterTap'</span><span style="color: #333333">;</span>
-        <span style="color: #888888">// TODO</span>
+        <span style="color: #888888">// ...</span>
         <span style="color: #008800; font-weight: bold">return</span> describeResult<span style="color: #333333">;</span>
     <span style="color: #333333">}</span>
     
     <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> <span style="color: #0066BB; font-weight: bold">invoke</span><span style="color: #333333">(</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginRequest</span> request<span style="color: #333333">)</span> <span style="color: #333333">{</span>
         Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> request<span style="color: #333333">.</span><span style="color: #0000CC">inputParameters</span><span style="color: #333333">;</span>
-        <span style="color: #888888">// TODO</span>
+        <span style="color: #888888">// ...</span>
         <span style="color: #008800; font-weight: bold">return</span> MetaUtility<span style="color: #333333">.</span><span style="color: #0000CC">convert</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;{</span>parameters<span style="color: #333333">});</span>
     <span style="color: #333333">}</span>
 <span style="color: #333333">}</span>
@@ -513,7 +506,7 @@
     
     <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> <span style="color: #0066BB; font-weight: bold">invoke</span><span style="color: #333333">(</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginRequest</span> request<span style="color: #333333">)</span> <span style="color: #333333">{</span>
         Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> parameters <span style="color: #333333">=</span> request<span style="color: #333333">.</span><span style="color: #0000CC">inputParameters</span><span style="color: #333333">;</span>
-        <span style="color: #888888">// TODO</span>
+        <span style="color: #888888">// ...</span>
         <span style="color: #008800; font-weight: bold">return</span> MetaUtility<span style="color: #333333">.</span><span style="color: #0000CC">convert</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;{</span>parameters<span style="color: #333333">});</span>
     <span style="color: #333333">}</span>
 <span style="color: #333333">}</span>
