@@ -175,7 +175,7 @@
         <members>LogWriterEntry__c.Order__c</members>
         <members>LogWriterEntry__c.Parameters__c</members>
         <members>LogWriterEntry__c.Position__c</members>
-        <members>LogWriterEntry__c.SequenceName__c</members>
+        <members>LogWriterEntry__c.Sequence__c</members>
         <members>LogWriterEntry__c.Stamp__c</members>
         <members>LogWriterEntry__c.Step__c</members>
         <members>Message__c.Exception__c</members>

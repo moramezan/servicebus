@@ -125,16 +125,16 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>SequenceName__c</fullName>
+        <fullName>Sequence__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
-        <formula>Step__r.Sequence__r.Name</formula>
-        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <inlineHelpText>What is the name of the sequence containing the LogWriter Step?</inlineHelpText>
-        <label>Sequence Name</label>
+        <label>Sequence</label>
+        <referenceTo>Sequence__c</referenceTo>
+        <relationshipLabel>Log Writer Entries</relationshipLabel>
+        <relationshipName>LogWriterEntries</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>Stamp__c</fullName>

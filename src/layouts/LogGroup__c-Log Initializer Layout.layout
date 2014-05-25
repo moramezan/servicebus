@@ -52,11 +52,12 @@
     <relatedLists>
         <excludeButtons>New</excludeButtons>
         <fields>Order__c</fields>
-        <fields>Step__c</fields>
-        <fields>SequenceName__c</fields>
-        <fields>Position__c</fields>
+        <fields>NAME</fields>
         <fields>GroupIdentifier__c</fields>
         <fields>Stamp__c</fields>
+        <fields>Sequence__c</fields>
+        <fields>Step__c</fields>
+        <fields>Position__c</fields>
         <relatedList>LogWriterEntry__c.LogGroup__c</relatedList>
         <sortField>Order__c</sortField>
         <sortOrder>Asc</sortOrder>
@@ -67,7 +68,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hb0000001S6Vl</masterLabel>
+        <masterLabel>00hb0000001SAOP</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

@@ -56,11 +56,12 @@ public class LogWriter implements Process.Plugin {
                 WHERE Id IN :logGroupIds
             ])).keySet();
         
-            String serializedParameters = System.Json.serializePretty(pluginRequest);
+            String serializedParameters = System.Json.serializePretty(pluginRequest.inputParameters);
             List<LogWriterEntry__c> logWriterEntries =  new List<LogWriterEntry__c>();
             for (Id logGroupId  : filteredLogGroupIds) {
                 logWriterEntries.add( new LogWriterEntry__c(
                     Step__c = step.Id,
+                    Sequence__c = step.Sequence__c,
                     Order__c   = parametersOrder,
                     LogGroup__c     = logGroupId,
                     EntryPointGuid__c = entryPointGuid,
