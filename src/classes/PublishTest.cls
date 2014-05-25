@@ -14,7 +14,10 @@
     
     static testmethod void testSubsequenceDropped() {
         //arrange events
-        EventType__c eventType = new EventType__c(Name = 'ready');
+        EventType__c eventType = new EventType__c(
+            Name = 'ready',
+            RecordTypeId = SObjectType.EventType__c.RecordTypeInfosByName.get('Simple').RecordTypeId
+        );
         insert eventType;
         
         //arrange processes
@@ -93,7 +96,10 @@
         //arrange processes
         Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
-        EventType__c eventType = new EventType__c(Name = 'TestEvent');
+        EventType__c eventType = new EventType__c(
+            Name = 'TestEvent',
+            RecordTypeId = SObjectType.EventType__c.RecordTypeInfosByName.get('Simple').RecordTypeId
+        );
         insert eventType;
         
         //arrange sequence
@@ -126,7 +132,10 @@
     }
     
     static testmethod void testSubscribersAffectParametersListReturned() {
-        EventType__c eventType = new EventType__c(Name = 'TestEvent');
+        EventType__c eventType = new EventType__c(
+            Name = 'TestEvent',
+            RecordTypeId = SObjectType.EventType__c.RecordTypeInfosByName.get('Simple').RecordTypeId
+        );
         insert eventType;
         
         //arrange processes

@@ -14,7 +14,10 @@
         Step__c stepA2 = StepObjectSet.generateOne(sequenceA.Id, wiretapProcess.Id);
 
         // Event
-        EventType__c eventNotPublished = new EventType__c(Name = 'an-event-not-published');
+        EventType__c eventNotPublished = new EventType__c(
+            Name = 'an-event-not-published',
+            RecordTypeId = SObjectType.EventType__c.RecordTypeInfosByName.get('Simple').RecordTypeId
+        );
         insert eventNotPublished;
        
         // Config A1
@@ -86,7 +89,10 @@
         Step__c stepC2 = StepObjectSet.generateOne(sequenceC.Id, subscribeProcess.Id);
             
         // Event
-        EventType__c eventNotPublished = new EventType__c(Name = 'an-event-not-published');
+        EventType__c eventNotPublished = new EventType__c(
+            Name = 'an-event-not-published',
+            RecordTypeId = SObjectType.EventType__c.RecordTypeInfosByName.get('Simple').RecordTypeId
+        );
         insert eventNotPublished;
 
         // Config C1

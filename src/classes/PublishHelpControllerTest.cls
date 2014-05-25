@@ -14,7 +14,10 @@
         Step__c stepA2 = StepObjectSet.generateOne(sequenceA.Id, wiretapProcess.Id);
         
         // Event
-        EventType__c eventTypeNotSubscribed = new EventType__c(Name = 'an-event-not-Subscribed');
+        EventType__c eventTypeNotSubscribed = new EventType__c(
+            Name = 'an-event-not-Subscribed',
+            RecordTypeId = SObjectType.EventType__c.RecordTypeInfosByName.get('Simple').RecordTypeId
+        );
         insert eventTypeNotSubscribed;
         
         // Config A1
