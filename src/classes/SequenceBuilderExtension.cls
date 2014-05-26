@@ -12,13 +12,20 @@ public with sharing class SequenceBuilderExtension {
         //first confirm the remote site setting exists
         ConfigureController controller = new ConfigureController();
         pr = controller.doRedirect();
-        if (pr != null) return pr;
+        if (pr != null) {
+            //send to remote site setting setup
+            pr.getParameters().put('DescriptionField', 'Before you build any sequences, you need this Remote Site Setting. Just click Save below and we\'ll take you straight back to your sequence.');
+            return pr;
+        }
         
         //then check if process discovery needs to run
         pr = Page.ProcessDiscover;
         pr.getParameters().put('retURL', ApexPages.currentPage().getUrl());
         Integer count = [SELECT COUNT() FROM Process__c WHERE FullyQualifiedClassName__c = :Terminate.class.getName()];
-        if (count == 0) return pr;
+        if (count == 0) {
+            //send to process discovery
+            return pr;
+        }
         
         //all systems go
         return null;

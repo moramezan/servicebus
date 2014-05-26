@@ -66,7 +66,7 @@ public class ConfigureController {
             'SiteName' => 'EDA_' + this.endpoint.replaceAll('[^A-Za-z0-9]+', '_').left(30),
             'EndpointUrl' => this.endpoint,
             'ProtocolMismatch' => '1',
-            'DescriptionField' => 'This Remote Site Setting must be saved.'
+            'DescriptionField' => 'Before the installation is complete, you need this Remote Site Setting. Just click Save below and we\'ll take you straight back to the package configuration.'
         });
         
         return setup;
