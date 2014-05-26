@@ -151,7 +151,7 @@
         <name>ApexTrigger</name>
     </types>
     <types>
-        <members>EDA</members>
+        <members>EventDrivenArchitecture</members>
         <name>CustomApplication</name>
     </types>
     <types>
