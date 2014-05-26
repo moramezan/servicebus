@@ -15,8 +15,7 @@
         
         // Event
         EventType__c eventTypeNotSubscribed = new EventType__c(
-            Name = 'an-event-not-Subscribed',
-            RecordTypeId = SObjectType.EventType__c.RecordTypeInfosByName.get('Simple').RecordTypeId
+            Name = 'an-event-not-Subscribed'
         );
         insert eventTypeNotSubscribed;
         

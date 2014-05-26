@@ -15,8 +15,7 @@
 
         // Event
         EventType__c eventNotPublished = new EventType__c(
-            Name = 'an-event-not-published',
-            RecordTypeId = SObjectType.EventType__c.RecordTypeInfosByName.get('Simple').RecordTypeId
+            Name = 'an-event-not-published'
         );
         insert eventNotPublished;
        
@@ -90,8 +89,7 @@
             
         // Event
         EventType__c eventNotPublished = new EventType__c(
-            Name = 'an-event-not-published',
-            RecordTypeId = SObjectType.EventType__c.RecordTypeInfosByName.get('Simple').RecordTypeId
+            Name = 'an-event-not-published'
         );
         insert eventNotPublished;
 

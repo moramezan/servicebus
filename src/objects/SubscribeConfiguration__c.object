@@ -58,13 +58,8 @@
         <inlineHelpText>What event type should this step listen to messages from?</inlineHelpText>
         <label>Event Type</label>
         <lookupFilter>
-            <active>true</active>
+            <active>false</active>
             <errorMessage>You may select a Simple Event only.</errorMessage>
-            <filterItems>
-                <field>EventType__c.RecordTypeId</field>
-                <operation>equals</operation>
-                <value>Simple</value>
-            </filterItems>
             <isOptional>false</isOptional>
         </lookupFilter>
         <referenceTo>EventType__c</referenceTo>

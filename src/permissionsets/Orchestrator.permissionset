@@ -872,10 +872,6 @@
         <apexPage>WiretapHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
-    <recordTypeVisibilities>
-        <recordType>EventType__c.Simple</recordType>
-        <visible>true</visible>
-    </recordTypeVisibilities>
     <tabSettings>
         <tab>Message__c</tab>
         <visibility>Visible</visibility>
