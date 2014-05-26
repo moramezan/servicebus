@@ -13,6 +13,10 @@ public with sharing class SequenceBuilderExtension {
         ConfigureController controller = new ConfigureController();
         pr = controller.doRedirect();
         if (pr != null) {
+            //non-admins can't configure remote site settings
+            Profile profile = [SELECT Id, Name FROM Profile WHERE Id = :UserInfo.getProfileId()];
+            if (profile.Name != 'System Administrator') System.assert(false, 'Please ask your System Administrator to click [Configure] on the Event Driven Architecture package or ask them to visit ' + Url.getSalesforceBaseUrl().toExternalForm() + Page.Configure.getUrl());
+            
             //send to remote site setting setup
             pr.getParameters().put('DescriptionField', 'Before you build any sequences, you need this Remote Site Setting. Just click Save below and we\'ll take you straight back to your sequence.');
             return pr;
