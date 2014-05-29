@@ -1,4 +1,4 @@
-<apex:page standardController="Sequence__c" extensions="SequenceBuilderExtension" action="{!doRedirect}">
+<apex:page standardController="Sequence__c" extensions="SequenceBuilderExtension">
     
     <apex:sectionHeader help="{!URLFOR($Page.SequenceBuilderHelp)}" title="{!$ObjectType.Sequence__c.Label}" subtitle="{!Sequence__c.Name}" />
     
@@ -22,6 +22,7 @@
         
         window.$Page = window.$Page || {};
         $Page.ProcessSettings = '{!$Page.ProcessSettings}';
+        $Page.Configure = '{!$Page.Configure}';
         
         window.Sequence__c = window.Sequence__c || {};
         Sequence__c.Id = '{!Sequence__c.Id}';
@@ -66,10 +67,16 @@
 
         Processes = {!Processes};
         Steps = {!Steps};
+        IsRemoteSiteSettingPresent = Boolean({!IsRemoteSiteSettingPresent});
+        CanConfigureRemoteSiteSetting = Boolean({!CanConfigureRemoteSiteSetting});
+        
+        window.$CurrentPage = window.$CurrentPage || {};
+        $CurrentPage.Url = '{!$CurrentPage.Url}';
         
         window.URLFOR = window.URLFOR || {};
         URLFOR['/'] = '{!URLFOR("/")}';
         URLFOR[$Page.ProcessSettings] = '{!URLFOR($Page.ProcessSettings)}';
+        URLFOR[$Page.Configure] = '{!URLFOR($Page.Configure)}';
     </c:bootstrapExt>
 
 </apex:page>

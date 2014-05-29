@@ -4,7 +4,7 @@
 
         //arrange
         String  name = 'Heartbeat (do not delete)';
-        PostInstallHandler.InstallSchedule(UserInfo.getUserId());
+        PostInstallHandler.InstallSchedule();
         List<CronJobDetail>  cronJobDetailsBefore = [SELECT  Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
         Integer actualSizeBefore = cronJobDetailsBefore.size();
 

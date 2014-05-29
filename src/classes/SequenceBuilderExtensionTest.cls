@@ -16,35 +16,6 @@
         return sequence.Id;
     }
     
-    /**
-     * We cannot really test SequenceBuilderExtension.doRedirect() for the same reason
-     * that ConfigureController.doRedirect() cannot be tested. Can't remember what that
-     * is exactly... maybe to do with difficulty mocking the callout response.
-     */
-    /*static testmethod void testDoRedirect() {
-        //arrange redirect, controller and extension
-        PageReference redirect;
-        ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c());
-        SequenceBuilderExtension extension = new SequenceBuilderExtension(controller);
-        
-        //act in the absence of any processes
-        redirect = extension.doRedirect();
-        
-        //assert it should redirect to discovery
-        String expectedDiscoverUrl = Page.ProcessDiscover.getUrl();
-        String actualDiscoverUrl = redirect.getUrl();
-        System.assertEquals(expectedDiscoverUrl, actualDiscoverUrl);
-        
-        //arrange some processes
-        setupSequence();
-        
-        //act
-        redirect = extension.doRedirect();
-        
-        //assert no redirect when processes are present
-        System.assert(redirect == null);
-    }*/
-    
     static testmethod void testGetProcesses() {
         //arrange sequence, controller and extension
         Id sequenceId = setupSequence();

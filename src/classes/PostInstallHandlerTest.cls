@@ -3,13 +3,8 @@
         //arrange
         String  name = 'Heartbeat (do not delete)';
         
-        //assert
-        Integer expectedSizeBefore = 0;
-        Integer actualSizeBefore = [SELECT COUNT() FROM CronJobDetail WHERE Name = :name LIMIT 1];
-        System.assertEquals(expectedSizeBefore, actualSizeBefore);
-        
         //act
-        PostInstallHandler.InstallSchedule(UserInfo.getUserId());
+        PostInstallHandler.InstallSchedule();
         
         //assert
         Integer expectedSizeAfter = 1;

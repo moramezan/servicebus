@@ -6,33 +6,14 @@ public with sharing class SequenceBuilderExtension {
         this.controller = controller;
     }
     
-    public PageReference doRedirect() {
-        PageReference pr;
-        
-        //first confirm the remote site setting exists
+    public Boolean getCanConfigureRemoteSiteSetting() {
+        Profile profile = (Profile)SalesforceObject.getById(UserInfo.getProfileId());
+        return profile.PermissionsModifyAllData && profile.PermissionsCustomizeApplication;
+    }
+    
+    public Boolean getIsRemoteSiteSettingPresent() {
         ConfigureController controller = new ConfigureController();
-        pr = controller.doRedirect();
-        if (pr != null) {
-            //non-admins can't configure remote site settings
-            Profile profile = [SELECT Id, Name FROM Profile WHERE Id = :UserInfo.getProfileId()];
-            if (profile.Name != 'System Administrator') System.assert(false, 'Please ask your System Administrator to click [Configure] on the Event Driven Architecture package or ask them to visit ' + Url.getSalesforceBaseUrl().toExternalForm() + Page.Configure.getUrl());
-            
-            //send to remote site setting setup
-            pr.getParameters().put('DescriptionField', 'Before you build any sequences, you need this Remote Site Setting. Just click Save below and we\'ll take you straight back to your sequence.');
-            return pr;
-        }
-        
-        //then check if process discovery needs to run
-        pr = Page.ProcessDiscover;
-        pr.getParameters().put('retURL', ApexPages.currentPage().getUrl());
-        Integer count = [SELECT COUNT() FROM Process__c WHERE FullyQualifiedClassName__c = :Terminate.class.getName()];
-        if (count == 0) {
-            //send to process discovery
-            return pr;
-        }
-        
-        //all systems go
-        return null;
+        return controller.getHasRemoteSite();
     }
     
     public String getProcesses() {

@@ -722,7 +722,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>Configure</apexPage>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>EventTypeHelp</apexPage>

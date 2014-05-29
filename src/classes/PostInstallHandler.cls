@@ -13,7 +13,7 @@ public without sharing class PostInstallHandler implements InstallHandler {
      */
     public void onInstall(InstallContext context) {
         //push upgrades run under the pushing user, not the local user, so keep it simple
-        if (!context.isPush()) installSchedule(context.installerId());
+        if (!context.isPush()) installSchedule();
         
         //permission set assignments must be made on the local user, not the pushing user
         if (!context.isPush()) assignPermissionSet(context.installerId());
@@ -24,14 +24,40 @@ public without sharing class PostInstallHandler implements InstallHandler {
         //wiretap should send to sysadmin, to prevent confusion with schedule processes
         if (!context.isPush()) createWiretapSettings(context.installerId());
         
+        //synchronously install our processes
+        if (!context.isPush()) initializeProcesses();
+        
         executeProcessDiscoverBatch();
+    }
+    
+    /**
+     * We can generate OUR processes synchronously. This means the sequence builder
+     * will be available immediately. The batch will get around to THEIR processes.
+     */
+    static public void initializeProcesses() {
+        List<Process__c> edaProcesses = new List<Process__c>();
+        
+        edaProcesses.add(ProcessObject.fromType(Type.forName(Branch.class.getName())));
+        edaProcesses.add(ProcessObject.fromType(Type.forName(Gate.class.getName())));
+        edaProcesses.add(ProcessObject.fromType(Type.forName(Jump.class.getName())));
+        edaProcesses.add(ProcessObject.fromType(Type.forName(LogInitializer.class.getName())));
+        edaProcesses.add(ProcessObject.fromType(Type.forName(LogWriter.class.getName())));
+        edaProcesses.add(ProcessObject.fromType(Type.forName(Mark.class.getName())));
+        edaProcesses.add(ProcessObject.fromType(Type.forName(Publish.class.getName())));
+        edaProcesses.add(ProcessObject.fromType(Type.forName(Schedule.class.getName())));
+        edaProcesses.add(ProcessObject.fromType(Type.forName(Subscribe.class.getName())));
+        edaProcesses.add(ProcessObject.fromType(Type.forName(Subsequence.class.getName())));
+        edaProcesses.add(ProcessObject.fromType(Type.forName(Terminate.class.getName())));
+        edaProcesses.add(ProcessObject.fromType(Type.forName(Wiretap.class.getName())));
+        
+        upsert edaProcesses FullyQualifiedClassName__c;
     }
     
     /**
      * Assign Orchestrator permission set to the installer
      * (Performed in a FUTURE method to prevent MIXED_DML_OPERATION exception)
      */
-    @TestVisible @Future static private void assignPermissionSet(Id userId) {
+    @Future static public void assignPermissionSet(Id userId) {
         //resolve package namespace prefix
         String namespacePrefix = PostInstallHandler.class.getName().substringBefore('PostInstallHandler').substringBefore('.');
         
@@ -61,26 +87,24 @@ public without sharing class PostInstallHandler implements InstallHandler {
     /**
      * Kick off process discovery in the background
      */
-    @TestVisible static private void executeProcessDiscoverBatch() {
+    static public void executeProcessDiscoverBatch() {
         AsyncApexJobs jobs = AsyncApexJobs.runOne(ProcessDiscoverBatch.class, 1);
     }
     
     /**
      * Creates the hourly cron job used by Schedule process steps.
      * Also makes sure the cron job will use the Batch Broker.
-     * 
-     * @param userId The real user id of the person who installed the package.
      */
-    @TestVisible private static void installSchedule(Id userId) {
+    static public Id installSchedule() {
         String name = 'Heartbeat (do not delete)';
         List<CronJobDetail> cronJobDetails = [SELECT Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
         
         //job already scheduled, nothing to do
-        if (!cronJobDetails.isEmpty()) return;
+        if (!cronJobDetails.isEmpty()) return null;
         
         String cronExpr = '0 0 * * * ?';
         HeartbeatDispatcher schedulable = new HeartbeatDispatcher();
-        System.schedule(name, cronExpr, schedulable);
+        return System.schedule(name, cronExpr, schedulable);
     }
     
     /**
@@ -130,7 +154,7 @@ public without sharing class PostInstallHandler implements InstallHandler {
      * Set the Wiretap Settings
      * (Performed in a FUTURE method to prevent MIXED_DML_OPERATION exception)
      */
-    @TestVisible @Future static private void createWiretapSettings(Id userId) {
+    @Future static public void createWiretapSettings(Id userId) {
         //fetch custom setting or create it for the first time
         WiretapSettings__c setting = WiretapSettings__c.getOrgDefaults();
         if (setting == null) setting = new WiretapSettings__c();

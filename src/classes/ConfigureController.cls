@@ -1,6 +1,37 @@
 public class ConfigureController {
     
-    String endpoint = Url.getSalesforceBaseUrl().toExternalForm();
+    /**
+     * Sometimes the CronJobDetail takes a while to populate.
+     * We are happy enough knowing just the CronJob Id exists
+     * in order to display that the Scheduled Job is alright.
+     * This gives immediate feedback when you press
+     * "Click here to schedule the job to fix this"
+     */
+    static private Id CronDetailId;
+    
+    private AppMenuItem AppMenuItem;
+    private AppMenuItem getAppMenuItem() {
+        if (this.AppMenuItem == null) this.AppMenuItem = [SELECT Id, StartUrl FROM AppMenuItem WHERE Name = 'EventDrivenArchitecture'];
+        return this.AppMenuItem;
+    }
+    
+    private List<CronJobDetail> CronJobDetails;
+    private List<CronJobDetail> getCronJobDetails() {
+        if (this.CronJobDetails == null) this.CronJobDetails = [SELECT Id FROM CronJobDetail WHERE Name = 'Heartbeat (do not delete)'];
+        return this.CronJobDetails;
+    }
+    
+    private List<Process__c> Processes;
+    private List<Process__c> getProcesses() {
+        if (this.Processes == null) this.Processes = [SELECT Id FROM Process__c WHERE FullyQualifiedClassName__c = :Terminate.class.getName()];
+        return this.Processes;
+    }
+    
+    private String HomeContent;
+    private String getHomeContent() {
+        if (this.HomeContent == null) this.HomeContent = Test.isRunningTest() ? '' : new PageReference('/home/home.jsp').getContent().toString();
+        return this.HomeContent;
+    }
     
     public class IdentityResult {
         public String id;
@@ -13,7 +44,6 @@ public class ConfigureController {
         public String email;
         public String first_name;
         public String last_name;
-        //public Map<String,Object> status;
         public Map<String,String> photos;
         public Map<String,String> urls;
         public Boolean active;
@@ -27,44 +57,112 @@ public class ConfigureController {
     /**
      * eg "https://pod.salesforce.com"
      */
-    static public String podProtocolAndHost() {
-        String orgId = UserInfo.getOrganizationId();
-        String userId = UserInfo.getUserId();
-        
-        System.PageReference pr = new System.PageReference('/id/' + orgId + '/' + userId);
-        pr.getParameters().put('oauth_token', UserInfo.getSessionId());
-        pr.getParameters().put('format', 'json');
-        
-        String data;
-        if (!Test.isRunningTest()) {
-            //fetch real identity
-            data = pr.getContent().toString();
-        } else {
-            //fake test identity
-            data = '{"urls": {"rest": "' + Url.getSalesforceBaseUrl().toExternalForm() + '"}}';
+    private String PodProtocolAndHost;
+    private String getPodProtocolAndHost() {
+        if (this.PodProtocolAndHost == null) {
+            String orgId = UserInfo.getOrganizationId();
+            String userId = UserInfo.getUserId();
+            System.PageReference pr = new System.PageReference('/id/' + orgId + '/' + userId);
+            pr.getParameters().put('oauth_token', UserInfo.getSessionId());
+            pr.getParameters().put('format', 'json');
+            
+            String data;
+            if (!Test.isRunningTest()) {
+                //fetch real identity
+                data = pr.getContent().toString();
+            } else {
+                //fake test identity
+                data = '{"urls": {"rest": "' + Url.getSalesforceBaseUrl().toExternalForm() + '"}}';
+            }
+            
+            IdentityResult result = (IdentityResult)Json.deserialize(data, IdentityResult.class);
+            Url rest = new Url(result.urls.get('rest'));
+            this.PodProtocolAndHost = rest.getProtocol() + '://' + rest.getHost();
         }
-        IdentityResult result = (IdentityResult)Json.deserialize(data, IdentityResult.class);
+        return this.PodProtocolAndHost;
+    }
+    
+    public PageReference doRedirect() {
+        Map<String,String> params = ApexPages.currentPage().getParameters();
         
-        Url rest = new Url(result.urls.get('rest'));
-        String protocolAndHost = rest.getProtocol() + '://' + rest.getHost();
-        return protocolAndHost;
+        if (params.containsKey('retURL') && getIsOk()) {
+            //back where you came from
+            String url = params.get('retURL');
+            return new PageReference(url);
+        }
+        
+        //on with setup
+        return null;
     }
     
-    @TestVisible void attemptCallout(String endpoint) {
-        System.HttpRequest request = new System.HttpRequest();
-        request.setMethod('GET');
-        request.setEndpoint(endpoint);
-        new System.Http().send(request);
+    /**
+     * App visibility can come from Profile associations or from Permission Sets.
+     * Unfortunately, Permission Sets only work in a dev org, not for an install.
+     * For installed users, we can detect the app's visibility from the app menu.
+     */
+    public Boolean getHasApp() {
+        //get the application id and scrape the home page
+        String appId = String.valueOf(this.getAppMenuItem().Id).left(15);
+        
+        if (this.getHomeContent().contains(appId)) {
+            //the app is visible
+            return true;
+        }
+        
+        if (this.getHomeContent().contains('Event Driven Architecture')) {
+            //the app is currently selected
+            return true;
+        }
+        
+        //needs to be set up!
+        return false;
     }
     
-    @TestVisible System.PageReference buildSetupPage() {
+    public PageReference doSetupApp() {
+        //scaffold edit url and append url parameter for your profile
+        PageReference pr = new ApexPages.StandardController(this.getAppMenuItem()).edit();
+        pr.getParameters().put('retURL', ApexPages.currentPage().getUrl());
+        pr.getParameters().put('selected_in_profile', String.valueOf(UserInfo.getProfileId()).left(15));
+        return pr;
+    }
+    
+    /**
+     * The Heartbeat scheduled job is required for the 'Schedule' process to run.
+     * If a System Administrator inadvertently deletes it, it can be recreated here.
+     */
+    public Boolean getHasHeartbeat() {
+        if (CronDetailId != null) return true;
+        return this.getCronJobDetails().size() == 1;
+    }
+    
+    public void doSetupHeartbeat() {
+        //schedule the job
+        CronDetailId = PostInstallHandler.installSchedule();
+    }
+    
+    /**
+     * The Remote Site Setting is a really nice-to-have for future use
+     * of the Tooling API or Metadata API. So we require that it be present.
+     */
+    public Boolean getHasRemoteSite() {
+        try {
+            System.HttpRequest request = new System.HttpRequest();
+            request.setMethod('GET');
+            request.setEndpoint(this.getPodProtocolAndHost());
+            new System.Http().send(request);
+            return true;
+        } catch (System.CalloutException e) {
+            return false;
+        }
+    }
+    
+    public PageReference doSetupRemoteSite() {
         //prepare a link to pre-populated remote site setting
         System.PageReference setup = new System.PageReference('/0rp/e');
         setup.getParameters().putAll(new Map<String,String>{
-            'save' => '1', //displays a prompt to save in red text
             'saveURL' => ApexPages.currentPage().getUrl(), //redirects to our configuration/tutorial after save
-            'SiteName' => 'EDA_' + this.endpoint.replaceAll('[^A-Za-z0-9]+', '_').left(30),
-            'EndpointUrl' => this.endpoint,
+            'SiteName' => 'EDA_' + this.getPodProtocolAndHost().replaceAll('[^A-Za-z0-9]+', '_').left(30),
+            'EndpointUrl' => this.getPodProtocolAndHost(),
             'ProtocolMismatch' => '1',
             'DescriptionField' => 'Before the installation is complete, you need this Remote Site Setting. Just click Save below and we\'ll take you straight back to the package configuration.'
         });
@@ -72,27 +170,15 @@ public class ConfigureController {
         return setup;
     }
     
-    public System.PageReference doRedirect() {
-        //resolve endpoint
-        this.endpoint = podProtocolAndHost();
-        
-        //edge case: if the page was viewed directly (curious customer), just display the page
-        if (null == endpoint) return null;
-        
-        try {
-            //first we will attempt a callout to see if the remote site setting is set up correctly
-            this.attemptCallout(this.endpoint);
-        } catch (System.CalloutException e) {
-            //if the callout failed, we need the admin to configure the remote site setting!
-            return this.buildSetupPage();
-        }
-        
-        //if the callout succeeded, show green message and display the page
-        ApexPages.addMessage(new ApexPages.Message(
-            ApexPages.Severity.CONFIRM,
-            'Your Remote Site Settings appear to be configured correctly.'
-        ));
-        
-        return null;
+    /**
+     * Is EVERYTHING installed correctly?
+     */
+    public Boolean getIsOk() {
+        return this.getHasRemoteSite() && this.getHasApp() && this.getHasHeartbeat();
     }
+    
+    public PageReference doGetStarted() {
+        return new PageReference(this.getAppMenuItem().StartUrl);
+    }
+    
 }
