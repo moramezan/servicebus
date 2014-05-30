@@ -5,6 +5,7 @@ public class StepObjectSet extends SalesforceObjectSet {
     }
     
     public override void onBeforeInsert() {
+        this.incrementPositions();
         this.insertConfigurations();
     }
     
@@ -23,6 +24,36 @@ public class StepObjectSet extends SalesforceObjectSet {
         
         //requery
         return (Step__c)SalesforceObject.getById(step.Id);
+    }
+    
+    /**
+     * Allows us to auto-increment the Step Position within a Sequence if it is
+     * unspecified. Does not affect data imports where Position is specified.
+     * 
+     * This position incrementer works for single inserts. Keep in mind that multiple
+     * 0-Position steps inserted in the same execution context will not increment separately.
+     */
+    private void incrementPositions() {
+        //get all involved steps
+        List<Step__c> steps = this.getSObjects();
+        
+        //get map of related sequences
+        Set<Id> sequenceIds = new Set<Id>();
+        for (Step__c step : steps) sequenceIds.add(step.Sequence__c);
+        Map<Id,Sequence__c> id2sequence = new Map<Id,Sequence__c>([
+            SELECT Id, StepsCount__c
+            FROM Sequence__c
+            WHERE Id IN :sequenceIds
+        ]);
+        
+        //increment 
+        for (Step__c step : steps) {
+            //only touch steps whose position is zero (unspecified)
+            if (step.Position__c != 0) continue;
+            
+            Sequence__c sequence = id2sequence.get(step.Sequence__c);
+            step.Position__c = sequence.StepsCount__c + 1;
+        }
     }
     
     /**

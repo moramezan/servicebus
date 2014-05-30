@@ -145,9 +145,16 @@
         <name>ApexPage</name>
     </types>
     <types>
+        <members>BranchConfigurationTriggers</members>
+        <members>JumpConfigurationTriggers</members>
+        <members>LogConfigurationTriggers</members>
+        <members>MessageTriggers</members>
+        <members>PublishConfigurationTriggers</members>
         <members>ScheduleConfigurationTriggers</members>
         <members>SequenceTriggers</members>
         <members>StepTriggers</members>
+        <members>SubscribeConfigurationTriggers</members>
+        <members>SubsequenceConfigurationTriggers</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -316,27 +323,6 @@
         <members>SubscribeConfiguration__c.ShowStep</members>
         <members>SubsequenceConfiguration__c.ShowStep</members>
         <name>WebLink</name>
-    </types>
-    <types>
-        <members>BranchConfiguration__c.UpdateBranchConfigurationName</members>
-        <members>JumpConfiguration__c.UpdateJumpConfigurationName</members>
-        <members>LogConfiguration__c.UpdateLogConfigurationName</members>
-        <members>PublishConfiguration__c.UpdatePublishConfigurationName</members>
-        <members>Step__c.StepPositionUpdate</members>
-        <members>SubscribeConfiguration__c.UpdateSubscribeConfigurationName</members>
-        <members>SubsequenceConfiguration__c.UpdateSubsequenceConfigurationName</members>
-        <name>WorkflowFieldUpdate</name>
-    </types>
-    <types>
-        <members>BranchConfiguration__c.OnBranchConfigurationUpsert</members>
-        <members>JumpConfiguration__c.OnJumpConfigurationUpsert</members>
-        <members>LogConfiguration__c.OnLogInitializerConfigurationUpsert</members>
-        <members>Message__c.OnMessageError</members>
-        <members>PublishConfiguration__c.OnPublishConfigurationUpsert</members>
-        <members>Step__c.OnStepInsert</members>
-        <members>SubscribeConfiguration__c.OnSubscribeConfigurationUpsert</members>
-        <members>SubsequenceConfiguration__c.OnSubsequenceConfigurationUpsert</members>
-        <name>WorkflowRule</name>
     </types>
     <uninstallClass>PostUninstallHandler</uninstallClass>
     <version>30.0</version>
