@@ -587,7 +587,7 @@
         Broker.markHelper(parametersIn0, parametersListOut);
         
         //assemble
-        Integer actualCount = (Integer)parametersIn0.get('eda_Count');
+        Integer actualCount = (Integer)parametersListOut[0].get('eda_Count');
         
         //assert
         Integer expectedCount = parametersListOut.size();

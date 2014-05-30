@@ -61,6 +61,9 @@ public with sharing class Gate implements Process.Plugin {
         
         //this is the last item, let's release
         parameters.put('Id', gateGroupId);
+        parameters.remove('eda_Count');
+        parameters.remove('eda_MarkCount');
+        parameters.remove('eda_GateGroupId');
         
         return EdaUtility.convert(new List<Map<String,Object>>{parameters});
     }

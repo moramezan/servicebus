@@ -448,15 +448,32 @@ abstract global without sharing class Broker {
      * If markCount isn't null, then the preceding process was a Mark; increment THEN put that value on parameters.
      * If markCount equates to two, then the preceding process was a splitter; write the count of split parameter sets.
      */
-    @TestVisible private static void markHelper(Map<String,Object> parameters, List<Map<String,Object>> parametersList) {
+    @TestVisible private static void markHelper(Map<String,Object> parameters, List<Map<String,Object>> outputs) {
         Decimal markCount = (Decimal)parameters.get('eda_MarkCount');
-        if (null != markCount) parameters.put('eda_MarkCount', ++markCount);
-        if (2 == markCount) {
-            Integer count = parametersList.size();
-            parameters.put('eda_Count', count);
-            if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('eda_GateGroupId')}); //tidy up split of 0
+        
+        if (null == markCount) {
+            //nothing to do, mark process has not tainted the input
+            return;
         }
-     }
+        
+        if (outputs.isEmpty()) {
+            //nothing to do, split process did not return any outputs, tidy up the gate group
+            //Database.delete(new List<Id>{(Id)parameters.get('eda_GateGroupId')});
+            return;
+        }
+        
+        markCount++;
+        
+        for (Map<String,Object> output : outputs) {
+            //write markCount onto every output
+            output.put('eda_MarkCount', markCount);
+        }
+        
+        if (2 == markCount) {
+            //write outputSize onto every output
+            for (Map<String,Object> output : outputs) output.put('eda_Count', outputs.size());
+        }
+    }
     
     global void restartIfWorkPending() {
         Integer worksPending = [
