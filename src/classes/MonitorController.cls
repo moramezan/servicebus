@@ -1,5 +1,9 @@
 public with sharing class MonitorController {
     
+    public String getNamespacePrefix() {
+        return MonitorController.class.getName().substringBefore('MonitorController');
+    }
+    
     public class Statistic {
         public Statistic(String name, Integer queued, Integer buffer, Integer processing, Integer reprocess, Integer overdue) {
             this.Name = name;

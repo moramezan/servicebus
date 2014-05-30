@@ -25,6 +25,7 @@
             Visualforce.remoting.Manager.invokeAction(
                 '{!$RemoteAction.MonitorController.getStatistics}', //getTestStatistics
                 function(data) {
+                    var Stats = eval('{!NamespacePrefix}Stats'); //Stats || eda.Stats
                     Stats.reload(data);
                     setTimeout(redraw, 1000);
                 }
