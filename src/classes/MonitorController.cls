@@ -43,8 +43,15 @@ public with sharing class MonitorController {
         //we need to be able to populate the scattered statuses by process id
         Map<Id,Statistic> id2statistic = new Map<Id,Statistic>();
         
+        //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
+        List<Process__c> processes = [
+            SELECT Id, Name
+            FROM Process__c
+            LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
+        ];
+        
         //populate id-keyed map for each process
-        for (Process__c process : [SELECT Id, Name FROM Process__c]) {
+        for (Process__c process : processes) {
             Statistic statistic = new Statistic(process.Name, 0, 0, 0, 0, 0);
             id2statistic.put(process.Id, statistic);
         }
