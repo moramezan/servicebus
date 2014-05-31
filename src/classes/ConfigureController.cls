@@ -1,4 +1,4 @@
-public class ConfigureController {
+public with sharing class ConfigureController {
     
     /**
      * Sometimes the CronJobDetail takes a while to populate.
