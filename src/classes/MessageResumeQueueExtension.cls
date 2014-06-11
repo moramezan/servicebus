@@ -17,6 +17,8 @@ public with sharing class MessageResumeQueueExtension {
     
     public class DoDml {
         public DoDml() {
+            if (!SObjectType.Message__c.Fields.Status__c.Updateable) System.assert(false, '!SObjectType.Message__c.Fields.Status__c.Updateable');
+        
             //fetch custom setting or create for the first time
             BrokerSettings__c setting = BrokerSettings__c.getOrgDefaults();
             if (setting == null) setting = new BrokerSettings__c();

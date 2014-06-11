@@ -215,6 +215,8 @@ abstract global without sharing class Broker {
      * @param messageIds Set of Message Ids to update
      */
     static global void mark(Set<Id> messageIds) {
+        if (!SObjectType.Message__c.Fields.Status__c.Updateable) System.assert(false, '!SObjectType.Message__c.Fields.Status__c.Updateable');   
+
         List<Message__c> messages = new List<Message__c>();
         for (Id messageId : messageIds) {
             messages.add(new Message__c(
@@ -381,7 +383,8 @@ abstract global without sharing class Broker {
     
     @TestVisible private static void surfaceException(Exception e, Id messageId) {
         if (!SObjectType.Note.Createable) System.assert(false, '!SObjectType.Note.Createable');
-        
+        if (!SObjectType.Message__c.Fields.Exception__c.Updateable) System.assert(false, '!SObjectType.Message__c.Fields.Exception__c.Updateable');   
+
         Map<String,Object> serializedException = new Map<String,Object>();
         serializedException.put('cause', e.getCause());
         serializedException.put('lineNumber', e.getLineNumber());

@@ -78,6 +78,8 @@ public class SequenceObject extends SalesforceObject {
     }
     
     public StepObjectSet destroySteps(Set<Id> stepIds) {
+        if (!SObjectType.Step__c.Fields.Position__c.Updateable) System.assert(false, '!SObjectType.Step__c.Fields.Position__c.Updateable');
+        
         Sequence__c sequence = (Sequence__c)this.getSObject();
         
         List<Step__c> stepsToDelete = [
