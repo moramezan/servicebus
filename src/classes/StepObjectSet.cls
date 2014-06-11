@@ -108,6 +108,7 @@ public class StepObjectSet extends SalesforceObjectSet {
      * This trigger takes care of the deletion of the configuration.
      */
     private void deleteConfigurations() {
+        if (!SObjectType.Step__c.Deletable) System.assert(false, '!SObjectType.Step__c.Deletable');  
         Set<Id> stepIds = (new Map<Id,SObject>(this.getSObjects())).keySet();
         Map<Id,Step__c> id2step = new Map<Id,Step__c>([SELECT id, Name, ConfigurationId__c FROM Step__c WHERE Id IN :stepIds]);
         
