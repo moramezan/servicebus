@@ -38,6 +38,8 @@ public with sharing class Gate implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
+        if (!SObjectType.GateItem__c.Createable) System.assert(false, '!SObjectType.GateItem__c.Createable');
+    
         Map<String,Object> parameters = request.inputParameters;
         
         Id gateGroupId = (Id)parameters.get('eda_GateGroupId');

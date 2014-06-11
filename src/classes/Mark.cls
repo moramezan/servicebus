@@ -28,6 +28,8 @@ public with sharing class Mark implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
+        if (!SObjectType.GateGroup__c.Createable) System.assert(false, '!SObjectType.GateGroup__c.Createable');
+        
         Map<String,Object> parameters = request.inputParameters;
         
         //create a grouping id for what will ultimately be gated

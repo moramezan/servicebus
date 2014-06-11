@@ -26,6 +26,8 @@ public class LogInitializer implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest pluginRequest) {
+        if (!SObjectType.LogGroup__c.Createable) System.assert(false, '!SObjectType.LogGroup__c.Createable');
+     
         Map<String,Object> parameters = pluginRequest.inputParameters;
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         

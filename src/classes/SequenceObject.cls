@@ -40,6 +40,8 @@ public class SequenceObject extends SalesforceObject {
     }
     
     public StepObject appendStep(Id processId) {
+        if (!SObjectType.Step__c.Createable) System.assert(false, '!SObjectType.Step__c.Createable');
+    
         Step__c step = new Step__c(
             Sequence__c = this.getSObject().Id,
             Process__c = processId

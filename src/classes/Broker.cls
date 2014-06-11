@@ -137,6 +137,8 @@ abstract global without sharing class Broker {
      * @param dataId    Id of some record that the sequence will operate on.
      */
     static global void enqueue(String sequenceName, Id dataId) {
+        if (!SObjectType.Message__c.Createable) System.assert(false, '!SObjectType.Message__c.Createable');    
+            
         Map<String,Object> parameters = new Map<String,Object> {
             'eda_EntryPointGuid' => getEntryPointGuid(18),
             'eda_SequenceName' => sequenceName,
@@ -191,6 +193,8 @@ abstract global without sharing class Broker {
      * @param dataId    Blob representation of the data the sequence will operate on.
      */
     static global void enqueue(String sequenceName, Blob data) {
+        if (!SObjectType.Document.Createable) System.assert(false, '!SObjectType.Document.Createable');
+            
         //prepare a very generic container
         Document document = new Document(
             Name = String.valueOf(Datetime.now().getTime()),
@@ -376,6 +380,8 @@ abstract global without sharing class Broker {
     }
     
     @TestVisible private static void surfaceException(Exception e, Id messageId) {
+        if (!SObjectType.Note.Createable) System.assert(false, '!SObjectType.Note.Createable');
+        
         Map<String,Object> serializedException = new Map<String,Object>();
         serializedException.put('cause', e.getCause());
         serializedException.put('lineNumber', e.getLineNumber());

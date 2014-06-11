@@ -14,6 +14,8 @@ public class StepObjectSet extends SalesforceObjectSet {
     }
     
     @TestVisible static private Step__c generateOne(Id sequenceId, Id processId) {
+        if (!SObjectType.Step__c.Createable) System.assert(false, '!SObjectType.Step__c.Createable');
+     
         Step__c step = new Step__c(
             Sequence__c = sequenceId,
             Process__c = processId

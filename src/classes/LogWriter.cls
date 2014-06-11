@@ -17,6 +17,8 @@ public class LogWriter implements Process.Plugin {
     
     
     public Process.PluginResult invoke(Process.PluginRequest pluginRequest) {
+        if (!SObjectType.LogWriterEntry__c.Createable) System.assert(false, '!SObjectType.LogWriterEntry__c.Createable');
+        
         Map<String,Object> parameters = pluginRequest.inputParameters;
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
