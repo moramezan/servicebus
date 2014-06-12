@@ -1,4 +1,4 @@
-abstract public class SalesforceObjectSet {
+abstract with sharing public class SalesforceObjectSet {
     
     private List<SObject> sobjs;
     public List<SObject> getSObjects() {

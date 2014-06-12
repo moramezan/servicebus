@@ -1,4 +1,4 @@
-public class SequenceObjectSet extends SalesforceObjectSet {
+public with sharing class SequenceObjectSet extends SalesforceObjectSet {
 
     public SequenceObjectSet(List<Sequence__c> sobjects) {
         super(sobjects);

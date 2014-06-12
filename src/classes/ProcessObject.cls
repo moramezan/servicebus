@@ -1,4 +1,4 @@
-public class ProcessObject extends SalesforceObject {
+public with sharing class ProcessObject extends SalesforceObject {
     
     public class ProcessException extends Exception {}
     

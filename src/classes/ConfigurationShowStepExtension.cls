@@ -1,4 +1,4 @@
-public class ConfigurationShowStepExtension {
+public with sharing class ConfigurationShowStepExtension {
     
     private ApexPages.StandardController controller;
     

@@ -1,4 +1,4 @@
-public class StepObject extends SalesforceObject {
+public with sharing class StepObject extends SalesforceObject {
 
     public StepObject(Step__c step) {
         super(step);

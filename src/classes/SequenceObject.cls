@@ -1,4 +1,4 @@
-public class SequenceObject extends SalesforceObject {
+public with sharing class SequenceObject extends SalesforceObject {
 
     public class SequenceException extends Exception {}
     

@@ -1,4 +1,4 @@
-public class LogInitializer implements Process.Plugin {
+public with sharing class LogInitializer implements Process.Plugin {
     
     public class LogInitializerException extends Exception {}
     

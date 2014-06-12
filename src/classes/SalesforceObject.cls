@@ -1,4 +1,4 @@
-abstract public class SalesforceObject {
+abstract with sharing public class SalesforceObject {
     
     private SObject sobj;
     public SObject getSObject() {

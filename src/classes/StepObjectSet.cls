@@ -1,4 +1,4 @@
-public class StepObjectSet extends SalesforceObjectSet {
+public with sharing class StepObjectSet extends SalesforceObjectSet {
     
     public StepObjectSet(List<Step__c> sobjects) {
         super(sobjects);
