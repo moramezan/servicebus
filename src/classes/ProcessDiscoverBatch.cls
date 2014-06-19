@@ -55,7 +55,7 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
     
     public class ApexClassProvider implements IApexClassProvider {
         public List<ApexClass> getApexClasses() {
-            return SalesforceObjectSet.listAll(ApexClass.SObjectType);
+            return (List<ApexClass>)new ProcessDiscoverBatch().start(null); //formerly SalesforceObjectSet.listAll() but sharing breaks it for InstallHandler user
         }
     } 
     
