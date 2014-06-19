@@ -86,9 +86,13 @@ public without sharing class PostInstallHandler implements InstallHandler {
     
     /**
      * Kick off process discovery in the background
+     *
+     * AsyncApexJobs.runOne would need to be WITHOUT SHARING to see AsyncApexJob
+     * because the InstallHandler user context cannot access that table. So here
+     * we just use Database.executeBatch as it's unlikely to already be running.
      */
     static public void executeProcessDiscoverBatch() {
-        AsyncApexJobs jobs = AsyncApexJobs.runOne(ProcessDiscoverBatch.class, 1);
+        Database.executeBatch(new ProcessDiscoverBatch(), 1);
     }
     
     /**
