@@ -5,7 +5,7 @@ public with sharing class StepObject extends SalesforceObject {
     }
     
     public void moveBefore(Id beforeStepId) {
-        if (!SObjectType.Step__c.Fields.Position__c.Updateable) System.assert(false, '!SObjectType.Step__c.Fields.Position__c.Updateable');
+        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new Broker.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
         
         Step__c stepToMove = (Step__c)this.getSObject();
         Step__c beforeStep = (Step__c)SalesforceObject.getById(beforeStepId);
@@ -33,7 +33,7 @@ public with sharing class StepObject extends SalesforceObject {
     }
     
     public void moveAfter(Id afterStepId) {
-        if (!SObjectType.Step__c.Fields.Position__c.Updateable) System.assert(false, '!SObjectType.Step__c.Fields.Position__c.Updateable');
+        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new Broker.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
         
         Step__c stepToMove = (Step__c)this.getSObject();
         Step__c afterStep = (Step__c)SalesforceObject.getById(afterStepId);

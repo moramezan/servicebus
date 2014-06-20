@@ -14,7 +14,7 @@ public with sharing class StepObjectSet extends SalesforceObjectSet {
     }
     
     @TestVisible static private Step__c generateOne(Id sequenceId, Id processId) {
-        if (!SObjectType.Step__c.Createable) System.assert(false, '!SObjectType.Step__c.Createable');
+        if (!SObjectType.Step__c.Createable) throw new Broker.CrudException('!SObjectType.Step__c.Createable');
      
         Step__c step = new Step__c(
             Sequence__c = sequenceId,
@@ -108,7 +108,7 @@ public with sharing class StepObjectSet extends SalesforceObjectSet {
      * This trigger takes care of the deletion of the configuration.
      */
     private void deleteConfigurations() {
-        if (!SObjectType.Step__c.Deletable) System.assert(false, '!SObjectType.Step__c.Deletable');  
+        if (!SObjectType.Step__c.Deletable) throw new Broker.CrudException('!SObjectType.Step__c.Deletable');  
         Set<Id> stepIds = (new Map<Id,SObject>(this.getSObjects())).keySet();
         Map<Id,Step__c> id2step = new Map<Id,Step__c>([SELECT id, Name, ConfigurationId__c FROM Step__c WHERE Id IN :stepIds]);
         

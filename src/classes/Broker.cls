@@ -81,6 +81,10 @@ abstract global without sharing class Broker {
     
     global class BrokerException extends Exception {}
     
+    public class CrudException extends Exception {}
+    
+    public class FlsException extends Exception {}
+    
     /**
      * Determines which messages are eligible to be moved into the Processing status (by finding Messages
      * with 'Reprocess' and 'Buffer' status). Note: too many fucked messages would clog up the system,
@@ -137,7 +141,7 @@ abstract global without sharing class Broker {
      * @param dataId    Id of some record that the sequence will operate on.
      */
     static global void enqueue(String sequenceName, Id dataId) {
-        if (!SObjectType.Message__c.Createable) System.assert(false, '!SObjectType.Message__c.Createable');    
+        if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable');    
             
         Map<String,Object> parameters = new Map<String,Object> {
             'eda_EntryPointGuid' => getEntryPointGuid(18),
@@ -193,7 +197,7 @@ abstract global without sharing class Broker {
      * @param dataId    Blob representation of the data the sequence will operate on.
      */
     static global void enqueue(String sequenceName, Blob data) {
-        if (!SObjectType.Document.Createable) System.assert(false, '!SObjectType.Document.Createable');
+        if (!SObjectType.Document.Createable) throw new Broker.CrudException('!SObjectType.Document.Createable');
             
         //prepare a very generic container
         Document document = new Document(
@@ -215,7 +219,7 @@ abstract global without sharing class Broker {
      * @param messageIds Set of Message Ids to update
      */
     static global void mark(Set<Id> messageIds) {
-        if (!SObjectType.Message__c.Fields.Status__c.Updateable) System.assert(false, '!SObjectType.Message__c.Fields.Status__c.Updateable');   
+        if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
 
         List<Message__c> messages = new List<Message__c>();
         for (Id messageId : messageIds) {
@@ -382,8 +386,8 @@ abstract global without sharing class Broker {
     }
     
     @TestVisible private static void surfaceException(Exception e, Id messageId) {
-        if (!SObjectType.Note.Createable) System.assert(false, '!SObjectType.Note.Createable');
-        if (!SObjectType.Message__c.Fields.Exception__c.Updateable) System.assert(false, '!SObjectType.Message__c.Fields.Exception__c.Updateable');   
+        if (!SObjectType.Note.Createable) throw new Broker.CrudException('!SObjectType.Note.Createable');
+        if (!SObjectType.Message__c.Fields.Exception__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Exception__c.Updateable');   
 
         Map<String,Object> serializedException = new Map<String,Object>();
         serializedException.put('cause', e.getCause());

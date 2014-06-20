@@ -28,7 +28,7 @@ public with sharing class Mark implements Process.Plugin {
     }
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
-        if (!SObjectType.GateGroup__c.Createable) System.assert(false, '!SObjectType.GateGroup__c.Createable');
+        if (!SObjectType.GateGroup__c.Createable) throw new Broker.CrudException('!SObjectType.GateGroup__c.Createable');
         
         Map<String,Object> parameters = request.inputParameters;
         

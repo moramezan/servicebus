@@ -45,7 +45,7 @@ public with sharing class ProcessObject extends SalesforceObject {
      * @return          Inserted process with all fields
      */
     @TestVisible static private Process__c generateOne(Type reflector) {
-        if (!SObjectType.Process__c.Createable) System.assert(false, '!SObjectType.Process__c.Createable');
+        if (!SObjectType.Process__c.Createable) throw new Broker.CrudException('!SObjectType.Process__c.Createable');
             
         Process__c process = fromType(reflector);
         insert process;
