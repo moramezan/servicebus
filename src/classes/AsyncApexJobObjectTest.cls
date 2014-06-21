@@ -1,4 +1,4 @@
-@IsTest private class AsyncApexJobsTest {
+@IsTest private class AsyncApexJobObjectTest {
     
     static testmethod void testAbortJobs() {
         
@@ -10,39 +10,35 @@
         Test.startTest();
         
         Id one = Database.executeBatch(new BatchBrokerImplementation(), 1);
-        Id two = Database.executeBatch(new BatchBrokerImplementation(), 1);
-        AsyncApexJobs asyncApexJobs = new AsyncApexJobs(new List<AsyncApexJob>{
-            new AsyncApexJob(Id = one),
-            new AsyncApexJob(Id = two)
-        });
+        AsyncApexJobObject asyncApexJob = new AsyncApexJobObject(new AsyncApexJob(Id = one));
         
         //during
-        Integer expectedRunning = 2;
+        Integer expectedRunning = 1;
         Integer actualRunning = [SELECT COUNT() FROM AsyncApexJob];
         System.assertEquals(expectedRunning, actualRunning);
         
-        asyncApexJobs.abort();
+        asyncApexJob.abort();
         
         Test.stopTest();
 
         //after
-        Integer expectedStopped = 2;
+        Integer expectedStopped = 1;
         Integer actualStopped = [SELECT COUNT() FROM AsyncApexJob WHERE Status = 'Aborted'];
         System.assertEquals(expectedStopped, actualStopped);
     }
     
     static testmethod void testRunOneOnlyRunsJobOnce() {
         Test.startTest();
-        AsyncApexJobs one = AsyncApexJobs.runOne(BatchBrokerImplementation.class, 1);
-        AsyncApexJobs two = AsyncApexJobs.runOne(BatchBrokerImplementation.class, 1);
+        AsyncApexJobObject one = AsyncApexJobObject.runOne(BatchBrokerImplementation.class, 1);
+        AsyncApexJobObject two = AsyncApexJobObject.runOne(BatchBrokerImplementation.class, 1);
         Test.stopTest();
         
         Integer expectedRunning = 1;
         Integer actualRunning = [SELECT COUNT() FROM AsyncApexJob];
         System.assertEquals(expectedRunning, actualRunning);
         
-        String serializedOne = System.Json.serializePretty(one.getSObjects()[0].Id);
-        String serializedTwo = System.Json.serializePretty(two.getSObjects()[0].Id);
+        String serializedOne = System.Json.serializePretty(one.getSObject().Id);
+        String serializedTwo = System.Json.serializePretty(two.getSObject().Id);
         System.assertEquals(serializedOne, serializedTwo);
     }
 

@@ -1,23 +1,21 @@
-public with sharing class AsyncApexJobs extends SalesforceObjectSet {
+public with sharing class AsyncApexJobObject extends SalesforceObject {
     
     /**
      * Domain constructor
      *
      * Note the only writeable property of an AsyncApexJob is Id.
      *
-     * @param asyncApexJobs List of AsyncApexJob.
+     * @param asyncApexJob The AsyncApexJob.
      */
-    public AsyncApexJobs(List<AsyncApexJob> asyncApexJobs) {
-        super(asyncApexJobs);
+    public AsyncApexJobObject(AsyncApexJob asyncApexJob) {
+        super(asyncApexJob);
     }
     
     /**
      * Abort all batch jobs held in the domain instance.
      */
     public void abort() {
-        for (AsyncApexJob asyncApexJob : (List<AsyncApexJob>)this.getSObjects()) {
-            System.abortJob(asyncApexJob.Id);
-        }
+        System.abortJob(this.getSObject().Id);
     }
     
     /**
@@ -27,7 +25,7 @@ public with sharing class AsyncApexJobs extends SalesforceObjectSet {
      * @param  chunkSize Chunk size for each iteration of the query locator (eg 200).
      * @return           Domain instance holding multiple existing jobs or one started job.
      */
-    static public AsyncApexJobs runOne(System.Type type, Integer chunkSize) {
+    static public AsyncApexJobObject runOne(System.Type type, Integer chunkSize) {
         String namespacePrefix;
         String name;
         
@@ -52,7 +50,7 @@ public with sharing class AsyncApexJobs extends SalesforceObjectSet {
         
         if (!existingJobs.isEmpty()) {
             //return existing job
-            return new AsyncApexJobs(existingJobs);
+            return new AsyncApexJobObject(existingJobs[0]);
         }
         
         //start job
@@ -62,6 +60,6 @@ public with sharing class AsyncApexJobs extends SalesforceObjectSet {
         AsyncApexJob job = (AsyncApexJob)SalesforceObject.getById(jobId);
         
         //return started job
-        return new AsyncApexJobs(new List<AsyncApexJob>{job});
+        return new AsyncApexJobObject(job);
     }
 }

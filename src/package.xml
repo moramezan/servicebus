@@ -7,8 +7,8 @@
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>
-        <members>AsyncApexJobs</members>
-        <members>AsyncApexJobsTest</members>
+        <members>AsyncApexJobObject</members>
+        <members>AsyncApexJobObjectTest</members>
         <members>BatchBrokerDispatcher</members>
         <members>BatchBrokerDispatcherTest</members>
         <members>BatchBrokerImplementation</members>

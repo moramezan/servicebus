@@ -5,11 +5,11 @@
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
-        <apexClass>AsyncApexJobs</apexClass>
+        <apexClass>AsyncApexJobObject</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>AsyncApexJobsTest</apexClass>
+        <apexClass>AsyncApexJobObjectTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
