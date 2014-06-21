@@ -2,6 +2,11 @@
     
     @TestVisible static private String FailureMessage = 'Fake Error Thrown in FailurePlugin';
     
+    public class DoNothingBroker extends Broker {
+        override public void restartImpl() {}
+        override public Boolean isAlreadyRunning() {return true;}
+    }
+    
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult describeResult = new Process.PluginDescribeResult();
         describeResult.Name = 'Failure Plugin';
@@ -166,7 +171,7 @@
          Process.PluginResult results = EdaUtility.convert(parametersList);
 
         //act
-        results =   Broker.applyStackDepth(results, stackDepth);
+        results = new DoNothingBroker().applyStackDepth(results, stackDepth);
 
         //assemble
         Integer actualStackDepth = -1;
@@ -339,7 +344,7 @@
         
         //act
         Id messageId = message.Id;
-        Broker.surfaceException(e, messageId) ;
+        new DoNothingBroker().surfaceException(e, messageId) ;
         
         //assemble
         List<Message__c> messages = [
@@ -584,7 +589,7 @@
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>> { parametersOut1, parametersOut2, parametersOut3 };
         
         //act
-        Broker.markHelper(parametersIn0, parametersListOut);
+        new DoNothingBroker().markHelper(parametersIn0, parametersListOut);
         
         //assemble
         Integer actualCount = (Integer)parametersListOut[0].get('eda_Count');
@@ -605,7 +610,7 @@
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
         
         //act
-        Broker.markHelper(parametersIn0, parametersListOut);
+        new DoNothingBroker().markHelper(parametersIn0, parametersListOut);
         
         //assemble
         Integer actualCount = (Integer)parametersIn0.get('eda_Count');
@@ -625,7 +630,7 @@
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
         
         //act
-        Broker.markHelper(parametersIn0, parametersListOut);
+        new DoNothingBroker().markHelper(parametersIn0, parametersListOut);
         
         //assemble
         Integer actualCount = (Integer) parametersIn0.get('eda_Count');
@@ -652,7 +657,7 @@
         insert message;
         
         //act
-        Broker.executeResolvePersist(message.Id);
+        new DoNothingBroker().executeResolvePersist(message.Id);
         
         //assemble
         Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
@@ -669,7 +674,7 @@
         insert message;
         
         //act
-        Broker.executeResolvePersist(message.Id);
+        new DoNothingBroker().executeResolvePersist(message.Id);
         
         //assemble
         Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
@@ -686,7 +691,7 @@
         insert message;
         
         //act
-        Broker.executeResolvePersist(message.Id);
+        new DoNothingBroker().executeResolvePersist(message.Id);
         
         //assemble
         Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);

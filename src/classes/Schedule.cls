@@ -1,8 +1,4 @@
-/**
- * This class is WITHOUT SHARING to ensure the InstallHandler user context can access CronTrigger etc
- * See http://salesforce.stackexchange.com/q/258/320 and http://salesforce.stackexchange.com/q/32607/320
- */
-public without sharing class Schedule implements Process.Plugin {
+public with sharing class Schedule implements Process.Plugin {
     
     public class Meta {
         public String Icon = 'clock';

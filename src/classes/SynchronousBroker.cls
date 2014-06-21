@@ -1,4 +1,4 @@
-public class SynchronousBroker extends Broker {
+public with sharing class SynchronousBroker extends Broker {
 
     static private Boolean isRunning = false;
     
@@ -16,7 +16,7 @@ public class SynchronousBroker extends Broker {
         while (iterator.hasNext()) {
             //each in separate execution context
             Message__c message = (Message__c)iterator.next();
-            Broker.executeResolvePersist(message.Id); //EXECUTE
+            this.executeResolvePersist(message.Id); //EXECUTE
         }
         
         //finish (invokes broker again in same context)

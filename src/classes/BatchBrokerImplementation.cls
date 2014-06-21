@@ -12,7 +12,7 @@ public without sharing class BatchBrokerImplementation extends Broker implements
     }
     
     public void execute(Database.BatchableContext context, List<Message__c> scopes) {
-        for (Message__c scope : scopes) Broker.executeResolvePersist(scope.Id);
+        for (Message__c scope : scopes) this.executeResolvePersist(scope.Id);
     }
     
     public void finish(Database.BatchableContext context) {

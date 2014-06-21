@@ -75,11 +75,11 @@
  * |  EXECUTE  | invokes [Terminate]
  * +-----------+
  */
-abstract global without sharing class Broker {
+abstract global with sharing class Broker {
     
     @TestVisible private static Integer stackDepthThreshold  = 500;
     
-    global class BrokerException extends Exception {}
+    public class BrokerException extends Exception {}
     
     public class CrudException extends Exception {}
     
@@ -97,7 +97,7 @@ abstract global without sharing class Broker {
      * @param workCount Maximum number of Messages to mark and locate (subject to fuckups)
      * @return          Query Locator identifying the now-marked-as-Processing Messages.
      */
-    global Database.QueryLocator locateMarkedWork(Integer workCount) {
+    virtual global Database.QueryLocator locateMarkedWork(Integer workCount) {
         Integer fuckedLimit = 100;
         
         Integer fuckedCount = [
@@ -124,7 +124,7 @@ abstract global without sharing class Broker {
         ]).keySet();
         
         //MARK
-        this.markImpl(messageIds);
+        this.mark(messageIds);
         
         //query locator hands back only the messages that were marked as processing
         String commaDelimitedIds = '(\'' + String.join(new List<Id>(messageIds), '\',\'') + '\')';
@@ -140,7 +140,7 @@ abstract global without sharing class Broker {
      * @param sequenceName Name of the sequence the data is destined for.
      * @param dataId    Id of some record that the sequence will operate on.
      */
-    static global void enqueue(String sequenceName, Id dataId) {
+    static global Id enqueue(String sequenceName, Id dataId) {
         if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable');    
             
         Map<String,Object> parameters = new Map<String,Object> {
@@ -171,16 +171,17 @@ abstract global without sharing class Broker {
         
         insert message; //PERSIST
         Broker.process();
+        return message.Id;
     }
     
-    static global void process() {
+    static public void process() {
         //first try to resolve broker class from custom setting
         BrokerSettings__c settings = BrokerSettings__c.getInstance();
         
-        //if there is no setting, use the snappy future broker
+        //if there is no setting, use the default batch broker
         if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBrokerImplementation.class.getName(); 
         
-        //except when we are scheduled, then use batch broker which doesn't need a session id
+        //or if we are scheduled, use the default batch broker which doesn't need a session id (unlike futurebroker)
         if (System.isScheduled()) settings.BrokerClassName__c = BatchBrokerImplementation.class.getName();
         
         Broker impl = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
@@ -196,7 +197,7 @@ abstract global without sharing class Broker {
      * @param sequenceName Name of the sequence the data is destined for.
      * @param dataId    Blob representation of the data the sequence will operate on.
      */
-    static global void enqueue(String sequenceName, Blob data) {
+    static public Id enqueue(String sequenceName, Blob data) {
         if (!SObjectType.Document.Createable) throw new Broker.CrudException('!SObjectType.Document.Createable');
             
         //prepare a very generic container
@@ -210,7 +211,7 @@ abstract global without sharing class Broker {
         
         //store this data away and enqueue
         insert document;
-        enqueue(sequenceName, document.Id);
+        return enqueue(sequenceName, document.Id);
     }
     
     /**
@@ -218,7 +219,7 @@ abstract global without sharing class Broker {
      *
      * @param messageIds Set of Message Ids to update
      */
-    static global void mark(Set<Id> messageIds) {
+    virtual global void mark(Set<Id> messageIds) {
         if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
 
         List<Message__c> messages = new List<Message__c>();
@@ -231,17 +232,13 @@ abstract global without sharing class Broker {
         update messages;
     }
     
-    virtual global void markImpl(Set<Id> messageIds) {
-        Broker.mark(messageIds);
-    }
-    
     /**
      * Resolves and invokes the Process.Plugin for one input, handing back an in-memory collection of outputs
      *
      * @param  message One Message whose status should be Processing
      * @return         Many Messages whose status should be Buffer
      */
-    static global void executeResolvePersist(Id messageId) {
+    virtual global void executeResolvePersist(Id messageId) {
         Message__c message = (Message__c)SalesforceObject.getById(messageId);
         List<Map<String,Object>> parametersList;
         Map<String,Object> parameters;
@@ -292,7 +289,7 @@ abstract global without sharing class Broker {
             //write back save important message properties 
             //TODO : requires a more generic approach to write back the "eda_" properties to 
             //       the parameters collections in parametersList
-            results = applyStackDepth(results, stackDepth);
+            results = this.applyStackDepth(results, stackDepth);
             // convert to a list of parameter collections
             parametersList = EdaUtility.convert(results);
         } catch (Exception e) {
@@ -306,7 +303,7 @@ abstract global without sharing class Broker {
         //OUR FUCKUPS ( after invocation )
         try {
             //gate processing support method
-            markHelper(parameters, parametersList);
+            this.markHelper(parameters, parametersList);
             
             //RESOLVE
             //wrap up parametersList into Messages
@@ -345,7 +342,7 @@ abstract global without sharing class Broker {
      * 4B. resolve the the process (ie the process referenced by 4A's step)
      * 5. only then can we correctly write to database with 4A (stepId) and 3 (parameters with the incremented position)
      */
-    static global void resolve(List<Message__c> messages) {
+    static public void resolve(List<Message__c> messages) {
         //assemble a map of next-step keys to messages
         Map<String,Message__c> key2data = new Map<String,Message__c>();
         for (Message__c message : messages) {
@@ -385,7 +382,7 @@ abstract global without sharing class Broker {
         }
     }
     
-    @TestVisible private static void surfaceException(Exception e, Id messageId) {
+    @TestVisible private void surfaceException(Exception e, Id messageId) {
         if (!SObjectType.Note.Createable) throw new Broker.CrudException('!SObjectType.Note.Createable');
         if (!SObjectType.Message__c.Fields.Exception__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Exception__c.Updateable');   
 
@@ -424,7 +421,7 @@ abstract global without sharing class Broker {
      * We use applyStackDepth()  to apply the incremented stackDepth variable to the eda_StackDepth parameter of
      * all messages returned from invoke()
      */
-    @TestVisible static private Process.PluginResult applyStackDepth(Process.PluginResult results, Integer stackDepth) {
+    @TestVisible private Process.PluginResult applyStackDepth(Process.PluginResult results, Integer stackDepth) {
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
 
         Integer count = 0;
@@ -461,7 +458,7 @@ abstract global without sharing class Broker {
      * If markCount isn't null, then the preceding process was a Mark; increment THEN put that value on parameters.
      * If markCount equates to two, then the preceding process was a splitter; write the count of split parameter sets.
      */
-    @TestVisible private static void markHelper(Map<String,Object> parameters, List<Map<String,Object>> outputs) {
+    @TestVisible private void markHelper(Map<String,Object> parameters, List<Map<String,Object>> outputs) {
         Decimal markCount = (Decimal)parameters.get('eda_MarkCount');
         
         if (null == markCount) {
