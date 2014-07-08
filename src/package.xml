@@ -37,6 +37,8 @@
         <members>LogWriterTest</members>
         <members>Mark</members>
         <members>MarkTest</members>
+        <members>MessageObjectSet</members>
+        <members>MessageObjectSetTest</members>
         <members>MessagePauseQueueExtension</members>
         <members>MessagePauseQueueExtensionTest</members>
         <members>MessageProcessExtension</members>
