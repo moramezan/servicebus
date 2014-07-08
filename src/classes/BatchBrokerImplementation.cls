@@ -8,11 +8,26 @@ public without sharing class BatchBrokerImplementation extends Broker implements
     
     public Database.QueryLocator start(Database.BatchableContext context) {
         if (BrokerSettings__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
-        return this.locateMarkedWork(100);
+        
+        //LOCATE
+        Database.QueryLocator locator = this.locateMarkableWork(100);
+        List<Message__c> messages = new ApexPages.StandardSetController(locator).getRecords();
+        
+        //MARK
+        this.mark(messages);
+        
+        return locator;
     }
     
     public void execute(Database.BatchableContext context, List<Message__c> scopes) {
-        for (Message__c scope : scopes) this.executeResolvePersist(scope.Id);
+        //EXECUTE
+        List<Message__c> messages = this.execute(scopes);
+        
+        //RESOLVE
+        this.resolve(messages);
+        
+        //PERSIST
+        this.persist(messages);
     }
     
     public void finish(Database.BatchableContext context) {

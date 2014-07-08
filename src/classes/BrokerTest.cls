@@ -212,7 +212,7 @@
         };
         
         //act
-        Broker.resolve(messages);
+        Broker.impl().resolve(messages);
         insert messages; //persist
         
         // assemble
@@ -275,7 +275,12 @@
         
         //act
         MockBroker broker = new MockBroker();
-        Database.QueryLocatorIterator iterator = broker.locateMarkedWork(queryLimit).iterator();
+        Database.QueryLocator locator = broker.locateMarkableWork(queryLimit);
+        Database.QueryLocatorIterator iterator = locator.iterator();
+        
+        //MARK
+        broker.mark(new ApexPages.StandardSetController(locator).getRecords());
+        
         List<Message__c> messages = new List<Message__c>();
         while (iterator.hasNext()) messages.add((Message__c)iterator.next());
         
@@ -295,7 +300,7 @@
         };
     
         //act
-        Database.QueryLocatorIterator iterator = new MockBroker().locateMarkedWork(fuckedLimit).iterator();
+        Database.QueryLocatorIterator iterator = new MockBroker().locateMarkableWork(fuckedLimit).iterator();
         List<Message__c> messages = new List<Message__c>();
         while (iterator.hasNext()) messages.add((Message__c)iterator.next());
         
@@ -322,7 +327,12 @@
         
         //act
         MockBroker broker = new MockBroker();
-        Database.QueryLocatorIterator iterator = broker.locateMarkedWork(workCount).iterator();
+        Database.QueryLocator locator = broker.locateMarkableWork(workCount);
+        Database.QueryLocatorIterator iterator = locator.iterator();
+        
+        //MARK
+        broker.mark(new ApexPages.StandardSetController(locator).getRecords());
+        
         List<Message__c> messages = new List<Message__c>();
         while (iterator.hasNext()) messages.add((Message__c)iterator.next());
         
@@ -411,7 +421,7 @@
         };
         
         // act
-        Broker.resolve(messages);
+        Broker.impl().resolve(messages);
         
         // assemble
         String actualSequenceName0 = '' ;
@@ -657,7 +667,10 @@
         insert message;
         
         //act
-        new DoNothingBroker().executeResolvePersist(message.Id);
+        Broker broker = new DoNothingBroker();
+        List<Message__c> messages = broker.execute(new List<Message__c>{message});
+        broker.resolve(messages);
+        broker.persist(messages);
         
         //assemble
         Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
@@ -674,7 +687,10 @@
         insert message;
         
         //act
-        new DoNothingBroker().executeResolvePersist(message.Id);
+        Broker broker = new DoNothingBroker();
+        List<Message__c> messages = broker.execute(new List<Message__c>{message});
+        broker.resolve(messages);
+        broker.persist(messages);
         
         //assemble
         Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
@@ -691,7 +707,10 @@
         insert message;
         
         //act
-        new DoNothingBroker().executeResolvePersist(message.Id);
+        Broker broker = new DoNothingBroker();
+        List<Message__c> messages = broker.execute(new List<Message__c>{message});
+        broker.resolve(messages);
+        broker.persist(messages);
         
         //assemble
         Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);

@@ -85,6 +85,18 @@ abstract global with sharing class Broker {
     
     public class FlsException extends Exception {}
     
+    static public Broker impl() {
+        //first try to resolve broker class from custom setting
+        BrokerSettings__c settings = BrokerSettings__c.getInstance();
+        
+        //if there is no setting, use the default batch broker
+        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBrokerImplementation.class.getName(); 
+        
+        //new up and return the broker instance
+        Broker impl = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
+        return impl;
+    }
+    
     /**
      * Determines which messages are eligible to be moved into the Processing status (by finding Messages
      * with 'Reprocess' and 'Buffer' status). Note: too many fucked messages would clog up the system,
@@ -97,7 +109,7 @@ abstract global with sharing class Broker {
      * @param workCount Maximum number of Messages to mark and locate (subject to fuckups)
      * @return          Query Locator identifying the now-marked-as-Processing Messages.
      */
-    virtual global Database.QueryLocator locateMarkedWork(Integer workCount) {
+    virtual global Database.QueryLocator locateMarkableWork(Integer workCount) {
         Integer fuckedLimit = 100;
         
         Integer fuckedCount = [
@@ -123,9 +135,6 @@ abstract global with sharing class Broker {
             LIMIT :Math.min(workCount, queryLimit)
         ]).keySet();
         
-        //MARK
-        this.mark(messageIds);
-        
         //query locator hands back only the messages that were marked as processing
         String commaDelimitedIds = '(\'' + String.join(new List<Id>(messageIds), '\',\'') + '\')';
         String queryString = 'SELECT Id, Step__c, Parameters__c FROM Message__c WHERE Id IN ' + commaDelimitedIds;
@@ -142,7 +151,9 @@ abstract global with sharing class Broker {
      */
     static global Id enqueue(String sequenceName, Id dataId) {
         if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable');    
-            
+        
+        Broker instance = impl();
+        
         Map<String,Object> parameters = new Map<String,Object> {
             'eda_EntryPointGuid' => getEntryPointGuid(18),
             'eda_SequenceName' => sequenceName,
@@ -166,25 +177,21 @@ abstract global with sharing class Broker {
         } else {
             //system is running
             message.Status__c = 'Buffer';
-            Broker.resolve(new List<Message__c>{message}); //RESOLVE
+            instance.resolve(new List<Message__c>{message}); //RESOLVE
         }
         
-        insert message; //PERSIST
+        instance.persist(new List<Message__c>{message}); //PERSIST
         Broker.process();
         return message.Id;
     }
     
+    /**
+     * //TODO
+     * //If we are scheduled, use the default batch broker which doesn't need a session id (unlike futurebroker)
+     * //if (System.isScheduled()) settings.BrokerClassName__c = BatchBrokerImplementation.class.getName();
+     */
     static public void process() {
-        //first try to resolve broker class from custom setting
-        BrokerSettings__c settings = BrokerSettings__c.getInstance();
-        
-        //if there is no setting, use the default batch broker
-        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBrokerImplementation.class.getName(); 
-        
-        //or if we are scheduled, use the default batch broker which doesn't need a session id (unlike futurebroker)
-        if (System.isScheduled()) settings.BrokerClassName__c = BatchBrokerImplementation.class.getName();
-        
-        Broker impl = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
+        Broker impl = impl();
         if (!impl.isAlreadyRunning()) impl.restartIfWorkPending();
     }
     
@@ -216,30 +223,24 @@ abstract global with sharing class Broker {
     
     /**
      * Sets many Messages statuses to 'Processing' and writes them away.
-     *
-     * @param messageIds Set of Message Ids to update
      */
-    virtual global void mark(Set<Id> messageIds) {
+    virtual global List<Database.SaveResult> mark(List<Message__c> messages) {
         if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
-
-        List<Message__c> messages = new List<Message__c>();
-        for (Id messageId : messageIds) {
-            messages.add(new Message__c(
-                Id = messageId,
-                Status__c = 'Processing'
-            ));
-        }
-        update messages;
+        for (Message__c message : messages) message.Status__c = 'Processing';
+        return Database.update(messages);
     }
     
     /**
      * Resolves and invokes the Process.Plugin for one input, handing back an in-memory collection of outputs
      *
-     * @param  message One Message whose status should be Processing
-     * @return         Many Messages whose status should be Buffer
+     * @param  inputMessages Messages whose status should be Processing
+     * @return               Many Messages whose status should be Buffer
      */
-    virtual global void executeResolvePersist(Id messageId) {
-        Message__c message = (Message__c)SalesforceObject.getById(messageId);
+    virtual global List<Message__c> execute(List<Message__c> inputMessages) {
+        //empty inputs, empty outputs
+        if (inputMessages.isEmpty()) return new List<Message__c>();
+        
+        Message__c message = inputMessages[0]; //TODO chunking
         List<Map<String,Object>> parametersList;
         Map<String,Object> parameters;
         Process.Plugin plugin;
@@ -270,7 +271,7 @@ abstract global with sharing class Broker {
                 e.setMessage('Could not cast Process.Plugin (interface unimplemented on process class)');
             }
             surfaceException(e, message.Id);
-            return; //get out of dodge quick
+            return new List<Message__c>(); //get out of dodge
         }
         
         SavePoint sp;
@@ -297,15 +298,12 @@ abstract global with sharing class Broker {
             Database.rollback(sp);
             
             surfaceException(e, message.Id);
-            return; //get out of dodge quick
+            return new List<Message__c>(); //get out of dodge quick
         }
-
-        //OUR FUCKUPS ( after invocation )
-        try {
+        
             //gate processing support method
             this.markHelper(parameters, parametersList);
             
-            //RESOLVE
             //wrap up parametersList into Messages
             List<Message__c> messages = new List<Message__c>();
             for (Map<String,Object> n : parametersList) {
@@ -315,21 +313,10 @@ abstract global with sharing class Broker {
                 ));
             }
             
-            //resolution
-            Broker.resolve(messages);
-            
-            //PERSIST
-            // persist successfully resolved outbound message(s)
-            insert messages;
-                        
             //delete successfully processed message
             delete message;
             Database.emptyRecycleBin(message);
-        } catch (Exception e) {
-            e.setMessage('Resolution Failure (check your sequence config) ' + e.getMessage());
-            surfaceException(e, message.Id);
-            return; //get out of dodge quick
-        }
+        return messages;
     }
 
     /**
@@ -342,7 +329,7 @@ abstract global with sharing class Broker {
      * 4B. resolve the the process (ie the process referenced by 4A's step)
      * 5. only then can we correctly write to database with 4A (stepId) and 3 (parameters with the incremented position)
      */
-    static public void resolve(List<Message__c> messages) {
+    virtual global void resolve(List<Message__c> messages) {
         //assemble a map of next-step keys to messages
         Map<String,Message__c> key2data = new Map<String,Message__c>();
         for (Message__c message : messages) {
@@ -370,6 +357,8 @@ abstract global with sharing class Broker {
         
         //now put the resolved sequence/step/process on each message
         for (Message__c message : messages) {
+        //OUR FUCKUPS ( after invocation )
+        try {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
             String sequenceName = (String)parameters.get('eda_SequenceName');
             Decimal position = (Decimal)parameters.get('eda_Position'); //care
@@ -379,7 +368,15 @@ abstract global with sharing class Broker {
             message.Sequence__c = step.Sequence__r.Id;
             message.Process__c = step.Process__r.Id;
             message.Step__c = step.Id;
+        } catch (Exception e) {
+            e.setMessage('Resolution Failure (check your sequence config) ' + e.getMessage());
+            surfaceException(e, message.Id);
         }
+        }
+    }
+    
+    virtual global List<Database.UpsertResult> persist(List<Message__c> messages) {
+        return Database.upsert(messages);
     }
     
     @TestVisible private void surfaceException(Exception e, Id messageId) {

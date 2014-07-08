@@ -8,15 +8,24 @@ public with sharing class SynchronousBroker extends Broker {
     }
     
     virtual public void start() {
-        //start (MARK)
-        Database.QueryLocator locator = this.locateMarkedWork(1);
+        //LOCATE
+        Database.QueryLocator locator = this.locateMarkableWork(1);
         Database.QueryLocatorIterator iterator = locator.iterator();
         
-        //execute (EXECUTE, RESOLVE, PERSIST)
+        //MARK
+        this.mark(new ApexPages.StandardSetController(locator).getRecords());
+        
         while (iterator.hasNext()) {
-            //each in separate execution context
             Message__c message = (Message__c)iterator.next();
-            this.executeResolvePersist(message.Id); //EXECUTE
+            
+            //EXECUTE
+            List<Message__c> messages = this.execute(new List<Message__c>{message}); //EXECUTE
+            
+            //RESOLVE
+            this.resolve(messages);
+            
+            //PERSIST
+            this.persist(messages);
         }
         
         //finish (invokes broker again in same context)
