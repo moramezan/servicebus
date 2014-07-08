@@ -129,6 +129,10 @@
                 <fullName>Queued</fullName>
                 <default>false</default>
             </picklistValues>
+            <picklistValues>
+                <fullName>Completed</fullName>
+                <default>false</default>
+            </picklistValues>
             <sorted>false</sorted>
         </picklist>
         <trackTrending>false</trackTrending>

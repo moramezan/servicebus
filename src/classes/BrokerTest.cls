@@ -80,10 +80,9 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c, IsDeleted
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c
             FROM Message__c
-            WHERE IsDeleted =  false
-            ALL ROWS
+            WHERE Status__c != 'Completed'
         ];
         
         Integer actualStackDepth;
@@ -831,10 +830,9 @@
 
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c, IsDeleted
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c
             FROM Message__c
-            WHERE IsDeleted =  false
-            ALL ROWS
+            WHERE Status__c != 'Completed'
         ];
 
 
@@ -892,10 +890,9 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c, IsDeleted
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c
             FROM Message__c
-            WHERE IsDeleted =  true
-            ALL ROWS
+            WHERE Status__c = 'Completed'
         ];
 
         Integer actualCount = messages.size();
@@ -946,16 +943,14 @@
         
         //assemble
         List<Message__c> messagesOk = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c, IsDeleted
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c
             FROM Message__c
-            WHERE IsDeleted =  true
-            ALL ROWS
+            WHERE Status__c = 'Completed'
         ];
         List<Message__c> messagesFailed = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c, IsDeleted
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c
             FROM Message__c
-            WHERE IsDeleted =  false
-            ALL ROWS
+            WHERE Status__c != 'Completed'
         ];
             
         Integer actualCountOk = messagesOk.size();

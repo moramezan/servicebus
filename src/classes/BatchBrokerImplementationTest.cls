@@ -26,7 +26,7 @@
         
         //assert
         Integer expectedCount = 0;
-        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE IsDeleted =  false ALL ROWS];
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c != 'Completed'];
         System.assertEquals(expectedCount, actualCount);
  
     }
@@ -54,10 +54,9 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.FullyQualifiedClassName__c, Step__c , Status__c, Exception__c, IsDeleted
+            SELECT Id, Name, Process__r.FullyQualifiedClassName__c, Step__c , Status__c, Exception__c
             FROM Message__c
-            WHERE IsDeleted =  false
-            ALL ROWS
+            WHERE Status__c != 'Completed'
         ];
         Integer actualCount = messages.size();
         
@@ -112,7 +111,7 @@
         
         //assert
         Integer expectedCount = 0;
-        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE IsDeleted = false ALL ROWS];
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c != 'Completed'];
         System.assertEquals(expectedCount, actualCount);
     }
     

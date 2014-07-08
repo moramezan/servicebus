@@ -24,10 +24,9 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Status__c, IsDeleted
+            SELECT Id, Name, Process__r.Name, Step__c , Status__c
             FROM Message__c
-            WHERE IsDeleted =  false
-            ALL ROWS
+            WHERE Status__c != 'Completed'
         ];
         
         Integer actualCount = messages.size();

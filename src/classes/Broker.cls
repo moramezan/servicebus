@@ -314,8 +314,8 @@ abstract global with sharing class Broker {
             }
             
             //delete successfully processed message
-            delete message;
-            Database.emptyRecycleBin(message);
+            message.Status__c = 'Completed';
+            update message;
         return messages;
     }
 

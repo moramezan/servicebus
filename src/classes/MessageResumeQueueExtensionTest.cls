@@ -32,10 +32,9 @@
 
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c, IsDeleted
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c
             FROM Message__c
-            WHERE IsDeleted =  false
-            ALL ROWS
+            WHERE Status__c != 'Completed'
         ];
 
        BrokerSettings__c actualSettings  = BrokerSettings__c.getInstance();
@@ -96,7 +95,7 @@
 
        // assert
        Integer expectedCount = 2 + 2;
-       Integer actualCount = [SELECT COUNT() FROM Message__c WHERE IsDeleted = true ALL ROWS];
+       Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
        System.assertEquals( expectedCount, actualCount);
        String expectedPageReference = SObjectType.Message__c.KeyPrefix;
        System.Assert(actualPageReference.getUrl().contains(expectedPageReference));
