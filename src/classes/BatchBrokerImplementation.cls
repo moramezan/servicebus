@@ -19,15 +19,15 @@ public without sharing class BatchBrokerImplementation extends Broker implements
         return locator;
     }
     
-    public void execute(Database.BatchableContext context, List<Message__c> scopes) {
+    public void execute(Database.BatchableContext context, List<Message__c> inputMessages) {
         //EXECUTE
-        List<Message__c> messages = this.execute(scopes);
+        List<Message__c> outputMessages = this.execute(inputMessages);
         
         //RESOLVE
-        this.resolve(messages);
+        this.resolve(outputMessages);
         
         //PERSIST
-        this.persist(messages);
+        this.persist(inputMessages, outputMessages);
     }
     
     public void finish(Database.BatchableContext context) {

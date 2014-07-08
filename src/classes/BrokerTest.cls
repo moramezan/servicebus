@@ -669,7 +669,7 @@
         Broker broker = new DoNothingBroker();
         List<Message__c> messages = broker.execute(new List<Message__c>{message});
         broker.resolve(messages);
-        broker.persist(messages);
+        broker.persist(new List<Message__c>{message}, messages);
         
         //assemble
         Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
@@ -689,7 +689,7 @@
         Broker broker = new DoNothingBroker();
         List<Message__c> messages = broker.execute(new List<Message__c>{message});
         broker.resolve(messages);
-        broker.persist(messages);
+        broker.persist(new List<Message__c>{message}, messages);
         
         //assemble
         Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
@@ -709,7 +709,7 @@
         Broker broker = new DoNothingBroker();
         List<Message__c> messages = broker.execute(new List<Message__c>{message});
         broker.resolve(messages);
-        broker.persist(messages);
+        broker.persist(new List<Message__c>{message}, messages);
         
         //assemble
         Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);

@@ -47,8 +47,7 @@ public with sharing class MessageResumeQueueExtension {
             //RESOLVE
             Broker.impl().resolve(messages);
             
-            //PERSIST
-            Broker.impl().persist(messages);
+            update messages;
         }
     }
 }

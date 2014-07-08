@@ -18,14 +18,16 @@ public with sharing class SynchronousBroker extends Broker {
         while (iterator.hasNext()) {
             Message__c message = (Message__c)iterator.next();
             
+            List<Message__c> inputMessages = new List<Message__c>{message};
+            
             //EXECUTE
-            List<Message__c> messages = this.execute(new List<Message__c>{message}); //EXECUTE
+            List<Message__c> outputMessages = this.execute(inputMessages); //EXECUTE
             
             //RESOLVE
-            this.resolve(messages);
+            this.resolve(outputMessages);
             
             //PERSIST
-            this.persist(messages);
+            this.persist(inputMessages, outputMessages);
         }
         
         //finish (invokes broker again in same context)

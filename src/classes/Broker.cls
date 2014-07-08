@@ -180,7 +180,7 @@ abstract global with sharing class Broker {
             instance.resolve(new List<Message__c>{message}); //RESOLVE
         }
         
-        instance.persist(new List<Message__c>{message}); //PERSIST
+        insert message;
         Broker.process();
         return message.Id;
     }
@@ -375,8 +375,17 @@ abstract global with sharing class Broker {
         }
     }
     
-    virtual global List<Database.UpsertResult> persist(List<Message__c> messages) {
-        return Database.upsert(messages);
+    virtual global List<Database.UpsertResult> persist(List<Message__c> inputMessages, List<Message__c> outputMessages) {
+        for (Message__c message : inputMessages) {
+            //designate all input messages as finished
+            message.Status__c = 'Completed';
+        }
+        
+        //transact both inputs and outputs in one fell swoop
+        List<Message__c> messages = new List<Message__c>();
+        messages.addAll(inputMessages);
+        messages.addAll(outputMessages);
+        return Database.upsert(messages, true); //all or none
     }
     
     @TestVisible private void surfaceException(Exception e, Id messageId) {
