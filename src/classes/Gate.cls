@@ -7,7 +7,7 @@ public with sharing class Gate implements Process.Plugin {
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'Aggregates a collection of messages previously marked with a correlation key';
+        plugin.Description = 'Aggregates a collection of messages previously marked with a correlation key.';
         plugin.Tag = 'Event Driven Architecture';
         plugin.Name = 'Gate';
         

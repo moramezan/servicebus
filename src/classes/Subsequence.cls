@@ -8,7 +8,7 @@ public with sharing class Subsequence implements Process.Plugin {
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'Temporarily diverts the message to another sequence, then returns it to the next step afterwards';
+        plugin.Description = 'Temporarily diverts the message to another sequence, then returns it to the next step afterwards.';
         plugin.Tag = 'Event Driven Architecture';
         plugin.Name = 'Subsequence';
         

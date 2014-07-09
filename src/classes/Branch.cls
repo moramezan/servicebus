@@ -10,7 +10,7 @@ public with sharing class Branch implements Process.Plugin {
     
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'Copies the message to another sequence';
+        plugin.Description = 'Copies the message to another sequence.';
         plugin.Tag = 'Event Driven Architecture';
         plugin.Name = 'Branch';
         return plugin;

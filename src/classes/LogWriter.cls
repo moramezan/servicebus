@@ -10,7 +10,7 @@ public class LogWriter implements Process.Plugin {
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Name = 'LogWriter';
-        plugin.Description = 'Stores the message parameters under a Log Group';
+        plugin.Description = 'Stores the message parameters under a Log Group.';
         plugin.Tag = 'Event Driven Architecture';
         return plugin;
     }

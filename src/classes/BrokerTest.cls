@@ -10,7 +10,7 @@
     public Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult describeResult = new Process.PluginDescribeResult();
         describeResult.Name = 'Failure Plugin';
-        describeResult.Description = 'A Process.Plugin that throws an exception for testing purposes. (Will not be listed)';
+        describeResult.Description = 'A Process.Plugin that throws an exception for testing purposes.'; //Will not be listed
         describeResult.Tag = 'Event Driven Architecture';
         System.assert(describeResult.Name.contains('Failure'));
         return describeResult;
