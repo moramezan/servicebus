@@ -15,7 +15,7 @@ public with sharing class MessageProcessExtension {
         }
         
         //write away status and any resolved fields ("avoids DML in action method")
-        Type.forName(DoDml.class.getName()).newInstance(); //PERSIST
+        Type.forName(DoDml.class.getName()).newInstance();
         
         //restart the broker
         Broker.process();

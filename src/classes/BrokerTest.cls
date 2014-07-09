@@ -212,7 +212,7 @@
         
         //act
         Broker.impl().resolve(messages);
-        insert messages; //persist
+        insert messages;
         
         // assemble
         List<Message__c> messagesAfter = SalesforceObjectSet.listAll(Message__c.SObjectType);
