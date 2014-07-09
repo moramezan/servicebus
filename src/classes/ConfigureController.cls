@@ -7,7 +7,7 @@ public with sharing class ConfigureController {
      * This gives immediate feedback when you press
      * "Click here to schedule the job to fix this"
      */
-    static private Id CronDetailId;
+    private Id CronDetailId;
     
     private AppMenuItem AppMenuItem;
     private AppMenuItem getAppMenuItem() {
@@ -131,13 +131,13 @@ public with sharing class ConfigureController {
      * If a System Administrator inadvertently deletes it, it can be recreated here.
      */
     public Boolean getHasHeartbeat() {
-        if (CronDetailId != null) return true;
+        if (this.CronDetailId != null) return true;
         return this.getCronJobDetails().size() == 1;
     }
     
     public void doSetupHeartbeat() {
         //schedule the job
-        CronDetailId = PostInstallHandler.installSchedule();
+        this.CronDetailId = PostInstallHandler.installSchedule();
     }
     
     /**
