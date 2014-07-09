@@ -290,8 +290,6 @@
                 <types><members>*</members><name>ContactCriteriaBasedSharingRule</name></types>
                 <types><members>*</members><name>ContactOwnerSharingRule</name></types>
                 <types><members>*</members><name>ContactSharingRules</name></types>
-                <types><members>*</members><name>CustomApplication</name></types>
-                <types><members>*</members><name>CustomApplicationComponent</name></types>
                 <types><members>*</members><name>CustomField</name></types>
                 <types><members>*</members><name>CustomLabel</name></types>
                 <types><members>*</members><name>CustomLabels</name></types>
@@ -346,6 +344,8 @@
         <!--
          ! These metadata types are either unpackageable, or tricky because
          ! they are coupled to profiles (app) or users (permissionsets):
+         ! <types><members>*</members><name>CustomApplication</name></types>
+         ! <types><members>*</members><name>CustomApplicationComponent</name></types>
          ! <types><members>*</members><name>ApprovalProcess</name></types>
          ! <types><members>*</members><name>AssignmentRule</name></types>
          ! <types><members>*</members><name>AssignmentRules</name></types>
