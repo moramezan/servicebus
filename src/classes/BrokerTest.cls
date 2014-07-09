@@ -575,7 +575,7 @@
         
     }
     
-    static testmethod void callingMarkHelperCorrectlySetsCountOnParametersWhenMarkCountIncrementsTo2() {
+    static testmethod void callingGateHelperCorrectlySetsCountOnParametersWhenMarkCountIncrementsTo2() {
         //arrange
         Integer markCount = 1;
         Map<String,Object> parametersIn0 = new Map<String,Object> {
@@ -598,7 +598,7 @@
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>> { parametersOut1, parametersOut2, parametersOut3 };
         
         //act
-        new DoNothingBroker().markHelper(parametersIn0, parametersListOut);
+        new DoNothingBroker().gateHelper(parametersIn0, parametersListOut);
         
         //assemble
         Integer actualCount = (Integer)parametersListOut[0].get('eda_Count');
@@ -608,7 +608,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testmethod void callingMarkHelperDoesNotSetCountOnParametersWhenMarkCountIncrementsToOtherThan2() {
+    static testmethod void callingGateHelperDoesNotSetCountOnParametersWhenMarkCountIncrementsToOtherThan2() {
         //arrange
         Integer markCount = 0; //will not increment to 2
         Map<String,Object> parametersIn0 = new Map<String,Object> {
@@ -619,7 +619,7 @@
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
         
         //act
-        new DoNothingBroker().markHelper(parametersIn0, parametersListOut);
+        new DoNothingBroker().gateHelper(parametersIn0, parametersListOut);
         
         //assemble
         Integer actualCount = (Integer)parametersIn0.get('eda_Count');
@@ -629,7 +629,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testmethod void callingMarkHelperDoesNotSetCountOnParametersWhenMarkCountIsNull() {
+    static testmethod void callingGateHelperDoesNotSetCountOnParametersWhenMarkCountIsNull() {
         //arrange
         Map<String,Object> parametersIn0 = new Map<String,Object> {
             'Id' => '0'
@@ -639,7 +639,7 @@
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
         
         //act
-        new DoNothingBroker().markHelper(parametersIn0, parametersListOut);
+        new DoNothingBroker().gateHelper(parametersIn0, parametersListOut);
         
         //assemble
         Integer actualCount = (Integer) parametersIn0.get('eda_Count');

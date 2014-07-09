@@ -300,7 +300,7 @@ abstract global with sharing class Broker {
         }
         
         //gate processing support method
-        this.markHelper(parameters, parametersList);
+        this.gateHelper(parameters, parametersList);
         
         //wrap up parametersList into Messages
         List<Message__c> messages = new List<Message__c>();
@@ -461,7 +461,7 @@ abstract global with sharing class Broker {
      * If markCount isn't null, then the preceding process was a Mark; increment THEN put that value on parameters.
      * If markCount equates to two, then the preceding process was a splitter; write the count of split parameter sets.
      */
-    @TestVisible private void markHelper(Map<String,Object> parameters, List<Map<String,Object>> outputs) {
+    @TestVisible private void gateHelper(Map<String,Object> parameters, List<Map<String,Object>> outputs) {
         Decimal markCount = (Decimal)parameters.get('eda_MarkCount');
         
         if (null == markCount) {
