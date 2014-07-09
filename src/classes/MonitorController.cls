@@ -1,6 +1,7 @@
 public with sharing class MonitorController {
     
-    public String getNamespacePrefix() {
+    //eg "ns."
+    public String getApexNamespacePrefix() {
         return MonitorController.class.getName().substringBefore('MonitorController');
     }
     
