@@ -667,15 +667,19 @@
         
         //act
         Broker broker = new DoNothingBroker();
-        List<Message__c> messages = broker.execute(new List<Message__c>{message});
-        broker.resolve(messages);
-        broker.persist(new List<Message__c>{message}, messages);
+        String actualMessage;
+        try {
+            List<Message__c> messages = broker.execute(new List<Message__c>{message});
+            broker.resolve(messages);
+            broker.persist(new List<Message__c>{message}, messages);
+        } catch (Exception e) {
+            actualMessage = e.getMessage();
+        }
         
         //assemble
         Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
         
         //assert
-        String actualMessage = messageActual.Exception__c;
         String expectedMessage = 'Could not deserialize json';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
@@ -687,16 +691,20 @@
         
         //act
         Broker broker = new DoNothingBroker();
-        List<Message__c> messages = broker.execute(new List<Message__c>{message});
-        broker.resolve(messages);
-        broker.persist(new List<Message__c>{message}, messages);
         
+        String actualMessage;
+        try {
+            List<Message__c> messages = broker.execute(new List<Message__c>{message});
+            broker.resolve(messages);
+            broker.persist(new List<Message__c>{message}, messages);
+        } catch (Exception e) {
+            actualMessage = e.getMessage();
+        }
         //assemble
         Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
         
         //assert
-        String actualMessage = messageActual.Exception__c;
-        String expectedMessage = 'position';
+        String expectedMessage = 'position, missing';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
@@ -707,16 +715,21 @@
         
         //act
         Broker broker = new DoNothingBroker();
-        List<Message__c> messages = broker.execute(new List<Message__c>{message});
-        broker.resolve(messages);
-        broker.persist(new List<Message__c>{message}, messages);
+        
+        String actualMessage;
+        try {
+            List<Message__c> messages = broker.execute(new List<Message__c>{message});
+            broker.resolve(messages);
+            broker.persist(new List<Message__c>{message}, messages);
+        } catch (Exception e) {
+            actualMessage = e.getMessage();
+        }
         
         //assemble
         Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
         
         //assert
-        String actualMessage = messageActual.Exception__c;
-        String expectedMessage = 'Step';
+        String expectedMessage = 'Step unqueryable';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
@@ -965,7 +978,7 @@
         System.assertEquals( expectedCountOk, actualCountOk);
         Integer expectedCountFailed = 1;
         System.assertEquals( expectedCountFailed, actualCountFailed);
-        String expectedExceptionMessage = 'Resolution Failure';
+        String expectedExceptionMessage = 'Resolve failure';
         System.assert(actualExceptionMessage.contains(expectedExceptionMessage));         
     }
 }

@@ -20,14 +20,23 @@ public without sharing class BatchBrokerImplementation extends Broker implements
     }
     
     public void execute(Database.BatchableContext context, List<Message__c> inputMessages) {
-        //EXECUTE
-        List<Message__c> outputMessages = this.execute(inputMessages);
-        
-        //RESOLVE
-        this.resolve(outputMessages);
-        
-        //PERSIST
-        this.persist(inputMessages, outputMessages);
+        SavePoint sp = Database.setSavePoint();
+        try {
+            //EXECUTE
+            List<Message__c> outputMessages = this.execute(inputMessages);
+            
+            //RESOLVE
+            this.resolve(outputMessages);
+            
+            //PERSIST
+            this.persist(inputMessages, outputMessages);
+        } catch (Exception e) {
+            //no emails or database activity thanks!
+            Database.rollback(sp);
+            
+            Message__c inputMessage = inputMessages[0];
+            this.surfaceException(e, inputMessage.Id);
+        }
     }
     
     public void finish(Database.BatchableContext context) {

@@ -79,7 +79,7 @@ abstract global with sharing class Broker {
     
     @TestVisible private static Integer stackDepthThreshold  = 500;
     
-    public class BrokerException extends Exception {}
+    global class EngineException extends Exception {}
     
     public class CrudException extends Exception {}
     
@@ -225,9 +225,13 @@ abstract global with sharing class Broker {
      * Sets many Messages statuses to 'Processing' and writes them away.
      */
     virtual global List<Database.SaveResult> mark(List<Message__c> messages) {
-        if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
-        for (Message__c message : messages) message.Status__c = 'Processing';
-        return Database.update(messages);
+        try {
+            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
+            for (Message__c message : messages) message.Status__c = 'Processing';
+            return Database.update(messages);
+        } catch (Exception e) {
+            throw new EngineException('Mark failure:\n' + e.getMessage());
+        }
     }
     
     /**
@@ -262,23 +266,21 @@ abstract global with sharing class Broker {
             plugin = (Process.Plugin)reflector.newInstance();
         } catch (Exception e) {
             if (e instanceof System.JsonException) {
-                e.setMessage('Could not deserialize json (malformed parameters)');
+                throw new EngineException('Could not deserialize json, eg malformed parameters:\n' + e.getMessage());
             } else if (e instanceof System.NullPointerException) {
-                e.setMessage('Position null (key missing from parameters) or Type null (class missing)');
+                throw new EngineException('Position null, eg key missing from parameters, or Type null eg class missing:\n' + e.getMessage());
             } else if (e instanceof System.QueryException) {
-                e.setMessage('Step unqueryable (bad sequence name, position, missing terminate)');
+                throw new EngineException('Step unqueryable, eg bad sequence name, position, missing terminate:\n' + e.getMessage());
             } else if (e instanceof System.TypeException) {
-                e.setMessage('Could not cast Process.Plugin (interface unimplemented on process class)');
+                throw new EngineException('Could not cast Process.Plugin, eg interface unimplemented on process class:\n' + e.getMessage());
+            } else {
+                throw new EngineException('Other pre-invocation exception:\n' + e.getMessage());
             }
-            surfaceException(e, message.Id);
-            return new List<Message__c>(); //get out of dodge
         }
         
-        SavePoint sp;
         //THEIR FUCKUPS (invocation)
         try {
-            //if there is a fuckup we must rollback!
-            sp = Database.setSavePoint();
+            //save important message properties (such as stackDepth) so that process authors 
             
             //save important message properties (such as stackDepth) so that process authors 
             //cannot pervert them  
@@ -294,28 +296,20 @@ abstract global with sharing class Broker {
             // convert to a list of parameter collections
             parametersList = EdaUtility.convert(results);
         } catch (Exception e) {
-            //no emails or database activity thanks!
-            Database.rollback(sp);
-            
-            surfaceException(e, message.Id);
-            return new List<Message__c>(); //get out of dodge quick
+            throw new EngineException('Execute failure in user process:\n' + e.getMessage());
         }
         
-            //gate processing support method
-            this.markHelper(parameters, parametersList);
-            
-            //wrap up parametersList into Messages
-            List<Message__c> messages = new List<Message__c>();
-            for (Map<String,Object> n : parametersList) {
-                messages.add(new Message__c(
-                    Parameters__c = Json.serializePretty(n),
-                    Status__c = 'Buffer'
-                ));
-            }
-            
-            //delete successfully processed message
-            message.Status__c = 'Completed';
-            update message;
+        //gate processing support method
+        this.markHelper(parameters, parametersList);
+        
+        //wrap up parametersList into Messages
+        List<Message__c> messages = new List<Message__c>();
+        for (Map<String,Object> n : parametersList) {
+            messages.add(new Message__c(
+                Parameters__c = Json.serializePretty(n),
+                Status__c = 'Buffer'
+            ));
+        }
         return messages;
     }
 
@@ -330,65 +324,68 @@ abstract global with sharing class Broker {
      * 5. only then can we correctly write to database with 4A (stepId) and 3 (parameters with the incremented position)
      */
     virtual global void resolve(List<Message__c> messages) {
-        //assemble a map of next-step keys to messages
-        Map<String,Message__c> key2data = new Map<String,Message__c>();
-        for (Message__c message : messages) {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
-            String sequenceName = (String)parameters.get('eda_SequenceName');
-            Decimal position = (Decimal)parameters.get('eda_Position') + 1; //care
-            String key = sequenceName + '#' + position;
-            key2data.put(key, message);
-            
-            //increment the position and put it back while we're at it
-            parameters.put('eda_Position', position);
-            message.Parameters__c = Json.serializePretty(parameters);
-        }
-        
-        //resolve the next steps and processes
-        List<Step__c> steps = [
-            SELECT Id, Process__r.Id, Sequence__r.Id, SequenceNameAndPosition__c
-            FROM Step__c
-            WHERE SequenceNameAndPosition__c IN :key2data.keySet()
-        ];
-        
-        //assemble a map of next-step keys to steps
-        Map<String,Step__c> key2step = new Map<String,Step__c>();
-        for (Step__c step : steps) key2step.put(step.SequenceNameAndPosition__c, step);
-        
-        //now put the resolved sequence/step/process on each message
-        for (Message__c message : messages) {
-        //OUR FUCKUPS ( after invocation )
         try {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
-            String sequenceName = (String)parameters.get('eda_SequenceName');
-            Decimal position = (Decimal)parameters.get('eda_Position'); //care
-            String key = sequenceName + '#' + position;
+            //assemble a map of next-step keys to messages
+            Map<String,Message__c> key2data = new Map<String,Message__c>();
+            for (Message__c message : messages) {
+                Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+                String sequenceName = (String)parameters.get('eda_SequenceName');
+                Decimal position = (Decimal)parameters.get('eda_Position') + 1; //care
+                String key = sequenceName + '#' + position;
+                key2data.put(key, message);
+                
+                //increment the position and put it back while we're at it
+                parameters.put('eda_Position', position);
+                message.Parameters__c = Json.serializePretty(parameters);
+            }
             
-            Step__c step = key2step.get(key);
-            message.Sequence__c = step.Sequence__r.Id;
-            message.Process__c = step.Process__r.Id;
-            message.Step__c = step.Id;
+            //resolve the next steps and processes
+            List<Step__c> steps = [
+                SELECT Id, Process__r.Id, Sequence__r.Id, SequenceNameAndPosition__c
+                FROM Step__c
+                WHERE SequenceNameAndPosition__c IN :key2data.keySet()
+            ];
+            
+            //assemble a map of next-step keys to steps
+            Map<String,Step__c> key2step = new Map<String,Step__c>();
+            for (Step__c step : steps) key2step.put(step.SequenceNameAndPosition__c, step);
+            
+            //now put the resolved sequence/step/process on each message
+            for (Message__c message : messages) {
+            //OUR FUCKUPS ( after invocation )
+                Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+                String sequenceName = (String)parameters.get('eda_SequenceName');
+                Decimal position = (Decimal)parameters.get('eda_Position'); //care
+                String key = sequenceName + '#' + position;
+                
+                Step__c step = key2step.get(key);
+                message.Sequence__c = step.Sequence__r.Id;
+                message.Process__c = step.Process__r.Id;
+                message.Step__c = step.Id;
+            }
         } catch (Exception e) {
-            e.setMessage('Resolution Failure (check your sequence config) ' + e.getMessage());
-            surfaceException(e, message.Id);
-        }
+            throw new EngineException('Resolve failure, check sequence config:\n' + e.getMessage());
         }
     }
     
     virtual global List<Database.UpsertResult> persist(List<Message__c> inputMessages, List<Message__c> outputMessages) {
-        for (Message__c message : inputMessages) {
-            //designate all input messages as finished
-            message.Status__c = 'Completed';
+        try {
+            for (Message__c message : inputMessages) {
+                //designate all input messages as finished
+                message.Status__c = 'Completed';
+            }
+            
+            //transact both inputs and outputs in one fell swoop
+            List<Message__c> messages = new List<Message__c>();
+            messages.addAll(inputMessages);
+            messages.addAll(outputMessages);
+            return Database.upsert(messages, true); //all or none
+        } catch (Exception e) {
+            throw new EngineException('Persist failure:\n' + e.getMessage());
         }
-        
-        //transact both inputs and outputs in one fell swoop
-        List<Message__c> messages = new List<Message__c>();
-        messages.addAll(inputMessages);
-        messages.addAll(outputMessages);
-        return Database.upsert(messages, true); //all or none
     }
     
-    @TestVisible private void surfaceException(Exception e, Id messageId) {
+    public void surfaceException(Exception e, Id messageId) {
         if (!SObjectType.Note.Createable) throw new Broker.CrudException('!SObjectType.Note.Createable');
         if (!SObjectType.Message__c.Fields.Exception__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Exception__c.Updateable');   
 
@@ -451,7 +448,7 @@ abstract global with sharing class Broker {
         Integer stackDepth = (parameters.get('eda_StackDepth') == null) ? 0 : (Integer) parameters.get('eda_StackDepth');
         stackDepth++;
         if (stackDepth > threshold) {
-            throw new BrokerException('Maximum Stack Depth exceeded - to resolve, manually set eda_StackDepth on parameters to 0');
+            throw new EngineException('Maximum Stack Depth exceeded - to resolve, manually set eda_StackDepth on parameters to 0');
         }
         return stackDepth;
     }

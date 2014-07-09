@@ -68,7 +68,8 @@
         System.assertEquals(expectedProcessName, messages[0].Process__r.FullyQualifiedClassName__c);
         
         String expectedMessage = BrokerTest.FailureMessage;
-        System.assertEquals(expectedMessage, messages[0].Exception__c);
+        String actualMessage = messages[0].Exception__c;
+        System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
 
     static testmethod void callingBrokerStartSuccessfullyCallsStartImp() {
