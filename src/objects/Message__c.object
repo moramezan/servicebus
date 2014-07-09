@@ -160,8 +160,26 @@
         <columns>Sequence__c</columns>
         <columns>Process__c</columns>
         <columns>IsOverdue__c</columns>
+        <columns>CREATED_DATE</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>AllExceptCompleted</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>Exception__c</columns>
+        <columns>Sequence__c</columns>
+        <columns>Process__c</columns>
+        <columns>IsOverdue__c</columns>
+        <columns>CREATED_DATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>notEqual</operation>
+            <value>Completed</value>
+        </filters>
+        <label>All except Completed</label>
     </listViews>
     <listViews>
         <fullName>Overdue</fullName>
