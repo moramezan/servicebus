@@ -92,7 +92,7 @@
         insert new BrokerSettings__c(BrokerClassName__c = BatchBrokerImplementation.class.getName());
         
         //scenario:
-        //resolved state, assume manual intervention to set status to 'Reprocess'
+        //resolved state, assume manual intervention to set status to 'Rebuffered'
         Map<String,Object> parameters = new Map<String,Object> {
             'eda_SequenceName' => sequenceNameA,
             'eda_Position' => 1, //not zero !!!
@@ -100,7 +100,7 @@
         };
         Message__c message = new Message__c(
             Step__c = stepA1.Id,
-            Status__c = 'Reprocess',
+            Status__c = 'Rebuffered',
             Parameters__c = Json.serializePretty(parameters)
         );
         insert message;

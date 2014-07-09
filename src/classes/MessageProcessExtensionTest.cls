@@ -14,7 +14,7 @@
         new MessageProcessExtension.DoDml();
         
         //assert
-        String expectedStatus = 'Reprocess';
+        String expectedStatus = 'Rebuffered';
         String actualStatus = message.Status__c;
         System.assertEquals(expectedStatus, actualStatus);
     }

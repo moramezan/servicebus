@@ -13,7 +13,7 @@
  * +-----------+
  *
  * +-----------+ (CONTEXT 2 batchable.start)
- * |  MARK     | we need to "dirty" these guys with PROCESSING status in case they fuck up
+ * |  MARK     | we need to "dirty" these guys with Started status in case they fuck up
  * +-----------+
  *
  * +-----------+ (CONTEXT 3 batchable.execute)
@@ -98,16 +98,16 @@ abstract global with sharing class Broker {
     }
     
     /**
-     * Determines which messages are eligible to be moved into the Processing status (by finding Messages
-     * with 'Reprocess' and 'Buffer' status). Note: too many fucked messages would clog up the system,
+     * Determines which messages are eligible to be moved into the Started status (by finding Messages
+     * with 'Rebuffered' and 'Buffered' status). Note: too many fucked messages would clog up the system,
      * so we have a global fuckedLimit.
      *
-     * Messages that should be processed have their status marked as Processing in the database before being
+     * Messages that should be processed have their status marked as Started in the database before being
      * submitted the query locator. That way, if any given execution fails, those messages will remain in the
-     * easily identifiable 'Processing' state.
+     * easily identifiable 'Started' state.
      *
      * @param workCount Maximum number of Messages to mark and locate (subject to fuckups)
-     * @return          Query Locator identifying the now-marked-as-Processing Messages.
+     * @return          Query Locator identifying the now-marked-as-Started Messages.
      */
     virtual global Database.QueryLocator locateMarkableWork(Integer workCount) {
         Integer fuckedLimit = 100;
@@ -115,27 +115,27 @@ abstract global with sharing class Broker {
         Integer fuckedCount = [
             SELECT COUNT()
             FROM Message__c
-            WHERE Status__c = 'Processing'
+            WHERE Status__c = 'Started'
         ];
         
-        Integer reprocessCount = [
+        Integer rebufferedCount = [
             SELECT COUNT()
             FROM Message__c
-            WHERE Status__c = 'Reprocess'
+            WHERE Status__c = 'Rebuffered'
         ];
         
-        //derives maximum number of Messages available for processing
-        Integer queryLimit = Math.max(0, fuckedLimit - fuckedCount) + reprocessCount;
+        //derives maximum number of Messages available for starting
+        Integer queryLimit = Math.max(0, fuckedLimit - fuckedCount) + rebufferedCount;
         
         Set<Id> messageIds = new Map<Id,Message__c>([
             SELECT Id
             FROM Message__c
-            WHERE Status__c IN ('Reprocess', 'Buffer')
+            WHERE Status__c IN ('Rebuffered', 'Buffered')
             ORDER BY Status__c DESC
             LIMIT :Math.min(workCount, queryLimit)
         ]).keySet();
         
-        //query locator hands back only the messages that were marked as processing
+        //query locator hands back only the messages that are markable as Started
         String commaDelimitedIds = '(\'' + String.join(new List<Id>(messageIds), '\',\'') + '\')';
         String queryString = 'SELECT Id, Step__c, Parameters__c FROM Message__c WHERE Id IN ' + commaDelimitedIds;
         return Database.getQueryLocator(queryString);
@@ -176,7 +176,7 @@ abstract global with sharing class Broker {
             message.Status__c = 'Queued';
         } else {
             //system is running
-            message.Status__c = 'Buffer';
+            message.Status__c = 'Buffered';
             instance.resolve(new List<Message__c>{message}); //RESOLVE
         }
         
@@ -222,12 +222,12 @@ abstract global with sharing class Broker {
     }
     
     /**
-     * Sets many Messages statuses to 'Processing' and writes them away.
+     * Sets many Messages statuses to 'Started' and writes them away.
      */
     virtual global List<Database.SaveResult> mark(List<Message__c> messages) {
         try {
             if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
-            for (Message__c message : messages) message.Status__c = 'Processing';
+            for (Message__c message : messages) message.Status__c = 'Started';
             return Database.update(messages);
         } catch (Exception e) {
             throw new EngineException('Mark failure:\n' + e.getMessage());
@@ -237,8 +237,8 @@ abstract global with sharing class Broker {
     /**
      * Resolves and invokes the Process.Plugin for one input, handing back an in-memory collection of outputs
      *
-     * @param  inputMessages Messages whose status should be Processing
-     * @return               Many Messages whose status should be Buffer
+     * @param  inputMessages Messages whose status should be Started
+     * @return               Many Messages whose status should be Buffered
      */
     virtual global List<Message__c> execute(List<Message__c> inputMessages) {
         //empty inputs, empty outputs
@@ -307,7 +307,7 @@ abstract global with sharing class Broker {
         for (Map<String,Object> n : parametersList) {
             messages.add(new Message__c(
                 Parameters__c = Json.serializePretty(n),
-                Status__c = 'Buffer'
+                Status__c = 'Buffered'
             ));
         }
         return messages;
@@ -492,8 +492,8 @@ abstract global with sharing class Broker {
         Integer worksPending = [
             SELECT COUNT()
             FROM Message__c
-            WHERE Status__c = 'Buffer'
-            OR Status__c = 'Reprocess'
+            WHERE Status__c = 'Buffered'
+            OR Status__c = 'Rebuffered'
         ];
         
         if (worksPending > 0) {

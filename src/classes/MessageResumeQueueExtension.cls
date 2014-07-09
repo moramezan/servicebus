@@ -39,9 +39,9 @@ public with sharing class MessageResumeQueueExtension {
             //So that they can be excluded from the RESOLVE / MARK cycle at a very early stage.
             //We want to be able to reintroduce messages on a one-by-one basis without turning on the tap.
             
-            //advance them from Queued to Buffer
+            //advance them from Queued to Buffered
             for (Message__c message : messages) {
-                message.Status__c = 'Buffer';
+                message.Status__c = 'Buffered';
             }
             
             //RESOLVE

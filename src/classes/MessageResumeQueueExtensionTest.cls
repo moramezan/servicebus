@@ -1,6 +1,6 @@
 @IsTest private class MessageResumeQueueExtensionTest {
 
-   static testmethod void  callingDoDmlCtorCorrectlyResolvesFromQueuedToBufferAndCorrectlySetsPause() {
+   static testmethod void  callingDoDmlCtorCorrectlyResolvesFromQueuedToBufferedAndCorrectlySetsPause() {
         // arrange
         Boolean isPaused =  true;
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
@@ -41,18 +41,18 @@
        Boolean actualIsPaused =  actualSettings.IsPaused__c;
        
        Integer actualCount = messages.size();
-       Boolean actualBuffer = true;
+       Boolean actualBuffered = true;
        for (Message__c message : messages) {
-           if (message.Status__c != 'Buffer') {
-               actualBuffer = false;    
+           if (message.Status__c != 'Buffered') {
+               actualBuffered = false;    
            }
        }
 
        // assert
        Integer expectedCount = 2;
        System.assertEquals( expectedCount, actualCount);
-       Boolean expectedBuffer = true;
-       System.assertEquals( expectedBuffer, actualBuffer);
+       Boolean expectedBuffered = true;
+       System.assertEquals( expectedBuffered, actualBuffered);
        Boolean expectedIsPaused =  false;
        System.assertEquals( expectedIsPaused, actualIsPaused);
     }

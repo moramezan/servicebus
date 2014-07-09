@@ -6,7 +6,7 @@
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         insert new Message__c(Status__c = 'Queued', Process__c = wiretapProcess.Id);
-        insert new Message__c(Status__c = 'Buffer', Process__c = terminateProcess.Id);
+        insert new Message__c(Status__c = 'Buffered', Process__c = terminateProcess.Id);
         
         //act
         List<MonitorController.Statistic> statistics = MonitorController.getStatistics();

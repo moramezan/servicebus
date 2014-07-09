@@ -5,20 +5,20 @@ public with sharing class MonitorController {
     }
     
     public class Statistic {
-        public Statistic(String name, Integer queued, Integer buffer, Integer processing, Integer reprocess, Integer overdue) {
+        public Statistic(String name, Integer queued, Integer buffered, Integer started, Integer rebuffered, Integer overdue) {
             this.Name = name;
             this.Queued = queued;
-            this.Buffer = buffer;
-            this.Processing = processing;
-            this.Reprocess = reprocess;
+            this.Buffered = buffered;
+            this.Started = started;
+            this.Rebuffered = rebuffered;
             this.Overdue = overdue;
         }
         
         public String Name {get; set;}
         public Integer Queued {get; set;}
-        public Integer Buffer {get; set;}
-        public Integer Processing {get; set;}
-        public Integer Reprocess {get; set;}
+        public Integer Buffered {get; set;}
+        public Integer Started {get; set;}
+        public Integer Rebuffered {get; set;}
         public Integer Overdue {get; set;}
     }
     
@@ -60,16 +60,16 @@ public with sharing class MonitorController {
             id2statistic.get((Id)result.get('processId')).Queued = (Integer)result.get('total');
         }
         
-        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Status__c = 'Buffer' GROUP BY Process__c]) {
-            id2statistic.get((Id)result.get('processId')).Buffer = (Integer)result.get('total');
+        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Status__c = 'Buffered' GROUP BY Process__c]) {
+            id2statistic.get((Id)result.get('processId')).Buffered = (Integer)result.get('total');
         }
         
-        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Status__c = 'Processing' GROUP BY Process__c]) {
-            id2statistic.get((Id)result.get('processId')).Processing = (Integer)result.get('total');
+        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Status__c = 'Started' GROUP BY Process__c]) {
+            id2statistic.get((Id)result.get('processId')).Started = (Integer)result.get('total');
         }
         
-        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Status__c = 'Reprocess' GROUP BY Process__c]) {
-            id2statistic.get((Id)result.get('processId')).Reprocess = (Integer)result.get('total');
+        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Status__c = 'Rebuffered' GROUP BY Process__c]) {
+            id2statistic.get((Id)result.get('processId')).Rebuffered = (Integer)result.get('total');
         }
         
         for (AggregateResult result : [SELECT Process__c processId, COUNT(Id) total FROM Message__c WHERE IsOverdue__c = true GROUP BY Process__c]) {

@@ -7,7 +7,7 @@
         <apex:axis type="Category" position="bottom" title="Process" fields="Name">
             <apex:chartLabel rotate="270" />
         </apex:axis>
-        <apex:axis type="Numeric" position="left" title="Messages" fields="Queued,Buffer,Processing,Reprocess,Overdue">
+        <apex:axis type="Numeric" position="left" title="Messages" fields="Queued,Buffered,Started,Rebuffered,Overdue">
             <!--<apex:chartLabel />-->
         </apex:axis>
         <apex:barSeries colorSet="#C00" orientation="vertical" axis="left" xField="Name" yField="Overdue" />
@@ -15,8 +15,8 @@
             opacity="0.6"
             axis="left"
             xField="Name"
-            yField="Queued,Buffer,Processing,Reprocess"
-            title="Queued,Buffer,Processing,Reprocess"
+            yField="Queued,Buffered,Started,Rebuffered"
+            title="Queued,Buffered,Started,Rebuffered"
         />
     </apex:chart>
     

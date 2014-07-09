@@ -7,7 +7,7 @@ public with sharing class MessageProcessExtension {
     }
     
     public PageReference doProcess() {
-        //we are happy for Queued, Buffered or Processing guys to be force-Processed
+        //we are happy for Queued, Buffered or Started guys to be force-Processed
         //but we just note that a Queued message will need to be resolved first!
         if (message.Status__c == 'Queued') {
             //message was paused, resolve here
@@ -30,7 +30,7 @@ public with sharing class MessageProcessExtension {
             if (!SObjectType.Message__c.Fields.Exception__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Exception__c.Updateable');
                   
             message.Exception__c = null;
-            message.Status__c = 'Reprocess';
+            message.Status__c = 'Rebuffered';
             update message;
         }
     }

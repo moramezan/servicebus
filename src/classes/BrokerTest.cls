@@ -37,7 +37,7 @@
     }
 
 
-    static testmethod void stackDepthExceededWillHaltProcessingWithAppropriateMessageDetail() {
+    static testmethod void stackDepthExceededWillHaltStartedWithAppropriateMessageDetail() {
         // arrange
         Integer stackDepthThreshold = 3;
         Broker.stackDepthThreshold  = stackDepthThreshold;
@@ -103,7 +103,7 @@
         System.assertEquals( expectedStackDepth, actualStackDepth);
         String expectedDetail = 'Maximum Stack Depth exceeded';
         System.assert(actualDetail.contains(expectedDetail)); 
-        String expectedStatus = 'Processing';
+        String expectedStatus = 'Started';
         System.assertEquals( expectedStatus, actualStatus); 
     }
     
@@ -267,9 +267,9 @@
         Integer queryLimit = 2;
         
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Buffer'),
-            new Message__c(Status__c = 'Buffer'),
-            new Message__c(Status__c = 'Buffer')
+            new Message__c(Status__c = 'Buffered'),
+            new Message__c(Status__c = 'Buffered'),
+            new Message__c(Status__c = 'Buffered')
         };
         
         //act
@@ -289,13 +289,13 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testmethod void testLocatorOnlyMarksNonProcessingWork() {
+    static testmethod void testLocatorOnlyMarksNonStartedWork() {
         //arrange
         Integer fuckedLimit = 2;
         
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Processing'),
-            new Message__c(Status__c = 'Processing')
+            new Message__c(Status__c = 'Started'),
+            new Message__c(Status__c = 'Started')
         };
     
         //act
@@ -309,19 +309,19 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testmethod void testLocatorReturnsOnlyReprocessWork() {
+    static testmethod void testLocatorReturnsOnlyRebufferedWork() {
         Integer workCount = 2;
         
         //arrange fucked messages
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Processing'),
-            new Message__c(Status__c = 'Processing')
+            new Message__c(Status__c = 'Started'),
+            new Message__c(Status__c = 'Started')
         };
         
-        //arrange reprocess messages
+        //arrange Rebuffered messages
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Reprocess'),
-            new Message__c(Status__c = 'Reprocess')
+            new Message__c(Status__c = 'Rebuffered'),
+            new Message__c(Status__c = 'Rebuffered')
         };
         
         //act
@@ -558,7 +558,7 @@
     static testmethod void callingRestartSuccessfullyCallsRestartImpl() {
         //arrange
         insert new BrokerSettings__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
-        insert new Message__c(Status__c = 'Reprocess');
+        insert new Message__c(Status__c = 'Rebuffered');
         
         //assert
         Boolean expectedBeforeFlag = false;

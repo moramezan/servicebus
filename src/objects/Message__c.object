@@ -114,15 +114,15 @@
         <label>Status</label>
         <picklist>
             <picklistValues>
-                <fullName>Buffer</fullName>
+                <fullName>Buffered</fullName>
                 <default>true</default>
             </picklistValues>
             <picklistValues>
-                <fullName>Processing</fullName>
+                <fullName>Started</fullName>
                 <default>false</default>
             </picklistValues>
             <picklistValues>
-                <fullName>Reprocess</fullName>
+                <fullName>Rebuffered</fullName>
                 <default>false</default>
             </picklistValues>
             <picklistValues>
