@@ -53,6 +53,17 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
+        <fullName>CreatedDate__c</fullName>
+        <defaultValue>NOW()</defaultValue>
+        <description>Values in this field will mirror the System generated CreatedDate field</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Values in this field will mirror the System generated CreatedDate field</inlineHelpText>
+        <label>CreatedDate</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
         <fullName>Exception__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>If the process threw an exception when handling this message, what was the error text?</inlineHelpText>
