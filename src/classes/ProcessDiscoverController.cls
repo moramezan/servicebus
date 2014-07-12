@@ -11,11 +11,6 @@ public with sharing class ProcessDiscoverController {
         }
     }
     
-    public Boolean getIsTerminatePresent() {
-        List<Process__c> processes = [SELECT Id FROM Process__c WHERE FullyQualifiedClassName__c = :Terminate.class.getName()];
-        return !processes.isEmpty();
-    }
-    
     public AsyncApexJob getAsyncApexJob() {
         Id asyncApexJobId = ApexPages.currentPage().getParameters().get('asyncApexJobId');
         return readAsyncApexJobs(asyncApexJobId)[0];

@@ -60,20 +60,7 @@
                     " */",
                     "",
                     "Ext.create('Discover.view.Holder', {renderTo: 'bodyCell'});",
-                    "",
-                    "/**",
-                    " * The first time the package is installed and a sequence is created,",
-                    " * let the user know why they are here and that they'll be taken back.",
-                    " */",
-                    "if (!IsTerminatePresent) {",
-                    "    var msg = Ext.Msg.alert(",
-                    "        'Almost there...',",
-                    "        'Before building your first sequence, we just need to<br />discover the available processes in your organization.<br />You will be taken back to your sequence straight after.'",
-                    "    );",
-                    "    msg.setIcon(Ext.MessageBox.INFO);",
-                    "    msg.getEl().dom.style.zIndex = 99999; //alert in front of twirly: http://forums.ext.net/showthread.php?15882",
-                    "    msg.alignTo(Ext.ComponentQuery.query('#grid')[0], 'c-c'); //align center of alert to center of grid",
-                    "}"
+                    ""
                 ]
             },
             "designerId": "2362d9de-39a0-4900-a1f3-96bf29152521"
