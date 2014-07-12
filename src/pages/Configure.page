@@ -1,4 +1,4 @@
-<apex:page controller="ConfigureController" tabStyle="Sequence__c" action="{!doRedirect}">
+<apex:page controller="ConfigureController" tabStyle="Sequence__c" action="{!doRedirect}" cache="false">
 
     <apex:sectionHeader title="Thanks for installing Event Driven Architecture" />
 
