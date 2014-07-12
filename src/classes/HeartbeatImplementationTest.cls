@@ -31,8 +31,8 @@
         insert one;
         
         //arrange steps
-        StepObjectSet.generateOne(one.Id, scheduleProcess.Id);
-        StepObjectSet.generateOne(one.Id, terminateProcess.Id);
+        StepObject.generateOne(one.Id, scheduleProcess.Id);
+        StepObject.generateOne(one.Id, terminateProcess.Id);
         
         List<ScheduleConfiguration__c> scheduleConfigurations = SalesforceObjectSet.listAll(ScheduleConfiguration__c.SObjectType);
         for (ScheduleConfiguration__c scheduleConfiguration : scheduleConfigurations) {

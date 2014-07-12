@@ -11,9 +11,9 @@
         insert soSequence;
         Id soSequenceId = soSequence.Id;
 
-        Step__c stepA1 = StepObjectSet.generateOne(soSequenceId, subscribeProcess.Id);
-        Step__c stepA2 = StepObjectSet.generateOne(soSequenceId, markProcess.Id);
-        Step__c stepA3 = StepObjectSet.generateOne(soSequenceId, terminateProcess.Id);
+        Step__c stepA1 = StepObject.generateOne(soSequenceId, subscribeProcess.Id);
+        Step__c stepA2 = StepObject.generateOne(soSequenceId, markProcess.Id);
+        Step__c stepA3 = StepObject.generateOne(soSequenceId, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         Decimal positionA3 = stepA3.Position__c;
@@ -141,15 +141,15 @@
         Sequence__c soSequenceA = new Sequence__c(Name = sequenceNameA);
         insert soSequenceA;
         Id soSequenceAId = soSequenceA.Id;
-        Step__c stepA1 = StepObjectSet.generateOne(soSequenceAId, markProcess.Id);
-        Step__c stepA2 = StepObjectSet.generateOne(soSequenceAId, terminateProcess.Id);
+        Step__c stepA1 = StepObject.generateOne(soSequenceAId, markProcess.Id);
+        Step__c stepA2 = StepObject.generateOne(soSequenceAId, terminateProcess.Id);
 
         String sequenceNameB = 'theSequenceB';   
         Sequence__c soSequenceB = new Sequence__c(Name = sequenceNameB);
         insert soSequenceB;
         Id soSequenceBId = soSequenceB.Id;
-        Step__c stepB1 = StepObjectSet.generateOne(soSequenceBId, markProcess.Id);
-        Step__c stepB2 = StepObjectSet.generateOne(soSequenceBId, terminateProcess.Id);
+        Step__c stepB1 = StepObject.generateOne(soSequenceBId, markProcess.Id);
+        Step__c stepB2 = StepObject.generateOne(soSequenceBId, terminateProcess.Id);
 
         // act 
         Id notStepAId =  stepB1.Id;
@@ -175,8 +175,8 @@
         Sequence__c soSequenceA = new Sequence__c(Name = sequenceNameA);
         insert soSequenceA;
         Id soSequenceAId = soSequenceA.Id;
-        Step__c stepA1 = StepObjectSet.generateOne(soSequenceAId, markProcess.Id);
-        Step__c stepA2 = StepObjectSet.generateOne(soSequenceAId, terminateProcess.Id);
+        Step__c stepA1 = StepObject.generateOne(soSequenceAId, markProcess.Id);
+        Step__c stepA2 = StepObject.generateOne(soSequenceAId, terminateProcess.Id);
  
 
         // act 

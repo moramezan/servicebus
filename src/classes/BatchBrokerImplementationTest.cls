@@ -11,8 +11,8 @@
         insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = StepObjectSet.generateOne(sequenceA.Id, markProcess.Id);
-        Step__c stepA2 = StepObjectSet.generateOne(sequenceA.Id, terminateProcess.Id);
+        Step__c stepA1 = StepObject.generateOne(sequenceA.Id, markProcess.Id);
+        Step__c stepA2 = StepObject.generateOne(sequenceA.Id, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         
@@ -41,7 +41,7 @@
         insert sequenceA;
         
         //arrange step
-        Step__c stepA1 = StepObjectSet.generateOne(sequenceA.Id, failureProcess.Id);
+        Step__c stepA1 = StepObject.generateOne(sequenceA.Id, failureProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         
         //arrange specific broker implementation
@@ -83,8 +83,8 @@
         insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = StepObjectSet.generateOne(sequenceA.Id, markProcess.Id);
-        Step__c stepA2 = StepObjectSet.generateOne(sequenceA.Id, terminateProcess.Id);
+        Step__c stepA1 = StepObject.generateOne(sequenceA.Id, markProcess.Id);
+        Step__c stepA2 = StepObject.generateOne(sequenceA.Id, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         

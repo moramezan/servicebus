@@ -20,20 +20,20 @@
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
         
         // Sequence A - Ok
-        Step__c stepA1 = StepObjectSet.generateOne(sequenceA.Id, wireTapProcess.Id);
-        Step__c stepA2 = StepObjectSet.generateOne(sequenceA.Id, terminateProcess.Id);
+        Step__c stepA1 = StepObject.generateOne(sequenceA.Id, wireTapProcess.Id);
+        Step__c stepA2 = StepObject.generateOne(sequenceA.Id, terminateProcess.Id);
         
         // Sequence B - Problem : Terminate Not last Step
-        Step__c stepB1 = StepObjectSet.generateOne(sequenceB.Id, terminateProcess.Id);
-        Step__c stepB2 = StepObjectSet.generateOne(sequenceB.Id, wireTapProcess.Id);
+        Step__c stepB1 = StepObject.generateOne(sequenceB.Id, terminateProcess.Id);
+        Step__c stepB2 = StepObject.generateOne(sequenceB.Id, wireTapProcess.Id);
  
         // Sequence C - Problem : More than One Terminate
-        Step__c stepC1 = StepObjectSet.generateOne(sequenceC.Id, terminateProcess.Id);
-        Step__c stepC2 = StepObjectSet.generateOne(sequenceC.Id, terminateProcess.Id);
+        Step__c stepC1 = StepObject.generateOne(sequenceC.Id, terminateProcess.Id);
+        Step__c stepC2 = StepObject.generateOne(sequenceC.Id, terminateProcess.Id);
         
         // Sequence D - Problem : Zero Terminate
-        Step__c stepD1 = StepObjectSet.generateOne(sequenceD.Id, wireTapProcess.Id);
-        Step__c stepD2 = StepObjectSet.generateOne(sequenceD.Id, wireTapProcess.Id);
+        Step__c stepD1 = StepObject.generateOne(sequenceD.Id, wireTapProcess.Id);
+        Step__c stepD2 = StepObject.generateOne(sequenceD.Id, wireTapProcess.Id);
 
         // Act :
         TerminateHelpController controller = new TerminateHelpController();

@@ -10,8 +10,8 @@
         Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
         // Sequence A - Warning : Ok but event Not Subscribed
-        Step__c stepA1 = StepObjectSet.generateOne(sequenceA.Id, publishProcess.Id);
-        Step__c stepA2 = StepObjectSet.generateOne(sequenceA.Id, wiretapProcess.Id);
+        Step__c stepA1 = StepObject.generateOne(sequenceA.Id, publishProcess.Id);
+        Step__c stepA2 = StepObject.generateOne(sequenceA.Id, wiretapProcess.Id);
         
         // Event
         EventType__c eventTypeNotSubscribed = new EventType__c(
@@ -54,8 +54,8 @@
         Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
         // Sequence B - Problem : No Configuration
-        Step__c stepB1 = StepObjectSet.generateOne(sequenceB.Id, publishProcess.Id);
-        Step__c stepB2 = StepObjectSet.generateOne(sequenceB.Id, wiretapProcess.Id);
+        Step__c stepB1 = StepObject.generateOne(sequenceB.Id, publishProcess.Id);
+        Step__c stepB2 = StepObject.generateOne(sequenceB.Id, wiretapProcess.Id);
         
         // Act :
         PublishHelpController controller = new PublishHelpController();

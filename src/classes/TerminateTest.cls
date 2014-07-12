@@ -20,8 +20,8 @@ private class TerminateTest
         insert sequence;
         
         //arrange steps
-        Step__c step1 = StepObjectSet.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c step2 = StepObjectSet.generateOne(sequence.Id, subsequenceProcess.Id);
+        Step__c step1 = StepObject.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c step2 = StepObject.generateOne(sequence.Id, subsequenceProcess.Id);
 
         Map<String,Object> parameters = new Map<String,Object> {
             'eda_SequenceName' => sequenceName,
@@ -98,8 +98,8 @@ private class TerminateTest
         
         Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
         
-        Step__c step01 = StepObjectSet.generateOne(sequence.Id, subsequenceProcess.Id);
-        Step__c step02 = StepObjectSet.generateOne(sequence.Id, subsequenceProcess.Id);
+        Step__c step01 = StepObject.generateOne(sequence.Id, subsequenceProcess.Id);
+        Step__c step02 = StepObject.generateOne(sequence.Id, subsequenceProcess.Id);
         
         Id subsequenceStepId01 = step01.Id ;
         Id subsequenceStepId02 = step02.Id ;

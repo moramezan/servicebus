@@ -9,7 +9,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepObjectSet.generateOne(sequence.Id, scheduleProcess.Id);
+        Step__c scheduleStep = StepObject.generateOne(sequence.Id, scheduleProcess.Id);
         
         ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c];
         scheduleConfiguration.Frequency__c = 'Weekly';
@@ -17,7 +17,7 @@
         scheduleConfiguration.FriendlyTimes__c = '09:00';
         update scheduleConfiguration;
         
-        Step__c terminateStep = StepObjectSet.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //this guy will miss his schedule
         Map<String,Object> parameters = new Map<String,Object>{
@@ -50,7 +50,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepObjectSet.generateOne(sequence.Id, scheduleProcess.Id);
+        Step__c scheduleStep = StepObject.generateOne(sequence.Id, scheduleProcess.Id);
         
         ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c];
         scheduleConfiguration.Frequency__c = 'Weekly';
@@ -58,7 +58,7 @@
         scheduleConfiguration.FriendlyTimes__c = '09:00';
         update scheduleConfiguration;
         
-        Step__c terminateStep = StepObjectSet.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //this guy will miss his schedule (it is not Wednesday at 9:00)
         Schedule.cronTrigger = (CronTrigger)Json.deserialize('{"PreviousFireTime": "2014-01-18T12:00:00.000Z"}', CronTrigger.class);

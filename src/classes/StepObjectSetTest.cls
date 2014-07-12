@@ -11,8 +11,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c subsequenceStep = StepObjectSet.generateOne(sequence.Id, subsequenceProcess.Id);
-        Step__c terminateStep = StepObjectSet.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c subsequenceStep = StepObject.generateOne(sequence.Id, subsequenceProcess.Id);
+        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //assert
         String expectedId = Schema.SObjectType.SubsequenceConfiguration__c.KeyPrefix; //this needs to be some config record
@@ -150,7 +150,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c branchStep = StepObjectSet.generateOne(sequence.Id, branchProcess.Id);
+        Step__c branchStep = StepObject.generateOne(sequence.Id, branchProcess.Id);
         
         Integer expectedSizeBefore =  1;
         Integer expectedSizeAfter =   0;

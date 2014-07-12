@@ -59,4 +59,20 @@ public with sharing class StepObject extends SalesforceObject {
         for (Step__c step : writeSteps) step.Position__c = position++;
         update writeSteps;
     }
+    
+    @TestVisible static private Step__c generateOne(Id sequenceId, Id processId) {
+        if (!SObjectType.Step__c.Createable) throw new Broker.CrudException('!SObjectType.Step__c.Createable');
+     
+        Step__c step = new Step__c(
+            Sequence__c = sequenceId,
+            Process__c = processId
+            //Position__c is automatic
+        );
+        
+        insert step;
+        
+        //requery
+        return (Step__c)SalesforceObject.getById(step.Id);
+    }
+    
 }

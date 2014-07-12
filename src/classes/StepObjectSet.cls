@@ -13,21 +13,6 @@ public with sharing class StepObjectSet extends SalesforceObjectSet {
         this.deleteConfigurations();
     }
     
-    @TestVisible static private Step__c generateOne(Id sequenceId, Id processId) {
-        if (!SObjectType.Step__c.Createable) throw new Broker.CrudException('!SObjectType.Step__c.Createable');
-     
-        Step__c step = new Step__c(
-            Sequence__c = sequenceId,
-            Process__c = processId
-            //Position__c is automatic
-        );
-        
-        insert step;
-        
-        //requery
-        return (Step__c)SalesforceObject.getById(step.Id);
-    }
-    
     /**
      * Allows us to auto-increment the Step Position within a Sequence if it is
      * unspecified. Does not affect data imports where Position is specified.
