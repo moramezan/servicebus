@@ -1,6 +1,6 @@
 public with sharing class ProcessObject extends SalesforceObject {
     
-    public class ProcessException extends Exception {}
+    public without sharing class ProcessException extends Exception {}
     
     public ProcessObject(Process__c process) {
         super(process);
@@ -11,7 +11,7 @@ public with sharing class ProcessObject extends SalesforceObject {
      * isn't appropriate for Tag, Description, InputParameters or OutputParameters. This inner class must be present
      * for an apex class to appear in the Process list.
      */
-    @TestVisible private class Meta {
+    @TestVisible private without sharing class Meta {
         /**
          * Each Process can have one associated customization in the form of a Custom Setting. Process Authors must
          * advertise the custom setting type here, and the framework will provide a link from the Process detail page.
@@ -52,6 +52,52 @@ public with sharing class ProcessObject extends SalesforceObject {
         return process;
     }
     
+    public without sharing class Context {
+        public Process__c contextFromType(Type reflector) {
+            Type outerClass = reflector;
+            Type innerClass = Type.forName(reflector.getName() + '.' + 'Meta');
+            
+            Process.Plugin plugin = (Process.Plugin)outerClass.newInstance();
+            Process.PluginDescribeResult describeResult = plugin.describe();
+            Process__c process = new Process__c(
+                Name = describeResult.Name,
+                Tag__c = describeResult.Tag,
+                Description__c = describeResult.Description,
+                FullyQualifiedClassName__c = outerClass.getName()
+            );
+            
+            //special exception for BrokerTest.FailurePlugin as used in testing
+            if (reflector.getName() == BrokerTest.class.getName()) return process;
+            
+            ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
+            
+            if (meta.CustomSetting != null) {
+                //attempt to populate the name of the customization object
+                process.CustomSetting__c = meta.CustomSetting.getSObjectType().getDescribe().getName();
+            }
+            
+            if (meta.ConfigObject != null) {
+                //attempt to populate the name of the configuration object
+                process.ConfigObject__c = meta.ConfigObject.getSObjectType().getDescribe().getName();
+            }
+            
+            if (meta.Icon != null) {
+                //attempt to populate the css class name of the process icon
+                process.Icon__c = meta.Icon;
+            }
+            
+            if (meta.DocsPageUrl != null) {
+                //populate the help page url
+                process.DocsPageUrl__c = meta.DocsPageUrl;
+            } else {
+                //EVERY PROCESS MUST PROVIDE A HELP PAGE
+                throw new ProcessException('Process "' + process.FullyQualifiedClassName__c + '" must provide Meta.DocsPageUrl');
+            }
+            
+            return process;
+        }
+    }
+    
     /**
      * Generates an in-memory Process from a Type
      *
@@ -59,47 +105,7 @@ public with sharing class ProcessObject extends SalesforceObject {
      * @return          In-memory process with all fields
      */
     static public Process__c fromType(Type reflector) {
-        Type outerClass = reflector;
-        Type innerClass = Type.forName(reflector.getName() + '.' + 'Meta');
-        
-        Process.Plugin plugin = (Process.Plugin)outerClass.newInstance();
-        Process.PluginDescribeResult describeResult = plugin.describe();
-        Process__c process = new Process__c(
-            Name = describeResult.Name,
-            Tag__c = describeResult.Tag,
-            Description__c = describeResult.Description,
-            FullyQualifiedClassName__c = outerClass.getName()
-        );
-        
-        //special exception for BrokerTest.FailurePlugin as used in testing
-        if (reflector.getName() == BrokerTest.class.getName()) return process;
-        
-        ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
-        
-        if (meta.CustomSetting != null) {
-            //attempt to populate the name of the customization object
-            process.CustomSetting__c = meta.CustomSetting.getSObjectType().getDescribe().getName();
-        }
-        
-        if (meta.ConfigObject != null) {
-            //attempt to populate the name of the configuration object
-            process.ConfigObject__c = meta.ConfigObject.getSObjectType().getDescribe().getName();
-        }
-        
-        if (meta.Icon != null) {
-            //attempt to populate the css class name of the process icon
-            process.Icon__c = meta.Icon;
-        }
-        
-        if (meta.DocsPageUrl != null) {
-            //populate the help page url
-            process.DocsPageUrl__c = meta.DocsPageUrl;
-        } else {
-            //EVERY PROCESS MUST PROVIDE A HELP PAGE
-            throw new ProcessException('Process "' + process.FullyQualifiedClassName__c + '" must provide Meta.DocsPageUrl');
-        }
-        
-        return process;
+        return new Context().contextFromType(reflector);
     }
     
 }
