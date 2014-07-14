@@ -66,7 +66,7 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
     @testVisible private  void deleteExcessiveAll() {
         // excessiveMessagesCount
         Integer insertableMessagesCount = this.getSObjects().size();
-        Integer persistedMessagesCount =  [SELECT COUNT() FROM Message__c];
+        Integer persistedMessagesCount =  [SELECT COUNT() FROM Message__c WHERE IsDeleted = false];
         Integer excessiveMessagesCount =  (insertableMessagesCount + persistedMessagesCount) - MaxTotalMessages;
         
         // limit clause
