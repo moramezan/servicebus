@@ -58,7 +58,7 @@
         <description>Values in this field will mirror the System generated CreatedDate field</description>
         <externalId>false</externalId>
         <inlineHelpText>Values in this field will mirror the System generated CreatedDate field</inlineHelpText>
-        <label>CreatedDate</label>
+        <label>Created Date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>DateTime</type>
