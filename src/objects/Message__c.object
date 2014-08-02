@@ -174,7 +174,7 @@
         <columns>Sequence__c</columns>
         <columns>Process__c</columns>
         <columns>IsOverdue__c</columns>
-        <columns>CREATED_DATE</columns>
+        <columns>CreatedDate__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
@@ -186,7 +186,7 @@
         <columns>Sequence__c</columns>
         <columns>Process__c</columns>
         <columns>IsOverdue__c</columns>
-        <columns>CREATED_DATE</columns>
+        <columns>CreatedDate__c</columns>
         <filterScope>Everything</filterScope>
         <filters>
             <field>Status__c</field>
@@ -203,6 +203,7 @@
         <columns>Sequence__c</columns>
         <columns>Process__c</columns>
         <columns>IsOverdue__c</columns>
+        <columns>CreatedDate__c</columns>
         <filterScope>Everything</filterScope>
         <filters>
             <field>IsOverdue__c</field>
@@ -222,6 +223,8 @@
         <customTabListAdditionalFields>Exception__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Sequence__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Process__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>IsOverdue__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CreatedDate__c</customTabListAdditionalFields>
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <excludedStandardButtons>New</excludedStandardButtons>
