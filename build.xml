@@ -8,17 +8,17 @@
     <target name="retrieve" description="Retrieves all package components to dev org">
         <sf:retrieve username="${sf.username}" password="${sf.password}" serverurl="https://login.salesforce.com" retrieveTarget="src" packageNames="Event Driven Architecture"/>
         <antcall target="alphabetize-searchlayouts" />
-        <antcall target="restore-artifacts" />
+        <antcall target="optimize-for-release" />
     </target>
 
     <target name="deploy" description="Deploys all package components to dev org">
-        <antcall target="remove-artifacts" />
+        <antcall target="optimize-for-devorg" />
         <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="https://login.salesforce.com" deployRoot="src"/>
-        <antcall target="restore-artifacts" />
+        <antcall target="optimize-for-release" />
     </target>
 
     <target name="package" description="Deploys all components to packaging org">
-        <antcall target="restore-artifacts" />
+        <antcall target="optimize-for-release" />
         <sf:deploy username="eda@countryskippers.com" password="CS42lkj1" serverurl="https://login.salesforce.com" deployRoot="src"/>
     </target>
     
@@ -83,7 +83,7 @@
         </replace>
     </target>
     
-    <target name="remove-artifacts" description="Removes namespace and management artifacts prior to unmanaged deploy.">
+    <target name="optimize-for-devorg" description="Removes namespace and management artifacts prior to unmanaged deploy.">
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
     <fullName>Event Driven Architecture</fullName>
@@ -107,58 +107,10 @@
             <replacevalue><![CDATA[
     </types>
     <version>31.0</version>]]></replacevalue>
-        </replace>
-        <replace file="src/permissionsets/Orchestrator.permissionset">
-            <replacetoken><![CDATA[
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageContentTypes</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageCustomPermissions</name>
-    </userPermissions>]]></replacetoken>
-            <replacevalue><![CDATA[
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageContentTypes</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageCssUsers</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageCustomPermissions</name>
-    </userPermissions>]]></replacevalue>
-        </replace>
-        <replace file="src/permissionsets/Orchestrator.permissionset">
-            <replacetoken><![CDATA[
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageRoles</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageSharing</name>
-    </userPermissions>]]></replacetoken>
-            <replacevalue><![CDATA[
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageRoles</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageSelfService</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageSharing</name>
-    </userPermissions>]]></replacevalue>
         </replace>
     </target>
 
-    <target name="restore-artifacts" description="Restores namespace and management artifacts following unmanaged deploy.">
+    <target name="optimize-for-release" description="Restores namespace and management artifacts following unmanaged deploy.">
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
     <fullName>Event Driven Architecture</fullName>
@@ -187,49 +139,129 @@
             <replacetoken><![CDATA[
     <userPermissions>
         <enabled>false</enabled>
-        <name>ManageContentTypes</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageCssUsers</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageCustomPermissions</name>
+        <name>AllowDeleteDandBCompany</name>
     </userPermissions>]]></replacetoken>
-            <replacevalue><![CDATA[
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageContentTypes</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageCustomPermissions</name>
-    </userPermissions>]]></replacevalue>
+            <replacevalue />
         </replace>
         <replace file="src/permissionsets/Orchestrator.permissionset">
             <replacetoken><![CDATA[
     <userPermissions>
         <enabled>false</enabled>
-        <name>ManageRoles</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageSelfService</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ManageSharing</name>
+        <name>AllowEmailIC</name>
     </userPermissions>]]></replacetoken>
-            <replacevalue><![CDATA[
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
     <userPermissions>
         <enabled>false</enabled>
-        <name>ManageRoles</name>
-    </userPermissions>
+        <name>AllowReadDandBCompany</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
     <userPermissions>
         <enabled>false</enabled>
-        <name>ManageSharing</name>
-    </userPermissions>]]></replacevalue>
+        <name>CreateCustomizeDashboards</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>CreateCustomizeReports</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>CreateDashboardFolders</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>CreateReportFolders</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>CreateWorkBadgeDefinition</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>EditMyDashboards</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>EditMyReports</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>ManageDashbdsInPubFolders</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>ManageReportsInPubFolders</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>ViewPublicDashboards</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>ViewPublicReports</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>WorkCalibrationUser</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
+        </replace>
+        <replace file="src/permissionsets/Orchestrator.permissionset">
+            <replacetoken><![CDATA[
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>WorkDotComUserPerm</name>
+    </userPermissions>]]></replacetoken>
+            <replacevalue />
         </replace>
     </target>
 
