@@ -48,9 +48,12 @@
     <customHelpPage>EventTypeHelp</customHelpPage>
     <deploymentStatus>Deployed</deploymentStatus>
     <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
     <label>Event Type</label>
     <nameField>
         <label>Event Type Name</label>
