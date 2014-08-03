@@ -63,7 +63,6 @@ public with sharing class SchemaSelectorController {
         
         //we have to use the describe, because the getMap() keys are unqualified
         for (String key : key2field.keySet()) {
-            if (Limits.getLimitFieldsDescribes() == 0) break; //limit to 100 available field describes
             SObjectField field = key2field.get(key);
             Schema.DescribeFieldResult description = field.getDescribe();
             String name = description.getName();
