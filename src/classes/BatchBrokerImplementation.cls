@@ -4,7 +4,13 @@
  * 
  * This class is WITHOUT SHARING to ensure the process can execute regardless of running user context.
  */
-public without sharing class BatchBrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts {
+public without sharing class BatchBrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
+    
+    /**
+     * Holds processable Message Ids for the sake of writing away unhandled exceptions
+     * We start with all the processable Message Ids and subtract the successful ones.
+     */
+    private Set<Id> failedMessageIds;
     
     public Database.QueryLocator start(Database.BatchableContext context) {
         if (BrokerSettings__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
@@ -16,12 +22,13 @@ public without sharing class BatchBrokerImplementation extends Broker implements
         //MARK
         this.mark(messages);
         
+        //assume all of them failing
+        this.failedMessageIds = new Map<Id,Message__c>(messages).keySet();
+        
         return locator;
     }
     
     public void execute(Database.BatchableContext context, List<Message__c> inputMessages) {
-        SavePoint sp = Database.setSavePoint();
-        try {
             //EXECUTE
             List<Message__c> outputMessages = this.execute(inputMessages);
             
@@ -30,17 +37,36 @@ public without sharing class BatchBrokerImplementation extends Broker implements
             
             //PERSIST
             this.persist(inputMessages, outputMessages);
-        } catch (Exception e) {
-            //no emails or database activity thanks!
-            Database.rollback(sp);
-            
-            Message__c inputMessage = inputMessages[0];
-            this.surfaceException(e, inputMessage.Id);
-        }
+        
+        //incrementally remove non failing message ids
+        for (Message__c inputMessage : inputMessages) this.failedMessageIds.remove(inputMessage.Id);
     }
     
     public void finish(Database.BatchableContext context) {
+        //any error detail is not on the batch job now, so look it up a little later
+        if (!this.failedMessageIds.isEmpty()) this.deferExceptionHandler(context.getJobId(), this.failedMessageIds);
+        
         this.restartIfWorkPending();
+    }
+    
+    /**
+     * Would prefer to do this in a @Future but that's not permitted from Batch
+     * so we schedule a job that runs (almost) immediately to go persist the errors.
+     * 
+     * The new reason we can't persist such errors in the execute() method is
+     * because we aren't catching any exceptions... because we can't do savepoints...
+     * because we can't do DML... because it prevents user processes doing callouts!
+     *
+     * Leaving the exceptions unhandled blesses us with system wide 'automatic rollback'
+     * as we can't call Database.setSavepoint(). Less naughty than leaving side effects
+     * or requiring every single process to implement its own transaction management.
+     */
+    @TestVisible private void deferExceptionHandler(Id asyncApexJobId, Set<Id> failedMessageIds) {
+        //1 second is not enough, we hit 'Based on configured schedule, the given trigger will never fire.'
+        DateTime now = System.now().addSeconds(5);
+        String cron = now.second() + ' ' + now.minute() + ' ' + now.hour() + ' ' + now.day() + ' ' + now.month() + ' ' + '?' + ' ' + now.year();
+        BatchBrokerExceptionHandlerSchedule schedule = new BatchBrokerExceptionHandlerSchedule(asyncApexJobId, failedMessageIds);
+        System.schedule('Exception handler for ' + asyncApexJobId, cron, schedule);
     }
     
     /**

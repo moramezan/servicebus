@@ -21,6 +21,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>BatchBrokerExceptionHandlerSchedule</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>BatchBrokerImplementation</apexClass>
         <enabled>false</enabled>
     </classAccesses>
