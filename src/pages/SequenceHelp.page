@@ -10,9 +10,9 @@
             <apex:pageBlockSectionItem >
                 <p>
                     A Sequence is an arrangement of multiple processing tasks called Steps.
-                    Each Sequence is known by a friendly name, for example 'ProcessInvoices', which should describe the nature of the work performed by its processing tasks or Steps.
+                    Each Sequence is known by a friendly name, for example 'ProcessInvoices', which should in some way indicate  the nature of the work that it's processing tasks (Steps) will perform .
                 </p>
-                <p>The EDA framework will advance Messages through the Steps of a Sequence in the order you arrange. A typical sequence will contain many steps. See diagram:</p>
+                <p>The EDA framework will advance Messages through the Steps of a Sequence in the order you specify using drag and drop. A typical sequence will contain many steps. See diagram:</p>
                 <p><br /><br /><br />See the following tutorials:</p>
             </apex:pageBlockSectionItem>
             <apex:pageBlockSectionItem >
@@ -30,17 +30,17 @@
         <apex:pageBlockSection title="When building a new Sequence" columns="1" collapsible="false">
             <apex:pageBlockSectionItem >
                 <ul>
-                    <li>Any Steps after the Terminate Process will not be executed.</li>
-                    <li>Each Step in the Sequence has an associated Process, a numbered Position, and potentially a Configuration.</li>
-                    <li>It is the orchestrator's responsibility to ensure the Terminate Process is the final Step in every Sequence. This is provided for you and cannot be deleted.</li>
+                    <li>Every Step in a Sequence has an associated Process, a numbered Position, and potentially a Configuration.</li>
+                    <li>A Terminate process is automatically inserted into a new Sequence at the point that the Sequence is created. This Terminate step cannot be deleted.</li>
+                    <li>It is the orchestrator's responsibility to ensure the Terminate Process is the final Step in every Sequence as any Steps after the Terminate Process will not be executed. </li>
                 </ul>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
         <apex:pageBlockSection title="Detail Page Buttons" columns="1" collapsible="false">
             <apex:pageBlockSectionItem >
-                <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Sequence/newStep.png')}" /> will append a new step (holding your chosen process) to the sequence. You can drag and drop to reposition each step.</p>
-                <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Sequence/injectTestMessage.png')}" /> enqueues a message (carrying your user record) to this sequence. The message will progress through all the steps.</p>
+                <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Sequence/newStep.png')}" /> will append a new Sequence step (containing your selected process). Once appended, you can drag and drop the step to reposition.</p>
+                <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Sequence/injectTestMessage.png')}" /> enqueues a message (referencing your user record as the underlying data ). </p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         

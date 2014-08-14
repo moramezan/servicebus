@@ -7,11 +7,16 @@
     <apex:pageBlock mode="maindetail" title="About the Subsequence Process">
         <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
-                <p>The Subsequence Process allows you to choose another Sequence to be executed when a Message reaches this Step. This allows you to re-use functionality in more than one place.</p>
-                <p>Messages will detour to your chosen subsequence. After all those Steps are executed, the Message will return to the next Step of the original Sequence.</p>
+                <p> Execution flow to jump to an another sequence (a "(sub)sequence") upon reaching a Subsequence process step
+                    This mechanism facilitates the re-use of a functionality packaged into any given (sub)sequence
+                    Once all steps  in (sub)sequence have executed, the message will return to the step immediately following the Subsequence process step</p>
+                <p> To specify the sequence to branch to from the Subsequence configuration page, select the name of the (sub)sequence from the sequence dropdown field.</p>
                 <p><img width="480" src="{!URLFOR($Resource.HelpZip, '/SubsequenceConfiguration/subsequence.png')}" /></p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
     </apex:pageBlock>
     
 </apex:page>
+
+ 
+

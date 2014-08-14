@@ -43,7 +43,7 @@
         <apex:pageBlockSection title="Detail Page Buttons" columns="1" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Process/viewApexClass.png')}" /> will show you the Apex Class that contains the underlying logic for any given Process.</p>
-                <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Process/viewSettings.png')}" /> takes you to the available Settings for a Process. (If applicable. Not all process have Settings)</p>
+                <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Process/viewSettings.png')}" /> takes you to the available Settings for a Process. (<b>Note:</b> Not all process have Settings)</p>
                 <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/Process/viewDocumentation.png')}" /> shows the supporting documentation provided by the author of a given Process.</p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>  

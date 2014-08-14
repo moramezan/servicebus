@@ -1,421 +1,537 @@
+<!DOCTYPE html>
+<html>
+<head>
 
+    <script src="/faces/a4j/g/3_3_3.Finalorg.ajax4jsf.javascript.AjaxScript?rel=1400083731000" type="text/javascript"></script>
+    <script src="/static/111213/js/perf/stub.js"></script>
+    <script src="/static/111213/js/functions.js" type="text/javascript"></script>
+    <script src="/jslibrary/1398894194000/sfdc/main.js" type="text/javascript"></script>
+    <script src="/jslibrary/jslabels/1399588760000/en_US.js" type="text/javascript"></script>
+    <script src="/static/111213/desktop/desktopAjax.js" type="text/javascript"></script>
+    <script src="/static/111213/js/picklist.js" type="text/javascript"></script>
+    <link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/zen-componentsCompatible.css" rel="stylesheet" type="text/css">
+    <link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/elements.css" rel="stylesheet" type="text/css">
+    <link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/common.css" rel="stylesheet" type="text/css">
+    <link class="user" href="/sCSS/30.0/sprites/1398193090000/Theme3/gc/dStandard.css" rel="stylesheet" type="text/css">
+    <link class="user" href="/sCSS/30.0/sprites/1400249746000/Theme3/00Db0000000d3oV/005b0000000vx4E/gc/dCustom0.css" rel="stylesheet" type="text/css">
+    <link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/extended.css" rel="stylesheet" type="text/css">
+    <link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/setup.css" rel="stylesheet" type="text/css">
+    <link class="user" href="./ProcessDevelopersGuide/syntax.css" rel="stylesheet" type="text/css">
+    <title></title>
+</head>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head><script src="/faces/a4j/g/3_3_3.Finalorg.ajax4jsf.javascript.AjaxScript?rel=1400083731000" type="text/javascript"></script><script src="/static/111213/js/perf/stub.js"></script><script src="/static/111213/js/functions.js" type="text/javascript"></script><script src="/jslibrary/1398894194000/sfdc/main.js" type="text/javascript"></script><script src="/jslibrary/jslabels/1399588760000/en_US.js" type="text/javascript"></script><script src="/static/111213/desktop/desktopAjax.js" type="text/javascript"></script><script src="/static/111213/js/picklist.js" type="text/javascript"></script><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/zen-componentsCompatible.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/elements.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/common.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1398193090000/Theme3/gc/dStandard.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1400249746000/Theme3/00Db0000000d3oV/005b0000000vx4E/gc/dCustom0.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/extended.css" rel="stylesheet" type="text/css" /><link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/setup.css" rel="stylesheet" type="text/css" /></head><body>
-    
-    <style>
-        body {background: url('./inPageClouds.png') top left no-repeat;}
-        a {text-decoration:none;}
-        code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:112%;}
+<body>
+<style>
+    body {background: url('./inPageClouds.png') top left no-repeat;}
+    a {text-decoration:none;}
+    code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:95%;}
 
-    </style>
+</style><br>
+<script>
+    if(!window.sfdcPage) { window.sfdcPage = new ApexPage(); }UserContext.initialize({"networkId":"","labelLastModified":"1399588760000","locale":"en_GB","isDefaultNetwork":true,"timeFormat":"HH:mm","today":"18/05/2014 22:11","orgPreferences":[{"index":257,"name":"TabOrganizer","value":true}],"userPreferences":[{"index":112,"name":"HideInlineEditSplash","value":false},{"index":114,"name":"OverrideTaskSendNotification","value":false},{"index":115,"name":"DefaultTaskSendNotification","value":false},{"index":119,"name":"HideUserLayoutStdFieldInfo","value":false},{"index":116,"name":"HideRPPWarning","value":false},{"index":87,"name":"HideInlineSchedulingSplash","value":false},{"index":88,"name":"HideCRUCNotification","value":false},{"index":89,"name":"HideNewPLESplash","value":false},{"index":90,"name":"HideNewPLEWarnIE6","value":false},{"index":122,"name":"HideOverrideSharingMessage","value":false},{"index":91,"name":"HideProfileILEWarn","value":false},{"index":93,"name":"HideProfileElvVideo","value":false},{"index":97,"name":"ShowPicklistEditSplash","value":false},{"index":92,"name":"HideDataCategorySplash","value":false},{"index":128,"name":"ShowDealView","value":false},{"index":129,"name":"HideDealViewGuidedTour","value":false},{"index":132,"name":"HideKnowledgeFirstTimeSetupMsg","value":false},{"index":104,"name":"DefaultOffEntityPermsMsg","value":false},{"index":135,"name":"HideNewCsnSplash","value":true},{"index":101,"name":"HideBrowserWarning","value":false},{"index":139,"name":"HideDashboardBuilderGuidedTour","value":false},{"index":140,"name":"HideSchedulingGuidedTour","value":false},{"index":180,"name":"HideReportBuilderGuidedTour","value":false},{"index":183,"name":"HideAssociationQueueCallout","value":false},{"index":194,"name":"HideQTEBanner","value":false},{"index":193,"name":"HideChatterOnboardingSplash","value":false},{"index":195,"name":"HideSecondChatterOnboardingSplash","value":false},{"index":270,"name":"HideIDEGuidedTour","value":true},{"index":282,"name":"HideQueryToolGuidedTour","value":true},{"index":196,"name":"HideCSIGuidedTour","value":true},{"index":271,"name":"HideFewmetGuidedTour","value":false},{"index":272,"name":"HideEditorGuidedTour","value":true},{"index":205,"name":"HideApexTestGuidedTour","value":false},{"index":206,"name":"HideSetupProfileHeaderTour","value":false},{"index":207,"name":"HideSetupProfileObjectsAndTabsTour","value":false},{"index":213,"name":"DefaultOffArticleTypeEntityPermMsg","value":false},{"index":214,"name":"HideSelfInfluenceGetStarted","value":false},{"index":215,"name":"HideOtherInfluenceGetStarted","value":false},{"index":216,"name":"HideFeedToggleGuidedTour","value":false},{"index":268,"name":"ShowChatterTab178GuidedTour","value":false},{"index":275,"name":"HidePeopleTabDeprecationMsg","value":false},{"index":276,"name":"HideGroupTabDeprecationMsg","value":false},{"index":224,"name":"HideUnifiedSearchGuidedTour","value":false},{"index":226,"name":"ShowDevContextMenu","value":true},{"index":227,"name":"HideWhatRecommenderForActivityQueues","value":false},{"index":228,"name":"HideLiveAgentFirstTimeSetupMsg","value":false},{"index":232,"name":"HideGroupAllowsGuestsMsgOnMemberWidget","value":false},{"index":233,"name":"HideGroupAllowsGuestsMsg","value":false},{"index":234,"name":"HideWhatAreGuestsMsg","value":false},{"index":235,"name":"HideNowAllowGuestsMsg","value":false},{"index":236,"name":"HideSocialAccountsAndContactsGuidedTour","value":false},{"index":237,"name":"HideAnalyticsHomeGuidedTour","value":false},{"index":238,"name":"ShowQuickCreateGuidedTour","value":false},{"index":245,"name":"HideFilePageGuidedTour","value":false},{"index":250,"name":"HideForecastingGuidedTour","value":false},{"index":251,"name":"HideBucketFieldGuide","value":false},{"index":263,"name":"HideSmartSearchCallOut","value":false},{"index":265,"name":"HideSocialProfilesKloutSplashScreen","value":false},{"index":273,"name":"ShowForecastingQuotaAttainment","value":false},{"index":280,"name":"HideForecastingQuotaColumn","value":false},{"index":301,"name":"HideManyWhoGuidedTour","value":false},{"index":284,"name":"HideExternalSharingModelGuidedTour","value":false},{"index":298,"name":"HideFileSyncBannerMsg","value":false},{"index":299,"name":"HideTestConsoleGuidedTour","value":false},{"index":300,"name":"HideNetworkSetupOverlayGettingStarted","value":false},{"index":302,"name":"HideManyWhoInlineEditTip","value":false},{"index":303,"name":"HideSetupV2WelcomeMessage","value":false},{"index":312,"name":"ForecastingShowQuantity","value":false},{"index":313,"name":"HideDataImporterIntroMsg","value":false},{"index":314,"name":"HideEnvironmentHubLightbox","value":false},{"index":316,"name":"HideSetupV2GuidedTour","value":false},{"index":317,"name":"HideFileSyncMobileDownloadDialog","value":false},{"index":318,"name":"HideHelpBannerQuickActionList","value":false},{"index":321,"name":"HideCustomEntityQuickActionCallout","value":true},{"index":322,"name":"HideEnhancedProfileHelpBubble","value":false},{"index":328,"name":"ForecastingHideZeroRows","value":false},{"index":330,"name":"HideEmbeddedComponentsFeatureCallout","value":true},{"index":341,"name":"HideDedupeMatchResultCallout","value":false},{"index":340,"name":"HideS1BrowserUI","value":false}],"startOfWeek":"2","isAccessibleMode":false,"ampm":["AM","PM"],"renderMode":"RETRO","userId":"005b0000000vx4E","dateTimeFormat":"dd/MM/yyyy HH:mm","dateFormat":"dd/MM/yyyy","uiSkin":"Theme3","language":"en_US","siteUrlPrefix":""});
+</script>
 
-         <br /><script> if(!window.sfdcPage) { window.sfdcPage = new ApexPage(); }UserContext.initialize({"networkId":"","labelLastModified":"1399588760000","locale":"en_GB","isDefaultNetwork":true,"timeFormat":"HH:mm","today":"18/05/2014 22:11","orgPreferences":[{"index":257,"name":"TabOrganizer","value":true}],"userPreferences":[{"index":112,"name":"HideInlineEditSplash","value":false},{"index":114,"name":"OverrideTaskSendNotification","value":false},{"index":115,"name":"DefaultTaskSendNotification","value":false},{"index":119,"name":"HideUserLayoutStdFieldInfo","value":false},{"index":116,"name":"HideRPPWarning","value":false},{"index":87,"name":"HideInlineSchedulingSplash","value":false},{"index":88,"name":"HideCRUCNotification","value":false},{"index":89,"name":"HideNewPLESplash","value":false},{"index":90,"name":"HideNewPLEWarnIE6","value":false},{"index":122,"name":"HideOverrideSharingMessage","value":false},{"index":91,"name":"HideProfileILEWarn","value":false},{"index":93,"name":"HideProfileElvVideo","value":false},{"index":97,"name":"ShowPicklistEditSplash","value":false},{"index":92,"name":"HideDataCategorySplash","value":false},{"index":128,"name":"ShowDealView","value":false},{"index":129,"name":"HideDealViewGuidedTour","value":false},{"index":132,"name":"HideKnowledgeFirstTimeSetupMsg","value":false},{"index":104,"name":"DefaultOffEntityPermsMsg","value":false},{"index":135,"name":"HideNewCsnSplash","value":true},{"index":101,"name":"HideBrowserWarning","value":false},{"index":139,"name":"HideDashboardBuilderGuidedTour","value":false},{"index":140,"name":"HideSchedulingGuidedTour","value":false},{"index":180,"name":"HideReportBuilderGuidedTour","value":false},{"index":183,"name":"HideAssociationQueueCallout","value":false},{"index":194,"name":"HideQTEBanner","value":false},{"index":193,"name":"HideChatterOnboardingSplash","value":false},{"index":195,"name":"HideSecondChatterOnboardingSplash","value":false},{"index":270,"name":"HideIDEGuidedTour","value":true},{"index":282,"name":"HideQueryToolGuidedTour","value":true},{"index":196,"name":"HideCSIGuidedTour","value":true},{"index":271,"name":"HideFewmetGuidedTour","value":false},{"index":272,"name":"HideEditorGuidedTour","value":true},{"index":205,"name":"HideApexTestGuidedTour","value":false},{"index":206,"name":"HideSetupProfileHeaderTour","value":false},{"index":207,"name":"HideSetupProfileObjectsAndTabsTour","value":false},{"index":213,"name":"DefaultOffArticleTypeEntityPermMsg","value":false},{"index":214,"name":"HideSelfInfluenceGetStarted","value":false},{"index":215,"name":"HideOtherInfluenceGetStarted","value":false},{"index":216,"name":"HideFeedToggleGuidedTour","value":false},{"index":268,"name":"ShowChatterTab178GuidedTour","value":false},{"index":275,"name":"HidePeopleTabDeprecationMsg","value":false},{"index":276,"name":"HideGroupTabDeprecationMsg","value":false},{"index":224,"name":"HideUnifiedSearchGuidedTour","value":false},{"index":226,"name":"ShowDevContextMenu","value":true},{"index":227,"name":"HideWhatRecommenderForActivityQueues","value":false},{"index":228,"name":"HideLiveAgentFirstTimeSetupMsg","value":false},{"index":232,"name":"HideGroupAllowsGuestsMsgOnMemberWidget","value":false},{"index":233,"name":"HideGroupAllowsGuestsMsg","value":false},{"index":234,"name":"HideWhatAreGuestsMsg","value":false},{"index":235,"name":"HideNowAllowGuestsMsg","value":false},{"index":236,"name":"HideSocialAccountsAndContactsGuidedTour","value":false},{"index":237,"name":"HideAnalyticsHomeGuidedTour","value":false},{"index":238,"name":"ShowQuickCreateGuidedTour","value":false},{"index":245,"name":"HideFilePageGuidedTour","value":false},{"index":250,"name":"HideForecastingGuidedTour","value":false},{"index":251,"name":"HideBucketFieldGuide","value":false},{"index":263,"name":"HideSmartSearchCallOut","value":false},{"index":265,"name":"HideSocialProfilesKloutSplashScreen","value":false},{"index":273,"name":"ShowForecastingQuotaAttainment","value":false},{"index":280,"name":"HideForecastingQuotaColumn","value":false},{"index":301,"name":"HideManyWhoGuidedTour","value":false},{"index":284,"name":"HideExternalSharingModelGuidedTour","value":false},{"index":298,"name":"HideFileSyncBannerMsg","value":false},{"index":299,"name":"HideTestConsoleGuidedTour","value":false},{"index":300,"name":"HideNetworkSetupOverlayGettingStarted","value":false},{"index":302,"name":"HideManyWhoInlineEditTip","value":false},{"index":303,"name":"HideSetupV2WelcomeMessage","value":false},{"index":312,"name":"ForecastingShowQuantity","value":false},{"index":313,"name":"HideDataImporterIntroMsg","value":false},{"index":314,"name":"HideEnvironmentHubLightbox","value":false},{"index":316,"name":"HideSetupV2GuidedTour","value":false},{"index":317,"name":"HideFileSyncMobileDownloadDialog","value":false},{"index":318,"name":"HideHelpBannerQuickActionList","value":false},{"index":321,"name":"HideCustomEntityQuickActionCallout","value":true},{"index":322,"name":"HideEnhancedProfileHelpBubble","value":false},{"index":328,"name":"ForecastingHideZeroRows","value":false},{"index":330,"name":"HideEmbeddedComponentsFeatureCallout","value":true},{"index":341,"name":"HideDedupeMatchResultCallout","value":false},{"index":340,"name":"HideS1BrowserUI","value":false}],"startOfWeek":"2","isAccessibleMode":false,"ampm":["AM","PM"],"renderMode":"RETRO","userId":"005b0000000vx4E","dateTimeFormat":"dd/MM/yyyy HH:mm","dateFormat":"dd/MM/yyyy","uiSkin":"Theme3","language":"en_US","siteUrlPrefix":""});
-</script><div class="apexp"><div id="j_id0:j_id2" class="bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette"><div class="pbHeader"><table border="0" cellpadding="0" cellspacing="0"><tr><td class="pbTitle"><h2 class="mainTitle">Tutorial : Log messages under a Common Identifier</h2></td><td>&nbsp;</td></tr></table></div><div class="pbBody">
+<div class="apexp bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette" id="j_id0:j_id2">
+<div class="pbHeader">
+    <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td class="pbTitle">
+                <h2 class="mainTitle">Tutorial : Log messages under a Common Identifier</h2>
+            </td>
 
-         <br /><div id="j_id0:j_id2:j_id4"><div class="pbSubheader brandTertiaryBgr first tertiaryPalette"><h3>Objective :</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first " colSpan="2">
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+</div>
 
-                    <p>This tutorial demonstrates the grouping of related messages under a common tag.
-                    </p>
-                    
-                    <p><ol>
-                        <li><b>Related Messages:</b>
-                        <br />Consider a valid <code>Supplier Invoice</code> that must be paid via a <code>Funds Transfer Instruction</code>. 
-                        <br />The <code>Supplier Invoice</code> and the <code>Funds Transfer Instruction</code> are two separate source documents
-                             generated on different systems. 
-                        <br />Both documents are however related by the payment process and therefore require grouping under a common tag.
-                        </li>
-                         
-                        <br /><br />
-                         
-                        li><b>Common Tag:</b>
-                        <br />An internal Salesforce ID such as <code>066b0000001RJct</code> may not be useful from an end user perspective.
-                        <br />An identifier such as <code>INVOICE-123</code> or <code>PMT2345</code> conveys useful meaning and is therefore a better choice for a common tag.
-                        <br /><code>Business identifiers</code> naturally vary on a case by case basis.
-                        <br />It is for this reason that the framework enables the system configurator to define what part 
-                             of structured data will act as the common identifier across disparate source documents.
-                        </li>
-                    </ol>  </p></td></tr><tr><td class="data2Col  last " colSpan="2">
-                    <p><b>Expected Duration : </b> 15 Minutes.</p></td></tr></table></div></div><div id="j_id0:j_id2:j_id9"><div class="pbSubheader brandTertiaryBgr tertiaryPalette"><h3>Scenario :</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first  last " colSpan="2">
+<div class="pbBody">
+<br>
+
+<div id="j_id0:j_id2:j_id4">
+    <div class="pbSubheader brandTertiaryBgr first tertiaryPalette">
+        <h3>Objective :</h3>
+    </div>
+
+    <div class="pbSubsection">
+        <table border="0" cellpadding="0" cellspacing="0" class="detailList">
+            <tr>
+                <td class="data2Col first" colspan="2">
+                    <p>This tutorial demonstrates the grouping of related messages under a common tag.</p>
+
+                    <p></p>
+
                     <ul>
-                        <li> We will model 
-                            <br />&nbsp; - the <i>receipt</i> of a <code>Purchase Invoice</code> , 
-                            <br />&nbsp; - the <i>payment</i> of that <code>Purchase Invoice</code> using a <code>Funds Transfer Instruction</code> 
-                            <br />&nbsp; - the relationship between these two documents using their respective business references 
+                        <li>
+                            <b>Related Messages:</b><br>
+                            Consider a valid <code>Supplier Invoice</code> that must be paid via a <code>Funds Transfer Instruction</code>.<br>
+                            The <code>Supplier Invoice</code> and the <code>Funds Transfer Instruction</code> are two separate source documents generated on different systems.<br>
+                            Both documents are however related by the payment process and therefore require grouping under a common tag.<br>
+                            <br>
                         </li>
-                        
-                        <br />
-                        
-                        <li> To achieve this, we will :
-                             <br />&nbsp; - create two custom objects : <code> PurchaseInvoice__c </code>  and <code> Payment__c  </code>  
-                             <br />&nbsp; - create an event driven  
-                             <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/PayInvoice.png" style="vertical-align:middle;" /> <b> ] </b> 
-                             process that simulates the payment of supplier invoices. 
-                             <br />&nbsp; - use the
-                             <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/LogWriter.png" style="vertical-align:middle;" /> <b> ] </b>
-                             and 
-                             <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/LogInitializer.png" style="vertical-align:middle;" /> <b> ] </b> 
-                             processes to relate
-                             the  Purchase Invoice Reference ( <code> PurchaseRef___c </code> ) and 
-                             the Payment Reference (<code> PaymentRef__c </code> ) business identifiers.
+                        <li>
+                            <b>Common Tag:</b><br>
+                            An internal Salesforce ID such as <code>066b0000001RJct</code> may not be useful from an end user perspective.<br>
+                            An identifier such as <code>INVOICE-123</code> or <code>PMT2345</code> conveys useful meaning and is therefore a better choice for a common tag.<br>
+                            <code>Business identifiers</code> naturally vary on a case by case basis.<br>
+                            It is for this reason that the framework enables the system configurator to define what part of structured data will act as the common identifier across disparate source
+                            documents.
                         </li>
-                    </ul></td></tr></table></div></div><div id="j_id0:j_id2:j_id12"><div class="pbSubheader brandTertiaryBgr tertiaryPalette"><h3>Detailed Step - Pre-requisites :</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first  last " colSpan="2">
-                
-                  <br /> <b> Note : </b> The creation of custom objects and processes will normally be carried out by the developer(s) in your organisation. 
-                  <br /> ( For detailed instructions on creating processes , see
-                       <a href="./ProcessDevelopersGuide.html" style="color: #00f;">Process Developer's Guide</a>.   )
-                  
-                  <br /><br />
-                                        
+                    </ul>
+
+                    <p></p>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="data2Col last" colspan="2">
+                    <p><b>Expected Duration :</b> 15 Minutes.</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div id="j_id0:j_id2:j_id9">
+    <div class="pbSubheader brandTertiaryBgr tertiaryPalette">
+        <h3>Scenario :</h3>
+    </div>
+
+    <div class="pbSubsection">
+        <table border="0" cellpadding="0" cellspacing="0" class="detailList">
+            <tr>
+                <td class="data2Col first last" colspan="2">
+                    <ul>
+                        <li>We will model<br>
+                            &nbsp; - the <i>receipt</i> of a <code>Purchase Invoice</code> ,<br>
+                            &nbsp; - the <i>payment</i> of that <code>Purchase Invoice</code> using a <code>Funds Transfer Instruction</code><br>
+                            &nbsp; - the relationship between these two documents using their respective business references</li>
+
+                        <li style="list-style: none"><br></li>
+
+                        <li>To achieve this, we will :<br>
+                            &nbsp; - create two custom objects : <code>PurchaseInvoice__c</code> and <code>Payment__c</code><br>
+                            &nbsp; - create an event driven <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/PayInvoice.png" style="vertical-align:middle;"> <b>]</b> process that simulates the payment of
+                            supplier invoices.<br>
+                            &nbsp; - use the <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/LogWriter.png" style="vertical-align:middle;"> <b>]</b> and <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/LogInitializer.png" style="vertical-align:middle;"> <b>]</b> processes to relate the Purchase Invoice Reference ( <code>PurchaseRef___c</code> )
+                            and the Payment Reference ( <code>PaymentRef__c</code> ) .</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div id="j_id0:j_id2:j_id12">
+    <div class="pbSubheader brandTertiaryBgr tertiaryPalette">
+        <h3>Detailed Step - Pre-requisites :</h3>
+    </div>
+
+    <div class="pbSubsection">
+        <table border="0" cellpadding="0" cellspacing="0" class="detailList">
+            <tr>
+                <td class="data2Col first last" colspan="2">
+                    <br>
+                    <b>Note :</b> The creation of custom objects and processes will normally be carried out by the developer(s) in your organisation.<br>
+                    ( For detailed instructions on creating processes , see <a href="./ProcessDevelopersGuide.html" style="color: #00f;">Process Developer's Guide</a>. )<br>
+                    <br>
+
                     <ol>
+                        <li>Create the Purchase Invoice object with a Reference field.<br>
+                            Click <code>Setup|Create|Objects|New Custom Object</code> .<br>
+                            <br></li>
 
-                        
-                        <li> Create the Purchase Invoice object with a Reference field.  
-                             <br /> Click <code> Setup|Create|Objects|New Custom Object </code> .
-                        </li>
-                        
-                        
-                        <br /><br />
-                        
-                        
-                        <li> Name the object <code> PurchaseInvoice </code>  
-                            <br /><br />                   
-                            <img src="./LogUnderCommonIdentifierTutorial/PurchaseInvoiceDefinition.png" style="vertical-align:middle;" />  
-                            <br /><br /> 
-                        </li>
-                        
-                        <br /><br />
-                        
-                        <li> Make sure it has a auto number <code> Name </code> field  
-                           <br /><br />      
-                            <img src="./LogUnderCommonIdentifierTutorial/PurchaseInvoiceAutoNumber.png" style="vertical-align:middle;" />  
-                            <br /><br /> 
-                        </li>
-                        
-                        
-                        <br /><br />
-                        
-                        
-                        <li> Create a single text Reference field called <code>Invoice Reference</code> 
-                            <br /><br /> 
-                            <img src="./LogUnderCommonIdentifierTutorial/PurchaseInvoiceReference.png " style="vertical-align:middle;" />  
-                            <br /><br /> 
-                        </li>
-                        
-                        
-                        <br /><br />
-                        
-                        <li>Create a tab for the <code>PurchaseInvoice</code> object.
-                            <br /> 
-                            <br /> Select <code> Setup|Create|Tabs|New </code> 
-                            <br /> Select a tab style  and  choose <code> PurchaseInvoice </code>  for the Object  
-                            <br /><br />  
-                            &nbsp; &nbsp; <img src="./LogUnderCommonIdentifierTutorial/PurchaseInvoiceTab.png " style="vertical-align:middle;" /> 
-                            <br />
-                            <br />Click [Next] ,  click [Next].
-                            <br />On the applications screen ,  ensure that only the <code>Event Driven Architecture</code> Application is selected. 
-                            <br /><br />
-                            &nbsp; &nbsp; <img src="./LogUnderCommonIdentifierTutorial/EdaAppSelected.png" style="vertical-align:middle;" />  
-                            <br />
-                            <br />Click [Save].  
-                        </li>
-                        
-    
-                        
-                        <br /><br />
-                        
-                        
-                        <li> Create the <code> Payment </code> object with a reference field.  
-                             <br /> Click <code> Setup|Create|Objects|New Custom Object </code> .   
-                        </li>    
-                        
-                        <br /><br />
-                        
-                        <li> Name the object <code> Payment </code> 
-                            <br /><br /> 
-                            <img src="./LogUnderCommonIdentifierTutorial/PaymentDefinition.png" style="vertical-align:middle;" />  
-                            <br /><br />  
-                        </li>
-                        
-                        <br /><br />
-                        
-                        <li> Make sure the <code> Payment </code> object has a Auto Number <code> Name </code> field  
-                            <br /><br /> 
-                            <img src="./LogUnderCommonIdentifierTutorial/PaymentAutoNumber.png" style="vertical-align:middle;" />  
-                            <br /><br /> 
-                        </li>
-                        
-                        <br /><br />
-                        
-                        
-                        <li> Create a single text Reference field called <code>PaymentReference</code> 
-                            <br /><br />  
-                            <img src="./LogUnderCommonIdentifierTutorial/PaymentReference.png" style="vertical-align:middle;" /> 
-                            <br /><br />  
-                        </li>
-                        
-                        <br /><br />
-                        
-                        
-                        <li> Create a tab for the <code> Payment </code>  object. 
-                            <br /> 
-                            <br /> Select <code> Setup|Create|Tabs|New </code> 
-                            <br /> Select a tab style  and  choose <code> Payment </code>  for the Object  
-                            <br /><br />  
-                            &nbsp; &nbsp; <img src="./LogUnderCommonIdentifierTutorial/PaymentTab.png" style="vertical-align:middle;" />  
-                            <br />
-                            <br />Click [Next] ,  click [Next].
-                            <br />On the applications screen ,  ensure that only the <code>Event Driven Architecture</code> Application is selected. 
-                            <br /><br />
-                            &nbsp; &nbsp; <img src="./LogUnderCommonIdentifierTutorial/EdaAppSelected.png" style="vertical-align:middle;" />  
-                            <br />
-                            <br />Click [Save]. 
-                        </li>
-                        
-                        
-                        <br /><br />
-                        
-                        <li> Create the   
-                             <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/PayInvoice.png" style="vertical-align:middle;" /> <b> ] </b>
-                             process that simulates the payment of a hypothetical inbound <code> Purchase Invoice </code>.  
-                             <br /> Click Setup <code> |Develop|Apex Classes|New </code>  .
-                             <br /> Paste the following code into the code window, then click [Save].            
-                             <br /><br />
-                                            
-    <div style="background: #ffffff; overflow:auto;width:60%;border:solid gray;border-width:.1em .1em .1em .1em;padding:.2em .6em;">
-    <pre style="margin: 0; line-height: 125%">
- 
-    <span style="color: #008800; font-weight: bold">public</span> with sharing <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">PayInvoice</span> <span style="color: #008800; font-weight: bold">implements</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">Plugin</span> <span style="color: #333333">{</span>
+                        <li>Name the object <code>PurchaseInvoice</code><br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/PurchaseInvoiceDefinition.png" style="vertical-align:middle;"><br>
+                            <br>
+                            <br>
+                            <br></li>
 
-    <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">PayInvoiceException</span> <span style="color: #008800; font-weight: bold">extends</span> Exception <span style="color: #333333">{}</span>
-    
-    <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">Meta</span> <span style="color: #333333">{</span>
-        <span style="color: #008800; font-weight: bold">public</span> String icon <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'money'</span><span style="color: #333333">;</span>
-    <span style="color: #333333">}</span>
-    
-    <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> <span style="color: #0066BB; font-weight: bold">describe</span><span style="color: #333333">()</span> <span style="color: #333333">{</span>
-        Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span> describeResult <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginDescribeResult</span><span style="color: #333333">();</span>
-        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Name</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'PayInvoice'</span><span style="color: #333333">;</span>
-        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Description</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'Demo - takes invoice and creates payment advice'</span><span style="color: #333333">;</span>
-        describeResult<span style="color: #333333">.</span><span style="color: #0000CC">Tag</span> <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'Example'</span><span style="color: #333333">;</span>
-        <span style="color: #008800; font-weight: bold">return</span> describeResult<span style="color: #333333">;</span>
-    <span style="color: #333333">}</span>
-    
-    <span style="color: #008800; font-weight: bold">public</span> Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginResult</span> <span style="color: #0066BB; font-weight: bold">invoke</span><span style="color: #333333">(</span>Process<span style="color: #333333">.</span><span style="color: #0000CC">PluginRequest</span> request<span style="color: #333333">)</span> <span style="color: #333333">{</span>
-        <span style="color: #888888">// input:</span>
-        Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;</span> notification <span style="color: #333333">=</span> request<span style="color: #333333">.</span><span style="color: #0000CC">inputParameters</span><span style="color: #333333">;</span>
-    
-        <span style="color: #888888">// simulate payment of invoice with payment reference</span>
-        String paymentReference <span style="color: #333333">=</span> <span style="background-color: #fff0f0">'PMT-'</span><span style="color: #333333">+</span> Math<span style="color: #333333">.</span><span style="color: #0000CC">round</span><span style="color: #333333">(</span>Math<span style="color: #333333">.</span><span style="color: #0000CC">random</span><span style="color: #333333">()*</span><span style="color: #0000DD; font-weight: bold">1000</span><span style="color: #333333">);</span>
-        Payment__c payment <span style="color: #333333">=</span>  <span style="color: #008800; font-weight: bold">new</span> Payment__c<span style="color: #333333">(</span> PaymentReference__c <span style="color: #333333">=</span>  paymentReference <span style="color: #333333">)</span> <span style="color: #333333">;</span>
-        insert payment<span style="color: #333333">;</span>
-    
-        <span style="color: #888888">// change the underlying document pointed at by the notification</span>
-        notification<span style="color: #333333">.</span><span style="color: #0000CC">put</span><span style="color: #333333">(</span><span style="background-color: #fff0f0">'Id'</span><span style="color: #333333">,</span> payment<span style="color: #333333">.</span><span style="color: #0000CC">Id</span><span style="color: #333333">);</span>
-    
-        <span style="color: #888888">// output:</span>
-        <span style="color: #008800; font-weight: bold">return</span> EdaUtility<span style="color: #333333">.</span><span style="color: #0000CC">convert</span><span style="color: #333333">(</span><span style="color: #008800; font-weight: bold">new</span> List<span style="color: #333333">&lt;</span>Map<span style="color: #333333">&lt;</span>String<span style="color: #333333">,</span>Object<span style="color: #333333">&gt;&gt;{</span>notification<span style="color: #333333">});</span>
-    <span style="color: #333333">}</span>
-<span style="color: #333333">}</span>
- 
-</pre></div>
+                        <li>Make sure it has a auto number <code>Name</code> field<br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/PurchaseInvoiceAutoNumber.png" style="vertical-align:middle;"><br>
+                            <br>
+                            <br>
+                            <br></li>
 
-                        <br />
-                        </li>     
-                     </ol></td></tr></table></div></div><div id="j_id0:j_id2:j_id15"><div class="pbSubheader brandTertiaryBgr tertiaryPalette"><h3>Detailed Steps - Configuration :</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first  last " colSpan="2">
-                    <ul>
-                        <li> Refresh the catalogue of available processes so that the   <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/PayInvoice.png" style="vertical-align:middle;" /> <b> ] </b> created earlier will be available for selection during Sequence creation 
-                             For specific details, refer to the  <a href="./ProcessDiscoveryTutorial.html" style="color: #00f;" target="_blank">Process Discovery Tutorial</a>
-                        </li>
-                        
-                        <br /><br />
-                        
-                        <li> Create the <code>  Purchase </code>  Sequence  
-                            <br /><br />
-                            <img src="./LogUnderCommonIdentifierTutorial/PurchaseSequence.png" style="vertical-align:middle;" /> 
-                            <br /><br />
-                        </li>
-                        
-                        <br /><br />
-                        
-                        <li> Using the New Step button, add the following steps to the <code>  Purchase </code>  Sequence : 
-                            <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/LogInitializer.png" style="vertical-align:middle;" /> <b> ] </b>
-                            , 
-                            <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/LogWriter.png" style="vertical-align:middle;" /> <b> ] </b> 
-                            ,
-                            <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/Branch.png" style="vertical-align:middle;" /> <b> ] </b> 
-                            and 
-                            <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/Terminate.png" style="vertical-align:middle;" />  <b> ] </b>   
-       
+                        <li>Create a single text Reference field called <code>Invoice Reference</code><br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/PurchaseInvoiceReference.png" style="vertical-align:middle;"><br>
+                            <br>
+                            <br>
+                            <br></li>
 
-                            <br /><br />
-                            <img src="./LogUnderCommonIdentifierTutorial/PurchaseSequenceSteps.png" style="vertical-align:middle;" /> 
-                            <br /><br />
-                        </li>
-                        
-                        <br /><br />
-                        
-                        <li> Create a <code> Pay </code>  Sequence  
-                            <br /><br />
-                            <img src="./LogUnderCommonIdentifierTutorial/PaySequence.png" style="vertical-align:middle;" /> 
-                            <br /><br />
-                        </li>
-                        
-                        <br /><br />
-                        
-                        <li> Using the New Step button, add the  the following steps to the <code> Pay </code> Sequence :
-                            <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/PayInvoice.png" style="vertical-align:middle;" />  <b> ] </b> 
-                            ,  
-                            <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/LogInitializer.png" style="vertical-align:middle;" /> <b> ] </b> 
-                            , 
-                            <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/LogWriter.png" style="vertical-align:middle;" /> <b> ] </b> 
-                            , 
-                            <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/Wiretap.png" style="vertical-align:middle;" /><b> ] </b>  
-                            and 
-                            <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/Terminate.png" style="vertical-align:middle;" />   <b> ] </b>
+                        <li>Create a tab for the <code>PurchaseInvoice</code> object.<br>
+                            <br>
+                            Select <code>Setup|Create|Tabs|New</code><br>
+                            Select a tab style and choose <code>PurchaseInvoice</code> for the Object<br>
+                            <br>
+                            &nbsp; &nbsp; <img src="./LogUnderCommonIdentifierTutorial/PurchaseInvoiceTab.png" style="vertical-align:middle;"><br>
+                            <br>
+                            Click [Next] , click [Next].<br>
+                            On the applications screen , ensure that only the <code>Event Driven Architecture</code> Application is selected.<br>
+                            <br>
+                            &nbsp; &nbsp; <img src="./LogUnderCommonIdentifierTutorial/EdaAppSelected.png" style="vertical-align:middle;"><br>
+                            <br>
+                            Click
+                            <img src="./LogUnderCommonIdentifierTutorial/Save.png" style="vertical-align:middle;"/>
+                            .<br>
+                            <br></li>
 
-                            <br /><br />
-                            <img src="./LogUnderCommonIdentifierTutorial/PaySequenceSteps.png" style="vertical-align:middle;" /> 
-                            <br /><br />
-                        </li>
-                        
-                        <br /><br />
-                        
-                        <li>    
-                            On the <code>  Purchase </code>  Sequence, click the <img src="./LogUnderCommonIdentifierTutorial/ConfigureLink.png" style="vertical-align:middle;" /> next to the
-                            <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/LogInitializer.png" style="vertical-align:middle;" /> <b> ] </b> 
-                            process.
-                            <br /> To display the dynamic field picker, click  the  <img src="./LogUnderCommonIdentifierTutorial/ChangeDynamicGroupIdentifierButton.png" style="vertical-align:middle;" /> 
-                            button. From the  SOject dropdown, select  Purchase Invoice (<code> PurchaseInvoice__c </code>). Next select the invoice reference  reference field (<code>InvoiceReference__c</code>)  from the field dropdown.
-      
-                            <br />
-                            <br />To complete the dynamic field selection definition, click the 
-                                 <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/SaveField.png" style="vertical-align:middle;" /> <b> ] </b>  
-                                 button to return to the Log configuration. 
-                                 The log configuration will now reflect the selected dynamic field rom the previous step.
-                            <br /><br />                    
-                            <img src="./LogUnderCommonIdentifierTutorial/LogConfigurationPurchase.png" style="vertical-align:middle;" /> 
-                            <br />
-                            <br />To return to the sequence configuration, click the
-                                 <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/Close.png" style="vertical-align:middle;" /> <b> ] </b> 
-                                 button  at the top right corner  of the pop-up.
-                        </li>
-                        
-                        
-                        <br /><br />
-                        
-                        <li> 
-                            On the <code> Purchase </code> Sequence, Click the 
-                            <img src="./LogUnderCommonIdentifierTutorial/ConfigureLink.png" style="vertical-align:middle;" />
-                            next to the
-                            <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/Branch.png" style="vertical-align:middle;" /> <b> ] </b> 
-                            process.
-                            <br />In the Sequence field, select the <code>Pay</code> Sequence 
-                            <br /><br /> 
-                            <img src="./LogUnderCommonIdentifierTutorial/BranchConfigurationPurchase.png" style="vertical-align:middle;" /> 
-                            <br />
-                            <br />Click [Save]. To return to the sequence configuration, click the 
-                            <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/Close.png" style="vertical-align:middle;" /> <b> ] </b> 
-                            button at the top right corner  of the pop-up.
-                        </li>
+                        <li>Create the <code>Payment</code> object with a reference field.<br>
+                            Click <code>Setup|Create|Objects|New Custom Object</code> .<br>
+                            <br></li>
 
-                        <br /><br />
+                        <li>Name the object <code>Payment</code><br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/PaymentDefinition.png" style="vertical-align:middle;"><br>
+                            <br>
+                            <br>
+                            <br></li>
 
-                        
-                        <li>    
-                            On the <code> Pay </code>  Sequence, click the <img src="./LogUnderCommonIdentifierTutorial/ConfigureLink.png" style="vertical-align:middle;" /> next to the
-                            <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/LogInitializer.png" style="vertical-align:middle;" /> <b> ] </b> 
-                            process.
-                            <br /> To display the dynamic field picker, click  the  <img src="./LogUnderCommonIdentifierTutorial/ChangeDynamicGroupIdentifierButton.png" style="vertical-align:middle;" /> 
-                            button. From the  SOject dropdown, select Payment (<code> Payment__c </code>). Next select the payment reference field (<code>PaymentReference__c</code>)  from the field dropdown.
-      
-                            <br />
-                            <br />To complete the dynamic field selection definition, click the 
-                                 <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/SaveField.png" style="vertical-align:middle;" /> <b> ] </b>  
-                                 button to return to the Log configuration. 
-                                 The log configuration will now reflect the selected dynamic field rom the previous step.
-                            <br /><br />                    
-                            <img src="./LogUnderCommonIdentifierTutorial/LogConfigurationPayment.png" style="vertical-align:middle;" /> 
-                            <br />
-                            <br />To return to the sequence configuration, click the
-                                 <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/Close.png" style="vertical-align:middle;" /> <b> ] </b> 
-                                 button  at the top right corner  of the pop-up.
-                        </li>    
-                        
-                        
-                    </ul></td></tr></table></div></div><div id="j_id0:j_id2:j_id18"><div class="pbSubheader brandTertiaryBgr tertiaryPalette"><h3>Detailed Steps - Create   Purchase Invoice :</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first  last " colSpan="2">
-                    <ul>
-                        <li> Click the Purchase Invoice tab , Click the "New" button and enter the fake reference <code> "INV-09-875" </code> in the InvoiceReference (InvoiceReference__c)  
-                            <br /><br />
-                            <img src="./LogUnderCommonIdentifierTutorial/PurchaseInvoiceNew.png" style="vertical-align:middle;" /> 
-                            <br /><br />
-                        </li>
-                        <li> Click [Save].
-                        </li>
-                        <li> Copy the Id of this Purchase Invoice to the clipboard for use in the next section 
-                            <br /><br />
-                            <img src="./LogUnderCommonIdentifierTutorial/BrowserAddressBar.png" style="vertical-align:middle;" />  
-                            <br /><br />     
-                        </li>
-                    </ul></td></tr></table></div></div><div id="j_id0:j_id2:j_id21"><div class="pbSubheader brandTertiaryBgr tertiaryPalette"><h3>Detailed Steps - Enqueue :</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first  last " colSpan="2">
-                    <ul>
-                        <li> All work in the event driven framework is initiated from the <code> Broker.enqueue(Sequence , id) </code> command.
-                        </li>
-                        <li> The first parameter is the name of the Sequence to invoke.
-                        
-<br /><br />
+                        <li>Make sure the <code>Payment</code> object has a Auto Number <code>Name</code> field<br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/PaymentAutoNumber.png" style="vertical-align:middle;"><br>
+                            <br>
+                            <br>
+                            <br></li>
 
+                        <li>Create a single text Reference field called <code>PaymentReference</code><br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/PaymentReference.png" style="vertical-align:middle;"><br>
+                            <br>
+                            <br>
+                            <br></li>
 
+                        <li>Create a tab for the <code>Payment</code> object.<br>
+                            <br>
+                            Select <code>Setup|Create|Tabs|New</code><br>
+                            Select a tab style and choose <code>Payment</code> for the Object<br>
+                            <br>
+                            &nbsp; &nbsp; <img src="./LogUnderCommonIdentifierTutorial/PaymentTab.png" style="vertical-align:middle;"><br>
+                            <br>
+                            Click [Next] , click [Next].<br>
+                            On the applications screen , ensure that only the <code>Event Driven Architecture</code> Application is selected.<br>
+                            <br>
+                            &nbsp; &nbsp; <img src="./LogUnderCommonIdentifierTutorial/EdaAppSelected.png" style="vertical-align:middle;"><br>
+                            <br>
+                            Click
+                            <img src="./LogUnderCommonIdentifierTutorial/Save.png" style="vertical-align:middle;"/>
+                            .<br>
+                            <br></li>
 
+                        <li>Create the <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/PayInvoice.png" style="vertical-align:middle;"> <b>]</b> process that simulates the payment of a hypothetical
+                            inbound <code>Purchase Invoice</code> .<br>
+                            Click Setup <code>|Develop|Apex Classes|New</code> .<br>
+                            Paste the following code into the code window, then click
+                            <img src="./LogUnderCommonIdentifierTutorial/Save.png" style="vertical-align:middle;"/>
+                            .
+                            <br>
+                            <br>
 
- 
- 
-<br /><br />
-<img src="./LogUnderCommonIdentifierTutorial/NewButton.png" style="vertical-align:middle;" /> 
-<br /><br />
+                            <div class="dp-highlighter" id="hlDiv">
+                                <div class="bar"></div>
+                                <br/>
+                                <ol class="dp-j" start="1">
+                                    <li class="alt"><span><span>global&nbsp;with&nbsp;sharing&nbsp;</span><span class="keyword">class</span><span>&nbsp;PayInvoice&nbsp;</span><span class=
+                                                                                                                                                                                             "keyword">implements</span><span>&nbsp;Process.Plugin&nbsp;{&nbsp;&nbsp;</span></span></li>
 
-           
-                        
-                        </li>
-                        <li> The second parameter is the id of the document to be enqueued.
-                        </li>
-                        <li> To simulate the processing of the fake Purchase Invoice, we will enqueue the Purchase Invoice from the Anonymous execute window.
-                        </li>
-                        <li> Click <code> Setup|Developer Console </code> 
-                            <br /><br />
-                            <img src="./LogUnderCommonIdentifierTutorial/DeveloperConsoleMenu.png" style="vertical-align:middle;" />  
-                            <br /><br />  
-                        </li>
-                        <li> Enter <code> Ctrl-E </code>  (Windows) or <code> Cmd-E </code> (Mac) to open the Anonymous Execute window;
-                        </li>
-                        <li> Enter <code> Broker.enqueue('Purchase','a0Pb0000004AAo5');</code>  Note that <code> 'a0Pb0000004AAo5' </code> represents the Purchase Invoice Id copied to your clipboard earlier  
-                            <br /><br />
-                            <img src="./LogUnderCommonIdentifierTutorial/AnonymousExecute.png" style="vertical-align:middle;" />  
-                            <br /><br />   
-                        </li>
-                    </ul></td></tr></table></div></div><div id="j_id0:j_id2:j_id24"><div class="pbSubheader brandTertiaryBgr tertiaryPalette"><h3>Detailed Steps - Review :</h3></div><div class="pbSubsection"><table class="detailList" border="0" cellpadding="0" cellspacing="0"><tr><td class="data2Col  first  last " colSpan="2">
-                    <ul>
-                         <li> You will eventually receive an email from the 
-                              <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/Wiretap.png" style="vertical-align:middle;" /> <b> ] </b> 
-                              inserted towards the end of the Pay Sequence.
-                            <br /><br />
-                            <img src="./LogUnderCommonIdentifierTutorial/Email.png" style="vertical-align:middle;" />  
-                            <br /><br />   
-                         </li>
-                         <li> On the <code>Purchase</code> Sequence, Click the
-                              <img src="./LogUnderCommonIdentifierTutorial/ConfigureLink.png" style="vertical-align:middle;" />
-                              next to the 
-                              <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/LogInitializer.png" style="vertical-align:middle;" /> <b> ] </b> 
-                              process
-                         </li>
-                         <li> On the <code>configuration</code> view, Click the <img src="./LogUnderCommonIdentifierTutorial/ListLogGroupsButton.png" style="vertical-align:middle;" /> button.
-                         </li>
-                         <li> This view will reconcile the progress of the message surfacing a log entry wherever a 
-                              <b> [ </b> <img src="./LogUnderCommonIdentifierTutorial/LogWriter.png" style="vertical-align:middle;" /> <b> ] </b> 
-                              process is encountered
-                            <br /><br />
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;<span class="keyword">class</span><span>&nbsp;PayInvoiceException&nbsp;</span><span class=
+                                                                                                                                                                                                "keyword">extends</span><span>&nbsp;Exception&nbsp;{}&nbsp;&nbsp;</span></span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;<span class="keyword">class</span><span>&nbsp;Meta&nbsp;{&nbsp;&nbsp;</span></span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;String&nbsp;Icon&nbsp;=&nbsp;</span><span class=
+                                                                                                                                                                                                        "string">'money'</span><span>;&nbsp;&nbsp;</span></span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=
+                                                                                                                        "keyword">public</span><span>&nbsp;String&nbsp;DocsPageUrl&nbsp;=&nbsp;Url.getSalesforceBaseUrl().toExternalForm()&nbsp;+&nbsp;Page.PayInvoiceHelp.getUrl();&nbsp;&nbsp;</span></span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;Process.PluginDescribeResult&nbsp;describe()&nbsp;{&nbsp;&nbsp;</span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Process.PluginDescribeResult&nbsp;describeResult&nbsp;=&nbsp;<span class=
+                                                                                                                                                                                           "keyword">new</span><span>&nbsp;Process.PluginDescribeResult();&nbsp;&nbsp;</span></span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;describeResult.Name&nbsp;=&nbsp;<span class="string">'PayInvoice'</span><span>;&nbsp;&nbsp;</span></span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;describeResult.Description&nbsp;=&nbsp;<span class=
+                                                                                                                                                               "string">'Demo&nbsp;-&nbsp;takes&nbsp;invoice&nbsp;and&nbsp;creates&nbsp;payment&nbsp;advice'</span><span>;&nbsp;&nbsp;</span></span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;describeResult.Tag&nbsp;=&nbsp;<span class="string">'Example'</span><span>;&nbsp;&nbsp;</span></span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;describeResult;&nbsp;&nbsp;</span></span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;Process.PluginResult&nbsp;invoke(Process.PluginRequest&nbsp;request)&nbsp;{&nbsp;&nbsp;</span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;input:</span><span>&nbsp;&nbsp;</span></span></li>
+
+                                    <li class="alt">
+                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Map&lt;String,Object&gt;&nbsp;parameters&nbsp;=&nbsp;request.inputParameters;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=
+                                                                                                                              "comment">//&nbsp;simulate&nbsp;payment&nbsp;of&nbsp;invoice&nbsp;with&nbsp;payment&nbsp;reference</span><span>&nbsp;&nbsp;</span></span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;paymentReference&nbsp;=&nbsp;<span class=
+                                                                                                                                                                    "string">'PMT-'</span><span>+&nbsp;Math.round(Math.random()*</span><span class="number">1000</span><span>);&nbsp;&nbsp;</span></span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Payment__c&nbsp;payment&nbsp;=&nbsp;&nbsp;<span class=
+                                                                                                                                                                        "keyword">new</span><span>&nbsp;Payment__c(&nbsp;PaymentReference__c&nbsp;=&nbsp;&nbsp;paymentReference&nbsp;)&nbsp;;&nbsp;&nbsp;</span></span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;insert&nbsp;payment;&nbsp;&nbsp;</span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=
+                                                                                                                           "comment">//&nbsp;change&nbsp;the&nbsp;underlying&nbsp;document&nbsp;pointed&nbsp;at&nbsp;by&nbsp;the&nbsp;notification</span><span>&nbsp;&nbsp;</span></span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameters.put(<span class="string">'Id'</span><span>,&nbsp;payment.Id);&nbsp;&nbsp;</span></span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;</span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;output:</span><span>&nbsp;&nbsp;</span></span></li>
+
+                                    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;EdaUtility.convert(</span><span class=
+                                                                                                                                                                                              "keyword">new</span><span>&nbsp;List&lt;Map&lt;String,Object&gt;&gt;{parameters});&nbsp;&nbsp;&nbsp;</span></span></li>
+
+                                    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li>
+
+                                    <li class=""><span>&nbsp;}&nbsp;&nbsp;</span></li>
+                                </ol>
+                                <br/>
+                            </div>
                             
-                            <img src="./LogUnderCommonIdentifierTutorial/LogWriterEntriesPurchase.png" style="vertical-align:middle;" /> 
-                            <br /><br />
-                         </li>
-                    </ul></td></tr></table></div></div></div><div class="pbFooter secondaryPalette"><div class="bg"></div></div></div></div></body></html>
+                            <br>
+                        </li>
+                    </ol>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div id="j_id0:j_id2:j_id15">
+    <div class="pbSubheader brandTertiaryBgr tertiaryPalette">
+        <h3>Detailed Steps - Configuration :</h3>
+    </div>
+
+    <div class="pbSubsection">
+        <table border="0" cellpadding="0" cellspacing="0" class="detailList">
+            <tr>
+                <td class="data2Col first last" colspan="2">
+                    <ul>
+                        <li>Refresh the catalogue of available processes so that the <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/PayInvoice.png" style="vertical-align:middle;"> <b>]</b> created
+                            earlier will be available for selection during Sequence creation For specific details, refer to the <a href="./ProcessDiscoveryTutorial.html" style="color: #00f;" target=
+                                    "_blank">Process Discovery Tutorial</a>
+                        </li>
+
+                        <li style="list-style: none"><br>
+                            <br></li>
+
+                        <li>Create the <code>Purchase</code> Sequence<br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/PurchaseSequence.png" style="vertical-align:middle;"><br>
+                            <br></li>
+
+                        <li style="list-style: none"><br>
+                            <br></li>
+
+                        <li>Using the New Step button, add the following steps to the <code>Purchase</code> Sequence : <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/LogInitializer.png" style=
+                                "vertical-align:middle;"> <b>]</b> , <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/LogWriter.png" style="vertical-align:middle;"> <b>]</b> , <b>[</b> <img src=
+                                                                                                                                                                                                           "./LogUnderCommonIdentifierTutorial/Branch.png" style="vertical-align:middle;"> <b>]</b> and <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/Terminate.png" style=
+                                "vertical-align:middle;"> <b>]</b><br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/PurchaseSequenceSteps.png" style="vertical-align:middle;"><br>
+                            <br></li>
+
+                        <li style="list-style: none"><br>
+                            <br></li>
+
+                        <li>Create a <code>Pay</code> Sequence<br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/PaySequence.png" style="vertical-align:middle;"><br>
+                            <br></li>
+
+                        <li style="list-style: none"><br>
+                            <br></li>
+
+                        <li>Using the New Step button, add the the following steps to the <code>Pay</code> Sequence : <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/PayInvoice.png" style=
+                                "vertical-align:middle;"> <b>]</b> , <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/LogInitializer.png" style="vertical-align:middle;"> <b>]</b> , <b>[</b> <img src=
+                                                                                                                                                                                                                "./LogUnderCommonIdentifierTutorial/LogWriter.png" style="vertical-align:middle;"> <b>]</b> , <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/Wiretap.png" style=
+                                "vertical-align:middle;"> <b>]</b> and <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/Terminate.png" style="vertical-align:middle;"> <b>]</b><br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/PaySequenceSteps.png" style="vertical-align:middle;"><br>
+                            <br></li>
+
+                        <li style="list-style: none"><br>
+                            <br></li>
+
+                        <li>On the <code>Purchase</code> Sequence, click the <img src="./LogUnderCommonIdentifierTutorial/ConfigureLink.png" style="vertical-align:middle;"> next to the <b>[</b> <img src=
+                                                                                                                                                                                                               "./LogUnderCommonIdentifierTutorial/LogInitializer.png" style="vertical-align:middle;"> <b>]</b> process.<br>
+                            To display the dynamic field picker, click the <img src="./LogUnderCommonIdentifierTutorial/ChangeDynamicGroupIdentifierButton.png" style="vertical-align:middle;"> button. From the
+                            SOject dropdown, select Purchase Invoice ( <code>PurchaseInvoice__c</code> ). Next select the invoice reference reference field (<code>InvoiceReference__c</code>) from the field
+                            dropdown.<br>
+                            <br>
+                            To complete the dynamic field selection definition, click the <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/SaveField.png" style="vertical-align:middle;"> <b>]</b> button to
+                            return to the Log configuration. The log configuration will now reflect the selected dynamic field rom the previous step.<br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/LogConfigurationPurchase.png" style="vertical-align:middle;"><br>
+                            <br>
+                            Close the pop-up to return to the sequence configuration
+                        </li>
+
+                        <li style="list-style: none"><br>
+                            <br></li>
+
+                        <li>On the <code>Purchase</code> Sequence, Click the <img src="./LogUnderCommonIdentifierTutorial/ConfigureLink.png" style="vertical-align:middle;"> next to the <b>[</b> <img src=
+                                                                                                                                                                                                               "./LogUnderCommonIdentifierTutorial/Branch.png" style="vertical-align:middle;"> <b>]</b> process.<br>
+                            In the Sequence field, select the <code>Pay</code> Sequence<br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/BranchConfigurationPurchase.png" style="vertical-align:middle;"><br>
+                            <br>
+                            Click
+                            <img src="./LogUnderCommonIdentifierTutorial/Save.png" style="vertical-align:middle;"/>
+                            .  Close the pop-up to return to the sequence configuration.</li>
+
+                        <li style="list-style: none"><br>
+                            <br></li>
+
+                        <li>On the <code>Pay</code> Sequence, click the <img src="./LogUnderCommonIdentifierTutorial/ConfigureLink.png" style="vertical-align:middle;"> next to the <b>[</b> <img src=
+                                                                                                                                                                                                          "./LogUnderCommonIdentifierTutorial/LogInitializer.png" style="vertical-align:middle;"> <b>]</b> process.<br>
+                            To display the dynamic field picker, click the <img src="./LogUnderCommonIdentifierTutorial/ChangeDynamicGroupIdentifierButton.png" style="vertical-align:middle;"> button. From the
+                            SOject dropdown, select Payment ( <code>Payment__c</code> ). Next select the payment reference field (<code>PaymentReference__c</code>) from the field dropdown.<br>
+                            <br>
+                            To complete the dynamic field selection definition, click the <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/SaveField.png" style="vertical-align:middle;"> <b>]</b> button to
+                            return to the Log configuration. The log configuration will now reflect the selected dynamic field rom the previous step.<br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/LogConfigurationPayment.png" style="vertical-align:middle;"><br>
+                            <br>
+                            Close the pop-up to return to the sequence configuration
+                            .</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div id="j_id0:j_id2:j_id18">
+    <div class="pbSubheader brandTertiaryBgr tertiaryPalette">
+        <h3>Detailed Steps - Create Purchase Invoice :</h3>
+    </div>
+
+    <div class="pbSubsection">
+        <table border="0" cellpadding="0" cellspacing="0" class="detailList">
+            <tr>
+                <td class="data2Col first last" colspan="2">
+                    <ul>
+                        <li>Click the Purchase Invoice tab , Click the "New" button and enter the fake reference <code>"INV-09-875"</code> in the InvoiceReference (InvoiceReference__c)<br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/PurchaseInvoiceNew.png" style="vertical-align:middle;"><br>
+                            <br></li>
+
+                        <li>Click
+                            <img src="./LogUnderCommonIdentifierTutorial/Save.png" style="vertical-align:middle;"/>
+                            .</li>
+
+                        <li>Copy the Id of this Purchase Invoice to the clipboard for use in the next section<br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/BrowserAddressBar.png" style="vertical-align:middle;"><br>
+                            <br></li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div id="j_id0:j_id2:j_id21">
+    <div class="pbSubheader brandTertiaryBgr tertiaryPalette">
+        <h3>Detailed Steps - Enqueue :</h3>
+    </div>
+
+    <div class="pbSubsection">
+        <table border="0" cellpadding="0" cellspacing="0" class="detailList">
+            <tr>
+                <td class="data2Col first last" colspan="2">
+                    <ul>
+                        <li>All work in the event driven framework is initiated from the <code>Broker.enqueue(Sequence , id)</code> command.</li>
+
+                        <li>The first parameter is the name of the Sequence to invoke.<br>
+     
+                           </li>
+
+                        <li>The second parameter is the id of the document to be enqueued.</li>
+
+                        <li>To simulate the processing of the fake Purchase Invoice, we will enqueue the Purchase Invoice from the Anonymous execute window.</li>
+
+                        <li>Click <code>Setup|Developer Console</code><br>
+                            
+                            <img src="./LogUnderCommonIdentifierTutorial/DeveloperConsoleMenu.png" style="vertical-align:middle;"><br>
+                            <br></li>
+
+                        <li>Enter <code>Ctrl-E</code> (Windows) or <code>Cmd-E</code> (Mac) to open the Anonymous Execute window;</li>
+
+                        <li>Enter <code>Broker.enqueue('Purchase','a0Pb0000004AAo5');</code> Note that <code>'a0Pb0000004AAo5'</code> represents the Purchase Invoice Id copied to your clipboard earlier<br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/AnonymousExecute.png" style="vertical-align:middle;"><br>
+                            <br></li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div id="j_id0:j_id2:j_id24">
+    <div class="pbSubheader brandTertiaryBgr tertiaryPalette">
+        <h3>Detailed Steps - Review :</h3>
+    </div>
+
+    <div class="pbSubsection">
+        <table border="0" cellpadding="0" cellspacing="0" class="detailList">
+            <tr>
+                <td class="data2Col first last" colspan="2">
+                    <ul>
+                        <li>You will receive an email from the <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/Wiretap.png" style="vertical-align:middle;"> <b>]</b> 
+                            process inserted towards the
+                            end of the <code>Pay</code> Sequence.<br>
+                        </li>
+
+                        <li>On the <code>Purchase</code> Sequence, Click the <img src="./LogUnderCommonIdentifierTutorial/ConfigureLink.png" style="vertical-align:middle;"> next to the <b>[</b> <img src=
+                                                                                                                                                                                                               "./LogUnderCommonIdentifierTutorial/LogInitializer.png" style="vertical-align:middle;"> <b>]</b> process</li>
+
+                        <li>On the <code>configuration</code> view, Click the <img src="./LogUnderCommonIdentifierTutorial/ListLogGroupsButton.png" style="vertical-align:middle;"> button.</li>
+
+                        <li>This view will reconcile the progress of the message surfacing a log entry wherever a <b>[</b> <img src="./LogUnderCommonIdentifierTutorial/LogWriter.png" style=
+                                "vertical-align:middle;"> <b>]</b> process is encountered<br>
+                            <br>
+                            <img src="./LogUnderCommonIdentifierTutorial/LogWriterEntriesPurchase.png" style="vertical-align:middle;"><br>
+                            <br></li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</div>
+
+<div class="pbFooter secondaryPalette bg"></div>
+</div>
+</body>
+</html>
