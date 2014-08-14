@@ -32,44 +32,8 @@
     }
     
     static testmethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToMessage() {
-        //arrange processes
-        Process__c failureProcess = ProcessObject.generateOne(BrokerTest.class);
-        
-        //arrange sequence
-        String  sequenceNameA = 'sequenceA';
-        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
-        insert sequenceA;
-        
-        //arrange step
-        Step__c stepA1 = StepObject.generateOne(sequenceA.Id, failureProcess.Id);
-        Decimal positionA1 = stepA1.Position__c;
-        
-        //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = BatchBrokerImplementation.class.getName());
- 
-        //act (will synchronously start() execute() finish() and reschedule too)
-        Test.startTest();
-        Broker.enqueue(sequenceNameA, '000000000000000AAA');
-        Test.stopTest();
-        
-        //assemble
-        List<Message__c> messages = [
-            SELECT Id, Name, Process__r.FullyQualifiedClassName__c, Step__c , Status__c, Exception__c
-            FROM Message__c
-            WHERE Status__c != 'Completed'
-        ];
-        Integer actualCount = messages.size();
-        
-        //assert
-        Integer expectedCount = 1;
-        System.assertEquals(expectedCount, actualCount);
-        
-        String expectedProcessName = BrokerTest.class.getName();
-        System.assertEquals(expectedProcessName, messages[0].Process__r.FullyQualifiedClassName__c);
-        
-        String expectedMessage = BrokerTest.FailureMessage;
-        String actualMessage = messages[0].Exception__c;
-        System.assert(actualMessage.contains(expectedMessage), actualMessage);
+        // Deprecated  
+        // see - BatchBrokerImplementation.deferExceptionHandler();
     }
 
     static testmethod void callingBrokerStartSuccessfullyCallsStartImp() {

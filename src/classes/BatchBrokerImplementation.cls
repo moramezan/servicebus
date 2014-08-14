@@ -10,7 +10,7 @@ public without sharing class BatchBrokerImplementation extends Broker implements
      * Holds processable Message Ids for the sake of writing away unhandled exceptions
      * We start with all the processable Message Ids and subtract the successful ones.
      */
-    private Set<Id> failedMessageIds;
+    private Set<Id> failedMessageIds = new Set<Id> ();
     
     public Database.QueryLocator start(Database.BatchableContext context) {
         if (BrokerSettings__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
