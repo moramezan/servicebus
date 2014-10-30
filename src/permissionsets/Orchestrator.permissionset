@@ -947,27 +947,7 @@
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
-        <name>CanInsertFeedSystemFields</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
         <name>CanUseNewDashboardBuilder</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ChatterFileLink</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ChatterInternalUser</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ChatterInviteExternalUsers</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>ChatterOwnGroups</name>
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
@@ -1063,11 +1043,19 @@
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
+        <name>EditPublicReports</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>false</enabled>
         <name>EditPublicTemplates</name>
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
         <name>EditReadonlyFields</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>EditReports</name>
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
@@ -1151,10 +1139,6 @@
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
-        <name>ManageChatterMessages</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
         <name>ManageContentPermissions</name>
     </userPermissions>
     <userPermissions>
@@ -1167,11 +1151,19 @@
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
+        <name>ManageCssUsers</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>false</enabled>
         <name>ManageCustomPermissions</name>
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
         <name>ManageCustomReportTypes</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>ManageDashboards</name>
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
@@ -1247,6 +1239,14 @@
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
+        <name>ManageSearchPromotionRules</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>ManageSelfService</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>false</enabled>
         <name>ManageSharing</name>
     </userPermissions>
     <userPermissions>
@@ -1259,7 +1259,7 @@
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
-        <name>ManageUnlistedGroups</name>
+        <name>ManageTwoFactor</name>
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
@@ -1271,11 +1271,11 @@
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
-        <name>ModerateChatter</name>
+        <name>ModifyAllData</name>
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
-        <name>ModifyAllData</name>
+        <name>ModifySecureAgents</name>
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
@@ -1356,6 +1356,10 @@
     <userPermissions>
         <enabled>false</enabled>
         <name>ViewEncryptedData</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>ViewEventLogFiles</name>
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
