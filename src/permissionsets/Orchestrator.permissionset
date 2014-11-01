@@ -81,6 +81,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>Heartbeat</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>HeartbeatDispatcher</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -94,6 +98,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>HeartbeatImplementationTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>HeartbeatTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -764,6 +772,10 @@
     <pageAccesses>
         <apexPage>GateHelp</apexPage>
         <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>HeartbeatHelp</apexPage>
+        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>JumpConfigurationShowStep</apexPage>
