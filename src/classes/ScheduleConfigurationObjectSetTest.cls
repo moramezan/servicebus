@@ -45,7 +45,7 @@
         ScheduleConfiguration__c config = new ScheduleConfiguration__c(
             Frequency__c = 'Monthly',
             FriendlyTimes__c = '12:00',
-            FriendlyDates__c = '7;14;21;28'
+            FriendlyDates__c = '07;14;21;28'
         );
         
         //act
@@ -55,7 +55,7 @@
         config = [SELECT Name FROM ScheduleConfiguration__c WHERE Id = :config.Id];
         
         //assert
-        String expectedName = 'Fires this sequence at 12:00 on day 7, 14, 21, 28 of every month.';
+        String expectedName = 'Fires this sequence at 12:00 on day 14, 21, 28, 07 of every month.';
         String actualName = config.Name;
         System.assertEquals(expectedName, actualName);
     }

@@ -1,17 +1,20 @@
 public with sharing class Schedule implements Process.Plugin {
     
+    public class ScheduleException  extends Exception {}
+    
     public class Meta {
         public String Icon = 'clock';
         public SObject ConfigObject = ScheduleConfiguration__c.SObjectType.newSObject();
         public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.ScheduleHelp.getUrl();
+        public Boolean ConsumesHeartbeat = true;
     }
     
     public Process.PluginDescribeResult describe() {
-        Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Tag = 'Event Driven Architecture';
-        plugin.Name = 'Schedule';
-        Plugin.Description = 'Injects a new message into this sequence at timed intervals.';
-        return plugin;
+        Process.PluginDescribeResult result = new Process.PluginDescribeResult();
+        result.Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages'; 
+        result.Tag = 'Event Driven Architecture';
+        result.Name = 'Schedule';
+        return result;
     }
     
     @TestVisible static private CronTrigger cronTrigger;
@@ -25,57 +28,75 @@ public with sharing class Schedule implements Process.Plugin {
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
         Map<String,Object> parameters = request.inputParameters;
-        List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
-        
-        String cronTriggerId = (String)parameters.get('Id');
-        Boolean isPassThru = (cronTriggerId == null) || !cronTriggerId.startsWith('08e');
-        
-        if (isPassThru) {
-            parametersList.add(parameters);
-        } else {
-            DateTime pft = findCronTrigger(cronTriggerId).PreviousFireTime;
-            DateTime heartbeat = DateTime.newInstanceGmt(
-                pft.year(), pft.month(), pft.day(), //date
-                pft.hour(), 0, 0 //align time to nearest hour
-            );
-            
-            ScheduleConfiguration__c config = (ScheduleConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
-            
-            if (isWithinWindow(heartbeat, config)) {
-                //this is one of the configured times, so carry on to next step
+
+        Boolean isHeartbeat = (Boolean)parameters.get('eda_IsHeartbeat');
+        String  stampAsString  =  (String)parameters.get('eda_EventStamp');
+        Id configurationId = (Id)parameters.get('eda_ConfigObjectId');
+
+         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
+    
+        if (isHeartbeat) {
+            // evaluate:
+            if (isWithinWindow(stampAsString, configurationId)) {
                 parametersList.add(parameters);
-            }
+            } 
+        } else { 
+            // passthru:
+            parametersList.add(parameters);
         }
+    
         return EdaUtility.convert(parametersList);
     }
-    
-    @TestVisible static private Boolean isWithinWindow(DateTime heartbeat, ScheduleConfiguration__c config) {
-        String frequency = config.Frequency__c;
-        Set<String> details = new Set<String>(config.FriendlyDates__c.split(';'));
-        Set<String> runTimes = new Set<String>(config.FriendlyTimes__c.split(';'));
-        
-        if (frequency == 'Daily') {
-            if (isWithinDailyWindow(heartbeat, details) && isWithinHourlyWindow(heartbeat, runTimes)) {
-                //&& isWithinMinutelyWindow() && isWithinSecondlyWindow()
-                return true;
-            }
-        } else if (frequency == 'Weekly') {
-            if (isWithinWeeklyWindow(heartbeat, details) && isWithinHourlyWindow(heartbeat, runTimes)) {
-                //&& isWithinMinutelyWindow() && isWithinSecondlyWindow()
-                return true;
-            }
-        } else if (frequency == 'Monthly') {
-            if (isWithinMonthlyWindow(heartbeat, details) && isWithinHourlyWindow(heartbeat, runTimes)) {
-                //&& isWithinMinutelyWindow() && isWithinSecondlyWindow()
-                return true;
-            }
+
+    @TestVisible static private Boolean isWithinWindow(String stampAsString, Id configurationId) {
+        DateTime stampAsDateTime;
+        try {
+           stampAsString =  getISO8601(stampAsString);
+           stampAsDateTime = getStamp(stampAsString);
+        } catch (Exception e)  {
+            throw new ScheduleException(e.getMessage());
         }
-        
+
+        String frequency;
+        Set<String> details;
+        Set<String> runTimes;
+        try {
+            ScheduleConfiguration__c configuration = (ScheduleConfiguration__c)SalesforceObject.getById(configurationId);
+            frequency = configuration.Frequency__c;
+            details = new Set<String>(configuration.FriendlyDates__c.split(';'));
+            runTimes = new Set<String>(configuration.FriendlyTimes__c.split(';'));
+        } catch (Exception e) {
+            throw new ScheduleException(e);
+        }
+
+        if (!isTimeMatch(stampAsString, runTimes)) {
+            return false;    
+        } else {
+            if (frequency == 'Daily') {
+               if (isWithinDailyWindow(stampAsDateTime, details)) {
+                    return true;
+                }
+            } else if (frequency == 'Weekly') {
+                if (isWithinWeeklyWindow(stampAsDateTime, details)) {
+                    return true;
+                }
+            } else if (frequency == 'Monthly') {
+                if (isWithinMonthlyWindow(stampAsString, details)) {
+                    return true;
+                }
+            }  
+        }
+
         return false;
     }
     
-    @TestVisible static private Boolean isWithinDailyWindow(DateTime heartbeat, Set<String> details) {
-        String day = heartbeat.format('EEEE');
+    @TestVisible static private Boolean isWithinWeeklyWindow(DateTime stampAsDateTime, Set<String> details) {
+        String day = stampAsDateTime.format('EEEE');
+        return details.contains(day);
+    } 
+    
+    @TestVisible static private Boolean isWithinDailyWindow(DateTime stampAsDateTime, Set<String> details) {
+        String day = stampAsDateTime.format('EEEE');
         
         Set<String> days = new Set<String>();
         
@@ -98,26 +119,37 @@ public with sharing class Schedule implements Process.Plugin {
         
         return days.contains(day);
     }
-    
-    @TestVisible static private Boolean isWithinWeeklyWindow(DateTime heartbeat, Set<String> details) {
-        String day = heartbeat.formatGmt('EEEE');
-        return details.contains(day);
+ 
+    @TestVisible static private Boolean isTimeMatch(String stampAsString, Set<String> runTimes) {
+        Pattern myPattern = pattern.compile('.*T(\\d{2}:\\d{2}):\\d{2}.*');  // '2014-01-18T12:00:00.000Z'
+        Matcher myMatcher = myPattern.matcher(stampAsString);
+        if ( myMatcher.matches() && (myMatcher.groupCount() == 1)) {
+            return runTimes.contains(myMatcher.group(1));
+        }
+        
+        return false;
     }
     
-    @TestVisible static private Boolean isWithinMonthlyWindow(DateTime heartbeat, Set<String> details) {
-        //convert ['1', '2', '3'] to [1, 2, 3]
-        Set<Integer> days = new Set<Integer>();
-        for (String detail : details) days.add(Integer.valueOf(detail));
-        Integer today = heartbeat.dayGmt();
-        return days.contains(today);
+    @TestVisible static private Boolean isWithinMonthlyWindow(String stampAsString, Set<String> details) {
+        Pattern myPattern = pattern.compile('\\d{4}-\\d{2}-(\\d{2})T\\d{2}:\\d{2}:\\d{2}.*');  // '2014-01-18T12:00:00.000Z'
+        Matcher myMatcher = myPattern.matcher(stampAsString);
+        if ( myMatcher.matches() && (myMatcher.groupCount() == 1)) {
+            return details.contains(myMatcher.group(1));
+        }
+        
+        return false;
     }
     
-    @TestVisible static private Boolean isWithinHourlyWindow(DateTime heartbeat, Set<String> runTimes) {
-        //convert ['01:00', '02:00', '03:00'] to [1:00, 2:00, 3:00]
-        Set<Time> times = new Set<Time>();
-        for (String runTime : runTimes) times.add(Time.newInstance(Integer.valueOf(runTime.left(2)), 0, 0, 0));
-        Time hour = heartbeat.timeGmt();
-        return times.contains(hour);
+    static private DateTime getStamp(String value) {
+    	return (DateTime)Json.deserialize('"' + getISO8601(value) + '"', DateTime.class);  
+    }
+    
+    static private String getISO8601(String value) {
+        value  = (value.endsWith('Z')) ? value.subStringBefore('Z') : value;
+        DateTime localDateTime = (DateTime)Json.deserialize('"' + value + '"', DateTime.class);
+        DateTime localDateTime2 = DateTime.newInstance(localDateTime.date(), localDateTime.time()); 
+        DateTime localDateTime3 = DateTime.newInstance(localDateTime2.year(), localDateTime2.month(), localDateTime2.day(), localDateTime2.hour(), localDateTime2.minute(), localDateTime2.second());
+        return localDateTime3.format( 'yyyy-MM-dd HH:mm:ss').replace(' ','T');
     }
     
 }
