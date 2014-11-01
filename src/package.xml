@@ -96,6 +96,8 @@
         <members>TerminateHelpController</members>
         <members>TerminateHelpControllerTest</members>
         <members>TerminateTest</members>
+        <members>VerticalBroker</members>
+        <members>VerticalBrokerTest</members>
         <members>Wiretap</members>
         <members>WiretapTest</members>
         <name>ApexClass</name>
