@@ -1,8 +1,8 @@
-@IsTest public class VerticalBrokerTest {
+@IsTest public class VerticalBrokerImplementationTest {
 
     static testmethod void testMarkAndExecuteAndDoneConditions() {
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = VerticalBroker.class.getName());
+        insert new BrokerSettings__c(BrokerClassName__c = VerticalBrokerImplementation.class.getName());
         
         //arrange processes
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -25,7 +25,7 @@
         insert message;
         
         //act (enqueue)
-        VerticalBroker impl = (VerticalBroker)Broker.impl();
+        VerticalBrokerImplementation impl = (VerticalBrokerImplementation)Broker.impl();
         List<Boolean> scopes = new List<Boolean>{true};
         impl.resolve(new List<Message__c>{message});
         update message;

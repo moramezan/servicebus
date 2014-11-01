@@ -361,11 +361,19 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>VerticalBroker</apexClass>
+        <apexClass>VerticalBrokerDispatcher</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>VerticalBrokerTest</apexClass>
+        <apexClass>VerticalBrokerDispatcherTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>VerticalBrokerImplementation</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>VerticalBrokerImplementationTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

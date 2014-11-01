@@ -1,4 +1,10 @@
-public without sharing class VerticalBroker extends Broker implements Database.Batchable<Boolean>, Database.AllowsCallouts, Database.Stateful {
+/**
+ * DO NOT ENQUEUE THIS JOB EVER
+ * see http://salesforce.stackexchange.com/a/24448/320
+ * 
+ * This class is WITHOUT SHARING to ensure the process can execute regardless of running user context.
+ */
+public without sharing class VerticalBrokerImplementation extends Broker implements Database.Batchable<Boolean>, Database.AllowsCallouts, Database.Stateful {
     
     @TestVisible private List<Message__c> markedMessages = new List<Message__c>();
     @TestVisible private Boolean abortJob = false;
@@ -80,11 +86,11 @@ public without sharing class VerticalBroker extends Broker implements Database.B
      * The BatchBroker executes another Batch Apex job to run itself again.
      */
     override public void restartImpl() {
-        Database.executeBatch(new VerticalBroker(), 1);
+        Database.executeBatch(new VerticalBrokerDispatcher(), 1);
     }
     
     override public Boolean isAlreadyRunning() {
-        System.Type type = VerticalBroker.class;
+        System.Type type = VerticalBrokerDispatcher.class;
         String namespacePrefix;
         String name;
         
