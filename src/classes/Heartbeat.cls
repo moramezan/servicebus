@@ -10,7 +10,7 @@ public with sharing class Heartbeat implements Process.Plugin {
 
     public Process.PluginDescribeResult describe () {
         Process.PluginDescribeResult result = new Process.PluginDescribeResult();
-        result.Description = 'Broadcasts a heartbeat message any sequence headed by a heartbeat subscriber';
+        result.Description = 'Broadcasts a heartbeat message to any sequence with a heartbeat subscriber as the first step';
         result.Tag = 'System';
         result.Name = 'Heartbeat';
         return result;
@@ -33,7 +33,9 @@ public with sharing class Heartbeat implements Process.Plugin {
             }
             
             // TODO : re-do this dynamically        
-            Set<String> interestedSubscriberNames = new Set<String>{'Schedule'}; 
+            Set<String> interestedSubscriberNames = new Set<String>{
+                Schedule.class.getName()
+            }; 
             
             List<Step__c> steps = [
                 SELECT Id, Sequence__r.Name, Position__c
@@ -43,26 +45,20 @@ public with sharing class Heartbeat implements Process.Plugin {
             
             for (Step__c step : steps) {
                 Map<String,Object> clone = parameters.clone();
-                clone.put('eda_Position', step.Position__c);
+                clone.put('eda_Position', step.Position__c-1);
                 clone.put('eda_SequenceName', step.Sequence__r.Name);
                 parametersList.add(clone);
             }
         }
 
-        //This should act as a Terminate - do not return
-        //the input message
-        // (ie We are 'bending' the pattern slightly   
-        // because we wish to keep the sequence that contains 
-        // this process as short as possible)
+        //This process should act as a Terminate - return empty list
         return EdaUtility.convert(parametersList);
     }
 
 
     static private String getISO8601(String value) {
-        value  = (value.endsWith('Z')) ? value.subStringBefore('Z') : value;
+        value  = (value.endsWith('Z')) ? value :  value+'Z';
         DateTime localDateTime = (DateTime)Json.deserialize('"' + value + '"', DateTime.class);
-        DateTime localDateTime2 = DateTime.newInstance(localDateTime.date(), localDateTime.time()); 
-        DateTime localDateTime3 = DateTime.newInstance(localDateTime2.year(), localDateTime2.month(), localDateTime2.day(), localDateTime2.hour(), localDateTime2.minute(), localDateTime2.second());
-        return localDateTime3.format( 'yyyy-MM-dd HH:mm:ss').replace(' ','T');
+        return ((''+localDateTime).replace(' ','T')); // or json.serialize(stamp) but that returns (unwanted) milliseconds)
     }
 }
