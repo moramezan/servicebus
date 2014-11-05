@@ -145,11 +145,9 @@ public with sharing class Schedule implements Process.Plugin {
     }
     
     static private String getISO8601(String value) {
-        value  = (value.endsWith('Z')) ? value.subStringBefore('Z') : value;
+        value  = (value.endsWith('Z')) ? value :  value+'Z';
         DateTime localDateTime = (DateTime)Json.deserialize('"' + value + '"', DateTime.class);
-        DateTime localDateTime2 = DateTime.newInstance(localDateTime.date(), localDateTime.time()); 
-        DateTime localDateTime3 = DateTime.newInstance(localDateTime2.year(), localDateTime2.month(), localDateTime2.day(), localDateTime2.hour(), localDateTime2.minute(), localDateTime2.second());
-        return localDateTime3.format( 'yyyy-MM-dd HH:mm:ss').replace(' ','T');
+        return ((''+localDateTime).replace(' ','T')); // or json.serialize(stamp) but that returns (unwanted) milliseconds)
     }
     
 }
