@@ -981,4 +981,95 @@
         String expectedExceptionMessage = 'Resolve failure';
         System.assert(actualExceptionMessage.contains(expectedExceptionMessage));         
     }
+ 
+    static testMethod void callingEnqueueWithParameterCollectionIncludesAllParametersInMessage() {
+        // arrange 
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+
+        String sequenceName = 'Test';
+        Sequence__c sequence = new Sequence__c(Name = sequenceName);
+        insert sequence;
+        
+        Step__c step  = new Step__c(Sequence__c = sequence.Id ,Position__c = 1,Process__c = terminateProcess.Id);
+        insert step;
+  
+        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        
+        String eventStamp = HeartbeatImplementation.getISO8601(DateTime.newInstance(2014,12,15,13,11,07));
+        Boolean isHeartbeat = true;
+        Map<String,Object> parameters = new Map<String,Object>{
+            'Id' => UserInfo.getUserId(), 
+            'eda_SequenceName' => sequenceName,    
+            'eda_EventStamp' => eventStamp,
+            'eda_IsHeartbeat' => isHeartbeat    
+        };
+             
+        // act
+        Broker.enqueue(parameters);
+
+        // assemble
+        List<Message__c> actualMessages = [  SELECT  Id, Parameters__c FROM Message__c];
+        Integer actualCount  = actualMessages.size();
+        String  actualEventStamp;
+        Boolean actualIsHeartbeat;
+        if (actualCount == 1) {
+            Map<String,Object> actualParameters = (Map<String,Object>)Json.deserializeUntyped(actualMessages[0].Parameters__c);
+            actualEventStamp = (String)actualParameters.get('eda_EventStamp');
+            actualIsHeartbeat = (Boolean)actualParameters.get('eda_IsHeartbeat');
+        }
+ 
+        // assert
+        Integer expectedCount  = 1;
+        System.assertEquals(expectedCount, actualCount);
+        String  expectedEventStamp = eventStamp;
+        System.assertEquals(expectedEventStamp, actualEventStamp);
+        Boolean expectedIsHeartbeat = isHeartbeat; 
+        System.assertEquals(expectedIsHeartbeat,actualIsHeartbeat);
+    }
+
+    static testMethod void callingEnqueueWithoutMandatoryParametersInParametersCollectionThrowsException() {
+        // arrange 
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+
+        String sequenceName = 'Test';
+        Sequence__c sequence = new Sequence__c(Name = sequenceName);
+        insert sequence;
+        
+        Step__c step  = new Step__c(Sequence__c = sequence.Id ,Position__c = 1,Process__c = terminateProcess.Id);
+        insert step;
+  
+        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        
+ 
+        Map<String,Object> parametersA = new Map<String,Object>{
+            'eda_SequenceName' => sequenceName
+        };
+        Map<String,Object> parametersB = new Map<String,Object>{
+            'Id' => UserInfo.getUserId() 
+        };
+            
+        // assemble
+        Boolean actualFlagA = false;
+        try {
+            // act
+            Broker.enqueue(parametersA);
+        } catch (Broker.EngineException e) {
+            actualFlagA = true;
+        }
+        
+        // assemble
+        Boolean actualFlagB = false;
+        try {
+            // act
+            Broker.enqueue(parametersB);
+        } catch (Broker.EngineException e) {
+            actualFlagB = true;
+        }
+        
+        // assert
+        Boolean expectedFlagA = true;
+        System.assertEquals(expectedFlagA,actualFlagA);
+        Boolean expectedFlagB = true;
+        System.assertEquals(expectedFlagB,actualFlagB); 
+    }    
 }

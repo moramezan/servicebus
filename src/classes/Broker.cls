@@ -150,17 +150,68 @@ abstract global with sharing class Broker {
      * @param dataId    Id of some record that the sequence will operate on.
      */
     static global Id enqueue(String sequenceName, Id dataId) {
-        if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable');    
-        
-        Broker instance = impl();
-        
-        Map<String,Object> parameters = new Map<String,Object> {
-            'eda_EntryPointGuid' => getEntryPointGuid(18),
+        if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable'); 
+         
+        Map<String,Object> injectedParameters = new Map<String,Object> {
             'eda_SequenceName' => sequenceName,
-            'eda_Position' => 0,
             'Id' => dataId
         };
         
+        return enqueue(injectedParameters);  
+    }   
+
+    /**
+     * Prepares data (represented a parameters collection) for processing.
+     * 
+     * The parameters collection should at minimum contain 
+     *  - an object Id ("Id")
+     *  - a sequence name ("eda_SequenceName")
+     * Failure to provide these parameters in the parameters collection will throw an EngineException
+     * 
+     * The parameters collection is converted to a Message object. This Message instance is saved 
+     * to the database and the Broker is immeadiately invoked if it is not already running.
+     *
+     * @param  injectedParameters a parametrised description of the message data.
+     */
+    static public Id enqueue(Map<String,Object> injectedParameters) {
+        if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable');    
+        
+        
+        // validate params are supplied:
+        if (injectedParameters == null) {
+            throw new EngineException('Cannot supply a null parameters collection to Broker.enqueue(parameters)');
+        }
+        
+        // validate minimum expected params are supplied:
+        List<String> missingParameters = new List<String>();
+        Set<String> expectedParameters = new Set<String>{
+            'eda_SequenceName',
+            'Id'     
+        };
+        for (String expectedParameter : expectedParameters) {
+            if(!injectedParameters.keySet().contains(expectedParameter)) 
+                missingParameters.add(expectedParameter);   
+        }
+        if (missingParameters.size() > 0) {
+            throw new EngineException(
+                'The following mandatory parameters were not supplied to Broker.enqueue() [' +
+                String.join(missingParameters,',') + 
+                ']'
+            );
+        }
+
+        Map<String,Object> parameters = new Map<String,Object> {
+            'eda_EntryPointGuid' => getEntryPointGuid(18),
+            'eda_Position' => 0
+        };
+      
+        // append parameters
+           for (String injectedParameter : injectedParameters.keySet()) {
+            parameters.put(injectedParameter,injectedParameters.get(injectedParameter));        
+        }
+
+        Broker instance = impl();
+                
         //create the message destined for the 0th step of the chain
         Message__c message = new Message__c(Parameters__c = Json.serializePretty(parameters));
         
