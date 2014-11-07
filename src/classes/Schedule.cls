@@ -17,14 +17,6 @@ public with sharing class Schedule implements Process.Plugin {
         return result;
     }
     
-    @TestVisible static private CronTrigger cronTrigger;
-    static public CronTrigger findCronTrigger(Id cronTriggerId) {
-        return cronTrigger != null ? cronTrigger : [
-            SELECT PreviousFireTime
-            FROM CronTrigger
-            WHERE Id = :cronTriggerId
-        ];
-    }
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
         Map<String,Object> parameters = request.inputParameters;
