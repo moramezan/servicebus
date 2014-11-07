@@ -84,6 +84,8 @@ public with sharing class ProcessObject extends SalesforceObject {
             if (meta.Icon != null) {
                 //attempt to populate the css class name of the process icon
                 process.Icon__c = meta.Icon;
+            } else {
+               process.Icon__c = 'cog'; 
             }
             
             if (meta.DocsPageUrl != null) {

@@ -1,4 +1,16 @@
-@IsTest public class ProcessObjectTest {
+@IsTest public class ProcessObjectTest implements Process.Plugin { 
+       public Process.PluginDescribeResult describe() {
+        return new Process.PluginDescribeResult();
+    }
+    
+    public Process.PluginResult invoke(Process.PluginRequest request) {
+        return EdaUtility.convert(new List<Map<String,Object>>());
+    }
+
+    public class Meta {
+        public String Icon = null;
+        public String DocsPageUrl = 'fakedocspage.html';
+    }
 
     static testmethod void callingGenerateOneInsertsExpectedProcess() {
         //arrange 
@@ -57,5 +69,23 @@
         System.assertEquals(expectedConfigObject , actualConfigObject);
         System.assertEquals(expectedIcon , actualIcon );
         System.assertEquals(expectedDocsPageUrl, actualDocsPageUrl);
-    }    
+    } 
+ 
+    static testmethod void pluginWithoutIconWillDefaultWithCogIcon() {
+        //arrange 
+        Type actualType = ProcessObjectTest.class;
+        Process.Plugin plugin = (Process.Plugin)actualType.newInstance();
+        Type innerClass = Type.forName(actualType.getName() + '.' + 'Meta'); 
+        ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
+
+        //act 
+        Process__c subscribeProcess = ProcessObject.fromType(actualType);
+        
+        //assemble
+        String actualIcon = subscribeProcess.Icon__c; 
+
+        //assert
+        String expectedIcon = 'cog';
+        System.assertEquals(expectedIcon , actualIcon);
+    }
 }
