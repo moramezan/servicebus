@@ -39,7 +39,18 @@ public with sharing class Gate implements Process.Plugin {
     
     public Process.PluginResult invoke(Process.PluginRequest request) {
         if (!SObjectType.GateItem__c.Createable) throw new Broker.CrudException('!SObjectType.GateItem__c.Createable');
-    
+
+        // housekeeping / deletion strategy
+        Boolean isDeletionEnabled = true;
+        try {
+            GateSettings__c setting = GateSettings__c.getInstance();
+            isDeletionEnabled = setting.IsEnabled__c;
+        } catch (Exception e) {
+        }
+        Integer maximumDays = 30;
+        Integer maximumItems = 10000;
+        performDefaultDeletionStrategy(isDeletionEnabled, maximumDays, maximumItems);
+
         Map<String,Object> parameters = request.inputParameters;
         
         Id gateGroupId = (Id)parameters.get('eda_GateGroupId');
@@ -70,4 +81,209 @@ public with sharing class Gate implements Process.Plugin {
         return EdaUtility.convert(new List<Map<String,Object>>{parameters});
     }
     
+ 
+    // Old / Max  Gate Item Deletion Rules:
+    //
+    // RULE 1 : for  any gateItem over date threshold ...
+    //          {
+    //            - add parent (gateGroup) Id to gateGroup parentSet
+    //            - delete gateGroup parents where gateGroup Id in gateGroup parentSet
+    //          }
+    //        
+    //
+    // RULE 2 : order gateItems by createdDate with focus on oldest 
+    //          derive excess count form oldest
+    //          for oldest gateItems making up excess count ...
+    //          {
+    //            - add parent (gateGroup) Id to gateGroup parentSet
+    //            - delete gateGroup parents where gateGroup Id in gateGroup parentSet
+    //          }
+
+
+    private static void performDefaultDeletionStrategy(Boolean isEnabled, Integer maximumDays, Integer maximumItems) {
+        if (!SObjectType.GateItem__c.Deletable) throw new Broker.CrudException('!SObjectType.GateItem__c.Deletable');
+        if (!SObjectType.GateGroup__c.Deletable) throw new Broker.CrudException('!SObjectType.GateItem__c.Deletable');  
+ 
+        DateTime now = System.now();        
+        IGateItemProvider gateItemProviderTime = new GateItemProviderTime(now, maximumDays);
+        IGateItemProvider gateItemProviderCount = new GateItemProviderCount(maximumItems);
+
+        GateDeletionProvider gateDeletionProvider =  new GateDeletionProvider(
+            isEnabled, gateItemProviderTime, gateItemProviderCount
+        );
+        gateDeletionProvider.deleteGateGroups();
+    }
+
+
+    public class GateDeletionProvider {
+        private Boolean IsEnabled;
+        private IGateItemProvider GateItemProviderTime;
+        private IGateItemProvider GateItemProviderCount;  
+
+        public GateDeletionProvider(Boolean isEnabled, IGateItemProvider gateItemProviderTime, IGateItemProvider gateItemProviderCount) {
+               this.IsEnabled = isEnabled;
+            this.gateItemProviderTime  = gateItemProviderTime;
+            this.gateItemProviderCount = gateItemProviderCount;  
+        }
+
+        public void deleteGateGroups() {
+            if (this.IsEnabled) {
+                Database.delete(new List<Id>(this.gateItemProviderTime.getGateGroupIds()));   // RULE 1
+                Database.delete(new List<Id>(this.gateItemProviderCount.getGateGroupIds()));  // RULE 2
+            }
+            
+            /// TODO : implement a more conservative approcach to ensure that DML limits are 
+            /// never blown. Suggested implementation in commented out section below
+            /// 
+            /// if (this.IsEnabled) {
+            ///      // RULE 1
+            ///     Set<Id> getGateGroupIdsTime  =  this.gateItemProviderTime.getGateGroupIds();
+            ///     List<GateItem__c> gateItemsTime = [
+            ///         SELECT Id, CreatedDate, GateGroup__c 
+            ///         FROM GateItem__c 
+            ///         ORDER BY GateGroup__c, Id DESC
+            ///         WHERE 
+            ///         GateGroup__c IN :getGateGroupIdsTime
+            ///         LIMIT 10000
+            ///     ];
+            ///     if (gateItemsTime == 10000) {
+            ///         // conservative larger child delete required
+            ///         // parents deleted on later gate processable invocations
+            ///         Database.delete(gateItemsTime);  
+            ///     } else {
+            ///         // preferred, cleaner (GateGroup parents included) delete 
+            ///         Database.delete(new List<Id>(getGateGroupIdsTime));  
+            ///     }
+            ///     
+            ///     // RULE 2
+            ///     Set<Id> getGateGroupIdsCount =  this.gateItemProviderCount.getGateGroupIds();
+            ///     List<GateItem__c> gateItemsCount = [
+            ///         SELECT Id, CreatedDate, GateGroup__c 
+            ///         FROM GateItem__c 
+            ///         ORDER BY GateGroup__c, Id DESC
+            ///         WHERE 
+            ///         GateGroup__c IN :getGateGroupIdsCount
+            ///         LIMIT 10000
+            ///     ];
+            ///     if (gateItemsCount == 10000) {
+            ///         // conservative larger child delete required
+            ///         // parents deleted on later gate processable invocations
+            ///         Database.delete(gateItemsCount);
+            ///     } else {
+            ///         // preferred, cleaner (GateGroup parents included) delete 
+            ///         Database.delete(new List<Id>(getGateGroupIdsCount));  
+            ///     }
+            /// }    
+        }
+    } 
+ 
+    
+    public interface IGateItemProvider {
+        Set<Id> getGateGroupIds();
+    }
+
+ 
+    public class MockGateItemProviderTime implements IGateItemProvider {
+        private String OverThreshold;
+
+        public MockGateItemProviderTime(String overThreshold) {
+            this.OverThreshold = overThreshold;
+        }
+
+        public Set<Id> getGateGroupIds() {
+            List<GateItem__c> gateItemsOverDateThreshold =  Gate.getGateItemsOverDateThresholdMock(this.OverThreshold);
+            return Gate.getGateGroupIds(gateItemsOverDateThreshold);
+        }
+    } 
+
+
+    // note can't really test this properly (system field createdDate)
+    public class GateItemProviderTime implements IGateItemProvider {
+        private DateTime Now; 
+        private Integer  MaximumDays;
+        
+        public GateItemProviderTime(DateTime now, Integer maximumDays) {
+            this.Now = now;
+            this.MaximumDays = maximumDays;
+        }
+
+        public Set<Id> getGateGroupIds() {
+            DateTime dateThreshold = Gate.getDateThreshold(this.Now, this.MaximumDays);
+            List<GateItem__c> gateItemsOverDateThreshold =  Gate.getGateItemsOverDateThresholdImpl(DateThreshold);
+            return Gate.getGateGroupIds(gateItemsOverDateThreshold);
+        }
+    } 
+
+ 
+    public class GateItemProviderCount implements IGateItemProvider {
+        private Integer MaximumItems;
+
+        public GateItemProviderCount(Integer maximumItems) {
+            this.MaximumItems = maximumItems;
+        }
+
+        public Set<Id> getGateGroupIds() {
+            Integer countThreshold = Gate.getCountThreshold(this.MaximumItems);
+            List<GateItem__c> gateItemsOverCountThreshold = Gate.getGateItemsOverCountThreshold(countThreshold );
+            return Gate.getGateGroupIds(gateItemsOverCountThreshold);
+        }
+    } 
+
+
+    @testVisible   
+    private static DateTime getDateThreshold(DateTime now, Integer maximumDays) {
+        return now.addDays(maximumDays * -1);
+    }
+
+
+    @testVisible
+    private static Integer getCountThreshold(Integer maximumItems) {
+        Integer threshold = [SELECT COUNT() FROM GateItem__c] - maximumItems ;
+        return  (threshold > 0) ? threshold : 0;
+    }
+
+
+    @testVisible
+    private  static List<GateItem__c> getGateItemsOverCountThreshold(Integer countThreshold) {
+        return [
+            SELECT Id, Name, GateGroup__c, Parameters__c, CreatedDate
+            FROM GateItem__c 
+            ORDER BY Id 
+            LIMIT :countThreshold
+        ];
+    }
+
+
+    // note can't really test this properly (system field createdDate)
+    @testVisible
+    private static List<GateItem__c> getGateItemsOverDateThresholdImpl(DateTime DateThreshold) {
+        return [
+            SELECT Id, Name, GateGroup__c, CreatedDate 
+            FROM GateItem__c WHERE CreatedDate > :DateThreshold
+        ];
+    }
+
+
+    @testVisible
+    private static List<GateItem__c> getGateItemsOverDateThresholdMock(String overThreshold) {
+        List<GateItem__c> gateItems = new   List<GateItem__c>();
+        for (GateItem__c gateItem : [SELECT Id, Name, GateGroup__c, Parameters__c, CreatedDate FROM GateItem__c]) {
+            if (gateItem.Parameters__c == overThreshold) {
+                gateItems.add(gateItem);
+            }
+        }
+
+        return gateItems;
+    }
+
+
+    @testVisible
+    private static Set<Id> getGateGroupIds(List<GateItem__c> gateItems) {
+        Set<Id> gateGroupIds = new Set<Id>();
+        for (GateItem__c gateItem : gateItems) {
+            gateGroupIds.add(gateItem.GateGroup__c);
+        }
+
+        return gateGroupIds;
+    } 
 }

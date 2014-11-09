@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>Enable/Disable default removal strategy of expired gated messages.</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>IsEnabled__c</fullName>
+        <defaultValue>true</defaultValue>
+        <description>Enables/Disables default removal strategy of gated messages.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables/Disables default removal strategy of gated messages.</inlineHelpText>
+        <label>IsEnabled</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <label>Gate Settings</label>
+</CustomObject>

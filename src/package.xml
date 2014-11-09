@@ -178,6 +178,7 @@
         <members>BrokerSettings__c.IsPaused__c</members>
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Parameters__c</members>
+        <members>GateSettings__c.IsEnabled__c</members>
         <members>HeartbeatSettings__c.EventStamp__c</members>
         <members>JumpConfiguration__c.Sequence__c</members>
         <members>KnifeSwitch__c.Url__c</members>
@@ -234,6 +235,7 @@
         <members>EventType__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
+        <members>GateSettings__c</members>
         <members>HeartbeatSettings__c</members>
         <members>JumpConfiguration__c</members>
         <members>KnifeSwitch__c</members>
