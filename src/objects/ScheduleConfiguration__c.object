@@ -287,9 +287,10 @@
     </fields>
     <fields>
         <fullName>FriendlyTimes__c</fullName>
+        <description>The pattern of schedule run times in GMT that the schedule runs</description>
         <externalId>false</externalId>
-        <inlineHelpText>What pattern of times does the schedule run?</inlineHelpText>
-        <label>Run Times</label>
+        <inlineHelpText>What pattern of times does the schedule run? All times should be entered in GMT.</inlineHelpText>
+        <label>Run Times (GMT)</label>
         <picklist>
             <picklistValues>
                 <fullName>00:00</fullName>
