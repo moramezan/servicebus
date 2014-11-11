@@ -19,12 +19,9 @@
             'eda_EventStamp' => stampAsString 
         };
 
-        Heartbeat plugin = new Heartbeat();
-        
         //act
-        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> parametersList = EdaUtility.convert(results);
-        
+        List<Map<String,Object>> parametersList = Broker.invoke(Heartbeat.class, parameters);
+
         //assert
         Integer expectedSize = 0;
         Integer actualSize = parametersList.size();
@@ -58,12 +55,9 @@
             'eda_EventStamp' => stampAsString 
         };
 
-        Heartbeat plugin = new Heartbeat();
-        
         //act
-        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> parametersList = EdaUtility.convert(results);
-        
+        List<Map<String,Object>> parametersList = Broker.invoke(Heartbeat.class, parameters);
+
         //assert
         Integer expectedSize = 2;
         Integer actualSize = parametersList.size();
@@ -97,12 +91,9 @@
             'eda_EventStamp' => stampAsString 
         };
 
-        Heartbeat plugin = new Heartbeat();
-        
         //act
-        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> parametersList = EdaUtility.convert(results);
-        
+        List<Map<String,Object>> parametersList = Broker.invoke(Heartbeat.class, parameters);
+
         //assert
         Integer expectedSize = 0;
         Integer actualSize = parametersList.size();
@@ -119,13 +110,11 @@
             'eda_EventStamp' => stampAsString 
         };
 
-        Heartbeat plugin = new Heartbeat();
-        
         //assemble
         Boolean actualFlag = false;
         try {
             //act
-            Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
+            List<Map<String,Object>> results = Broker.invoke(Heartbeat.class, parameters);
         } catch (Heartbeat.HeartbeatException e) {
             actualFlag = true;
         }
@@ -145,13 +134,11 @@
             'eda_EventStamp' => stampAsString 
         };
 
-        Heartbeat plugin = new Heartbeat();
-        
         //assemble
         Boolean actualFlag = true;
         try {
             //act
-            Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
+            List<Map<String,Object>> results = Broker.invoke(Heartbeat.class, parameters);
         } catch (Heartbeat.HeartbeatException e) {
             actualFlag = false;
         }

@@ -1,13 +1,6 @@
 @IsTest //-- no view of org data
 private class WiretapTest {
     
-    static testmethod void testProcessIsDescribed() {
-        Wiretap wiretap = new Wiretap();
-        System.assertNotEquals(null, wiretap.describe().Name);
-        System.assertNotEquals(null, wiretap.describe().Description);
-        System.assertNotEquals(null, wiretap.describe().Tag);
-    }
-    
     static testmethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnCustomSettingNOTSet() {
         // Arrange :
         String sequenceName = 'the-sequence';
@@ -26,10 +19,9 @@ private class WiretapTest {
    
 
         // Act
-        Wiretap plugin = new Wiretap();
         Boolean actualFlagException = false;
         try {
-            Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
+            List<Map<String,Object>> results = Broker.invoke(Wiretap.class, parameters);
         } catch (Exception e) {
            actualFlagException = true;
         }
@@ -58,9 +50,7 @@ private class WiretapTest {
         Integer expectedSize = 1;
 
         // Act
-        Wiretap plugin = new Wiretap();
-        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> actualParametersList = EdaUtility.convert(results);
+        List<Map<String,Object>> actualParametersList = Broker.invoke(Wiretap.class, parameters);
 
         // prepare
         Integer actualSize = actualParametersList.size();

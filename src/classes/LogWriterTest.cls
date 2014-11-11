@@ -19,9 +19,7 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            LogWriter plugin = new LogWriter();
-            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-            List<Map<String,Object>> results = EdaUtility.convert(result);
+            List<Map<String,Object>> results = Broker.invoke(LogWriter.class, parameters);
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -54,9 +52,7 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            LogWriter plugin = new LogWriter();
-            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-            List<Map<String,Object>> results = EdaUtility.convert(result);
+            List<Map<String,Object>> results = Broker.invoke(LogWriter.class, parameters);
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -121,9 +117,7 @@
         };
         
         //act
-        LogWriter plugin = new LogWriter();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> results = EdaUtility.convert(result);
+        List<Map<String,Object>> results = Broker.invoke(LogWriter.class, parameters);
         
         //assemble
         List<LogWriterEntry__c> logWriterEntries = SalesforceObjectSet.listAll(LogWriterEntry__c.SObjectType);

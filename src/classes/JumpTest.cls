@@ -1,17 +1,9 @@
 @IsTest private class JumpTest {
 
-    static testmethod void testProcessIsDescribed() {
-        Jump jump = new Jump();
-        System.assertNotEquals(null, jump.describe().Name);
-        System.assertNotEquals(null, jump.describe().Description);
-        System.assertNotEquals(null, jump.describe().Tag);
-    }
-    
-    
     static testmethod void testJumpPervertsExecution() {
         //arrange
-        Process__c jump = new Process__c(Name = 'Jump');
-        insert jump;
+        Process__c jumpProcess = new Process__c(Name = 'Jump');
+        insert jumpProcess;
         
         Process__c terminate = new Process__c(Name = 'Terminate');
         insert terminate;
@@ -25,7 +17,7 @@
         
         Sequence__c origin = new Sequence__c(Name = 'origin');
         insert origin;
-        insert new Step__c(Sequence__c = origin.Id, Position__c = 1, Process__c = jump.Id, ConfigurationId__c = configuration.Id);
+        insert new Step__c(Sequence__c = origin.Id, Position__c = 1, Process__c = jumpProcess.Id, ConfigurationId__c = configuration.Id);
         insert new Step__c(Sequence__c = origin.Id, Position__c = 2, Process__c = terminate.Id);
         
         
@@ -37,8 +29,7 @@
         };
         
         //act
-        Jump plugin = new Jump();
-        List<Map<String,Object>> parametersList = EdaUtility.convert(plugin.invoke(new Process.PluginRequest(parameters)));
+        List<Map<String,Object>> parametersList = Broker.invoke(Jump.class, parameters);
         
         //assert
         Integer expectedSize = 1;

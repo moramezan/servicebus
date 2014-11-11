@@ -1,36 +1,24 @@
-public with sharing class Mark implements Process.Plugin {
+public with sharing class Mark {
     
     public class Meta {
+        public String Tag = 'Event Driven Architecture';
+        public String Name = 'Mark';
+        public String Description = 'Marks the message with a correlation key, for splitting into a collection.';
         public String Icon = 'tag_blue';
         public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.GateHelp.getUrl();
-    }
-    
-    public Process.PluginDescribeResult describe() {
-        Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'Marks the message with a correlation key, for splitting into a collection.';
-        plugin.Tag = 'Event Driven Architecture';
-        plugin.Name = 'Mark';
         
-        plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
-            new Process.PluginDescribeResult.OutputParameter(
-                'eda_MarkCount',
-                'The broker will increment this to detect that the next process returned multiple messages.',
-                Process.PluginDescribeResult.ParameterType.INTEGER
-            ),
-            new Process.PluginDescribeResult.OutputParameter(
-                'eda_GateGroupId',
-                'The Id of the Gate Group that eventually associates all the marked messages.',
-                Process.PluginDescribeResult.ParameterType.ID
-            )
+        public Map<String,String> Outputs = new Map<String,String>{
+            'eda_MarkCount' => (Integer.class).getName(), //The broker will increment this to detect that the next process returned multiple messages.
+            'eda_GateGroupId' => (Id.class).getName() //The Id of the Gate Group that eventually associates all the marked messages.
         };
-        
-        return plugin;
     }
     
-    public Process.PluginResult invoke(Process.PluginRequest request) {
+    public String Parameters;
+    
+    override public String toString() {
         if (!SObjectType.GateGroup__c.Createable) throw new Broker.CrudException('!SObjectType.GateGroup__c.Createable');
         
-        Map<String,Object> parameters = request.inputParameters;
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
         //create a grouping id for what will ultimately be gated
         GateGroup__c gateGroup = new GateGroup__C();
@@ -40,7 +28,7 @@ public with sharing class Mark implements Process.Plugin {
         parameters.put('eda_MarkCount', 0);
         parameters.put('eda_GateGroupId', gateGroup.Id);
         
-        return new Process.PluginResult(new Map<String,Object>{'0' => parameters});
+        return Json.serialize(new List<Map<String,Object>>{parameters});
     }
     
 }

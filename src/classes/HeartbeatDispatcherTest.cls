@@ -15,7 +15,7 @@
         Test.stopTest();
         
         Integer expectedCount = 1;
-        Integer actualCount = [SELECT COUNT() FROM AsyncApexJob];
+        Integer actualCount = [SELECT COUNT() FROM AsyncApexJob WHERE ApexClass.Name = 'HeartbeatDispatcher'];
         System.assertEquals(expectedCount, actualCount);
     }
     

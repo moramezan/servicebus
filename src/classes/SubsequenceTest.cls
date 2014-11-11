@@ -34,16 +34,14 @@
         update config;
         
         //prepare message
-        Process.PluginRequest request = new Process.PluginRequest(new Map<String,Object>{
+        Map<String,Object> parameters = new Map<String,Object>{
             'eda_SequenceName' => 'originSequence',
             'eda_Position' => 1,
             'eda_ConfigObjectId' => config.Id
-        });
+        };
         
         //act
-        Subsequence plugin = new Subsequence();
-        Process.PluginResult result = plugin.invoke(request);
-        List<Map<String,Object>> parametersList = EdaUtility.convert(result);
+        List<Map<String,Object>> parametersList = Broker.invoke(Subsequence.class, parameters);
         
         //asserts
         Decimal expectedSize = 1;

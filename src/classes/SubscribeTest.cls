@@ -16,14 +16,11 @@
         //arrange
         String data = '{"herp":"derp"}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
-        Subscribe plugin = new Subscribe();
         
         //act
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> parametersList = Broker.invoke(Subscribe.class, parameters);
         
         //assert
-        List<Map<string, object>> parametersList = EdaUtility.convert(result);
-        
         integer expectedSize = 1;
         integer actualSize = parametersList.size();
         System.assertEquals(expectedSize , actualSize);

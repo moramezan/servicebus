@@ -1,15 +1,17 @@
-@IsTest public class ProcessObjectTest implements Process.Plugin { 
-       public Process.PluginDescribeResult describe() {
-        return new Process.PluginDescribeResult();
-    }
+@IsTest public class ProcessObjectTest { 
     
-    public Process.PluginResult invoke(Process.PluginRequest request) {
-        return EdaUtility.convert(new List<Map<String,Object>>());
-    }
-
     public class Meta {
+        public String Tag = 'Fake';
+        public String Name = 'Test';
+        public String Description = 'Herpderp';
         public String Icon = null;
         public String DocsPageUrl = 'fakedocspage.html';
+    }
+
+    public String Parameters;
+    
+    override public String toString() {
+        return Json.serialize(new List<Map<String,Object>>());
     }
 
     static testmethod void callingGenerateOneInsertsExpectedProcess() {
@@ -37,8 +39,8 @@
         //arrange 
         Type actualType = Subscribe.class;
         
-        Process.Plugin plugin = (Process.Plugin)actualType.newInstance();
-        Process.PluginDescribeResult describeResult = plugin.describe();
+        Object process = actualType.newInstance();
+        ProcessObject.Meta describeResult = (ProcessObject.Meta)Json.deserialize(Json.serialize(Subscribe.Meta.class.newInstance()), ProcessObject.Meta.class);
         String expectedName = describeResult.Name;
         String expectedTag = describeResult.Tag;
         String expectedDescription = describeResult.Description;
@@ -71,10 +73,11 @@
         System.assertEquals(expectedDocsPageUrl, actualDocsPageUrl);
     } 
  
-    static testmethod void pluginWithoutIconWillDefaultWithCogIcon() {
+    static testmethod void processWithoutIconWillDefaultWithCogIcon() {
         //arrange 
         Type actualType = ProcessObjectTest.class;
-        Process.Plugin plugin = (Process.Plugin)actualType.newInstance();
+        Object process = actualType.newInstance();
+        
         Type innerClass = Type.forName(actualType.getName() + '.' + 'Meta'); 
         ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
 

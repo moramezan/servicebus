@@ -1,23 +1,20 @@
-public with sharing class Wiretap implements Process.Plugin {
+public with sharing class Wiretap {
    
     public class WiretapException extends Exception {}
       
     public class Meta {
+        public String Tag = 'Event Driven Architecture';
+        public String Name = 'Wiretap';
+        public String Description = 'Emails the message parameters to the user.';
         public SObject CustomSetting = WiretapSettings__c.SObjectType.newSObject();
         public String Icon = 'email';
         public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.WiretapHelp.getUrl();
     }
     
-    public Process.PluginDescribeResult describe() {
-        Process.PluginDescribeResult describeResult = new Process.PluginDescribeResult();
-        describeResult.Name = 'Wiretap';
-        describeResult.Description = 'Emails the message parameters to the user.';
-        describeResult.Tag = 'Event Driven Architecture';
-        return describeResult;
-    }
+    public String Parameters;
     
-    public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> parameters = request.inputParameters;
+    override public String toString() {
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
         Id userId;
         try {
@@ -44,6 +41,6 @@ public with sharing class Wiretap implements Process.Plugin {
         message.setSaveAsActivity(false);
         Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{message});
         
-        return EdaUtility.convert(new List<Map<String,Object>>{parameters});
+        return Json.serialize(new List<Map<String,Object>>{parameters});
     }
 }

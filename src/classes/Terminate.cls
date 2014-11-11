@@ -1,20 +1,17 @@
-public with sharing class Terminate implements Process.Plugin {
+public with sharing class Terminate {
     
     public class Meta {
+        public String Tag = 'Event Driven Architecture';
+        public String Name = 'Terminate';
+        public String Description = 'Swallows messages at the end of this sequence.';
         public String Icon = 'stop';
         public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.TerminateHelp.getUrl();
     }
     
-    public Process.PluginDescribeResult describe() {
-        Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'Swallows messages at the end of this sequence.';
-        plugin.Tag = 'Event Driven Architecture';
-        plugin.Name = 'Terminate';
-        return plugin;
-    }
+    public String Parameters;
     
-    public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> parameters = request.inputParameters;
+    override public String toString() {
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
         //if we got here from a subsequence, back to where you came from!
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
@@ -22,13 +19,13 @@ public with sharing class Terminate implements Process.Plugin {
         
         if (data == null) {
             //no subsequences
-            return EdaUtility.convert(parametersList);
+            return Json.serialize(parametersList);
         }
 
         List<Id> stepIds = (List<Id>)System.Json.deserialize(System.Json.serialize(data), List<Id>.class);
         if (stepIds.isEmpty()) {
             //subsequences finished
-            return EdaUtility.convert(parametersList);
+            return Json.serialize(parametersList);
         }
         
         //pop one subsequence off stack
@@ -41,7 +38,7 @@ public with sharing class Terminate implements Process.Plugin {
         parameters.put('eda_Position', step.Position__c );
         parametersList.add(parameters);
 
-        return EdaUtility.convert(parametersList);
+        return Json.serialize(parametersList);
     }
 
 }

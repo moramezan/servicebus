@@ -41,9 +41,7 @@
         };
         
         //act
-        LogInitializer plugin = new LogInitializer();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> results = EdaUtility.convert(result);
+        List<Map<String,Object>> results = Broker.invoke(LogInitializer.class, parameters);
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -102,9 +100,7 @@
         };
         
         //act
-        LogInitializer plugin = new LogInitializer();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> results = EdaUtility.convert(result);
+        List<Map<String,Object>> results = Broker.invoke(LogInitializer.class, parameters);
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -167,9 +163,7 @@
         };
         
         //act
-        LogInitializer plugin = new LogInitializer();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> results = EdaUtility.convert(result);
+        List<Map<String,Object>> results = Broker.invoke(LogInitializer.class, parameters);
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -219,9 +213,7 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            LogInitializer plugin = new LogInitializer();
-            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-            List<Map<String,Object>> results = EdaUtility.convert(result);
+            List<Map<String,Object>> results = Broker.invoke(LogInitializer.class, parameters);
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -267,9 +259,7 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            LogInitializer plugin = new LogInitializer();
-            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-            List<Map<String,Object>> results = EdaUtility.convert(result);
+            List<Map<String,Object>> results = Broker.invoke(LogInitializer.class, parameters);
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();

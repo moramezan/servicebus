@@ -37,11 +37,9 @@
         };
     
         // act 
-        Schedule plugin = new Schedule();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> results = Broker.invoke(Schedule.class, parameters);
         
         // assemble
-        List<Map<String,Object>> results = EdaUtility.convert(result);
         Integer actualCount = results.size();
 
          Boolean actualIsHeartbeat = null;
@@ -100,11 +98,9 @@
         };
  
         // act 
-        Schedule plugin = new Schedule();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> results = Broker.invoke(Schedule.class, parameters);
         
         // assemble
-        List<Map<String,Object>> results = EdaUtility.convert(result);
         Integer actualCount = results.size();
 
          Boolean actualIsHeartbeat = null;
@@ -167,11 +163,9 @@
         };
  
         // act 
-        Schedule plugin = new Schedule();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> results = Broker.invoke(Schedule.class, parameters);
         
         // assemble
-        List<Map<String,Object>> results = EdaUtility.convert(result);
         Integer actualCount = results.size();
 
          Boolean actualIsHeartbeat = null;
@@ -234,11 +228,9 @@
         };
  
         // act 
-        Schedule plugin = new Schedule();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> results = Broker.invoke(Schedule.class, parameters);
         
         // assemble
-        List<Map<String,Object>> results = EdaUtility.convert(result);
         Integer actualCount = results.size();
 
          Boolean actualIsHeartbeat = null;
@@ -300,11 +292,9 @@
         };
  
         // act 
-        Schedule plugin = new Schedule();
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
+        List<Map<String,Object>> results = Broker.invoke(Schedule.class, parameters);
         
         // assemble
-        List<Map<String,Object>> results = EdaUtility.convert(result);
         Integer actualCount = results.size();
 
         // assert
@@ -336,13 +326,11 @@
             'eda_ConfigObjectId' => invalidConfigurationId
         };
         
-        Schedule plugin = new Schedule();
-            
         // assemble
         Boolean actualFlag = false;
         try {
             // act  
-            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
+            List<Map<String,Object>> result = Broker.invoke(Schedule.class, parameters);
         } catch (Schedule.ScheduleException e) {
             actualFlag = true;
         }
@@ -374,13 +362,11 @@
             'eda_EventStamp' => invalidStamp
         };
         
-        Schedule plugin = new Schedule();
-            
         // assemble
         Boolean actualFlag = false;
         try {
             // act  
-            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
+            List<Map<String,Object>> result = Broker.invoke(Schedule.class, parameters);
         } catch (Schedule.ScheduleException e) {
             actualFlag = true;
         }

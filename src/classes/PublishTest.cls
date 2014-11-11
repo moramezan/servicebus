@@ -45,8 +45,7 @@
             'eda_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
-        Publish plugin = new Publish();
-        List<Map<String,Object>> parametersList = EdaUtility.convert(plugin.invoke(new Process.PluginRequest(parameters)));
+        List<Map<String,Object>> parametersList = Broker.invoke(Publish.class, parameters);
         
         //should return one for sub, one for passthru
         Integer expectedSize = 2;
@@ -78,13 +77,11 @@
         PublishConfiguration__c config = new PublishConfiguration__c();
         insert config;
         
-        Publish plugin = new Publish();
         Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'TestSequence', 'eda_Position' => 1, 'eda_ConfigObjectId' => config.Id};
-        Process.PluginRequest request = new Process.PluginRequest(parameters);
         
         //act
         Boolean thrown = false;
-        try {plugin.invoke(request);}
+        try {Broker.invoke(Publish.class, parameters);}
         catch (Publish.PublishException e) {thrown = true;}
         
         //assert
@@ -113,11 +110,9 @@
         
         String data = '{"eda_SequenceName":"TestSequence","eda_Position":1,"eda_ConfigObjectId":"' + step.ConfigurationId__c + '"}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
-        Publish plugin = new Publish();
         
         //act
-        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> parametersList = EdaUtility.convert(results);
+        List<Map<String,Object>> parametersList = Broker.invoke(Publish.class, parameters);
         
         //assert
         Integer expectedSize = 1;
@@ -172,9 +167,7 @@
         Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'Publisher', 'eda_Position' => 1, 'eda_ConfigObjectId' => publisherStep.ConfigurationId__c};
         
         //act
-        Publish plugin = new Publish();
-        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> parametersList = EdaUtility.convert(results);
+        List<Map<String,Object>> parametersList = Broker.invoke(Publish.class, parameters);
         
         //assert
         Integer expectedSize = 3;

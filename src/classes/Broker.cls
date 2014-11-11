@@ -96,7 +96,28 @@ abstract global with sharing class Broker {
         Broker impl = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
         return impl;
     }
-    
+
+    @TestVisible static private List<Map<String,Object>> invoke(Type reflector, Map<String,Object> input) {
+        //cast inputs and invoke
+        Map<String,Object> untyped = new Map<String,Object>{
+            'Parameters' => Json.serialize(input)
+            //AllowsCallouts
+        };
+        Object process = Json.deserialize(Json.serialize(untyped), reflector);
+        String data = String.valueOf(process);
+        List<Object> results = (List<Object>)Json.deserializeUntyped(data);
+
+        //balance plus delta, cast output
+        List<Map<String,Object>> outputs = new List<Map<String,Object>>();
+        for (Object result : results) {
+            Map<String,Object> output = input.clone();
+            output.putAll((Map<String,Object>)result);
+            outputs.add(output);
+        }
+
+        return outputs;
+    }
+
     /**
      * Determines which messages are eligible to be moved into the Started status (by finding Messages
      * with 'Rebuffered' and 'Buffered' status). Note: too many fucked messages would clog up the system,
@@ -286,7 +307,7 @@ abstract global with sharing class Broker {
     }
     
     /**
-     * Resolves and invokes the Process.Plugin for one input, handing back an in-memory collection of outputs
+     * Resolves and invokes the toStringable Object for one input, handing back an in-memory collection of outputs
      *
      * @param  inputMessages Messages whose status should be Started
      * @return               Many Messages whose status should be Buffered
@@ -296,9 +317,10 @@ abstract global with sharing class Broker {
         if (inputMessages.isEmpty()) return new List<Message__c>();
         
         Message__c message = inputMessages[0]; //TODO chunking
-        List<Map<String,Object>> parametersList;
+        List<Map<String,Object>> results;
         Map<String,Object> parameters;
-        Process.Plugin plugin;
+        Type reflector;
+        Object process;
         
         //OUR FUCKUPS ( before invocation )
         try {
@@ -313,8 +335,8 @@ abstract global with sharing class Broker {
             parameters.put('eda_ConfigObjectId', Step.ConfigurationId__c);
         
             //instantiate processable instance
-            Type reflector = Type.forName(Step.Process__r.FullyQualifiedClassName__c);
-            plugin = (Process.Plugin)reflector.newInstance();
+            reflector = Type.forName(Step.Process__r.FullyQualifiedClassName__c);
+            if (reflector == null) throw new EngineException('Reflector was null! ' + step.Process__r);
         } catch (Exception e) {
             if (e instanceof System.JsonException) {
                 throw new EngineException('Could not deserialize json, eg malformed parameters:\n' + e.getMessage());
@@ -323,7 +345,7 @@ abstract global with sharing class Broker {
             } else if (e instanceof System.QueryException) {
                 throw new EngineException('Step unqueryable, eg bad sequence name, position, missing terminate:\n' + e.getMessage());
             } else if (e instanceof System.TypeException) {
-                throw new EngineException('Could not cast Process.Plugin, eg interface unimplemented on process class:\n' + e.getMessage());
+                throw new EngineException('Could not cast Process.Plugin, eg interface unimplemented on process class:\n' + e.getMessage()); //#547 this will never happen... there is no longer an interface and ALL implementors are Object anyway
             } else {
                 throw new EngineException('Other pre-invocation exception:\n' + e.getMessage());
             }
@@ -339,23 +361,21 @@ abstract global with sharing class Broker {
             //       property
             Integer stackDepth = getStackDepth(parameters, stackDepthThreshold);
             //call invoke the processable instance
-            Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
+            results = Broker.invoke(reflector, parameters);
             //write back save important message properties 
             //TODO : requires a more generic approach to write back the "eda_" properties to 
-            //       the parameters collections in parametersList
-            results = this.applyStackDepth(results, stackDepth);
-            // convert to a list of parameter collections
-            parametersList = EdaUtility.convert(results);
+            //       the parameters collections in results
+            this.applyStackDepth(results, stackDepth);
         } catch (Exception e) {
             throw new EngineException('Execute failure in user process:\n' + e.getMessage());
         }
         
         //gate processing support method
-        this.gateHelper(parameters, parametersList);
+        this.gateHelper(parameters, results);
         
-        //wrap up parametersList into Messages
+        //wrap up results into Messages
         List<Message__c> messages = new List<Message__c>();
-        for (Map<String,Object> n : parametersList) {
+        for (Map<String,Object> n : results) {
             messages.add(new Message__c(
                 Parameters__c = Json.serializePretty(n),
                 Status__c = 'Buffered'
@@ -475,21 +495,11 @@ abstract global with sharing class Broker {
      * We use applyStackDepth()  to apply the incremented stackDepth variable to the eda_StackDepth parameter of
      * all messages returned from invoke()
      */
-    @TestVisible private Process.PluginResult applyStackDepth(Process.PluginResult results, Integer stackDepth) {
-        List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
-
-        Integer count = 0;
-        Integer size = results.outputParameters.size();
-
-        for (Integer i = 0; i < size; i++) {
-            Object result = results.outputParameters.get(String.valueOf(i));
-            String data = System.Json.serialize(result);
-            Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
-            parameters.put('eda_StackDepth',stackDepth);
-            parametersList.add(parameters);
+    @TestVisible List<Map<String,Object>> applyStackDepth(List<Map<String,Object>> results, Integer stackDepth) {
+        for (Map<String,Object> result : results) {
+            result.put('eda_StackDepth',stackDepth);
         }
-
-        return EdaUtility.convert(parametersList);
+        return results;
     }
 
     /**

@@ -1,25 +1,21 @@
-public with sharing class Schedule implements Process.Plugin {
+public with sharing class Schedule {
     
     public class ScheduleException  extends Exception {}
     
     public class Meta {
+        public String Tag = 'Event Driven Architecture';
+        public String Name = 'Schedule';
+        public String Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages
         public String Icon = 'clock';
         public SObject ConfigObject = ScheduleConfiguration__c.SObjectType.newSObject();
         public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.ScheduleHelp.getUrl();
         public Boolean ConsumesHeartbeat = true;
     }
     
-    public Process.PluginDescribeResult describe() {
-        Process.PluginDescribeResult result = new Process.PluginDescribeResult();
-        result.Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages'; 
-        result.Tag = 'Event Driven Architecture';
-        result.Name = 'Schedule';
-        return result;
-    }
+    public String Parameters;
     
-    
-    public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> parameters = request.inputParameters;
+    override public String toString() {
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
 
         Boolean isHeartbeat = (Boolean)parameters.get('eda_IsHeartbeat');
         String  stampAsString  =  (String)parameters.get('eda_EventStamp');
@@ -37,7 +33,7 @@ public with sharing class Schedule implements Process.Plugin {
             parametersList.add(parameters);
         }
     
-        return EdaUtility.convert(parametersList);
+        return Json.serialize(parametersList);
     }
 
     @TestVisible static private Boolean isWithinWindow(String stampAsString, Id configurationId) {

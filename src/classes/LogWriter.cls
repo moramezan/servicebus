@@ -1,25 +1,21 @@
-public class LogWriter implements Process.Plugin {
+public with sharing class LogWriter {
     
     public class LogWriterException extends Exception {}
     
     public class Meta {
+        public String Tag = 'Event Driven Architecture';
+        public String Name = 'LogWriter';
+        public String Description = 'Stores the message parameters under a Log Group.';
         public String Icon = 'pencil_add';
         public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.LogHelp.getUrl();
     }
     
-    public Process.PluginDescribeResult describe() {
-        Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Name = 'LogWriter';
-        plugin.Description = 'Stores the message parameters under a Log Group.';
-        plugin.Tag = 'Event Driven Architecture';
-        return plugin;
-    }
+    public String Parameters;
     
-    
-    public Process.PluginResult invoke(Process.PluginRequest pluginRequest) {
+    override public String toString() {
         if (!SObjectType.LogWriterEntry__c.Createable) throw new Broker.CrudException('!SObjectType.LogWriterEntry__c.Createable');
         
-        Map<String,Object> parameters = pluginRequest.inputParameters;
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
         Integer parametersOrder = (Integer)parameters.get('eda_Counter');
@@ -58,7 +54,7 @@ public class LogWriter implements Process.Plugin {
                 WHERE Id IN :logGroupIds
             ])).keySet();
         
-            String serializedParameters = System.Json.serializePretty(pluginRequest.inputParameters);
+            String serializedParameters = System.Json.serializePretty(parameters);
             List<LogWriterEntry__c> logWriterEntries =  new List<LogWriterEntry__c>();
             for (Id logGroupId  : filteredLogGroupIds) {
                 logWriterEntries.add( new LogWriterEntry__c(
@@ -75,6 +71,6 @@ public class LogWriter implements Process.Plugin {
 
         parametersList.add(parameters);
         
-        return EdaUtility.convert(parametersList);
+        return Json.serialize(parametersList);
     }
 }

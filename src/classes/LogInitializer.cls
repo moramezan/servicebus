@@ -1,34 +1,26 @@
-public with sharing class LogInitializer implements Process.Plugin {
+public with sharing class LogInitializer {
     
     public class LogInitializerException extends Exception {}
     
     public class Meta {
+        public String Tag = 'Event Driven Architecture';
+        public String Name = 'LogInitializer';
+        public String Description = 'Creates a grouping identifier which all subsequent LogWriter processes log against.';
         public SObject ConfigObject = LogConfiguration__c.SObjectType.newSobject();
         public String Icon = 'pencil';
         public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.LogHelp.getUrl();
-    }
-    
-    public Process.PluginDescribeResult describe () {
-        Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Name = 'LogInitializer';
-        plugin.Description = 'Creates a grouping identifier which all subsequent LogWriter processes log against.';
-        plugin.Tag = 'Event Driven Architecture';
         
-        plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
-            new Process.PluginDescribeResult.OutputParameter(
-                'eda_LogGroupIds',
-                'An identifier that associates instances of steps.',
-                Process.PluginDescribeResult.ParameterType.String
-            )
+        public Map<String,String> Outputs = new Map<String,String>{
+            'eda_LogGroupIds' => (List<Id>.class).getName() //An identifier that associates instances of steps.
         };
-
-        return plugin;
     }
     
-    public Process.PluginResult invoke(Process.PluginRequest pluginRequest) {
+    public String Parameters;
+    
+    override public String toString() {
         if (!SObjectType.LogGroup__c.Createable) throw new Broker.CrudException('!SObjectType.LogGroup__c.Createable');
      
-        Map<String,Object> parameters = pluginRequest.inputParameters;
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
         
@@ -71,7 +63,7 @@ public with sharing class LogInitializer implements Process.Plugin {
          parameters.put('eda_LogGroupIds', logGroupIds);
 
          
-         return EdaUtility.convert(new List<Map<String,Object>>{parameters});
+         return Json.serialize(new List<Map<String,Object>>{parameters});
     }
 
  

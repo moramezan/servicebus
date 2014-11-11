@@ -27,9 +27,8 @@
             'eda_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
-        Branch plugin = new Branch();
-        List<Map<String,Object>> parametersList = EdaUtility.convert(plugin.invoke(new Process.PluginRequest(parameters)));
-        
+        List<Map<String,Object>> parametersList = Broker.invoke(Branch.class, parameters);
+
         List<Object> expectedIds = null;
         List<Object> actualIds = (List<Object>)parametersList[1].get('eda_SubsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
@@ -53,13 +52,9 @@
             'eda_ConfigObjectId' => config.Id
         };
         
-        //arrange processable
-        Branch plugin = new Branch();
-        
         //act
-        Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> parametersList = EdaUtility.convert(result);
-        
+        List<Map<String,Object>> parametersList = Broker.invoke(Branch.class, parameters);
+
         //assert
         Decimal expectedSize = 2;
         Decimal actualSize = parametersList.size();
@@ -106,16 +101,12 @@
             'eda_ConfigObjectId' => config.Id
         };
         
-        //arrange process
-        Branch plugin = new Branch();
-        
         //arrange exception
         Boolean exceptionThrown = false;
         
         //act
         try {
-            Process.PluginResult result = plugin.invoke(new Process.PluginRequest(parameters));
-            List<Map<String,Object>> parametersList = EdaUtility.convert(result);
+            List<Map<String,Object>> parametersList = Broker.invoke(Branch.class, parameters);
         } catch (Exception e) {
             exceptionThrown = true;
             System.assert(e instanceof Branch.BranchException);

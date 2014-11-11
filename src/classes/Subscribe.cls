@@ -1,20 +1,18 @@
-public with sharing class Subscribe implements Process.Plugin {
+public with sharing class Subscribe {
 
     public class Meta {
+        public String Tag = 'Event Driven Architecture';
+        public String Name = 'Subscribe';
+        public String Description = 'Listens for messages via a named Event Type.';
         public SObject ConfigObject = SubscribeConfiguration__c.SObjectType.newSObject();
         public String Icon = 'eye';
         public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubscribeHelp.getUrl();
     }
     
-    public Process.PluginDescribeResult describe() {
-        Process.PluginDescribeResult result = new Process.PluginDescribeResult();
-        result.Description = 'Listens for messages via a named Event Type.';
-        result.Tag = 'Event Driven Architecture';
-        result.Name = 'Subscribe';
-        return result;
-    }
+    public String Parameters;
     
-    public Process.PluginResult invoke(Process.PluginRequest request) {
-        return EdaUtility.convert(new List<Map<String,Object>>{request.inputParameters});
+    override public String toString() {
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        return Json.serialize(new List<Map<String,Object>>{parameters});
     }
 }

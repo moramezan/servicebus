@@ -31,7 +31,7 @@
  
     }
     
-    static testmethod void callingEnqueueWithInternallyFailingPluginSuccessfullyWritesErrorMessageToMessage() {
+    static testmethod void callingEnqueueWithInternallyFailingProcessSuccessfullyWritesErrorMessageToMessage() {
         // Deprecated  
         // see - BatchBrokerImplementation.deferExceptionHandler();
     }

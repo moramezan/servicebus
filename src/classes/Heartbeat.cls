@@ -1,24 +1,19 @@
-public with sharing class Heartbeat implements Process.Plugin {
+public with sharing class Heartbeat {
     
     public class HeartbeatException extends Exception {}
 
     public class Meta {
+        public String Tag = 'System';
+        public String Name = 'Heartbeat';
+        public String Description = 'Broadcasts a heartbeat message to any sequence with a heartbeat subscriber as the first step';
         public String Icon = 'heart_add';
         public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.HeartbeatHelp.getUrl();
     }
 
+    public String Parameters;
 
-    public Process.PluginDescribeResult describe () {
-        Process.PluginDescribeResult result = new Process.PluginDescribeResult();
-        result.Description = 'Broadcasts a heartbeat message to any sequence with a heartbeat subscriber as the first step';
-        result.Tag = 'System';
-        result.Name = 'Heartbeat';
-        return result;
-    }
-
-
-    public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> parameters = request.InputParameters;
+    override public String toString() {
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
         Boolean isHeartbeat = (Boolean)parameters.get('eda_IsHeartbeat');
         String  stampAsString = (String)parameters.get('eda_EventStamp');
@@ -52,7 +47,7 @@ public with sharing class Heartbeat implements Process.Plugin {
         }
 
         //This process should act as a Terminate - return empty list
-        return EdaUtility.convert(parametersList);
+        return Json.serialize(parametersList);
     }
 
 

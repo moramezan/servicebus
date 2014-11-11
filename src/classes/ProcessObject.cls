@@ -13,6 +13,21 @@ public with sharing class ProcessObject extends SalesforceObject {
      */
     @TestVisible private without sharing class Meta {
         /**
+         * Each process MUST provide a grouping tag.
+         */
+        public String Tag;
+
+        /**
+         * Each process MUST provide a friendly name.
+         */
+        public String Name;
+
+        /**
+         * Each process MUST provide a succinct description.
+         */
+        public String Description;
+
+        /**
          * Each Process can have one associated customization in the form of a Custom Setting. Process Authors must
          * advertise the custom setting type here, and the framework will provide a link from the Process detail page.
          */
@@ -36,6 +51,9 @@ public with sharing class ProcessObject extends SalesforceObject {
          * populate the property with a default value like Page.MyProcessDocs.getUrl() to make this available to users.
          */
         public String DocsPageUrl;
+        
+        //Inputs
+        //Outputs
     }
     
     /**
@@ -57,20 +75,42 @@ public with sharing class ProcessObject extends SalesforceObject {
             Type outerClass = reflector;
             Type innerClass = Type.forName(reflector.getName() + '.' + 'Meta');
             
-            Process.Plugin plugin = (Process.Plugin)outerClass.newInstance();
-            Process.PluginDescribeResult describeResult = plugin.describe();
+            Object impl = outerClass.newInstance();
             Process__c process = new Process__c(
-                Name = describeResult.Name,
-                Tag__c = describeResult.Tag,
-                Description__c = describeResult.Description,
                 FullyQualifiedClassName__c = outerClass.getName()
             );
             
-            //special exception for BrokerTest.FailurePlugin as used in testing
+            //special exception for BrokerTest.FailureProcess as used in testing
             if (reflector.getName() == BrokerTest.class.getName()) return process;
             
             ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
-            
+
+            if (meta.Tag == null) {
+                //EVERY PROCESS MUST PROVIDE A TAG
+                throw new ProcessException('Process "' + process.FullyQualifiedClassName__c + '" must provide Meta.Tag');
+            }
+
+            //attempt to populate the tag of the process
+            process.Tag__c = meta.Tag;
+
+
+            if (meta.Name == null) {
+                //EVERY PROCESS MUST PROVIDE A NAME
+                throw new ProcessException('Process "' + process.FullyQualifiedClassName__c + '" must provide Meta.Name');
+            }
+
+            //attempt to populate the tag of the process
+            process.Name = meta.Name;
+
+
+            if (meta.Description == null) {
+                //EVERY PROCESS MUST PROVIDE A DESCRIPTION
+                throw new ProcessException('Process "' + process.FullyQualifiedClassName__c + '" must provide Meta.Description');
+            }
+
+            //attempt to populate the tag of the process
+            process.Description__c = meta.Description;
+
             if (meta.CustomSetting != null) {
                 //attempt to populate the name of the customization object
                 process.CustomSetting__c = meta.CustomSetting.getSObjectType().getDescribe().getName();

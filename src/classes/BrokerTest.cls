@@ -1,26 +1,24 @@
-@IsTest public class BrokerTest implements Process.Plugin { //formerly FailurePlugin
+@IsTest public class BrokerTest { //formerly FailureProcess
     
-    @TestVisible static private String FailureMessage = 'Fake Error Thrown in FailurePlugin';
+    @TestVisible static private String FailureMessage = 'Fake Error Thrown in FailureProcess';
+    
+    public class Meta {
+        public String Tag = 'Event Driven Architecture';
+        public String Name = 'Failure Process';
+        public String Description = 'A toStringable Object that throws an exception for testing purposes.'; //Will not be listed
+    }
+    
+    public String Parameters;
     
     public class DoNothingBroker extends Broker {
         override public void restartImpl() {}
         override public Boolean isAlreadyRunning() {return true;}
     }
     
-    public Process.PluginDescribeResult describe() {
-        Process.PluginDescribeResult describeResult = new Process.PluginDescribeResult();
-        describeResult.Name = 'Failure Plugin';
-        describeResult.Description = 'A Process.Plugin that throws an exception for testing purposes.'; //Will not be listed
-        describeResult.Tag = 'Event Driven Architecture';
-        System.assert(describeResult.Name.contains('Failure'));
-        return describeResult;
-    }
-    
-    public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> parameters = request.inputParameters;
-        System.assert(this.describe().Name.contains('Failure'));
+    override public String toString() {
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         throw new BrokerException(FailureMessage);
-        return EdaUtility.convert(new List<Map<String,Object>>{parameters});
+        return Json.serialize(new List<Map<String,Object>>{parameters});
     }
     
     public class BrokerException extends Exception {}
@@ -167,14 +165,13 @@
         Integer stackDepth = 8;
         Map<String,Object> parameters = new Map<String,Object>();
         List<Map<String,Object>>  parametersList = new List<Map<String,Object>>{ parameters };
-         Process.PluginResult results = EdaUtility.convert(parametersList);
 
         //act
-        results = new DoNothingBroker().applyStackDepth(results, stackDepth);
+        parametersList = new DoNothingBroker().applyStackDepth(parametersList, stackDepth);
 
         //assemble
         Integer actualStackDepth = -1;
-        List<Map<String,Object>>  actualParametersList = EdaUtility.convert(results);
+        List<Map<String,Object>>  actualParametersList = parametersList;
         for (Map<String,Object> actualParameters : actualParametersList ) {
             actualStackDepth = (Integer) actualParameters.get('eda_StackDepth');
         }
@@ -764,7 +761,7 @@
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
-    static testmethod void testNonProcessPluginThrowsTypeException() {
+    static testmethod void testNonProcessObjectThrowsTypeException() {
         //arrange processes
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
@@ -776,7 +773,7 @@
         StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         terminateProcess.FullyQualifiedClassName__c = 'Account';
-        update terminateProcess; //Account is DEFINITELY not a Process.Plugin
+        update terminateProcess; //Account is DEFINITELY not a toStringable Object
         
         //arrange specific broker implementation
         insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
@@ -789,7 +786,7 @@
         //assert
         Message__c message = [SELECT Id, Exception__c FROM Message__c];
         String actualMessage = message.Exception__c;
-        String expectedMessage = 'interface';
+        String expectedMessage = 'No such column \'Parameters\' on sobject of type Account';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     

@@ -12,7 +12,7 @@
         }
     } 
     
-    static testmethod void testRecordCreatedForPluginAndStateful() {
+    static testmethod void testRecordCreatedForProcessAndStateful() {
         //arrange
         ProcessDiscoverBatch.classes = [
             SELECT Id, Name, NamespacePrefix

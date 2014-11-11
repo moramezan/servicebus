@@ -1,13 +1,6 @@
 @IsTest  //-- no view of org data
 private  class GateTest {
 
-    static testmethod void testProcessIsDescribed() {
-        Jump jump = new Jump();
-        System.assertNotEquals(null, jump.describe().Name);
-        System.assertNotEquals(null, jump.describe().Description);
-        System.assertNotEquals(null, jump.describe().Tag);
-    }
-    
     static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenGateItemsCountEqCount() {
         // Arrange :
         String sequenceName = 'the-sequence';
@@ -47,9 +40,7 @@ private  class GateTest {
         Integer expectedGateItemsSize = (Integer) count;
 
         // Act
-        Gate plugin = new Gate();
-        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
+        List<Map<String,Object>> actualOutParametersList = Broker.invoke(Gate.class, parameters);
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -105,9 +96,7 @@ private  class GateTest {
         Integer expectedGateItemsSize = (Integer) ( count - 1) ;
 
         // Act
-        Gate plugin = new Gate();
-        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
+        List<Map<String,Object>> actualOutParametersList = Broker.invoke(Gate.class, parameters);
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();

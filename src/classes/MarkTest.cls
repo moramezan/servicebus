@@ -1,14 +1,7 @@
 @IsTest //-- no view of org data
 private class MarkTest {
 
-    static testmethod void testProcessIsDescribed() {
-        Mark mark = new Mark();
-        System.assertNotEquals(null, mark.describe().Name);
-        System.assertNotEquals(null, mark.describe().Description);
-        System.assertNotEquals(null, mark.describe().Tag);
-    }
-    
-    static testmethod void callingExecuteReturnsExpectedParametersCollectio() {
+    static testmethod void callingExecuteReturnsExpectedParametersCollection() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Decimal position = 1;
@@ -26,9 +19,7 @@ private class MarkTest {
         Boolean expectedGateGroupIdFlag = true;
 
         // Act
-        Mark plugin = new Mark();
-        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
+        List<Map<String,Object>> actualOutParametersList = Broker.invoke(Mark.class, parameters);
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -36,8 +27,8 @@ private class MarkTest {
         Boolean actualGateGroupIdFlag = false;
         if (actualSize > 0) {
             Map<String,Object> actualParameters = actualOutParametersList[0];
-            actualMarkCount = (Decimal) parameters.get('eda_MarkCount' );
-            actualGateGroupIdFlag = (parameters.get('eda_GateGroupId' ) != null);
+            actualMarkCount = (Decimal) actualParameters.get('eda_MarkCount' );
+            actualGateGroupIdFlag = (actualParameters.get('eda_GateGroupId' ) != null);
         }
         Integer actualGateGroupSize = [SELECT COUNT() FROM GateGroup__c];
 

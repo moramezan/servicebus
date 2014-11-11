@@ -22,8 +22,6 @@
         <members>ConfigurationShowStepExtensionTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
-        <members>EdaUtility</members>
-        <members>EdaUtilityTest</members>
         <members>Gate</members>
         <members>GateTest</members>
         <members>Heartbeat</members>

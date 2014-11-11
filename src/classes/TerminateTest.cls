@@ -36,9 +36,7 @@ private class TerminateTest
         Decimal expectedPosition = subsequencePosition;
 
         // Act
-        Terminate plugin = new Terminate();
-        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
+        List<Map<String,Object>> actualOutParametersList = Broker.invoke(Terminate.class, parameters);
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -74,9 +72,7 @@ private class TerminateTest
         Decimal expectedSize = 0;
  
         // Act
-        Terminate plugin = new Terminate();
-        Process.PluginResult results = plugin.invoke(new Process.PluginRequest(parameters));
-        List<Map<String,Object>> actualOutParametersList = EdaUtility.convert(results);
+        List<Map<String,Object>> actualOutParametersList = Broker.invoke(Terminate.class, parameters);
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -116,15 +112,11 @@ private class TerminateTest
 
 
         // Act
-        Terminate plugin = new Terminate();
-        
-        Process.PluginResult resultsInvokeFirst = plugin.invoke(new Process.PluginRequest(parametersFirst));
-        List<Map<String,Object>> actualOutParametersListFirst = EdaUtility.convert(resultsInvokeFirst);
+        List<Map<String,Object>> actualOutParametersListFirst = Broker.invoke(Terminate.class, parametersFirst);
         
         Map<String,Object> parametersSecond = actualOutParametersListFirst[0].clone(); //-- Terminate hands back one
         
-        Process.PluginResult resultsInvokeSecond = plugin.invoke(new Process.PluginRequest(parametersSecond));
-        List<Map<String,Object>> actualOutParametersListSecond = EdaUtility.convert(resultsInvokeSecond);
+        List<Map<String,Object>> actualOutParametersListSecond = Broker.invoke(Terminate.class, parametersSecond);
         
         // prepare
         List<Object> actualStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('eda_SubsequenceStepIds');

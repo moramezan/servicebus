@@ -1,34 +1,23 @@
-public with sharing class Subsequence implements Process.Plugin {
+public with sharing class Subsequence {
 
     public class Meta {
+        public String Tag = 'Event Driven Architecture';
+        public String Name = 'Subsequence';
+        public String Description = 'Temporarily diverts the message to another sequence, then returns it to the next step afterwards.';
         public SObject ConfigObject = SubsequenceConfiguration__c.SObjectType.newSObject();
         public String Icon = 'arrow_undo';
         public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubsequenceHelp.getUrl();
-    }
-    
-    public Process.PluginDescribeResult describe() {
-        Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'Temporarily diverts the message to another sequence, then returns it to the next step afterwards.';
-        plugin.Tag = 'Event Driven Architecture';
-        plugin.Name = 'Subsequence';
         
-        plugin.outputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
-            new Process.PluginDescribeResult.OutputParameter(
-                'eda_SubsequenceName',
-                'Marks the sequence name which the Subsequence returns to.',
-                Process.PluginDescribeResult.ParameterType.STRING
-            ),
-            new Process.PluginDescribeResult.OutputParameter(
-                'eda_SubsequencePosition',
-                'Marks the position number which the Subsequence returns to.',
-                Process.PluginDescribeResult.ParameterType.INTEGER
-            )
+        public Map<String,String> Outputs = new Map<String,String>{
+            'eda_SubsequenceName' => (String.class).getName(), //Marks the sequence name which the Subsequence returns to.
+            'eda_SubsequencePosition' => (Integer.class).getName() //Marks the position number which the Subsequence returns to.
         };
-        return plugin;
     }
     
-    public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> parameters = request.inputParameters;
+    public String Parameters;
+    
+    override public String toString() {
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
         //derive the step Id
         Step__c step = [
@@ -52,6 +41,6 @@ public with sharing class Subsequence implements Process.Plugin {
         parameters.put('eda_SequenceName', sequence.Name);
         parameters.put('eda_Position', 0);
         
-        return EdaUtility.convert(new List<Map<String,Object>>{parameters});
+        return Json.serialize(new List<Map<String,Object>>{parameters});
     }
 }

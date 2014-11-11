@@ -1,23 +1,20 @@
-public with sharing class Publish implements Process.Plugin {
+public with sharing class Publish {
     
     public class PublishException extends Exception {}
 
     public class Meta {
+        public String Tag = 'Event Driven Architecture';
+        public String Name = 'Publish';
+        public String Description = 'Broadcasts the message to other sequences via a named Event Type.';
         public SObject ConfigObject = PublishConfiguration__c.SObjectType.newSObject();
         public String Icon = 'chart_organisation';
         public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.PublishHelp.getUrl();
     }
     
-    public Process.PluginDescribeResult describe () {
-        Process.PluginDescribeResult result = new Process.PluginDescribeResult();
-        result.Description = 'Broadcasts the message to other sequences via a named Event Type.';
-        result.Tag = 'Event Driven Architecture';
-        result.Name = 'Publish';
-        return result;
-    }
+    public String Parameters;
     
-    public Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> parameters = request.InputParameters;
+    override public String toString() {
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         
         PublishConfiguration__c publishConfiguration = (PublishConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
@@ -50,6 +47,6 @@ public with sharing class Publish implements Process.Plugin {
         //original guy carries on... this is not a Terminate
         parametersList.add(parameters);
         
-        return EdaUtility.convert(parametersList);
+        return Json.serialize(parametersList);
     }
 }

@@ -14,7 +14,7 @@
                     When Processes receive and act on a message, they may output multiple new Messages that go to subsequent Processes.
                 </p>
                 <p>
-                    Processes are implemented as Apex Classes just like Visual Workflow plugins.
+                    Processes are implemented as Apex Classes.
                     Event Driven Architecture contains by default a number of ready-made processes, including:
                 </p>
                 <ul>

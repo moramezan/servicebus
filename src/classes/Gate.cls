@@ -1,43 +1,25 @@
-public with sharing class Gate implements Process.Plugin {
+public with sharing class Gate {
     
     public class Meta {
+        public String Tag = 'Event Driven Architecture';
+        public String Name = 'Gate';
+        public String Description = 'Aggregates a collection of messages previously marked with a correlation key.';
         public String Icon = 'arrow_join';
         public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.GateHelp.getUrl();
-    }
-    
-    public Process.PluginDescribeResult describe() {
-        Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Description = 'Aggregates a collection of messages previously marked with a correlation key.';
-        plugin.Tag = 'Event Driven Architecture';
-        plugin.Name = 'Gate';
-        
-        plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
-            new Process.PluginDescribeResult.InputParameter(
-                'eda_GateGroupId',
-                'Id of the GateGroup the marked messages should belong to.',
-                Process.PluginDescribeResult.ParameterType.ID,
-                false
-            ),
-            new Process.PluginDescribeResult.InputParameter(
-                'eda_Count',
-                'Number of marked messages the gate should expect.',
-                Process.PluginDescribeResult.ParameterType.INTEGER,
-                false
-            )
+
+        public Map<String,String> Inputs = new Map<String,String>{
+            'eda_GateGroupId' => (Id.class).getName(), //Id of the GateGroup the marked messages should belong to.
+            'eda_Count' => (Integer.class).getName() //Number of marked messages the gate should expect.
         };
-        
-        plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
-            new Process.PluginDescribeResult.OutputParameter(
-                'Id',
-                'Id of the GateGroup whose members are now all present.',
-                Process.PluginDescribeResult.ParameterType.ID
-            )
+
+        public Map<String,String> Outputs = new Map<String,String>{
+            'eda_Id' => (Id.class).getName() //Id of the GateGroup whose members are now all present.
         };
-        
-        return plugin;
     }
+
+    public String Parameters;
     
-    public Process.PluginResult invoke(Process.PluginRequest request) {
+    override public String toString() {
         if (!SObjectType.GateItem__c.Createable) throw new Broker.CrudException('!SObjectType.GateItem__c.Createable');
 
         // housekeeping / deletion strategy
@@ -51,7 +33,7 @@ public with sharing class Gate implements Process.Plugin {
         Integer maximumItems = 10000;
         performDefaultDeletionStrategy(isDeletionEnabled, maximumDays, maximumItems);
 
-        Map<String,Object> parameters = request.inputParameters;
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
         Id gateGroupId = (Id)parameters.get('eda_GateGroupId');
         Decimal count = (Decimal)parameters.get('eda_Count');
@@ -69,7 +51,7 @@ public with sharing class Gate implements Process.Plugin {
         
         if (count != gateItems.size()) {
             //this is not the last item, so let's swallow
-            return new Process.PluginResult(new Map<String,Object>());
+            return Json.serialize(new List<Map<String,Object>>());
         }
         
         //this is the last item, let's release
@@ -78,7 +60,7 @@ public with sharing class Gate implements Process.Plugin {
         parameters.remove('eda_MarkCount');
         parameters.remove('eda_GateGroupId');
         
-        return EdaUtility.convert(new List<Map<String,Object>>{parameters});
+        return Json.serialize(new List<Map<String,Object>>{parameters});
     }
     
  
