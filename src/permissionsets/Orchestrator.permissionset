@@ -113,6 +113,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>LogConfigurationObjectSet</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>LogConfigurationObjectSetTests</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>LogInitializer</apexClass>
         <enabled>false</enabled>
     </classAccesses>
