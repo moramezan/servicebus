@@ -98,11 +98,13 @@
         Integer expectedCount = 1;
         System.assertEquals( expectedCount, actualCount);
         Integer expectedStackDepth = stackDepthThreshold;
-        System.assertEquals( expectedStackDepth, actualStackDepth);
-        String expectedDetail = 'Maximum Stack Depth exceeded';
-        System.assert(actualDetail.contains(expectedDetail)); 
+        System.assertEquals(expectedStackDepth, actualStackDepth, 'Wrong stack depth.');
+        
+        String expectedDetail = 'Maximum Stack Depth exceeded - to resolve, manually set eda_StackDepth on parameters to 0';
+        System.assertEquals(expectedDetail, actualDetail, 'Wrong message');
+        
         String expectedStatus = 'Started';
-        System.assertEquals( expectedStatus, actualStatus); 
+        System.assertEquals(expectedStatus, actualStatus, 'Wrong message status.'); 
     }
     
     static testmethod void callingGetStackDepthReturnsExpectedValueWhenStackDepthParameterLtThreshold() {
@@ -757,8 +759,8 @@
         
         //assert
         String actualMessage = message.Exception__c;
-        String expectedMessage = 'class missing';
-        System.assert(actualMessage.contains(expectedMessage), actualMessage);
+        String expectedMessage = 'Other pre-invocation exception:\nReflector for classname was null: lalala';
+        System.assertEquals(expectedMessage, actualMessage, 'Wrong message detail.');
     }
     
     static testmethod void testNonProcessObjectThrowsTypeException() {
@@ -786,7 +788,7 @@
         //assert
         Message__c message = [SELECT Id, Exception__c FROM Message__c];
         String actualMessage = message.Exception__c;
-        String expectedMessage = 'No such column \'Parameters\' on sobject of type Account';
+        String expectedMessage = 'Could not see Parameters, eg instance is not a process class:\nAccount';
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     

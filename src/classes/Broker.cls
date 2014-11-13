@@ -437,8 +437,16 @@ abstract global with sharing class Broker {
             parameters.put('eda_ConfigObjectId', Step.ConfigurationId__c);
         
             //instantiate processable instance
-            reflector = Type.forName(Step.Process__r.FullyQualifiedClassName__c);
-            if (reflector == null) throw new EngineException('Reflector was null! ' + step.Process__r);
+            reflector = Type.forName(step.Process__r.FullyQualifiedClassName__c);
+            if (reflector == null) throw new EngineException('Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c);
+            
+            Object plugin = Json.deserialize('{}', reflector);
+            Map<String,Object> untyped = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(plugin));
+            if (!untyped.containsKey('Parameters')) {
+                //woops, probably not a process! this is kinda the only way to do this since we don't have an interface
+                throw new EngineException('Could not see Parameters, eg instance is not a process class:\n' + reflector.getName());
+            }
+            
         } catch (Exception e) {
             if (e instanceof System.JsonException) {
                 throw new EngineException('Could not deserialize json, eg malformed parameters:\n' + e.getMessage());
@@ -446,19 +454,18 @@ abstract global with sharing class Broker {
                 throw new EngineException('Position null, eg key missing from parameters, or Type null eg class missing:\n' + e.getMessage());
             } else if (e instanceof System.QueryException) {
                 throw new EngineException('Step unqueryable, eg bad sequence name, position, missing terminate:\n' + e.getMessage());
-            } else if (e instanceof System.TypeException) {
-                throw new EngineException('Could not cast Process.Plugin, eg interface unimplemented on process class:\n' + e.getMessage()); //#547 this will never happen... there is no longer an interface and ALL implementors are Object anyway
             } else {
                 throw new EngineException('Other pre-invocation exception:\n' + e.getMessage());
             }
         }
         
+        //save important message properties (such as stackDepth) so that process authors cannot pervert them  
+        //THROWS EngineException TODO : requires a more generic approach not specific to just the eda_StackDepth
+        Integer stackDepth = getStackDepth(parameters, stackDepthThreshold);
+        
         //THEIR FUCKUPS (invocation)
         Savepoint sp;
         try {
-            //save important message properties (such as stackDepth) so that process authors cannot pervert them  
-            //TODO : requires a more generic approach not specific to just the eda_StackDepth
-            Integer stackDepth = getStackDepth(parameters, stackDepthThreshold);
             
             Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters);
             wrapper.invokeCallouts();
@@ -466,14 +473,15 @@ abstract global with sharing class Broker {
             wrapper.invokeMain();
             results = wrapper.Outputs;
             
-            //write back save important message properties to the parameters collections in results
-            //TODO : requires a more generic approach to write back the "eda_" properties to 
-            this.applyStackDepth(results, stackDepth);
         } catch (Exception e) {
-            Database.rollback(sp);
+            if (sp != null) Database.rollback(sp); //might be null if stackDepth blows up
             throw new EngineException('Execute failure in user process:\n' + e.getMessage());
         }
         
+        //write back save important message properties to the parameters collections in results
+        //TODO : requires a more generic approach to write back the "eda_" properties to 
+        this.applyStackDepth(results, stackDepth);
+
         //gate processing support method
         this.gateHelper(parameters, results);
         
