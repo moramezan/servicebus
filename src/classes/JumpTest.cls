@@ -29,7 +29,8 @@
         };
         
         //act
-        List<Map<String,Object>> parametersList = Broker.invoke(Jump.class, parameters);
+        Type reflector = Jump.class;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assert
         Integer expectedSize = 1;

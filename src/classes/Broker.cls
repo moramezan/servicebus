@@ -96,6 +96,108 @@ abstract global with sharing class Broker {
         Broker impl = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
         return impl;
     }
+    
+    /**
+     * Example usage:
+     * Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters);
+     * wrapper.invokeCallouts();
+     * wrapper.invokeMain();
+     * List<Map<String,Object>> outputs = wrapper.Outputs;
+     */
+    @TestVisible private class Wrapper {
+        /**
+         * We need to know "what" the plugin is
+         * whenever we get or set its properties as
+         * deserialize requires a concrete type.
+         */
+        private Type reflector;
+        
+        /**
+         * Must "hang on to" the plugin instance so it
+         * can be invoked twice and communicate with
+         * itself across invocations.
+         */
+        private Object plugin;
+        
+        /**
+         * The input parameters are used twice. For
+         * assembling the plugin before invocation
+         * AND for balance + delta jiggery pokery.
+         */
+        private Map<String,Object> Inputs;
+        
+        /**
+         * The output collection can only be made by
+         * invoking the main plugin logic, save them here
+         * so they're available wherever wrapper scope is.
+         */
+        public List<Map<String,Object>> Outputs;
+        
+        /**
+         * @param reflector from the concrete plugin type eg Branch.class
+         * @param parameters that will be handed in when invoking plugin
+         */
+        public Wrapper(Type reflector, Map<String,Object> inputs) {
+            this.reflector = reflector;
+            this.inputs = inputs;
+            
+            Map<String,Object> untyped = new Map<String,Object>{
+                'Parameters' => Json.serialize(inputs)
+            };
+            
+            //do not call constructor
+            //this.plugin = reflector.newInstance();
+            this.plugin = Json.deserialize(Json.serialize(untyped), reflector);
+        }
+        
+        /**
+         * @return fluent API
+         */
+        public Wrapper invokeCallouts() {
+            if (!(this.plugin instanceof Database.AllowsCallouts)) {
+                //nothing to do
+                return this;
+            }
+            
+            //set flag
+            Map<String,Object> untyped = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(this.plugin));
+            untyped.put('AllowsCallouts', true);
+            this.plugin = Json.deserialize(Json.serialize(untyped), this.reflector);
+            
+            //do callouts
+            String data = String.valueOf(this.plugin);
+            if (data != null) throw new EngineException('Your AllowsCallouts code block should return null.');
+            
+            return this;
+        }
+        
+        /**
+         * @return fluent API
+         */
+        public Wrapper invokeMain() {
+            //set flag
+            Map<String,Object> untyped = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(this.plugin));
+            untyped.put('AllowsCallouts', false);
+            this.plugin = Json.deserialize(Json.serialize(untyped), this.reflector);
+            
+            //do invocation
+            String data = String.valueOf(this.plugin);
+            if (data == null) throw new EngineException('Your main code block should return a serialized List<Map<String,Object>>.');
+            
+            //output equals balance plus delta
+            List<Map<String,Object>> outputs = new List<Map<String,Object>>();
+            List<Object> results = (List<Object>)Json.deserializeUntyped(data);
+            for (Object result : results) {
+                Map<String,Object> output = this.inputs.clone();
+                output.putAll((Map<String,Object>)result);
+                outputs.add(output);
+            }
+            
+            this.outputs = outputs;
+            
+            return this;
+        }
+    }
 
     @TestVisible static private List<Map<String,Object>> invoke(Type reflector, Map<String,Object> input) {
         //cast inputs and invoke
@@ -361,7 +463,7 @@ abstract global with sharing class Broker {
             //       property
             Integer stackDepth = getStackDepth(parameters, stackDepthThreshold);
             //call invoke the processable instance
-            results = Broker.invoke(reflector, parameters);
+            results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
             //write back save important message properties 
             //TODO : requires a more generic approach to write back the "eda_" properties to 
             //       the parameters collections in results

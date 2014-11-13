@@ -19,7 +19,8 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            List<Map<String,Object>> results = Broker.invoke(LogWriter.class, parameters);
+            Type reflector = LogWriter.class;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -52,7 +53,8 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            List<Map<String,Object>> results = Broker.invoke(LogWriter.class, parameters);
+            Type reflector = LogWriter.class;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -117,7 +119,8 @@
         };
         
         //act
-        List<Map<String,Object>> results = Broker.invoke(LogWriter.class, parameters);
+        Type reflector = LogWriter.class;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assemble
         List<LogWriterEntry__c> logWriterEntries = SalesforceObjectSet.listAll(LogWriterEntry__c.SObjectType);

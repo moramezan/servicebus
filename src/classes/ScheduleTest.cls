@@ -37,7 +37,8 @@
         };
     
         // act 
-        List<Map<String,Object>> results = Broker.invoke(Schedule.class, parameters);
+        Type reflector = Schedule.class;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -98,7 +99,8 @@
         };
  
         // act 
-        List<Map<String,Object>> results = Broker.invoke(Schedule.class, parameters);
+        Type reflector = Schedule.class;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -163,7 +165,8 @@
         };
  
         // act 
-        List<Map<String,Object>> results = Broker.invoke(Schedule.class, parameters);
+        Type reflector = Schedule.class;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -228,7 +231,8 @@
         };
  
         // act 
-        List<Map<String,Object>> results = Broker.invoke(Schedule.class, parameters);
+        Type reflector = Schedule.class;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -292,7 +296,8 @@
         };
  
         // act 
-        List<Map<String,Object>> results = Broker.invoke(Schedule.class, parameters);
+        Type reflector = Schedule.class;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -330,7 +335,8 @@
         Boolean actualFlag = false;
         try {
             // act  
-            List<Map<String,Object>> result = Broker.invoke(Schedule.class, parameters);
+            Type reflector = Schedule.class;
+            List<Map<String,Object>> result = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         } catch (Schedule.ScheduleException e) {
             actualFlag = true;
         }
@@ -366,7 +372,8 @@
         Boolean actualFlag = false;
         try {
             // act  
-            List<Map<String,Object>> result = Broker.invoke(Schedule.class, parameters);
+            Type reflector = Schedule.class;
+            List<Map<String,Object>> result = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         } catch (Schedule.ScheduleException e) {
             actualFlag = true;
         }

@@ -21,7 +21,8 @@ private class WiretapTest {
         // Act
         Boolean actualFlagException = false;
         try {
-            List<Map<String,Object>> results = Broker.invoke(Wiretap.class, parameters);
+            Type reflector = Wiretap.class;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         } catch (Exception e) {
            actualFlagException = true;
         }
@@ -50,7 +51,8 @@ private class WiretapTest {
         Integer expectedSize = 1;
 
         // Act
-        List<Map<String,Object>> actualParametersList = Broker.invoke(Wiretap.class, parameters);
+        Type reflector = Wiretap.class;
+        List<Map<String,Object>> actualParametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
 
         // prepare
         Integer actualSize = actualParametersList.size();

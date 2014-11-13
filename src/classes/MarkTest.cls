@@ -19,7 +19,8 @@ private class MarkTest {
         Boolean expectedGateGroupIdFlag = true;
 
         // Act
-        List<Map<String,Object>> actualOutParametersList = Broker.invoke(Mark.class, parameters);
+        Type reflector = Mark.class;
+        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();

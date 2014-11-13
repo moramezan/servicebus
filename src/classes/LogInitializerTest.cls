@@ -41,7 +41,8 @@
         };
         
         //act
-        List<Map<String,Object>> results = Broker.invoke(LogInitializer.class, parameters);
+        Type reflector = LogInitializer.class;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -100,7 +101,8 @@
         };
         
         //act
-        List<Map<String,Object>> results = Broker.invoke(LogInitializer.class, parameters);
+        Type reflector = LogInitializer.class;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -163,7 +165,8 @@
         };
         
         //act
-        List<Map<String,Object>> results = Broker.invoke(LogInitializer.class, parameters);
+        Type reflector = LogInitializer.class;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -213,7 +216,8 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            List<Map<String,Object>> results = Broker.invoke(LogInitializer.class, parameters);
+            Type reflector = LogInitializer.class;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -259,7 +263,8 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            List<Map<String,Object>> results = Broker.invoke(LogInitializer.class, parameters);
+            Type reflector = LogInitializer.class;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();

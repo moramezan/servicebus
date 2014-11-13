@@ -45,7 +45,8 @@
             'eda_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
-        List<Map<String,Object>> parametersList = Broker.invoke(Publish.class, parameters);
+        Type reflector = Publish.class;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //should return one for sub, one for passthru
         Integer expectedSize = 2;
@@ -81,7 +82,8 @@
         
         //act
         Boolean thrown = false;
-        try {Broker.invoke(Publish.class, parameters);}
+        Type reflector = Publish.class;
+        try {new Broker.Wrapper(reflector, parameters).invokeMain();}
         catch (Publish.PublishException e) {thrown = true;}
         
         //assert
@@ -112,7 +114,8 @@
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         
         //act
-        List<Map<String,Object>> parametersList = Broker.invoke(Publish.class, parameters);
+        Type reflector = Publish.class;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assert
         Integer expectedSize = 1;
@@ -167,7 +170,8 @@
         Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'Publisher', 'eda_Position' => 1, 'eda_ConfigObjectId' => publisherStep.ConfigurationId__c};
         
         //act
-        List<Map<String,Object>> parametersList = Broker.invoke(Publish.class, parameters);
+        Type reflector = Publish.class;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assert
         Integer expectedSize = 3;

@@ -18,7 +18,8 @@
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         
         //act
-        List<Map<String,Object>> parametersList = Broker.invoke(Subscribe.class, parameters);
+        Type reflector = Subscribe.class;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assert
         integer expectedSize = 1;

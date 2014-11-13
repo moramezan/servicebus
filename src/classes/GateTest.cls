@@ -40,7 +40,8 @@ private  class GateTest {
         Integer expectedGateItemsSize = (Integer) count;
 
         // Act
-        List<Map<String,Object>> actualOutParametersList = Broker.invoke(Gate.class, parameters);
+        Type reflector = Gate.class;
+        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -96,7 +97,8 @@ private  class GateTest {
         Integer expectedGateItemsSize = (Integer) ( count - 1) ;
 
         // Act
-        List<Map<String,Object>> actualOutParametersList = Broker.invoke(Gate.class, parameters);
+        Type reflector = Gate.class;
+        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();

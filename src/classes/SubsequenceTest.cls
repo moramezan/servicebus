@@ -41,7 +41,8 @@
         };
         
         //act
-        List<Map<String,Object>> parametersList = Broker.invoke(Subsequence.class, parameters);
+        Type reflector = Subsequence.class;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //asserts
         Decimal expectedSize = 1;
