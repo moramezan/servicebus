@@ -2,7 +2,7 @@
     
     @TestVisible static private String FailureMessage = 'Fake Error Thrown in FailureProcess';
     
-    public class Meta {
+    @TestVisible private class Meta {
         public String Tag = 'Event Driven Architecture';
         public String Name = 'Failure Process';
         public String Description = 'A toStringable Object that throws an exception for testing purposes.'; //Will not be listed

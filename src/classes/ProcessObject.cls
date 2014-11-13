@@ -80,9 +80,6 @@ public with sharing class ProcessObject extends SalesforceObject {
                 FullyQualifiedClassName__c = outerClass.getName()
             );
             
-            //special exception for BrokerTest.FailureProcess as used in testing
-            if (reflector.getName() == BrokerTest.class.getName()) return process;
-            
             ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
 
             if (meta.Tag == null) {
