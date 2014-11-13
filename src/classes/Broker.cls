@@ -454,21 +454,23 @@ abstract global with sharing class Broker {
         }
         
         //THEIR FUCKUPS (invocation)
+        Savepoint sp;
         try {
-            //save important message properties (such as stackDepth) so that process authors 
-            
-            //save important message properties (such as stackDepth) so that process authors 
-            //cannot pervert them  
+            //save important message properties (such as stackDepth) so that process authors cannot pervert them  
             //TODO : requires a more generic approach not specific to just the eda_StackDepth
-            //       property
             Integer stackDepth = getStackDepth(parameters, stackDepthThreshold);
-            //call invoke the processable instance
-            results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
-            //write back save important message properties 
+            
+            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters);
+            wrapper.invokeCallouts();
+            sp = Database.setSavepoint();
+            wrapper.invokeMain();
+            results = wrapper.Outputs;
+            
+            //write back save important message properties to the parameters collections in results
             //TODO : requires a more generic approach to write back the "eda_" properties to 
-            //       the parameters collections in results
             this.applyStackDepth(results, stackDepth);
         } catch (Exception e) {
+            Database.rollback(sp);
             throw new EngineException('Execute failure in user process:\n' + e.getMessage());
         }
         
