@@ -19,22 +19,40 @@ public with sharing class SynchronousBroker extends Broker {
             Message__c message = (Message__c)iterator.next();
             List<Message__c> inputMessages = new List<Message__c>{message};
             
-            SavePoint sp = Database.setSavePoint();
+            List<Message__c> outputMessages;
             try {
+            
                 //EXECUTE
-                List<Message__c> outputMessages = this.execute(inputMessages);
-                
-                //RESOLVE
-                this.resolve(outputMessages);
+                outputMessages = this.execute(inputMessages);
                 
                 //PERSIST
                 this.persist(inputMessages, outputMessages);
-            } catch (Exception e) {
-                //no emails or database activity thanks!
-                Database.rollback(sp);
                 
-                Message__c inputMessage = inputMessages[0];
-                this.surfaceException(e, inputMessage.Id);
+            } catch (EngineException e) {
+            
+                //revert, except callouts which should really be idempotent anyway
+                if (e.savepoint != null) Database.rollback(e.savepoint);
+                
+                //write away error text on messages
+                update e.fuckups;
+                
+                //stop, don't resolve
+                //finish (invokes broker again in same context)
+                this.restartIfWorkPending();
+                return;
+                
+            }
+            
+            try {
+            
+                //RESOLVE
+                this.resolve(outputMessages);
+                
+            } catch (EngineException e) {
+            
+                //write away error text on messages
+                update e.fuckups;
+                
             }
         }
         

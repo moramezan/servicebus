@@ -90,7 +90,10 @@
         if (actualCount > 0) {
             Map<String,Object> actualParameters = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Parameters__c);
             actualStackDepth = (Integer) actualParameters.get('eda_StackDepth');
-            actualDetail = messages[0].Exception__c;
+            
+            //assemble
+            Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(messages[0].Exception__c);
+            actualDetail = (String)ex.get('Message');
             actualStatus = messages[0].Status__c;
         }
    
@@ -107,7 +110,7 @@
         System.assertEquals(expectedStatus, actualStatus, 'Wrong message status.'); 
     }
     
-    static testmethod void callingGetStackDepthReturnsExpectedValueWhenStackDepthParameterLtThreshold() {
+    static testmethod void callingEnforceStackDepthReturnsExpectedValueWhenStackDepthParameterLtThreshold() {
         //arrange
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
@@ -116,7 +119,7 @@
         parameters.put(key, stackDepth);
         
         //act
-        Integer actualStackDepth = Broker.getStackDepth(parameters, threshold);
+        Integer actualStackDepth = Broker.enforceStackDepth(parameters, threshold);
 
         //assert
         Integer expectedStackDepth = stackDepth + 1;
@@ -125,14 +128,14 @@
 
 
 
-    static testmethod void callingGetStackDepthReturnsExpectedValueWhenStackDepthParameterNotDefined() {
+    static testmethod void callingEnforceStackDepthReturnsExpectedValueWhenStackDepthParameterNotDefined() {
        //arrange
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
         Integer stackDepth = 0;
 
         //act
-        Integer actualStackDepth = Broker.getStackDepth(parameters, threshold);
+        Integer actualStackDepth = Broker.enforceStackDepth(parameters, threshold);
 
         //assert
         Integer expectedStackDepth = stackDepth + 1;
@@ -140,7 +143,7 @@
     }
  
   
-    static testmethod void callingGetStackDepthThrowsExceptionWhenStackDepthParameterGtOrEqToThreshold() {
+    static testmethod void callingEnforceStackDepthThrowsExceptionWhenStackDepthParameterGtOrEqToThreshold() {
        //arrange
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
@@ -151,8 +154,8 @@
         Boolean actualFlag = false;
         try {
             //act
-            Integer actualStackDepth = Broker.getStackDepth(parameters, threshold);
-        } catch (Exception e) {
+            Integer actualStackDepth = Broker.enforceStackDepth(parameters, threshold);
+        } catch (Broker.StackDepthException e) {
             actualFlag = true;
         }
 
@@ -211,7 +214,6 @@
         
         //act
         Broker.impl().resolve(messages);
-        insert messages;
         
         // assemble
         List<Message__c> messagesAfter = SalesforceObjectSet.listAll(Message__c.SObjectType);
@@ -338,37 +340,6 @@
         Integer expectedCount = 2;
         Integer actualCount = messages.size();
         System.assertEquals(expectedCount, actualCount);
-    }
-    
-    static testmethod void callingSurfaceExceptionSurfacesExpectedMessageOnMessage() {
-        //arrange
-        Message__c message = new Message__c(
-            Parameters__c = '{"Id":1, "eda_SequenceName":"crow", "eda_Position":1}'
-        );
-        insert message;
-        
-        String theMessage = 'balls';
-        BrokerException e = new BrokerException(theMessage);
-        
-        //act
-        Id messageId = message.Id;
-        new DoNothingBroker().surfaceException(e, messageId) ;
-        
-        //assemble
-        List<Message__c> messages = [
-            SELECT Id, Name, Parameters__c, Exception__c
-            FROM Message__c
-        ];
-        
-        //assert
-        Integer expectedSize = 1;
-        Integer actualSize = messages.size();
-        System.assertEquals(expectedSize, actualSize);
-        
-        
-        String expectedMessage = theMessage;
-        String actualMessage = messages[0].Exception__c;
-        System.assert(actualMessage.contains(expectedMessage));
     }
     
     static testmethod void canCorrectlyResolveMessages() {
@@ -666,21 +637,23 @@
         
         //act
         Broker broker = new DoNothingBroker();
-        String actualMessage;
         try {
             List<Message__c> messages = broker.execute(new List<Message__c>{message});
-            broker.resolve(messages);
             broker.persist(new List<Message__c>{message}, messages);
-        } catch (Exception e) {
-            actualMessage = e.getMessage();
-        }
-        
-        //assemble
-        Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
-        
-        //assert
-        String expectedMessage = 'Could not deserialize json';
-        System.assert(actualMessage.contains(expectedMessage), actualMessage);
+            broker.resolve(messages);
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Broker.EngineException e) {
+            update e.fuckups;
+            
+            //assemble
+            Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
+            Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(messageActual.Exception__c);
+            
+            //assert
+            String expectedMessage = 'Could not deserialize json, eg malformed parameters.';
+            String actualMessage = (String)ex.get('Message');
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message detail.');
+        }        
     }
     
     static testmethod void testMissingPositionThrowsExpectedException() {
@@ -694,9 +667,9 @@
         String actualMessage;
         try {
             List<Message__c> messages = broker.execute(new List<Message__c>{message});
-            broker.resolve(messages);
             broker.persist(new List<Message__c>{message}, messages);
-        } catch (Exception e) {
+            broker.resolve(messages);
+        } catch (Broker.EngineException e) {
             actualMessage = e.getMessage();
         }
         //assemble
@@ -718,9 +691,9 @@
         String actualMessage;
         try {
             List<Message__c> messages = broker.execute(new List<Message__c>{message});
-            broker.resolve(messages);
             broker.persist(new List<Message__c>{message}, messages);
-        } catch (Exception e) {
+            broker.resolve(messages);
+        } catch (Broker.EngineException e) {
             actualMessage = e.getMessage();
         }
         
@@ -756,11 +729,12 @@
         
         //assemble
         Message__c message = [SELECT Id, Exception__c FROM Message__c];
+        Map<String,Object> actualEx = (Map<String,Object>)Json.deserializeUntyped(message.Exception__c);
         
         //assert
         String actualMessage = message.Exception__c;
-        String expectedMessage = 'Other pre-invocation exception:\nReflector for classname was null: lalala';
-        System.assertEquals(expectedMessage, actualMessage, 'Wrong message detail.');
+        String expectedMessage = 'Reflector for classname was null: lalala';
+        System.assertEquals(expectedMessage, (String)actualEx.get('Message'), 'Wrong message detail.');
     }
     
     static testmethod void testNonProcessObjectThrowsTypeException() {
@@ -785,11 +759,14 @@
         Broker.enqueue(sequence.Name, '000000000000000AAA');
         Test.stopTest();
         
-        //assert
+        //assemble
         Message__c message = [SELECT Id, Exception__c FROM Message__c];
-        String actualMessage = message.Exception__c;
-        String expectedMessage = 'Could not see Parameters, eg instance is not a process class:\nAccount';
-        System.assert(actualMessage.contains(expectedMessage), actualMessage);
+        Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(message.Exception__c);
+        
+        //assert
+        String actualMessage = (String)ex.get('Message');
+        String expectedMessage = 'Could not see Parameters, eg instance is not a process class: Account';
+        System.assertEquals(expectedMessage, actualMessage, 'Wrong message detail.');
     }
     
     
@@ -971,14 +948,17 @@
         if (actualCountFailed == 1) {
             actualExceptionMessage = messagesFailed[0].Exception__c;
         }
+        
+        //assemble
+        Map<String,Object> actualException = (Map<String,Object>)Json.deserializeUntyped(actualExceptionMessage);
 
         // assert
-        Integer expectedCountOk = 2;
+        Integer expectedCountOk = 3;
         System.assertEquals( expectedCountOk, actualCountOk);
         Integer expectedCountFailed = 1;
         System.assertEquals( expectedCountFailed, actualCountFailed);
-        String expectedExceptionMessage = 'Resolve failure';
-        System.assert(actualExceptionMessage.contains(expectedExceptionMessage));         
+        String expectedExceptionMessage = 'Step unqueryable, eg bad sequence name, position, missing terminate.';
+        System.assertEquals(expectedExceptionMessage, (String)actualException.get('Message'), 'Wrong message');         
     }
  
     static testMethod void callingEnqueueWithParameterCollectionIncludesAllParametersInMessage() {

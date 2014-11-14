@@ -79,7 +79,133 @@ abstract global with sharing class Broker {
     
     @TestVisible private static Integer stackDepthThreshold  = 500;
     
-    global class EngineException extends Exception {}
+    public class StackDepthException extends Exception {}
+    
+    public class EngineException extends Exception {
+        /**
+         * Gotta jettison this guy for rollback later
+         */
+        public Savepoint savepoint = null;
+        
+        /**
+         * Persist these guys after rolling back the execute
+         */
+        public List<Message__c> fuckups = new List<Message__c>();
+        
+        /**
+         * Shorthand constructor
+         */
+        public EngineException(Savepoint sp, Id messageId, String error, Exception cause) {
+            this(messageId, error, cause);
+            this.savepoint = sp;
+        }
+        
+        /**
+         * Shorthand constructor
+         */
+        public EngineException(Id messageId, String error, Exception cause) {
+            this(error, cause);
+            this.fuckups.add(new Message__c(
+                Id = messageId,
+                Exception__c = new ExceptionSerializer(this).getAsString()
+            ));
+        }
+        
+        /**
+         * Shorthand constructor
+         */
+        public EngineException(Set<Id> messageIds, String error, Exception cause) {
+            this(error, cause);
+            for (Id messageId : messageIds) this.fuckups.add(new Message__c(
+                Id = messageId,
+                Exception__c = new ExceptionSerializer(this).getAsString()
+            ));
+        }
+    }
+    
+    /**
+     * Usage:
+     * new ExceptionSerializer(myEx).getAsString();
+     */
+    @TestVisible private class ExceptionSerializer {
+        
+        private JsonGenerator g;
+        
+        public ExceptionSerializer(Exception e) {
+            //true for pretty printing
+            g = Json.createGenerator(true);
+            
+            g.writeStartObject();
+            traverseException(e);
+            g.writeEndObject();
+        }
+        
+        public String getAsString() {
+            return g.getAsString();
+        }
+        
+        @TestVisible private void traverseException(Exception e) {
+            //special exceptions
+            if (e instanceof DmlException || e instanceof EmailException) {
+                Integer n = e.getNumDml();
+                g.writeNumberField('NumDml', n);
+                
+                //the names of the field or fields that caused the error described by the ith failed row
+                List<List<String>> dmlFieldNames = new List<List<String>>();
+                for (Integer i = 0; i < n; i++) dmlFieldNames.add(e.getDmlFieldNames(i));
+                g.writeObjectField('DmlFieldNames', dmlFieldNames);
+                
+                //cannot serialize Schema.sObjectField
+                //List<List<Schema.sObjectField>> dmlFields = new List<List<Schema.sObjectField>>();
+                //for (Integer i = 0; i < n; i++) dmlFields.add(e.getDmlFields(i));
+                //g.writeObjectField('DmlFields', dmlFields); 
+                
+                //the ID of the failed record that caused the error described by the ith failed row
+                List<Id> dmlIds = new List<Id>();
+                for (Integer i = 0; i < n; i++) dmlIds.add(e.getDmlId(i));
+                g.writeObjectField('DmlIds', dmlIds);
+                
+                //the original row position of the ith failed row
+                List<Integer> dmlIndexes = new List<Integer>();
+                for (Integer i = 0; i < n; i++) dmlIndexes.add(e.getDmlIndex(i));
+                g.writeObjectField('DmlIndexes', dmlIndexes);
+                
+                //the user message for the ith failed row
+                List<String> dmlMessages = new List<String>();
+                for (Integer i = 0; i < n; i++) dmlMessages.add(e.getDmlMessage(i));
+                g.writeObjectField('DmlMessages', dmlMessages);
+                
+                //the Apex failure code for the ith failed row
+                List<String> dmlStatusCodes = new List<String>();
+                for (Integer i = 0; i < n; i++) dmlStatusCodes.add(e.getDmlStatusCode(i));
+                g.writeObjectField('DmlStatusCodes', dmlStatusCodes);
+                
+                //cannot serialize Enum
+                //List<System.StatusCode> dmlTypes = new List<System.StatusCode>();
+                //for (Integer i = 0; i < n; i++) dmlTypes.add(e.getDmlType(i));
+                //g.writeObjectField('DmlTpes', dmlTypes);
+            }
+            
+            //normal exceptions
+            g.writeNumberField('LineNumber', e.getLineNumber());
+            g.writeStringField('Message', e.getMessage());
+            g.writeStringField('StackTraceString', e.getStackTraceString());
+            g.writeStringField('TypeName', e.getTypeName());
+            g.writeFieldName('Cause');
+            
+            if (e.getCause() == null) {
+                //time to stop recursing
+                this.g.writeNull();
+                return;
+            }
+            
+            //recurse into causes
+            g.writeStartObject();
+            traverseException(e.getCause());
+            g.writeEndObject();
+        }
+        
+    }
     
     public class CrudException extends Exception {}
     
@@ -151,6 +277,7 @@ abstract global with sharing class Broker {
         }
         
         /**
+         * @throws EngineException
          * @return fluent API
          */
         public Wrapper invokeCallouts() {
@@ -172,6 +299,7 @@ abstract global with sharing class Broker {
         }
         
         /**
+         * @throws EngineException
          * @return fluent API
          */
         public Wrapper invokeMain() {
@@ -197,27 +325,6 @@ abstract global with sharing class Broker {
             
             return this;
         }
-    }
-
-    @TestVisible static private List<Map<String,Object>> invoke(Type reflector, Map<String,Object> input) {
-        //cast inputs and invoke
-        Map<String,Object> untyped = new Map<String,Object>{
-            'Parameters' => Json.serialize(input)
-            //AllowsCallouts
-        };
-        Object process = Json.deserialize(Json.serialize(untyped), reflector);
-        String data = String.valueOf(process);
-        List<Object> results = (List<Object>)Json.deserializeUntyped(data);
-
-        //balance plus delta, cast output
-        List<Map<String,Object>> outputs = new List<Map<String,Object>>();
-        for (Object result : results) {
-            Map<String,Object> output = input.clone();
-            output.putAll((Map<String,Object>)result);
-            outputs.add(output);
-        }
-
-        return outputs;
     }
 
     /**
@@ -354,7 +461,7 @@ abstract global with sharing class Broker {
             instance.resolve(new List<Message__c>{message}); //RESOLVE
         }
         
-        insert message;
+        upsert message;
         Broker.process();
         return message.Id;
     }
@@ -404,7 +511,7 @@ abstract global with sharing class Broker {
             for (Message__c message : messages) message.Status__c = 'Started';
             return Database.update(messages);
         } catch (Exception e) {
-            throw new EngineException('Mark failure:\n' + e.getMessage());
+            throw new EngineException('Mark failure!', e);
         }
     }
     
@@ -419,64 +526,70 @@ abstract global with sharing class Broker {
         if (inputMessages.isEmpty()) return new List<Message__c>();
         
         Message__c message = inputMessages[0]; //TODO chunking
-        List<Map<String,Object>> results;
-        Map<String,Object> parameters;
-        Type reflector;
-        Object process;
         
-        //OUR FUCKUPS ( before invocation )
+        //OUR FUCKUPS (before invocation)
+        
+        Map<String,Object> parameters;
         try {
             parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
-    
-            Step__c step = [
+        } catch (JsonException e) {
+            throw new EngineException(message.Id, 'Could not deserialize json, eg malformed parameters.', e);
+        }
+        
+        Step__c step;
+        try {
+            step = [
                 SELECT Process__c, ConfigurationId__c, Process__r.Name, Process__r.FullyQualifiedClassName__c
                 FROM Step__c
                 WHERE Id = :message.Step__c
             ];
+        } catch (QueryException e) {
+            throw new EngineException(message.Id, 'Step unqueryable, eg bad sequence name, position, missing terminate.', e);
+        }
         
-            parameters.put('eda_ConfigObjectId', Step.ConfigurationId__c);
+        Type reflector = Type.forName(step.Process__r.FullyQualifiedClassName__c);
+        if (reflector == null) {
+            throw new EngineException(message.Id, 'Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c, null);
+        }
         
-            //instantiate processable instance
-            reflector = Type.forName(step.Process__r.FullyQualifiedClassName__c);
-            if (reflector == null) throw new EngineException('Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c);
-            
-            Object plugin = Json.deserialize('{}', reflector);
-            Map<String,Object> untyped = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(plugin));
-            if (!untyped.containsKey('Parameters')) {
-                //woops, probably not a process! this is kinda the only way to do this since we don't have an interface
-                throw new EngineException('Could not see Parameters, eg instance is not a process class:\n' + reflector.getName());
-            }
-            
-        } catch (Exception e) {
-            if (e instanceof System.JsonException) {
-                throw new EngineException('Could not deserialize json, eg malformed parameters:\n' + e.getMessage());
-            } else if (e instanceof System.NullPointerException) {
-                throw new EngineException('Position null, eg key missing from parameters, or Type null eg class missing:\n' + e.getMessage());
-            } else if (e instanceof System.QueryException) {
-                throw new EngineException('Step unqueryable, eg bad sequence name, position, missing terminate:\n' + e.getMessage());
-            } else {
-                throw new EngineException('Other pre-invocation exception:\n' + e.getMessage());
-            }
+        Object plugin = Json.deserialize('{}', reflector);
+        Map<String,Object> untyped = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(plugin));
+        if (!untyped.containsKey('Parameters')) {
+            throw new EngineException(message.Id, 'Could not see Parameters, eg instance is not a process class: ' + reflector.getName(), null);
         }
         
         //save important message properties (such as stackDepth) so that process authors cannot pervert them  
         //THROWS EngineException TODO : requires a more generic approach not specific to just the eda_StackDepth
-        Integer stackDepth = getStackDepth(parameters, stackDepthThreshold);
+        Integer stackDepth;
+        try {
+            stackDepth = enforceStackDepth(parameters, stackDepthThreshold);
+        } catch (StackDepthException e) {
+            //wrapped this here because we need to stick the MESSAGE ID on the exception in order to be able to write the problem away
+            throw new EngineException(message.Id, 'Maximum Stack Depth exceeded - to resolve, manually set eda_StackDepth on parameters to 0', e);
+        }
+        
+        
+        if (step.ConfigurationId__c != null) parameters.put('eda_ConfigObjectId', step.ConfigurationId__c);
+        Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters);
         
         //THEIR FUCKUPS (invocation)
+        
         Savepoint sp;
         try {
             
-            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters);
+            //TODO COUNT ANY DMLS
             wrapper.invokeCallouts();
             sp = Database.setSavepoint();
             wrapper.invokeMain();
-            results = wrapper.Outputs;
+            //TODO COUNT ANY CALLOUTS
             
         } catch (Exception e) {
-            if (sp != null) Database.rollback(sp); //might be null if stackDepth blows up
-            throw new EngineException('Execute failure in user process:\n' + e.getMessage());
+            throw new EngineException(sp, message.Id, 'Execute failure in user process', e);
         }
+        
+        //OUR FUCKUPS  (after invocation)
+        
+        List<Map<String,Object>> results = wrapper.Outputs;
         
         //write back save important message properties to the parameters collections in results
         //TODO : requires a more generic approach to write back the "eda_" properties to 
@@ -493,6 +606,7 @@ abstract global with sharing class Broker {
                 Status__c = 'Buffered'
             ));
         }
+        
         return messages;
     }
 
@@ -535,7 +649,7 @@ abstract global with sharing class Broker {
             
             //now put the resolved sequence/step/process on each message
             for (Message__c message : messages) {
-            //OUR FUCKUPS ( after invocation )
+                //OUR FUCKUPS ( after invocation )
                 Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
                 String sequenceName = (String)parameters.get('eda_SequenceName');
                 Decimal position = (Decimal)parameters.get('eda_Position'); //care
@@ -546,8 +660,12 @@ abstract global with sharing class Broker {
                 message.Process__c = step.Process__r.Id;
                 message.Step__c = step.Id;
             }
+            
+            //DML time!
+            upsert messages;
         } catch (Exception e) {
-            throw new EngineException('Resolve failure, check sequence config:\n' + e.getMessage());
+            Set<Id> messageIds = new Map<Id,Message__c>(messages).keySet();
+            throw new EngineException(messageIds, 'Resolve failure, check sequence config.', e);
         }
     }
     
@@ -564,35 +682,11 @@ abstract global with sharing class Broker {
             messages.addAll(outputMessages);
             return Database.upsert(messages, true); //all or none
         } catch (Exception e) {
-            throw new EngineException('Persist failure:\n' + e.getMessage());
+            Set<Id> messageIds = new Map<Id,Message__c>(inputMessages).keySet();
+            throw new EngineException(messageIds, 'Persist failure.', e);
         }
     }
     
-    public void surfaceException(Exception e, Id messageId) {
-        if (!SObjectType.Note.Createable) throw new Broker.CrudException('!SObjectType.Note.Createable');
-        if (!SObjectType.Message__c.Fields.Exception__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Exception__c.Updateable');   
-
-        Map<String,Object> serializedException = new Map<String,Object>();
-        serializedException.put('cause', e.getCause());
-        serializedException.put('lineNumber', e.getLineNumber());
-        serializedException.put('message', e.getMessage());
-        serializedException.put('stackTraceString', e.getStackTraceString());
-        serializedException.put('typeName', e.getTypeName());
-        
-        //log exception summary on parameters
-        Database.update(new Message__c(
-            Id = messageId,
-            Exception__c = e.getMessage().left(255)
-        ));
-        
-        //log exception details over 255 bytes using note object
-        insert new Note(
-            ParentId = messageId,
-            Title = e.getMessage().left(80),
-            Body = Json.serializePretty(serializedException).left(32000)
-        );
-    }
-
      /**
      * Context:
      * A message can pass through a limited number of steps. This "limit" is a fairly high arbitrary threshold.
@@ -602,7 +696,7 @@ abstract global with sharing class Broker {
      * An exception is thrown if the stackDepth threshold is reached
      *
      * We cannot simply increment  eda_StackDepth BEFORE calling invoke as a process writer could fuck with this parameter
-     * Instead we read and increment eda_StackDepth BEFORE calling invoke using getStackDepth()
+     * Instead we read and increment eda_StackDepth BEFORE calling invoke using enforceStackDepth()
      * and assign to an Integer stackDepth variable
      * We use applyStackDepth()  to apply the incremented stackDepth variable to the eda_StackDepth parameter of
      * all messages returned from invoke()
@@ -617,11 +711,11 @@ abstract global with sharing class Broker {
     /**
      * See applyStackDepth() method for context and details.
      */
-    @TestVisible static private Integer getStackDepth(Map<String,Object> parameters, Integer threshold) {
+    @TestVisible static private Integer enforceStackDepth(Map<String,Object> parameters, Integer threshold) {
         Integer stackDepth = (parameters.get('eda_StackDepth') == null) ? 0 : (Integer) parameters.get('eda_StackDepth');
         stackDepth++;
         if (stackDepth > threshold) {
-            throw new EngineException('Maximum Stack Depth exceeded - to resolve, manually set eda_StackDepth on parameters to 0');
+            throw new StackDepthException('Stack depth of ' + stackDepth + ' is greater than threshold of ' + threshold);
         }
         return stackDepth;
     }

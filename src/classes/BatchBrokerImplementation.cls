@@ -29,17 +29,43 @@ public without sharing class BatchBrokerImplementation extends Broker implements
     }
     
     public void execute(Database.BatchableContext context, List<Message__c> inputMessages) {
+        
+        //remove handled message ids
+        this.failedMessageIds.removeAll(new Map<Id,SObject>(inputMessages).keySet());
+        
+        List<Message__c> outputMessages;
+        try {
+        
             //EXECUTE
-            List<Message__c> outputMessages = this.execute(inputMessages);
-            
-            //RESOLVE
-            this.resolve(outputMessages);
+            outputMessages = this.execute(inputMessages);
             
             //PERSIST
             this.persist(inputMessages, outputMessages);
+            
+        } catch (EngineException e) {
         
-        //incrementally remove non failing message ids
-        for (Message__c inputMessage : inputMessages) this.failedMessageIds.remove(inputMessage.Id);
+            //revert, except callouts which should really be idempotent anyway
+            if (e.savepoint != null) Database.rollback(e.savepoint);
+            
+            //write away error text on messages
+            update e.fuckups;
+            
+            //stop, don't resolve
+            return;
+            
+        }
+        
+        try {
+        
+            //RESOLVE
+            this.resolve(outputMessages);
+            
+        } catch (EngineException e) {
+        
+            //write away error text on messages
+            update e.fuckups;
+            
+        }
     }
     
     public void finish(Database.BatchableContext context) {

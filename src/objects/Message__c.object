@@ -69,11 +69,12 @@
     <fields>
         <fullName>Exception__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>If the process threw an exception when handling this message, what was the error text?</inlineHelpText>
+        <inlineHelpText>If the process threw an exception when handling this message, what was the error?</inlineHelpText>
         <label>Exception</label>
-        <required>false</required>
+        <length>32768</length>
         <trackTrending>false</trackTrending>
-        <type>TextArea</type>
+        <type>LongTextArea</type>
+        <visibleLines>20</visibleLines>
     </fields>
     <fields>
         <fullName>IsOverdue__c</fullName>
