@@ -65,7 +65,7 @@
         System.assertEquals( expectedStepCount , actualStepCount  );  
     } 
 
-   	private static testmethod void callingTerminateAddsTerminateStepIfNoTerminateStepExists() {
+    private static testmethod void callingTerminateAddsTerminateStepIfNoTerminateStepExists() {
         // arrange
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
 

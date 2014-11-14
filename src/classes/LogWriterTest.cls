@@ -34,7 +34,7 @@
         System.assert( actualMessage.contains(expectedMessage) );
     }
     
-	private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
+    private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
         //arrange
         String sequenceName  = 'LogWriterSequence';
         Integer thePosition =  1;
@@ -132,11 +132,11 @@
         String actualParametersSerialized2;
         for (LogWriterEntry__c  logWriterEntry : logWriterEntries) {
             if (logWriterEntry.LogGroup__c == logGroup1.Id) {
-            	actualLogGroup1 = true;
+                actualLogGroup1 = true;
                 actualParametersSerialized1 = logWriterEntry.Parameters__c;
             }
             if (logWriterEntry.LogGroup__c == logGroup2.Id) {
-            	actualLogGroup2 = true;
+                actualLogGroup2 = true;
                 actualParametersSerialized2 = logWriterEntry.Parameters__c;
             }
         }

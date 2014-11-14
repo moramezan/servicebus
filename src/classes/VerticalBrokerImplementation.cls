@@ -115,5 +115,5 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         
         return existingJobsCount != 0;
     }
-	
+    
 }

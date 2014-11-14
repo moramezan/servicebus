@@ -63,7 +63,7 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
         private IApexClassProvider apexClassProvider;
         
         public ProcessHealth (IApexClassProvider apexClassProvider) {
-        	this.apexClassProvider = apexClassProvider;   
+            this.apexClassProvider = apexClassProvider;   
         }
 
         public  Map<Id,String> getProcessHealth() {

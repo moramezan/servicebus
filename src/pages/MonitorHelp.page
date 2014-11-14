@@ -9,8 +9,8 @@
             <apex:pageBlockSectionItem >
                 <p>
                     A monitoring page is provided so you can see system health at a glance. Below is an example.
-                	<br />From the <strong style="color:#090;">green</strong> areas you can deduce there is a lot of <strong>Publish/Subscribe</strong> activity currently.
-            		<br />The <strong style="color:#900;">red</strong> area indicates there is very likely a problem with the <strong>Scrape</strong><!--FetchStockPrice--> process.
+                    <br />From the <strong style="color:#090;">green</strong> areas you can deduce there is a lot of <strong>Publish/Subscribe</strong> activity currently.
+                    <br />The <strong style="color:#900;">red</strong> area indicates there is very likely a problem with the <strong>Scrape</strong><!--FetchStockPrice--> process.
                 </p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>

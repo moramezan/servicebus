@@ -1,5 +1,5 @@
 @IsTest public class SalesforceObjectSetTest {
-	
+    
     class SequenceObjectSet extends SalesforceObjectSet {
         public SequenceObjectSet(List<Sequence__c> sequences) {
             super(sequences);
