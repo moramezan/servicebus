@@ -11,7 +11,6 @@
         <members>AsyncApexJobObjectTest</members>
         <members>BatchBrokerDispatcher</members>
         <members>BatchBrokerDispatcherTest</members>
-        <members>BatchBrokerExceptionHandlerSchedule</members>
         <members>BatchBrokerImplementation</members>
         <members>BatchBrokerImplementationTest</members>
         <members>Branch</members>
