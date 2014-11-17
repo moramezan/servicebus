@@ -216,7 +216,7 @@ abstract global with sharing class Broker {
         BrokerSettings__c settings = BrokerSettings__c.getInstance();
         
         //if there is no setting, use the default batch broker
-        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = BatchBrokerImplementation.class.getName(); 
+        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = VerticalBrokerImplementation.class.getName(); 
         
         //new up and return the broker instance
         Broker impl = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
