@@ -12,29 +12,34 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     
     @TestVisible private Boolean abortJob = false;
 
-    class Generator implements Iterable<Boolean>,Iterator<Boolean> {
-        private Integer i = 0;
-        public Boolean hasNext() {
-            if (i > 100) return false;
-            return true;
-        }
-        public Boolean next() {
-            i++;
-            return true;
-        }
-        public Iterator<Boolean> iterator() {
-            return this;
-        }
-    }
-    
     /**
      * If scope is null, execute will never be reacher!
      * Has to be array of booleans, not nulls
      */
     public Iterable<Boolean> start(Database.BatchableContext context) {
         if (BrokerSettings__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
-        
-        return (Iterable<Boolean>)new Generator();
+        return new List<Boolean>{
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true,
+            true, true, true, true, true, true, true, true, true, true
+        };
     }
     
     public void execute(Database.BatchableContext context, List<Boolean> scopes) {
