@@ -72,7 +72,7 @@ public with sharing class LogInitializer {
         try {
             return SalesforceObject.getById(theId);
         } catch (Exception e) {
-            throw new LogInitializerException('Cannot hydate SObject with Id=[' + theId + ']' + e.getStackTraceString());
+            throw new LogInitializerException('Cannot hydate SObject with Id=[' + theId + ']', e);
         }
     }
 

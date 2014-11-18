@@ -31,11 +31,6 @@
  
     }
     
-    static testmethod void callingEnqueueWithInternallyFailingProcessSuccessfullyWritesErrorMessageToMessage() {
-        // Deprecated  
-        // see - BatchBrokerImplementation.deferExceptionHandler();
-    }
-
     static testmethod void callingBrokerStartSuccessfullyCallsStartImp() {
         //arrange processes
         Process__c markProcess = ProcessObject.generateOne(Mark.class);

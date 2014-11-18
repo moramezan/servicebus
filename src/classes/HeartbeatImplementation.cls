@@ -359,8 +359,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
                 heartbeatProcess = ProcessObject.fromType(Heartbeat.class);
                 insert heartbeatProcess;    
             } catch (Exception e) {
-                e.setMessage('Cannot configure '  + Heartbeat.class.getName() + ' process in process object - ' + e.getMessage());
-                throw new Broker.CrudException(e);
+                throw new Broker.CrudException('Cannot configure '  + Heartbeat.class.getName() + ' process in process object.', e);
             }
         } else {
             heartbeatProcess = [SELECT Id, Name FROM Process__c WHERE Name = :Heartbeat.class.getName()][0];
@@ -371,8 +370,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
                 terminateProcess = ProcessObject.fromType(Terminate.class);
                 insert terminateProcess;    
             } catch (Exception e) {
-                e.setMessage('Cannot configure '  + Terminate.class.getName() + ' process in process object - ' + e.getMessage());
-                throw new Broker.CrudException(e);
+                throw new Broker.CrudException('Cannot configure '  + Terminate.class.getName() + ' process in process object.', e);
             }
         } else {
             terminateProcess = [SELECT Id, Name FROM Process__c WHERE Name = :Terminate.class.getName()][0];
@@ -383,8 +381,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
                 sequence = new Sequence__c(Name = SystemHeartbeatSequence);
                 insert sequence; 
             } catch (Exception e) {
-                e.setMessage('Cannot configure ' + SystemHeartbeatSequence + ' sequence - ' + e.getMessage());
-                throw new Broker.CrudException(e);
+                throw new Broker.CrudException('Cannot configure ' + SystemHeartbeatSequence + ' sequence.', e);
             }
         } else {
             sequence  = [SELECT Id, Name FROM Sequence__c WHERE Name = :SystemHeartbeatSequence][0];
@@ -399,10 +396,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
                 delete [SELECT Id FROM Step__c WHERE Sequence__c = :sequence.Id]; 
                 insert steps;
             } catch (Exception e) {
-                e.setMessage('Cannot configure ' + Heartbeat.class.getName()  + ' and/or ' + Terminate.class.getName() +
-                    ' step(s) on ' + SystemHeartbeatSequence + ' sequence - ' + e.getMessage()
-                );
-                throw new Broker.CrudException(e);
+                throw new Broker.CrudException('Cannot configure ' + Heartbeat.class.getName()  + ' and/or ' + Terminate.class.getName() + ' step(s) on ' + SystemHeartbeatSequence + ' sequence.', e);
             }
         }    
     } 
