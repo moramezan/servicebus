@@ -26,7 +26,6 @@
         
         //act (enqueue)
         VerticalBrokerImplementation impl = (VerticalBrokerImplementation)Broker.impl();
-        List<Boolean> scopes = new List<Boolean>{true};
         impl.resolve(new List<Message__c>{message});
         update message;
         
@@ -36,6 +35,7 @@
         System.assertEquals(expectedCount, actualCount, 'Message should be buffered.');
         
         //act (mark)
+        List<SObject> scopes = new List<SObject>();
         impl.execute(null, scopes);
         
         //assert

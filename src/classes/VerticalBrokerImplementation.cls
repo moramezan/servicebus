@@ -4,11 +4,10 @@
  * 
  * This class is WITHOUT SHARING to ensure the process can execute regardless of running user context.
  */
-public without sharing class VerticalBrokerImplementation extends Broker implements Database.Batchable<Boolean>, Database.AllowsCallouts, Database.Stateful {
+public without sharing class VerticalBrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
     
     @TestVisible private Set<Id> fatalMessageIds = new Set<Id>();
     @TestVisible private Map<Id,Message__c> markedMessages = new Map<Id,Message__c>();
-    @TestVisible private List<Message__c> errorMessages = new List<Message__c>();
     
     @TestVisible private Boolean abortJob = false;
 
@@ -16,43 +15,13 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
      * If scope is null, execute will never be reacher!
      * Has to be array of booleans, not nulls
      */
-    public Iterable<Boolean> start(Database.BatchableContext context) {
+    public Database.QueryLocator start(Database.BatchableContext context) {
         if (BrokerSettings__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
-        return new List<Boolean>{
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true
-        };
+        return Database.getQueryLocator([SELECT Id FROM FieldPermissions LIMIT 100]);
     }
     
-    public void execute(Database.BatchableContext context, List<Boolean> scopes) {
+    public void execute(Database.BatchableContext context, List<SObject> scopes) {
         if (BrokerSettings__c.getInstance().Inhibit__c == true) System.abortJob(context.getJobId()); //INHIBIT
-        
-        //ok, so this is kind of awkward... we need SOME OTHER SIGNAL of fatal errors
-        //than just the FATAL IDS being "pre set" otherwise those guys never get even
-        //a single attempt at execute...  it goes straight from MARK to FATAL HANDLER
-        AsyncApexJob asyncApexJob = Test.isRunningTest() ? new AsyncApexJob() : [
-            SELECT Id, ExtendedStatus
-            FROM AsyncApexJob
-            WHERE Id = :context.getJobId()
-        ];
         
         //LOCATE
         Database.QueryLocator locator = this.locateMarkableWork(1);
@@ -60,44 +29,14 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         
         Boolean hasWorkToMark = !markableMessages.isEmpty();
         Boolean hasWorkToExecute = !this.markedMessages.isEmpty();
-        Boolean hasWorkToSaveErrors = !this.errorMessages.isEmpty();
-        Boolean hasWorkWithFatalErrors = !this.fatalMessageIds.isEmpty() && asyncApexJob.ExtendedStatus != null;
-        
-        if (hasWorkWithFatalErrors) {
-            //FATAL (sacrificial execution context)
-            
-            List<Message__c> fatalMessages = new List<Message__c>();
-            for (Id fatalMessageId : this.fatalMessageIds) fatalMessages.add(new Message__c(
-                Id = fatalMessageId,
-                Exception__c = asyncApexJob.ExtendedStatus
-            ));
-            
-            //better than nothing
-            update fatalMessages;
-            
-            //these guys have been handled (fatal)
-            this.markedMessages = new Map<Id,Message__c>();
-            
-            //fatals handled
-            this.fatalMessageIds = new Set<Id>();
-            
-            //next context
-            return;
-        }
-        
-        if (hasWorkToSaveErrors) {
-            //ERROR (sacrificial execution context)
-            update this.errorMessages;
-            
-            //errors handled
-            this.errorMessages = new List<Message__c>();
-            
-            //next context
-            return;
-        }
         
         if (!hasWorkToMark && !hasWorkToExecute) {
             //DONE
+            
+            //errors
+            this.handleFatalExceptions(context);
+            
+            //exit
             if (Test.isRunningTest()) this.abortJob = true; else System.abortJob(context.getJobId());
             
             //last context
@@ -109,21 +48,27 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
             this.mark(markableMessages);
             this.markedMessages = new Map<Id,Message__c>(markableMessages);
             
-            //potentially fatal errors
-            this.fatalMessageIds.addAll(this.markedMessages.keySet());
-            
             //next context
             return;
         }
         
+        Set<Id> inputIds = this.markedMessages.keySet();
+        List<Message__c> inputMessages = this.markedMessages.values();
         List<Message__c> outputMessages;
+        
+        //potentially fatal errors
+        this.fatalMessageIds.addAll(inputIds);
+        
+        //these guys have been handled (either way, thanks to stateful)
+        this.markedMessages = new Map<Id,Message__c>();
+        
         try {
         
             //EXECUTE
-            outputMessages = this.execute(this.markedMessages.values());
+            outputMessages = this.execute(inputMessages);
             
             //PERSIST
-            this.persist(this.markedMessages.values(), outputMessages);
+            this.persist(inputMessages, outputMessages);
             
         } catch (EngineException e) {
             
@@ -131,13 +76,10 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
             if (e.savepoint != null) Database.rollback(e.savepoint);
             
             //these had errors
-            this.errorMessages = e.fuckups;
+            update e.fuckups;
             
             //but not fatal errors
-            this.fatalMessageIds.removeAll(this.markedMessages.keySet());
-            
-            //these guys have been handled (failure)
-            this.markedMessages = new Map<Id,Message__c>();
+            this.fatalMessageIds.removeAll(inputIds);
             
             //stop, no outputs to resolve
             return;
@@ -145,10 +87,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         }
         
         //not fatal errors
-        this.fatalMessageIds.removeAll(this.markedMessages.keySet());
-        
-        //these guys have been handled (successfully)
-        this.markedMessages = new Map<Id,Message__c>(); //these guys handled
+        this.fatalMessageIds.removeAll(inputIds);
         
         try {
             
@@ -158,13 +97,43 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         } catch (EngineException e) {
             
             //these had errors
-            this.errorMessages = e.fuckups;
+            update e.fuckups;
             
         }
     }
     
     public void finish(Database.BatchableContext context) {
         this.restartIfWorkPending();
+    }
+    
+    /**
+     * The new reason we can't persist such errors in the execute() method is
+     * because they are uncatchable exceptions like System.assert() or Limits.
+     *
+     * While we can't get the stack trace of these exceptions, we can do ever so
+     * slightly better and pull the detail off the job's ExtendedStatus to give
+     * a tiny bit of visibility about the problem to the process author / user.
+     *
+     * There is always ONE place to go for the information: Message__c.Exception__c
+     */
+    public void handleFatalExceptions(Database.BatchableContext context) {
+        if (this.fatalMessageIds.isEmpty()) return;
+        
+        AsyncApexJob asyncApexJob = [
+            SELECT Id, ExtendedStatus
+            FROM AsyncApexJob
+            WHERE Id = :context.getJobId()
+        ];
+        
+        //if (asyncApexJob.ExtendedStatus == null) return; //only gonna destroy exception
+        
+        List<Message__c> fatalMessages = new List<Message__c>();
+        for (Id fatalMessageId : this.fatalMessageIds) fatalMessages.add(new Message__c(
+            Id = fatalMessageId,
+            Exception__c = asyncApexJob.ExtendedStatus
+        ));
+        
+        update fatalMessages;
     }
     
     /**

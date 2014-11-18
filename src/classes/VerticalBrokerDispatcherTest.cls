@@ -8,12 +8,12 @@
         Object iterator = dispatcher.start(null);
         
         //assert
-        System.assert(iterator instanceof Iterable<Boolean>);
+        System.assert(iterator instanceof Iterable<SObject>);
     }
     
     static testmethod void coverExecute() {
         //arrange
-        List<Boolean> scopes = new List<Boolean>();
+        List<SObject> scopes = new List<SObject>();
         VerticalBrokerDispatcher dispatcher = new VerticalBrokerDispatcher();
         
         //act

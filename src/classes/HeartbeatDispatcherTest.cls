@@ -1,6 +1,10 @@
 @IsTest private class HeartbeatDispatcherTest {
     
     static testmethod void coverExecuteMethod() {
+        //arrange specific broker implementation
+        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        
+        //act
         Test.startTest();
         HeartbeatDispatcher dispatcher = new HeartbeatDispatcher();
         System.schedule('HeartbeatDispatcherTest', '0 0 * * * ?', dispatcher);
