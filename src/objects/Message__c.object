@@ -94,10 +94,10 @@
         <externalId>false</externalId>
         <inlineHelpText>What is the JSON object representing the parameters carried by this message?</inlineHelpText>
         <label>Parameters</label>
-        <length>32768</length>
+        <length>131072</length>
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
-        <visibleLines>10</visibleLines>
+        <visibleLines>20</visibleLines>
     </fields>
     <fields>
         <fullName>Process__c</fullName>
