@@ -11,6 +11,6 @@ Ext.define('Override.model.Step', {
     fields.ProcessName.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.Name.Name;
     fields.ProcessDescription.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.Description__c.Name;
     fields.ProcessIcon.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.Icon__c.Name;
-    fields.ProcessDocsPageUrl.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.DocsPageUrl__c.Name;
+    fields.ProcessHelpUrl.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.HelpUrl__c.Name;
     fields.ProcessCustomSetting.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.CustomSetting__c.Name;
 });

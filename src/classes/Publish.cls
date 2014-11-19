@@ -8,7 +8,7 @@ public with sharing class Publish {
         public String Description = 'Broadcasts the message to other sequences via a named Event Type.';
         public SObject ConfigObject = PublishConfiguration__c.SObjectType.newSObject();
         public String Icon = 'chart_organisation';
-        public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.PublishHelp.getUrl();
+        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.PublishHelp.getUrl();
     }
     
     public String Parameters;

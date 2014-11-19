@@ -535,7 +535,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Process__c.DocsPageUrl__c</field>
+        <field>Process__c.HelpUrl__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

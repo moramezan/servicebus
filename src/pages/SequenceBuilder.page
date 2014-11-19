@@ -60,8 +60,8 @@
         $ObjectType.Process__c.Fields.Tag__c.Name = '{!$ObjectType.Process__c.Fields.Tag__c.Name}';
         $ObjectType.Process__c.Fields.Icon__c = $ObjectType.Process__c.Fields.Icon__c || {};
         $ObjectType.Process__c.Fields.Icon__c.Name = '{!$ObjectType.Process__c.Fields.Icon__c.Name}';
-        $ObjectType.Process__c.Fields.DocsPageUrl__c = $ObjectType.Process__c.Fields.DocsPageUrl__c || {};
-        $ObjectType.Process__c.Fields.DocsPageUrl__c.Name = '{!$ObjectType.Process__c.Fields.DocsPageUrl__c.Name}';
+        $ObjectType.Process__c.Fields.HelpUrl__c = $ObjectType.Process__c.Fields.HelpUrl__c || {};
+        $ObjectType.Process__c.Fields.HelpUrl__c.Name = '{!$ObjectType.Process__c.Fields.HelpUrl__c.Name}';
         $ObjectType.Process__c.Fields.CustomSetting__c = $ObjectType.Process__c.Fields.CustomSetting__c || {};
         $ObjectType.Process__c.Fields.CustomSetting__c.Name = '{!$ObjectType.Process__c.Fields.CustomSetting__c.Name}';
 

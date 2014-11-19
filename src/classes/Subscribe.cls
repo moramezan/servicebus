@@ -6,7 +6,7 @@ public with sharing class Subscribe {
         public String Description = 'Listens for messages via a named Event Type.';
         public SObject ConfigObject = SubscribeConfiguration__c.SObjectType.newSObject();
         public String Icon = 'eye';
-        public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubscribeHelp.getUrl();
+        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubscribeHelp.getUrl();
     }
     
     public String Parameters;

@@ -5,7 +5,7 @@ public with sharing class Gate {
         public String Name = 'Gate';
         public String Description = 'Aggregates a collection of messages previously marked with a correlation key.';
         public String Icon = 'arrow_join';
-        public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.GateHelp.getUrl();
+        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.GateHelp.getUrl();
 
         public Map<String,String> Inputs = new Map<String,String>{
             'eda_GateGroupId' => (Id.class).getName(), //Id of the GateGroup the marked messages should belong to.

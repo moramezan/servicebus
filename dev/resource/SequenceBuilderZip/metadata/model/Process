@@ -85,7 +85,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "DocsPageUrl",
+                "name": "HelpUrl",
                 "type": "string"
             },
             "designerId": "a395ad56-c6cb-4f4e-bd3d-36dff4d6e4b9"

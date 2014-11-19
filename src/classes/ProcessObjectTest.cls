@@ -5,7 +5,7 @@
         public String Name = 'Test';
         public String Description = 'Herpderp';
         public String Icon = null;
-        public String DocsPageUrl = 'fakedocspage.html';
+        public String HelpUrl = 'fakedocspage.html';
     }
 
     public String Parameters;
@@ -49,7 +49,7 @@
         ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
         String expectedConfigObject = meta.ConfigObject.getSObjectType().getDescribe().getName();
         String expectedIcon = meta.icon;
-        String expectedDocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubscribeHelp.getUrl();
+        String expectedHelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubscribeHelp.getUrl();
         
         //act 
         Process__c subscribeProcess = ProcessObject.fromType(actualType);
@@ -61,7 +61,7 @@
         String actualFullyQualifiedClassName = subscribeProcess.FullyQualifiedClassName__c; 
         String actualConfigObject = subscribeProcess.ConfigObject__c; 
         String actualIcon = subscribeProcess.Icon__c; 
-        String actualDocsPageUrl = subscribeProcess.DocsPageUrl__c;
+        String actualHelpUrl = subscribeProcess.HelpUrl__c;
 
         //assert
         System.assertEquals(expectedName , actualName );
@@ -70,7 +70,7 @@
         System.assertEquals(expectedFullyQualifiedClassName , actualFullyQualifiedClassName);
         System.assertEquals(expectedConfigObject , actualConfigObject);
         System.assertEquals(expectedIcon , actualIcon );
-        System.assertEquals(expectedDocsPageUrl, actualDocsPageUrl);
+        System.assertEquals(expectedHelpUrl, actualHelpUrl);
     } 
  
     static testmethod void processWithoutIconWillDefaultWithCogIcon() {

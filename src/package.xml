@@ -210,7 +210,7 @@
         <members>Process__c.ConfigObject__c</members>
         <members>Process__c.CustomSetting__c</members>
         <members>Process__c.Description__c</members>
-        <members>Process__c.DocsPageUrl__c</members>
+        <members>Process__c.HelpUrl__c</members>
         <members>Process__c.FullyQualifiedClassName__c</members>
         <members>Process__c.Icon__c</members>
         <members>Process__c.Tag__c</members>

@@ -97,10 +97,10 @@
         <type>TextArea</type>
     </fields>
     <fields>
-        <fullName>DocsPageUrl__c</fullName>
+        <fullName>HelpUrl__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Where is the supporting documentation provided by the author of this process?</inlineHelpText>
-        <label>Docs Page URL</label>
+        <label>Help URL</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Url</type>

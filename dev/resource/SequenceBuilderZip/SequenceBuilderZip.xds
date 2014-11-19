@@ -23,8 +23,8 @@
         "displayfield-ExtBox1-1277-inputEl": "Not Installed",
         "displayfield-ExtBox1-1384-inputEl": "Not Installed"
     },
-    "xdsVersion": "3.0.1",
-    "xdsBuild": 1343,
+    "xdsVersion": "3.0.4",
+    "xdsBuild": 1386,
     "schemaVersion": 1,
     "upgradeVersion": 300000000004,
     "framework": "ext42",

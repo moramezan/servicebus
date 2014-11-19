@@ -8,7 +8,7 @@ public with sharing class Schedule {
         public String Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages
         public String Icon = 'clock';
         public SObject ConfigObject = ScheduleConfiguration__c.SObjectType.newSObject();
-        public String DocsPageUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.ScheduleHelp.getUrl();
+        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.ScheduleHelp.getUrl();
         public Boolean ConsumesHeartbeat = true;
     }
     

@@ -113,7 +113,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "ProcessDocsPageUrl",
+                "name": "ProcessHelpUrl",
                 "persist": false,
                 "type": "string"
             },

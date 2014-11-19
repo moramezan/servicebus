@@ -50,7 +50,7 @@ public with sharing class ProcessObject extends SalesforceObject {
          * Each Process can have one Visualforce Page for support and documentation purposes. Process Authors can
          * populate the property with a default value like Page.MyProcessDocs.getUrl() to make this available to users.
          */
-        public String DocsPageUrl {get;}
+        public String HelpUrl {get;}
         
         /**
          * Input Parameters
@@ -107,8 +107,8 @@ public with sharing class ProcessObject extends SalesforceObject {
             //attempt to populate the css class name of the process icon (with sensible default)
             process.Icon__c = meta.Icon == null ? 'cog' : meta.Icon;
             
-            //attempt to populate the docs page url
-            process.DocsPageUrl__c = meta.DocsPageUrl == null ? Url.getSalesforceBaseUrl().toExternalForm() + Page.ProcessDescribe.getUrl() + '?fqn=' + outerClass.getName() : meta.DocsPageUrl;
+            //attempt to populate the help url
+            process.HelpUrl__c = meta.HelpUrl == null ? Url.getSalesforceBaseUrl().toExternalForm() + Page.ProcessDescribe.getUrl() + '?fqn=' + outerClass.getName() : meta.HelpUrl;
 
             if (meta.CustomSetting != null) {
                 //attempt to populate the name of the customization object
