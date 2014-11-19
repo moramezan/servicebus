@@ -552,10 +552,9 @@ abstract public with sharing class Broker {
             throw new EngineException(message.Id, 'Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c, null);
         }
         
-        Object plugin = Json.deserialize('{}', reflector);
-        Map<String,Object> untyped = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(plugin));
-        if (!untyped.containsKey('Parameters')) {
-            throw new EngineException(message.Id, 'Could not see Parameters, eg instance is not a process class: ' + reflector.getName(), null);
+        Type meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + '.' + 'Meta');
+        if (meta == null) {
+            throw new EngineException(message.Id, 'Could not see Meta inner class, this is not a valid process: ' + reflector.getName(), null);
         }
         
         //save important message properties (such as stackDepth) so that process authors cannot pervert them  

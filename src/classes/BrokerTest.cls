@@ -765,7 +765,7 @@
         
         //assert
         String actualMessage = (String)ex.get('Message');
-        String expectedMessage = 'Could not see Parameters, eg instance is not a process class: Account';
+        String expectedMessage = 'Could not see Meta inner class, this is not a valid process: Account';
         System.assertEquals(expectedMessage, actualMessage, 'Wrong message detail.');
     }
     
