@@ -11,49 +11,57 @@ public with sharing class ProcessObject extends SalesforceObject {
      * isn't appropriate for Tag, Description, InputParameters or OutputParameters. This inner class must be present
      * for an apex class to appear in the Process list.
      */
-    @TestVisible private without sharing class Meta {
+    public without sharing class Meta {
         /**
          * Each process MUST provide a grouping tag.
          */
-        public String Tag;
+        public String Tag {get;}
 
         /**
          * Each process MUST provide a friendly name.
          */
-        public String Name;
+        public String Name {get;}
 
         /**
          * Each process MUST provide a succinct description.
          */
-        public String Description;
+        public String Description {get;}
 
         /**
          * Each Process can have one associated customization in the form of a Custom Setting. Process Authors must
          * advertise the custom setting type here, and the framework will provide a link from the Process detail page.
          */
-        public SObject CustomSetting;
+        public SObject CustomSetting {get;}
         
         /**
          * Each Step can have one associated configuration record. The type of the record depends on what process
          * is living on the Step. Process Authors must advertise the object type here, and the framework will
          * handle the record lifecycle (creating and deleting them in tandem with the appropriate Step).
          */
-        public SObject ConfigObject;
+        public SObject ConfigObject {get;}
         
         /**
          * Each Process must name an icon (eg 'arrow_left') from the FamFamFam Silk library:
          * http://www.famfamfam.com/archive/silk-icons-thats-your-lot/
          */
-        public String Icon;
+        public String Icon {get;}
         
         /**
          * Each Process can have one Visualforce Page for support and documentation purposes. Process Authors can
          * populate the property with a default value like Page.MyProcessDocs.getUrl() to make this available to users.
          */
-        public String DocsPageUrl;
+        public String DocsPageUrl {get;}
         
-        //Inputs
-        //Outputs
+        /**
+         * Input Parameters
+         */
+        public Map<String,String> Inputs {get;}
+        
+        /**
+         * Output Parameters
+         */
+        public Map<String,String> Outputs {get;}
+        
     }
     
     /**
@@ -99,8 +107,8 @@ public with sharing class ProcessObject extends SalesforceObject {
             //attempt to populate the css class name of the process icon (with sensible default)
             process.Icon__c = meta.Icon == null ? 'cog' : meta.Icon;
             
-            //attempt to populate the docs page url //TODO (with sensible default)
-            process.DocsPageUrl__c = meta.DocsPageUrl == null ? '/apex/ProcessDescribe' : meta.DocsPageUrl;
+            //attempt to populate the docs page url
+            process.DocsPageUrl__c = meta.DocsPageUrl == null ? Url.getSalesforceBaseUrl().toExternalForm() + Page.ProcessDescribe.getUrl() + '?fqn=' + outerClass.getName() : meta.DocsPageUrl;
 
             if (meta.CustomSetting != null) {
                 //attempt to populate the name of the customization object

@@ -197,6 +197,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ProcessDescribeController</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ProcessDiscoverBatch</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -824,6 +828,10 @@
     <pageAccesses>
         <apexPage>ProcessApexClass</apexPage>
         <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>ProcessDescribe</apexPage>
+        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessDiscover</apexPage>

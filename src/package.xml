@@ -55,6 +55,7 @@
         <members>PostInstallHandlerTest</members>
         <members>PostUninstallHandler</members>
         <members>PostUninstallHandlerTest</members>
+        <members>ProcessDescribeController</members>
         <members>ProcessDiscoverBatch</members>
         <members>ProcessDiscoverBatchTest</members>
         <members>ProcessDiscoverController</members>
@@ -129,6 +130,7 @@
         <members>Monitor</members>
         <members>MonitorHelp</members>
         <members>ProcessApexClass</members>
+        <members>ProcessDescribe</members>
         <members>ProcessDiscover</members>
         <members>ProcessDiscoverHelp</members>
         <members>ProcessDocumentation</members>
