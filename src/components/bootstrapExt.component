@@ -19,11 +19,11 @@
     
     <!-- DEVELOPMENT -->
     <apex:outputPanel rendered="{!LEN(developmentPrefix) != 0}" layout="none">
-        <base href="{!developmentPrefix}{!URLFOR(staticResource, '/')}" />
-        <link href="{!developmentPrefix}{!URLFOR(staticResource, '/bootstrap.css')}" rel="stylesheet" type="text/css" />
-        <script src="{!developmentPrefix}{!URLFOR(staticResource, '/ext/ext-dev.js')}"></script>
-        <script src="{!developmentPrefix}{!URLFOR(staticResource, '/bootstrap.js')}"></script>
-        <script src="{!developmentPrefix}{!URLFOR(staticResource, '/app.js')}"></script>
+        <base href="{!developmentPrefix}{!staticResource}/" />
+        <link href="{!developmentPrefix}{!staticResource}/bootstrap.css" rel="stylesheet" type="text/css" />
+        <script src="{!developmentPrefix}{!staticResource}/ext/ext-dev.js"></script>
+        <script src="{!developmentPrefix}{!staticResource}/bootstrap.js"></script>
+        <script src="{!developmentPrefix}{!staticResource}/app.js"></script>
     </apex:outputPanel>
     
     <!-- PRODUCTION -->
