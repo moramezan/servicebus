@@ -95,7 +95,7 @@ public with sharing class ProcessObject extends SalesforceObject {
                 throw new ProcessException('Process "' + process.FullyQualifiedClassName__c + '" must provide Meta.Description');
             }
 
-            //attempt to populate the tag of the process
+            //attempt to populate the short description of the process.
             process.Description__c = meta.Description;
 
             //attempt to populate the tag of the process (with sensible default)
