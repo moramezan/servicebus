@@ -82,24 +82,6 @@ public with sharing class ProcessObject extends SalesforceObject {
             
             ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
 
-            if (meta.Tag == null) {
-                //EVERY PROCESS MUST PROVIDE A TAG
-                throw new ProcessException('Process "' + process.FullyQualifiedClassName__c + '" must provide Meta.Tag');
-            }
-
-            //attempt to populate the tag of the process
-            process.Tag__c = meta.Tag;
-
-
-            if (meta.Name == null) {
-                //EVERY PROCESS MUST PROVIDE A NAME
-                throw new ProcessException('Process "' + process.FullyQualifiedClassName__c + '" must provide Meta.Name');
-            }
-
-            //attempt to populate the tag of the process
-            process.Name = meta.Name;
-
-
             if (meta.Description == null) {
                 //EVERY PROCESS MUST PROVIDE A DESCRIPTION
                 throw new ProcessException('Process "' + process.FullyQualifiedClassName__c + '" must provide Meta.Description');
@@ -107,6 +89,18 @@ public with sharing class ProcessObject extends SalesforceObject {
 
             //attempt to populate the tag of the process
             process.Description__c = meta.Description;
+
+            //attempt to populate the tag of the process (with sensible default)
+            process.Tag__c = meta.Tag == null ? 'Untagged' : meta.Tag;
+
+            //attempt to populate the tag of the process (with sensible default)
+            process.Name = meta.Name == null ? outerClass.getName() : meta.Name;
+            
+            //attempt to populate the css class name of the process icon (with sensible default)
+            process.Icon__c = meta.Icon == null ? 'cog' : meta.Icon;
+            
+            //attempt to populate the docs page url //TODO (with sensible default)
+            process.DocsPageUrl__c = meta.DocsPageUrl == null ? '/apex/ProcessDescribe' : meta.DocsPageUrl;
 
             if (meta.CustomSetting != null) {
                 //attempt to populate the name of the customization object
@@ -117,22 +111,7 @@ public with sharing class ProcessObject extends SalesforceObject {
                 //attempt to populate the name of the configuration object
                 process.ConfigObject__c = meta.ConfigObject.getSObjectType().getDescribe().getName();
             }
-            
-            if (meta.Icon != null) {
-                //attempt to populate the css class name of the process icon
-                process.Icon__c = meta.Icon;
-            } else {
-               process.Icon__c = 'cog'; 
-            }
-            
-            if (meta.DocsPageUrl != null) {
-                //populate the help page url
-                process.DocsPageUrl__c = meta.DocsPageUrl;
-            } else {
-                //EVERY PROCESS MUST PROVIDE A HELP PAGE
-                throw new ProcessException('Process "' + process.FullyQualifiedClassName__c + '" must provide Meta.DocsPageUrl');
-            }
-            
+
             return process;
         }
     }
