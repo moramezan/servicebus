@@ -79,7 +79,7 @@
     <fields>
         <fullName>CustomSetting__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Optionally, what is the API name of a Custom Setting used to hold any global options for this process?</inlineHelpText>
+        <inlineHelpText>Optionally, what is the API name of a Custom Setting used to hold any system-wide options for this process?</inlineHelpText>
         <label>Custom Setting</label>
         <length>40</length>
         <required>false</required>

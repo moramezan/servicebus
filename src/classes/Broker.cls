@@ -75,7 +75,7 @@
  * |  EXECUTE  | invokes [Terminate]
  * +-----------+
  */
-abstract global with sharing class Broker {
+abstract public with sharing class Broker {
     
     @TestVisible private static Integer stackDepthThreshold  = 500;
     
@@ -330,7 +330,7 @@ abstract global with sharing class Broker {
     /**
      * Determines which messages are eligible to be moved into the Started status (by finding Messages
      * with 'Rebuffered' and 'Buffered' status). Note: too many fucked messages would clog up the system,
-     * so we have a global fuckedLimit.
+     * so we have a system-wide fuckedLimit.
      *
      * Messages that should be processed have their status marked as Started in the database before being
      * submitted the query locator. That way, if any given execution fails, those messages will remain in the
@@ -339,7 +339,7 @@ abstract global with sharing class Broker {
      * @param workCount Maximum number of Messages to mark and locate (subject to fuckups)
      * @return          Query Locator identifying the now-marked-as-Started Messages.
      */
-    virtual global Database.QueryLocator locateMarkableWork(Integer workCount) {
+    virtual public Database.QueryLocator locateMarkableWork(Integer workCount) {
         Integer fuckedLimit = 100;
         
         Integer fuckedCount = [
@@ -379,7 +379,7 @@ abstract global with sharing class Broker {
      * @param sequenceName Name of the sequence the data is destined for.
      * @param dataId    Id of some record that the sequence will operate on.
      */
-    static global Id enqueue(String sequenceName, Id dataId) {
+    static public Id enqueue(String sequenceName, Id dataId) {
         if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable'); 
          
         Map<String,Object> injectedParameters = new Map<String,Object> {
@@ -505,7 +505,7 @@ abstract global with sharing class Broker {
     /**
      * Sets many Messages statuses to 'Started' and writes them away.
      */
-    virtual global List<Database.SaveResult> mark(List<Message__c> messages) {
+    virtual public List<Database.SaveResult> mark(List<Message__c> messages) {
         try {
             if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
             for (Message__c message : messages) message.Status__c = 'Started';
@@ -521,7 +521,7 @@ abstract global with sharing class Broker {
      * @param  inputMessages Messages whose status should be Started
      * @return               Many Messages whose status should be Buffered
      */
-    virtual global List<Message__c> execute(List<Message__c> inputMessages) {
+    virtual public List<Message__c> execute(List<Message__c> inputMessages) {
         //empty inputs, empty outputs
         if (inputMessages.isEmpty()) return new List<Message__c>();
         
@@ -620,7 +620,7 @@ abstract global with sharing class Broker {
      * 4B. resolve the the process (ie the process referenced by 4A's step)
      * 5. only then can we correctly write to database with 4A (stepId) and 3 (parameters with the incremented position)
      */
-    virtual global void resolve(List<Message__c> messages) {
+    virtual public void resolve(List<Message__c> messages) {
         try {
             //assemble a map of next-step keys to messages
             Map<String,Message__c> key2data = new Map<String,Message__c>();
@@ -669,7 +669,7 @@ abstract global with sharing class Broker {
         }
     }
     
-    virtual global List<Database.UpsertResult> persist(List<Message__c> inputMessages, List<Message__c> outputMessages) {
+    virtual public List<Database.UpsertResult> persist(List<Message__c> inputMessages, List<Message__c> outputMessages) {
         try {
             for (Message__c message : inputMessages) {
                 //designate all input messages as finished
@@ -755,7 +755,7 @@ abstract global with sharing class Broker {
         }
     }
     
-    global void restartIfWorkPending() {
+    public void restartIfWorkPending() {
         Integer worksPending = [
             SELECT COUNT()
             FROM Message__c
@@ -768,9 +768,9 @@ abstract global with sharing class Broker {
         }
     }
     
-    abstract global Boolean isAlreadyRunning();
+    abstract public Boolean isAlreadyRunning();
      
-    abstract global void restartImpl();
+    abstract public void restartImpl();
     
     @TestVisible static private String getEntryPointGuid(Integer size) {
         return EncodingUtil.convertToHex(crypto.generateAesKey(128)).substring(0, size);
