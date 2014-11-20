@@ -1,3 +1,0 @@
-<apex:page standardController="Process__c" action="{!URLFOR(Process__c.HelpUrl__c)}">
-    <apex:outputField value="{!Process__c.HelpUrl__c}" rendered="false" />
-</apex:page>

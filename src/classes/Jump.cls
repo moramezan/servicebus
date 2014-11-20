@@ -6,7 +6,7 @@ public with sharing class Jump {
         public String Description = 'Permanently diverts the message to another sequence, never to return.';
         public SObject ConfigObject = JumpConfiguration__c.SObjectType.newSObject();
         public String Icon = 'arrow_switch';
-        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.JumpHelp.getUrl();
+        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.JumpConfigurationCsh.getUrl();
     }
     
     public String Parameters;

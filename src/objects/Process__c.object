@@ -45,7 +45,7 @@
         <type>Default</type>
     </actionOverrides>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
-    <customHelpPage>ProcessHelp</customHelpPage>
+    <customHelpPage>ProcessCsh</customHelpPage>
     <deploymentStatus>Deployed</deploymentStatus>
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
@@ -97,15 +97,6 @@
         <type>TextArea</type>
     </fields>
     <fields>
-        <fullName>HelpUrl__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Where is the supporting documentation provided by the author of this process?</inlineHelpText>
-        <label>Help URL</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Url</type>
-    </fields>
-    <fields>
         <fullName>FullyQualifiedClassName__c</fullName>
         <caseSensitive>false</caseSensitive>
         <externalId>true</externalId>
@@ -116,6 +107,15 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>HelpUrl__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Where is the supporting documentation provided by the author of this process?</inlineHelpText>
+        <label>Help URL</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
     </fields>
     <fields>
         <fullName>Icon__c</fullName>
@@ -197,13 +197,13 @@
         <requireRowSelection>false</requireRowSelection>
     </webLinks>
     <webLinks>
-        <fullName>Documentation</fullName>
+        <fullName>Help</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
         <linkType>page</linkType>
-        <masterLabel>View Documentation</masterLabel>
+        <masterLabel>View Help</masterLabel>
         <openType>replace</openType>
-        <page>ProcessDocumentation</page>
+        <page>ProcessHelp</page>
         <protected>false</protected>
     </webLinks>
     <webLinks>

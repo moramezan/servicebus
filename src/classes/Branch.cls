@@ -3,7 +3,7 @@ public with sharing class Branch {
     public class Meta {
         public SObject ConfigObject = BranchConfiguration__c.SObjectType.newSObject();
         public String Icon = 'arrow_branch';
-        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.BranchHelp.getUrl();
+        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.BranchConfigurationCsh.getUrl();
         public String Tag = 'Event Driven Architecture';
         public String Name = 'Branch';
         public String Description = 'Copies the message to another sequence.';

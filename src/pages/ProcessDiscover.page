@@ -24,12 +24,12 @@
         retURL = '{!retURL}';
         
         window.$Page = window.$Page || {};
-        $Page.ProcessDiscoverHelp = '{!$Page.ProcessDiscoverHelp}';
+        $Page.ProcessCsh = '{!$Page.ProcessCsh}';
         
         window.URLFOR = window.URLFOR || {};
         URLFOR['/'] = '{!URLFOR("/")}';
         URLFOR[retURL] = '{!URLFOR(retURL)}';
-        URLFOR[$Page.ProcessDiscoverHelp] = '{!URLFOR($Page.ProcessDiscoverHelp)}';
+        URLFOR[$Page.ProcessCsh] = '{!URLFOR($Page.ProcessCsh)}';
         
         window.AsyncApexJob = window.AsyncApexJob || {};
         AsyncApexJob.Id = '{!AsyncApexJob.Id}';

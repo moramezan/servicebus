@@ -1,6 +1,8 @@
-<apex:page standardController="Sequence__c" extensions="SequenceBuilderExtension">
+<apex:page standardController="Sequence__c" extensions="SequenceBuilderExtension" action="{!findTerminateProblems}">
     
-    <apex:sectionHeader help="{!URLFOR($Page.SequenceBuilderHelp)}" title="{!$ObjectType.Sequence__c.Label}" subtitle="{!Sequence__c.Name}" />
+    <apex:pageMessages showDetail="true" />
+    
+    <apex:sectionHeader help="{!URLFOR($Page.SequenceCsh)}" title="{!$ObjectType.Sequence__c.Label}" subtitle="{!Sequence__c.Name}" />
     
     <apex:pageBlock id="pageBlockId" title="{!$ObjectType.Step__c.LabelPlural}">
         <apex:pageBlockButtons location="top" id="pageBlockButtonsId" />

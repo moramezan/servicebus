@@ -49,7 +49,7 @@
         ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
         String expectedConfigObject = meta.ConfigObject.getSObjectType().getDescribe().getName();
         String expectedIcon = meta.icon;
-        String expectedHelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubscribeHelp.getUrl();
+        String expectedHelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubscribeConfigurationCsh.getUrl();
         
         //act 
         Process__c subscribeProcess = ProcessObject.fromType(actualType);

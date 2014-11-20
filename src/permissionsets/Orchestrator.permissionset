@@ -229,14 +229,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>PublishHelpController</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>PublishHelpControllerTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>PublishTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -325,14 +317,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SubscribeHelpController</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>SubscribeHelpControllerTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>SubscribeTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -354,14 +338,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>Terminate</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>TerminateHelpController</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>TerminateHelpControllerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -535,12 +511,12 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Process__c.HelpUrl__c</field>
+        <field>Process__c.FullyQualifiedClassName__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Process__c.FullyQualifiedClassName__c</field>
+        <field>Process__c.HelpUrl__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -754,11 +730,11 @@
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <pageAccesses>
-        <apexPage>BranchConfigurationShowStep</apexPage>
+        <apexPage>BranchConfigurationCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>BranchHelp</apexPage>
+        <apexPage>BranchConfigurationShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -766,23 +742,27 @@
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>EventTypeHelp</apexPage>
+        <apexPage>EventTypeCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>GateHelp</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>HeartbeatHelp</apexPage>
+        <apexPage>GateGroupCsh</apexPage>
         <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>GateItemCsh</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>JumpConfigurationCsh</apexPage>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>JumpConfigurationShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>JumpHelp</apexPage>
+        <apexPage>LogConfigurationCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -794,11 +774,15 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>LogHelp</apexPage>
-        <enabled>true</enabled>
+        <apexPage>LogGroupCsh</apexPage>
+        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>MessageHelp</apexPage>
+        <apexPage>LogWriterEntryCsh</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>MessageCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -818,15 +802,23 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>MessageSplash</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>Monitor</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>MonitorHelp</apexPage>
+        <apexPage>MonitorSplash</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessApexClass</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>ProcessCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -838,19 +830,19 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ProcessDiscoverHelp</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>ProcessDocumentation</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>ProcessHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessSettings</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>ProcessSplash</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>PublishConfigurationCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -862,11 +854,7 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>PublishHelp</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>ScheduleHelp</apexPage>
+        <apexPage>ScheduleConfigurationCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -878,19 +866,23 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SequenceBuilderHelp</apexPage>
+        <apexPage>SequenceCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SequenceHelp</apexPage>
-        <enabled>true</enabled>
+        <apexPage>SequenceSplash</apexPage>
+        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>StepHelp</apexPage>
+        <apexPage>StepCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>StepShowConfiguration</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>SubscribeConfigurationCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -902,23 +894,11 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SubscribeHelp</apexPage>
+        <apexPage>SubsequenceConfigurationCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>SubsequenceConfigurationShowStep</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>SubsequenceHelp</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>TerminateHelp</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>WiretapHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <tabSettings>

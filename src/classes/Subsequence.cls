@@ -6,7 +6,7 @@ public with sharing class Subsequence {
         public String Description = 'Temporarily diverts the message to another sequence, then returns it to the next step afterwards.';
         public SObject ConfigObject = SubsequenceConfiguration__c.SObjectType.newSObject();
         public String Icon = 'arrow_undo';
-        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubsequenceHelp.getUrl();
+        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubsequenceConfigurationCsh.getUrl();
         
         public Map<String,String> Outputs = new Map<String,String>{
             'eda_SubsequenceName' => (String.class).getName(), //Marks the sequence name which the Subsequence returns to.

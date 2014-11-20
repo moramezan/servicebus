@@ -4,5 +4,5 @@
     <mobileReady>false</mobileReady>
     <motif>Custom19: Wrench</motif>
     <page>Monitor</page>
-    <splashPageLink>MonitorHelp</splashPageLink>
+    <splashPageLink>MonitorSplash</splashPageLink>
 </CustomTab>

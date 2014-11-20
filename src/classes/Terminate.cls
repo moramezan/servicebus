@@ -5,7 +5,7 @@ public with sharing class Terminate {
         public String Name = 'Terminate';
         public String Description = 'Swallows messages at the end of this sequence.';
         public String Icon = 'stop';
-        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.TerminateHelp.getUrl();
+        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.StepCsh.getUrl();
     }
     
     public String Parameters;
@@ -40,5 +40,7 @@ public with sharing class Terminate {
 
         return Json.serialize(parametersList);
     }
+    
+    
 
 }

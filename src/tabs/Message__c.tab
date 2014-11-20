@@ -3,5 +3,5 @@
     <customObject>true</customObject>
     <mobileReady>false</mobileReady>
     <motif>Custom23: Mail</motif>
-    <splashPageLink>MessageHelp</splashPageLink>
+    <splashPageLink>MessageSplash</splashPageLink>
 </CustomTab>

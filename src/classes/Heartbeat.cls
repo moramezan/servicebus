@@ -7,7 +7,6 @@ public with sharing class Heartbeat {
         public String Name = 'Heartbeat';
         public String Description = 'Broadcasts a heartbeat message to any sequence with a heartbeat subscriber as the first step';
         public String Icon = 'heart_add';
-        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.HeartbeatHelp.getUrl();
     }
 
     public String Parameters;

@@ -1,1 +1,0 @@
-<apex:page tabStyle="Sequence__c" action="{!URLFOR($Page.SequenceHelp)}" />
