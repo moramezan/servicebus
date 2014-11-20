@@ -5,7 +5,7 @@ public with sharing class Mark {
         public String Name = 'Mark';
         public String Description = 'Marks the message with a correlation key, for splitting into a collection.';
         public String Icon = 'tag_blue';
-        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.GateGroupCsh.getUrl();
+        public String HelpUrl = Page.GateGroupCsh.getUrl();
         
         public Map<String,String> Outputs = new Map<String,String>{
             'eda_MarkCount' => (Integer.class).getName(), //The broker will increment this to detect that the next process returned multiple messages.

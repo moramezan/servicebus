@@ -8,7 +8,7 @@ public with sharing class LogInitializer {
         public String Description = 'Creates a grouping identifier which all subsequent LogWriter processes log against.';
         public SObject ConfigObject = LogConfiguration__c.SObjectType.newSobject();
         public String Icon = 'pencil';
-        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.LogConfigurationCsh.getUrl();
+        public String HelpUrl = Page.LogConfigurationCsh.getUrl();
         
         public Map<String,String> Outputs = new Map<String,String>{
             'eda_LogGroupIds' => (List<Id>.class).getName() //An identifier that associates instances of steps.

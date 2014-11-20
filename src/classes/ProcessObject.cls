@@ -108,7 +108,8 @@ public with sharing class ProcessObject extends SalesforceObject {
             process.Icon__c = meta.Icon == null ? 'cog' : meta.Icon;
             
             //attempt to populate the help url
-            process.HelpUrl__c = meta.HelpUrl == null ? Url.getSalesforceBaseUrl().toExternalForm() + Page.ProcessDescribe.getUrl() + '?fqn=' + outerClass.getName() : meta.HelpUrl;
+            process.HelpUrl__c = meta.HelpUrl == null ? Page.ProcessDescribe.getUrl() + '?fqn=' + outerClass.getName() : meta.HelpUrl;
+            if (process.HelpUrl__c.startsWith('/')) process.HelpUrl__c = Url.getSalesforceBaseUrl().toExternalForm() + process.HelpUrl__c;
 
             if (meta.CustomSetting != null) {
                 //attempt to populate the name of the customization object

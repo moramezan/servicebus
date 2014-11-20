@@ -8,7 +8,7 @@ public with sharing class Wiretap {
         public String Description = 'Emails the message parameters to the user.';
         public SObject CustomSetting = WiretapSettings__c.SObjectType.newSObject();
         public String Icon = 'email';
-        public String HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.LogWriterEntryCsh.getUrl();
+        public String HelpUrl = Page.LogWriterEntryCsh.getUrl();
     }
     
     public String Parameters;
