@@ -23,12 +23,11 @@
         insert config;
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_StepConfigId' => config.Id,
             'eda_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Type reflector = Branch.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
 
         List<Object> expectedIds = null;
         List<Object> actualIds = (List<Object>)parametersList[1].get('eda_SubsequenceStepIds');
@@ -49,13 +48,12 @@
         //arrange parameters
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_SequenceName' => origin.Name,
-            'eda_Position' => 1,
-            'eda_StepConfigId' => config.Id
+            'eda_Position' => 1
         };
         
         //act
         Type reflector = Branch.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
 
         //assert
         Decimal expectedSize = 2;
@@ -99,8 +97,7 @@
         //arrange parameters
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_SequenceName' => sequence.Name,
-            'eda_Position' => 1,
-            'eda_StepConfigId' => config.Id
+            'eda_Position' => 1
         };
         
         //arrange exception
@@ -109,7 +106,7 @@
         //act
         try {
             Type reflector = Branch.class;
-            List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+            List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         } catch (Exception e) {
             exceptionThrown = true;
             System.assert(e instanceof Branch.BranchException);

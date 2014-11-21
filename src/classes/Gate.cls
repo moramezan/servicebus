@@ -1,5 +1,7 @@
 public with sharing class Gate {
     
+    public String Parameters;
+    
     public class Meta {
         public String Tag = 'Event Driven Architecture';
         public String Name = 'Gate';
@@ -17,8 +19,6 @@ public with sharing class Gate {
         };
     }
 
-    public String Parameters;
-    
     override public String toString() {
         if (!SObjectType.GateItem__c.Createable) throw new Broker.CrudException('!SObjectType.GateItem__c.Createable');
 

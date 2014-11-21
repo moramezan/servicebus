@@ -1,7 +1,7 @@
 public with sharing class Wiretap {
    
-    public class WiretapException extends Exception {}
-      
+    public String Parameters;
+    
     public class Meta {
         public String Tag = 'Event Driven Architecture';
         public String Name = 'Wiretap';
@@ -10,8 +10,6 @@ public with sharing class Wiretap {
         public String Icon = 'email';
         public String HelpUrl = Page.LogWriterEntryCsh.getUrl();
     }
-    
-    public String Parameters;
     
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);

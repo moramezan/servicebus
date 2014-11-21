@@ -38,7 +38,7 @@
     
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -91,16 +91,15 @@
          //arrange parameters
          Boolean isHeartbeat = true;
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday
-        Id configId = [SELECT Id FROM ScheduleConfig__c].Id;
+        ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString,
-            'eda_StepConfigId' => configId
+            'eda_EventStamp' => stampAsString
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -108,13 +107,11 @@
          Boolean actualIsHeartbeat = null;
         String  actualStampTruncated = null;
         Integer actualParameterSize = null;
-        Id actualConfigId = null;
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
             actualIsHeartbeat = (Boolean)actualParameters.get('eda_IsHeartbeat');
             actualStampTruncated = (String)actualParameters.get('eda_EventStamp');
-            actualConfigId = (Id)actualParameters.get('eda_StepConfigId');   
         }
         
         // assert
@@ -123,12 +120,10 @@
 
         Boolean expectedIsHeartbeat = isHeartbeat;
         String  expectedStampTruncated = stampAsString;
-        Id expectedConfigId = configId;
-        Integer expectedParameterSize = 3;
+        Integer expectedParameterSize = 2;
         System.assertEquals(expectedIsHeartbeat, actualIsHeartbeat);
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
-        System.assertEquals(expectedConfigId, actualConfigId);     
     }  
 
 
@@ -157,16 +152,15 @@
          //arrange parameters
          Boolean isHeartbeat = true;
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday, a working day
-        Id configId = [SELECT Id FROM ScheduleConfig__c].Id;
+        ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString,
-            'eda_StepConfigId' => configId
+            'eda_EventStamp' => stampAsString
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -174,13 +168,11 @@
          Boolean actualIsHeartbeat = null;
         String  actualStampTruncated = null;
         Integer actualParameterSize = null;
-        Id actualConfigId = null;
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
             actualIsHeartbeat = (Boolean)actualParameters.get('eda_IsHeartbeat');
             actualStampTruncated = (String)actualParameters.get('eda_EventStamp');
-            actualConfigId = (Id)actualParameters.get('eda_StepConfigId');   
         }
         
         // assert
@@ -189,12 +181,10 @@
 
         Boolean expectedIsHeartbeat = isHeartbeat;
         String  expectedStampTruncated = stampAsString;
-        Id expectedConfigId = configId;
-        Integer expectedParameterSize = 3;
+        Integer expectedParameterSize = 2;
         System.assertEquals(expectedIsHeartbeat, actualIsHeartbeat);
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
-        System.assertEquals(expectedConfigId, actualConfigId);     
     }  
 
 
@@ -223,16 +213,15 @@
          //arrange parameters
          Boolean isHeartbeat = true;
         String stampAsString = '2014-01-03T12:00:00.000Z';   
-        Id configId = [SELECT Id FROM ScheduleConfig__c].Id;
+        ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString,
-            'eda_StepConfigId' => configId
+            'eda_EventStamp' => stampAsString
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -240,13 +229,11 @@
          Boolean actualIsHeartbeat = null;
         String  actualStampTruncated = null;
         Integer actualParameterSize = null;
-        Id actualConfigId = null;
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
             actualIsHeartbeat = (Boolean)actualParameters.get('eda_IsHeartbeat');
             actualStampTruncated = (String)actualParameters.get('eda_EventStamp');
-            actualConfigId = (Id)actualParameters.get('eda_StepConfigId');   
         }
         
         // assert
@@ -255,12 +242,10 @@
 
         Boolean expectedIsHeartbeat = isHeartbeat;
         String  expectedStampTruncated = stampAsString;
-        Id expectedConfigId = configId;
-        Integer expectedParameterSize = 3;
+        Integer expectedParameterSize = 2;
         System.assertEquals(expectedIsHeartbeat, actualIsHeartbeat);
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
-        System.assertEquals(expectedConfigId, actualConfigId);     
     }  
 
 
@@ -288,16 +273,15 @@
          //arrange parameters
          Boolean isHeartbeat = true;
         String stampAsString = '2014-01-18T12:00:00.000Z';
-        Id configId = [SELECT Id FROM ScheduleConfig__c].Id;
+        ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString,
-            'eda_StepConfigId' => configId
+            'eda_EventStamp' => stampAsString
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -324,11 +308,10 @@
         //arrange parameters
         Boolean isHeartbeat = true;
         String validStamp = '2014-01-18T12:00:00.000Z';
-        Id invalidConfigId = null;
+        ScheduleConfig__c invalidConfig = null;
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => validStamp,
-            'eda_StepConfigId' => invalidConfigId
+            'eda_EventStamp' => validStamp
         };
         
         // assemble
@@ -336,7 +319,7 @@
         try {
             // act  
             Type reflector = Schedule.class;
-            List<Map<String,Object>> result = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+            List<Map<String,Object>> result = new Broker.Wrapper(reflector, parameters, invalidConfig).invokeMain().Outputs;
         } catch (Schedule.ScheduleException e) {
             actualFlag = true;
         }
@@ -373,7 +356,7 @@
         try {
             // act  
             Type reflector = Schedule.class;
-            List<Map<String,Object>> result = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+            List<Map<String,Object>> result = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
         } catch (Schedule.ScheduleException e) {
             actualFlag = true;
         }

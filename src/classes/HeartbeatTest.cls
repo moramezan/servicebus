@@ -21,7 +21,7 @@
 
         //act
         Type reflector = Heartbeat.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
 
         //assert
         Integer expectedSize = 0;
@@ -58,7 +58,7 @@
 
         //act
         Type reflector = Heartbeat.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
 
         //assert
         Integer expectedSize = 2;
@@ -95,7 +95,7 @@
 
         //act
         Type reflector = Heartbeat.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
 
         //assert
         Integer expectedSize = 0;
@@ -118,7 +118,7 @@
         try {
             //act
             Type reflector = Heartbeat.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
         } catch (Heartbeat.HeartbeatException e) {
             actualFlag = true;
         }
@@ -143,7 +143,7 @@
         try {
             //act
             Type reflector = Heartbeat.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
         } catch (Heartbeat.HeartbeatException e) {
             actualFlag = false;
         }

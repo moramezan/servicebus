@@ -1,5 +1,8 @@
 public with sharing class Branch {
 
+    public String Parameters;
+    public SObject StepConfig;
+
     public class Meta {
         public SObject StepConfig = BranchConfig__c.SObjectType.newSObject();
         public String Icon = 'arrow_branch';
@@ -9,15 +12,13 @@ public with sharing class Branch {
         public String Description = 'Copies the message to another sequence.';
     }
 
-    public String Parameters;
-
     public class BranchException extends Exception {}
     
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
 
         //get step config
-        BranchConfig__c config = (BranchConfig__c)SalesforceObject.getById((Id)parameters.get('eda_StepConfigId'));
+        BranchConfig__c config = (BranchConfig__c)this.StepConfig;
         Sequence__c sequence = (Sequence__c)SalesforceObject.getById(config.Sequence__c);
         
         //get sequence name

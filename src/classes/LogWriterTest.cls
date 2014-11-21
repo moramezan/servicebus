@@ -20,7 +20,7 @@
         String actualMessage;
         try {
             Type reflector = LogWriter.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -54,7 +54,7 @@
         String actualMessage;
         try {
             Type reflector = LogWriter.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -120,7 +120,7 @@
         
         //act
         Type reflector = LogWriter.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
         
         //assemble
         List<LogWriterEntry__c> logWriterEntries = SalesforceObjectSet.listAll(LogWriterEntry__c.SObjectType);

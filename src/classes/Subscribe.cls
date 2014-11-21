@@ -1,5 +1,7 @@
 public with sharing class Subscribe {
 
+    public String Parameters;
+    
     public class Meta {
         public String Tag = 'Event Driven Architecture';
         public String Name = 'Subscribe';
@@ -8,8 +10,6 @@ public with sharing class Subscribe {
         public String Icon = 'eye';
         public String HelpUrl = Page.SubscribeConfigCsh.getUrl();
     }
-    
-    public String Parameters;
     
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);

@@ -1,6 +1,6 @@
 public with sharing class LogWriter {
     
-    public class LogWriterException extends Exception {}
+    public String Parameters;
     
     public class Meta {
         public String Tag = 'Event Driven Architecture';
@@ -10,7 +10,7 @@ public with sharing class LogWriter {
         public String HelpUrl = Page.LogConfigCsh.getUrl();
     }
     
-    public String Parameters;
+    public class LogWriterException extends Exception {}
     
     override public String toString() {
         if (!SObjectType.LogWriterEntry__c.Createable) throw new Broker.CrudException('!SObjectType.LogWriterEntry__c.Createable');

@@ -1,5 +1,7 @@
 public with sharing class Mark {
     
+    public String Parameters;
+    
     public class Meta {
         public String Tag = 'Event Driven Architecture';
         public String Name = 'Mark';
@@ -12,8 +14,6 @@ public with sharing class Mark {
             'eda_GateGroupId' => (Id.class).getName() //The Id of the Gate Group that eventually associates all the marked messages.
         };
     }
-    
-    public String Parameters;
     
     override public String toString() {
         if (!SObjectType.GateGroup__c.Createable) throw new Broker.CrudException('!SObjectType.GateGroup__c.Createable');

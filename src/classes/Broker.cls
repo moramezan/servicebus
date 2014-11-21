@@ -225,7 +225,7 @@ abstract public with sharing class Broker {
     
     /**
      * Example usage:
-     * Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters);
+     * Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters, config);
      * wrapper.invokeCallouts();
      * wrapper.invokeMain();
      * List<Map<String,Object>> outputs = wrapper.Outputs;
@@ -246,6 +246,12 @@ abstract public with sharing class Broker {
         private Object plugin;
         
         /**
+         * The config instance must be available in
+         * both callouts and invocation contexts.
+         */
+        private SObject config;
+        
+        /**
          * The input parameters are used twice. For
          * assembling the plugin before invocation
          * AND for balance + delta jiggery pokery.
@@ -262,13 +268,16 @@ abstract public with sharing class Broker {
         /**
          * @param reflector from the concrete plugin type eg Branch.class
          * @param parameters that will be handed in when invoking plugin
+         * @param config that optionally lives on the step
          */
-        public Wrapper(Type reflector, Map<String,Object> inputs) {
+        public Wrapper(Type reflector, Map<String,Object> inputs, SObject config) {
             this.reflector = reflector;
             this.inputs = inputs;
+            this.config = config;
             
             Map<String,Object> untyped = new Map<String,Object>{
-                'Parameters' => Json.serialize(inputs)
+                'Parameters' => Json.serialize(inputs),
+                'StepConfig' => this.config
             };
             
             //do not call constructor
@@ -567,9 +576,9 @@ abstract public with sharing class Broker {
             throw new EngineException(message.Id, 'Maximum Stack Depth exceeded - to resolve, manually set eda_StackDepth on parameters to 0', e);
         }
         
-        
-        if (step.ConfigId__c != null) parameters.put('eda_StepConfigId', step.ConfigId__c);
-        Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters);
+        SObject config;
+        if (step.ConfigId__c != null) config = SalesforceObject.getById(step.ConfigId__c);
+        Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters, config);
         
         //THEIR FUCKUPS (invocation)
         

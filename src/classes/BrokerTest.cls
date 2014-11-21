@@ -1,18 +1,11 @@
 @IsTest public class BrokerTest { //formerly FailureProcess
     
-    @TestVisible static private String FailureMessage = 'Fake Error Thrown in FailureProcess';
+    public String Parameters;
     
     @TestVisible private class Meta {
         public String Tag = 'Event Driven Architecture';
         public String Name = 'Failure Process';
         public String Description = 'A toStringable Object that throws an exception for testing purposes.'; //Will not be listed
-    }
-    
-    public String Parameters;
-    
-    public class DoNothingBroker extends Broker {
-        override public void restartImpl() {}
-        override public Boolean isAlreadyRunning() {return true;}
     }
     
     override public String toString() {
@@ -23,6 +16,13 @@
     
     public class BrokerException extends Exception {}
 
+    public class DoNothingBroker extends Broker {
+        override public void restartImpl() {}
+        override public Boolean isAlreadyRunning() {return true;}
+    }
+    
+    @TestVisible static private String FailureMessage = 'Fake Error Thrown in FailureProcess';
+    
     static public Boolean flagRestartImpl = false;
     public class MockBroker extends Broker {
         override public Boolean isAlreadyRunning() {

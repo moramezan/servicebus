@@ -1,6 +1,7 @@
 public with sharing class Schedule {
     
-    public class ScheduleException  extends Exception {}
+    public String Parameters;
+    public SObject StepConfig;
     
     public class Meta {
         public String Tag = 'Event Driven Architecture';
@@ -12,14 +13,14 @@ public with sharing class Schedule {
         public Boolean ConsumesHeartbeat = true;
     }
     
-    public String Parameters;
+    public class ScheduleException  extends Exception {}
     
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
 
         Boolean isHeartbeat = (Boolean)parameters.get('eda_IsHeartbeat');
         String  stampAsString  =  (String)parameters.get('eda_EventStamp');
-        Id configId = (Id)parameters.get('eda_StepConfigId');
+        Id configId = this.StepConfig == null ? null : this.StepConfig.Id;
 
          List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
     

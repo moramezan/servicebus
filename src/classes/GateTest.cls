@@ -41,7 +41,7 @@ private  class GateTest {
 
         // Act
         Type reflector = Gate.class;
-        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -98,7 +98,7 @@ private  class GateTest {
 
         // Act
         Type reflector = Gate.class;
-        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();

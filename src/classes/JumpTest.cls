@@ -22,7 +22,6 @@
         
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_StepConfigId' => config.Id,
             'eda_SequenceName' => 'origin',
             'eda_Position' => 1,
             'data' => 'herpderp'
@@ -30,7 +29,7 @@
         
         //act
         Type reflector = Jump.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         
         //assert
         Integer expectedSize = 1;

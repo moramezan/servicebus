@@ -1,6 +1,7 @@
 public with sharing class LogInitializer {
     
-    public class LogInitializerException extends Exception {}
+    public String Parameters;
+    public SObject StepConfig;
     
     public class Meta {
         public String Tag = 'Event Driven Architecture';
@@ -15,7 +16,7 @@ public with sharing class LogInitializer {
         };
     }
     
-    public String Parameters;
+    public class LogInitializerException extends Exception {}
     
     override public String toString() {
         if (!SObjectType.LogGroup__c.Createable) throw new Broker.CrudException('!SObjectType.LogGroup__c.Createable');
@@ -40,7 +41,7 @@ public with sharing class LogInitializer {
         //get group identifier instruction from config
         LogConfig__c config;
         try {
-            config = (LogConfig__c)SalesforceObject.getById((Id)parameters.get('eda_StepConfigId'));
+            config = (LogConfig__c)SalesforceObject.getById(this.StepConfig.Id);
         } catch (System.QueryException e) {
             throw new LogInitializerException('Unable to access Log Config');
         }

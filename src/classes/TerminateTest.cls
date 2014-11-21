@@ -37,7 +37,7 @@ private class TerminateTest
 
         // Act
         Type reflector = Terminate.class;
-        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -74,7 +74,7 @@ private class TerminateTest
  
         // Act
         Type reflector = Terminate.class;
-        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -115,11 +115,11 @@ private class TerminateTest
 
         // Act
         Type reflector = Terminate.class;
-        List<Map<String,Object>> actualOutParametersListFirst = new Broker.Wrapper(reflector, parametersFirst).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutParametersListFirst = new Broker.Wrapper(reflector, parametersFirst, null).invokeMain().Outputs;
         
         Map<String,Object> parametersSecond = actualOutParametersListFirst[0].clone(); //-- Terminate hands back one
         
-        List<Map<String,Object>> actualOutParametersListSecond = new Broker.Wrapper(reflector, parametersSecond).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutParametersListSecond = new Broker.Wrapper(reflector, parametersSecond, null).invokeMain().Outputs;
         
         // prepare
         List<Object> actualStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('eda_SubsequenceStepIds');

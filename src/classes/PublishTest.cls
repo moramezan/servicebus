@@ -41,12 +41,11 @@
         ));
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_StepConfigId' => pubConfig.Id,
             'eda_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Type reflector = Publish.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, pubConfig).invokeMain().Outputs;
         
         //should return one for sub, one for passthru
         Integer expectedSize = 2;
@@ -83,7 +82,7 @@
         //act
         Boolean thrown = false;
         Type reflector = Publish.class;
-        try {new Broker.Wrapper(reflector, parameters).invokeMain();}
+        try {new Broker.Wrapper(reflector, parameters, null).invokeMain();}
         catch (Publish.PublishException e) {thrown = true;}
         
         //assert
@@ -105,17 +104,18 @@
         
         //arrange steps
         Step__c step = StepObject.generateOne(sequence.Id, publishProcess.Id);
-        Database.update(new PublishConfig__c(
+        PublishConfig__c config = new PublishConfig__c(
             Id = step.ConfigId__c,
             EventType__c = eventType.Id
-        ));
+        );
+        update config;
         
-        String data = '{"eda_SequenceName":"TestSequence","eda_Position":1,"eda_StepConfigId":"' + step.ConfigId__c + '"}';
+        String data = '{"eda_SequenceName":"TestSequence","eda_Position":1}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         
         //act
         Type reflector = Publish.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         
         //assert
         Integer expectedSize = 1;
@@ -142,10 +142,11 @@
         insert publisher;
         
         Step__c publisherStep = StepObject.generateOne(publisher.Id, publishProcess.Id);
-        Database.update(new PublishConfig__c(
+        PublishConfig__c pubConfig = new PublishConfig__c(
             Id = publisherStep.ConfigId__c,
             EventType__c = eventType.Id
-        ));
+        );
+        update pubConfig;
         
         //arrange subscribe sequences and steps
         Sequence__c subscriber1 = new Sequence__c(Name = 'Subscriber1');
@@ -167,11 +168,11 @@
         ));
         
         //arrange
-        Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'Publisher', 'eda_Position' => 1, 'eda_StepConfigId' => publisherStep.ConfigId__c};
+        Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'Publisher', 'eda_Position' => 1};
         
         //act
         Type reflector = Publish.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, pubConfig).invokeMain().Outputs;
         
         //assert
         Integer expectedSize = 3;

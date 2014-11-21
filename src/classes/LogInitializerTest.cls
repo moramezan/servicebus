@@ -35,14 +35,13 @@
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_StepConfigId' =>  config.Id,
             'eda_SequenceName' => sequenceName,
             'eda_Position' => thePosition
         };
         
         //act
         Type reflector = LogInitializer.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -95,14 +94,13 @@
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_StepConfigId' =>  config.Id,
             'eda_SequenceName' => sequenceName,
             'eda_Position' => thePosition
         };
         
         //act
         Type reflector = LogInitializer.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -159,14 +157,13 @@
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_StepConfigId' =>  config.Id,
             'eda_SequenceName' => sequenceName,
             'eda_Position' => thePosition
         };
         
         //act
         Type reflector = LogInitializer.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -217,7 +214,7 @@
         String actualMessage;
         try {
             Type reflector = LogInitializer.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -254,7 +251,6 @@
         
         Map<String,Object> parameters = new Map<String,Object>{
            'Id' => theId   ,
-           'eda_StepConfigId' =>  config.Id,
            'eda_SequenceName' => sequenceName,
            'eda_Position' => thePosition
         };
@@ -264,8 +260,8 @@
         String actualMessage;
         try {
             Type reflector = LogInitializer.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
-        } catch (Exception e) {
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
+        } catch (LogInitializer.LogInitializerException e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
         }
@@ -275,7 +271,7 @@
         System.assertEquals(expectedFlagException, actualFlagException);
         
         String expectedMessage = 'Unable to access Log Config';
-        System.assert( actualMessage.contains(expectedMessage) );
+        System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
     }
     
     

@@ -1,6 +1,6 @@
 public with sharing class Heartbeat {
     
-    public class HeartbeatException extends Exception {}
+    public String Parameters;
 
     public class Meta {
         public String Tag = 'System';
@@ -9,7 +9,7 @@ public with sharing class Heartbeat {
         public String Icon = 'heart_add';
     }
 
-    public String Parameters;
+    public class HeartbeatException extends Exception {}
 
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);

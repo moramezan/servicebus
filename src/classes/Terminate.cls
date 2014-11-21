@@ -1,5 +1,7 @@
 public with sharing class Terminate {
     
+    public String Parameters;
+    
     public class Meta {
         public String Tag = 'Event Driven Architecture';
         public String Name = 'Terminate';
@@ -7,8 +9,6 @@ public with sharing class Terminate {
         public String Icon = 'stop';
         public String HelpUrl = Page.StepCsh.getUrl();
     }
-    
-    public String Parameters;
     
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);

@@ -1,7 +1,8 @@
 public with sharing class Publish {
     
-    public class PublishException extends Exception {}
-
+    public String Parameters;
+    public SObject StepConfig;
+    
     public class Meta {
         public String Tag = 'Event Driven Architecture';
         public String Name = 'Publish';
@@ -11,16 +12,16 @@ public with sharing class Publish {
         public String HelpUrl = Page.PublishConfigCsh.getUrl();
     }
     
-    public String Parameters;
-    
+    public class PublishException extends Exception {}
+
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         
-        PublishConfig__c publishConfig = (PublishConfig__c)SalesforceObject.getById((Id)parameters.get('eda_StepConfigId'));
+        PublishConfig__c publishConfig = (PublishConfig__c)this.StepConfig;
         
-        if (null == publishConfig.EventType__c) {
-            throw new PublishException('Publish Config ' + publishConfig.Id + ' has no Event type');
+        if (publishConfig == null || publishConfig.EventType__c == null) {
+            throw new PublishException('Publish Config ' + publishConfig + ' has no Event type');
         }
         
         Map<Id,SObject> subscribeConfigs = new Map<Id,SObject>([

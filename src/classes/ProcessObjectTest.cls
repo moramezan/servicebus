@@ -1,5 +1,7 @@
 @IsTest public class ProcessObjectTest { 
     
+    public String Parameters;
+    
     public class Meta {
         public String Tag = 'Fake';
         public String Name = 'Test';
@@ -8,8 +10,6 @@
         public String HelpUrl = 'fakedocspage.html';
     }
 
-    public String Parameters;
-    
     override public String toString() {
         return Json.serialize(new List<Map<String,Object>>());
     }

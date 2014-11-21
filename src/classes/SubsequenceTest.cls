@@ -36,13 +36,12 @@
         //prepare message
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_SequenceName' => 'originSequence',
-            'eda_Position' => 1,
-            'eda_StepConfigId' => config.Id
+            'eda_Position' => 1
         };
         
         //act
         Type reflector = Subsequence.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         
         //asserts
         Decimal expectedSize = 1;
