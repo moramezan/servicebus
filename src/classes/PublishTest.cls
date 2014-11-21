@@ -77,7 +77,7 @@
         PublishConfig__c config = new PublishConfig__c();
         insert config;
         
-        Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'TestSequence', 'eda_Position' => 1, 'eda_StepConfigId' => config.Id};
+        Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'TestSequence', 'eda_Position' => 1};
         
         //act
         Boolean thrown = false;
