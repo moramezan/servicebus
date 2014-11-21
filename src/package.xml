@@ -43,8 +43,8 @@
         <members>MessageObjectSetTest</members>
         <members>MessagePauseQueueExtension</members>
         <members>MessagePauseQueueExtensionTest</members>
-        <members>MessageProcessExtension</members>
-        <members>MessageProcessExtensionTest</members>
+        <members>MessageRebufferExtension</members>
+        <members>MessageRebufferExtensionTest</members>
         <members>MessageResumeQueueExtension</members>
         <members>MessageResumeQueueExtensionTest</members>
         <members>MessageShowDataExtension</members>
@@ -120,7 +120,7 @@
         <members>LogWriterEntryCsh</members>
         <members>MessageCsh</members>
         <members>MessagePauseQueue</members>
-        <members>MessageProcess</members>
+        <members>MessageRebuffer</members>
         <members>MessageResumeQueue</members>
         <members>MessageShowData</members>
         <members>MessageSplash</members>
@@ -321,7 +321,7 @@
         <members>LogConfiguration__c.ChangeDynamicGroupIdentifier</members>
         <members>LogConfiguration__c.ListLogGroups</members>
         <members>Message__c.PauseQueue</members>
-        <members>Message__c.Process</members>
+        <members>Message__c.Rebuffer</members>
         <members>Message__c.ResumeQueue</members>
         <members>Message__c.ShowData</members>
         <members>Process__c.ApexClass</members>

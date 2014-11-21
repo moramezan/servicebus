@@ -249,14 +249,14 @@
         <requireRowSelection>false</requireRowSelection>
     </webLinks>
     <webLinks>
-        <fullName>Process</fullName>
+        <fullName>Rebuffer</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>
-        <masterLabel>Process Message</masterLabel>
+        <masterLabel>Rebuffer Message</masterLabel>
         <openType>sidebar</openType>
-        <page>MessageProcess</page>
+        <page>MessageRebuffer</page>
         <protected>false</protected>
     </webLinks>
     <webLinks>

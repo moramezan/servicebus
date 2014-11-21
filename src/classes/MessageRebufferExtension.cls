@@ -1,12 +1,12 @@
-public with sharing class MessageProcessExtension {
+public with sharing class MessageRebufferExtension {
     
     @TestVisible static private Message__c message;
     
-    public MessageProcessExtension(ApexPages.StandardController controller) {
+    public MessageRebufferExtension(ApexPages.StandardController controller) {
         message = (Message__c)SalesforceObject.getById(controller.getId());
     }
     
-    public PageReference doProcess() {
+    public PageReference doRebuffer() {
         //we are happy for Queued, Buffered or Started guys to be force-Processed
         //but we just note that a Queued message will need to be resolved first!
         if (message.Status__c == 'Queued') {

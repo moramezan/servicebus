@@ -1,4 +1,4 @@
-@IsTest public class MessageProcessExtensionTest {
+@IsTest public class MessageRebufferExtensionTest {
 
     static testmethod void testDml() {
         //arrange message
@@ -7,11 +7,11 @@
         
         //arrange controller and extension
         ApexPages.StandardController controller = new ApexPages.StandardController(message);
-        MessageProcessExtension extension = new MessageProcessExtension(controller);
-        MessageProcessExtension.message = message;
+        MessageRebufferExtension extension = new MessageRebufferExtension(controller);
+        MessageRebufferExtension.message = message;
         
         //act
-        new MessageProcessExtension.DoDml();
+        new MessageRebufferExtension.DoDml();
         
         //assert
         String expectedStatus = 'Rebuffered';

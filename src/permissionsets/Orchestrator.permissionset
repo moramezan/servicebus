@@ -149,11 +149,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageProcessExtension</apexClass>
+        <apexClass>MessageRebufferExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageProcessExtensionTest</apexClass>
+        <apexClass>MessageRebufferExtensionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -790,7 +790,7 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>MessageProcess</apexPage>
+        <apexPage>MessageRebuffer</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
