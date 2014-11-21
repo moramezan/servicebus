@@ -17,8 +17,8 @@
         <members>BranchTest</members>
         <members>Broker</members>
         <members>BrokerTest</members>
-        <members>ConfigurationShowStepExtension</members>
-        <members>ConfigurationShowStepExtensionTest</members>
+        <members>ConfigShowStepExtension</members>
+        <members>ConfigShowStepExtensionTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
         <members>Gate</members>
@@ -31,8 +31,8 @@
         <members>HeartbeatTest</members>
         <members>Jump</members>
         <members>JumpTest</members>
-        <members>LogConfigurationObjectSet</members>
-        <members>LogConfigurationObjectSetTests</members>
+        <members>LogConfigObjectSet</members>
+        <members>LogConfigObjectSetTests</members>
         <members>LogInitializer</members>
         <members>LogInitializerTest</members>
         <members>LogWriter</members>
@@ -69,8 +69,8 @@
         <members>SalesforceObjectSetTest</members>
         <members>SalesforceObjectTest</members>
         <members>Schedule</members>
-        <members>ScheduleConfigurationObjectSet</members>
-        <members>ScheduleConfigurationObjectSetTest</members>
+        <members>ScheduleConfigObjectSet</members>
+        <members>ScheduleConfigObjectSetTest</members>
         <members>ScheduleTest</members>
         <members>SchemaSelectorController</members>
         <members>SchemaSelectorControllerTest</members>
@@ -105,17 +105,17 @@
         <name>ApexComponent</name>
     </types>
     <types>
-        <members>BranchConfigurationCsh</members>
-        <members>BranchConfigurationShowStep</members>
+        <members>BranchConfigCsh</members>
+        <members>BranchConfigShowStep</members>
         <members>Configure</members>
         <members>EventTypeCsh</members>
         <members>GateGroupCsh</members>
         <members>GateItemCsh</members>
-        <members>JumpConfigurationCsh</members>
-        <members>JumpConfigurationShowStep</members>
-        <members>LogConfigurationCsh</members>
-        <members>LogConfigurationListLogGroups</members>
-        <members>LogConfigurationSchemaSelector</members>
+        <members>JumpConfigCsh</members>
+        <members>JumpConfigShowStep</members>
+        <members>LogConfigCsh</members>
+        <members>LogConfigListLogGroups</members>
+        <members>LogConfigSchemaSelector</members>
         <members>LogGroupCsh</members>
         <members>LogWriterEntryCsh</members>
         <members>MessageCsh</members>
@@ -133,34 +133,34 @@
         <members>ProcessHelp</members>
         <members>ProcessSettings</members>
         <members>ProcessSplash</members>
-        <members>PublishConfigurationCsh</members>
-        <members>PublishConfigurationManageEventTypes</members>
-        <members>PublishConfigurationShowStep</members>
-        <members>ScheduleConfigurationCsh</members>
+        <members>PublishConfigCsh</members>
+        <members>PublishConfigManageEventTypes</members>
+        <members>PublishConfigShowStep</members>
+        <members>ScheduleConfigCsh</members>
         <members>SchemaSelector</members>
         <members>SequenceBuilder</members>
         <members>SequenceCsh</members>
         <members>SequenceSplash</members>
         <members>StepCsh</members>
-        <members>StepShowConfiguration</members>
-        <members>SubscribeConfigurationCsh</members>
-        <members>SubscribeConfigurationManageEventTypes</members>
-        <members>SubscribeConfigurationShowStep</members>
-        <members>SubsequenceConfigurationCsh</members>
-        <members>SubsequenceConfigurationShowStep</members>
+        <members>StepShowConfig</members>
+        <members>SubscribeConfigCsh</members>
+        <members>SubscribeConfigManageEventTypes</members>
+        <members>SubscribeConfigShowStep</members>
+        <members>SubsequenceConfigCsh</members>
+        <members>SubsequenceConfigShowStep</members>
         <name>ApexPage</name>
     </types>
     <types>
-        <members>BranchConfigurationTriggers</members>
-        <members>JumpConfigurationTriggers</members>
-        <members>LogConfigurationTriggers</members>
+        <members>BranchConfigTriggers</members>
+        <members>JumpConfigTriggers</members>
+        <members>LogConfigTriggers</members>
         <members>MessageTriggers</members>
-        <members>PublishConfigurationTriggers</members>
-        <members>ScheduleConfigurationTriggers</members>
+        <members>PublishConfigTriggers</members>
+        <members>ScheduleConfigTriggers</members>
         <members>SequenceTriggers</members>
         <members>StepTriggers</members>
-        <members>SubscribeConfigurationTriggers</members>
-        <members>SubsequenceConfigurationTriggers</members>
+        <members>SubscribeConfigTriggers</members>
+        <members>SubsequenceConfigTriggers</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -168,7 +168,7 @@
         <name>CustomApplication</name>
     </types>
     <types>
-        <members>BranchConfiguration__c.Sequence__c</members>
+        <members>BranchConfig__c.Sequence__c</members>
         <members>BrokerSettings__c.BrokerClassName__c</members>
         <members>BrokerSettings__c.Inhibit__c</members>
         <members>BrokerSettings__c.IsPaused__c</members>
@@ -176,13 +176,13 @@
         <members>GateItem__c.Parameters__c</members>
         <members>GateSettings__c.IsEnabled__c</members>
         <members>HeartbeatSettings__c.EventStamp__c</members>
-        <members>JumpConfiguration__c.Sequence__c</members>
+        <members>JumpConfig__c.Sequence__c</members>
         <members>KnifeSwitch__c.Url__c</members>
-        <members>LogConfiguration__c.DynamicGroupIdentifierObjectName__c</members>
-        <members>LogConfiguration__c.DynamicGroupIdentifier__c</members>
-        <members>LogConfiguration__c.StaticGroupIdentifier__c</members>
+        <members>LogConfig__c.DynamicGroupIdentifierObjectName__c</members>
+        <members>LogConfig__c.DynamicGroupIdentifier__c</members>
+        <members>LogConfig__c.StaticGroupIdentifier__c</members>
         <members>LogGroup__c.GroupIdentifier__c</members>
-        <members>LogGroup__c.LogConfiguration__c</members>
+        <members>LogGroup__c.LogConfig__c</members>
         <members>LogGroup__c.Stamp__c</members>
         <members>LogWriterEntry__c.EntryPointGuid__c</members>
         <members>LogWriterEntry__c.GroupIdentifier__c</members>
@@ -202,50 +202,50 @@
         <members>Message__c.Status__c</members>
         <members>Message__c.Step__c</members>
         <members>Process__c.ApexClassId__c</members>
-        <members>Process__c.ConfigObject__c</members>
         <members>Process__c.CustomSetting__c</members>
         <members>Process__c.Description__c</members>
         <members>Process__c.FullyQualifiedClassName__c</members>
         <members>Process__c.HelpUrl__c</members>
         <members>Process__c.Icon__c</members>
+        <members>Process__c.StepConfig__c</members>
         <members>Process__c.Tag__c</members>
-        <members>PublishConfiguration__c.EventType__c</members>
-        <members>ScheduleConfiguration__c.Frequency__c</members>
-        <members>ScheduleConfiguration__c.FriendlyDates__c</members>
-        <members>ScheduleConfiguration__c.FriendlyTimes__c</members>
+        <members>PublishConfig__c.EventType__c</members>
+        <members>ScheduleConfig__c.Frequency__c</members>
+        <members>ScheduleConfig__c.FriendlyDates__c</members>
+        <members>ScheduleConfig__c.FriendlyTimes__c</members>
         <members>Sequence__c.StepsCount__c</members>
-        <members>Step__c.ConfigurationId__c</members>
-        <members>Step__c.ConfigurationName__c</members>
+        <members>Step__c.ConfigId__c</members>
+        <members>Step__c.ConfigName__c</members>
         <members>Step__c.Position__c</members>
         <members>Step__c.Process__c</members>
         <members>Step__c.SequenceNameAndPosition__c</members>
         <members>Step__c.Sequence__c</members>
-        <members>SubscribeConfiguration__c.EventType__c</members>
-        <members>SubsequenceConfiguration__c.Sequence__c</members>
+        <members>SubscribeConfig__c.EventType__c</members>
+        <members>SubsequenceConfig__c.Sequence__c</members>
         <members>WiretapSettings__c.UserId__c</members>
         <name>CustomField</name>
     </types>
     <types>
-        <members>BranchConfiguration__c</members>
+        <members>BranchConfig__c</members>
         <members>BrokerSettings__c</members>
         <members>EventType__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
         <members>GateSettings__c</members>
         <members>HeartbeatSettings__c</members>
-        <members>JumpConfiguration__c</members>
+        <members>JumpConfig__c</members>
         <members>KnifeSwitch__c</members>
-        <members>LogConfiguration__c</members>
+        <members>LogConfig__c</members>
         <members>LogGroup__c</members>
         <members>LogWriterEntry__c</members>
         <members>Message__c</members>
         <members>Process__c</members>
-        <members>PublishConfiguration__c</members>
-        <members>ScheduleConfiguration__c</members>
+        <members>PublishConfig__c</members>
+        <members>ScheduleConfig__c</members>
         <members>Sequence__c</members>
         <members>Step__c</members>
-        <members>SubscribeConfiguration__c</members>
-        <members>SubsequenceConfiguration__c</members>
+        <members>SubscribeConfig__c</members>
+        <members>SubsequenceConfig__c</members>
         <members>WiretapSettings__c</members>
         <name>CustomObject</name>
     </types>
@@ -270,22 +270,22 @@
         <name>Document</name>
     </types>
     <types>
-        <members>BranchConfiguration__c-Branch Configuration Layout</members>
+        <members>BranchConfig__c-Branch Config Layout</members>
         <members>EventType__c-Event Type Layout</members>
         <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>
-        <members>JumpConfiguration__c-Jump Configuration Layout</members>
-        <members>LogConfiguration__c-Log Initializer Configuration Layout</members>
+        <members>JumpConfig__c-Jump Config Layout</members>
+        <members>LogConfig__c-Log Initializer Config Layout</members>
         <members>LogGroup__c-Log Initializer Layout</members>
         <members>LogWriterEntry__c-Log Writer Entry Layout</members>
         <members>Message__c-Message Layout</members>
         <members>Process__c-Process Layout</members>
-        <members>PublishConfiguration__c-Publish Configuration Layout</members>
-        <members>ScheduleConfiguration__c-Schedule Configuration Layout</members>
+        <members>PublishConfig__c-Publish Config Layout</members>
+        <members>ScheduleConfig__c-Schedule Config Layout</members>
         <members>Sequence__c-Sequence Layout</members>
         <members>Step__c-Step Layout</members>
-        <members>SubscribeConfiguration__c-Subscribe Configuration Layout</members>
-        <members>SubsequenceConfiguration__c-Subsequence Configuration Layout</members>
+        <members>SubscribeConfig__c-Subscribe Config Layout</members>
+        <members>SubsequenceConfig__c-Subsequence Config Layout</members>
         <name>Layout</name>
     </types>
     <types>
@@ -309,17 +309,17 @@
         <name>StaticResource</name>
     </types>
     <types>
-        <members>ScheduleConfiguration__c.RequireFriendlyDates</members>
-        <members>ScheduleConfiguration__c.RequireFriendlyTimes</members>
+        <members>ScheduleConfig__c.RequireFriendlyDates</members>
+        <members>ScheduleConfig__c.RequireFriendlyTimes</members>
         <members>Sequence__c.FixedName</members>
         <members>Sequence__c.UniqueName</members>
         <name>ValidationRule</name>
     </types>
     <types>
-        <members>BranchConfiguration__c.ShowStep</members>
-        <members>JumpConfiguration__c.ShowStep</members>
-        <members>LogConfiguration__c.ChangeDynamicGroupIdentifier</members>
-        <members>LogConfiguration__c.ListLogGroups</members>
+        <members>BranchConfig__c.ShowStep</members>
+        <members>JumpConfig__c.ShowStep</members>
+        <members>LogConfig__c.ChangeDynamicGroupIdentifier</members>
+        <members>LogConfig__c.ListLogGroups</members>
         <members>Message__c.PauseQueue</members>
         <members>Message__c.Rebuffer</members>
         <members>Message__c.ResumeQueue</members>
@@ -328,12 +328,12 @@
         <members>Process__c.Discover</members>
         <members>Process__c.Help</members>
         <members>Process__c.Settings</members>
-        <members>PublishConfiguration__c.ManageEventTypes</members>
-        <members>PublishConfiguration__c.ShowStep</members>
-        <members>Step__c.ShowConfiguration</members>
-        <members>SubscribeConfiguration__c.ManageEventTypes</members>
-        <members>SubscribeConfiguration__c.ShowStep</members>
-        <members>SubsequenceConfiguration__c.ShowStep</members>
+        <members>PublishConfig__c.ManageEventTypes</members>
+        <members>PublishConfig__c.ShowStep</members>
+        <members>Step__c.ShowConfig</members>
+        <members>SubscribeConfig__c.ManageEventTypes</members>
+        <members>SubscribeConfig__c.ShowStep</members>
+        <members>SubsequenceConfig__c.ShowStep</members>
         <name>WebLink</name>
     </types>
     <uninstallClass>PostUninstallHandler</uninstallClass>

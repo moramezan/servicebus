@@ -1,0 +1,21 @@
+<apex:page tabStyle="ScheduleConfig__c" showHeader="false" standardStylesheets="true">
+    
+    <style>
+        body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
+    </style>
+
+    <apex:pageBlock mode="maindetail" title="About the Schedule Process">
+        <apex:pageBlockSection columns="2" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <p>Certain events are time based.</p>
+                <p>Time is a continuous flow but in reality, most systems are interested in the occurrence of discreet time events such as 12:00 pm, Monday.</p>
+                <p>The Schedule process has a configurable schedule to register interest in the occurrence of discrete future time  events and will emit a  message  whenever a schedule event occurs.</p>
+                <p>A schedule is defined by one or more hourly time intervals defining when the schedule should fire. This hourly schedule is filtered by frequency and run dates.</p>
+                <p>In the Run Times field, select one or more hourly time intervals that specify when the schedule should fire.</p>
+                <p>In the Frequency field , select the frequency from Daily, Weekly or Monthly. The value selected defines the available values under the Run dates picklist.</p>
+                <p><img width="480" src="{!URLFOR($Resource.HelpZip, '/ScheduleConfig/schedule.png')}" /></p>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+</apex:page>

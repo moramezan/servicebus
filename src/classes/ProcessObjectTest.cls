@@ -47,9 +47,9 @@
         String expectedFullyQualifiedClassName = actualType.getName();
         Type innerClass = Type.forName(actualType.getName() + '.' + 'Meta'); 
         ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
-        String expectedConfigObject = meta.ConfigObject.getSObjectType().getDescribe().getName();
+        String expectedStepConfig  = meta.StepConfig.getSObjectType().getDescribe().getName();
         String expectedIcon = meta.icon;
-        String expectedHelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubscribeConfigurationCsh.getUrl();
+        String expectedHelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubscribeConfigCsh.getUrl();
         
         //act 
         Process__c subscribeProcess = ProcessObject.fromType(actualType);
@@ -59,7 +59,7 @@
         String actualTag = subscribeProcess.Tag__c; 
         String actualDescription = subscribeProcess.Description__c; 
         String actualFullyQualifiedClassName = subscribeProcess.FullyQualifiedClassName__c; 
-        String actualConfigObject = subscribeProcess.ConfigObject__c; 
+        String actualStepConfig = subscribeProcess.StepConfig__c; 
         String actualIcon = subscribeProcess.Icon__c; 
         String actualHelpUrl = subscribeProcess.HelpUrl__c;
 
@@ -68,7 +68,7 @@
         System.assertEquals(expectedTag , actualTag );
         System.assertEquals(expectedDescription , actualDescription );
         System.assertEquals(expectedFullyQualifiedClassName , actualFullyQualifiedClassName);
-        System.assertEquals(expectedConfigObject , actualConfigObject);
+        System.assertEquals(expectedStepConfig , actualStepConfig);
         System.assertEquals(expectedIcon , actualIcon );
         System.assertEquals(expectedHelpUrl, actualHelpUrl);
     } 

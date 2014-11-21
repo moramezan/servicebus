@@ -34,11 +34,11 @@ public with sharing class ProcessObject extends SalesforceObject {
         public SObject CustomSetting {get;}
         
         /**
-         * Each Step can have one associated configuration record. The type of the record depends on what process
+         * Each Step can have one associated config record. The type of the record depends on what process
          * is living on the Step. Process Authors must advertise the object type here, and the framework will
          * handle the record lifecycle (creating and deleting them in tandem with the appropriate Step).
          */
-        public SObject ConfigObject {get;}
+        public SObject StepConfig {get;}
         
         /**
          * Each Process must name an icon (eg 'arrow_left') from the FamFamFam Silk library:
@@ -116,9 +116,9 @@ public with sharing class ProcessObject extends SalesforceObject {
                 process.CustomSetting__c = meta.CustomSetting.getSObjectType().getDescribe().getName();
             }
             
-            if (meta.ConfigObject != null) {
-                //attempt to populate the name of the configuration object
-                process.ConfigObject__c = meta.ConfigObject.getSObjectType().getDescribe().getName();
+            if (meta.StepConfig != null) {
+                //attempt to populate the name of the config object
+                process.StepConfig__c = meta.StepConfig.getSObjectType().getDescribe().getName();
             }
 
             return process;

@@ -538,7 +538,7 @@
     }   
 
  
-    static testMethod void callingRefreshConfigurationCorrectlyConfiguresHeartbeatSequence() {
+    static testMethod void callingRefreshConfigCorrectlyConfiguresHeartbeatSequence() {
         // arrange 
         List<Process__c> processesBefore = [ 
             SELECT Id, Name
@@ -564,7 +564,7 @@
         Integer actualStepsBeforeCount = stepsBefore.size();
         
         // act 
-        HeartbeatImplementation.refreshConfiguration(); 
+        HeartbeatImplementation.refreshConfig(); 
         
         // assemble
         List<Process__c> processesAfter = [ 

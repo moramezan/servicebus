@@ -7,7 +7,7 @@ public with sharing class LogWriter {
         public String Name = 'LogWriter';
         public String Description = 'Stores the message parameters under a Log Group.';
         public String Icon = 'pencil_add';
-        public String HelpUrl = Page.LogConfigurationCsh.getUrl();
+        public String HelpUrl = Page.LogConfigCsh.getUrl();
     }
     
     public String Parameters;

@@ -1,16 +1,16 @@
 @IsTest private class ScheduleTest {
    
 
-    static testmethod void canDetermineConfigObject() {
+    static testmethod void canDetermineStepConfig() {
         //arrange processes
         Process__c ScheduleProcess = ProcessObject.generateOne(Schedule.class);
         
         //act
-        String actualConfiguration = ScheduleProcess.ConfigObject__c;
+        String actualConfig = ScheduleProcess.StepConfig__c;
         
         // Assert
-        String expectedConfiguration = Schema.SobjectType.ScheduleConfiguration__c.Name;
-        System.assertEquals(expectedConfiguration, actualConfiguration);
+        String expectedConfig = Schema.SobjectType.ScheduleConfig__c.Name;
+        System.assertEquals(expectedConfig, actualConfig);
     }
 
 
@@ -81,21 +81,21 @@
 
         //arrange config
         ///Weekly    Sunday;Monday;Tuesday
-        ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c]; 
-        scheduleConfiguration.Frequency__c = 'Weekly';
-        scheduleConfiguration.FriendlyDates__c = 'Wednesday';
-        scheduleConfiguration.FriendlyTimes__c = '12:00';
-        update scheduleConfiguration;
+        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c]; 
+        scheduleConfig.Frequency__c = 'Weekly';
+        scheduleConfig.FriendlyDates__c = 'Wednesday';
+        scheduleConfig.FriendlyTimes__c = '12:00';
+        update scheduleConfig;
         
 
          //arrange parameters
          Boolean isHeartbeat = true;
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday
-        Id configurationId = [SELECT Id FROM ScheduleConfiguration__c].Id;
+        Id configId = [SELECT Id FROM ScheduleConfig__c].Id;
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_IsHeartbeat' => isHeartbeat,
             'eda_EventStamp' => stampAsString,
-            'eda_ConfigObjectId' => configurationId
+            'eda_StepConfigId' => configId
         };
  
         // act 
@@ -108,13 +108,13 @@
          Boolean actualIsHeartbeat = null;
         String  actualStampTruncated = null;
         Integer actualParameterSize = null;
-        Id actualConfigurationId = null;
+        Id actualConfigId = null;
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
             actualIsHeartbeat = (Boolean)actualParameters.get('eda_IsHeartbeat');
             actualStampTruncated = (String)actualParameters.get('eda_EventStamp');
-            actualConfigurationId = (Id)actualParameters.get('eda_ConfigObjectId');   
+            actualConfigId = (Id)actualParameters.get('eda_StepConfigId');   
         }
         
         // assert
@@ -123,12 +123,12 @@
 
         Boolean expectedIsHeartbeat = isHeartbeat;
         String  expectedStampTruncated = stampAsString;
-        Id expectedConfigurationId = configurationId;
+        Id expectedConfigId = configId;
         Integer expectedParameterSize = 3;
         System.assertEquals(expectedIsHeartbeat, actualIsHeartbeat);
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
-        System.assertEquals(expectedConfigurationId, actualConfigurationId);     
+        System.assertEquals(expectedConfigId, actualConfigId);     
     }  
 
 
@@ -147,21 +147,21 @@
 
         //arrange config
         ///Daily    Working days only;Weekends and holidays
-        ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c]; 
-        scheduleConfiguration.Frequency__c = 'Daily';
-        scheduleConfiguration.FriendlyDates__c = 'Working days only';
-        scheduleConfiguration.FriendlyTimes__c = '12:00';
-        update scheduleConfiguration;
+        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c]; 
+        scheduleConfig.Frequency__c = 'Daily';
+        scheduleConfig.FriendlyDates__c = 'Working days only';
+        scheduleConfig.FriendlyTimes__c = '12:00';
+        update scheduleConfig;
         
 
          //arrange parameters
          Boolean isHeartbeat = true;
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday, a working day
-        Id configurationId = [SELECT Id FROM ScheduleConfiguration__c].Id;
+        Id configId = [SELECT Id FROM ScheduleConfig__c].Id;
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_IsHeartbeat' => isHeartbeat,
             'eda_EventStamp' => stampAsString,
-            'eda_ConfigObjectId' => configurationId
+            'eda_StepConfigId' => configId
         };
  
         // act 
@@ -174,13 +174,13 @@
          Boolean actualIsHeartbeat = null;
         String  actualStampTruncated = null;
         Integer actualParameterSize = null;
-        Id actualConfigurationId = null;
+        Id actualConfigId = null;
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
             actualIsHeartbeat = (Boolean)actualParameters.get('eda_IsHeartbeat');
             actualStampTruncated = (String)actualParameters.get('eda_EventStamp');
-            actualConfigurationId = (Id)actualParameters.get('eda_ConfigObjectId');   
+            actualConfigId = (Id)actualParameters.get('eda_StepConfigId');   
         }
         
         // assert
@@ -189,12 +189,12 @@
 
         Boolean expectedIsHeartbeat = isHeartbeat;
         String  expectedStampTruncated = stampAsString;
-        Id expectedConfigurationId = configurationId;
+        Id expectedConfigId = configId;
         Integer expectedParameterSize = 3;
         System.assertEquals(expectedIsHeartbeat, actualIsHeartbeat);
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
-        System.assertEquals(expectedConfigurationId, actualConfigurationId);     
+        System.assertEquals(expectedConfigId, actualConfigId);     
     }  
 
 
@@ -213,21 +213,21 @@
 
         //arrange config
         ///Monthly    04;06
-        ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c]; 
-        scheduleConfiguration.Frequency__c = 'Monthly';
-        scheduleConfiguration.FriendlyDates__c = '03;15;16';
-        scheduleConfiguration.FriendlyTimes__c = '12:00';
-        update scheduleConfiguration;
+        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c]; 
+        scheduleConfig.Frequency__c = 'Monthly';
+        scheduleConfig.FriendlyDates__c = '03;15;16';
+        scheduleConfig.FriendlyTimes__c = '12:00';
+        update scheduleConfig;
         
 
          //arrange parameters
          Boolean isHeartbeat = true;
         String stampAsString = '2014-01-03T12:00:00.000Z';   
-        Id configurationId = [SELECT Id FROM ScheduleConfiguration__c].Id;
+        Id configId = [SELECT Id FROM ScheduleConfig__c].Id;
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_IsHeartbeat' => isHeartbeat,
             'eda_EventStamp' => stampAsString,
-            'eda_ConfigObjectId' => configurationId
+            'eda_StepConfigId' => configId
         };
  
         // act 
@@ -240,13 +240,13 @@
          Boolean actualIsHeartbeat = null;
         String  actualStampTruncated = null;
         Integer actualParameterSize = null;
-        Id actualConfigurationId = null;
+        Id actualConfigId = null;
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
             actualIsHeartbeat = (Boolean)actualParameters.get('eda_IsHeartbeat');
             actualStampTruncated = (String)actualParameters.get('eda_EventStamp');
-            actualConfigurationId = (Id)actualParameters.get('eda_ConfigObjectId');   
+            actualConfigId = (Id)actualParameters.get('eda_StepConfigId');   
         }
         
         // assert
@@ -255,12 +255,12 @@
 
         Boolean expectedIsHeartbeat = isHeartbeat;
         String  expectedStampTruncated = stampAsString;
-        Id expectedConfigurationId = configurationId;
+        Id expectedConfigId = configId;
         Integer expectedParameterSize = 3;
         System.assertEquals(expectedIsHeartbeat, actualIsHeartbeat);
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
-        System.assertEquals(expectedConfigurationId, actualConfigurationId);     
+        System.assertEquals(expectedConfigId, actualConfigId);     
     }  
 
 
@@ -278,21 +278,21 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
 
         //arrange config
-        ScheduleConfiguration__c scheduleConfiguration = [SELECT Id FROM ScheduleConfiguration__c]; 
-        scheduleConfiguration.Frequency__c = 'Weekly';
-        scheduleConfiguration.FriendlyDates__c = 'Wednesday';
-        scheduleConfiguration.FriendlyTimes__c = '13:00';
-        update scheduleConfiguration;
+        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c]; 
+        scheduleConfig.Frequency__c = 'Weekly';
+        scheduleConfig.FriendlyDates__c = 'Wednesday';
+        scheduleConfig.FriendlyTimes__c = '13:00';
+        update scheduleConfig;
         
 
          //arrange parameters
          Boolean isHeartbeat = true;
         String stampAsString = '2014-01-18T12:00:00.000Z';
-        Id configurationId = [SELECT Id FROM ScheduleConfiguration__c].Id;
+        Id configId = [SELECT Id FROM ScheduleConfig__c].Id;
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_IsHeartbeat' => isHeartbeat,
             'eda_EventStamp' => stampAsString,
-            'eda_ConfigObjectId' => configurationId
+            'eda_StepConfigId' => configId
         };
  
         // act 
@@ -324,11 +324,11 @@
         //arrange parameters
         Boolean isHeartbeat = true;
         String validStamp = '2014-01-18T12:00:00.000Z';
-        Id invalidConfigurationId = null;
+        Id invalidConfigId = null;
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_IsHeartbeat' => isHeartbeat,
             'eda_EventStamp' => validStamp,
-            'eda_ConfigObjectId' => invalidConfigurationId
+            'eda_StepConfigId' => invalidConfigId
         };
         
         // assemble

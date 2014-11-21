@@ -48,7 +48,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
          }
             
         public void generateHeartbeats() {
-            HeartbeatImplementation.refreshConfiguration();
+            HeartbeatImplementation.refreshConfig();
             HeartbeatImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
         }
     }   
@@ -274,7 +274,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
      */
      
     /*
-     * Validation of Configuration
+     * Validation of Config
      */
      
     @testVisible
@@ -332,11 +332,11 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
 
 
     /*
-     * Configuration  refresh 
+     * Config  refresh 
      * (required logic run as and when  needed ...)
      */
     @testVisible
-    private static void refreshConfiguration() {
+    private static void refreshConfig() {
         if (!SObjectType.Process__c.Createable) throw new Broker.CrudException('!SObjectType.Process__c.Createable');
         if (!SObjectType.Sequence__c.Createable) throw new Broker.CrudException('!SObjectType.Sequence__c.Createable');
         if (!SObjectType.Step__c.Createable) throw new Broker.CrudException('!SObjectType.Step__c.Createable');

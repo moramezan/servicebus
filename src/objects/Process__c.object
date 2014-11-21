@@ -66,17 +66,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>ConfigObject__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Optionally, what is the API name of a Custom Object used to configure instances of this process?</inlineHelpText>
-        <label>Config Object</label>
-        <length>40</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>CustomSetting__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Optionally, what is the API name of a Custom Setting used to hold any system-wide options for this process?</inlineHelpText>
@@ -123,6 +112,17 @@
         <inlineHelpText>What is the name of the icon that represents this process? (From http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png)</inlineHelpText>
         <label>Icon</label>
         <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>StepConfig__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Optionally, what is the API name of a Custom Object used to configure instances of this process?</inlineHelpText>
+        <label>Step Config</label>
+        <length>40</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>

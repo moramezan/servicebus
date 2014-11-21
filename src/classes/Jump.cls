@@ -4,9 +4,9 @@ public with sharing class Jump {
         public String Tag = 'Event Driven Architecture';
         public String Name = 'Jump';
         public String Description = 'Permanently diverts the message to another sequence, never to return.';
-        public SObject ConfigObject = JumpConfiguration__c.SObjectType.newSObject();
+        public SObject StepConfig = JumpConfig__c.SObjectType.newSObject();
         public String Icon = 'arrow_switch';
-        public String HelpUrl = Page.JumpConfigurationCsh.getUrl();
+        public String HelpUrl = Page.JumpConfigCsh.getUrl();
     }
     
     public String Parameters;
@@ -14,9 +14,9 @@ public with sharing class Jump {
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
-        //get destination from configuration
-        JumpConfiguration__c configuration = (JumpConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
-        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(configuration.Sequence__c);
+        //get destination from config
+        JumpConfig__c config = (JumpConfig__c)SalesforceObject.getById((Id)parameters.get('eda_StepConfigId'));
+        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(config.Sequence__c);
         
         parameters.put('eda_SequenceName', sequence.Name);
         parameters.put('eda_Position', 0);

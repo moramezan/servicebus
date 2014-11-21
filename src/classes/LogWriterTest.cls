@@ -84,25 +84,25 @@
         Step__c stepA2 = new Step__c(Sequence__c = sequence.Id, Position__c = positionA2, Process__c = logWriterProcess.Id);
         insert stepA2;
  
-        LogConfiguration__c configuration1  = new LogConfiguration__c(
+        LogConfig__c config1  = new LogConfig__c(
             StaticGroupIdentifier__c = theIdentifier1
         );
-        insert configuration1;
+        insert config1;
          
-        LogConfiguration__c configuration2  = new LogConfiguration__c(
+        LogConfig__c config2  = new LogConfig__c(
             StaticGroupIdentifier__c = theIdentifier2
         );
-        insert configuration2;
+        insert config2;
         
         LogGroup__c logGroup1  = new LogGroup__c(
-            LogConfiguration__c = configuration1.Id,
+            LogConfig__c = config1.Id,
             GroupIdentifier__c =  theIdentifier1,
             Stamp__c = System.Now()
         );
         insert logGroup1;
         
         LogGroup__c logGroup2  = new LogGroup__c(
-            LogConfiguration__c = configuration2.Id,
+            LogConfig__c = config2.Id,
             GroupIdentifier__c =  theIdentifier2,
             Stamp__c = System.Now()
         );

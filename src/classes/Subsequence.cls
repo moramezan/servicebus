@@ -4,9 +4,9 @@ public with sharing class Subsequence {
         public String Tag = 'Event Driven Architecture';
         public String Name = 'Subsequence';
         public String Description = 'Temporarily diverts the message to another sequence, then returns it to the next step afterwards.';
-        public SObject ConfigObject = SubsequenceConfiguration__c.SObjectType.newSObject();
+        public SObject StepConfig = SubsequenceConfig__c.SObjectType.newSObject();
         public String Icon = 'arrow_undo';
-        public String HelpUrl = Page.SubsequenceConfigurationCsh.getUrl();
+        public String HelpUrl = Page.SubsequenceConfigCsh.getUrl();
         
         public Map<String,String> Outputs = new Map<String,String>{
             'eda_SubsequenceName' => (String.class).getName(), //Marks the sequence name which the Subsequence returns to.
@@ -27,9 +27,9 @@ public with sharing class Subsequence {
             AND Position__c = :(Decimal) parameters.get('eda_Position')
         ];
   
-        //get destination from configuration
-        SubsequenceConfiguration__c configuration = (SubsequenceConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
-        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(configuration.Sequence__c);
+        //get destination from config
+        SubsequenceConfig__c config = (SubsequenceConfig__c)SalesforceObject.getById((Id)parameters.get('eda_StepConfigId'));
+        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(config.Sequence__c);
         
         List<Object> stepIds = (List<Object>)parameters.get('eda_SubsequenceStepIds');
         if (stepIds == null) {

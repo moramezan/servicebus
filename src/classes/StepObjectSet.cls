@@ -6,11 +6,11 @@ public with sharing class StepObjectSet extends SalesforceObjectSet {
     
     public override void onBeforeInsert() {
         this.incrementPositions();
-        this.insertConfigurations();
+        this.insertConfigs();
     }
     
     public override void onBeforeDelete() {
-        this.deleteConfigurations();
+        this.deleteConfigs();
     }
     
     /**
@@ -44,11 +44,11 @@ public with sharing class StepObjectSet extends SalesforceObjectSet {
     }
     
     /**
-     * If a step's process has configuration, we need to insert the configuration at the same
-     * time as the step. (We used to do this when the user attempted to view the configuration
+     * If a step's process has config, we need to insert the config at the same
+     * time as the step. (We used to do this when the user attempted to view the config
      * for the first time, but that does DML from a Visualforce action and fails security review.)
      */
-    private void insertConfigurations() {
+    private void insertConfigs() {
         //get all involved steps
         List<Step__c> steps = this.getSObjects();
         
@@ -57,56 +57,56 @@ public with sharing class StepObjectSet extends SalesforceObjectSet {
         for (Step__c step : steps) processIds.add(step.Process__c);
         
         //query process ids to their config objects
-        List<Process__c> processes = [SELECT Id, ConfigObject__c FROM Process__c WHERE Id IN :processIds];
+        List<Process__c> processes = [SELECT Id, StepConfig__c FROM Process__c WHERE Id IN :processIds];
         
         //assemble a mapping of process ids to config object strings
-        Map<Id,String> processId2configObject = new Map<Id,String>();
-        for (Process__c process : processes) processId2configObject.put(process.Id, process.ConfigObject__c);
+        Map<Id,String> processId2stepConfig = new Map<Id,String>();
+        for (Process__c process : processes) processId2stepConfig.put(process.Id, process.StepConfig__c);
         
-        //we will do applicable steps and configurations in tandem
+        //we will do applicable steps and configs in tandem
         List<Step__c> configuredSteps = new List<Step__c>();
-        List<SObject> configurations = new List<SObject>();
+        List<SObject> configs = new List<SObject>();
         
-        //assemble applicable steps and configurations
+        //assemble applicable steps and configs
         for (Step__c step : steps) {
-            String configObject = processId2configObject.get(step.Process__c);
-            if (configObject != null) {
-                SObject configuration = (SObject)Type.forName(configObject).newInstance();
+            String stepConfig = processId2stepConfig.get(step.Process__c);
+            if (stepConfig != null) {
+                SObject config = (SObject)Type.forName(stepConfig).newInstance();
                 configuredSteps.add(step);
-                configurations.add(configuration);
+                configs.add(config);
             }
         }
         
-        insert configurations;
+        insert configs;
         
-        //reconcile the configuration ids back onto the steps
+        //reconcile the config ids back onto the steps
         for (Integer i = 0; i < configuredsteps.size(); i++) {
             Step__c step = configuredsteps[i];
-            SObject configuration = configurations[i];
-            step.ConfigurationId__c = configuration.Id;
+            SObject config = configs[i];
+            step.ConfigId__c = config.Id;
         }
     }
     
     /**
-     * If a step has configuration, there is a one-to-one relationship.
-     * StepAfterInsert takes care of the creation of the configuration.
-     * This trigger takes care of the deletion of the configuration.
+     * If a step has config, there is a one-to-one relationship.
+     * StepAfterInsert takes care of the creation of the config.
+     * This trigger takes care of the deletion of the config.
      */
-    private void deleteConfigurations() {
+    private void deleteConfigs() {
         if (!SObjectType.Step__c.Deletable) throw new Broker.CrudException('!SObjectType.Step__c.Deletable');  
         Set<Id> stepIds = (new Map<Id,SObject>(this.getSObjects())).keySet();
-        Map<Id,Step__c> id2step = new Map<Id,Step__c>([SELECT id, Name, ConfigurationId__c FROM Step__c WHERE Id IN :stepIds]);
+        Map<Id,Step__c> id2step = new Map<Id,Step__c>([SELECT id, Name, ConfigId__c FROM Step__c WHERE Id IN :stepIds]);
         
-        //prepare list of configuration ids
+        //prepare list of config ids
         List<Id> ids = new List<Id>();
         
-        //enumerate steps to get configuration ids
+        //enumerate steps to get config ids
         for (Step__c step : id2step.values()) {
-            if (null == step.ConfigurationId__c) continue;
-            ids.add(step.ConfigurationId__c);
+            if (null == step.ConfigId__c) continue;
+            ids.add(step.ConfigId__c);
         }
         
-        //delete all the configuration records
+        //delete all the config records
         if (!ids.isEmpty()) {
             //don't choke on steps with no config
             Database.delete(ids);

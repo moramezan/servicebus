@@ -21,19 +21,19 @@ public with sharing class SequenceObject extends SalesforceObject {
         String orderBy = SObjectType.Step__c.Fields.Position__c.Name;
         List<Step__c> steps = Database.query('SELECT ' + String.join(fields, ',') + ' FROM Step__c WHERE Sequence__c = :sequenceId ORDER BY ' + orderBy);
         
-        //ConfigurationName field from related configs
+        //ConfigName field from related configs
         for (Step__c step : steps) {
             //Yes, we are doing SOQL inside a for-loop here!
             //We cannot SOQL or SOSL across multiple objects:
             //http://salesforce.stackexchange.com/q/24877/320
             //One improvement would be to use SOAP retrieve(),
             //but the Remote Site Setting has post-install steps.
-            Id configurationId = step.ConfigurationId__c;
-            if (null == configurationId) continue;
-            String objectType = configurationId.getSObjectType().getDescribe().getName();
-            SObject config = Database.query('SELECT Id, Name FROM ' + objectType + ' WHERE Id = :configurationId');
-            String configurationName = (String)config.get('Name');
-            step.ConfigurationName__c = configurationName.left(80);
+            Id configId = step.ConfigId__c;
+            if (null == configId) continue;
+            String objectType = configId.getSObjectType().getDescribe().getName();
+            SObject config = Database.query('SELECT Id, Name FROM ' + objectType + ' WHERE Id = :configId');
+            String configName = (String)config.get('Name');
+            step.ConfigName__c = configName.left(80);
         }
         
         return new StepObjectSet(steps);

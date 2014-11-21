@@ -7,8 +7,8 @@ public with sharing class Schedule {
         public String Name = 'Schedule';
         public String Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages
         public String Icon = 'clock';
-        public SObject ConfigObject = ScheduleConfiguration__c.SObjectType.newSObject();
-        public String HelpUrl = Page.ScheduleConfigurationCsh.getUrl();
+        public SObject StepConfig = ScheduleConfig__c.SObjectType.newSObject();
+        public String HelpUrl = Page.ScheduleConfigCsh.getUrl();
         public Boolean ConsumesHeartbeat = true;
     }
     
@@ -19,13 +19,13 @@ public with sharing class Schedule {
 
         Boolean isHeartbeat = (Boolean)parameters.get('eda_IsHeartbeat');
         String  stampAsString  =  (String)parameters.get('eda_EventStamp');
-        Id configurationId = (Id)parameters.get('eda_ConfigObjectId');
+        Id configId = (Id)parameters.get('eda_StepConfigId');
 
          List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
     
         if (isHeartbeat) {
             // evaluate:
-            if (isWithinWindow(stampAsString, configurationId)) {
+            if (isWithinWindow(stampAsString, configId)) {
                 parametersList.add(parameters);
             } 
         } else { 
@@ -36,7 +36,7 @@ public with sharing class Schedule {
         return Json.serialize(parametersList);
     }
 
-    @TestVisible static private Boolean isWithinWindow(String stampAsString, Id configurationId) {
+    @TestVisible static private Boolean isWithinWindow(String stampAsString, Id configId) {
         DateTime stampAsDateTime;
         try {
            stampAsString =  getISO8601(stampAsString);
@@ -49,10 +49,10 @@ public with sharing class Schedule {
         Set<String> details;
         Set<String> runTimes;
         try {
-            ScheduleConfiguration__c configuration = (ScheduleConfiguration__c)SalesforceObject.getById(configurationId);
-            frequency = configuration.Frequency__c;
-            details = new Set<String>(configuration.FriendlyDates__c.split(';'));
-            runTimes = new Set<String>(configuration.FriendlyTimes__c.split(';'));
+            ScheduleConfig__c config = (ScheduleConfig__c)SalesforceObject.getById(configId);
+            frequency = config.Frequency__c;
+            details = new Set<String>(config.FriendlyDates__c.split(';'));
+            runTimes = new Set<String>(config.FriendlyTimes__c.split(';'));
         } catch (Exception e) {
             throw new ScheduleException(e);
         }

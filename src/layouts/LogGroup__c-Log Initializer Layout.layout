@@ -15,7 +15,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>LogConfiguration__c</field>
+                <field>LogConfig__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>

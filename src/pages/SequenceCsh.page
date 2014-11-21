@@ -30,7 +30,7 @@
         <apex:pageBlockSection title="When building a new Sequence" columns="1" collapsible="false">
             <apex:pageBlockSectionItem >
                 <ul>
-                    <li>Every Step in a Sequence has an associated Process, a numbered Position, and potentially a Configuration.</li>
+                    <li>Every Step in a Sequence has an associated Process, a numbered Position, and potentially a Config.</li>
                     <li>A Terminate process is automatically inserted into a new Sequence at the point that the Sequence is created. This Terminate step cannot be deleted.</li>
                     <li>It is the orchestrator's responsibility to ensure the Terminate Process is the final Step in every Sequence as any Steps after the Terminate Process will not be executed. </li>
                 </ul>

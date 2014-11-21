@@ -1,3 +1,0 @@
-<apex:page standardController="Step__c" action="{!IF(ISBLANK(Step__c.ConfigurationId__c), URLFOR($Action.Step__c.View, Id), '/' + Step__c.ConfigurationId__c)}">
-    <apex:outputField value="{!Step__c.ConfigurationId__c}" rendered="false" />
-</apex:page>

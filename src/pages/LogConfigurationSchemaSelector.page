@@ -1,1 +1,0 @@
-<apex:page standardController="LogConfiguration__c" action="{!URLFOR($Page.SchemaSelector, null, ['id'=id,'objectSchemaKey'=$ObjectType.LogConfiguration__c.Fields.DynamicGroupIdentifierObjectName__c.Name,'fieldSchemaKey'=$ObjectType.LogConfiguration__c.Fields.DynamicGroupIdentifier__c.Name,'retURL'=URLFOR($Action.LogConfiguration__c.View, id)])}" />

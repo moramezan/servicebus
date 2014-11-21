@@ -417,7 +417,7 @@
                     "/**",
                     " * Double click behaves like hitting Edit",
                     " */",
-                    "if (record.get('ConfigurationId')) {",
+                    "if (record.get('ConfigId')) {",
                     "    e.target = Ext.get(tr).down('a.configurelink').dom;",
                     "    this.onConfigureLinkClick.apply(this, arguments);",
                     "}"
@@ -480,7 +480,7 @@
                     "",
                     "/**",
                     " * When user closes the configuration window, we reload the grid. Any",
-                    " * ConfigurationName changes will then be reflected for the user to see.",
+                    " * ConfigName changes will then be reflected for the user to see.",
                     " * The main window is always refocussed by closing the configuration window.",
                     " */",
                     "if (controller.popup && !controller.popup.closed) {",

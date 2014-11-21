@@ -6,9 +6,9 @@ public with sharing class LogInitializer {
         public String Tag = 'Event Driven Architecture';
         public String Name = 'LogInitializer';
         public String Description = 'Creates a grouping identifier which all subsequent LogWriter processes log against.';
-        public SObject ConfigObject = LogConfiguration__c.SObjectType.newSobject();
+        public SObject StepConfig = LogConfig__c.SObjectType.newSobject();
         public String Icon = 'pencil';
-        public String HelpUrl = Page.LogConfigurationCsh.getUrl();
+        public String HelpUrl = Page.LogConfigCsh.getUrl();
         
         public Map<String,String> Outputs = new Map<String,String>{
             'eda_LogGroupIds' => (List<Id>.class).getName() //An identifier that associates instances of steps.
@@ -37,12 +37,12 @@ public with sharing class LogInitializer {
          }
          Step__c  step = steps[0];
  
-        //get group identifier instruction from configuration
-        LogConfiguration__c configuration;
+        //get group identifier instruction from config
+        LogConfig__c config;
         try {
-            configuration = (LogConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
+            config = (LogConfig__c)SalesforceObject.getById((Id)parameters.get('eda_StepConfigId'));
         } catch (System.QueryException e) {
-            throw new LogInitializerException('Unable to access Log Configuration');
+            throw new LogInitializerException('Unable to access Log Config');
         }
         
          // insert composite key values into log group :
@@ -50,8 +50,8 @@ public with sharing class LogInitializer {
          // 1.  the date-time stamp
          // 2.  a (fairly unique ) business group value
          Id dataId =  (Id)parameters.get('Id');
-         String groupIdentifier = getBusinesGroupIdentifier(configuration, step, dataId) ;
-         LogGroup__c logGroup = new LogGroup__c( LogConfiguration__c = configuration.Id,  GroupIdentifier__c = groupIdentifier, Stamp__c = System.Now());
+         String groupIdentifier = getBusinesGroupIdentifier(config, step, dataId) ;
+         LogGroup__c logGroup = new LogGroup__c( LogConfig__c = config.Id,  GroupIdentifier__c = groupIdentifier, Stamp__c = System.Now());
          insert logGroup;
 
          // update outbound message
@@ -82,26 +82,26 @@ public with sharing class LogInitializer {
     }
     
     
-    @TestVisible private static String getBusinesGroupIdentifier(LogConfiguration__c configuration, Step__c  step,  Id dataId) {
+    @TestVisible private static String getBusinesGroupIdentifier(LogConfig__c config, Step__c  step,  Id dataId) {
 
         //  default :
         //
         //  "sequence name" and "step position"
-        //  (always use this if StaticGroupIdentifier__c from configuration equates to null)
+        //  (always use this if StaticGroupIdentifier__c from config equates to null)
         String defaultGroupIdentifier =  step.Sequence__r.Name + '-' + step.Position__c;
         
         
         //  preferred alternatives :
         //
-        //     alternative 1  use non-null StaticGroupIdentifier__c from configuration
+        //     alternative 1  use non-null StaticGroupIdentifier__c from config
         //     even better
         //     alternative 2  attempt obtain a user friendly "business id" from the
         //                    object by defining a field of that object in the
         //                    DynamicGroupIdentifier__c field
         //                    if successful, any entry in StaticGroupIdentifier__c is ignored
         
-        String groupIdentifier =  configuration.StaticGroupIdentifier__c;
-        String dynamicGroupIdentifier =  configuration.DynamicGroupIdentifier__c;
+        String groupIdentifier =  config.StaticGroupIdentifier__c;
+        String dynamicGroupIdentifier =  config.DynamicGroupIdentifier__c;
         
         Boolean flagBusinessIdOk = true;
         String businessId;

@@ -1,8 +1,8 @@
 @IsTest public class SchemaSelectorControllerTest {
     
-    static testmethod void testSelectionFromLogConfiguration() {
-        //arrange log configuration
-        LogConfiguration__c config = new LogConfiguration__c();
+    static testmethod void testSelectionFromLogConfig() {
+        //arrange log config
+        LogConfig__c config = new LogConfig__c();
         insert config;
         
         //arrange page
@@ -10,8 +10,8 @@
         Test.setCurrentPage(pr);
         pr.getParameters().putAll(new Map<String,String>{
             'id' => config.Id,
-            'objectSchemaKey' => SObjectType.LogConfiguration__c.Fields.DynamicGroupIdentifierObjectName__c.Name,
-            'fieldSchemaKey' => SObjectType.LogConfiguration__c.Fields.DynamicGroupIdentifier__c.Name,
+            'objectSchemaKey' => SObjectType.LogConfig__c.Fields.DynamicGroupIdentifierObjectName__c.Name,
+            'fieldSchemaKey' => SObjectType.LogConfig__c.Fields.DynamicGroupIdentifier__c.Name,
             'retURL' => new ApexPages.StandardController(config).view().getUrl()
         });
         
@@ -43,7 +43,7 @@
         //assemble
         config = [
             SELECT Id, DynamicGroupIdentifierObjectName__c, DynamicGroupIdentifier__c
-            FROM LogConfiguration__c
+            FROM LogConfig__c
             WHERE Id = :config.Id
         ];
         

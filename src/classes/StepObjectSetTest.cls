@@ -1,7 +1,7 @@
 @IsTest private class StepObjectSetTest {
     
     //before insert test
-    static testmethod void testStepConfigurationIsCreatedWhenInserted() {
+    static testmethod void testStepConfigIsCreatedWhenInserted() {
         //arrange processes
         Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -15,8 +15,8 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //assert
-        String expectedId = Schema.SObjectType.SubsequenceConfiguration__c.KeyPrefix; //this needs to be some config record
-        String actualId = subsequenceStep.ConfigurationId__c;
+        String expectedId = Schema.SObjectType.SubsequenceConfig__c.KeyPrefix; //this needs to be some config record
+        String actualId = subsequenceStep.ConfigId__c;
         System.assert(actualId.startsWith(expectedId));
     }
 
@@ -154,13 +154,13 @@
         
         Integer expectedSizeBefore =  1;
         Integer expectedSizeAfter =   0;
-        Integer actualSizeBefore = [SELECT COUNT() FROM BranchConfiguration__c];
+        Integer actualSizeBefore = [SELECT COUNT() FROM BranchConfig__c];
         
         //Act
         delete branchStep;
         
         //Prepare
-        Integer actualSizeAfter = [SELECT COUNT() FROM BranchConfiguration__c];
+        Integer actualSizeAfter = [SELECT COUNT() FROM BranchConfig__c];
         
         //Assert
         System.assertEquals(expectedSizeBefore, actualSizeBefore);

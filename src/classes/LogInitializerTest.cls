@@ -1,15 +1,15 @@
 @IsTest private class LogInitializerTest {
 
-    private static testmethod void canDetermineConfigObject() {
+    private static testmethod void canDetermineStepConfig() {
         //arrange processes
         Process__c logInitializerProcess = ProcessObject.generateOne(LogInitializer.class);
         
         //act
-        String actualConfiguration = logInitializerProcess.ConfigObject__c;
+        String actualConfig = logInitializerProcess.StepConfig__c;
         
         // Assert
-        String expectedConfiguration = Schema.SobjectType.LogConfiguration__c.Name;
-        System.assertEquals(expectedConfiguration, actualConfiguration);
+        String expectedConfig = Schema.SobjectType.LogConfig__c.Name;
+        System.assertEquals(expectedConfig, actualConfig);
     }
     
     private static testmethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForXXXXXXXXX() {
@@ -25,17 +25,17 @@
         Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = logInitializerProcess.Id);
         insert step;
         
-        LogConfiguration__c configuration = [
+        LogConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c
-            FROM LogConfiguration__c
+            FROM LogConfig__c
         ];
-        configuration.StaticGroupIdentifier__c = null;
-        configuration.DynamicGroupIdentifier__c = 'Fld_Doesnt_Exist__c';
-        update configuration;
+        config.StaticGroupIdentifier__c = null;
+        config.DynamicGroupIdentifier__c = 'Fld_Doesnt_Exist__c';
+        update config;
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_ConfigObjectId' =>  configuration.Id,
+            'eda_StepConfigId' =>  config.Id,
             'eda_SequenceName' => sequenceName,
             'eda_Position' => thePosition
         };
@@ -48,7 +48,7 @@
         DateTime expectedStampTo = System.Now().addSeconds(1);
         DateTime expectedStampFrom = System.Now().addSeconds(-1);
         List<LogGroup__c> logGroups = [
-            SELECT id, Name, LogConfiguration__c,  GroupIdentifier__c, Stamp__c
+            SELECT id, Name, LogConfig__c,  GroupIdentifier__c, Stamp__c
             FROM LogGroup__c
             WHERE Stamp__c >= :expectedStampFrom
             AND Stamp__c <=  :expectedStampTo
@@ -86,16 +86,16 @@
         Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = logInitializerProcess.Id);
         insert step;
         
-        LogConfiguration__c configuration = [
+        LogConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c
-            FROM LogConfiguration__c
+            FROM LogConfig__c
         ];
-        configuration.StaticGroupIdentifier__c = null; // no identifier specified
-        update configuration;
+        config.StaticGroupIdentifier__c = null; // no identifier specified
+        update config;
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_ConfigObjectId' =>  configuration.Id,
+            'eda_StepConfigId' =>  config.Id,
             'eda_SequenceName' => sequenceName,
             'eda_Position' => thePosition
         };
@@ -108,7 +108,7 @@
         DateTime expectedStampTo = System.Now().addSeconds(1);
         DateTime expectedStampFrom = System.Now().addSeconds(-1);
         List<LogGroup__c> logGroups = [
-            SELECT id, Name, LogConfiguration__c,  GroupIdentifier__c, Stamp__c
+            SELECT id, Name, LogConfig__c,  GroupIdentifier__c, Stamp__c
             FROM LogGroup__c
             WHERE Stamp__c >= :expectedStampFrom
             AND Stamp__c <=  :expectedStampTo
@@ -150,16 +150,16 @@
         Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = logInitializerProcess.Id);
         insert step;
         
-        LogConfiguration__c configuration = [
+        LogConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c
-            FROM LogConfiguration__c
+            FROM LogConfig__c
         ];
-        configuration.StaticGroupIdentifier__c = theIdentifier; // not null
-        update configuration;
+        config.StaticGroupIdentifier__c = theIdentifier; // not null
+        update config;
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_ConfigObjectId' =>  configuration.Id,
+            'eda_StepConfigId' =>  config.Id,
             'eda_SequenceName' => sequenceName,
             'eda_Position' => thePosition
         };
@@ -172,7 +172,7 @@
         DateTime expectedStampTo = System.Now().addSeconds(1);
         DateTime expectedStampFrom = System.Now().addSeconds(-1);
         List<LogGroup__c> logGroups = [
-            SELECT id, Name, LogConfiguration__c,  GroupIdentifier__c, Stamp__c
+            SELECT id, Name, LogConfig__c,  GroupIdentifier__c, Stamp__c
             FROM LogGroup__c
             WHERE Stamp__c >= :expectedStampFrom
             AND Stamp__c <=  :expectedStampTo
@@ -246,15 +246,15 @@
         Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = 1, Process__c = logInitializerProcess.Id);
         insert step;
         
-        LogConfiguration__c configuration = [
+        LogConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c
-            FROM LogConfiguration__c
+            FROM LogConfig__c
         ];
-        delete configuration;
+        delete config;
         
         Map<String,Object> parameters = new Map<String,Object>{
            'Id' => theId   ,
-           'eda_ConfigObjectId' =>  configuration.Id,
+           'eda_StepConfigId' =>  config.Id,
            'eda_SequenceName' => sequenceName,
            'eda_Position' => thePosition
         };
@@ -274,7 +274,7 @@
         Boolean expectedFlagException = true;
         System.assertEquals(expectedFlagException, actualFlagException);
         
-        String expectedMessage = 'Unable to access Log Configuration';
+        String expectedMessage = 'Unable to access Log Config';
         System.assert( actualMessage.contains(expectedMessage) );
     }
     

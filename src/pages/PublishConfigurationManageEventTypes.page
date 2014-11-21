@@ -1,1 +1,0 @@
-<apex:page standardController="PublishConfiguration__c" action="/{!URLFOR($ObjectType.EventType__c)}" />

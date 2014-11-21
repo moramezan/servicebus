@@ -66,11 +66,11 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>LogConfiguration__c</fullName>
+        <fullName>LogConfig__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>What record configures the Log Initializer Step that the message was passing through?</inlineHelpText>
-        <label>Log Configuration</label>
-        <referenceTo>LogConfiguration__c</referenceTo>
+        <label>Log Config</label>
+        <referenceTo>LogConfig__c</referenceTo>
         <relationshipLabel>Log Groups</relationshipLabel>
         <relationshipName>LogGroups</relationshipName>
         <relationshipOrder>0</relationshipOrder>

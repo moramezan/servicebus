@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <customHelpPage>ScheduleConfigCsh</customHelpPage>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Frequency__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Does this schedule run daily, weekly or monthly?</inlineHelpText>
+        <label>Frequency</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Daily</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Weekly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Monthly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>FriendlyDates__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>What pattern of days does the schedule run?</inlineHelpText>
+        <label>Run Dates</label>
+        <picklist>
+            <controllingField>Frequency__c</controllingField>
+            <picklistValues>
+                <fullName>Working days only</fullName>
+                <controllingFieldValues>Daily</controllingFieldValues>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Weekends and holidays</fullName>
+                <controllingFieldValues>Daily</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>1</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>2</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>3</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>4</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>5</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>6</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>7</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>8</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>9</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>10</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>11</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>12</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>13</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>14</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>15</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>16</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>17</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>18</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>19</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>20</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>21</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>22</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>23</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>24</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>25</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>26</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>27</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>28</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>29</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>30</fullName>
+                <controllingFieldValues>Monthly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Sunday</fullName>
+                <controllingFieldValues>Weekly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Monday</fullName>
+                <controllingFieldValues>Weekly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Tuesday</fullName>
+                <controllingFieldValues>Weekly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Wednesday</fullName>
+                <controllingFieldValues>Weekly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Thursday</fullName>
+                <controllingFieldValues>Weekly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Friday</fullName>
+                <controllingFieldValues>Weekly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Saturday</fullName>
+                <controllingFieldValues>Weekly</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>MultiselectPicklist</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <fields>
+        <fullName>FriendlyTimes__c</fullName>
+        <description>The pattern of schedule run times in GMT that the schedule runs</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What pattern of times does the schedule run? All times should be entered in GMT.</inlineHelpText>
+        <label>Run Times (GMT)</label>
+        <picklist>
+            <picklistValues>
+                <fullName>00:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>01:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>02:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>03:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>04:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>05:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>06:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>07:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>08:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>09:00</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>10:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>11:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>12:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>13:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>14:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>15:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>16:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>17:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>18:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>19:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>20:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>21:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>22:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>23:00</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>MultiselectPicklist</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <label>Schedule Config</label>
+    <nameField>
+        <label>What does this step do?</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Schedule Configs</pluralLabel>
+    <searchLayouts>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>RequireFriendlyDates</fullName>
+        <active>true</active>
+        <errorConditionFormula>!INCLUDES(FriendlyDates__c, &apos;Working days only&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;Weekends and holidays&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;1&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;2&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;3&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;4&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;5&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;6&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;7&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;8&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;9&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;10&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;11&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;12&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;13&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;14&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;15&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;16&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;17&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;18&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;19&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;20&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;21&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;22&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;23&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;24&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;25&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;26&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;27&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;28&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;29&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;30&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;Sunday&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;Monday&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;Tuesday&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;Wednesday&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;Thursday&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;Friday&apos;) &amp;&amp;
+!INCLUDES(FriendlyDates__c, &apos;Saturday&apos;)</errorConditionFormula>
+        <errorDisplayField>FriendlyDates__c</errorDisplayField>
+        <errorMessage>You must specify at least one run date.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>RequireFriendlyTimes</fullName>
+        <active>true</active>
+        <errorConditionFormula>!INCLUDES(FriendlyTimes__c, &apos;00:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;01:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;02:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;03:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;04:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;05:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;06:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;07:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;08:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;09:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;10:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;11:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;12:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;13:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;14:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;15:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;16:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;17:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;18:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;19:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;20:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;21:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;22:00&apos;) &amp;&amp;
+!INCLUDES(FriendlyTimes__c, &apos;23:00&apos;)</errorConditionFormula>
+        <errorDisplayField>FriendlyTimes__c</errorDisplayField>
+        <errorMessage>You must specify at least one run time.</errorMessage>
+    </validationRules>
+</CustomObject>

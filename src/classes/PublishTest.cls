@@ -1,15 +1,15 @@
 @IsTest private class PublishTest {
 
-    static testmethod void canDetermineConfigObject() {
+    static testmethod void canDetermineStepConfig() {
         //arrange processes
         Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
         //act
-        String actualConfiguration = publishProcess.ConfigObject__c;
+        String actualConfig = publishProcess.StepConfig__c;
         
         //assert
-        String expectedConfiguration = Schema.SObjectType.PublishConfiguration__c.Name;
-        System.assertEquals(expectedConfiguration, actualConfiguration);
+        String expectedConfig = Schema.SObjectType.PublishConfig__c.Name;
+        System.assertEquals(expectedConfig, actualConfig);
     }
     
     static testmethod void testSubsequenceDropped() {
@@ -23,7 +23,7 @@
         Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
         
         //arrange publish config
-        PublishConfiguration__c pubConfig = new PublishConfiguration__c(
+        PublishConfig__c pubConfig = new PublishConfig__c(
             EventType__c = eventType.Id
         );
         insert pubConfig;
@@ -35,13 +35,13 @@
         Step__c subscribeStep = StepObject.generateOne(target.Id, subscribeProcess.Id);
         
         //arrange subscribe config
-        Database.update(new SubscribeConfiguration__c(
-            Id = subscribeStep.ConfigurationId__c,
+        Database.update(new SubscribeConfig__c(
+            Id = subscribeStep.ConfigId__c,
             EventType__c = eventType.Id
         ));
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_ConfigObjectId' => pubConfig.Id,
+            'eda_StepConfigId' => pubConfig.Id,
             'eda_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
@@ -75,10 +75,10 @@
         //arrange steps
         Step__c step = StepObject.generateOne(sequence.Id, publishProcess.Id);
         
-        PublishConfiguration__c config = new PublishConfiguration__c();
+        PublishConfig__c config = new PublishConfig__c();
         insert config;
         
-        Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'TestSequence', 'eda_Position' => 1, 'eda_ConfigObjectId' => config.Id};
+        Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'TestSequence', 'eda_Position' => 1, 'eda_StepConfigId' => config.Id};
         
         //act
         Boolean thrown = false;
@@ -105,12 +105,12 @@
         
         //arrange steps
         Step__c step = StepObject.generateOne(sequence.Id, publishProcess.Id);
-        Database.update(new PublishConfiguration__c(
-            Id = step.ConfigurationId__c,
+        Database.update(new PublishConfig__c(
+            Id = step.ConfigId__c,
             EventType__c = eventType.Id
         ));
         
-        String data = '{"eda_SequenceName":"TestSequence","eda_Position":1,"eda_ConfigObjectId":"' + step.ConfigurationId__c + '"}';
+        String data = '{"eda_SequenceName":"TestSequence","eda_Position":1,"eda_StepConfigId":"' + step.ConfigId__c + '"}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         
         //act
@@ -142,8 +142,8 @@
         insert publisher;
         
         Step__c publisherStep = StepObject.generateOne(publisher.Id, publishProcess.Id);
-        Database.update(new PublishConfiguration__c(
-            Id = publisherStep.ConfigurationId__c,
+        Database.update(new PublishConfig__c(
+            Id = publisherStep.ConfigId__c,
             EventType__c = eventType.Id
         ));
         
@@ -152,8 +152,8 @@
         insert subscriber1;
         
         Step__c subscriber1step = StepObject.generateOne(subscriber1.Id, subscribeProcess.Id);
-        Database.update(new SubscribeConfiguration__c(
-            Id = subscriber1step.ConfigurationId__c,
+        Database.update(new SubscribeConfig__c(
+            Id = subscriber1step.ConfigId__c,
             EventType__c = eventType.Id
         ));
         
@@ -161,13 +161,13 @@
         insert subscriber2;
         
         Step__c subscriber2step = StepObject.generateOne(subscriber2.Id, subscribeProcess.Id);
-        Database.update(new SubscribeConfiguration__c(
-            Id = subscriber2step.ConfigurationId__c,
+        Database.update(new SubscribeConfig__c(
+            Id = subscriber2step.ConfigId__c,
             EventType__c = eventType.Id
         ));
         
         //arrange
-        Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'Publisher', 'eda_Position' => 1, 'eda_ConfigObjectId' => publisherStep.ConfigurationId__c};
+        Map<String,Object> parameters = new Map<String,Object>{'eda_SequenceName' => 'Publisher', 'eda_Position' => 1, 'eda_StepConfigId' => publisherStep.ConfigId__c};
         
         //act
         Type reflector = Publish.class;

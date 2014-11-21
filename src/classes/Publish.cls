@@ -6,9 +6,9 @@ public with sharing class Publish {
         public String Tag = 'Event Driven Architecture';
         public String Name = 'Publish';
         public String Description = 'Broadcasts the message to other sequences via a named Event Type.';
-        public SObject ConfigObject = PublishConfiguration__c.SObjectType.newSObject();
+        public SObject StepConfig = PublishConfig__c.SObjectType.newSObject();
         public String Icon = 'chart_organisation';
-        public String HelpUrl = Page.PublishConfigurationCsh.getUrl();
+        public String HelpUrl = Page.PublishConfigCsh.getUrl();
     }
     
     public String Parameters;
@@ -17,22 +17,22 @@ public with sharing class Publish {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         
-        PublishConfiguration__c publishConfiguration = (PublishConfiguration__c)SalesforceObject.getById((Id)parameters.get('eda_ConfigObjectId'));
+        PublishConfig__c publishConfig = (PublishConfig__c)SalesforceObject.getById((Id)parameters.get('eda_StepConfigId'));
         
-        if (null == publishConfiguration.EventType__c) {
-            throw new PublishException('Publish Configuration ' + publishConfiguration.Id + ' has no Event type');
+        if (null == publishConfig.EventType__c) {
+            throw new PublishException('Publish Config ' + publishConfig.Id + ' has no Event type');
         }
         
-        Map<Id,SObject> subscribeConfigurations = new Map<Id,SObject>([
+        Map<Id,SObject> subscribeConfigs = new Map<Id,SObject>([
             SELECT Id
-            FROM SubscribeConfiguration__c
-            WHERE EventType__c = :publishConfiguration.EventType__c
+            FROM SubscribeConfig__c
+            WHERE EventType__c = :publishConfig.EventType__c
         ]);
         
         List<Step__c> steps = [
             SELECT Id, Sequence__r.Name, Position__c
             FROM Step__c
-            WHERE ConfigurationId__c IN :subscribeConfigurations.keySet()
+            WHERE ConfigId__c IN :subscribeConfigs.keySet()
         ];
         
         for (Step__c step : steps) {

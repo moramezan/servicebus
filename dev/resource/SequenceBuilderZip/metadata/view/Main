@@ -94,7 +94,7 @@
             "codeClass": null,
             "userConfig": {
                 "align": "right",
-                "dataIndex": "ConfigurationId",
+                "dataIndex": "ConfigId",
                 "defaultWidth": null,
                 "tdCls": "link",
                 "text": "Configure",
@@ -122,13 +122,13 @@
                         "fn": "renderer",
                         "implHandler": [
                             "//some processes have no configuration",
-                            "if (record.get('ConfigurationId')) return Ext.DomHelper.createHtml({",
+                            "if (record.get('ConfigId')) return Ext.DomHelper.createHtml({",
                             "    'tag': 'a',",
                             "    'html': 'Configure',",
                             "    'class': 'configurelink',",
                             "    'onclick': 'return false;',",
                             "    'title': 'Configure Step',",
-                            "    'href': URLFOR['/'] + record.get('ConfigurationId') + '?isdtp=vw'",
+                            "    'href': URLFOR['/'] + record.get('ConfigId') + '?isdtp=vw'",
                             "}) + ' |';"
                         ]
                     },
@@ -145,7 +145,7 @@
             "codeClass": null,
             "userConfig": {
                 "align": "center",
-                "dataIndex": "ConfigurationId",
+                "dataIndex": "ConfigId",
                 "defaultWidth": null,
                 "tdCls": "link",
                 "text": "Delete",
@@ -201,7 +201,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "dataIndex": "ConfigurationId",
+                "dataIndex": "ConfigId",
                 "defaultWidth": null,
                 "tdCls": "link",
                 "text": "Settings",
@@ -323,11 +323,11 @@
             },
             "codeClass": null,
             "userConfig": {
-                "dataIndex": "ConfigurationName",
+                "dataIndex": "ConfigName",
                 "flex": 1,
                 "menuDisabled": true,
                 "sortable": false,
-                "text": "ConfigurationNameOrProcessDescription"
+                "text": "ConfigNameOrProcessDescription"
             },
             "designerId": "dc8883e2-1fed-4d7a-b917-c4dfec27e223",
             "cn": [
@@ -350,7 +350,7 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
-                            "return record.get('ConfigurationName') || record.get('ProcessDescription');"
+                            "return record.get('ConfigName') || record.get('ProcessDescription');"
                         ]
                     },
                     "designerId": "d54aa3ec-466a-4dc9-b1a8-eae50dd41c78"

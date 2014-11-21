@@ -1,15 +1,15 @@
 @IsTest private class SubsequenceTest {
 
-    static testmethod void canDetermineConfigObject() {
+    static testmethod void canDetermineStepConfig() {
         //arrange processes
         Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
         
         //act
-        String actualConfiguration = subsequenceProcess.ConfigObject__c;
+        String actualConfig = subsequenceProcess.StepConfig__c;
         
         //assert
-        String expectedConfiguration = Schema.SobjectType.SubsequenceConfiguration__c.Name;
-        System.assertEquals(expectedConfiguration, actualConfiguration);
+        String expectedConfig = Schema.SobjectType.SubsequenceConfig__c.Name;
+        System.assertEquals(expectedConfig, actualConfig);
     }
 
     static testmethod void testMessageIsRedirected() {
@@ -26,9 +26,9 @@
         insert target;
         Step__c targetStep = StepObject.generateOne(target.Id, terminateProcess.Id);
         
-        //prepare configuration in db
-        SubsequenceConfiguration__c config = new SubsequenceConfiguration__c(
-            Id = originStep.ConfigurationId__c,
+        //prepare config in db
+        SubsequenceConfig__c config = new SubsequenceConfig__c(
+            Id = originStep.ConfigId__c,
             Sequence__c = target.Id
         );
         update config;
@@ -37,7 +37,7 @@
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_SequenceName' => 'originSequence',
             'eda_Position' => 1,
-            'eda_ConfigObjectId' => config.Id
+            'eda_StepConfigId' => config.Id
         };
         
         //act

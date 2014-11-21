@@ -1,15 +1,15 @@
 @IsTest private class BranchTest {
 
-    static testmethod void canDetermineConfigObject() {
+    static testmethod void canDetermineStepConfig() {
         //arrange processes
         Process__c branchProcess = ProcessObject.generateOne(Branch.class);
         
         //act
-        String actualConfiguration = branchProcess.ConfigObject__c;
+        String actualConfig = branchProcess.StepConfig__c;
         
         //assert
-        String expectedConfiguration = Schema.SobjectType.BranchConfiguration__c.Name;
-        System.assertEquals(expectedConfiguration, actualConfiguration);
+        String expectedConfig = Schema.SobjectType.BranchConfig__c.Name;
+        System.assertEquals(expectedConfig, actualConfig);
     }
 
     static testmethod void testSubsequenceDropped() {
@@ -19,11 +19,11 @@
         Sequence__c target = new Sequence__c(Name = 'target');
         insert target;
         
-        BranchConfiguration__c config = new BranchConfiguration__c(Sequence__c = target.Id);
+        BranchConfig__c config = new BranchConfig__c(Sequence__c = target.Id);
         insert config;
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_ConfigObjectId' => config.Id,
+            'eda_StepConfigId' => config.Id,
             'eda_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
@@ -43,14 +43,14 @@
         insert target;
         
         //arrange config
-        BranchConfiguration__c config = new BranchConfiguration__c(Sequence__c = target.Id);
+        BranchConfig__c config = new BranchConfig__c(Sequence__c = target.Id);
         insert config;
         
         //arrange parameters
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_SequenceName' => origin.Name,
             'eda_Position' => 1,
-            'eda_ConfigObjectId' => config.Id
+            'eda_StepConfigId' => config.Id
         };
         
         //act
@@ -93,14 +93,14 @@
         insert sequence;
         
         //arrange config
-        BranchConfiguration__c config = new BranchConfiguration__c(Sequence__c = sequence.Id);
+        BranchConfig__c config = new BranchConfig__c(Sequence__c = sequence.Id);
         insert config;
         
         //arrange parameters
         Map<String,Object> parameters = new Map<String,Object>{
             'eda_SequenceName' => sequence.Name,
             'eda_Position' => 1,
-            'eda_ConfigObjectId' => config.Id
+            'eda_StepConfigId' => config.Id
         };
         
         //arrange exception

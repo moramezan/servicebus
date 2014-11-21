@@ -160,11 +160,11 @@ public with sharing class ConfigureController {
         //prepare a link to pre-populated remote site setting
         System.PageReference setup = new System.PageReference('/0rp/e');
         setup.getParameters().putAll(new Map<String,String>{
-            'saveURL' => ApexPages.currentPage().getUrl(), //redirects to our configuration/tutorial after save
+            'saveURL' => ApexPages.currentPage().getUrl(), //redirects to our config/tutorial after save
             'SiteName' => 'EDA_' + this.getPodProtocolAndHost().replaceAll('[^A-Za-z0-9]+', '_').left(30),
             'EndpointUrl' => this.getPodProtocolAndHost(),
             'ProtocolMismatch' => '1',
-            'DescriptionField' => 'Before the installation is complete, you need this Remote Site Setting. Just click Save below and we\'ll take you straight back to the package configuration.'
+            'DescriptionField' => 'Before the installation is complete, you need this Remote Site Setting. Just click Save below and we\'ll take you straight back to the package config.'
         });
         
         return setup;

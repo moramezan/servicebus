@@ -1,15 +1,15 @@
 @IsTest private class SubscribeTest{
     
-    static testmethod void canDetermineConfigObject() {
+    static testmethod void canDetermineStepConfig() {
         //arrange processes
         Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
         
         //act
-        String actualConfiguration = subscribeProcess.ConfigObject__c;
+        String actualConfig = subscribeProcess.StepConfig__c;
         
         // Assert
-        String expectedConfiguration = Schema.SobjectType.SubscribeConfiguration__c.Name;
-        System.assertEquals(expectedConfiguration, actualConfiguration);
+        String expectedConfig = Schema.SobjectType.SubscribeConfig__c.Name;
+        System.assertEquals(expectedConfig, actualConfig);
     }
     
     static testmethod void testSubscribeProcessActsAsNoop() {

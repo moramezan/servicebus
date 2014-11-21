@@ -12,17 +12,17 @@
         insert target;
         insert new Step__c(Sequence__c = target.Id, Position__c = 1, Process__c = terminate.Id);
         
-        JumpConfiguration__c configuration = new JumpConfiguration__c(Sequence__c = target.Id);
-        insert configuration;
+        JumpConfig__c config = new JumpConfig__c(Sequence__c = target.Id);
+        insert config;
         
         Sequence__c origin = new Sequence__c(Name = 'origin');
         insert origin;
-        insert new Step__c(Sequence__c = origin.Id, Position__c = 1, Process__c = jumpProcess.Id, ConfigurationId__c = configuration.Id);
+        insert new Step__c(Sequence__c = origin.Id, Position__c = 1, Process__c = jumpProcess.Id, ConfigId__c = config.Id);
         insert new Step__c(Sequence__c = origin.Id, Position__c = 2, Process__c = terminate.Id);
         
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_ConfigObjectId' => configuration.Id,
+            'eda_StepConfigId' => config.Id,
             'eda_SequenceName' => 'origin',
             'eda_Position' => 1,
             'data' => 'herpderp'

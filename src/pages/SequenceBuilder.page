@@ -42,10 +42,10 @@
         $ObjectType.Step__c.Fields.Sequence__c.Name = '{!$ObjectType.Step__c.Fields.Sequence__c.Name}';
         $ObjectType.Step__c.Fields.Position__c = $ObjectType.Step__c.Fields.Position__c || {};
         $ObjectType.Step__c.Fields.Position__c.Name = '{!$ObjectType.Step__c.Fields.Position__c.Name}';
-        $ObjectType.Step__c.Fields.ConfigurationId__c = $ObjectType.Step__c.Fields.ConfigurationId__c || {};
-        $ObjectType.Step__c.Fields.ConfigurationId__c.Name = '{!$ObjectType.Step__c.Fields.ConfigurationId__c.Name}';
-        $ObjectType.Step__c.Fields.ConfigurationName__c = $ObjectType.Step__c.Fields.ConfigurationName__c || {};
-        $ObjectType.Step__c.Fields.ConfigurationName__c.Name = '{!$ObjectType.Step__c.Fields.ConfigurationName__c.Name}';
+        $ObjectType.Step__c.Fields.ConfigId__c = $ObjectType.Step__c.Fields.ConfigId__c || {};
+        $ObjectType.Step__c.Fields.ConfigId__c.Name = '{!$ObjectType.Step__c.Fields.ConfigId__c.Name}';
+        $ObjectType.Step__c.Fields.ConfigName__c = $ObjectType.Step__c.Fields.ConfigName__c || {};
+        $ObjectType.Step__c.Fields.ConfigName__c.Name = '{!$ObjectType.Step__c.Fields.ConfigName__c.Name}';
         $ObjectType.Step__c.Fields.Process__c = $ObjectType.Step__c.Fields.Process__c || {};
         $ObjectType.Step__c.Fields.Process__c.Name = '{!$ObjectType.Step__c.Fields.Process__c.Name}';
         $ObjectType.Step__c.Fields.Process__c.RelationshipName = '{!$ObjectType.Step__c.Fields.Process__c.RelationshipName}';

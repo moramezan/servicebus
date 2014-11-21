@@ -141,7 +141,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "ConfigurationId",
+                "name": "ConfigId",
                 "persist": false,
                 "type": "string"
             },
@@ -155,7 +155,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "ConfigurationName",
+                "name": "ConfigName",
                 "persist": false,
                 "type": "string"
             },

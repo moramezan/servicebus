@@ -1,1 +1,0 @@
-<apex:page standardController="SubscribeConfiguration__c" action="{!URLFOR($Action.EventType__c.List, $ObjectType.EventType__c)}" />

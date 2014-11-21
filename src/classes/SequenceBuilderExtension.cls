@@ -124,7 +124,7 @@ public with sharing class SequenceBuilderExtension {
     public void findPublishProblems() {
         List<Sequence__c> sequences = [
             SELECT Id, Name,
-            (SELECT id, Name, Process__c, ConfigurationId__c FROM Steps__r ORDER BY Position__c ASC)
+            (SELECT id, Name, Process__c, ConfigId__c FROM Steps__r ORDER BY Position__c ASC)
             FROM Sequence__c
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
         ];
@@ -135,8 +135,8 @@ public with sharing class SequenceBuilderExtension {
             WHERE FullyQualifiedClassName__c = :Publish.class.getName()
         ];
         
-        Map<Id,SObject> publishConfigurationIdToPublishConfiguration = SalesforceObjectSet.mapAll(PublishConfiguration__c.SObjectType);
-        List<SubscribeConfiguration__c> SubscribeConfigurations = SalesforceObjectSet.listAll(SubscribeConfiguration__c.SObjectType);
+        Map<Id,SObject> publishConfigIdToPublishConfig = SalesforceObjectSet.mapAll(PublishConfig__c.SObjectType);
+        List<SubscribeConfig__c> SubscribeConfigs = SalesforceObjectSet.listAll(SubscribeConfig__c.SObjectType);
         Map<Id,SObject> eventTypeIdToEventType = SalesforceObjectSet.mapAll(EventType__c.SObjectType);
         
         for (Sequence__c sequence : sequences) {
@@ -151,24 +151,24 @@ public with sharing class SequenceBuilderExtension {
                 if (step.Process__c != publishProcess.Id) continue;
                 
                 Id stepId = step.Id;
-                Id publishConfigurationId = (Id) step.ConfigurationId__c; // cast from string to Id
+                Id publishConfigId = (Id) step.ConfigId__c; // cast from string to Id
                 
-                PublishConfiguration__c publishConfiguration;
+                PublishConfig__c publishConfig;
                 Id eventTypeId;
-                publishConfiguration = (PublishConfiguration__c)publishConfigurationIdToPublishConfiguration.get(publishConfigurationId);
-                eventTypeId = publishConfiguration.EventType__c;
+                publishConfig = (PublishConfig__c)publishConfigIdToPublishConfig.get(publishConfigId);
+                eventTypeId = publishConfig.EventType__c;
                 
                 if (eventTypeId == null) {
                     ApexPages.addMessage(new ApexPages.Message(
                         ApexPages.Severity.WARNING,
-                        'No event type has been configured on ' + publishConfigurationId
+                        'No event type has been configured on ' + publishConfigId
                     ));
                     continue;
                 }
                 
                 Boolean subscriberFound = false;
-                for (SubscribeConfiguration__c SubscribeConfiguration : SubscribeConfigurations) {
-                    if (SubscribeConfiguration.EventType__c == eventTypeId) {
+                for (SubscribeConfig__c SubscribeConfig : SubscribeConfigs) {
+                    if (SubscribeConfig.EventType__c == eventTypeId) {
                         subscriberFound = true;
                     }
                 }
@@ -176,7 +176,7 @@ public with sharing class SequenceBuilderExtension {
                 if (!subscriberFound) {
                     ApexPages.addMessage(new ApexPages.Message(
                         ApexPages.Severity.WARNING,
-                        'There are no subscribers listening to the event on ' + publishConfigurationId
+                        'There are no subscribers listening to the event on ' + publishConfigId
                     ));
                 }
             }
@@ -187,7 +187,7 @@ public with sharing class SequenceBuilderExtension {
         
         List<Sequence__c> sequences = [
             SELECT Id, Name,
-            (SELECT Id, Name, Process__c, ConfigurationId__c FROM Steps__r ORDER BY Position__c ASC) steps
+            (SELECT Id, Name, Process__c, ConfigId__c FROM Steps__r ORDER BY Position__c ASC) steps
             FROM Sequence__c
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
         ];
@@ -198,8 +198,8 @@ public with sharing class SequenceBuilderExtension {
             WHERE FullyQualifiedClassName__c = :Subscribe.class.getName()
         ];
         
-        Map<Id,SObject> subscribeConfigurationIdToSubscribeConfiguration = SalesforceObjectSet.mapAll(SubscribeConfiguration__c.SObjectType);
-        List<PublishConfiguration__c> publishConfigurations = SalesforceObjectSet.listAll(PublishConfiguration__c.SObjectType);
+        Map<Id,SObject> subscribeConfigIdToSubscribeConfig = SalesforceObjectSet.mapAll(SubscribeConfig__c.SObjectType);
+        List<PublishConfig__c> publishConfigs = SalesforceObjectSet.listAll(PublishConfig__c.SObjectType);
         Map<Id,SObject> eventTypeIdToEventType = SalesforceObjectSet.mapAll(EventType__c.SObjectType);
         
         for (Sequence__c sequence : sequences) {
@@ -208,12 +208,12 @@ public with sharing class SequenceBuilderExtension {
             Integer count = 1;
             Boolean subscribeFirst = false;
             Id stepId = null;
-            Id subscribeConfigurationId = null;
+            Id subscribeConfigId = null;
             
             for (Step__c step : steps) {
                 if (step.Process__c == SubscribeProcess.Id) {
                     subscribeOccurs++;
-                    subscribeConfigurationId = (Id) step.ConfigurationId__c; // cast from string to Id
+                    subscribeConfigId = (Id) step.ConfigId__c; // cast from string to Id
                     if (count == 1) {
                         subscribeFirst = true;
                         stepId = step.Id;
@@ -241,18 +241,18 @@ public with sharing class SequenceBuilderExtension {
                 continue;
             }
             
-            SubscribeConfiguration__c subscribeConfiguration = (SubscribeConfiguration__c)subscribeConfigurationIdToSubscribeConfiguration.get(subscribeConfigurationId);
-            if (subscribeConfiguration.EventType__c == null) {
+            SubscribeConfig__c subscribeConfig = (SubscribeConfig__c)subscribeConfigIdToSubscribeConfig.get(subscribeConfigId);
+            if (subscribeConfig.EventType__c == null) {
                 ApexPages.addMessage(new ApexPages.Message(
                     ApexPages.Severity.WARNING,
-                    'No event type defined on Subscribe Configuration ' + sequence.Id
+                    'No event type defined on Subscribe Config ' + sequence.Id
                 ));
                 continue;
             }
             
             Boolean publisherFound = false;
-            for (PublishConfiguration__c  publishConfiguration : publishConfigurations) {
-                if (subscribeConfiguration.EventType__c != null && publishConfiguration.EventType__c == subscribeConfiguration.EventType__c) publisherFound = true;
+            for (PublishConfig__c  publishConfig : publishConfigs) {
+                if (subscribeConfig.EventType__c != null && publishConfig.EventType__c == subscribeConfig.EventType__c) publisherFound = true;
             }
             
             if (!publisherFound) {

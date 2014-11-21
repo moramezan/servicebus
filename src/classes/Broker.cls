@@ -539,7 +539,7 @@ abstract public with sharing class Broker {
         Step__c step;
         try {
             step = [
-                SELECT Process__c, ConfigurationId__c, Process__r.Name, Process__r.FullyQualifiedClassName__c
+                SELECT Process__c, ConfigId__c, Process__r.Name, Process__r.FullyQualifiedClassName__c
                 FROM Step__c
                 WHERE Id = :message.Step__c
             ];
@@ -568,7 +568,7 @@ abstract public with sharing class Broker {
         }
         
         
-        if (step.ConfigurationId__c != null) parameters.put('eda_ConfigObjectId', step.ConfigurationId__c);
+        if (step.ConfigId__c != null) parameters.put('eda_StepConfigId', step.ConfigId__c);
         Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters);
         
         //THEIR FUCKUPS (invocation)

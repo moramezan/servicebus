@@ -45,11 +45,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ConfigurationShowStepExtension</apexClass>
+        <apexClass>ConfigShowStepExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ConfigurationShowStepExtensionTest</apexClass>
+        <apexClass>ConfigShowStepExtensionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -101,11 +101,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>LogConfigurationObjectSet</apexClass>
+        <apexClass>LogConfigObjectSet</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>LogConfigurationObjectSetTests</apexClass>
+        <apexClass>LogConfigObjectSetTests</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -253,11 +253,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ScheduleConfigurationObjectSet</apexClass>
+        <apexClass>ScheduleConfigObjectSet</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ScheduleConfigurationObjectSetTest</apexClass>
+        <apexClass>ScheduleConfigObjectSetTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -371,7 +371,7 @@
     <description>Allows orchestration of Sequences, Steps and Processes as part of Event Driven Architecture.</description>
     <fieldPermissions>
         <editable>true</editable>
-        <field>BranchConfiguration__c.Sequence__c</field>
+        <field>BranchConfig__c.Sequence__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -381,22 +381,22 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>JumpConfiguration__c.Sequence__c</field>
+        <field>JumpConfig__c.Sequence__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>LogConfiguration__c.DynamicGroupIdentifierObjectName__c</field>
+        <field>LogConfig__c.DynamicGroupIdentifierObjectName__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>LogConfiguration__c.DynamicGroupIdentifier__c</field>
+        <field>LogConfig__c.DynamicGroupIdentifier__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>LogConfiguration__c.StaticGroupIdentifier__c</field>
+        <field>LogConfig__c.StaticGroupIdentifier__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -496,11 +496,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Process__c.ConfigObject__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Process__c.CustomSetting__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -526,27 +521,32 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Process__c.StepConfig__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Process__c.Tag__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>PublishConfiguration__c.EventType__c</field>
+        <field>PublishConfig__c.EventType__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>ScheduleConfiguration__c.Frequency__c</field>
+        <field>ScheduleConfig__c.Frequency__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>ScheduleConfiguration__c.FriendlyDates__c</field>
+        <field>ScheduleConfig__c.FriendlyDates__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>ScheduleConfiguration__c.FriendlyTimes__c</field>
+        <field>ScheduleConfig__c.FriendlyTimes__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -556,12 +556,12 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Step__c.ConfigurationId__c</field>
+        <field>Step__c.ConfigId__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Step__c.ConfigurationName__c</field>
+        <field>Step__c.ConfigName__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -576,12 +576,12 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>SubscribeConfiguration__c.EventType__c</field>
+        <field>SubscribeConfig__c.EventType__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>SubsequenceConfiguration__c.Sequence__c</field>
+        <field>SubsequenceConfig__c.Sequence__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <label>Orchestrator</label>
@@ -591,7 +591,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>BranchConfiguration__c</object>
+        <object>BranchConfig__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -627,7 +627,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>JumpConfiguration__c</object>
+        <object>JumpConfig__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -636,7 +636,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>LogConfiguration__c</object>
+        <object>LogConfig__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -681,7 +681,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>PublishConfiguration__c</object>
+        <object>PublishConfig__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -690,7 +690,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>ScheduleConfiguration__c</object>
+        <object>ScheduleConfig__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -717,7 +717,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>SubscribeConfiguration__c</object>
+        <object>SubscribeConfig__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -726,15 +726,15 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>SubsequenceConfiguration__c</object>
+        <object>SubsequenceConfig__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <pageAccesses>
-        <apexPage>BranchConfigurationCsh</apexPage>
+        <apexPage>BranchConfigCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>BranchConfigurationShowStep</apexPage>
+        <apexPage>BranchConfigShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -754,23 +754,23 @@
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>JumpConfigurationCsh</apexPage>
+        <apexPage>JumpConfigCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>JumpConfigurationShowStep</apexPage>
+        <apexPage>JumpConfigShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>LogConfigurationCsh</apexPage>
+        <apexPage>LogConfigCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>LogConfigurationListLogGroups</apexPage>
+        <apexPage>LogConfigListLogGroups</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>LogConfigurationSchemaSelector</apexPage>
+        <apexPage>LogConfigSchemaSelector</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -842,19 +842,19 @@
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>PublishConfigurationCsh</apexPage>
+        <apexPage>PublishConfigCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>PublishConfigurationManageEventTypes</apexPage>
+        <apexPage>PublishConfigManageEventTypes</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>PublishConfigurationShowStep</apexPage>
+        <apexPage>PublishConfigShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ScheduleConfigurationCsh</apexPage>
+        <apexPage>ScheduleConfigCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -878,27 +878,27 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>StepShowConfiguration</apexPage>
+        <apexPage>StepShowConfig</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SubscribeConfigurationCsh</apexPage>
+        <apexPage>SubscribeConfigCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SubscribeConfigurationManageEventTypes</apexPage>
+        <apexPage>SubscribeConfigManageEventTypes</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SubscribeConfigurationShowStep</apexPage>
+        <apexPage>SubscribeConfigShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SubsequenceConfigurationCsh</apexPage>
+        <apexPage>SubsequenceConfigCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SubsequenceConfigurationShowStep</apexPage>
+        <apexPage>SubsequenceConfigShowStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <tabSettings>

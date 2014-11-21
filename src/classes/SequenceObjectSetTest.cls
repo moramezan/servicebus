@@ -15,13 +15,13 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         Integer expectedConfigsBefore = 1;
-        Integer actualConfigsBefore = [SELECT COUNT() FROM BranchConfiguration__c];
+        Integer actualConfigsBefore = [SELECT COUNT() FROM BranchConfig__c];
         
         //act
         delete sequence;
         
         Integer expectedConfigsAfter = 0;
-        Integer actualConfigsAfter = [SELECT COUNT() FROM BranchConfiguration__c];
+        Integer actualConfigsAfter = [SELECT COUNT() FROM BranchConfig__c];
         
         //assert
         System.assertEquals(expectedConfigsBefore, actualConfigsBefore);

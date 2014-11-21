@@ -236,12 +236,12 @@
         insert eventTypeNotSubscribed;
         
         // Config A1
-        Id configurationIdA1 = ((Step__c)SalesforceObject.getById(stepA1.Id)).ConfigurationId__c;
+        Id configIdA1 = ((Step__c)SalesforceObject.getById(stepA1.Id)).ConfigId__c;
         
-        PublishConfiguration__c PublishConfigurationA1 = (PublishConfiguration__c)SalesforceObject.getById(configurationIdA1);
+        PublishConfig__c PublishConfigA1 = (PublishConfig__c)SalesforceObject.getById(configIdA1);
         
-        PublishConfigurationA1.EventType__c = eventTypeNotSubscribed.Id;
-        update PublishConfigurationA1;
+        PublishConfigA1.EventType__c = eventTypeNotSubscribed.Id;
+        update PublishConfigA1;
         
         // Act :
         SequenceBuilderExtension controller = new SequenceBuilderExtension(null);
@@ -269,7 +269,7 @@
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
         Process__c publishProcess = ProcessObject.generateOne(Publish.class);
         
-        // Sequence B - Problem : No Configuration
+        // Sequence B - Problem : No Config
         Step__c stepB1 = StepObject.generateOne(sequenceB.Id, publishProcess.Id);
         Step__c stepB2 = StepObject.generateOne(sequenceB.Id, wiretapProcess.Id);
         
@@ -310,10 +310,10 @@
         insert eventNotPublished;
        
         // Config A1
-        Id configurationIdA1 = ((Step__c)SalesforceObject.getById(stepA1.Id)).ConfigurationId__c;
-        SubscribeConfiguration__c subscribeConfigurationA1 = (SubscribeConfiguration__c)SalesforceObject.getById(configurationIdA1);
-        subscribeConfigurationA1.EventType__c = eventNotPublished.Id;
-        update subscribeConfigurationA1;
+        Id configIdA1 = ((Step__c)SalesforceObject.getById(stepA1.Id)).ConfigId__c;
+        SubscribeConfig__c subscribeConfigA1 = (SubscribeConfig__c)SalesforceObject.getById(configIdA1);
+        subscribeConfigA1.EventType__c = eventNotPublished.Id;
+        update subscribeConfigA1;
  
  
         // Act :
@@ -384,16 +384,16 @@
         insert eventNotPublished;
 
         // Config C1
-        Id configurationIdC1 = ((Step__c)SalesforceObject.getById(stepC1.Id)).ConfigurationId__c;
-        SubscribeConfiguration__c subscribeConfigurationC1 = (SubscribeConfiguration__c)SalesforceObject.getById(configurationIdC1);
-        subscribeConfigurationC1.EventType__c = eventNotPublished.Id;
-        update subscribeConfigurationC1;
+        Id configIdC1 = ((Step__c)SalesforceObject.getById(stepC1.Id)).ConfigId__c;
+        SubscribeConfig__c subscribeConfigC1 = (SubscribeConfig__c)SalesforceObject.getById(configIdC1);
+        subscribeConfigC1.EventType__c = eventNotPublished.Id;
+        update subscribeConfigC1;
 
         // Config C2
-        Id configurationIdC2 = ((Step__c)SalesforceObject.getById(stepC2.Id)).ConfigurationId__c;
-        SubscribeConfiguration__c subscribeConfigurationC2 = (SubscribeConfiguration__c)SalesforceObject.getById(configurationIdC2);
-        subscribeConfigurationC2.EventType__c = eventNotPublished.Id;
-        update subscribeConfigurationC2;
+        Id configIdC2 = ((Step__c)SalesforceObject.getById(stepC2.Id)).ConfigId__c;
+        SubscribeConfig__c subscribeConfigC2 = (SubscribeConfig__c)SalesforceObject.getById(configIdC2);
+        subscribeConfigC2.EventType__c = eventNotPublished.Id;
+        update subscribeConfigC2;
         
         // Act :
         SequenceBuilderExtension controller = new SequenceBuilderExtension(null);
@@ -422,7 +422,7 @@
         Sequence__c sequenceB = new Sequence__c(Name = 'SequenceB');
         insert sequenceB;
         
-        // Sequence B - Problem : No Configuration
+        // Sequence B - Problem : No Config
         Step__c stepB1 = StepObject.generateOne(sequenceB.Id, subscribeProcess.Id);
         Step__c stepB2 = StepObject.generateOne(sequenceB.Id, wiretapProcess.Id);
 
@@ -439,7 +439,7 @@
         System.assertEquals(expectedErrorCount, actualErrorCount);
         
         String actualDescription = sequenceB.Id;
-        String expectedDescription = 'No event type defined on Subscribe Configuration';
+        String expectedDescription = 'No event type defined on Subscribe Config';
         System.assert(messages[0].getSummary().contains(expectedDescription));
         System.assert(messages[0].getSummary().contains(actualDescription));
     }
