@@ -570,11 +570,6 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
-        <field>Step__c.SequenceNameAndPosition__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
         <editable>true</editable>
         <field>SubscribeConfig__c.EventType__c</field>
         <readable>true</readable>

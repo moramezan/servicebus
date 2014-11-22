@@ -6,7 +6,12 @@ public with sharing class StepObjectSet extends SalesforceObjectSet {
     
     public override void onBeforeInsert() {
         this.incrementPositions();
+        this.generateNames();
         this.insertConfigs();
+    }
+    
+    public override void onBeforeUpdate(List<SObject> oldObjects) {
+        this.generateNames();
     }
     
     public override void onBeforeDelete() {
@@ -40,6 +45,29 @@ public with sharing class StepObjectSet extends SalesforceObjectSet {
             
             Sequence__c sequence = id2sequence.get(step.Sequence__c);
             step.Position__c = sequence.StepsCount__c + 1;
+        }
+    }
+    
+    /**
+     * Formerly taken care of by SequenceNameAndPosition__c formula.
+     * But now we need to make sure that this composite key is set.
+     */
+    private void generateNames() {
+        List<Step__c> steps = this.getSObjects();
+        
+        //get map of related sequences
+        Set<Id> sequenceIds = new Set<Id>();
+        for (Step__c step : steps) sequenceIds.add(step.Sequence__c);
+        Map<Id,Sequence__c> id2sequence = new Map<Id,Sequence__c>([
+            SELECT Id, Name, StepsCount__c
+            FROM Sequence__c
+            WHERE Id IN :sequenceIds
+        ]);
+        
+        //generate 
+        for (Step__c step : steps) {
+            Sequence__c sequence = id2sequence.get(step.Sequence__c);
+            step.Name = sequence.Name + '#' + step.Position__c;
         }
     }
     

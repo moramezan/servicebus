@@ -646,14 +646,14 @@ abstract public with sharing class Broker {
             
             //resolve the next steps and processes
             List<Step__c> steps = [
-                SELECT Id, Process__r.Id, Sequence__r.Id, SequenceNameAndPosition__c
+                SELECT Id, Name, Process__r.Id, Sequence__r.Id
                 FROM Step__c
-                WHERE SequenceNameAndPosition__c IN :key2data.keySet()
+                WHERE Name IN :key2data.keySet()
             ];
             
             //assemble a map of next-step keys to steps
             Map<String,Step__c> key2step = new Map<String,Step__c>();
-            for (Step__c step : steps) key2step.put(step.SequenceNameAndPosition__c, step);
+            for (Step__c step : steps) key2step.put(step.Name, step);
             
             //now put the resolved sequence/step/process on each message
             for (Message__c message : messages) {

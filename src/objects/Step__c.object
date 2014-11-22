@@ -105,18 +105,6 @@
         <type>Lookup</type>
     </fields>
     <fields>
-        <fullName>SequenceNameAndPosition__c</fullName>
-        <externalId>false</externalId>
-        <formula>Sequence__r.Name + &apos;#&apos; + TEXT(Position__c)</formula>
-        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <inlineHelpText>What sequence name and position uniquely identifies this step?</inlineHelpText>
-        <label>Sequence Name and Position</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Sequence__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>What sequence does this step belong to?</inlineHelpText>
@@ -132,9 +120,8 @@
     </fields>
     <label>Step</label>
     <nameField>
-        <displayFormat>STEP-{00000}</displayFormat>
         <label>Step Name</label>
-        <type>AutoNumber</type>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Steps</pluralLabel>
     <searchLayouts>

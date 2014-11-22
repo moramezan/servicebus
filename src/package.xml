@@ -218,7 +218,6 @@
         <members>Step__c.ConfigName__c</members>
         <members>Step__c.Position__c</members>
         <members>Step__c.Process__c</members>
-        <members>Step__c.SequenceNameAndPosition__c</members>
         <members>Step__c.Sequence__c</members>
         <members>SubscribeConfig__c.EventType__c</members>
         <members>SubsequenceConfig__c.Sequence__c</members>
