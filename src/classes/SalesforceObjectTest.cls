@@ -37,7 +37,7 @@
         //arrange process
         Process__c process = new Process__c(
             Name = 'foo',
-            CustomSetting__c = 'bar',
+            Setting__c = 'bar',
             FullyQualifiedClassName__c = 'baz'
         );
         insert process;

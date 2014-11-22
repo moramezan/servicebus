@@ -202,11 +202,11 @@
         <members>Message__c.Status__c</members>
         <members>Message__c.Step__c</members>
         <members>Process__c.ApexClassId__c</members>
-        <members>Process__c.CustomSetting__c</members>
         <members>Process__c.Description__c</members>
         <members>Process__c.FullyQualifiedClassName__c</members>
         <members>Process__c.HelpUrl__c</members>
         <members>Process__c.Icon__c</members>
+        <members>Process__c.Setting__c</members>
         <members>Process__c.StepConfig__c</members>
         <members>Process__c.Tag__c</members>
         <members>PublishConfig__c.EventType__c</members>

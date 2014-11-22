@@ -98,7 +98,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "CustomSetting",
+                "name": "Setting",
                 "type": "string"
             },
             "designerId": "23e99c69-311f-466c-8c07-d39aad9289fc"

@@ -31,7 +31,7 @@ public with sharing class ProcessObject extends SalesforceObject {
          * Each Process can have one associated customization in the form of a Custom Setting. Process Authors must
          * advertise the custom setting type here, and the framework will provide a link from the Process detail page.
          */
-        public SObject CustomSetting {get;}
+        public SObject ProcessSetting {get;}
         
         /**
          * Each Step can have one associated config record. The type of the record depends on what process
@@ -111,9 +111,9 @@ public with sharing class ProcessObject extends SalesforceObject {
             process.HelpUrl__c = meta.HelpUrl == null ? Page.ProcessDescribe.getUrl() + '?fqn=' + outerClass.getName() : meta.HelpUrl;
             if (process.HelpUrl__c.startsWith('/')) process.HelpUrl__c = Url.getSalesforceBaseUrl().toExternalForm() + process.HelpUrl__c;
 
-            if (meta.CustomSetting != null) {
+            if (meta.ProcessSetting != null) {
                 //attempt to populate the name of the customization object
-                process.CustomSetting__c = meta.CustomSetting.getSObjectType().getDescribe().getName();
+                process.Setting__c = meta.ProcessSetting.getSObjectType().getDescribe().getName();
             }
             
             if (meta.StepConfig != null) {

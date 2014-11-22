@@ -6,7 +6,7 @@ public with sharing class Wiretap {
         public String Tag = 'Event Driven Architecture';
         public String Name = 'Wiretap';
         public String Description = 'Emails the message parameters to the user.';
-        public SObject CustomSetting = WiretapSettings__c.SObjectType.newSObject();
+        public SObject ProcessSetting = WiretapSettings__c.SObjectType.newSObject();
         public String Icon = 'email';
         public String HelpUrl = Page.LogWriterEntryCsh.getUrl();
     }

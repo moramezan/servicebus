@@ -1,7 +1,7 @@
 @IsTest //-- no view of org data
 private class WiretapTest {
     
-    static testmethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnCustomSettingNOTSet() {
+    static testmethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnProcessSettingNOTSet() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Integer step = 1;
@@ -33,7 +33,7 @@ private class WiretapTest {
         System.assertEquals(expectedFlagException , actualFlagException );
     }
    
-    static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenDefinedMetaCustomSettingSet() {
+    static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenDefinedMetaProcessSettingSet() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Integer step = 1;

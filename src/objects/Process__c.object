@@ -66,17 +66,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>CustomSetting__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Optionally, what is the API name of a Custom Setting used to hold any system-wide options for this process?</inlineHelpText>
-        <label>Custom Setting</label>
-        <length>40</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Description__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>What does this process do?</inlineHelpText>
@@ -112,6 +101,17 @@
         <inlineHelpText>What is the name of the icon that represents this process? (From http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png)</inlineHelpText>
         <label>Icon</label>
         <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Setting__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Optionally, what is the API name of a Custom Setting used to hold any system-wide options for this process?</inlineHelpText>
+        <label>Process Setting</label>
+        <length>40</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>

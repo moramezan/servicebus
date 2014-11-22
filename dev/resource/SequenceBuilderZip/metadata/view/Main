@@ -229,7 +229,7 @@
                         "fn": "renderer",
                         "implHandler": [
                             "//some processes have no settings",
-                            "if (record.get('ProcessCustomSetting')) return '| ' + Ext.DomHelper.createHtml({",
+                            "if (record.get('ProcessSetting')) return '| ' + Ext.DomHelper.createHtml({",
                             "    'tag': 'a',",
                             "    'html': 'Settings',",
                             "    'class': 'settingslink',",

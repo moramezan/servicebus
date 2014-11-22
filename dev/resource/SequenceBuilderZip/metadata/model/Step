@@ -127,7 +127,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "ProcessCustomSetting",
+                "name": "ProcessSetting",
                 "persist": false,
                 "type": "string"
             },
