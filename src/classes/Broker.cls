@@ -629,10 +629,13 @@ abstract public with sharing class Broker {
      * 5. only then can we correctly write to database with 4A (stepId) and 3 (parameters with the incremented position)
      */
     virtual public void resolve(List<Message__c> messages) {
-        try {
-            //assemble a map of next-step keys to messages
-            Map<String,Message__c> key2data = new Map<String,Message__c>();
-            for (Message__c message : messages) {
+        Set<Id> fuckedIds = new Set<Id>();
+        Exception firstError;
+        
+        //assemble a map of next-step keys to messages
+        Map<String,Message__c> key2data = new Map<String,Message__c>();
+        for (Message__c message : messages) {
+            try {
                 Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
                 String sequenceName = (String)parameters.get('eda_SequenceName');
                 Decimal position = (Decimal)parameters.get('eda_Position') + 1; //care
@@ -642,22 +645,26 @@ abstract public with sharing class Broker {
                 //increment the position and put it back while we're at it
                 parameters.put('eda_Position', position);
                 message.Parameters__c = Json.serializePretty(parameters);
+            } catch (Exception e) {
+                firstError = e;
+                fuckedIds.add(message.Id);
             }
-            
-            //resolve the next steps and processes
-            List<Step__c> steps = [
-                SELECT Id, Name, Process__r.Id, Sequence__r.Id
-                FROM Step__c
-                WHERE Name IN :key2data.keySet()
-            ];
-            
-            //assemble a map of next-step keys to steps
-            Map<String,Step__c> key2step = new Map<String,Step__c>();
-            for (Step__c step : steps) key2step.put(step.Name, step);
-            
-            //now put the resolved sequence/step/process on each message
-            for (Message__c message : messages) {
-                //OUR FUCKUPS ( after invocation )
+        }
+        
+        //resolve the next steps and processes
+        List<Step__c> steps = [
+            SELECT Id, Name, Process__r.Id, Sequence__r.Id
+            FROM Step__c
+            WHERE Name IN :key2data.keySet()
+        ];
+        
+        //assemble a map of next-step keys to steps
+        Map<String,Step__c> key2step = new Map<String,Step__c>();
+        for (Step__c step : steps) key2step.put(step.Name, step);
+        
+        //now put the resolved sequence/step/process on each message
+        for (Message__c message : messages) {
+            try {
                 Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
                 String sequenceName = (String)parameters.get('eda_SequenceName');
                 Decimal position = (Decimal)parameters.get('eda_Position'); //care
@@ -667,14 +674,16 @@ abstract public with sharing class Broker {
                 message.Sequence__c = step.Sequence__r.Id;
                 message.Process__c = step.Process__r.Id;
                 message.Step__c = step.Id;
+            } catch (Exception e) {
+                firstError = e;
+                fuckedIds.add(message.Id);
             }
-            
-            //DML time!
-            upsert messages;
-        } catch (Exception e) {
-            Set<Id> messageIds = new Map<Id,Message__c>(messages).keySet();
-            throw new EngineException(messageIds, 'Resolve failure, check sequence config.', e);
         }
+        
+        //DML time!
+        upsert messages;
+        
+        if (!fuckedIds.isEmpty()) throw new EngineException(fuckedIds, 'Resolve failure, check sequence config.', firstError);
     }
     
     virtual public List<Database.UpsertResult> persist(List<Message__c> inputMessages, List<Message__c> outputMessages) {
