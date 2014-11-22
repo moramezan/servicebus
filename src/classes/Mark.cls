@@ -10,8 +10,8 @@ public with sharing class Mark {
         public String HelpUrl = Page.GateGroupCsh.getUrl();
         
         public Map<String,String> Outputs = new Map<String,String>{
-            'eda_MarkCount' => (Integer.class).getName(), //The broker will increment this to detect that the next process returned multiple messages.
-            'eda_GateGroupId' => (Id.class).getName() //The Id of the Gate Group that eventually associates all the marked messages.
+            'eda_MarkCount' => 'INTEGER the broker will calculate this to detect that the next process returned multiple messages.',
+            'eda_GateGroupId' => 'ID of the Gate Group that eventually associates all the marked messages.'
         };
     }
     

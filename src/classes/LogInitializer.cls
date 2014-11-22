@@ -12,7 +12,7 @@ public with sharing class LogInitializer {
         public String HelpUrl = Page.LogConfigCsh.getUrl();
         
         public Map<String,String> Outputs = new Map<String,String>{
-            'eda_LogGroupIds' => (List<Id>.class).getName() //An identifier that associates instances of steps.
+            'eda_LogGroupIds' => 'LIST<ID> of potentially multiple groups from log initializer steps.'
         };
     }
     

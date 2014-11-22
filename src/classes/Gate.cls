@@ -10,12 +10,12 @@ public with sharing class Gate {
         public String HelpUrl = Page.GateGroupCsh.getUrl();
 
         public Map<String,String> Inputs = new Map<String,String>{
-            'eda_GateGroupId' => (Id.class).getName(), //Id of the GateGroup the marked messages should belong to.
-            'eda_Count' => (Integer.class).getName() //Number of marked messages the gate should expect.
+            'eda_GateGroupId' => 'ID of the GateGroup the marked messages should belong to.',
+            'eda_Count' => 'INTEGER of marked messages the gate should expect.'
         };
 
         public Map<String,String> Outputs = new Map<String,String>{
-            'eda_Id' => (Id.class).getName() //Id of the GateGroup whose members are now all present.
+            'eda_Id' => 'ID of the GateGroup whose members are now all present.'
         };
     }
 

@@ -53,12 +53,14 @@ public with sharing class ProcessObject extends SalesforceObject {
         public String HelpUrl {get;}
         
         /**
-         * Input Parameters
+         * Key represents the parameter name, eg 'ns_URL'
+         * Value is a friendly description, eg 'STRING of endpoint to scrape.'
          */
         public Map<String,String> Inputs {get;}
         
         /**
-         * Output Parameters
+         * Key represents the parameter name, eg 'ns_URL'
+         * Value is a friendly description, eg 'STRING of endpoint to scrape.'
          */
         public Map<String,String> Outputs {get;}
         

@@ -12,8 +12,8 @@ public with sharing class Subsequence {
         public String HelpUrl = Page.SubsequenceConfigCsh.getUrl();
         
         public Map<String,String> Outputs = new Map<String,String>{
-            'eda_SubsequenceName' => (String.class).getName(), //Marks the sequence name which the Subsequence returns to.
-            'eda_SubsequencePosition' => (Integer.class).getName() //Marks the position number which the Subsequence returns to.
+            'eda_SubsequenceName' => 'STRING of the sequence name which the Subsequence returns to.',
+            'eda_SubsequencePosition' => 'INTEGER of the position number which the Subsequence returns to.'
         };
     }
     
