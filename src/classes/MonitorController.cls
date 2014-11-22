@@ -57,23 +57,25 @@ public with sharing class MonitorController {
             id2statistic.put(process.Id, statistic);
         }
         
-        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Status__c = 'Queued' GROUP BY Process__c]) {
+        //check for null so we don't blow up for unresolved messages
+        //TODO is there any point even displaying queued messages?!?!
+        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Process__c != null AND Status__c = 'Queued' GROUP BY Process__c]) {
             id2statistic.get((Id)result.get('processId')).Queued = (Integer)result.get('total');
         }
         
-        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Status__c = 'Buffered' GROUP BY Process__c]) {
+        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Process__c != null AND Status__c = 'Buffered' GROUP BY Process__c]) {
             id2statistic.get((Id)result.get('processId')).Buffered = (Integer)result.get('total');
         }
         
-        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Status__c = 'Started' GROUP BY Process__c]) {
+        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Process__c != null AND Status__c = 'Started' GROUP BY Process__c]) {
             id2statistic.get((Id)result.get('processId')).Started = (Integer)result.get('total');
         }
         
-        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Status__c = 'Rebuffered' GROUP BY Process__c]) {
+        for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Process__c != null AND Status__c = 'Rebuffered' GROUP BY Process__c]) {
             id2statistic.get((Id)result.get('processId')).Rebuffered = (Integer)result.get('total');
         }
         
-        for (AggregateResult result : [SELECT Process__c processId, COUNT(Id) total FROM Message__c WHERE IsOverdue__c = true GROUP BY Process__c]) {
+        for (AggregateResult result : [SELECT Process__c processId, COUNT(Id) total FROM Message__c WHERE Process__c != null AND IsOverdue__c = true GROUP BY Process__c]) {
             id2statistic.get((Id)result.get('processId')).Overdue = (Integer)result.get('total');
         }
         
