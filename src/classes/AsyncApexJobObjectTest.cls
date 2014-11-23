@@ -9,7 +9,7 @@
         
         Test.startTest();
         
-        Id one = Database.executeBatch(new BatchBrokerImplementation(), 1);
+        Id one = Database.executeBatch(new ProcessDiscoverBatch(), 1);
         AsyncApexJobObject asyncApexJob = new AsyncApexJobObject(new AsyncApexJob(Id = one));
         
         //during
@@ -29,8 +29,9 @@
     
     static testmethod void testRunOneOnlyRunsJobOnce() {
         Test.startTest();
-        AsyncApexJobObject one = AsyncApexJobObject.runOne(BatchBrokerImplementation.class, 1);
-        AsyncApexJobObject two = AsyncApexJobObject.runOne(BatchBrokerImplementation.class, 1);
+        ProcessDiscoverBatch.classes = new List<ApexClass>();
+        AsyncApexJobObject one = AsyncApexJobObject.runOne(ProcessDiscoverBatch.class, 1);
+        AsyncApexJobObject two = AsyncApexJobObject.runOne(ProcessDiscoverBatch.class, 1);
         Test.stopTest();
         
         Integer expectedRunning = 1;

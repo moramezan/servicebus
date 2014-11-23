@@ -138,7 +138,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     
     /**
      * Each Broker implementation must provide the smarts of how to restart it.
-     * The BatchBroker executes another Batch Apex job to run itself again.
+     * The VerticalBroker executes another Batch Apex job to run itself again.
      */
     override public void restartImpl() {
         Database.executeBatch(new VerticalBrokerDispatcher(), 1);
