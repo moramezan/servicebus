@@ -4,10 +4,6 @@
  */
 public with sharing class HeartbeatImplementation implements System.Schedulable {
     
-    @testVisible
-    private static String SystemHeartbeatSequence = 'HeartbeatSequence';
- 
-    
     public void execute(System.SchedulableContext context) {
         HeartbeatImplementation.IHeartbeatGenerator heartbeatGenerator = 
             (HeartbeatImplementation.IHeartbeatGenerator) new HeartbeatImplementation.HeartbeatGeneratorImpl();
@@ -48,7 +44,6 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
          }
             
         public void generateHeartbeats() {
-            HeartbeatImplementation.refreshConfig();
             HeartbeatImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
         }
     }   
@@ -164,8 +159,9 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
         for (DateTime heartbeat : heartbeats) {
             Map<String,Object> parameters = new Map<String,Object>{
                 'Id' => UserInfo.getUserId(), 
-                'eda_SequenceName' => SystemHeartbeatSequence,    
+                'eda_SequenceName' => '',
                 'eda_EventStamp' => getISO8601(heartbeat),
+                'eda_IsHeartbeatProcess' => true, //#575 so that resolve and execute can crow look
                 'eda_IsHeartbeat' => true    
             };
             Broker.enqueue(parameters);
@@ -273,133 +269,4 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
      *
      */
      
-    /*
-     * Validation of Config
-     */
-     
-    @testVisible
-    private static Boolean isConfiguredHeartbeatProcess() {
-        List<Process__c> processes = [ 
-            SELECT Id, Name
-            FROM Process__c 
-            WHERE Name = :Heartbeat.class.getName() 
-        ];
-        
-       return (processes.size() == 1); 
-    }
-    @testVisible
-    private static Boolean isConfiguredTerminateProcess() {
-        List<Process__c> processes = [ 
-            SELECT Id, Name
-            FROM Process__c 
-            WHERE Name = :Terminate.class.getName() 
-        ];
-        
-       return (processes.size() == 1); 
-    }
-
-
-    @testVisible
-    private static Boolean isConfiguredProcess(Boolean isConfiguredTerminateProcess, Boolean isConfiguredHeartbeatProcess) {
-        return (isConfiguredTerminateProcess && isConfiguredHeartbeatProcess); 
-    }
-
-    @testVisible
-    private static Boolean isConfiguredSequence(Boolean isConfiguredProcess) {
-        if (!isConfiguredProcess)
-            return false;
-            
-        List<Sequence__c> sequences  = [SELECT Id, Name FROM Sequence__c WHERE Name = :SystemHeartbeatSequence];
-        return (sequences.size() == 1); 
-    }
-
-
-    @testVisible
-    private static Boolean isConfiguredStep(Boolean isConfiguredSequence) {
-        
-        if (!isConfiguredSequence)
-            return false;
-            
-        List<Step__c> steps = [ 
-            SELECT Id, Name
-            FROM Step__c 
-            WHERE Process__r.Name = :Heartbeat.class.getName() 
-            AND Position__c = 1 
-            AND Sequence__r.Name = :SystemHeartbeatSequence
-        ];
-        return (steps.size() == 1);
-    }
-
-
-    /*
-     * Config  refresh 
-     * (required logic run as and when  needed ...)
-     */
-    @testVisible
-    private static void refreshConfig() {
-        if (!SObjectType.Process__c.Createable) throw new Broker.CrudException('!SObjectType.Process__c.Createable');
-        if (!SObjectType.Sequence__c.Createable) throw new Broker.CrudException('!SObjectType.Sequence__c.Createable');
-        if (!SObjectType.Step__c.Createable) throw new Broker.CrudException('!SObjectType.Step__c.Createable');
-        if (!SObjectType.Step__c.Deletable) throw new Broker.CrudException('!SObjectType.Step__c.Deletable');
-
-        // verify:
-        Boolean isConfiguredHeartbeatProcess = isConfiguredHeartbeatProcess();
-        Boolean isConfiguredTerminateProcess = isConfiguredTerminateProcess();
-        Boolean isConfiguredProcess = isConfiguredProcess(isConfiguredHeartbeatProcess, isConfiguredTerminateProcess);
-        Boolean isConfiguredSequence = isConfiguredSequence(isConfiguredProcess);
-        Boolean isConfiguredStep = isConfiguredStep(isConfiguredSequence);   
-        
-        // refresh as needed:
-        Process__c heartbeatProcess;
-        Process__c terminateProcess;
-        Sequence__c sequence;
-        
-        if (!isConfiguredHeartbeatProcess) {
-            try {
-                heartbeatProcess = ProcessObject.fromType(Heartbeat.class);
-                insert heartbeatProcess;    
-            } catch (Exception e) {
-                throw new Broker.CrudException('Cannot configure '  + Heartbeat.class.getName() + ' process in process object.', e);
-            }
-        } else {
-            heartbeatProcess = [SELECT Id, Name FROM Process__c WHERE Name = :Heartbeat.class.getName()][0];
-        }
-        
-        if (!isConfiguredTerminateProcess) {
-            try {
-                terminateProcess = ProcessObject.fromType(Terminate.class);
-                insert terminateProcess;    
-            } catch (Exception e) {
-                throw new Broker.CrudException('Cannot configure '  + Terminate.class.getName() + ' process in process object.', e);
-            }
-        } else {
-            terminateProcess = [SELECT Id, Name FROM Process__c WHERE Name = :Terminate.class.getName()][0];
-        } 
-
-        if (!isConfiguredSequence) {
-            try {
-                sequence = new Sequence__c(Name = SystemHeartbeatSequence);
-                insert sequence; 
-            } catch (Exception e) {
-                throw new Broker.CrudException('Cannot configure ' + SystemHeartbeatSequence + ' sequence.', e);
-            }
-        } else {
-            sequence  = [SELECT Id, Name FROM Sequence__c WHERE Name = :SystemHeartbeatSequence][0];
-        }
-
-        if (!isConfiguredStep) {
-            try {
-                List<Step__c> steps = new List<Step__c>{
-                    new Step__c(Sequence__c = sequence.Id ,Position__c = 1,Process__c = heartbeatProcess.Id),
-                    new Step__c(Sequence__c = sequence.Id ,Position__c = 2,Process__c = terminateProcess.Id)
-                };
-                delete [SELECT Id FROM Step__c WHERE Sequence__c = :sequence.Id]; 
-                insert steps;
-            } catch (Exception e) {
-                throw new Broker.CrudException('Cannot configure ' + Heartbeat.class.getName()  + ' and/or ' + Terminate.class.getName() + ' step(s) on ' + SystemHeartbeatSequence + ' sequence.', e);
-            }
-        }    
-    } 
-    // END OF FUCKERY 
-        
 }

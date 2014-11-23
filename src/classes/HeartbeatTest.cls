@@ -1,16 +1,6 @@
 @IsTest private class HeartbeatTest {
 
     static testmethod void noInterestedProcessesReturnsZeroMessages() {
-        //arrange processes
-        Process__c HeartbeatProcess = ProcessObject.generateOne(Heartbeat.class);
-        
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'SystemSequence');
-        insert sequence;
-        
-        //arrange steps
-        Step__c step = StepObject.generateOne(sequence.Id, HeartbeatProcess.Id);
-
         //arrange parameters
         Boolean isHeartbeat = true;
         String stampAsString = '2014-01-18T12:00:00.000Z';
@@ -32,19 +22,15 @@
 
     static testmethod void  gtOneInterestedProcessReturnsSameNumberOfMessages() {
         //arrange processes
-        Process__c HeartbeatProcess = ProcessObject.generateOne(Heartbeat.class);
         Process__c ScheduleProcess = ProcessObject.generateOne(Schedule.class);
 
         //arrange sequence
-        Sequence__c systemSequence = new Sequence__c(Name = 'SystemSequence');
-        insert systemSequence;
         Sequence__c interestedSequenceA = new Sequence__c(Name = 'InterestedSequenceA');
         insert interestedSequenceA;
         Sequence__c interestedSequenceB = new Sequence__c(Name = 'InterestedSequenceB');
         insert interestedSequenceB;
 
         //arrange steps
-        Step__c stepSystem = StepObject.generateOne(systemSequence.Id, HeartbeatProcess.Id);
         Step__c stepA = StepObject.generateOne(interestedSequenceA.Id, ScheduleProcess.Id);
         Step__c stepB = StepObject.generateOne(interestedSequenceB.Id, ScheduleProcess.Id);
         
@@ -69,19 +55,15 @@
 
     static testmethod void  HeartbeatParamEqToFalseOrMissingAlwaysReturnsZeroMessages() {
         //arrange processes
-        Process__c HeartbeatProcess = ProcessObject.generateOne(Heartbeat.class);
         Process__c ScheduleProcess = ProcessObject.generateOne(Schedule.class);
 
         //arrange sequence
-        Sequence__c systemSequence = new Sequence__c(Name = 'SystemSequence');
-        insert systemSequence;
         Sequence__c interestedSequenceA = new Sequence__c(Name = 'InterestedSequenceA');
         insert interestedSequenceA;
         Sequence__c interestedSequenceB = new Sequence__c(Name = 'InterestedSequenceB');
         insert interestedSequenceB;
 
         //arrange steps
-        Step__c stepSystem = StepObject.generateOne(systemSequence.Id, HeartbeatProcess.Id);
         Step__c stepA = StepObject.generateOne(interestedSequenceA.Id, ScheduleProcess.Id);
         Step__c stepB = StepObject.generateOne(interestedSequenceB.Id, ScheduleProcess.Id);
         

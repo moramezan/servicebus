@@ -545,6 +545,15 @@ abstract public with sharing class Broker {
             throw new EngineException(message.Id, 'Could not deserialize json, eg malformed parameters.', e);
         }
         
+        //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
+        if (parameters.get('eda_IsHeartbeatProcess') != null) {
+            //invoke and wrap up results into messages
+            List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, parameters, null).invokeMain().Outputs;
+            List<Message__c> messages = new List<Message__c>();
+            for (Object output : outputs) messages.add(new Message__c(Parameters__c = Json.serializePretty(output), Status__c = 'Buffered'));
+            return messages;
+        }
+        
         Step__c step;
         try {
             step = [
@@ -666,6 +675,10 @@ abstract public with sharing class Broker {
         for (Message__c message : messages) {
             try {
                 Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+                
+                //#575 crow look, heartbeat doesn't need his sequence or step resolved
+                if (parameters.get('eda_IsHeartbeatProcess') != null) continue;
+                
                 String sequenceName = (String)parameters.get('eda_SequenceName');
                 Decimal position = (Decimal)parameters.get('eda_Position'); //care
                 String key = sequenceName + '#' + position;

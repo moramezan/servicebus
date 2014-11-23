@@ -2,12 +2,8 @@ public with sharing class Heartbeat {
     
     public String Parameters;
 
-    public class Meta {
-        public String Tag = 'System';
-        public String Name = 'Heartbeat';
-        public String Description = 'Broadcasts a heartbeat message to any sequence with a heartbeat subscriber as the first step';
-        public String Icon = 'heart_add';
-    }
+    //#575 heartbeat process evades discovery
+    //public class Meta {}
 
     public class HeartbeatException extends Exception {}
 
@@ -41,6 +37,7 @@ public with sharing class Heartbeat {
                 Map<String,Object> clone = parameters.clone();
                 clone.put('eda_Position', step.Position__c-1);
                 clone.put('eda_SequenceName', step.Sequence__r.Name);
+                clone.put('eda_IsHeartbeatProcess', null); //#575 so outputs don't get same crow look as input
                 parametersList.add(clone);
             }
         }
