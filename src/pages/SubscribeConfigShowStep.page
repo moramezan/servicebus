@@ -1,1 +1,0 @@
-<apex:page standardController="SubscribeConfig__c" extensions="ConfigShowStepExtension" action="{!doRedirect}" />

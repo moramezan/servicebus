@@ -80,14 +80,14 @@
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
-        <fullName>ShowStep</fullName>
+        <fullName>Step</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>
         <masterLabel>Show Step</masterLabel>
         <openType>sidebar</openType>
-        <page>JumpConfigShowStep</page>
+        <page>JumpConfigStep</page>
         <protected>false</protected>
     </webLinks>
 </CustomObject>

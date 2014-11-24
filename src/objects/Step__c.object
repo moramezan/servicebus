@@ -133,14 +133,14 @@
     </searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
     <webLinks>
-        <fullName>ShowConfig</fullName>
+        <fullName>Config</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>
         <masterLabel>Show Config</masterLabel>
         <openType>sidebar</openType>
-        <page>StepShowConfig</page>
+        <page>StepConfig</page>
         <protected>false</protected>
     </webLinks>
 </CustomObject>

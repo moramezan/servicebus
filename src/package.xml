@@ -13,8 +13,8 @@
         <members>BranchTest</members>
         <members>Broker</members>
         <members>BrokerTest</members>
-        <members>ConfigShowStepExtension</members>
-        <members>ConfigShowStepExtensionTest</members>
+        <members>ConfigStepExtension</members>
+        <members>ConfigStepExtensionTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
         <members>Gate</members>
@@ -43,8 +43,8 @@
         <members>MessageRebufferExtensionTest</members>
         <members>MessageResumeQueueExtension</members>
         <members>MessageResumeQueueExtensionTest</members>
-        <members>MessageShowDataExtension</members>
-        <members>MessageShowDataExtensionTest</members>
+        <members>MessageDataExtension</members>
+        <members>MessageDataExtensionTest</members>
         <members>MonitorController</members>
         <members>MonitorControllerTest</members>
         <members>PostInstallHandler</members>
@@ -102,15 +102,15 @@
     </types>
     <types>
         <members>BranchConfigCsh</members>
-        <members>BranchConfigShowStep</members>
+        <members>BranchConfigStep</members>
         <members>Configure</members>
         <members>EventTypeCsh</members>
         <members>GateGroupCsh</members>
         <members>GateItemCsh</members>
         <members>JumpConfigCsh</members>
-        <members>JumpConfigShowStep</members>
+        <members>JumpConfigStep</members>
         <members>LogConfigCsh</members>
-        <members>LogConfigListLogGroups</members>
+        <members>LogConfigLogGroups</members>
         <members>LogConfigSchemaSelector</members>
         <members>LogGroupCsh</members>
         <members>LogWriterEntryCsh</members>
@@ -118,7 +118,7 @@
         <members>MessagePauseQueue</members>
         <members>MessageRebuffer</members>
         <members>MessageResumeQueue</members>
-        <members>MessageShowData</members>
+        <members>MessageData</members>
         <members>MessageSplash</members>
         <members>Monitor</members>
         <members>MonitorSplash</members>
@@ -131,19 +131,19 @@
         <members>ProcessSplash</members>
         <members>PublishConfigCsh</members>
         <members>PublishConfigManageEventTypes</members>
-        <members>PublishConfigShowStep</members>
+        <members>PublishConfigStep</members>
         <members>ScheduleConfigCsh</members>
         <members>SchemaSelector</members>
         <members>SequenceBuilder</members>
         <members>SequenceCsh</members>
         <members>SequenceSplash</members>
         <members>StepCsh</members>
-        <members>StepShowConfig</members>
+        <members>StepConfig</members>
         <members>SubscribeConfigCsh</members>
         <members>SubscribeConfigManageEventTypes</members>
-        <members>SubscribeConfigShowStep</members>
+        <members>SubscribeConfigStep</members>
         <members>SubsequenceConfigCsh</members>
-        <members>SubsequenceConfigShowStep</members>
+        <members>SubsequenceConfigStep</members>
         <name>ApexPage</name>
     </types>
     <types>
@@ -311,24 +311,24 @@
         <name>ValidationRule</name>
     </types>
     <types>
-        <members>BranchConfig__c.ShowStep</members>
-        <members>JumpConfig__c.ShowStep</members>
+        <members>BranchConfig__c.Step</members>
+        <members>JumpConfig__c.Step</members>
         <members>LogConfig__c.ChangeDynamicGroupIdentifier</members>
-        <members>LogConfig__c.ListLogGroups</members>
+        <members>LogConfig__c.LogGroups</members>
         <members>Message__c.PauseQueue</members>
         <members>Message__c.Rebuffer</members>
         <members>Message__c.ResumeQueue</members>
-        <members>Message__c.ShowData</members>
+        <members>Message__c.Data</members>
         <members>Process__c.ApexClass</members>
         <members>Process__c.Discover</members>
         <members>Process__c.Help</members>
         <members>Process__c.Settings</members>
         <members>PublishConfig__c.ManageEventTypes</members>
-        <members>PublishConfig__c.ShowStep</members>
-        <members>Step__c.ShowConfig</members>
+        <members>PublishConfig__c.Step</members>
+        <members>Step__c.Config</members>
         <members>SubscribeConfig__c.ManageEventTypes</members>
-        <members>SubscribeConfig__c.ShowStep</members>
-        <members>SubsequenceConfig__c.ShowStep</members>
+        <members>SubscribeConfig__c.Step</members>
+        <members>SubsequenceConfig__c.Step</members>
         <name>WebLink</name>
     </types>
     <uninstallClass>PostUninstallHandler</uninstallClass>

@@ -1,4 +1,4 @@
-@IsTest public class MessageShowDataExtensionTest {
+@IsTest public class MessageDataExtensionTest {
 
     static testmethod void testRedirect() {
         //arrange
@@ -7,7 +7,7 @@
         insert message;
         
         ApexPages.StandardController controller = new ApexPages.StandardController(message);
-        MessageShowDataExtension extension = new MessageShowDataExtension(controller);
+        MessageDataExtension extension = new MessageDataExtension(controller);
         
         //act
         PageReference redirect = extension.doRedirect();

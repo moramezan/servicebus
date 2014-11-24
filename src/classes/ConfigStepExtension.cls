@@ -1,8 +1,8 @@
-public with sharing class ConfigShowStepExtension {
+public with sharing class ConfigStepExtension {
     
     private ApexPages.StandardController controller;
     
-    public ConfigShowStepExtension(ApexPages.StandardController controller) {
+    public ConfigStepExtension(ApexPages.StandardController controller) {
         this.controller = controller;
     }
     

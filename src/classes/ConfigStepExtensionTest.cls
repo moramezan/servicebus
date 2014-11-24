@@ -1,4 +1,4 @@
-@IsTest public class ConfigShowStepExtensionTest {
+@IsTest public class ConfigStepExtensionTest {
 
     static testmethod void testRedirectOccurs() {
         //arrange process, sequence and step
@@ -11,7 +11,7 @@
         
         JumpConfig__c config = new JumpConfig__c();
         ApexPages.StandardController controller = new ApexPages.StandardController(config);
-        ConfigShowStepExtension extension = new ConfigShowStepExtension(controller);
+        ConfigStepExtension extension = new ConfigStepExtension(controller);
         
         //act
         PageReference redirect = extension.doRedirect();

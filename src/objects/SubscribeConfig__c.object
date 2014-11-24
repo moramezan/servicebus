@@ -103,14 +103,14 @@
         <showsStatus>false</showsStatus>
     </webLinks>
     <webLinks>
-        <fullName>ShowStep</fullName>
+        <fullName>Step</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>
         <masterLabel>Show Step</masterLabel>
         <openType>sidebar</openType>
-        <page>SubscribeConfigShowStep</page>
+        <page>SubscribeConfigStep</page>
         <protected>false</protected>
     </webLinks>
 </CustomObject>

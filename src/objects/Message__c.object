@@ -272,14 +272,14 @@
         <requireRowSelection>false</requireRowSelection>
     </webLinks>
     <webLinks>
-        <fullName>ShowData</fullName>
+        <fullName>Data</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>
         <masterLabel>Show Data</masterLabel>
         <openType>sidebar</openType>
-        <page>MessageShowData</page>
+        <page>MessageData</page>
         <protected>false</protected>
     </webLinks>
 </CustomObject>
