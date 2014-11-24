@@ -4,6 +4,3 @@
 [submodule "lib/sencha-architect-3.0.1"]
 	path = lib/sencha-architect-3.0.1
 	url = https://github.com/ratsaas/sencha-architect.git
-[submodule "lib/salesforce_ant_31.0"]
-	path = lib/salesforce_ant_31.0
-	url = https://github.com/bigassforce/salesforce_ant.git

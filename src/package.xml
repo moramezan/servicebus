@@ -331,5 +331,6 @@
         <members>SubsequenceConfig__c.Step</members>
         <name>WebLink</name>
     </types>
+    <uninstallClass>PostUninstallHandler</uninstallClass>
     <version>32.0</version>
 </Package>
