@@ -1,7 +1,7 @@
 public with sharing class Schedule {
     
     public String Parameters;
-    public SObject StepConfig;
+    public ScheduleConfig__c StepConfig;
     
     public class Meta {
         public String Tag = 'Event Driven Architecture';

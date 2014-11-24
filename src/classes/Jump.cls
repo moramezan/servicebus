@@ -1,7 +1,7 @@
 public with sharing class Jump {
 
     public String Parameters;
-    public SObject StepConfig;
+    public JumpConfig__c StepConfig;
 
     public class Meta {
         public String Tag = 'Event Driven Architecture';
@@ -16,7 +16,7 @@ public with sharing class Jump {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
         //get destination from config
-        JumpConfig__c config = (JumpConfig__c)this.StepConfig;
+        JumpConfig__c config = this.StepConfig;
         Sequence__c sequence = (Sequence__c)SalesforceObject.getById(config.Sequence__c);
         
         parameters.put('eda_SequenceName', sequence.Name);

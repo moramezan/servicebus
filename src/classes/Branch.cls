@@ -1,7 +1,7 @@
 public with sharing class Branch {
 
     public String Parameters;
-    public SObject StepConfig;
+    public BranchConfig__c StepConfig;
 
     public class Meta {
         public SObject StepConfig = BranchConfig__c.SObjectType.newSObject();
@@ -18,7 +18,7 @@ public with sharing class Branch {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
 
         //get step config
-        BranchConfig__c config = (BranchConfig__c)this.StepConfig;
+        BranchConfig__c config = this.StepConfig;
         Sequence__c sequence = (Sequence__c)SalesforceObject.getById(config.Sequence__c);
         
         //get sequence name

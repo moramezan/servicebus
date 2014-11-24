@@ -1,7 +1,7 @@
 public with sharing class Publish {
     
     public String Parameters;
-    public SObject StepConfig;
+    public PublishConfig__c StepConfig;
     
     public class Meta {
         public String Tag = 'Event Driven Architecture';
@@ -18,7 +18,7 @@ public with sharing class Publish {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         
-        PublishConfig__c publishConfig = (PublishConfig__c)this.StepConfig;
+        PublishConfig__c publishConfig = this.StepConfig;
         
         if (publishConfig == null || publishConfig.EventType__c == null) {
             throw new PublishException('Publish Config ' + publishConfig + ' has no Event type');

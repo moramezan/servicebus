@@ -1,7 +1,7 @@
 public with sharing class Subsequence {
     
     public String Parameters;
-    public SObject StepConfig;
+    public SubsequenceConfig__c StepConfig;
     
     public class Meta {
         public String Tag = 'Event Driven Architecture';
@@ -29,7 +29,7 @@ public with sharing class Subsequence {
         ];
   
         //get destination from config
-        SubsequenceConfig__c config = (SubsequenceConfig__c)this.StepConfig;
+        SubsequenceConfig__c config = this.StepConfig;
         Sequence__c sequence = (Sequence__c)SalesforceObject.getById(config.Sequence__c);
         
         List<Object> stepIds = (List<Object>)parameters.get('eda_SubsequenceStepIds');

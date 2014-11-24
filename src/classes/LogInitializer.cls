@@ -1,7 +1,7 @@
 public with sharing class LogInitializer {
     
     public String Parameters;
-    public SObject StepConfig;
+    public LogConfig__c StepConfig;
     
     public class Meta {
         public String Tag = 'Event Driven Architecture';
