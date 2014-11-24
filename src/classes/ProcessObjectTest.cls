@@ -2,7 +2,8 @@
     
     public String Parameters;
     
-    public class Meta {
+    @testVisible
+    private class Meta {
         public String Tag = 'Fake';
         public String Name = 'Test';
         public String Description = 'Herpderp';
@@ -73,22 +74,4 @@
         System.assertEquals(expectedHelpUrl, actualHelpUrl);
     } 
  
-    static testmethod void processWithoutIconWillDefaultWithCogIcon() {
-        //arrange 
-        Type actualType = ProcessObjectTest.class;
-        Object process = actualType.newInstance();
-        
-        Type innerClass = Type.forName(actualType.getName() + '.' + 'Meta'); 
-        ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
-
-        //act 
-        Process__c subscribeProcess = ProcessObject.fromType(actualType);
-        
-        //assemble
-        String actualIcon = subscribeProcess.Icon__c; 
-
-        //assert
-        String expectedIcon = 'cog';
-        System.assertEquals(expectedIcon , actualIcon);
-    }
 }
