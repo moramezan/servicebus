@@ -93,41 +93,33 @@ abstract public with sharing class Broker {
         public List<Message__c> fuckups = new List<Message__c>();
         
         /**
-         * Shorthand constructor
-         */
-        public EngineException(Savepoint sp, Id messageId, String error, Exception cause) {
-            this(messageId, error, cause);
-            this.savepoint = sp;
-        }
-        
-        /**
          * User-error constructor for #581
-         * This leaves the smoking gun pointing at the user process, not our broker
+         * This points the smoking gun at the user process, not our broker.
+         *
+         * @param savepoint holding any DML to be rolled back by handler
+         * @param messageIds which the handler will write away for debug
+         * @param userCause of the originating exception due to THEIR code
          */
-        public EngineException(Savepoint sp, Id messageId, Exception userCause) {
-            this(userCause.getMessage(), userCause);
-            this.fuckups.add(new Message__c(
+        public EngineException(Savepoint savepoint, Set<Id> messageIds, Exception userException) {
+            this(userException.getMessage(), userException);
+            this.savepoint = savepoint;
+            for (Id messageId : messageIds) this.fuckups.add(new Message__c(
                 Id = messageId,
-                Exception__c = new ExceptionSerializer(userCause).getAsString()
+                Exception__c = new ExceptionSerializer(userException).getAsString()
             ));
         }
         
         /**
-         * Shorthand constructor
+         * Broker-error constructor for our own fuckups per #598
+         *
+         * @param savepoint holding any DML to be rolled back by handler
+         * @param messageIds which the handler will write away for debug
+         * @param brokerCause of the originating exception due to OUR code
+         * @param error message that lends detail to what WE did wrong
          */
-        public EngineException(Id messageId, String error, Exception cause) {
-            this(error, cause);
-            this.fuckups.add(new Message__c(
-                Id = messageId,
-                Exception__c = new ExceptionSerializer(this).getAsString()
-            ));
-        }
-        
-        /**
-         * Shorthand constructor
-         */
-        public EngineException(Set<Id> messageIds, String error, Exception cause) {
-            this(error, cause);
+        public EngineException(Savepoint savepoint, Set<Id> messageIds, Exception brokerException, String message) {
+            this(message, brokerException);
+            this.savepoint = savepoint;
             for (Id messageId : messageIds) this.fuckups.add(new Message__c(
                 Id = messageId,
                 Exception__c = new ExceptionSerializer(this).getAsString()
@@ -554,7 +546,7 @@ abstract public with sharing class Broker {
         try {
             parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
         } catch (JsonException e) {
-            throw new EngineException(message.Id, 'Could not deserialize json, eg malformed parameters.', e);
+            throw new EngineException(null, new Set<Id>{message.Id}, e, 'Could not deserialize json, eg malformed parameters.');
         }
         
         //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
@@ -574,17 +566,17 @@ abstract public with sharing class Broker {
                 WHERE Id = :message.Step__c
             ];
         } catch (QueryException e) {
-            throw new EngineException(message.Id, 'Step unqueryable, eg bad sequence name, position, missing terminate.', e);
+            throw new EngineException(null, new Set<Id>{message.Id}, e, 'Step unqueryable, eg bad sequence name, position, missing terminate.');
         }
         
         Type reflector = Type.forName(step.Process__r.FullyQualifiedClassName__c);
         if (reflector == null) {
-            throw new EngineException(message.Id, 'Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c, null);
+            throw new EngineException(null, new Set<Id>{message.Id}, null, 'Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c);
         }
         
         Type meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + '.' + 'Meta');
         if (meta == null) {
-            throw new EngineException(message.Id, 'Could not see Meta inner class, this is not a valid process: ' + reflector.getName(), null);
+            throw new EngineException(null, new Set<Id>{message.Id}, null, 'Could not see Meta inner class, this is not a valid process: ' + reflector.getName());
         }
         
         //save important message properties (such as stackDepth) so that process authors cannot pervert them  
@@ -594,7 +586,7 @@ abstract public with sharing class Broker {
             stackDepth = enforceStackDepth(parameters, stackDepthThreshold);
         } catch (StackDepthException e) {
             //wrapped this here because we need to stick the MESSAGE ID on the exception in order to be able to write the problem away
-            throw new EngineException(message.Id, 'Maximum Stack Depth exceeded - to resolve, manually set eda_StackDepth on parameters to 0', e);
+            throw new EngineException(null, new Set<Id>{message.Id}, e, 'Maximum Stack Depth exceeded - to resolve, manually set eda_StackDepth on parameters to 0');
         }
         
         SObject config;
@@ -614,7 +606,7 @@ abstract public with sharing class Broker {
             
         } catch (Exception e) {
             //#581 smoking gun should point at the user, NOT at our broker
-            throw new EngineException(sp, message.Id, e);
+            throw new EngineException(sp, new Set<Id>{message.Id}, e);
         }
         
         //OUR FUCKUPS  (after invocation)
@@ -709,7 +701,7 @@ abstract public with sharing class Broker {
         //DML time!
         upsert messages;
         
-        if (!fuckedIds.isEmpty()) throw new EngineException(fuckedIds, 'Resolve failure, check sequence config.', firstError);
+        if (!fuckedIds.isEmpty()) throw new EngineException(null, fuckedIds, firstError, 'Resolve failure, check sequence config.');
     }
     
     virtual public List<Database.UpsertResult> persist(List<Message__c> inputMessages, List<Message__c> outputMessages) {
@@ -726,7 +718,7 @@ abstract public with sharing class Broker {
             return Database.upsert(messages, true); //all or none
         } catch (Exception e) {
             Set<Id> messageIds = new Map<Id,Message__c>(inputMessages).keySet();
-            throw new EngineException(messageIds, 'Persist failure.', e);
+            throw new EngineException(null, messageIds, e, 'Persist failure.');
         }
     }
     
