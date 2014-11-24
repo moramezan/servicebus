@@ -101,6 +101,18 @@ abstract public with sharing class Broker {
         }
         
         /**
+         * User-error constructor for #581
+         * This leaves the smoking gun pointing at the user process, not our broker
+         */
+        public EngineException(Savepoint sp, Id messageId, Exception userCause) {
+            this(userCause.getMessage(), userCause);
+            this.fuckups.add(new Message__c(
+                Id = messageId,
+                Exception__c = new ExceptionSerializer(userCause).getAsString()
+            ));
+        }
+        
+        /**
          * Shorthand constructor
          */
         public EngineException(Id messageId, String error, Exception cause) {
@@ -601,7 +613,8 @@ abstract public with sharing class Broker {
             //TODO COUNT ANY CALLOUTS
             
         } catch (Exception e) {
-            throw new EngineException(sp, message.Id, 'Execute failure in user process', e);
+            //#581 smoking gun should point at the user, NOT at our broker
+            throw new EngineException(sp, message.Id, e);
         }
         
         //OUR FUCKUPS  (after invocation)
