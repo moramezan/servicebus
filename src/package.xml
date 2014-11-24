@@ -35,6 +35,8 @@
         <members>LogWriterTest</members>
         <members>Mark</members>
         <members>MarkTest</members>
+        <members>MessageDataExtension</members>
+        <members>MessageDataExtensionTest</members>
         <members>MessageObjectSet</members>
         <members>MessageObjectSetTest</members>
         <members>MessagePauseQueueExtension</members>
@@ -43,8 +45,6 @@
         <members>MessageRebufferExtensionTest</members>
         <members>MessageResumeQueueExtension</members>
         <members>MessageResumeQueueExtensionTest</members>
-        <members>MessageDataExtension</members>
-        <members>MessageDataExtensionTest</members>
         <members>MonitorController</members>
         <members>MonitorControllerTest</members>
         <members>PostInstallHandler</members>
@@ -115,10 +115,10 @@
         <members>LogGroupCsh</members>
         <members>LogWriterEntryCsh</members>
         <members>MessageCsh</members>
+        <members>MessageData</members>
         <members>MessagePauseQueue</members>
         <members>MessageRebuffer</members>
         <members>MessageResumeQueue</members>
-        <members>MessageData</members>
         <members>MessageSplash</members>
         <members>Monitor</members>
         <members>MonitorSplash</members>
@@ -137,8 +137,8 @@
         <members>SequenceBuilder</members>
         <members>SequenceCsh</members>
         <members>SequenceSplash</members>
-        <members>StepCsh</members>
         <members>StepConfig</members>
+        <members>StepCsh</members>
         <members>SubscribeConfigCsh</members>
         <members>SubscribeConfigManageEventTypes</members>
         <members>SubscribeConfigStep</members>
@@ -315,10 +315,10 @@
         <members>JumpConfig__c.Step</members>
         <members>LogConfig__c.ChangeDynamicGroupIdentifier</members>
         <members>LogConfig__c.LogGroups</members>
+        <members>Message__c.Data</members>
         <members>Message__c.PauseQueue</members>
         <members>Message__c.Rebuffer</members>
         <members>Message__c.ResumeQueue</members>
-        <members>Message__c.Data</members>
         <members>Process__c.ApexClass</members>
         <members>Process__c.Discover</members>
         <members>Process__c.Help</members>
@@ -331,6 +331,5 @@
         <members>SubsequenceConfig__c.Step</members>
         <name>WebLink</name>
     </types>
-    <uninstallClass>PostUninstallHandler</uninstallClass>
-    <version>31.0</version>
+    <version>32.0</version>
 </Package>

@@ -237,6 +237,17 @@
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
+        <fullName>Data</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Show Data</masterLabel>
+        <openType>sidebar</openType>
+        <page>MessageData</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
         <fullName>PauseQueue</fullName>
         <availability>online</availability>
         <displayType>massActionButton</displayType>
@@ -270,16 +281,5 @@
         <page>MessageResumeQueue</page>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
-    </webLinks>
-    <webLinks>
-        <fullName>Data</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>Show Data</masterLabel>
-        <openType>sidebar</openType>
-        <page>MessageData</page>
-        <protected>false</protected>
     </webLinks>
 </CustomObject>
