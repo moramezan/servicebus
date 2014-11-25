@@ -10,7 +10,10 @@ public with sharing class Heartbeat {
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
-        Boolean isHeartbeat = (Boolean)parameters.get('eda_IsHeartbeat');
+        Boolean isHeartbeat = ( parameters.get('eda_IsHeartbeat') == null) ?
+            false :
+            (Boolean)parameters.get('eda_IsHeartbeat');
+
         String  stampAsString = (String)parameters.get('eda_EventStamp');
 
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
