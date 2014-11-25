@@ -1050,5 +1050,49 @@
         System.assertEquals(expectedFlagA,actualFlagA);
         Boolean expectedFlagB = true;
         System.assertEquals(expectedFlagB,actualFlagB); 
-    }    
+    } 
+    
+    
+    static testMethod void callingEnqueueAlwaysSetsInitiatingParameters() {
+        //arrange processes
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        insert sequence;
+        
+        //arrange steps
+        StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        
+        //arrange specific broker implementation
+        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        
+        //act
+        Test.startTest();
+        Broker.enqueue(sequence.Name, '000000000000000AAA');
+        Test.stopTest();
+        
+        // assemble
+        List<Message__c> messagesAfter = [SELECT Parameters__c FROM Message__c LIMIT 1];
+        
+        
+        String  actualEntryPointGuid ; 
+        Id      actualEnqueueUserId  ; 
+        Integer actualPosition       ; 
+        if (messagesAfter.size() == 1) {
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(messagesAfter[0].Parameters__c);
+            actualEntryPointGuid = (String) parameters.get('eda_EntryPointGuid');
+            actualEnqueueUserId  = (Id) parameters.get('eda_EnqueueUserId' );
+            actualPosition       = (Integer) parameters.get('eda_Position');
+        }
+
+        // assert
+        String  expectedEntryPointGuid = null;
+        System.assertNotEquals(expectedEntryPointGuid,actualEntryPointGuid);
+        Id  expectedEnqueueUserId = UserInfo.getUserId();
+        System.assertEquals(expectedEnqueueUserId,actualEnqueueUserId);
+        Integer expectedPosition = 1;   
+        System.assertEquals(expectedPosition ,actualPosition);
+    } 
+
 }

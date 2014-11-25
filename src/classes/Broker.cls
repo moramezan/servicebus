@@ -445,6 +445,7 @@ abstract public with sharing class Broker {
 
         Map<String,Object> parameters = new Map<String,Object> {
             'eda_EntryPointGuid' => getEntryPointGuid(18),
+            'eda_EnqueueUserId' => UserInfo.getUserId(),
             'eda_Position' => 0
         };
       
