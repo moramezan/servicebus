@@ -57,9 +57,8 @@
     <enableStreamingApi>true</enableStreamingApi>
     <label>Gate Group</label>
     <nameField>
-        <displayFormat>GG-{0000000000}</displayFormat>
         <label>Gate Group Name</label>
-        <type>AutoNumber</type>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Gate Groups</pluralLabel>
     <searchLayouts>

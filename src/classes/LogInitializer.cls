@@ -52,7 +52,13 @@ public with sharing class LogInitializer {
          // 2.  a (fairly unique ) business group value
          Id dataId =  (Id)parameters.get('Id');
          String groupIdentifier = getBusinesGroupIdentifier(config, step, dataId) ;
-         LogGroup__c logGroup = new LogGroup__c( LogConfig__c = config.Id,  GroupIdentifier__c = groupIdentifier, Stamp__c = System.Now());
+         DateTime now = System.Now();
+         LogGroup__c logGroup = new LogGroup__c(
+             Name = String.valueOf(now) + ' - ' + groupIdentifier,
+             LogConfig__c = config.Id,
+             GroupIdentifier__c = groupIdentifier,
+             Stamp__c = now
+         );
          insert logGroup;
 
          // update outbound message

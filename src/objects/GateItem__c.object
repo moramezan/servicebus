@@ -81,9 +81,8 @@
     </fields>
     <label>Gate Item</label>
     <nameField>
-        <displayFormat>GI-{0000000000}</displayFormat>
         <label>GateItem Name</label>
-        <type>AutoNumber</type>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Gate Items</pluralLabel>
     <searchLayouts>

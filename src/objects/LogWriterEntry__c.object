@@ -165,9 +165,8 @@
     </fields>
     <label>Log Writer Entry</label>
     <nameField>
-        <displayFormat>ENTRY-{0000000000}</displayFormat>
         <label>Log Writer Entry Name</label>
-        <type>AutoNumber</type>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Log Writer Entries</pluralLabel>
     <searchLayouts>

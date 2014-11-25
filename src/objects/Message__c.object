@@ -172,25 +172,25 @@
     <label>Message</label>
     <listViews>
         <fullName>All</fullName>
+        <columns>CreatedDate__c</columns>
         <columns>NAME</columns>
         <columns>Status__c</columns>
         <columns>Exception__c</columns>
         <columns>Sequence__c</columns>
         <columns>Process__c</columns>
         <columns>IsOverdue__c</columns>
-        <columns>CreatedDate__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
     <listViews>
         <fullName>AllExceptCompleted</fullName>
+        <columns>CreatedDate__c</columns>
         <columns>NAME</columns>
         <columns>Status__c</columns>
         <columns>Exception__c</columns>
         <columns>Sequence__c</columns>
         <columns>Process__c</columns>
         <columns>IsOverdue__c</columns>
-        <columns>CreatedDate__c</columns>
         <filterScope>Everything</filterScope>
         <filters>
             <field>Status__c</field>
@@ -201,13 +201,13 @@
     </listViews>
     <listViews>
         <fullName>Overdue</fullName>
+        <columns>CreatedDate__c</columns>
         <columns>NAME</columns>
         <columns>Status__c</columns>
         <columns>Exception__c</columns>
         <columns>Sequence__c</columns>
         <columns>Process__c</columns>
         <columns>IsOverdue__c</columns>
-        <columns>CreatedDate__c</columns>
         <filterScope>Everything</filterScope>
         <filters>
             <field>IsOverdue__c</field>
@@ -217,9 +217,8 @@
         <label>Overdue</label>
     </listViews>
     <nameField>
-        <displayFormat>MSG-{0000000000}</displayFormat>
         <label>Message Name</label>
-        <type>AutoNumber</type>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Messages</pluralLabel>
     <searchLayouts>

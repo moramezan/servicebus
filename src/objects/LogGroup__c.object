@@ -99,9 +99,8 @@
         <label>All</label>
     </listViews>
     <nameField>
-        <displayFormat>LOG-{0000000000}</displayFormat>
         <label>Log Group Name</label>
-        <type>AutoNumber</type>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Log Groups</pluralLabel>
     <searchLayouts>
