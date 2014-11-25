@@ -116,11 +116,15 @@ public with sharing class ProcessObject extends SalesforceObject {
             if (meta.ProcessSetting != null) {
                 //attempt to populate the name of the customization object
                 process.Setting__c = meta.ProcessSetting.getSObjectType().getDescribe().getName();
+            } else {
+                process.Setting__c = null;
             }
             
             if (meta.StepConfig != null) {
                 //attempt to populate the name of the config object
                 process.StepConfig__c = meta.StepConfig.getSObjectType().getDescribe().getName();
+            } else {
+                process.StepConfig__c = null;
             }
 
             return process;
