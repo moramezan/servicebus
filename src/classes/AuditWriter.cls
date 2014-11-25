@@ -1,19 +1,19 @@
-public with sharing class LogWriter {
+public with sharing class AuditWriter {
     
     public String Parameters;
     
     public class Meta {
         public String Tag = 'Event Driven Architecture';
-        public String Name = 'LogWriter';
-        public String Description = 'Stores the message parameters under a Log Group.';
+        public String Name = 'Audit Writer';
+        public String Description = 'Stores the message parameters under an Audit Group.';
         public String Icon = 'pencil_add';
-        public String HelpUrl = Page.LogConfigCsh.getUrl();
+        public String HelpUrl = Page.AuditInitializerConfigCsh.getUrl();
     }
     
-    public class LogWriterException extends Exception {}
+    public class AuditWriterException extends Exception {}
     
     override public String toString() {
-        if (!SObjectType.LogWriterEntry__c.Createable) throw new Broker.CrudException('!SObjectType.LogWriterEntry__c.Createable');
+        if (!SObjectType.AuditEntry__c.Createable) throw new Broker.CrudException('!SObjectType.AuditEntry__c.Createable');
         
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
@@ -23,7 +23,7 @@ public with sharing class LogWriter {
         
         String entryPointGuid = (String)parameters.get('eda_EntryPointGuid');
         if (String.isBlank(entryPointGuid)) {
-            throw new LogWriterException('Unable to access the Entry Point GUID');
+            throw new AuditWriterException('Unable to access the Entry Point GUID');
         }
                 
         //derive the Step
@@ -34,39 +34,39 @@ public with sharing class LogWriter {
             AND Position__c = :(Decimal) parameters.get('eda_Position')
         ];
         if (steps.size() == 0) {
-            throw new LogWriterException('Unable to access the Step');
+            throw new AuditWriterException('Unable to access the Step');
         }
         Step__c step = steps[0];
  
-        //write log entry for every log group identifier
-        List<Object> collection = (List<Object>)parameters.get('eda_LogGroupIds');
+        //write audit entry for every audit group identifier
+        List<Object> collection = (List<Object>)parameters.get('eda_AuditGroupIds');
         
         if (collection != null) {
-            List<Id> logGroupIds = new List<Id>();
+            List<Id> auditGroupIds = new List<Id>();
             for (Object c : collection) {
                 if  (c != null) {
-                  logGroupIds.add((Id) c );  
+                  auditGroupIds.add((Id) c );  
                 }
             }
-            Set<Id> filteredLogGroupIds = (new Map<Id, LogGroup__c>([
+            Set<Id> filteredAuditGroupIds = (new Map<Id,AuditGroup__c>([
                 SELECT Id, Name
-                FROM LogGroup__c
-                WHERE Id IN :logGroupIds
+                FROM AuditGroup__c
+                WHERE Id IN :auditGroupIds
             ])).keySet();
         
             String serializedParameters = System.Json.serializePretty(parameters);
-            List<LogWriterEntry__c> logWriterEntries =  new List<LogWriterEntry__c>();
-            for (Id logGroupId  : filteredLogGroupIds) {
-                logWriterEntries.add( new LogWriterEntry__c(
+            List<AuditEntry__c> auditEntries =  new List<AuditEntry__c>();
+            for (Id auditGroupId  : filteredAuditGroupIds) {
+                auditEntries.add( new AuditEntry__c(
                     Step__c = step.Id,
                     Sequence__c = step.Sequence__c,
                     Order__c   = parametersOrder,
-                    LogGroup__c     = logGroupId,
+                    AuditGroup__c     = auditGroupId,
                     EntryPointGuid__c = entryPointGuid,
                     Parameters__c    = serializedParameters
                 ));
             }
-            insert logWriterEntries;
+            insert auditEntries;
         }
 
         parametersList.add(parameters);

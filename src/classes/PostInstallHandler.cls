@@ -40,8 +40,8 @@ public without sharing class PostInstallHandler implements InstallHandler {
         edaProcesses.add(ProcessObject.fromType(Type.forName(Branch.class.getName())));
         edaProcesses.add(ProcessObject.fromType(Type.forName(Gate.class.getName())));
         edaProcesses.add(ProcessObject.fromType(Type.forName(Jump.class.getName())));
-        edaProcesses.add(ProcessObject.fromType(Type.forName(LogInitializer.class.getName())));
-        edaProcesses.add(ProcessObject.fromType(Type.forName(LogWriter.class.getName())));
+        edaProcesses.add(ProcessObject.fromType(Type.forName(AuditInitializer.class.getName())));
+        edaProcesses.add(ProcessObject.fromType(Type.forName(AuditWriter.class.getName())));
         edaProcesses.add(ProcessObject.fromType(Type.forName(Mark.class.getName())));
         edaProcesses.add(ProcessObject.fromType(Type.forName(Publish.class.getName())));
         edaProcesses.add(ProcessObject.fromType(Type.forName(Schedule.class.getName())));

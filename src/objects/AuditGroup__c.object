@@ -45,7 +45,7 @@
         <type>Default</type>
     </actionOverrides>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
-    <customHelpPage>LogConfigCsh</customHelpPage>
+    <customHelpPage>AuditGroupCsh</customHelpPage>
     <deploymentStatus>Deployed</deploymentStatus>
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
@@ -55,21 +55,10 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
-        <fullName>DynamicGroupIdentifierObjectName__c</fullName>
+        <fullName>GroupIdentifier__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>What type of object did the field name come from?</inlineHelpText>
-        <label>Dynamic Group Identifier Object Name</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>DynamicGroupIdentifier__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>What field name from the message data arriving at this step, will be used to name the Log Group?</inlineHelpText>
-        <label>Dynamic Group Identifier</label>
+        <inlineHelpText>XXX</inlineHelpText>
+        <label>Group Identifier</label>
         <length>80</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -77,55 +66,54 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>StaticGroupIdentifier__c</fullName>
-        <description>Enter any static business key (eg INVOICE, PAYSLIP, etc) to  describe the grouping.  Alternatively ,leave blank  to enable a system generated identifier.</description>
+        <fullName>AuditInitializerConfig__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>What text (eg INVOICE, PAYSLIP, etc) will be used to name the Log Groups created at this step?</inlineHelpText>
-        <label>Static Group Identifier</label>
-        <length>80</length>
+        <inlineHelpText>What record configures the AuditInitializer Step that the message was passing through?</inlineHelpText>
+        <label>Audit Config</label>
+        <referenceTo>AuditInitializerConfig__c</referenceTo>
+        <relationshipLabel>Audit Groups</relationshipLabel>
+        <relationshipName>AuditGroups</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Stamp__c</fullName>
+        <defaultValue>NOW()</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>XXX</inlineHelpText>
+        <label>Stamp</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
+        <type>DateTime</type>
     </fields>
-    <label>Log Config</label>
+    <label>Audit Group</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>GroupIdentifier__c</columns>
+        <columns>Stamp__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
     <nameField>
-        <label>What does this step do?</label>
+        <label>Audit Group Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Log Configs</pluralLabel>
+    <pluralLabel>Audit Groups</pluralLabel>
     <searchLayouts>
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <excludedStandardButtons>New</excludedStandardButtons>
+        <lookupDialogsAdditionalFields>GroupIdentifier__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Stamp__c</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>GroupIdentifier__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Stamp__c</lookupPhoneDialogsAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+        <searchFilterFields>GroupIdentifier__c</searchFilterFields>
+        <searchFilterFields>Stamp__c</searchFilterFields>
     </searchLayouts>
-    <sharingModel>ReadWrite</sharingModel>
-    <webLinks>
-        <fullName>ChangeDynamicGroupIdentifier</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <linkType>page</linkType>
-        <masterLabel>Change Dynamic Group Identifier</masterLabel>
-        <openType>replace</openType>
-        <page>LogConfigSchemaSelector</page>
-        <protected>false</protected>
-    </webLinks>
-    <webLinks>
-        <fullName>LogGroups</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <hasMenubar>false</hasMenubar>
-        <hasScrollbars>true</hasScrollbars>
-        <hasToolbar>false</hasToolbar>
-        <height>600</height>
-        <isResizable>true</isResizable>
-        <linkType>page</linkType>
-        <masterLabel>List Log Groups</masterLabel>
-        <openType>newWindow</openType>
-        <page>LogConfigLogGroups</page>
-        <position>none</position>
-        <protected>false</protected>
-        <showsLocation>false</showsLocation>
-        <showsStatus>false</showsStatus>
-    </webLinks>
+    <sharingModel>ControlledByParent</sharingModel>
 </CustomObject>

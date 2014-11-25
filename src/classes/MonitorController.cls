@@ -29,11 +29,11 @@ public with sharing class MonitorController {
             new Statistic('Publish',         2, 14,  0,  0,  0),
             new Statistic('Wiretap',         1,  1,  4,  0,  0),
             new Statistic('Jump',            2,  1,  0,  0,  0),
-            new Statistic('LogInitializer',  1,  1,  0,  0,  0),
+            new Statistic('AuditInitializer',1,  1,  0,  0,  0),
             new Statistic('Subsequence',     2,  1,  2,  0,  0),
             new Statistic('Subscribe',       2, 14,  9,  0,  0),
             new Statistic('Schedule',        1,  1,  0,  0,  0),
-            new Statistic('LogWriter',       0,  1,  0,  0,  0),
+            new Statistic('AuditWriter',       0,  1,  0,  0,  0),
             new Statistic('Gate',            1,  1,  0,  0,  0),
             new Statistic('Scrape',          0,  0, 44,  0, 44),
             new Statistic('Mark',            0,  1,  0,  0,  0)

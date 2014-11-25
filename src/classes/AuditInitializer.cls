@@ -1,25 +1,26 @@
-public with sharing class LogInitializer {
+public with sharing class AuditInitializer {
     
     public String Parameters;
-    public LogConfig__c StepConfig;
+    public AuditInitializerConfig__c StepConfig;
     
     public class Meta {
         public String Tag = 'Event Driven Architecture';
-        public String Name = 'LogInitializer';
-        public String Description = 'Creates a grouping identifier which all subsequent LogWriter processes log against.';
-        public SObject StepConfig = LogConfig__c.SObjectType.newSobject();
+        public String Name = 'Audit Initializer';
+        public String Description = 'Creates a grouping identifier which all subsequent Audit Writer processes audit against.';
+        public SObject StepConfig = AuditInitializerConfig__c.SObjectType.newSobject();
         public String Icon = 'pencil';
-        public String HelpUrl = Page.LogConfigCsh.getUrl();
+        public String HelpUrl = Page.AuditInitializerConfigCsh.getUrl();
         
         public Map<String,String> Outputs = new Map<String,String>{
-            'eda_LogGroupIds' => 'LIST<ID> of potentially multiple groups from log initializer steps.'
+            'eda_AuditGroupIds' => 'LIST<ID> of potentially multiple groups from AuditInitializer steps.'
         };
+        
     }
     
-    public class LogInitializerException extends Exception {}
+    public class AuditInitializerException extends Exception {}
     
     override public String toString() {
-        if (!SObjectType.LogGroup__c.Createable) throw new Broker.CrudException('!SObjectType.LogGroup__c.Createable');
+        if (!SObjectType.AuditGroup__c.Createable) throw new Broker.CrudException('!SObjectType.AuditGroup__c.Createable');
      
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
@@ -34,40 +35,40 @@ public with sharing class LogInitializer {
              AND Position__c = :(Decimal) parameters.get('eda_Position')
          ];
          if (steps.size() == 0) {
-            throw new LogInitializerException('Unable to access the Step Position and Sequence Name');
+            throw new AuditInitializerException('Unable to access the Step Position and Sequence Name');
          }
          Step__c  step = steps[0];
  
         //get group identifier instruction from config
-        LogConfig__c config;
+        AuditInitializerConfig__c config;
         try {
-            config = (LogConfig__c)SalesforceObject.getById(this.StepConfig.Id);
+            config = (AuditInitializerConfig__c)SalesforceObject.getById(this.StepConfig.Id);
         } catch (System.QueryException e) {
-            throw new LogInitializerException('Unable to access Log Config');
+            throw new AuditInitializerException('Unable to access AuditInitializerConfig');
         }
         
-         // insert composite key values into log group :
+         // insert composite key values into audit group :
          // the composite key comprises
          // 1.  the date-time stamp
          // 2.  a (fairly unique ) business group value
          Id dataId =  (Id)parameters.get('Id');
          String groupIdentifier = getBusinesGroupIdentifier(config, step, dataId) ;
          DateTime now = System.Now();
-         LogGroup__c logGroup = new LogGroup__c(
+         AuditGroup__c auditGroup = new AuditGroup__c(
              Name = String.valueOf(now) + ' - ' + groupIdentifier,
-             LogConfig__c = config.Id,
+             AuditInitializerConfig__c = config.Id,
              GroupIdentifier__c = groupIdentifier,
              Stamp__c = now
          );
-         insert logGroup;
+         insert auditGroup;
 
          // update outbound message
-         List<Object> logGroupIds = (List<Object>)parameters.get('eda_LogGroupIds');
-         if (logGroupIds == null) {
-             logGroupIds = new List<Object>();
+         List<Object> auditGroupIds = (List<Object>)parameters.get('eda_AuditGroupIds');
+         if (auditGroupIds == null) {
+             auditGroupIds = new List<Object>();
          }
-         logGroupIds.add(logGroup.Id);
-         parameters.put('eda_LogGroupIds', logGroupIds);
+         auditGroupIds.add(auditGroup.Id);
+         parameters.put('eda_AuditGroupIds', auditGroupIds);
 
          
          return Json.serialize(new List<Map<String,Object>>{parameters});
@@ -79,7 +80,7 @@ public with sharing class LogInitializer {
         try {
             return SalesforceObject.getById(theId);
         } catch (Exception e) {
-            throw new LogInitializerException('Cannot hydate SObject with Id=[' + theId + ']', e);
+            throw new AuditInitializerException('Cannot hydate SObject with Id=[' + theId + ']', e);
         }
     }
 
@@ -89,7 +90,7 @@ public with sharing class LogInitializer {
     }
     
     
-    @TestVisible private static String getBusinesGroupIdentifier(LogConfig__c config, Step__c  step,  Id dataId) {
+    @TestVisible private static String getBusinesGroupIdentifier(AuditInitializerConfig__c config, Step__c  step,  Id dataId) {
 
         //  default :
         //

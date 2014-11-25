@@ -1,33 +1,33 @@
-@IsTest private class LogInitializerTest {
+@IsTest private class AuditInitializerTest {
 
     private static testmethod void canDetermineStepConfig() {
         //arrange processes
-        Process__c logInitializerProcess = ProcessObject.generateOne(LogInitializer.class);
+        Process__c auditInitializerProcess = ProcessObject.generateOne(AuditInitializer.class);
         
         //act
-        String actualConfig = logInitializerProcess.StepConfig__c;
+        String actualConfig = auditInitializerProcess.StepConfig__c;
         
         // Assert
-        String expectedConfig = Schema.SobjectType.LogConfig__c.Name;
+        String expectedConfig = Schema.SobjectType.AuditInitializerConfig__c.Name;
         System.assertEquals(expectedConfig, actualConfig);
     }
     
-    private static testmethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForXXXXXXXXX() {
+    private static testmethod void callingInvokeInsertsExpectedCompositeIdentifiersOnAuditGroupForXXXXXXXXX() {
         //arrange
-        String sequenceName  = 'LogInitializerSequence';
+        String sequenceName  = 'AuditInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA'; // no data present
-        Process__c logInitializerProcess = ProcessObject.generateOne(LogInitializer.class);
+        Process__c auditInitializerProcess = ProcessObject.generateOne(AuditInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = logInitializerProcess.Id);
+        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = auditInitializerProcess.Id);
         insert step;
         
-        LogConfig__c config = [
+        AuditInitializerConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c
-            FROM LogConfig__c
+            FROM AuditInitializerConfig__c
         ];
         config.StaticGroupIdentifier__c = null;
         config.DynamicGroupIdentifier__c = 'Fld_Doesnt_Exist__c';
@@ -40,23 +40,23 @@
         };
         
         //act
-        Type reflector = LogInitializer.class;
+        Type reflector = AuditInitializer.class;
         List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
         DateTime expectedStampFrom = System.Now().addSeconds(-1);
-        List<LogGroup__c> logGroups = [
-            SELECT id, Name, LogConfig__c,  GroupIdentifier__c, Stamp__c
-            FROM LogGroup__c
+        List<AuditGroup__c> auditGroups = [
+            SELECT id, Name, AuditInitializerConfig__c,  GroupIdentifier__c, Stamp__c
+            FROM AuditGroup__c
             WHERE Stamp__c >= :expectedStampFrom
             AND Stamp__c <=  :expectedStampTo
         ];
 
         String  actualGroupIdentifier = null;
-        Integer actualLogGroupSize = logGroups.size();
-        if (actualLogGroupSize > 0) {
-             actualGroupIdentifier =  logGroups[0].GroupIdentifier__c;
+        Integer actualAuditGroupSize = auditGroups.size();
+        if (actualAuditGroupSize > 0) {
+             actualGroupIdentifier =  auditGroups[0].GroupIdentifier__c;
         }
         
            
@@ -65,29 +65,29 @@
         Integer actualResultsSize = results.size();
         System.assertEquals(expectedResultsSize, actualResultsSize);
         
-        Integer expectedLogGroupSize = 1;
-        System.assertEquals(expectedLogGroupSize, actualLogGroupSize);
+        Integer expectedAuditGroupSize = 1;
+        System.assertEquals(expectedAuditGroupSize, actualAuditGroupSize);
         
         String expectedGroupIdentifier1 = 'DYNAMIC-KEY-ON';
         System.assert(actualGroupIdentifier.contains(expectedGroupIdentifier1));
     }  
     
-    private static testmethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForConfigIdentifierEqNull() {
+    private static testmethod void callingInvokeInsertsExpectedCompositeIdentifiersOnAuditGroupForConfigIdentifierEqNull() {
         //arrange
-        String sequenceName  = 'LogInitializerSequence';
+        String sequenceName  = 'AuditInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logInitializerProcess = ProcessObject.generateOne(LogInitializer.class);
+        Process__c auditInitializerProcess = ProcessObject.generateOne(AuditInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = logInitializerProcess.Id);
+        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = auditInitializerProcess.Id);
         insert step;
         
-        LogConfig__c config = [
+        AuditInitializerConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c
-            FROM LogConfig__c
+            FROM AuditInitializerConfig__c
         ];
         config.StaticGroupIdentifier__c = null; // no identifier specified
         update config;
@@ -99,23 +99,23 @@
         };
         
         //act
-        Type reflector = LogInitializer.class;
+        Type reflector = AuditInitializer.class;
         List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
         DateTime expectedStampFrom = System.Now().addSeconds(-1);
-        List<LogGroup__c> logGroups = [
-            SELECT id, Name, LogConfig__c,  GroupIdentifier__c, Stamp__c
-            FROM LogGroup__c
+        List<AuditGroup__c> auditGroups = [
+            SELECT id, Name, AuditInitializerConfig__c,  GroupIdentifier__c, Stamp__c
+            FROM AuditGroup__c
             WHERE Stamp__c >= :expectedStampFrom
             AND Stamp__c <=  :expectedStampTo
         ];
 
         String  actualGroupIdentifier = null;
-        Integer actualLogGroupSize = logGroups.size();
-        if (actualLogGroupSize > 0) {
-             actualGroupIdentifier =  logGroups[0].GroupIdentifier__c;
+        Integer actualAuditGroupSize = auditGroups.size();
+        if (actualAuditGroupSize > 0) {
+             actualGroupIdentifier =  auditGroups[0].GroupIdentifier__c;
         }
         
            
@@ -124,8 +124,8 @@
         Integer actualResultsSize = results.size();
         System.assertEquals(expectedResultsSize, actualResultsSize);
         
-        Integer expectedLogGroupSize = 1;
-        System.assertEquals(expectedLogGroupSize, actualLogGroupSize);
+        Integer expectedAuditGroupSize = 1;
+        System.assertEquals(expectedAuditGroupSize, actualAuditGroupSize);
         
         String expectedGroupIdentifier1 = sequenceName ;
         String expectedGroupIdentifier2 = String.valueOf(thePosition) ;
@@ -134,23 +134,23 @@
     }
     
     
-    private static testmethod void callingInvokeInsertsExpectedCompositeIdentifiersOnLogGroupForConfigIdentifierNotNull() {
+    private static testmethod void callingInvokeInsertsExpectedCompositeIdentifiersOnAuditGroupForConfigIdentifierNotNull() {
         //arrange
         String theIdentifier  = 'BALLS-SAID';
-        String sequenceName  = 'LogInitializerSequence';
+        String sequenceName  = 'AuditInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logInitializerProcess = ProcessObject.generateOne(LogInitializer.class);
+        Process__c auditInitializerProcess = ProcessObject.generateOne(AuditInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = logInitializerProcess.Id);
+        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = auditInitializerProcess.Id);
         insert step;
         
-        LogConfig__c config = [
+        AuditInitializerConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c
-            FROM LogConfig__c
+            FROM AuditInitializerConfig__c
         ];
         config.StaticGroupIdentifier__c = theIdentifier; // not null
         update config;
@@ -162,23 +162,23 @@
         };
         
         //act
-        Type reflector = LogInitializer.class;
+        Type reflector = AuditInitializer.class;
         List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
         DateTime expectedStampFrom = System.Now().addSeconds(-1);
-        List<LogGroup__c> logGroups = [
-            SELECT id, Name, LogConfig__c,  GroupIdentifier__c, Stamp__c
-            FROM LogGroup__c
+        List<AuditGroup__c> auditGroups = [
+            SELECT id, Name, AuditInitializerConfig__c,  GroupIdentifier__c, Stamp__c
+            FROM AuditGroup__c
             WHERE Stamp__c >= :expectedStampFrom
             AND Stamp__c <=  :expectedStampTo
         ];
 
         String  actualGroupIdentifier = null;
-        Integer actualLogGroupSize = logGroups.size();
-        if (actualLogGroupSize > 0) {
-             actualGroupIdentifier =  logGroups[0].GroupIdentifier__c;
+        Integer actualAuditGroupSize = auditGroups.size();
+        if (actualAuditGroupSize > 0) {
+             actualGroupIdentifier =  auditGroups[0].GroupIdentifier__c;
         }
         
            
@@ -187,8 +187,8 @@
         Integer actualResultsSize = results.size();
         System.assertEquals(expectedResultsSize, actualResultsSize);
         
-        Integer expectedLogGroupSize = 1;
-        System.assertEquals(expectedLogGroupSize, actualLogGroupSize);
+        Integer expectedAuditGroupSize = 1;
+        System.assertEquals(expectedAuditGroupSize, actualAuditGroupSize);
         
         String expectedGroupIdentifier1 = theIdentifier ;
         System.assert(actualGroupIdentifier.contains(expectedGroupIdentifier1));
@@ -197,10 +197,10 @@
     
     private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
         //arrange
-        String sequenceName  = 'LogInitializerSequence';
+        String sequenceName  = 'AuditInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logInitializerProcess = ProcessObject.generateOne(LogInitializer.class);
+        Process__c auditInitializerProcess = ProcessObject.generateOne(AuditInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -213,7 +213,7 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            Type reflector = LogInitializer.class;
+            Type reflector = AuditInitializer.class;
             List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
@@ -232,20 +232,20 @@
         
     private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessConfig() {
         //arrange
-        String sequenceName  = 'LogInitializerSequence';
+        String sequenceName  = 'AuditInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logInitializerProcess = ProcessObject.generateOne(LogInitializer.class);
+        Process__c auditInitializerProcess = ProcessObject.generateOne(AuditInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = 1, Process__c = logInitializerProcess.Id);
+        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = 1, Process__c = auditInitializerProcess.Id);
         insert step;
         
-        LogConfig__c config = [
+        AuditInitializerConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c
-            FROM LogConfig__c
+            FROM AuditInitializerConfig__c
         ];
         delete config;
         
@@ -259,9 +259,9 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            Type reflector = LogInitializer.class;
+            Type reflector = AuditInitializer.class;
             List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
-        } catch (LogInitializer.LogInitializerException e) {
+        } catch (AuditInitializer.AuditInitializerException e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
         }
@@ -270,7 +270,7 @@
         Boolean expectedFlagException = true;
         System.assertEquals(expectedFlagException, actualFlagException);
         
-        String expectedMessage = 'Unable to access Log Config';
+        String expectedMessage = 'Unable to access AuditInitializerConfig';
         System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
     }
     
@@ -283,7 +283,7 @@
         String actualMessage;
         Boolean actualExceptionFlag  = false;
         try {
-            SObject o = LogInitializer.getHydrated(bullshitId);
+            SObject o = AuditInitializer.getHydrated(bullshitId);
         } catch (Exception e ) {
             actualMessage = e.getMessage();
             actualExceptionFlag  = true;
@@ -305,7 +305,7 @@
         Id theId = account.Id;
 
         //act
-        SObject o = LogInitializer.getHydrated(theId);
+        SObject o = AuditInitializer.getHydrated(theId);
  
         // assemble
         String actualMessage  = json.serialize(o);
@@ -326,7 +326,7 @@
         String fieldName = 'Jigsaw';
 
         //act
-        String actualIdentifier = LogInitializer.getIdentifer(fieldName ,so);
+        String actualIdentifier = AuditInitializer.getIdentifer(fieldName ,so);
       
         // assert
         String expectedIdentifier = theJigSaw;

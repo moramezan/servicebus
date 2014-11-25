@@ -45,7 +45,7 @@
         <type>Default</type>
     </actionOverrides>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
-    <customHelpPage>LogWriterEntryCsh</customHelpPage>
+    <customHelpPage>AuditEntryCsh</customHelpPage>
     <deploymentStatus>Deployed</deploymentStatus>
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
@@ -68,7 +68,7 @@
     <fields>
         <fullName>GroupIdentifier__c</fullName>
         <externalId>false</externalId>
-        <formula>LogGroup__r.GroupIdentifier__c</formula>
+        <formula>AuditGroup__r.GroupIdentifier__c</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <inlineHelpText>XXX</inlineHelpText>
         <label>Group Identifier</label>
@@ -78,13 +78,13 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>LogGroup__c</fullName>
+        <fullName>AuditGroup__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>What Log Group is this entry written into?</inlineHelpText>
-        <label>Log Group</label>
-        <referenceTo>LogGroup__c</referenceTo>
-        <relationshipLabel>Log Writer Entries</relationshipLabel>
-        <relationshipName>LogWriterEntries</relationshipName>
+        <inlineHelpText>What Audit Group is this entry written into?</inlineHelpText>
+        <label>Audit Group</label>
+        <referenceTo>AuditGroup__c</referenceTo>
+        <relationshipLabel>Audit Entries</relationshipLabel>
+        <relationshipName>AuditEntries</relationshipName>
         <relationshipOrder>0</relationshipOrder>
         <reparentableMasterDetail>false</reparentableMasterDetail>
         <trackTrending>false</trackTrending>
@@ -94,7 +94,7 @@
     <fields>
         <fullName>Order__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>What position in the Log Group is this entry?</inlineHelpText>
+        <inlineHelpText>What position in the Audit Group is this entry?</inlineHelpText>
         <label>Order</label>
         <precision>4</precision>
         <required>false</required>
@@ -106,7 +106,7 @@
     <fields>
         <fullName>Parameters__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>What were the message parameters saved by the LogWriter Process?</inlineHelpText>
+        <inlineHelpText>What were the message parameters saved by the AuditWriter Process?</inlineHelpText>
         <label>Parameters</label>
         <length>32768</length>
         <trackTrending>false</trackTrending>
@@ -118,7 +118,7 @@
         <externalId>false</externalId>
         <formula>Step__r.Position__c</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <inlineHelpText>What position in the sequence was the LogWriter Step that the message passed through?</inlineHelpText>
+        <inlineHelpText>What position in the sequence was the AuditWriter Step that the message passed through?</inlineHelpText>
         <label>Position</label>
         <precision>18</precision>
         <required>false</required>
@@ -133,8 +133,8 @@
         <externalId>false</externalId>
         <label>Sequence</label>
         <referenceTo>Sequence__c</referenceTo>
-        <relationshipLabel>Log Writer Entries</relationshipLabel>
-        <relationshipName>LogWriterEntries</relationshipName>
+        <relationshipLabel>Audit Entries</relationshipLabel>
+        <relationshipName>AuditEntries</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
@@ -142,7 +142,7 @@
     <fields>
         <fullName>Stamp__c</fullName>
         <externalId>false</externalId>
-        <formula>LogGroup__r.Stamp__c</formula>
+        <formula>AuditGroup__r.Stamp__c</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <inlineHelpText>XXX</inlineHelpText>
         <label>Stamp</label>
@@ -154,21 +154,21 @@
         <fullName>Step__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
-        <inlineHelpText>What LogWriter Step did the message pass through?</inlineHelpText>
+        <inlineHelpText>What AuditWriter Step did the message pass through?</inlineHelpText>
         <label>Step</label>
         <referenceTo>Step__c</referenceTo>
-        <relationshipLabel>Log Writer Entries</relationshipLabel>
-        <relationshipName>LogWriterEntries</relationshipName>
+        <relationshipLabel>Audit Entries</relationshipLabel>
+        <relationshipName>AuditEntries</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
-    <label>Log Writer Entry</label>
+    <label>Audit Entry</label>
     <nameField>
-        <label>Log Writer Entry Name</label>
+        <label>Audit Entry Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Log Writer Entries</pluralLabel>
+    <pluralLabel>Audit Entries</pluralLabel>
     <searchLayouts>
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>

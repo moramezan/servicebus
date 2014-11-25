@@ -22,7 +22,7 @@
                     <li>Publish and Subscribe</li>
                     <li>Branch and Jump</li>
                     <li>Subsequence</li>
-                    <li>Log and Wiretap</li>
+                    <li>Audit and Wiretap</li>
                     <li>Mark and Gate</li>
                 </ul>
             </apex:pageBlockSectionItem>

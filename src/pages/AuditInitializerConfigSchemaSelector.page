@@ -1,0 +1,1 @@
+<apex:page standardController="AuditInitializerConfig__c" action="{!URLFOR($Page.SchemaSelector, null, ['id'=id,'objectSchemaKey'=$ObjectType.AuditInitializerConfig__c.Fields.DynamicGroupIdentifierObjectName__c.Name,'fieldSchemaKey'=$ObjectType.AuditInitializerConfig__c.Fields.DynamicGroupIdentifier__c.Name,'retURL'=URLFOR($Action.AuditInitializerConfig__c.View, id)])}" />

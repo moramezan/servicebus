@@ -93,7 +93,7 @@
                 to see how custom event driven logic written in Apex is discovered by the Event Driven framework. 
             </p>    
         </apex:pageBlockSection>
-        <apex:pageBlockSection columns="1" title="TUTORIAL 3: Log Message Events Under a Common Identifier" collapsible="false">
+        <apex:pageBlockSection columns="1" title="TUTORIAL 3: Audit Message Events Under a Common Identifier" collapsible="false">
             <p>
                 Click
                 <a href="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial.html')}" target="_blank" style="color: #00f;">here</a>

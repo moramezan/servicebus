@@ -1,11 +1,11 @@
-@IsTest private class LogWriterTest{
+@IsTest private class AuditWriterTest{
     
     private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessEntryPointGuid() {
         //arrange
-        String sequenceName  = 'LogWriterSequence';
+        String sequenceName  = 'AuditWriterSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logWriterProcess = ProcessObject.generateOne(LogWriter.class);
+        Process__c auditWriterProcess = ProcessObject.generateOne(AuditWriter.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -19,7 +19,7 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            Type reflector = LogWriter.class;
+            Type reflector = AuditWriter.class;
             List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
@@ -36,10 +36,10 @@
     
     private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
         //arrange
-        String sequenceName  = 'LogWriterSequence';
+        String sequenceName  = 'AuditWriterSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logWriterProcess = ProcessObject.generateOne(LogWriter.class);
+        Process__c auditWriterProcess = ProcessObject.generateOne(AuditWriter.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -53,7 +53,7 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            Type reflector = LogWriter.class;
+            Type reflector = AuditWriter.class;
             List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
@@ -68,76 +68,76 @@
         System.assert( actualMessage.contains(expectedMessage) );
     }
 
-    private static testmethod void callingInvokeInsertsExpectedLogWriterEntries() {
+    private static testmethod void callingInvokeInsertsExpectedAuditWriterEntries() {
         //arrange
         String theIdentifier1 = 'BALLS';
         String theIdentifier2 = 'CROW';
        
-        String sequenceName  = 'LogSequence';
+        String sequenceName  = 'AuditSequence';
         Integer positionA2 =  1;
         Id theId  = '000000000000000AAA';
-        Process__c logWriterProcess = ProcessObject.generateOne(LogWriter.class);
+        Process__c auditWriterProcess = ProcessObject.generateOne(AuditWriter.class);
                
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c stepA2 = new Step__c(Sequence__c = sequence.Id, Position__c = positionA2, Process__c = logWriterProcess.Id);
+        Step__c stepA2 = new Step__c(Sequence__c = sequence.Id, Position__c = positionA2, Process__c = auditWriterProcess.Id);
         insert stepA2;
  
-        LogConfig__c config1  = new LogConfig__c(
+        AuditInitializerConfig__c config1  = new AuditInitializerConfig__c(
             StaticGroupIdentifier__c = theIdentifier1
         );
         insert config1;
          
-        LogConfig__c config2  = new LogConfig__c(
+        AuditInitializerConfig__c config2  = new AuditInitializerConfig__c(
             StaticGroupIdentifier__c = theIdentifier2
         );
         insert config2;
         
-        LogGroup__c logGroup1  = new LogGroup__c(
-            LogConfig__c = config1.Id,
+        AuditGroup__c auditGroup1  = new AuditGroup__c(
+            AuditInitializerConfig__c = config1.Id,
             GroupIdentifier__c =  theIdentifier1,
             Stamp__c = System.Now()
         );
-        insert logGroup1;
+        insert auditGroup1;
         
-        LogGroup__c logGroup2  = new LogGroup__c(
-            LogConfig__c = config2.Id,
+        AuditGroup__c auditGroup2  = new AuditGroup__c(
+            AuditInitializerConfig__c = config2.Id,
             GroupIdentifier__c =  theIdentifier2,
             Stamp__c = System.Now()
         );
-        insert logGroup2;
+        insert auditGroup2;
  
-        List<Object> logGroupIds = new List<Object>{ logGroup1.Id, logGroup2.Id };
+        List<Object> auditGroupIds = new List<Object>{ auditGroup1.Id, auditGroup2.Id };
  
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
             'eda_EntryPointGuid' => '1234567abcde',
-            'eda_LogGroupIds' => logGroupIds,
+            'eda_AuditGroupIds' => auditGroupIds,
             'eda_SequenceName' => sequenceName,
             'eda_Position' => positionA2
         };
         
         //act
-        Type reflector = LogWriter.class;
+        Type reflector = AuditWriter.class;
         List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
         
         //assemble
-        List<LogWriterEntry__c> logWriterEntries = SalesforceObjectSet.listAll(LogWriterEntry__c.SObjectType);
+        List<AuditEntry__c> auditEntries = SalesforceObjectSet.listAll(AuditEntry__c.SObjectType);
         
          
-        Boolean actualLogGroup1 = false;
-        Boolean actualLogGroup2 = false;
+        Boolean actualAuditGroup1 = false;
+        Boolean actualAuditGroup2 = false;
         String actualParametersSerialized1;
         String actualParametersSerialized2;
-        for (LogWriterEntry__c  logWriterEntry : logWriterEntries) {
-            if (logWriterEntry.LogGroup__c == logGroup1.Id) {
-                actualLogGroup1 = true;
-                actualParametersSerialized1 = logWriterEntry.Parameters__c;
+        for (AuditEntry__c  auditEntry : auditEntries) {
+            if (auditEntry.AuditGroup__c == auditGroup1.Id) {
+                actualAuditGroup1 = true;
+                actualParametersSerialized1 = auditEntry.Parameters__c;
             }
-            if (logWriterEntry.LogGroup__c == logGroup2.Id) {
-                actualLogGroup2 = true;
-                actualParametersSerialized2 = logWriterEntry.Parameters__c;
+            if (auditEntry.AuditGroup__c == auditGroup2.Id) {
+                actualAuditGroup2 = true;
+                actualParametersSerialized2 = auditEntry.Parameters__c;
             }
         }
         String actualSequenceName;
@@ -150,16 +150,16 @@
         Integer actualResultsSize = results.size();
         System.assertEquals(expectedResultsSize, actualResultsSize);
         
-        Integer expectedLogWriterEntrySize = 2;
-        Integer actualLogWriterEntrySize = LogWriterEntries.size();
-        System.assertEquals(expectedLogWriterEntrySize, actualLogWriterEntrySize);
+        Integer expectedAuditEntrySize = 2;
+        Integer actualAuditEntrySize = AuditEntries.size();
+        System.assertEquals(expectedAuditEntrySize, actualAuditEntrySize);
 
-        Boolean expectedLogGroup1 = true;
-        Boolean expectedLogGroup2 = true;
+        Boolean expectedAuditGroup1 = true;
+        Boolean expectedAuditGroup2 = true;
         Boolean expectedParameters = true;
         String expectedSequenceName = sequenceName;
-        System.assertEquals(expectedLogGroup1, actualLogGroup1);
-        System.assertEquals(expectedLogGroup2, actualLogGroup2);
+        System.assertEquals(expectedAuditGroup1, actualAuditGroup1);
+        System.assertEquals(expectedAuditGroup2, actualAuditGroup2);
         System.assertEquals(expectedParameters, actualParameters);
         System.assertEquals(actualParametersSerialized1, actualParametersSerialized2);
         System.assert(actualParametersSerialized1.contains(expectedSequenceName));

@@ -85,27 +85,27 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>LogConfigObjectSet</apexClass>
+        <apexClass>AuditInitializerConfigObjectSet</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>LogConfigObjectSetTests</apexClass>
+        <apexClass>AuditInitializerConfigObjectSetTests</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>LogInitializer</apexClass>
+        <apexClass>AuditInitializer</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>LogInitializerTest</apexClass>
+        <apexClass>AuditInitializerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>LogWriter</apexClass>
+        <apexClass>AuditWriter</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>LogWriterTest</apexClass>
+        <apexClass>AuditWriterTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -370,67 +370,67 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>LogConfig__c.DynamicGroupIdentifierObjectName__c</field>
+        <field>AuditInitializerConfig__c.DynamicGroupIdentifierObjectName__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>LogConfig__c.DynamicGroupIdentifier__c</field>
+        <field>AuditInitializerConfig__c.DynamicGroupIdentifier__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>LogConfig__c.StaticGroupIdentifier__c</field>
+        <field>AuditInitializerConfig__c.StaticGroupIdentifier__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogGroup__c.GroupIdentifier__c</field>
+        <field>AuditGroup__c.GroupIdentifier__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogGroup__c.Stamp__c</field>
+        <field>AuditGroup__c.Stamp__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogWriterEntry__c.EntryPointGuid__c</field>
+        <field>AuditEntry__c.EntryPointGuid__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogWriterEntry__c.GroupIdentifier__c</field>
+        <field>AuditEntry__c.GroupIdentifier__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogWriterEntry__c.Order__c</field>
+        <field>AuditEntry__c.Order__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogWriterEntry__c.Parameters__c</field>
+        <field>AuditEntry__c.Parameters__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogWriterEntry__c.Position__c</field>
+        <field>AuditEntry__c.Position__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogWriterEntry__c.Sequence__c</field>
+        <field>AuditEntry__c.Sequence__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogWriterEntry__c.Stamp__c</field>
+        <field>AuditEntry__c.Stamp__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>LogWriterEntry__c.Step__c</field>
+        <field>AuditEntry__c.Step__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -615,7 +615,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>LogConfig__c</object>
+        <object>AuditInitializerConfig__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -624,7 +624,7 @@
         <allowEdit>false</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>LogGroup__c</object>
+        <object>AuditGroup__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -633,7 +633,7 @@
         <allowEdit>false</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>LogWriterEntry__c</object>
+        <object>AuditEntry__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -741,23 +741,23 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>LogConfigCsh</apexPage>
+        <apexPage>AuditInitializerConfigCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>LogConfigLogGroups</apexPage>
+        <apexPage>AuditInitializerConfigAuditGroups</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>LogConfigSchemaSelector</apexPage>
+        <apexPage>AuditInitializerConfigSchemaSelector</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>LogGroupCsh</apexPage>
+        <apexPage>AuditGroupCsh</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>LogWriterEntryCsh</apexPage>
+        <apexPage>AuditEntryCsh</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>

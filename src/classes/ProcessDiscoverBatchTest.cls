@@ -60,8 +60,8 @@
         Type schedule = Type.forName('Schedule.Meta');
         Type subsequence = Type.forName('Subsequence.Meta');
         Type subscribe = Type.forName('Subscribe.Meta');
-        Type logInitializer = Type.forName('LogInitializer.Meta');
-        Type logWriter = Type.forName('LogWriter.Meta');
+        Type auditInitializer = Type.forName('AuditInitializer.Meta');
+        Type auditWriter = Type.forName('AuditWriter.Meta');
         
         // act
         Boolean actualGate = (gate != null);
@@ -73,8 +73,8 @@
         Boolean actualSchedule = (schedule != null);
         Boolean actualSubsequence = (subsequence != null);
         Boolean actualSubscribe = (subscribe != null);
-        Boolean actualLogInitializer = (logInitializer != null);
-        Boolean actualLogWriter = (logWriter != null);
+        Boolean actualAuditInitializer = (auditInitializer != null);
+        Boolean actualAuditWriter = (auditWriter != null);
         
         // assert
         System.assert(actualSubsequence);
@@ -86,8 +86,8 @@
         System.assert(actualTerminate);
         System.assert(actualSubscribe);
         System.assert(actualWiretap);
-        System.assert(actualLogInitializer);
-        System.assert(actualLogWriter);
+        System.assert(actualAuditInitializer);
+        System.assert(actualAuditWriter);
     }
    
     

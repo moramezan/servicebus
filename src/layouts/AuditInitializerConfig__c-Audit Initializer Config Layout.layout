@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customButtons>AuditGroups</customButtons>
+    <customButtons>ChangeDynamicGroupIdentifier</customButtons>
     <excludeButtons>Clone</excludeButtons>
-    <excludeButtons>Edit</excludeButtons>
+    <excludeButtons>Delete</excludeButtons>
+    <excludeButtons>Share</excludeButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>false</customLabel>
@@ -14,18 +17,17 @@
                 <field>Name</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Required</behavior>
-                <field>LogConfig__c</field>
+                <behavior>Edit</behavior>
+                <field>StaticGroupIdentifier__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Stamp__c</field>
+                <emptySpace>true</emptySpace>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>GroupIdentifier__c</field>
+                <behavior>Readonly</behavior>
+                <field>DynamicGroupIdentifier__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -49,26 +51,13 @@
         <layoutColumns/>
         <style>CustomLinks</style>
     </layoutSections>
-    <relatedLists>
-        <excludeButtons>New</excludeButtons>
-        <fields>Order__c</fields>
-        <fields>NAME</fields>
-        <fields>GroupIdentifier__c</fields>
-        <fields>Stamp__c</fields>
-        <fields>Sequence__c</fields>
-        <fields>Step__c</fields>
-        <fields>Position__c</fields>
-        <relatedList>LogWriterEntry__c.LogGroup__c</relatedList>
-        <sortField>Order__c</sortField>
-        <sortOrder>Asc</sortOrder>
-    </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>
     <showInteractionLogPanel>false</showInteractionLogPanel>
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hb0000001SAOP</masterLabel>
+        <masterLabel>00hb0000001S6Vk</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

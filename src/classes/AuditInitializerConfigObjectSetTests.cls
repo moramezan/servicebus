@@ -1,29 +1,29 @@
-@IsTest private class LogConfigObjectSetTests {
+@IsTest private class AuditInitializerConfigObjectSetTests {
 
     static testmethod void canCorrectlySetStaticGroupIdentifierWhenDynamicGroupIdentifierEqNullDuringInsert() {
         //arrange
-        List<LogConfig__c> logConfigsBefore = [
+        List<AuditInitializerConfig__c> auditInitializerConfigsBefore = [
             SELECT Id, DynamicGroupIdentifier__c,  StaticGroupIdentifier__c
-            FROM LogConfig__c
+            FROM AuditInitializerConfig__c
         ];
-        Integer actualSizeBefore = logConfigsBefore.size();
+        Integer actualSizeBefore = auditInitializerConfigsBefore.size();
         String staticIdentifier = 'STATIC';
         String dynamicIdentifier = null;
         
         //act
-        insert new LogConfig__c(StaticGroupIdentifier__c = staticIdentifier);
+        insert new AuditInitializerConfig__c(StaticGroupIdentifier__c = staticIdentifier);
         
         // assemble 
-        List<LogConfig__c> logConfigsAfter = [
+        List<AuditInitializerConfig__c> auditInitializerConfigsAfter = [
             SELECT Id, DynamicGroupIdentifier__c,  StaticGroupIdentifier__c
-            FROM LogConfig__c
+            FROM AuditInitializerConfig__c
         ];
-        Integer actualSizeAfter = logConfigsAfter.size();
+        Integer actualSizeAfter = auditInitializerConfigsAfter.size();
         String actualDynamicGroupIdentifier;
         String actualStaticGroupIdentifier;
         if (actualSizeAfter == 1) {
-            actualDynamicGroupIdentifier = logConfigsAfter[0].DynamicGroupIdentifier__c;
-            actualStaticGroupIdentifier = logConfigsAfter[0].StaticGroupIdentifier__c;
+            actualDynamicGroupIdentifier = auditInitializerConfigsAfter[0].DynamicGroupIdentifier__c;
+            actualStaticGroupIdentifier = auditInitializerConfigsAfter[0].StaticGroupIdentifier__c;
         }
         
         //assert
@@ -45,40 +45,40 @@
         String staticIdentifier02 = 'STATIC-STEP-02';
         String dynamicIdentifier02 = null;
         
-        LogConfigObjectSet.isEnabled = false;
-        insert new LogConfig__c(
+        AuditInitializerConfigObjectSet.isEnabled = false;
+        insert new AuditInitializerConfig__c(
             StaticGroupIdentifier__c = staticIdentifier01, 
             DynamicGroupIdentifier__c = dynamicIdentifier01
         );
         
-        List<LogConfig__c> logConfigsBefore = [
+        List<AuditInitializerConfig__c> auditInitializerConfigsBefore = [
             SELECT Id, DynamicGroupIdentifier__c,  StaticGroupIdentifier__c
-            FROM LogConfig__c
+            FROM AuditInitializerConfig__c
         ];
-        Integer actualSizeBefore = logConfigsBefore.size();
+        Integer actualSizeBefore = auditInitializerConfigsBefore.size();
         String actualDynamicGroupIdentifierBefore;
         String actualStaticGroupIdentifierBefore;
         if (actualSizeBefore == 1) {
-            actualDynamicGroupIdentifierBefore = logConfigsBefore[0].DynamicGroupIdentifier__c;
-            actualStaticGroupIdentifierBefore = logConfigsBefore[0].StaticGroupIdentifier__c;
+            actualDynamicGroupIdentifierBefore = auditInitializerConfigsBefore[0].DynamicGroupIdentifier__c;
+            actualStaticGroupIdentifierBefore = auditInitializerConfigsBefore[0].StaticGroupIdentifier__c;
         }
         
         //act
-        LogConfigObjectSet.isEnabled = true;
-        logConfigsBefore[0].StaticGroupIdentifier__c = staticIdentifier02;
-        update logConfigsBefore[0];
+        AuditInitializerConfigObjectSet.isEnabled = true;
+        auditInitializerConfigsBefore[0].StaticGroupIdentifier__c = staticIdentifier02;
+        update auditInitializerConfigsBefore[0];
         
         // assemble 
-        List<LogConfig__c> logConfigsAfter = [
+        List<AuditInitializerConfig__c> auditInitializerConfigsAfter = [
             SELECT Id, DynamicGroupIdentifier__c,  StaticGroupIdentifier__c
-            FROM LogConfig__c
+            FROM AuditInitializerConfig__c
         ];
-        Integer actualSizeAfter = logConfigsAfter.size();
+        Integer actualSizeAfter = auditInitializerConfigsAfter.size();
         String actualDynamicGroupIdentifierAfter;
         String actualStaticGroupIdentifierAfter;
         if (actualSizeAfter == 1) {
-            actualDynamicGroupIdentifierAfter = logConfigsAfter[0].DynamicGroupIdentifier__c;
-            actualStaticGroupIdentifierAfter = logConfigsAfter[0].StaticGroupIdentifier__c;
+            actualDynamicGroupIdentifierAfter = auditInitializerConfigsAfter[0].DynamicGroupIdentifier__c;
+            actualStaticGroupIdentifierAfter = auditInitializerConfigsAfter[0].StaticGroupIdentifier__c;
         }
         
         //assert
@@ -100,28 +100,28 @@
 
     static testmethod void canCorrectlySetDynamicGroupIdentifierWhenStaticGroupIdentifierEqNullDuringInsert() {
         //arrange
-        List<LogConfig__c> logConfigsBefore = [
+        List<AuditInitializerConfig__c> auditInitializerConfigsBefore = [
             SELECT Id, DynamicGroupIdentifier__c,  StaticGroupIdentifier__c
-            FROM LogConfig__c
+            FROM AuditInitializerConfig__c
         ];
-        Integer actualSizeBefore = logConfigsBefore.size();
+        Integer actualSizeBefore = auditInitializerConfigsBefore.size();
         String dynamicIdentifier = 'DYNAMIC';
         String staticIdentifier = null;
         
         //act
-        insert new LogConfig__c(DynamicGroupIdentifier__c = dynamicIdentifier);
+        insert new AuditInitializerConfig__c(DynamicGroupIdentifier__c = dynamicIdentifier);
         
         // assemble 
-        List<LogConfig__c> logConfigsAfter = [
+        List<AuditInitializerConfig__c> auditInitializerConfigsAfter = [
             SELECT Id, DynamicGroupIdentifier__c,  StaticGroupIdentifier__c
-            FROM LogConfig__c
+            FROM AuditInitializerConfig__c
         ];
-        Integer actualSizeAfter = logConfigsAfter.size();
+        Integer actualSizeAfter = auditInitializerConfigsAfter.size();
         String actualDynamicGroupIdentifier;
         String actualStaticGroupIdentifier;
         if (actualSizeAfter == 1) {
-            actualDynamicGroupIdentifier = logConfigsAfter[0].DynamicGroupIdentifier__c;
-            actualStaticGroupIdentifier = logConfigsAfter[0].StaticGroupIdentifier__c;
+            actualDynamicGroupIdentifier = auditInitializerConfigsAfter[0].DynamicGroupIdentifier__c;
+            actualStaticGroupIdentifier = auditInitializerConfigsAfter[0].StaticGroupIdentifier__c;
         }
         
         //assert
@@ -143,40 +143,40 @@
         String staticIdentifier02 =  null;
         String dynamicIdentifier02 = 'DYNAMIC-STEP-02';
         
-        LogConfigObjectSet.isEnabled = false;
-        insert new LogConfig__c(
+        AuditInitializerConfigObjectSet.isEnabled = false;
+        insert new AuditInitializerConfig__c(
             StaticGroupIdentifier__c = staticIdentifier01, 
             DynamicGroupIdentifier__c = dynamicIdentifier01
         );
         
-        List<LogConfig__c> logConfigsBefore = [
+        List<AuditInitializerConfig__c> auditInitializerConfigsBefore = [
             SELECT Id, DynamicGroupIdentifier__c,  StaticGroupIdentifier__c
-            FROM LogConfig__c
+            FROM AuditInitializerConfig__c
         ];
-        Integer actualSizeBefore = logConfigsBefore.size();
+        Integer actualSizeBefore = auditInitializerConfigsBefore.size();
         String actualDynamicGroupIdentifierBefore;
         String actualStaticGroupIdentifierBefore;
         if (actualSizeBefore == 1) {
-            actualDynamicGroupIdentifierBefore = logConfigsBefore[0].DynamicGroupIdentifier__c;
-            actualStaticGroupIdentifierBefore = logConfigsBefore[0].StaticGroupIdentifier__c;
+            actualDynamicGroupIdentifierBefore = auditInitializerConfigsBefore[0].DynamicGroupIdentifier__c;
+            actualStaticGroupIdentifierBefore = auditInitializerConfigsBefore[0].StaticGroupIdentifier__c;
         }
         
         //act
-        LogConfigObjectSet.isEnabled = true;
-        logConfigsBefore[0].DynamicGroupIdentifier__c = dynamicIdentifier02;
-        update logConfigsBefore[0];
+        AuditInitializerConfigObjectSet.isEnabled = true;
+        auditInitializerConfigsBefore[0].DynamicGroupIdentifier__c = dynamicIdentifier02;
+        update auditInitializerConfigsBefore[0];
         
         // assemble 
-        List<LogConfig__c> logConfigsAfter = [
+        List<AuditInitializerConfig__c> auditInitializerConfigsAfter = [
             SELECT Id, DynamicGroupIdentifier__c,  StaticGroupIdentifier__c
-            FROM LogConfig__c
+            FROM AuditInitializerConfig__c
         ];
-        Integer actualSizeAfter = logConfigsAfter.size();
+        Integer actualSizeAfter = auditInitializerConfigsAfter.size();
         String actualDynamicGroupIdentifierAfter;
         String actualStaticGroupIdentifierAfter;
         if (actualSizeAfter == 1) {
-            actualDynamicGroupIdentifierAfter = logConfigsAfter[0].DynamicGroupIdentifier__c;
-            actualStaticGroupIdentifierAfter = logConfigsAfter[0].StaticGroupIdentifier__c;
+            actualDynamicGroupIdentifierAfter = auditInitializerConfigsAfter[0].DynamicGroupIdentifier__c;
+            actualStaticGroupIdentifierAfter = auditInitializerConfigsAfter[0].StaticGroupIdentifier__c;
         }
         
         //assert

@@ -3,5 +3,5 @@
     <apiVersion>32.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <label>LogConfigCsh</label>
+    <label>AuditInitializerConfigCsh</label>
 </ApexPage>
