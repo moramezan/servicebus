@@ -82,7 +82,7 @@
         <formula>/* Shows messages not completed within one hour */
 (NOW() &gt; LastModifiedDate + (1/24))
 &amp;&amp;
-(!ISPICKVAL(Status__c, &quot;Completed&quot;))</formula>
+(ISPICKVAL(Status__c, &quot;Started&quot;))</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <inlineHelpText>Is this message stalled or otherwise not processing correctly?</inlineHelpText>
         <label>Overdue</label>
