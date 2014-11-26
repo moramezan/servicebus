@@ -189,6 +189,7 @@
         <members>HeartbeatSettings__c.EventStamp__c</members>
         <members>JumpConfig__c.Sequence__c</members>
         <members>KnifeSwitch__c.Url__c</members>
+        <members>Message__c.Cause__c</members>
         <members>Message__c.CreatedDate__c</members>
         <members>Message__c.Exception__c</members>
         <members>Message__c.IsOverdue__c</members>

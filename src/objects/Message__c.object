@@ -56,6 +56,16 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
+        <fullName>Cause__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>If the process threw an exception, what was the stack trace that caused it?</inlineHelpText>
+        <label>Cause</label>
+        <length>32768</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>20</visibleLines>
+    </fields>
+    <fields>
         <fullName>CreatedDate__c</fullName>
         <defaultValue>NOW()</defaultValue>
         <description>Values in this field will mirror the System generated CreatedDate field</description>
@@ -71,10 +81,11 @@
         <externalId>false</externalId>
         <inlineHelpText>If the process threw an exception when handling this message, what was the error?</inlineHelpText>
         <label>Exception</label>
-        <length>32768</length>
+        <length>255</length>
+        <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>LongTextArea</type>
-        <visibleLines>20</visibleLines>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>IsOverdue__c</fullName>
