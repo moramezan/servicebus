@@ -78,7 +78,7 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Cause__c
             FROM Message__c
             WHERE Status__c != 'Completed'
         ];
@@ -92,7 +92,7 @@
             actualStackDepth = (Integer) actualParameters.get('eda_StackDepth');
             
             //assemble
-            Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(messages[0].Exception__c);
+            Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(messages[0].Cause__c);
             actualDetail = (String)ex.get('Message');
             actualStatus = messages[0].Status__c;
         }
@@ -647,7 +647,7 @@
             
             //assemble
             Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
-            Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(messageActual.Exception__c);
+            Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(messageActual.Cause__c);
             
             //assert
             String expectedMessage = 'Could not deserialize json, eg malformed parameters.';
@@ -728,8 +728,8 @@
         Test.stopTest();
         
         //assemble
-        Message__c message = [SELECT Id, Exception__c FROM Message__c];
-        Map<String,Object> actualEx = (Map<String,Object>)Json.deserializeUntyped(message.Exception__c);
+        Message__c message = [SELECT Id, Cause__c, Exception__c FROM Message__c];
+        Map<String,Object> actualEx = (Map<String,Object>)Json.deserializeUntyped(message.Cause__c);
         
         //assert
         String actualMessage = message.Exception__c;
@@ -760,8 +760,8 @@
         Test.stopTest();
         
         //assemble
-        Message__c message = [SELECT Id, Exception__c FROM Message__c];
-        Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(message.Exception__c);
+        Message__c message = [SELECT Id, Cause__c FROM Message__c];
+        Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(message.Cause__c);
         
         //assert
         String actualMessage = (String)ex.get('Message');
@@ -819,7 +819,7 @@
 
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c
             FROM Message__c
             WHERE Status__c != 'Completed'
         ];
@@ -879,7 +879,7 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c
             FROM Message__c
             WHERE Status__c = 'Completed'
         ];
@@ -932,12 +932,12 @@
         
         //assemble
         List<Message__c> messagesOk = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Cause__c
             FROM Message__c
             WHERE Status__c = 'Completed'
         ];
         List<Message__c> messagesFailed = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Exception__c
+            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Cause__c
             FROM Message__c
             WHERE Status__c != 'Completed'
         ];
@@ -946,7 +946,7 @@
         Integer actualCountFailed = messagesFailed.size();
         String actualExceptionMessage;
         if (actualCountFailed == 1) {
-            actualExceptionMessage = messagesFailed[0].Exception__c;
+            actualExceptionMessage = messagesFailed[0].Cause__c;
         }
         
         //assemble
