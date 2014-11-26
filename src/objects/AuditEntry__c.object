@@ -108,7 +108,7 @@
         <externalId>false</externalId>
         <inlineHelpText>What were the message parameters saved by the AuditWriter Process?</inlineHelpText>
         <label>Parameters</label>
-        <length>131072</length>
+        <length>32768</length>
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
         <visibleLines>2</visibleLines>
