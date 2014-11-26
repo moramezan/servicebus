@@ -55,6 +55,20 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
+        <fullName>AuditGroup__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>What Audit Group is this entry written into?</inlineHelpText>
+        <label>Audit Group</label>
+        <referenceTo>AuditGroup__c</referenceTo>
+        <relationshipLabel>Audit Entries</relationshipLabel>
+        <relationshipName>AuditEntries</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
         <fullName>EntryPointGuid__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>What was the entry point guid assigned to this message when it first entered a sequence?</inlineHelpText>
@@ -76,20 +90,6 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>AuditGroup__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>What Audit Group is this entry written into?</inlineHelpText>
-        <label>Audit Group</label>
-        <referenceTo>AuditGroup__c</referenceTo>
-        <relationshipLabel>Audit Entries</relationshipLabel>
-        <relationshipName>AuditEntries</relationshipName>
-        <relationshipOrder>0</relationshipOrder>
-        <reparentableMasterDetail>false</reparentableMasterDetail>
-        <trackTrending>false</trackTrending>
-        <type>MasterDetail</type>
-        <writeRequiresMasterRead>false</writeRequiresMasterRead>
     </fields>
     <fields>
         <fullName>Order__c</fullName>

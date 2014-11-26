@@ -9,6 +9,12 @@
     <types>
         <members>AsyncApexJobObject</members>
         <members>AsyncApexJobObjectTest</members>
+        <members>AuditInitializer</members>
+        <members>AuditInitializerConfigObjectSet</members>
+        <members>AuditInitializerConfigObjectSetTests</members>
+        <members>AuditInitializerTest</members>
+        <members>AuditWriter</members>
+        <members>AuditWriterTest</members>
         <members>Branch</members>
         <members>BranchTest</members>
         <members>Broker</members>
@@ -27,12 +33,6 @@
         <members>HeartbeatTest</members>
         <members>Jump</members>
         <members>JumpTest</members>
-        <members>AuditInitializerConfigObjectSet</members>
-        <members>AuditInitializerConfigObjectSetTests</members>
-        <members>AuditInitializer</members>
-        <members>AuditInitializerTest</members>
-        <members>AuditWriter</members>
-        <members>AuditWriterTest</members>
         <members>Mark</members>
         <members>MarkTest</members>
         <members>MessageDataExtension</members>
@@ -101,6 +101,11 @@
         <name>ApexComponent</name>
     </types>
     <types>
+        <members>AuditEntryCsh</members>
+        <members>AuditGroupCsh</members>
+        <members>AuditInitializerConfigAuditGroups</members>
+        <members>AuditInitializerConfigCsh</members>
+        <members>AuditInitializerConfigSchemaSelector</members>
         <members>BranchConfigCsh</members>
         <members>BranchConfigStep</members>
         <members>Configure</members>
@@ -109,11 +114,6 @@
         <members>GateItemCsh</members>
         <members>JumpConfigCsh</members>
         <members>JumpConfigStep</members>
-        <members>AuditInitializerConfigCsh</members>
-        <members>AuditInitializerConfigAuditGroups</members>
-        <members>AuditInitializerConfigSchemaSelector</members>
-        <members>AuditGroupCsh</members>
-        <members>AuditEntryCsh</members>
         <members>MessageCsh</members>
         <members>MessageData</members>
         <members>MessagePauseQueue</members>
@@ -147,9 +147,9 @@
         <name>ApexPage</name>
     </types>
     <types>
+        <members>AuditInitializerConfigTriggers</members>
         <members>BranchConfigTriggers</members>
         <members>JumpConfigTriggers</members>
-        <members>AuditInitializerConfigTriggers</members>
         <members>MessageTriggers</members>
         <members>PublishConfigTriggers</members>
         <members>ScheduleConfigTriggers</members>
@@ -164,6 +164,21 @@
         <name>CustomApplication</name>
     </types>
     <types>
+        <members>AuditEntry__c.AuditGroup__c</members>
+        <members>AuditEntry__c.EntryPointGuid__c</members>
+        <members>AuditEntry__c.GroupIdentifier__c</members>
+        <members>AuditEntry__c.Order__c</members>
+        <members>AuditEntry__c.Parameters__c</members>
+        <members>AuditEntry__c.Position__c</members>
+        <members>AuditEntry__c.Sequence__c</members>
+        <members>AuditEntry__c.Stamp__c</members>
+        <members>AuditEntry__c.Step__c</members>
+        <members>AuditGroup__c.AuditInitializerConfig__c</members>
+        <members>AuditGroup__c.GroupIdentifier__c</members>
+        <members>AuditGroup__c.Stamp__c</members>
+        <members>AuditInitializerConfig__c.DynamicGroupIdentifierObjectName__c</members>
+        <members>AuditInitializerConfig__c.DynamicGroupIdentifier__c</members>
+        <members>AuditInitializerConfig__c.StaticGroupIdentifier__c</members>
         <members>BranchConfig__c.Sequence__c</members>
         <members>BrokerSettings__c.BrokerClassName__c</members>
         <members>BrokerSettings__c.Inhibit__c</members>
@@ -174,21 +189,6 @@
         <members>HeartbeatSettings__c.EventStamp__c</members>
         <members>JumpConfig__c.Sequence__c</members>
         <members>KnifeSwitch__c.Url__c</members>
-        <members>AuditInitializerConfig__c.DynamicGroupIdentifierObjectName__c</members>
-        <members>AuditInitializerConfig__c.DynamicGroupIdentifier__c</members>
-        <members>AuditInitializerConfig__c.StaticGroupIdentifier__c</members>
-        <members>AuditGroup__c.GroupIdentifier__c</members>
-        <members>AuditGroup__c.AuditInitializerConfig__c</members>
-        <members>AuditGroup__c.Stamp__c</members>
-        <members>AuditEntry__c.EntryPointGuid__c</members>
-        <members>AuditEntry__c.GroupIdentifier__c</members>
-        <members>AuditEntry__c.AuditGroup__c</members>
-        <members>AuditEntry__c.Order__c</members>
-        <members>AuditEntry__c.Parameters__c</members>
-        <members>AuditEntry__c.Position__c</members>
-        <members>AuditEntry__c.Sequence__c</members>
-        <members>AuditEntry__c.Stamp__c</members>
-        <members>AuditEntry__c.Step__c</members>
         <members>Message__c.CreatedDate__c</members>
         <members>Message__c.Exception__c</members>
         <members>Message__c.IsOverdue__c</members>
@@ -221,6 +221,9 @@
         <name>CustomField</name>
     </types>
     <types>
+        <members>AuditEntry__c</members>
+        <members>AuditGroup__c</members>
+        <members>AuditInitializerConfig__c</members>
         <members>BranchConfig__c</members>
         <members>BrokerSettings__c</members>
         <members>EventType__c</members>
@@ -230,9 +233,6 @@
         <members>HeartbeatSettings__c</members>
         <members>JumpConfig__c</members>
         <members>KnifeSwitch__c</members>
-        <members>AuditInitializerConfig__c</members>
-        <members>AuditGroup__c</members>
-        <members>AuditEntry__c</members>
         <members>Message__c</members>
         <members>Process__c</members>
         <members>PublishConfig__c</members>
@@ -265,14 +265,14 @@
         <name>Document</name>
     </types>
     <types>
+        <members>AuditEntry__c-Audit Entry Layout</members>
+        <members>AuditGroup__c-Audit Group Layout</members>
+        <members>AuditInitializerConfig__c-Audit Initializer Config Layout</members>
         <members>BranchConfig__c-Branch Config Layout</members>
         <members>EventType__c-Event Type Layout</members>
         <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>
         <members>JumpConfig__c-Jump Config Layout</members>
-        <members>AuditInitializerConfig__c-Audit Initializer Config Layout</members>
-        <members>AuditGroup__c-Audit Group Layout</members>
-        <members>AuditEntry__c-Audit Entry Layout</members>
         <members>Message__c-Message Layout</members>
         <members>Process__c-Process Layout</members>
         <members>PublishConfig__c-Publish Config Layout</members>
@@ -311,10 +311,10 @@
         <name>ValidationRule</name>
     </types>
     <types>
+        <members>AuditInitializerConfig__c.AuditGroups</members>
+        <members>AuditInitializerConfig__c.ChangeDynamicGroupIdentifier</members>
         <members>BranchConfig__c.Step</members>
         <members>JumpConfig__c.Step</members>
-        <members>AuditInitializerConfig__c.ChangeDynamicGroupIdentifier</members>
-        <members>AuditInitializerConfig__c.AuditGroups</members>
         <members>Message__c.Data</members>
         <members>Message__c.PauseQueue</members>
         <members>Message__c.Rebuffer</members>

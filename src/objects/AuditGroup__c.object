@@ -55,17 +55,6 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
-        <fullName>GroupIdentifier__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>XXX</inlineHelpText>
-        <label>Group Identifier</label>
-        <length>80</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>AuditInitializerConfig__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>What record configures the AuditInitializer Step that the message was passing through?</inlineHelpText>
@@ -78,6 +67,17 @@
         <trackTrending>false</trackTrending>
         <type>MasterDetail</type>
         <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>GroupIdentifier__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>XXX</inlineHelpText>
+        <label>Group Identifier</label>
+        <length>80</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Stamp__c</fullName>

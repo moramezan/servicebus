@@ -101,16 +101,6 @@
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
-        <fullName>ChangeDynamicGroupIdentifier</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <linkType>page</linkType>
-        <masterLabel>Change Dynamic Group Identifier</masterLabel>
-        <openType>replace</openType>
-        <page>AuditInitializerConfigSchemaSelector</page>
-        <protected>false</protected>
-    </webLinks>
-    <webLinks>
         <fullName>AuditGroups</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
@@ -127,5 +117,15 @@
         <protected>false</protected>
         <showsLocation>false</showsLocation>
         <showsStatus>false</showsStatus>
+    </webLinks>
+    <webLinks>
+        <fullName>ChangeDynamicGroupIdentifier</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>page</linkType>
+        <masterLabel>Change Dynamic Group Identifier</masterLabel>
+        <openType>replace</openType>
+        <page>AuditInitializerConfigSchemaSelector</page>
+        <protected>false</protected>
     </webLinks>
 </CustomObject>
