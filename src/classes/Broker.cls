@@ -787,7 +787,7 @@ abstract public with sharing class Broker {
             output.put('eda_MarkCount', markCount);
         }
         
-        if (2 == markCount) {
+        if (1 == markCount) {
             //write outputSize onto every output
             for (Map<String,Object> output : outputs) output.put('eda_Count', outputs.size());
         }

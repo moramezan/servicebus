@@ -545,9 +545,9 @@
         
     }
     
-    static testmethod void callingGateHelperCorrectlySetsCountOnParametersWhenMarkCountIncrementsTo2() {
+      static testmethod void callingGateHelperCorrectlySetsCountOnParametersWhenMarkCountIncrementsTo1() {
         //arrange
-        Integer markCount = 1;
+        Integer markCount = 0;
         Map<String,Object> parametersIn0 = new Map<String,Object> {
             'Id' => '0',
             'eda_MarkCount' => markCount
@@ -578,9 +578,9 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testmethod void callingGateHelperDoesNotSetCountOnParametersWhenMarkCountIncrementsToOtherThan2() {
+    static testmethod void callingGateHelperDoesNotSetCountOnParametersWhenMarkCountIncrementsToOtherThan1() {
         //arrange
-        Integer markCount = 0; //will not increment to 2
+        Integer markCount = 0; //will not increment to 1
         Map<String,Object> parametersIn0 = new Map<String,Object> {
             'Id' => '0',
             'eda_MarkCount' => markCount
