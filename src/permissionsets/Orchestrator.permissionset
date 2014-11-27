@@ -365,7 +365,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>AuditEntry__c.Order__c</field>
+        <field>AuditEntry__c.Hops__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

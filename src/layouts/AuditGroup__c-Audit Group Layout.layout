@@ -51,7 +51,7 @@
     </layoutSections>
     <relatedLists>
         <excludeButtons>New</excludeButtons>
-        <fields>Order__c</fields>
+        <fields>Hops__c</fields>
         <fields>NAME</fields>
         <fields>GroupIdentifier__c</fields>
         <fields>Stamp__c</fields>
@@ -59,7 +59,7 @@
         <fields>Step__c</fields>
         <fields>Position__c</fields>
         <relatedList>AuditEntry__c.AuditGroup__c</relatedList>
-        <sortField>Order__c</sortField>
+        <sortField>Hops__c</sortField>
         <sortOrder>Asc</sortOrder>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>

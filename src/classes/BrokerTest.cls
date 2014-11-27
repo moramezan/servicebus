@@ -35,10 +35,10 @@
     }
 
 
-    static testmethod void stackDepthExceededWillHaltStartedWithAppropriateMessageDetail() {
+    static testmethod void hopsExceededWillHaltStartedWithAppropriateMessageDetail() {
         // arrange
-        Integer stackDepthThreshold = 3;
-        Broker.stackDepthThreshold  = stackDepthThreshold;
+        Integer maxHops = 3;
+        Broker.MaxHops = maxHops;
 
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -83,13 +83,13 @@
             WHERE Status__c != 'Completed'
         ];
         
-        Integer actualStackDepth;
+        Integer actualHops;
         String actualDetail;
         String actualStatus;
         Integer actualCount = messages.size();
         if (actualCount > 0) {
             Map<String,Object> actualParameters = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Parameters__c);
-            actualStackDepth = (Integer) actualParameters.get('eda_StackDepth');
+            actualHops = (Integer) actualParameters.get('eda_Hops');
             
             //assemble
             Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(messages[0].Cause__c);
@@ -100,62 +100,62 @@
         // assert
         Integer expectedCount = 1;
         System.assertEquals( expectedCount, actualCount);
-        Integer expectedStackDepth = stackDepthThreshold;
-        System.assertEquals(expectedStackDepth, actualStackDepth, 'Wrong stack depth.');
+        Integer expectedHops = maxHops;
+        System.assertEquals(expectedHops, actualHops, 'Wrong hops.');
         
-        String expectedDetail = 'Maximum Stack Depth exceeded - to resolve, manually set eda_StackDepth on parameters to 0';
+        String expectedDetail = 'Too many hops - to resolve, manually set eda_Hops on parameters to 0';
         System.assertEquals(expectedDetail, actualDetail, 'Wrong message');
         
         String expectedStatus = 'Started';
         System.assertEquals(expectedStatus, actualStatus, 'Wrong message status.'); 
     }
     
-    static testmethod void callingEnforceStackDepthReturnsExpectedValueWhenStackDepthParameterLtThreshold() {
+    static testmethod void callingEnforceMaxHopsReturnsExpectedValueWhenHopsParameterLtThreshold() {
         //arrange
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
-        Integer stackDepth = 8;
-        String key  = 'eda_StackDepth';
-        parameters.put(key, stackDepth);
+        Integer hops = 8;
+        String key  = 'eda_Hops';
+        parameters.put(key, hops);
         
         //act
-        Integer actualStackDepth = Broker.enforceStackDepth(parameters, threshold);
+        Integer actualHops = Broker.enforceMaxHops(parameters, threshold);
 
         //assert
-        Integer expectedStackDepth = stackDepth + 1;
-        System.assertEquals( expectedStackDepth, actualStackDepth);
+        Integer expectedHops = hops + 1;
+        System.assertEquals( expectedHops, actualHops);
     }
 
 
 
-    static testmethod void callingEnforceStackDepthReturnsExpectedValueWhenStackDepthParameterNotDefined() {
+    static testmethod void callingEnforceMaxHopsReturnsExpectedValueWhenHopsParameterNotDefined() {
        //arrange
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
-        Integer stackDepth = 0;
+        Integer hops = 0;
 
         //act
-        Integer actualStackDepth = Broker.enforceStackDepth(parameters, threshold);
+        Integer actualHops = Broker.enforceMaxHops(parameters, threshold);
 
         //assert
-        Integer expectedStackDepth = stackDepth + 1;
-        System.assertEquals( expectedStackDepth, actualStackDepth);
+        Integer expectedHops = hops + 1;
+        System.assertEquals( expectedHops, actualHops);
     }
  
   
-    static testmethod void callingEnforceStackDepthThrowsExceptionWhenStackDepthParameterGtOrEqToThreshold() {
+    static testmethod void callingEnforceMaxHopsThrowsExceptionWhenHopsParameterGtOrEqToThreshold() {
        //arrange
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
-        Integer stackDepth = 10;
-        String key  = 'eda_StackDepth';
-        parameters.put(key, stackDepth);
+        Integer hops = 10;
+        String key  = 'eda_Hops';
+        parameters.put(key, hops);
         
         Boolean actualFlag = false;
         try {
             //act
-            Integer actualStackDepth = Broker.enforceStackDepth(parameters, threshold);
-        } catch (Broker.StackDepthException e) {
+            Integer actualHops = Broker.enforceMaxHops(parameters, threshold);
+        } catch (Broker.TooManyHopsException e) {
             actualFlag = true;
         }
 
@@ -165,25 +165,25 @@
     }
     
     
-    static testmethod void callingApplyStackDepthCorrectlyAppliesStackDepthToParameters() {
+    static testmethod void callingApplyHopsCorrectlyAppliesHopsToParameters() {
         //arrange
-        Integer stackDepth = 8;
+        Integer hops = 8;
         Map<String,Object> parameters = new Map<String,Object>();
         List<Map<String,Object>>  parametersList = new List<Map<String,Object>>{ parameters };
 
         //act
-        parametersList = new DoNothingBroker().applyStackDepth(parametersList, stackDepth);
+        parametersList = new DoNothingBroker().applyHops(parametersList, hops);
 
         //assemble
-        Integer actualStackDepth = -1;
+        Integer actualHops = -1;
         List<Map<String,Object>>  actualParametersList = parametersList;
         for (Map<String,Object> actualParameters : actualParametersList ) {
-            actualStackDepth = (Integer) actualParameters.get('eda_StackDepth');
+            actualHops = (Integer) actualParameters.get('eda_Hops');
         }
  
         //assert
-        Integer expectedStackDepth = stackDepth;
-        System.assertEquals( expectedStackDepth, actualStackDepth);
+        Integer expectedhops = hops;
+        System.assertEquals(expectedHops, actualHops);
     }
     
  

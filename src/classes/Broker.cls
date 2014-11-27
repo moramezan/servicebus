@@ -77,9 +77,9 @@
  */
 abstract public with sharing class Broker {
     
-    @TestVisible private static Integer stackDepthThreshold  = 500;
+    @TestVisible private static Integer MaxHops  = 500;
     
-    public class StackDepthException extends Exception {}
+    public class TooManyHopsException extends Exception {}
     
     public class EngineException extends Exception {
         /**
@@ -582,14 +582,14 @@ abstract public with sharing class Broker {
             throw new EngineException(null, new Set<Id>{message.Id}, null, 'Could not see Meta inner class, this is not a valid process: ' + reflector.getName());
         }
         
-        //save important message properties (such as stackDepth) so that process authors cannot pervert them  
-        //THROWS EngineException TODO : requires a more generic approach not specific to just the eda_StackDepth
-        Integer stackDepth;
+        //save important message properties (such as eda_Hops) so that process authors cannot pervert them  
+        //THROWS EngineException TODO : requires a more generic approach not specific to just the eda_Hops
+        Integer hops;
         try {
-            stackDepth = enforceStackDepth(parameters, stackDepthThreshold);
-        } catch (StackDepthException e) {
+            hops = enforceMaxHops(parameters, maxHops);
+        } catch (TooManyHopsException e) {
             //wrapped this here because we need to stick the MESSAGE ID on the exception in order to be able to write the problem away
-            throw new EngineException(null, new Set<Id>{message.Id}, e, 'Maximum Stack Depth exceeded - to resolve, manually set eda_StackDepth on parameters to 0');
+            throw new EngineException(null, new Set<Id>{message.Id}, e, 'Too many hops - to resolve, manually set eda_Hops on parameters to 0');
         }
         
         SObject config;
@@ -618,7 +618,7 @@ abstract public with sharing class Broker {
         
         //write back save important message properties to the parameters collections in results
         //TODO : requires a more generic approach to write back the "eda_" properties to 
-        this.applyStackDepth(results, stackDepth);
+        this.applyHops(results, hops);
 
         //gate processing support method
         this.gateHelper(parameters, results);
@@ -731,31 +731,31 @@ abstract public with sharing class Broker {
      * The intent is to prevent a never ending self referencing loop (we cannot control what the system configurators
      * configure). A self referencing loop would eventually ring alarm bells with the Salesforce police with the
      * possibility of the Munger being blacklisted
-     * An exception is thrown if the stackDepth threshold is reached
+     * An exception is thrown if the Max Hops threshold is reached
      *
-     * We cannot simply increment  eda_StackDepth BEFORE calling invoke as a process writer could fuck with this parameter
-     * Instead we read and increment eda_StackDepth BEFORE calling invoke using enforceStackDepth()
-     * and assign to an Integer stackDepth variable
-     * We use applyStackDepth()  to apply the incremented stackDepth variable to the eda_StackDepth parameter of
+     * We cannot simply increment  eda_Hops BEFORE calling invoke as a process writer could fuck with this parameter
+     * Instead we read and increment eda_Hops BEFORE calling invoke using enforceMaxHops()
+     * and assign to an Integer hops variable
+     * We use applyHops()  to apply the incremented hops variable to the eda_Hops parameter of
      * all messages returned from invoke()
      */
-    @TestVisible List<Map<String,Object>> applyStackDepth(List<Map<String,Object>> results, Integer stackDepth) {
+    @TestVisible List<Map<String,Object>> applyHops(List<Map<String,Object>> results, Integer hops) {
         for (Map<String,Object> result : results) {
-            result.put('eda_StackDepth',stackDepth);
+            result.put('eda_Hops', hops);
         }
         return results;
     }
 
     /**
-     * See applyStackDepth() method for context and details.
+     * See applyHops() method for context and details.
      */
-    @TestVisible static private Integer enforceStackDepth(Map<String,Object> parameters, Integer threshold) {
-        Integer stackDepth = (parameters.get('eda_StackDepth') == null) ? 0 : (Integer) parameters.get('eda_StackDepth');
-        stackDepth++;
-        if (stackDepth > threshold) {
-            throw new StackDepthException('Stack depth of ' + stackDepth + ' is greater than threshold of ' + threshold);
+    @TestVisible static private Integer enforceMaxHops(Map<String,Object> parameters, Integer threshold) {
+        Integer hops = (parameters.get('eda_Hops') == null) ? 0 : (Integer) parameters.get('eda_Hops');
+        hops++;
+        if (hops > threshold) {
+            throw new TooManyHopsException('Number of hops ' + hops + ' is greater than threshold of ' + threshold);
         }
-        return stackDepth;
+        return hops;
     }
     
     

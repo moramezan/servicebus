@@ -92,10 +92,10 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Order__c</fullName>
+        <fullName>Hops__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>What position in the Audit Group is this entry?</inlineHelpText>
-        <label>Order</label>
+        <inlineHelpText>How many hops were there when this entry was written?</inlineHelpText>
+        <label>Hops</label>
         <precision>4</precision>
         <required>false</required>
         <scale>0</scale>

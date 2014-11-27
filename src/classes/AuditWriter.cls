@@ -18,7 +18,7 @@ public with sharing class AuditWriter {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
-        Integer parametersOrder = (Integer)parameters.get('eda_Counter');
+        Integer parametersOrder = (Integer)parameters.get('eda_Hops');
         parametersOrder = (parametersOrder != null) ? parametersOrder : 1;
         
         String entryPointGuid = (String)parameters.get('eda_EntryPointGuid');
@@ -60,7 +60,7 @@ public with sharing class AuditWriter {
                 auditEntries.add( new AuditEntry__c(
                     Step__c = step.Id,
                     Sequence__c = step.Sequence__c,
-                    Order__c   = parametersOrder,
+                    Hops__c = parametersOrder,
                     AuditGroup__c     = auditGroupId,
                     EntryPointGuid__c = entryPointGuid,
                     Parameters__c    = serializedParameters
