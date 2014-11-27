@@ -3,15 +3,59 @@
  * See http://salesforce.stackexchange.com/q/258/320 and http://salesforce.stackexchange.com/q/32607/320
  */
 public without sharing class ProcessDiscoverBatch implements Database.Batchable<SObject> {
+
+    @testVisible
+    private static Database.QueryLocator  getQueryLocator() {
+        List<Id> apexClassIds = new List<Id>(); 
+        for (ApexClass apexClass : [SELECT Id, Name, NamespacePrefix
+                                    FROM ApexClass
+                                    ORDER BY Name ASC
+                                    LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
+        ]) {
+            Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
+            
+            if (reflector != null) {
+                String fullyQualifiedClassName = String.isBlank(apexClass.NamespacePrefix) ? apexClass.Name : apexClass.NamespacePrefix + '.' + apexClass.Name;
+                Type meta = Type.forName(fullyQualifiedClassName + '.' + 'Meta'); 
+                if (meta != null) {
+                       apexClassIds.add(apexClass.Id);
+                }
+           }
+        }
+        
+        String filterClause01  = '\'' + String.join(apexClassIds,'\',\'')  + '\'' ;
+       
+       
+        // unfortunately "filterClause02" is really only here 
+        // for test purposes
+        // Matt
+        // ... perhaps you can rework this code so its 
+        // less ugly at some point
+        String filterClause02; 
+        if (classes != null) {
+            List<String> filteredClassNames = new List<String>();
+            for (ApexClass c : classes) {
+                filteredClassNames.add(c.Name);    
+            } 
+            filterClause02  = '\'' + String.join(filteredClassNames,'\',\'')  + '\'' ;
+        }
+
+
+        String queryString  =
+            ' SELECT Id, Name, NamespacePrefix  ' + 
+            ' FROM ApexClass ' + 
+            ' WHERE Id IN ( ' + filterClause01 + ' ) ';
+        queryString  = (filterClause02 == null) ?  queryString : queryString + ' AND Name IN (' +filterClause02+ ')';
+        queryString  = queryString + 
+            ' ORDER BY Name ASC ' +
+            ' LIMIT 10000 ';
+  
+        return Database.getQueryLocator(queryString);
+    }
     
     @TestVisible static private List<ApexClass> classes;
     public Iterable<SObject> start(Database.BatchableContext context) {
-        return classes != null ? classes : [
-            SELECT Id, Name, NamespacePrefix
-            FROM ApexClass
-            ORDER BY Name ASC
-            LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
-        ];
+        return getQueryLocator();
     }
     
     public void execute(Database.BatchableContext context, List<ApexClass> scope) {
@@ -55,7 +99,12 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
     
     public class ApexClassProvider implements IApexClassProvider {
         public List<ApexClass> getApexClasses() {
-            return (List<ApexClass>)new ProcessDiscoverBatch().start(null); //formerly SalesforceObjectSet.listAll() but sharing breaks it for InstallHandler user
+            List<ApexClass> apexClasses = new List<ApexClass>();
+            Database.QueryLocatorIterator actualIterator =  ProcessDiscoverBatch.getQueryLocator().iterator();
+            while (actualIterator.hasNext()) {
+                apexClasses.add((ApexClass)actualIterator.next());
+            }
+            return apexClasses;
         }
     } 
     

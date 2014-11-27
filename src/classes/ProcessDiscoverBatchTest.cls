@@ -17,9 +17,7 @@
         ProcessDiscoverBatch.classes = [
             SELECT Id, Name, NamespacePrefix
             FROM ApexClass
-            WHERE Name = 'Terminate'
             ORDER BY Name ASC
-            LIMIT 1
         ];
         ProcessDiscoverBatch batch = new ProcessDiscoverBatch();
         
@@ -30,23 +28,26 @@
         List<Process__c> processes = SalesforceObjectSet.listAll(Process__c.SObjectType);
         
         //assert
-        Integer expectedCount = 1;
+        Integer expectedCount = 12;
         Integer actualCount = processes.size();
         System.assertEquals(expectedCount, actualCount);
         
-        String expectedName = 'Terminate';
-        String actualName = processes[0].Name;
-        System.assert(actualName.contains(expectedName));
-
-        String expectedDescription = 'end of this sequence';
-        String actualDescription = processes[0].Description__c;
-        System.assert(actualDescription.contains(expectedDescription));
+        //assemble
+        String actualDescription;
+        String actualTag;
+        for (Process__c process : processes) {
+            if (process.Name ==  Terminate.class.getName()) {
+                actualDescription = process.Description__c;
+                actualTag = process.Tag__c;
+            }
+        }
         
+        //assert
+        String expectedDescription = 'end of this sequence';
+        System.assert(actualDescription.contains(expectedDescription));
         String expectedTag = 'Event Driven Architecture';
-        String actualTag = processes[0].Tag__c;
         System.assert(actualDescription.contains(expectedDescription));
     }
-    
 
  
     static testmethod void testImplementsEdaSubclass() {
@@ -198,4 +199,27 @@
         System.assertEquals(expectedProcessesAfterSize, actualProcessesAfterSize);
         System.assertEquals(expectedProcessesBeforeSize, actualProcessesBeforeSize); 
     } 
+
+    static testmethod void getQueryLocatorReturnsExpectedIterable() {
+        //arrange
+        //n/a
+        
+        //act
+        Database.QueryLocator actualQueryLocator = ProcessDiscoverBatch.getQueryLocator(); 
+        
+        //assemble
+        Set<String> actualApexClassNames = new Set<String>();
+        Database.QueryLocatorIterator actualIterator =  actualQueryLocator.iterator();
+        while (actualIterator.hasNext()) {
+            ApexClass apexClass =  (ApexClass)actualIterator.next();
+            actualApexClassNames.add(apexClass.Name);
+        }
+        
+        //assert
+        system.debug(json.serialize(actualApexClassNames));
+        system.assert(true,actualApexClassNames.Contains(WireTap.class.getName()));
+        system.assert(true,actualApexClassNames.Contains(Publish.class.getName()));
+        system.assert(true,!actualApexClassNames.Contains(ProcessDiscoverBatch.class.getName()));   
+    }  
+    
 }
