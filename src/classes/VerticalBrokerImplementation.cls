@@ -11,6 +11,9 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     
     @TestVisible private Boolean abortJob = false;
 
+    @testVisible
+    private static Integer TotalPotentialMarks = 100;
+
     /**
      * If scope is null, execute will never be reacher!
      * Has to be array of booleans, not nulls
@@ -24,7 +27,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         if (BrokerSettings__c.getInstance().Inhibit__c == true) System.abortJob(context.getJobId()); //INHIBIT
         
         //LOCATE
-        Database.QueryLocator locator = this.locateMarkableWork(1);
+        Database.QueryLocator locator = this.locateMarkableWork(TotalPotentialMarks);
         List<Message__c> markableMessages = new ApexPages.StandardSetController(locator).getRecords();
         
         Boolean hasWorkToMark = !markableMessages.isEmpty();
@@ -46,22 +49,27 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         if (!hasWorkToExecute) {
             //MARK
             this.mark(markableMessages);
-            this.markedMessages = new Map<Id,Message__c>(markableMessages);
-            
+            Map<Id,Message__c> latestMarkedMessages = new Map<Id,Message__c>(markableMessages);
+            for (Id markedMessageId : latestMarkedMessages.keySet()) {
+                this.markedMessages.put(markedMessageId, latestMarkedMessages.get(markedMessageId));
+            }
+ 
             //next context
             return;
         }
         
-        Set<Id> inputIds = this.markedMessages.keySet();
-        List<Message__c> inputMessages = this.markedMessages.values();
+        Map<Id,Message__c> chunkedAndMarkedMessages = getChunkedAndMarkedMessages(this.markedMessages);
+        ////
+        Set<Id> inputIds = chunkedAndMarkedMessages.keySet();
+        List<Message__c> inputMessages = chunkedAndMarkedMessages.values();  
         List<Message__c> outputMessages;
         
         //potentially fatal errors
         this.fatalMessageIds.addAll(inputIds);
         
-        //these guys have been handled (either way, thanks to stateful)
-        this.markedMessages = new Map<Id,Message__c>();
-        
+        //marked messages not selected for execution in this context
+        this.markedMessages =   getRemainingMarkedMessages(this.markedMessages,chunkedAndMarkedMessages);
+
         try {
         
             //EXECUTE
@@ -170,5 +178,28 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         
         return existingJobsCount != 0;
     }
-    
+
+    @testVisible
+    private static Map<Id,Message__c> getChunkedAndMarkedMessages(Map<Id,Message__c> markedMessages) {
+        // for this implementation, simply pull and return the first available message
+        Map<Id,Message__c> results = new Map<Id,Message__c>();
+        if (markedMessages.size() > 0) {
+            results.put(markedMessages.values()[0].Id , markedMessages.values()[0]);    
+        }
+        return results;
+    }
+
+    @testVisible
+    private static Map<Id,Message__c> getRemainingMarkedMessages(
+        Map<Id,Message__c> markedMessages,
+        Map<Id,Message__c> chunkedAndMarkedMessages
+    ) {
+        Map<Id,Message__c> remainingMarkedMessages = new Map<Id,Message__c>();
+        for (Id messageId : markedMessages.keySet()) {
+            if (!chunkedAndMarkedMessages.keySet().contains(messageId)) {
+                remainingMarkedMessages.put(messageId, markedMessages.get(messageId));
+            }
+        }
+        return remainingMarkedMessages;
+    }
 }
