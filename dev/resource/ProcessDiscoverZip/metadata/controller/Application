@@ -10,11 +10,12 @@
         "isAsyncApexJobFinished": false,
         "isAsyncApexJobStarted": false
     },
+    "name": "MyController",
     "configAlternates": {
         "isAsyncApexJobFinished": "boolean",
         "isAsyncApexJobStarted": "boolean"
     },
-    "designerId": "82c204d7-ffa5-4759-a8cc-79105b35ef9f",
+    "designerId": "3684d753-8954-4c0a-91c0-004ece690203",
     "customConfigs": [
         {
             "group": "(Custom Properties)",
@@ -40,13 +41,12 @@
                 "designer|params": [
                     "target"
                 ],
-                "designer|targetType": null,
                 "fn": "onGridpanelAfterRender",
                 "implHandler": [
                     "Ext.log('[Discover.controller.Application] heard gridpanel afterrender event');",
                     "",
                     "var me = this;",
-                    "var store = Ext.getStore('AsyncApexJob');",
+                    "var store = Ext.getStore('AsyncApexJobs');",
                     "var jobAlreadyFinished = Ext.Array.contains(['Aborted', 'Completed', 'Failed'], AsyncApexJob.Status);",
                     "",
                     "Ext.log('[Discover.controller.Application] start polling AsyncApexJob store');",
@@ -76,7 +76,8 @@
                 "name": "afterrender",
                 "scope": "me"
             },
-            "designerId": "d2231564-a5ca-4fdf-a040-66226f968502"
+            "name": "onGridpanelAfterRender",
+            "designerId": "f581cdbc-954c-4cce-b0f5-e96a42c9cde3"
         },
         {
             "type": "applicationaction",
@@ -119,7 +120,8 @@
                 "scope": "this",
                 "single": true
             },
-            "designerId": "758f1ee6-8101-42de-9ce7-c99286edcc30"
+            "name": "onAsyncApexJobStart",
+            "designerId": "c74f0cbf-1b54-4091-942b-cc21e7495623"
         },
         {
             "type": "applicationaction",
@@ -139,7 +141,8 @@
                 "scope": "this",
                 "single": true
             },
-            "designerId": "900050cf-d099-4672-b7f9-95e1c98d4b6c"
+            "name": "onAsyncApexJobFinish",
+            "designerId": "c34d0351-b3a8-4a66-b17a-91cf10936f67"
         },
         {
             "type": "controllerref",
@@ -153,7 +156,8 @@
                 "selector": "#progressbar",
                 "xtype": "Ext.ProgressBar"
             },
-            "designerId": "1731ab06-bb1c-4bdc-ae79-64f7524229d8"
+            "name": "ProgressBar",
+            "designerId": "f6aa230d-938e-4bcf-81f0-53f7e0ae5ac5"
         },
         {
             "type": "controllerref",
@@ -167,7 +171,8 @@
                 "selector": "#grid",
                 "xtype": "Ext.grid.Panel"
             },
-            "designerId": "86a646dd-4330-4f64-9053-2429e0db5a70"
+            "name": "Grid",
+            "designerId": "c55e7a03-940f-4b36-bccb-25b037003440"
         }
     ]
 }

@@ -9,85 +9,87 @@
         "designer|userClassName": "Process",
         "idProperty": "Id"
     },
-    "designerId": "36956622-31bd-4466-a271-13ff984cbc47",
+    "name": "MyModel1",
+    "designerId": "35db243f-de5b-46c0-9008-9a0706ffc6f6",
     "cn": [
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.Field",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Id",
-                "type": "auto"
+                "name": "Id"
             },
-            "designerId": "9a727c15-e592-42b9-b974-a6f1c48b9783"
+            "name": "MyField1",
+            "designerId": "3acbe149-8c5b-48f6-a7a2-46e323847aaf"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Name",
-                "type": "string"
+                "name": "Name"
             },
-            "designerId": "b675c6bf-7bb0-4140-8bb8-7b2a092699b7"
+            "name": "MyString4",
+            "designerId": "7ae143db-51e5-4b70-ab14-b183db734bc1"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Description",
-                "type": "string"
+                "name": "Description"
             },
-            "designerId": "21e4919a-d068-4d32-9d39-a852548d8070"
+            "name": "MyString5",
+            "designerId": "60243e76-4fd1-4054-8c21-ccb28fa6a702"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Icon",
-                "type": "string"
+                "name": "Icon"
             },
-            "designerId": "ff0ece21-7d40-4627-a282-3a750e3f6c67"
+            "name": "MyString6",
+            "designerId": "3ab00d12-5962-47cd-84db-a16df0386be0"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Tag",
-                "type": "string"
+                "name": "Tag"
             },
-            "designerId": "866854e7-397e-4de8-86e6-e827f1ec9c91"
+            "name": "MyString7",
+            "designerId": "54cbd60e-bd52-4e7e-b60f-2f0b9c315994"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "FullyQualifiedClassName",
-                "type": "string"
+                "designer|createAlias": null,
+                "name": "FullyQualifiedClassName"
             },
-            "designerId": "a9dcb4c5-d880-40b4-be38-8ad5ba1bcae1",
+            "name": "MyString8",
+            "designerId": "7c6fa3c9-3bc8-4ac5-b0fc-4e32b31c28a8",
             "cn": [
                 {
                     "type": "fixedfunction",
@@ -107,7 +109,8 @@
                             "return '(' + v + ')';"
                         ]
                     },
-                    "designerId": "39d9bd58-8175-4031-a8d7-e366e63fb262"
+                    "name": "convert",
+                    "designerId": "486296c1-bc56-4248-93b4-78de234cf0a8"
                 }
             ]
         },
@@ -122,13 +125,15 @@
                 "api": [
                     "{read: $RemoteAction.ProcessDiscoverController.readProcesses}"
                 ],
-                "designer|createAlias": "vfremote",
+                "designer|createAlias": null,
                 "designer|displayName": "ProcessProxy",
+                "directFn": null,
                 "extraParams": [
                     "{lastModifiedDate: new Date(AsyncApexJob.CreatedDate).toUTCString()}"
                 ]
             },
-            "designerId": "80b1e297-057f-4c9d-a2e2-89905f856030"
+            "name": "MyDirectProxy1",
+            "designerId": "5783c9c0-ef99-4245-abcb-10bf1c020faa"
         }
     ]
 }

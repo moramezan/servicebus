@@ -9,33 +9,34 @@
         "designer|userClassName": "AsyncApexJob",
         "idProperty": "Id"
     },
-    "designerId": "c7d4097d-1683-471c-9f38-a448ae1f6b14",
+    "name": "MyModel",
+    "designerId": "3dcd1a61-d7b5-4a05-af36-daebda4c519c",
     "cn": [
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.Field",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Id",
-                "type": "auto"
+                "name": "Id"
             },
-            "designerId": "2af62978-06b5-4791-8594-86db06a41086"
+            "name": "MyField",
+            "designerId": "c92d01f3-f7fd-41db-96ea-fa2f74c1a972"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.Date",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "CompletedDate",
-                "type": "date"
+                "name": "CompletedDate"
             },
-            "designerId": "11870b70-b0a8-4846-bd90-1bf489b4479f",
+            "name": "MyDate",
+            "designerId": "23f603df-c504-49e5-9bdb-af3e88289c33",
             "cn": [
                 {
                     "type": "fixedfunction",
@@ -54,22 +55,23 @@
                             "return v ? new Date(v) : null;"
                         ]
                     },
-                    "designerId": "b676a495-22b5-47e4-b02a-13f7ab42a236"
+                    "name": "convert",
+                    "designerId": "3c48c97d-fb40-4bb5-8639-a8d8761263de"
                 }
             ]
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.Date",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "CreatedDate",
-                "type": "date"
+                "name": "CreatedDate"
             },
-            "designerId": "e59bed06-750e-445c-8aa7-cd6c0505f464",
+            "name": "MyDate1",
+            "designerId": "dd69267d-bd9b-4c21-872b-01eeb9bffbc3",
             "cn": [
                 {
                     "type": "fixedfunction",
@@ -88,113 +90,114 @@
                             "return v ? new Date(v) : null;"
                         ]
                     },
-                    "designerId": "2fa599bd-3c90-464f-a6e6-3736a650bada"
+                    "name": "convert",
+                    "designerId": "aae76763-8fde-4422-9618-64e4645a6ff7"
                 }
             ]
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "ExtendedStatus",
-                "type": "string"
+                "name": "ExtendedStatus"
             },
-            "designerId": "306b0358-a842-430a-8491-68f79b5e5917"
+            "name": "MyString",
+            "designerId": "19dd0e68-4d7d-434f-824c-ef84d12dad85"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.Integer",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "JobItemsProcessed",
-                "type": "int"
+                "name": "JobItemsProcessed"
             },
-            "designerId": "5c248486-d9c6-40b6-b35d-38dbcbf6efaf"
+            "name": "MyInteger",
+            "designerId": "0a1581ec-13a5-481d-b70c-13ce0e383840"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "JobType",
-                "type": "string"
+                "name": "JobType"
             },
-            "designerId": "8642c1ae-5c24-4799-9c2d-91fd6cd7fc17"
+            "name": "MyString1",
+            "designerId": "da21531f-56d5-4c57-8b7b-7aa369b4f9ea"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "LastProcessed",
-                "type": "string"
+                "name": "LastProcessed"
             },
-            "designerId": "c0552a32-d3d0-4796-8498-8cae271a6153"
+            "name": "MyString2",
+            "designerId": "1d813fe5-4b28-4bdd-9993-42fc4e4f8ec1"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.Integer",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "LastProcessedOffset",
-                "type": "int"
+                "name": "LastProcessedOffset"
             },
-            "designerId": "e1131955-5953-4dbe-afed-750375f05c85"
+            "name": "MyInteger1",
+            "designerId": "19d370e8-fe97-44f5-8515-74eb740d90f2"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.Integer",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "NumberOfErrors",
-                "type": "int"
+                "name": "NumberOfErrors"
             },
-            "designerId": "4c84ac8b-6a65-4adf-837f-0e87a9cfedbb"
+            "name": "MyInteger2",
+            "designerId": "ddd57cb8-50e3-4791-b93b-9f1dbbab4c5d"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Status",
-                "type": "string"
+                "name": "Status"
             },
-            "designerId": "4fcf93ea-357c-44cf-b113-c043fe0c39c4"
+            "name": "MyString3",
+            "designerId": "f0515e98-7ca6-4df9-a048-36d09d1e6b20"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.Integer",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "TotalJobItems",
-                "type": "int"
+                "name": "TotalJobItems"
             },
-            "designerId": "dd67e7e9-a8c8-410c-9379-ac6dc7a39357"
+            "name": "MyInteger3",
+            "designerId": "63bd7c45-5dd2-4b95-b9d7-23e4cdd89c97"
         },
         {
             "type": "Ext.data.proxy.Direct",
@@ -207,13 +210,15 @@
                 "api": [
                     "{read: $RemoteAction.ProcessDiscoverController.readAsyncApexJobs}"
                 ],
-                "designer|createAlias": "vfremote",
+                "designer|createAlias": null,
                 "designer|displayName": "AsyncApexJobProxy",
+                "directFn": null,
                 "extraParams": [
                     "{asyncApexJobId: AsyncApexJob.Id}"
                 ]
             },
-            "designerId": "846ce609-25e5-4e19-9665-bb1593dea93f"
+            "name": "MyDirectProxy",
+            "designerId": "4e1c091a-daed-45a2-9b35-5e951f394925"
         },
         {
             "type": "basicfunction",
@@ -258,7 +263,8 @@
                     "progressbar.updateProgress(value, text, animate);"
                 ]
             },
-            "designerId": "1627df2d-5e55-4da7-a470-8fa8c0ba4190"
+            "name": "draw",
+            "designerId": "bdf7226e-cc42-4873-9530-c92034b3e957"
         },
         {
             "type": "basicfunction",
@@ -278,7 +284,8 @@
                     "return (timeCompleted - timeCreated) / 1000;"
                 ]
             },
-            "designerId": "693fe634-f273-49eb-a288-755b12d73726"
+            "name": "countElapsedSeconds",
+            "designerId": "18e58a8d-55af-473a-935c-521f816f452d"
         },
         {
             "type": "basicfunction",
@@ -301,7 +308,8 @@
                     "if (this.get('Status') != 'Completed') grid.mask(msg);"
                 ]
             },
-            "designerId": "f1767ad1-2442-4188-876b-2453b4a1537b"
+            "name": "mask",
+            "designerId": "048602e6-9d4f-4b11-a407-4e9811307db4"
         }
     ]
 }

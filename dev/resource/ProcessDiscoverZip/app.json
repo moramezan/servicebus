@@ -1,11 +1,75 @@
 {
    "name": "Discover",
-   "requires": [
-      "baf-theme-native",
-      "fflib-ext-common"
+   "indexHtmlPath": "index.html",
+   "classpath": "${app.dir}/app,${app.dir}/app/override/data/proxy/",
+   "overrides": "${app.dir}/overrides",
+   "framework": "ext",
+   "theme": "ext-theme-classic-903b57e0-2766-4e66-9434-1f5794c89f8a",
+   "requires": [],
+   "sass": {
+      "namespace": "Discover"
+   },
+   "url": null,
+   "js": [
+      {
+         "path": "${ext.dir}/build/ext-all-rtl-debug.js"
+      },
+      {
+         "path": "app/override/data/proxy/Direct.js",
+         "includeInBundle": true
+      },
+      {
+         "path": "app.js",
+         "bundle": true
+      }
    ],
-   "id": "cebfb4ac-7776-4b20-8456-e623cf58c820",
-   "resources": [
-      "ext/packages/ext-theme-classic/build/resources/ext-theme-classic-all-rtl-debug.css"
-   ]
+   "css": [
+      {
+         "path": "bootstrap.css",
+         "bootstrap": true
+      },
+      {
+         "path": "ext/packages/ext-theme-classic/build/resources/ext-theme-classic-all-rtl.css",
+         "remote": true
+      },
+      {
+         "path": "build/production/Discover/resources/Discover-all.css",
+         "remote": true
+      }
+   ],
+   "production": {},
+   "testing": {},
+   "development": {},
+   "bootstrap": {
+      "base": "${app.dir}",
+      "manifest": "bootstrap.json",
+      "microloader": "bootstrap.js",
+      "css": "bootstrap.css"
+   },
+   "output": {
+      "base": "${workspace.build.dir}/${build.environment}/${app.name}"
+   },
+   "appCache": {
+      "cache": [
+         "index.html"
+      ],
+      "network": [
+         "*"
+      ],
+      "fallback": []
+   },
+   "resources": [],
+   "ignore": [
+      "(^|/)CVS(/?$|/.*?$)"
+   ],
+   "archivePath": "archive",
+   "slicer": {
+      "js": [
+         {
+            "path": "${app.dir}/sass/example/custom.js",
+            "isWidgetManifest": true
+         }
+      ]
+   },
+   "id": "b27f29f3-f272-4ba4-8e01-e3d0ede7acce"
 }

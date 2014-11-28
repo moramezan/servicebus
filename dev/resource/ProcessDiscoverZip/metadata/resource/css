@@ -7,7 +7,9 @@
     "codeClass": null,
     "userConfig": {
         "designer|userClassName": "css",
-        "url": "ext/packages/ext-theme-classic/build/resources/ext-theme-classic-all-rtl-debug.css"
+        "remote": true,
+        "url": "ext/packages/ext-theme-classic/build/resources/ext-theme-classic-all-rtl.css"
     },
-    "designerId": "e49f586a-4385-422b-8b4c-001e2578532c"
+    "name": "css",
+    "designerId": "d8c095b0-7233-4041-ac2c-310692f6c3de"
 }

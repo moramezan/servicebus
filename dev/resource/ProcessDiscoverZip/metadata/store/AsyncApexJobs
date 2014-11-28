@@ -1,0 +1,48 @@
+{
+    "type": "Ext.data.Store",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "autoLoad": false,
+        "designer|userClassName": "AsyncApexJobs",
+        "model": "AsyncApexJob",
+        "storeId": "AsyncApexJobs"
+    },
+    "name": "MyStore",
+    "designerId": "0586e6f6-d2e9-407f-9e82-7e0430358e45",
+    "cn": [
+        {
+            "type": "basiceventbinding",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|commentHeader": [
+                    ""
+                ],
+                "fn": "onStoreLoad",
+                "implHandler": [
+                    "//https://github.com/ivan-novakov/extjs-upload-widget/issues/26",
+                    "if (records[0].get('JobItemsProcessed') > 0) {",
+                    "    //batch job has started for real",
+                    "    Discover.getApplication().fireEvent('asyncapexjobstart', store, records, successful, eOpts);",
+                    "}",
+                    "",
+                    "if (Ext.Array.contains(['Aborted', 'Completed', 'Failed'], records[0].get('Status'))) {",
+                    "    //batch job has finished for real",
+                    "    Discover.getApplication().fireEvent('asyncapexjobfinish', store, records, successful, eOpts);",
+                    "}"
+                ],
+                "name": "load",
+                "scope": "me"
+            },
+            "name": "onStoreLoad",
+            "designerId": "07ace19e-4a9f-48fe-8887-f05239d81874"
+        }
+    ]
+}

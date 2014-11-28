@@ -1,0 +1,15 @@
+{
+    "type": "jsoverrideresource",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "js",
+        "includeInBundle": true,
+        "url": "app/override/data/proxy/Direct.js"
+    },
+    "name": "js",
+    "designerId": "1f9666bd-7205-49df-aa2b-902a39346819"
+}

@@ -2,7 +2,9 @@
     "name": "ProcessDiscoverZip",
     "settings": {
         "cmd": {
-            "license": "commercial"
+            "license": "commercial",
+            "cmdVersion": "5.0.2.270",
+            "frameworkVersion": "5.0.1.1255"
         },
         "canvasControls": {
             "viewportSize": {
@@ -12,32 +14,51 @@
                 "width": null
             }
         },
-        "urlPrefix": "",
-        "exportPath": ""
+        "urlPrefix": "http://localhost/ProcessDiscoverZip/",
+        "exportPath": "",
+        "spacesToIndent": 4,
+        "sdkPath": "",
+        "lineEnding": "LF",
+        "genTimestamps": false,
+        "cacheBust": false,
+        "buildShouldOverwriteIndex": true,
+        "generateArchitectVersion": true,
+        "projectHasEnabledWebServer": false,
+        "lockUrlPrefix": false,
+        "installStatus": "Not Installed",
+        "lastBuildSelection": {
+            "value": "webBuild",
+            "display": "Build web app"
+        }
     },
-    "xdsVersion": "3.0.4",
-    "xdsBuild": 1386,
+    "xdsVersion": "3.1.0",
+    "xdsBuild": 1934,
     "schemaVersion": 1,
-    "upgradeVersion": 300000000004,
-    "framework": "ext42",
+    "upgradeVersion": 300000000007,
+    "framework": "ext50",
     "viewOrderMap": {
         "view": [
-            "cd16f635-ec7d-4faf-bc2b-ba4655a673b6"
+            "2162a9ba-07cf-4dd3-8e4d-c18119bc08d2",
+            "08989e4b-a684-46b7-ad47-dfd9e2ec37e0",
+            "3ceac646-3905-4338-8943-d3562818de61"
         ],
         "store": [
-            "a3b9da76-089b-4af3-b4e4-19cdbf253630",
-            "49a8aaf7-77b8-4773-949b-a5cd4b0b0982"
+            "0586e6f6-d2e9-407f-9e82-7e0430358e45",
+            "94ffaa98-317c-4abb-a012-5fb49e5ca603"
         ],
         "controller": [
-            "82c204d7-ffa5-4759-a8cc-79105b35ef9f"
+            "3684d753-8954-4c0a-91c0-004ece690203"
         ],
         "model": [
-            "36956622-31bd-4466-a271-13ff984cbc47",
-            "c7d4097d-1683-471c-9f38-a448ae1f6b14"
+            "3dcd1a61-d7b5-4a05-af36-daebda4c519c",
+            "35db243f-de5b-46c0-9008-9a0706ffc6f6"
         ],
         "resource": [
-            "740d4d11-914f-4e10-aa84-fea6a8e6fddf",
-            "e49f586a-4385-422b-8b4c-001e2578532c"
+            "61504695-b19b-490e-85a9-74077e1086c7",
+            "d8c095b0-7233-4041-ac2c-310692f6c3de",
+            "1f9666bd-7205-49df-aa2b-902a39346819",
+            "903b57e0-2766-4e66-9434-1f5794c89f8a",
+            "a61d587f-d164-4dc7-9f43-a089b161b330"
         ],
         "app": [
             "application"
