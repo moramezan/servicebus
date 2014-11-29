@@ -308,4 +308,71 @@
         System.assertEquals(expectedCount, actualRemainingMarkedMessages.keySet().size());
         System.assertEquals(true, actualFlag);
     } 
+
+    static testmethod void callingGetAvailableContextsReturnsExpectedCount() {
+        //arrange
+        IdUtility messageIdUtility = new IdUtility(Message__c.getSObjectType());
+        Id messageAId = messageIdUtility.getNext();
+        Id messageBId = messageIdUtility.getNext();
+        Id messageCId = messageIdUtility.getNext();
+        Id messageDId = messageIdUtility.getNext();
+        Id messageEId = messageIdUtility.getNext();
+
+        List<Message__c> markableMessages = new List<Message__c>{
+            new Message__c(Id = messageAId),
+            new Message__c(Id = messageBId),
+            new Message__c(Id = messageCId)
+        };
+        
+        Map<Id,Message__c> markedMessages  = new Map<Id, Message__c>{
+            messageDId => new Message__c(Id = messageDId),
+            messageEId => new Message__c(Id = messageEId)
+        };
+          
+        Integer remainingContexts = 7; 
+          
+        //act
+        Integer actualAvailableContexts = VerticalBrokerImplementation.getAvailableContexts (
+            remainingContexts, 
+            markableMessages,
+            markedMessages  
+        );
+    
+        //assert
+        Integer expectedAvailableContexts = 7 - 3 - 2 - 1;
+        System.assertEquals( expectedAvailableContexts,actualAvailableContexts );
+    }
+
+    static testmethod void callingGetAdjustedMarkableMessagesReturnsExpectedCollection() {
+        //arrange
+        IdUtility messageIdUtility = new IdUtility(Message__c.getSObjectType());
+        Id messageAId = messageIdUtility.getNext();
+        Id messageBId = messageIdUtility.getNext();
+        Id messageCId = messageIdUtility.getNext();
+
+        List<Message__c> markableMessages = new List<Message__c>{
+            new Message__c(Id = messageAId),
+            new Message__c(Id = messageBId),
+            new Message__c(Id = messageCId)
+        };
+ 
+        Integer availableContexts = 2;
+
+        //act
+        List<Message__c> actualAdjustedMarkableMessages = VerticalBrokerImplementation.getAdjustedMarkableMessages(
+            markableMessages, 
+            availableContexts
+        );
+ 
+        //assemble
+        Integer actualCount = actualAdjustedMarkableMessages.Size();
+        Set<Id> actualMessageIds  = (new Map<Id, Message__c>(actualAdjustedMarkableMessages)).keySet();
+        Set<Id> expectedMessageIds  = (new Map<Id, Message__c>(markableMessages)).keySet();
+        Boolean actualFlag = expectedMessageIds.containsAll(actualMessageIds);
+
+        //assert
+        Integer expectedCount = availableContexts;
+        System.assertEquals( expectedCount, actualCount);
+        System.assertEquals( true, actualFlag);
+    }
 }

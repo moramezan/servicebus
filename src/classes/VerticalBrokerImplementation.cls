@@ -1,4 +1,4 @@
-/**
+/*
  * DO NOT ENQUEUE THIS JOB EVER
  * see http://salesforce.stackexchange.com/a/24448/320
  * 
@@ -11,16 +11,28 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     
     @TestVisible private Boolean abortJob = false;
 
+    /**
+     * some integer below a hard limit of 4000 (min expected rows in FieldPermissions)
+     */
     @testVisible
-    private static Integer TotalPotentialMarks = 100;
+    private  Integer RemainingContexts = 100;   
 
+    /**
+     * experiment esp when chunking - for now, set at 50% of RemainingContexts 
+     */
+    @testVisible
+    private static Integer TotalPotentialMarks = 50;  
+
+     @testVisible
+     private  Boolean hasAllContexts = true;
+     
     /**
      * If scope is null, execute will never be reacher!
      * Has to be array of booleans, not nulls
      */
     public Database.QueryLocator start(Database.BatchableContext context) {
         if (BrokerSettings__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
-        return Database.getQueryLocator([SELECT Id FROM FieldPermissions LIMIT 100]);
+        return Database.getQueryLocator([SELECT Id FROM FieldPermissions LIMIT :RemainingContexts]);
     }
     
     public void execute(Database.BatchableContext context, List<SObject> scopes) {
@@ -33,9 +45,23 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         Boolean hasWorkToMark = !markableMessages.isEmpty();
         Boolean hasWorkToExecute = !this.markedMessages.isEmpty();
         
-        if (!hasWorkToMark && !hasWorkToExecute) {
+        RemainingContexts--;
+                
+        if (!hasAllContexts) {
             //DONE
             
+            //last context
+            if (RemainingContexts == 0) {
+                //errors
+                this.handleFatalExceptions(context); 
+                
+                return; 
+            }
+        }
+        
+        if (!hasWorkToMark && !hasWorkToExecute)  {
+            //DONE
+
             //errors
             this.handleFatalExceptions(context);
             
@@ -45,13 +71,33 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
             //last context
             return;
         }
-        
-        if (!hasWorkToExecute) {
+
+        if (!hasWorkToExecute) {                         
             //MARK
-            this.mark(markableMessages);
-            Map<Id,Message__c> latestMarkedMessages = new Map<Id,Message__c>(markableMessages);
-            for (Id markedMessageId : latestMarkedMessages.keySet()) {
-                this.markedMessages.put(markedMessageId, latestMarkedMessages.get(markedMessageId));
+            if (hasAllContexts) { // this flag is set to false inside this code block ..
+                // at this point, taking account of 
+                //  - contexts  already executed (incl. this context)
+                //  - the need for a terminate context
+                //  - the combined work executes of markableMessages and  markedMessages  
+                // how many contexts are actually available ?
+                Integer availableContexts = getAvailableContexts(RemainingContexts ,  markableMessages,  markedMessages);
+                
+                // limit the markable messages to actually available "WorkToExecute" contexts
+                List<Message__c> adjustedMarkableMessages = getAdjustedMarkableMessages(markableMessages, availableContexts+1);
+                
+                // set the terminate flag
+                hasAllContexts = (availableContexts > 0);
+                
+                // if  (adjusted) markable Messages exist
+                //   - mark these guys in the database 
+                //  - simultaneously add them to the  stateful markedMessages collection
+                if (adjustedMarkableMessages.size() > 0) {
+                    this.mark(adjustedMarkableMessages);
+                    Map<Id,Message__c> messageIdToMarkableMessage = new Map<Id,Message__c>(adjustedMarkableMessages);
+                    for (Id markableMessageId : messageIdToMarkableMessage.keySet()) {
+                        this.markedMessages.put(markableMessageId, messageIdToMarkableMessage.get(markableMessageId));
+                    }
+                }
             }
  
             //next context
@@ -201,5 +247,38 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
             }
         }
         return remainingMarkedMessages;
+    }
+    
+    @testVisible
+    private static Integer getAvailableContexts (
+        Integer remainingContexts, 
+        List<Message__c> markableMessages,
+        Map<Id,Message__c> markedMessages 
+    ) {
+        Integer exitContext = 1;
+        return remainingContexts - markableMessages.size() - markedMessages.size() - exitContext;
+    }
+    
+    /**
+     * if we cant do the full MarkableMessage complement (ie messages selected with Buffered state),
+     * can we instead try to do as many as we can given the available remaining contexts
+     */
+    @testVisible
+    private static List<Message__c> getAdjustedMarkableMessages(
+        List<Message__c> markableMessages, 
+        Integer availableContexts
+    ) {
+        if (markableMessages.size() <= availableContexts) {
+            return markableMessages;
+        }
+ 
+        List<Message__c> adjustedMarkableMessages = new List<Message__c>();
+        Integer i = 1;
+        while (i <= availableContexts) {
+            adjustedMarkableMessages.add(markableMessages[i-1]);
+            i++;
+        }
+
+        return adjustedMarkableMessages;
     }
 }
