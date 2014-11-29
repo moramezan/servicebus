@@ -52,12 +52,10 @@ Ext.define('Ext.ux.TabCloseMenu', {
      */
     extraItemsTail: null,
 
+    // TODO - doc this.addEvents('aftermenu','beforemenu');
+
     //public
     constructor: function (config) {
-        this.addEvents(
-            'aftermenu',
-            'beforemenu');
-
         this.mixins.observable.constructor.call(this, config);
     },
 

@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
-*/
 /**
  * The Editor class is used to provide inline editing for elements on the page. The editor
  * is backed by a {@link Ext.form.field.Field} that will be displayed to edit the underlying content.
@@ -47,18 +30,12 @@ Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
  *
  */
 Ext.define('Ext.Editor', {
-
-    /* Begin Definitions */
-
     extend: 'Ext.container.Container',
-
-    alias: 'widget.editor',
+    xtype: 'editor',
 
     requires: ['Ext.layout.container.Editor'],
 
-    /* End Definitions */
-
-   layout: 'editor',
+    layout: 'editor',
 
     /**
     * @cfg {Ext.form.field.Field} field
@@ -172,13 +149,66 @@ Ext.define('Ext.Editor', {
     focusOnToFront: false,
 
     /**
-     * @cfg {String/HTMLElement/Ext.Element} [parentEl=document.body]
+     * @cfg {String/HTMLElement/Ext.dom.Element} [parentEl=document.body]
      * An element to render to.
      */
 
     // private overrides
     hidden: true,
     baseCls: Ext.baseCSSPrefix + 'editor',
+
+    /**
+     * @event beforestartedit
+     * Fires when editing is initiated, but before the value changes.  Editing can be canceled by returning
+     * false from the handler of this event.
+     * @param {Ext.Editor} this
+     * @param {Ext.dom.Element} boundEl The underlying element bound to this editor
+     * @param {Object} value The field value being set
+     */
+
+    /**
+     * @event startedit
+     * Fires when this editor is displayed
+     * @param {Ext.Editor} this
+     * @param {Ext.dom.Element} boundEl The underlying element bound to this editor
+     * @param {Object} value The starting field value
+     */
+
+    /**
+     * @event beforecomplete
+     * Fires after a change has been made to the field, but before the change is reflected in the underlying
+     * field.  Saving the change to the field can be canceled by returning false from the handler of this event.
+     * Note that if the value has not changed and ignoreNoChange = true, the editing will still end but this
+     * event will not fire since no edit actually occurred.
+     * @param {Ext.Editor} this
+     * @param {Object} value The current field value
+     * @param {Object} startValue The original field value
+     */
+
+    /**
+     * @event complete
+     * Fires after editing is complete and any changed value has been written to the underlying field.
+     * @param {Ext.Editor} this
+     * @param {Object} value The current field value
+     * @param {Object} startValue The original field value
+     */
+
+    /**
+     * @event canceledit
+     * Fires after editing has been canceled and the editor's value has been reset.
+     * @param {Ext.Editor} this
+     * @param {Object} value The user-entered field value that was discarded
+     * @param {Object} startValue The original field value that was set back into the editor after cancel
+     */
+
+    /**
+     * @event specialkey
+     * Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed.  You can check
+     * {@link Ext.event.Event#getKey} to determine which key was pressed.
+     * @param {Ext.Editor} this
+     * @param {Ext.form.field.Field} field The field attached to this editor
+     * @param {Ext.event.Event} event The event object
+     */
 
     initComponent : function() {
         var me = this,
@@ -201,64 +231,6 @@ Ext.define('Ext.Editor', {
         me.items = field;
 
         me.callParent(arguments);
-
-        me.addEvents(
-            /**
-             * @event beforestartedit
-             * Fires when editing is initiated, but before the value changes.  Editing can be canceled by returning
-             * false from the handler of this event.
-             * @param {Ext.Editor} this
-             * @param {Ext.Element} boundEl The underlying element bound to this editor
-             * @param {Object} value The field value being set
-             */
-            'beforestartedit',
-
-            /**
-             * @event startedit
-             * Fires when this editor is displayed
-             * @param {Ext.Editor} this
-             * @param {Ext.Element} boundEl The underlying element bound to this editor
-             * @param {Object} value The starting field value
-             */
-            'startedit',
-
-            /**
-             * @event beforecomplete
-             * Fires after a change has been made to the field, but before the change is reflected in the underlying
-             * field.  Saving the change to the field can be canceled by returning false from the handler of this event.
-             * Note that if the value has not changed and ignoreNoChange = true, the editing will still end but this
-             * event will not fire since no edit actually occurred.
-             * @param {Ext.Editor} this
-             * @param {Object} value The current field value
-             * @param {Object} startValue The original field value
-             */
-            'beforecomplete',
-            /**
-             * @event complete
-             * Fires after editing is complete and any changed value has been written to the underlying field.
-             * @param {Ext.Editor} this
-             * @param {Object} value The current field value
-             * @param {Object} startValue The original field value
-             */
-            'complete',
-            /**
-             * @event canceledit
-             * Fires after editing has been canceled and the editor's value has been reset.
-             * @param {Ext.Editor} this
-             * @param {Object} value The user-entered field value that was discarded
-             * @param {Object} startValue The original field value that was set back into the editor after cancel
-             */
-            'canceledit',
-            /**
-             * @event specialkey
-             * Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed.  You can check
-             * {@link Ext.EventObject#getKey} to determine which key was pressed.
-             * @param {Ext.Editor} this
-             * @param {Ext.form.field.Field} field The field attached to this editor
-             * @param {Ext.EventObject} event The event object
-             */
-            'specialkey'
-        );
     },
 
     // private
@@ -312,28 +284,25 @@ Ext.define('Ext.Editor', {
 
     /**
      * Starts the editing process and shows the editor.
-     * @param {String/HTMLElement/Ext.Element} el The element to edit
+     * @param {String/HTMLElement/Ext.dom.Element} el The element to edit
      * @param {String} value (optional) A value to initialize the editor with. If a value is not provided, it defaults
       * to the innerHTML of el.
      */
     startEdit : function(el, value) {
         var me = this,
-            field = me.field;
+            field = me.field,
+            dom;
 
         me.completeEdit();
         me.boundEl = Ext.get(el);
-        value = Ext.isDefined(value) ? value : Ext.String.trim(me.boundEl.dom.innerText || me.boundEl.dom.innerHTML);
+        dom = me.boundEl.dom;
+        value = Ext.isDefined(value) ? value : Ext.String.trim(dom.textContent || dom.innerText || dom.innerHTML);
 
-        if (!me.rendered) {
-            // Render to the ownerCt's element
-            // Being floating, we do not need to use the actual layout's target.
-            // Indeed, it's better if we do not so that we do not interfere with layout's child management,
-            // especially with CellEditors in the element of a TablePanel.
-            if (me.ownerCt) {
-                me.parentEl = me.ownerCt.el;
-                me.parentEl.position();
-            }
-            me.render(me.parentEl || document.body);
+        // If NOT configured with a renderTo, render to the ownerCt's element
+        // Being floating, we do not need to use the actual layout's target.
+        // Indeed, it's better if we do not so that we do not interfere with layout's child management.
+        if (!me.rendered && !me.renderTo && me.ownerCt) {
+            (me.renderTo = me.ownerCt.el).position();
         }
 
         if (me.fireEvent('beforestartedit', me, me.boundEl, value) !== false) {
@@ -392,7 +361,7 @@ Ext.define('Ext.Editor', {
         }
 
         if (String(value) === String(me.startValue) && me.ignoreNoChange) {
-            me.hideEdit(remainVisible);
+            me.onEditComplete(remainVisible);
             return;
         }
 
@@ -400,9 +369,9 @@ Ext.define('Ext.Editor', {
             // Grab the value again, may have changed in beforecomplete
             value = me.getValue();
             if (me.updateEl && me.boundEl) {
-                me.boundEl.update(value);
+                me.boundEl.setHtml(value);
             }
-            me.hideEdit(remainVisible);
+            me.onEditComplete(remainVisible);
             me.fireEvent('complete', me, value, me.startValue);
         }
     },
@@ -437,16 +406,16 @@ Ext.define('Ext.Editor', {
                 me.setValue(startValue);
                 field.resumeEvents();
             }
-            me.hideEdit(remainVisible);
+            me.onEditComplete(remainVisible);
             me.fireEvent('canceledit', me, value, startValue);
             delete me.editedValue;
         }
     },
 
     // private
-    hideEdit: function(remainVisible) {
+    onEditComplete: function(remainVisible) {
+        this.editing = false;
         if (remainVisible !== true) {
-            this.editing = false;
             this.hide();
         }
     },
@@ -462,7 +431,7 @@ Ext.define('Ext.Editor', {
         }
 
         // If newly active element is focusable, prevent reacquisition of focus by editor owner
-        if (Ext.fly(target).isFocusable() || target.getAttribute('tabIndex')) {
+        if (Ext.fly(target).isFocusable() || target.getAttribute('tabindex')) {
             target.focus();
         }
     },
@@ -475,11 +444,6 @@ Ext.define('Ext.Editor', {
         if (me.editing) {
             me.completeEdit();
             return;
-        }
-        // Fields which mimic blur have to be told to fire t heir blur events.
-        // All other types of field are automatically blurred when an ancestor hides.
-        if (field.hasFocus && field.triggerBlur) {
-            field.triggerBlur();
         }
         if (field.collapse) {
             field.collapse();
@@ -508,12 +472,11 @@ Ext.define('Ext.Editor', {
         return this.field.getValue();
     },
 
-    beforeDestroy : function() {
+    beforeDestroy: function () {
         var me = this;
 
         Ext.destroy(me.field);
         delete me.field;
-        delete me.parentEl;
         delete me.boundEl;
 
         me.callParent(arguments);

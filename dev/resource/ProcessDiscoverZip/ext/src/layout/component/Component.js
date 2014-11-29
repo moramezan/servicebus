@@ -1,32 +1,10 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
-*/
 /**
  * This class is intended to be extended or created via the {@link Ext.Component#componentLayout layout}
  * configuration property.  See {@link Ext.Component#componentLayout} for additional details.
  * @private
  */
 Ext.define('Ext.layout.component.Component', {
-
-    /* Begin Definitions */
-
     extend: 'Ext.layout.Layout',
-
-    /* End Definitions */
 
     type: 'component',
 
@@ -38,6 +16,9 @@ Ext.define('Ext.layout.component.Component', {
     usesContentWidth: true,
     usesHeight: true,
     usesWidth: true,
+
+    widthCache: {},
+    heightCache: {},
 
     beginLayoutCycle: function (ownerContext, firstCycle) {
         var me = this,
@@ -70,11 +51,13 @@ Ext.define('Ext.layout.component.Component', {
             if (ownerCtContext && !ownerCtContext.hasRawContent) {
                 ownerLayout = owner.ownerLayout;
 
-                if (ownerLayout.usesWidth) {
-                    ++ownerContext.consumersWidth;
-                }
-                if (ownerLayout.usesHeight) {
-                    ++ownerContext.consumersHeight;
+                if (ownerLayout) {
+                    if (ownerLayout.usesWidth) {
+                        ++ownerContext.consumersWidth;
+                    }
+                    if (ownerLayout.usesHeight) {
+                        ++ownerContext.consumersHeight;
+                    }
                 }
             }
         }
@@ -177,7 +160,7 @@ Ext.define('Ext.layout.component.Component', {
 
     /**
      * Returns the owner component's resize element.
-     * @return {Ext.Element}
+     * @return {Ext.dom.Element}
      */
     getTarget : function() {
         return this.owner.el;
@@ -187,7 +170,7 @@ Ext.define('Ext.layout.component.Component', {
      * Returns the element into which rendering must take place. Defaults to the owner Component's encapsulating element.
      *
      * May be overridden in Component layout managers which implement an inner element.
-     * @return {Ext.Element}
+     * @return {Ext.dom.Element}
      */
     getRenderTarget : function() {
         return this.owner.el;
@@ -224,6 +207,7 @@ Ext.define('Ext.layout.component.Component', {
             widthModel = ownerContext.widthModel,
             boxParent = ownerContext.boxParent,
             isBoxParent = ownerContext.isBoxParent,
+            target = ownerContext.target,
             props = ownerContext.props,
             isContainer,
             ret = {
@@ -235,7 +219,7 @@ Ext.define('Ext.layout.component.Component', {
             zeroWidth, zeroHeight,
             needed = 0,
             got = 0,
-            ready, size, temp;
+            ready, size, temp, key, cache;
 
         // Note: this method is called *a lot*, so we have to be careful not to waste any
         // time or make useless calls or, especially, read the DOM when we can avoid it.
@@ -290,7 +274,15 @@ Ext.define('Ext.layout.component.Component', {
                             // may have a better idea of how to do it even with no items:
                             temp = containerLayout.measureContentWidth(ownerContext);
                         } else {
-                            temp = me.measureContentWidth(ownerContext);
+                            if (target.cacheWidth) {
+                                // if all instances of a given xtype/UI are the same size, only read the DOM once
+                                // to measure the first instance.  Thereafter, retrieve the width from the cache.
+                                key = target.xtype + '-' + target.ui;
+                                cache = me.widthCache;
+                                temp = cache[key] || (cache[key] = me.measureContentWidth(ownerContext));
+                            } else {
+                                temp = me.measureContentWidth(ownerContext);
+                            }
                         }
 
                         if (!isNaN(ret.contentWidth = temp)) {
@@ -384,7 +376,15 @@ Ext.define('Ext.layout.component.Component', {
                             // may have a better idea of how to do it even with no items:
                             temp = containerLayout.measureContentHeight(ownerContext);
                         } else {
-                            temp = me.measureContentHeight(ownerContext);
+                           if (target.cacheHeight) {
+                                // if all instances of a given xtype/UI are the same size, only read the DOM once
+                                // to measure the first instance.  Thereafter, retrieve the height from the cache.
+                                key = target.xtype + '-' + target.ui;
+                                cache = me.heightCache;
+                                temp = cache[key] || (cache[key] = me.measureContentHeight(ownerContext));
+                            } else {
+                                temp = me.measureContentHeight(ownerContext);
+                            }
                         }
 
                         if (!isNaN(ret.contentHeight = temp)) {

@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
-*/
 /**
  * Slider which supports vertical or horizontal orientation, keyboard adjustments, configurable snapping, axis clicking
  * and animation. Can be added as an item to any container.
@@ -34,7 +17,29 @@ Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
 Ext.define('Ext.slider.Single', {
     extend: 'Ext.slider.Multi',
     alias: ['widget.slider', 'widget.sliderfield'],
-    alternateClassName: ['Ext.Slider', 'Ext.form.SliderField', 'Ext.slider.SingleSlider', 'Ext.slider.Slider'],
+    alternateClassName: [
+        'Ext.Slider',
+        'Ext.form.SliderField',
+        'Ext.slider.SingleSlider',
+        'Ext.slider.Slider'
+    ],
+
+    initComponent: function() {
+        if (this.publishOnComplete) {
+            this.valuePublishEvent = 'changecomplete';
+        }
+        this.callParent();
+    },
+
+    /**
+     * @cfg {Boolean} [publishOnComplete=true]
+     * This controls when the value of the slider is published to the `ViewModel`. By
+     * default this is done only when the thumb is released (the change is complete). To
+     * cause this to happen on every change of the thumb position, specify `false`. This
+     * setting is `true` by default for improved performance on slower devices (such as
+     * older browsers or tablets).
+     */
+    publishOnComplete: true,
 
     /**
      * Returns the current value of the slider
@@ -62,6 +67,7 @@ Ext.define('Ext.slider.Single', {
             args = Ext.toArray(args);
             args.unshift(0);
         }
+
         return this.callParent(args);
     },
 

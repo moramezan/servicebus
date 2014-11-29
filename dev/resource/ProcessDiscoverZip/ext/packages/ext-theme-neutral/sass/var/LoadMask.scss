@@ -116,7 +116,7 @@ $loadmask-msg-inner-font-size: $font-size !default;
  * @var {string}
  * The font-weight of the message inner element
  */
-$loadmask-msg-inner-font-weight: normal !default;
+$loadmask-msg-inner-font-weight: $font-weight !default;
 
 /**
  * @var {string}

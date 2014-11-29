@@ -1,27 +1,8 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
-*/
 /**
  * @private
  */
 Ext.define('Ext.menu.KeyNav', {
     extend: 'Ext.util.KeyNav',
-
-    requires: ['Ext.FocusManager'],
     
     constructor: function(config) {
         var me = this;
@@ -43,7 +24,7 @@ Ext.define('Ext.menu.KeyNav', {
         var me = this,
             fi = me.menu.focusedItem;
 
-        if (fi && e.getKey() == Ext.EventObject.DOWN && me.isWhitelisted(fi)) {
+        if (fi && e.getKey() == e.DOWN && me.isWhitelisted(fi)) {
             return true;
         }
         me.focusNextItem(1);
@@ -94,7 +75,7 @@ Ext.define('Ext.menu.KeyNav', {
     },
 
     isWhitelisted: function(item) {
-        return Ext.FocusManager.isWhitelisted(item);
+        return !!item.needArrowKeys;
     },
 
     left: function(e) {
@@ -105,8 +86,8 @@ Ext.define('Ext.menu.KeyNav', {
             return true;
         }
 
-        menu.hide();
         if (menu.parentMenu) {
+            menu.hide();
             menu.parentMenu.focus();
         }
     },
@@ -144,7 +125,7 @@ Ext.define('Ext.menu.KeyNav', {
         var me = this,
             fi = me.menu.focusedItem;
 
-        if (fi && e.getKey() == Ext.EventObject.UP && me.isWhitelisted(fi)) {
+        if (fi && e.getKey() == e.UP && me.isWhitelisted(fi)) {
             return true;
         }
         me.focusNextItem(-1);
