@@ -1095,4 +1095,40 @@
         System.assertEquals(expectedPosition ,actualPosition);
     } 
 
+    static testMethod void callingInvokeMainWithCorrectToToStringOverrideDoesNOTThrowException() {
+        //arrange
+        Map<String,Object> parameters = new Map<String,Object>();
+        
+        //act
+        Boolean actualFlag = true;
+        Type reflector = Terminate.class;
+        try {
+            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters, null).invokeMain();   
+        } catch (Exception e) {
+            actualFlag = false;   
+        }
+        
+        //assert
+        Boolean expectedFlag = true;
+        System.assertEquals(expectedFlag, actualFlag, 'Unexpected error thrown by wrapper invokeMain()'); 
+    }
+    
+    static testMethod void callingInvokeMainWhenNoToToStringOverrideThrowsExpectedException() {
+        //arrange
+        Map<String,Object> parameters = new Map<String,Object>();
+        Type reflector = PostInstallHandler.class; // Clearly, no toString() override here!
+        
+        //act
+        Boolean actualFlag = false;
+        try {
+            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters, null).invokeMain();
+        } catch (Broker.EngineException e) {
+            actualFlag = e.getMessage().contains('overriden the toString() method');
+        } 
+        
+        //assert
+        Boolean expectedFlag = true;
+        System.assertEquals(expectedFlag, actualFlag, 'expect exception thrown for [toString() not overridden]');
+    }
+
 }
