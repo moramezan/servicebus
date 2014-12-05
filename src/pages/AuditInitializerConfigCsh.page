@@ -18,7 +18,7 @@
                             <li>Explicit Dynamic Key</li>
                         </ul>
                     </p>
-                    <p><img width="480" src="{!URLFOR($Resource.HelpZip, '/LogConfig/Log.png')}" /></p>
+                    <p><img width="480" src="{!URLFOR($Resource.HelpZip, '/AuditInitializerConfig/Log.png')}" /></p>
                     
                 </apex:pageBlockSectionItem>
 
@@ -54,7 +54,6 @@
                     <p>From the [Choose Object Name], select the required field's parent SOBject from the dropdown list (for example Account). 
                        The associated field drop down list will be enabled after the selection of a valid SObject.
                     </p>
-                    <p><b> Note : </b> If the Dynamic Group Identifier is valued, the Static Group Identifier should not be valued.</p>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection> 
             

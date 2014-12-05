@@ -144,6 +144,8 @@
         <members>SubscribeConfigStep</members>
         <members>SubsequenceConfigCsh</members>
         <members>SubsequenceConfigStep</members>
+        <members>TerminateCsh</members>
+        <members>WiretapCsh</members>
         <name>ApexPage</name>
     </types>
     <types>

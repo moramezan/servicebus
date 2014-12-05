@@ -10,12 +10,12 @@
             <apex:pageBlockSectionItem >
                 <p>
                     A Process is a single, logical program with inputs and outputs in the form of Messages.
-                    Logic that splits data (map) or combines data (reduce) should be encapsulated in distinct Processes.
-                    When Processes receive and act on a message, they may output multiple new Messages that go to subsequent Processes.
+                    Logic that splits data, combines data or alters data should be encapsulated in distinct processes.
+                    When a process receives and acts on a message, it may output multiple new messages that go to subsequent processes.
                 </p>
                 <p>
-                    Processes are implemented as Apex Classes.
-                    Event Driven Architecture contains by default a number of ready-made processes, including:
+                    Processes are implemented as Apex classes.
+                    The Enterprise Service Bus framework ("ESB") contains by default a number of ready-made processes, including:
                 </p>
                 <ul>
                     <li>Schedule</li>
@@ -51,18 +51,20 @@
         <apex:pageBlockSection title="Click [Continue] to proceed." columns="1" collapsible="false" />
     </apex:pageBlock>
     
-    <apex:pageBlock mode="maindetail" title="Discovering Processes">
+    <apex:pageBlock mode="maindetail" title="Discovering Processes (continued below)">
         <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
-                <p>Before a process written in Apex can be referenced as a step in a sequence, it must first be discovered and registered in Event Driven Architecture.</p>
-                <p>Note this discovery job will be launched automatically when installing the package or trying to build a Sequence for the first time.</p>
+                <p>Before a process written in Apex can be referenced as a step in a sequence, 
+                    it must first be discovered and registered in the Enterprise Service Bus framework.
+                </p>
+                <p>This discovery job will be launched automatically when installing the package or trying to build a Sequence for the first time.</p>
                 <p>There is also a mechanism for discovering processes manually and is initiated by clicking the [Discover] button from the Processes list view.</p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
         <apex:pageBlockSection columns="1" collapsible="false">
             <apex:pageBlockSectionItem >
-                <p>Learn more about <a style="color:#00F;" href="{!URLFOR($Resource.HelpZip, '/ProcessDiscoveryTutorial.html')}">Process Discovery</a> within Event Driven Architecture.</p>
+                <p>Learn more about <a style="color:#00F;" href="{!URLFOR($Resource.HelpZip, '/ProcessDiscoveryTutorial.html')}">Process Discovery</a> within the ESB framework.</p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         

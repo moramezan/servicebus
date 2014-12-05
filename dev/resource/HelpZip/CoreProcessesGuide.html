@@ -1,588 +1,658 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-    <script src="/faces/a4j/g/3_3_3.Finalorg.ajax4jsf.javascript.AjaxScript?rel=1400083731000" type="text/javascript"></script>
-    <script src="/static/111213/js/perf/stub.js"></script>
-    <script src="/static/111213/js/functions.js" type="text/javascript"></script>
-    <script src="/jslibrary/1398894194000/sfdc/main.js" type="text/javascript"></script>
-    <script src="/jslibrary/jslabels/13995887%3C!DOCTYPE%20HTML%20PUBLIC"></script>
-    <script src="/faces/a4j/g/3_3_3.Finalorg.ajax4jsf.javascript.AjaxScript?rel=1400083731000" type="text/javascript"></script>
-    <script src="/static/111213/js/perf/stub.js"></script>
-    <script src="/static/111213/js/functions.js" type="text/javascript"></script>
-    <script src="/jslibrary/1398894194000/sfdc/main.js" type="text/javascript"></script>
-    <script src="/jslibrary/jslabels/1399588760000/en_US.js" type="text/javascript"></script>
-    <script src="/static/111213/desktop/desktopAjax.js" type="text/javascript"></script>
-    <script src="/static/111213/js/picklist.js" type="text/javascript"></script>
-    <link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/zen-componentsCompatible.css" rel="stylesheet" type="text/css">
-    <link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/elements.css" rel="stylesheet" type="text/css">
-    <link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/common.css" rel="stylesheet" type="text/css">
-    <link class="user" href="/sCSS/30.0/sprites/1398193090000/Theme3/gc/dStandard.css" rel="stylesheet" type="text/css">
-    <link class="user" href="/sCSS/30.0/sprites/1400249746000/Theme3/00Db0000000d3oV/005b0000000vx4E/gc/dCustom0.css" rel="stylesheet" type="text/css">
-    <link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/extended.css" rel="stylesheet" type="text/css">
-    <link class="user" href="/sCSS/30.0/sprites/1399588760000/Theme3/default/gc/setup.css" rel="stylesheet" type="text/css">
-
     <title></title>
+    <style type="text/css">
+        body {background: url('./inPageClouds.png') top left no-repeat;}
+
+        code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:95%;}
+        .contact {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+            font-size:102%;
+            text-align:center}
+        .contact.dot {font-weight:bold;}
+        a {text-decoration:none;}
+        .gist-file{
+            margin-top: 10px;
+            margin-right: 20px;
+        }
+
+        .extra-details{
+            margin-left: 5%;
+        }
+
+    </style>
 </head>
-
-<body>
-<style>
-    body {background: url('./inPageClouds.png') top left no-repeat;}
-
-    code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:112%;}
-    .contact {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
-        font-size:112%;
-        text-align:center}
-    .contact.dot {font-weight:bold;}
-    a {text-decoration:none;}
-</style><br>
-<script>
-    if(!window.sfdcPage) { window.sfdcPage = new ApexPage(); }UserContext.initialize({"networkId":"","labelLastModified":"1399588760000","locale":"en_GB","isDefaultNetwork":true,"timeFormat":"HH:mm","today":"18/05/2014 22:10","orgPreferences":[{"index":257,"name":"TabOrganizer","value":true}],"userPreferences":[{"index":112,"name":"HideInlineEditSplash","value":false},{"index":114,"name":"OverrideTaskSendNotification","value":false},{"index":115,"name":"DefaultTaskSendNotification","value":false},{"index":119,"name":"HideUserLayoutStdFieldInfo","value":false},{"index":116,"name":"HideRPPWarning","value":false},{"index":87,"name":"HideInlineSchedulingSplash","value":false},{"index":88,"name":"HideCRUCNotification","value":false},{"index":89,"name":"HideNewPLESplash","value":false},{"index":90,"name":"HideNewPLEWarnIE6","value":false},{"index":122,"name":"HideOverrideSharingMessage","value":false},{"index":91,"name":"HideProfileILEWarn","value":false},{"index":93,"name":"HideProfileElvVideo","value":false},{"index":97,"name":"ShowPicklistEditSplash","value":false},{"index":92,"name":"HideDataCategorySplash","value":false},{"index":128,"name":"ShowDealView","value":false},{"index":129,"name":"HideDealViewGuidedTour","value":false},{"index":132,"name":"HideKnowledgeFirstTimeSetupMsg","value":false},{"index":104,"name":"DefaultOffEntityPermsMsg","value":false},{"index":135,"name":"HideNewCsnSplash","value":true},{"index":101,"name":"HideBrowserWarning","value":false},{"index":139,"name":"HideDashboardBuilderGuidedTour","value":false},{"index":140,"name":"HideSchedulingGuidedTour","value":false},{"index":180,"name":"HideReportBuilderGuidedTour","value":false},{"index":183,"name":"HideAssociationQueueCallout","value":false},{"index":194,"name":"HideQTEBanner","value":false},{"index":193,"name":"HideChatterOnboardingSplash","value":false},{"index":195,"name":"HideSecondChatterOnboardingSplash","value":false},{"index":270,"name":"HideIDEGuidedTour","value":true},{"index":282,"name":"HideQueryToolGuidedTour","value":true},{"index":196,"name":"HideCSIGuidedTour","value":true},{"index":271,"name":"HideFewmetGuidedTour","value":false},{"index":272,"name":"HideEditorGuidedTour","value":true},{"index":205,"name":"HideApexTestGuidedTour","value":false},{"index":206,"name":"HideSetupProfileHeaderTour","value":false},{"index":207,"name":"HideSetupProfileObjectsAndTabsTour","value":false},{"index":213,"name":"DefaultOffArticleTypeEntityPermMsg","value":false},{"index":214,"name":"HideSelfInfluenceGetStarted","value":false},{"index":215,"name":"HideOtherInfluenceGetStarted","value":false},{"index":216,"name":"HideFeedToggleGuidedTour","value":false},{"index":268,"name":"ShowChatterTab178GuidedTour","value":false},{"index":275,"name":"HidePeopleTabDeprecationMsg","value":false},{"index":276,"name":"HideGroupTabDeprecationMsg","value":false},{"index":224,"name":"HideUnifiedSearchGuidedTour","value":false},{"index":226,"name":"ShowDevContextMenu","value":true},{"index":227,"name":"HideWhatRecommenderForActivityQueues","value":false},{"index":228,"name":"HideLiveAgentFirstTimeSetupMsg","value":false},{"index":232,"name":"HideGroupAllowsGuestsMsgOnMemberWidget","value":false},{"index":233,"name":"HideGroupAllowsGuestsMsg","value":false},{"index":234,"name":"HideWhatAreGuestsMsg","value":false},{"index":235,"name":"HideNowAllowGuestsMsg","value":false},{"index":236,"name":"HideSocialAccountsAndContactsGuidedTour","value":false},{"index":237,"name":"HideAnalyticsHomeGuidedTour","value":false},{"index":238,"name":"ShowQuickCreateGuidedTour","value":false},{"index":245,"name":"HideFilePageGuidedTour","value":false},{"index":250,"name":"HideForecastingGuidedTour","value":false},{"index":251,"name":"HideBucketFieldGuide","value":false},{"index":263,"name":"HideSmartSearchCallOut","value":false},{"index":265,"name":"HideSocialProfilesKloutSplashScreen","value":false},{"index":273,"name":"ShowForecastingQuotaAttainment","value":false},{"index":280,"name":"HideForecastingQuotaColumn","value":false},{"index":301,"name":"HideManyWhoGuidedTour","value":false},{"index":284,"name":"HideExternalSharingModelGuidedTour","value":false},{"index":298,"name":"HideFileSyncBannerMsg","value":false},{"index":299,"name":"HideTestConsoleGuidedTour","value":false},{"index":300,"name":"HideNetworkSetupOverlayGettingStarted","value":false},{"index":302,"name":"HideManyWhoInlineEditTip","value":false},{"index":303,"name":"HideSetupV2WelcomeMessage","value":false},{"index":312,"name":"ForecastingShowQuantity","value":false},{"index":313,"name":"HideDataImporterIntroMsg","value":false},{"index":314,"name":"HideEnvironmentHubLightbox","value":false},{"index":316,"name":"HideSetupV2GuidedTour","value":false},{"index":317,"name":"HideFileSyncMobileDownloadDialog","value":false},{"index":318,"name":"HideHelpBannerQuickActionList","value":false},{"index":321,"name":"HideCustomEntityQuickActionCallout","value":true},{"index":322,"name":"HideEnhancedProfileHelpBubble","value":false},{"index":328,"name":"ForecastingHideZeroRows","value":false},{"index":330,"name":"HideEmbeddedComponentsFeatureCallout","value":true},{"index":341,"name":"HideDedupeMatchResultCallout","value":false},{"index":340,"name":"HideS1BrowserUI","value":false}],"startOfWeek":"2","isAccessibleMode":false,"ampm":["AM","PM"],"renderMode":"RETRO","userId":"005b0000000vx4E","dateTimeFormat":"dd/MM/yyyy HH:mm","dateFormat":"dd/MM/yyyy","uiSkin":"Theme3","language":"en_US","siteUrlPrefix":""});
-</script>
-
-<div class="apexp bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette" id="j_id0:j_id2">
-    <div class="pbHeader">
-        <table border="0" cellpadding="0" cellspacing="0">
+    <body>
+        <table>
             <tr>
-                <td class="pbTitle">
-                    <h2 class="mainTitle">Core Processes Guide</h2>
+                <td>
+                    <h2>
+                        Core Processes Guide
+                    </h2>
                 </td>
-
-                <td>&nbsp;</td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+        </table><br>
+        <table>
+            <tr>
+                <td>
+                    <br>
+                    <b>Intended Audience :</b><br>
+                    <ul>
+                        <li>Configurator / Business Analyst / Salesforce System Administrator
+                        </li>
+                        <li>Force.com Apex Developers
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>About This Guide :</b><br>
+                    <ul>
+                        <li>The purpose of this guide is to explain the use and configuration of
+                            every pre-packaged process in the ESB framework .
+                        </li>
+                        <li>This guide does not cover designing building and deploying custom ESB processes. 
+                            <br/> That topic is described in the separate 
+                            <a href="./ProcessDevelopersGuide.html" style="color: #00f;">Process Developer's
+                                Guide</a> guide.
+                        </li>
+                        <li>This guide does not cover configuring or monitoring the Enterprise Service Bus.
+                            <br/> That topic is described in the separate 
+                            <a href="./OrchestratorsGuide.html" style="color: #00f;">Orchestrator's Guide</a>
+                            guide.
+                        </li>
+                    </ul><br>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Overview :</b><br>
+                    <ul>
+                        <li>The ESB framework  has 12 pre-packaged ESB processes.
+                        </li>
+                        <li>These pre-packaged processes are classified under the group 
+                            "Event Driven Architecture".
+                        </li>
+                        <li>Some processes work in isolation (for example <code>Wiretap</code> )
+                            while other processes work in tandem (for example <code>Publish</code> and
+                            <code>Subscribe</code>)
+                        </li>
+                        <li>Note that some processes are no-operation or pass-through in nature.
+                            <br/>In other words these no-op processes simply forward all received messages to
+                            the next step in their respective Sequence
+                        </li>
+                    </ul>
+                </td>
             </tr>
         </table>
-    </div>
-
-    <div class="pbBody">
-        <br>
-
-        <div class="pbSubsection" id="j_id0:j_id2:j_id4">
-            <table border="0" cellpadding="0" cellspacing="0" class="detailList">
-                <tr>
-                    <td class="data2Col first" colspan="2">
-                        <br>
-                        <b>Intended Audience :</b><br>
-
-                        <ul>
-                            <li>Configurator / Business Analyst / Salesforce System Administrator</li>
-
-                            <li>Force.com Apex Developers</li>
-                        </ul>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="data2Col" colspan="2">
-                        <b>About This Guide :</b><br>
-
-                        <ul>
-                            <li>The purpose of this guide is to explain the use and configuration of every pre-packaged process in the Event Driven framework.</li>
-
-                            <li>This guide does not cover designing building and deploying custom event driven processes. This topic is described in the separate <a href="./ProcessDevelopersGuide.html" style=
-                                    "color: #00f;">Process Developer's Guide</a> guide.
-                            </li>
-
-                            <li>This guide does not cover configuring or monitoring the Event Driven Application. This topic is described in the separate <a href="./OrchestratorsGuide.html" style="color: #00f;">
-                                Orchestrator's Guide</a> guide.
-                            </li>
-                        </ul><br>
-                        <br>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="data2Col last" colspan="2">
-                        <b>Overview :</b><br>
-
-                        <ul>
-                            <li>The Event Driven framework has 12 pre-packaged processes.</li>
-
-                            <li>These pre-packaged processes are classified under the group Event Driven Architecture</li>
-
-                            <li>Some processes work in isolation (for example <code>Wiretap</code> ) while other processes work in tandem (for example <code>Publish</code> and <code>Subscribe</code>)</li>
-
-                            <li>Note that some processes are no-operation or pass-through in nature. In other words these no-op processes simply forward on the worker messages to the next step in the
-                                Sequence</li>
-                        </ul>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <div class="pbFooter secondaryPalette bg"></div>
-</div>
-
-<div class="apexp bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette" id="j_id0:j_id11">
-    <div class="pbBody" id="j_id0:j_id11:j_id12">
-        <div class="pbSubheader brandTertiaryBgr first tertiaryPalette">
-            <h3></h3>
-        </div>
-
-        <div class="pbSubsection">
-            <table border="0" cellpadding="0" cellspacing="0" class="detailList">
-                <tr>
-                    <td class="data2Col first last" colspan="2">
-                        <img src="./CoreProcessesGuide/Terminate.png" style="vertical-align:middle;"> <b>Terminate :</b><br>
-
-                        <ul>
-                            <li>Every Sequence must have a <code>Termination</code> process.</li>
-
-                            <li>A [Termination] process is automatically inserted as a sequence step when a Processing Sequence is first created.</li>
-
-                            <li>It is the orchestrator's responsibility to ensure that the termination process is the final step in the Processing Sequence.</li>
-
-                            <li>Any processes that follw the Termination step in a sequence will not be executed.</li>
-                        </ul>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <div class="pbFooter secondaryPalette bg"></div>
-</div>
-
-<div class="apexp bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette" id="j_id0:j_id15">
-    <div class="pbBody" id="j_id0:j_id15:j_id16">
-        <div class="pbSubheader brandTertiaryBgr first tertiaryPalette">
-            <h3></h3>
-        </div>
-
-        <div class="pbSubsection">
-            <table border="0" cellpadding="0" cellspacing="0" class="detailList">
-                <tr>
-                    <td class="data2Col first" colspan="2">
-                        <img src="./CoreProcessesGuide/Wiretap.png" style="vertical-align:middle;"> <b>Wiretap :</b><br>
-
-                        <ul>
-                            <li>A <code>Wiretap</code> process is a pass through process that emails the message details of the current step in a Processing Sequence.</li>
-                        </ul>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="data2Col" colspan="2">
-                        <br>
-                        <b>Customization and Configuration :</b><br>
-
-                        <ul>
-                            <li>The email will be sent to the user under which the Event Driven framework is running.</li>
-
-                            <li>Alternatively, a specific user can be nominated to receive these emails.</li>
-
-                            <li>To specify the <code>Wiretap</code> recipient, select the <code>Wiretap</code> process from the list of processes and on the detailed view, click the [View Settings] button.</li>
-
-                            <li>Clicking the [View Settings] button will redirect the to the <code>WireTap Custom Settings</code> view</li>
-
-                            <li>On the <code>WireTap Custom Settings</code> view, enter the <code>User Id</code> of the nominated user that will receive <code>Wiretap</code> emails in the custom setting <code>User
-                                Id</code></li>
-                        </ul>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="data2Col last" colspan="2">
-                        <br>
-                        <b>Usage Example:</b> see <a href="./ScrapeWebPageTutorial.html" style="color: #00f;">Scrape Web Page, Tutorial 04</a><br>
-                        <br>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <div class="pbFooter secondaryPalette bg"></div>
-</div>
-
-<div class="apexp bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette" id="j_id0:j_id23">
-    <div class="pbBody" id="j_id0:j_id23:j_id24">
-        <div class="pbSubheader brandTertiaryBgr first tertiaryPalette">
-            <h3></h3>
-        </div>
-
-        <div class="pbSubsection">
-            <table border="0" cellpadding="0" cellspacing="0" class="detailList">
-                <tr>
-                    <td class="data2Col first" colspan="2">
-                        <img src="./CoreProcessesGuide/LogWriter.png" style="vertical-align:middle;"> <b>LogWriter :</b><br>
-                        <img src="./CoreProcessesGuide/LogInitializer.png" style="vertical-align:middle;"> <b>LogInitializer :</b><br>
-
-                        <ul>
-                            <li>The <code>LogWriter</code> and <code>LogInitializer</code> work in tandem so that the underlying data at various steps in one or more Sequence(s) can be related under a
-                                meaningful and common grouping reference key</li>
-
-                            <li>The <code>LogInitializer</code> process defines a new business grouping key.</li>
-
-                            <li>Any message passing through this <code>LogInitializer</code> process will have its state persisted under this business grouping key whenever the message passes through subsequent
-                                <code>LogWriter</code> processes</li>
-
-                            <li>Note that a message can carry more than one business grouping key. In such cases , the <code>LogWriter</code> process will persist a message under every business grouping key
-                                found in the message</li>
-                        </ul><br>
-                        A business grouping key is a composite of :
-
-                        <ul>
-                            <li>A Time Stamp</li>
-
-                            <li>A Business Identifier</li>
-                        </ul>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="data2Col" colspan="2">
-                        <br>
-                        <b>Customization and Configuration :</b> The business identifier (the non-time stamp portion of the business grouping key described above) can be configured in be one of the three ways:<br>
-                        <br>
-                        <b>Implicit configuration :</b><br>
-                        <br>
-
-                        <ul>
-                            <li>This is the default mechanism for defining the business identifier and is used when no explicit definition has been 
-                                configured on the <code>LogInitializer</code> process.
-                            </li>
-                            <li>Under this mode, the business identifier will be a composite of the <code>LogInitializer</code>'s Sequence Name and 
-                                Sequence Position
-                            </li>
-                            <li>For example, a <code>LogInitializer</code> placed as the second step in a sequence named <code>'Test'</code> will 
-                                auto-configure itself to generate the business identifier <code>'Test-2'</code>.
-                            </li>
-                        </ul>
-                        <br>
-             
+        <table>
+            <tr>
+                <td>
+                    <img src="./CoreProcessesGuide/Terminate.png" style="vertical-align:middle;">
+                    <b>Terminate :</b><br>
+                    <ul>
+                        <li>Every Sequence must have a <code>Terminate</code> process.
+                        </li>
+                        <li>A <code>Terminate</code> process is automatically inserted as a sequence
+                            step when a processing sequence is first created.
+                        </li>
+                        <li>It is the ESB configurator's responsibility to ensure that the
+                            <code>Terminate</code> process is the final step in any processing sequence.
+                       <br/> <b>Note:</b>
+                            Any processes that follow the termination step in a sequence will not be
+                            executed.
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td>
+                    <img src="./CoreProcessesGuide/Wiretap.png" style="vertical-align:middle;">
+                    <b>Wiretap :</b><br>
+                    <ul>
+                        <li>A <code>Wiretap</code> process is a pass through process that also emails the
+                            details of an inbound message to an interested user.
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="extra-details">
+                   
+                    <b>Customization and Configuration :</b><br>
+                    <ul>
+                        <li>The email will be sent to the user under which the ESB framework
+                            is running.
+                        </li>
+                        <li>Alternatively, a specific user can be nominated to receive these emails.
+                        </li>
+                        <li>To specify the <code>Wiretap</code> recipient, select the
+                            <code>Wiretap</code> process from the list of processes and on the detailed
+                            view, click the <code>View Settings</code> button.
+                        </li>
+                        <li>Clicking the <code>View Settings</code> button will redirect the to the
+                            <code>WireTap Custom Settings</code> view
+                        </li>
+                        <li>On the <code>WireTap Custom Settings</code> view, enter the <code>User
+                            Id</code> of the nominated user that will receive wiretap emails.
+                        </li>
+                    </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
+        <br/>
+        
+        <table>
+            <tr>
+                <td>
+                    <img src="./CoreProcessesGuide/AuditWriter.png" style="vertical-align:middle;">
+                    <b>AuditWriter :</b><br>
+                    <img src="./CoreProcessesGuide/AuditInitializer.png" style="vertical-align:middle;"> 
+                    <b>AuditInitializer :</b><br>
+                    <ul>
+                        <li>The <code>AuditWriter</code> and <code>AuditInitializer</code>
+                            processes work together.
+                            <br/> This allows the relationship between  data at various 
+                            steps in one or more sequence(s) to be presented under a meaningful 
+                            and common grouping reference key
+                        </li>
+                        <li>The <code>AuditInitializer</code> process defines a new business grouping
+                            key.
+                        </li>
+                        <li>A message passing through a <code>AuditInitializer</code> process will
+                            have it's state persisted  downstream whenever that same
+                            message passes through  a subsequent <code>AuditWriter</code> process
+                           <br/> <b>Note:</b>
+                             A message passing through a  <code>AuditInitializer</code> process results in the  
+                            creation of a business grouping key.
+                            <br/> Downstream <code>AuditWriter</code> processes will 
+                             persist the  state of the message under that business grouping key.
+                        </li>
                         
-                        <br>
-                        <b>Static Configuration :</b><br>
-                        <br>
-
-                        <ul>
-                            <li>
-                                To specify the a static business identifier , click the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" /> link next to a <code>LogInitializer</code> process
-                            </li>
-                            <li>
-                                Clicking the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" /> link will surface the configuration screen for the <code>LogInitializer</code> process
-                            </li>
-                            <li>
-                                Click the <img src="./CoreProcessesGuide/Edit.png" style="vertical-align:middle;" /> button.
-                            </li>
-                            <li>
-                                In the Static Group Identifier field, enter a meaningful static value (eg <code>INVOICE</code> or <code>WEB-DATA</code>) which 
-                                will form the grouping identifier.
-                            </li>
-                            <li>
-                                Click the <img src="./CoreProcessesGuide/Save.png" style="vertical-align:middle;" />  button.
-                            </li>
-                            <li>
-                                For example, a <code>LogInitializer</code> with the value <code>'PAY-SLIP'</code> will generate the business identifier
-                                <code>'PAY-SLIP'</code>.
-                            </li>
-                        </ul>
-                        <br>
-
-                        <br>
-                        <b>Dynamic Configuration :</b><br>
-                        <br>
-
-                        <ul>
-                            <li>
-                                To specify a dynamic business identifier , click the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" />  link next to a <code>LogInitializer</code> process.
-                            </li>
-                            <li>
-                                Clicking the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" />  link will surface the configuration screen for the <code>LogInitializer</code> process.
-                            </li>
-                            <li>
-                                Click the <img src="./CoreProcessesGuide/ChangeDynamicGroupIdentifier.png" style="vertical-align:middle;" /> button. 
-                                This will surface an <code>SObject</code> field selector screen.
-                            </li>
-                            <li>
-                                Using the picklist, select the <code>SObject</code> and related <code>SObject</code> field that define the data source for the dynamic business identifier.
-                                <br/><b>for example:</b>  selecting <code>Account</code> and then <code>NaicsCode</code>  configures the <code>LogInitializer</code> process 
-                                to perform the following steps at runtime:
-                                
-                                <ol>                                                                                                                     
-                                   <li>inspect the contents of underlying data passing through the process</li>
-                                   <li>extract the value of the <code>NaicsCode</code>  from the contents  of underlying data (the dynamic business key)</li>
-                                   <li>create a business grouping identifier using the dynamically derived business key derived under step 2.   </li>  
-                                </ol>
-
-                                <b>note:</b> It is the system orchestrator's responsibility to ensure that the selected <code>SObject</code>  field will
-                                align with underlying data passing through the sequence.
-                            </li>
-                            <li>
-                                A message passing a dynamically configured <code>LogInitializer</code> process will have its underlying data inspected and 
-                                the value of this dynamic field extracted.
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="data2Col last" colspan="2">
-                        <br>
-                        <b>Usage Example:</b> see <a href="./LogUnderCommonIdentifierTutorial.html" style="color: #00f;">Log Under Common Identifier, Tutorial 03</a><br>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <div class="pbFooter secondaryPalette bg"></div>
-</div>
-
-<div class="apexp bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette" id="j_id0:j_id31">
-    <div class="pbBody" id="j_id0:j_id31:j_id32">
-        <div class="pbSubheader brandTertiaryBgr first tertiaryPalette">
-            <h3></h3>
-        </div>
-
-        <div class="pbSubsection">
-            <table border="0" cellpadding="0" cellspacing="0" class="detailList">
-                <tr>
-                    <td class="data2Col first" colspan="2">
-                        <img src="./CoreProcessesGuide/Publish.png" style="vertical-align:middle;"> <b>Publish :</b><br>
-                        <img src="./CoreProcessesGuide/Subscribe.png" style="vertical-align:middle;"> <b>Subscribe :</b><br>
-
-                        <ul>
-                            <li>The <code>Publish</code> and <code>Subscribe</code> processes work in tandem to provide a loose coupling of a Sequence steps.</li>
-
-                            <li>The loose coupling is achieved by specifying a common Named Event that is shared between both the <code>Publish</code> and <code>Subscribe</code> processes</li>
-
-                            <li>The <code>Publish</code> process directs the message to the common named event and the <code>Subscribe</code> process retrieves from the common Named Event.</li>
-
-                            <li>Because of this indirection, more than one <code>Subscribe</code> process can retrieve from the same Named Event.</li>
-
-                            <li><b>Note</b> that a <code>Subscribe</code>  process must be the first process in a Sequence</li>
-                        </ul>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="data2Col" colspan="2">
-                        <br>
-                        <b>Customization and Configuration :</b><br>
-
-                        <ul>
-                            <li>A named event must be specified for both the <code>Subscribe</code> and <code>Publish</code> processes.</li>
-
-                            <li>A named event is created from the configuration screen of either the  <code>Publish</code> or <code>Subscribe</code> processes</li>
-
-                            <li>To specify the named event , click the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" />  link next to either a <code>Publish</code> or <code>Subscribe</code> Sequence step</li>
-
-                            <li>Clicking the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" />  link will redirect to the configuration view</li>
-
-                            <li>On the configuration view, click the <img src="./CoreProcessesGuide/ManageEventTypes.png" style="vertical-align:middle;" /> button
-                                and then click the  <img src="./CoreProcessesGuide/NewEventType.png" style="vertical-align:middle;" /> button to create a new named event</li>
-
-                            <li>To publish to a named event, click the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" />  link next to a <code>Publish</code>  Sequence step (if not already on the <code>Publish</code> configuration view) .</li>
-
-                            <!-- <li>Clicking the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" />  link will redirect to the Publish configuration view</li>
--->
-                            
-                            <li>Select a named event to publish to by clicking the <code>Event Type</code> lookup field.</li>
-
-                            <li>To subscribe to a named event, click the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" />  link next to a <code>Subscribe</code> Sequence step (if not already on the <code>Subscribe</code> configuration view)</li>
-
-                          <!--  <li>Clicking the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" /> link will redirect to the Subscribe configuration view</li>
--->
-                            <li>Select a named event to subscribe to by clicking the <code>Event Type</code> lookup field.</li>
-                        </ul>
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td class="data2Col last" colspan="2">
-                        <br>
-                        <b>Usage Example:</b> see <a href="./ScrapeWebPageTutorial.html" style="color: #00f;">Scrape Web Page, Tutorial 04</a><br>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <div class="pbFooter secondaryPalette bg"></div>
-</div>
-
-<div class="apexp bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette" id="j_id0:j_id39">
-    <div class="pbBody" id="j_id0:j_id39:j_id40">
-        <div class="pbSubheader brandTertiaryBgr first tertiaryPalette">
-            <h3></h3>
-        </div>
-
-        <div class="pbSubsection">
-            <table border="0" cellpadding="0" cellspacing="0" class="detailList">
-                <tr>
-                    <td class="data2Col first" colspan="2">
-                        <img src="./CoreProcessesGuide/Mark.png" style="vertical-align:middle;"> <b>Mark :</b><br>
-                        <img src="./CoreProcessesGuide/Gate.png" style="vertical-align:middle;"> <b>Gate :</b><br>
-
-                        <ul>
-                            <li>A related collection of messages may follow different execution paths.</li>
-
-                            <li>A need may arise for a given process to act on these messages in a single transaction context even though one or more of these messages may have proceeded down a different
-                                execution path.</li>
-
-                            <li>This approach is commonly known as Map-Reduce and the <code>Mark</code> and <code>Gate</code> processes work in tandem to implement this pattern.</li>
-
-                            <li>The <code>Mark</code> process flags a message with a unique grouping key</li>
-
-                            <li>The process following the <code>Mark</code>  process is assumed to be a process that fans out the message in some manner (for example, splitting the underlying data pointed at by the
-                                message)</li>
-
-                            <li>Using the unique grouping key , the <code>Gate</code> process in a subsequent Sequence step buffers logically related messages.</li>
-
-                            <li>When all messages for a given grouping key are received, they are all simultaneously released to the next step in the Sequence in a single execution context</li>
-                        </ul>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="data2Col last" colspan="2">
-                        <br>
-                        <b>Customization and Configuration :</b><br>
-
-                        <ul>
-                            <li>Insert a <code>Mark</code> process immediately before a fan-out process in a Sequence.</li>
-
-                            <li>Insert a <code>Gate</code> process at some point after the fan-out process</li>
-                        </ul>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <div class="pbFooter secondaryPalette bg"></div>
-</div>
-
-<div class="apexp bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette" id="j_id0:j_id45">
-    <div class="pbBody" id="j_id0:j_id45:j_id46">
-        <div class="pbSubheader brandTertiaryBgr first tertiaryPalette">
-            <h3></h3>
-        </div>
-
-        <div class="pbSubsection">
-            <table border="0" cellpadding="0" cellspacing="0" class="detailList">
-                <tr>
-                    <td class="data2Col first" colspan="2">
-                        <img src="./CoreProcessesGuide/SubSequence.png" style="vertical-align:middle;"> <b>SubSequence :</b><br>
-                        <img src="./CoreProcessesGuide/Branch.png" style="vertical-align:middle;"> <b>Branch :</b><br>
-                        <img src="./CoreProcessesGuide/Jump.png" style="vertical-align:middle;"> <b>Jump :</b><br>
-
-                        <ul>
-                            <li>Sometimes execution logic is composed into seperate Sequences and a need arises to connect the logic of one or more Sequences</li>
-                            
-                            <li>The <code>SubSequence</code>, <code>Branch</code> and <code>Jump</code> processes allow Sequences messages to transition between Sequences</li>
-
-                            <li>The <code>Jump</code> process directs execution flow to the first step in a new specified Sequence. 
-                                <br/> (Steps in the Sequence following a  <code>Jump</code> step will not be executed)</li>
-
-                            <li>The <code>Branch</code> process splits execution flow to the first step in a new specified Sequence AND remaining steps in the current Sequence.
-                                <br/> (Unlike the <code>Jump</code> process, steps in the Sequence following a <code>Branch</code> step will still be executed)</li>
-
-                            <li>The <code>SubSequence</code> process directs execution flow to the first step in a new specified Sequence.
-                                <br/> (When execution reaches the <code>Terminate</code> step in the new specified Sequence,
-                                execution flow returns to the step immediately following the <code>SubSequence</code>  step of the current Sequence)</li>
-                        </ul> 
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td class="data2Col last" colspan="2">
-                        <br>
-                        <b>Customization and Configuration :</b><br>
-
-                        <ul>
-                            <li>To specify the Sequence to jump to, click the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" /> link next to a <code>Jump</code> Sequence step.</li>
-
-                            <li>Clicking the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" /> link will redirect to the Jump configuration view</li>
-
-                            <li>In the Sequence field, enter the name of the Sequence to jump to .</li>
-
-                            <li>To specify the Sequence to branch to, click the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" /> link next to a <code>Branch</code> Sequence step.</li>
-
-                            <li>Clicking the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" /> link will redirect to the Branch configuration view</li>
-
-                            <li>In the <code>Sequence</code> field, enter the name of the Sequence to branch to .</li>
-
-                            <li>To specify the Sequence to execute before returning, click the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" /> link next to a <code>SubSequence</code> Sequence step.</li>
-
-                            <li>Clicking the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" /> link will redirect to the SubSequence configuration view</li>
-
-                            <li>In the <code>Sequence</code> field, enter the name of the Sequence to execute.</li>
-                        </ul>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <div class="pbFooter secondaryPalette bg"></div>
-</div>
-
-<div class="apexp bPageBlock brandSecondaryBrd bDetailBlock secondaryPalette" id="j_id0:j_id51">
-    <div class="pbBody" id="j_id0:j_id51:j_id52">
-        <div class="pbSubheader brandTertiaryBgr first tertiaryPalette">
-            <h3></h3>
-        </div>
-
-        <div class="pbSubsection">
-            <table border="0" cellpadding="0" cellspacing="0" class="detailList">
-                <tr>
-                    <td class="data2Col first" colspan="2">
-                        <img src="./CoreProcessesGuide/Schedule.png" style="vertical-align:middle;"> <b>Schedule :</b><br>
-
-                        <ul>
-                            <li>Certain events are time based.</li>
-
-                            <li>Time is a continuous flow but in practise, most systems are interested in the occurrence of discreet time events such as 12:00 pm, Monday.</li>
-
-                            <li>The Schedule process has a configurable schedule to register interest in the occurrence of discrete future time based events. This register is called a schedule.</li>
-
-                            <li>The <code>Schedule</code> process emits a message whenever a a schedule event has occurred.</li>
-
-                            <li><b>Note:</b> that the <code>Schedule</code> process must be the first step in a Sequence.</li>
-                        </ul>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="data2Col" colspan="2">
-                        <br>
-                        <b>Customization and Configuration :</b><br>
-
-                        <ul>
-                            <li>To specify a schedule, click the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" /> link next to a Schedule Sequence step.</li>
-
-                            <li>Clicking the <img src="./CoreProcessesGuide/ConfigureLink.png" style="vertical-align:middle;" /> link will redirect to the Schedule configuration view</li>
-
-                            <li>A schedule is defined by one or more hourly time intervals defining when the schedule should fire. This hourly schedule is filtered by frequency and run dates.</li>
-
-                            <li>In the Run Times field , select one or more hourly time intervals that specify when the schedule should fire.</li>
-
-                            <li>In the <code>Frequency</code> field , select the frequency from <code>Daily</code>, <code>Weekly</code> or <code>Monthly</code>. The value selected defines the available values
-                                under the Run dates picklist</li>
-                        </ul>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="data2Col last" colspan="2">
-                        <br>
-                        <b>Usage Example:</b> see <a href="./ScrapeWebPageTutorial.html" style="color: #00f;">Scrape Web Page, Tutorial 04</a><br>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <div class="pbFooter secondaryPalette bg"></div>
-</div>
-
-<div class="contact">
-    webmaster@bigassforce.com &middot; (+44) 07545169989 &middot; <a href="http://www.bigassforce.com/" style="color: #00f;" target="_blank">www.bigassforce.com</a>
- </div>
-
+                        <li>A message can carry more than one business grouping key. 
+                            <br/>In such cases , the <code>AuditWriter</code> process will persist a message under
+                            every business grouping key found in the message
+                        </li>
+                    </ul>
+
+                    <div class="extra-details">
+                    A business grouping key is a composite of :
+                    <ul>
+                        <li>A Time Stamp
+                        </li>
+                        <li>A Business Identifier
+                        </li>
+                    </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="extra-details">
+               
+                    <b>Customization and Configuration :</b> The business identifier (the non-time
+                    stamp portion of the business grouping key described above) can be configured
+                    in be one of the three ways:
+                    <br/>
+                    <br/>
+                    <b>Implicit configuration :</b>
+                  
+                    <ul>
+                        <li>This is the default mechanism for defining the business identifier and is
+                            used when no explicit definition has been configured on the
+                            <code>AuditInitializer</code> process.
+                        </li>
+                        <li>Under this mode, the business identifier will be a composite of the
+                            <code>AuditInitializer</code>'s sequence name and sequence position
+                        </li>
+                        <li>For example, a <code>AuditInitializer</code> placed as the second step in a
+                            sequence named <code>'Test'</code> will auto-configure itself to generate the
+                            business identifier <code>'Test-2'</code>.
+                        </li>
+                    </ul>
+                 
+                    <b>Static Configuration :</b>
+                  
+                    <ul>
+                        <li>To specify the a static business identifier , click the configure link
+                            next to a <code>AuditInitializer</code> process
+                        </li>
+                        <li>Clicking the configure link will surface the configuration screen for the
+                            <code>AuditInitializer</code> process
+                        </li>
+                        <li>Click the <img src="./CoreProcessesGuide/Edit.png"
+                                           style="vertical-align:middle;"> button.
+                        </li>
+                        <li>In the Static Group Identifier field, enter a meaningful static value (eg
+                            <code>INVOICE</code> or <code>WEB-DATA</code>) which will form the grouping
+                            identifier.
+                        </li>
+                        <li>Click the <img src="./CoreProcessesGuide/Save.png" 
+                                           style="vertical-align:middle;"> button.
+                        </li>
+                        <li>For example, a <code>AuditInitializer</code> with the value
+                            <code>'PAY-SLIP'</code> will generate the business identifier
+                            <code>'PAY-SLIP'</code>.
+                        </li>
+                    </ul>
+                 
+                    <b>Dynamic Configuration :</b>
+               
+                    <ul>
+                        <li>To specify a dynamic business identifier , click the configure link next
+                            to a <code>AuditInitializer</code> process.
+                        </li>
+                        <li>Clicking the configure link will surface the configuration screen for the
+                            <code>AuditInitializer</code> process.
+                        </li>
+                        <li>Click the <img src="./CoreProcessesGuide/ChangeDynamicGroupIdentifier.png" 
+                                           style="vertical-align:middle;"> button. 
+                            This will surface an <code>SObject</code>
+                            field selector screen.
+                        </li>
+                        <li>Using the picklist, select the <code>SObject</code> and related
+                            <code>SObject</code> field that define the data source for the dynamic
+                            business identifier.<br>
+                            <b>for example:</b> selecting <code>Account</code> and then
+                            <code>NaicsCode</code> configures the <code>AuditInitializer</code> process
+                            to perform the following steps at runtime:
+                            <ol>
+                                <li>inspect the contents of underlying data passing through the process
+                                </li>
+                                <li>extract the value of the <code>NaicsCode</code> from the contents of
+                                    underlying data (the dynamic business key)
+                                </li>
+                                <li>create a business grouping identifier using the dynamically derived
+                                    business key derived under step 2.
+                                </li>
+                            </ol><b>note:</b> It is the system designer's responsibility to ensure that
+                            the selected <code>SObject</code> field will align with underlying data
+                            passing through the sequence.
+                        </li>
+                        <li>A message passing through a dynamically configured
+                            <code>AuditInitializer</code> process will have its underlying data inspected
+                            and the value of this dynamic field extracted.
+                        </li>
+                    </ul>
+                    </div>
+                </td>
  
-</body>
+            </tr>
+            <tr>
+                <td>
+                    <div class="extra-details">
+                    <br>
+                    <b>Usage Example:</b> see <a href="./LogUnderCommonIdentifierTutorial.html"
+                                                 style="color: #00f;">Log Under Common Identifier, Tutorial 03</a><br>
+                    </div>    
+                </td>
+            </tr>
+        </table>
+        
+        <br/><br/>
+        
+        <table>
+            <tr>
+                <td>
+                    <img src="./CoreProcessesGuide/Publish.png" 
+                         style="vertical-align:middle;">
+                    <b>Publish :</b><br>
+                    <img src="./CoreProcessesGuide/Subscribe.png" 
+                         style="vertical-align:middle;">
+                    <b>Subscribe :</b><br>
+                    <ul>
+                        <li>The <code>Publish</code> and <code>Subscribe</code> processes work 
+                            together to bind two or more sequences.
+                        </li>
+                        <li>This binding is achieved by specifying a common Named Event that is
+                            shared between both the <code>Publish</code> and <code>Subscribe</code>
+                            processes. 
+                        </li>
+                        <li>The <code>Publish</code> process directs the message to the common named
+                            event and the <code>Subscribe</code> process retrieves from the common Named
+                            Event.
+                        </li>
+                        <li>This indirection facilitates the retrieval of
+                            the same Named Event by
+                            more than one <code>Subscribe</code> process.
+                        </li>
+                        <li>
+                            A <code>Subscribe</code> process must always be the first
+                            process in a Sequence
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="extra-details">
+                   
+                    <b>Customization and Configuration :</b><br>
+                    <ul>
+                        <li>A named event must be specified for both the <code>Subscribe</code> and
+                            <code>Publish</code> processes.
+                        </li>
+                        <li>A named event is created from the configuration screen of either the
+                            <code>Publish</code> or <code>Subscribe</code> processes
+                        </li>
+                        <li>To specify the named event , click the configure link next to either a
+                            <code>Publish</code> or <code>Subscribe</code> Sequence step
+                        </li>
+                        <li>Clicking the configure link will redirect to the configuration view
+                        </li>
+                        <li>On the configuration view, click the 
+                            <img src="./CoreProcessesGuide/ManageEventTypes.png" 
+                                 style="vertical-align:middle;">
+                            button and then click the <img src="./CoreProcessesGuide/NewEventType.png"
+                                                           style="vertical-align:middle;">
+                            button to create a new named event
+                        </li>
+                        <li>To publish to a named event, click the configure link next to a
+                            <code>Publish</code> Sequence step (if not already on the
+                            <code>Publish</code> configuration view) .
+                        </li>
+ 
+                        <li>Select a named event to publish to by clicking the <code>Event
+                            Type</code> lookup field.
+                        </li>
+                        <li>To subscribe to a named event, click the configure link next to a <code>
+                            Subscribe</code> Sequence step (if not already on the
+                            <code>Subscribe</code> configuration view)
+                        </li>
+
+                        <li>Select a named event to subscribe to by clicking the <code>Event
+                            Type</code> lookup field.
+                        </li>
+                    </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
+        <br/>
+        
+        <table>
+            <tr>
+                <td>
+                    <img src="./CoreProcessesGuide/Mark.png" style="vertical-align:middle;">
+                    <b>Mark :</b><br>
+                    <img src="./CoreProcessesGuide/Gate.png" style="vertical-align:middle;">
+                    <b>Gate :</b><br>
+                    <ul>
+                        <li>A <i>related</i> collection of messages may proceed down different execution paths.
+                        </li>
+                        <li>A need may still arise for a  process to act on these <i>related</i> messages in a single
+                            transaction context 
+                            <br/> ( even though one (or more) of these messages may have
+                            proceeded down different paths).
+                        </li>
+                        <li>A pattern that handles the above scenario is commonly known as a "Saga".
+                        </li>
+
+
+                        <li style="list-style: none">
+                        <br/>
+                        </li>
+
+
+                        <li>A <code>Shipping</code> Service is a typical example of a Saga.
+                            <ul>
+                                <li>From the perspective of the ESB framework, consider a
+                                    <code>Shipping</code> sequence that begins with a
+                                    <code>Customer-Order</code> message.
+                                </li>
+                                <li>The <code>Shipping</code> sequence will typically reach out to two
+                                    helper sequences : a <code>Bill-Customer</code> sequence and an
+                                    <code>Accept-Order</code> sequence.
+                                </li>
+                                <li>These two (sub)sequences will asynchronously report back to the
+                                    <code>Shipping</code> sequence via a <code>Customer-Billed</code> message
+                                    and an <code>Order-Accepted</code> message.
+                                </li>
+                                <li>Unfortunately, the arrival order of these two asynchronous messages
+                                    is unknown until runtime.
+                                </li>
+                                <li>For this reason, the <code>Shipping</code> sequence will need to <i>
+                                    hold up</i> and not release the <code>Customer-Order</code> message
+                                    until until BOTH the
+                                    <ul>
+                                        <li>
+                                            <code>Customer-Billed</code> and
+                                        </li>
+                                        <li>
+                                            <code>Order-Accepted</code>
+                                        </li>
+                                    </ul>messages have returned to the <code>Shipping</code> sequence.
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li style="list-style: none">
+                            <br/>
+                        </li>
+
+                        <li>Using the above example, the ESB framework would
+                            <ul>
+                                <li>make use of a <code>Mark</code> process immediately prior to a custom
+                                    <code>Dispatcher</code> process
+                                </li>
+                                <li>the custom written <code>Dispatcher</code> process would fan out the
+                                    <code>Customer-Order</code> message as
+                                    <ul>
+                                        <li>a <code>Customer-Billed</code> message to the
+                                            <code>Bill-Customer</code> sequence and
+                                        </li>
+                                        <li>a <code>Order-Accepted</code> message to the
+                                            <code>Accept-Order</code> sequence.
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>A <code>Gate</code> process would be placed after the
+                                    <code>Dispatcher</code> process to buffer the returned
+                                    <code>Customer-Billed</code> and <code>Order-Accepted</code> messages.
+                                </li>
+                                <li>This <code>Gate</code> process would release the
+                                    <code>Customer-Order</code> message after receiving both the
+                                    <code>Customer-Billed</code> and <code>Order-Accepted</code> messages
+                                </li>
+                            </ul>
+                        </li>
+
+
+                        <li style="list-style: none">
+                            <br/>
+                        </li>
+
+
+                        <li>In summary, the ESB framework uses
+                            <ul>
+                                <li>a <code>Mark</code> process and a <code>Gate</code> process in tandem
+                                    to implement a Saga.
+                                </li>
+                                <li>First, the <code>Mark</code> process annotates a message suggesting
+                                    it (and the messages it subsequently spawns) will be used in a saga.
+                                </li>
+                                <li>Later, a downstream <code>Gate</code> process buffers and releases
+                                    logically related messages.
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="extra-details">
+                    <b>Customization and Configuration :</b><br>
+                    <ul>
+                        <li>Insert a <code>Mark</code> process immediately before a fan-out process
+                            in a Sequence.
+                        </li>
+                        <li>Insert a <code>Gate</code> process at some point after the fan-out
+                            process
+                        </li>
+                    </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
+        <br/>
+        
+        
+        <table>
+            <tr>
+                <td>
+                    <img src="./CoreProcessesGuide/SubSequence.png" style="vertical-align:middle;">
+                    <b>SubSequence :</b><br>
+                    <img src="./CoreProcessesGuide/Branch.png" style="vertical-align:middle;">
+                    <b>Branch :</b><br>
+                    <img src="./CoreProcessesGuide/Jump.png" style="vertical-align:middle;">
+                    <b>Jump :</b><br>
+                    <ul>
+                        <li>Execution logic is often broken into two or more sequences.
+                           <br/> A need therefore arises to connect the business logic contained in these sequences
+                        </li>
+                        <li>The <code>SubSequence</code>, <code>Branch</code> and <code>Jump</code>
+                            processes allow messages to transition between sequences
+                       
+                        <ul>
+                            <li>The <code>Jump</code> process directs execution flow to the first step in
+                                an alternative sequence.
+                                <br>
+                                <b>Note:</b>
+                                Steps in the current sequence following a <code>Jump</code> step will not be
+                                executed
+                            </li>
+                            <li>The <code>Branch</code> process directs execution flow to the first step
+                                in an alternative sequence AND allows the remaining steps in the current
+                                sequence to complete.
+                                <br>
+                                <b>Note:</b>
+                                Unlike the <code>Jump</code> process, steps in the current sequence following a
+                                <code>Branch</code> step will still be executed
+                            </li>
+                            <li>The <code>SubSequence</code> process directs execution flow to the first
+                                step in an alternative sequence.
+                                <br>
+                                <b>Note:</b>
+                                When execution reaches the <code>Terminate</code> step in the alternative
+                                sequence, execution flow returns to the step immediately
+                                following the <code>SubSequence</code> step of the current Sequence
+                            </li>     
+                        </ul>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="extra-details">
+                        <b>Customization and Configuration :</b><br>
+                        <ul>
+                            <li>To specify the sequence to jump to, click the configure link next to a
+                                <code>Jump</code> sequence step.
+                            </li>
+                            <li>Clicking the configure link will redirect to the <code>Jump</code> configuration view
+                            </li>
+                            <li>In the sequence field, enter the name of the sequence to jump to .
+                            </li>
+                            <li style="list-style: none">
+                                <br/>
+                            </li>
+                            <li>To specify the sequence to branch to, click the configure link next to a
+                                <code>Branch</code> sequence step.
+                            </li>
+                            <li>Clicking the configure link will redirect to the <code>Branch</code> 
+                                configuration view
+                            </li>
+                            <li>In the <code>sequence</code> field, enter the name of the sequence to
+                                branch to.
+                            </li>
+                            <li style="list-style: none">
+                                <br/>
+                            </li>
+                            <li>To specify the sequence to execute before returning, click the configure
+                                link next to a <code>Subsequence</code> sequence step.
+                            </li>
+                            <li>Clicking the configure link will redirect to the <code>Subsequence</code>
+                                configuration view
+                            </li>
+                            <li>In the <code>sequence</code> field, enter the name of the sequence to
+                                execute.
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
+        <br/>
+        
+        <table>
+            <tr>
+                <td>
+                    <img src="./CoreProcessesGuide/Schedule.png" style="vertical-align:middle;">
+                    <b>Schedule :</b><br>
+                    <ul>
+                        <li>Certain events are time based.
+                        </li>
+                        <li>Time is a continuous flow but in reality, most systems are interested in
+                            the occurrence of discreet time events such as 12:00 pm GMT, Monday.
+                        </li>
+                        <li>The <code>Schedule</code> process has a configurable schedule to register interest in
+                            the occurrence of discrete future time based events. This register is called
+                            a schedule.
+                        </li>
+                        <li>The <code>Schedule</code> process emits a message whenever a registered
+                            scheduled event has occurred.
+                        <br/>
+                            <b>Note:</b> A <code>Schedule</code> process must be the first step
+                            in a sequence.
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="extra-details">
+                    <b>Customization and Configuration :</b><br>
+                    <ul>
+                        <li>To specify a schedule, click the configure link next to a Schedule
+                           sequence step.
+                        </li>
+                        <li>Clicking the configure link will redirect to the Schedule configuration
+                            view
+                        </li>
+                        <li>A schedule has one or more hourly time intervals defining when
+                            the schedule should fire. 
+                            <br/>The  schedule can be further filtered by frequency and
+                            run dates.
+                        </li>
+                        <li>In the <code>Run Times</code>  field , select one or more hourly time intervals that
+                            specify when the schedule should fire.<br>
+                            (The framework assumes all times are specified in GMT with no reference to
+                            Org or user's time zone settings.)
+                        </li>
+                        <li>In the <code>Frequency</code> field , select the frequency from
+                            <code>Daily</code>, <code>Weekly</code> or <code>Monthly</code>. 
+                            <br/>The value
+                            selected defines the available values under the Run dates picklist
+                        </li>
+                    </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </body>
 </html>

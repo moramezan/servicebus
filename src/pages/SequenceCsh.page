@@ -1,18 +1,19 @@
 <apex:page tabStyle="Sequence__c" showHeader="false" standardStylesheets="true">
-    
+
     <style>
         body {background: url('{!URLFOR($Resource.HelpZip, "/inPageClouds.png")}') top left no-repeat;}
         a {text-decoration:none;}
     </style>
-    
+
     <apex:pageBlock mode="maindetail" title="Introducing Sequences">
         <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
                 <p>
                     A Sequence is an arrangement of multiple processing tasks called Steps.
-                    Each Sequence is known by a friendly name, for example 'ProcessInvoices', which should in some way indicate  the nature of the work that it's processing tasks (Steps) will perform .
+                    Each Sequence is known by a friendly name, for example 'ProcessInvoices', which should in some way
+                    indicate  the nature of the work that it's processing steps will perform .
                 </p>
-                <p>The EDA framework will advance Messages through the Steps of a Sequence in the order you specify using drag and drop. A typical sequence will contain many steps. See diagram:</p>
+                <p>The ESB framework will advance Messages through the Steps of a Sequence in the order you specify using drag and drop. A typical sequence will contain many steps. See diagram:</p>
                 <p><br /><br /><br />See the following tutorials:</p>
             </apex:pageBlockSectionItem>
             <apex:pageBlockSectionItem >
@@ -21,7 +22,6 @@
             <apex:pageBlockSectionItem >
                 <ul>
                     <li>Build a simple <a href="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial.html')}" style="color: #00f;">WireTap</a> sequence.</li>
-                    <li>Build a simple <a href="{!URLFOR($Resource.HelpZip, '/ScrapeWebPageTutorial.html')}" style="color: #00f;">Web Scrape</a> sequence.</li>
                     <li>Build a sequence that groups messages under a <a href="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial.html')}" style="color: #00f;">Common Identifier</a>.</li>
                 </ul>
             </apex:pageBlockSectionItem>

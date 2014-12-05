@@ -7,9 +7,10 @@
     <apex:pageBlock mode="maindetail" title="About the Subsequence Process">
         <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
-                <p> Execution flow to jump to an another sequence (a "(sub)sequence") upon reaching a Subsequence process step
-                    This mechanism facilitates the re-use of a functionality packaged into any given (sub)sequence
-                    Once all steps  in (sub)sequence have executed, the message will return to the step immediately following the Subsequence process step</p>
+                <p>  The SubSequence process directs execution flow to the first step in an alternative sequence.
+                    When execution reaches the Terminate step in the alternative sequence,
+                    execution flow returns to the step immediately following the SubSequence step of the current Sequence.
+                </p>
                 <p> To specify the sequence to branch to from the Subsequence config page, select the name of the (sub)sequence from the sequence dropdown field.</p>
                 <p><img width="480" src="{!URLFOR($Resource.HelpZip, '/SubsequenceConfig/subsequence.png')}" /></p>
             </apex:pageBlockSectionItem>

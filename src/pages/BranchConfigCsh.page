@@ -7,10 +7,23 @@
     <apex:pageBlock mode="maindetail" title="About the Branch Process">
         <apex:pageBlockSection columns="2" collapsible="false">
             <apex:pageBlockSectionItem >
-                <p>When execution flow is broken into more than one sequence a need arises to connect these sequences</p>
-                <p>The Branch process splits execution flow between the first step in a specified Sequence and remaining steps in the current Sequence.</p>
-                <p>Unlike the Jump process, steps in the Sequence following the Branch step  WILL be executed.</p>
-                <p>To specify the Sequence to branch to from the branch config page, select the name of the Sequence to branch to from the Sequence dropdown field.</p>
+                <p>Execution logic is often broken into two or more sequences.
+                   <br/> A need therefore arises to connect the business logic contained in these sequences</p>
+                
+                
+                <p>The Branch process directs execution flow to the first step
+                    in an alternative sequence and allows the remaining steps in the current
+                    sequence to complete.
+                </p>
+               
+                <p>Unlike the Jump process, steps in the current sequence following a
+                   Branch step will still be executed
+                </p>
+               
+                <p>To specify the Sequence to branch to , 
+                    select the name of the Sequence to branch to from the Sequence dropdown field.
+                
+                </p>
                 <p><img width="480" src="{!URLFOR($Resource.HelpZip, '/BranchConfig/branch.png')}" /></p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
