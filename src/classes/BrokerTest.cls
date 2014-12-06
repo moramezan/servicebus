@@ -1123,7 +1123,7 @@
         try {
             Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters, null).invokeMain();
         } catch (Broker.EngineException e) {
-            actualFlag = e.getMessage().contains('overriden the toString() method');
+            actualFlag = e.getMessage().contains('overridden the toString() method');
         } 
         
         //assert
