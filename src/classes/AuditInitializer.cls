@@ -55,7 +55,7 @@ public with sharing class AuditInitializer {
          String groupIdentifier = getBusinesGroupIdentifier(config, step, dataId) ;
          DateTime now = System.Now();
          AuditGroup__c auditGroup = new AuditGroup__c(
-             Name = String.valueOf(now) + ' - ' + groupIdentifier,
+             Name = ((''+now).replace(' ','T'))+'Z' + ' - ' + groupIdentifier,
              AuditInitializerConfig__c = config.Id,
              GroupIdentifier__c = groupIdentifier,
              Stamp__c = now
