@@ -885,14 +885,6 @@
         <apexPage>SubsequenceConfigStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
-    <pageAccesses>
-        <apexPage>TerminateCsh</apexPage>
-        <enabled>false</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>WiretapCsh</apexPage>
-        <enabled>false</enabled>
-    </pageAccesses>
     <tabSettings>
         <tab>Message__c</tab>
         <visibility>Visible</visibility>

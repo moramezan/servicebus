@@ -8,7 +8,7 @@ public with sharing class Wiretap {
         public String Description = 'Emails the message parameters to the user.';
         public SObject ProcessSetting = WiretapSettings__c.SObjectType.newSObject();
         public String Icon = 'email';
-        public String HelpUrl = Page.WiretapCsh.getUrl();
+        public String HelpUrl = Page.GateItemCsh.getUrl();
     }
     
     override public String toString() {

@@ -7,7 +7,7 @@ public with sharing class Terminate {
         public String Name = 'Terminate';
         public String Description = 'Swallows messages at the end of this sequence.';
         public String Icon = 'stop';
-        public String HelpUrl = Page.TerminateCsh.getUrl();
+        public String HelpUrl = Page.StepCsh.getUrl();
     }
     
     override public String toString() {
