@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <applicationVisibilities>
-        <application>EventDrivenArchitecture</application>
+        <application>EnterpriseServiceBus</application>
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
@@ -352,7 +352,7 @@
         <apexClass>WiretapTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
-    <description>Allows orchestration of Sequences, Steps and Processes as part of Event Driven Architecture.</description>
+    <description>Allows orchestration of Sequences, Steps and Processes as part of Enterprise Service Bus.</description>
     <fieldPermissions>
         <editable>false</editable>
         <field>AuditEntry__c.EntryPointGuid__c</field>

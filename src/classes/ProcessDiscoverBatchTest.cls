@@ -45,12 +45,12 @@
         //assert
         String expectedDescription = 'end of this sequence';
         System.assert(actualDescription.contains(expectedDescription));
-        String expectedTag = 'Event Driven Architecture';
+        String expectedTag = 'Enterprise Service Bus';
         System.assert(actualDescription.contains(expectedDescription));
     }
 
  
-    static testmethod void testImplementsEdaSubclass() {
+    static testmethod void testImplementsEsbSubclass() {
         // arrange
         Type gate = Type.forName('Gate.Meta');
         Type mark = Type.forName('Mark.Meta');

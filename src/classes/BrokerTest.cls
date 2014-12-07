@@ -3,7 +3,7 @@
     public String Parameters;
     
     @TestVisible private class Meta {
-        public String Tag = 'Event Driven Architecture';
+        public String Tag = 'Enterprise Service Bus';
         public String Name = 'Failure Process';
         public String Description = 'A toStringable Object that throws an exception for testing purposes.'; //Will not be listed
     }
@@ -89,7 +89,7 @@
         Integer actualCount = messages.size();
         if (actualCount > 0) {
             Map<String,Object> actualParameters = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Parameters__c);
-            actualHops = (Integer) actualParameters.get('eda_Hops');
+            actualHops = (Integer) actualParameters.get('esb_Hops');
             
             //assemble
             Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(messages[0].Cause__c);
@@ -103,7 +103,7 @@
         Integer expectedHops = maxHops;
         System.assertEquals(expectedHops, actualHops, 'Wrong hops.');
         
-        String expectedDetail = 'Too many hops - to resolve, manually set eda_Hops on parameters to 0';
+        String expectedDetail = 'Too many hops - to resolve, manually set esb_Hops on parameters to 0';
         System.assertEquals(expectedDetail, actualDetail, 'Wrong message');
         
         String expectedStatus = 'Started';
@@ -115,7 +115,7 @@
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
         Integer hops = 8;
-        String key  = 'eda_Hops';
+        String key  = 'esb_Hops';
         parameters.put(key, hops);
         
         //act
@@ -148,7 +148,7 @@
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
         Integer hops = 10;
-        String key  = 'eda_Hops';
+        String key  = 'esb_Hops';
         parameters.put(key, hops);
         
         Boolean actualFlag = false;
@@ -178,7 +178,7 @@
         Integer actualHops = -1;
         List<Map<String,Object>>  actualParametersList = parametersList;
         for (Map<String,Object> actualParameters : actualParametersList ) {
-            actualHops = (Integer) actualParameters.get('eda_Hops');
+            actualHops = (Integer) actualParameters.get('esb_Hops');
         }
  
         //assert
@@ -208,8 +208,8 @@
         Decimal positionA3 = stepA3.Position__c;
         
         List<Message__c> messages =  new List<Message__c>{
-            new Message__c(Parameters__c = '{"eda_SequenceName": "' + sequenceNameA + '", "eda_Position": ' + positionA1 + '}'),
-            new Message__c(Parameters__c = '{"eda_SequenceName": "' + sequenceNameA + '", "eda_Position": ' + positionA2 + '}')
+            new Message__c(Parameters__c = '{"esb_SequenceName": "' + sequenceNameA + '", "esb_Position": ' + positionA1 + '}'),
+            new Message__c(Parameters__c = '{"esb_SequenceName": "' + sequenceNameA + '", "esb_Position": ' + positionA2 + '}')
         };
         
         //act
@@ -227,8 +227,8 @@
         Id actualProcessId02;
         for (Message__c message : messagesAfter) {
             Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
-            String parametersSequenceName = (String)parameters.get('eda_SequenceName');
-            Integer parametersPosition = (Integer)parameters.get('eda_Position');
+            String parametersSequenceName = (String)parameters.get('esb_SequenceName');
+            Integer parametersPosition = (Integer)parameters.get('esb_Position');
             if (parametersSequenceName != sequenceNameA) {
                 flagSequenceNameA = false;
             }
@@ -382,11 +382,11 @@
         insert stepC2;
         
         List<Message__c> messages = new List<Message__c>{
-            new Message__c(Parameters__c = '{"Id": 0, "eda_SequenceName": "' + sequenceA.Name + '", "eda_Position": ' + positionA1 + '}'), // Same Sequence / Position
-            new Message__c(Parameters__c = '{"Id": 1, "eda_SequenceName": "' + sequenceA.Name + '", "eda_Position": ' + positionA1 + '}'), // Same Sequence / Position
-            new Message__c(Parameters__c = '{"Id": 2, "eda_SequenceName": "' + sequenceA.Name + '", "eda_Position": ' + positionA2 + '}'),
-            new Message__c(Parameters__c = '{"Id": 3, "eda_SequenceName": "' + sequenceB.Name + '", "eda_Position": ' + positionB1 + '}'),
-            new Message__c(Parameters__c = '{"Id": 4, "eda_SequenceName": "' + sequenceC.Name + '", "eda_Position": ' + positionC1 + '}')
+            new Message__c(Parameters__c = '{"Id": 0, "esb_SequenceName": "' + sequenceA.Name + '", "esb_Position": ' + positionA1 + '}'), // Same Sequence / Position
+            new Message__c(Parameters__c = '{"Id": 1, "esb_SequenceName": "' + sequenceA.Name + '", "esb_Position": ' + positionA1 + '}'), // Same Sequence / Position
+            new Message__c(Parameters__c = '{"Id": 2, "esb_SequenceName": "' + sequenceA.Name + '", "esb_Position": ' + positionA2 + '}'),
+            new Message__c(Parameters__c = '{"Id": 3, "esb_SequenceName": "' + sequenceB.Name + '", "esb_Position": ' + positionB1 + '}'),
+            new Message__c(Parameters__c = '{"Id": 4, "esb_SequenceName": "' + sequenceC.Name + '", "esb_Position": ' + positionC1 + '}')
         };
         
         // act
@@ -406,8 +406,8 @@
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
             Integer theId = (Integer) parameters.get('Id');
-            String theSequenceName = (String)parameters.get('eda_SequenceName');
-            Integer thePosition = (Integer)parameters.get('eda_Position');
+            String theSequenceName = (String)parameters.get('esb_SequenceName');
+            Integer thePosition = (Integer)parameters.get('esb_Position');
             if (theId == 0) {
                 actualSequenceName0 = theSequenceName;
                 actualPosition0 = thePosition;
@@ -550,7 +550,7 @@
         Integer markCount = 0;
         Map<String,Object> parametersIn0 = new Map<String,Object> {
             'Id' => '0',
-            'eda_MarkCount' => markCount
+            'esb_MarkCount' => markCount
         };
         
         Map<String,Object> parametersOut1 = new Map<String,Object> {
@@ -571,7 +571,7 @@
         new DoNothingBroker().gateHelper(parametersIn0, parametersListOut);
         
         //assemble
-        Integer actualCount = (Integer)parametersListOut[0].get('eda_Count');
+        Integer actualCount = (Integer)parametersListOut[0].get('esb_Count');
         
         //assert
         Integer expectedCount = parametersListOut.size();
@@ -583,7 +583,7 @@
         Integer markCount = 0; //will not increment to 1
         Map<String,Object> parametersIn0 = new Map<String,Object> {
             'Id' => '0',
-            'eda_MarkCount' => markCount
+            'esb_MarkCount' => markCount
         };
         
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
@@ -592,7 +592,7 @@
         new DoNothingBroker().gateHelper(parametersIn0, parametersListOut);
         
         //assemble
-        Integer actualCount = (Integer)parametersIn0.get('eda_Count');
+        Integer actualCount = (Integer)parametersIn0.get('esb_Count');
         
         //assert
         Integer expectedCount = null;
@@ -603,7 +603,7 @@
         //arrange
         Map<String,Object> parametersIn0 = new Map<String,Object> {
             'Id' => '0'
-            //'eda_MarkCount' => markCount //Not specified; key will return null
+            //'esb_MarkCount' => markCount //Not specified; key will return null
         };
         
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
@@ -612,7 +612,7 @@
         new DoNothingBroker().gateHelper(parametersIn0, parametersListOut);
         
         //assemble
-        Integer actualCount = (Integer) parametersIn0.get('eda_Count');
+        Integer actualCount = (Integer) parametersIn0.get('esb_Count');
         
         //assert
         Integer expectedCount = null;
@@ -622,7 +622,7 @@
  
     
     //TODO :: write test for this when you (NReid) understand this ( cant remember right now)
-    // if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('eda_GateGroupId')}); //tidy up split of 0
+    // if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('esb_GateGroupId')}); //tidy up split of 0
     
     /**
      * Bug with Salesforce:
@@ -682,7 +682,7 @@
     
     static testmethod void testNoStepThrowsQueryException() {
         //arrange (note there is no Step__c in database!)
-        Message__c message = new Message__c(Parameters__c = '{"eda_SequenceName": "", "eda_Position": 0}');
+        Message__c message = new Message__c(Parameters__c = '{"esb_SequenceName": "", "esb_Position": 0}');
         insert message;
         
         //act
@@ -978,9 +978,9 @@
         Boolean isHeartbeat = true;
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => UserInfo.getUserId(), 
-            'eda_SequenceName' => sequenceName,    
-            'eda_EventStamp' => eventStamp,
-            'eda_IsHeartbeat' => isHeartbeat    
+            'esb_SequenceName' => sequenceName,    
+            'esb_EventStamp' => eventStamp,
+            'esb_IsHeartbeat' => isHeartbeat    
         };
              
         // act
@@ -993,8 +993,8 @@
         Boolean actualIsHeartbeat;
         if (actualCount == 1) {
             Map<String,Object> actualParameters = (Map<String,Object>)Json.deserializeUntyped(actualMessages[0].Parameters__c);
-            actualEventStamp = (String)actualParameters.get('eda_EventStamp');
-            actualIsHeartbeat = (Boolean)actualParameters.get('eda_IsHeartbeat');
+            actualEventStamp = (String)actualParameters.get('esb_EventStamp');
+            actualIsHeartbeat = (Boolean)actualParameters.get('esb_IsHeartbeat');
         }
  
         // assert
@@ -1021,7 +1021,7 @@
         
  
         Map<String,Object> parametersA = new Map<String,Object>{
-            'eda_SequenceName' => sequenceName
+            'esb_SequenceName' => sequenceName
         };
         Map<String,Object> parametersB = new Map<String,Object>{
             'Id' => UserInfo.getUserId() 
@@ -1081,9 +1081,9 @@
         Integer actualPosition       ; 
         if (messagesAfter.size() == 1) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(messagesAfter[0].Parameters__c);
-            actualEntryPointGuid = (String) parameters.get('eda_EntryPointGuid');
-            actualEnqueueUserId  = (Id) parameters.get('eda_EnqueueUserId' );
-            actualPosition       = (Integer) parameters.get('eda_Position');
+            actualEntryPointGuid = (String) parameters.get('esb_EntryPointGuid');
+            actualEnqueueUserId  = (Id) parameters.get('esb_EnqueueUserId' );
+            actualPosition       = (Integer) parameters.get('esb_Position');
         }
 
         // assert

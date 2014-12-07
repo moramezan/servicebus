@@ -4,7 +4,7 @@ public with sharing class AuditInitializer {
     public AuditInitializerConfig__c StepConfig;
     
     public class Meta {
-        public String Tag = 'Event Driven Architecture';
+        public String Tag = 'Enterprise Service Bus';
         public String Name = 'Audit Initializer';
         public String Description = 'Creates a grouping identifier which all subsequent Audit Writer processes audit against.';
         public SObject StepConfig = AuditInitializerConfig__c.SObjectType.newSobject();
@@ -12,7 +12,7 @@ public with sharing class AuditInitializer {
         public String HelpUrl = Page.AuditInitializerConfigCsh.getUrl();
         
         public Map<String,String> Outputs = new Map<String,String>{
-            'eda_AuditGroupIds' => 'LIST<ID> of potentially multiple groups from AuditInitializer steps.'
+            'esb_AuditGroupIds' => 'LIST<ID> of potentially multiple groups from AuditInitializer steps.'
         };
         
     }
@@ -31,8 +31,8 @@ public with sharing class AuditInitializer {
          List<Step__c> steps = [
              SELECT Id, Position__c, Sequence__r.Name
              FROM Step__c
-             WHERE Sequence__r.Name = :(String)parameters.get('eda_SequenceName')
-             AND Position__c = :(Decimal) parameters.get('eda_Position')
+             WHERE Sequence__r.Name = :(String)parameters.get('esb_SequenceName')
+             AND Position__c = :(Decimal) parameters.get('esb_Position')
          ];
          if (steps.size() == 0) {
             throw new AuditInitializerException('Unable to access the Step Position and Sequence Name');
@@ -63,12 +63,12 @@ public with sharing class AuditInitializer {
          insert auditGroup;
 
          // update outbound message
-         List<Object> auditGroupIds = (List<Object>)parameters.get('eda_AuditGroupIds');
+         List<Object> auditGroupIds = (List<Object>)parameters.get('esb_AuditGroupIds');
          if (auditGroupIds == null) {
              auditGroupIds = new List<Object>();
          }
          auditGroupIds.add(auditGroup.Id);
-         parameters.put('eda_AuditGroupIds', auditGroupIds);
+         parameters.put('esb_AuditGroupIds', auditGroupIds);
 
          
          return Json.serialize(new List<Map<String,Object>>{parameters});

@@ -3,7 +3,7 @@ public with sharing class Wiretap {
     public String Parameters;
     
     public class Meta {
-        public String Tag = 'Event Driven Architecture';
+        public String Tag = 'Enterprise Service Bus';
         public String Name = 'Wiretap';
         public String Description = 'Emails the message parameters to the user.';
         public SObject ProcessSetting = WiretapSettings__c.SObjectType.newSObject();
@@ -30,9 +30,9 @@ public with sharing class Wiretap {
             + '@'
             + UserInfo.getOrganizationId()
             + ' '
-            + parameters.get('eda_SequenceName')
+            + parameters.get('esb_SequenceName')
             + '#'
-            + parameters.get('eda_Position')
+            + parameters.get('esb_Position')
         );
         message.setPlainTextBody(Json.serializePretty(parameters));
         message.setTargetObjectId(userId);

@@ -1,6 +1,6 @@
 /**
  * Use this hook to react to messages that encountered errors during processing.
- * For example, we formerly might have sent an email to the EDA Orchestrator.
+ * For example, we formerly might have sent an email to the ESB Orchestrator.
  */
 trigger MessageTriggers on Message__c (before insert) {
     

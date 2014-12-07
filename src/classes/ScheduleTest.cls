@@ -32,8 +32,8 @@
          Boolean isHeartbeat = false;
         String stampAsString = '2014-01-18T12:00:00.000Z';
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString
+            'esb_IsHeartbeat' => isHeartbeat,
+            'esb_EventStamp' => stampAsString
         };
     
         // act 
@@ -49,8 +49,8 @@
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
-            actualIsHeartbeat = (Boolean)actualParameters.get('eda_IsHeartbeat');
-            actualStampTruncated = (String)actualParameters.get('eda_EventStamp');
+            actualIsHeartbeat = (Boolean)actualParameters.get('esb_IsHeartbeat');
+            actualStampTruncated = (String)actualParameters.get('esb_EventStamp');
         }
         
         // assert
@@ -93,8 +93,8 @@
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday
         ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString
+            'esb_IsHeartbeat' => isHeartbeat,
+            'esb_EventStamp' => stampAsString
         };
  
         // act 
@@ -110,8 +110,8 @@
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
-            actualIsHeartbeat = (Boolean)actualParameters.get('eda_IsHeartbeat');
-            actualStampTruncated = (String)actualParameters.get('eda_EventStamp');
+            actualIsHeartbeat = (Boolean)actualParameters.get('esb_IsHeartbeat');
+            actualStampTruncated = (String)actualParameters.get('esb_EventStamp');
         }
         
         // assert
@@ -154,8 +154,8 @@
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday, a working day
         ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString
+            'esb_IsHeartbeat' => isHeartbeat,
+            'esb_EventStamp' => stampAsString
         };
  
         // act 
@@ -171,8 +171,8 @@
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
-            actualIsHeartbeat = (Boolean)actualParameters.get('eda_IsHeartbeat');
-            actualStampTruncated = (String)actualParameters.get('eda_EventStamp');
+            actualIsHeartbeat = (Boolean)actualParameters.get('esb_IsHeartbeat');
+            actualStampTruncated = (String)actualParameters.get('esb_EventStamp');
         }
         
         // assert
@@ -215,8 +215,8 @@
         String stampAsString = '2014-01-03T12:00:00.000Z';   
         ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString
+            'esb_IsHeartbeat' => isHeartbeat,
+            'esb_EventStamp' => stampAsString
         };
  
         // act 
@@ -232,8 +232,8 @@
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
-            actualIsHeartbeat = (Boolean)actualParameters.get('eda_IsHeartbeat');
-            actualStampTruncated = (String)actualParameters.get('eda_EventStamp');
+            actualIsHeartbeat = (Boolean)actualParameters.get('esb_IsHeartbeat');
+            actualStampTruncated = (String)actualParameters.get('esb_EventStamp');
         }
         
         // assert
@@ -275,8 +275,8 @@
         String stampAsString = '2014-01-18T12:00:00.000Z';
         ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString
+            'esb_IsHeartbeat' => isHeartbeat,
+            'esb_EventStamp' => stampAsString
         };
  
         // act 
@@ -310,8 +310,8 @@
         String validStamp = '2014-01-18T12:00:00.000Z';
         ScheduleConfig__c invalidConfig = null;
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => validStamp
+            'esb_IsHeartbeat' => isHeartbeat,
+            'esb_EventStamp' => validStamp
         };
         
         // assemble
@@ -347,8 +347,8 @@
          Boolean isHeartbeat = true;
         String invalidStamp = 'XXXX-01-18T12:00:00.000Z';
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => invalidStamp
+            'esb_IsHeartbeat' => isHeartbeat,
+            'esb_EventStamp' => invalidStamp
         };
         
         // assemble

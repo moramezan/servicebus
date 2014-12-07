@@ -4,7 +4,7 @@ public with sharing class Subsequence {
     public SubsequenceConfig__c StepConfig;
     
     public class Meta {
-        public String Tag = 'Event Driven Architecture';
+        public String Tag = 'Enterprise Service Bus';
         public String Name = 'Subsequence';
         public String Description = 'Temporarily diverts the message to another sequence, then returns it to the next step afterwards.';
         public SObject StepConfig = SubsequenceConfig__c.SObjectType.newSObject();
@@ -12,8 +12,8 @@ public with sharing class Subsequence {
         public String HelpUrl = Page.SubsequenceConfigCsh.getUrl();
         
         public Map<String,String> Outputs = new Map<String,String>{
-            'eda_SubsequenceName' => 'STRING of the sequence name which the Subsequence returns to.',
-            'eda_SubsequencePosition' => 'INTEGER of the position number which the Subsequence returns to.'
+            'esb_SubsequenceName' => 'STRING of the sequence name which the Subsequence returns to.',
+            'esb_SubsequencePosition' => 'INTEGER of the position number which the Subsequence returns to.'
         };
     }
     
@@ -24,23 +24,23 @@ public with sharing class Subsequence {
         Step__c step = [
             SELECT Id
             FROM Step__c
-            WHERE Sequence__r.Name = :(String)parameters.get('eda_SequenceName')
-            AND Position__c = :(Decimal) parameters.get('eda_Position')
+            WHERE Sequence__r.Name = :(String)parameters.get('esb_SequenceName')
+            AND Position__c = :(Decimal) parameters.get('esb_Position')
         ];
   
         //get destination from config
         SubsequenceConfig__c config = this.StepConfig;
         Sequence__c sequence = (Sequence__c)SalesforceObject.getById(config.Sequence__c);
         
-        List<Object> stepIds = (List<Object>)parameters.get('eda_SubsequenceStepIds');
+        List<Object> stepIds = (List<Object>)parameters.get('esb_SubsequenceStepIds');
         if (stepIds == null) {
             stepIds = new List<Object>();
         }
         stepIds.add(step.Id);
         
-        parameters.put('eda_SubsequenceStepIds', stepIds);
-        parameters.put('eda_SequenceName', sequence.Name);
-        parameters.put('eda_Position', 0);
+        parameters.put('esb_SubsequenceStepIds', stepIds);
+        parameters.put('esb_SequenceName', sequence.Name);
+        parameters.put('esb_Position', 0);
         
         return Json.serialize(new List<Map<String,Object>>{parameters});
     }

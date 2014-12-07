@@ -75,7 +75,7 @@
                     "        Ext.Msg.show({",
                     "            title: 'Almost there...',",
                     "            msg: [",
-                    "                'Hey, your Salesforce Administrator should configure Event Driven Architecture.',",
+                    "                'Hey, your Salesforce Administrator should configure Enterprise Service Bus.',",
                     "                'To fix this, please ask them nicely to configure the package at the URL below:',",
                     "                '<a href=\"' + URLFOR[$Page.Configure] + '\">' + URLFOR[$Page.Configure] + '</a>'",
                     "            ].join('<br /><br />'),",

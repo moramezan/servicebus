@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
     <defaultLandingTab>Monitor</defaultLandingTab>
-    <label>Event Driven Architecture</label>
-    <logo>EventDrivenArchitecture/edaAppPng.png</logo>
+    <label>Enterprise Service Bus</label>
+    <logo>EnterpriseServiceBus/esbAppPng.png</logo>
     <tab>Monitor</tab>
     <tab>Sequence__c</tab>
     <tab>Process__c</tab>

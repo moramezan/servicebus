@@ -11,7 +11,7 @@
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            // 'eda_EntryPointGuid' => '1234567abcde',  // null EntryPointGuid
+            // 'esb_EntryPointGuid' => '1234567abcde',  // null EntryPointGuid
             'Id' => theId
         };
         
@@ -45,7 +45,7 @@
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_EntryPointGuid' => '1234567abcde',
+            'esb_EntryPointGuid' => '1234567abcde',
             'Id' => theId
         };
         
@@ -112,10 +112,10 @@
  
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_EntryPointGuid' => '1234567abcde',
-            'eda_AuditGroupIds' => auditGroupIds,
-            'eda_SequenceName' => sequenceName,
-            'eda_Position' => positionA2
+            'esb_EntryPointGuid' => '1234567abcde',
+            'esb_AuditGroupIds' => auditGroupIds,
+            'esb_SequenceName' => sequenceName,
+            'esb_Position' => positionA2
         };
         
         //act

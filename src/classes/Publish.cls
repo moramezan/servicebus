@@ -4,7 +4,7 @@ public with sharing class Publish {
     public PublishConfig__c StepConfig;
     
     public class Meta {
-        public String Tag = 'Event Driven Architecture';
+        public String Tag = 'Enterprise Service Bus';
         public String Name = 'Publish';
         public String Description = 'Broadcasts the message to other sequences via a named Event Type.';
         public SObject StepConfig = PublishConfig__c.SObjectType.newSObject();
@@ -39,9 +39,9 @@ public with sharing class Publish {
         for (Step__c step : steps) {
             Map<String,Object> clone = parameters.clone();
             //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
-            clone.put('eda_SubsequenceStepIds', null);
-            clone.put('eda_Position', step.Position__c);
-            clone.put('eda_SequenceName', step.Sequence__r.Name);
+            clone.put('esb_SubsequenceStepIds', null);
+            clone.put('esb_Position', step.Position__c);
+            clone.put('esb_SequenceName', step.Sequence__r.Name);
             parametersList.add(clone);
         }
         

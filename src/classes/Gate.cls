@@ -3,19 +3,19 @@ public with sharing class Gate {
     public String Parameters;
     
     public class Meta {
-        public String Tag = 'Event Driven Architecture';
+        public String Tag = 'Enterprise Service Bus';
         public String Name = 'Gate';
         public String Description = 'Aggregates a collection of messages previously marked with a correlation key.';
         public String Icon = 'arrow_join';
         public String HelpUrl = Page.GateGroupCsh.getUrl();
 
         public Map<String,String> Inputs = new Map<String,String>{
-            'eda_GateGroupId' => 'ID of the GateGroup the marked messages should belong to.',
-            'eda_Count' => 'INTEGER of marked messages the gate should expect.'
+            'esb_GateGroupId' => 'ID of the GateGroup the marked messages should belong to.',
+            'esb_Count' => 'INTEGER of marked messages the gate should expect.'
         };
 
         public Map<String,String> Outputs = new Map<String,String>{
-            'eda_Id' => 'ID of the GateGroup whose members are now all present.'
+            'esb_Id' => 'ID of the GateGroup whose members are now all present.'
         };
     }
 
@@ -35,8 +35,8 @@ public with sharing class Gate {
 
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
-        Id gateGroupId = (Id)parameters.get('eda_GateGroupId');
-        Decimal count = (Decimal)parameters.get('eda_Count');
+        Id gateGroupId = (Id)parameters.get('esb_GateGroupId');
+        Decimal count = (Decimal)parameters.get('esb_Count');
         
         insert new GateItem__c(
             GateGroup__c = gateGroupId,
@@ -56,9 +56,9 @@ public with sharing class Gate {
         
         //this is the last item, let's release
         parameters.put('Id', gateGroupId);
-        parameters.remove('eda_Count');
-        parameters.remove('eda_MarkCount');
-        parameters.remove('eda_GateGroupId');
+        parameters.remove('esb_Count');
+        parameters.remove('esb_MarkCount');
+        parameters.remove('esb_GateGroupId');
         
         return Json.serialize(new List<Map<String,Object>>{parameters});
     }

@@ -4,7 +4,7 @@ public with sharing class Schedule {
     public ScheduleConfig__c StepConfig;
     
     public class Meta {
-        public String Tag = 'Event Driven Architecture';
+        public String Tag = 'Enterprise Service Bus';
         public String Name = 'Schedule';
         public String Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages
         public String Icon = 'clock';
@@ -18,8 +18,8 @@ public with sharing class Schedule {
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
 
-        Boolean isHeartbeat = (Boolean)parameters.get('eda_IsHeartbeat');
-        String  stampAsString  =  (String)parameters.get('eda_EventStamp');
+        Boolean isHeartbeat = (Boolean)parameters.get('esb_IsHeartbeat');
+        String  stampAsString  =  (String)parameters.get('esb_EventStamp');
         Id configId = this.StepConfig == null ? null : this.StepConfig.Id;
 
          List<Map<String,Object>> parametersList = new List<Map<String,Object>>();

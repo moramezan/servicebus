@@ -8,7 +8,7 @@
     
     
     <target name="retrieve" description="Retrieves all package components to dev org">
-        <sf:retrieve username="${sf.username}" password="${sf.password}" serverurl="https://login.salesforce.com" retrieveTarget="src" packageNames="Event Driven Architecture"/>
+        <sf:retrieve username="${sf.username}" password="${sf.password}" serverurl="https://login.salesforce.com" retrieveTarget="src" packageNames="Enterprise Service Bus"/>
         <antcall target="alphabetize-searchlayouts" />
         <antcall target="optimize-for-release" />
     </target>
@@ -42,13 +42,13 @@
     <target name="remove-futurebroker-artifacts">
         <replace file="futurebroker/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
-    <fullName>Event Driven Architecture Future Broker</fullName>
+    <fullName>Enterprise Service Bus Future Broker</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
     <description>Low latency asynchronous messaging backbone.</description>
     <namespacePrefix>eda_fb</namespacePrefix>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
-    <fullName>Event Driven Architecture Future Broker</fullName>
+    <fullName>Enterprise Service Bus Future Broker</fullName>
     <description>Low latency asynchronous messaging backbone.</description>
     <types>]]></replacevalue>
         </replace>
@@ -65,11 +65,11 @@
     <target name="restore-futurebroker-artifacts">
         <replace file="futurebroker/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
-    <fullName>Event Driven Architecture Future Broker</fullName>
+    <fullName>Enterprise Service Bus Future Broker</fullName>
     <description>Low latency asynchronous messaging backbone.</description>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
-    <fullName>Event Driven Architecture Future Broker</fullName>
+    <fullName>Enterprise Service Bus Future Broker</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
     <description>Low latency asynchronous messaging backbone.</description>
     <namespacePrefix>eda_fb</namespacePrefix>
@@ -88,15 +88,15 @@
     <target name="optimize-for-devorg" description="Removes namespace and management artifacts prior to unmanaged deploy.">
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
-    <fullName>Event Driven Architecture</fullName>
+    <fullName>Enterprise Service Bus</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
     <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
-    <namespacePrefix>eda</namespacePrefix>
+    <namespacePrefix>esb</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
-    <fullName>Event Driven Architecture</fullName>
+    <fullName>Enterprise Service Bus</fullName>
     <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacevalue>
@@ -115,15 +115,15 @@
     <target name="optimize-for-release" description="Restores namespace and management artifacts following unmanaged deploy.">
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
-    <fullName>Event Driven Architecture</fullName>
+    <fullName>Enterprise Service Bus</fullName>
     <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
-    <fullName>Event Driven Architecture</fullName>
+    <fullName>Enterprise Service Bus</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
     <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
-    <namespacePrefix>eda</namespacePrefix>
+    <namespacePrefix>esb</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacevalue>

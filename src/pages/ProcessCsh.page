@@ -30,7 +30,7 @@
                 <apex:image value="{!URLFOR($Resource.HelpZip, '/Process/processArtifacts.png')}" />
             </apex:pageBlockSectionItem>
             <apex:pageBlockSectionItem >
-                <p>See the tutorial: <a href="{!URLFOR($Resource.HelpZip, '/ProcessDiscoveryTutorial.html')}"  style="color: #00f;">How to discover EDA Processes</a>.</p>
+                <p>See the tutorial: <a href="{!URLFOR($Resource.HelpZip, '/ProcessDiscoveryTutorial.html')}"  style="color: #00f;">How to discover ESB Processes</a>.</p>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         

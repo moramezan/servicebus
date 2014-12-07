@@ -8,8 +8,8 @@ private class MarkTest {
         String data = 'data';
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda_SequenceName' => sequenceName,
-            'eda_Position' => position,
+            'esb_SequenceName' => sequenceName,
+            'esb_Position' => position,
             'data' => data
         };
 
@@ -28,8 +28,8 @@ private class MarkTest {
         Boolean actualGateGroupIdFlag = false;
         if (actualSize > 0) {
             Map<String,Object> actualParameters = actualOutParametersList[0];
-            actualMarkCount = (Decimal) actualParameters.get('eda_MarkCount' );
-            actualGateGroupIdFlag = (actualParameters.get('eda_GateGroupId' ) != null);
+            actualMarkCount = (Decimal) actualParameters.get('esb_MarkCount' );
+            actualGateGroupIdFlag = (actualParameters.get('esb_GateGroupId' ) != null);
         }
         Integer actualGateGroupSize = [SELECT COUNT() FROM GateGroup__c];
 

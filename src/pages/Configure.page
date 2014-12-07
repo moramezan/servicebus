@@ -1,6 +1,6 @@
 <apex:page controller="ConfigureController" tabStyle="Sequence__c" action="{!doRedirect}" cache="false">
 
-    <apex:sectionHeader title="Thanks for installing Event Driven Architecture" />
+    <apex:sectionHeader title="Thanks for installing Enterprise Service Bus" />
 
     <apex:form >
         <apex:pageBlock mode="maindetail">
@@ -40,7 +40,7 @@
                     </p>
                 </apex:pageBlockSectionItem>
                 <apex:pageBlockSectionItem rendered="{!NOT(HasApp)}">
-                    <apex:pageMessage strength="3" severity="ERROR" title="The Event Driven Architecture application is not visible.">
+                    <apex:pageMessage strength="3" severity="ERROR" title="The Enterprise Service Bus application is not visible.">
                         <apex:commandButton action="{!doSetupApp}" value="Click here then click Save at the top of the page to fix this" />
                     </apex:pageMessage>
                 </apex:pageBlockSectionItem>
@@ -80,24 +80,24 @@
             
         </apex:pageBlockButtons>
         --->
-        <apex:pageBlockSection columns="1" title="TUTORIAL 1: Confirm Event Driven Architecture is Correctly Setup" collapsible="false">
+        <apex:pageBlockSection columns="1" title="TUTORIAL 1: Confirm Enterprise Service Bus is Correctly Setup" collapsible="false">
             <p>
                 To verify that the Event Driven Package has been correctly installed and configured, click
                 <a href="{!URLFOR($Resource.HelpZip, '/ConfirmSetupTutorial.html')}" target="_blank" style="color: #00f;">here</a>
             </p>
         </apex:pageBlockSection>
-        <apex:pageBlockSection columns="1" title="TUTORIAL 2: Discover Event Driven Processes" collapsible="false">
+        <apex:pageBlockSection columns="1" title="TUTORIAL 2: Discover Enterprise Service Bus Processes" collapsible="false">
             <p>
                 Click
                 <a href="{!URLFOR($Resource.HelpZip, '/ProcessDiscoveryTutorial.html')}" target="_blank" style="color: #00f;">here</a>
-                to see how custom event driven logic written in Apex is discovered by the Event Driven framework. 
+                to see how custom event driven logic written in Apex is discovered by the Enterprise Service Bus. 
             </p>    
         </apex:pageBlockSection>
         <apex:pageBlockSection columns="1" title="TUTORIAL 3: Audit Message Events Under a Common Identifier" collapsible="false">
             <p>
                 Click
                 <a href="{!URLFOR($Resource.HelpZip, '/LogUnderCommonIdentifierTutorial.html')}" target="_blank" style="color: #00f;">here</a>
-                to see how the Event Driven framework enables the common requirement of grouping related messages under a common tag.
+                to see how the Enterprise Service Bus enables the common requirement of grouping related messages under a common tag.
             </p>
         </apex:pageBlockSection>
         <apex:pageBlockSection columns="1" title="TUTORIAL 4: Regularly Scrape a Web Page" collapsible="false">

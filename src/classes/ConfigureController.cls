@@ -11,7 +11,7 @@ public with sharing class ConfigureController {
     
     private AppMenuItem AppMenuItem;
     private AppMenuItem getAppMenuItem() {
-        if (this.AppMenuItem == null) this.AppMenuItem = [SELECT Id, StartUrl FROM AppMenuItem WHERE Name = 'EventDrivenArchitecture'];
+        if (this.AppMenuItem == null) this.AppMenuItem = [SELECT Id, StartUrl FROM AppMenuItem WHERE Name = 'EnterpriseServiceBus'];
         return this.AppMenuItem;
     }
     
@@ -109,7 +109,7 @@ public with sharing class ConfigureController {
             return true;
         }
         
-        if (this.getHomeContent().contains('Event Driven Architecture')) {
+        if (this.getHomeContent().contains('Enterprise Service Bus')) {
             //the app is currently selected
             return true;
         }
@@ -161,7 +161,7 @@ public with sharing class ConfigureController {
         System.PageReference setup = new System.PageReference('/0rp/e');
         setup.getParameters().putAll(new Map<String,String>{
             'saveURL' => ApexPages.currentPage().getUrl(), //redirects to our config/tutorial after save
-            'SiteName' => 'EDA_' + this.getPodProtocolAndHost().replaceAll('[^A-Za-z0-9]+', '_').left(30),
+            'SiteName' => 'ESB_' + this.getPodProtocolAndHost().replaceAll('[^A-Za-z0-9]+', '_').left(30),
             'EndpointUrl' => this.getPodProtocolAndHost(),
             'ProtocolMismatch' => '1',
             'DescriptionField' => 'Before the installation is complete, you need this Remote Site Setting. Just click Save below and we\'ll take you straight back to the package config.'

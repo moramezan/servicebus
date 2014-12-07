@@ -5,8 +5,8 @@
         Boolean isHeartbeat = true;
         String stampAsString = '2014-01-18T12:00:00.000Z';
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString 
+            'esb_IsHeartbeat' => isHeartbeat,
+            'esb_EventStamp' => stampAsString 
         };
 
         //act
@@ -38,8 +38,8 @@
         Boolean isHeartbeat = true;
         String stampAsString = '2014-01-18T12:00:00.000Z';
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString 
+            'esb_IsHeartbeat' => isHeartbeat,
+            'esb_EventStamp' => stampAsString 
         };
 
         //act
@@ -71,8 +71,8 @@
         Boolean isHeartbeat = false;
         String stampAsString = '2014-01-18T12:00:00.000Z';
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString 
+            'esb_IsHeartbeat' => isHeartbeat,
+            'esb_EventStamp' => stampAsString 
         };
 
         //act
@@ -91,8 +91,8 @@
         Boolean isHeartbeat = true;
         String stampAsString = 'XXXX-01-18T12:00:00.000Z';  // invalid stamp
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString 
+            'esb_IsHeartbeat' => isHeartbeat,
+            'esb_EventStamp' => stampAsString 
         };
 
         //assemble
@@ -116,8 +116,8 @@
         Boolean isHeartbeat = false;
         String stampAsString = 'XXXX-01-18T12:00:00.000Z';  // invalid stamp
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_IsHeartbeat' => isHeartbeat,
-            'eda_EventStamp' => stampAsString 
+            'esb_IsHeartbeat' => isHeartbeat,
+            'esb_EventStamp' => stampAsString 
         };
 
         //assemble

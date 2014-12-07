@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Event Driven Architecture</fullName>
+    <fullName>Enterprise Service Bus</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
     <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
-    <namespacePrefix>eda</namespacePrefix>
+    <namespacePrefix>esb</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>
@@ -160,7 +160,7 @@
         <name>ApexTrigger</name>
     </types>
     <types>
-        <members>EventDrivenArchitecture</members>
+        <members>EnterpriseServiceBus</members>
         <name>CustomApplication</name>
     </types>
     <types>
@@ -261,8 +261,8 @@
         <name>CustomTab</name>
     </types>
     <types>
-        <members>EventDrivenArchitecture</members>
-        <members>EventDrivenArchitecture/edaAppPng.png</members>
+        <members>EnterpriseServiceBus</members>
+        <members>EnterpriseServiceBus/esbAppPng.png</members>
         <name>Document</name>
     </types>
     <types>
@@ -290,8 +290,8 @@
         <members>Message__c.AllExceptCompleted</members>
         <members>Message__c.Overdue</members>
         <members>Process__c.All</members>
-        <members>Process__c.AllExceptEDA</members>
-        <members>Process__c.EventDrivenArchitecture</members>
+        <members>Process__c.AllExceptESB</members>
+        <members>Process__c.EnterpriseServiceBus</members>
         <members>Process__c.Untagged</members>
         <members>Sequence__c.All</members>
         <name>ListView</name>

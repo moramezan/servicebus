@@ -401,7 +401,7 @@ abstract public with sharing class Broker {
         if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable'); 
          
         Map<String,Object> injectedParameters = new Map<String,Object> {
-            'eda_SequenceName' => sequenceName,
+            'esb_SequenceName' => sequenceName,
             'Id' => dataId
         };
         
@@ -413,7 +413,7 @@ abstract public with sharing class Broker {
      * 
      * The parameters collection should at minimum contain 
      *  - an object Id ("Id")
-     *  - a sequence name ("eda_SequenceName")
+     *  - a sequence name ("esb_SequenceName")
      * Failure to provide these parameters in the parameters collection will throw an EngineException
      * 
      * The parameters collection is converted to a Message object. This Message instance is saved 
@@ -433,7 +433,7 @@ abstract public with sharing class Broker {
         // validate minimum expected params are supplied:
         List<String> missingParameters = new List<String>();
         Set<String> expectedParameters = new Set<String>{
-            'eda_SequenceName',
+            'esb_SequenceName',
             'Id'     
         };
         for (String expectedParameter : expectedParameters) {
@@ -449,9 +449,9 @@ abstract public with sharing class Broker {
         }
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'eda_EntryPointGuid' => getEntryPointGuid(18),
-            'eda_EnqueueUserId' => UserInfo.getUserId(),
-            'eda_Position' => 0
+            'esb_EntryPointGuid' => getEntryPointGuid(18),
+            'esb_EnqueueUserId' => UserInfo.getUserId(),
+            'esb_Position' => 0
         };
       
         // append parameters
@@ -556,7 +556,7 @@ abstract public with sharing class Broker {
         }
         
         //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
-        if (parameters.get('eda_IsHeartbeatProcess') != null) {
+        if (parameters.get('esb_IsHeartbeatProcess') != null) {
             //invoke and wrap up results into messages
             List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, parameters, null).invokeMain().Outputs;
             List<Message__c> messages = new List<Message__c>();
@@ -585,14 +585,14 @@ abstract public with sharing class Broker {
             throw new EngineException(null, new Set<Id>{message.Id}, null, 'Could not see Meta inner class, this is not a valid process: ' + reflector.getName());
         }
         
-        //save important message properties (such as eda_Hops) so that process authors cannot pervert them  
-        //THROWS EngineException TODO : requires a more generic approach not specific to just the eda_Hops
+        //save important message properties (such as esb_Hops) so that process authors cannot pervert them  
+        //THROWS EngineException TODO : requires a more generic approach not specific to just the esb_Hops
         Integer hops;
         try {
             hops = enforceMaxHops(parameters, maxHops);
         } catch (TooManyHopsException e) {
             //wrapped this here because we need to stick the MESSAGE ID on the exception in order to be able to write the problem away
-            throw new EngineException(null, new Set<Id>{message.Id}, e, 'Too many hops - to resolve, manually set eda_Hops on parameters to 0');
+            throw new EngineException(null, new Set<Id>{message.Id}, e, 'Too many hops - to resolve, manually set esb_Hops on parameters to 0');
         }
         
         SObject config;
@@ -620,7 +620,7 @@ abstract public with sharing class Broker {
         List<Map<String,Object>> results = wrapper.Outputs;
         
         //write back save important message properties to the parameters collections in results
-        //TODO : requires a more generic approach to write back the "eda_" properties to 
+        //TODO : requires a more generic approach to write back the "esb_" properties to 
         this.applyHops(results, hops);
 
         //gate processing support method
@@ -657,13 +657,13 @@ abstract public with sharing class Broker {
         for (Message__c message : messages) {
             try {
                 Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
-                String sequenceName = (String)parameters.get('eda_SequenceName');
-                Decimal position = (Decimal)parameters.get('eda_Position') + 1; //care
+                String sequenceName = (String)parameters.get('esb_SequenceName');
+                Decimal position = (Decimal)parameters.get('esb_Position') + 1; //care
                 String key = sequenceName + '#' + position;
                 key2data.put(key, message);
                 
                 //increment the position and put it back while we're at it
-                parameters.put('eda_Position', position);
+                parameters.put('esb_Position', position);
                 message.Parameters__c = Json.serializePretty(parameters);
             } catch (Exception e) {
                 firstError = e;
@@ -688,10 +688,10 @@ abstract public with sharing class Broker {
                 Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
                 
                 //#575 crow look, heartbeat doesn't need his sequence or step resolved
-                if (parameters.get('eda_IsHeartbeatProcess') != null) continue;
+                if (parameters.get('esb_IsHeartbeatProcess') != null) continue;
                 
-                String sequenceName = (String)parameters.get('eda_SequenceName');
-                Decimal position = (Decimal)parameters.get('eda_Position'); //care
+                String sequenceName = (String)parameters.get('esb_SequenceName');
+                Decimal position = (Decimal)parameters.get('esb_Position'); //care
                 String key = sequenceName + '#' + position;
                 
                 Step__c step = key2step.get(key);
@@ -736,15 +736,15 @@ abstract public with sharing class Broker {
      * possibility of the Munger being blacklisted
      * An exception is thrown if the Max Hops threshold is reached
      *
-     * We cannot simply increment  eda_Hops BEFORE calling invoke as a process writer could fuck with this parameter
-     * Instead we read and increment eda_Hops BEFORE calling invoke using enforceMaxHops()
+     * We cannot simply increment  esb_Hops BEFORE calling invoke as a process writer could fuck with this parameter
+     * Instead we read and increment esb_Hops BEFORE calling invoke using enforceMaxHops()
      * and assign to an Integer hops variable
-     * We use applyHops()  to apply the incremented hops variable to the eda_Hops parameter of
+     * We use applyHops()  to apply the incremented hops variable to the esb_Hops parameter of
      * all messages returned from invoke()
      */
     @TestVisible List<Map<String,Object>> applyHops(List<Map<String,Object>> results, Integer hops) {
         for (Map<String,Object> result : results) {
-            result.put('eda_Hops', hops);
+            result.put('esb_Hops', hops);
         }
         return results;
     }
@@ -753,7 +753,7 @@ abstract public with sharing class Broker {
      * See applyHops() method for context and details.
      */
     @TestVisible static private Integer enforceMaxHops(Map<String,Object> parameters, Integer threshold) {
-        Integer hops = (parameters.get('eda_Hops') == null) ? 0 : (Integer) parameters.get('eda_Hops');
+        Integer hops = (parameters.get('esb_Hops') == null) ? 0 : (Integer) parameters.get('esb_Hops');
         hops++;
         if (hops > threshold) {
             throw new TooManyHopsException('Number of hops ' + hops + ' is greater than threshold of ' + threshold);
@@ -770,7 +770,7 @@ abstract public with sharing class Broker {
      * If markCount equates to two, then the preceding process was a splitter; write the count of split parameter sets.
      */
     @TestVisible private void gateHelper(Map<String,Object> parameters, List<Map<String,Object>> outputs) {
-        Decimal markCount = (Decimal)parameters.get('eda_MarkCount');
+        Decimal markCount = (Decimal)parameters.get('esb_MarkCount');
         
         if (null == markCount) {
             //nothing to do, mark process has not tainted the input
@@ -779,7 +779,7 @@ abstract public with sharing class Broker {
         
         if (outputs.isEmpty()) {
             //nothing to do, split process did not return any outputs, tidy up the gate group
-            //Database.delete(new List<Id>{(Id)parameters.get('eda_GateGroupId')});
+            //Database.delete(new List<Id>{(Id)parameters.get('esb_GateGroupId')});
             return;
         }
         
@@ -787,12 +787,12 @@ abstract public with sharing class Broker {
         
         for (Map<String,Object> output : outputs) {
             //write markCount onto every output
-            output.put('eda_MarkCount', markCount);
+            output.put('esb_MarkCount', markCount);
         }
         
         if (1 == markCount) {
             //write outputSize onto every output
-            for (Map<String,Object> output : outputs) output.put('eda_Count', outputs.size());
+            for (Map<String,Object> output : outputs) output.put('esb_Count', outputs.size());
         }
     }
     

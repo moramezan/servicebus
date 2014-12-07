@@ -7,7 +7,7 @@ public with sharing class Branch {
         public SObject StepConfig = BranchConfig__c.SObjectType.newSObject();
         public String Icon = 'arrow_branch';
         public String HelpUrl = Page.BranchConfigCsh.getUrl();
-        public String Tag = 'Event Driven Architecture';
+        public String Tag = 'Enterprise Service Bus';
         public String Name = 'Branch';
         public String Description = 'Copies the message to another sequence.';
     }
@@ -25,7 +25,7 @@ public with sharing class Branch {
         String branchTo = sequence.Name;
         
         //prevent recursion
-        if (branchTo == (String)parameters.get('eda_SequenceName')) {
+        if (branchTo == (String)parameters.get('esb_SequenceName')) {
             throw new BranchException('Not allowed to branch to own sequence!');
         }
         
@@ -33,9 +33,9 @@ public with sharing class Branch {
         Map<String,Object> clone = parameters.clone();
         
         //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
-        clone.put('eda_SubsequenceStepIds', null);
-        clone.put('eda_SequenceName', branchTo);
-        clone.put('eda_Position', 0);
+        clone.put('esb_SubsequenceStepIds', null);
+        clone.put('esb_SequenceName', branchTo);
+        clone.put('esb_Position', 0);
         
         //TODO
         //we might have an inbound document, where parallel sequences are attempting

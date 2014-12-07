@@ -35,8 +35,8 @@
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_SequenceName' => sequenceName,
-            'eda_Position' => thePosition
+            'esb_SequenceName' => sequenceName,
+            'esb_Position' => thePosition
         };
         
         //act
@@ -94,8 +94,8 @@
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_SequenceName' => sequenceName,
-            'eda_Position' => thePosition
+            'esb_SequenceName' => sequenceName,
+            'esb_Position' => thePosition
         };
         
         //act
@@ -157,8 +157,8 @@
         
         Map<String,Object> parameters = new Map<String,Object>{
             'Id' => theId,
-            'eda_SequenceName' => sequenceName,
-            'eda_Position' => thePosition
+            'esb_SequenceName' => sequenceName,
+            'esb_Position' => thePosition
         };
         
         //act
@@ -251,8 +251,8 @@
         
         Map<String,Object> parameters = new Map<String,Object>{
            'Id' => theId   ,
-           'eda_SequenceName' => sequenceName,
-           'eda_Position' => thePosition
+           'esb_SequenceName' => sequenceName,
+           'esb_Position' => thePosition
         };
         
         //act

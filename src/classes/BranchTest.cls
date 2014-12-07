@@ -23,14 +23,14 @@
         insert config;
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
+            'esb_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Type reflector = Branch.class;
         List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
 
         List<Object> expectedIds = null;
-        List<Object> actualIds = (List<Object>)parametersList[1].get('eda_SubsequenceStepIds');
+        List<Object> actualIds = (List<Object>)parametersList[1].get('esb_SubsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
     }
     
@@ -47,8 +47,8 @@
         
         //arrange parameters
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_SequenceName' => origin.Name,
-            'eda_Position' => 1
+            'esb_SequenceName' => origin.Name,
+            'esb_Position' => 1
         };
         
         //act
@@ -65,11 +65,11 @@
         
         //asserts
         String expectedNormalSequenceName = origin.Name;
-        String actualNormalSequenceName = (String)normalParameters.get('eda_SequenceName');
+        String actualNormalSequenceName = (String)normalParameters.get('esb_SequenceName');
         System.assertEquals(expectedNormalSequenceName, actualNormalSequenceName);
         
         Decimal expectedNormalPosition = 1;
-        Decimal expectedActualPosition = (Decimal)normalParameters.get('eda_Position');
+        Decimal expectedActualPosition = (Decimal)normalParameters.get('esb_Position');
         System.assertEquals(expectedNormalPosition, expectedActualPosition);
         
         //act
@@ -77,11 +77,11 @@
         
         //asserts
         String expectedBranchSequenceName = target.Name;
-        String actualBranchSequenceName = (String)branchParameters.get('eda_SequenceName');
+        String actualBranchSequenceName = (String)branchParameters.get('esb_SequenceName');
         System.assertEquals(expectedBranchSequenceName, actualBranchSequenceName);
         
         Decimal expectedBranchPosition = 0;
-        Decimal actualBranchPosition = (Decimal)branchParameters.get('eda_Position');
+        Decimal actualBranchPosition = (Decimal)branchParameters.get('esb_Position');
         System.assertEquals(expectedBranchPosition, actualBranchPosition);
     }
     
@@ -96,8 +96,8 @@
         
         //arrange parameters
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_SequenceName' => sequence.Name,
-            'eda_Position' => 1
+            'esb_SequenceName' => sequence.Name,
+            'esb_Position' => 1
         };
         
         //arrange exception

@@ -76,7 +76,7 @@
         
         //assert
         System.assert(url.contains('0rp'));
-        System.assert(url.contains('EDA'));
+        System.assert(url.contains('ESB'));
         System.assert(url.contains('installation'));
     }
     

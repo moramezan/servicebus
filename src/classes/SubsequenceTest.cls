@@ -35,8 +35,8 @@
         
         //prepare message
         Map<String,Object> parameters = new Map<String,Object>{
-            'eda_SequenceName' => 'originSequence',
-            'eda_Position' => 1
+            'esb_SequenceName' => 'originSequence',
+            'esb_Position' => 1
         };
         
         //act
@@ -49,15 +49,15 @@
         System.assertEquals(expectedSize, actualSize);
         
         String expectedSequenceName = 'targetSequence';
-        String actualSequenceName = (String)parametersList[0].get('eda_SequenceName');
+        String actualSequenceName = (String)parametersList[0].get('esb_SequenceName');
         System.assertEquals(expectedSequenceName, actualSequenceName);
         
         Decimal expectedPosition = 0;
-        Decimal actualPosition = (Decimal)parametersList[0].get('eda_Position');
+        Decimal actualPosition = (Decimal)parametersList[0].get('esb_Position');
         System.assertEquals(expectedPosition, actualPosition);
 
         String expectedList = '["' + originStep.Id + '"]';
-        String actualList = System.Json.serialize(parametersList[0].get('eda_SubsequenceStepIds'));
+        String actualList = System.Json.serialize(parametersList[0].get('esb_SubsequenceStepIds'));
         System.assertEquals(expectedList, actualList);
     }
     
