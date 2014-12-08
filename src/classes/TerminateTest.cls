@@ -1,6 +1,24 @@
 @IsTest //-- no view of org data
 private class TerminateTest
 {
+    static testmethod void hasTheCorrectAllowableInvocations() {
+        //arrange 
+        Type actualType = Terminate.class;
+        Type outerClass = Type.forName(actualType.getName());  
+        Type innerClass = Type.forName(outerClass.getName() + '.' + 'Meta'); 
+        ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
+        
+        //act 
+        Integer actualAllowableInvocations = meta.AllowableInvocations;  
+
+        //assemble
+        actualAllowableInvocations = (actualAllowableInvocations == null) ? 1 : actualAllowableInvocations; 
+
+        //assert
+        Integer expectedAllowableInvocations = 90;
+        System.assertEquals(expectedAllowableInvocations, actualAllowableInvocations);
+    }
+
 
     static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenSubsequenceAttribsDefinedOnParameters()
     {

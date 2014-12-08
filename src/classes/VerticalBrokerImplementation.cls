@@ -104,7 +104,23 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
             return;
         }
         
-        Map<Id,Message__c> chunkedAndMarkedMessages = getChunkedAndMarkedMessages(this.markedMessages);
+        // derive chunked and marked messages
+        Set<String> fullyQualifiedClassNames = new Set<String> ();
+        for (Message__c messageWithQualifiedName : [
+            SELECT Id , Process__r.FullyQualifiedClassName__c
+            FROM Message__c
+            WHERE Id IN :this.markedMessages.keySet()
+        ]) {
+            fullyQualifiedClassNames.add(messageWithQualifiedName.Process__r.FullyQualifiedClassName__c);   
+        }
+
+        VerticalBrokerImplementation.IAttributeProvider attributeProvider =  
+            new VerticalBrokerImplementation.AttributeProvider(fullyQualifiedClassNames);
+         Map<Id,Message__c> chunkedAndMarkedMessages =   VerticalBrokerImplementation.getChunkedAndMarkedMessages(
+            this.markedMessages,
+            attributeProvider
+        );
+
         ////
         Set<Id> inputIds = chunkedAndMarkedMessages.keySet();
         List<Message__c> inputMessages = chunkedAndMarkedMessages.values();  
@@ -226,16 +242,6 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     }
 
     @testVisible
-    private static Map<Id,Message__c> getChunkedAndMarkedMessages(Map<Id,Message__c> markedMessages) {
-        // for this implementation, simply pull and return the first available message
-        Map<Id,Message__c> results = new Map<Id,Message__c>();
-        if (markedMessages.size() > 0) {
-            results.put(markedMessages.values()[0].Id , markedMessages.values()[0]);    
-        }
-        return results;
-    }
-
-    @testVisible
     private static Map<Id,Message__c> getRemainingMarkedMessages(
         Map<Id,Message__c> markedMessages,
         Map<Id,Message__c> chunkedAndMarkedMessages
@@ -281,4 +287,119 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
 
         return adjustedMarkableMessages;
     }
+
+    
+    public interface IAttributeProvider {
+        Map<String, Integer> getFullyQualifiedClassNameToAllowableInvocations();     
+    }
+    
+    
+    public class AttributeProvider implements  IAttributeProvider {
+    
+        Set<String> fullyQualifiedClassNames;
+    
+        public AttributeProvider(Set<String> fullyQualifiedClassNames) {
+            this.fullyQualifiedClassNames = fullyQualifiedClassNames;
+        }
+        
+        public Map<String, Integer> getFullyQualifiedClassNameToAllowableInvocations() {
+            Map<String, Integer> results = new Map<String, Integer>();
+            for (String fullyQualifiedClassName : this.fullyQualifiedClassNames) {
+                Type outerClass = Type.forName(fullyQualifiedClassName);
+                Type innerClass = Type.forName(outerClass.getName() + '.' + 'Meta');            
+                ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
+                Integer allowableInvocations = (meta.AllowableInvocations == null) ? 1 : (Integer) meta.AllowableInvocations;  
+                results.put(fullyQualifiedClassName, allowableInvocations);
+            }
+            
+            return results;
+        }    
+    }
+
+
+    public class MockAttributeProvider implements IAttributeProvider {
+    
+        Map<String, Integer> fullyQualifiedClassNameToAllowableInvocations;
+        
+        public MockAttributeProvider(Map<String, Integer> fullyQualifiedClassNameToAllowableInvocations) {
+            this.fullyQualifiedClassNameToAllowableInvocations = fullyQualifiedClassNameToAllowableInvocations;
+        }
+        
+        public Map<String,Integer> getFullyQualifiedClassNameToAllowableInvocations() {
+            return this.fullyQualifiedClassNameToAllowableInvocations;
+        }      
+    }
+
+
+    @testVisible
+    private static Map<Id,Message__c> getChunkedAndMarkedMessages(
+        Map<Id,Message__c> messageIdToMarkedMessage,
+        IAttributeProvider attributeProvider
+    ) {
+
+        // derive apex class to message collection
+        Map<String, Map<Id,Message__c>> fullyQualifiedClassNameToMessageCollection = new Map<String, Map<Id,Message__c>>();
+        for (Id messageId : messageIdToMarkedMessage.keySet()) {
+            Message__c message = messageIdToMarkedMessage.get(messageId);
+            String fullyQualifiedClassName = message.Process__r.FullyQualifiedClassName__c;
+            Map<Id,Message__c> messageCollection = fullyQualifiedClassNameToMessageCollection.get(fullyQualifiedClassName);
+            if (messageCollection == null) {
+                messageCollection = new Map<Id,Message__c>();
+            }
+            messageCollection.put(messageId,message);
+            fullyQualifiedClassNameToMessageCollection.put(fullyQualifiedClassName, messageCollection);
+        }
+
+        // derive all available decision making attributes per collection
+        // TODO : attributes becomes Map<String,Integer>
+        //        perhaps then introduce oldest message create date  with 
+        //        rule that  collection with oldest record get priority?
+        Map<String,Integer> fullyQualifiedClassNameToAllowableInvocations = 
+            attributeProvider.getFullyQualifiedClassNameToAllowableInvocations();
+
+        Map<String, Map<String,Integer>> fullyQualifiedClassNameToAttributes = new Map<String, Map<String,Integer>>();
+        for (String fullyQualifiedClassName : fullyQualifiedClassNameToMessageCollection.keySet()) {
+            Map<Id,Message__c> messageCollection = fullyQualifiedClassNameToMessageCollection.get(fullyQualifiedClassName);
+            Integer messageCount = messageCollection.keySet().size();
+            Integer allowableInvocations = fullyQualifiedClassNameToAllowableInvocations.get(fullyQualifiedClassName);  
+
+            Map<String,Integer> attributes = new Map<String,Integer>{
+                'AllowableInvocations' => (allowableInvocations == null) ? 0 : allowableInvocations,  
+                'MessageCount' => messageCount
+            };
+            
+            fullyQualifiedClassNameToAttributes.put(fullyQualifiedClassName ,attributes);
+        }
+
+        // make decision 
+        String selectedFullyQualifiedClassName;
+        Integer maximumSize = 0;
+        for (String fullyQualifiedClassName  : fullyQualifiedClassNameToAttributes.keySet()) {
+            Map<String,Integer> attributes = fullyQualifiedClassNameToAttributes.get(fullyQualifiedClassName);
+            Integer allowableInvocations = attributes.get('AllowableInvocations');
+            Integer messageCount = attributes.get('MessageCount');
+            Integer viableCount = (messageCount > allowableInvocations) ? allowableInvocations : messageCount;
+            if (viableCount >= maximumSize) {
+                maximumSize = viableCount;
+                selectedFullyQualifiedClassName = fullyQualifiedClassName;
+            }
+        }
+
+        // apply maximum chunks 
+        Map<Id,Message__c> results = new Map<Id,Message__c>();
+        if (selectedFullyQualifiedClassName != null) {
+            Map<Id,Message__c> messageCollection = fullyQualifiedClassNameToMessageCollection.get(selectedFullyQualifiedClassName);
+            Map<String,Integer> attributes = fullyQualifiedClassNameToAttributes.get(selectedFullyQualifiedClassName);
+            Integer allowableInvocations = attributes.get('AllowableInvocations');
+            Integer i = 1;
+            for (Id messageCollectionId : messageCollection.keySet()) {
+                if (i <= allowableInvocations) {
+                    results.put(messageCollectionId, messageCollection.get(messageCollectionId));
+                }
+                i++;
+            }
+        }
+ 
+        return results;
+     }
 }

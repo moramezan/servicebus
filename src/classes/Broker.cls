@@ -385,7 +385,7 @@ abstract public with sharing class Broker {
         
         //query locator hands back only the messages that are markable as Started
         String commaDelimitedIds = '(\'' + String.join(new List<Id>(messageIds), '\',\'') + '\')';
-        String queryString = 'SELECT Id, Step__c, Parameters__c FROM Message__c WHERE Id IN ' + commaDelimitedIds;
+        String queryString = 'SELECT Id, Step__c, Parameters__c, Process__r.FullyQualifiedClassName__c FROM Message__c WHERE Id IN ' + commaDelimitedIds;
         return Database.getQueryLocator(queryString);
     }
     
@@ -543,97 +543,141 @@ abstract public with sharing class Broker {
     virtual public List<Message__c> execute(List<Message__c> inputMessages) {
         //empty inputs, empty outputs
         if (inputMessages.isEmpty()) return new List<Message__c>();
-        
-        Message__c message = inputMessages[0]; //TODO chunking
-        
+
+        // Observation / possible TODO :
+        // there is an assumption that all messages are for the same process ..
+        // ie an upstream function did its job correctly
+        // i think we may need to throw an exception if we detect
+        // more than one process in the collection 
+
+
         //OUR FUCKUPS (before invocation)
         
-        Map<String,Object> parameters;
-        try {
-            parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
-        } catch (JsonException e) {
-            throw new EngineException(null, new Set<Id>{message.Id}, e, 'Could not deserialize json, eg malformed parameters.');
-        }
+        List<Message__c> messages = new List<Message__c>();
+        Boolean isHeartbeatProcess = false; // a single message flips this to true - see observation above and need for an exception       
+        Integer offset = 1;
+        Map<Integer, Broker.Wrapper> offsetToWrapper = new Map<Integer, Broker.Wrapper>();
+        Map<Integer, Map<String,Object>> offsetToAttributes = new Map<Integer, Map<String,Object>>();
         
-        //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
-        if (parameters.get('esb_IsHeartbeatProcess') != null) {
-            //invoke and wrap up results into messages
-            List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, parameters, null).invokeMain().Outputs;
-            List<Message__c> messages = new List<Message__c>();
-            for (Object output : outputs) messages.add(new Message__c(Parameters__c = Json.serializePretty(output), Status__c = 'Buffered'));
-            return messages;
-        }
-        
-        Step__c step;
-        try {
-            step = [
-                SELECT Process__c, ConfigId__c, Process__r.Name, Process__r.FullyQualifiedClassName__c
-                FROM Step__c
-                WHERE Id = :message.Step__c
-            ];
-        } catch (QueryException e) {
-            throw new EngineException(null, new Set<Id>{message.Id}, e, 'Step unqueryable, eg bad sequence name, position, missing terminate.');
-        }
-        
-        Type reflector = Type.forName(step.Process__r.FullyQualifiedClassName__c);
-        if (reflector == null) {
-            throw new EngineException(null, new Set<Id>{message.Id}, null, 'Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c);
-        }
-        
-        Type meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + '.' + 'Meta');
-        if (meta == null) {
-            throw new EngineException(null, new Set<Id>{message.Id}, null, 'Could not see Meta inner class, this is not a valid process: ' + reflector.getName());
-        }
-        
-        //save important message properties (such as esb_Hops) so that process authors cannot pervert them  
-        //THROWS EngineException TODO : requires a more generic approach not specific to just the esb_Hops
-        Integer hops;
-        try {
-            hops = enforceMaxHops(parameters, maxHops);
-        } catch (TooManyHopsException e) {
-            //wrapped this here because we need to stick the MESSAGE ID on the exception in order to be able to write the problem away
-            throw new EngineException(null, new Set<Id>{message.Id}, e, 'Too many hops - to resolve, manually set esb_Hops on parameters to 0');
-        }
-        
-        SObject config;
-        if (step.ConfigId__c != null) config = SalesforceObject.getById(step.ConfigId__c);
-        Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters, config);
-        
-        //THEIR FUCKUPS (invocation)
-        
-        Savepoint sp;
-        try {
+        for (Message__c message : inputMessages) {                            
+            Map<String,Object> parameters;
+            try {
+                parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+            } catch (JsonException e) {
+                throw new EngineException(null, new Set<Id>{message.Id}, e, 'Could not deserialize json, eg malformed parameters.');
+            }
+
+            Map<String,Object> attributes = new Map<String,Object>();
+            attributes.put('MessageId',message.Id);
+            attributes.put('Parameters',parameters);
+            offsetToAttributes.put(offset,attributes);
+
+            //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
+            if (parameters.get('eda_IsHeartbeatProcess') != null) {
+                //invoke and wrap up results into messages
+                isHeartbeatProcess = true; 
+                List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, parameters, null).invokeMain().Outputs;
+                for (Object output : outputs) messages.add(new Message__c(Parameters__c = Json.serializePretty(output), Status__c = 'Buffered'));
+            }
             
+            else {
+                Step__c step;
+                try {
+                    step = [
+                        SELECT Process__c, ConfigId__c, Process__r.Name, Process__r.FullyQualifiedClassName__c
+                        FROM Step__c
+                        WHERE Id = :message.Step__c
+                    ];
+                } catch (QueryException e) {
+                    throw new EngineException(null, new Set<Id>{message.Id}, e, 'Step unqueryable, eg bad sequence name, position, missing terminate.');
+                }
+                
+                Type reflector = Type.forName(step.Process__r.FullyQualifiedClassName__c);
+                if (reflector == null) {
+                    throw new EngineException(null, new Set<Id>{message.Id}, null, 'Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c);
+                }
+                
+                Type meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + '.' + 'Meta');
+                if (meta == null) {
+                    throw new EngineException(null, new Set<Id>{message.Id}, null, 'Could not see Meta inner class, this is not a valid process: ' + reflector.getName());
+                }
+                
+                //save important message properties (such as eda_Hops) so that process authors cannot pervert them  
+                //THROWS EngineException TODO : requires a more generic approach not specific to just the eda_Hops
+                try {
+                    Integer hops = enforceMaxHops(parameters, maxHops);
+                    attributes = offsetToAttributes.get(offset);
+                    attributes.put('Hops',hops);
+                    offsetToAttributes.put(offset,attributes);
+                } catch (TooManyHopsException e) {
+                    //wrapped this here because we need to stick the MESSAGE ID on the exception in order to be able to write the problem away
+                    throw new EngineException(null, new Set<Id>{message.Id}, e, 'Too many hops - to resolve, manually set esb_Hops on parameters to 0');
+                } 
+                
+                SObject config;
+                if (step.ConfigId__c != null) config = SalesforceObject.getById(step.ConfigId__c);
+                Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters, config);
+                offsetToWrapper.put(offset, wrapper);
+                offset++;
+            }   
+        }
+        
+        if (isHeartbeatProcess) {
+             return messages;
+        }   
+
+        //THEIR FUCKUPS (invocation)  
+          
+        Savepoint sp;
+        Integer currentOffset;
+        try {
+            for (Integer wrapperOffset : offsetToWrapper.keySet()) { // no indent - preserve git diff
             //TODO COUNT ANY DMLS
+            currentOffset = wrapperOffset;
+            Broker.Wrapper wrapper = offsetToWrapper.get(wrapperOffset);
             wrapper.invokeCallouts();
+            }
             sp = Database.setSavepoint();
+            for (Integer wrapperOffset : offsetToWrapper.keySet()) { // no indent - preserve git diff
+            currentOffset = wrapperOffset;
+            Broker.Wrapper wrapper = offsetToWrapper.get(wrapperOffset);
             wrapper.invokeMain();
             //TODO COUNT ANY CALLOUTS
-            
+            }
         } catch (Exception e) {
             //#581 smoking gun should point at the user, NOT at our broker
-            throw new EngineException(sp, new Set<Id>{message.Id}, e);
+            Map<String,Object> attributes = offsetToAttributes.get(currentOffset);
+            Id messageId = (Id)attributes.get('MessageId');
+            throw new EngineException(sp, new Set<Id>{messageId}, e);
         }
         
         //OUR FUCKUPS  (after invocation)
         
-        List<Map<String,Object>> results = wrapper.Outputs;
+        for (Integer wrapperOffset : offsetToWrapper.keySet()) {
+            Broker.Wrapper wrapper = offsetToWrapper.get(wrapperOffset);
         
-        //write back save important message properties to the parameters collections in results
-        //TODO : requires a more generic approach to write back the "esb_" properties to 
-        this.applyHops(results, hops);
+            //write back save important message properties to the parameters collections in results
+            //TODO : requires a more generic approach to write back the "esb_" properties to 
 
-        //gate processing support method
-        this.gateHelper(parameters, results);
-        
-        //wrap up results into Messages
-        List<Message__c> messages = new List<Message__c>();
-        for (Map<String,Object> n : results) {
-            messages.add(new Message__c(
-                Parameters__c = Json.serializePretty(n),
-                Status__c = 'Buffered'
-            ));
-        }
+            List<Map<String,Object>> results = wrapper.Outputs;
+ 
+            Map<String,Object> attributes = offsetToAttributes.get(wrapperOffset);
+            Integer hops = (Integer)attributes.get('Hops');
+            Map<String,Object> parameters = ( Map<String,Object> )attributes.get('Parameters');
+
+            this.applyHops(results, hops); 
+            
+            //gate processing support method
+            this.gateHelper(parameters, results);
+            
+            //wrap up results into Messages
+            for (Map<String,Object> n : results) {
+                messages.add(new Message__c(
+                    Parameters__c = Json.serializePretty(n),
+                    Status__c = 'Buffered'
+                ));
+            }  
+        }         
         
         return messages;
     }

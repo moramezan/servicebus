@@ -1,5 +1,24 @@
 @IsTest private class JumpTest {
+     
+    static testmethod void hasTheCorrectAllowableInvocations() {
+        //arrange 
+        Type actualType = Jump.class;
+        Type outerClass = Type.forName(actualType.getName());  
+        Type innerClass = Type.forName(outerClass.getName() + '.' + 'Meta'); 
+        ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
+        
+        //act 
+        Integer actualAllowableInvocations = meta.AllowableInvocations;  
 
+        //assemble
+        actualAllowableInvocations = (actualAllowableInvocations == null) ? 1 : actualAllowableInvocations; 
+
+        //assert
+        Integer expectedAllowableInvocations = 1;
+        System.assertEquals(expectedAllowableInvocations, actualAllowableInvocations);
+    }
+ 
+    
     static testmethod void testJumpPervertsExecution() {
         //arrange
         Process__c jumpProcess = new Process__c(Name = 'Jump');

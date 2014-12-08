@@ -8,6 +8,7 @@ public with sharing class Gate {
         public String Description = 'Aggregates a collection of messages previously marked with a correlation key.';
         public String Icon = 'arrow_join';
         public String HelpUrl = Page.GateGroupCsh.getUrl();
+        public Integer AllowableInvocations = 1;
 
         public Map<String,String> Inputs = new Map<String,String>{
             'esb_GateGroupId' => 'ID of the GateGroup the marked messages should belong to.',

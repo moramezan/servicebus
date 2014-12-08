@@ -239,30 +239,6 @@
         }
     }
 
-    static testmethod void callingGetChunkedAndMarkedMessagesReturnExpectedCollection() {
-        //arrange
-        IdUtility messageIdUtility = new IdUtility(Message__c.getSObjectType());
-        Id messageAId = messageIdUtility.getNext();
-        Id messageBId = messageIdUtility.getNext();
-        Id messageCId = messageIdUtility.getNext();
-
-        Map<Id,Message__c> markedMessages = new Map<Id,Message__c>{
-            messageAId => new Message__c(Id = messageAId),
-            messageBId => new Message__c(Id = messageBId),
-            messageCId => new Message__c(Id = messageCId)
-        };
-
-        //act
-        Map<Id,Message__c> actualChunkedAndMarkedMessages =  VerticalBrokerImplementation.getChunkedAndMarkedMessages(
-             markedMessages
-        );
-
-        //assert
-        System.assertEquals(true, actualChunkedAndMarkedMessages.size() == 1);
-        Id actualChunkedAndMarkedMessageId  = new List<Id>(actualChunkedAndMarkedMessages.keySet())[0];
-        System.assertEquals(true, markedMessages.keyset().contains(actualChunkedAndMarkedMessageId));
-    }   
-    
     static testmethod void callingGetRemainingMarkedMessagesReturnsExpectedCollection() {
         //arrange
         IdUtility messageIdUtility = new IdUtility(Message__c.getSObjectType());
@@ -375,4 +351,411 @@
         System.assertEquals( expectedCount, actualCount);
         System.assertEquals( true, actualFlag);
     }
+
+
+    static testmethod void callingGetFullyQualifiedClassNameToAllowableInvocationsReturnsExpectedCollection() {
+        // arrange 
+        Set<String> fullyQualifiedClassNames = new Set<String>{
+            Terminate.class.getName(),   
+            Gate.class.getName(),        
+            Wiretap.class.getName()    
+         };
+        
+        VerticalBrokerImplementation.IAttributeProvider attributeProvider = 
+            new VerticalBrokerImplementation.AttributeProvider(fullyQualifiedClassNames);
+        
+        // act
+        Map<String, Integer> getFullyQualifiedClassNameToAllowableInvocations = 
+            attributeProvider.getFullyQualifiedClassNameToAllowableInvocations();
+         
+        // assemble  
+        Integer actualTerminate = getFullyQualifiedClassNameToAllowableInvocations.get(Terminate.class.getName());
+        Integer actualGate = getFullyQualifiedClassNameToAllowableInvocations.get(Gate.class.getName());
+        Integer actualWiretap = getFullyQualifiedClassNameToAllowableInvocations.get(Wiretap.class.getName());
+        
+          
+        // assert
+        Integer expectedTerminate = 90;
+        system.assertEquals(expectedTerminate, actualTerminate);
+        Integer expectedGate = 1;
+        system.assertEquals(expectedGate, actualGate);
+        Integer expectedWiretap = 1;
+        system.assertEquals(expectedWiretap, actualWiretap);
+    }
+    
+    static testmethod void callingGetFullyQualifiedClassNameToAllowableInvocationsForMockReturnsExpectedCollection() {
+        // arrange 
+        Integer    mockedTerminateCount =  21;   
+        Integer    mockedGateCount = 22;     
+        Integer    mockedWiretapCount = 23;
+            
+        Map<String, Integer> mockedFullyQualifiedClassNameToAllowableInvocations = new  Map<String, Integer>{
+            Terminate.class.getName() => mockedTerminateCount,   
+            Gate.class.getName() => mockedGateCount,        
+            Wiretap.class.getName()  => mockedWiretapCount   
+        };
+
+       VerticalBrokerImplementation.IAttributeProvider attributeProvider = 
+            new VerticalBrokerImplementation.MockAttributeProvider(mockedFullyQualifiedClassNameToAllowableInvocations);
+            
+        // act
+        Map<String, Integer> getFullyQualifiedClassNameToAllowableInvocations = 
+            attributeProvider.getFullyQualifiedClassNameToAllowableInvocations();
+         
+        // assemble  
+        Integer actualTerminate = getFullyQualifiedClassNameToAllowableInvocations.get(Terminate.class.getName());
+        Integer actualGate = getFullyQualifiedClassNameToAllowableInvocations.get(Gate.class.getName());
+        Integer actualWiretap = getFullyQualifiedClassNameToAllowableInvocations.get(Wiretap.class.getName());
+ 
+        // assert
+        Integer expectedTerminate = mockedTerminateCount;
+        system.assertEquals(expectedTerminate, actualTerminate);
+        Integer expectedGate = mockedGateCount;
+        system.assertEquals(expectedGate, actualGate);
+        Integer expectedWiretap = mockedWiretapCount;
+        system.assertEquals(expectedWiretap, actualWiretap);
+    }  
+
+
+    static testmethod void callingGetChunkedAndMarkedMessagesReturnsExpectedCollection01() {
+        // Requirement : 
+        //       Maximize the number of messages processed in a single context
+        // Constraints / Rules
+        //       - Messages must all be for the same process 
+        //       - find highest number of messages for a single process limited by that 
+        //         process's  maximum allowable invocations
+        // Scenario  : 
+        //       - Terminate has the highest allowable invocations 
+        //       - Terminate has more than  enough messages to fill allowable invocations
+        // Expect 
+        //      - Return a collection of 2 Terminate messages
+        Integer  mockedTerminateCount = 2;   
+        Integer  mockedGateCount      = 1;     
+        Integer  mockedWiretapCount   = 1;
+        Integer totalTerminate =  3;
+        Integer totalGate      =  2;
+        Integer totalWiretap   =  2;
+
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c gateProcess = ProcessObject.generateOne(Gate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+
+        Map<String,Map<String,Object>> processNameToAttributes = new Map<String,Map<String,Object>>{
+            terminateProcess.Name  =>  new Map<String,Object>{
+                'Process' => terminateProcess,
+                'AllowableInvocations' => mockedTerminateCount,
+                'TotalMessages' => totalTerminate       
+            }, 
+            gateProcess.Name  =>  new Map<String,Object>{
+                'Process' => gateProcess,
+                'AllowableInvocations' => mockedGateCount,
+                'TotalMessages' => totalGate      
+            },
+            wiretapProcess.Name  =>  new Map<String,Object>{
+                'Process' => wiretapProcess,
+                'AllowableInvocations' => mockedWiretapCount,
+                'TotalMessages' => totalWiretap       
+            }     
+        };
+
+        // arrange - setup
+        Map<String,Object> providerAndMessageIdToMessage = 
+            setupProviderAndMessages(processNameToAttributes);
+        VerticalBrokerImplementation.IAttributeProvider attributeProvider =   
+            (VerticalBrokerImplementation.IAttributeProvider) providerAndMessageIdToMessage.get('Provider');
+        Map<Id,Message__c> messageIdToMessage = 
+            (Map<Id,Message__c>) providerAndMessageIdToMessage.get('MessageIdToMessage');
+    
+        //act
+        Map<Id,Message__c> chunkedAndMarkedMessages =   VerticalBrokerImplementation.getChunkedAndMarkedMessages(
+            messageIdToMessage,
+            attributeProvider
+        );
+ 
+        //assemble
+        Integer actualCount = chunkedAndMarkedMessages.keySet().size();
+        Boolean actualFlag = true;
+        for (Id messageId : chunkedAndMarkedMessages.keySet()) {
+            Message__c actualMessage = chunkedAndMarkedMessages.get(messageId); 
+            if (actualMessage.Cause__c != terminateProcess.Name) actualFlag = false;
+        }
+        
+        //assert
+        Integer expectedCount = 2;
+        System.assertEquals(expectedCount, actualCount);   
+        Boolean expectedFlag = true;
+        System.assertEquals(expectedFlag, actualFlag);
+    }
+    
+    
+    static testmethod void callingGetChunkedAndMarkedMessagesReturnsExpectedCollection02() {
+        // Requirement : 
+        //       Maximize the number of messages processed in a single context
+        // Constraints / Rules
+        //       - Messages must all be for the same process 
+        //       - find highest number of messages for a single process limited by that 
+        //         process's  maximum allowable invocations
+        // Scenario : 
+        //       - Terminate AND Gate both have the highest allowable invocations 
+        //       - Terminate has more  messages than Gate within allowable invocations
+        // Expect 
+        //      - Return a collection of 2 Terminate messages
+        Integer  mockedTerminateCount = 2;   
+        Integer  mockedGateCount      = 1;     
+        Integer  mockedWiretapCount   = 1;
+        Integer totalTerminate =  3;
+        Integer totalGate      =  3;
+        Integer totalWiretap   =  2;
+
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c gateProcess = ProcessObject.generateOne(Gate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+
+        Map<String,Map<String,Object>> processNameToAttributes = new Map<String,Map<String,Object>>{
+            terminateProcess.Name  =>  new Map<String,Object>{
+                'Process' => terminateProcess,
+                'AllowableInvocations' => mockedTerminateCount,
+                'TotalMessages' => totalTerminate       
+            }, 
+            gateProcess.Name  =>  new Map<String,Object>{
+                'Process' => gateProcess,
+                'AllowableInvocations' => mockedGateCount,
+                'TotalMessages' => totalGate      
+            },
+            wiretapProcess.Name  =>  new Map<String,Object>{
+                'Process' => wiretapProcess,
+                'AllowableInvocations' => mockedWiretapCount,
+                'TotalMessages' => totalWiretap       
+            }     
+        };
+
+         // arrange - setup
+         Map<String,Object> providerAndMessageIdToMessage = 
+            setupProviderAndMessages(processNameToAttributes);
+         VerticalBrokerImplementation.IAttributeProvider attributeProvider =   
+             (VerticalBrokerImplementation.IAttributeProvider) providerAndMessageIdToMessage.get('Provider');
+         Map<Id,Message__c> messageIdToMessage = 
+             (Map<Id,Message__c>) providerAndMessageIdToMessage.get('MessageIdToMessage');
+    
+        //act
+        Map<Id,Message__c> chunkedAndMarkedMessages =   VerticalBrokerImplementation.getChunkedAndMarkedMessages(
+            messageIdToMessage,
+            attributeProvider
+        );
+ 
+        //assemble
+        Integer actualCount = chunkedAndMarkedMessages.keySet().size();
+        Boolean actualFlag = true;
+        for (Id messageId : chunkedAndMarkedMessages.keySet()) {
+            Message__c actualMessage = chunkedAndMarkedMessages.get(messageId); 
+            if (actualMessage.Cause__c != terminateProcess.Name) actualFlag = false;
+        }
+        
+        //assert
+        Integer expectedCount = 2;
+        System.assertEquals(expectedCount, actualCount);   
+        Boolean expectedFlag = true;
+        System.assertEquals(expectedFlag, actualFlag);
+    }
+
+   static testmethod void callingGetChunkedAndMarkedMessagesReturnsExpectedCollection03() {
+        // Requirement : 
+        //       Maximize the number of messages processed in a single context
+        // Constraints / Rules
+        //       - Messages must all be for the same process 
+        //       - find highest number of messages for a single process limited by that 
+        //         process's  maximum allowable invocations
+        // Scenario  : 
+        //       - Terminate AND Gate both have the highest allowable invocations 
+        //       - Terminate AND Gate  both have same message count allowable invocations
+        // Expect 
+        //      - Return a collection of 2 Terminate OR 2 Gate messages
+        Integer  mockedTerminateCount = 2;   
+        Integer  mockedGateCount      = 2;     
+        Integer  mockedWiretapCount   = 1;
+        Integer totalTerminate =  3;
+        Integer totalGate      =  3;
+        Integer totalWiretap   =  2;
+
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c gateProcess = ProcessObject.generateOne(Gate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+
+        Map<String,Map<String,Object>> processNameToAttributes = new Map<String,Map<String,Object>>{
+            terminateProcess.Name  =>  new Map<String,Object>{
+                'Process' => terminateProcess,
+                'AllowableInvocations' => mockedTerminateCount,
+                'TotalMessages' => totalTerminate       
+            }, 
+            gateProcess.Name  =>  new Map<String,Object>{
+                'Process' => gateProcess,
+                'AllowableInvocations' => mockedGateCount,
+                'TotalMessages' => totalGate      
+            },
+            wiretapProcess.Name  =>  new Map<String,Object>{
+                'Process' => wiretapProcess,
+                'AllowableInvocations' => mockedWiretapCount,
+                'TotalMessages' => totalWiretap       
+            }     
+        };
+
+        // arrange - setup
+        Map<String,Object> providerAndMessageIdToMessage = 
+            setupProviderAndMessages(processNameToAttributes);
+        VerticalBrokerImplementation.IAttributeProvider attributeProvider =   
+            (VerticalBrokerImplementation.IAttributeProvider) providerAndMessageIdToMessage.get('Provider');
+        Map<Id,Message__c> messageIdToMessage = 
+            (Map<Id,Message__c>) providerAndMessageIdToMessage.get('MessageIdToMessage');
+    
+        //act
+        Map<Id,Message__c> chunkedAndMarkedMessages =   VerticalBrokerImplementation.getChunkedAndMarkedMessages(
+            messageIdToMessage,
+            attributeProvider
+        );
+ 
+        //assemble
+        Integer actualCount = chunkedAndMarkedMessages.keySet().size();
+        Set<String> distinctNames = new Set<String>();
+        Set<String> validNames = new Set<String>{
+            terminateProcess.Name,
+            gateProcess.Name
+        };
+        Boolean actualFlag = true;
+        for (Id messageId : chunkedAndMarkedMessages.keySet()) {
+            Message__c actualMessage = chunkedAndMarkedMessages.get(messageId); 
+            if(!validNames.contains(actualMessage.Cause__c))  
+                actualFlag = false;
+            distinctNames.add(actualMessage.Cause__c);
+        }
+        Integer actualNameCount = distinctNames.size();
+        
+        //assert
+        Integer expectedCount = 2;
+        System.assertEquals(expectedCount, actualCount); 
+        Integer expectedNameCount = 1;
+        System.assertEquals(expectedNameCount, actualNameCount);  
+        Boolean expectedFlag = true;
+        System.assertEquals(expectedFlag, actualFlag);
+   }
+
+   static testmethod void callingGetChunkedAndMarkedMessagesReturnsExpectedCollection04() {
+        // Requirement : 
+        //       Maximize the number of messages processed in a single context
+        // Constraints / Rules
+        //       - Messages must all be for the same process 
+        //       - find highest number of messages for a single process limited by that 
+        //         process's  maximum allowable invocations
+        // Scenario  : 
+        //       - Gate (5) has a higher allowable invocations value than Terminate (4)
+        //       - Terminate (3) has more messages than Gate (2) 
+        //       - Terminate  message count (3) with allowable invocations (4)
+        // Expect 
+        //      - Return a collection of 3 Terminate 
+        Integer  mockedTerminateCount = 4;   
+        Integer  mockedGateCount      = 5;     
+        Integer  mockedWiretapCount   = 1;
+        Integer totalTerminate =  3;
+        Integer totalGate      =  2;
+        Integer totalWiretap   =  2;
+        
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c gateProcess = ProcessObject.generateOne(Gate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+
+        Map<String,Map<String,Object>> processNameToAttributes = new Map<String,Map<String,Object>>{
+            terminateProcess.Name  =>  new Map<String,Object>{
+                'Process' => terminateProcess,
+                'AllowableInvocations' => mockedTerminateCount,
+                'TotalMessages' => totalTerminate       
+            }, 
+            gateProcess.Name  =>  new Map<String,Object>{
+                'Process' => gateProcess,
+                'AllowableInvocations' => mockedGateCount,
+                'TotalMessages' => totalGate      
+            },
+            wiretapProcess.Name  =>  new Map<String,Object>{
+                'Process' => wiretapProcess,
+                'AllowableInvocations' => mockedWiretapCount,
+                'TotalMessages' => totalWiretap       
+            }     
+        };
+
+        // arrange - setup
+        Map<String,Object> providerAndMessageIdToMessage = 
+            setupProviderAndMessages(processNameToAttributes);
+        VerticalBrokerImplementation.IAttributeProvider attributeProvider =   
+            (VerticalBrokerImplementation.IAttributeProvider) providerAndMessageIdToMessage.get('Provider');
+        Map<Id,Message__c> messageIdToMessage = 
+            (Map<Id,Message__c>) providerAndMessageIdToMessage.get('MessageIdToMessage');
+        
+        //act
+        Map<Id,Message__c> chunkedAndMarkedMessages =   VerticalBrokerImplementation.getChunkedAndMarkedMessages(
+            messageIdToMessage,
+            attributeProvider
+        );
+        
+        //assemble
+        Integer actualCount = chunkedAndMarkedMessages.keySet().size();
+        Set<String> distinctNames = new Set<String>();
+        Set<String> validNames = new Set<String>{
+        terminateProcess.Name
+        };
+        Boolean actualFlag = true;
+        for (Id messageId : chunkedAndMarkedMessages.keySet()) {
+            Message__c actualMessage = chunkedAndMarkedMessages.get(messageId); 
+            if(!validNames.contains(actualMessage.Cause__c))  
+                actualFlag = false;
+            distinctNames.add(actualMessage.Cause__c);
+        }
+        Integer actualNameCount = distinctNames.size();
+        
+        //assert
+        Integer expectedCount = 3;
+        System.assertEquals(expectedCount, actualCount); 
+        Integer expectedNameCount = 1;
+        System.assertEquals(expectedNameCount, actualNameCount);  
+        Boolean expectedFlag = true;
+        System.assertEquals(expectedFlag, actualFlag);
+    }
+
+
+   static Map<String,Object> setupProviderAndMessages(Map<String,Map<String,Object>> processNameToAttributes) {
+        // parse attributes into collections
+        Map<String, Integer> mockedFullyQualifiedClassNameToAllowableInvocations = new  Map<String, Integer>();
+        List<Message__c> messages = new List<Message__c>(); 
+        for (String processName : processNameToAttributes.keyset()) {
+            Map<String,Object> attributes = processNameToAttributes.get(processName);
+            Process__c process = (Process__c) attributes.get('Process');
+            Integer allowableInvocations = (Integer) attributes.get('AllowableInvocations');
+            Integer totalMessages = (Integer) attributes.get('TotalMessages');
+            
+            // provider collection
+            mockedFullyQualifiedClassNameToAllowableInvocations.put(processName, allowableInvocations);
+            
+            // message collection
+            Integer i = 1;
+            while (i <= totalMessages) {
+                messages.add(new Message__c( Process__c = process.Id, Cause__c = processName)); 
+                i++;
+            }
+        }
+        
+        // create provider
+        VerticalBrokerImplementation.IAttributeProvider attributeProvider = 
+            new VerticalBrokerImplementation.MockAttributeProvider(mockedFullyQualifiedClassNameToAllowableInvocations);
+
+        // create messages
+        insert messages;
+        Set<Id> messageIds = new Map<Id,Message__c>(messages).keySet();
+        Map<Id,Message__c> messageIdToMessage = new Map<Id,Message__c>([
+            SELECT Id, Process__c, Process__r.FullyQualifiedClassName__c, Cause__c 
+            FROM Message__c 
+            WHERE Id in :messageIds
+        ]);
+        
+        return new Map<String,Object>{
+            'Provider' => attributeProvider,
+            'MessageIdToMessage' => messageIdToMessage
+        };
+   }
 }

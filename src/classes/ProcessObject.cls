@@ -53,6 +53,12 @@ public with sharing class ProcessObject extends SalesforceObject {
         public String HelpUrl {get;}
         
         /**
+         * Each process defines the maximum number of times it can be invoked in a single execution context.
+         * No definition implies a default limit of 1.
+         */
+        public Integer AllowableInvocations {get;}
+
+        /**
          * Key represents the parameter name, eg 'ns_URL'
          * Value is a friendly description, eg 'STRING of endpoint to scrape.'
          */

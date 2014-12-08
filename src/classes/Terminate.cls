@@ -8,6 +8,7 @@ public with sharing class Terminate {
         public String Description = 'Swallows messages at the end of this sequence.';
         public String Icon = 'stop';
         public String HelpUrl = Page.StepCsh.getUrl();
+        public Integer AllowableInvocations = 90;
     }
     
     override public String toString() {
