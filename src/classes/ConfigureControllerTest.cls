@@ -55,29 +55,17 @@
         System.assert(controller.getHasHeartbeat());
     }
     
-    static testmethod void testGetHasRemoteSite() {
+    static testmethod void testGetHasRemoteSiteSetting() {
         //arrange
         ConfigureController controller = new ConfigureController();
         Test.setMock(HttpCalloutMock.class, new CalloutResponder());
         
         //act
-        Boolean hasRemoteSite = controller.getHasRemoteSite();
+        controller.detectRemoteSiteSetting();
+        Boolean hasRemoteSite = controller.HasRemoteSiteSetting;
         
         //assert
         System.assert(hasRemoteSite);
-    }
-    
-    static testmethod void testDoSetupRemoteSite() {
-        //arrange
-        ConfigureController controller = new ConfigureController();
-        
-        //act
-        String url = controller.doSetupRemoteSite().getUrl();
-        
-        //assert
-        System.assert(url.contains('0rp'));
-        System.assert(url.contains('ESB'));
-        System.assert(url.contains('installation'));
     }
     
 }

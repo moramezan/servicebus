@@ -19,7 +19,7 @@ public without sharing class PostInstallHandler implements InstallHandler {
         if (!context.isPush()) assignPermissionSet(context.installerId());
         
         //only nag about the remote site setting on first install
-        if (!context.isUpgrade()) sendRemoteSiteSettingNag(context.installerId());
+        if (!context.isUpgrade()) sendNotification(context.installerId());
         
         //wiretap should send to sysadmin, to prevent confusion with schedule processes
         if (!context.isPush()) createWiretapSettings(context.installerId());
@@ -114,7 +114,7 @@ public without sharing class PostInstallHandler implements InstallHandler {
     /**
      * Notify them (and us) on package install
      */
-    static private void sendRemoteSiteSettingNag(Id userId) {
+    static private void sendNotification(Id userId) {
         //notify the installing user
         User user = [
             SELECT Id, FirstName, Email
@@ -134,17 +134,12 @@ public without sharing class PostInstallHandler implements InstallHandler {
             + '\n\n'
             + '    your Enterprise Service Bus package has installed alright.'
             + '\n\n'
-            + 'But now you must click [Configure] on the package and follow'
-            + '\nthe on-screen instructions if you have not already done so:'
-            + '\n\n'
-            + Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:') + Page.Configure.getUrl()
-            + '\n\n'
             + 'Please feel free to reach out if you have any difficulties'
-            + '\nwith ESB, and I can better learn how people apply it :-)'
+            + '\nwith ESB, and we can better learn how people apply it.'
             + '\n\n'
             + 'best regards,'
             + '\nEeyore'
-            + '\nwebmaster@bigassforce.com'
+            + '\nwebmaster@bigass.io'
         );
         
         try {

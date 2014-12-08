@@ -13,7 +13,8 @@ public with sharing class SequenceBuilderExtension {
     
     public Boolean getIsRemoteSiteSettingPresent() {
         ConfigureController controller = new ConfigureController();
-        return controller.getHasRemoteSite();
+        controller.detectRemoteSiteSetting();
+        return controller.HasRemoteSiteSetting;
     }
     
     public String getProcesses() {

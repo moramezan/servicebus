@@ -58,7 +58,7 @@ public with sharing class ConfigureController {
      * eg "https://pod.salesforce.com"
      */
     private String PodProtocolAndHost;
-    private String getPodProtocolAndHost() {
+    public String getPodProtocolAndHost() {
         if (this.PodProtocolAndHost == null) {
             String orgId = UserInfo.getOrganizationId();
             String userId = UserInfo.getUserId();
@@ -140,41 +140,29 @@ public with sharing class ConfigureController {
         this.CronDetailId = PostInstallHandler.installSchedule();
     }
     
-    /**
-     * The Remote Site Setting is a really nice-to-have for future use
-     * of the Tooling API or Metadata API. So we require that it be present.
+     /**
+     * Detect if Remote Site Setting is deployed
      */
-    public Boolean getHasRemoteSite() {
-        try {
-            System.HttpRequest request = new System.HttpRequest();
-            request.setMethod('GET');
-            request.setEndpoint(this.getPodProtocolAndHost());
-            new System.Http().send(request);
-            return true;
-        } catch (System.CalloutException e) {
-            return false;
-        }
-    }
-    
-    public PageReference doSetupRemoteSite() {
-        //prepare a link to pre-populated remote site setting
-        System.PageReference setup = new System.PageReference('/0rp/e');
-        setup.getParameters().putAll(new Map<String,String>{
-            'saveURL' => ApexPages.currentPage().getUrl(), //redirects to our config/tutorial after save
-            'SiteName' => 'ESB_' + this.getPodProtocolAndHost().replaceAll('[^A-Za-z0-9]+', '_').left(30),
-            'EndpointUrl' => this.getPodProtocolAndHost(),
-            'ProtocolMismatch' => '1',
-            'DescriptionField' => 'Before the installation is complete, you need this Remote Site Setting. Just click Save below and we\'ll take you straight back to the package config.'
-        });
+    public Boolean HasRemoteSiteSetting {get; set;}
+    public void detectRemoteSiteSetting() {
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(this.getPodProtocolAndHost());
+        request.setMethod('GET');
         
-        return setup;
+        try {
+            new Http().send(request);
+            this.HasRemoteSiteSetting = true;
+        } catch (CalloutException e) {
+            //remote site setting is missing
+            this.HasRemoteSiteSetting = false;
+        }
     }
     
     /**
      * Is EVERYTHING installed correctly?
      */
     public Boolean getIsOk() {
-        return this.getHasRemoteSite() && this.getHasApp() && this.getHasHeartbeat();
+        return this.getHasApp() && this.getHasHeartbeat();
     }
     
     public PageReference doGetStarted() {
