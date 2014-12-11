@@ -23,6 +23,10 @@
         <members>ConfigStepExtensionTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
+        <members>Confirm</members>
+        <members>ConfirmItemConfirmExtension</members>
+        <members>ConfirmItemDenyExtension</members>
+        <members>ConfirmItemObjectSet</members>
         <members>Gate</members>
         <members>GateTest</members>
         <members>Heartbeat</members>
@@ -109,6 +113,10 @@
         <members>BranchConfigCsh</members>
         <members>BranchConfigStep</members>
         <members>Configure</members>
+        <members>ConfirmConfigCsh</members>
+        <members>ConfirmItemConfirm</members>
+        <members>ConfirmItemCsh</members>
+        <members>ConfirmItemDeny</members>
         <members>EventTypeCsh</members>
         <members>GateGroupCsh</members>
         <members>GateItemCsh</members>
@@ -149,6 +157,8 @@
     <types>
         <members>AuditInitializerConfigTriggers</members>
         <members>BranchConfigTriggers</members>
+        <members>ConfirmConfigTriggers</members>
+        <members>ConfirmItemTriggers</members>
         <members>JumpConfigTriggers</members>
         <members>MessageTriggers</members>
         <members>PublishConfigTriggers</members>
@@ -183,6 +193,13 @@
         <members>BrokerSettings__c.BrokerClassName__c</members>
         <members>BrokerSettings__c.Inhibit__c</members>
         <members>BrokerSettings__c.IsPaused__c</members>
+        <members>ConfirmConfig__c.DenySequence__c</members>
+        <members>ConfirmItem__c.ConfirmConfig__c</members>
+        <members>ConfirmItem__c.Confirm__c</members>
+        <members>ConfirmItem__c.DenySequence__c</members>
+        <members>ConfirmItem__c.Deny__c</members>
+        <members>ConfirmItem__c.EntityId__c</members>
+        <members>ConfirmItem__c.Parameters__c</members>
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Parameters__c</members>
         <members>GateSettings__c.IsEnabled__c</members>
@@ -227,6 +244,8 @@
         <members>AuditInitializerConfig__c</members>
         <members>BranchConfig__c</members>
         <members>BrokerSettings__c</members>
+        <members>ConfirmConfig__c</members>
+        <members>ConfirmItem__c</members>
         <members>EventType__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
@@ -270,6 +289,8 @@
         <members>AuditGroup__c-Audit Group Layout</members>
         <members>AuditInitializerConfig__c-Audit Initializer Config Layout</members>
         <members>BranchConfig__c-Branch Config Layout</members>
+        <members>ConfirmConfig__c-Confirm Config Layout</members>
+        <members>ConfirmItem__c-Confirm Item Layout</members>
         <members>EventType__c-Event Type Layout</members>
         <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>
@@ -317,6 +338,8 @@
         <members>AuditInitializerConfig__c.AuditGroups</members>
         <members>AuditInitializerConfig__c.ChangeDynamicGroupIdentifier</members>
         <members>BranchConfig__c.Step</members>
+        <members>ConfirmItem__c.Confirm</members>
+        <members>ConfirmItem__c.Deny</members>
         <members>JumpConfig__c.Step</members>
         <members>Message__c.Data</members>
         <members>Message__c.PauseQueue</members>
