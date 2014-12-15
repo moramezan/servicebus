@@ -35,22 +35,23 @@ public without sharing class PostInstallHandler implements InstallHandler {
      * will be available immediately. The batch will get around to THEIR processes.
      */
     static public void initializeProcesses() {
-        List<Process__c> edaProcesses = new List<Process__c>();
+        List<Process__c> processes = new List<Process__c>{
+            ProcessObject.fromType(Type.forName(AuditInitializer.class.getName())),
+            ProcessObject.fromType(Type.forName(AuditWriter.class.getName())),
+            ProcessObject.fromType(Type.forName(Branch.class.getName())),
+            ProcessObject.fromType(Type.forName(Confirm.class.getName())),
+            ProcessObject.fromType(Type.forName(Gate.class.getName())),
+            ProcessObject.fromType(Type.forName(Jump.class.getName())),
+            ProcessObject.fromType(Type.forName(Mark.class.getName())),
+            ProcessObject.fromType(Type.forName(Publish.class.getName())),
+            ProcessObject.fromType(Type.forName(Schedule.class.getName())),
+            ProcessObject.fromType(Type.forName(Subscribe.class.getName())),
+            ProcessObject.fromType(Type.forName(Subsequence.class.getName())),
+            ProcessObject.fromType(Type.forName(Terminate.class.getName())),
+            ProcessObject.fromType(Type.forName(Wiretap.class.getName()))
+        };
         
-        edaProcesses.add(ProcessObject.fromType(Type.forName(Branch.class.getName())));
-        edaProcesses.add(ProcessObject.fromType(Type.forName(Gate.class.getName())));
-        edaProcesses.add(ProcessObject.fromType(Type.forName(Jump.class.getName())));
-        edaProcesses.add(ProcessObject.fromType(Type.forName(AuditInitializer.class.getName())));
-        edaProcesses.add(ProcessObject.fromType(Type.forName(AuditWriter.class.getName())));
-        edaProcesses.add(ProcessObject.fromType(Type.forName(Mark.class.getName())));
-        edaProcesses.add(ProcessObject.fromType(Type.forName(Publish.class.getName())));
-        edaProcesses.add(ProcessObject.fromType(Type.forName(Schedule.class.getName())));
-        edaProcesses.add(ProcessObject.fromType(Type.forName(Subscribe.class.getName())));
-        edaProcesses.add(ProcessObject.fromType(Type.forName(Subsequence.class.getName())));
-        edaProcesses.add(ProcessObject.fromType(Type.forName(Terminate.class.getName())));
-        edaProcesses.add(ProcessObject.fromType(Type.forName(Wiretap.class.getName())));
-        
-        upsert edaProcesses FullyQualifiedClassName__c;
+        upsert processes FullyQualifiedClassName__c;
     }
     
     /**
