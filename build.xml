@@ -19,6 +19,8 @@
     </target>
 
     <target name="deploy" description="Deploys all package components to dev org">
+        <!-- stop jobs -->
+        <executeAnonymous username="${de.username}" password="${de.password}">for (SObject j : [SELECT Id FROM CronTrigger]) System.abortJob(j.Id);</executeAnonymous>
         <antcall target="optimize-for-devorg" />
         <sf:deploy
             username="${de.username}"
@@ -127,6 +129,10 @@
         <!-- clean up any previous purge -->
         <delete dir="purge" />
         <mkdir dir="purge" />
+        
+        <!-- stop jobs and unassign permission sets -->
+        <executeAnonymous username="${de.username}" password="${de.password}">for (SObject j : [SELECT Id FROM CronTrigger]) System.abortJob(j.Id);</executeAnonymous>
+        <executeAnonymous username="${de.username}" password="${de.password}">delete [SELECT Id FROM PermissionSetAssignment WHERE PermissionSet.IsOwnedByProfile = false];</executeAnonymous>
         
         <!-- delete Escalation Rules which lack package support -->
         <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><types><members>*</members><name>EscalationRules</name></types></Package>]]></echo>
