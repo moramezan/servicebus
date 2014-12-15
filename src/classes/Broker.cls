@@ -611,7 +611,7 @@ abstract public with sharing class Broker {
                     offsetToAttributes.put(offset,attributes);
                 } catch (TooManyHopsException e) {
                     //wrapped this here because we need to stick the MESSAGE ID on the exception in order to be able to write the problem away
-                    throw new EngineException(null, new Set<Id>{message.Id}, e, 'Too many hops - to resolve, manually set esb_Hops on parameters to 0');
+                    throw new EngineException(null, new Set<Id>{message.Id}, e, 'Too many hops - to resolve, manually set esb_Hops on parameters to 1');
                 } 
                 
                 SObject config;
@@ -797,7 +797,7 @@ abstract public with sharing class Broker {
      * See applyHops() method for context and details.
      */
     @TestVisible static private Integer enforceMaxHops(Map<String,Object> parameters, Integer threshold) {
-        Integer hops = (parameters.get('esb_Hops') == null) ? 0 : (Integer) parameters.get('esb_Hops');
+        Integer hops = (parameters.get('esb_Hops') == null) ? 1 : (Integer) parameters.get('esb_Hops');
         hops++;
         if (hops > threshold) {
             throw new TooManyHopsException('Number of hops ' + hops + ' is greater than threshold of ' + threshold);

@@ -103,7 +103,7 @@
         Integer expectedHops = maxHops;
         System.assertEquals(expectedHops, actualHops, 'Wrong hops.');
         
-        String expectedDetail = 'Too many hops - to resolve, manually set esb_Hops on parameters to 0';
+        String expectedDetail = 'Too many hops - to resolve, manually set esb_Hops on parameters to 1';
         System.assertEquals(expectedDetail, actualDetail, 'Wrong message');
         
         String expectedStatus = 'Started';
@@ -132,7 +132,7 @@
        //arrange
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
-        Integer hops = 0;
+        Integer hops = 1;
 
         //act
         Integer actualHops = Broker.enforceMaxHops(parameters, threshold);
