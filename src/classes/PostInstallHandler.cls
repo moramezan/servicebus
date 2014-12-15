@@ -67,7 +67,7 @@ public without sharing class PostInstallHandler implements InstallHandler {
             SELECT Id
             FROM PermissionSet
             WHERE NamespacePrefix = :namespacePrefix
-            AND Name = 'Orchestrator'
+            AND Name = 'AdministerEsb'
         ];
         
         //determine if it has been assigned already
