@@ -314,6 +314,9 @@
         <!-- leave Relative Time Alarms intact -->
         <delete file="purge/workflows/ExternalEventMapping.workflow" />
         
+        <!-- leave FeedItem layouts intact -->
+        <delete file="purge/layouts/FeedItem-Feed Item Layout.layout" />
+        
         <!-- leave Standard Applications intact -->
         <delete><fileset dir="purge/applications" includes="standard__*" /></delete>
         <delete file="purge/applications/Force_com.app" /><!-- Unable to delete custom app. Profiles are using this custom app as default.: Service Cloud -->
