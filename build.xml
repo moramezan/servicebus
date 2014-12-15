@@ -314,7 +314,7 @@
         <!-- leave Relative Time Alarms intact -->
         <delete file="purge/workflows/ExternalEventMapping.workflow" />
         
-        <!-- leave FeedItem layouts intact -->
+        <!-- leave FeedItem layout intact (Error: Layout must have at least 1 section) -->
         <delete file="purge/layouts/FeedItem-Feed Item Layout.layout" />
         
         <!-- leave Standard Applications intact -->
