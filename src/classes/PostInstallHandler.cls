@@ -12,20 +12,25 @@ public without sharing class PostInstallHandler implements InstallHandler {
      * Version previousVersion();
      */
     public void onInstall(InstallContext context) {
+        Id installerId = context == null ? UserInfo.getUserId() : context.installerId();
+        Boolean isUpgrade = context == null ? false : context.isUpgrade();
+        Boolean isPush = context == null ? false : context.isPush();
+        Boolean isCli = context == null;
+        
         //push upgrades run under the pushing user, not the local user, so keep it simple
-        if (!context.isPush()) installSchedule();
+        if (!isPush) installSchedule();
         
         //permission set assignments must be made on the local user, not the pushing user
-        if (!context.isPush()) assignPermissionSet(context.installerId());
+        if (!isPush) assignPermissionSet(installerId);
         
         //only nag about the remote site setting on first install
-        if (!context.isUpgrade()) sendNotification(context.installerId());
+        if (!isUpgrade && !isCli) sendNotification(installerId);
         
         //wiretap should send to sysadmin, to prevent confusion with schedule processes
-        if (!context.isPush()) createWiretapSettings(context.installerId());
+        if (!isPush) createWiretapSettings(installerId);
         
         //synchronously install our processes
-        if (!context.isPush()) initializeProcesses();
+        if (!isPush) initializeProcesses();
         
         executeProcessDiscoverBatch();
     }

@@ -27,6 +27,7 @@
             deployRoot="src"
         />
         <antcall target="optimize-for-release" />
+        <executeAnonymous username="${de.username}" password="${de.password}">new PostInstallHandler().onInstall(null);</executeAnonymous>
     </target>
 
     <target name="package" description="Deploys all components to packaging org">
