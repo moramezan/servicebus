@@ -98,7 +98,7 @@
         <br />
         
         
-        </apex:form>-->
+        </apex:form>
     
     <p>For more in depth analysis and insight:
        <ul> 
@@ -140,6 +140,7 @@
                 to see how the Enterprise Service Bus enables the common requirement of grouping related messages under a common tag.
             </p>
         </apex:pageBlockSection>
+        <!--
         <apex:pageBlockSection columns="1" title="TUTORIAL 4: Regularly Scrape a Web Page" collapsible="false">
             <p>
                 Click
@@ -149,7 +150,8 @@
                 <a href="http://finance.yahoo.com/q?s=CRM" target="_blank" style="color: #00f;">Yahoo Finance</a>
                 for the ticker price of CRM (Salesforce)
             </p>
-            </apex:pageBlockSection>
+         </apex:pageBlockSection>
+        -->
        
     <br/><br/>
             
