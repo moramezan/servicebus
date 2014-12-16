@@ -104,7 +104,7 @@ public with sharing class ProcessObject extends SalesforceObject {
             }
 
             //attempt to populate the short description of the process.
-            process.Description__c = meta.Description;
+            process.Description__c = (meta.Description.length() > 255) ? meta.Description.left(252)+'...' : meta.Description;
 
             //attempt to populate the tag of the process (with sensible default)
             process.Tag__c = meta.Tag == null ? 'Untagged' : meta.Tag;
