@@ -6,17 +6,13 @@
 
 <body>
 <style>
-    body {background: url('./inPageClouds.png') top left no-repeat;font-family:sans-serif;}
+    body {background: url('./inPageClouds.png') top left no-repeat;font-family:sans-serif;font-size:90%;}
 
     code {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size:95%;}
-    .contact {font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
-        font-size:102%;
-        text-align:center}
-    .contact.dot {font-weight:bold;}
     a {text-decoration:none;}
     .gist-file{
         margin-top: 10px;
-        margin-right: 20px;
+        margin-right: 20%;
     }
 
     
@@ -677,16 +673,33 @@
                             <br/> The ESB framework will use a "cog" icon to represnet your plugin
                                   if you fail to include ths property in your <code>Meta</code>.
                     </li>
-                    <li><b> 008 : </b>  the <code>HelpUrl</code> is a string that defines the help page for
-                            the plugin. The help page is surfaced as a link  on the list view 
-                            of the ESB processes.
-                        <br/> Either a VisualForce page reference  or an external web page reference   can be assigned to
-                              this property.
-                        <br/> <b>Note</b> If this property is not defined,
-                             the ESB framework will surface a user friendly representation of your plugin
-                             by making use of the attributes contained within the plugin's <code>Meta</code> .
+                    <li><b> 008 : </b>  <code>Limits</code>  constrains the  number of times a  plugin  
+                               may be executed in a single context.
+
+                            <br/> This property  enables  more  work to be performed than would otherwise
+                            be possible within prevailing daily Salesforce execution limits.
+                            <ul>
+                                <li> The default is implicitly and conservatively  set to one.</li>
+                                <li> A  simple plugin that avoids  Salesforce governed
+                                operations such as SOQL or callouts is a good candidate for a 
+                                large <code>Limits</code> setting. (100 or greater) </li>
+                                <li> If however, the plugin makes use of a  governed operation,
+                                    ascertain 50% of that particular  Salesforce limit and divide by the number of times
+                                    the plugin uses the governed operation.
+                                    <br/> The <code>Limits</code> property should not exceed this
+                                    calculated value.
+                                </li>
+                            </ul>
                     </li>
-        
+                    <li><b> 009 : </b>  the <code>HelpUrl</code> is a string that defines the help page for
+                        the plugin. The help page is surfaced as a link  on the list view
+                        of the ESB processes.
+                        <br/> Either a VisualForce page reference  or an external web page reference   can be assigned to
+                        this property.
+                        <br/> <b>Note</b> If this property is not defined,
+                        the ESB framework will surface a user friendly representation of your plugin
+                        by making use of the attributes contained within the plugin's <code>Meta</code> .
+                    </li>
         
         
         
@@ -719,10 +732,10 @@
                     </li>
         
         
-                    <li><b> 012 : </b>   the input message is injected into the <code>invoke()</code> method in the 
+                    <li><b> 013 : </b>   the input message is injected into the <code>invoke()</code> method in the 
                            form of a key-value collection.
                     </li>
-                    <li><b> 019 : </b>  the <code>invoke()</code> method returns an output collection of zero, 
+                    <li><b> 020 : </b>  the <code>invoke()</code> method returns an output collection of zero, 
                             one or more messages.
                     </li>
         
@@ -750,14 +763,14 @@
                         <br/>
                     </li>
         
-                    <li><b> 015 - 022 : </b> Under the <code>main code block</code> ,
+                    <li><b> 016 - 023 : </b> Under the <code>main code block</code> ,
                             initiate the business logic implementation. 
                             <br/> The specification defines the preferred chatter
                             feed owner  as being the User Id defined the  custom settings of the plugin.
                         <br/> For this reason, the code references  <code>ChatterTapSettings__c</code> 
                               to determine if the default chatter (User) Id should been overwritten.
                     </li>
-                    <li><b> 009 : </b>  To surface a link to the custom settings page of your plugin directly on the ESB processes list view:
+                    <li><b> 010 : </b>  To surface a link to the custom settings page of your plugin directly on the ESB processes list view:
                         <br/> assign an instance of your custom setting SObject to the CustomSetting parameter of the
                         plugin's <code>Meta</code> inner class.
                     </li>
@@ -786,7 +799,7 @@
 
               
                     
-                    <li><b>  024 - 031 : </b> Complete the implementation of the  business specification.
+                    <li><b>  025 - 032 : </b> Complete the implementation of the  business specification.
                         <br/> In this example, the parameters surfaced to a given chatter feed are 
                               deliberately limited to the  Sequence Name (<code>esb_SequenceName</code>) 
                              and Sequence Position (<code>esb_Position</code>). 
@@ -800,28 +813,6 @@
                     <br/>
 
 
-
-                     <!--
-                    <li>
-                        <b>Step 06</b>
-                        <br/> Test the plugin
-                        <ul>
-                            <li> Most plugins will exhibit a set of tests similar to those shown below</li>
-                            <li> Tests will normally cover
-                                <br/> - the expected <code>Meta</code> (for example, the <code>Description</code> )
-                                <br/> - the expected initial state (for example, the Custom settings supporting the plugin)
-                                <br/> - that expected exceptions are thrown for invalid initial state
-                                <br/> - the expected outputs (for example, the count of the messages in the output collecton)
-                                <br/> - the expected side effects (for example, the insertion of certain records such as a <code>FeedItem</code>)
-                            </li>
-                        </ul>
-                        <br/>
-
-                        
-                        <script src="https://gist.github.com/worslip/9de6893bd18927385e12.js"></script>
-
-                    </li>
-                    -->
 
  
                    <li>
@@ -1102,7 +1093,25 @@
                         <br/> The ESB framework will use a "cog" icon to represnet your plugin
                         if you fail to include ths property in your <code>Meta</code>.
                     </li>
-                    <li><b> 010 : </b>  the <code>HelpUrl</code> is a string that defines the help page for
+                    <li><b> 010 : </b>  <code>Limits</code>  constrains the  number of times a  plugin
+                        may be executed in a single context.
+
+                        <br/> This property  enables  more  work to be performed than would otherwise
+                        be possible within prevailing daily Salesforce execution limits.
+                        <ul>
+                            <li> The default is implicitly and conservatively  set to one.</li>
+                            <li> A  simple plugin that avoids  Salesforce governed
+                                operations such as SOQL or callouts is a good candidate for a
+                                large <code>Limits</code> setting. (100 or greater) </li>
+                            <li> If however, the plugin makes use of a  governed operation,
+                                ascertain 50% of that particular  Salesforce limit and divide by the number of times
+                                the plugin uses the governed operation.
+                                <br/> The <code>Limits</code> property should not exceed this
+                                calculated value.
+                            </li>
+                        </ul>
+                    </li>
+                    <li><b> 011 : </b>  the <code>HelpUrl</code> is a string that defines the help page for
                         the plugin. The help page is surfaced as a link  on the list view
                         of the ESB processes.
                         <br/> Either a VisualForce page reference  or an external web page reference   can be assigned to
@@ -1142,10 +1151,10 @@
                         <br/>
                     </li>
             
-                    <li><b> 013 : </b>   the input message is injected into the <code>invoke()</code> method in the
+                    <li><b> 014 : </b>   the input message is injected into the <code>invoke()</code> method in the
                         form of a key-value collection.
                     </li>
-                    <li><b> 024 : </b>  the <code>invoke()</code> method returns an output collection of zero,
+                    <li><b> 025 : </b>  the <code>invoke()</code> method returns an output collection of zero,
                         one or more messages.
                     </li>
             
@@ -1173,7 +1182,7 @@
                         <br/>
                     </li>
             
-                    <li><b> 017 - 027 : </b> Implement the callout logic.
+                    <li><b> 018 - 028 : </b> Implement the callout logic.
                         <ul>
                             <li> The callout block must return null</li>
                             <li> The callout block must never return the body of the callout response.</li>
@@ -1182,7 +1191,7 @@
                         </ul>
 
                     </li>
-                    <li><b> 013, 024 : </b> All callout responses are communicated from the <code>callout block</code>
+                    <li><b> 014, 025 : </b> All callout responses are communicated from the <code>callout block</code>
                         to the  <code>main block</code>  via a user defined global <code>String</code> member.
                         <br/> In this example, the <code>String</code> member is (arbitrarily) named <code>Body</code> and is assigned
                     the content of the callout response. 
@@ -1217,18 +1226,18 @@
                         <br/>
                     </li>
                     
-                    <li><b>  033 - 040 : </b> The  <code>main block</code> completes the implementation of
+                    <li><b>  034 - 041 : </b> The  <code>main block</code> completes the implementation of
                         the business specification by the persisting the callout
                         content in a standard  <code>document</code> SObject.
                     </li>
                     
-                    <li><b> 017, 037 : </b>  The content of the callout response is retrieved from the
+                    <li><b> 018, 038 : </b>  The content of the callout response is retrieved from the
                         global  member <code>Body</code> and assigned to the body of the
                          <code>document</code> SObject.
                     </li>
                     
                     
-                    <li><b>  040  :  </b> <code>Id</code> is a standard parameter of any message and it
+                    <li><b>  041  :  </b> <code>Id</code> is a standard parameter of any message and it
                         normally points to the underlying data (SObject)of the  message.
                         <br/> Any plugin is free to update this <code>Id</code> parameter to conform
                         with the requirements of the plugin business specification.
@@ -1237,7 +1246,7 @@
                         updated with the <code>Id</code> of the inserted document.
                     </li>
                     
-                    <li><b> 040, 012 - 014 :  </b> If a plugin modifies or adds a  parameter on any outbound message,
+                    <li><b> 041, 013 - 015 :  </b> If a plugin modifies or adds a  parameter on any outbound message,
                         the modification should be formally described by detailing the
                         parameter name and a comment describing the modification
                     </li>
@@ -1368,11 +1377,11 @@
 
                     <li><b>   001 : </b> An ESB plugin is a standard Apex class. ( ESB plugins do not take a dependency on the ESB package)
                     </li>
-                    <li><b>   003 - 035 : </b>  a valid ESB plugin has two key elements, namely
+                    <li><b>   003 - 036 : </b>  a valid ESB plugin has two key elements, namely
                         an inner <code>Meta</code> class and
                         an <code>invoke()</code>method.
                     </li>
-                    <li><b>   003 - 010 : </b>  the inner <code>Meta</code> class exposes important properties about the ESB plugin thereby facilitating
+                    <li><b>   003 - 011 : </b>  the inner <code>Meta</code> class exposes important properties about the ESB plugin thereby facilitating
                         correct integration into the ESB framework.
                     </li>
                     <li><b>  004 : </b>  the  <code>Tag</code>         is a string that that groups the ESB plugin with similar plugins.
@@ -1388,28 +1397,40 @@
                          ESB processes.
                         <br/> <b>Note</b> The full collection of  possible icons can be found at the  <a href=http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png>famfam</a>  website.
                     </li>
-                    <li><b>  008 : </b>  the <code>HelpUrl</code> is a string that describes the help page for the plugin.
+                    <li><b> 008 : </b>  <code>Limits</code>  constrains the  number of times a  plugin
+                        may be executed in a single context.
+
+                        <br/> This property  enables  more  work to be performed than would otherwise
+                        be possible within prevailing daily Salesforce execution limits.
+                        <ul>
+                            <li> The default is implicitly and conservatively  set to one.</li>
+                            <li> A  simple plugin that avoids  Salesforce governed
+                                operations such as SOQL or callouts is a good candidate for a
+                                large <code>Limits</code> setting. (100 or greater) </li>
+                            <li> If however, the plugin makes use of a  governed operation,
+                                ascertain 50% of that particular  Salesforce limit and divide by the number of times
+                                the plugin uses the governed operation.
+                                <br/> The <code>Limits</code> property should not exceed this
+                                calculated value.
+                            </li>
+                        </ul>
+                    </li>
+                    <li><b>  009 : </b>  the <code>HelpUrl</code> is a string that describes the help page for the plugin.
                         <br/> The help page does not have to be in the form of a VisualForce page
                         - external help page reference   are also valid.
                     </li>
-                    <li><b>  009 : </b>  Surfacing a link to the plugin specific custom settings on the processes list view is possible.
+                    <li><b>  010 : </b>  Surfacing a link to the plugin specific custom settings on the processes list view is possible.
                         <br/>Simply assign an instance of the custom setting  to the <code>CustomSetting</code> member of the
                         plugin's <code>Meta</code> inner class.
                     </li>
-                    <li><b>  013 - 035 : </b>  the <code>invoke()</code> method contains the Apex logic that implements the business specification.
+                    <li><b>  014 - 036 : </b>  the <code>invoke()</code> method contains the Apex logic that implements the business specification.
                     </li>
-                    <li><b>   013 : </b>  an input message is injected into the <code>invoke()</code> method in the form of key-value  collection.
+                    <li><b>   014 : </b>  an input message is injected into the <code>invoke()</code> method in the form of key-value  collection.
                     </li>
-                    <li><b>   034 : </b>  the <code>invoke()</code> method returns a list of zero, one or more  output messages.
+                    <li><b>   035 : </b>  the <code>invoke()</code> method returns a list of zero, one or more  output messages.
                         <br/> Each output message consists of a key-value parameter collection.
                     </li>
-
-                    <!--
-                    <li style="list-style: none"><br/>
-                        <br/>
-                        <i>[*] - exceptions will appear as records in the message object</i>
-                    </li>
-                    -->
+                    
                 </ul>
             </td>
         </tr>
@@ -1459,12 +1480,12 @@
 
                     <li><b>   001 : </b>  An ESB plugin is a standard Apex class. ( ESB plugins do not take a dependency on the ESB package)
                     </li>
-                    <li><b>  001 - 050 : </b>  a valid ESB plugin has two key elements, namely
+                    <li><b>  001 - 051 : </b>  a valid ESB plugin has two key elements, namely
                         an inner <code>Meta</code> class
                         and an <code>invoke()</code>method.
                     </li>
 
-                    <li><b>  005 - 018 : </b>  the inner <code>Meta</code> class exposes important properties about the ESB plugin thereby facilitating  correct integration into the ESB framework.
+                    <li><b>  005 - 019 : </b>  the inner <code>Meta</code> class exposes important properties about the ESB plugin thereby facilitating  correct integration into the ESB framework.
                     </li>
 
                     <li><b>  006 : </b>  the  <code>Description</code> is a string that describes the functionality of the plugin and is surfaced on the  list view of the ESB processes by the discovery process.
@@ -1480,30 +1501,48 @@
                         ESB processes.
                         <br/> <b>Note</b> The full collection of  possible icons can be found at the  <a href=http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png>famfam</a>  website.
                     </li>
-                    <li><b>  010 : </b>  the <code>HelpUrl</code> is a string that describes the help page for the plugin.
+                    <li><b> 010 : </b>  <code>Limits</code>  constrains the  number of times a  plugin
+                        may be executed in a single context.
+
+                        <br/> This property  enables  more  work to be performed than would otherwise
+                        be possible within prevailing daily Salesforce execution limits.
+                        <ul>
+                            <li> The default is implicitly and conservatively  set to one.</li>
+                            <li> A  simple plugin that avoids  Salesforce governed
+                                operations such as SOQL or callouts is a good candidate for a
+                                large <code>Limits</code> setting. (100 or greater) </li>
+                            <li> If however, the plugin makes use of a  governed operation,
+                                ascertain 50% of that particular  Salesforce limit and divide by the number of times
+                                the plugin uses the governed operation.
+                                <br/> The <code>Limits</code> property should not exceed this
+                                calculated value.
+                            </li>
+                        </ul>
+                    </li>
+                    <li><b>  011 : </b>  the <code>HelpUrl</code> is a string that describes the help page for the plugin.
                         <br/> The help page does not have to be in the form of a VisualForce page -
                               external help page references are also valid.
                     </li>
 
                     <li>
-                        <b>012 - 014  : </b>   the <code>Inputs</code>   property documents all expected inputs.
+                        <b>013 - 0145  : </b>   the <code>Inputs</code>   property documents all expected inputs.
                         <br><b>Note</b> This documentation supports auto generated help for the plugin.
                     </li>
 
                     <li>
-                        <b> 015 - 017   : </b>   the <code>Outputs</code>  property documents all outputs added, deleted or modified
+                        <b> 016 - 018   : </b>   the <code>Outputs</code>  property documents all outputs added, deleted or modified
                         <br><b>Note</b> This documentation supports auto generated help for the plugin.
                     </li>
                     
                     
-                    <li><b>  022 - 049 : </b>  the <code>invoke()</code> method contains the Apex logic .
+                    <li><b>  023 - 050 : </b>  the <code>invoke()</code> method contains the Apex logic .
                         <br/>  The method takes a single event message   and
                         returns zero, one or more output messages as a collection.
                     </li>
 
 
                     <li>
-                        <b>001 - 050  : </b>  ESB plugins making callouts must be annotated in a manner that 
+                        <b>001 - 051  : </b>  ESB plugins making callouts must be annotated in a manner that 
                           declares the plugin's intent to make one or more callouts
       
                         <ul>
@@ -1517,13 +1556,13 @@
                             </li>
     
                             <li>
-                                <b>024 - 034   : </b>  All <code>callout logic</code> must be implemented within a callout code block
+                                <b>025 - 035  : </b>  All <code>callout logic</code> must be implemented within a callout code block
                                 <br/>The  <code>callout logic</code>  must return null
                                 <br/>The  <code>callout logic</code>  must never return the body of the callout response.
                             </li>
     
                             <li>
-                                <b> 020, 041   : </b>  The <code>main block</code> accesses  callout content through class instance properties.
+                                <b> 021, 042  : </b>  The <code>main block</code> accesses  callout content through class instance properties.
                                 <br/> Every callout should have a corresponding String class property. 
                                 <br/>It is left to the developer of the plugin to  appropriately name the property(ies)
                             </li>  
