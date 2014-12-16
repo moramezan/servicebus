@@ -107,17 +107,20 @@ public with sharing class ProcessObject extends SalesforceObject {
             process.Description__c = (meta.Description.length() > 255) ? meta.Description.left(252)+'...' : meta.Description;
 
             //attempt to populate the tag of the process (with sensible default)
-            process.Tag__c = meta.Tag == null ? 'Untagged' : meta.Tag;
+            process.Tag__c = meta.Tag == null ? 'Untagged' : (meta.Tag.length() > 255) ? meta.Tag.left(252)+'...' : meta.Tag;
 
             //attempt to populate the tag of the process (with sensible default)
-            process.Name = meta.Name == null ? outerClass.getName() : meta.Name;
+            String name = meta.Name == null ? outerClass.getName() : meta.Name;
+            process.Name = name.length() > 255 ? name.left(255) : name;
             
             //attempt to populate the css class name of the process icon (with sensible default)
-            process.Icon__c = meta.Icon == null ? 'cog' : meta.Icon;
+            String icon = meta.Icon == null ? 'cog' : meta.Icon;
+            process.Icon__c = icon.length() > 255 ? 'cog' : icon;
             
             //attempt to populate the help url
-            process.HelpUrl__c = meta.HelpUrl == null ? Page.ProcessDescribe.getUrl() + '?fqn=' + outerClass.getName() : meta.HelpUrl;
-            if (process.HelpUrl__c.startsWith('/')) process.HelpUrl__c = Url.getSalesforceBaseUrl().toExternalForm() + process.HelpUrl__c;
+            String helpUrl = meta.HelpUrl == null ? Page.ProcessDescribe.getUrl() + '?fqn=' + outerClass.getName() : meta.HelpUrl;
+            if (helpUrl.startsWith('/')) helpUrl = Url.getSalesforceBaseUrl().toExternalForm() + helpUrl;
+            process.HelpUrl__c = helpUrl.length() > 255 ? helpUrl.left(255) : helpUrl;
 
             if (meta.ProcessSetting != null) {
                 //attempt to populate the name of the customization object
