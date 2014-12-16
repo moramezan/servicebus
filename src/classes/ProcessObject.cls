@@ -56,7 +56,7 @@ public with sharing class ProcessObject extends SalesforceObject {
          * Each process defines the maximum number of times it can be invoked in a single execution context.
          * No definition implies a default limit of 1.
          */
-        public Integer AllowableInvocations {get;}
+        public Integer Limits {get;}
 
         /**
          * Key represents the parameter name, eg 'ns_URL'

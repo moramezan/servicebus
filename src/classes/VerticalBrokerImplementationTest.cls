@@ -353,7 +353,7 @@
     }
 
 
-    static testmethod void callingGetFullyQualifiedClassNameToAllowableInvocationsReturnsExpectedCollection() {
+    static testmethod void callingGetFullyQualifiedClassNameToLimitsReturnsExpectedCollection() {
         // arrange 
         Set<String> fullyQualifiedClassNames = new Set<String>{
             Terminate.class.getName(),   
@@ -365,13 +365,13 @@
             new VerticalBrokerImplementation.AttributeProvider(fullyQualifiedClassNames);
         
         // act
-        Map<String, Integer> getFullyQualifiedClassNameToAllowableInvocations = 
-            attributeProvider.getFullyQualifiedClassNameToAllowableInvocations();
+        Map<String, Integer> getFullyQualifiedClassNameToLimits = 
+            attributeProvider.getFullyQualifiedClassNameToLimits();
          
         // assemble  
-        Integer actualTerminate = getFullyQualifiedClassNameToAllowableInvocations.get(Terminate.class.getName());
-        Integer actualGate = getFullyQualifiedClassNameToAllowableInvocations.get(Gate.class.getName());
-        Integer actualWiretap = getFullyQualifiedClassNameToAllowableInvocations.get(Wiretap.class.getName());
+        Integer actualTerminate = getFullyQualifiedClassNameToLimits.get(Terminate.class.getName());
+        Integer actualGate = getFullyQualifiedClassNameToLimits.get(Gate.class.getName());
+        Integer actualWiretap = getFullyQualifiedClassNameToLimits.get(Wiretap.class.getName());
         
           
         // assert
@@ -383,29 +383,29 @@
         system.assertEquals(expectedWiretap, actualWiretap);
     }
     
-    static testmethod void callingGetFullyQualifiedClassNameToAllowableInvocationsForMockReturnsExpectedCollection() {
+    static testmethod void callingGetFullyQualifiedClassNameToLimitsForMockReturnsExpectedCollection() {
         // arrange 
         Integer    mockedTerminateCount =  21;   
         Integer    mockedGateCount = 22;     
         Integer    mockedWiretapCount = 23;
             
-        Map<String, Integer> mockedFullyQualifiedClassNameToAllowableInvocations = new  Map<String, Integer>{
+        Map<String, Integer> mockedFullyQualifiedClassNameToLimits = new  Map<String, Integer>{
             Terminate.class.getName() => mockedTerminateCount,   
             Gate.class.getName() => mockedGateCount,        
             Wiretap.class.getName()  => mockedWiretapCount   
         };
 
        VerticalBrokerImplementation.IAttributeProvider attributeProvider = 
-            new VerticalBrokerImplementation.MockAttributeProvider(mockedFullyQualifiedClassNameToAllowableInvocations);
+            new VerticalBrokerImplementation.MockAttributeProvider(mockedFullyQualifiedClassNameToLimits);
             
         // act
-        Map<String, Integer> getFullyQualifiedClassNameToAllowableInvocations = 
-            attributeProvider.getFullyQualifiedClassNameToAllowableInvocations();
+        Map<String, Integer> getFullyQualifiedClassNameToLimits = 
+            attributeProvider.getFullyQualifiedClassNameToLimits();
          
         // assemble  
-        Integer actualTerminate = getFullyQualifiedClassNameToAllowableInvocations.get(Terminate.class.getName());
-        Integer actualGate = getFullyQualifiedClassNameToAllowableInvocations.get(Gate.class.getName());
-        Integer actualWiretap = getFullyQualifiedClassNameToAllowableInvocations.get(Wiretap.class.getName());
+        Integer actualTerminate = getFullyQualifiedClassNameToLimits.get(Terminate.class.getName());
+        Integer actualGate = getFullyQualifiedClassNameToLimits.get(Gate.class.getName());
+        Integer actualWiretap = getFullyQualifiedClassNameToLimits.get(Wiretap.class.getName());
  
         // assert
         Integer expectedTerminate = mockedTerminateCount;
@@ -443,17 +443,17 @@
         Map<String,Map<String,Object>> processNameToAttributes = new Map<String,Map<String,Object>>{
             terminateProcess.Name  =>  new Map<String,Object>{
                 'Process' => terminateProcess,
-                'AllowableInvocations' => mockedTerminateCount,
+                'Limits' => mockedTerminateCount,
                 'TotalMessages' => totalTerminate       
             }, 
             gateProcess.Name  =>  new Map<String,Object>{
                 'Process' => gateProcess,
-                'AllowableInvocations' => mockedGateCount,
+                'Limits' => mockedGateCount,
                 'TotalMessages' => totalGate      
             },
             wiretapProcess.Name  =>  new Map<String,Object>{
                 'Process' => wiretapProcess,
-                'AllowableInvocations' => mockedWiretapCount,
+                'Limits' => mockedWiretapCount,
                 'TotalMessages' => totalWiretap       
             }     
         };
@@ -514,17 +514,17 @@
         Map<String,Map<String,Object>> processNameToAttributes = new Map<String,Map<String,Object>>{
             terminateProcess.Name  =>  new Map<String,Object>{
                 'Process' => terminateProcess,
-                'AllowableInvocations' => mockedTerminateCount,
+                'Limits' => mockedTerminateCount,
                 'TotalMessages' => totalTerminate       
             }, 
             gateProcess.Name  =>  new Map<String,Object>{
                 'Process' => gateProcess,
-                'AllowableInvocations' => mockedGateCount,
+                'Limits' => mockedGateCount,
                 'TotalMessages' => totalGate      
             },
             wiretapProcess.Name  =>  new Map<String,Object>{
                 'Process' => wiretapProcess,
-                'AllowableInvocations' => mockedWiretapCount,
+                'Limits' => mockedWiretapCount,
                 'TotalMessages' => totalWiretap       
             }     
         };
@@ -584,17 +584,17 @@
         Map<String,Map<String,Object>> processNameToAttributes = new Map<String,Map<String,Object>>{
             terminateProcess.Name  =>  new Map<String,Object>{
                 'Process' => terminateProcess,
-                'AllowableInvocations' => mockedTerminateCount,
+                'Limits' => mockedTerminateCount,
                 'TotalMessages' => totalTerminate       
             }, 
             gateProcess.Name  =>  new Map<String,Object>{
                 'Process' => gateProcess,
-                'AllowableInvocations' => mockedGateCount,
+                'Limits' => mockedGateCount,
                 'TotalMessages' => totalGate      
             },
             wiretapProcess.Name  =>  new Map<String,Object>{
                 'Process' => wiretapProcess,
-                'AllowableInvocations' => mockedWiretapCount,
+                'Limits' => mockedWiretapCount,
                 'TotalMessages' => totalWiretap       
             }     
         };
@@ -665,17 +665,17 @@
         Map<String,Map<String,Object>> processNameToAttributes = new Map<String,Map<String,Object>>{
             terminateProcess.Name  =>  new Map<String,Object>{
                 'Process' => terminateProcess,
-                'AllowableInvocations' => mockedTerminateCount,
+                'Limits' => mockedTerminateCount,
                 'TotalMessages' => totalTerminate       
             }, 
             gateProcess.Name  =>  new Map<String,Object>{
                 'Process' => gateProcess,
-                'AllowableInvocations' => mockedGateCount,
+                'Limits' => mockedGateCount,
                 'TotalMessages' => totalGate      
             },
             wiretapProcess.Name  =>  new Map<String,Object>{
                 'Process' => wiretapProcess,
-                'AllowableInvocations' => mockedWiretapCount,
+                'Limits' => mockedWiretapCount,
                 'TotalMessages' => totalWiretap       
             }     
         };
@@ -721,16 +721,16 @@
 
    static Map<String,Object> setupProviderAndMessages(Map<String,Map<String,Object>> processNameToAttributes) {
         // parse attributes into collections
-        Map<String, Integer> mockedFullyQualifiedClassNameToAllowableInvocations = new  Map<String, Integer>();
+        Map<String, Integer> mockedFullyQualifiedClassNameToLimits = new  Map<String, Integer>();
         List<Message__c> messages = new List<Message__c>(); 
         for (String processName : processNameToAttributes.keyset()) {
             Map<String,Object> attributes = processNameToAttributes.get(processName);
             Process__c process = (Process__c) attributes.get('Process');
-            Integer allowableInvocations = (Integer) attributes.get('AllowableInvocations');
+            Integer Limits = (Integer) attributes.get('Limits');
             Integer totalMessages = (Integer) attributes.get('TotalMessages');
             
             // provider collection
-            mockedFullyQualifiedClassNameToAllowableInvocations.put(processName, allowableInvocations);
+            mockedFullyQualifiedClassNameToLimits.put(processName, Limits);
             
             // message collection
             Integer i = 1;
@@ -742,7 +742,7 @@
         
         // create provider
         VerticalBrokerImplementation.IAttributeProvider attributeProvider = 
-            new VerticalBrokerImplementation.MockAttributeProvider(mockedFullyQualifiedClassNameToAllowableInvocations);
+            new VerticalBrokerImplementation.MockAttributeProvider(mockedFullyQualifiedClassNameToLimits);
 
         // create messages
         insert messages;

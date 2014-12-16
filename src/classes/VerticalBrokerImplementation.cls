@@ -290,7 +290,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
 
     
     public interface IAttributeProvider {
-        Map<String, Integer> getFullyQualifiedClassNameToAllowableInvocations();     
+        Map<String, Integer> getFullyQualifiedClassNameToLimits();     
     }
     
     
@@ -302,14 +302,14 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
             this.fullyQualifiedClassNames = fullyQualifiedClassNames;
         }
         
-        public Map<String, Integer> getFullyQualifiedClassNameToAllowableInvocations() {
+        public Map<String, Integer> getFullyQualifiedClassNameToLimits() {
             Map<String, Integer> results = new Map<String, Integer>();
             for (String fullyQualifiedClassName : this.fullyQualifiedClassNames) {
                 Type outerClass = Type.forName(fullyQualifiedClassName);
                 Type innerClass = Type.forName(outerClass.getName() + '.' + 'Meta');            
                 ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
-                Integer allowableInvocations = (meta.AllowableInvocations == null) ? 1 : (Integer) meta.AllowableInvocations;  
-                results.put(fullyQualifiedClassName, allowableInvocations);
+                Integer Limits = (meta.Limits == null) ? 1 : (Integer) meta.Limits;  
+                results.put(fullyQualifiedClassName, Limits);
             }
             
             return results;
@@ -319,14 +319,14 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
 
     public class MockAttributeProvider implements IAttributeProvider {
     
-        Map<String, Integer> fullyQualifiedClassNameToAllowableInvocations;
+        Map<String, Integer> fullyQualifiedClassNameToLimits;
         
-        public MockAttributeProvider(Map<String, Integer> fullyQualifiedClassNameToAllowableInvocations) {
-            this.fullyQualifiedClassNameToAllowableInvocations = fullyQualifiedClassNameToAllowableInvocations;
+        public MockAttributeProvider(Map<String, Integer> fullyQualifiedClassNameToLimits) {
+            this.fullyQualifiedClassNameToLimits = fullyQualifiedClassNameToLimits;
         }
         
-        public Map<String,Integer> getFullyQualifiedClassNameToAllowableInvocations() {
-            return this.fullyQualifiedClassNameToAllowableInvocations;
+        public Map<String,Integer> getFullyQualifiedClassNameToLimits() {
+            return this.fullyQualifiedClassNameToLimits;
         }      
     }
 
@@ -354,17 +354,17 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         // TODO : attributes becomes Map<String,Integer>
         //        perhaps then introduce oldest message create date  with 
         //        rule that  collection with oldest record get priority?
-        Map<String,Integer> fullyQualifiedClassNameToAllowableInvocations = 
-            attributeProvider.getFullyQualifiedClassNameToAllowableInvocations();
+        Map<String,Integer> fullyQualifiedClassNameToLimits = 
+            attributeProvider.getFullyQualifiedClassNameToLimits();
 
         Map<String, Map<String,Integer>> fullyQualifiedClassNameToAttributes = new Map<String, Map<String,Integer>>();
         for (String fullyQualifiedClassName : fullyQualifiedClassNameToMessageCollection.keySet()) {
             Map<Id,Message__c> messageCollection = fullyQualifiedClassNameToMessageCollection.get(fullyQualifiedClassName);
             Integer messageCount = messageCollection.keySet().size();
-            Integer allowableInvocations = fullyQualifiedClassNameToAllowableInvocations.get(fullyQualifiedClassName);  
+            Integer Limits = fullyQualifiedClassNameToLimits.get(fullyQualifiedClassName);  
 
             Map<String,Integer> attributes = new Map<String,Integer>{
-                'AllowableInvocations' => (allowableInvocations == null) ? 0 : allowableInvocations,  
+                'Limits' => (Limits == null) ? 0 : Limits,  
                 'MessageCount' => messageCount
             };
             
@@ -376,9 +376,9 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         Integer maximumSize = 0;
         for (String fullyQualifiedClassName  : fullyQualifiedClassNameToAttributes.keySet()) {
             Map<String,Integer> attributes = fullyQualifiedClassNameToAttributes.get(fullyQualifiedClassName);
-            Integer allowableInvocations = attributes.get('AllowableInvocations');
+            Integer Limits = attributes.get('Limits');
             Integer messageCount = attributes.get('MessageCount');
-            Integer viableCount = (messageCount > allowableInvocations) ? allowableInvocations : messageCount;
+            Integer viableCount = (messageCount > Limits) ? Limits : messageCount;
             if (viableCount >= maximumSize) {
                 maximumSize = viableCount;
                 selectedFullyQualifiedClassName = fullyQualifiedClassName;
@@ -390,10 +390,10 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         if (selectedFullyQualifiedClassName != null) {
             Map<Id,Message__c> messageCollection = fullyQualifiedClassNameToMessageCollection.get(selectedFullyQualifiedClassName);
             Map<String,Integer> attributes = fullyQualifiedClassNameToAttributes.get(selectedFullyQualifiedClassName);
-            Integer allowableInvocations = attributes.get('AllowableInvocations');
+            Integer Limits = attributes.get('Limits');
             Integer i = 1;
             for (Id messageCollectionId : messageCollection.keySet()) {
-                if (i <= allowableInvocations) {
+                if (i <= Limits) {
                     results.put(messageCollectionId, messageCollection.get(messageCollectionId));
                 }
                 i++;

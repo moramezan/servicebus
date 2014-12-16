@@ -1,6 +1,6 @@
 @IsTest private class PublishTest {
 
-    static testmethod void hasTheCorrectAllowableInvocations() {
+    static testmethod void hasTheCorrectLimits() {
         //arrange 
         Type actualType = Publish.class;
         Type outerClass = Type.forName(actualType.getName());  
@@ -8,14 +8,14 @@
         ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
         
         //act 
-        Integer actualAllowableInvocations = meta.AllowableInvocations;  
+        Integer actualLimits = meta.Limits;  
 
         //assemble
-        actualAllowableInvocations = (actualAllowableInvocations == null) ? 1 : actualAllowableInvocations; 
+        actualLimits = (actualLimits == null) ? 1 : actualLimits; 
 
         //assert
-        Integer expectedAllowableInvocations = 1;
-        System.assertEquals(expectedAllowableInvocations, actualAllowableInvocations);
+        Integer expectedLimits = 1;
+        System.assertEquals(expectedLimits, actualLimits);
     }
     
     

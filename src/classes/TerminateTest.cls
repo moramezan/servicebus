@@ -1,7 +1,7 @@
 @IsTest //-- no view of org data
 private class TerminateTest
 {
-    static testmethod void hasTheCorrectAllowableInvocations() {
+    static testmethod void hasTheCorrectLimits() {
         //arrange 
         Type actualType = Terminate.class;
         Type outerClass = Type.forName(actualType.getName());  
@@ -9,14 +9,14 @@ private class TerminateTest
         ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
         
         //act 
-        Integer actualAllowableInvocations = meta.AllowableInvocations;  
+        Integer actualLimits = meta.Limits;  
 
         //assemble
-        actualAllowableInvocations = (actualAllowableInvocations == null) ? 1 : actualAllowableInvocations; 
+        actualLimits = (actualLimits == null) ? 1 : actualLimits; 
 
         //assert
-        Integer expectedAllowableInvocations = 90;
-        System.assertEquals(expectedAllowableInvocations, actualAllowableInvocations);
+        Integer expectedLimits = 90;
+        System.assertEquals(expectedLimits, actualLimits);
     }
 
 
