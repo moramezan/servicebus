@@ -11,17 +11,23 @@
             "steps"
         ],
         "border": false,
+        "designer|userAlias": "main",
         "designer|userClassName": "Main",
         "forceFit": true,
         "header": false,
+        "height": null,
         "hideHeaders": true,
         "itemId": "steps",
+        "overCls": null,
         "scroll": "none",
-        "simpleDrag": null,
         "store": "Steps",
-        "title": null
+        "title": null,
+        "width": null
     },
-    "designerId": "c643aa83-56f5-491f-8f25-056038befcfe",
+    "name": "MyGridPanel",
+    "designerId": "9cbadca1-a42c-4363-90df-7ff570bbc81d",
+    "viewControllerInstanceId": "bf39ad9e-82df-4684-8541-a74710b6a191",
+    "viewModelInstanceId": "4ae8b5d7-802d-4f04-8a79-a3c87134e2b1",
     "cn": [
         {
             "type": "Ext.grid.View",
@@ -36,10 +42,11 @@
                 "overItemCls": "",
                 "stripeRows": false
             },
+            "name": "MyGridView",
             "configAlternates": {
                 "loadMask": "boolean"
             },
-            "designerId": "65773a8e-f421-47ba-b87a-b4632f3475db",
+            "designerId": "478a0514-b2f2-4e74-b010-979f539974e4",
             "cn": [
                 {
                     "type": "Ext.grid.plugin.DragDrop",
@@ -47,13 +54,13 @@
                         "name": "plugins",
                         "type": "array"
                     },
-                    "codeClass": "Ext.grid.plugin.DragDrop",
+                    "codeClass": null,
                     "userConfig": {
                         "designer|displayName": "StepsGridPlugin",
-                        "dragText": null,
                         "pluginId": "dragdrop"
                     },
-                    "designerId": "47817ef8-6785-4c53-9771-cad9891aef0e"
+                    "name": "MyGridDragDropPlugin",
+                    "designerId": "691ee87e-a31f-4f7d-bb57-2ca6f00c1fa1"
                 }
             ]
         },
@@ -65,23 +72,25 @@
             },
             "codeClass": null,
             "userConfig": {
-                "altText": null,
-                "designer|displayName": null,
-                "emptyCellText": null,
                 "iconCls": "grippy",
                 "menuDisabled": true,
-                "menuText": null,
                 "tdCls": "grippy",
                 "text": "Order",
                 "tooltip": "Drag and drop to reorganize",
                 "width": 16
             },
-            "designerId": "dc032a05-935d-436c-85ed-c50c88d6102d",
-            "customConfigs": [
+            "name": "MyActionColumn",
+            "designerId": "4c5de253-309b-446d-ae37-11aa2d5adcdd",
+            "cn": [
                 {
-                    "group": "(Custom Properties)",
-                    "name": "text",
-                    "type": "string"
+                    "type": "actioncolumnitem",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "name": "MyActionColumnItem",
+                    "designerId": "5533651d-99c8-4e64-9bbd-c5c68e24e2a0"
                 }
             ]
         },
@@ -95,12 +104,12 @@
             "userConfig": {
                 "align": "right",
                 "dataIndex": "ConfigId",
-                "defaultWidth": null,
                 "tdCls": "link",
                 "text": "Configure",
                 "width": 70
             },
-            "designerId": "3b7e5904-59af-4e82-bbd5-b83fa44b6680",
+            "name": "MyColumn",
+            "designerId": "5756960b-c7e9-4a88-9e53-477e63b3367c",
             "cn": [
                 {
                     "type": "fixedfunction",
@@ -132,7 +141,8 @@
                             "}) + ' |';"
                         ]
                     },
-                    "designerId": "edcb3349-9653-4068-ae36-d07e359f5485"
+                    "name": "renderer",
+                    "designerId": "dedacd01-80aa-4f76-b8db-8f0bd8d10165"
                 }
             ]
         },
@@ -146,12 +156,12 @@
             "userConfig": {
                 "align": "center",
                 "dataIndex": "ConfigId",
-                "defaultWidth": null,
                 "tdCls": "link",
                 "text": "Delete",
                 "width": 26
             },
-            "designerId": "7313023d-6309-46f7-a3d1-0036734aa8ee",
+            "name": "MyColumn1",
+            "designerId": "e0ebddb4-37d7-4571-8f52-30a0ab413b8d",
             "cn": [
                 {
                     "type": "fixedfunction",
@@ -189,7 +199,8 @@
                             "});"
                         ]
                     },
-                    "designerId": "192b1959-cbfc-4185-93da-d826f14d7876"
+                    "name": "renderer",
+                    "designerId": "953df7e9-d3f4-414f-8ff5-9422cb948267"
                 }
             ]
         },
@@ -202,12 +213,12 @@
             "codeClass": null,
             "userConfig": {
                 "dataIndex": "ConfigId",
-                "defaultWidth": null,
                 "tdCls": "link",
                 "text": "Settings",
                 "width": 60
             },
-            "designerId": "958ae9fa-1117-4d84-94a5-2e1b24e43eb7",
+            "name": "MyColumn2",
+            "designerId": "4a7871a4-5a72-476d-9cc9-cb72faf5928d",
             "cn": [
                 {
                     "type": "fixedfunction",
@@ -235,11 +246,12 @@
                             "    'class': 'settingslink',",
                             "    'onclick': 'return false;',",
                             "    'title': 'Process Settings',",
-                            "    'href': URLFOR[$Page.ProcessSettings] + '?id=' + record\t.get('ProcessId')",
+                            "    'href': URLFOR[$Page.ProcessSettings] + '?id=' + record.get('ProcessId')",
                             "});"
                         ]
                     },
-                    "designerId": "82161303-89bf-4707-8ee6-b7f8882c11d7"
+                    "name": "renderer",
+                    "designerId": "0cdc512c-ec36-4e1c-a318-406ea72dc4b1"
                 }
             ]
         },
@@ -256,7 +268,8 @@
                 "tdCls": "icon",
                 "width": 25
             },
-            "designerId": "ae3c9ae2-d54b-456d-9f75-77897e341390",
+            "name": "MyActionColumn1",
+            "designerId": "cb648509-0754-4021-9593-b69742cfaac2",
             "cn": [
                 {
                     "type": "actioncolumnitem",
@@ -269,10 +282,11 @@
                         "designer|displayName": "cog",
                         "iconCls": "cog"
                     },
-                    "designerId": "af5e7bc9-6567-4a54-997e-a1ad183f84a9"
+                    "name": "MyActionColumnItem1",
+                    "designerId": "4e36fcbd-8800-4f11-bb5f-559a4f081feb"
                 },
                 {
-                    "type": "fixedfunction",
+                    "type": "basicfunction",
                     "reference": {
                         "name": "items",
                         "type": "array"
@@ -294,7 +308,8 @@
                             "this.items[0].iconCls = record.get('ProcessIcon');"
                         ]
                     },
-                    "designerId": "3cd0cd3d-191f-442a-b957-8427c690eb4a"
+                    "name": "renderer",
+                    "designerId": "fa05028c-5a27-45de-92ba-9c00b22b2624"
                 }
             ]
         },
@@ -306,14 +321,14 @@
             },
             "codeClass": null,
             "userConfig": {
-                "autoEl": null,
                 "dataIndex": "ProcessName",
                 "menuDisabled": true,
                 "sortable": false,
                 "text": "Process",
                 "width": 120
             },
-            "designerId": "c8a7f650-8193-44ba-98f0-a0b323e9da2c"
+            "name": "MyColumn3",
+            "designerId": "00f4d5b1-cdcd-4cbf-885a-f23531ff7ba5"
         },
         {
             "type": "Ext.grid.column.Column",
@@ -329,7 +344,8 @@
                 "sortable": false,
                 "text": "ConfigNameOrProcessDescription"
             },
-            "designerId": "dc8883e2-1fed-4d7a-b917-c4dfec27e223",
+            "name": "MyColumn4",
+            "designerId": "a4276fa2-0c0e-4ebc-8544-ca6ff65676fa",
             "cn": [
                 {
                     "type": "fixedfunction",
@@ -353,7 +369,8 @@
                             "return record.get('ConfigName') || record.get('ProcessDescription');"
                         ]
                     },
-                    "designerId": "d54aa3ec-466a-4dc9-b1a8-eae50dd41c78"
+                    "name": "renderer",
+                    "designerId": "88c236da-0846-456d-8392-bf6c0dd45715"
                 }
             ]
         },
@@ -369,7 +386,8 @@
                 "text": "HelpUrl",
                 "width": 125
             },
-            "designerId": "be5e3c6d-982a-42c8-9281-ac9fa9cc6031",
+            "name": "MyColumn5",
+            "designerId": "1817ca8c-536e-4ef9-b081-be5d5e6023fc",
             "cn": [
                 {
                     "type": "fixedfunction",
@@ -405,7 +423,8 @@
                             "return html;"
                         ]
                     },
-                    "designerId": "9eb70e15-c80f-4abe-aae9-85c9b9881cc3"
+                    "name": "renderer",
+                    "designerId": "0d98986c-7c13-4764-adce-a26fe47e8cd2"
                 }
             ]
         }

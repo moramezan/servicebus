@@ -8,7 +8,8 @@
     "userConfig": {
         "designer|userClassName": "css1",
         "remote": true,
-        "url": "ext/packages/ext-theme-classic/build/resources/ext-theme-classic-all-rtl-debug.css"
+        "url": "build/production/Builder/resources/Builder-all.css"
     },
-    "designerId": "21822669-1b29-466b-b56a-addfe9553bb7"
+    "name": "css1",
+    "designerId": "21361606-997b-4168-86b5-0fa51912fbb7"
 }

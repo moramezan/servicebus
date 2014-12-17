@@ -6,11 +6,11 @@
     },
     "codeClass": null,
     "userConfig": {
-        "basePath": "ext",
+        "basePath": "ext/",
         "designer|userClassName": "Library",
-        "includeCss": false,
         "includeJs": false,
-        "theme": null
+        "theme": "salesforce"
     },
-    "designerId": "7ed44062-929e-43c3-853e-ea348b8a8daf"
+    "name": "Library",
+    "designerId": "74192dbf-46d9-4bfb-a3a8-1e15873b6dec"
 }

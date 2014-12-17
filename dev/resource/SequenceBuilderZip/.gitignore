@@ -1,8 +1,7 @@
-/app
 /build
 /.architect
 /app.js
-/bootstrap.css
 /bootstrap.js
+/bootstrap.css
 /bootstrap.json
 /index.html

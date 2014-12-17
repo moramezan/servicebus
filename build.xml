@@ -101,19 +101,13 @@
         <zip destfile="src/staticresources/HelpZip.resource" basedir="dev/resource/HelpZip" />
     </target>
 
-    <target name="sencha-builder" description="Builds Sencha application">
+    <target name="sencha-builder" description="Zips up 'Sequence Builder' application using Sencha Architect output">
         <delete file="src/staticresources/SequenceBuilderZip.resource" />
-        <delete dir="dev/resource/SequenceBuilderZip/packages/baf-theme-native" />
-        <exec command="lib/sencha-cmd-4.0.1.45/sencha repository sync" />
-        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/SequenceBuilderZip ant clean" />
-        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/SequenceBuilderZip app refresh" />
-        <exec command="lib/sencha-cmd-4.0.1.45/sencha --cwd=dev/resource/SequenceBuilderZip app build" />
         <zip destfile="src/staticresources/SequenceBuilderZip.resource" basedir="dev/resource/SequenceBuilderZip/build/production/Builder" includes="**"/>
     </target>
 
-    <target name="sencha-discover" description="Builds Discover application">
+    <target name="sencha-discover" description="Zips up 'Process Discover' application using Sencha Architect output">
         <delete file="src/staticresources/ProcessDiscoverZip.resource" />
-        <delete dir="dev/resource/ProcessDiscoverZip/packages/baf-theme-native" />
         <zip destfile="src/staticresources/ProcessDiscoverZip.resource" basedir="dev/resource/ProcessDiscoverZip/build/production/Discover" includes="**"/>
     </target>
     

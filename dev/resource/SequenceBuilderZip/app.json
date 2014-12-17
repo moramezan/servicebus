@@ -1,11 +1,75 @@
 {
    "name": "Builder",
-   "requires": [
-      "fflib-ext-common",
-      "baf-theme-native"
+   "indexHtmlPath": "index.html",
+   "classpath": "${app.dir}/app,${app.dir}/app/override/data/proxy/",
+   "overrides": "${app.dir}/overrides",
+   "framework": "ext",
+   "theme": "ext-theme-classic-67f7ba53-ce8a-4518-a625-8b4f9e0acce1",
+   "requires": [],
+   "sass": {
+      "namespace": "Builder"
+   },
+   "url": null,
+   "js": [
+      {
+         "path": "${ext.dir}/build/ext-all-rtl-debug.js"
+      },
+      {
+         "path": "app/override/data/proxy/Direct.js",
+         "includeInBundle": true
+      },
+      {
+         "path": "app.js",
+         "bundle": true
+      }
    ],
-   "id": "bf1697a9-b1bf-46b9-9af3-cf074d720176",
-   "resources": [
-      "bootstrap.css"
-   ]
+   "css": [
+      {
+         "path": "bootstrap.css",
+         "bootstrap": true
+      },
+      {
+         "path": "ext/packages/ext-theme-classic/build/resources/ext-theme-classic-all-rtl.css",
+         "remote": true
+      },
+      {
+         "path": "build/production/Builder/resources/Builder-all.css",
+         "remote": true
+      }
+   ],
+   "production": {},
+   "testing": {},
+   "development": {},
+   "bootstrap": {
+      "base": "${app.dir}",
+      "manifest": "bootstrap.json",
+      "microloader": "bootstrap.js",
+      "css": "bootstrap.css"
+   },
+   "output": {
+      "base": "${workspace.build.dir}/${build.environment}/${app.name}"
+   },
+   "appCache": {
+      "cache": [
+         "index.html"
+      ],
+      "network": [
+         "*"
+      ],
+      "fallback": []
+   },
+   "resources": [],
+   "ignore": [
+      "(^|/)CVS(/?$|/.*?$)"
+   ],
+   "archivePath": "archive",
+   "slicer": {
+      "js": [
+         {
+            "path": "${app.dir}/sass/example/custom.js",
+            "isWidgetManifest": true
+         }
+      ]
+   },
+   "id": "18da69ef-4b8c-48b6-9c3d-63447390128c"
 }

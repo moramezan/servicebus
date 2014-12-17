@@ -7,19 +7,18 @@
     "codeClass": null,
     "userConfig": {
         "container|align": "stretch",
-        "container|defaultMargins": [
-            "{",
-            "    top: 0,",
-            "    right: 10,",
-            "    bottom: 0,",
-            "    left:0",
-            "}"
-        ],
         "container|pack": "center",
+        "designer|userAlias": "buttons",
         "designer|userClassName": "Buttons",
-        "layout": "hbox"
+        "height": null,
+        "layout": "hbox",
+        "margin": null,
+        "width": null
     },
-    "designerId": "77d83ff9-c025-46b1-984f-9d55c330870d",
+    "name": "MyContainer",
+    "designerId": "480d533d-4068-47ba-871e-0ec965d4c536",
+    "viewControllerInstanceId": "a303fb2f-97fc-4fe6-99c0-47b9d29bca63",
+    "viewModelInstanceId": "ae83cb8d-1acb-4a07-ae00-5d0831f7c483",
     "cn": [
         {
             "type": "Ext.button.Button",
@@ -31,11 +30,12 @@
             "userConfig": {
                 "itemId": "newStep",
                 "layout|flex": null,
-                "maxWidth": null,
-                "text": "New Step",
-                "width": null
+                "layout|margins": null,
+                "margin": "0 10px 0 0",
+                "text": "New Step"
             },
-            "designerId": "64f7b0a4-3c54-4c7d-847a-e00f5a63c489",
+            "name": "MyButton",
+            "designerId": "76666a75-e111-40e4-b5e3-5fcd1583e383",
             "cn": [
                 {
                     "type": "Ext.menu.Menu",
@@ -47,12 +47,12 @@
                     "userConfig": {
                         "designer|displayName": "Tags",
                         "ignoreParentClicks": true,
-                        "minWidth": null,
                         "plain": true,
                         "showSeparator": false,
                         "width": null
                     },
-                    "designerId": "d90f1e8c-6e67-4a35-8407-05f20ddb4501"
+                    "name": "MyMenu",
+                    "designerId": "a3f73739-03bc-4399-94a6-56a0703397b0"
                 }
             ]
         },
@@ -64,11 +64,13 @@
             },
             "codeClass": null,
             "userConfig": {
+                "itemId": "inject",
                 "layout|flex": null,
-                "layout|margins": null,
-                "text": "Inject Test Message"
+                "margin": "0 10px 0 0",
+                "text": "Inject Text Message"
             },
-            "designerId": "d9de5484-eb10-4150-a590-e49399071ecb",
+            "name": "MyButton1",
+            "designerId": "e4e82dd0-f7a3-4cca-bd1e-08b7a7fec65a",
             "cn": [
                 {
                     "type": "fixedfunction",
@@ -87,7 +89,7 @@
                             "function handler(response, event) {",
                             "    Ext.Msg.show({",
                             "        title: 'Enqueue',",
-                            "        msg: 'Enqueued to Sequence \"' + response + '\"',",
+                            "        msg: 'Enqueued to Sequence \\\"' + response + '\\\"',",
                             "        buttons: Ext.Msg.OK",
                             "    });",
                             "    button.enable();",
@@ -104,7 +106,8 @@
                             ");"
                         ]
                     },
-                    "designerId": "4352d1e7-3bb9-4f0e-be49-8049ef94ee62"
+                    "name": "handler",
+                    "designerId": "e2aa1d21-1e6a-4386-a95a-394554baddd3"
                 }
             ]
         }

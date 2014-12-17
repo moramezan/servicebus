@@ -6,22 +6,10 @@
     },
     "codeClass": null,
     "userConfig": {
-        "designer|userClassName": "Application",
-        "popup": [
-            "null"
-        ]
+        "designer|userClassName": "Application"
     },
-    "configAlternates": {
-        "popup": "object"
-    },
-    "designerId": "30321ebb-d159-427a-9ebf-87c303155eb7",
-    "customConfigs": [
-        {
-            "group": "(Custom Properties)",
-            "name": "popup",
-            "type": "string"
-        }
-    ],
+    "name": "MyController",
+    "designerId": "4cb5961c-0a1b-4345-85f6-14bba2e41244",
     "cn": [
         {
             "type": "controlleraction",
@@ -58,32 +46,31 @@
                     "            items: []",
                     "        }",
                     "    };",
-                    "",
+                    "    ",
                     "    //iterate over each process",
                     "    Ext.each(tag2processes[tag], function(process) {",
-                    "",
+                    "        ",
                     "        //TERMINATE step cannot be created",
                     "        if(process.get('Name') == 'Terminate') return;",
-                    "",
                     "        var processItem = {",
                     "            itemId: process.get('Id'),",
                     "            text: process.get('Name'),",
                     "            iconCls: process.get('Icon')",
                     "        };",
-                    "",
+                    "        ",
                     "        //add process item to tag",
                     "        tagItem.menu.items.push(processItem);",
                     "    });",
-                    "",
+                    "    ",
                     "    //add tag item to menu",
                     "    menu.add(tagItem);",
-                    "});",
-                    ""
+                    "});"
                 ],
                 "name": "beforerender",
                 "scope": "me"
             },
-            "designerId": "5b6aba6d-4459-4e22-be84-b467900d804b"
+            "name": "onButtonBeforeRender",
+            "designerId": "34ca9191-eb62-46e7-8cc2-83518621263f"
         },
         {
             "type": "controlleraction",
@@ -120,7 +107,8 @@
                 "name": "click",
                 "scope": "me"
             },
-            "designerId": "2a71ff26-5830-4f54-ba2d-2182b57bbec1"
+            "name": "onMenuitemClick",
+            "designerId": "82ad728f-aadb-4211-8e80-602953bf19df"
         },
         {
             "type": "controllerref",
@@ -134,7 +122,8 @@
                 "selector": "gridpanel#steps",
                 "xtype": "Ext.grid.Panel"
             },
-            "designerId": "41d85ef8-2f64-434f-9d0f-582d9481dacd"
+            "name": "grid",
+            "designerId": "f012866d-f2e3-4ca9-b95b-95d0d8d6bfd6"
         },
         {
             "type": "controlleraction",
@@ -155,6 +144,8 @@
                 "designer|targetType": "Ext.grid.View",
                 "fn": "onDrop",
                 "implHandler": [
+                    "//return;",
+                    "console.log('got here');",
                     "var controller = this,",
                     "    grid = data.view.ownerCt,",
                     "    fromStep = data.records[0],",
@@ -184,7 +175,8 @@
                 "name": "drop",
                 "scope": "me"
             },
-            "designerId": "f513ebc3-a6ba-46be-8bdc-ff93c33f3fc3"
+            "name": "onDrop",
+            "designerId": "54c1b0da-9c8f-456e-be1c-378b86ca8e0b"
         },
         {
             "type": "controlleraction",
@@ -216,14 +208,16 @@
                     " * This closes the config popup if the clicks outside it.",
                     " */",
                     "var controller = this;",
-                    "Ext.fly(window).on('focus', function() {",
+                    "//TODO",
+                    "Ext.get(window).on('focus', function() {",
                     "    controller.getApplication().fireEvent('mainwindowfocus', controller);",
                     "});"
                 ],
                 "name": "viewready",
                 "scope": "me"
             },
-            "designerId": "e43a14f2-5f05-4614-99a7-8a2b36a5205e"
+            "name": "onViewReady",
+            "designerId": "1491e6dc-6ea1-4ebf-b16e-8b79a339bb7d"
         },
         {
             "type": "controlleraction",
@@ -243,13 +237,13 @@
                     "    this.onSettingsLinkClick.apply(this, arguments);",
                     "} else if ('deletelink' == e.target.className) {",
                     "    this.onDeleteLinkClick.apply(this, arguments);",
-                    "}",
-                    ""
+                    "}"
                 ],
                 "name": "cellclick",
                 "scope": "me"
             },
-            "designerId": "bf2114ae-966a-48d8-bb78-7cad2fbf3320"
+            "name": "onLinkClick",
+            "designerId": "d4e13d9e-fa3e-419e-9a3b-3b231dd4423d"
         },
         {
             "type": "basicfunction",
@@ -293,7 +287,8 @@
                     "me.popup.focus();"
                 ]
             },
-            "designerId": "540df7c3-43c4-4c27-b109-a729235a017c"
+            "name": "onConfigureLinkClick",
+            "designerId": "a9de3807-60a9-4ff1-a6d4-4b66865dea92"
         },
         {
             "type": "basicfunction",
@@ -337,7 +332,8 @@
                     "me.popup.focus();"
                 ]
             },
-            "designerId": "3e61f28b-bed5-461a-9164-30932990072f"
+            "name": "onSettingsLinkClick",
+            "designerId": "8b4deb2a-3764-4705-94c3-c824fa1f4ca7"
         },
         {
             "type": "basicfunction",
@@ -378,7 +374,8 @@
                     "}).setIcon(Ext.Msg.WARNING);"
                 ]
             },
-            "designerId": "bee0e44c-933a-44bb-894f-338f40b879d3"
+            "name": "onDeleteLinkClick",
+            "designerId": "14f7953d-cc09-48e6-8a6c-49e36a418151"
         },
         {
             "type": "controlleraction",
@@ -400,7 +397,8 @@
                 "name": "beforecellmousedown",
                 "scope": "me"
             },
-            "designerId": "bceecc07-2306-4a69-bf9b-b14ab590b636"
+            "name": "onDrag",
+            "designerId": "0e59075d-ce5e-4dd0-80e4-8d9d2ad8b4be"
         },
         {
             "type": "controlleraction",
@@ -425,7 +423,8 @@
                 "name": "celldblclick",
                 "scope": "me"
             },
-            "designerId": "28b2df76-7cf7-434f-a61e-c109d0ed7335"
+            "name": "onCellDoubleClick",
+            "designerId": "feac816a-0950-4163-819c-e6ba3ebea70f"
         },
         {
             "type": "controlleraction",
@@ -458,7 +457,8 @@
                 "name": "afterrender",
                 "scope": "me"
             },
-            "designerId": "e11cc1d0-5197-4ece-b8bb-b4351e534f4f"
+            "name": "onMenuitemAfterRender",
+            "designerId": "e1d4da07-ab8f-4a5f-a3ae-8dc86416b714"
         },
         {
             "type": "applicationaction",
@@ -485,7 +485,7 @@
                     " */",
                     "if (controller.popup && !controller.popup.closed) {",
                     "    controller.popup.close();",
-                    "",
+                    "    ",
                     "    grid.mask('Loading...');",
                     "    store.load(function() {",
                     "        grid.unmask();",
@@ -495,7 +495,8 @@
                 "name": "mainwindowfocus",
                 "scope": "this"
             },
-            "designerId": "e8985047-d5ae-4d80-abf8-ff1f41fbb7af"
+            "name": "onMainWindowFocus",
+            "designerId": "c7bafd69-96a3-4b42-b8a9-3391fd108f75"
         }
     ]
 }

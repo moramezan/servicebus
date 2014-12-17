@@ -9,99 +9,99 @@
         "designer|userClassName": "Process",
         "idProperty": "Id"
     },
-    "designerId": "ae535247-0e03-48c5-a20a-2210b81f78bd",
+    "name": "MyModel",
+    "designerId": "7459911a-fe4d-4b03-8922-843b795633b9",
     "cn": [
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.Field",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Id",
-                "type": "auto"
+                "name": "Id"
             },
-            "designerId": "de1724aa-2a72-4929-b86c-67bae062dfed"
+            "name": "MyField",
+            "designerId": "f2733be1-0b64-4107-991d-f1cf5d6de106"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Name",
-                "type": "string"
+                "name": "Name"
             },
-            "designerId": "4e0a7820-b7e5-4a22-8c04-ff309975aef4"
+            "name": "MyString",
+            "designerId": "4dbd6e6c-4efc-4cfa-98ef-fa2a7e0520c9"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Description",
-                "type": "string"
+                "name": "Description"
             },
-            "designerId": "b8ea5500-ae88-444b-b8f4-c419fc48dc0c"
+            "name": "MyString1",
+            "designerId": "08904ef1-5c67-48ce-8920-17ff5b5174a0"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "mapping": null,
-                "name": "Tag",
-                "type": "string"
+                "name": "Tag"
             },
-            "designerId": "361710ec-3f4a-4b2c-af4c-60a773c3da49"
+            "name": "MyString2",
+            "designerId": "d687b3bf-0347-4c07-86c7-9417a9237690"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Icon",
-                "type": "string"
+                "name": "Icon"
             },
-            "designerId": "f794bf99-3332-4d43-b6e4-d363a2d3be5b"
+            "name": "MyString3",
+            "designerId": "03ada7c8-f90e-49f3-a287-1e0d030b7967"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "HelpUrl",
-                "type": "string"
+                "name": "HelpUrl"
             },
-            "designerId": "a395ad56-c6cb-4f4e-bd3d-36dff4d6e4b9"
+            "name": "MyString4",
+            "designerId": "0451a599-68e3-40fa-87c4-4d9d1075b862"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Setting",
-                "type": "string"
+                "name": "Setting"
             },
-            "designerId": "23e99c69-311f-466c-8c07-d39aad9289fc"
+            "name": "MyString5",
+            "designerId": "b0aad3ad-b08c-498c-b3da-b784850f0973"
         }
     ]
 }

@@ -7,7 +7,10 @@
     "codeClass": null,
     "userConfig": {
         "designer|userClassName": "css",
-        "url": "bootstrap.css"
+        "id": "css",
+        "remote": true,
+        "url": "ext/packages/ext-theme-classic/build/resources/ext-theme-classic-all-rtl.css"
     },
-    "designerId": "bc22f2fd-040c-4043-b02d-0750eeb47c33"
+    "name": "css",
+    "designerId": "24759d55-e13c-43d4-9e30-c0ebcde5b089"
 }

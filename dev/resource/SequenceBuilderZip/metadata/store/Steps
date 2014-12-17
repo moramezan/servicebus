@@ -6,13 +6,12 @@
     },
     "codeClass": null,
     "userConfig": {
-        "autoLoad": false,
         "designer|userClassName": "Steps",
         "model": "Step",
-        "remoteFilter": true,
         "storeId": "Steps"
     },
-    "designerId": "a43ec6a5-795e-478c-8f9e-74b4f9cd36ec",
+    "name": "MyStore",
+    "designerId": "c3b6ba4e-5f77-4a60-9b73-0bd9f90467a0",
     "cn": [
         {
             "type": "processcfgfunction",
@@ -35,7 +34,8 @@
                     "return config;"
                 ]
             },
-            "designerId": "af1370a9-9f6b-4031-8fc3-1c382b1e42f3"
+            "name": "processSteps",
+            "designerId": "b92d5e42-08b2-4b13-9e30-48910aa266be"
         }
     ]
 }

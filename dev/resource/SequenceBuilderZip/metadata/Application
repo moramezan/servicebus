@@ -10,25 +10,23 @@
             "Application"
         ],
         "models": [
-            "Step",
-            "Process"
+            "Process",
+            "Step"
         ],
         "name": "Builder",
         "requires": [
-            "Ext.grid.plugin.DragDrop",
-            "Ext.Msg",
-            "Ext.window.Window",
-            "Ext.util.Point"
+            "Ext.Msg"
         ],
         "stores": [
-            "Steps",
-            "Processes"
+            "Processes",
+            "Steps"
         ],
         "views": [
             "Buttons",
             "Main"
         ]
     },
+    "name": "Application",
     "designerId": "application",
     "cn": [
         {
@@ -41,6 +39,9 @@
             "userConfig": {
                 "fn": "launch",
                 "implHandler": [
+                    "//http://www.sencha.com/forum/showthread.php?296173-validIdRe-throwing-Invalid-Element-quot-id-quot-for-valid-ids-containing-colons&p=1081456#post1081456",
+                    "Ext.dom.Element.prototype.validIdRe = /^[a-z_][:a-z0-9\\-_]*$/i;",
+                    "",
                     "Ext.create('Builder.view.Main', {",
                     "    renderTo: $Component.pageBlockId",
                     "});",
@@ -50,7 +51,6 @@
                     "Ext.create('Builder.view.Buttons', {",
                     "    renderTo: $Component.pageBlockButtonsId",
                     "});",
-                    "",
                     "",
                     "if (!IsRemoteSiteSettingPresent) {",
                     "    var msg;",
@@ -83,10 +83,12 @@
                     "            buttons: Ext.Msg.OK",
                     "        });",
                     "    }",
-                    "}"
+                    "}",
+                    ""
                 ]
             },
-            "designerId": "054a7704-822c-4c5d-afa4-c9e0f4a63749"
+            "name": "launch",
+            "designerId": "f8c1a541-2ab1-401a-bafa-3faf4b9be525"
         }
     ]
 }

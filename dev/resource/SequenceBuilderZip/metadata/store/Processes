@@ -6,13 +6,12 @@
     },
     "codeClass": null,
     "userConfig": {
-        "autoLoad": null,
-        "data": null,
         "designer|userClassName": "Processes",
         "model": "Process",
         "storeId": "Processes"
     },
-    "designerId": "91bb25b9-a1f9-4e85-8268-af90bb48d611",
+    "name": "MyStore",
+    "designerId": "3ced4af9-f789-4610-85a9-4cc6fb7f7684",
     "cn": [
         {
             "type": "processcfgfunction",
@@ -35,7 +34,8 @@
                     "return config;"
                 ]
             },
-            "designerId": "feccabf3-7280-48b5-8b6d-63cdf76c795c"
+            "name": "processProcesses",
+            "designerId": "1cc8cbbb-425f-4cbf-b962-37d8181b9d05"
         }
     ]
 }

@@ -9,10 +9,11 @@
         "designer|userClassName": "Step",
         "idProperty": "Id"
     },
-    "designerId": "01cba15c-4d92-4182-b364-3a9245edcb47",
+    "name": "MyModel",
+    "designerId": "2e0af0ff-44fe-40cb-a9bd-7050f68308c5",
     "cn": [
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.Field",
             "reference": {
                 "name": "fields",
                 "type": "array"
@@ -21,36 +22,37 @@
             "userConfig": {
                 "name": "Id"
             },
-            "designerId": "b62f3d4f-2625-46a4-a5ab-834177a3ec77"
+            "name": "MyField1",
+            "designerId": "557eaff0-f79d-483b-b8c6-c6432bbccf8c"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Name",
-                "type": "string"
+                "name": "Name"
             },
-            "designerId": "37a4734c-3948-4adb-a68a-a92b88d41040"
+            "name": "MyString6",
+            "designerId": "8ad199a1-d824-4443-b212-b68b03b097a9"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.Integer",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Position",
-                "type": "int"
+                "name": "Position"
             },
-            "designerId": "fafaa9a2-e591-4ce3-bf17-89eb714230cf"
+            "name": "MyInteger",
+            "designerId": "85d1e8d6-4489-40a7-bf80-5fb7175a8eca"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
@@ -58,13 +60,13 @@
             "codeClass": null,
             "userConfig": {
                 "name": "ProcessId",
-                "persist": false,
-                "type": "string"
+                "persist": false
             },
-            "designerId": "fd03ad7d-a9d0-446c-80a7-d588d259c0d6"
+            "name": "MyString7",
+            "designerId": "2417ac6b-1725-411e-8f3a-b68b98b80d8a"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
@@ -72,13 +74,13 @@
             "codeClass": null,
             "userConfig": {
                 "name": "ProcessName",
-                "persist": false,
-                "type": "string"
+                "persist": false
             },
-            "designerId": "5986fdef-73c8-4eb0-8f5e-537330b0b4de"
+            "name": "MyString8",
+            "designerId": "8404a373-87a5-47cf-9fd4-2d43f6771b09"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
@@ -86,13 +88,13 @@
             "codeClass": null,
             "userConfig": {
                 "name": "ProcessDescription",
-                "persist": false,
-                "type": "string"
+                "persist": false
             },
-            "designerId": "346d23b6-f53f-471b-8ac8-2556a7d59475"
+            "name": "MyString9",
+            "designerId": "6809464c-862a-4dab-843c-dccc1fa50130"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
@@ -100,13 +102,13 @@
             "codeClass": null,
             "userConfig": {
                 "name": "ProcessIcon",
-                "persist": false,
-                "type": "string"
+                "persist": false
             },
-            "designerId": "ef9a9884-15b1-4d3f-9342-129452ba2f20"
+            "name": "MyString10",
+            "designerId": "833c589a-36c8-4e31-a5e9-6d2830c00760"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
@@ -114,13 +116,13 @@
             "codeClass": null,
             "userConfig": {
                 "name": "ProcessHelpUrl",
-                "persist": false,
-                "type": "string"
+                "persist": false
             },
-            "designerId": "68289f71-7cf6-46ab-8b22-93378c814c8f"
+            "name": "MyString11",
+            "designerId": "ebd66425-5466-420f-bce4-ca1a4654cce7"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
@@ -128,13 +130,13 @@
             "codeClass": null,
             "userConfig": {
                 "name": "ProcessSetting",
-                "persist": false,
-                "type": "string"
+                "persist": false
             },
-            "designerId": "c87a81ec-521f-45c1-8b4d-6161094046df"
+            "name": "MyString12",
+            "designerId": "82f94ccb-b0b1-4054-a2fe-f95677984584"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
@@ -142,13 +144,13 @@
             "codeClass": null,
             "userConfig": {
                 "name": "ConfigId",
-                "persist": false,
-                "type": "string"
+                "persist": false
             },
-            "designerId": "c75e0f49-6728-4232-b02a-1bde47eff9cf"
+            "name": "MyString13",
+            "designerId": "1bed569e-6744-4c08-8171-39febd9b03c9"
         },
         {
-            "type": "Ext.data.Field",
+            "type": "Ext.data.field.String",
             "reference": {
                 "name": "fields",
                 "type": "array"
@@ -156,10 +158,10 @@
             "codeClass": null,
             "userConfig": {
                 "name": "ConfigName",
-                "persist": false,
-                "type": "string"
+                "persist": false
             },
-            "designerId": "12a1c917-48e0-450e-bea5-13911185d9a7"
+            "name": "MyString14",
+            "designerId": "9203ffa3-24f5-4e0a-824a-37a3a27dcd6b"
         },
         {
             "type": "Ext.data.proxy.Direct",
@@ -175,15 +177,13 @@
                     "    destroy: $RemoteAction.SequenceBuilderExtension.destroySteps",
                     "}"
                 ],
-                "designer|createAlias": "vfremote",
                 "designer|displayName": "StepProxy",
                 "extraParams": [
-                    "{",
-                    "    \"sequenceId\": Sequence__c.Id",
-                    "}"
+                    "{sequenceId: Sequence__c.Id}"
                 ]
             },
-            "designerId": "3d7071ac-b992-48b4-9830-d535e317fd66",
+            "name": "MyDirectProxy",
+            "designerId": "c0126497-cee3-4add-98a5-5a05f7c04656",
             "cn": [
                 {
                     "type": "Ext.data.writer.Json",
@@ -197,7 +197,8 @@
                         "designer|displayName": "StepWriter",
                         "nameProperty": "mapping"
                     },
-                    "designerId": "33ec2ede-e45b-4c2c-8050-8975ae3fc8ff"
+                    "name": "MyJsonWriter",
+                    "designerId": "abba2f4b-1137-4236-8a48-77e720c810a1"
                 },
                 {
                     "type": "Ext.data.reader.Json",
@@ -209,7 +210,8 @@
                     "userConfig": {
                         "designer|displayName": "StepReader"
                     },
-                    "designerId": "6859069b-6c23-4610-a115-28282a280e2b"
+                    "name": "MyJsonReader",
+                    "designerId": "dd0e8917-10b9-4dab-8d7b-e49b6adb3115"
                 }
             ]
         }
