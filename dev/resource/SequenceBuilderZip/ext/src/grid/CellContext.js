@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
-*/
 /**
  * Internal utility class that provides a unique cell context.
  * @private
@@ -34,7 +17,7 @@ Ext.define('Ext.grid.CellContext', {
     
     isEqual: function(other) {
         if (other) {
-            return this.record === other.record && this.columnHeader === other.columnHeader;
+            return this.record === other.record && this.column === other.column;
         }
         return false;
     },
@@ -57,39 +40,67 @@ Ext.define('Ext.grid.CellContext', {
         return me;
     },
 
-    setRow: function(row) {
+    setAll: function(view, recordIndex, columnIndex, record, columnHeader) {
         var me = this;
+
+        me.view = view;
+        me.rowIdx = recordIndex;
+        me.colIdx = columnIndex;
+        me.record = record;
+        me.column = columnHeader;
+        return me;
+    },
+
+    setRow: function(row) {
+        var me = this,
+            dataSource = me.view.dataSource;
+        
         if (row !== undefined) {
             // Row index passed
             if (typeof row === 'number') {
-                me.row = Math.max(Math.min(row, me.view.dataSource.getCount() - 1), 0);
-                me.record = me.view.dataSource.getAt(row);
+                me.rowIdx = Math.max(Math.min(row, dataSource.getCount() - 1), 0);
+                me.record = dataSource.getAt(row);
             }
             // row is a Record
             else if (row.isModel) {
                 me.record = row;
-                me.row = me.view.indexOf(row);
+                me.rowIdx = dataSource.indexOf(row);
             }
             // row is a grid row
             else if (row.tagName) {
                 me.record = me.view.getRecord(row);
-                me.row = me.view.indexOf(me.record);
+                me.rowIdx = dataSource.indexOf(me.record);
             }
         }
     },
     
     setColumn: function(col) {
         var me = this,
-            mgr = me.view.ownerCt.getColumnManager();
+            mgr = me.view.getVisibleColumnManager();
             
         if (col !== undefined) {
             if (typeof col === 'number') {
-                me.column = col;
-                me.columnHeader = mgr.getHeaderAtIndex(col);
+                me.colIdx = col;
+                me.column = mgr.getHeaderAtIndex(col);
             } else if (col.isHeader) {
-                me.columnHeader = col;
-                me.column = mgr.getHeaderIndex(col);
+                me.column = col;
+                me.colIdx = mgr.getHeaderIndex(col);
             }
         }
+    },
+
+    equal: function(other) {
+        return (other && other.isCellContext && other.view === this.view && other.record === this.record && other.column === this.column);
+    },
+
+    clone: function() {
+        var me = this,
+            result = new me.self(me.view);
+
+        result.rowIdx = me.rowIdx;
+        result.colIdx = me.colIdx;
+        result.record = me.record;
+        result.column = me.column;
+        return result;
     }
 });

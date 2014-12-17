@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
-*/
 /**
  * Simple helper class for easily creating image components. This renders an image tag to
  * the DOM with the configured src.
@@ -32,7 +15,7 @@ Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
  *     changingImage.setSrc('http://www.sencha.com/img/20110215-feat-perf.png');
  *
  * By default, only an img element is rendered and that is this component's primary
- * {@link Ext.AbstractComponent#getEl element}. If the {@link Ext.AbstractComponent#autoEl} property
+ * {@link Ext.Component#getEl element}. If the {@link Ext.Component#autoEl} property
  * is other than 'img' (the default), the a child img element will be added to the primary
  * element. This can be used to create a wrapper element around the img.
  *
@@ -87,6 +70,8 @@ Ext.define('Ext.Img', {
      */
 
     ariaRole: 'img',
+    
+    maskOnDisable: false,
 
     initComponent: function() {
         if (this.glyph) {

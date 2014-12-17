@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
-*/
 /**
  * A selection model that renders a column of checkboxes that can be toggled to
  * select or deselect rows. The default mode for this selection model is MULTI.
@@ -42,14 +25,16 @@ Ext.define('Ext.selection.CheckboxModel', {
 
     /**
      * @cfg {Boolean} checkOnly
-     * True if rows can only be selected by clicking on the checkbox column.
+     * True if rows can only be selected by clicking on the checkbox column, not by clicking
+     * on the row itself. Note that this only refers to selection via the UI, programmatic
+     * selection will still occur regardless.
      */
     checkOnly: false,
     
     /**
      * @cfg {Boolean} showHeaderCheckbox
      * Configure as `false` to not display the header checkbox at the top of the column.
-     * When {@link Ext.data.Store#buffered} is set to `true`, this configuration will
+     * When the store is a {@link Ext.data.BufferedStore BufferedStore}, this configuration will
      * not be available because the buffered data set does not always contain all data. 
      */
     showHeaderCheckbox: undefined,
@@ -66,6 +51,8 @@ Ext.define('Ext.selection.CheckboxModel', {
     // private
     checkerOnCls: Ext.baseCSSPrefix + 'grid-hd-checker-on',
     
+    tdCls: Ext.baseCSSPrefix + 'grid-cell-special ' + Ext.baseCSSPrefix + 'grid-cell-row-checker',
+    
     constructor: function(){
         var me = this;
         me.callParent(arguments);   
@@ -80,7 +67,7 @@ Ext.define('Ext.selection.CheckboxModel', {
     beforeViewRender: function(view) {
         var me = this,
             owner;
-            
+
         me.callParent(arguments);
 
         // if we have a locked header, only hook up to the first
@@ -129,13 +116,13 @@ Ext.define('Ext.selection.CheckboxModel', {
 
         // Preserve behaviour of false, but not clear why that would ever be done.
         if (checkbox !== false) {
-            if (checkbox == 'first') {
+            if (checkbox === 'first') {
                 checkbox = 0;
-            } else if (checkbox == 'last') {
+            } else if (checkbox === 'last') {
                 checkbox = headerCt.getColumnCount();
             }
             Ext.suspendLayouts();
-            if (view.getStore().buffered) {
+            if (view.getStore().isBufferedStore) {
                 me.showHeaderCheckbox = false;
             }
             headerCt.add(checkbox,  me.getHeaderConfig());
@@ -220,8 +207,9 @@ Ext.define('Ext.selection.CheckboxModel', {
             hideable: false,
             menuDisabled: true,
             dataIndex: '',
+            tdCls: me.tdCls,
             cls: showCheck ? Ext.baseCSSPrefix + 'column-header-checkbox ' : '',
-            renderer: Ext.Function.bind(me.renderer, me),
+            defaultRenderer: me.renderer.bind(me),
             editRenderer: me.editRenderer || me.renderEmpty,
             locked: me.hasLockedHeader()
         };
@@ -243,35 +231,9 @@ Ext.define('Ext.selection.CheckboxModel', {
      * See {@link Ext.grid.column.Column#renderer} for description of allowed parameters.
      */
     renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
-        var baseCSSPrefix = Ext.baseCSSPrefix;
-        metaData.tdCls = baseCSSPrefix + 'grid-cell-special ' + baseCSSPrefix + 'grid-cell-row-checker';
-        return '<div class="' + baseCSSPrefix + 'grid-row-checker" role="presentation">&#160;</div>';
+        return '<div class="' + Ext.baseCSSPrefix + 'grid-row-checker" role="presentation">&#160;</div>';
     },
     
-    processSelection: function(view, record, item, index, e){
-        var me = this,
-            checker = e.getTarget(me.checkSelector),
-            mode;
-            
-        // checkOnly set, but we didn't click on a checker.
-        if (me.checkOnly && !checker) {
-            return;
-        }
-
-        if (checker) {
-            mode = me.getSelectionMode();
-            // dont change the mode if its single otherwise
-            // we would get multiple selection
-            if (mode !== 'SINGLE') {
-                me.setSelectionMode('SIMPLE');
-            }
-            me.selectWithEvent(record, e);
-            me.setSelectionMode(mode);
-        } else {
-            me.selectWithEvent(record, e);
-        }
-    },
-
     /**
      * Synchronize header checker value as selection changes.
      * @private
@@ -333,11 +295,11 @@ Ext.define('Ext.selection.CheckboxModel', {
             selectedCount = 0,
             selected, len, i;
             
-        if (!store.buffered && storeCount > 0) {
+        if (!store.isBufferedStore && storeCount > 0) {
             selected = me.selected;
             hdSelectStatus = true;
             for (i = 0, len = selected.getCount(); i < len; ++i) {
-                if (!me.storeHasSelected(selected.getAt(i))) {
+                if (store.indexOfId(selected.getAt(i).id) === -1) {
                     break;
                 }
                 ++selectedCount;

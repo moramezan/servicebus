@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
-*/
 /**
  * Provides a time input field with a time dropdown and automatic time validation.
  *
@@ -61,7 +44,7 @@ Ext.define('Ext.form.field.Time', {
 
     /**
      * @cfg {String} [triggerCls='x-form-time-trigger']
-     * An additional CSS class used to style the trigger button. The trigger will always get the {@link #triggerBaseCls}
+     * An additional CSS class used to style the trigger button. The trigger will always get the {@link Ext.form.trigger.Trigger#baseCls}
      * by default and triggerCls will be **appended** if specified.
      */
     triggerCls: Ext.baseCSSPrefix + 'form-time-trigger',
@@ -133,8 +116,13 @@ Ext.define('Ext.form.field.Time', {
     //</locale>
 
     /**
-     * @cfg {Number} increment
+     * @cfg {Number} [increment=15]
      * The number of minutes between each time value in the list.
+     *
+     * Note that this only affects the *list of suggested times.*
+     *
+     * To enforce that only times on the list are valid, use {@link #snapToIncrement}. That will coerce
+     * any typed values to the nearest increment point upon blur.
      */
     increment: 15,
 
@@ -149,12 +137,19 @@ Ext.define('Ext.form.field.Time', {
      * Whether the Tab key should select the currently highlighted item.
      */
     selectOnTab: true,
-    
+
     /**
      * @cfg {Boolean} [snapToIncrement=false]
      * Specify as `true` to enforce that only values on the {@link #increment} boundary are accepted.
+     *
+     * Typed values will be coerced to the nearest {@link #increment} point on blur.
      */
     snapToIncrement: false,
+
+    /**
+     * @inheritdoc
+     */
+    valuePublishEvent: ['select', 'blur'],
 
     /**
      * @private
@@ -178,30 +173,24 @@ Ext.define('Ext.form.field.Time', {
         var me = this,
             min = me.minValue,
             max = me.maxValue;
+        
         if (min) {
             me.setMinValue(min);
         }
         if (max) {
             me.setMaxValue(max);
         }
+        // Forcibly create the picker, since we need the store it creates
+        me.store = me.getPicker().store;
+        
         me.displayTpl = new Ext.XTemplate(
             '<tpl for=".">' +
                 '{[typeof values === "string" ? values : this.formatDate(values["' + me.displayField + '"])]}' +
                 '<tpl if="xindex < xcount">' + me.delimiter + '</tpl>' +
             '</tpl>', {
-            formatDate: Ext.Function.bind(me.formatDate, me)
+            formatDate: me.formatDate.bind(me)
         });
-        this.callParent();
-    },
-
-    /**
-     * @private
-     */
-    transformOriginalValue: function (value) {
-        if (Ext.isDefined(value)) {
-            return this.rawToValue(value) || value || null;
-        }
-        return value;
+        me.callParent();
     },
 
     /**
@@ -280,9 +269,10 @@ Ext.define('Ext.form.field.Time', {
         me[isMin ? 'minValue' : 'maxValue'] = val;
     },
     
-    getInitDate: function(hours, minutes) {
+    getInitDate: function (hours, minutes, seconds) {
         var parts = this.initDateParts;
-        return new Date(parts[0], parts[1], parts[2], hours || 0, minutes || 0, 0, 0);    
+
+        return new Date(parts[0], parts[1], parts[2], hours || 0, minutes || 0, seconds || 0, 0);    
     },
 
     valueToRaw: function(value) {
@@ -298,9 +288,11 @@ Ext.define('Ext.form.field.Time', {
      * @return {String[]} All validation errors for this field
      */
     getErrors: function(value) {
+        value = arguments.length > 0 ? value : this.getRawValue();
+
         var me = this,
             format = Ext.String.format,
-            errors = me.callParent(arguments),
+            errors = me.callParent([value]),
             minValue = me.minValue,
             maxValue = me.maxValue,
             data = me.displayTplData,
@@ -416,6 +408,7 @@ Ext.define('Ext.form.field.Time', {
 
         me.listConfig = Ext.apply({
             xtype: 'timepicker',
+            pickerField: me,
             selModel: {
                 mode: me.multiSelect ? 'SIMPLE' : 'SINGLE'
             },
@@ -427,7 +420,6 @@ Ext.define('Ext.form.field.Time', {
             maxHeight: me.pickerMaxHeight
         }, me.listConfig);
         picker = me.callParent();
-        me.bindStore(picker.store);
         return picker;
     },
     
@@ -486,7 +478,10 @@ Ext.define('Ext.form.field.Time', {
                                }
                            }
                         }
-                        selModel.select(toSelect);
+
+                        if (toSelect.length) {
+                            selModel.select(toSelect);
+                        }
                     }
                 }
             }
@@ -536,11 +531,12 @@ Ext.define('Ext.form.field.Time', {
         return me.parseDate(item);
     },
 
-    setValue: function(v) {
-        // Store MUST be created for parent setValue to function
+    setValue: function (v) {
+        // Store MUST be created for parent setValue to function.
         this.getPicker();
+
         if (Ext.isDate(v)) {
-            v = this.getInitDate(v.getHours(), v.getMinutes());
+            v = this.getInitDate(v.getHours(), v.getMinutes(), v.getSeconds());
         }
 
         return this.callParent([v]);

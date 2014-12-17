@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
-*/
 /**
  * This class is a base class for an event domain. In the context of MVC, an "event domain"
  * is one or more base classes that fire events to which a Controller wants to listen. A
@@ -35,7 +18,7 @@ Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
  * extends {@link Ext.Component}, where the selectors use
  * {@link Ext.ComponentQuery#query Ext.ComponentQuery}.
  * -   {@link Ext.app.domain.Global Global domain}. This domain provides Controllers with access
- * to events fired from {@link Ext#globalEvents} Observable instance. These events represent
+ * to events fired from {@link Ext.GlobalEvents} Observable instance. These events represent
  * the state of the application as a whole, and are always anonymous. Because of this, Global
  * domain does not provide selectors at all.
  * -   {@link Ext.app.domain.Controller Controller domain}. This domain includes all classes
@@ -67,13 +50,16 @@ Ext.define('Ext.app.EventDomain', {
     /**
      * @cfg {String} idProperty Name of the identifier property for this event domain.
      */
-     
+         
     isEventDomain: true,
+    isInstance: false,
 
     constructor: function() {
         var me = this;
 
-        Ext.app.EventDomain.instances[me.type] = me;
+        if (!me.isInstance) {
+            Ext.app.EventDomain.instances[me.type] = me;
+        }
 
         me.bus = {};
         me.monitoredClasses = [];
@@ -97,7 +83,8 @@ Ext.define('Ext.app.EventDomain', {
         var me = this,
             bus = me.bus,
             selectors = bus[ev],
-            selector, controllers, id, events, event, i, ln;
+            selector, controllers, id, info,
+            events, len, i, event;
 
         if (!selectors) {
             return true;
@@ -105,23 +92,29 @@ Ext.define('Ext.app.EventDomain', {
 
         // Loop over all the selectors that are bound to this event
         for (selector in selectors) {
-            // Check if the target matches the selector
-            if (selectors.hasOwnProperty(selector) && me.match(target, selector)) {
+            // Check if the target matches the selector, note that we will only have
+            // me.controller when we're an instance of a domain.View attached to a view controller.
+            if (selectors.hasOwnProperty(selector) && me.match(target, selector, me.controller)) {
                 // Loop over all the controllers that are bound to this selector
                 controllers = selectors[selector];
 
                 for (id in controllers) {
                     if (controllers.hasOwnProperty(id)) {
-                        // Loop over all the events that are bound to this selector
-                        events = controllers[id];
-
-                        for (i = 0, ln = events.length; i < ln; i++) {
-                            event = events[i];
-
-                            // Fire the event!
-                            if (event.fire.apply(event, args) === false) {
-                                return false;
-                            }
+                        info = controllers[id];
+                        if (info.controller.isActive()) {
+                            // Loop over all the events that are bound to this selector
+                            // on the current controller
+                            events = info.list;
+                            len = events.length;
+                    
+                            for (i = 0; i < len; i++) {
+                                event = events[i];
+                    
+                                // Fire the event!
+                                if (event.fire.apply(event, args) === false) {
+                                    return false;
+                                }
+                            } 
                         }
                     }
                 }
@@ -160,10 +153,14 @@ Ext.define('Ext.app.EventDomain', {
             idProperty = me.idProperty,
             monitoredClasses = me.monitoredClasses,
             monitoredClassesCount = monitoredClasses.length,
-            i, tree, list, selector, options, listener, scope, event, listeners, ev;
+            controllerId = controller.getId(),
+            eventNameMap = Ext.$eventNameMap,
+            i, tree, info, selector, options, listener, scope, event, listeners, ev,
+            classHasListeners;
 
         for (selector in selectors) {
-            if (selectors.hasOwnProperty(selector) && (listeners = selectors[selector])) {
+            listeners = selectors[selector];
+            if (listeners) {
                 if (idProperty) {
                     //<debug>
                     if (!/^[*#]/.test(selector)) {
@@ -175,42 +172,57 @@ Ext.define('Ext.app.EventDomain', {
                 }
                 
                 for (ev in listeners) {
-                    if (listeners.hasOwnProperty(ev)) {
-                        options  = null;
-                        listener = listeners[ev];
-                        scope    = controller;
-                        event    = new Ext.util.Event(controller, ev);
+                    options  = null;
+                    listener = listeners[ev];
+                    scope    = controller;
+                    // This is inlined for performance
+                    ev       = eventNameMap[ev] || (eventNameMap[ev] = ev.toLowerCase());
+                    event    = new Ext.util.Event(controller, ev);
 
-                        // Normalize the listener
-                        if (Ext.isObject(listener)) {
-                            options  = listener;
-                            listener = options.fn;
-                            scope    = options.scope || controller;
+                    // Normalize the listener
+                    if (Ext.isObject(listener)) {
+                        options  = listener;
+                        listener = options.fn;
+                        scope    = options.scope || controller;
 
-                            delete options.fn;
-                            delete options.scope;
-                        }
-
-                        if (typeof listener === 'string') {
-                            listener = scope[listener];
-                        }
-                        event.addListener(listener, scope, options);
-
-                        for (i = monitoredClassesCount; i-- > 0;) {
-                            monitoredClasses[i].hasListeners._incr_(ev);
-                        }
-
-                        // Create the bus tree if it is not there yet
-                        tree = bus[ev]             || (bus[ev] = {});
-                        tree = tree[selector]      || (tree[selector] = {});
-                        list = tree[controller.id] || (tree[controller.id] = []);
-
-                        // Push our listener in our bus
-                        list.push(event);
+                        delete options.fn;
+                        delete options.scope;
                     }
-                } //end inner loop
+                    
+                    //<debug>
+                    if ((!options || !options.scope) && typeof listener === 'string') {
+                        // Allow this lookup to be dynamic in debug mode.
+                        // Super useful for testing!
+                        scope = null;    
+                    } else
+                    //</debug>
+
+                    if (typeof listener === 'string') {
+                        listener = scope[listener];
+                    }
+                    event.addListener(listener, scope, options);
+
+                    for (i = 0; i < monitoredClassesCount; ++i) {
+                        classHasListeners = monitoredClasses[i].hasListeners;
+                        if (classHasListeners) {
+                            // Ext.mixin.Observable doesn't have hasListeners at class level
+                            classHasListeners._incr_(ev);
+                        }
+                    }
+
+                    // Create the bus tree if it is not there yet
+                    tree = bus[ev]             || (bus[ev] = {});
+                    tree = tree[selector]      || (tree[selector] = {});
+                    info = tree[controllerId]  || (tree[controllerId] = {
+                        controller: controller,
+                        list: []
+                    });
+
+                    // Push our listener in our bus
+                    info.list.push(event);
+                }
             }
-        } //end outer loop
+        }
     },
 
     /**
@@ -251,14 +263,14 @@ Ext.define('Ext.app.EventDomain', {
     monitor: function(observable) {
         var domain = this,
             prototype = observable.isInstance ? observable : observable.prototype,
-            fireEventArgs = prototype.fireEventArgs;
+            doFireEvent = prototype.doFireEvent;
 
         domain.monitoredClasses.push(observable);
 
-        prototype.fireEventArgs = function(ev, args) {
-            var ret = fireEventArgs.apply(this, arguments);
+        prototype.doFireEvent = function(ev, args) {
+            var ret = doFireEvent.apply(this, arguments);
 
-            if (ret !== false) {
+            if (ret !== false && !this.isSuspended(ev)) {
                 ret = domain.dispatch(this, ev, args);
             }
 
@@ -275,15 +287,49 @@ Ext.define('Ext.app.EventDomain', {
      */
     unlisten: function(controllerId) {
         var bus = this.bus,
-            controllers, ev, selector, selectors;
+            id = controllerId,
+            monitoredClasses = this.monitoredClasses,
+            monitoredClassesCount = monitoredClasses.length,
+            eventNameMap = Ext.$eventNameMap,
+            controllers, ev, events, len,
+            item, selector, selectors, i, j, info, classHasListeners;
+            
+        if (controllerId.isController) {
+            id = controllerId.getId();
+        }
 
         for (ev in bus) {
+            // This is inlined for performance
+            ev = eventNameMap[ev] || (eventNameMap[ev] = ev.toLowerCase());
             if (bus.hasOwnProperty(ev) && (selectors = bus[ev])) {
                 for (selector in selectors) {
                     controllers = selectors[selector];
-                    delete controllers[controllerId];  // harmless if !hasOwnProperty
+                    info = controllers[id];
+                    if (info) {
+                        events = info.list;
+                        if (events) {
+                            for (i = 0, len = events.length; i < len; ++i) {
+                                item = events[i];
+                                item.clearListeners();
+                                for (j = 0; j < monitoredClassesCount; ++j) {
+                                    classHasListeners = monitoredClasses[j].hasListeners;
+                                    if (classHasListeners) {
+                                        // Ext.mixin.Observable doesn't have hasListeners
+                                        // at class level
+                                        classHasListeners._decr_(item.name);
+                                    }
+                                }
+                            }
+                            delete controllers[id];
+                        }
+                    } 
                 }
             }
         }
+        
+    },
+    
+    destroy: function() {
+        this.monitoredClasses = this.bus = null;
     }
 });

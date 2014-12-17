@@ -1,24 +1,7 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
-*/
 /**
  * This class implements the data store event domain. All classes extending from 
  * {@link Ext.data.AbstractStore} are included in this domain. The selectors are simply
- * store id's or the wildcard "*" to match any store.
+ * store id, alias or the wildcard "*" to match any store.
  *
  * @private
  */
@@ -32,12 +15,27 @@ Ext.define('Ext.app.domain.Store', {
     ],
     
     type: 'store',
-    idProperty: 'storeId',
+    prefix: 'store.',
+    idMatchRe: /^\#/,
     
     constructor: function() {
         var me = this;
         
         me.callParent();
         me.monitor(Ext.data.AbstractStore);
+    },
+
+    match: function(target, selector) {
+        var result = false,
+            alias = target.alias;
+        
+        if (selector === '*') {
+            result = true;
+        } else if (this.idMatchRe.test(selector)) {
+            result = target.getStoreId() === selector.substring(1);
+        } else if (alias) {
+            result = Ext.Array.indexOf(alias, this.prefix + selector) > -1;
+        }
+        return result;
     }
 });
