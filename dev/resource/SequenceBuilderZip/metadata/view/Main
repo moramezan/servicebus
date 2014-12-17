@@ -286,7 +286,7 @@
                     "designerId": "4e36fcbd-8800-4f11-bb5f-559a4f081feb"
                 },
                 {
-                    "type": "basicfunction",
+                    "type": "fixedfunction",
                     "reference": {
                         "name": "items",
                         "type": "array"
@@ -309,7 +309,7 @@
                         ]
                     },
                     "name": "renderer",
-                    "designerId": "fa05028c-5a27-45de-92ba-9c00b22b2624"
+                    "designerId": "3b7d4371-87b4-4146-8581-f71c8b470599"
                 }
             ]
         },
