@@ -45,6 +45,7 @@
         String expectedName = describeResult.Name;
         String expectedTag = describeResult.Tag;
         String expectedDescription = describeResult.Description;
+        Integer expectedLimits = describeResult.Limits;
         String expectedFullyQualifiedClassName = actualType.getName();
         Type innerClass = Type.forName(actualType.getName() + '.' + 'Meta'); 
         ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
@@ -63,7 +64,8 @@
         String actualStepConfig = subscribeProcess.StepConfig__c; 
         String actualIcon = subscribeProcess.Icon__c; 
         String actualHelpUrl = subscribeProcess.HelpUrl__c;
-
+        Integer actualLimits = (Integer)subscribeProcess.Limits__c;
+        
         //assert
         System.assertEquals(expectedName , actualName );
         System.assertEquals(expectedTag , actualTag );
@@ -72,6 +74,7 @@
         System.assertEquals(expectedStepConfig , actualStepConfig);
         System.assertEquals(expectedIcon , actualIcon );
         System.assertEquals(expectedHelpUrl, actualHelpUrl);
+        System.assertEquals(expectedLimits, actualLimits);
     } 
  
 }

@@ -105,17 +105,8 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         }
         
         // derive chunked and marked messages
-        Set<String> fullyQualifiedClassNames = new Set<String> ();
-        for (Message__c messageWithQualifiedName : [
-            SELECT Id , Process__r.FullyQualifiedClassName__c
-            FROM Message__c
-            WHERE Id IN :this.markedMessages.keySet()
-        ]) {
-            fullyQualifiedClassNames.add(messageWithQualifiedName.Process__r.FullyQualifiedClassName__c);   
-        }
-
-        VerticalBrokerImplementation.IAttributeProvider attributeProvider =  
-            new VerticalBrokerImplementation.AttributeProvider(fullyQualifiedClassNames);
+         VerticalBrokerImplementation.IAttributeProvider attributeProvider =  
+            new VerticalBrokerImplementation.AttributeProvider();
          Map<Id,Message__c> chunkedAndMarkedMessages =   VerticalBrokerImplementation.getChunkedAndMarkedMessages(
             this.markedMessages,
             attributeProvider
@@ -296,20 +287,11 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     
     public class AttributeProvider implements  IAttributeProvider {
     
-        Set<String> fullyQualifiedClassNames;
-    
-        public AttributeProvider(Set<String> fullyQualifiedClassNames) {
-            this.fullyQualifiedClassNames = fullyQualifiedClassNames;
-        }
-        
         public Map<String, Integer> getFullyQualifiedClassNameToLimits() {
             Map<String, Integer> results = new Map<String, Integer>();
-            for (String fullyQualifiedClassName : this.fullyQualifiedClassNames) {
-                Type outerClass = Type.forName(fullyQualifiedClassName);
-                Type innerClass = Type.forName(outerClass.getName() + '.' + 'Meta');            
-                ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
-                Integer Limits = (meta.Limits == null) ? 1 : (Integer) meta.Limits;  
-                results.put(fullyQualifiedClassName, Limits);
+            for (Process__c process : [SELECT Id, FullyQualifiedClassName__c, Limits__c FROM Process__c]) {
+                Integer limits = (process.Limits__c != null) ? (Integer)process.Limits__c : 1; 
+                results.put(process.FullyQualifiedClassName__c, limits);
             }
             
             return results;

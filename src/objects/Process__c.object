@@ -107,6 +107,19 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Limits__c</fullName>
+        <defaultValue>1</defaultValue>
+        <description>How many times can this process run within the governor limits?</description>
+        <externalId>false</externalId>
+        <label>Limits</label>
+        <precision>4</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Setting__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Optionally, what is the API name of a Custom Setting used to hold any system-wide options for this process?</inlineHelpText>
@@ -145,6 +158,7 @@
         <columns>NAME</columns>
         <columns>Tag__c</columns>
         <columns>Description__c</columns>
+        <columns>Limits__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>

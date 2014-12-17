@@ -136,6 +136,9 @@ public with sharing class ProcessObject extends SalesforceObject {
                 process.StepConfig__c = null;
             }
 
+            //attempt to populate the maximum executions
+            process.Limits__c = (meta.Limits != null) ? meta.Limits : 1;    
+            
             return process;
         }
     }

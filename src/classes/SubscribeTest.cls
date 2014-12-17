@@ -14,7 +14,7 @@
         actualLimits = (actualLimits == null) ? 1 : actualLimits; 
 
         //assert
-        Integer expectedLimits = 1;
+        Integer expectedLimits = 90;
         System.assertEquals(expectedLimits, actualLimits);
     }
     

@@ -354,24 +354,23 @@
 
 
     static testmethod void callingGetFullyQualifiedClassNameToLimitsReturnsExpectedCollection() {
-        // arrange 
-        Set<String> fullyQualifiedClassNames = new Set<String>{
-            Terminate.class.getName(),   
-            Gate.class.getName(),        
-            Wiretap.class.getName()    
-         };
+        // arrange
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c gateProcess = ProcessObject.generateOne(Gate.class);
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+
         
         VerticalBrokerImplementation.IAttributeProvider attributeProvider = 
-            new VerticalBrokerImplementation.AttributeProvider(fullyQualifiedClassNames);
+            new VerticalBrokerImplementation.AttributeProvider();
         
         // act
         Map<String, Integer> getFullyQualifiedClassNameToLimits = 
             attributeProvider.getFullyQualifiedClassNameToLimits();
          
         // assemble  
-        Integer actualTerminate = getFullyQualifiedClassNameToLimits.get(Terminate.class.getName());
-        Integer actualGate = getFullyQualifiedClassNameToLimits.get(Gate.class.getName());
-        Integer actualWiretap = getFullyQualifiedClassNameToLimits.get(Wiretap.class.getName());
+        Integer actualTerminate = getFullyQualifiedClassNameToLimits.get(terminateProcess.FullyQualifiedClassName__c);
+        Integer actualGate = getFullyQualifiedClassNameToLimits.get(gateProcess.FullyQualifiedClassName__c);
+        Integer actualWiretap = getFullyQualifiedClassNameToLimits.get(wiretapProcess.FullyQualifiedClassName__c);
         
           
         // assert
