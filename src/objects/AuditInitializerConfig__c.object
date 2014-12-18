@@ -101,24 +101,6 @@
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
-        <fullName>AuditGroups</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <hasMenubar>false</hasMenubar>
-        <hasScrollbars>true</hasScrollbars>
-        <hasToolbar>false</hasToolbar>
-        <height>600</height>
-        <isResizable>true</isResizable>
-        <linkType>page</linkType>
-        <masterLabel>List Audit Groups</masterLabel>
-        <openType>newWindow</openType>
-        <page>AuditInitializerConfigAuditGroups</page>
-        <position>none</position>
-        <protected>false</protected>
-        <showsLocation>false</showsLocation>
-        <showsStatus>false</showsStatus>
-    </webLinks>
-    <webLinks>
         <fullName>ChangeDynamicGroupIdentifier</fullName>
         <availability>online</availability>
         <displayType>button</displayType>

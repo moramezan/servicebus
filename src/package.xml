@@ -107,7 +107,6 @@
     <types>
         <members>AuditEntryCsh</members>
         <members>AuditGroupCsh</members>
-        <members>AuditInitializerConfigAuditGroups</members>
         <members>AuditInitializerConfigCsh</members>
         <members>AuditInitializerConfigSchemaSelector</members>
         <members>BranchConfigCsh</members>
@@ -333,7 +332,6 @@
         <name>ValidationRule</name>
     </types>
     <types>
-        <members>AuditInitializerConfig__c.AuditGroups</members>
         <members>AuditInitializerConfig__c.ChangeDynamicGroupIdentifier</members>
         <members>BranchConfig__c.Step</members>
         <members>ConfirmItem__c.Confirm</members>

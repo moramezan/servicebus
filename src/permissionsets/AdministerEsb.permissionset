@@ -791,10 +791,6 @@
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>AuditInitializerConfigAuditGroups</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>AuditInitializerConfigCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>

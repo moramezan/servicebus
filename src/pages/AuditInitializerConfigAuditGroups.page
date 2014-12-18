@@ -1,9 +1,0 @@
-<apex:page standardController="AuditInitializerConfig__c">
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection columns="1" collapsible="false">
-            <apex:pageBlockSectionItem >
-                <apex:relatedList list="AuditGroups__r" />
-            </apex:pageBlockSectionItem>
-        </apex:pageBlockSection>
-    </apex:pageBlock>
-</apex:page>
