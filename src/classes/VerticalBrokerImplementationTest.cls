@@ -360,17 +360,14 @@
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
 
         
-        VerticalBrokerImplementation.IAttributeProvider attributeProvider = 
-            new VerticalBrokerImplementation.AttributeProvider();
-        
         // act
-        Map<String, Integer> getFullyQualifiedClassNameToLimits = 
-            attributeProvider.getFullyQualifiedClassNameToLimits();
-         
-        // assemble  
-        Integer actualTerminate = getFullyQualifiedClassNameToLimits.get(terminateProcess.FullyQualifiedClassName__c);
-        Integer actualGate = getFullyQualifiedClassNameToLimits.get(gateProcess.FullyQualifiedClassName__c);
-        Integer actualWiretap = getFullyQualifiedClassNameToLimits.get(wiretapProcess.FullyQualifiedClassName__c);
+        Map<String, Integer> fullyQualifiedClassNameToLimits = 
+            VerticalBrokerImplementation.getFullyQualifiedClassNameToLimits();
+    
+        // asesmble  
+        Integer actualTerminate = fullyQualifiedClassNameToLimits.get(terminateProcess.FullyQualifiedClassName__c);
+        Integer actualGate = fullyQualifiedClassNameToLimits.get(gateProcess.FullyQualifiedClassName__c);
+        Integer actualWiretap = fullyQualifiedClassNameToLimits.get(wiretapProcess.FullyQualifiedClassName__c);
         
           
         // assert
@@ -382,39 +379,6 @@
         system.assertEquals(expectedWiretap, actualWiretap);
     }
     
-    static testmethod void callingGetFullyQualifiedClassNameToLimitsForMockReturnsExpectedCollection() {
-        // arrange 
-        Integer    mockedTerminateCount =  21;   
-        Integer    mockedGateCount = 22;     
-        Integer    mockedWiretapCount = 23;
-            
-        Map<String, Integer> mockedFullyQualifiedClassNameToLimits = new  Map<String, Integer>{
-            Terminate.class.getName() => mockedTerminateCount,   
-            Gate.class.getName() => mockedGateCount,        
-            Wiretap.class.getName()  => mockedWiretapCount   
-        };
-
-       VerticalBrokerImplementation.IAttributeProvider attributeProvider = 
-            new VerticalBrokerImplementation.MockAttributeProvider(mockedFullyQualifiedClassNameToLimits);
-            
-        // act
-        Map<String, Integer> getFullyQualifiedClassNameToLimits = 
-            attributeProvider.getFullyQualifiedClassNameToLimits();
-         
-        // assemble  
-        Integer actualTerminate = getFullyQualifiedClassNameToLimits.get(Terminate.class.getName());
-        Integer actualGate = getFullyQualifiedClassNameToLimits.get(Gate.class.getName());
-        Integer actualWiretap = getFullyQualifiedClassNameToLimits.get(Wiretap.class.getName());
- 
-        // assert
-        Integer expectedTerminate = mockedTerminateCount;
-        system.assertEquals(expectedTerminate, actualTerminate);
-        Integer expectedGate = mockedGateCount;
-        system.assertEquals(expectedGate, actualGate);
-        Integer expectedWiretap = mockedWiretapCount;
-        system.assertEquals(expectedWiretap, actualWiretap);
-    }  
-
 
     static testmethod void callingGetChunkedAndMarkedMessagesReturnsExpectedCollection01() {
         // Requirement : 
@@ -458,18 +422,16 @@
         };
 
         // arrange - setup
-        Map<String,Object> providerAndMessageIdToMessage = 
-            setupProviderAndMessages(processNameToAttributes);
-        VerticalBrokerImplementation.IAttributeProvider attributeProvider =   
-            (VerticalBrokerImplementation.IAttributeProvider) providerAndMessageIdToMessage.get('Provider');
-        Map<Id,Message__c> messageIdToMessage = 
-            (Map<Id,Message__c>) providerAndMessageIdToMessage.get('MessageIdToMessage');
-    
+        Map<String,Object> providerAndMessages =  setupProviderAndMessages(processNameToAttributes);
+        Map<Id,Message__c> messageIdToMarkedMessage  = (Map<Id,Message__c>) providerAndMessages.get('MessageIdToMessage');
+        Map<String, Integer> fullyQualifiedClassNameToLimits = (Map<String, Integer>) providerAndMessages.get('fullyQualifiedClassNameToLimits');
+        
         //act
-        Map<Id,Message__c> chunkedAndMarkedMessages =   VerticalBrokerImplementation.getChunkedAndMarkedMessages(
-            messageIdToMessage,
-            attributeProvider
-        );
+        Map<Id,Message__c> chunkedAndMarkedMessages = 
+            VerticalBrokerImplementation.getChunkedAndMarkedMessages(
+                messageIdToMarkedMessage, 
+                fullyQualifiedClassNameToLimits
+            );
  
         //assemble
         Integer actualCount = chunkedAndMarkedMessages.keySet().size();
@@ -527,21 +489,19 @@
                 'TotalMessages' => totalWiretap       
             }     
         };
-
-         // arrange - setup
-         Map<String,Object> providerAndMessageIdToMessage = 
-            setupProviderAndMessages(processNameToAttributes);
-         VerticalBrokerImplementation.IAttributeProvider attributeProvider =   
-             (VerticalBrokerImplementation.IAttributeProvider) providerAndMessageIdToMessage.get('Provider');
-         Map<Id,Message__c> messageIdToMessage = 
-             (Map<Id,Message__c>) providerAndMessageIdToMessage.get('MessageIdToMessage');
     
+        // arrange - setup
+        Map<String,Object> providerAndMessages =  setupProviderAndMessages(processNameToAttributes);
+        Map<Id,Message__c> messageIdToMarkedMessage  = (Map<Id,Message__c>) providerAndMessages.get('MessageIdToMessage');
+        Map<String, Integer> fullyQualifiedClassNameToLimits = (Map<String, Integer>) providerAndMessages.get('fullyQualifiedClassNameToLimits');
+        
         //act
-        Map<Id,Message__c> chunkedAndMarkedMessages =   VerticalBrokerImplementation.getChunkedAndMarkedMessages(
-            messageIdToMessage,
-            attributeProvider
-        );
- 
+        Map<Id,Message__c> chunkedAndMarkedMessages = 
+            VerticalBrokerImplementation.getChunkedAndMarkedMessages(
+                messageIdToMarkedMessage, 
+                fullyQualifiedClassNameToLimits
+            );
+        
         //assemble
         Integer actualCount = chunkedAndMarkedMessages.keySet().size();
         Boolean actualFlag = true;
@@ -599,19 +559,17 @@
         };
 
         // arrange - setup
-        Map<String,Object> providerAndMessageIdToMessage = 
-            setupProviderAndMessages(processNameToAttributes);
-        VerticalBrokerImplementation.IAttributeProvider attributeProvider =   
-            (VerticalBrokerImplementation.IAttributeProvider) providerAndMessageIdToMessage.get('Provider');
-        Map<Id,Message__c> messageIdToMessage = 
-            (Map<Id,Message__c>) providerAndMessageIdToMessage.get('MessageIdToMessage');
-    
+        Map<String,Object> providerAndMessages =  setupProviderAndMessages(processNameToAttributes);
+        Map<Id,Message__c> messageIdToMarkedMessage  = (Map<Id,Message__c>) providerAndMessages.get('MessageIdToMessage');
+        Map<String, Integer> fullyQualifiedClassNameToLimits = (Map<String, Integer>) providerAndMessages.get('fullyQualifiedClassNameToLimits');
+        
         //act
-        Map<Id,Message__c> chunkedAndMarkedMessages =   VerticalBrokerImplementation.getChunkedAndMarkedMessages(
-            messageIdToMessage,
-            attributeProvider
-        );
- 
+        Map<Id,Message__c> chunkedAndMarkedMessages = 
+            VerticalBrokerImplementation.getChunkedAndMarkedMessages(
+                messageIdToMarkedMessage, 
+                fullyQualifiedClassNameToLimits
+            );
+       
         //assemble
         Integer actualCount = chunkedAndMarkedMessages.keySet().size();
         Set<String> distinctNames = new Set<String>();
@@ -680,19 +638,17 @@
         };
 
         // arrange - setup
-        Map<String,Object> providerAndMessageIdToMessage = 
-            setupProviderAndMessages(processNameToAttributes);
-        VerticalBrokerImplementation.IAttributeProvider attributeProvider =   
-            (VerticalBrokerImplementation.IAttributeProvider) providerAndMessageIdToMessage.get('Provider');
-        Map<Id,Message__c> messageIdToMessage = 
-            (Map<Id,Message__c>) providerAndMessageIdToMessage.get('MessageIdToMessage');
+        Map<String,Object> providerAndMessages =  setupProviderAndMessages(processNameToAttributes);
+        Map<Id,Message__c> messageIdToMarkedMessage  = (Map<Id,Message__c>) providerAndMessages.get('MessageIdToMessage');
+        Map<String, Integer> fullyQualifiedClassNameToLimits = (Map<String, Integer>) providerAndMessages.get('fullyQualifiedClassNameToLimits');
         
         //act
-        Map<Id,Message__c> chunkedAndMarkedMessages =   VerticalBrokerImplementation.getChunkedAndMarkedMessages(
-            messageIdToMessage,
-            attributeProvider
-        );
-        
+        Map<Id,Message__c> chunkedAndMarkedMessages = 
+            VerticalBrokerImplementation.getChunkedAndMarkedMessages(
+                messageIdToMarkedMessage, 
+                fullyQualifiedClassNameToLimits
+            );
+       
         //assemble
         Integer actualCount = chunkedAndMarkedMessages.keySet().size();
         Set<String> distinctNames = new Set<String>();
@@ -716,8 +672,58 @@
         Boolean expectedFlag = true;
         System.assertEquals(expectedFlag, actualFlag);
     }
-
-
+ 
+   static testmethod void callingGetChunkedAndMarkedMessagesReturnsExpectedCollection05() {
+        // Requirement : 
+        //      Any messages with process__c set to null  are collected into the 'null' process name 
+        // Constraints / Rules
+        //       - Any messages with process__c set to null  are collected into the 'null' process name
+        //       - A null process has a Limits proerty of exaxtly 1
+        // Scenario  : 
+        //       - A single message without a process 
+        // Expect 
+        //      - Return a collection of 1 null message 
+                    
+        // arrange - setup
+        Message__c message = new Message__c();
+        insert message;
+        Map<Id,Message__c> messageIdToMarkedMessage  = new Map<Id,Message__c>{
+            message.Id => message    
+        };
+        Map<String, Integer> fullyQualifiedClassNameToLimits = VerticalBrokerImplementation.getFullyQualifiedClassNameToLimits(); 
+                
+                
+        //act
+        Map<Id,Message__c> chunkedAndMarkedMessages = 
+            VerticalBrokerImplementation.getChunkedAndMarkedMessages(
+                messageIdToMarkedMessage, 
+                fullyQualifiedClassNameToLimits
+            );
+       
+        //assemble
+        Integer actualCount = chunkedAndMarkedMessages.keySet().size();
+        Set<String> distinctNames = new Set<String>();
+        Set<String> validNames = new Set<String>{
+         null
+        };
+        Boolean actualFlag = true;
+        for (Id messageId : chunkedAndMarkedMessages.keySet()) {
+            Message__c actualMessage = chunkedAndMarkedMessages.get(messageId); 
+            if(!validNames.contains(actualMessage.Cause__c))  
+                actualFlag = false;
+            distinctNames.add(actualMessage.Cause__c);
+        }
+        Integer actualNameCount = distinctNames.size();
+           
+        //assert
+        Integer expectedCount = 1;
+        System.assertEquals(expectedCount, actualCount); 
+        Integer expectedNameCount = 1;
+        System.assertEquals(expectedNameCount, actualNameCount); 
+        Boolean expectedFlag = true;
+        System.assertEquals(expectedFlag, actualFlag);
+   }
+    
    static Map<String,Object> setupProviderAndMessages(Map<String,Map<String,Object>> processNameToAttributes) {
         // parse attributes into collections
         Map<String, Integer> mockedFullyQualifiedClassNameToLimits = new  Map<String, Integer>();
@@ -738,10 +744,6 @@
                 i++;
             }
         }
-        
-        // create provider
-        VerticalBrokerImplementation.IAttributeProvider attributeProvider = 
-            new VerticalBrokerImplementation.MockAttributeProvider(mockedFullyQualifiedClassNameToLimits);
 
         // create messages
         insert messages;
@@ -753,7 +755,7 @@
         ]);
         
         return new Map<String,Object>{
-            'Provider' => attributeProvider,
+            'fullyQualifiedClassNameToLimits' => mockedFullyQualifiedClassNameToLimits,
             'MessageIdToMessage' => messageIdToMessage
         };
    }

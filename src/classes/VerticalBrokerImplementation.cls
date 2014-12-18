@@ -25,6 +25,8 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
 
      @testVisible
      private  Boolean hasAllContexts = true;
+    
+     private Map<String, Integer>  fullyQualifiedClassNameToLimits = getFullyQualifiedClassNameToLimits();
      
     /**
      * If scope is null, execute will never be reacher!
@@ -105,11 +107,9 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         }
         
         // derive chunked and marked messages
-         VerticalBrokerImplementation.IAttributeProvider attributeProvider =  
-            new VerticalBrokerImplementation.AttributeProvider();
-         Map<Id,Message__c> chunkedAndMarkedMessages =   VerticalBrokerImplementation.getChunkedAndMarkedMessages(
-            this.markedMessages,
-            attributeProvider
+        Map<Id,Message__c> chunkedAndMarkedMessages = getChunkedAndMarkedMessages(
+            this.markedMessages, 
+            this.fullyQualifiedClassNameToLimits
         );
 
         ////
@@ -279,44 +279,24 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         return adjustedMarkableMessages;
     }
 
-    
-    public interface IAttributeProvider {
-        Map<String, Integer> getFullyQualifiedClassNameToLimits();     
-    }
-    
-    
-    public class AttributeProvider implements  IAttributeProvider {
-    
-        public Map<String, Integer> getFullyQualifiedClassNameToLimits() {
-            Map<String, Integer> results = new Map<String, Integer>();
-            for (Process__c process : [SELECT Id, FullyQualifiedClassName__c, Limits__c FROM Process__c]) {
-                Integer limits = (process.Limits__c != null) ? (Integer)process.Limits__c : 1; 
-                results.put(process.FullyQualifiedClassName__c, limits);
-            }
-            
-            return results;
-        }    
-    }
 
 
-    public class MockAttributeProvider implements IAttributeProvider {
-    
-        Map<String, Integer> fullyQualifiedClassNameToLimits;
-        
-        public MockAttributeProvider(Map<String, Integer> fullyQualifiedClassNameToLimits) {
-            this.fullyQualifiedClassNameToLimits = fullyQualifiedClassNameToLimits;
+    @testVisible
+    private  static Map<String, Integer> getFullyQualifiedClassNameToLimits() {
+        Map<String, Integer> results = new Map<String, Integer>();
+        for (Process__c process : [SELECT Id, FullyQualifiedClassName__c, Limits__c FROM Process__c]) {
+            Integer limits = (process.Limits__c != null) ? (Integer)process.Limits__c : 1; 
+            results.put(process.FullyQualifiedClassName__c, limits);
         }
-        
-        public Map<String,Integer> getFullyQualifiedClassNameToLimits() {
-            return this.fullyQualifiedClassNameToLimits;
-        }      
-    }
+        results.put(null, 1);  
+        return results;
+    }    
 
 
     @testVisible
     private static Map<Id,Message__c> getChunkedAndMarkedMessages(
         Map<Id,Message__c> messageIdToMarkedMessage,
-        IAttributeProvider attributeProvider
+        Map<String,Integer> fullyQualifiedClassNameToLimits
     ) {
 
         // derive apex class to message collection
@@ -331,13 +311,6 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
             messageCollection.put(messageId,message);
             fullyQualifiedClassNameToMessageCollection.put(fullyQualifiedClassName, messageCollection);
         }
-
-        // derive all available decision making attributes per collection
-        // TODO : attributes becomes Map<String,Integer>
-        //        perhaps then introduce oldest message create date  with 
-        //        rule that  collection with oldest record get priority?
-        Map<String,Integer> fullyQualifiedClassNameToLimits = 
-            attributeProvider.getFullyQualifiedClassNameToLimits();
 
         Map<String, Map<String,Integer>> fullyQualifiedClassNameToAttributes = new Map<String, Map<String,Integer>>();
         for (String fullyQualifiedClassName : fullyQualifiedClassNameToMessageCollection.keySet()) {
@@ -354,7 +327,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         }
 
         // make decision 
-        String selectedFullyQualifiedClassName;
+        String selectedFullyQualifiedClassName = '#UNDEFINED#'; // null is a pseudo valid class name for this logic
         Integer maximumSize = 0;
         for (String fullyQualifiedClassName  : fullyQualifiedClassNameToAttributes.keySet()) {
             Map<String,Integer> attributes = fullyQualifiedClassNameToAttributes.get(fullyQualifiedClassName);
@@ -369,7 +342,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
 
         // apply maximum chunks 
         Map<Id,Message__c> results = new Map<Id,Message__c>();
-        if (selectedFullyQualifiedClassName != null) {
+        if (selectedFullyQualifiedClassName != '#UNDEFINED#') {
             Map<Id,Message__c> messageCollection = fullyQualifiedClassNameToMessageCollection.get(selectedFullyQualifiedClassName);
             Map<String,Integer> attributes = fullyQualifiedClassNameToAttributes.get(selectedFullyQualifiedClassName);
             Integer Limits = attributes.get('Limits');

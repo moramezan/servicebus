@@ -80,7 +80,8 @@ abstract public with sharing class Broker {
     @TestVisible private static Integer MaxHops  = 500;
     
     public class TooManyHopsException extends Exception {}
-    
+    public class MalformedMessageException extends Exception {} // Temp Measure, Matt - feel free to delete
+      
     public class EngineException extends Exception {
         /**
          * Gotta jettison this guy for rollback later
@@ -566,6 +567,14 @@ abstract public with sharing class Broker {
             } catch (JsonException e) {
                 throw new EngineException(null, new Set<Id>{message.Id}, e, 'Could not deserialize json, eg malformed parameters.');
             }
+
+            // Temp Measure, Matt - feel free to delete
+            Message__c tempMessage = [SELECT Process__c, Sequence__c FROM Message__c WHERE Id = :message.Id];
+            if (tempMessage.Process__c == null) 
+                throw new EngineException(null, new Set<Id>{message.Id}, new MalformedMessageException(), 'Message cannot have a null process.');
+            
+            if (tempMessage.Sequence__c == null) 
+                throw new EngineException(null, new Set<Id>{message.Id}, new MalformedMessageException(), 'Message cannot have a null sequence.');
 
             Map<String,Object> attributes = new Map<String,Object>();
             attributes.put('MessageId',message.Id);

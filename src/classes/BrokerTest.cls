@@ -656,6 +656,12 @@
         }        
     }
     
+    
+    // TODO - Test Fails
+    //        Assume it will be fixed when deailing with Issue "migrate chunking logic into abstract Broker #636"
+    // Method Name      testMissingPositionThrowsExpectedException
+    // Error Message    System.AssertException: Assertion Failed: Message cannot have a null process.
+    // Stack Trace      Class.BrokerTest.testMissingPositionThrowsExpectedException: line 680, column 1
     static testmethod void testMissingPositionThrowsExpectedException() {
         //arrange
         Message__c message = new Message__c(Parameters__c = '{"not_position": 0}');
@@ -680,6 +686,13 @@
         System.assert(actualMessage.contains(expectedMessage), actualMessage);
     }
     
+    
+    
+    // TODO - Test Fails
+    //        Assume it will be fixed when deailing with Issue "migrate chunking logic into abstract Broker #636"
+    // Method Name      testNoStepThrowsQueryException
+    // Error Message    System.AssertException: Assertion Failed: Message cannot have a null process.
+    // Stack Trace      Class.BrokerTest.testNoStepThrowsQueryException: line 705, column 1
     static testmethod void testNoStepThrowsQueryException() {
         //arrange (note there is no Step__c in database!)
         Message__c message = new Message__c(Parameters__c = '{"esb_SequenceName": "", "esb_Position": 0}');
@@ -892,6 +905,13 @@
         System.assertEquals( expectedCount, actualCount);
     }
  
+ 
+    // TODO - Test Fails
+    //        Assume it will be fixed when deailing with Issue "migrate chunking logic into abstract Broker #636"
+    // Method Name      canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError
+    // Error Message    System.AssertException: Assertion Failed: Wrong message: Expected: Step unqueryable, eg bad sequence 
+    //                  name, position, missing terminate., Actual: Message cannot have a null process.
+    // Stack Trace      Class.BrokerTest.canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError: line 961, column 1
     static testmethod void canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError() {
         // arrange
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
