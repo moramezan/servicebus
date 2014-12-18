@@ -3,13 +3,13 @@
     static testmethod void callingDoDmlCtorCorrectlySetsPauseFlag() {
         // arrange
         Boolean isPaused =  false;
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
         
         //act - actions in the ctor
         MessagePauseQueueExtension.DoDml doDmlInstance = new MessagePauseQueueExtension.DoDml();
         
         //assemble
-        BrokerSettings__c actualSettings  = BrokerSettings__c.getInstance();
+        BrokerSetting__c actualSettings  = BrokerSetting__c.getInstance();
         Boolean actualIsPaused =  actualSettings.IsPaused__c;
 
         // assert
@@ -21,7 +21,7 @@
    static testmethod void  callingDoPauseOnQueuedMessagesProcessesMessages() {
         // arrange
         Boolean isPaused =  false;
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
         
         //act 
         ApexPages.StandardSetController controller = new ApexPages.StandardSetController([SELECT Id, Name FROM Message__c]);
@@ -29,7 +29,7 @@
         System.PageReference actualPageReference  = messagePauseQueueExtension.doPause();
         
         //assemble
-        BrokerSettings__c actualSettings  = BrokerSettings__c.getInstance();
+        BrokerSetting__c actualSettings  = BrokerSetting__c.getInstance();
         Boolean actualIsPaused =  actualSettings.IsPaused__c;
         
         

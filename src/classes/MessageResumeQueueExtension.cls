@@ -20,8 +20,8 @@ public with sharing class MessageResumeQueueExtension {
             if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');
         
             //fetch custom setting or create for the first time
-            BrokerSettings__c setting = BrokerSettings__c.getOrgDefaults();
-            if (setting == null) setting = new BrokerSettings__c();
+            BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
+            if (setting == null) setting = new BrokerSetting__c();
             
             //unset the flag
             setting.IsPaused__c = false;

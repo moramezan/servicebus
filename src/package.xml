@@ -190,9 +190,10 @@
         <members>AuditInitializerConfig__c.DynamicGroupIdentifier__c</members>
         <members>AuditInitializerConfig__c.StaticGroupIdentifier__c</members>
         <members>BranchConfig__c.Sequence__c</members>
-        <members>BrokerSettings__c.BrokerClassName__c</members>
-        <members>BrokerSettings__c.Inhibit__c</members>
-        <members>BrokerSettings__c.IsPaused__c</members>
+        <members>BrokerSetting__c.BrokerClassName__c</members>
+        <members>BrokerSetting__c.EventStamp__c</members>
+        <members>BrokerSetting__c.Inhibit__c</members>
+        <members>BrokerSetting__c.IsPaused__c</members>
         <members>ConfirmConfig__c.DenySequence__c</members>
         <members>ConfirmItem__c.ConfirmConfig__c</members>
         <members>ConfirmItem__c.Confirm__c</members>
@@ -202,8 +203,6 @@
         <members>ConfirmItem__c.Parameters__c</members>
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Parameters__c</members>
-        <members>GateSettings__c.IsEnabled__c</members>
-        <members>HeartbeatSettings__c.EventStamp__c</members>
         <members>JumpConfig__c.Sequence__c</members>
         <members>KnifeSwitch__c.Url__c</members>
         <members>Message__c.Cause__c</members>
@@ -236,7 +235,7 @@
         <members>Step__c.Sequence__c</members>
         <members>SubscribeConfig__c.EventType__c</members>
         <members>SubsequenceConfig__c.Sequence__c</members>
-        <members>WiretapSettings__c.UserId__c</members>
+        <members>WiretapSetting__c.UserId__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -244,14 +243,12 @@
         <members>AuditGroup__c</members>
         <members>AuditInitializerConfig__c</members>
         <members>BranchConfig__c</members>
-        <members>BrokerSettings__c</members>
+        <members>BrokerSetting__c</members>
         <members>ConfirmConfig__c</members>
         <members>ConfirmItem__c</members>
         <members>EventType__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
-        <members>GateSettings__c</members>
-        <members>HeartbeatSettings__c</members>
         <members>JumpConfig__c</members>
         <members>KnifeSwitch__c</members>
         <members>Message__c</members>
@@ -262,7 +259,7 @@
         <members>Step__c</members>
         <members>SubscribeConfig__c</members>
         <members>SubsequenceConfig__c</members>
-        <members>WiretapSettings__c</members>
+        <members>WiretapSetting__c</members>
         <name>CustomObject</name>
     </types>
     <types>

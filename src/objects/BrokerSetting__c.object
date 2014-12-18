@@ -16,6 +16,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>EventStamp__c</fullName>
+        <description>A time stamp representing the last time that a heartbeat message was successfully enqueued to the broker</description>
+        <externalId>false</externalId>
+        <label>Event Stamp</label>
+        <length>25</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Inhibit__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Set this TRUE to interrupt a haywire Broker during development.</description>

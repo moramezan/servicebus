@@ -219,7 +219,7 @@ abstract public with sharing class Broker {
     
     static public Broker impl() {
         //first try to resolve broker class from custom setting
-        BrokerSettings__c settings = BrokerSettings__c.getInstance();
+        BrokerSetting__c settings = BrokerSetting__c.getInstance();
         
         //if there is no setting, use a default
         if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = VerticalBrokerImplementation.class.getName(); 
@@ -465,8 +465,8 @@ abstract public with sharing class Broker {
         Message__c message = new Message__c(Parameters__c = Json.serializePretty(parameters));
         
         //fetch the custom setting or create an empty one
-        BrokerSettings__c setting = BrokerSettings__c.getOrgDefaults();
-        if (setting == null) setting = new BrokerSettings__c();
+        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
+        if (setting == null) setting = new BrokerSetting__c();
         
         if (setting.IsPaused__c) {
             //system is paused

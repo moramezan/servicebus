@@ -20,16 +20,13 @@ public with sharing class Gate {
         };
     }
 
+    @TestVisible static private Boolean DeletionEnabled = true;
+    
     override public String toString() {
         if (!SObjectType.GateItem__c.Createable) throw new Broker.CrudException('!SObjectType.GateItem__c.Createable');
 
         // housekeeping / deletion strategy
-        Boolean isDeletionEnabled = true;
-        try {
-            GateSettings__c setting = GateSettings__c.getInstance();
-            isDeletionEnabled = setting.IsEnabled__c;
-        } catch (Exception e) {
-        }
+        Boolean isDeletionEnabled = DeletionEnabled;
         Integer maximumDays = 30;
         Integer maximumItems = 10000;
         performDefaultDeletionStrategy(isDeletionEnabled, maximumDays, maximumItems);

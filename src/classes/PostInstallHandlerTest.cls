@@ -66,13 +66,13 @@
         
         //act
         Test.startTest();
-        Integer countBefore = [SELECT COUNT() FROM WiretapSettings__c];
+        Integer countBefore = [SELECT COUNT() FROM WiretapSetting__c];
         PostInstallHandler.createWiretapSettings(userId);
         Test.stopTest();
         
         //assert
         Integer expectedCount = countBefore + 1;
-        Integer actualCount = [SELECT COUNT() FROM WiretapSettings__c];
+        Integer actualCount = [SELECT COUNT() FROM WiretapSetting__c];
         System.assertEquals(expectedCount, actualCount);
     }
 

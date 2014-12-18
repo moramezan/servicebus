@@ -6,7 +6,7 @@ public with sharing class Wiretap {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Wiretap';
         public String Description = 'Emails the message parameters to the user.';
-        public SObject ProcessSetting = WiretapSettings__c.SObjectType.newSObject();
+        public SObject ProcessSetting = WiretapSetting__c.SObjectType.newSObject();
         public String Icon = 'email';
         public String HelpUrl = Page.GateItemCsh.getUrl();
     }
@@ -16,7 +16,7 @@ public with sharing class Wiretap {
         
         Id userId;
         try {
-            WiretapSettings__c setting = WiretapSettings__c.getInstance();
+            WiretapSetting__c setting = WiretapSetting__c.getInstance();
             userId = setting.UserId__c;
         } catch (Exception e) {
         }

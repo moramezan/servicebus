@@ -28,7 +28,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
  
         public  HeartbeatGeneratorImpl() {
             //EventStamp: null is still valid (first run)
-            String eventStampAsString = HeartbeatSettings__c.getInstance().EventStamp__c;
+            String eventStampAsString = BrokerSetting__c.getInstance().EventStamp__c;
             DateTime  eventStampAsDateTime = 
                 (eventStampAsString != null) ? 
                 getISO8601AsDateTime(eventStampAsString) :
@@ -140,8 +140,8 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
     
         DateTime lastEventStamp =  heartbeats[count-1];
         String lastEventStampAsString = getISO8601(lastEventStamp);
-        HeartbeatSettings__c  setting = new HeartbeatSettings__c() ;  
-        List<HeartbeatSettings__c> settings =  [SELECT Id, EventStamp__c FROM HeartbeatSettings__c];
+        BrokerSetting__c  setting = new BrokerSetting__c() ;  
+        List<BrokerSetting__c> settings =  [SELECT Id, EventStamp__c FROM BrokerSetting__c];
         if (settings.size() != 0) {
             setting = settings[0];
         }

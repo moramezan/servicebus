@@ -21,7 +21,7 @@
         insert stepA6;
 
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
 
         //tee up two messages in queued state
         Broker.enqueue(sequenceNameA, '000000000000000AAA');
@@ -37,7 +37,7 @@
             WHERE Status__c != 'Completed'
         ];
 
-       BrokerSettings__c actualSettings  = BrokerSettings__c.getInstance();
+       BrokerSetting__c actualSettings  = BrokerSetting__c.getInstance();
        Boolean actualIsPaused =  actualSettings.IsPaused__c;
        
        Integer actualCount = messages.size();
@@ -82,7 +82,7 @@
         insert stepA6;
 
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
 
         //tee up two messages in queued state
         Broker.enqueue(sequenceNameA, '000000000000000AAA');

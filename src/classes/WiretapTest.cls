@@ -25,7 +25,7 @@ private class WiretapTest {
         Integer step = 1;
         String data = 'data';
 
-       //--NOT-DEFINED insert new WiretapSettings__c ( UserId__c = UserInfo.getUserId());
+       //--NOT-DEFINED insert new WiretapSetting__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
             'esb_SequenceName' => sequenceName,
@@ -57,7 +57,7 @@ private class WiretapTest {
         Integer step = 1;
         String data = 'data';
 
-        insert new WiretapSettings__c ( UserId__c = UserInfo.getUserId());
+        insert new WiretapSetting__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
             'esb_SequenceName' => sequenceName,

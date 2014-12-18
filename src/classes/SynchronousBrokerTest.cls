@@ -17,7 +17,7 @@
         Decimal positionA2 = stepA2.Position__c;
         
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act 
         Broker.enqueue(sequenceNameA, '000000000000000AAA');

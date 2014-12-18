@@ -2,7 +2,7 @@
 
     static testmethod void testMarkAndExecuteAndDoneConditions() {
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = VerticalBrokerImplementation.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = VerticalBrokerImplementation.class.getName());
         
         //arrange processes
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -62,7 +62,7 @@
 
     static testmethod void testMarkLimitedToTotalPotentialMarksWhenBufferedMessagesGtTotalPotentialMarks() {
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = VerticalBrokerImplementation.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = VerticalBrokerImplementation.class.getName());
         
         //arrange processes
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -132,7 +132,7 @@
 
     static testmethod void testMarkLimitedToTotalBufferedMessagesWhenTotalPotentialMarksGtTotaBufferedMessagesCount() {
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = VerticalBrokerImplementation.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = VerticalBrokerImplementation.class.getName());
         
         //arrange processes
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);

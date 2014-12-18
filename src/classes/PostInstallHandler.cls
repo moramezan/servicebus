@@ -161,8 +161,8 @@ public without sharing class PostInstallHandler implements InstallHandler {
      */
     @Future static public void createWiretapSettings(Id userId) {
         //fetch custom setting or create it for the first time
-        WiretapSettings__c setting = WiretapSettings__c.getOrgDefaults();
-        if (setting == null) setting = new WiretapSettings__c();
+        WiretapSetting__c setting = WiretapSetting__c.getOrgDefaults();
+        if (setting == null) setting = new WiretapSetting__c();
         
         //write the values
         setting.UserId__c = userId;

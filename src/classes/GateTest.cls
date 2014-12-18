@@ -21,6 +21,8 @@ private  class GateTest {
 
 
     static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenGateItemsCountEqCount() {
+        Gate.DeletionEnabled = false; //compensate for former uninserted GateSettings
+        
         // Arrange :
         String sequenceName = 'the-sequence';
         Decimal position = 1;
@@ -79,6 +81,8 @@ private  class GateTest {
     
     
     static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenGateItemsCountNotEqCount() {
+        Gate.DeletionEnabled = false; //compensate for former uninserted GateSettings
+        
         // Arrange :
         String sequenceName = 'the-sequence';
         Decimal position = 1;

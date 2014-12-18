@@ -1,4 +1,4 @@
-<apex:page tabStyle="WiretapSettings__c" showHeader="false" standardStylesheets="true">
+<apex:page tabStyle="WiretapSetting__c" showHeader="false" standardStylesheets="true">
 
     <style>
         body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}

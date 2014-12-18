@@ -2,7 +2,7 @@
     
     static testmethod void coverExecuteMethod() {
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act
         Test.startTest();

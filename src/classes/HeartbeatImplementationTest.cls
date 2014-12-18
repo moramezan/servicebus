@@ -207,7 +207,7 @@
         HeartbeatImplementation.updateLastEventStamp( heartbeats );
 
         // assemble
-        HeartbeatSettings__c settings = HeartbeatSettings__c.getInstance();
+        BrokerSetting__c settings = BrokerSetting__c.getInstance();
         DateTime actualEventStamp = HeartbeatImplementation.getISO8601AsDateTime(settings.EventStamp__c);
       
         // assert
@@ -235,7 +235,7 @@
         HeartbeatImplementation.updateLastEventStamp( heartbeats );
 
         // assemble
-        HeartbeatSettings__c settings = HeartbeatSettings__c.getInstance();
+        BrokerSetting__c settings = BrokerSetting__c.getInstance();
         DateTime actualEventStamp = HeartbeatImplementation.getISO8601AsDateTime(settings.EventStamp__c);
       
         // assert
@@ -260,7 +260,7 @@
         Time lastEventTime = Time.newInstance(hour, lastEventMinute, 00, 0);
         DateTime lastEventStamp =  DateTime.newInstance(currentDate, lastEventTime);
         
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         // act
         HeartbeatImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
@@ -313,7 +313,7 @@
         Time lastEventTime = Time.newInstance(hour, lastEventMinute, 00, 0);
         DateTime lastEventStamp =  DateTime.newInstance(currentDate, lastEventTime);
         
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         // act
         HeartbeatImplementation.IHeartbeatGenerator heartbeatGeneratorMock = (HeartbeatImplementation.IHeartbeatGenerator) 

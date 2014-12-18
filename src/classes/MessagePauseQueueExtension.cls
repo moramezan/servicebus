@@ -15,8 +15,8 @@ public with sharing class MessagePauseQueueExtension {
     public class DoDml {
         public DoDml() {
             //fetch custom setting or create for the first time
-            BrokerSettings__c setting = BrokerSettings__c.getOrgDefaults();
-            if (setting == null) setting = new BrokerSettings__c();
+            BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
+            if (setting == null) setting = new BrokerSetting__c();
             
             //unset the flag
             setting.IsPaused__c = true;

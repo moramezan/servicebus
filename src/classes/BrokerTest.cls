@@ -70,7 +70,7 @@
         insert stepA6;
         
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act 
         Broker.enqueue(sequenceNameA, '000000000000000AAA');
@@ -473,7 +473,7 @@
         //arrange broker implementation custom setting
         String theSequenceName = 'TestSequence';
         Id theId = '000000000000000AAA';
-        insert new BrokerSettings__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
         
         //assert
         Boolean expectedBeforeFlag = false;
@@ -501,7 +501,7 @@
         StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange
-        insert new BrokerSettings__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
         
         //assert
         Boolean expectedBeforeFlag = false;
@@ -527,7 +527,7 @@
     
     static testmethod void callingRestartSuccessfullyCallsRestartImpl() {
         //arrange
-        insert new BrokerSettings__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
         insert new Message__c(Status__c = 'Rebuffered');
         
         //assert
@@ -720,7 +720,7 @@
         update terminateProcess; //pretend we deleted the class
         
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act
         Test.startTest();
@@ -752,7 +752,7 @@
         update terminateProcess; //Account is DEFINITELY not a toStringable Object
         
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act
         Test.startTest();
@@ -810,8 +810,8 @@
         insert stepA6;
 
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
-        //insert new BrokerSettings__c();
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        //insert new BrokerSetting__c();
 
         //act
         Broker.enqueue(sequenceNameA, '000000000000000AAA');
@@ -871,7 +871,7 @@
         insert stepA6;
         
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
         
         //act 
         Broker.enqueue(sequenceNameA, '000000000000000AAA');
@@ -924,7 +924,7 @@
         insert stepA6;
         
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = false);
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = false);
         
         //act 
         Broker.enqueue(sequenceNameA, '000000000000000AAA');
@@ -972,7 +972,7 @@
         Step__c step  = new Step__c(Sequence__c = sequence.Id ,Position__c = 1,Process__c = terminateProcess.Id);
         insert step;
   
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         String eventStamp = HeartbeatImplementation.getISO8601(DateTime.newInstance(2014,12,15,13,11,07));
         Boolean isHeartbeat = true;
@@ -1017,7 +1017,7 @@
         Step__c step  = new Step__c(Sequence__c = sequence.Id ,Position__c = 1,Process__c = terminateProcess.Id);
         insert step;
   
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
  
         Map<String,Object> parametersA = new Map<String,Object>{
@@ -1065,7 +1065,7 @@
         StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange specific broker implementation
-        insert new BrokerSettings__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act
         Test.startTest();

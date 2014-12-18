@@ -31,12 +31,12 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
      * Has to be array of booleans, not nulls
      */
     public Database.QueryLocator start(Database.BatchableContext context) {
-        if (BrokerSettings__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
+        if (BrokerSetting__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
         return Database.getQueryLocator([SELECT Id FROM FieldPermissions LIMIT :RemainingContexts]);
     }
     
     public void execute(Database.BatchableContext context, List<SObject> scopes) {
-        if (BrokerSettings__c.getInstance().Inhibit__c == true) System.abortJob(context.getJobId()); //INHIBIT
+        if (BrokerSetting__c.getInstance().Inhibit__c == true) System.abortJob(context.getJobId()); //INHIBIT
         
         //LOCATE
         Database.QueryLocator locator = this.locateMarkableWork(TotalPotentialMarks);
