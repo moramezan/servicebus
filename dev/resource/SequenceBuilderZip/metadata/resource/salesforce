@@ -11,7 +11,7 @@
     "name": "MyClassicTheme",
     "designerId": "67f7ba53-ce8a-4518-a625-8b4f9e0acce1",
     "storage": {
-        "needsCompile": false,
+        "needsCompile": true,
         "simple": {
             "pkgVersion": 1,
             "pkgPath": "packages"
@@ -1250,7 +1250,12 @@
                     ".#{$prefix}menu-item-icon.paypal, .#{$prefix}action-col-icon.paypal {background-image:url('extraicons/paypal.png');}",
                     ".#{$prefix}menu-item-icon.salesforce, .#{$prefix}action-col-icon.salesforce {background-image:url('extraicons/salesforce.png');}",
                     ".#{$prefix}menu-item-icon.stripe, .#{$prefix}action-col-icon.stripe {background-image:url('extraicons/stripe.png');}",
-                    ".#{$prefix}menu-item-icon.twitter, .#{$prefix}action-col-icon.twitter {background-image:url('extraicons/twitter.png');}"
+                    ".#{$prefix}menu-item-icon.twitter, .#{$prefix}action-col-icon.twitter {background-image:url('extraicons/twitter.png');}",
+                    ".#{$prefix}menu-item-icon.drive, .#{$prefix}action-col-icon.drive {background-image:url('extraicons/drive.png');}",
+                    ".#{$prefix}menu-item-icon.gmail, .#{$prefix}action-col-icon.gmail {background-image:url('extraicons/gmail.png');}",
+                    ".#{$prefix}menu-item-icon.youtube, .#{$prefix}action-col-icon.youtube {background-image:url('extraicons/youtube.png');}",
+                    ".#{$prefix}menu-item-icon.ebay, .#{$prefix}action-col-icon.ebay {background-image:url('extraicons/ebay.png');}",
+                    ""
                 ]
             },
             "name": "scss2",

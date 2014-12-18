@@ -32,7 +32,7 @@
         }
     },
     "xdsVersion": "3.1.0",
-    "xdsBuild": 1934,
+    "xdsBuild": 1943,
     "schemaVersion": 1,
     "upgradeVersion": 300000000007,
     "framework": "ext50",
@@ -56,8 +56,8 @@
         "resource": [
             "61504695-b19b-490e-85a9-74077e1086c7",
             "d8c095b0-7233-4041-ac2c-310692f6c3de",
-            "1f9666bd-7205-49df-aa2b-902a39346819",
             "903b57e0-2766-4e66-9434-1f5794c89f8a",
+            "1f9666bd-7205-49df-aa2b-902a39346819",
             "a61d587f-d164-4dc7-9f43-a089b161b330"
         ],
         "app": [

@@ -24,40 +24,36 @@
 table#bodyTable td#bodyCell {
     padding: 10px 10px 10px 0;
 }
-.#{$prefix}action-col-icon.gear {
-    background: url('icons/gears16.png');
-}
-
 /**
- * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
- * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
- */
+* Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
+* https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
+*/
 a.#{$prefix}btn:hover {
     text-decoration: none;
 }
 
 /**
- * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
- * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
- */
+* Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
+* https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
+*/
 a.#{$prefix}datepicker-date:hover {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 /**
- * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
- * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
- */
+* Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
+* https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
+*/
 a.#{$prefix}tab:hover {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 /**
- * Fixes indents caused by ul li, ol li {margin-left: 1.5em;} in Salesforce:
- * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
- */
+* Fixes indents caused by ul li, ol li {margin-left: 1.5em;} in Salesforce:
+* https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
+*/
 li.#{$prefix}boundlist-item {
-  margin-left: 0;
+    margin-left: 0;
 }
 
 .#{$prefix}menu-item-icon.accept, .#{$prefix}action-col-icon.accept {background-image:url('famfamfam/accept.png');}
@@ -1060,3 +1056,15 @@ li.#{$prefix}boundlist-item {
 .#{$prefix}menu-item-icon.zoom, .#{$prefix}action-col-icon.zoom {background-image:url('famfamfam/zoom.png');}
 .#{$prefix}menu-item-icon.zoom_in, .#{$prefix}action-col-icon.zoom_in {background-image:url('famfamfam/zoom_in.png');}
 .#{$prefix}menu-item-icon.zoom_out, .#{$prefix}action-col-icon.zoom_out {background-image:url('famfamfam/zoom_out.png');}
+
+.#{$prefix}menu-item-icon.atlassian, .#{$prefix}action-col-icon.atlassian {background-image:url('extraicons/atlassian.png');}
+.#{$prefix}menu-item-icon.github, .#{$prefix}action-col-icon.github {background-image:url('extraicons/github.png');}
+.#{$prefix}menu-item-icon.linkedin, .#{$prefix}action-col-icon.linkedin {background-image:url('extraicons/linkedin.png');}
+.#{$prefix}menu-item-icon.paypal, .#{$prefix}action-col-icon.paypal {background-image:url('extraicons/paypal.png');}
+.#{$prefix}menu-item-icon.salesforce, .#{$prefix}action-col-icon.salesforce {background-image:url('extraicons/salesforce.png');}
+.#{$prefix}menu-item-icon.stripe, .#{$prefix}action-col-icon.stripe {background-image:url('extraicons/stripe.png');}
+.#{$prefix}menu-item-icon.twitter, .#{$prefix}action-col-icon.twitter {background-image:url('extraicons/twitter.png');}
+.#{$prefix}menu-item-icon.drive, .#{$prefix}action-col-icon.drive {background-image:url('extraicons/drive.png');}
+.#{$prefix}menu-item-icon.gmail, .#{$prefix}action-col-icon.gmail {background-image:url('extraicons/gmail.png');}
+.#{$prefix}menu-item-icon.youtube, .#{$prefix}action-col-icon.youtube {background-image:url('extraicons/youtube.png');}
+.#{$prefix}menu-item-icon.ebay, .#{$prefix}action-col-icon.ebay {background-image:url('extraicons/ebay.png');}
