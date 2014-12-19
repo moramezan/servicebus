@@ -569,12 +569,17 @@ abstract public with sharing class Broker {
             }
 
             // Temp Measure, Matt - feel free to delete
-            Message__c tempMessage = [SELECT Process__c, Sequence__c FROM Message__c WHERE Id = :message.Id];
-            if (tempMessage.Process__c == null) 
-                throw new EngineException(null, new Set<Id>{message.Id}, new MalformedMessageException(), 'Message cannot have a null process.');
-            
-            if (tempMessage.Sequence__c == null) 
-                throw new EngineException(null, new Set<Id>{message.Id}, new MalformedMessageException(), 'Message cannot have a null sequence.');
+            Boolean heartbeatFlag = (parameters.get('esb_IsHeartbeatProcess') != null) ? (Boolean) parameters.get('esb_IsHeartbeatProcess') : false;
+            if (!heartbeatFlag) {
+              Message__c tempMessage = [SELECT Process__c, Sequence__c FROM Message__c WHERE Id = :message.Id];
+              if (tempMessage.Process__c == null) 
+                  throw new EngineException(null, new Set<Id>{message.Id}, new MalformedMessageException(), 'Message cannot have a null process.');
+              
+              if (tempMessage.Sequence__c == null) 
+                  throw new EngineException(null, new Set<Id>{message.Id}, new MalformedMessageException(), 'Message cannot have a null sequence.');
+            }
+
+
 
             Map<String,Object> attributes = new Map<String,Object>();
             attributes.put('MessageId',message.Id);
@@ -582,7 +587,7 @@ abstract public with sharing class Broker {
             offsetToAttributes.put(offset,attributes);
 
             //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
-            if (parameters.get('eda_IsHeartbeatProcess') != null) {
+            if (parameters.get('esb_IsHeartbeatProcess') != null) {
                 //invoke and wrap up results into messages
                 isHeartbeatProcess = true; 
                 List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, parameters, null).invokeMain().Outputs;
