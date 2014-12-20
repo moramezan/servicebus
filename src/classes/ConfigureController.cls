@@ -1,6 +1,31 @@
 public with sharing class ConfigureController {
     
     /**
+     * eg "https://pod.salesforce.com"
+     */
+    static public String protocolAndHost {
+        get {
+            if (protocolAndHost == null) {
+                //memoize
+                String orgId = UserInfo.getOrganizationId();
+                String userId = UserInfo.getUserId();
+                System.PageReference pr = new System.PageReference('/id/' + orgId + '/' + userId);
+                pr.getParameters().put('oauth_token', UserInfo.getSessionId());
+                pr.getParameters().put('format', 'json');
+                
+                //within test context use url class, else derive from identity api
+                String data = Test.isRunningTest() ? '{"urls": {"rest": "' + Url.getSalesforceBaseUrl().toExternalForm() + '"}}' : pr.getContent().toString();
+                Map<String,Object> result = (Map<String,Object>)Json.deserializeUntyped(data);
+                Map<String,Object> urls = (Map<String,Object>)result.get('urls');
+                Url rest = new Url((String)urls.get('rest'));
+                protocolAndHost = rest.getProtocol() + '://' + rest.getHost();
+            }
+            
+            return protocolAndHost;
+        }
+    }
+    
+    /**
      * Sometimes the CronJobDetail takes a while to populate.
      * We are happy enough knowing just the CronJob Id exists
      * in order to display that the Scheduled Job is alright.
@@ -33,53 +58,11 @@ public with sharing class ConfigureController {
         return this.HomeContent;
     }
     
-    public class IdentityResult {
-        public String id;
-        public String asserted_user;
-        public String user_id;
-        public String organization_id;
-        public String username;
-        public String nick_name;
-        public String display_name;
-        public String email;
-        public String first_name;
-        public String last_name;
-        public Map<String,String> photos;
-        public Map<String,String> urls;
-        public Boolean active;
-        public String user_type;
-        public String language;
-        public String locale;
-        public Integer utcOffset;
-        public DateTime last_modified_date;
-    }
-    
     /**
      * eg "https://pod.salesforce.com"
      */
-    private String PodProtocolAndHost;
     public String getPodProtocolAndHost() {
-        if (this.PodProtocolAndHost == null) {
-            String orgId = UserInfo.getOrganizationId();
-            String userId = UserInfo.getUserId();
-            System.PageReference pr = new System.PageReference('/id/' + orgId + '/' + userId);
-            pr.getParameters().put('oauth_token', UserInfo.getSessionId());
-            pr.getParameters().put('format', 'json');
-            
-            String data;
-            if (!Test.isRunningTest()) {
-                //fetch real identity
-                data = pr.getContent().toString();
-            } else {
-                //fake test identity
-                data = '{"urls": {"rest": "' + Url.getSalesforceBaseUrl().toExternalForm() + '"}}';
-            }
-            
-            IdentityResult result = (IdentityResult)Json.deserialize(data, IdentityResult.class);
-            Url rest = new Url(result.urls.get('rest'));
-            this.PodProtocolAndHost = rest.getProtocol() + '://' + rest.getHost();
-        }
-        return this.PodProtocolAndHost;
+        return protocolAndHost;
     }
     
     public PageReference doRedirect() {
