@@ -51,6 +51,7 @@
         <members>MessageResumeQueueExtensionTest</members>
         <members>MonitorController</members>
         <members>MonitorControllerTest</members>
+        <members>OAuthController</members>
         <members>PostInstallHandler</members>
         <members>PostInstallHandlerTest</members>
         <members>PostUninstallHandler</members>
@@ -129,6 +130,7 @@
         <members>MessageSplash</members>
         <members>Monitor</members>
         <members>MonitorSplash</members>
+        <members>OAuth</members>
         <members>ProcessApexClass</members>
         <members>ProcessCsh</members>
         <members>ProcessDescribe</members>
@@ -213,6 +215,8 @@
         <members>Message__c.Sequence__c</members>
         <members>Message__c.Status__c</members>
         <members>Message__c.Step__c</members>
+        <members>OAuthSetting__c.AccessToken__c</members>
+        <members>OAuthSetting__c.RefreshToken__c</members>
         <members>Process__c.ApexClassId__c</members>
         <members>Process__c.Description__c</members>
         <members>Process__c.FullyQualifiedClassName__c</members>
@@ -251,6 +255,7 @@
         <members>JumpConfig__c</members>
         <members>KnifeSwitch__c</members>
         <members>Message__c</members>
+        <members>OAuthSetting__c</members>
         <members>Process__c</members>
         <members>PublishConfig__c</members>
         <members>ScheduleConfig__c</members>
