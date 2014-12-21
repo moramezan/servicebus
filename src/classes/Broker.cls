@@ -399,7 +399,8 @@ abstract public with sharing class Broker {
      * @param dataId    Id of some record that the sequence will operate on.
      */
     static public Id enqueue(String sequenceName, Id dataId) {
-        if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable'); 
+        //TODO #653
+        //if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable'); 
          
         Map<String,Object> injectedParameters = new Map<String,Object> {
             'esb_SequenceName' => sequenceName,
@@ -423,8 +424,8 @@ abstract public with sharing class Broker {
      * @param  injectedParameters a parametrised description of the message data.
      */
     static public Id enqueue(Map<String,Object> injectedParameters) {
-        if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable');    
-        
+        //TODO #653
+        //if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable');    
         
         // validate params are supplied:
         if (injectedParameters == null) {

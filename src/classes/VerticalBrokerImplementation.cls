@@ -202,7 +202,28 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
      * The VerticalBroker executes another Batch Apex job to run itself again.
      */
     override public void restartImpl() {
-        Database.executeBatch(new VerticalBrokerDispatcher(), 1);
+        //#653 run Broker under sysadmin user context
+        if (Test.isRunningTest()) Database.executeBatch(new VerticalBrokerDispatcher(), 1);
+        else restartDefer();
+    }
+    
+    /**
+     * Doing this asynchronously to avoid 'uncommitted work pending' exception
+     */
+    @Future(callout=true) static private void restartDefer() {
+        String command = 'Database.executeBatch(new ' + VerticalBrokerDispatcher.class.getName() + '(), 1);';
+        
+        //using getSalesforceBaseUrl instead of protocolAndHost because the latter requires a session id
+        PageReference pr = new PageReference(Url.getSalesforceBaseUrl().toExternalForm() + '/services/data/v32.0/tooling/executeAnonymous');
+        pr.getParameters().put('anonymousBody', command);
+        String execApex = pr.getUrl();
+        
+        HttpRequest request = new HttpRequest();
+        request.setMethod('GET');
+        request.setEndpoint(execApex);
+        request.setHeader('Authorization', 'Bearer ' + OAuthSetting__c.getInstance().AccessToken__c);
+        
+        new Http().send(request);
     }
     
     override public Boolean isAlreadyRunning() {

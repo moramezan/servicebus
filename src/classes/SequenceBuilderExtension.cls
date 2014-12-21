@@ -6,6 +6,21 @@ public with sharing class SequenceBuilderExtension {
         this.controller = controller;
     }
     
+    /**
+     * If we don't have an OAuthSetting__c with an AccessToken__c this
+     * quickly sends us through the dance to get that set up correctly.
+     */
+    public PageReference initOAuth() {
+        OAuthSetting__c setting = OAuthSetting__c.getInstance();
+        if (setting == null) setting = new OAuthSetting__c();
+        if (setting.AccessToken__c != null) return null; //all ok
+        
+        //better do the dance
+        PageReference oauth = Page.OAuth;
+        oauth.getParameters().put('retURL', ApexPages.currentPage().getUrl());
+        return oauth;
+    }
+    
     public Boolean getCanConfigureRemoteSiteSetting() {
         Profile profile = (Profile)SalesforceObject.getById(UserInfo.getProfileId());
         return profile.PermissionsModifyAllData && profile.PermissionsCustomizeApplication;

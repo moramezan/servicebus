@@ -1,4 +1,4 @@
-<apex:page standardController="Sequence__c" extensions="SequenceBuilderExtension">
+<apex:page standardController="Sequence__c" extensions="SequenceBuilderExtension" action="{!initOAuth}">
     
     <apex:pageMessages showDetail="true" />
     
