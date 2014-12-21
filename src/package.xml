@@ -65,6 +65,7 @@
         <members>ProcessObjectTest</members>
         <members>Publish</members>
         <members>PublishTest</members>
+        <members>RemoteSiteSettingController</members>
         <members>SalesforceObject</members>
         <members>SalesforceObjectSet</members>
         <members>SalesforceObjectSetTest</members>
@@ -102,6 +103,7 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>RemoteSiteSetting</members>
         <members>bootstrapExt</members>
         <name>ApexComponent</name>
     </types>

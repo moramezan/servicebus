@@ -60,6 +60,11 @@ public with sharing class OAuthController {
     }
     
     public PageReference handleRedirect() {
+        if (!RemoteSiteSettingController.isRssPresent) {
+            //STEP ZERO (let component javascript deploy remote site setting)
+            return null;
+        }
+        
         OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
         if (setting == null) setting = new OAuthSetting__c();
         String code = ApexPages.currentPage().getParameters().get('code');

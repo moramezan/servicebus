@@ -3,49 +3,8 @@
     <apex:sectionHeader title="Thanks for installing Enterprise Service Bus" />
 
     <apex:form >
-        <apex:pageBlock mode="maindetail" rendered="{!NOT(HasRemoteSiteSetting)}">
-            <script>
-                (function createRemoteSite() {
-                    // Calls the Metdata API from JavaScript to create the Remote Site Setting to permit Apex callouts
-                    var binding = new XMLHttpRequest();
-                    var request = ''
-                        + '<?xml version="1.0" encoding="utf-8"?>'
-                        + '<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
-                        + '<env:Header>'
-                        + '<urn:SessionHeader xmlns:urn="http://soap.sforce.com/2006/04/metadata">'
-                        + '<urn:sessionId>{!$Api.Session_ID}</urn:sessionId>'
-                        + '</urn:SessionHeader>'
-                        + '</env:Header>'
-                        + '<env:Body>'
-                        + '<createMetadata xmlns="http://soap.sforce.com/2006/04/metadata">'
-                        + '<metadata xsi:type="RemoteSiteSetting">'
-                        + '<fullName>ESB_API</fullName>'
-                        + '<description>Enterprise Service Bus API</description>'
-                        + '<disableProtocolSecurity>false</disableProtocolSecurity>'
-                        + '<isActive>true</isActive>'
-                        + '<url>{!PodProtocolAndHost}</url>'
-                        + '</metadata>'
-                        + '</createMetadata>'
-                        + '</env:Body>'
-                        + '</env:Envelope>'
-                    ;
-                    binding.open('POST', 'https://' + window.location.host + '/services/Soap/m/32.0');
-                    binding.setRequestHeader('SOAPAction','""');
-                    binding.setRequestHeader('Content-Type', 'text/xml');
-                    binding.onreadystatechange = function() {
-                        if(this.readyState == 4) {
-                            var parser = new DOMParser();
-                            var doc  = parser.parseFromString(this.response, 'application/xml');
-                            var errors = doc.getElementsByTagName('errors');
-                            errors.length ? alert(errors) : window.location.reload();
-                        }
-                    };
-                    binding.send(request);
-                }());
-            </script>
-        </apex:pageBlock>
-        
-        <apex:pageBlock mode="maindetail" rendered="{!HasRemoteSiteSetting}">
+        <c:RemoteSiteSetting >
+        <apex:pageBlock mode="maindetail">
             <apex:pageBlockSection collapsible="false" columns="1" title="Checking Remote Site Setting...">
                 <apex:pageBlockSectionItem rendered="{!HasRemoteSiteSetting}">
                     <p>
@@ -97,7 +56,7 @@
         <br />
         <br />
         
-        
+        </c:RemoteSiteSetting>
         </apex:form>
     
     <p>For more in depth analysis and insight:

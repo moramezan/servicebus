@@ -1,31 +1,6 @@
 public with sharing class ConfigureController {
     
     /**
-     * eg "https://pod.salesforce.com"
-     */
-    static public String protocolAndHost {
-        get {
-            if (protocolAndHost == null) {
-                //memoize
-                String orgId = UserInfo.getOrganizationId();
-                String userId = UserInfo.getUserId();
-                System.PageReference pr = new System.PageReference('/id/' + orgId + '/' + userId);
-                pr.getParameters().put('oauth_token', UserInfo.getSessionId());
-                pr.getParameters().put('format', 'json');
-                
-                //within test context use url class, else derive from identity api
-                String data = Test.isRunningTest() ? '{"urls": {"rest": "' + Url.getSalesforceBaseUrl().toExternalForm() + '"}}' : pr.getContent().toString();
-                Map<String,Object> result = (Map<String,Object>)Json.deserializeUntyped(data);
-                Map<String,Object> urls = (Map<String,Object>)result.get('urls');
-                Url rest = new Url((String)urls.get('rest'));
-                protocolAndHost = rest.getProtocol() + '://' + rest.getHost();
-            }
-            
-            return protocolAndHost;
-        }
-    }
-    
-    /**
      * Sometimes the CronJobDetail takes a while to populate.
      * We are happy enough knowing just the CronJob Id exists
      * in order to display that the Scheduled Job is alright.
@@ -62,7 +37,7 @@ public with sharing class ConfigureController {
      * eg "https://pod.salesforce.com"
      */
     public String getPodProtocolAndHost() {
-        return protocolAndHost;
+        return RemoteSiteSettingController.protocolAndHost;
     }
     
     public PageReference doRedirect() {
@@ -128,17 +103,7 @@ public with sharing class ConfigureController {
      */
     public Boolean HasRemoteSiteSetting {get; set;}
     public void detectRemoteSiteSetting() {
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint(this.getPodProtocolAndHost());
-        request.setMethod('GET');
-        
-        try {
-            new Http().send(request);
-            this.HasRemoteSiteSetting = true;
-        } catch (CalloutException e) {
-            //remote site setting is missing
-            this.HasRemoteSiteSetting = false;
-        }
+        this.HasRemoteSiteSetting = RemoteSiteSettingController.isRssPresent;
     }
     
     /**
