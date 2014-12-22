@@ -66,7 +66,7 @@ public with sharing class RemoteSiteSettingController {
             + '<env:Body>'
             + '<createMetadata xmlns="http://soap.sforce.com/2006/04/metadata">'
             + '<metadata xsi:type="RemoteSiteSetting">'
-            + '<fullName>Enterprise_Service_Bus_API</fullName>'
+            + '<fullName>Enterprise_Service_Bus_API_' + String.valueOf(DateTime.now().getTime()).right(4) + '</fullName>'
             + '<description>Enterprise Service Bus API</description>'
             + '<disableProtocolSecurity>false</disableProtocolSecurity>'
             + '<isActive>true</isActive>'
