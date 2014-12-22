@@ -104,7 +104,7 @@
     </types>
     <types>
         <members>RemoteSiteSetting</members>
-        <members>bootstrapExt</members>
+        <members>BootstrapExt</members>
         <name>ApexComponent</name>
     </types>
     <types>
