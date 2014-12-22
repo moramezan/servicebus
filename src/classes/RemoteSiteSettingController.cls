@@ -38,7 +38,7 @@ public with sharing class RemoteSiteSettingController {
                 //memoize
                 String orgId = UserInfo.getOrganizationId();
                 String userId = UserInfo.getUserId();
-                System.PageReference pr = new System.PageReference('/id/' + orgId + '/' + userId);
+                PageReference pr = new PageReference('/id/' + orgId + '/' + userId);
                 pr.getParameters().put('oauth_token', UserInfo.getSessionId());
                 pr.getParameters().put('format', 'json');
                 

@@ -1,4 +1,4 @@
-<apex:component controller="RemoteSiteSettingController">
+<apex:component controller="RemoteSiteSettingController" layout="none">
     
     <apex:outputPanel layout="none" rendered="{!isRssPresent}">
         <!-- when Remote Site Setting is present, show contents -->

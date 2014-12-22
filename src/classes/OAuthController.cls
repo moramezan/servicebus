@@ -49,7 +49,7 @@ public with sharing class OAuthController {
      * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2Fesb__OAuth
      */
     public PageReference buildCodeLink(String code) {
-        PageReference pr = new PageReference(ConfigureController.protocolAndHost + '/services/oauth2/token');
+        PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'authorization_code');
         pr.getParameters().put('client_id', CLIENT);
         pr.getParameters().put('client_secret', SECRET);
