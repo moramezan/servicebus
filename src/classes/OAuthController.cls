@@ -48,6 +48,17 @@ public with sharing class OAuthController {
      * &format=json
      * &grant_type=authorization_code
      * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2Fesb__OAuth
+     * 
+     * The Salesforce OAuth service responds with both and access token and a refresh token like this:
+     * {
+     * "id":"https://login.salesforce.com/id/00Dj0000000I44vEAC/005j0000000X37nAAC",
+     * "issued_at":"1419271694442",
+     * "scope":"api refresh_token",
+     * "instance_url":"https://na16.salesforce.com",
+     * "token_type":"Bearer",
+     * "refresh_token":"5Aep861E3ECfhV22nZpJccJlM3BOtQdGCyk.ptFPOUId8FaxmI8NDHIes.T15qoY86qCs2hD1sdWlwudG5HP8I2","signature":"7DRL2Rg8o189HjDwwb2LBGbGXlEYJOCondmLry1D4aY=",
+     * "access_token":"00Dj0000000I44v!AQYAQLocFFeWV3WywoaS6wjcdnEvm4_FdPrd9MrlB_y1Q.5Xll9mTloey5GIXrIP1fdB2lKlsfmZ7Sqh6UAhFzuD6SzHqtXO"
+     * }
      */
     public PageReference buildCodeLink(String code) {
         PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/oauth2/token');
@@ -60,15 +71,62 @@ public with sharing class OAuthController {
         return pr;
     }
     
+    /**
+     * STEP THREE
+     * We periodically perform an out-of-band request to refresh the access token so it's always roaring and ready.
+     * https://na16.salesforce.com/services/oauth2/token
+     * ?client_id=3MVG9fMtCkV6eLhfxsgy.rM62Ve5FyYsgesF4WLk.paM5gTwyAEtQLEnPyYB4l7_f1ywAtb4.6lBeo1ZvuEpE
+     * &client_secret=4608752124209996979
+     * &grant_type=refresh_token
+     * &refresh_token=5Aep861E3ECfhV22nZpJccJlM3BOtQdGCyk.ptFPOUId8FaxmIl5Fuf1.aLnyFHZo2XLyAobgvmfCqq7qvrRICK
+     * 
+     * The Salesforce OAuth service responds with a new access token like this:
+     * {
+     * "id":"https://login.salesforce.com/id/00Dj0000000I44vEAC/005j0000000X37nAAC",
+     * "issued_at":"1419263794330",
+     * "scope":"api refresh_token",
+     * "instance_url":"https://na16.salesforce.com",
+     * "token_type":"Bearer",
+     * "signature":"Y162odkkgH5pTalDzR82nXKRK794hHpBelUb8+fUubs=",
+     * "access_token":"00Dj0000000I44v!AQYAQKgWV8FRAfgKVWJE5BETIjEE0hvNWKojZI57zaxpPcLe1tqWrCXgkjhSvRwXHTiIOTF12Hd7TvKZd7WBg8kUbVIbcHeL"
+     * }
+     */
+    public PageReference buildRefreshLink() {
+        PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/oauth2/token');
+        pr.getParameters().put('grant_type', 'refresh_token');
+        pr.getParameters().put('client_id', CLIENT);
+        pr.getParameters().put('client_secret', SECRET);
+        pr.getParameters().put('refresh_token', OAuthSetting__c.getInstance().RefreshToken__c);
+        return pr;
+    }
+    
+    /**
+     * Performs the third part of the OAuth dance using the refresh token
+     * to get a ready-and-roaring access token, and saves the new one away.
+     */
+    static public void refreshAccessToken() {
+        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
+        if (setting == null) setting = new OAuthSetting__c();
+        
+        HttpRequest request = new HttpRequest();
+        request.setMethod('POST');
+        request.setEndpoint(new OAuthController().buildRefreshLink().getUrl());
+        
+        String data = new Http().send(request).getBody();
+        Token t = (Token)Json.deserialize(data, Token.class);
+        setting.AccessToken__c = t.access_token;
+        upsert setting;
+    }
+    
     public PageReference handleRedirect() {
+        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
+        if (setting == null) setting = new OAuthSetting__c();
+        String code = ApexPages.currentPage().getParameters().get('code');
+        
         if (!RemoteSiteSettingController.isRssPresent) {
             //STEP ZERO (let component javascript deploy remote site setting)
             return null;
         }
-        
-        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
-        if (setting == null) setting = new OAuthSetting__c();
-        String code = ApexPages.currentPage().getParameters().get('code');
         
         if (code == null) {
             //STEP ONE

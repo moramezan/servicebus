@@ -5,12 +5,24 @@
 public with sharing class HeartbeatImplementation implements System.Schedulable {
     
     public void execute(System.SchedulableContext context) {
+        //keep access token roaring and ready every hour
+        deferRefreshAccessToken();
+        
         HeartbeatImplementation.IHeartbeatGenerator heartbeatGenerator = 
             (HeartbeatImplementation.IHeartbeatGenerator) new HeartbeatImplementation.HeartbeatGeneratorImpl();
         heartbeatGenerator.generateHeartbeats();    
     }
-
-
+    
+    /**
+     * We must do this inside a Future method otherwise we get error:
+     * Scheduler: failed to execute scheduled job: jobId: 707j0000004w8PC,
+     * class: common.apex.async.AsyncApexJobObject,
+     * reason: Callout from scheduled Apex not supported.
+     */
+    @Future(callout=true) static private void deferRefreshAccessToken() {
+        OAuthController.refreshAccessToken();
+    }
+    
     public interface IHeartbeatGenerator {
         void generateHeartbeats();
     }
