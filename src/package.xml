@@ -103,8 +103,8 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>RemoteSiteSetting</members>
         <members>BootstrapExt</members>
+        <members>RemoteSiteSetting</members>
         <name>ApexComponent</name>
     </types>
     <types>

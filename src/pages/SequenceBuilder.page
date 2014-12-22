@@ -8,8 +8,8 @@
         <apex:pageBlockButtons location="top" id="pageBlockButtonsId" />
     </apex:pageBlock>
     
-    <c:RemoteSiteSetting>
-    <c:bootstrapExt staticResource="{!$Resource.SequenceBuilderZip}" applicationName="Builder" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}" baseCSSPrefix="z-">
+    <c:RemoteSiteSetting >
+    <c:BootstrapExt staticResource="{!$Resource.SequenceBuilderZip}" applicationName="Builder" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}" baseCSSPrefix="z-">
         window.$Component = window.$Component || {};
         $Component.pageBlockId = '{!$Component.pageBlockId}';
         $Component.pageBlockButtonsId = '{!$Component.pageBlockId.pageBlockButtonsId}';
@@ -76,7 +76,7 @@
         window.URLFOR = window.URLFOR || {};
         URLFOR['/'] = '{!URLFOR("/")}';
         URLFOR[$Page.ProcessSettings] = '{!URLFOR($Page.ProcessSettings)}';
-    </c:bootstrapExt>
+    </c:BootstrapExt>
     </c:RemoteSiteSetting>
 
 </apex:page>

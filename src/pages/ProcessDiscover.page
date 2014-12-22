@@ -1,5 +1,5 @@
 <apex:page tabStyle="Process__c" controller="ProcessDiscoverController" action="{!doRedirect}">
-    <c:bootstrapExt applicationName="Discover" staticResource="{!$Resource.ProcessDiscoverZip}" baseCSSPrefix="z-" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}">
+    <c:BootstrapExt applicationName="Discover" staticResource="{!$Resource.ProcessDiscoverZip}" baseCSSPrefix="z-" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}">
         window.$ObjectType = window.$ObjectType || {};
         $ObjectType.Process__c = $ObjectType.Process__c || {};
         $ObjectType.Process__c.Fields = $ObjectType.Process__c.Fields || {};
@@ -44,5 +44,5 @@
         AsyncApexJob.Status = '{!AsyncApexJob.Status}';
         AsyncApexJob.TotalJobItems = Number({!AsyncApexJob.TotalJobItems});
 
-    </c:bootstrapExt>
+    </c:BootstrapExt>
 </apex:page>
