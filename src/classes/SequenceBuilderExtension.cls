@@ -21,17 +21,6 @@ public with sharing class SequenceBuilderExtension {
         return oauth;
     }
     
-    public Boolean getCanConfigureRemoteSiteSetting() {
-        Profile profile = (Profile)SalesforceObject.getById(UserInfo.getProfileId());
-        return profile.PermissionsModifyAllData && profile.PermissionsCustomizeApplication;
-    }
-    
-    public Boolean getIsRemoteSiteSettingPresent() {
-        ConfigureController controller = new ConfigureController();
-        controller.detectRemoteSiteSetting();
-        return controller.HasRemoteSiteSetting;
-    }
-    
     public String getProcesses() {
         List<Process__c> procs = SalesforceObjectSet.listAll(Process__c.SObjectType);
         return Json.serializePretty(procs);

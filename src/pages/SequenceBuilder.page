@@ -8,6 +8,7 @@
         <apex:pageBlockButtons location="top" id="pageBlockButtonsId" />
     </apex:pageBlock>
     
+    <c:RemoteSiteSetting>
     <c:bootstrapExt staticResource="{!$Resource.SequenceBuilderZip}" applicationName="Builder" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}" baseCSSPrefix="z-">
         window.$Component = window.$Component || {};
         $Component.pageBlockId = '{!$Component.pageBlockId}';
@@ -24,7 +25,6 @@
         
         window.$Page = window.$Page || {};
         $Page.ProcessSettings = '{!$Page.ProcessSettings}';
-        $Page.Configure = '{!$Page.Configure}';
         
         window.Sequence__c = window.Sequence__c || {};
         Sequence__c.Id = '{!Sequence__c.Id}';
@@ -69,8 +69,6 @@
 
         Processes = {!Processes};
         Steps = {!Steps};
-        IsRemoteSiteSettingPresent = Boolean({!IsRemoteSiteSettingPresent});
-        CanConfigureRemoteSiteSetting = Boolean({!CanConfigureRemoteSiteSetting});
         
         window.$CurrentPage = window.$CurrentPage || {};
         $CurrentPage.Url = '{!$CurrentPage.Url}';
@@ -78,7 +76,7 @@
         window.URLFOR = window.URLFOR || {};
         URLFOR['/'] = '{!URLFOR("/")}';
         URLFOR[$Page.ProcessSettings] = '{!URLFOR($Page.ProcessSettings)}';
-        URLFOR[$Page.Configure] = '{!URLFOR($Page.Configure)}';
     </c:bootstrapExt>
+    </c:RemoteSiteSetting>
 
 </apex:page>
