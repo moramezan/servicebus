@@ -1,8 +1,9 @@
 public with sharing class OAuthController {
     
-    final static private String CLIENT = '3MVG9fMtCkV6eLhfxsgy.rM62VU0VV56FOOkj0Tsgj1CavTLb3N.g2kuagIqfQiJ5hZJgJT0JrZKvsBKk_s1J';
-    final static private String SECRET = '2834415504471774418';
-    final static private String REDIRECT = 'https://login.salesforce.com/apex/esb__OAuth';
+    final static private Boolean ISDEV = OAuthController.class.getName().substringBefore('OAuthController').substringBefore('.') == '';
+    final static private String CLIENT = ISDEV ? '3MVG9fMtCkV6eLhfxsgy.rM62Ve5FyYsgesF4WLk.paM5gTwyAEtQLEnPyYB4l7_f1ywAtb4.6lBeo1ZvuEpE' : '3MVG9fMtCkV6eLhfxsgy.rM62VU0VV56FOOkj0Tsgj1CavTLb3N.g2kuagIqfQiJ5hZJgJT0JrZKvsBKk_s1J';
+    final static private String SECRET = ISDEV ? '4608752124209996979' : '2834415504471774418';
+    final static private String REDIRECT = ISDEV ? 'https://login.salesforce.com/apex/OAuth' : 'https://login.salesforce.com/apex/esb__OAuth';
     
     public class Token {
         public String id;
