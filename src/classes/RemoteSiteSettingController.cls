@@ -38,8 +38,13 @@ public with sharing class RemoteSiteSettingController {
                 //memoize
                 String orgId = UserInfo.getOrganizationId();
                 String userId = UserInfo.getUserId();
+                String sessionId = UserInfo.getSessionId();
+                
+                //we can trust getSalesforceBaseUrl within batches and schedules (but not in VF)
+                if (sessionId == null) return Url.getSalesforceBaseUrl().toExternalForm();
+                
                 PageReference pr = new PageReference('/id/' + orgId + '/' + userId);
-                pr.getParameters().put('oauth_token', UserInfo.getSessionId());
+                pr.getParameters().put('oauth_token', sessionId);
                 pr.getParameters().put('format', 'json');
                 
                 //within test context use url class, else derive from identity api
