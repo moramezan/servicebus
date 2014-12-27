@@ -551,11 +551,7 @@ abstract public with sharing class Broker {
         //OUR FUCKUPS (before invocation)
         
         Map<Id,Map<String,Object>> id2parameters = new Map<Id,Map<String,Object>>();
-        try {
-            for (Message__c inputMessage : inputMessages) id2parameters.put(inputMessage.Id, (Map<String,Object>)Json.deserializeUntyped(inputMessage.Parameters__c));
-        } catch (JsonException e) {
-            throw new EngineException(null, inputMessageIds, e, 'Could not deserialize json, eg malformed parameters.');
-        }
+        for (Message__c inputMessage : inputMessages) id2parameters.put(inputMessage.Id, (Map<String,Object>)Json.deserializeUntyped(inputMessage.Parameters__c));
         
         //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
         if (id2parameters.get(inputMessages[0].Id).get('esb_IsHeartbeatProcess') != null) {

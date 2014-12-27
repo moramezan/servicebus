@@ -102,6 +102,7 @@
     </fields>
     <fields>
         <fullName>Parameters__c</fullName>
+        <defaultValue>&quot;{}&quot;</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>What is the JSON object representing the parameters carried by this message?</inlineHelpText>
         <label>Parameters</label>

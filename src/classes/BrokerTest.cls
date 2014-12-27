@@ -673,33 +673,6 @@
      * http://salesforce.stackexchange.com/questions/27180/database-emptyrecyclebin-exhibits-unexpected-behaviour
      */
     
-    static testmethod void testMalformedParametersThrowsSystemJsonException() {
-        //arrange
-        Message__c message = new Message__c(Parameters__c = '{"malformed":....}');
-        insert message;
-        
-        //act
-        Broker broker = new DoNothingBroker();
-        try {
-            List<Message__c> messages = broker.execute(new List<Message__c>{message});
-            broker.persist(new List<Message__c>{message}, messages);
-            broker.resolve(messages);
-            System.assert(false, 'Line above should throw exception.');
-        } catch (Broker.EngineException e) {
-            update e.fuckups;
-            
-            //assemble
-            Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
-            Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(messageActual.Cause__c);
-            
-            //assert
-            String expectedMessage = 'Could not deserialize json, eg malformed parameters.';
-            String actualMessage = (String)ex.get('Message');
-            System.assertEquals(expectedMessage, actualMessage, 'Wrong message detail.');
-        }        
-    }
-    
-    
     // TODO - Test Fails
     //        Assume it will be fixed when deailing with Issue "migrate chunking logic into abstract Broker #636"
     // Method Name      testMissingPositionThrowsExpectedException

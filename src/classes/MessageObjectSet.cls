@@ -16,9 +16,28 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
     
     override public void onBeforeInsert() {
         deleteCompletedMessages(System.now());   
+        this.validateJsonParameters();
     }
-
-
+    
+    override public void onBeforeUpdate(List<SObject> oldObjects) {
+        this.validateJsonParameters();
+    }
+    
+    /**
+     * Ensure that Message Parameters are always valid JSON #660
+     * So that we can trust them in the Broker and keep code simple.
+     */
+    @TestVisible private void validateJsonParameters() {
+        List<Message__c> messages = this.getSObjects();
+        
+        for (Message__c message : messages) {
+            try {
+                Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+            } catch (JsonException e) {
+                message.Parameters__c.addError(e);
+            }
+        }
+    }
 
      /*
       *  Users may wish to view completed messages. The question then arises,

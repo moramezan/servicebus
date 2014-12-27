@@ -1,5 +1,37 @@
 @IsTest public class MessageObjectSetTest {
     
+    static testmethod void testValidMessageParameters() {
+        //arrange message
+        Message__c validMessage = new Message__c(
+            Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}'
+        );
+        
+        //assert
+        System.assert(!ApexPages.hasMessages(), 'Should not have errors before.');
+        
+        //act
+        new MessageObjectSet(new List<Message__c>{validMessage}).validateJsonParameters();
+        
+        //assert
+        System.assert(!ApexPages.hasMessages(), 'Should not have errors after.');
+    }
+    
+    static testmethod void testInvalidMessageParameters() {
+        //arrange message
+        Message__c validMessage = new Message__c(
+            Parameters__c = '{...}'
+        );
+        
+        //assert
+        System.assert(!ApexPages.hasMessages(), 'Should not have errors before.');
+        
+        //act
+        new MessageObjectSet(new List<Message__c>{validMessage}).validateJsonParameters();
+        
+        //assert
+        System.assert(ApexPages.hasMessages(), 'Should have errors after.');
+    }
+    
     static testmethod void correctlyDeletesExpiredCompletedMessages() {
         // arrange
         MessageObjectSet.triggerEnabled = false;
