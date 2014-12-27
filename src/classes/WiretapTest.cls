@@ -15,7 +15,7 @@ private class WiretapTest {
         actualLimits = (actualLimits == null) ? 1 : actualLimits; 
 
         //assert
-        Integer expectedLimits = 1;
+        Integer expectedLimits = 9;
         System.assertEquals(expectedLimits, actualLimits);
     }
 

@@ -8,6 +8,7 @@ public with sharing class AuditWriter {
         public String Description = 'Stores the message parameters under an Audit Group.';
         public String Icon = 'pencil_add';
         public String HelpUrl = Page.AuditInitializerConfigCsh.getUrl();
+        public Integer Limits = 1;
     }
     
     public class AuditWriterException extends Exception {}

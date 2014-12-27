@@ -80,7 +80,6 @@ abstract public with sharing class Broker {
     @TestVisible private static Integer MaxHops  = 500;
     
     public class TooManyHopsException extends Exception {}
-    public class MalformedMessageException extends Exception {} // Temp Measure, Matt - feel free to delete
       
     public class EngineException extends Exception {
         /**
@@ -348,40 +347,41 @@ abstract public with sharing class Broker {
 
     /**
      * Determines which messages are eligible to be moved into the Started status (by finding Messages
-     * with 'Rebuffered' and 'Buffered' status). Note: too many fucked messages would clog up the system,
-     * so we have a system-wide fuckedLimit.
+     * with 'Rebuffered' and 'Buffered' status).
      *
      * Messages that should be processed have their status marked as Started in the database before being
      * submitted the query locator. That way, if any given execution fails, those messages will remain in the
      * easily identifiable 'Started' state.
      *
-     * @param workCount Maximum number of Messages to mark and locate (subject to fuckups)
-     * @return          Query Locator identifying the now-marked-as-Started Messages.
+     * @return QueryLocator identifying the to-be-marked-as-Started Messages.
      */
-    virtual public Database.QueryLocator locateMarkableWork(Integer workCount) {
-        Integer fuckedLimit = 100;
+    virtual public Database.QueryLocator locateMarkableWork() {
+        //find oldest rebuffered message or oldest buffered message
+        Message__c specimen;
+        try {
+            specimen = [
+                SELECT Id, Status__c, Process__c, Process__r.Limits__c
+                FROM Message__c
+                WHERE Status__c IN ('Rebuffered', 'Buffered')
+                ORDER BY Status__c DESC, CreatedDate ASC
+                LIMIT 1
+            ];
+        } catch (QueryException e) {
+            //no work found, return empty query locator
+            return Database.getQueryLocator([SELECT Id FROM Message__c WHERE Id IN (null)]);
+        }
         
-        Integer fuckedCount = [
-            SELECT COUNT()
-            FROM Message__c
-            WHERE Status__c = 'Started'
-        ];
-        
-        Integer rebufferedCount = [
-            SELECT COUNT()
-            FROM Message__c
-            WHERE Status__c = 'Rebuffered'
-        ];
-        
-        //derives maximum number of Messages available for starting
-        Integer queryLimit = Math.max(0, fuckedLimit - fuckedCount) + rebufferedCount;
+        //number of times specimen process can run within governor limits, eg 1
+        Integer queryLimit = specimen.Process__r.Limits__c != null ? specimen.Process__r.Limits__c.intValue() : 1;
+        String status = specimen.Status__c;
+        Id processId = specimen.Process__c;
         
         Set<Id> messageIds = new Map<Id,Message__c>([
             SELECT Id
             FROM Message__c
-            WHERE Status__c IN ('Rebuffered', 'Buffered')
-            ORDER BY Status__c DESC
-            LIMIT :Math.min(workCount, queryLimit)
+            WHERE Status__c = :status
+            ORDER BY CreatedDate ASC
+            LIMIT :queryLimit
         ]).keySet();
         
         //query locator hands back only the messages that are markable as Started
@@ -545,156 +545,119 @@ abstract public with sharing class Broker {
     virtual public List<Message__c> execute(List<Message__c> inputMessages) {
         //empty inputs, empty outputs
         if (inputMessages.isEmpty()) return new List<Message__c>();
-
-        // Observation / possible TODO :
-        // there is an assumption that all messages are for the same process ..
-        // ie an upstream function did its job correctly
-        // i think we may need to throw an exception if we detect
-        // more than one process in the collection 
-
-
+        
+        Set<Id> inputMessageIds = new Map<Id,SObject>(inputMessages).keySet();
+        
         //OUR FUCKUPS (before invocation)
         
-        List<Message__c> messages = new List<Message__c>();
-        Boolean isHeartbeatProcess = false; // a single message flips this to true - see observation above and need for an exception       
-        Integer offset = 1;
-        Map<Integer, Broker.Wrapper> offsetToWrapper = new Map<Integer, Broker.Wrapper>();
-        Map<Integer, Map<String,Object>> offsetToAttributes = new Map<Integer, Map<String,Object>>();
-        
-        for (Message__c message : inputMessages) {                            
-            Map<String,Object> parameters;
-            try {
-                parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
-            } catch (JsonException e) {
-                throw new EngineException(null, new Set<Id>{message.Id}, e, 'Could not deserialize json, eg malformed parameters.');
-            }
-
-            // Temp Measure, Matt - feel free to delete
-            Boolean heartbeatFlag = (parameters.get('esb_IsHeartbeatProcess') != null) ? (Boolean) parameters.get('esb_IsHeartbeatProcess') : false;
-            if (!heartbeatFlag) {
-              Message__c tempMessage = [SELECT Process__c, Sequence__c FROM Message__c WHERE Id = :message.Id];
-              if (tempMessage.Process__c == null) 
-                  throw new EngineException(null, new Set<Id>{message.Id}, new MalformedMessageException(), 'Message cannot have a null process.');
-              
-              if (tempMessage.Sequence__c == null) 
-                  throw new EngineException(null, new Set<Id>{message.Id}, new MalformedMessageException(), 'Message cannot have a null sequence.');
-            }
-
-
-
-            Map<String,Object> attributes = new Map<String,Object>();
-            attributes.put('MessageId',message.Id);
-            attributes.put('Parameters',parameters);
-            offsetToAttributes.put(offset,attributes);
-
-            //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
-            if (parameters.get('esb_IsHeartbeatProcess') != null) {
-                //invoke and wrap up results into messages
-                isHeartbeatProcess = true; 
-                List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, parameters, null).invokeMain().Outputs;
-                for (Object output : outputs) messages.add(new Message__c(Parameters__c = Json.serializePretty(output), Status__c = 'Buffered'));
-            }
-            
-            else {
-                Step__c step;
-                try {
-                    step = [
-                        SELECT Process__c, ConfigId__c, Process__r.Name, Process__r.FullyQualifiedClassName__c
-                        FROM Step__c
-                        WHERE Id = :message.Step__c
-                    ];
-                } catch (QueryException e) {
-                    throw new EngineException(null, new Set<Id>{message.Id}, e, 'Step unqueryable, eg bad sequence name, position, missing terminate.');
-                }
-                
-                Type reflector = Type.forName(step.Process__r.FullyQualifiedClassName__c);
-                if (reflector == null) {
-                    throw new EngineException(null, new Set<Id>{message.Id}, null, 'Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c);
-                }
-                
-                Type meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + '.' + 'Meta');
-                if (meta == null) {
-                    throw new EngineException(null, new Set<Id>{message.Id}, null, 'Could not see Meta inner class, this is not a valid process: ' + reflector.getName());
-                }
-                
-                //save important message properties (such as eda_Hops) so that process authors cannot pervert them  
-                //THROWS EngineException TODO : requires a more generic approach not specific to just the eda_Hops
-                try {
-                    Integer hops = enforceMaxHops(parameters, maxHops);
-                    attributes = offsetToAttributes.get(offset);
-                    attributes.put('Hops',hops);
-                    offsetToAttributes.put(offset,attributes);
-                } catch (TooManyHopsException e) {
-                    //wrapped this here because we need to stick the MESSAGE ID on the exception in order to be able to write the problem away
-                    throw new EngineException(null, new Set<Id>{message.Id}, e, 'Too many hops - to resolve, manually set esb_Hops on parameters to 1');
-                } 
-                
-                SObject config;
-                if (step.ConfigId__c != null) config = SalesforceObject.getById(step.ConfigId__c);
-                Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters, config);
-                offsetToWrapper.put(offset, wrapper);
-                offset++;
-            }   
+        Map<Id,Map<String,Object>> id2parameters = new Map<Id,Map<String,Object>>();
+        try {
+            for (Message__c inputMessage : inputMessages) id2parameters.put(inputMessage.Id, (Map<String,Object>)Json.deserializeUntyped(inputMessage.Parameters__c));
+        } catch (JsonException e) {
+            throw new EngineException(null, inputMessageIds, e, 'Could not deserialize json, eg malformed parameters.');
         }
         
-        if (isHeartbeatProcess) {
-             return messages;
-        }   
-
-        //THEIR FUCKUPS (invocation)  
-          
-        Savepoint sp;
-        Integer currentOffset;
+        //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
+        if (id2parameters.get(inputMessages[0].Id).get('esb_IsHeartbeatProcess') != null) {
+            //invoke and wrap up results into messages
+            List<Message__c> outputMessages = new List<Message__c>();
+            for (Message__c inputMessage : inputMessages) {
+                Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Parameters__c);
+                List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, parameters, null).invokeMain().Outputs;
+                for (Map<String,Object> output : outputs) outputMessages.add(new Message__c(Parameters__c = Json.serializePretty(output), Status__c = 'Buffered'));
+            }
+            return outputMessages;
+        }
+        
+        //specimen message will have same process as others
+        Message__c specimen = [SELECT Process__r.FullyQualifiedClassName__c, Step__r.ConfigId__c FROM Message__c WHERE Id = :inputMessages[0].Id];
+        
+        if (specimen.Step__c == null) {
+            //this scenario is really following on from a failed resolve - thinking that we might explicitly set a new message status
+            //of FAILED but in due course we hope to do away with resolve step entirely with message names '{sequence}#{position}V{version}'
+            throw new EngineException(null, inputMessageIds, null, 'Step unqueryable, eg bad sequence name, position, missing terminate.');
+        }
+        
+        Type reflector = Type.forName(specimen.Process__r.FullyQualifiedClassName__c);
+        if (reflector == null) {
+            throw new EngineException(null, inputMessageIds, null, 'Reflector for classname was null: ' + specimen.Process__r.FullyQualifiedClassName__c);
+        }
+        
+        Type meta = Type.forName(specimen.Process__r.FullyQualifiedClassName__c + '.' + 'Meta');
+        if (meta == null) {
+            throw new EngineException(null, inputMessageIds, null, 'Could not see Meta inner class, this is not a valid process: ' + reflector.getName());
+        }
+        
+        //save important message properties (such as esb_Hops) so that process authors cannot pervert them  
+        //THROWS EngineException TODO : requires a more generic approach not specific to just the esb_Hops
+        Map<Id,Integer> id2hops = new Map<Id,Integer>();
         try {
-            for (Integer wrapperOffset : offsetToWrapper.keySet()) { // no indent - preserve git diff
+            for (Message__c inputMessage : inputMessages) id2hops.put(inputMessage.Id, enforceMaxHops(id2parameters.get(inputMessage.Id), maxHops));
+        } catch (TooManyHopsException e) {
+            //wrapped this here because we need to stick the MESSAGE ID on the exception in order to be able to write the problem away
+            throw new EngineException(null, inputMessageIds, e, 'Too many hops - to resolve, manually set esb_Hops on parameters to 0');
+        }
+        
+        //specimen determines whether all have configs or none
+        Map<Id,SObject> messageId2config = new Map<Id,SObject>();
+        if (specimen.Step__r.ConfigId__c != null) {
+            //find all steps config ids
+            Map<Id,Message__c> id2message = new Map<Id,Message__c>([
+                SELECT Step__r.ConfigId__c
+                FROM Message__c
+                WHERE Id IN :inputMessageIds
+            ]);
+            
+            //arrange step config ids and query all config sobjects
+            List<Id> configIds = new List<Id>();
+            for (Message__c message : id2message.values()) configIds.add(message.Step__r.ConfigId__c);
+            Map<Id,SObject> configId2config = new Map<Id,SObject>(SalesforceObject.getByIds(configIds));
+            
+            //arrange config objects against message ids
+            for (Message__c message : id2message.values()) messageId2config.put(message.Id, configId2config.get(message.Step__r.ConfigId__c));
+        }
+        
+        Map<Id,Broker.Wrapper> id2wrapper = new Map<Id,Broker.Wrapper>();
+        for (Message__c inputMessage : inputMessages) id2wrapper.put(inputMessage.Id, new Broker.Wrapper(reflector, id2parameters.get(inputMessage.Id), messageId2config.get(inputMessage.Id)));
+        
+        //THEIR FUCKUPS (invocation)
+        
+        Savepoint sp;
+        try {
+            
             //TODO COUNT ANY DMLS
-            currentOffset = wrapperOffset;
-            Broker.Wrapper wrapper = offsetToWrapper.get(wrapperOffset);
-            wrapper.invokeCallouts();
-            }
+            for (Broker.Wrapper wrapper : id2wrapper.values()) wrapper.invokeCallouts();
             sp = Database.setSavepoint();
-            for (Integer wrapperOffset : offsetToWrapper.keySet()) { // no indent - preserve git diff
-            currentOffset = wrapperOffset;
-            Broker.Wrapper wrapper = offsetToWrapper.get(wrapperOffset);
-            wrapper.invokeMain();
+            for (Broker.Wrapper wrapper : id2wrapper.values()) wrapper.invokeMain();
             //TODO COUNT ANY CALLOUTS
-            }
+            
         } catch (Exception e) {
             //#581 smoking gun should point at the user, NOT at our broker
-            Map<String,Object> attributes = offsetToAttributes.get(currentOffset);
-            Id messageId = (Id)attributes.get('MessageId');
-            throw new EngineException(sp, new Set<Id>{messageId}, e);
+            throw new EngineException(sp, inputMessageIds, e);
         }
         
-        //OUR FUCKUPS  (after invocation)
+        //OUR FUCKUPS (after invocation)
         
-        for (Integer wrapperOffset : offsetToWrapper.keySet()) {
-            Broker.Wrapper wrapper = offsetToWrapper.get(wrapperOffset);
+        Map<Id,List<Map<String,Object>>> id2outputParameters = new Map<Id,List<Map<String,Object>>>();
+        for (Id messageId : id2wrapper.keySet()) id2outputParameters.put(messageId, id2wrapper.get(messageId).Outputs);
         
-            //write back save important message properties to the parameters collections in results
-            //TODO : requires a more generic approach to write back the "esb_" properties to 
-
-            List<Map<String,Object>> results = wrapper.Outputs;
- 
-            Map<String,Object> attributes = offsetToAttributes.get(wrapperOffset);
-            Integer hops = (Integer)attributes.get('Hops');
-            Map<String,Object> parameters = ( Map<String,Object> )attributes.get('Parameters');
-
-            this.applyHops(results, hops); 
-            
-            //gate processing support method
-            this.gateHelper(parameters, results);
-            
-            //wrap up results into Messages
-            for (Map<String,Object> n : results) {
-                messages.add(new Message__c(
-                    Parameters__c = Json.serializePretty(n),
-                    Status__c = 'Buffered'
-                ));
-            }  
-        }         
+        //write back save important message properties to the parameters collections in results
+        //TODO : requires a more generic approach to write back the "esb_" properties to 
+        for (Id messageId : id2outputParameters.keySet()) this.applyHops(id2outputParameters.get(messageId), id2hops.get(messageId));
         
-        return messages;
+        //gate processing support method
+        for (Id messageId : id2outputParameters.keySet()) this.gateHelper(id2parameters.get(messageId), id2outputParameters.get(messageId));
+        
+        //wrap up results into Messages
+        List<Message__c> outputMessages = new List<Message__c>();
+        for (List<Map<String,Object>> outputParameters : id2outputParameters.values()) for (Map<String,Object> outputParameter : outputParameters) {
+            outputMessages.add(new Message__c(
+                Parameters__c = Json.serializePretty(outputParameter),
+                Status__c = 'Buffered'
+            ));
+        }
+        
+        return outputMessages;
     }
 
     /**

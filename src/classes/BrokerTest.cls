@@ -34,6 +34,51 @@
         }
     }
 
+    static testmethod void testChunkingMarkFindsMultipleWork() {
+        //arrange broker
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        
+        //arrange processes and sequence and steps
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        
+        Sequence__c sequence = new Sequence__c(Name = 'test');
+        insert sequence;
+        
+        Step__c wiretapStep = StepObject.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        
+        //arrange messages
+        String parameters = '{"esb_SequenceName":"test","esb_Position":0}';
+        List<Message__c> messages = new List<Message__c>{
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters)
+        };
+        
+        insert messages;
+        Broker.impl().resolve(messages);
+        
+        //act
+        Database.QueryLocator locator = Broker.impl().locateMarkableWork();
+        List<Message__c> records = new ApexPages.StandardSetController(locator).getRecords();
+        
+        //assert
+        Integer expectedLimits = 9;
+        Integer actualLimits = new Wiretap.Meta().Limits;
+        System.assertEquals(expectedLimits, actualLimits, 'Wiretap should have meta limits of nine.');
+        
+        Integer expectedSize = 9;
+        Integer actualSize = records.size();
+        System.assertEquals(expectedSize, actualSize, 'Chunking mark should have found nine.');
+    }
+    
 
     static testmethod void hopsExceededWillHaltStartedWithAppropriateMessageDetail() {
         // arrange
@@ -103,7 +148,7 @@
         Integer expectedHops = maxHops;
         System.assertEquals(expectedHops, actualHops, 'Wrong hops.');
         
-        String expectedDetail = 'Too many hops - to resolve, manually set esb_Hops on parameters to 1';
+        String expectedDetail = 'Too many hops - to resolve, manually set esb_Hops on parameters to 0';
         System.assertEquals(expectedDetail, actualDetail, 'Wrong message');
         
         String expectedStatus = 'Started';
@@ -265,17 +310,17 @@
     
     static testmethod void testLocatorMarksCorrectNumberOfMessages() {
         //arrange
-        Integer queryLimit = 2;
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Buffered'),
-            new Message__c(Status__c = 'Buffered'),
-            new Message__c(Status__c = 'Buffered')
+            new Message__c(Process__c = terminateProcess.Id, Status__c = 'Buffered'),
+            new Message__c(Process__c = terminateProcess.Id, Status__c = 'Buffered'),
+            new Message__c(Process__c = terminateProcess.Id, Status__c = 'Buffered')
         };
         
         //act
         MockBroker broker = new MockBroker();
-        Database.QueryLocator locator = broker.locateMarkableWork(queryLimit);
+        Database.QueryLocator locator = broker.locateMarkableWork();
         Database.QueryLocatorIterator iterator = locator.iterator();
         
         //MARK
@@ -286,21 +331,19 @@
         
         //assert
         Integer actualCount = messages.size();
-        Integer expectedCount = 2;
+        Integer expectedCount = 3;
         System.assertEquals(expectedCount, actualCount);
     }
     
     static testmethod void testLocatorOnlyMarksNonStartedWork() {
         //arrange
-        Integer fuckedLimit = 2;
-        
         insert new List<Message__c>{
             new Message__c(Status__c = 'Started'),
             new Message__c(Status__c = 'Started')
         };
     
         //act
-        Database.QueryLocatorIterator iterator = new MockBroker().locateMarkableWork(fuckedLimit).iterator();
+        Database.QueryLocatorIterator iterator = new MockBroker().locateMarkableWork().iterator();
         List<Message__c> messages = new List<Message__c>();
         while (iterator.hasNext()) messages.add((Message__c)iterator.next());
         
@@ -311,7 +354,7 @@
     }
     
     static testmethod void testLocatorReturnsOnlyRebufferedWork() {
-        Integer workCount = 2;
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
         //arrange fucked messages
         insert new List<Message__c>{
@@ -321,13 +364,13 @@
         
         //arrange Rebuffered messages
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Rebuffered'),
-            new Message__c(Status__c = 'Rebuffered')
+            new Message__c(Process__c = terminateProcess.Id, Status__c = 'Rebuffered'),
+            new Message__c(Process__c = terminateProcess.Id, Status__c = 'Rebuffered')
         };
         
         //act
         MockBroker broker = new MockBroker();
-        Database.QueryLocator locator = broker.locateMarkableWork(workCount);
+        Database.QueryLocator locator = broker.locateMarkableWork();
         Database.QueryLocatorIterator iterator = locator.iterator();
         
         //MARK

@@ -1,4 +1,105 @@
 @IsTest public class VerticalBrokerImplementationTest {
+    
+    static testmethod void testChunkedMarkContextsCount() {
+        //arrange processes and sequence and steps
+        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        
+        Sequence__c sequence = new Sequence__c(Name = 'test');
+        insert sequence;
+        
+        Step__c wiretapStep = StepObject.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        
+        //arrange messages
+        String parameters = '{"esb_SequenceName":"test","esb_Position":0}';
+        List<Message__c> messages = new List<Message__c>{
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters),
+            new Message__c(Parameters__c = parameters)
+        };
+        
+        insert messages;
+        Broker.impl().resolve(messages);
+        VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
+        
+        //assert
+        Integer expectedContexts = 100;
+        Integer actualContexts = impl.Contexts;
+        System.assertEquals(expectedContexts, actualContexts, 'Should have five contexts.');
+        
+        //act (List controllers are not supported for FieldPermissions)
+        Database.QueryLocatorIterator iterator = impl.start(null).iterator();
+        List<SObject> records = new List<Sobject>();
+        while (iterator.hasNext()) records.add(iterator.next());
+        
+        //assert
+        Integer expectedSize = 100;
+        Integer actualSize = records.size();
+        System.assertEquals(expectedSize, actualSize, 'Locator should have 100 records.');
+        
+        //act
+        impl.execute(null, null);
+        
+        //assert
+        expectedContexts = 99;
+        actualContexts = impl.Contexts;
+        System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
+        
+        //assert (should have marked as many as he can fit within remaining contexts)
+        Integer expectedMarked = 9;
+        Integer actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
+        System.assertEquals(expectedMarked, actualMarked, 'Should have nine marked messages.');
+        
+        //act
+        impl.execute(null, null);
+        
+        //assert
+        expectedContexts = 98;
+        actualContexts = impl.Contexts;
+        System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
+        
+        //assert (should have executed all marked messages in one chunk)
+        expectedMarked = 0;
+        actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
+        System.assertEquals(expectedMarked, actualMarked, 'Should have zero marked messages.');
+        
+        //act
+        impl.execute(null, null);
+        
+        //assert
+        expectedContexts = 97;
+        actualContexts = impl.Contexts;
+        System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
+        
+        //assert (should have marked as many as he can fit within remaining contexts)
+        expectedMarked = 9;
+        actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
+        System.assertEquals(expectedMarked, actualMarked, 'Should have nine marked messages.');
+        
+        //act
+        impl.execute(null, null);
+        
+        //assert
+        expectedContexts = 96;
+        actualContexts = impl.Contexts;
+        System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
+        
+        //assert (should have executed all marked messages in one chunk)
+        expectedMarked = 0;
+        actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
+        System.assertEquals(expectedMarked, actualMarked, 'Should have zero marked messages.');
+        
+        //act
+        impl.execute(null, null);
+        
+    }
 
     static testmethod void testMarkAndExecuteAndDoneConditions() {
         //arrange specific broker implementation
@@ -102,8 +203,7 @@
         );
         insert message03;
         
-        Integer totalPotentialMarks = 2; // Less than Buffered Messages Count
-        VerticalBrokerImplementation.TotalPotentialMarks = totalPotentialMarks;
+        Integer totalPotentialMarks = 3; // Less than Buffered Messages Count
         
         
         //arrange resolution
@@ -173,7 +273,6 @@
         insert message03;
         
         Integer totalPotentialMarks = 4;  // Greater than Buffered Messages Count
-        VerticalBrokerImplementation.TotalPotentialMarks = totalPotentialMarks;
 
         //arrange resolution
         VerticalBrokerImplementation impl = (VerticalBrokerImplementation)Broker.impl();
@@ -375,7 +474,7 @@
         system.assertEquals(expectedTerminate, actualTerminate);
         Integer expectedGate = 1;
         system.assertEquals(expectedGate, actualGate);
-        Integer expectedWiretap = 1;
+        Integer expectedWiretap = 9;
         system.assertEquals(expectedWiretap, actualWiretap);
     }
     

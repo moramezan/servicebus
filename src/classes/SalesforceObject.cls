@@ -21,4 +21,15 @@ abstract with sharing public class SalesforceObject {
         String fields = String.join(new List<String>(description.fields.getMap().keySet()), ',');
         return Database.query('SELECT ' + fields + ' FROM ' + name + ' WHERE Id = :id');
     }
+    
+    static public List<SObject> getByIds(List<Id> ids) {
+        if (ids.isEmpty()) return new List<SObject>();
+        
+        SObjectType type = ids[0].getSObjectType();
+        DescribeSObjectResult description = type.getDescribe();
+        String name = description.getName();
+        String fields = String.join(new List<String>(description.fields.getMap().keySet()), ',');
+        return Database.query('SELECT ' + fields + ' FROM ' + name + ' WHERE Id IN :ids');
+    }
+
 }
