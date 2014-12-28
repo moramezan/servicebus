@@ -2,7 +2,7 @@
 <CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
     <defaultLandingTab>Monitor</defaultLandingTab>
     <label>Enterprise Service Bus</label>
-    <logo>EnterpriseServiceBus/esbAppPng.png</logo>
+    <logo>EnterpriseServiceBus/EsbApp.png</logo>
     <tab>Monitor</tab>
     <tab>Sequence__c</tab>
     <tab>Process__c</tab>
