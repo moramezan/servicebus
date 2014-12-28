@@ -42,18 +42,6 @@ public with sharing class SynchronousBroker extends Broker {
                 return;
                 
             }
-            
-            try {
-            
-                //RESOLVE
-                this.resolve(outputMessages);
-                
-            } catch (EngineException e) {
-            
-                //write away error text on messages
-                update e.fuckups;
-                
-            }
         }
         
         //finish (invokes broker again in same context)

@@ -9,10 +9,6 @@ public with sharing class MessageRebufferExtension {
     public PageReference doRebuffer() {
         //we are happy for Queued, Buffered or Started guys to be force-Processed
         //but we just note that a Queued message will need to be resolved first!
-        if (message.Status__c == 'Queued') {
-            //message was paused, resolve here
-            Broker.impl().resolve(new List<Message__c>{message}); //RESOLVE
-        }
         
         //write away status and any resolved fields ("avoids DML in action method")
         Type.forName(DoDml.class.getName()).newInstance();

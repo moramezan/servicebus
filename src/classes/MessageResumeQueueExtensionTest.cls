@@ -32,7 +32,7 @@
 
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c
+            SELECT Id, Name, Parameters__c, Status__c
             FROM Message__c
             WHERE Status__c != 'Completed'
         ];

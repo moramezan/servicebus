@@ -1,5 +1,20 @@
 @IsTest public class MessageObjectSetTest {
     
+    static testmethod void testPopulateRouteKey() {
+        //arrange message
+        Message__c message = new Message__c(
+            Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}'
+        );
+        
+        //act
+        new MessageObjectSet(new List<Message__c>{message}).populateRouteKey();
+        
+        //assert
+        String expectedRoute = 'test#1';
+        String actualRoute = message.Route__c;
+        System.assertEquals(expectedRoute, actualRoute, 'Route incorrectly populated.');
+    }
+    
     static testmethod void testValidMessageParameters() {
         //arrange message
         Message__c validMessage = new Message__c(

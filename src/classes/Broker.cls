@@ -357,36 +357,50 @@ abstract public with sharing class Broker {
      */
     virtual public Database.QueryLocator locateMarkableWork() {
         //find oldest rebuffered message or oldest buffered message
-        Message__c specimen;
+        Message__c specimenMessage;
         try {
-            specimen = [
-                SELECT Id, Status__c, Process__c, Process__r.Limits__c
+            specimenMessage = [
+                SELECT Id, Status__c, Route__c
                 FROM Message__c
                 WHERE Status__c IN ('Rebuffered', 'Buffered')
-                ORDER BY Status__c DESC, CreatedDate ASC
+                ORDER BY Status__c DESC, CreatedDate__c ASC
                 LIMIT 1
             ];
         } catch (QueryException e) {
-            //no work found, return empty query locator
+            //no specimen message means no work found, return empty query locator
             return Database.getQueryLocator([SELECT Id FROM Message__c WHERE Id IN (null)]);
         }
         
-        //number of times specimen process can run within governor limits, eg 1
-        Integer queryLimit = specimen.Process__r.Limits__c != null ? specimen.Process__r.Limits__c.intValue() : 1;
-        String status = specimen.Status__c;
-        Id processId = specimen.Process__c;
+        //number of times specimen process can run within governor limits
+        Integer queryLimit = 1;
+        String status = specimenMessage.Status__c;
+        String route = specimenMessage.Route__c;
+        
+        Step__c specimenStep;
+        try {
+            specimenStep = [
+                SELECT Id, Process__r.Limits__c
+                FROM Step__c
+                WHERE Name = :route
+                //LIMIT unnecessary, only one should exist
+            ];
+            queryLimit = specimenStep.Process__r.Limits__c.intValue();
+        } catch (QueryException e) {
+            //no step found, resolution problem or might be a heartbeat
+        }
         
         Set<Id> messageIds = new Map<Id,Message__c>([
             SELECT Id
             FROM Message__c
             WHERE Status__c = :status
-            ORDER BY CreatedDate ASC
+            AND Route__c = :route //chunk by step as opposed to by process
+            ORDER BY CreatedDate__c ASC
             LIMIT :queryLimit
         ]).keySet();
         
         //query locator hands back only the messages that are markable as Started
         String commaDelimitedIds = '(\'' + String.join(new List<Id>(messageIds), '\',\'') + '\')';
-        String queryString = 'SELECT Id, Step__c, Parameters__c, Process__r.FullyQualifiedClassName__c FROM Message__c WHERE Id IN ' + commaDelimitedIds;
+        String queryString = 'SELECT Id, Route__c, Parameters__c FROM Message__c WHERE Id IN ' + commaDelimitedIds;
         return Database.getQueryLocator(queryString);
     }
     
@@ -453,7 +467,7 @@ abstract public with sharing class Broker {
         Map<String,Object> parameters = new Map<String,Object> {
             'esb_EntryPointGuid' => getEntryPointGuid(18),
             'esb_EnqueueUserId' => UserInfo.getUserId(),
-            'esb_Position' => 0
+            'esb_Position' => 1
         };
       
         // append parameters
@@ -479,7 +493,6 @@ abstract public with sharing class Broker {
         } else {
             //system is running
             message.Status__c = 'Buffered';
-            instance.resolve(new List<Message__c>{message}); //RESOLVE
         }
         
         upsert message;
@@ -566,20 +579,23 @@ abstract public with sharing class Broker {
         }
         
         //specimen message will have same process as others
-        Message__c specimen = [SELECT Process__r.FullyQualifiedClassName__c, Step__r.ConfigId__c FROM Message__c WHERE Id = :inputMessages[0].Id];
+        Message__c specimen = [SELECT Route__c FROM Message__c WHERE Id = :inputMessages[0].Id];
         
-        if (specimen.Step__c == null) {
+        Step__c step;
+        try {
+            step = [SELECT ConfigId__c, Process__r.FullyQualifiedClassName__c FROM Step__c WHERE Name = :specimen.Route__c];
+        } catch (QueryException e) {
             //this scenario is really following on from a failed resolve - thinking that we might explicitly set a new message status
             //of FAILED but in due course we hope to do away with resolve step entirely with message names '{sequence}#{position}V{version}'
             throw new EngineException(null, inputMessageIds, null, 'Step unqueryable, eg bad sequence name, position, missing terminate.');
         }
         
-        Type reflector = Type.forName(specimen.Process__r.FullyQualifiedClassName__c);
+        Type reflector = Type.forName(step.Process__r.FullyQualifiedClassName__c);
         if (reflector == null) {
-            throw new EngineException(null, inputMessageIds, null, 'Reflector for classname was null: ' + specimen.Process__r.FullyQualifiedClassName__c);
+            throw new EngineException(null, inputMessageIds, null, 'Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c);
         }
         
-        Type meta = Type.forName(specimen.Process__r.FullyQualifiedClassName__c + '.' + 'Meta');
+        Type meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + '.' + 'Meta');
         if (meta == null) {
             throw new EngineException(null, inputMessageIds, null, 'Could not see Meta inner class, this is not a valid process: ' + reflector.getName());
         }
@@ -594,27 +610,15 @@ abstract public with sharing class Broker {
             throw new EngineException(null, inputMessageIds, e, 'Too many hops - to resolve, manually set esb_Hops on parameters to 0');
         }
         
-        //specimen determines whether all have configs or none
-        Map<Id,SObject> messageId2config = new Map<Id,SObject>();
-        if (specimen.Step__r.ConfigId__c != null) {
+        //step determines whether all have configs or none
+        SObject stepConfig;
+        if (step.ConfigId__c != null) {
             //find all steps config ids
-            Map<Id,Message__c> id2message = new Map<Id,Message__c>([
-                SELECT Step__r.ConfigId__c
-                FROM Message__c
-                WHERE Id IN :inputMessageIds
-            ]);
-            
-            //arrange step config ids and query all config sobjects
-            List<Id> configIds = new List<Id>();
-            for (Message__c message : id2message.values()) configIds.add(message.Step__r.ConfigId__c);
-            Map<Id,SObject> configId2config = new Map<Id,SObject>(SalesforceObject.getByIds(configIds));
-            
-            //arrange config objects against message ids
-            for (Message__c message : id2message.values()) messageId2config.put(message.Id, configId2config.get(message.Step__r.ConfigId__c));
+            stepConfig = SalesforceObject.getById(step.ConfigId__c);
         }
         
         Map<Id,Broker.Wrapper> id2wrapper = new Map<Id,Broker.Wrapper>();
-        for (Message__c inputMessage : inputMessages) id2wrapper.put(inputMessage.Id, new Broker.Wrapper(reflector, id2parameters.get(inputMessage.Id), messageId2config.get(inputMessage.Id)));
+        for (Message__c inputMessage : inputMessages) id2wrapper.put(inputMessage.Id, new Broker.Wrapper(reflector, id2parameters.get(inputMessage.Id), stepConfig));
         
         //THEIR FUCKUPS (invocation)
         
@@ -644,7 +648,7 @@ abstract public with sharing class Broker {
         //gate processing support method
         for (Id messageId : id2outputParameters.keySet()) this.gateHelper(id2parameters.get(messageId), id2outputParameters.get(messageId));
         
-        //wrap up results into Messages
+        //wrap up results into Messages (new guys should have Position = 0)
         List<Message__c> outputMessages = new List<Message__c>();
         for (List<Map<String,Object>> outputParameters : id2outputParameters.values()) for (Map<String,Object> outputParameter : outputParameters) {
             outputMessages.add(new Message__c(
@@ -653,81 +657,12 @@ abstract public with sharing class Broker {
             ));
         }
         
+        //position + 1
+        new MessageObjectSet(outputMessages).incrementPositions();
+        
         return outputMessages;
     }
 
-    /**
-     * Increments parameters then resolves their destined Sequence, Step, and Process.
-     *
-     * 1. hydrate the parameters from message
-     * 2. increments the position by one, ready to resolve the next step in the sequence
-     * 3. modify the parameters to reflect the new position
-     * 4A. resolve the step from the parameters
-     * 4B. resolve the the process (ie the process referenced by 4A's step)
-     * 5. only then can we correctly write to database with 4A (stepId) and 3 (parameters with the incremented position)
-     */
-    virtual public void resolve(List<Message__c> messages) {
-        Set<Id> fuckedIds = new Set<Id>();
-        Exception firstError;
-        
-        //assemble a map of next-step keys to messages
-        Map<String,Message__c> key2data = new Map<String,Message__c>();
-        for (Message__c message : messages) {
-            try {
-                Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
-                String sequenceName = (String)parameters.get('esb_SequenceName');
-                Decimal position = (Decimal)parameters.get('esb_Position') + 1; //care
-                String key = sequenceName + '#' + position;
-                key2data.put(key, message);
-                
-                //increment the position and put it back while we're at it
-                parameters.put('esb_Position', position);
-                message.Parameters__c = Json.serializePretty(parameters);
-            } catch (Exception e) {
-                firstError = e;
-                fuckedIds.add(message.Id);
-            }
-        }
-        
-        //resolve the next steps and processes
-        List<Step__c> steps = [
-            SELECT Id, Name, Process__r.Id, Sequence__r.Id
-            FROM Step__c
-            WHERE Name IN :key2data.keySet()
-        ];
-        
-        //assemble a map of next-step keys to steps
-        Map<String,Step__c> key2step = new Map<String,Step__c>();
-        for (Step__c step : steps) key2step.put(step.Name, step);
-        
-        //now put the resolved sequence/step/process on each message
-        for (Message__c message : messages) {
-            try {
-                Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
-                
-                //#575 crow look, heartbeat doesn't need his sequence or step resolved
-                if (parameters.get('esb_IsHeartbeatProcess') != null) continue;
-                
-                String sequenceName = (String)parameters.get('esb_SequenceName');
-                Decimal position = (Decimal)parameters.get('esb_Position'); //care
-                String key = sequenceName + '#' + position;
-                
-                Step__c step = key2step.get(key);
-                message.Sequence__c = step.Sequence__r.Id;
-                message.Process__c = step.Process__r.Id;
-                message.Step__c = step.Id;
-            } catch (Exception e) {
-                firstError = e;
-                fuckedIds.add(message.Id);
-            }
-        }
-        
-        //DML time!
-        upsert messages;
-        
-        if (!fuckedIds.isEmpty()) throw new EngineException(null, fuckedIds, firstError, 'Resolve failure, check sequence config.');
-    }
-    
     virtual public List<Database.UpsertResult> persist(List<Message__c> inputMessages, List<Message__c> outputMessages) {
         try {
             for (Message__c message : inputMessages) {

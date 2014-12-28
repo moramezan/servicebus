@@ -17,10 +17,41 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
     override public void onBeforeInsert() {
         deleteCompletedMessages(System.now());   
         this.validateJsonParameters();
+        this.populateRouteKey();
     }
     
     override public void onBeforeUpdate(List<SObject> oldObjects) {
         this.validateJsonParameters();
+        this.populateRouteKey();
+    }
+    
+    /**
+     * Unrelated to former term "resolve" (which now refers to PROCESS location)
+     * this is just a convenience to increment the position of a bunch of messages.
+     */
+    public void incrementPositions() {
+        List<Message__c> messages = this.getSObjects();
+        for (Message__c message : messages) {
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+            Integer position = (Integer)parameters.get('esb_Position');
+            parameters.put('esb_Position', ++position);
+            message.Parameters__c = Json.serializePretty(parameters);
+        }
+    }
+    
+    /**
+     * It's not sensible to query on the JSON formatted SequenceName and Position
+     * but what we can do is make sure those guys are always concatenated into a key.
+     */
+    @TestVisible private void populateRouteKey() {
+        List<Message__c> messages = this.getSObjects();
+        
+        for (Message__c message : messages) {
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+            String sequence = (String)parameters.get('esb_SequenceName');
+            Integer position = (Integer)parameters.get('esb_Position');
+            message.Route__c = sequence + '#' + position;
+        }
     }
     
     /**

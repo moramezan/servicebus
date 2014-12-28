@@ -29,7 +29,6 @@ public with sharing class ConfirmItemObjectSet extends SalesforceObjectSet {
         }
         
         insert messages; //note they will start mid sequence
-        Broker.impl().resolve(messages); //position + 1
         Broker.process();
         
         Database.delete(idsToDelete);
@@ -70,7 +69,6 @@ public with sharing class ConfirmItemObjectSet extends SalesforceObjectSet {
         }
         
         insert messages; //new guys start mid sequence
-        Broker.impl().resolve(messages); //position + 1
         Broker.process();
         
         Database.delete(idsToDelete);

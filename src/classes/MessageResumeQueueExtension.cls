@@ -45,7 +45,6 @@ public with sharing class MessageResumeQueueExtension {
             }
             
             //RESOLVE
-            Broker.impl().resolve(messages);
             
             update messages;
         }

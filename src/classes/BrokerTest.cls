@@ -49,7 +49,7 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange messages
-        String parameters = '{"esb_SequenceName":"test","esb_Position":0}';
+        String parameters = '{"esb_SequenceName":"test","esb_Position":1}';
         List<Message__c> messages = new List<Message__c>{
             new Message__c(Parameters__c = parameters),
             new Message__c(Parameters__c = parameters),
@@ -63,7 +63,6 @@
         };
         
         insert messages;
-        Broker.impl().resolve(messages);
         
         //act
         Database.QueryLocator locator = Broker.impl().locateMarkableWork();
@@ -123,7 +122,7 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Cause__c
+            SELECT Id, Name, Parameters__c, Status__c, Cause__c
             FROM Message__c
             WHERE Status__c != 'Completed'
         ];
@@ -233,7 +232,7 @@
     
  
 
-    static testmethod void canCorrectlyResolveAndPersistMessages() {
+    static testmethod void canCorrectlyIncrementAndPersistMessages() {
         //arrange processes
         Process__c markProcess = ProcessObject.generateOne(Mark.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -257,8 +256,10 @@
             new Message__c(Parameters__c = '{"esb_SequenceName": "' + sequenceNameA + '", "esb_Position": ' + positionA2 + '}')
         };
         
+        
         //act
-        Broker.impl().resolve(messages);
+        new MessageObjectSet(messages).incrementPositions();
+        insert messages;
         
         // assemble
         List<Message__c> messagesAfter = SalesforceObjectSet.listAll(Message__c.SObjectType);
@@ -266,10 +267,6 @@
         Boolean flagPosition01 = false;
         Boolean flagPosition02 = false;
         Boolean flagSequenceNameA = true;
-        Id actualStepId01;
-        Id actualStepId02;
-        Id actualProcessId01;
-        Id actualProcessId02;
         for (Message__c message : messagesAfter) {
             Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
             String parametersSequenceName = (String)parameters.get('esb_SequenceName');
@@ -279,13 +276,9 @@
             }
             if (parametersPosition == (positionA1 + 1))  {
                 flagPosition01 = true;
-                actualStepId01 = message.Step__c;
-                actualProcessId01 = message.Process__c;
             }
             if (parametersPosition == (positionA2 + 1))  {
                 flagPosition02 = true;
-                actualStepId02 = message.Step__c;
-                actualProcessId02 = message.Process__c;
             }
         }
         
@@ -302,20 +295,21 @@
         Id expectedStepId02 = stepA3.Id ;
         Id expectedProcessId01 = markProcess.Id;
         Id expectedProcessId02 = terminateProcess.Id;
-        System.assertEquals(expectedStepId01, actualStepId01);
-        System.assertEquals(expectedStepId02, actualStepId02);
-        System.assertEquals(expectedProcessId01, actualProcessId01  );
-        System.assertEquals(expectedProcessId02, actualProcessId02  );
     }
     
     static testmethod void testLocatorMarksCorrectNumberOfMessages() {
         //arrange
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
+        Sequence__c sequence = new Sequence__c(Name = 'test');
+        insert sequence;
+        
+        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        
         insert new List<Message__c>{
-            new Message__c(Process__c = terminateProcess.Id, Status__c = 'Buffered'),
-            new Message__c(Process__c = terminateProcess.Id, Status__c = 'Buffered'),
-            new Message__c(Process__c = terminateProcess.Id, Status__c = 'Buffered')
+            new Message__c(Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}'),
+            new Message__c(Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}'),
+            new Message__c(Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}')
         };
         
         //act
@@ -356,16 +350,21 @@
     static testmethod void testLocatorReturnsOnlyRebufferedWork() {
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
+        Sequence__c sequence = new Sequence__c(Name = 'test');
+        insert sequence;
+        
+        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        
         //arrange fucked messages
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Started'),
-            new Message__c(Status__c = 'Started')
+            new Message__c(Status__c = 'Started', Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}'),
+            new Message__c(Status__c = 'Started', Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}')
         };
         
         //arrange Rebuffered messages
         insert new List<Message__c>{
-            new Message__c(Process__c = terminateProcess.Id, Status__c = 'Rebuffered'),
-            new Message__c(Process__c = terminateProcess.Id, Status__c = 'Rebuffered')
+            new Message__c(Status__c = 'Rebuffered', Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}'),
+            new Message__c(Status__c = 'Rebuffered', Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}')
         };
         
         //act
@@ -385,7 +384,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testmethod void canCorrectlyResolveMessages() {
+    static testmethod void canCorrectlyIncrementMessages() {
         // arrange
         Process__c markProcess = ProcessObject.generateOne(Mark.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
@@ -433,7 +432,8 @@
         };
         
         // act
-        Broker.impl().resolve(messages);
+        new MessageObjectSet(messages).incrementPositions();
+        insert messages;
         
         // assemble
         String actualSequenceName0 = '' ;
@@ -690,7 +690,6 @@
         try {
             List<Message__c> messages = broker.execute(new List<Message__c>{message});
             broker.persist(new List<Message__c>{message}, messages);
-            broker.resolve(messages);
         } catch (Broker.EngineException e) {
             actualMessage = e.getMessage();
         }
@@ -721,7 +720,6 @@
         try {
             List<Message__c> messages = broker.execute(new List<Message__c>{message});
             broker.persist(new List<Message__c>{message}, messages);
-            broker.resolve(messages);
         } catch (Broker.EngineException e) {
             actualMessage = e.getMessage();
         }
@@ -848,7 +846,7 @@
 
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c
+            SELECT Id, Name, Parameters__c, Status__c
             FROM Message__c
             WHERE Status__c != 'Completed'
         ];
@@ -908,7 +906,7 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c
+            SELECT Id, Name, Parameters__c, Status__c
             FROM Message__c
             WHERE Status__c = 'Completed'
         ];
@@ -968,12 +966,12 @@
         
         //assemble
         List<Message__c> messagesOk = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Cause__c
+            SELECT Id, Name, Parameters__c, Status__c, Cause__c
             FROM Message__c
             WHERE Status__c = 'Completed'
         ];
         List<Message__c> messagesFailed = [
-            SELECT Id, Name, Process__r.Name, Step__c , Parameters__c, Status__c, Cause__c
+            SELECT Id, Name, Parameters__c, Status__c, Cause__c
             FROM Message__c
             WHERE Status__c != 'Completed'
         ];
