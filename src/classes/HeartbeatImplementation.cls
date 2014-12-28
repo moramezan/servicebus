@@ -170,10 +170,10 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
 
         for (DateTime heartbeat : heartbeats) {
             Map<String,Object> parameters = new Map<String,Object>{
-                'Id' => UserInfo.getUserId(), 
-                'esb_SequenceName' => '',
-                'esb_EventStamp' => getISO8601(heartbeat),
-                'esb_IsHeartbeatProcess' => true //#575 so that resolve and execute can crow look
+                'esb__Id' => UserInfo.getUserId(), 
+                '__SequenceName' => '',
+                '__EventStamp' => getISO8601(heartbeat),
+                '__IsHeartbeatProcess' => true //#575 so that resolve and execute can crow look
             };
             Broker.enqueue(parameters);
         }

@@ -11,7 +11,7 @@ public with sharing class MessageDataExtension {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
         
         try {
-            Id dataId = (Id)parameters.get('Id');
+            Id dataId = (Id)parameters.get('esb__Id');
             SObject dataObject = SalesforceObject.getById(dataId);
             return new ApexPages.StandardController(dataObject).view();
         } catch (Exception e) {

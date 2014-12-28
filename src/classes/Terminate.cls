@@ -16,7 +16,7 @@ public with sharing class Terminate {
         
         //if we got here from a subsequence, back to where you came from!
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
-        Object data = parameters.get('esb_SubsequenceStepIds');
+        Object data = parameters.get('__SubsequenceStepIds');
         
         if (data == null) {
             //no subsequences
@@ -34,9 +34,9 @@ public with sharing class Terminate {
         Step__c step = (Step__c)SalesforceObject.getById(lastId);
         Sequence__c sequence = (Sequence__c)SalesforceObject.getById(step.Sequence__c);
         
-        parameters.put('esb_SubsequenceStepIds', stepIds);
-        parameters.put('esb_SequenceName', sequence.Name );
-        parameters.put('esb_Position', step.Position__c );
+        parameters.put('__SubsequenceStepIds', stepIds);
+        parameters.put('__SequenceName', sequence.Name );
+        parameters.put('__Position', step.Position__c );
         parametersList.add(parameters);
 
         return Json.serialize(parametersList);

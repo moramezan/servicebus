@@ -30,8 +30,8 @@
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            // 'esb_EntryPointGuid' => '1234567abcde',  // null EntryPointGuid
-            'Id' => theId
+            // '__EntryPointGuid' => '1234567abcde',  // null EntryPointGuid
+            'esb__Id' => theId
         };
         
         //act
@@ -64,8 +64,8 @@
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb_EntryPointGuid' => '1234567abcde',
-            'Id' => theId
+            '__EntryPointGuid' => '1234567abcde',
+            'esb__Id' => theId
         };
         
         //act
@@ -130,11 +130,11 @@
         List<Object> auditGroupIds = new List<Object>{ auditGroup1.Id, auditGroup2.Id };
  
         Map<String,Object> parameters = new Map<String,Object>{
-            'Id' => theId,
-            'esb_EntryPointGuid' => '1234567abcde',
-            'esb_AuditGroupIds' => auditGroupIds,
-            'esb_SequenceName' => sequenceName,
-            'esb_Position' => positionA2
+            'esb__Id' => theId,
+            '__EntryPointGuid' => '1234567abcde',
+            'esb__AuditGroupIds' => auditGroupIds,
+            '__SequenceName' => sequenceName,
+            '__Position' => positionA2
         };
         
         //act

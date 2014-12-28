@@ -34,10 +34,10 @@ private  class GateTest {
         Id gateGroupId = gateGroup.Id;
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'esb_SequenceName' => sequenceName,
-            'esb_Position' => position,
-            'esb_GateGroupId' => gateGroupId,
-            'esb_Count' => count,
+            '__SequenceName' => sequenceName,
+            '__Position' => position,
+            'esb__GateGroupId' => gateGroupId,
+            '__Count' => count,
             'data' => data
         };
 
@@ -69,7 +69,7 @@ private  class GateTest {
         Id actualGateGroupId = null;
         if (actualSize > 0) {
             Map<String,Object> actualParameters = actualOutParametersList[0];
-            actualGateGroupId = (Id) parameters.get('Id' );
+            actualGateGroupId = (Id) parameters.get('esb__Id' );
         }
         integer actualGateItemsSize = [SELECT COUNT() FROM GateItem__c];
 
@@ -95,10 +95,10 @@ private  class GateTest {
         Id gateGroupId = gateGroup.Id;
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'esb_SequenceName' => sequenceName,
-            'esb_Position' => position,
-            'esb_GateGroupId' => gateGroupId,
-            'esb_Count' => count,
+            '__SequenceName' => sequenceName,
+            '__Position' => position,
+            'esb__GateGroupId' => gateGroupId,
+            '__Count' => count,
             'data' => data
         };
 

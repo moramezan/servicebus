@@ -41,8 +41,8 @@
         
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb_SequenceName' => 'origin',
-            'esb_Position' => 1,
+            '__SequenceName' => 'origin',
+            '__Position' => 1,
             'data' => 'herpderp'
         };
         
@@ -56,11 +56,11 @@
         System.assertEquals(expectedSize, actualSize);
         
         String expectedSequenceName = 'target';
-        String actualSequenceName = (String)parametersList[0].get('esb_SequenceName');
+        String actualSequenceName = (String)parametersList[0].get('__SequenceName');
         System.assertEquals(expectedSequenceName, actualSequenceName);
         
         Decimal expectedPosition = 0;
-        Decimal actualPosition = (Decimal)parametersList[0].get('esb_Position');
+        Decimal actualPosition = (Decimal)parametersList[0].get('__Position');
         System.assertEquals(expectedPosition, actualPosition);
         
         String expectedPassThruData = 'herpderp';

@@ -11,12 +11,11 @@ public with sharing class Gate {
         public Integer Limits = 1;
 
         public Map<String,String> Inputs = new Map<String,String>{
-            'esb_GateGroupId' => 'ID of the GateGroup the marked messages should belong to.',
-            'esb_Count' => 'INTEGER of marked messages the gate should expect.'
+            'esb__GateGroupId' => 'ID of the GateGroup the marked messages should belong to.'
         };
 
         public Map<String,String> Outputs = new Map<String,String>{
-            'esb_Id' => 'ID of the GateGroup whose members are now all present.'
+            'esb__Id' => 'ID of the GateGroup whose members are now all present.'
         };
     }
 
@@ -33,8 +32,8 @@ public with sharing class Gate {
 
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
-        Id gateGroupId = (Id)parameters.get('esb_GateGroupId');
-        Decimal count = (Decimal)parameters.get('esb_Count');
+        Id gateGroupId = (Id)parameters.get('esb__GateGroupId');
+        Decimal count = (Decimal)parameters.get('__Count');
         
         insert new GateItem__c(
             GateGroup__c = gateGroupId,
@@ -53,10 +52,10 @@ public with sharing class Gate {
         }
         
         //this is the last item, let's release
-        parameters.put('Id', gateGroupId);
-        parameters.remove('esb_Count');
-        parameters.remove('esb_MarkCount');
-        parameters.remove('esb_GateGroupId');
+        parameters.put('esb__Id', gateGroupId);
+        parameters.remove('__Count');
+        parameters.remove('__MarkCount');
+        parameters.remove('esb__GateGroupId');
         
         return Json.serialize(new List<Map<String,Object>>{parameters});
     }

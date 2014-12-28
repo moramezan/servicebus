@@ -417,8 +417,8 @@ abstract public with sharing class Broker {
         //if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable'); 
          
         Map<String,Object> injectedParameters = new Map<String,Object> {
-            'esb_SequenceName' => sequenceName,
-            'Id' => dataId
+            '__SequenceName' => sequenceName,
+            'esb__Id' => dataId
         };
         
         return enqueue(injectedParameters);  
@@ -429,7 +429,7 @@ abstract public with sharing class Broker {
      * 
      * The parameters collection should at minimum contain 
      *  - an object Id ("Id")
-     *  - a sequence name ("esb_SequenceName")
+     *  - a sequence name ("__SequenceName")
      * Failure to provide these parameters in the parameters collection will throw an EngineException
      * 
      * The parameters collection is converted to a Message object. This Message instance is saved 
@@ -449,8 +449,8 @@ abstract public with sharing class Broker {
         // validate minimum expected params are supplied:
         List<String> missingParameters = new List<String>();
         Set<String> expectedParameters = new Set<String>{
-            'esb_SequenceName',
-            'Id'     
+            '__SequenceName',
+            'esb__Id'     
         };
         for (String expectedParameter : expectedParameters) {
             if(!injectedParameters.keySet().contains(expectedParameter)) 
@@ -465,9 +465,9 @@ abstract public with sharing class Broker {
         }
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'esb_EntryPointGuid' => getEntryPointGuid(18),
-            'esb_EnqueueUserId' => UserInfo.getUserId(),
-            'esb_Position' => 1
+            '__EntryPointGuid' => getEntryPointGuid(18),
+            '__EnqueueUserId' => UserInfo.getUserId(),
+            '__Position' => 1
         };
       
         // append parameters
@@ -567,7 +567,7 @@ abstract public with sharing class Broker {
         for (Message__c inputMessage : inputMessages) id2parameters.put(inputMessage.Id, (Map<String,Object>)Json.deserializeUntyped(inputMessage.Parameters__c));
         
         //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
-        if (id2parameters.get(inputMessages[0].Id).get('esb_IsHeartbeatProcess') != null) {
+        if (id2parameters.get(inputMessages[0].Id).get('__IsHeartbeatProcess') != null) {
             //invoke and wrap up results into messages
             List<Message__c> outputMessages = new List<Message__c>();
             for (Message__c inputMessage : inputMessages) {
@@ -600,14 +600,14 @@ abstract public with sharing class Broker {
             throw new EngineException(null, inputMessageIds, null, 'Could not see Meta inner class, this is not a valid process: ' + reflector.getName());
         }
         
-        //save important message properties (such as esb_Hops) so that process authors cannot pervert them  
-        //THROWS EngineException TODO : requires a more generic approach not specific to just the esb_Hops
+        //save important message properties (such as __Hops) so that process authors cannot pervert them  
+        //THROWS EngineException TODO : requires a more generic approach not specific to just the __Hops
         Map<Id,Integer> id2hops = new Map<Id,Integer>();
         try {
             for (Message__c inputMessage : inputMessages) id2hops.put(inputMessage.Id, enforceMaxHops(id2parameters.get(inputMessage.Id), maxHops));
         } catch (TooManyHopsException e) {
             //wrapped this here because we need to stick the MESSAGE ID on the exception in order to be able to write the problem away
-            throw new EngineException(null, inputMessageIds, e, 'Too many hops - to resolve, manually set esb_Hops on parameters to 0');
+            throw new EngineException(null, inputMessageIds, e, 'Too many hops - to resolve, manually set __Hops on parameters to 0');
         }
         
         //step determines whether all have configs or none
@@ -642,7 +642,7 @@ abstract public with sharing class Broker {
         for (Id messageId : id2wrapper.keySet()) id2outputParameters.put(messageId, id2wrapper.get(messageId).Outputs);
         
         //write back save important message properties to the parameters collections in results
-        //TODO : requires a more generic approach to write back the "esb_" properties to 
+        //TODO : requires a more generic approach to write back the "__" properties to 
         for (Id messageId : id2outputParameters.keySet()) this.applyHops(id2outputParameters.get(messageId), id2hops.get(messageId));
         
         //gate processing support method
@@ -689,15 +689,15 @@ abstract public with sharing class Broker {
      * possibility of the Munger being blacklisted
      * An exception is thrown if the Max Hops threshold is reached
      *
-     * We cannot simply increment  esb_Hops BEFORE calling invoke as a process writer could fuck with this parameter
-     * Instead we read and increment esb_Hops BEFORE calling invoke using enforceMaxHops()
+     * We cannot simply increment __Hops BEFORE calling invoke as a process writer could fuck with this parameter
+     * Instead we read and increment __Hops BEFORE calling invoke using enforceMaxHops()
      * and assign to an Integer hops variable
-     * We use applyHops()  to apply the incremented hops variable to the esb_Hops parameter of
+     * We use applyHops()  to apply the incremented hops variable to the __Hops parameter of
      * all messages returned from invoke()
      */
     @TestVisible List<Map<String,Object>> applyHops(List<Map<String,Object>> results, Integer hops) {
         for (Map<String,Object> result : results) {
-            result.put('esb_Hops', hops);
+            result.put('__Hops', hops);
         }
         return results;
     }
@@ -706,7 +706,7 @@ abstract public with sharing class Broker {
      * See applyHops() method for context and details.
      */
     @TestVisible static private Integer enforceMaxHops(Map<String,Object> parameters, Integer threshold) {
-        Integer hops = (parameters.get('esb_Hops') == null) ? 1 : (Integer) parameters.get('esb_Hops');
+        Integer hops = (parameters.get('__Hops') == null) ? 1 : (Integer) parameters.get('__Hops');
         hops++;
         if (hops > threshold) {
             throw new TooManyHopsException('Number of hops ' + hops + ' is greater than threshold of ' + threshold);
@@ -723,7 +723,7 @@ abstract public with sharing class Broker {
      * If markCount equates to two, then the preceding process was a splitter; write the count of split parameter sets.
      */
     @TestVisible private void gateHelper(Map<String,Object> parameters, List<Map<String,Object>> outputs) {
-        Decimal markCount = (Decimal)parameters.get('esb_MarkCount');
+        Decimal markCount = (Decimal)parameters.get('__MarkCount');
         
         if (null == markCount) {
             //nothing to do, mark process has not tainted the input
@@ -732,7 +732,7 @@ abstract public with sharing class Broker {
         
         if (outputs.isEmpty()) {
             //nothing to do, split process did not return any outputs, tidy up the gate group
-            //Database.delete(new List<Id>{(Id)parameters.get('esb_GateGroupId')});
+            //Database.delete(new List<Id>{(Id)parameters.get('esb__GateGroupId')});
             return;
         }
         
@@ -740,12 +740,12 @@ abstract public with sharing class Broker {
         
         for (Map<String,Object> output : outputs) {
             //write markCount onto every output
-            output.put('esb_MarkCount', markCount);
+            output.put('__MarkCount', markCount);
         }
         
         if (1 == markCount) {
             //write outputSize onto every output
-            for (Map<String,Object> output : outputs) output.put('esb_Count', outputs.size());
+            for (Map<String,Object> output : outputs) output.put('__Count', outputs.size());
         }
     }
     

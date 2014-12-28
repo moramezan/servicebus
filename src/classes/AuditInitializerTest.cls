@@ -53,9 +53,9 @@
         update config;
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'Id' => theId,
-            'esb_SequenceName' => sequenceName,
-            'esb_Position' => thePosition
+            'esb__Id' => theId,
+            '__SequenceName' => sequenceName,
+            '__Position' => thePosition
         };
         
         //act
@@ -112,9 +112,9 @@
         update config;
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'Id' => theId,
-            'esb_SequenceName' => sequenceName,
-            'esb_Position' => thePosition
+            'esb__Id' => theId,
+            '__SequenceName' => sequenceName,
+            '__Position' => thePosition
         };
         
         //act
@@ -175,9 +175,9 @@
         update config;
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'Id' => theId,
-            'esb_SequenceName' => sequenceName,
-            'esb_Position' => thePosition
+            'esb__Id' => theId,
+            '__SequenceName' => sequenceName,
+            '__Position' => thePosition
         };
         
         //act
@@ -225,7 +225,7 @@
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            'Id' => theId
+            'esb__Id' => theId
         };
         
         //act
@@ -269,9 +269,9 @@
         delete config;
         
         Map<String,Object> parameters = new Map<String,Object>{
-           'Id' => theId   ,
-           'esb_SequenceName' => sequenceName,
-           'esb_Position' => thePosition
+           'esb__Id' => theId   ,
+           '__SequenceName' => sequenceName,
+           '__Position' => thePosition
         };
         
         //act

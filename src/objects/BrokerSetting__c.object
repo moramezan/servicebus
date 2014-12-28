@@ -6,7 +6,7 @@
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>BrokerClassName__c</fullName>
-        <description>Fully qualified name of Broker subclass (eg esb_fb.FutureBroker)</description>
+        <description>Fully qualified name of Broker subclass (eg myns.FutureBroker)</description>
         <externalId>false</externalId>
         <label>Broker Class Name</label>
         <length>97</length>

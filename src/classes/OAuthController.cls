@@ -22,7 +22,7 @@ public with sharing class OAuthController {
      * A human begins the OAuth dance from a link, eg:
      * https://login.salesforce.com/services/oauth2/authorize
      * ?client_id=3MVG98XJQQAccJQd0q2.s_Ak1RI4Of5e5kbUbbDYvVs41Ba0bFlnad4pzSMri5oQGHlDulk9raTGKF_y4lL51
-     * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2Feda__OAuth
+     * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2Fesb__OAuth
      * &response_type=code
      */
     public PageReference buildAuthLink() {

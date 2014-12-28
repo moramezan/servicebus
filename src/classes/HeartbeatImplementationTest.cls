@@ -284,7 +284,7 @@
         Boolean actualFlag = true;
         for (Message__c actualMessage : actualMessages) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(actualMessage.Parameters__c);
-            String actualEventStamp = (String)parameters.get('esb_EventStamp');
+            String actualEventStamp = (String)parameters.get('__EventStamp');
             if (!expectedHeartbeatsAsSet.contains(actualEventStamp))
                 actualFlag = false;
         }
@@ -344,7 +344,7 @@
         Boolean actualFlag = true;
         for (Message__c actualMessage : actualMessages) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(actualMessage.Parameters__c);
-            String actualEventStamp = (String)parameters.get('esb_EventStamp');
+            String actualEventStamp = (String)parameters.get('__EventStamp');
             if (!expectedHeartbeatsAsSet.contains(actualEventStamp))
                 actualFlag = false;
         }

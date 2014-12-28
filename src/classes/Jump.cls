@@ -19,8 +19,8 @@ public with sharing class Jump {
         JumpConfig__c config = this.StepConfig;
         Sequence__c sequence = (Sequence__c)SalesforceObject.getById(config.Sequence__c);
         
-        parameters.put('esb_SequenceName', sequence.Name);
-        parameters.put('esb_Position', 0);
+        parameters.put('__SequenceName', sequence.Name);
+        parameters.put('__Position', 0);
         
         return Json.serialize(new List<Map<String,Object>>{parameters});
     }

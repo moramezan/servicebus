@@ -28,8 +28,8 @@ private class WiretapTest {
        //--NOT-DEFINED insert new WiretapSetting__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'esb_SequenceName' => sequenceName,
-            'esb_Step' => step,
+            '__SequenceName' => sequenceName,
+            'step' => step,
             'data' => data
         };
         
@@ -60,8 +60,8 @@ private class WiretapTest {
         insert new WiretapSetting__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'esb_SequenceName' => sequenceName,
-            'esb_Step' => step,
+            '__SequenceName' => sequenceName,
+            'step' => step,
             'data' => data
         };
         

@@ -33,8 +33,8 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
         List<Message__c> messages = this.getSObjects();
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
-            Integer position = (Integer)parameters.get('esb_Position');
-            parameters.put('esb_Position', ++position);
+            Integer position = (Integer)parameters.get('__Position');
+            parameters.put('__Position', ++position);
             message.Parameters__c = Json.serializePretty(parameters);
         }
     }
@@ -48,11 +48,11 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
         
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
-            Boolean isHeartbeatProcess = (Boolean)parameters.get('esb_IsHeartbeatProcess');
+            Boolean isHeartbeatProcess = (Boolean)parameters.get('__IsHeartbeatProcess');
             if (isHeartbeatProcess == true) continue; //#575 crow look, don't try to route
             
-            String sequence = (String)parameters.get('esb_SequenceName');
-            Integer position = (Integer)parameters.get('esb_Position');
+            String sequence = (String)parameters.get('__SequenceName');
+            Integer position = (Integer)parameters.get('__Position');
             message.Route__c = sequence + '#' + position;
         }
     }

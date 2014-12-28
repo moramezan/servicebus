@@ -42,9 +42,9 @@ private class TerminateTest
         Step__c step2 = StepObject.generateOne(sequence.Id, subsequenceProcess.Id);
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'esb_SequenceName' => sequenceName,
-            'esb_Position' => position,
-            'esb_SubsequenceStepIds' => new List<Id>{step2.Id},
+            '__SequenceName' => sequenceName,
+            '__Position' => position,
+            '__SubsequenceStepIds' => new List<Id>{step2.Id},
             'data' => data
         };
 
@@ -63,8 +63,8 @@ private class TerminateTest
         Decimal actualPosition = null;
         if (actualSize > 0) {
             Map<String,Object> actualParameters = actualOutParametersList[0];
-            actualSequenceName = (String)actualParameters.get('esb_SequenceName');
-            actualPosition = (Decimal)actualParameters.get('esb_Position');
+            actualSequenceName = (String)actualParameters.get('__SequenceName');
+            actualPosition = (Decimal)actualParameters.get('__Position');
         }
 
         // Assert
@@ -83,8 +83,8 @@ private class TerminateTest
  
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'esb_SequenceName' => sequenceName,
-            'esb_Position' => position,
+            '__SequenceName' => sequenceName,
+            '__Position' => position,
             'data' => data
         };
 
@@ -124,9 +124,9 @@ private class TerminateTest
         subsequenceStepIds.add(subsequenceStepId02);
         
         Map<String,Object> parametersFirst = new Map<String,Object> {
-            'esb_SequenceName' => sequenceName,
-            'esb_Position' => position,
-            'esb_SubsequenceStepIds' => subsequenceStepIds,
+            '__SequenceName' => sequenceName,
+            '__Position' => position,
+            '__SubsequenceStepIds' => subsequenceStepIds,
             'data' => data
         };
 
@@ -140,8 +140,8 @@ private class TerminateTest
         List<Map<String,Object>> actualOutParametersListSecond = new Broker.Wrapper(reflector, parametersSecond, null).invokeMain().Outputs;
         
         // prepare
-        List<Object> actualStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('esb_SubsequenceStepIds');
-        List<Object> actualStepIdsAfterSecond = (List<Object>)actualOutParametersListSecond[0].get('esb_SubsequenceStepIds');
+        List<Object> actualStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('__SubsequenceStepIds');
+        List<Object> actualStepIdsAfterSecond = (List<Object>)actualOutParametersListSecond[0].get('__SubsequenceStepIds');
         
         Integer actualSizeAfterFirst = actualStepIdsAfterFirst.size();
         Integer actualSizeAfterSecond = actualStepIdsAfterSecond.size();

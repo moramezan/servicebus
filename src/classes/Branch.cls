@@ -25,7 +25,7 @@ public with sharing class Branch {
         String branchTo = sequence.Name;
         
         //prevent recursion
-        if (branchTo == (String)parameters.get('esb_SequenceName')) {
+        if (branchTo == (String)parameters.get('__SequenceName')) {
             throw new BranchException('Not allowed to branch to own sequence!');
         }
         
@@ -33,21 +33,21 @@ public with sharing class Branch {
         Map<String,Object> clone = parameters.clone();
         
         //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
-        clone.put('esb_SubsequenceStepIds', null);
-        clone.put('esb_SequenceName', branchTo);
-        clone.put('esb_Position', 0);
+        clone.put('__SubsequenceStepIds', null);
+        clone.put('__SequenceName', branchTo);
+        clone.put('__Position', 0);
         
         //TODO
         //we might have an inbound document, where parallel sequences are attempting
         //to transform the same data - if the pointer was the same they would content
         //so the document is duplicated and the duplicate handed off to the sequence
         //
-        //String id = (String)parameters.get('Id');
+        //String id = (String)parameters.get('esb__Id');
         //if (null != id && id.startsWith('015')) {
         //  Document document = [SELECT Id, Body FROM Document WHERE Id = :id];
         //  Document clone = document.clone();
         //  insert clone;
-        //  event.put('Id', clone.Id);
+        //  event.put('esb__Id', clone.Id);
         //}
         
         return Json.serialize(new List<Map<String,Object>>{parameters, clone});

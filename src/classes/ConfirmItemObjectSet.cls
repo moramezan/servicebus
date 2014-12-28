@@ -19,7 +19,7 @@ public with sharing class ConfirmItemObjectSet extends SalesforceObjectSet {
             if (!confirmItem.Confirm__c) continue; //nothing to do
             
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(confirmItem.Parameters__c);
-            parameters.put('esb_Confirm', true);
+            parameters.put('esb__Confirm', true);
             messages.add(new Message__c(
                 Status__c = 'Buffered',
                 Parameters__c = Json.serializePretty(parameters)
@@ -57,9 +57,9 @@ public with sharing class ConfirmItemObjectSet extends SalesforceObjectSet {
             if (confirmItem.DenySequence__c == null) continue; //nothing to do
             
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(confirmItem.Parameters__c);
-            parameters.put('esb_Deny', true);
-            parameters.put('esb_SequenceName', id2sequence.get(confirmItem.DenySequence__c).Name);
-            parameters.put('esb_Position', 0);
+            parameters.put('esb__Deny', true);
+            parameters.put('__SequenceName', id2sequence.get(confirmItem.DenySequence__c).Name);
+            parameters.put('__Position', 0);
             messages.add(new Message__c(
                 Status__c = 'Buffered',
                 Parameters__c = Json.serializePretty(parameters)

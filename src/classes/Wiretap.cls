@@ -31,9 +31,9 @@ public with sharing class Wiretap {
             + '@'
             + UserInfo.getOrganizationId()
             + ' '
-            + parameters.get('esb_SequenceName')
+            + parameters.get('__SequenceName')
             + '#'
-            + parameters.get('esb_Position')
+            + parameters.get('__Position')
         );
         message.setPlainTextBody(Json.serializePretty(parameters));
         message.setTargetObjectId(userId);

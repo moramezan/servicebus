@@ -17,7 +17,7 @@ public with sharing class Confirm {
         
         //save away (can be resumed later)
         insert new ConfirmItem__c(
-            EntityId__c = (Id)parameters.get('Id'),
+            EntityId__c = (Id)parameters.get('esb__Id'),
             Parameters__c = Json.serializePretty(parameters),
             DenySequence__c = this.StepConfig.DenySequence__c,
             ConfirmConfig__c = this.StepConfig.Id

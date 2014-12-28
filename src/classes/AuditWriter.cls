@@ -19,10 +19,10 @@ public with sharing class AuditWriter {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
-        Integer parametersOrder = (Integer)parameters.get('esb_Hops');
+        Integer parametersOrder = (Integer)parameters.get('__Hops');
         parametersOrder = (parametersOrder != null) ? parametersOrder : 1;
         
-        String entryPointGuid = (String)parameters.get('esb_EntryPointGuid');
+        String entryPointGuid = (String)parameters.get('__EntryPointGuid');
         if (String.isBlank(entryPointGuid)) {
             throw new AuditWriterException('Unable to access the Entry Point GUID');
         }
@@ -31,8 +31,8 @@ public with sharing class AuditWriter {
         List<Step__c> steps = [
             SELECT Id, Position__c, Sequence__c
             FROM Step__c
-            WHERE Sequence__r.Name = :(String)parameters.get('esb_SequenceName')
-            AND Position__c = :(Decimal) parameters.get('esb_Position')
+            WHERE Sequence__r.Name = :(String)parameters.get('__SequenceName')
+            AND Position__c = :(Decimal) parameters.get('__Position')
         ];
         if (steps.size() == 0) {
             throw new AuditWriterException('Unable to access the Step');
@@ -40,7 +40,7 @@ public with sharing class AuditWriter {
         Step__c step = steps[0];
  
         //write audit entry for every audit group identifier
-        List<Object> collection = (List<Object>)parameters.get('esb_AuditGroupIds');
+        List<Object> collection = (List<Object>)parameters.get('esb__AuditGroupIds');
         
         if (collection != null) {
             List<Id> auditGroupIds = new List<Id>();

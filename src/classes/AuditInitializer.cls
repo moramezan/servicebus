@@ -12,7 +12,7 @@ public with sharing class AuditInitializer {
         public String HelpUrl = Page.AuditInitializerConfigCsh.getUrl();
         
         public Map<String,String> Outputs = new Map<String,String>{
-            'esb_AuditGroupIds' => 'LIST<ID> of potentially multiple groups from AuditInitializer steps.'
+            'esb__AuditGroupIds' => 'LIST<ID> of potentially multiple groups from AuditInitializer steps.'
         };
         
     }
@@ -31,8 +31,8 @@ public with sharing class AuditInitializer {
          List<Step__c> steps = [
              SELECT Id, Position__c, Sequence__r.Name
              FROM Step__c
-             WHERE Sequence__r.Name = :(String)parameters.get('esb_SequenceName')
-             AND Position__c = :(Decimal) parameters.get('esb_Position')
+             WHERE Sequence__r.Name = :(String)parameters.get('__SequenceName')
+             AND Position__c = :(Decimal) parameters.get('__Position')
          ];
          if (steps.size() == 0) {
             throw new AuditInitializerException('Unable to access the Step Position and Sequence Name');
@@ -51,7 +51,7 @@ public with sharing class AuditInitializer {
          // the composite key comprises
          // 1.  the date-time stamp
          // 2.  a (fairly unique ) business group value
-         Id dataId =  (Id)parameters.get('Id');
+         Id dataId =  (Id)parameters.get('esb__Id');
          String groupIdentifier = getBusinesGroupIdentifier(config, step, dataId) ;
          DateTime now = System.Now();
          AuditGroup__c auditGroup = new AuditGroup__c(
@@ -63,12 +63,12 @@ public with sharing class AuditInitializer {
          insert auditGroup;
 
          // update outbound message
-         List<Object> auditGroupIds = (List<Object>)parameters.get('esb_AuditGroupIds');
+         List<Object> auditGroupIds = (List<Object>)parameters.get('esb__AuditGroupIds');
          if (auditGroupIds == null) {
              auditGroupIds = new List<Object>();
          }
          auditGroupIds.add(auditGroup.Id);
-         parameters.put('esb_AuditGroupIds', auditGroupIds);
+         parameters.put('esb__AuditGroupIds', auditGroupIds);
 
          
          return Json.serialize(new List<Map<String,Object>>{parameters});

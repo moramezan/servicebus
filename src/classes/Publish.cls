@@ -39,9 +39,9 @@ public with sharing class Publish {
         for (Step__c step : steps) {
             Map<String,Object> clone = parameters.clone();
             //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
-            clone.put('esb_SubsequenceStepIds', null);
-            clone.put('esb_Position', step.Position__c);
-            clone.put('esb_SequenceName', step.Sequence__r.Name);
+            clone.put('__SubsequenceStepIds', null);
+            clone.put('__Position', step.Position__c);
+            clone.put('__SequenceName', step.Sequence__r.Name);
             parametersList.add(clone);
         }
         

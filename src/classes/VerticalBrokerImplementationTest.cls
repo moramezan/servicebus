@@ -12,7 +12,7 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange messages
-        String parameters = '{"esb_SequenceName":"test","esb_Position":1}';
+        String parameters = '{"__SequenceName":"test","__Position":1}';
         List<Message__c> messages = new List<Message__c>{
             new Message__c(Parameters__c = parameters),
             new Message__c(Parameters__c = parameters),
@@ -118,8 +118,8 @@
         Message__c message = new Message__c(
             Status__c = 'Buffered',
             Parameters__c = Json.serialize(new Map<String,Object> {
-                'esb_SequenceName' => 'TestSequence',
-                'esb_Position' => 1
+                '__SequenceName' => 'TestSequence',
+                '__Position' => 1
             })
         );
         insert message;
@@ -177,8 +177,8 @@
         Message__c message01 = new Message__c(
             Status__c = 'Buffered',
             Parameters__c = Json.serialize(new Map<String,Object> {
-                'esb_SequenceName' => 'TestSequence',
-                'esb_Position' => 1
+                '__SequenceName' => 'TestSequence',
+                '__Position' => 1
             })
         );
         insert message01;
@@ -186,8 +186,8 @@
         Message__c message02 = new Message__c(
             Status__c = 'Buffered',
             Parameters__c = Json.serialize(new Map<String,Object> {
-                'esb_SequenceName' => 'TestSequence',
-                'esb_Position' => 1
+                '__SequenceName' => 'TestSequence',
+                '__Position' => 1
             })
         );
         insert message02;
@@ -195,8 +195,8 @@
         Message__c message03 = new Message__c(
             Status__c = 'Buffered',
             Parameters__c = Json.serialize(new Map<String,Object> {
-                'esb_SequenceName' => 'TestSequence',
-                'esb_Position' => 1
+                '__SequenceName' => 'TestSequence',
+                '__Position' => 1
             })
         );
         insert message03;
@@ -243,8 +243,8 @@
         Message__c message01 = new Message__c(
             Status__c = 'Buffered',
             Parameters__c = Json.serialize(new Map<String,Object> {
-                'esb_SequenceName' => 'TestSequence',
-                'esb_Position' => 1
+                '__SequenceName' => 'TestSequence',
+                '__Position' => 1
             })
         );
         insert message01;
@@ -252,8 +252,8 @@
         Message__c message02 = new Message__c(
             Status__c = 'Buffered',
             Parameters__c = Json.serialize(new Map<String,Object> {
-                'esb_SequenceName' => 'TestSequence',
-                'esb_Position' => 1
+                '__SequenceName' => 'TestSequence',
+                '__Position' => 1
             })
         );
         insert message02;
@@ -261,8 +261,8 @@
         Message__c message03 = new Message__c(
             Status__c = 'Buffered',
             Parameters__c = Json.serialize(new Map<String,Object> {
-                'esb_SequenceName' => 'TestSequence',
-                'esb_Position' => 1
+                '__SequenceName' => 'TestSequence',
+                '__Position' => 1
             })
         );
         insert message03;

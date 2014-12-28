@@ -2,7 +2,7 @@
 
     static testmethod void testRedirect() {
         //arrange
-        String parameters = Json.serialize(new Map<String,Object>{'Id' => UserInfo.getUserId()});
+        String parameters = Json.serialize(new Map<String,Object>{'esb__Id' => UserInfo.getUserId()});
         Message__c message = new Message__c(Parameters__c = parameters);
         insert message;
         

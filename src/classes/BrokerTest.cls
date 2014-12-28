@@ -49,7 +49,7 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange messages
-        String parameters = '{"esb_SequenceName":"test","esb_Position":1}';
+        String parameters = '{"__SequenceName":"test","__Position":1}';
         List<Message__c> messages = new List<Message__c>{
             new Message__c(Parameters__c = parameters),
             new Message__c(Parameters__c = parameters),
@@ -133,7 +133,7 @@
         Integer actualCount = messages.size();
         if (actualCount > 0) {
             Map<String,Object> actualParameters = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Parameters__c);
-            actualHops = (Integer) actualParameters.get('esb_Hops');
+            actualHops = (Integer) actualParameters.get('__Hops');
             
             //assemble
             Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(messages[0].Cause__c);
@@ -147,7 +147,7 @@
         Integer expectedHops = maxHops;
         System.assertEquals(expectedHops, actualHops, 'Wrong hops.');
         
-        String expectedDetail = 'Too many hops - to resolve, manually set esb_Hops on parameters to 0';
+        String expectedDetail = 'Too many hops - to resolve, manually set __Hops on parameters to 0';
         System.assertEquals(expectedDetail, actualDetail, 'Wrong message');
         
         String expectedStatus = 'Started';
@@ -159,7 +159,7 @@
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
         Integer hops = 8;
-        String key  = 'esb_Hops';
+        String key  = '__Hops';
         parameters.put(key, hops);
         
         //act
@@ -192,7 +192,7 @@
         Map<String,Object> parameters = new Map<String,Object>();
         Integer threshold = 10;
         Integer hops = 10;
-        String key  = 'esb_Hops';
+        String key  = '__Hops';
         parameters.put(key, hops);
         
         Boolean actualFlag = false;
@@ -222,7 +222,7 @@
         Integer actualHops = -1;
         List<Map<String,Object>>  actualParametersList = parametersList;
         for (Map<String,Object> actualParameters : actualParametersList ) {
-            actualHops = (Integer) actualParameters.get('esb_Hops');
+            actualHops = (Integer) actualParameters.get('__Hops');
         }
  
         //assert
@@ -252,8 +252,8 @@
         Decimal positionA3 = stepA3.Position__c;
         
         List<Message__c> messages =  new List<Message__c>{
-            new Message__c(Parameters__c = '{"esb_SequenceName": "' + sequenceNameA + '", "esb_Position": ' + positionA1 + '}'),
-            new Message__c(Parameters__c = '{"esb_SequenceName": "' + sequenceNameA + '", "esb_Position": ' + positionA2 + '}')
+            new Message__c(Parameters__c = '{"__SequenceName": "' + sequenceNameA + '", "__Position": ' + positionA1 + '}'),
+            new Message__c(Parameters__c = '{"__SequenceName": "' + sequenceNameA + '", "__Position": ' + positionA2 + '}')
         };
         
         
@@ -269,8 +269,8 @@
         Boolean flagSequenceNameA = true;
         for (Message__c message : messagesAfter) {
             Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
-            String parametersSequenceName = (String)parameters.get('esb_SequenceName');
-            Integer parametersPosition = (Integer)parameters.get('esb_Position');
+            String parametersSequenceName = (String)parameters.get('__SequenceName');
+            Integer parametersPosition = (Integer)parameters.get('__Position');
             if (parametersSequenceName != sequenceNameA) {
                 flagSequenceNameA = false;
             }
@@ -307,9 +307,9 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         insert new List<Message__c>{
-            new Message__c(Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}'),
-            new Message__c(Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}'),
-            new Message__c(Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}')
+            new Message__c(Parameters__c = '{"__SequenceName":"test","__Position":1}'),
+            new Message__c(Parameters__c = '{"__SequenceName":"test","__Position":1}'),
+            new Message__c(Parameters__c = '{"__SequenceName":"test","__Position":1}')
         };
         
         //act
@@ -357,14 +357,14 @@
         
         //arrange fucked messages
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Started', Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}'),
-            new Message__c(Status__c = 'Started', Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}')
+            new Message__c(Status__c = 'Started', Parameters__c = '{"__SequenceName":"test","__Position":1}'),
+            new Message__c(Status__c = 'Started', Parameters__c = '{"__SequenceName":"test","__Position":1}')
         };
         
         //arrange Rebuffered messages
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Rebuffered', Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}'),
-            new Message__c(Status__c = 'Rebuffered', Parameters__c = '{"esb_SequenceName":"test","esb_Position":1}')
+            new Message__c(Status__c = 'Rebuffered', Parameters__c = '{"__SequenceName":"test","__Position":1}'),
+            new Message__c(Status__c = 'Rebuffered', Parameters__c = '{"__SequenceName":"test","__Position":1}')
         };
         
         //act
@@ -424,11 +424,11 @@
         insert stepC2;
         
         List<Message__c> messages = new List<Message__c>{
-            new Message__c(Parameters__c = '{"Id": 0, "esb_SequenceName": "' + sequenceA.Name + '", "esb_Position": ' + positionA1 + '}'), // Same Sequence / Position
-            new Message__c(Parameters__c = '{"Id": 1, "esb_SequenceName": "' + sequenceA.Name + '", "esb_Position": ' + positionA1 + '}'), // Same Sequence / Position
-            new Message__c(Parameters__c = '{"Id": 2, "esb_SequenceName": "' + sequenceA.Name + '", "esb_Position": ' + positionA2 + '}'),
-            new Message__c(Parameters__c = '{"Id": 3, "esb_SequenceName": "' + sequenceB.Name + '", "esb_Position": ' + positionB1 + '}'),
-            new Message__c(Parameters__c = '{"Id": 4, "esb_SequenceName": "' + sequenceC.Name + '", "esb_Position": ' + positionC1 + '}')
+            new Message__c(Parameters__c = '{"esb__Id": 0, "__SequenceName": "' + sequenceA.Name + '", "__Position": ' + positionA1 + '}'), // Same Sequence / Position
+            new Message__c(Parameters__c = '{"esb__Id": 1, "__SequenceName": "' + sequenceA.Name + '", "__Position": ' + positionA1 + '}'), // Same Sequence / Position
+            new Message__c(Parameters__c = '{"esb__Id": 2, "__SequenceName": "' + sequenceA.Name + '", "__Position": ' + positionA2 + '}'),
+            new Message__c(Parameters__c = '{"esb__Id": 3, "__SequenceName": "' + sequenceB.Name + '", "__Position": ' + positionB1 + '}'),
+            new Message__c(Parameters__c = '{"esb__Id": 4, "__SequenceName": "' + sequenceC.Name + '", "__Position": ' + positionC1 + '}')
         };
         
         // act
@@ -448,9 +448,9 @@
         Integer actualPosition4 = -1 ;
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
-            Integer theId = (Integer) parameters.get('Id');
-            String theSequenceName = (String)parameters.get('esb_SequenceName');
-            Integer thePosition = (Integer)parameters.get('esb_Position');
+            Integer theId = (Integer) parameters.get('esb__Id');
+            String theSequenceName = (String)parameters.get('__SequenceName');
+            Integer thePosition = (Integer)parameters.get('__Position');
             if (theId == 0) {
                 actualSequenceName0 = theSequenceName;
                 actualPosition0 = thePosition;
@@ -592,20 +592,20 @@
         //arrange
         Integer markCount = 0;
         Map<String,Object> parametersIn0 = new Map<String,Object> {
-            'Id' => '0',
-            'esb_MarkCount' => markCount
+            'esb__Id' => '0',
+            '__MarkCount' => markCount
         };
         
         Map<String,Object> parametersOut1 = new Map<String,Object> {
-            'Id' => '1'
+            'esb__Id' => '1'
         };
         
         Map<String,Object> parametersOut2 = new Map<String,Object> {
-            'Id' => '2'
+            'esb__Id' => '2'
         };
         
         Map<String,Object> parametersOut3 = new Map<String,Object> {
-            'Id' => '3'
+            'esb__Id' => '3'
         };
         
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>> { parametersOut1, parametersOut2, parametersOut3 };
@@ -614,7 +614,7 @@
         new DoNothingBroker().gateHelper(parametersIn0, parametersListOut);
         
         //assemble
-        Integer actualCount = (Integer)parametersListOut[0].get('esb_Count');
+        Integer actualCount = (Integer)parametersListOut[0].get('__Count');
         
         //assert
         Integer expectedCount = parametersListOut.size();
@@ -625,8 +625,8 @@
         //arrange
         Integer markCount = 0; //will not increment to 1
         Map<String,Object> parametersIn0 = new Map<String,Object> {
-            'Id' => '0',
-            'esb_MarkCount' => markCount
+            'esb__Id' => '0',
+            '__MarkCount' => markCount
         };
         
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
@@ -635,7 +635,7 @@
         new DoNothingBroker().gateHelper(parametersIn0, parametersListOut);
         
         //assemble
-        Integer actualCount = (Integer)parametersIn0.get('esb_Count');
+        Integer actualCount = (Integer)parametersIn0.get('__Count');
         
         //assert
         Integer expectedCount = null;
@@ -645,8 +645,8 @@
     static testmethod void callingGateHelperDoesNotSetCountOnParametersWhenMarkCountIsNull() {
         //arrange
         Map<String,Object> parametersIn0 = new Map<String,Object> {
-            'Id' => '0'
-            //'esb_MarkCount' => markCount //Not specified; key will return null
+            'esb__Id' => '0'
+            //'__MarkCount' => markCount //Not specified; key will return null
         };
         
         List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
@@ -655,7 +655,7 @@
         new DoNothingBroker().gateHelper(parametersIn0, parametersListOut);
         
         //assemble
-        Integer actualCount = (Integer) parametersIn0.get('esb_Count');
+        Integer actualCount = (Integer) parametersIn0.get('__Count');
         
         //assert
         Integer expectedCount = null;
@@ -665,7 +665,7 @@
  
     
     //TODO :: write test for this when you (NReid) understand this ( cant remember right now)
-    // if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('esb_GateGroupId')}); //tidy up split of 0
+    // if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('esb__GateGroupId')}); //tidy up split of 0
     
     /**
      * Bug with Salesforce:
@@ -710,7 +710,7 @@
     // Stack Trace      Class.BrokerTest.testNoStepThrowsQueryException: line 705, column 1
     static testmethod void testNoStepThrowsQueryException() {
         //arrange (note there is no Step__c in database!)
-        Message__c message = new Message__c(Parameters__c = '{"esb_SequenceName": "", "esb_Position": 0}');
+        Message__c message = new Message__c(Parameters__c = '{"__SequenceName": "", "__Position": 0}');
         insert message;
         
         //act
@@ -1010,9 +1010,9 @@
         
         String eventStamp = HeartbeatImplementation.getISO8601(DateTime.newInstance(2014,12,15,13,11,07));
         Map<String,Object> parameters = new Map<String,Object>{
-            'Id' => UserInfo.getUserId(),
-            'esb_SequenceName' => sequenceName,
-            'esb_EventStamp' => eventStamp
+            'esb__Id' => UserInfo.getUserId(),
+            '__SequenceName' => sequenceName,
+            '__EventStamp' => eventStamp
         };
              
         // act
@@ -1024,7 +1024,7 @@
         String  actualEventStamp;
         if (actualCount == 1) {
             Map<String,Object> actualParameters = (Map<String,Object>)Json.deserializeUntyped(actualMessages[0].Parameters__c);
-            actualEventStamp = (String)actualParameters.get('esb_EventStamp');
+            actualEventStamp = (String)actualParameters.get('__EventStamp');
         }
  
         // assert
@@ -1049,10 +1049,10 @@
         
  
         Map<String,Object> parametersA = new Map<String,Object>{
-            'esb_SequenceName' => sequenceName
+            '__SequenceName' => sequenceName
         };
         Map<String,Object> parametersB = new Map<String,Object>{
-            'Id' => UserInfo.getUserId() 
+            'esb__Id' => UserInfo.getUserId() 
         };
             
         // assemble
@@ -1109,9 +1109,9 @@
         Integer actualPosition       ; 
         if (messagesAfter.size() == 1) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(messagesAfter[0].Parameters__c);
-            actualEntryPointGuid = (String) parameters.get('esb_EntryPointGuid');
-            actualEnqueueUserId  = (Id) parameters.get('esb_EnqueueUserId' );
-            actualPosition       = (Integer) parameters.get('esb_Position');
+            actualEntryPointGuid = (String) parameters.get('__EntryPointGuid');
+            actualEnqueueUserId  = (Id) parameters.get('__EnqueueUserId' );
+            actualPosition       = (Integer) parameters.get('__Position');
         }
 
         // assert

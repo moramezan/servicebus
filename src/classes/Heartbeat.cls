@@ -10,7 +10,7 @@ public with sharing class Heartbeat {
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
-        String  stampAsString = (String)parameters.get('esb_EventStamp');
+        String  stampAsString = (String)parameters.get('__EventStamp');
 
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         
@@ -33,9 +33,9 @@ public with sharing class Heartbeat {
         
         for (Step__c step : steps) {
             Map<String,Object> clone = parameters.clone();
-            clone.put('esb_Position', step.Position__c);
-            clone.put('esb_SequenceName', step.Sequence__r.Name);
-            clone.put('esb_IsHeartbeatProcess', null); //#575 so outputs don't get same crow look as input
+            clone.put('__Position', step.Position__c);
+            clone.put('__SequenceName', step.Sequence__r.Name);
+            clone.put('__IsHeartbeatProcess', null); //#575 so outputs don't get same crow look as input
             parametersList.add(clone);
         }
 

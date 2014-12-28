@@ -60,7 +60,7 @@
         ));
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb_SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
+            '__SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Type reflector = Publish.class;
@@ -73,12 +73,12 @@
         
         //first one is for subscriber
         List<Object> expectedIds = null;
-        List<Object> actualIds = (List<Object>)parametersList[0].get('esb_SubsequenceStepIds');
+        List<Object> actualIds = (List<Object>)parametersList[0].get('__SubsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
         
         //second one is original/passthru
         expectedIds = new List<Id>{'000000000000000AAA'};
-        actualIds = (List<Object>)parametersList[1].get('esb_SubsequenceStepIds');
+        actualIds = (List<Object>)parametersList[1].get('__SubsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
     }
     
@@ -96,7 +96,7 @@
         PublishConfig__c config = new PublishConfig__c();
         insert config;
         
-        Map<String,Object> parameters = new Map<String,Object>{'esb_SequenceName' => 'TestSequence', 'esb_Position' => 1};
+        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'TestSequence', '__Position' => 1};
         
         //act
         Boolean thrown = false;
@@ -129,7 +129,7 @@
         );
         update config;
         
-        String data = '{"esb_SequenceName":"TestSequence","esb_Position":1}';
+        String data = '{"__SequenceName":"TestSequence","__Position":1}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         
         //act
@@ -187,7 +187,7 @@
         ));
         
         //arrange
-        Map<String,Object> parameters = new Map<String,Object>{'esb_SequenceName' => 'Publisher', 'esb_Position' => 1};
+        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'Publisher', '__Position' => 1};
         
         //act
         Type reflector = Publish.class;
