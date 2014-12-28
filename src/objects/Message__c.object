@@ -113,7 +113,9 @@
     </fields>
     <fields>
         <fullName>Route__c</fullName>
+        <description>Composite key that can be runtime-resolved to a Step as late as possible.</description>
         <externalId>true</externalId>
+        <inlineHelpText>What route should this message take for execution?</inlineHelpText>
         <label>Route</label>
         <length>255</length>
         <required>false</required>

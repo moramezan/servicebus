@@ -1,5 +1,20 @@
 @IsTest public class MessageObjectSetTest {
     
+    static testmethod void testUnpopulatedRouteKey() {
+        //arrange message
+        Message__c message = new Message__c(
+            Parameters__c = '{"esb_IsHeartbeatProcess":true}'
+        );
+        
+        //act
+        new MessageObjectSet(new List<Message__c>{message}).populateRouteKey();
+        
+        //assert
+        String expectedRoute = null;
+        String actualRoute = message.Route__c;
+        System.assertEquals(expectedRoute, actualRoute, 'Route should be null for heartbeats.');
+    }
+    
     static testmethod void testPopulateRouteKey() {
         //arrange message
         Message__c message = new Message__c(
