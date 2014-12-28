@@ -30,20 +30,6 @@
                     </apex:pageMessage>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
-            
-            <apex:pageBlockSection collapsible="false" columns="1" title="Checking Application Menu...">
-                <apex:pageBlockSectionItem rendered="{!HasApp}">
-                    <p>
-                        <img style="vertical-align:middle;" src="{!URLFOR('/img/msg_icons/confirm16.png')}" />
-                        OK! The application is visible up top right.
-                    </p>
-                </apex:pageBlockSectionItem>
-                <apex:pageBlockSectionItem rendered="{!NOT(HasApp)}">
-                    <apex:pageMessage strength="3" severity="ERROR" title="The Enterprise Service Bus application is not visible.">
-                        <apex:commandButton action="{!doSetupApp}" value="Click here then click Save at the top of the page to fix this" />
-                    </apex:pageMessage>
-                </apex:pageBlockSectionItem>
-            </apex:pageBlockSection>
         </apex:pageBlock>
     
         <br />

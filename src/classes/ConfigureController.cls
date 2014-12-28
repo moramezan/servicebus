@@ -54,37 +54,6 @@ public with sharing class ConfigureController {
     }
     
     /**
-     * App visibility can come from Profile associations or from Permission Sets.
-     * Unfortunately, Permission Sets only work in a dev org, not for an install.
-     * For installed users, we can detect the app's visibility from the app menu.
-     */
-    public Boolean getHasApp() {
-        //get the application id and scrape the home page
-        String appId = String.valueOf(this.getAppMenuItem().Id).left(15);
-        
-        if (this.getHomeContent().contains(appId)) {
-            //the app is visible
-            return true;
-        }
-        
-        if (this.getHomeContent().contains('Enterprise Service Bus')) {
-            //the app is currently selected
-            return true;
-        }
-        
-        //needs to be set up!
-        return false;
-    }
-    
-    public PageReference doSetupApp() {
-        //scaffold edit url and append url parameter for your profile
-        PageReference pr = new ApexPages.StandardController(this.getAppMenuItem()).edit();
-        pr.getParameters().put('retURL', ApexPages.currentPage().getUrl());
-        pr.getParameters().put('selected_in_profile', String.valueOf(UserInfo.getProfileId()).left(15));
-        return pr;
-    }
-    
-    /**
      * The Heartbeat scheduled job is required for the 'Schedule' process to run.
      * If a System Administrator inadvertently deletes it, it can be recreated here.
      */
@@ -110,7 +79,7 @@ public with sharing class ConfigureController {
      * Is EVERYTHING installed correctly?
      */
     public Boolean getIsOk() {
-        return this.getHasApp() && this.getHasHeartbeat();
+        return this.getHasHeartbeat();
     }
     
     public PageReference doGetStarted() {

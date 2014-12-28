@@ -6,7 +6,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
     
     public void execute(System.SchedulableContext context) {
         //keep access token roaring and ready every hour
-        deferRefreshAccessToken();
+        if (!Test.isRunningTest()) deferRefreshAccessToken();
         
         HeartbeatImplementation.IHeartbeatGenerator heartbeatGenerator = 
             (HeartbeatImplementation.IHeartbeatGenerator) new HeartbeatImplementation.HeartbeatGeneratorImpl();

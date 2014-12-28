@@ -6,29 +6,6 @@
         }
     }
     
-    static testmethod void testGetHasAppAlwaysFalseInTest() {
-        //arrange
-        ConfigureController controller = new ConfigureController();
-        
-        //act
-        Boolean hasApp = controller.getHasApp();
-        
-        //assert
-        System.assert(!hasApp);
-    }
-    
-    static testmethod void testDoSetupAppReturnsAppIdInUrl() {
-        //arrange
-        ConfigureController controller = new ConfigureController();
-        
-        //act
-        String url = controller.doSetupApp().getUrl();
-        
-        //assert
-        System.assert(url.contains('02u'));
-        System.assert(url.contains('00e'));
-    }
-    
     static testmethod void testGetHasHeartbeatFalseInTest() {
         //arrange
         ConfigureController controller = new ConfigureController();
