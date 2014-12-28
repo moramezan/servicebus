@@ -3,7 +3,7 @@ public with sharing class Schedule {
     public String Parameters;
     public ScheduleConfig__c StepConfig;
     
-    public class Meta {
+    public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Schedule';
         public String Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages

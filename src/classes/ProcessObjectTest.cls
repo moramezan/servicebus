@@ -2,8 +2,7 @@
     
     public String Parameters;
     
-    @testVisible
-    private class Meta {
+    @TestVisible private class ESB {
         public String Tag = 'Fake';
         public String Name = 'Test';
         public String Description = 'Herpderp';
@@ -41,14 +40,14 @@
         Type actualType = Subscribe.class;
         
         Object process = actualType.newInstance();
-        ProcessObject.Meta describeResult = (ProcessObject.Meta)Json.deserialize(Json.serialize(Subscribe.Meta.class.newInstance()), ProcessObject.Meta.class);
+        ProcessObject.ESB describeResult = (ProcessObject.ESB)Json.deserialize(Json.serialize(Subscribe.ESB.class.newInstance()), ProcessObject.ESB.class);
         String expectedName = describeResult.Name;
         String expectedTag = describeResult.Tag;
         String expectedDescription = describeResult.Description;
         Integer expectedLimits = describeResult.Limits;
         String expectedFullyQualifiedClassName = actualType.getName();
-        Type innerClass = Type.forName(actualType.getName() + '.' + 'Meta'); 
-        ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
+        Type innerClass = Type.forName(actualType.getName() + '.' + 'ESB'); 
+        ProcessObject.ESB meta = (ProcessObject.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.ESB.class);
         String expectedStepConfig  = meta.StepConfig.getSObjectType().getDescribe().getName();
         String expectedIcon = meta.icon;
         String expectedHelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubscribeConfigCsh.getUrl();

@@ -2,7 +2,7 @@ public with sharing class Terminate {
     
     public String Parameters;
     
-    public class Meta {
+    public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Terminate';
         public String Description = 'Swallows messages at the end of this sequence.';

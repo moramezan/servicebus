@@ -1,9 +1,9 @@
 <apex:page showHeader="false" controller="ProcessDescribeController">
     
     <apex:pageBlock mode="maindetail">
-    	<apex:pageBlockSection collapsible="false" columns="1" title="Process Meta">
-        	<apex:pageBlockSectionItem >
-            	<apex:dataTable cellspacing="10" value="{!process}" var="process">
+        <apex:pageBlockSection collapsible="false" columns="1" title="ESB Process">
+            <apex:pageBlockSectionItem >
+                <apex:dataTable cellspacing="10" value="{!process}" var="process">
                     <apex:column breakBefore="true" style="font-weight: bold;">Tag</apex:column>
                     <apex:column value="{!Process.Tag__c}" />
 
@@ -19,20 +19,20 @@
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
-        <apex:pageBlockSection collapsible="false" columns="1" title="Input Parameters" rendered="{!Meta.Inputs != null}">
+        <apex:pageBlockSection collapsible="false" columns="1" title="Input Parameters" rendered="{!ESB.Inputs != null}">
             <apex:pageBlockSectionItem >
-                <apex:dataTable cellspacing="10" value="{!Meta.Inputs}" var="key">
-                	<apex:column style="font-weight: bold;">{!key}</apex:column>
-                	<apex:column >{!Meta.Inputs[key]}</apex:column>
+                <apex:dataTable cellspacing="10" value="{!ESB.Inputs}" var="key">
+                    <apex:column style="font-weight: bold;">{!key}</apex:column>
+                    <apex:column >{!ESB.Inputs[key]}</apex:column>
                 </apex:dataTable>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
-        <apex:pageBlockSection collapsible="false" columns="1" title="Output Parameters" rendered="{!Meta.Outputs != null}">
+        <apex:pageBlockSection collapsible="false" columns="1" title="Output Parameters" rendered="{!ESB.Outputs != null}">
             <apex:pageBlockSectionItem >
-                <apex:dataTable cellspacing="10" value="{!Meta.Outputs}" var="key">
-                	<apex:column style="font-weight: bold;">{!key}</apex:column>
-                	<apex:column >{!Meta.Outputs[key]}</apex:column>
+                <apex:dataTable cellspacing="10" value="{!ESB.Outputs}" var="key">
+                    <apex:column style="font-weight: bold;">{!key}</apex:column>
+                    <apex:column >{!ESB.Outputs[key]}</apex:column>
                 </apex:dataTable>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>

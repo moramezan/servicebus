@@ -3,7 +3,7 @@ public with sharing class Confirm {
     public ConfirmConfig__c StepConfig;
     public String Parameters;
     
-    public class Meta {
+    public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Confirm';
         public String Icon = 'control_pause_blue';

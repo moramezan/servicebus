@@ -595,9 +595,9 @@ abstract public with sharing class Broker {
             throw new EngineException(null, inputMessageIds, null, 'Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c);
         }
         
-        Type meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + '.' + 'Meta');
+        Type meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + '.' + 'ESB');
         if (meta == null) {
-            throw new EngineException(null, inputMessageIds, null, 'Could not see Meta inner class, this is not a valid process: ' + reflector.getName());
+            throw new EngineException(null, inputMessageIds, null, 'Could not see ESB inner class, this is not a valid process: ' + reflector.getName());
         }
         
         //save important message properties (such as __Hops) so that process authors cannot pervert them  

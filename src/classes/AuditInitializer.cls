@@ -3,7 +3,7 @@ public with sharing class AuditInitializer {
     public String Parameters;
     public AuditInitializerConfig__c StepConfig;
     
-    public class Meta {
+    public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Audit Initializer';
         public String Description = 'Creates a grouping identifier which all subsequent Audit Writer processes audit against.';

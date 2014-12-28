@@ -11,7 +11,7 @@ public with sharing class ProcessObject extends SalesforceObject {
      * isn't appropriate for Tag, Description, InputParameters or OutputParameters. This inner class must be present
      * for an apex class to appear in the Process list.
      */
-    public without sharing class Meta {
+    public class ESB {
         /**
          * Each process MUST provide a grouping tag.
          */
@@ -89,18 +89,18 @@ public with sharing class ProcessObject extends SalesforceObject {
     public without sharing class Context {
         public Process__c contextFromType(Type reflector) {
             Type outerClass = reflector;
-            Type innerClass = Type.forName(reflector.getName() + '.' + 'Meta');
+            Type innerClass = Type.forName(reflector.getName() + '.' + 'ESB');
             
             Object impl = outerClass.newInstance();
             Process__c process = new Process__c(
                 FullyQualifiedClassName__c = outerClass.getName()
             );
             
-            ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
+            ProcessObject.ESB meta = (ProcessObject.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.ESB.class);
 
             if (meta.Description == null) {
                 //EVERY PROCESS MUST PROVIDE A DESCRIPTION
-                throw new ProcessException('Process "' + process.FullyQualifiedClassName__c + '" must provide Meta.Description');
+                throw new ProcessException('Process "' + process.FullyQualifiedClassName__c + '" must provide ESB.Description');
             }
 
             //attempt to populate the short description of the process.

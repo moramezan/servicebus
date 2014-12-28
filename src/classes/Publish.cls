@@ -3,7 +3,7 @@ public with sharing class Publish {
     public String Parameters;
     public PublishConfig__c StepConfig;
     
-    public class Meta {
+    public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Publish';
         public String Description = 'Broadcasts the message to other sequences via a named Event Type.';

@@ -3,7 +3,7 @@ public with sharing class Jump {
     public String Parameters;
     public JumpConfig__c StepConfig;
 
-    public class Meta {
+    public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Jump';
         public String Description = 'Permanently diverts the message to another sequence, never to return.';

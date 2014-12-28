@@ -2,7 +2,7 @@ public with sharing class Subscribe {
 
     public String Parameters;
     
-    public class Meta {
+    public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Subscribe';
         public String Description = 'Listens for messages via a named Event Type.';

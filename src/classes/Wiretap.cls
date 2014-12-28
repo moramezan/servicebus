@@ -2,7 +2,7 @@ public with sharing class Wiretap {
    
     public String Parameters;
     
-    public class Meta {
+    public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Wiretap';
         public String Description = 'Emails the message parameters to the user.';

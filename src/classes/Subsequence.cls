@@ -3,7 +3,7 @@ public with sharing class Subsequence {
     public String Parameters;
     public SubsequenceConfig__c StepConfig;
     
-    public class Meta {
+    public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Subsequence';
         public String Description = 'Temporarily diverts the message to another sequence, then returns it to the next step afterwards.';

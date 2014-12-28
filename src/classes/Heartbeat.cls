@@ -3,7 +3,7 @@ public with sharing class Heartbeat {
     public String Parameters;
 
     //#575 heartbeat process evades discovery
-    //public class Meta {}
+    //public class ESB {}
 
     public class HeartbeatException extends Exception {}
 

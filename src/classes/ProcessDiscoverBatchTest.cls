@@ -52,17 +52,17 @@
  
     static testmethod void testImplementsEsbSubclass() {
         // arrange
-        Type gate = Type.forName('Gate.Meta');
-        Type mark = Type.forName('Mark.Meta');
-        Type terminate = Type.forName('Terminate.Meta');
-        Type branch = Type.forName('Branch.Meta');
-        Type wiretap = Type.forName('Wiretap.Meta');
-        Type publish = Type.forName('Publish.Meta');
-        Type schedule = Type.forName('Schedule.Meta');
-        Type subsequence = Type.forName('Subsequence.Meta');
-        Type subscribe = Type.forName('Subscribe.Meta');
-        Type auditInitializer = Type.forName('AuditInitializer.Meta');
-        Type auditWriter = Type.forName('AuditWriter.Meta');
+        Type gate = Type.forName('Gate.ESB');
+        Type mark = Type.forName('Mark.ESB');
+        Type terminate = Type.forName('Terminate.ESB');
+        Type branch = Type.forName('Branch.ESB');
+        Type wiretap = Type.forName('Wiretap.ESB');
+        Type publish = Type.forName('Publish.ESB');
+        Type schedule = Type.forName('Schedule.ESB');
+        Type subsequence = Type.forName('Subsequence.ESB');
+        Type subscribe = Type.forName('Subscribe.ESB');
+        Type auditInitializer = Type.forName('AuditInitializer.ESB');
+        Type auditWriter = Type.forName('AuditWriter.ESB');
         
         // act
         Boolean actualGate = (gate != null);

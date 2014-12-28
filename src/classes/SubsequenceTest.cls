@@ -4,8 +4,8 @@
         //arrange 
         Type actualType = Subsequence.class;
         Type outerClass = Type.forName(actualType.getName());  
-        Type innerClass = Type.forName(outerClass.getName() + '.' + 'Meta'); 
-        ProcessObject.Meta meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
+        Type innerClass = Type.forName(outerClass.getName() + '.' + 'ESB'); 
+        ProcessObject.ESB meta = (ProcessObject.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.ESB.class);
         
         //act 
         Integer actualLimits = meta.Limits;  

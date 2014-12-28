@@ -2,7 +2,7 @@ public with sharing class AuditWriter {
     
     public String Parameters;
     
-    public class Meta {
+    public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Audit Writer';
         public String Description = 'Stores the message parameters under an Audit Group.';

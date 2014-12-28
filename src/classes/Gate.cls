@@ -2,7 +2,7 @@ public with sharing class Gate {
     
     public String Parameters;
     
-    public class Meta {
+    public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Gate';
         public String Description = 'Aggregates a collection of messages previously marked with a correlation key.';

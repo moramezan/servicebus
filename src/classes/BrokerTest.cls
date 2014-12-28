@@ -2,7 +2,7 @@
     
     public String Parameters;
     
-    @TestVisible private class Meta {
+    @TestVisible private class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Failure Process';
         public String Description = 'A toStringable Object that throws an exception for testing purposes.'; //Will not be listed
@@ -70,7 +70,7 @@
         
         //assert
         Integer expectedLimits = 9;
-        Integer actualLimits = new Wiretap.Meta().Limits;
+        Integer actualLimits = new Wiretap.ESB().Limits;
         System.assertEquals(expectedLimits, actualLimits, 'Wiretap should have meta limits of nine.');
         
         Integer expectedSize = 9;
@@ -792,7 +792,7 @@
         
         //assert
         String actualMessage = (String)ex.get('Message');
-        String expectedMessage = 'Could not see Meta inner class, this is not a valid process: Account';
+        String expectedMessage = 'Could not see ESB inner class, this is not a valid process: Account';
         System.assertEquals(expectedMessage, actualMessage, 'Wrong message detail.');
     }
     

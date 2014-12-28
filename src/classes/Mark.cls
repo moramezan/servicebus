@@ -2,7 +2,7 @@ public with sharing class Mark {
     
     public String Parameters;
     
-    public class Meta {
+    public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Mark';
         public String Description = 'Marks the message with a correlation key, for splitting into a collection.';

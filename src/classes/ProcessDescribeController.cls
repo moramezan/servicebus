@@ -1,7 +1,7 @@
 public with sharing class ProcessDescribeController {
     
     public Process__c process {public get; private set;}
-    public ProcessObject.Meta Meta {public get; private set;}
+    public ProcessObject.ESB ESB {public get; private set;}
     
     public ProcessDescribeController() {
         String fqn = ApexPages.currentPage().getParameters().get('fqn');
@@ -12,8 +12,8 @@ public with sharing class ProcessDescribeController {
             WHERE FullyQualifiedClassName__c = :fqn
         ];
         
-        Type innerClass = Type.forName(fqn + '.' + 'Meta');
-        this.meta = (ProcessObject.Meta)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.Meta.class);
+        Type innerClass = Type.forName(fqn + '.' + 'ESB');
+        this.ESB = (ProcessObject.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.ESB.class);
     }
     
 }

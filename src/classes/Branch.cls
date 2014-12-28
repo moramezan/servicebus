@@ -3,7 +3,7 @@ public with sharing class Branch {
     public String Parameters;
     public BranchConfig__c StepConfig;
 
-    public class Meta {
+    public class ESB {
         public SObject StepConfig = BranchConfig__c.SObjectType.newSObject();
         public String Icon = 'arrow_branch';
         public String HelpUrl = Page.BranchConfigCsh.getUrl();
