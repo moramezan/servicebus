@@ -10,39 +10,33 @@ public with sharing class Heartbeat {
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
-        Boolean isHeartbeat = ( parameters.get('esb_IsHeartbeat') == null) ?
-            false :
-            (Boolean)parameters.get('esb_IsHeartbeat');
-
         String  stampAsString = (String)parameters.get('esb_EventStamp');
 
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         
-        if (isHeartbeat) {
-            try {
-               stampAsString = getISO8601(stampAsString);
-            } catch (Exception e)  {
-                throw new HeartbeatException(e);
-            }
-            
-            // TODO : re-do this dynamically        
-            Set<String> interestedSubscriberNames = new Set<String>{
-                Schedule.class.getName()
-            }; 
-            
-            List<Step__c> steps = [
-                SELECT Id, Sequence__r.Name, Position__c
-                FROM Step__c
-                WHERE Process__r.Name IN :interestedSubscriberNames
-            ];
-            
-            for (Step__c step : steps) {
-                Map<String,Object> clone = parameters.clone();
-                clone.put('esb_Position', step.Position__c-1);
-                clone.put('esb_SequenceName', step.Sequence__r.Name);
-                clone.put('esb_IsHeartbeatProcess', null); //#575 so outputs don't get same crow look as input
-                parametersList.add(clone);
-            }
+        try {
+           stampAsString = getISO8601(stampAsString);
+        } catch (Exception e)  {
+            throw new HeartbeatException(e);
+        }
+        
+        // TODO : re-do this dynamically        
+        Set<String> interestedSubscriberNames = new Set<String>{
+            Schedule.class.getName()
+        }; 
+        
+        List<Step__c> steps = [
+            SELECT Id, Sequence__r.Name, Position__c
+            FROM Step__c
+            WHERE Process__r.Name IN :interestedSubscriberNames
+        ];
+        
+        for (Step__c step : steps) {
+            Map<String,Object> clone = parameters.clone();
+            clone.put('esb_Position', step.Position__c);
+            clone.put('esb_SequenceName', step.Sequence__r.Name);
+            clone.put('esb_IsHeartbeatProcess', null); //#575 so outputs don't get same crow look as input
+            parametersList.add(clone);
         }
 
         //This process should act as a Terminate - return empty list

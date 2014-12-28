@@ -173,8 +173,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
                 'Id' => UserInfo.getUserId(), 
                 'esb_SequenceName' => '',
                 'esb_EventStamp' => getISO8601(heartbeat),
-                'esb_IsHeartbeatProcess' => true, //#575 so that resolve and execute can crow look
-                'esb_IsHeartbeat' => true    
+                'esb_IsHeartbeatProcess' => true //#575 so that resolve and execute can crow look
             };
             Broker.enqueue(parameters);
         }

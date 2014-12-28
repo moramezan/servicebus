@@ -1009,12 +1009,10 @@
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         String eventStamp = HeartbeatImplementation.getISO8601(DateTime.newInstance(2014,12,15,13,11,07));
-        Boolean isHeartbeat = true;
         Map<String,Object> parameters = new Map<String,Object>{
-            'Id' => UserInfo.getUserId(), 
-            'esb_SequenceName' => sequenceName,    
-            'esb_EventStamp' => eventStamp,
-            'esb_IsHeartbeat' => isHeartbeat    
+            'Id' => UserInfo.getUserId(),
+            'esb_SequenceName' => sequenceName,
+            'esb_EventStamp' => eventStamp
         };
              
         // act
@@ -1024,11 +1022,9 @@
         List<Message__c> actualMessages = [  SELECT  Id, Parameters__c FROM Message__c];
         Integer actualCount  = actualMessages.size();
         String  actualEventStamp;
-        Boolean actualIsHeartbeat;
         if (actualCount == 1) {
             Map<String,Object> actualParameters = (Map<String,Object>)Json.deserializeUntyped(actualMessages[0].Parameters__c);
             actualEventStamp = (String)actualParameters.get('esb_EventStamp');
-            actualIsHeartbeat = (Boolean)actualParameters.get('esb_IsHeartbeat');
         }
  
         // assert
@@ -1036,8 +1032,6 @@
         System.assertEquals(expectedCount, actualCount);
         String  expectedEventStamp = eventStamp;
         System.assertEquals(expectedEventStamp, actualEventStamp);
-        Boolean expectedIsHeartbeat = isHeartbeat; 
-        System.assertEquals(expectedIsHeartbeat,actualIsHeartbeat);
     }
 
     static testMethod void callingEnqueueWithoutMandatoryParametersInParametersCollectionThrowsException() {

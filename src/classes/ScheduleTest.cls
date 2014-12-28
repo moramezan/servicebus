@@ -47,12 +47,7 @@
 
 
          //arrange parameters
-         Boolean isHeartbeat = false;
-        String stampAsString = '2014-01-18T12:00:00.000Z';
-        Map<String,Object> parameters = new Map<String,Object>{
-            'esb_IsHeartbeat' => isHeartbeat,
-            'esb_EventStamp' => stampAsString
-        };
+        Map<String,Object> parameters = new Map<String,Object>();
     
         // act 
         Type reflector = Schedule.class;
@@ -61,25 +56,17 @@
         // assemble
         Integer actualCount = results.size();
 
-         Boolean actualIsHeartbeat = null;
-        String  actualStampTruncated = null;
         Integer actualParameterSize = null;
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
-            actualIsHeartbeat = (Boolean)actualParameters.get('esb_IsHeartbeat');
-            actualStampTruncated = (String)actualParameters.get('esb_EventStamp');
         }
         
         // assert
         Integer expectedCount = 1;
         System.assertEquals(expectedCount, actualCount);
 
-        Boolean expectedIsHeartbeat = isHeartbeat;
-        String  expectedStampTruncated = stampAsString;
-        Integer expectedParameterSize = 2;
-        System.assertEquals(expectedIsHeartbeat, actualIsHeartbeat);
-        System.assertEquals(expectedStampTruncated, actualStampTruncated); 
+        Integer expectedParameterSize = 0;
         System.assertEquals(expectedParameterSize, actualParameterSize); 
     }   
 
@@ -107,11 +94,9 @@
         
 
          //arrange parameters
-         Boolean isHeartbeat = true;
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday
         ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb_IsHeartbeat' => isHeartbeat,
             'esb_EventStamp' => stampAsString
         };
  
@@ -122,13 +107,11 @@
         // assemble
         Integer actualCount = results.size();
 
-         Boolean actualIsHeartbeat = null;
         String  actualStampTruncated = null;
         Integer actualParameterSize = null;
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
-            actualIsHeartbeat = (Boolean)actualParameters.get('esb_IsHeartbeat');
             actualStampTruncated = (String)actualParameters.get('esb_EventStamp');
         }
         
@@ -136,10 +119,8 @@
         Integer expectedCount = 1;
         System.assertEquals(expectedCount, actualCount);
 
-        Boolean expectedIsHeartbeat = isHeartbeat;
         String  expectedStampTruncated = stampAsString;
-        Integer expectedParameterSize = 2;
-        System.assertEquals(expectedIsHeartbeat, actualIsHeartbeat);
+        Integer expectedParameterSize = 1;
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
     }  
@@ -168,11 +149,9 @@
         
 
          //arrange parameters
-         Boolean isHeartbeat = true;
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday, a working day
         ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb_IsHeartbeat' => isHeartbeat,
             'esb_EventStamp' => stampAsString
         };
  
@@ -183,13 +162,11 @@
         // assemble
         Integer actualCount = results.size();
 
-         Boolean actualIsHeartbeat = null;
         String  actualStampTruncated = null;
         Integer actualParameterSize = null;
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
-            actualIsHeartbeat = (Boolean)actualParameters.get('esb_IsHeartbeat');
             actualStampTruncated = (String)actualParameters.get('esb_EventStamp');
         }
         
@@ -197,10 +174,8 @@
         Integer expectedCount = 1;
         System.assertEquals(expectedCount, actualCount);
 
-        Boolean expectedIsHeartbeat = isHeartbeat;
         String  expectedStampTruncated = stampAsString;
-        Integer expectedParameterSize = 2;
-        System.assertEquals(expectedIsHeartbeat, actualIsHeartbeat);
+        Integer expectedParameterSize = 1;
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
     }  
@@ -229,11 +204,9 @@
         
 
          //arrange parameters
-         Boolean isHeartbeat = true;
         String stampAsString = '2014-01-03T12:00:00.000Z';   
         ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb_IsHeartbeat' => isHeartbeat,
             'esb_EventStamp' => stampAsString
         };
  
@@ -244,13 +217,11 @@
         // assemble
         Integer actualCount = results.size();
 
-         Boolean actualIsHeartbeat = null;
         String  actualStampTruncated = null;
         Integer actualParameterSize = null;
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
-            actualIsHeartbeat = (Boolean)actualParameters.get('esb_IsHeartbeat');
             actualStampTruncated = (String)actualParameters.get('esb_EventStamp');
         }
         
@@ -258,10 +229,8 @@
         Integer expectedCount = 1;
         System.assertEquals(expectedCount, actualCount);
 
-        Boolean expectedIsHeartbeat = isHeartbeat;
         String  expectedStampTruncated = stampAsString;
-        Integer expectedParameterSize = 2;
-        System.assertEquals(expectedIsHeartbeat, actualIsHeartbeat);
+        Integer expectedParameterSize = 1;
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
     }  
@@ -289,11 +258,9 @@
         
 
          //arrange parameters
-         Boolean isHeartbeat = true;
         String stampAsString = '2014-01-18T12:00:00.000Z';
         ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb_IsHeartbeat' => isHeartbeat,
             'esb_EventStamp' => stampAsString
         };
  
@@ -324,11 +291,9 @@
         
 
         //arrange parameters
-        Boolean isHeartbeat = true;
         String validStamp = '2014-01-18T12:00:00.000Z';
         ScheduleConfig__c invalidConfig = null;
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb_IsHeartbeat' => isHeartbeat,
             'esb_EventStamp' => validStamp
         };
         
@@ -362,10 +327,8 @@
         
 
          //arrange parameters
-         Boolean isHeartbeat = true;
         String invalidStamp = 'XXXX-01-18T12:00:00.000Z';
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb_IsHeartbeat' => isHeartbeat,
             'esb_EventStamp' => invalidStamp
         };
         

@@ -18,13 +18,12 @@ public with sharing class Schedule {
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
 
-        Boolean isHeartbeat = (Boolean)parameters.get('esb_IsHeartbeat');
-        String  stampAsString  =  (String)parameters.get('esb_EventStamp');
+        String stampAsString = (String)parameters.get('esb_EventStamp');
         Id configId = this.StepConfig == null ? null : this.StepConfig.Id;
 
-         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
+        List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
     
-        if (isHeartbeat) {
+        if (stampAsString != null) {
             // evaluate:
             if (isWithinWindow(stampAsString, configId)) {
                 parametersList.add(parameters);
