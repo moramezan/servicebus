@@ -238,7 +238,7 @@ public with sharing class Gate {
     private static List<GateItem__c> getGateItemsOverDateThresholdImpl(DateTime DateThreshold) {
         return [
             SELECT Id, Name, GateGroup__c, CreatedDate 
-            FROM GateItem__c WHERE CreatedDate > :DateThreshold
+            FROM GateItem__c WHERE CreatedDate < :DateThreshold   // :DateThreshold > CreatedDate   
         ];
     }
 
