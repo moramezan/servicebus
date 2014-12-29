@@ -24,8 +24,8 @@
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
 
         //tee up two messages in queued state
-        Broker.enqueue(sequenceNameA, '000000000000000AAA');
-        Broker.enqueue(sequenceNameA, '000000000000000AAA');
+        new Job(sequenceNameA, '000000000000000AAA').execute(null);
+        new Job(sequenceNameA, '000000000000000AAA').execute(null);
 
         //act - actions in the ctor
         MessageResumeQueueExtension.DoDml doDmlInstance = new MessageResumeQueueExtension.DoDml();
@@ -85,8 +85,8 @@
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
 
         //tee up two messages in queued state
-        Broker.enqueue(sequenceNameA, '000000000000000AAA');
-        Broker.enqueue(sequenceNameA, '000000000000000AAA');
+        new Job(sequenceNameA, '000000000000000AAA').execute(null);
+        new Job(sequenceNameA, '000000000000000AAA').execute(null);
 
         //act -
         ApexPages.StandardSetController controller = new ApexPages.StandardSetController([SELECT Id, Name FROM Message__c]);

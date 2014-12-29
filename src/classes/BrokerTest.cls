@@ -116,9 +116,8 @@
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
-        //act 
-        Broker.enqueue(sequenceNameA, '000000000000000AAA');
-
+        //act
+        new Job(sequenceNameA, '000000000000000AAA').execute(null);
         
         //assemble
         List<Message__c> messages = [
@@ -524,7 +523,7 @@
         System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
         //act
-        Broker.enqueue(theSequenceName, theId);
+        new Job(theSequenceName, theId).execute(null);
         
         //assert
         Boolean expectedAfterFlag = true;
@@ -556,7 +555,7 @@
         System.assertEquals(expectedSizeBefore , actualSizeBefore);
         
         //act
-        Broker.enqueue('TestSequence', Blob.valueOf('balls'));
+        new Job('TestSequence', Blob.valueOf('balls')).execute(null);
         
         //assert
         Integer expectedSizeAfter = 1;
@@ -750,9 +749,7 @@
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act
-        Test.startTest();
-        Broker.enqueue(sequence.Name, '000000000000000AAA');
-        Test.stopTest();
+        new Job(sequence.Name, '000000000000000AAA').execute(null);
         
         //assemble
         Message__c message = [SELECT Id, Cause__c, Exception__c FROM Message__c];
@@ -782,9 +779,7 @@
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act
-        Test.startTest();
-        Broker.enqueue(sequence.Name, '000000000000000AAA');
-        Test.stopTest();
+        new Job(sequence.Name, '000000000000000AAA').execute(null);
         
         //assemble
         Message__c message = [SELECT Id, Cause__c FROM Message__c];
@@ -841,7 +836,7 @@
         //insert new BrokerSetting__c();
 
         //act
-        Broker.enqueue(sequenceNameA, '000000000000000AAA');
+        new Job(sequenceNameA, '000000000000000AAA').execute(null);
 
 
         //assemble
@@ -901,7 +896,7 @@
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
         
         //act 
-        Broker.enqueue(sequenceNameA, '000000000000000AAA');
+        new Job(sequenceNameA, '000000000000000AAA').execute(null);
 
         
         //assemble
@@ -961,7 +956,7 @@
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = false);
         
         //act 
-        Broker.enqueue(sequenceNameA, '000000000000000AAA');
+        new Job(sequenceNameA, '000000000000000AAA').execute(null);
 
         
         //assemble
@@ -1003,7 +998,8 @@
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step  = new Step__c(Sequence__c = sequence.Id ,Position__c = 1,Process__c = terminateProcess.Id);
+        Integer position = 1;
+        Step__c step  = new Step__c(Sequence__c = sequence.Id ,Position__c = position,Process__c = terminateProcess.Id);
         insert step;
   
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
@@ -1012,11 +1008,12 @@
         Map<String,Object> parameters = new Map<String,Object>{
             'esb__Id' => UserInfo.getUserId(),
             '__SequenceName' => sequenceName,
+            '__Position' => position,
             '__EventStamp' => eventStamp
         };
              
         // act
-        Broker.enqueue(parameters);
+        new Job(parameters).execute(null);
 
         // assemble
         List<Message__c> actualMessages = [  SELECT  Id, Parameters__c FROM Message__c];
@@ -1059,7 +1056,7 @@
         Boolean actualFlagA = false;
         try {
             // act
-            Broker.enqueue(parametersA);
+            new Job(parametersA).execute(null);
         } catch (Broker.EngineException e) {
             actualFlagA = true;
         }
@@ -1068,7 +1065,7 @@
         Boolean actualFlagB = false;
         try {
             // act
-            Broker.enqueue(parametersB);
+            new Job(parametersB).execute(null);
         } catch (Broker.EngineException e) {
             actualFlagB = true;
         }
@@ -1096,9 +1093,7 @@
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act
-        Test.startTest();
-        Broker.enqueue(sequence.Name, '000000000000000AAA');
-        Test.stopTest();
+        new Job(sequence.Name, '000000000000000AAA').execute(null);
         
         // assemble
         List<Message__c> messagesAfter = [SELECT Parameters__c FROM Message__c LIMIT 1];

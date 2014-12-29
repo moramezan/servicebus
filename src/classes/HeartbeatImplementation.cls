@@ -168,15 +168,22 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
       
         updateLastEventStamp(heartbeats);
 
+        List<Map<String,Object>> parameterses = new List<Map<String,Object>>();
         for (DateTime heartbeat : heartbeats) {
             Map<String,Object> parameters = new Map<String,Object>{
                 'esb__Id' => UserInfo.getUserId(), 
-                '__SequenceName' => '',
+                '__SequenceName' => '', //avoid "Mandatory parameter __SequenceName not supplied."
+                '__Position' => '', //avoid "Mandatory parameter __Position not supplied."
                 '__EventStamp' => getISO8601(heartbeat),
                 '__IsHeartbeatProcess' => true //#575 so that resolve and execute can crow look
             };
-            Broker.enqueue(parameters);
+            parameterses.add(parameters);
         }
+        
+        //Workaround for known issue: "Method only allowed during testing"
+        //https://success.salesforce.com/issues_view?id=a1p300000008XM1AAM
+        if (Test.isRunningTest()) new Job(parameterses).execute(null);
+        else System.enqueueJob(new Job(parameterses));
     }
  
     

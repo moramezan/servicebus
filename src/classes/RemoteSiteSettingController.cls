@@ -40,8 +40,8 @@ public with sharing class RemoteSiteSettingController {
                 String userId = UserInfo.getUserId();
                 String sessionId = UserInfo.getSessionId();
                 
-                //we can trust getSalesforceBaseUrl within batches and schedules (but not in VF)
-                if (sessionId == null) return Url.getSalesforceBaseUrl().toExternalForm();
+                //use getSalesforceBaseUrl within batches and schedules (not Visualforce), and fix inconsistent protocol
+                if (sessionId == null) return Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:');
                 
                 PageReference pr = new PageReference('/id/' + orgId + '/' + userId);
                 pr.getParameters().put('oauth_token', sessionId);

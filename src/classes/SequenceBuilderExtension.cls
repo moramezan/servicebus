@@ -63,7 +63,7 @@ public with sharing class SequenceBuilderExtension {
     
     @RemoteAction static public String enqueue(Id sequenceId) {
         Sequence__c sequence = (Sequence__c)SalesforceObject.getById(sequenceId);
-        Broker.enqueue(sequence.Name, UserInfo.getUserId());
+        System.enqueueJob(new Job(sequence.Name, UserInfo.getUserId()));
         return sequence.Name;
     }
     

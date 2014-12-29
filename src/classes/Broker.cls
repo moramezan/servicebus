@@ -222,7 +222,7 @@ abstract public with sharing class Broker {
         BrokerSetting__c settings = BrokerSetting__c.getInstance();
         
         //if there is no setting, use a default
-        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = VerticalBrokerImplementation.class.getName(); 
+        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = Type.forName('VerticalBrokerImplementation').getName(); 
         
         //new up and return the broker instance
         Broker impl = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
@@ -405,135 +405,12 @@ abstract public with sharing class Broker {
     }
     
     /**
-     * Prepares data for processing at the start of a nominated sequence by wrapping the pointer to the data (an id) in a
-     * Message object. This Message instance is saved to the database and the Broker is immeadiately
-     * invoked if it is not already running.
-     *
-     * @param sequenceName Name of the sequence the data is destined for.
-     * @param dataId    Id of some record that the sequence will operate on.
-     */
-    static public Id enqueue(String sequenceName, Id dataId) {
-        //TODO #653
-        //if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable'); 
-         
-        Map<String,Object> injectedParameters = new Map<String,Object> {
-            '__SequenceName' => sequenceName,
-            'esb__Id' => dataId
-        };
-        
-        return enqueue(injectedParameters);  
-    }   
-
-    /**
-     * Prepares data (represented a parameters collection) for processing.
-     * 
-     * The parameters collection should at minimum contain 
-     *  - an object Id ("Id")
-     *  - a sequence name ("__SequenceName")
-     * Failure to provide these parameters in the parameters collection will throw an EngineException
-     * 
-     * The parameters collection is converted to a Message object. This Message instance is saved 
-     * to the database and the Broker is immeadiately invoked if it is not already running.
-     *
-     * @param  injectedParameters a parametrised description of the message data.
-     */
-    static public Id enqueue(Map<String,Object> injectedParameters) {
-        //TODO #653
-        //if (!SObjectType.Message__c.Createable) throw new Broker.CrudException('!SObjectType.Message__c.Createable');    
-        
-        // validate params are supplied:
-        if (injectedParameters == null) {
-            throw new EngineException('Cannot supply a null parameters collection to Broker.enqueue(parameters)');
-        }
-        
-        // validate minimum expected params are supplied:
-        List<String> missingParameters = new List<String>();
-        Set<String> expectedParameters = new Set<String>{
-            '__SequenceName',
-            'esb__Id'     
-        };
-        for (String expectedParameter : expectedParameters) {
-            if(!injectedParameters.keySet().contains(expectedParameter)) 
-                missingParameters.add(expectedParameter);   
-        }
-        if (missingParameters.size() > 0) {
-            throw new EngineException(
-                'The following mandatory parameters were not supplied to Broker.enqueue() [' +
-                String.join(missingParameters,',') + 
-                ']'
-            );
-        }
-
-        Map<String,Object> parameters = new Map<String,Object> {
-            '__EntryPointGuid' => getEntryPointGuid(18),
-            '__EnqueueUserId' => UserInfo.getUserId(),
-            '__Position' => 1
-        };
-      
-        // append parameters
-           for (String injectedParameter : injectedParameters.keySet()) {
-            parameters.put(injectedParameter,injectedParameters.get(injectedParameter));        
-        }
-
-        Broker instance = impl();
-                
-        //create the message destined for the 0th step of the chain
-        Message__c message = new Message__c(Parameters__c = Json.serializePretty(parameters));
-        
-        //fetch the custom setting or create an empty one
-        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        if (setting == null) setting = new BrokerSetting__c();
-        
-        if (setting.IsPaused__c) {
-            //system is paused
-            //Why aren't these Messages resolved?
-            //Because their pointers would be a misrepresentation of their destination
-            //if the system had been rearranged during the time it was paused.
-            message.Status__c = 'Queued';
-        } else {
-            //system is running
-            message.Status__c = 'Buffered';
-        }
-        
-        upsert message;
-        Broker.process();
-        return message.Id;
-    }
-    
-    /**
-     * //TODO
      * //If we are scheduled, use the default batch broker which doesn't need a session id (unlike futurebroker)
      * //if (System.isScheduled()) settings.BrokerClassName__c = VerticalBrokerImplementation.class.getName();
      */
     static public void process() {
         Broker impl = impl();
         if (!impl.isAlreadyRunning()) impl.restartIfWorkPending();
-    }
-    
-    /**
-     * Prepares Blob data for processing at the start of a nominated sequence
-     * by wrapping the pointer to the data (an id) in a Message object
-     * This Persisted Data instance is saved to the database and the Broker is
-     * immeadiately invoked threreafter
-     *
-     * @param sequenceName Name of the sequence the data is destined for.
-     * @param dataId    Blob representation of the data the sequence will operate on.
-     */
-    static public Id enqueue(String sequenceName, Blob data) {
-        if (!SObjectType.Document.Createable) throw new Broker.CrudException('!SObjectType.Document.Createable');
-            
-        //prepare a very generic container
-        Document document = new Document(
-            Name = String.valueOf(Datetime.now().getTime()),
-            Body = data,
-            FolderId = UserInfo.getUserId(),
-            ContentType = 'text/plain',
-            Type = 'txt'
-        );
-        
-        //store this data away and enqueue
-        insert document;
-        return enqueue(sequenceName, document.Id);
     }
     
     /**
@@ -750,6 +627,8 @@ abstract public with sharing class Broker {
     }
     
     public void restartIfWorkPending() {
+        if (BrokerSetting__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
+        
         Integer worksPending = [
             SELECT COUNT()
             FROM Message__c
@@ -766,7 +645,7 @@ abstract public with sharing class Broker {
      
     abstract public void restartImpl();
     
-    @TestVisible static private String getEntryPointGuid(Integer size) {
+    static public String getEntryPointGuid(Integer size) {
         return EncodingUtil.convertToHex(crypto.generateAesKey(128)).substring(0, size);
     }
 }

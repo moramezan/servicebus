@@ -21,13 +21,10 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
      * Has to be array of booleans, not nulls
      */
     public Database.QueryLocator start(Database.BatchableContext context) {
-        if (BrokerSetting__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
         return Database.getQueryLocator([SELECT Id FROM FieldPermissions LIMIT :this.Contexts]);
     }
     
     public void execute(Database.BatchableContext context, List<SObject> scopes) {
-        if (BrokerSetting__c.getInstance().Inhibit__c == true) System.abortJob(context.getJobId()); //INHIBIT
-        
         //ever decreasing
         this.Contexts--;
         

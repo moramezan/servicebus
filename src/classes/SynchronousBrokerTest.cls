@@ -20,7 +20,7 @@
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act 
-        Broker.enqueue(sequenceNameA, '000000000000000AAA');
+        new Job(sequenceNameA, '000000000000000AAA').execute(null);
         
         //assemble
         List<Message__c> messages = [

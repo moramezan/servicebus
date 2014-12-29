@@ -35,6 +35,7 @@
         <members>HeartbeatImplementation</members>
         <members>HeartbeatImplementationTest</members>
         <members>HeartbeatTest</members>
+        <members>Job</members>
         <members>Jump</members>
         <members>JumpTest</members>
         <members>Mark</members>
