@@ -529,7 +529,7 @@ private  class GateTest {
         Integer actualSize = actualGateItems.size();
 
         // assert:
-        Integer expectedSize = gateItems.size();
+        Integer expectedSize = 0;
         System.assertEquals(expectedSize, actualSize);
     }
 
@@ -659,7 +659,7 @@ private  class GateTest {
         Integer actualSize = actualGateGroupIds.size();
 
         // assert:
-        Integer expectedSize = 3;
+        Integer expectedSize = 0;
         System.assertEquals(expectedSize,actualSize );
     }
 
@@ -706,7 +706,7 @@ private  class GateTest {
         Integer actualSize = actualGateGroupIds.size();
 
         // assert:
-        Integer expectedSize = 0;
+        Integer expectedSize = 3;
         System.assertEquals(expectedSize,actualSize );
     }
 }
