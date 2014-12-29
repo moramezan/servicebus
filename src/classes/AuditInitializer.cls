@@ -96,7 +96,7 @@ public with sharing class AuditInitializer {
         //
         //  "sequence name" and "step position"
         //  (always use this if StaticGroupIdentifier__c from config equates to null)
-        String defaultGroupIdentifier =  step.Sequence__r.Name + '-' + step.Position__c;
+        String defaultGroupIdentifier =  step.Sequence__r.Name + '#' + step.Position__c;
         
         
         //  preferred alternatives :
