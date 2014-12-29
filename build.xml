@@ -19,16 +19,15 @@
     </target>
 
     <target name="deploy" description="Deploys all package components to dev org">
-        <!-- stop jobs -->
-        <executeAnonymous username="${de.username}" password="${de.password}">for (SObject j : [SELECT Id FROM CronTrigger]) System.abortJob(j.Id);</executeAnonymous>
         <antcall target="optimize-for-devorg" />
-        <sf:deploy
-            username="${de.username}"
-            password="${de.password}"
-            serverurl="https://login.salesforce.com"
-            deployRoot="src"
-        />
+        <subant failonerror="false" target="subdeploy" buildpath="." />
         <antcall target="optimize-for-release" />
+    </target>
+    
+    <target name="subdeploy" description="Subtarget for avoiding fail-on-error">
+        <!-- stop jobs, deploy, start jobs -->
+        <executeAnonymous username="${de.username}" password="${de.password}">for (SObject j : [SELECT Id FROM CronTrigger]) System.abortJob(j.Id);</executeAnonymous>
+        <sf:deploy username="${de.username}" password="${de.password}" serverurl="https://login.salesforce.com" deployRoot="src" />
         <executeAnonymous username="${de.username}" password="${de.password}">new PostInstallHandler().onInstall(null);</executeAnonymous>
     </target>
 
