@@ -679,7 +679,7 @@
     // Stack Trace      Class.BrokerTest.testMissingPositionThrowsExpectedException: line 680, column 1
     static testmethod void testMissingPositionThrowsExpectedException() {
         //arrange
-        Message__c message = new Message__c(Parameters__c = '{"not_position": 0}');
+        Message__c message = new Message__c(Parameters__c = '{"not__Position":1}');
         insert message;
         
         //act
@@ -687,8 +687,7 @@
         
         String actualMessage;
         try {
-            List<Message__c> messages = broker.execute(new List<Message__c>{message});
-            broker.persist(new List<Message__c>{message}, messages);
+            broker.execute(new List<Message__c>{message});
         } catch (Broker.EngineException e) {
             actualMessage = e.getMessage();
         }
@@ -696,8 +695,8 @@
         Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
         
         //assert
-        String expectedMessage = 'position, missing';
-        System.assert(actualMessage.contains(expectedMessage), actualMessage);
+        String expectedMessage = 'Mandatory parameter esb__SequenceName not supplied.';
+        System.assertEquals(expectedMessage, actualMessage, 'Wrong exception message.');
     }
     
     
@@ -1031,7 +1030,7 @@
         System.assertEquals(expectedEventStamp, actualEventStamp);
     }
 
-    static testMethod void callingEnqueueWithoutMandatoryParametersInParametersCollectionThrowsException() {
+    static testMethod void callingExecuteWithoutMandatoryParametersInParametersCollectionThrowsException() {
         // arrange 
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
 
@@ -1056,7 +1055,9 @@
         Boolean actualFlagA = false;
         try {
             // act
-            new Job(parametersA).execute(null);
+            Message__c message = new Message__c(Parameters__c = Json.serialize(parametersA));
+            insert message;
+            Broker.impl().execute(new List<Message__c>{message});
         } catch (Broker.EngineException e) {
             actualFlagA = true;
         }
@@ -1065,7 +1066,9 @@
         Boolean actualFlagB = false;
         try {
             // act
-            new Job(parametersB).execute(null);
+            Message__c message = new Message__c(Parameters__c = Json.serialize(parametersB));
+            insert message;
+            Broker.impl().execute(new List<Message__c>{message});
         } catch (Broker.EngineException e) {
             actualFlagB = true;
         }

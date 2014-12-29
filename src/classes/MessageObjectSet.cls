@@ -17,11 +17,13 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
     override public void onBeforeInsert() {
         deleteCompletedMessages(System.now());   
         this.validateJsonParameters();
+        this.interpretEsbSequenceName();
         this.populateRouteKey();
     }
     
     override public void onBeforeUpdate(List<SObject> oldObjects) {
         this.validateJsonParameters();
+        this.interpretEsbSequenceName();
         this.populateRouteKey();
     }
     
@@ -35,6 +37,27 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
             Integer position = (Integer)parameters.get('__Position');
             parameters.put('__Position', ++position);
+            message.Parameters__c = Json.serializePretty(parameters);
+        }
+    }
+    
+    /**
+     * In #658 we hoped to expose esb__SequenceName API in Broker.persist()
+     * but it means we can't insert messages then just 'run' broker over them.
+     * 
+     * We want to interpret esb__SequenceName into __SequenceName and __Position
+     * as late and as simply as possible. Doing it here in the trigger works OK.
+     */
+    public void interpretEsbSequenceName() {
+        List<Message__c> messages = this.getSObjects();
+        for (Message__c message : messages) {
+            //user nominated Sequence (no esb prefix)
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+            if (parameters.get('esb__SequenceName') == null) continue; //nothing to do
+            
+            parameters.put('__SequenceName', parameters.get('esb__SequenceName'));
+            parameters.put('__Position', 1);
+            parameters.put('esb__SequenceName', null);
             message.Parameters__c = Json.serializePretty(parameters);
         }
     }

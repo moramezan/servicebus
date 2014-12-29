@@ -7,7 +7,7 @@ public with sharing class SynchronousBroker extends Broker {
         this.start();
     }
     
-    virtual public void start() {
+    public void start() {
         //LOCATE
         Database.QueryLocator locator = this.locateMarkableWork();
         Database.QueryLocatorIterator iterator = locator.iterator();

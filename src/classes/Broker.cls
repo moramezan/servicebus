@@ -8,71 +8,78 @@
  *
  * As used by a queueing broker:
  *
- * +-----------+ (CONTEXT 1 FROM USER)
+ * +-----------+ (CONTEXT Q FROM STANDARD USER)
  * |  ENQUEUE  |
+ * |  PERSIST  | deals with esb__SequenceName etc
  * +-----------+
  *
- * +-----------+ (CONTEXT 2 batchable.start)
- * |  MARK     | we need to "dirty" these guys with Started status in case they fuck up
+ * +-----------+ (CONTEXT F FROM STANDARD USER)
+ * |  FUTURE   | calls tooling api with admin sid
  * +-----------+
  *
- * +-----------+ (CONTEXT 3 batchable.execute)
- * |  EXECUTE  | invokes [Wiretap]
- * |  RESOLVE  | ensures all generated messages never
- * |  PERSIST  | exist in an unresolved state per issue #100
+ * +-----------+ (CONTEXT T AS SYSTEM ADMIN)
+ * |TOOLING API| ghosts running user in future
  * +-----------+
  *
- * +-----------+ (CONTEXT 4 batchable.finish)
- * |  ENQUEUE  |
+ * +-----------+ (CONTEXT S batchable.start AS SYSTEM ADMIN)
+ * |  BS HERE  | generate 100 context QueryLocator
  * +-----------+
  *
- * +-----------+ (CONTEXT 5 batchable.start)
+ * +-----------+ (CONTEXT 1 batchable.execute AS SYSTEM ADMIN)
  * |  MARK     |
  * +-----------+
  *
- * +-----------+ (CONTEXT 6 batchable.execute)
+ * +-----------+ (CONTEXT 2 batchable.execute AS SYSTEM ADMIN)
  * |  EXECUTE  | invokes [Wiretap]
- * |  RESOLVE  |
  * |  PERSIST  |
  * +-----------+
  *
- * +-----------+ (CONTEXT 7 batchable.finish)
- * |  ENQUEUE  |
- * +-----------+
- *
- * +-----------+ (CONTEXT 8 batchable.start)
+ * +-----------+ (CONTEXT 3 batchable.execute AS SYSTEM ADMIN)
  * |  MARK     |
  * +-----------+
  *
- * +-----------+ (CONTEXT 9 batchable.execute)
+ * +-----------+ (CONTEXT 4 batchable.execute AS SYSTEM ADMIN)
+ * |  EXECUTE  | invokes [Wiretap]
+ * |  PERSIST  |
+ * +-----------+
+ *
+ * +-----------+ (CONTEXT 5 batchable.execute AS SYSTEM ADMIN)
+ * |  MARK     |
+ * +-----------+
+ *
+ * +-----------+ (CONTEXT 6 batchable.execute AS SYSTEM ADMIN)
  * |  EXECUTE  | invokes [Terminate]
- * |  RESOLVE  |
  * |  PERSIST  |
  * +-----------+
  *
- * +-----------+ (CONTEXT 10 batchable.finish)
- * |  ENQUEUE  |
+ * +-----------+ (CONTEXT 7 batchable.execute AS SYSTEM ADMIN)
+ * |  DONE     | detect exit condition
+ * |  ABORTJOB | optionally abort IFF we ran out of work
+ * +-----------+
+ *
+ * +-----------+ (CONTEXT F batchable.finish AS SYSTEM ADMIN)
+ * |  RESTART  | optionally restart IFF we exhausted the BS query locator
  * +-----------+
  *
  *
  *
  * As used by a synchronous broker:
  *
- * +-----------+ (CONTEXT 1 FROM USER)
+ * +-----------+ (CONTEXT 1 FROM SYSTEM ADMIN)
  * |  ENQUEUE  |
+ * |  PERSIST  | deals with esb__SequenceName etc
  * |           |
- * |  RESOLVE  |
- * |  PERSIST  |
  * |  MARK     |
  * |  EXECUTE  | invokes [Wiretap]
- * |  RESOLVE  |
  * |  PERSIST  |
+ * |           |
  * |  MARK     |
  * |  EXECUTE  | invokes [Wiretap]
- * |  RESOLVE  |
  * |  PERSIST  |
+ * |           |
  * |  MARK     |
  * |  EXECUTE  | invokes [Terminate]
+ * |  PERSIST  |
  * +-----------+
  */
 abstract public with sharing class Broker {
@@ -355,7 +362,7 @@ abstract public with sharing class Broker {
      *
      * @return QueryLocator identifying the to-be-marked-as-Started Messages.
      */
-    virtual public Database.QueryLocator locateMarkableWork() {
+    public Database.QueryLocator locateMarkableWork() {
         //find oldest rebuffered message or oldest buffered message
         Message__c specimenMessage;
         try {
@@ -416,7 +423,7 @@ abstract public with sharing class Broker {
     /**
      * Sets many Messages statuses to 'Started' and writes them away.
      */
-    virtual public List<Database.SaveResult> mark(List<Message__c> messages) {
+    public List<Database.SaveResult> mark(List<Message__c> messages) {
         try {
             if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
             for (Message__c message : messages) message.Status__c = 'Started';
@@ -432,7 +439,7 @@ abstract public with sharing class Broker {
      * @param  inputMessages Messages whose status should be Started
      * @return               Many Messages whose status should be Buffered
      */
-    virtual public List<Message__c> execute(List<Message__c> inputMessages) {
+    public List<Message__c> execute(List<Message__c> inputMessages) {
         //empty inputs, empty outputs
         if (inputMessages.isEmpty()) return new List<Message__c>();
         
@@ -442,6 +449,9 @@ abstract public with sharing class Broker {
         
         Map<Id,Map<String,Object>> id2parameters = new Map<Id,Map<String,Object>>();
         for (Message__c inputMessage : inputMessages) id2parameters.put(inputMessage.Id, (Map<String,Object>)Json.deserializeUntyped(inputMessage.Parameters__c));
+        
+        for (Map<String,Object> parameters : id2parameters.values()) if (!parameters.containsKey('__SequenceName')) throw new Broker.EngineException(null, inputMessageIds, null, 'Mandatory parameter esb__SequenceName not supplied.');
+        for (Map<String,Object> parameters : id2parameters.values()) if (!parameters.containsKey('__Position')) throw new Broker.EngineException(null, inputMessageIds, null, 'Mandatory parameter esb__SequenceName not supplied.');
         
         //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
         if (id2parameters.get(inputMessages[0].Id).get('__IsHeartbeatProcess') != null) {
@@ -540,11 +550,16 @@ abstract public with sharing class Broker {
         return outputMessages;
     }
 
-    virtual public List<Database.UpsertResult> persist(List<Message__c> inputMessages, List<Message__c> outputMessages) {
+    public List<Database.UpsertResult> persist(List<Message__c> inputMessages, List<Message__c> outputMessages) {
         try {
             for (Message__c message : inputMessages) {
                 //designate all input messages as finished
                 message.Status__c = 'Completed';
+            }
+            
+            for (Message__c message : outputMessages) {
+                //we COULD have designated all output messages as Buffered
+                //but it varies if the Broker is paused (they'd be Queued)
             }
             
             //transact both inputs and outputs in one fell swoop

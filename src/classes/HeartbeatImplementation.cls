@@ -172,8 +172,8 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
         for (DateTime heartbeat : heartbeats) {
             Map<String,Object> parameters = new Map<String,Object>{
                 'esb__Id' => UserInfo.getUserId(), 
-                '__SequenceName' => '', //avoid "Mandatory parameter __SequenceName not supplied."
-                '__Position' => '', //avoid "Mandatory parameter __Position not supplied."
+                '__SequenceName' => '', //avoid "Mandatory parameter esb__SequenceName not supplied."
+                '__Position' => '', //avoid "Mandatory parameter esb__SequenceName not supplied."
                 '__EventStamp' => getISO8601(heartbeat),
                 '__IsHeartbeatProcess' => true //#575 so that resolve and execute can crow look
             };

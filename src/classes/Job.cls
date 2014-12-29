@@ -71,9 +71,6 @@ global without sharing class Job implements Queueable, Database.AllowsCallouts {
             throw new Broker.EngineException('Cannot supply a null parameters collection.');
         }
         
-        for (Map<String,Object> parameters : parameterses) if (!parameters.containsKey('__SequenceName')) throw new Broker.EngineException('Mandatory parameter __SequenceName not supplied.');
-        for (Map<String,Object> parameters : parameterses) if (!parameters.containsKey('__Position')) throw new Broker.EngineException('Mandatory parameter __Position not supplied.');
-        
         //fetch the custom setting or create an empty one
         BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
         if (setting == null) setting = new BrokerSetting__c();
@@ -103,7 +100,9 @@ global without sharing class Job implements Queueable, Database.AllowsCallouts {
      */
     public void execute(QueueableContext context) {
         //just in time DML
-        insert this.messages;
+        List<Message__c> inputs = new List<Message__c>();
+        List<Message__c> outputs = this.messages;
+        Broker.impl().persist(inputs, outputs);
         
         if (!Test.isRunningTest()) defer();
         else Broker.process();
