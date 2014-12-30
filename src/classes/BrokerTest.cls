@@ -49,20 +49,21 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange messages
-        String parameters = '{"__SequenceName":"test","__Position":1}';
-        List<Message__c> messages = new List<Message__c>{
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters)
+        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1};
+        
+        List<Map<String,Object>> parameterses = new List<Map<String,Object>>{
+            parameters,
+            parameters,
+            parameters,
+            parameters,
+            parameters,
+            parameters,
+            parameters,
+            parameters,
+            parameters
         };
         
-        insert messages;
+        List<Message__c> messages = new Job(parameterses).persist();
         
         //act
         Database.QueryLocator locator = Broker.impl().locateMarkableWork();
@@ -250,50 +251,40 @@
         Decimal positionA2 = stepA2.Position__c;
         Decimal positionA3 = stepA3.Position__c;
         
-        List<Message__c> messages =  new List<Message__c>{
-            new Message__c(Parameters__c = '{"__SequenceName": "' + sequenceNameA + '", "__Position": ' + positionA1 + '}'),
-            new Message__c(Parameters__c = '{"__SequenceName": "' + sequenceNameA + '", "__Position": ' + positionA2 + '}')
+        List<Map<String,Object>> parameterses = new List<Map<String,Object>>{
+            new Map<String,Object>{'__SequenceName' => 'sequenceName1', '__Position' => positionA1},
+            new Map<String,Object>{'__SequenceName' => 'sequenceName2', '__Position' => positionA2}
         };
         
         
         //act
+        List<Message__c> messages = new Job(parameterses).persist();
         new MessageObjectSet(messages).incrementPositions();
-        insert messages;
         
-        // assemble
-        List<Message__c> messagesAfter = SalesforceObjectSet.listAll(Message__c.SObjectType);
-        
-        Boolean flagPosition01 = false;
-        Boolean flagPosition02 = false;
-        Boolean flagSequenceNameA = true;
-        for (Message__c message : messagesAfter) {
-            Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
-            String parametersSequenceName = (String)parameters.get('__SequenceName');
-            Integer parametersPosition = (Integer)parameters.get('__Position');
-            if (parametersSequenceName != sequenceNameA) {
-                flagSequenceNameA = false;
-            }
-            if (parametersPosition == (positionA1 + 1))  {
-                flagPosition01 = true;
-            }
-            if (parametersPosition == (positionA2 + 1))  {
-                flagPosition02 = true;
-            }
-        }
+        //assemble
+        Map<String,Object> parameters1 = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Parameters__c);
+        Map<String,Object> parameters2 = (Map<String,Object>)System.Json.deserializeUntyped(messages[1].Parameters__c);
         
         // assert
         Integer expectedCount = 2;
-        Integer actualCount = messagesAfter.size();
+        Integer actualCount = messages.size();
         System.assertEquals(expectedCount, actualCount);
 
-        System.assert(flagSequenceNameA);
-        System.assert(flagPosition01);
-        System.assert(flagPosition02);
+        String expectedSequenceName1 = 'sequenceName1';
+        String actualSequenceName1 = (String)parameters1.get('__SequenceName');
+        System.assertEquals(expectedSequenceName1, actualSequenceName1, 'Wrong sequence name');
+        
+        Decimal expectedPosition1 = positionA1 + 1;
+        Decimal actualPosition1 = (Decimal)parameters1.get('__Position');
+        System.assertEquals(expectedPosition1, actualPosition1, 'Wrong position 1.');
 
-        Id expectedStepId01 = stepA2.Id;
-        Id expectedStepId02 = stepA3.Id ;
-        Id expectedProcessId01 = markProcess.Id;
-        Id expectedProcessId02 = terminateProcess.Id;
+        String expectedSequenceName2 = 'sequenceName2';
+        String actualSequenceName2 = (String)parameters2.get('__SequenceName');
+        System.assertEquals(expectedSequenceName2, actualSequenceName2, 'Wrong sequence name');
+        
+        Decimal expectedPosition2 = positionA2 + 1;
+        Decimal actualPosition2 = (Decimal)parameters2.get('__Position');
+        System.assertEquals(expectedPosition2, actualPosition2, 'Wrong position 2.');
     }
     
     static testmethod void testLocatorMarksCorrectNumberOfMessages() {
@@ -305,11 +296,11 @@
         
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
-        insert new List<Message__c>{
-            new Message__c(Parameters__c = '{"__SequenceName":"test","__Position":1}'),
-            new Message__c(Parameters__c = '{"__SequenceName":"test","__Position":1}'),
-            new Message__c(Parameters__c = '{"__SequenceName":"test","__Position":1}')
-        };
+        new Job(new List<Map<String,Object>>{
+            new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1},
+            new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1},
+            new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1}
+        }).persist();
         
         //act
         MockBroker broker = new MockBroker();
@@ -330,10 +321,12 @@
     
     static testmethod void testLocatorOnlyMarksNonStartedWork() {
         //arrange
+        MessageObjectSet.Inhibit = false;
         insert new List<Message__c>{
             new Message__c(Status__c = 'Started'),
             new Message__c(Status__c = 'Started')
         };
+        MessageObjectSet.Inhibit = true;
     
         //act
         Database.QueryLocatorIterator iterator = new MockBroker().locateMarkableWork().iterator();
@@ -355,16 +348,20 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange fucked messages
+        MessageObjectSet.Inhibit = false;
         insert new List<Message__c>{
             new Message__c(Status__c = 'Started', Parameters__c = '{"__SequenceName":"test","__Position":1}'),
             new Message__c(Status__c = 'Started', Parameters__c = '{"__SequenceName":"test","__Position":1}')
         };
+        MessageObjectSet.Inhibit = true;
         
         //arrange Rebuffered messages
+        MessageObjectSet.Inhibit = false;
         insert new List<Message__c>{
             new Message__c(Status__c = 'Rebuffered', Parameters__c = '{"__SequenceName":"test","__Position":1}'),
             new Message__c(Status__c = 'Rebuffered', Parameters__c = '{"__SequenceName":"test","__Position":1}')
         };
+        MessageObjectSet.Inhibit = true;
         
         //act
         MockBroker broker = new MockBroker();
@@ -422,17 +419,17 @@
         insert stepC1;
         insert stepC2;
         
-        List<Message__c> messages = new List<Message__c>{
-            new Message__c(Parameters__c = '{"esb__Id": 0, "__SequenceName": "' + sequenceA.Name + '", "__Position": ' + positionA1 + '}'), // Same Sequence / Position
-            new Message__c(Parameters__c = '{"esb__Id": 1, "__SequenceName": "' + sequenceA.Name + '", "__Position": ' + positionA1 + '}'), // Same Sequence / Position
-            new Message__c(Parameters__c = '{"esb__Id": 2, "__SequenceName": "' + sequenceA.Name + '", "__Position": ' + positionA2 + '}'),
-            new Message__c(Parameters__c = '{"esb__Id": 3, "__SequenceName": "' + sequenceB.Name + '", "__Position": ' + positionB1 + '}'),
-            new Message__c(Parameters__c = '{"esb__Id": 4, "__SequenceName": "' + sequenceC.Name + '", "__Position": ' + positionC1 + '}')
+        List<Map<String,Object>> parameterses = new List<Map<String,Object>>{
+            new Map<String,Object>{'esb__Id' => 0, '__SequenceName' => sequenceA.Name, '__Position' => positionA1}, // Same Sequence / Position
+            new Map<String,Object>{'esb__Id' => 1, '__SequenceName' => sequenceA.Name, '__Position' => positionA1}, // Same Sequence / Position
+            new Map<String,Object>{'esb__Id' => 2, '__SequenceName' => sequenceA.Name, '__Position' => positionA2},
+            new Map<String,Object>{'esb__Id' => 3, '__SequenceName' => sequenceB.Name, '__Position' => positionB1},
+            new Map<String,Object>{'esb__Id' => 4, '__SequenceName' => sequenceC.Name, '__Position' => positionC1}
         };
         
         // act
+        List<Message__c> messages = new Job(parameterses).persist();
         new MessageObjectSet(messages).incrementPositions();
-        insert messages;
         
         // assemble
         String actualSequenceName0 = '' ;
@@ -570,7 +567,7 @@
     static testmethod void callingRestartSuccessfullyCallsRestartImpl() {
         //arrange
         insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
-        insert new Message__c(Status__c = 'Rebuffered');
+        List<Message__c> messages = new Job('test', UserInfo.getUserId()).persist();
         
         //assert
         Boolean expectedBeforeFlag = false;
@@ -678,21 +675,22 @@
     // Error Message    System.AssertException: Assertion Failed: Message cannot have a null process.
     // Stack Trace      Class.BrokerTest.testMissingPositionThrowsExpectedException: line 680, column 1
     static testmethod void testMissingPositionThrowsExpectedException() {
-        //arrange
-        Message__c message = new Message__c(Parameters__c = '{"not__Position":1}');
-        insert message;
+        //arrange message
+        Map<String,Object> parameters = new Map<String,Object>{'not__Position' => 1};
+        List<Message__c> messages = new Job(parameters).persist();
         
-        //act
+        //arrange broker
         Broker broker = new DoNothingBroker();
         
         String actualMessage;
         try {
-            broker.execute(new List<Message__c>{message});
+            //act
+            broker.execute(messages);
         } catch (Broker.EngineException e) {
             actualMessage = e.getMessage();
         }
         //assemble
-        Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
+        Message__c messageActual = (Message__c)SalesforceObject.getById(messages[0].Id);
         
         //assert
         String expectedMessage = 'Mandatory parameter esb__SequenceName not supplied.';
@@ -707,27 +705,23 @@
     // Error Message    System.AssertException: Assertion Failed: Message cannot have a null process.
     // Stack Trace      Class.BrokerTest.testNoStepThrowsQueryException: line 705, column 1
     static testmethod void testNoStepThrowsQueryException() {
-        //arrange (note there is no Step__c in database!)
-        Message__c message = new Message__c(Parameters__c = '{"__SequenceName": "", "__Position": 0}');
-        insert message;
+        //arrange message (note there is no Step__c in database!)
+        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => '', '__Position' => 0};
+        List<Message__c> messages = new Job(parameters).persist();
         
-        //act
+        //arrange specific broker implementation
         Broker broker = new DoNothingBroker();
         
         String actualMessage;
         try {
-            List<Message__c> messages = broker.execute(new List<Message__c>{message});
-            broker.persist(new List<Message__c>{message}, messages);
+            broker.execute(messages);
         } catch (Broker.EngineException e) {
             actualMessage = e.getMessage();
         }
         
-        //assemble
-        Message__c messageActual = (Message__c)SalesforceObject.getById(message.Id);
-        
         //assert
-        String expectedMessage = 'Step unqueryable';
-        System.assert(actualMessage.contains(expectedMessage), actualMessage);
+        String expectedMessage = 'Step unqueryable, eg bad sequence name, position, missing terminate.';
+        System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
     }
     
     static testmethod void testProcessWithoutClassThrowsExpectedException() {
@@ -1031,7 +1025,7 @@
     }
 
     static testMethod void callingExecuteWithoutMandatoryParametersInParametersCollectionThrowsException() {
-        // arrange 
+        // arrange process, sequence, step
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
 
         String sequenceName = 'Test';
@@ -1041,23 +1035,18 @@
         Step__c step  = new Step__c(Sequence__c = sequence.Id ,Position__c = 1,Process__c = terminateProcess.Id);
         insert step;
   
+        //arrange broker
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
- 
-        Map<String,Object> parametersA = new Map<String,Object>{
-            '__SequenceName' => sequenceName
-        };
-        Map<String,Object> parametersB = new Map<String,Object>{
-            'esb__Id' => UserInfo.getUserId() 
-        };
-            
+        //arrange messages
+        List<Message__c> messagesA = new Job(new Map<String,Object>{'__SequenceName' => 'test'}).persist();
+        List<Message__c> messagesB = new Job(new Map<String,Object>{'esb__Id' => null}).persist();
+        
         // assemble
         Boolean actualFlagA = false;
         try {
             // act
-            Message__c message = new Message__c(Parameters__c = Json.serialize(parametersA));
-            insert message;
-            Broker.impl().execute(new List<Message__c>{message});
+            Broker.impl().execute(messagesA);
         } catch (Broker.EngineException e) {
             actualFlagA = true;
         }
@@ -1066,9 +1055,7 @@
         Boolean actualFlagB = false;
         try {
             // act
-            Message__c message = new Message__c(Parameters__c = Json.serialize(parametersB));
-            insert message;
-            Broker.impl().execute(new List<Message__c>{message});
+            Broker.impl().execute(messagesB);
         } catch (Broker.EngineException e) {
             actualFlagB = true;
         }

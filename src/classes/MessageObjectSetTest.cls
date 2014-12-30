@@ -94,7 +94,9 @@
         // -- current stamp 
         //   
 
+        MessageObjectSet.Inhibit = false;
         insert messagesA; 
+        MessageObjectSet.Inhibit = true;
 
         // act
         MessageObjectSet messageObjectSetInstance = new MessageObjectSet(new List<Message__c>{new Message__c(Status__c = 'Buffered')});
@@ -152,7 +154,9 @@
         // -- current stamp 
         // 
 
+        MessageObjectSet.Inhibit = false;
         insert messagesA; 
+        MessageObjectSet.Inhibit = true;
 
         List<Message__c> messagesB = new List<Message__c>();
         messagesB.add(new Message__c(Exception__c = beforeTags[0],  Status__c = 'Buffered'));
@@ -212,7 +216,9 @@
         // -- current stamp 
         // 
 
+        MessageObjectSet.Inhibit = false;
         insert messagesA; 
+        MessageObjectSet.Inhibit = true;
 
         List<Message__c> messagesB = new List<Message__c>();
         messagesB.add(new Message__c(Exception__c = beforeTags[0],  Status__c = 'Buffered'));
@@ -274,7 +280,9 @@
         // -- current stamp 
         // 
 
+        MessageObjectSet.Inhibit = false;
         insert messagesA; 
+        MessageObjectSet.Inhibit = true;
 
         List<Message__c> messagesB = new List<Message__c>();
         messagesB.add(new Message__c(Exception__c = beforeTags[0],  Status__c = 'Buffered'));
@@ -351,7 +359,9 @@
         // -- current stamp 
         //   
         
+        MessageObjectSet.Inhibit = false;
         insert messagesA; 
+        MessageObjectSet.Inhibit = true;
 
         List<Message__c> messagesB = new List<Message__c>();
         messagesB.add(new Message__c(Exception__c = expectedExistingTags[2],  Status__c = 'Buffered'));
@@ -361,7 +371,9 @@
 
         // act
         MessageObjectSet.triggerEnabled = true;
+        MessageObjectSet.Inhibit = false;
         insert messagesB; 
+        MessageObjectSet.Inhibit = true;
 
         // assemble
         List<Message__c> actualPersisted  =  [SELECT Id, Exception__c  FROM Message__c ];
@@ -406,8 +418,10 @@
 
         // act
         MessageObjectSet.triggerEnabled = false;
+        MessageObjectSet.Inhibit = false;
         insert messagesA;     
         insert messagesB;
+        MessageObjectSet.Inhibit = true;
 
         // assemble
         Integer actualPersistedCompletedCount =  [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];

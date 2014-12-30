@@ -1,12 +1,11 @@
 @IsTest public class MessageDataExtensionTest {
 
     static testmethod void testRedirect() {
-        //arrange
-        String parameters = Json.serialize(new Map<String,Object>{'esb__Id' => UserInfo.getUserId()});
-        Message__c message = new Message__c(Parameters__c = parameters);
-        insert message;
+        //arrange message
+        Map<String,Object> parameters = new Map<String,Object>{'esb__Id' => UserInfo.getUserId()};
+        List<Message__c> messages = new Job(parameters).persist();
         
-        ApexPages.StandardController controller = new ApexPages.StandardController(message);
+        ApexPages.StandardController controller = new ApexPages.StandardController(messages[0]);
         MessageDataExtension extension = new MessageDataExtension(controller);
         
         //act

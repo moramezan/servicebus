@@ -2,20 +2,19 @@
 
     static testmethod void testDml() {
         //arrange message
-        Message__c message = new Message__c(Status__c = 'Queued');
-        insert message;
+        List<Message__c> messages = new Job('Test', UserInfo.getUserId()).persist();
         
         //arrange controller and extension
-        ApexPages.StandardController controller = new ApexPages.StandardController(message);
+        ApexPages.StandardController controller = new ApexPages.StandardController(messages[0]);
         MessageRebufferExtension extension = new MessageRebufferExtension(controller);
-        MessageRebufferExtension.message = message;
+        MessageRebufferExtension.message = messages[0];
         
         //act
         new MessageRebufferExtension.DoDml();
         
         //assert
         String expectedStatus = 'Rebuffered';
-        String actualStatus = message.Status__c;
+        String actualStatus = messages[0].Status__c;
         System.assertEquals(expectedStatus, actualStatus);
     }
 

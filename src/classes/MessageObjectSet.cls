@@ -1,5 +1,11 @@
 public with sharing class MessageObjectSet extends SalesforceObjectSet {
     
+    /**
+     * Prevent message inserts per #677
+     * (Change this flag sparingly only)
+     */
+    static public Boolean Inhibit = true;
+    
     /*
      * Note : this flag is purely for TDD purposes 
      */
@@ -14,7 +20,20 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
         super(messages);
     }
     
+    /**
+     * Fields can only be changed if Apex is
+     * used to unset the Inhibit static.
+     */
+    @TestVisible private void inhibitCreationFromGui() {
+        List<Message__c> messages = this.getSObjects();
+        
+        for (Integer i = 0; i < messages.size(); i++) {
+            if (Inhibit) messages[i].addError('Messages cannot be created from the GUI.');
+        }
+    }
+    
     override public void onBeforeInsert() {
+        this.inhibitCreationFromGui();
         deleteCompletedMessages(System.now());   
         this.validateJsonParameters();
         this.interpretEsbSequenceName();
@@ -42,8 +61,9 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
     }
     
     /**
-     * In #658 we hoped to expose esb__SequenceName API in Broker.persist()
-     * but it means we can't insert messages then just 'run' broker over them.
+     * In #658 we hoped to expose esb__SequenceName API in Broker.persist() but
+     * it meant we can't insert messages then just 'run' broker over them. Further
+     * issue #677 feels like we probably shouldn't be inserting messages at all.
      * 
      * We want to interpret esb__SequenceName into __SequenceName and __Position
      * as late and as simply as possible. Doing it here in the trigger works OK.

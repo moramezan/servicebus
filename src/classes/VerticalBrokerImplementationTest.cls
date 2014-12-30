@@ -12,20 +12,20 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange messages
-        String parameters = '{"__SequenceName":"test","__Position":1}';
-        List<Message__c> messages = new List<Message__c>{
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters),
-            new Message__c(Parameters__c = parameters)
+        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1};
+        List<Map<String,Object>> parameterses = new List<Map<String,Object>>{
+            parameters,
+            parameters,
+            parameters,
+            parameters,
+            parameters,
+            parameters,
+            parameters,
+            parameters,
+            parameters
         };
         
-        insert messages;
+        List<Message__c> messages = new Job(parameterses).persist();
         VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
         
         //assert
@@ -115,18 +115,15 @@
         Step__c step = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange message
-        Message__c message = new Message__c(
-            Status__c = 'Buffered',
-            Parameters__c = Json.serialize(new Map<String,Object> {
+        new Job(
+            new Map<String,Object> {
                 '__SequenceName' => 'TestSequence',
                 '__Position' => 1
-            })
-        );
-        insert message;
+            }
+        ).persist();
         
         //act (enqueue)
         VerticalBrokerImplementation impl = (VerticalBrokerImplementation)Broker.impl();
-        update message;
         
         //assert
         Integer expectedCount = 1;
@@ -174,41 +171,32 @@
         Step__c step = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange messages
-        Message__c message01 = new Message__c(
-            Status__c = 'Buffered',
-            Parameters__c = Json.serialize(new Map<String,Object> {
+        new Job(
+            new Map<String,Object> {
                 '__SequenceName' => 'TestSequence',
                 '__Position' => 1
-            })
-        );
-        insert message01;
+            }
+        ).persist();
             
-        Message__c message02 = new Message__c(
-            Status__c = 'Buffered',
-            Parameters__c = Json.serialize(new Map<String,Object> {
+        new Job(
+            new Map<String,Object> {
                 '__SequenceName' => 'TestSequence',
                 '__Position' => 1
-            })
-        );
-        insert message02;
+            }
+        ).persist();
         
-        Message__c message03 = new Message__c(
-            Status__c = 'Buffered',
-            Parameters__c = Json.serialize(new Map<String,Object> {
+        new Job(
+            new Map<String,Object> {
                 '__SequenceName' => 'TestSequence',
                 '__Position' => 1
-            })
-        );
-        insert message03;
+            }
+        ).persist();
         
         Integer totalPotentialMarks = 3; // Less than Buffered Messages Count
         
         
         //arrange resolution
         VerticalBrokerImplementation impl = (VerticalBrokerImplementation)Broker.impl();
-        update message01;
-        update message02;
-        update message03;  
         Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
         
         //act
@@ -240,40 +228,31 @@
         Step__c step = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange messages
-        Message__c message01 = new Message__c(
-            Status__c = 'Buffered',
-            Parameters__c = Json.serialize(new Map<String,Object> {
+        new Job(
+            new Map<String,Object> {
                 '__SequenceName' => 'TestSequence',
                 '__Position' => 1
-            })
-        );
-        insert message01;
+            }
+        ).persist();
             
-        Message__c message02 = new Message__c(
-            Status__c = 'Buffered',
-            Parameters__c = Json.serialize(new Map<String,Object> {
+        new Job(
+            new Map<String,Object> {
                 '__SequenceName' => 'TestSequence',
                 '__Position' => 1
-            })
-        );
-        insert message02;
+            }
+        ).persist();
         
-        Message__c message03 = new Message__c(
-            Status__c = 'Buffered',
-            Parameters__c = Json.serialize(new Map<String,Object> {
+        new Job(
+            new Map<String,Object> {
                 '__SequenceName' => 'TestSequence',
                 '__Position' => 1
-            })
-        );
-        insert message03;
+            }
+        ).persist();
         
         Integer totalPotentialMarks = 4;  // Greater than Buffered Messages Count
 
         //arrange resolution
         VerticalBrokerImplementation impl = (VerticalBrokerImplementation)Broker.impl();
-        update message01;
-        update message02;
-        update message03;  
         Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
         
         //act

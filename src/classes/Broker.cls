@@ -566,7 +566,12 @@ abstract public with sharing class Broker {
             List<Message__c> messages = new List<Message__c>();
             messages.addAll(inputMessages);
             messages.addAll(outputMessages);
-            return Database.upsert(messages, true); //all or none
+            
+            MessageObjectSet.Inhibit = false;
+            List<Database.UpsertResult> results = Database.upsert(messages, true); //all or none
+            MessageObjectSet.Inhibit = true;
+            
+            return results;
         } catch (Exception e) {
             Set<Id> messageIds = new Map<Id,Message__c>(inputMessages).keySet();
             throw new EngineException(null, messageIds, e, 'Persist failure.');

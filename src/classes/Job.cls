@@ -91,6 +91,7 @@ global without sharing class Job implements Queueable, Database.AllowsCallouts {
     
     /**
      * Usually handled within a second or so.
+     * NOT TO BE CONFUSED WITH BROKER.EXECUTE
      * 
      * We can't really test System.enqueueJob() because of known issue:
      * https://success.salesforce.com/issues_view?id=a1p300000008XM1AAM
@@ -99,13 +100,27 @@ global without sharing class Job implements Queueable, Database.AllowsCallouts {
      * this works without startTest/stopTest: new Job(parameters).execute(null)
      */
     public void execute(QueueableContext context) {
+        List<Message__c> messages = this.persist();
+        if (!Test.isRunningTest()) defer();
+        else Broker.process();
+    }
+    
+    /**
+     * NOT TO BE CONFUSED WITH BROKER.PERSIST
+     * Persist, but don't execute yet.
+     * (Useful for writing unit tests)
+     *
+     * This can be used in lieu of Database.insert(message)
+     * like this: new Job('Wiretaps', userId).persist()
+     * 
+     * @return list of persisted output messages
+     */
+    @TestVisible private List<Message__c> persist() {
         //just in time DML
         List<Message__c> inputs = new List<Message__c>();
         List<Message__c> outputs = this.messages;
         Broker.impl().persist(inputs, outputs);
-        
-        if (!Test.isRunningTest()) defer();
-        else Broker.process();
+        return outputs;
     }
     
     @Future(callout=true) static private void defer() {
