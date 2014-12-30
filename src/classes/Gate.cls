@@ -41,7 +41,7 @@ public with sharing class Gate {
         );
         
         List<GateItem__c> gateItems = [
-            SELECT Id
+            SELECT Id, Parameters__c
             FROM GateItem__c
             WHERE GateGroup__c = :gateGroupId
         ];
@@ -51,12 +51,32 @@ public with sharing class Gate {
             return Json.serialize(new List<Map<String,Object>>());
         }
         
-        //this is the last item, let's release
-        parameters.put('esb__Id', gateGroupId);
-        parameters.remove('__Count');
-        parameters.remove('__MarkCount');
-        parameters.remove('esb__GateGroupId');
+        // derive common parameters
+        // this isn't strictly correct from the perspective of 
+        // 'common' meaning parameters at the point of the Mark
+        // but from the perspective of 'these parameters are all the same and appear on 
+        // every underlying gate item parameters collection' .. it is correct
+        Map<String,Object> commonParameters = getCommonParameters(gateItems);
         
+        List<Map<String,Object>> parameteres = new List<Map<String,Object>>();
+        for (GateItem__c gateItem : gateItems) {
+            parameteres.add((Map<String,Object>)json.deserializeUntyped(gateItem.Parameters__c));   
+        }
+        
+        //this is the last item, let's release
+        //conceptual note:
+        //  this is a *new* message, not an arbitary message triggering the release 
+        //  that has now metamorphosised into something else.
+        //  Because it is a *new* message, extra care taken to
+        //  null out conceptually incorrect parameters
+        parameters = cleanParameters(parameters); // start with a clean parameters collection
+        parameters.putAll(commonParameters);   // add the common parameters ...
+        parameters.put('esb__GateItemParameters',parameteres); // add parameters from each message as a list
+        parameters.put('esb__Id', gateGroupId);
+        parameters.put('__Count',null); // confuser - null out
+        parameters.put('__MarkCount',null); // confuser - null out
+        parameters.put('esb__GateGroupId',null); // confuser - null out        
+
         return Json.serialize(new List<Map<String,Object>>{parameters});
     }
     
@@ -265,4 +285,48 @@ public with sharing class Gate {
 
         return gateGroupIds;
     } 
+
+       
+    @testVisible
+    private static Map<String,Object> getCommonParameters(List<GateItem__c> gateItems) {
+        // iteration 1
+        Set<String> allKeys = new Set<String>(); 
+        for(GateItem__c gateItem :gateItems) {
+            Map<String,Object> gateItemParameters = (Map<String,Object>)json.deserializeUntyped(gateItem.Parameters__c);
+            allKeys.addAll(gateItemParameters.keySet());
+        }
+        
+        // iteration 2
+        Map<String,Object> commonParameters = new Map<String,Object>();
+        for (String key : allKeys) {
+            Integer i = 1; 
+            Boolean same = true;
+            Object value = null;
+            for(GateItem__c gateItem :gateItems) {
+                Map<String,Object> gateItemParameters = (Map<String,Object>)json.deserializeUntyped(gateItem.Parameters__c);
+                Object newValue = gateItemParameters.get(key);
+                if (i == 1)
+                    value = newValue;
+                if (newValue != value)  
+                    same = false;
+                value = newValue;
+                i++;
+            }
+            if (same && (value != null))  
+                commonParameters.put(key, value);
+        }
+        
+        return commonParameters;
+    }  
+  
+    @testVisible
+    private static Map<String,Object> cleanParameters(Map<String,Object> parameters) {
+        for (String parameter : parameters.keySet()) {
+            Object value = (Object)parameters.get(parameter);
+            value =  (parameter.startsWith('__') || parameter.startsWith('esb__'))  ? value : null;  
+            parameters.put(parameter, value);
+        }
+        
+        return parameters;
+    }
 }

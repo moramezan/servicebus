@@ -709,4 +709,148 @@ private  class GateTest {
         Integer expectedSize = 3;
         System.assertEquals(expectedSize,actualSize );
     }
+        static testmethod void callingGetCommonParametersReturnsExpectedCollection01() {
+        // Arrange :
+        List<GateItem__c> gateItems = new List<GateItem__c>{
+            new GateItem__c(
+                Parameters__c = json.serialize(
+                    new Map<String,Object> {
+                        'p1' => 'v1',
+                        'p2' => 'v2'
+                    } 
+                )
+            ),
+            new GateItem__c(
+                Parameters__c = json.serialize(
+                    new Map<String,Object> {
+                        'p1' => 'v1',
+                        'p2' => 'v2'
+                    } 
+                )
+            )  
+        };
+        
+        // Act
+        Map<String,Object> actualCommonParameters = Gate.getCommonParameters(gateItems);
+        
+        // prepare
+        Decimal actualSize = actualCommonParameters.keySet().size();
+        
+        
+        // Assert
+        Integer expectedSize = 2;
+        System.assertEquals(expectedSize , actualSize );
+    }
+    
+
+    static testmethod void callingGetCommonParametersReturnsExpectedCollection02() {
+        // Arrange :
+        List<GateItem__c> gateItems = new List<GateItem__c>{
+            new GateItem__c(
+                Parameters__c = json.serialize(
+                    new Map<String,Object> {
+                        'p1' => 'v1',
+                        'p2' => 'v2',
+                        'p3' => 'v3'   // not present on all
+                    } 
+                )
+            ),
+            new GateItem__c(
+                Parameters__c = json.serialize(
+                    new Map<String,Object> {
+                        'p1' => 'v1',
+                        'p2' => 'v2'
+                    } 
+                )
+            )  
+        };
+        
+        // Act
+        Map<String,Object> actualCommonParameters = Gate.getCommonParameters(gateItems);
+        
+        // prepare
+        Decimal actualSize = actualCommonParameters.keySet().size();
+        Boolean actual01 = actualCommonParameters.keySet().contains('p1');
+        Boolean actual02 = actualCommonParameters.keySet().contains('p2');
+        Boolean actual03 = actualCommonParameters.keySet().contains('p3');
+        
+        // Assert
+        Integer expectedSize = 2;
+        System.assertEquals(expectedSize , actualSize);
+        Boolean expected01 = true;
+        System.assertEquals(expected01 , actual01);
+        Boolean expected02 = true;
+        System.assertEquals(expected02 , actual02);
+        Boolean expected03 = false;
+        System.assertEquals(expected03 , actual03);
+    }
+    
+    static testmethod void callingGetCommonParametersReturnsExpectedCollection03() {
+        // Arrange :
+        List<GateItem__c> gateItems = new List<GateItem__c>{
+            new GateItem__c(
+                Parameters__c = json.serialize(
+                    new Map<String,Object> {
+                        'p1' => null,  // present on all, but null
+                        'p2' => 'v2',
+                        'p3' => 'v3'   // not present on all
+                    } 
+                )
+            ),
+            new GateItem__c(
+                Parameters__c = json.serialize(
+                    new Map<String,Object> {
+                        'p1' => null, // present on all, but null
+                        'p2' => 'v2'
+                    } 
+                )
+            )  
+        };
+        
+        // Act
+        Map<String,Object> actualCommonParameters = Gate.getCommonParameters(gateItems);
+        
+        // prepare
+        Decimal actualSize = actualCommonParameters.keySet().size();
+        Boolean actual01 = actualCommonParameters.keySet().contains('p1');
+        Boolean actual02 = actualCommonParameters.keySet().contains('p2');
+        Boolean actual03 = actualCommonParameters.keySet().contains('p3');
+        
+        // Assert
+        Integer expectedSize = 1;
+        System.assertEquals(expectedSize , actualSize);
+        Boolean expected01 = false;
+        System.assertEquals(expected01 , actual01);
+        Boolean expected02 = true;
+        System.assertEquals(expected02 , actual02);
+        Boolean expected03 = false;
+        System.assertEquals(expected03 , actual03);
+    } 
+
+ 	static testmethod void callingCleanParametersReturnsExpectedCollection() {
+        // Arrange :
+        Map<String,Object> parameters = new Map<String,Object> {
+            '__x' => 'v1',   
+            'esb__x' => 'v2',
+            'balls' => 'v3'   
+        };
+
+        // Act
+        Map<String,Object> actualParameters =  Gate.cleanParameters(parameters);
+            
+
+        // prepare
+        Boolean actual01 = (actualParameters.get('__x') != null);
+        Boolean actual02 = (actualParameters.get('esb__x') != null);
+        Boolean actual03 = (actualParameters.get('balls') == null);
+        
+        // Assert
+        Boolean expected01 = true;
+        System.assertEquals(expected01 , actual01);
+        Boolean expected02 = true;
+        System.assertEquals(expected02 , actual02);
+        Boolean expected03 = true;
+        System.assertEquals(expected03 , actual03);
+    } 
+    
 }
