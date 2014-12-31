@@ -21,14 +21,15 @@
     <target name="deploy" description="Deploys all package components to dev org">
         <antcall target="optimize-for-devorg" />
         <subant failonerror="false" target="subdeploy" buildpath="." />
+        <executeAnonymous username="${de.username}" password="${de.password}">new PostInstallHandler().onInstall(null);</executeAnonymous>
+        <!-- #684 always try to restart jobs, so a failed deployment doesn't leave the org with the schedule stopped -->
         <antcall target="optimize-for-release" />
     </target>
     
     <target name="subdeploy" description="Subtarget for avoiding fail-on-error">
-        <!-- stop jobs, deploy, start jobs -->
+        <!-- stop jobs, deploy (a failure by either of these returns out of subant) -->
         <executeAnonymous username="${de.username}" password="${de.password}">for (SObject j : [SELECT Id FROM CronTrigger]) System.abortJob(j.Id);</executeAnonymous>
         <sf:deploy username="${de.username}" password="${de.password}" serverurl="https://login.salesforce.com" deployRoot="src" />
-        <executeAnonymous username="${de.username}" password="${de.password}">new PostInstallHandler().onInstall(null);</executeAnonymous>
     </target>
 
     <target name="package" description="Deploys all components to packaging org">
