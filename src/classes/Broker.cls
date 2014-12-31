@@ -218,10 +218,6 @@ abstract public with sharing class Broker {
         
     }
     
-    public class CrudException extends Exception {}
-    
-    public class FlsException extends Exception {}
-    
     static public Broker impl() {
         //first try to resolve broker class from custom setting
         BrokerSetting__c settings = BrokerSetting__c.getInstance();
@@ -423,7 +419,7 @@ abstract public with sharing class Broker {
      */
     public List<Database.SaveResult> mark(List<Message__c> messages) {
         try {
-            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new Broker.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
+            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new SalesforceObject.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
             for (Message__c message : messages) message.Status__c = 'Started';
             return Database.update(messages);
         } catch (Exception e) {

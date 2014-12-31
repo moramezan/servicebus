@@ -22,7 +22,7 @@ public with sharing class Gate {
     @TestVisible static private Boolean DeletionEnabled = true;
     
     override public String toString() {
-        if (!SObjectType.GateItem__c.Createable) throw new Broker.CrudException('!SObjectType.GateItem__c.Createable');
+        if (!SObjectType.GateItem__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.GateItem__c.Createable');
 
         // housekeeping / deletion strategy
         Boolean isDeletionEnabled = DeletionEnabled;
@@ -100,8 +100,8 @@ public with sharing class Gate {
 
 
     private static void performDefaultDeletionStrategy(Boolean isEnabled, Integer maximumDays, Integer maximumItems) {
-        if (!SObjectType.GateItem__c.Deletable) throw new Broker.CrudException('!SObjectType.GateItem__c.Deletable');
-        if (!SObjectType.GateGroup__c.Deletable) throw new Broker.CrudException('!SObjectType.GateItem__c.Deletable');  
+        if (!SObjectType.GateItem__c.Deletable) throw new SalesforceObject.CrudException('!SObjectType.GateItem__c.Deletable');
+        if (!SObjectType.GateGroup__c.Deletable) throw new SalesforceObject.CrudException('!SObjectType.GateItem__c.Deletable');  
  
         DateTime now = System.now();        
         IGateItemProvider gateItemProviderTime = new GateItemProviderTime(now, maximumDays);

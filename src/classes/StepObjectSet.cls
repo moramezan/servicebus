@@ -121,7 +121,7 @@ public with sharing class StepObjectSet extends SalesforceObjectSet {
      * This trigger takes care of the deletion of the config.
      */
     private void deleteConfigs() {
-        if (!SObjectType.Step__c.Deletable) throw new Broker.CrudException('!SObjectType.Step__c.Deletable');  
+        if (!SObjectType.Step__c.Deletable) throw new SalesforceObject.CrudException('!SObjectType.Step__c.Deletable');  
         Set<Id> stepIds = (new Map<Id,SObject>(this.getSObjects())).keySet();
         Map<Id,Step__c> id2step = new Map<Id,Step__c>([SELECT id, Name, ConfigId__c FROM Step__c WHERE Id IN :stepIds]);
         

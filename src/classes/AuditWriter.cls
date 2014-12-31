@@ -14,7 +14,7 @@ public with sharing class AuditWriter {
     public class AuditWriterException extends Exception {}
     
     override public String toString() {
-        if (!SObjectType.AuditEntry__c.Createable) throw new Broker.CrudException('!SObjectType.AuditEntry__c.Createable');
+        if (!SObjectType.AuditEntry__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.AuditEntry__c.Createable');
         
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();

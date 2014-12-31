@@ -40,7 +40,7 @@ public with sharing class SequenceObject extends SalesforceObject {
     }
     
     public StepObject appendStep(Id processId) {
-        if (!SObjectType.Step__c.Createable) throw new Broker.CrudException('!SObjectType.Step__c.Createable');
+        if (!SObjectType.Step__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.Step__c.Createable');
     
         Step__c step = new Step__c(
             Sequence__c = this.getSObject().Id,
@@ -78,8 +78,8 @@ public with sharing class SequenceObject extends SalesforceObject {
     }
     
     public StepObjectSet destroySteps(Set<Id> stepIds) {
-        if (!SObjectType.Step__c.Deletable) throw new Broker.CrudException('!SObjectType.Step__c.Deletable');
-        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new Broker.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
+        if (!SObjectType.Step__c.Deletable) throw new SalesforceObject.CrudException('!SObjectType.Step__c.Deletable');
+        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new SalesforceObject.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
         
         Sequence__c sequence = (Sequence__c)this.getSObject();
         

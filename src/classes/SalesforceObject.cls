@@ -1,5 +1,17 @@
 abstract with sharing public class SalesforceObject {
     
+    /**
+     * Used to enforce read-write permissions
+     * for AppExchange security review process.
+     */
+    public class CrudException extends Exception {}
+    
+    /**
+     * Used to enforce field-level permissions
+     * for AppExchange security review process.
+     */
+    public class FlsException extends Exception {}
+    
     private SObject sobj;
     public SObject getSObject() {
         if (this.sobj.Id != null) {

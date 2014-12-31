@@ -20,7 +20,7 @@ public with sharing class AuditInitializer {
     public class AuditInitializerException extends Exception {}
     
     override public String toString() {
-        if (!SObjectType.AuditGroup__c.Createable) throw new Broker.CrudException('!SObjectType.AuditGroup__c.Createable');
+        if (!SObjectType.AuditGroup__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.AuditGroup__c.Createable');
      
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();

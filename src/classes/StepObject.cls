@@ -5,7 +5,7 @@ public with sharing class StepObject extends SalesforceObject {
     }
     
     public void moveBefore(Id beforeStepId) {
-        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new Broker.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
+        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new SalesforceObject.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
         
         Step__c stepToMove = (Step__c)this.getSObject();
         Step__c beforeStep = (Step__c)SalesforceObject.getById(beforeStepId);
@@ -33,7 +33,7 @@ public with sharing class StepObject extends SalesforceObject {
     }
     
     public void moveAfter(Id afterStepId) {
-        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new Broker.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
+        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new SalesforceObject.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
         
         Step__c stepToMove = (Step__c)this.getSObject();
         Step__c afterStep = (Step__c)SalesforceObject.getById(afterStepId);
@@ -61,7 +61,7 @@ public with sharing class StepObject extends SalesforceObject {
     }
     
     @TestVisible static private Step__c generateOne(Id sequenceId, Id processId) {
-        if (!SObjectType.Step__c.Createable) throw new Broker.CrudException('!SObjectType.Step__c.Createable');
+        if (!SObjectType.Step__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.Step__c.Createable');
      
         Step__c step = new Step__c(
             Sequence__c = sequenceId,

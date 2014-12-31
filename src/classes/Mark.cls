@@ -15,7 +15,7 @@ public with sharing class Mark {
     }
     
     override public String toString() {
-        if (!SObjectType.GateGroup__c.Createable) throw new Broker.CrudException('!SObjectType.GateGroup__c.Createable');
+        if (!SObjectType.GateGroup__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.GateGroup__c.Createable');
         
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
