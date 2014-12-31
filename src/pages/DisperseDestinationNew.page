@@ -1,0 +1,25 @@
+<apex:page standardController="DisperseDestination__c">
+    
+    <apex:pageMessages showDetail="true" id="messages" />
+    <apex:sectionHeader title="New {!$ObjectType.DisperseDestination__c.Label}" />
+    
+    <apex:form >
+        <apex:pageBlock mode="edit" title="{!$ObjectType.DisperseDestination__c.Label} Edit" id="pageBlock">
+            
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" onclick="saveAndBack();return false;" />
+                <apex:actionFunction reRender="messages" name="saveAndBack" action="{!quicksave}" oncomplete="window.location = document.referrer;" />
+                <apex:commandButton value="Cancel" action="{!cancel}" id="back" />
+            </apex:pageBlockButtons>
+            
+            <apex:pageBlockSection title="Information" columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.DisperseDestination__c.Fields.Sequence__c.Label}" />
+                    <apex:inputField value="{!DisperseDestination__c.Sequence__c}" />
+                </apex:pageBlockSectionItem>
+                
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    
+</apex:page>

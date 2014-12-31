@@ -1,0 +1,45 @@
+public with sharing class Disperse {
+    
+    public String Parameters;
+    public DisperseConfig__c StepConfig;
+    
+    public class ESB {
+        public String Tag = 'Enterprise Service Bus';
+        public String Name = 'Disperse';
+        public String Description = 'Copies the message to multiple sequences simultaneously.';
+        public String Icon = 'chart_organisation';
+        public String HelpUrl = Page.DisperseConfigCsh.getUrl();
+        public SObject StepConfig = DisperseConfig__c.SObjectType.newSObject();
+    }
+    
+    public class DisperseException extends Exception {}
+    
+    override public String toString() {
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        
+        //find all the sequences
+        List<DisperseDestination__c> destinations = [
+            SELECT Id, Sequence__r.Name
+            FROM DisperseDestination__c
+            WHERE DisperseConfig__c = :this.StepConfig.Id
+        ];
+        
+        //catch dumb configuration
+        for (DisperseDestination__c destination : destinations) {
+            if (destination.Sequence__r.Name == (String)parameters.get('__SequenceName')) {
+                throw new DisperseException('Disperse cannot include its own Sequence as a Destination.');
+            }
+        }
+        
+        //fan out a bunch of messages
+        List<Map<String,Object>> outputs = new List<Map<String,Object>>();
+        for (DisperseDestination__c destination : destinations) {
+            outputs.add(new Map<String,Object>{
+                'esb__SequenceName' => destination.Sequence__r.Name
+            });
+        }
+        
+        return Json.serialize(outputs);
+    }
+
+}

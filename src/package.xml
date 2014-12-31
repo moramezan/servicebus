@@ -27,6 +27,7 @@
         <members>ConfirmItemConfirmExtension</members>
         <members>ConfirmItemDenyExtension</members>
         <members>ConfirmItemObjectSet</members>
+        <members>Disperse</members>
         <members>Gate</members>
         <members>GateTest</members>
         <members>Heartbeat</members>
@@ -120,6 +121,9 @@
         <members>ConfirmItemConfirm</members>
         <members>ConfirmItemCsh</members>
         <members>ConfirmItemDeny</members>
+        <members>DisperseConfigCsh</members>
+        <members>DisperseDestinationCsh</members>
+        <members>DisperseDestinationNew</members>
         <members>EventTypeCsh</members>
         <members>GateGroupCsh</members>
         <members>GateItemCsh</members>
@@ -163,6 +167,8 @@
         <members>BranchConfigTriggers</members>
         <members>ConfirmConfigTriggers</members>
         <members>ConfirmItemTriggers</members>
+        <members>DisperseConfigTriggers</members>
+        <members>DisperseDestinationTriggers</members>
         <members>JumpConfigTriggers</members>
         <members>MessageTriggers</members>
         <members>PublishConfigTriggers</members>
@@ -205,6 +211,8 @@
         <members>ConfirmItem__c.Deny__c</members>
         <members>ConfirmItem__c.EntityId__c</members>
         <members>ConfirmItem__c.Parameters__c</members>
+        <members>DisperseDestination__c.DisperseConfig__c</members>
+        <members>DisperseDestination__c.Sequence__c</members>
         <members>GateItem__c.GateGroup__c</members>
         <members>GateItem__c.Parameters__c</members>
         <members>JumpConfig__c.Sequence__c</members>
@@ -250,6 +258,8 @@
         <members>BrokerSetting__c</members>
         <members>ConfirmConfig__c</members>
         <members>ConfirmItem__c</members>
+        <members>DisperseConfig__c</members>
+        <members>DisperseDestination__c</members>
         <members>EventType__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
@@ -294,6 +304,8 @@
         <members>BranchConfig__c-Branch Config Layout</members>
         <members>ConfirmConfig__c-Confirm Config Layout</members>
         <members>ConfirmItem__c-Confirm Item Layout</members>
+        <members>DisperseConfig__c-Disperse Config Layout</members>
+        <members>DisperseDestination__c-Destination Layout</members>
         <members>EventType__c-Event Type Layout</members>
         <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>
