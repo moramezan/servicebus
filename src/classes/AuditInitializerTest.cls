@@ -1,20 +1,9 @@
 @IsTest private class AuditInitializerTest {
 
     static testmethod void hasTheCorrectLimits() {
-        //arrange 
-        Type actualType = AuditInitializer.class;
-        Type outerClass = Type.forName(actualType.getName());  
-        Type innerClass = Type.forName(outerClass.getName() + '.' + 'ESB'); 
-        ProcessObject.ESB meta = (ProcessObject.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.ESB.class);
-        
-        //act 
-        Integer actualLimits = meta.Limits;  
-
-        //assemble
-        actualLimits = (actualLimits == null) ? 1 : actualLimits; 
-
         //assert
-        Integer expectedLimits = 1;
+        Integer expectedLimits = 75;
+        Integer actualLimits = new AuditInitializer.ESB().Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
 
@@ -213,87 +202,6 @@
         System.assert(actualGroupIdentifier.contains(expectedGroupIdentifier1));
     }
 
-    
-    private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessStep() {
-        //arrange
-        String sequenceName  = 'AuditInitializerSequence';
-        Integer thePosition =  1;
-        Id theId  = '000000000000000AAA';
-        Process__c auditInitializerProcess = ProcessObject.generateOne(AuditInitializer.class);
-        
-        Sequence__c sequence = new Sequence__c(Name = sequenceName);
-        insert sequence;
-    
-        Map<String,Object> parameters = new Map<String,Object>{
-            'esb__Id' => theId
-        };
-        
-        //act
-        Boolean actualFlagException =  false;
-        String actualMessage;
-        try {
-            Type reflector = AuditInitializer.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
-        } catch (Exception e) {
-            actualFlagException =  true;
-            actualMessage = e.getMessage();
-        }
-      
-        // Assert
-        Boolean expectedFlagException = true;
-        System.assertEquals(expectedFlagException, actualFlagException);
-        
-        String expectedMessage = 'Unable to access the Step Position and Sequence Name';
-        System.assert( actualMessage.contains(expectedMessage) );
-    }
-
-     
-        
-    private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessConfig() {
-        //arrange
-        String sequenceName  = 'AuditInitializerSequence';
-        Integer thePosition =  1;
-        Id theId  = '000000000000000AAA';
-        Process__c auditInitializerProcess = ProcessObject.generateOne(AuditInitializer.class);
-        
-        Sequence__c sequence = new Sequence__c(Name = sequenceName);
-        insert sequence;
-        
-        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = 1, Process__c = auditInitializerProcess.Id);
-        insert step;
-        
-        AuditInitializerConfig__c config = [
-            SELECT Id, StaticGroupIdentifier__c
-            FROM AuditInitializerConfig__c
-        ];
-        delete config;
-        
-        Map<String,Object> parameters = new Map<String,Object>{
-           'esb__Id' => theId   ,
-           '__SequenceName' => sequenceName,
-           '__Position' => thePosition
-        };
-        
-        //act
-        Boolean actualFlagException =  false;
-        String actualMessage;
-        try {
-            Type reflector = AuditInitializer.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
-        } catch (AuditInitializer.AuditInitializerException e) {
-            actualFlagException =  true;
-            actualMessage = e.getMessage();
-        }
- 
-        // Assert
-        Boolean expectedFlagException = true;
-        System.assertEquals(expectedFlagException, actualFlagException);
-        
-        String expectedMessage = 'Unable to access AuditInitializerConfig';
-        System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
-    }
-    
-    
     private static testmethod void callingGetHydratedThrowsExpectedExceptionWhenIdInvalid() {
         //arrange
         Id bullshitId = '000000000000000AAA';

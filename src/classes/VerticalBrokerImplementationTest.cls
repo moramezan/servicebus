@@ -52,9 +52,9 @@
         System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
         
         //assert (should have marked as many as he can fit within remaining contexts)
-        Integer expectedMarked = 9;
+        Integer expectedMarked = 5;
         Integer actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
-        System.assertEquals(expectedMarked, actualMarked, 'Should have nine marked messages.');
+        System.assertEquals(expectedMarked, actualMarked, 'Should have five marked messages.');
         
         //act
         impl.execute(null, null);
@@ -78,9 +78,9 @@
         System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
         
         //assert (should have marked as many as he can fit within remaining contexts)
-        expectedMarked = 9;
+        expectedMarked = 4;
         actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
-        System.assertEquals(expectedMarked, actualMarked, 'Should have nine marked messages.');
+        System.assertEquals(expectedMarked, actualMarked, 'Should have four marked messages.');
         
         //act
         impl.execute(null, null);

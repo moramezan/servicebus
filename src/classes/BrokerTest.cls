@@ -70,13 +70,13 @@
         List<Message__c> records = new ApexPages.StandardSetController(locator).getRecords();
         
         //assert
-        Integer expectedLimits = 9;
+        Integer expectedLimits = 5;
         Integer actualLimits = new Wiretap.ESB().Limits;
-        System.assertEquals(expectedLimits, actualLimits, 'Wiretap should have meta limits of nine.');
+        System.assertEquals(expectedLimits, actualLimits, 'Wiretap should have meta limits of five.');
         
-        Integer expectedSize = 9;
+        Integer expectedSize = 5;
         Integer actualSize = records.size();
-        System.assertEquals(expectedSize, actualSize, 'Chunking mark should have found nine.');
+        System.assertEquals(expectedSize, actualSize, 'Chunking mark should have found five.');
     }
     
 

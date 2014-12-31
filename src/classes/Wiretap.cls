@@ -9,7 +9,7 @@ public with sharing class Wiretap {
         public SObject ProcessSetting = WiretapSetting__c.SObjectType.newSObject();
         public String Icon = 'email';
         public String HelpUrl = Page.GateItemCsh.getUrl();
-        public Integer Limits = 9;
+        public Integer Limits = 5; //leave half of 10 (Total number of sendEmail methods allowed)
     }
     
     override public String toString() {

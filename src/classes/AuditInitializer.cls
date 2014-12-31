@@ -10,6 +10,7 @@ public with sharing class AuditInitializer {
         public SObject StepConfig = AuditInitializerConfig__c.SObjectType.newSobject();
         public String Icon = 'pencil';
         public String HelpUrl = Page.AuditInitializerConfigCsh.getUrl();
+        public Integer Limits = 75; //leave half of 150 (Total number of DML statements issued)
         
         public Map<String,String> Outputs = new Map<String,String>{
             'esb__AuditGroupIds' => 'LIST<ID> of potentially multiple groups from AuditInitializer steps.'
@@ -25,34 +26,15 @@ public with sharing class AuditInitializer {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
-        
-        
-         //derive the SequenceName and Position
-         List<Step__c> steps = [
-             SELECT Id, Position__c, Sequence__r.Name
-             FROM Step__c
-             WHERE Sequence__r.Name = :(String)parameters.get('__SequenceName')
-             AND Position__c = :(Decimal) parameters.get('__Position')
-         ];
-         if (steps.size() == 0) {
-            throw new AuditInitializerException('Unable to access the Step Position and Sequence Name');
-         }
-         Step__c  step = steps[0];
- 
         //get group identifier instruction from config
-        AuditInitializerConfig__c config;
-        try {
-            config = (AuditInitializerConfig__c)SalesforceObject.getById(this.StepConfig.Id);
-        } catch (System.QueryException e) {
-            throw new AuditInitializerException('Unable to access AuditInitializerConfig');
-        }
+        AuditInitializerConfig__c config = this.StepConfig;
         
          // insert composite key values into audit group :
          // the composite key comprises
          // 1.  the date-time stamp
          // 2.  a (fairly unique ) business group value
          Id dataId =  (Id)parameters.get('esb__Id');
-         String groupIdentifier = getBusinesGroupIdentifier(config, step, dataId) ;
+         String groupIdentifier = getBusinesGroupIdentifier(config, (String)parameters.get('__SequenceName') + '#' + (Decimal) parameters.get('__Position'), dataId) ;
          DateTime now = System.Now();
          AuditGroup__c auditGroup = new AuditGroup__c(
              Name = ((''+now).replace(' ','T'))+'Z' + ' - ' + groupIdentifier,
@@ -90,13 +72,13 @@ public with sharing class AuditInitializer {
     }
     
     
-    @TestVisible private static String getBusinesGroupIdentifier(AuditInitializerConfig__c config, Step__c  step,  Id dataId) {
+    @TestVisible private static String getBusinesGroupIdentifier(AuditInitializerConfig__c config, String  step,  Id dataId) {
 
         //  default :
         //
         //  "sequence name" and "step position"
         //  (always use this if StaticGroupIdentifier__c from config equates to null)
-        String defaultGroupIdentifier =  step.Sequence__r.Name + '#' + step.Position__c;
+        String defaultGroupIdentifier =  step;
         
         
         //  preferred alternatives :

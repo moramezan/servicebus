@@ -8,7 +8,7 @@ public with sharing class Terminate {
         public String Description = 'Swallows messages at the end of this sequence.';
         public String Icon = 'stop';
         public String HelpUrl = Page.StepCsh.getUrl();
-        public Integer Limits = 90;
+        public Integer Limits = 100; //leave half of 200 (Total number of SOQL queries issued)
     }
     
     override public String toString() {
@@ -31,12 +31,15 @@ public with sharing class Terminate {
         
         //pop one subsequence off stack
         Id lastId = stepIds.remove(stepIds.size() - 1);
-        Step__c step = (Step__c)SalesforceObject.getById(lastId);
-        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(step.Sequence__c);
+        Step__c step = [
+            SELECT Id, Sequence__r.Name, Position__c
+            FROM Step__c
+            WHERE Id = :lastId
+        ];
         
         parameters.put('__SubsequenceStepIds', stepIds);
-        parameters.put('__SequenceName', sequence.Name );
-        parameters.put('__Position', step.Position__c );
+        parameters.put('__SequenceName', step.Sequence__r.Name);
+        parameters.put('__Position', step.Position__c);
         parametersList.add(parameters);
 
         return Json.serialize(parametersList);

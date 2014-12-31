@@ -1,20 +1,9 @@
 @IsTest private class ScheduleTest {
 
     static testmethod void hasTheCorrectLimits() {
-        //arrange 
-        Type actualType = Schedule.class;
-        Type outerClass = Type.forName(actualType.getName());  
-        Type innerClass = Type.forName(outerClass.getName() + '.' + 'ESB'); 
-        ProcessObject.ESB meta = (ProcessObject.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.ESB.class);
-        
-        //act 
-        Integer actualLimits = meta.Limits;  
-
-        //assemble
-        actualLimits = (actualLimits == null) ? 1 : actualLimits; 
-
         //assert
-        Integer expectedLimits = 1;
+        Integer expectedLimits = 5000;
+        Integer actualLimits = new Schedule.ESB().Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
     
@@ -95,14 +84,13 @@
 
          //arrange parameters
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday
-        ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
             '__EventStamp' => stampAsString
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, scheduleConfig).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -150,14 +138,13 @@
 
          //arrange parameters
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday, a working day
-        ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
             '__EventStamp' => stampAsString
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, scheduleConfig).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -205,14 +192,13 @@
 
          //arrange parameters
         String stampAsString = '2014-01-03T12:00:00.000Z';   
-        ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
             '__EventStamp' => stampAsString
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, scheduleConfig).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -259,14 +245,13 @@
 
          //arrange parameters
         String stampAsString = '2014-01-18T12:00:00.000Z';
-        ScheduleConfig__c config = [SELECT Id FROM ScheduleConfig__c];
         Map<String,Object> parameters = new Map<String,Object>{
             '__EventStamp' => stampAsString
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, scheduleConfig).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -276,42 +261,6 @@
         System.assertEquals(expectedCount, actualCount);    
     }  
 
-    static testmethod void isHeartbeatThrowsExceptionWhenInvalidConfigParam() {
-        //arrange processes
-        Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
-        
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
-        insert sequence;
-        
-        //arrange steps
-        Step__c scheduleStep = StepObject.generateOne(sequence.Id, scheduleProcess.Id);
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
-        
-
-        //arrange parameters
-        String validStamp = '2014-01-18T12:00:00.000Z';
-        ScheduleConfig__c invalidConfig = null;
-        Map<String,Object> parameters = new Map<String,Object>{
-            '__EventStamp' => validStamp
-        };
-        
-        // assemble
-        Boolean actualFlag = false;
-        try {
-            // act  
-            Type reflector = Schedule.class;
-            List<Map<String,Object>> result = new Broker.Wrapper(reflector, parameters, invalidConfig).invokeMain().Outputs;
-        } catch (Schedule.ScheduleException e) {
-            actualFlag = true;
-        }
- 
-        // assert
-        Boolean expectedFlag = true;
-        System.assertEquals(expectedFlag, actualFlag); 
-    }   
-    
     static testmethod void isHeartbeatThrowsExceptionWhenInvalidStampParam() {
         //arrange processes
         Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);

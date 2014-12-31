@@ -2,20 +2,9 @@
 private class WiretapTest {
     
     static testmethod void hasTheCorrectLimits() {
-        //arrange 
-        Type actualType = Wiretap.class;
-        Type outerClass = Type.forName(actualType.getName());  
-        Type innerClass = Type.forName(outerClass.getName() + '.' + 'ESB'); 
-        ProcessObject.ESB meta = (ProcessObject.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.ESB.class);
-        
-        //act 
-        Integer actualLimits = meta.Limits;  
-
-        //assemble
-        actualLimits = (actualLimits == null) ? 1 : actualLimits; 
-
         //assert
-        Integer expectedLimits = 9;
+        Integer expectedLimits = 5;
+        Integer actualLimits = new Wiretap.ESB().Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
 

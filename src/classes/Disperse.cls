@@ -10,6 +10,7 @@ public with sharing class Disperse {
         public String Icon = 'chart_organisation';
         public String HelpUrl = Page.DisperseConfigCsh.getUrl();
         public SObject StepConfig = DisperseConfig__c.SObjectType.newSObject();
+        public Integer Limits = 100; //leave half of 200 (Total number of SOQL queries issued)
     }
     
     public class DisperseException extends Exception {}

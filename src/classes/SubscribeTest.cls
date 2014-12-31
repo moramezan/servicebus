@@ -1,20 +1,9 @@
 @IsTest private class SubscribeTest{
 
     static testmethod void hasTheCorrectLimits() {
-        //arrange 
-        Type actualType = Subscribe.class;
-        Type outerClass = Type.forName(actualType.getName());  
-        Type innerClass = Type.forName(outerClass.getName() + '.' + 'ESB'); 
-        ProcessObject.ESB meta = (ProcessObject.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.ESB.class);
-        
-        //act 
-        Integer actualLimits = meta.Limits;  
-
-        //assemble
-        actualLimits = (actualLimits == null) ? 1 : actualLimits; 
-
         //assert
-        Integer expectedLimits = 90;
+        Integer expectedLimits = 5000;
+        Integer actualLimits = new Subscribe.ESB().Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
     

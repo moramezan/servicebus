@@ -8,6 +8,7 @@ public with sharing class Mark {
         public String Description = 'Marks the message with a correlation key, for splitting into a collection.';
         public String Icon = 'tag_blue';
         public String HelpUrl = Page.GateGroupCsh.getUrl();
+        public Integer Limits = 75; //leave half of 150 (Total number of DML statements issued)
         
         public Map<String,String> Outputs = new Map<String,String>{
             'esb__GateGroupId' => 'ID of the Gate Group that eventually associates all the marked messages.'

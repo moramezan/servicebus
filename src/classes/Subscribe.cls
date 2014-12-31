@@ -9,7 +9,7 @@ public with sharing class Subscribe {
         public SObject StepConfig = SubscribeConfig__c.SObjectType.newSObject();
         public String Icon = 'eye';
         public String HelpUrl = Page.SubscribeConfigCsh.getUrl();
-        public Integer Limits = 90;
+        public Integer Limits = 5000; //leave half of 10,000 (Total number of records retrieved by Database.getQueryLocator)
     }
     
     override public String toString() {

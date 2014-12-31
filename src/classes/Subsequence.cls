@@ -10,6 +10,7 @@ public with sharing class Subsequence {
         public SObject StepConfig = SubsequenceConfig__c.SObjectType.newSObject();
         public String Icon = 'arrow_undo';
         public String HelpUrl = Page.SubsequenceConfigCsh.getUrl();
+        public Integer Limits = 50; //leave half of 200 (Total number of SOQL queries issued)
     }
     
     override public String toString() {

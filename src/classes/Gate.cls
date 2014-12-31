@@ -8,7 +8,7 @@ public with sharing class Gate {
         public String Description = 'Aggregates a collection of messages previously marked with a correlation key.';
         public String Icon = 'arrow_join';
         public String HelpUrl = Page.GateGroupCsh.getUrl();
-        public Integer Limits = 1;
+        public Integer Limits = 20; //leave half of 200 (Total number of SOQL queries issued)
 
         public Map<String,String> Inputs = new Map<String,String>{
             'esb__GateGroupId' => 'ID of the GateGroup the marked messages should belong to.'

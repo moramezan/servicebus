@@ -11,6 +11,7 @@ public with sharing class Schedule {
         public SObject StepConfig = ScheduleConfig__c.SObjectType.newSObject();
         public String HelpUrl = Page.ScheduleConfigCsh.getUrl();
         public Boolean ConsumesHeartbeat = true;
+        public Integer Limits = 5000; //leave half of 10,000 (Total number of records retrieved by Database.getQueryLocator)
     }
     
     public class ScheduleException  extends Exception {}
@@ -19,13 +20,12 @@ public with sharing class Schedule {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
 
         String stampAsString = (String)parameters.get('__EventStamp');
-        Id configId = this.StepConfig == null ? null : this.StepConfig.Id;
 
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
     
         if (stampAsString != null) {
             // evaluate:
-            if (isWithinWindow(stampAsString, configId)) {
+            if (isWithinWindow(stampAsString, this.StepConfig)) {
                 parametersList.add(parameters);
             } 
         } else { 
@@ -36,7 +36,7 @@ public with sharing class Schedule {
         return Json.serialize(parametersList);
     }
 
-    @TestVisible static private Boolean isWithinWindow(String stampAsString, Id configId) {
+    @TestVisible static private Boolean isWithinWindow(String stampAsString, ScheduleConfig__c config) {
         DateTime stampAsDateTime;
         try {
            stampAsString =  getISO8601(stampAsString);
@@ -49,7 +49,6 @@ public with sharing class Schedule {
         Set<String> details;
         Set<String> runTimes;
         try {
-            ScheduleConfig__c config = (ScheduleConfig__c)SalesforceObject.getById(configId);
             frequency = config.Frequency__c;
             details = new Set<String>(config.FriendlyDates__c.split(';'));
             runTimes = new Set<String>(config.FriendlyTimes__c.split(';'));

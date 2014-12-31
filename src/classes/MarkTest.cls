@@ -2,20 +2,9 @@
 private class MarkTest {
 
     static testmethod void hasTheCorrectLimits() {
-        //arrange 
-        Type actualType = Mark.class;
-        Type outerClass = Type.forName(actualType.getName());  
-        Type innerClass = Type.forName(outerClass.getName() + '.' + 'ESB'); 
-        ProcessObject.ESB meta = (ProcessObject.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.ESB.class);
-        
-        //act 
-        Integer actualLimits = meta.Limits;  
-
-        //assemble
-        actualLimits = (actualLimits == null) ? 1 : actualLimits; 
-
         //assert
-        Integer expectedLimits = 1;
+        Integer expectedLimits = 75;
+        Integer actualLimits = new Mark.ESB().Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
     

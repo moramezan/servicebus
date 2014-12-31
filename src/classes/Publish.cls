@@ -10,6 +10,7 @@ public with sharing class Publish {
         public SObject StepConfig = PublishConfig__c.SObjectType.newSObject();
         public String Icon = 'chart_organisation';
         public String HelpUrl = Page.PublishConfigCsh.getUrl();
+        public Integer Limits = 50; //leave half of 200 (Total number of SOQL queries issued)
     }
     
     public class PublishException extends Exception {}

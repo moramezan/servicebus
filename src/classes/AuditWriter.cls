@@ -8,7 +8,7 @@ public with sharing class AuditWriter {
         public String Description = 'Stores the message parameters under an Audit Group.';
         public String Icon = 'pencil_add';
         public String HelpUrl = Page.AuditInitializerConfigCsh.getUrl();
-        public Integer Limits = 1;
+        public Integer Limits = 50; //leave half of 200 (Total number of SOQL queries issued)
     }
     
     public class AuditWriterException extends Exception {}
