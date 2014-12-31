@@ -808,11 +808,11 @@
     </objectPermissions>
     <pageAccesses>
         <apexPage>AuditEntryCsh</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>AuditGroupCsh</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>AuditInitializerConfigCsh</apexPage>
@@ -868,11 +868,11 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>GateGroupCsh</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>GateItemCsh</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>JumpConfigCsh</apexPage>
@@ -904,7 +904,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>MessageSplash</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>Monitor</apexPage>
@@ -916,7 +916,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>OAuth</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessApexClass</apexPage>
@@ -928,7 +928,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessDescribe</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessDiscover</apexPage>
@@ -944,7 +944,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessSplash</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>PublishConfigCsh</apexPage>
@@ -976,7 +976,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>SequenceSplash</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>StepConfig</apexPage>
