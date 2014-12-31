@@ -80,6 +80,7 @@ global without sharing class Job implements Queueable, Database.AllowsCallouts {
             parameters.putAll(new Map<String,Object>{
                 '__Hops' => 0,
                 '__EntryPointGuid' => Broker.getEntryPointGuid(18),
+                'esb__EnqueueUserId' => UserInfo.getUserId(), //WE use '__' and THEY use 'esb' per #669
                 '__EnqueueUserId' => UserInfo.getUserId()
             });
             
