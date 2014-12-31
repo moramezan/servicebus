@@ -37,6 +37,7 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
         deleteCompletedMessages(System.now());   
         this.validateJsonParameters();
         this.interpretEsbSequenceName();
+        this.incrementHops();
         this.populateRouteKey();
     }
     
@@ -56,6 +57,32 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
             Integer position = (Integer)parameters.get('__Position');
             parameters.put('__Position', ++position);
+            message.Parameters__c = Json.serializePretty(parameters);
+        }
+    }
+    
+    /**
+     * Context:
+     * A message can pass through a limited number of steps. This "limit" is a fairly high arbitrary threshold.
+     * The intent is to prevent a never ending self referencing loop (we cannot control what the system configurators
+     * configure). A self referencing loop would eventually ring alarm bells with the Salesforce police with the
+     * possibility of the Munger being blacklisted
+     * An exception is thrown if the Max Hops threshold is reached
+     *
+     * We cannot simply increment __Hops BEFORE calling invoke as a process writer could fuck with this parameter
+     * Instead we read and increment __Hops BEFORE calling invoke using enforceMaxHops()
+     * and assign to an Integer hops variable
+     * We use applyHops()  to apply the incremented hops variable to the __Hops parameter of
+     * all messages returned from invoke()
+     */
+    public void incrementHops() {
+        List<Message__c> messages = this.getSObjects();
+        for (Message__c message : messages) {
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+            Integer hops = (Integer)parameters.get('__Hops');
+            if (hops == null) continue; //nothing to do
+            
+            parameters.put('__Hops', ++hops);
             message.Parameters__c = Json.serializePretty(parameters);
         }
     }

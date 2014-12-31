@@ -84,10 +84,8 @@
  */
 abstract public with sharing class Broker {
     
-    @TestVisible private static Integer MaxHops  = 500;
+    @TestVisible private static Integer MaxHops = 500;
     
-    public class TooManyHopsException extends Exception {}
-      
     public class EngineException extends Exception {
         /**
          * Gotta jettison this guy for rollback later
@@ -489,12 +487,8 @@ abstract public with sharing class Broker {
         
         //save important message properties (such as __Hops) so that process authors cannot pervert them  
         //THROWS EngineException TODO : requires a more generic approach not specific to just the __Hops
-        Map<Id,Integer> id2hops = new Map<Id,Integer>();
-        try {
-            for (Message__c inputMessage : inputMessages) id2hops.put(inputMessage.Id, enforceMaxHops(id2parameters.get(inputMessage.Id), maxHops));
-        } catch (TooManyHopsException e) {
-            //wrapped this here because we need to stick the MESSAGE ID on the exception in order to be able to write the problem away
-            throw new EngineException(null, inputMessageIds, e, 'Too many hops - to resolve, manually set __Hops on parameters to 0');
+        for (Map<String,Object> parameters : id2parameters.values()) if ((Integer)parameters.get('__Hops') >= MaxHops) {
+            throw new EngineException(null, inputMessageIds, null, 'Too many hops - to resolve, manually set __Hops on parameters to 0');
         }
         
         //step determines whether all have configs or none
@@ -527,10 +521,6 @@ abstract public with sharing class Broker {
         
         Map<Id,List<Map<String,Object>>> id2outputParameters = new Map<Id,List<Map<String,Object>>>();
         for (Id messageId : id2wrapper.keySet()) id2outputParameters.put(messageId, id2wrapper.get(messageId).Outputs);
-        
-        //write back save important message properties to the parameters collections in results
-        //TODO : requires a more generic approach to write back the "__" properties to 
-        for (Id messageId : id2outputParameters.keySet()) this.applyHops(id2outputParameters.get(messageId), id2hops.get(messageId));
         
         //gate processing support method
         for (Id messageId : id2outputParameters.keySet()) this.gateHelper(id2parameters.get(messageId), id2outputParameters.get(messageId));
@@ -577,40 +567,6 @@ abstract public with sharing class Broker {
             throw new EngineException(null, messageIds, e, 'Persist failure.');
         }
     }
-    
-     /**
-     * Context:
-     * A message can pass through a limited number of steps. This "limit" is a fairly high arbitrary threshold.
-     * The intent is to prevent a never ending self referencing loop (we cannot control what the system configurators
-     * configure). A self referencing loop would eventually ring alarm bells with the Salesforce police with the
-     * possibility of the Munger being blacklisted
-     * An exception is thrown if the Max Hops threshold is reached
-     *
-     * We cannot simply increment __Hops BEFORE calling invoke as a process writer could fuck with this parameter
-     * Instead we read and increment __Hops BEFORE calling invoke using enforceMaxHops()
-     * and assign to an Integer hops variable
-     * We use applyHops()  to apply the incremented hops variable to the __Hops parameter of
-     * all messages returned from invoke()
-     */
-    @TestVisible List<Map<String,Object>> applyHops(List<Map<String,Object>> results, Integer hops) {
-        for (Map<String,Object> result : results) {
-            result.put('__Hops', hops);
-        }
-        return results;
-    }
-
-    /**
-     * See applyHops() method for context and details.
-     */
-    @TestVisible static private Integer enforceMaxHops(Map<String,Object> parameters, Integer threshold) {
-        Integer hops = (parameters.get('__Hops') == null) ? 1 : (Integer) parameters.get('__Hops');
-        hops++;
-        if (hops > threshold) {
-            throw new TooManyHopsException('Number of hops ' + hops + ' is greater than threshold of ' + threshold);
-        }
-        return hops;
-    }
-    
     
     /**
      * The Mark helper logic is for the Gate process; it determines when a split occurs, and writes away the number of

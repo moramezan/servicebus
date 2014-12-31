@@ -156,17 +156,20 @@
     
     static testmethod void callingEnforceMaxHopsReturnsExpectedValueWhenHopsParameterLtThreshold() {
         //arrange
-        Map<String,Object> parameters = new Map<String,Object>();
-        Integer threshold = 10;
-        Integer hops = 8;
-        String key  = '__Hops';
-        parameters.put(key, hops);
+        Broker.MaxHops = 2;
+        List<Message__c> messages = new Job(new Map<String,Object>{
+            //'__Hops' => 0 //enqueue sets hops
+        }).persist();
         
         //act
-        Integer actualHops = Broker.enforceMaxHops(parameters, threshold);
+        new MessageObjectSet(messages).incrementHops();
+        
+        //assemble
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(messages[0].Parameters__c);
 
         //assert
-        Integer expectedHops = hops + 1;
+        Integer expectedHops = 1;
+        Integer actualHops = (Integer)parameters.get('__Hops');
         System.assertEquals( expectedHops, actualHops);
     }
 
@@ -174,32 +177,49 @@
 
     static testmethod void callingEnforceMaxHopsReturnsExpectedValueWhenHopsParameterNotDefined() {
        //arrange
-        Map<String,Object> parameters = new Map<String,Object>();
-        Integer threshold = 10;
-        Integer hops = 1;
+        Broker.MaxHops = 10;
+        List<Message__c> messages = new Job(new Map<String,Object>{
+            //enqueue sets hops
+        }).persist();
 
         //act
-        Integer actualHops = Broker.enforceMaxHops(parameters, threshold);
+        new MessageObjectSet(messages).incrementHops();
+        
+        //assemble
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(messages[0].Parameters__c);
 
         //assert
-        Integer expectedHops = hops + 1;
+        Integer expectedHops = 1;
+        Integer actualHops = (Integer)parameters.get('__Hops');
         System.assertEquals( expectedHops, actualHops);
     }
  
   
     static testmethod void callingEnforceMaxHopsThrowsExceptionWhenHopsParameterGtOrEqToThreshold() {
-       //arrange
-        Map<String,Object> parameters = new Map<String,Object>();
-        Integer threshold = 10;
-        Integer hops = 10;
-        String key  = '__Hops';
-        parameters.put(key, hops);
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
+        insert sequence;
+        
+        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        
+        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        
+        //arrange message
+        Broker.MaxHops = 1;
+        List<Message__c> messages = new Job(new Map<String,Object>{
+            'esb__SequenceName' => 'Test'
+            //'esb__Hops' => 0 //enqueue sets hops
+        }).persist();
+        
+        //assemble
+        //http://salesforce.stackexchange.com/q/61213/320
+        messages = SalesforceObjectSet.listAll(Message__c.SObjectType);
         
         Boolean actualFlag = false;
         try {
             //act
-            Integer actualHops = Broker.enforceMaxHops(parameters, threshold);
-        } catch (Broker.TooManyHopsException e) {
+            Broker.impl().execute(messages);
+        } catch (Broker.EngineException e) {
             actualFlag = true;
         }
 
@@ -209,29 +229,6 @@
     }
     
     
-    static testmethod void callingApplyHopsCorrectlyAppliesHopsToParameters() {
-        //arrange
-        Integer hops = 8;
-        Map<String,Object> parameters = new Map<String,Object>();
-        List<Map<String,Object>>  parametersList = new List<Map<String,Object>>{ parameters };
-
-        //act
-        parametersList = new DoNothingBroker().applyHops(parametersList, hops);
-
-        //assemble
-        Integer actualHops = -1;
-        List<Map<String,Object>>  actualParametersList = parametersList;
-        for (Map<String,Object> actualParameters : actualParametersList ) {
-            actualHops = (Integer) actualParameters.get('__Hops');
-        }
- 
-        //assert
-        Integer expectedhops = hops;
-        System.assertEquals(expectedHops, actualHops);
-    }
-    
- 
-
     static testmethod void canCorrectlyIncrementAndPersistMessages() {
         //arrange processes
         Process__c markProcess = ProcessObject.generateOne(Mark.class);

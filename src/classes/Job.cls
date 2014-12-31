@@ -78,6 +78,7 @@ global without sharing class Job implements Queueable, Database.AllowsCallouts {
         //create the message destined for the 0th step of the chain
         for (Map<String,Object> parameters : parameterses) {
             parameters.putAll(new Map<String,Object>{
+                '__Hops' => 0,
                 '__EntryPointGuid' => Broker.getEntryPointGuid(18),
                 '__EnqueueUserId' => UserInfo.getUserId()
             });
