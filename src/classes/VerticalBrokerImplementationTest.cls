@@ -29,9 +29,9 @@
         VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
         
         //assert
-        Integer expectedContexts = 100;
+        Integer expectedContexts = 1000;
         Integer actualContexts = impl.Contexts;
-        System.assertEquals(expectedContexts, actualContexts, 'Should have 100 contexts.');
+        System.assertEquals(expectedContexts, actualContexts, 'Should have 1000 contexts.');
         
         //act (List controllers are not supported for FieldPermissions)
         Database.QueryLocatorIterator iterator = impl.start(null).iterator();
@@ -39,7 +39,7 @@
         while (iterator.hasNext()) records.add(iterator.next());
         
         //assert
-        Integer expectedSize = 100;
+        Integer expectedSize = 1000;
         Integer actualSize = records.size();
         System.assertEquals(expectedSize, actualSize, 'Locator should have 100 records.');
         
@@ -47,7 +47,7 @@
         impl.execute(null, null);
         
         //assert
-        expectedContexts = 99;
+        expectedContexts = 999;
         actualContexts = impl.Contexts;
         System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
         
@@ -60,7 +60,7 @@
         impl.execute(null, null);
         
         //assert
-        expectedContexts = 98;
+        expectedContexts = 998;
         actualContexts = impl.Contexts;
         System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
         
@@ -73,7 +73,7 @@
         impl.execute(null, null);
         
         //assert
-        expectedContexts = 97;
+        expectedContexts = 997;
         actualContexts = impl.Contexts;
         System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
         
@@ -86,7 +86,7 @@
         impl.execute(null, null);
         
         //assert
-        expectedContexts = 96;
+        expectedContexts = 996;
         actualContexts = impl.Contexts;
         System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
         

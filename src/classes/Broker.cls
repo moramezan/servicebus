@@ -409,9 +409,13 @@ abstract public with sharing class Broker {
      * //If we are scheduled, use the default batch broker which doesn't need a session id (unlike futurebroker)
      * //if (System.isScheduled()) settings.BrokerClassName__c = VerticalBrokerImplementation.class.getName();
      */
+    static public Boolean IsFirstRun = false;
     static public void process() {
         Broker impl = impl();
-        if (!impl.isAlreadyRunning()) impl.restartIfWorkPending();
+        if (!impl.isAlreadyRunning()) {
+            IsFirstRun = true;
+            impl.restartIfWorkPending();
+        }
     }
     
     /**

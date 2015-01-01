@@ -14,7 +14,11 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     /**
      * Some integer below a hard limit of 4000 (min expected rows in FieldPermissions)
      */
-    @TestVisible private Integer Contexts = 100;
+    @TestVisible private Integer Contexts = 1000;
+    
+    public VerticalBrokerImplementation() {
+        if (Broker.IsFirstRun) this.Contexts = 15;
+    }
     
     /**
      * If scope is null, execute will never be reacher!
