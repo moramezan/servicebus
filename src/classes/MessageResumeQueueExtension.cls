@@ -9,7 +9,7 @@ public with sharing class MessageResumeQueueExtension {
         Type.forName(MessageResumeQueueExtension.DoDml.class.getName()).newInstance();
         
         //restart the broker
-        Broker.process();
+        Job.process();
         
         //redirect to list view
         return new PageReference('/' + SObjectType.Message__c.KeyPrefix);

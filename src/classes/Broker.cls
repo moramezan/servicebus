@@ -86,6 +86,11 @@ abstract public with sharing class Broker {
     
     @TestVisible private static Integer MaxHops = 500;
     
+    /**
+     * #671 first query locator spends less time in 'Preparing'
+     */
+    static public Boolean IsFirstRun = false;
+    
     public class EngineException extends Exception {
         /**
          * Gotta jettison this guy for rollback later
@@ -406,19 +411,6 @@ abstract public with sharing class Broker {
     }
     
     /**
-     * //If we are scheduled, use the default batch broker which doesn't need a session id (unlike futurebroker)
-     * //if (System.isScheduled()) settings.BrokerClassName__c = VerticalBrokerImplementation.class.getName();
-     */
-    static public Boolean IsFirstRun = false;
-    static public void process() {
-        Broker impl = impl();
-        if (!impl.isAlreadyRunning()) {
-            IsFirstRun = true;
-            impl.restartIfWorkPending();
-        }
-    }
-    
-    /**
      * Sets many Messages statuses to 'Started' and writes them away.
      */
     public List<Database.SaveResult> mark(List<Message__c> messages) {
@@ -427,7 +419,7 @@ abstract public with sharing class Broker {
             for (Message__c message : messages) message.Status__c = 'Started';
             return Database.update(messages);
         } catch (Exception e) {
-            throw new EngineException('Mark failure!', e);
+            throw new EngineException(e.getMessage());
         }
     }
     

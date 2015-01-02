@@ -14,7 +14,7 @@ public with sharing class MessageRebufferExtension {
         Type.forName(DoDml.class.getName()).newInstance();
         
         //restart the broker
-        Broker.process();
+        Job.process();
         
         //redirect back to list view
         return new ApexPages.PageReference('/' + SObjectType.Message__c.KeyPrefix);

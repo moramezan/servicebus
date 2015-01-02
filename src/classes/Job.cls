@@ -4,6 +4,8 @@
  */
 global without sharing class Job implements Queueable, Database.AllowsCallouts {
     
+    public class JobException extends Exception {}
+    
     private List<Message__c> messages = new List<Message__c>();
     
     /**
@@ -21,7 +23,7 @@ global without sharing class Job implements Queueable, Database.AllowsCallouts {
      * @param sequenceName Name of the sequence the data is destined for.
      * @param dataId    Blob representation of the data the sequence will operate on.
      */
-    global Job(String sequenceName, Blob data) {
+    public Job(String sequenceName, Blob data) {
         this(sequenceName, Database.insert(new Document(
             Name = String.valueOf(Datetime.now().getTime()),
             Body = data,
@@ -103,8 +105,17 @@ global without sharing class Job implements Queueable, Database.AllowsCallouts {
      */
     public void execute(QueueableContext context) {
         List<Message__c> messages = this.persist();
-        if (!Test.isRunningTest()) defer();
-        else Broker.process();
+        
+        // #653 don't use a @Future call unless necessary
+        if (Broker.impl().isAlreadyRunning()) return;
+        
+        if (!Test.isRunningTest()) {
+            //in real life, usurp sysadmin
+            Job.processAsUser();
+        } else {
+            //in tests, just run the thing
+            Job.process();
+        }
     }
     
     /**
@@ -125,9 +136,33 @@ global without sharing class Job implements Queueable, Database.AllowsCallouts {
         return outputs;
     }
     
-    @Future(callout=true) static private void defer() {
+    /**
+     * We MUST ALWAYS prevent more than 1 running broker worker
+     * otherwise they will fight over the work to be marked etc.
+     *
+     * Was formerly Broker.process() but needs to be global now
+     * for the sake of running from Execute Anonymous context.
+     */
+    static global void process() {
+        Broker impl = Broker.impl();
+        if (impl.isAlreadyRunning()) return;
+        // #671 first query locator spends less time in 'Preparing'
+        Broker.IsFirstRun = true;
+        impl.restartIfWorkPending();
+    }
+    
+    /**
+     * When this blows up we throw an unhandled exception in our namespace,
+     * we should receive an email and reach out to the customer to debug this!
+     *
+     * @throws JobException
+     */
+    @Future(callout=true) static private void processAsUser() {
+        // #653 don't use an API call unless necessary
+        if (Broker.impl().isAlreadyRunning()) return;
+        
         PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/data/v32.0/tooling/executeAnonymous');
-        pr.getParameters().put('anonymousBody', Broker.class.getName() + '.process();');
+        pr.getParameters().put('anonymousBody', Job.class.getName() + '.process();');
         String endpoint = pr.getUrl();
         
         HttpRequest request = new HttpRequest();
@@ -135,7 +170,9 @@ global without sharing class Job implements Queueable, Database.AllowsCallouts {
         request.setEndpoint(endpoint);
         request.setHeader('Authorization', 'Bearer ' + OAuthSetting__c.getInstance().AccessToken__c);
         
-        new Http().send(request);
+        // #653 throw unhandled exception in our namespace
+        HttpResponse response = new Http().send(request);
+        Integer status = response.getStatusCode();
+        if (status != 200) throw new JobException(response.getBody());
     }
-    
 }
