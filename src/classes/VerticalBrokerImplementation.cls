@@ -17,7 +17,8 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     @TestVisible private Integer Contexts = 1000;
     
     public VerticalBrokerImplementation() {
-        if (Broker.IsFirstRun) this.Contexts = 15;
+        // #671 first query locator spends less time in 'Preparing'
+        if (Broker.IsFirstRun) this.Contexts = 50;
     }
     
     /**
