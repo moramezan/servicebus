@@ -7,10 +7,16 @@
 public without sharing class VerticalBrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
     
     @TestVisible private Set<Id> fatalMessageIds = new Set<Id>();
-    @TestVisible private Map<Id,Message__c> markedMessages = new Map<Id,Message__c>();
-    
+    @TestVisible private Map<Id,Message__c> executableMessages = new Map<Id,Message__c>();
     @TestVisible private Boolean abortJob = false;
 
+    /**
+     * If we encounter any kind of unexpected exception (catchable or otherwise)
+     * inside this batch job, we risk that the QueryLocator will loop forever. This
+     * flag can be set when that condition is detected.
+     */
+    @TestVisible private Boolean isHaywire = false;
+    
     /**
      * Some integer below a hard limit of 4000 (min expected rows in FieldPermissions)
      */
@@ -29,91 +35,117 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         return Database.getQueryLocator([SELECT Id FROM FieldPermissions LIMIT :this.Contexts]);
     }
     
+    /**
+     * +------------------+---------------------+------------------+
+     * | Has work to MARK | Has work to EXECUTE | Action to take   |
+     * +------------------+---------------------+------------------+
+     * | 0                | 0                   | Done, abort job! |
+     * +------------------+---------------------+------------------+
+     * | 0                | 1                   | Broker.execute   | (would likely abort next)
+     * +------------------+---------------------+------------------+
+     * | 1                | 0                   | Broker.mark      | (would likely execute next)
+     * +------------------+---------------------+------------------+
+     * | 1                | 1                   | Broker.execute   | (would likely mark next)
+     * +------------------+---------------------+------------------+
+     */
     public void execute(Database.BatchableContext context, List<SObject> scopes) {
+        //#690 prevent haywire (do NOT try to persist errors)
+        if (this.isHaywire) {
+            System.abortJob(context.getJobId());
+            return;
+        }
+        
         //ever decreasing
         this.Contexts--;
         
-        if (this.Contexts == 0) {
-            //MORE CONTEXTS REQUIRED TO DO ANYTHING
-            this.handleFatalExceptions(context);
-            return;
-        }
+        //handle errors progressively
+        this.handleFatalExceptions(context);
         
         //LOCATE
-        Database.QueryLocator locator = this.locateMarkableWork();
+        Database.QueryLocator locator;
+        try {
+            locator = this.locateMarkableWork();
+        } catch (Exception e) {
+            this.isHaywire = true; //this will roll over thanks to stateful
+            throw new Broker.EngineException('Locate haywire condition: ' + e.getMessage());
+        }
+        
         List<Message__c> markableMessages = new ApexPages.StandardSetController(locator).getRecords();
-        
         Boolean hasWorkToMark = !markableMessages.isEmpty();
-        Boolean hasWorkToExecute = !this.markedMessages.isEmpty();
+        Boolean hasWorkToExecute = !this.executableMessages.isEmpty();
         
-        if (this.Contexts == 1 && !hasWorkToExecute) {
-            //WOULD MARK BUT NOT ENOUGH CONTEXTS TO EXECUTE
-            this.handleFatalExceptions(context);
+        Boolean isMarkContext = hasWorkToMark && !hasWorkToExecute;
+        Boolean isExecuteContext = hasWorkToExecute;
+        Boolean isAbortJobContext = !hasWorkToMark && !hasWorkToExecute;
+        Boolean isNeedsMoreContexts = this.Contexts == 0;
+        
+        //MORE
+        if (isNeedsMoreContexts) {
+            //dedicate this whole last context to fatal exception handling
             return;
         }
         
-        if (!hasWorkToMark && !hasWorkToExecute) {
-            //DONE
-            
-            //errors
-            this.handleFatalExceptions(context);
-            
+        //ABORT
+        if (isAbortJobContext) {
             //exit
             if (Test.isRunningTest()) this.abortJob = true; else System.abortJob(context.getJobId());
-            
-            //last context
-            return;
         }
         
-        if (!hasWorkToExecute) {
-            //MARK
-            this.mark(markableMessages);
-            this.markedMessages = new Map<Id,Message__c>(markableMessages);
+        //MARK
+        if (isMarkContext) {
+            //but if we can't execute, don't mark
+            if (this.Contexts == 1) return;
             
-            //next context
-            return;
+            try {
+                //put these guys ready to handle
+                this.mark(markableMessages);
+                this.executableMessages = new Map<Id,Message__c>(markableMessages);
+                
+            } catch (Exception e) {
+                this.isHaywire = true; //this will roll over thanks to stateful
+                throw new Broker.EngineException('Mark haywire condition: ' + e.getMessage());
+            }
         }
         
-        Set<Id> inputIds = this.markedMessages.keySet();
-        List<Message__c> inputMessages = this.markedMessages.values();
-        List<Message__c> outputMessages;
-        
-        //potentially fatal errors
-        this.fatalMessageIds.addAll(inputIds);
-        
-        //these guys have been handled (either way, thanks to stateful)
-        this.markedMessages = new Map<Id,Message__c>();
-        
-        try {
-        
-            //EXECUTE
-            outputMessages = this.execute(inputMessages);
+        //EXECUTE
+        if (isExecuteContext) {
             
-            //PERSIST
-            this.persist(inputMessages, outputMessages);
+            Set<Id> inputIds = this.executableMessages.keySet();
+            List<Message__c> inputMessages = this.executableMessages.values();
             
-        } catch (EngineException e) {
+            //clear these guys as handled (successfully or otherwise, thanks to stateful)
+            this.executableMessages = new Map<Id,Message__c>();
             
-            //revert, except callouts which should really be idempotent anyway
-            if (e.savepoint != null) Database.rollback(e.savepoint);
+            //potentially fatal errors
+            this.fatalMessageIds.addAll(inputIds);
             
-            //these had errors
-            update e.fuckups;
+            try {
+                //EXECUTE
+                List<Message__c> outputMessages = this.execute(inputMessages);
+                
+                //PERSIST
+                this.persist(inputMessages, outputMessages);
+                
+            } catch (EngineException e) {
+                //revert, except callouts which should really be idempotent anyway
+                if (e.savepoint != null) Database.rollback(e.savepoint);
+                
+                //these had errors
+                update e.fuckups;
+            }
             
-            //but not fatal errors
+            //ultimately not fatal errors
             this.fatalMessageIds.removeAll(inputIds);
-            
-            //stop, no outputs to resolve
-            return;
-            
         }
-        
-        //not fatal errors
-        this.fatalMessageIds.removeAll(inputIds);
     }
     
     public void finish(Database.BatchableContext context) {
         this.restartIfWorkPending();
+    }
+    
+    public void handleHaywireCondition(Database.BatchableContext context) {
+        System.abortJob(context.getJobId());
+        //throw new Broker.EngineException('Haywire condition!');
     }
     
     /**
@@ -134,8 +166,6 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
             FROM AsyncApexJob
             WHERE Id = :context.getJobId()
         ];
-        
-        //if (asyncApexJob.ExtendedStatus == null) return; //only gonna destroy exception
         
         List<Message__c> fatalMessages = new List<Message__c>();
         for (Id fatalMessageId : this.fatalMessageIds) fatalMessages.add(new Message__c(
