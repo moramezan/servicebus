@@ -59,7 +59,11 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         this.Contexts--;
         
         //handle errors progressively
-        this.handleFatalExceptions(context);
+        if (!this.fatalMessageIds.isEmpty()) {
+            //dedicate this whole context to fatal exception handling
+            this.handleFatalExceptions(context);
+            return;
+        }
         
         //LOCATE
         Database.QueryLocator locator;
@@ -81,7 +85,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         
         //MORE
         if (isNeedsMoreContexts) {
-            //dedicate this whole last context to fatal exception handling
+            //no point to mark OR execute, just restart
             return;
         }
         
@@ -174,6 +178,9 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         ));
         
         update fatalMessages;
+        
+        //empty out
+        this.fatalMessageIds = new Set<Id>();
     }
     
     /**
