@@ -104,6 +104,7 @@ global without sharing class Job implements Queueable, Database.AllowsCallouts {
      * this works without startTest/stopTest: new Job(parameters).execute(null)
      */
     public void execute(QueueableContext context) {
+        if (context != null) new MessageObjectSet(this.messages).populateQueueableId(context);
         List<Message__c> messages = this.persist();
         
         // #653 don't use a @Future call unless necessary

@@ -62,6 +62,22 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
     }
     
     /**
+     * #694 puts QueueableContext Job Id on messages. Because when people
+     * use System.enqueueJob to enqueue a message into the system, they will
+     * never get a Message Id. But at least we have a possibility of using
+     * the Queueable AsyncApexJob Id as a correlation later for Capture etc.
+     */
+    public void populateQueueableId(QueueableContext context) {
+        List<Message__c> messages = this.getSObjects();
+        for(Message__c message : messages) {
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+            Id queueableId = context.getJobId();
+            parameters.put('__QueueableId', queueableId);
+            message.Parameters__c = Json.serializePretty(parameters);
+        }
+    }
+    
+    /**
      * Context:
      * A message can pass through a limited number of steps. This "limit" is a fairly high arbitrary threshold.
      * The intent is to prevent a never ending self referencing loop (we cannot control what the system configurators
