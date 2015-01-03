@@ -42,45 +42,105 @@ public with sharing class MonitorController {
     
     @RemoteAction static public List<Statistic> getStatistics() {
         //we need to be able to populate the scattered statuses by process id
-        Map<Id,Statistic> id2statistic = new Map<Id,Statistic>();
+        Map<String,Statistic> route2statistic = new Map<String,Statistic>();
         
-        //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
-        List<Process__c> processes = [
-            SELECT Id, Name
-            FROM Process__c
+        List<Step__c> steps = [
+            SELECT Id, Name, Process__c, Process__r.Name
+            FROM Step__c
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
         ];
         
         //populate id-keyed map for each process
-        for (Process__c process : processes) {
-            Statistic statistic = new Statistic(process.Name, 0, 0, 0, 0, 0);
-            id2statistic.put(process.Id, statistic);
+        for (Step__c step : steps) {
+            Statistic statistic = new Statistic(step.Process__r.Name, 0, 0, 0, 0, 0);
+            route2statistic.put(step.Name, statistic);
         }
         
         //check for null so we don't blow up for unresolved messages
         //TODO is there any point even displaying queued messages?!?!
         //TODO restore after #662
-        //for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Process__c != null AND Status__c = 'Queued' GROUP BY Process__c]) {
-        //    id2statistic.get((Id)result.get('processId')).Queued = (Integer)result.get('total');
-        //}
-        //
-        //for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Process__c != null AND Status__c = 'Buffered' GROUP BY Process__c]) {
-        //    id2statistic.get((Id)result.get('processId')).Buffered = (Integer)result.get('total');
-        //}
-        //
-        //for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Process__c != null AND Status__c = 'Started' GROUP BY Process__c]) {
-        //    id2statistic.get((Id)result.get('processId')).Started = (Integer)result.get('total');
-        //}
-        //
-        //for (AggregateResult result : [SELECT Process__c processId, COUNT(Status__c) total FROM Message__c WHERE Process__c != null AND Status__c = 'Rebuffered' GROUP BY Process__c]) {
-        //    id2statistic.get((Id)result.get('processId')).Rebuffered = (Integer)result.get('total');
-        //}
-        //
-        //for (AggregateResult result : [SELECT Process__c processId, COUNT(Id) total FROM Message__c WHERE Process__c != null AND IsOverdue__c = true GROUP BY Process__c]) {
-        //    id2statistic.get((Id)result.get('processId')).Overdue = (Integer)result.get('total');
-        //}
+        //first aggregate by route
+        for (AggregateResult result : [
+            SELECT Route__c route, COUNT(Status__c) total
+            FROM Message__c
+            WHERE Route__c != null
+            AND Status__c = 'Queued'
+            GROUP BY Route__c
+        ]) {
+            route2statistic.get((String)result.get('route')).Queued = (Integer)result.get('total');
+        }
         
-        return id2statistic.values();
+        for (AggregateResult result : [
+            SELECT Route__c route, COUNT(Status__c) total
+            FROM Message__c
+            WHERE Route__c != null
+            AND Status__c = 'Buffered'
+            GROUP BY Route__c
+        ]) {
+            route2statistic.get((String)result.get('route')).Buffered = (Integer)result.get('total');
+        }
+        
+        for (AggregateResult result : [
+            SELECT Route__c route, COUNT(Status__c) total
+            FROM Message__c
+            WHERE Route__c != null
+            AND Status__c = 'Started'
+            GROUP BY Route__c
+        ]) {
+            route2statistic.get((String)result.get('route')).Started = (Integer)result.get('total');
+        }
+        
+        for (AggregateResult result : [
+            SELECT Route__c route, COUNT(Status__c) total
+            FROM Message__c
+            WHERE Route__c != null
+            AND Status__c = 'Rebuffered'
+            GROUP BY Route__c
+        ]) {
+            route2statistic.get((String)result.get('route')).Rebuffered = (Integer)result.get('total');
+        }
+        
+        for (AggregateResult result : [
+            SELECT Route__c route, COUNT(Id) total
+            FROM Message__c
+            WHERE Route__c != null
+            AND IsOverdue__c = true
+            GROUP BY Route__c
+        ]) {
+            route2statistic.get((String)result.get('route')).Overdue = (Integer)result.get('total');
+        }
+        
+        //second collate routes into processes via steps
+        Map<String,Statistic> process2statistic = new Map<String,Statistic>();
+        
+        List<Process__c> processes = [
+            SELECT Id, Name
+            FROM Process__c
+            LIMIT 1000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
+        ];
+        
+        for (Process__c process : processes) {
+            Statistic statistic = new Statistic(process.Name, 0, 0, 0, 0, 0);
+            process2statistic.put(process.Name, statistic);
+        }
+        
+        Map<String,String> route2process = new Map<String,String>();
+        for (Step__c step : steps) route2process.put(step.Name, step.Process__r.Name);
+        
+        //combine first and second parts
+        for (String route : route2statistic.keySet()) {
+            Statistic routeStat = route2statistic.get(route);
+            String process = route2process.get(route);
+            
+            Statistic procStat = process2statistic.get(process);
+            procStat.Queued     += routeStat.Queued;
+            procStat.Buffered   += routeStat.Buffered;
+            procStat.Started    += routeStat.Started;
+            procStat.Rebuffered += routeStat.Rebuffered;
+            procStat.Overdue    += routeStat.Overdue;
+        }
+        
+        return process2statistic.values();
     }
     
 }

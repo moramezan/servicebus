@@ -5,9 +5,15 @@
         Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
+        insert sequence;
+        
+        Step__c wiretapStep = StepObject.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        
         MessageObjectSet.Inhibit = false;
-        insert new Message__c(Status__c = 'Queued');
-        insert new Message__c(Status__c = 'Buffered');
+        insert new Message__c(Parameters__c = '{"esb__SequenceName":"Test"}', Status__c = 'Queued');
+        insert new Message__c(Parameters__c = '{"esb__SequenceName":"Test"}', Status__c = 'Buffered');
         MessageObjectSet.Inhibit = true;
         
         //act
