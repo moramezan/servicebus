@@ -101,16 +101,6 @@
         <zip destfile="src/staticresources/HelpZip.resource" basedir="dev/resource/HelpZip" />
     </target>
 
-    <target name="sencha-builder" description="Zips up 'Sequence Builder' application using Sencha Architect output">
-        <delete file="src/staticresources/SequenceBuilderZip.resource" />
-        <zip destfile="src/staticresources/SequenceBuilderZip.resource" basedir="dev/resource/SequenceBuilderZip/build/production/Builder" includes="**"/>
-    </target>
-
-    <target name="sencha-discover" description="Zips up 'Process Discover' application using Sencha Architect output">
-        <delete file="src/staticresources/ProcessDiscoverZip.resource" />
-        <zip destfile="src/staticresources/ProcessDiscoverZip.resource" basedir="dev/resource/ProcessDiscoverZip/build/production/Discover" includes="**"/>
-    </target>
-    
     <!--
      ! MANUAL PURGE STEPS
      ! Social Accounts and Contacts Settings > Disable

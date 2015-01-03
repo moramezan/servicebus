@@ -40,8 +40,8 @@
     -->
     <target name="-after-build">
         <!-- don't let ext framework trample body styles -->
-        <replace dir="${basedir}/build/production/Discover/resources" includes="*.css" token="z-body" value="zzz-body" />
-        <replace file="${basedir}/build/production/Discover/app.js" token="this.Ezt" value="window.Ezt" />
+        <replace dir="build/production/Discover/resources" includes="*.css" token="z-body" value="zzz-body" />
+        <replace file="build/production/Discover/app.js" token="this.Ezt" value="window.Ezt" />
         
         <!-- isolate Ext.Boot microloader / bootstrap from index.html so salesforce can use it -->
         <!-- http://www.sencha.com/forum/showthread.php?290269-CMD-5.0.1.231-production-build-error-Cannot-read-property-baseUrl-of-undefined&p=1062641&viewfull=1#post1062641 -->
@@ -50,6 +50,9 @@
         <!-- but the problem with the Ext.Boot microloader / bootstrap is that it needs some file called ext-*.js to determine path -->
         <!-- <echo file="${basedir}/build/production/Discover/ext-baseurl.js" /> -->
         <!-- all too fucking hard in my humble opinion -->
+        
+        <delete file="../../../src/staticresources/ProcessDiscoverZip.resource" />
+        <zip destfile="../../../src/staticresources/ProcessDiscoverZip.resource" basedir="build/production/Discover" includes="**"/>
     </target>
 
 </project>
