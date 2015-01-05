@@ -359,6 +359,14 @@ abstract public with sharing class Broker {
      * submitted the query locator. That way, if any given execution fails, those messages will remain in the
      * easily identifiable 'Started' state.
      *
+     * CONTEXT 1:
+     * - Locate (lock for update)
+     * - Mark   (performs update and puts into stateful, safe from clutches of other jobs)
+     *
+     * CONTEXT 2:
+     * - Locate  (locks totally unrelated next guys)
+     * - Execute (reads guys off stateful property, does work and performs update)
+     *
      * @return QueryLocator identifying the to-be-marked-as-Started Messages.
      */
     public Database.QueryLocator locateMarkableWork() {
@@ -400,8 +408,9 @@ abstract public with sharing class Broker {
             FROM Message__c
             WHERE Status__c = :status
             AND Route__c = :route //chunk by step as opposed to by process
-            ORDER BY CreatedDate__c ASC
+            //ORDER BY CreatedDate__c ASC //not possible when locking
             LIMIT :queryLimit
+            FOR UPDATE //#695 investigate broker race condition
         ]).keySet();
         
         //query locator hands back only the messages that are markable as Started
