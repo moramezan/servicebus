@@ -2,7 +2,54 @@
  * Queueable job = new Job('Wiretaps', userId);
  * System.enqueueJob(job);
  */
-global without sharing class Job implements Queueable, Database.AllowsCallouts {
+global without sharing class Job implements Process.Plugin, Queueable {
+    
+    /**
+     * Unfortunately we need this constructor for Process.Plugin:
+     * "System.TypeException: Job does not have a no-arg constructor"
+     * At least if someone tries to enqueueJob() it won't insert messages.
+     */
+    global Job() {}
+    
+    /**
+     * Per #702 we may as well describe this as a "real" Flow plugin
+     * although we're intending to just piggy back the system interface.
+     *
+     * If someone put this into a real flow, they MUST provide esb__SequenceName
+     * and we can at least hand back the esb__QueueableId as some kind of output.
+     */
+    global Process.PluginDescribeResult describe() {
+        Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
+        plugin.Name = 'ESB Job';
+        plugin.Tag = 'Enterprise Service Bus';
+        plugin.Description = 'Enqueue a Job into the Enterprise Service Bus';
+        
+        plugin.inputParameters = new List<Process.PluginDescribeResult.InputParameter>{
+            new Process.PluginDescribeResult.InputParameter('esb__SequenceName', Process.PluginDescribeResult.ParameterType.STRING, true)
+        };
+        
+        plugin.outputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
+            new Process.PluginDescribeResult.OutputParameter('esb__QueueableId', Process.PluginDescribeResult.ParameterType.STRING)
+        };
+        
+        return plugin;
+    }
+    
+    /**
+     * Per #702 this enables developers to Enqueue into ESB without a compile-time
+     * dependency, by leveraging the Process.Plugin system interface.
+     *
+     * Secondarily it also DOUBLES as a REAL Process.Plugin that people can use
+     * in Visual Flow to get stuff into ESB. (Though they would create a dependency.)
+     */
+    global Process.PluginResult invoke(Process.PluginRequest request) {
+        Map<String,Object> parameters = request.inputParameters;
+        Queueable job = new Job(parameters);
+        Id queueableId = System.enqueueJob(job);
+        
+        parameters.put('esb__QueueableId', queueableId);
+        return new Process.PluginResult(parameters);
+    }
     
     public class JobException extends Exception {}
     
