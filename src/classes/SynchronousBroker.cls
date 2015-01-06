@@ -9,14 +9,12 @@ public with sharing class SynchronousBroker extends Broker {
     
     public void start() {
         //LOCATE
-        Database.QueryLocator locator = this.locateMarkableWork();
-        Database.QueryLocatorIterator iterator = locator.iterator();
+        List<Message__c> messages = this.locateMarkableWork();
         
         //MARK
-        this.mark(new ApexPages.StandardSetController(locator).getRecords());
+        this.mark(messages);
         
-        while (iterator.hasNext()) {
-            Message__c message = (Message__c)iterator.next();
+        for (Message__c message : messages) {
             List<Message__c> inputMessages = new List<Message__c>{message};
             
             List<Message__c> outputMessages;

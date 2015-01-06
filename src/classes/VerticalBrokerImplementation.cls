@@ -66,15 +66,14 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         }
         
         //LOCATE
-        Database.QueryLocator locator;
+        List<Message__c> markableMessages;
         try {
-            locator = this.locateMarkableWork();
+            markableMessages = this.locateMarkableWork();
         } catch (Exception e) {
             this.isHaywire = true; //this will roll over thanks to stateful
             throw new Broker.EngineException('Locate haywire condition: ' + e.getMessage());
         }
         
-        List<Message__c> markableMessages = new ApexPages.StandardSetController(locator).getRecords();
         Boolean hasWorkToMark = !markableMessages.isEmpty();
         Boolean hasWorkToExecute = !this.executableMessages.isEmpty();
         

@@ -44,7 +44,6 @@ public without sharing class PostInstallHandler implements InstallHandler {
             ProcessObject.fromType(Type.forName(AuditInitializer.class.getName())),
             ProcessObject.fromType(Type.forName(AuditWriter.class.getName())),
             ProcessObject.fromType(Type.forName(Branch.class.getName())),
-            ProcessObject.fromType(Type.forName(Confirm.class.getName())),
             ProcessObject.fromType(Type.forName(Gate.class.getName())),
             ProcessObject.fromType(Type.forName(Jump.class.getName())),
             ProcessObject.fromType(Type.forName(Mark.class.getName())),

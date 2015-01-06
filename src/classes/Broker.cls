@@ -367,9 +367,9 @@ abstract public with sharing class Broker {
      * - Locate  (locks totally unrelated next guys)
      * - Execute (reads guys off stateful property, does work and performs update)
      *
-     * @return QueryLocator identifying the to-be-marked-as-Started Messages.
+     * @return collection of soon-to-be-marked-as-Started Messages.
      */
-    public Database.QueryLocator locateMarkableWork() {
+    public List<Message__c> locateMarkableWork() {
         //find oldest rebuffered message or oldest buffered message
         Message__c specimenMessage;
         try {
@@ -382,7 +382,7 @@ abstract public with sharing class Broker {
             ];
         } catch (QueryException e) {
             //no specimen message means no work found, return empty query locator
-            return Database.getQueryLocator([SELECT Id FROM Message__c WHERE Id IN (null)]);
+            return [SELECT Id FROM Message__c WHERE Id IN (null)];
         }
         
         //number of times specimen process can run within governor limits
@@ -403,20 +403,17 @@ abstract public with sharing class Broker {
             //no step found, resolution problem or might be a heartbeat
         }
         
-        Set<Id> messageIds = new Map<Id,Message__c>([
-            SELECT Id
+        List<Message__c> messages = [
+            SELECT Id, Route__c, Parameters__c
             FROM Message__c
             WHERE Status__c = :status
             AND Route__c = :route //chunk by step as opposed to by process
             //ORDER BY CreatedDate__c ASC //not possible when locking
             LIMIT :queryLimit
             FOR UPDATE //#695 investigate broker race condition
-        ]).keySet();
+        ];
         
-        //query locator hands back only the messages that are markable as Started
-        String commaDelimitedIds = '(\'' + String.join(new List<Id>(messageIds), '\',\'') + '\')';
-        String queryString = 'SELECT Id, Route__c, Parameters__c FROM Message__c WHERE Id IN ' + commaDelimitedIds;
-        return Database.getQueryLocator(queryString);
+        return messages;
     }
     
     /**

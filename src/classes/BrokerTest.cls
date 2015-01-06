@@ -66,8 +66,7 @@
         List<Message__c> messages = new Job(parameterses).persist();
         
         //act
-        Database.QueryLocator locator = Broker.impl().locateMarkableWork();
-        List<Message__c> records = new ApexPages.StandardSetController(locator).getRecords();
+        List<Message__c> records = Broker.impl().locateMarkableWork();
         
         //assert
         Integer expectedLimits = 5;
@@ -301,14 +300,9 @@
         
         //act
         MockBroker broker = new MockBroker();
-        Database.QueryLocator locator = broker.locateMarkableWork();
-        Database.QueryLocatorIterator iterator = locator.iterator();
         
         //MARK
-        broker.mark(new ApexPages.StandardSetController(locator).getRecords());
-        
-        List<Message__c> messages = new List<Message__c>();
-        while (iterator.hasNext()) messages.add((Message__c)iterator.next());
+        List<Message__c> messages = broker.locateMarkableWork();
         
         //assert
         Integer actualCount = messages.size();
@@ -326,9 +320,7 @@
         MessageObjectSet.Inhibit = true;
     
         //act
-        Database.QueryLocatorIterator iterator = new MockBroker().locateMarkableWork().iterator();
-        List<Message__c> messages = new List<Message__c>();
-        while (iterator.hasNext()) messages.add((Message__c)iterator.next());
+        List<Message__c> messages = Broker.impl().locateMarkableWork();
         
         //assert
         Integer expectedCount = 0;
@@ -362,14 +354,9 @@
         
         //act
         MockBroker broker = new MockBroker();
-        Database.QueryLocator locator = broker.locateMarkableWork();
-        Database.QueryLocatorIterator iterator = locator.iterator();
         
         //MARK
-        broker.mark(new ApexPages.StandardSetController(locator).getRecords());
-        
-        List<Message__c> messages = new List<Message__c>();
-        while (iterator.hasNext()) messages.add((Message__c)iterator.next());
+        List<Message__c> messages = broker.locateMarkableWork();
         
         // assert
         Integer expectedCount = 2;
