@@ -16,20 +16,6 @@
                     <apex:pageMessage strength="3" severity="ERROR" title="The remote site setting needs to be created." />
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
-            
-            <apex:pageBlockSection collapsible="false" columns="1" title="Checking Scheduled Job...">
-                <apex:pageBlockSectionItem rendered="{!HasHeartbeat}">
-                    <p>
-                        <img style="vertical-align:middle;" src="{!URLFOR('/img/msg_icons/confirm16.png')}" />
-                        OK! The scheduled job is running correctly.
-                    </p>
-                </apex:pageBlockSectionItem>
-                <apex:pageBlockSectionItem rendered="{!NOT(HasHeartbeat)}">
-                    <apex:pageMessage strength="3" severity="ERROR" title="The scheduled job is not running.">
-                        <apex:commandButton action="{!doSetupHeartbeat}" value="Click here to schedule the job to fix this" />
-                    </apex:pageMessage>
-                </apex:pageBlockSectionItem>
-            </apex:pageBlockSection>
         </apex:pageBlock>
     
         <br />

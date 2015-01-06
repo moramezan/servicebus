@@ -103,6 +103,10 @@ public without sharing class PostInstallHandler implements InstallHandler {
     /**
      * Creates the hourly cron job used by Schedule process steps.
      * Also makes sure the cron job will use the Batch Broker.
+     *
+     * Per #708 if someone trashes the scheduled job, we don't try
+     * to pick that up in a Configure Page (or anything else). Instead
+     * they should re-install the package over the top of the org.
      */
     static public Id installSchedule() {
         String name = 'Enterprise Service Bus Heartbeat';
