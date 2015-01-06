@@ -1,4 +1,4 @@
-<apex:page controller="ConfigureController" tabStyle="Sequence__c" action="{!detectRemoteSiteSetting}" cache="false">
+<apex:page controller="ConfigureController" tabStyle="Sequence__c" action="{!initOAuth}" cache="false">
 
     <apex:sectionHeader title="Thanks for installing Enterprise Service Bus" />
 

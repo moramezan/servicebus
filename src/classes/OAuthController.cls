@@ -4,6 +4,7 @@ public with sharing class OAuthController {
     final static private String CLIENT = ISDEV ? '3MVG9fMtCkV6eLhfxsgy.rM62Ve5FyYsgesF4WLk.paM5gTwyAEtQLEnPyYB4l7_f1ywAtb4.6lBeo1ZvuEpE' : '3MVG9fMtCkV6eLhfxsgy.rM62VU0VV56FOOkj0Tsgj1CavTLb3N.g2kuagIqfQiJ5hZJgJT0JrZKvsBKk_s1J';
     final static private String SECRET = ISDEV ? '4608752124209996979' : '2834415504471774418';
     final static private String REDIRECT = ISDEV ? 'https://login.salesforce.com/apex/OAuth' : 'https://login.salesforce.com/apex/esb__OAuth';
+    final static private String APPNAME = ISDEV ? 'Dev Enterprise Service Bus' : 'Enterprise Service Bus';
     
     public class Token {
         public String id;
@@ -18,6 +19,41 @@ public with sharing class OAuthController {
     }
     
     /**
+     * We can interrogate the OauthToken object per #700 to
+     * determine if the user has allowed the connected app,
+     * which will catch the case if it has been revoked.
+     */
+    static private Boolean IsAllowed {
+        get {
+            if (IsAllowed == null) {
+                List<OauthToken> oauthtokens = [
+                    SELECT UserId
+                    FROM OauthToken
+                    WHERE AppName = :APPNAME
+                ];
+                IsAllowed = !oauthtokens.isEmpty();
+            }
+            return Isallowed;
+        }
+    }
+    
+    /**
+     * This is a universal entry point to the OAuth dance that
+     * can be used from places like page action handler code.
+     *
+     * @param retURL where should the user should be returned to
+     * @return       oauth start point (or null if already allowed)
+     */
+    static public PageReference doDanceIfNeeded(PageReference retURL) {
+        if (IsAllowed) return null; //all ok
+        
+        //better do the dance
+        PageReference dance = Page.OAuth;
+        dance.getParameters().put('retURL', retURL.getUrl());
+        return dance;
+    }
+    
+    /**
      * STEP ONE:
      * A human begins the OAuth dance from a link, eg:
      * https://login.salesforce.com/services/oauth2/authorize
@@ -25,7 +61,7 @@ public with sharing class OAuthController {
      * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2Fesb__OAuth
      * &response_type=code
      */
-    public PageReference buildAuthLink() {
+    private PageReference buildAuthLink() {
         PageReference pr = new PageReference('https://login.salesforce.com/services/oauth2/authorize');
         pr.getParameters().put('response_type', 'code');
         pr.getParameters().put('client_id', CLIENT);
@@ -60,7 +96,7 @@ public with sharing class OAuthController {
      * "access_token":"00Dj0000000I44v!AQYAQLocFFeWV3WywoaS6wjcdnEvm4_FdPrd9MrlB_y1Q.5Xll9mTloey5GIXrIP1fdB2lKlsfmZ7Sqh6UAhFzuD6SzHqtXO"
      * }
      */
-    public PageReference buildCodeLink(String code) {
+    private PageReference buildCodeLink(String code) {
         PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'authorization_code');
         pr.getParameters().put('client_id', CLIENT);
@@ -91,7 +127,7 @@ public with sharing class OAuthController {
      * "access_token":"00Dj0000000I44v!AQYAQKgWV8FRAfgKVWJE5BETIjEE0hvNWKojZI57zaxpPcLe1tqWrCXgkjhSvRwXHTiIOTF12Hd7TvKZd7WBg8kUbVIbcHeL"
      * }
      */
-    public PageReference buildRefreshLink() {
+    private PageReference buildRefreshLink() {
         PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'refresh_token');
         pr.getParameters().put('client_id', CLIENT);

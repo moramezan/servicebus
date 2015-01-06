@@ -40,17 +40,13 @@ public with sharing class ConfigureController {
         return RemoteSiteSettingController.protocolAndHost;
     }
     
-    public PageReference doRedirect() {
-        Map<String,String> params = ApexPages.currentPage().getParameters();
-        
-        if (params.containsKey('retURL') && getIsOk()) {
-            //back where you came from
-            String url = params.get('retURL');
-            return new PageReference(url);
-        }
-        
-        //on with setup
-        return null;
+    /**
+     * If we don't have an OAuthSetting__c with an AccessToken__c this
+     * quickly sends us through the dance to get that set up correctly.
+     */
+    public PageReference initOAuth() {
+        PageReference retURL = ApexPages.currentPage();
+        return OAuthController.doDanceIfNeeded(retURL);
     }
     
     /**

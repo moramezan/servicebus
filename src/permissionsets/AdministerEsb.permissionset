@@ -836,7 +836,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>OAuth</apexPage>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessApexClass</apexPage>
