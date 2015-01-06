@@ -105,7 +105,7 @@ public without sharing class PostInstallHandler implements InstallHandler {
      * Also makes sure the cron job will use the Batch Broker.
      */
     static public Id installSchedule() {
-        String name = 'Heartbeat (do not delete)';
+        String name = 'Enterprise Service Bus Heartbeat';
         List<CronJobDetail> cronJobDetails = [SELECT Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
         
         //job already scheduled, nothing to do

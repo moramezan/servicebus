@@ -1,7 +1,7 @@
 @IsTest private class PostInstallHandlerTest {
     static testmethod void callingInstallScheduleCorrectlyInstallsSchedule() {
         //arrange
-        String  name = 'Heartbeat (do not delete)';
+        String  name = 'Enterprise Service Bus Heartbeat';
         
         //act
         PostInstallHandler.InstallSchedule();

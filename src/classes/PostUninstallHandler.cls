@@ -10,7 +10,7 @@ public without sharing class PostUninstallHandler implements UnInstallHandler {
 
 
     @TestVisible private static void uninstallSchedule() {
-        String  name = 'Heartbeat (do not delete)';
+        String  name = 'Enterprise Service Bus Heartbeat';
         List<CronJobDetail>  cronJobDetails = [SELECT   Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
         if (cronJobDetails.size() > 0) {
             Id cronJobDetailId = cronJobDetails[0].Id;

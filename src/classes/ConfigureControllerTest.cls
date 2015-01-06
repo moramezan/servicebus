@@ -9,7 +9,7 @@
     static testmethod void testGetHasHeartbeatFalseInTest() {
         //arrange
         ConfigureController controller = new ConfigureController();
-        Integer expectedCount = [SELECT COUNT() FROM CronJobDetail WHERE Name = 'Heartbeat (do not delete)'];
+        Integer expectedCount = [SELECT COUNT() FROM CronJobDetail WHERE Name = 'Enterprise Service Bus Heartbeat'];
         
         //act
         Boolean hasHeartbeat = controller.getHasHeartbeat();

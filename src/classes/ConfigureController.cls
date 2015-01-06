@@ -17,7 +17,7 @@ public with sharing class ConfigureController {
     
     private List<CronJobDetail> CronJobDetails;
     private List<CronJobDetail> getCronJobDetails() {
-        if (this.CronJobDetails == null) this.CronJobDetails = [SELECT Id FROM CronJobDetail WHERE Name = 'Heartbeat (do not delete)'];
+        if (this.CronJobDetails == null) this.CronJobDetails = [SELECT Id FROM CronJobDetail WHERE Name = 'Enterprise Service Bus Heartbeat'];
         return this.CronJobDetails;
     }
     
