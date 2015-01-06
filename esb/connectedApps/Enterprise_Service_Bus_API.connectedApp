@@ -7,7 +7,7 @@
     <label>Enterprise Service Bus</label>
     <logoUrl>https://c.na16.content.force.com/servlet/servlet.ImageServer?id=015j0000000WEKG&amp;oid=00Dj0000000Kcak&amp;lastMod=1420515864000</logoUrl>
     <oauthConfig>
-        <callbackUrl>https://login.salesforce.com/apex/esb__OAuth</callbackUrl>
+        <callbackUrl>https://login.salesforce.com/apex/esb__Configure</callbackUrl>
         <consumerKey>3MVG9fMtCkV6eLhfxsgy.rM62VU0VV56FOOkj0Tsgj1CavTLb3N.g2kuagIqfQiJ5hZJgJT0JrZKvsBKk_s1J</consumerKey>
         <scopes>Api</scopes>
         <scopes>RefreshToken</scopes>

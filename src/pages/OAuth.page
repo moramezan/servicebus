@@ -1,4 +1,0 @@
-<apex:page showHeader="false" sidebar="false" standardStylesheets="false" controller="OAuthController" action="{!handleRedirect}">
-    <apex:pageMessages showDetail="true" />
-    <c:RemoteSiteSetting />
-</apex:page>

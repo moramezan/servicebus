@@ -20,7 +20,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
      * reason: Callout from scheduled Apex not supported.
      */
     @Future(callout=true) static private void deferRefreshAccessToken() {
-        OAuthController.refreshAccessToken();
+        ConfigureController.refreshAccessToken();
     }
     
     public interface IHeartbeatGenerator {

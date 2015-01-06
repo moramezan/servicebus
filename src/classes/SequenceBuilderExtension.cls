@@ -10,9 +10,9 @@ public with sharing class SequenceBuilderExtension {
      * If we don't have an OAuthSetting__c with an AccessToken__c this
      * quickly sends us through the dance to get that set up correctly.
      */
-    public PageReference initOAuth() {
+    public PageReference initConfigure() {
         PageReference retURL = ApexPages.currentPage();
-        return OAuthController.doDanceIfNeeded(retURL);
+        return ConfigureController.doDanceIfNeeded(retURL);
     }
     
     public String getProcesses() {

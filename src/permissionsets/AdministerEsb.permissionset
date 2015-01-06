@@ -173,10 +173,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>OAuthController</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>PostInstallHandler</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -833,10 +829,6 @@
     <pageAccesses>
         <apexPage>MonitorSplash</apexPage>
         <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>OAuth</apexPage>
-        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessApexClass</apexPage>

@@ -6,17 +6,4 @@
         }
     }
     
-    static testmethod void testGetHasRemoteSiteSetting() {
-        //arrange
-        ConfigureController controller = new ConfigureController();
-        Test.setMock(HttpCalloutMock.class, new CalloutResponder());
-        
-        //act
-        controller.detectRemoteSiteSetting();
-        Boolean hasRemoteSite = controller.HasRemoteSiteSetting;
-        
-        //assert
-        System.assert(hasRemoteSite);
-    }
-    
 }

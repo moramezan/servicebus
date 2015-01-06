@@ -49,7 +49,6 @@
         <members>MessageResumeQueueExtensionTest</members>
         <members>MonitorController</members>
         <members>MonitorControllerTest</members>
-        <members>OAuthController</members>
         <members>PostInstallHandler</members>
         <members>PostInstallHandlerTest</members>
         <members>PostUninstallHandler</members>
@@ -129,7 +128,6 @@
         <members>MessageSplash</members>
         <members>Monitor</members>
         <members>MonitorSplash</members>
-        <members>OAuth</members>
         <members>ProcessApexClass</members>
         <members>ProcessCsh</members>
         <members>ProcessDescribe</members>

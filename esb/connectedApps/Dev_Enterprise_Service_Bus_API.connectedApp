@@ -7,7 +7,7 @@
     <label>Dev Enterprise Service Bus</label>
     <logoUrl>https://c.na16.content.force.com/servlet/servlet.ImageServer?id=015j0000000WEKG&amp;oid=00Dj0000000Kcak&amp;lastMod=1420515864000</logoUrl>
     <oauthConfig>
-        <callbackUrl>https://login.salesforce.com/apex/OAuth</callbackUrl>
+        <callbackUrl>https://login.salesforce.com/apex/Configure</callbackUrl>
         <consumerKey>3MVG9fMtCkV6eLhfxsgy.rM62Ve5FyYsgesF4WLk.paM5gTwyAEtQLEnPyYB4l7_f1ywAtb4.6lBeo1ZvuEpE</consumerKey>
         <scopes>Api</scopes>
         <scopes>RefreshToken</scopes>
