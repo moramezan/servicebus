@@ -1,3 +1,0 @@
-<apex:page standardController="ConfirmItem__c" extensions="ConfirmItemDenyExtension" action="{!doDeny}">
-    <apex:pageMessages />
-</apex:page>

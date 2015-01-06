@@ -1,3 +1,0 @@
-<apex:page standardController="ConfirmItem__c" extensions="ConfirmItemConfirmExtension" action="{!doConfirm}">
-    <apex:pageMessages />
-</apex:page>
