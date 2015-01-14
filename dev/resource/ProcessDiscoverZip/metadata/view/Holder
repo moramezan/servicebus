@@ -67,6 +67,7 @@
                         "implHandler": [
                             "//not very DRY, but we can get useful initial values off the bridging component",
                             "config.value = Number(AsyncApexJob.JobItemsProcessed / AsyncApexJob.TotalJobItems); //cast to Number() prevents divide by zero",
+                            "config.value = isNaN(config.value) ? 0 : config.value;",
                             "return config;"
                         ]
                     },
