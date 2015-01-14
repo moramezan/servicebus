@@ -67,7 +67,7 @@
                 "itemId": "inject",
                 "layout|flex": null,
                 "margin": "0 10px 0 0",
-                "text": "Inject Test Message"
+                "text": "Enqueue Test Message"
             },
             "name": "MyButton1",
             "designerId": "e4e82dd0-f7a3-4cca-bd1e-08b7a7fec65a",
