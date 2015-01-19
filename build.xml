@@ -33,13 +33,19 @@
     </target>
 
     <target name="package" description="Deploys all components to packaging org">
+        <!-- prompt user to confirm this is the right time to tag -->
+        <echo message="#############################################" />
+        <input message="ARE YOU SURE TO DEPLOY TO THE PACKAGING ORG?" addproperty="tag.confirm" validargs="ok" />
+        
         <antcall target="optimize-for-release" />
+        <executeAnonymous username="${esb.username}" password="${esb.password}">for (SObject j : [SELECT Id FROM CronTrigger]) System.abortJob(j.Id);</executeAnonymous>
         <sf:deploy
             username="${esb.username}"
             password="${esb.password}"
             serverurl="https://login.salesforce.com"
             deployRoot="src"
         />
+        <executeAnonymous username="${esb.username}" password="${esb.password}">new PostInstallHandler().onInstall(null);</executeAnonymous>
     </target>
     
     <target name="optimize-for-devorg" description="Removes namespace and management artifacts prior to unmanaged deploy.">
