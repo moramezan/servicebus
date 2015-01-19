@@ -1119,13 +1119,12 @@
         Boolean actualFlag = false;
         try {
             Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters, null).invokeMain();
+            System.assert(false, 'Above should throw exception.');
         } catch (Broker.EngineException e) {
-            actualFlag = e.getMessage().contains('overridden the toString() method');
-        } 
-        
-        //assert
-        Boolean expectedFlag = true;
-        System.assertEquals(expectedFlag, actualFlag, 'expect exception thrown for [toString() not overridden]');
+            String expectedMessage = 'Your plugin has not overridden the toString() method. Please refer to the Process Developers Guide for specific guidance.';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
     }
 
 }

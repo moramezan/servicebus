@@ -332,7 +332,7 @@ abstract public with sharing class Broker {
             //do invocation
             String data = String.valueOf(this.plugin);
             if (data == null) throw new EngineException('Your main code block should return a serialized List<Map<String,Object>>.');
-            if(data.startsWith(this.reflector.getName()) && data.endsWith('[]')) 
+            if(data.endsWith(this.reflector.getName().replaceAll('[^.]+\\.', '') + ':[]')) 
                 throw new EngineException('Your plugin has not overridden the toString() method.' + 
                                           ' Please refer to the Process Developers Guide for specific guidance.');
             
