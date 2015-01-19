@@ -1,0 +1,96 @@
+<h1>
+    Step Config and Process Settings
+</h1>
+
+<h3>Configuring process behaviour</h3>
+
+<p>
+    Instead of replicating a large portions of custom logic in a second or third plugin process, a
+    process developer may instead choose to expose variation in execution logic through the use of
+    plugin attributes.
+</p>
+
+<p>
+    Plugin attributes can apply to:
+</p>
+
+<ul>
+    <li>the process class as a whole via a global process custom setting, or</li>
+    <li>process logic at a specific step by making use of a step config object.</li>
+</ul>
+
+<h2>
+    Process Settings (settings specific to each process)
+</h2>
+
+<p>
+    The snippet below illustrates how to make use of class wide custom settings for your plugin.
+</p>
+
+<pre>
+global class Meta {
+    //..
+    global SObject CustomSetting = YourCustomSettings__c.SObjectType.newSObject();
+    //..
+}
+
+
+global void invoke() {
+    //..
+    //main code block
+    YourCustomSettings__c settings = YourCustomSettings__c.getInstance();
+    String yourField = settings.YourCustomField__c;
+    //..
+}
+</pre>
+
+<h3>
+    Notes
+</h3>
+
+<p>
+    <strong>003</strong> if you wish to surface a link to the Custom Setting of your process on the Processes list view, simply assign an instance of your custom setting SObject to the CustomSetting parameter of the plugin's <code>ESB</code> inner class.
+    <br /><strong>011 - 012</strong> to reference generic plugin configuration settings inside the plugin execution, simply call <code>getInstance()</code> on your custom setting object and access the relevent fields.
+</p>
+
+<h2>
+    Step Config (config specific to each step)
+</h2>
+
+<p>
+    The snippet below illustrates how to make use of a step specific configuration for your plugin.
+</p>
+
+<pre>
+//..
+global YourConfiguration__c StepConfig;
+//..
+
+global class Meta {
+    //..
+    global SObject ConfigObject = YourConfiguration__c.SObjectType.newSObject();
+    //..
+}
+
+
+global void invoke() {
+    //..
+    //main code block
+    YourConfiguration__c configuration = this.StepConfig;
+    //..
+}
+</pre>
+
+<h3>
+    Notes
+</h3>
+
+<p>
+    <strong>005 - 009</strong> if you wish to surface a link to step specific settings of your plugin, simply assign an instance of your step config SObject to the StepConfig parameter of the plugin's <code>ESB</code> inner class.
+    <br /><strong>012 - 017, 002</strong> To access step specific configuration from code inside the plugin execution, simply declare a class instance global <code>YourConfiguration__c</code> with the name <code>StepConfig</code>.
+</p>
+
+<fieldset>
+    <legend>Note</legend>
+    The ESB framework will correctly hydrate the instance for you.
+</fieldset>

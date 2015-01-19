@@ -1,1 +1,1 @@
-<apex:page tabStyle="DisperseDestination__c" />
+<apex:page action="{!URLFOR($Page.Csh, null, ['topic'='ProcessDisperse'])}" />

@@ -64,7 +64,7 @@ public with sharing class SequenceBuilderExtension {
     /**
      * Health check stuff
      */
-    public void findTerminateProblems() {
+    public PageReference findTerminateProblems() {
         List<Sequence__c> sequences = [
             SELECT Id, Name,
             (SELECT Id, Name, Process__c FROM Steps__r ORDER BY Position__c ASC) steps
@@ -118,9 +118,17 @@ public with sharing class SequenceBuilderExtension {
                 continue;
             }
         }
+        
+        if (ApexPages.hasMessages()) {
+            //show problems
+            return null;
+        } else {
+            //redirect to help
+            return new PageReference('/apex/Csh?topic=ProcessTerminate');
+        }
     }
     
-    public void findPublishProblems() {
+    public PageReference findPublishProblems() {
         List<Sequence__c> sequences = [
             SELECT Id, Name,
             (SELECT id, Name, Process__c, ConfigId__c FROM Steps__r ORDER BY Position__c ASC)
@@ -180,9 +188,17 @@ public with sharing class SequenceBuilderExtension {
                 }
             }
         }
+        
+        if (ApexPages.hasMessages()) {
+            //show problems
+            return null;
+        } else {
+            //redirect to help
+            return new PageReference('/apex/Csh?topic=ProcessPublishSubscribe');
+        }
     }
     
-    public void findSubscribeProblems() {
+    public PageReference findSubscribeProblems() {
         
         List<Sequence__c> sequences = [
             SELECT Id, Name,
@@ -261,6 +277,14 @@ public with sharing class SequenceBuilderExtension {
                 ));
                 continue;
             }
+        }
+        
+        if (ApexPages.hasMessages()) {
+            //show problems
+            return null;
+        } else {
+            //redirect to help
+            return new PageReference('/apex/Csh?topic=ProcessPublishSubscribe');
         }
     }
 }

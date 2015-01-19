@@ -3,13 +3,16 @@ public with sharing class Jump {
     public String Parameters;
     public JumpConfig__c StepConfig;
 
+    /**
+     * @docs ProcessBranchJumpSubsequence.html
+     */
     public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Jump';
         public String Description = 'Permanently diverts the message to another sequence, never to return.';
         public SObject StepConfig = JumpConfig__c.SObjectType.newSObject();
         public String Icon = 'arrow_switch';
-        public String HelpUrl = Page.JumpConfigCsh.getUrl();
+        public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessBranchJumpSubsequence').getUrl();
         public Integer Limits = 100; //leave half of 200 (Total number of SOQL queries issued)
     }
     

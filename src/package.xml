@@ -112,6 +112,7 @@
         <members>BranchConfigCsh</members>
         <members>BranchConfigStep</members>
         <members>Configure</members>
+        <members>Csh</members>
         <members>DisperseConfigCsh</members>
         <members>DisperseDestinationCsh</members>
         <members>DisperseDestinationNew</members>
@@ -314,7 +315,7 @@
         <name>PermissionSet</name>
     </types>
     <types>
-        <members>HelpZip</members>
+        <members>CshZip</members>
         <members>ProcessDiscoverZip</members>
         <members>SequenceBuilderZip</members>
         <name>StaticResource</name>

@@ -3,13 +3,16 @@ public with sharing class AuditInitializer {
     public String Parameters;
     public AuditInitializerConfig__c StepConfig;
     
+    /**
+     * @docs ProcessAudit.html
+     */
     public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Audit Initializer';
         public String Description = 'Creates a grouping identifier which all subsequent Audit Writer processes audit against.';
         public SObject StepConfig = AuditInitializerConfig__c.SObjectType.newSobject();
         public String Icon = 'pencil';
-        public String HelpUrl = Page.AuditInitializerConfigCsh.getUrl();
+        public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessAudit').getUrl();
         public Integer Limits = 75; //leave half of 150 (Total number of DML statements issued)
         
         public Map<String,String> Outputs = new Map<String,String>{

@@ -2,6 +2,9 @@ public with sharing class Terminate {
     
     public String Parameters;
     
+    /**
+     * @docs ProcessTerminate.html
+     */
     public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Terminate';

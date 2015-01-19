@@ -1,0 +1,100 @@
+<h1>
+    Framework Boundaries
+</h1>
+
+<h3>
+    External Boundary - Inbound
+</h3>
+
+<p>
+    External events (for example <em>"Time is 12:01"</em> or <em>"Stock price changed"</em>) are
+    not directly consumable by the ESB framework. Instead, ESB configurators make use of the
+    <code>esb.Job</code> object to transform an external events into event messages that are
+    consumable by the ESB framework.
+</p>
+
+<p>
+    The <code>esb.Job</code> object supports several signatures, namely:
+</p>
+
+<ul>
+    <li>
+        <code>esb.Job(String sequenceName, Id entityId)</code>
+    </li>
+    <!--
+     ! TODO
+     ! <li>
+     !     <code>esb.Job(String sequenceName, Blob data)</code>
+     ! </li>
+     !-->
+</ul>
+
+<p>
+    Usage:
+</p>
+
+<dl>
+    <dt><code>sequenceName</code></dt>
+    <dd>defines which sequence will respond to the injected message event.</dd>
+    
+    <dt><code>entityId</code></dt>
+    <dd>defines the SObject that will be subject to the processing steps</dd>
+</dl>
+
+<p>
+    Use the <code>esb.Job(String sequenceName, Id entityId)</code> constructor whenever the data
+    related to the external event is retrievable as a Salesforce object using the object's
+    <code>Id</code>.
+</p>
+
+<!--<p>
+ !    Use the <code>Enqueue(String SequenceName, Blob data )</code> method
+ !    <br/>whenever the data related to the external event is a stream of data not yet
+ !    persisted in Salesforce by passing in that stream in the form of a
+ !    <code>Blob</code>.  
+ ! </p>
+ !-->
+
+<h2>
+    External Boundary - Outbound
+</h2>
+
+<p>
+    Any process is free to communicate outside the framework boundary via:
+</p>
+
+<ul>
+    <li>HTTP callouts</li>
+    <li>the invocation of a workflow rules</li>
+    <li>DML operations, and/or</li>
+    <li>the sending of one or more email messages</li>
+</ul>
+
+<h3>
+    Internal Boundary
+</h3>
+
+<p>
+    All Sequences have a <em>Terminate</em> process as their final processing step. Conceptually,
+    this is very similar to a 'buffer stop' at the end of a railway line.
+</p>
+
+<p>
+    A <em>Terminate</em> processing step is automatically inserted when the sequence is created.
+</p>
+
+<p>
+    Sequences may interact with one another via one of four standard pre-packaged processes, namely:
+</p>
+
+<ul>
+    <li><em>Jump</em></li>
+    <li><em>Branch</em></li>
+    <li><em>Soubroutine</em></li>
+    <li><em>Publish</em></li>
+    <li><em>Subscribe</em></li>
+</ul>
+
+<p>
+    (see <a href="?topic=Processes">Core processes Guide</a> for further details.)
+</p>

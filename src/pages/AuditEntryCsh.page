@@ -1,18 +1,1 @@
-<apex:page tabStyle="AuditEntry__c" showHeader="false" standardStylesheets="true">
-    
-    <style>
-        body {background: url('{!URLFOR("/img/in-page_clouds.png")}') top left no-repeat;}
-    </style>
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection title="About Audit Entries" columns="2" collapsible="false">
-            <apex:pageBlockSectionItem >
-                <p>
-                    The Audit Entries page lists all audit entries associated with a particular audit group.
-                    Each audit entry represents the persisted state of the message as and when it passed through an AuditWriter process.
-                </p>
-                <p><img   src="{!URLFOR($Resource.HelpZip, '/AuditEntry/LogWriterEntriesPurchase.png')}" /></p>
-            </apex:pageBlockSectionItem>
-        </apex:pageBlockSection>
-        
-    </apex:pageBlock>
-</apex:page>
+<apex:page action="{!URLFOR($Page.Csh, null, ['topic'='ProcessAudit'])}" />

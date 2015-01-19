@@ -97,8 +97,8 @@
     </target>
 
     <target name="zip" description="Compresses misc zipped static resources">
-        <delete file="src/staticresources/HelpZip.resource" />
-        <zip destfile="src/staticresources/HelpZip.resource" basedir="dev/resource/HelpZip" />
+        <delete file="src/staticresources/CshZip.resource" />
+        <zip destfile="src/staticresources/CshZip.resource" basedir="dev/resource/CshZip" />
     </target>
 
     <!--

@@ -2,16 +2,20 @@ public with sharing class Gate {
     
     public String Parameters;
     
+    /**
+     * @docs ProcessMarkGate.html
+     */
     public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Gate';
         public String Description = 'Aggregates a collection of messages previously marked with a correlation key.';
         public String Icon = 'arrow_join';
-        public String HelpUrl = Page.GateGroupCsh.getUrl();
+        public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessMarkGate').getUrl();
         public Integer Limits = 20; //leave half of 200 (Total number of SOQL queries issued)
 
         public Map<String,String> Inputs = new Map<String,String>{
-            'esb__GateGroupId' => 'ID of the GateGroup the marked messages should belong to.'
+            'esb__GateGroupId' => 'ID of the GateGroup the marked messages should belong to.',
+            'esb__GateItemParameters' => 'LIST of message parameters from all gated messages.'
         };
 
         public Map<String,String> Outputs = new Map<String,String>{

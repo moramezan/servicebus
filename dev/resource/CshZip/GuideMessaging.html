@@ -1,0 +1,97 @@
+<h1>
+    Messaging Concepts
+</h1>
+
+<h3>
+    Messages and Events
+</h3>
+
+<p>
+    Events occur all the time. (For example: the clock strikes twelve, the fuel tank reaches empty).
+    To represent details about an event in a computer system, we use a special object called a
+    message. The primary purpose of a message is to provide a useful mechanism to communicate to a
+    processes that a particular event has occurred.
+</p>
+
+<h3>
+    Event Based Architecture
+</h3>
+
+<p>
+    Specific events are only relevant to specific processes. For this reason a <em>Broker</em>
+    routes event messages (representing specific events) to specific processes within the system.
+</p>
+
+<p>
+    Combinations of specific event messages to specific processes can be reduced to a routing table
+    called a <code>Sequence</code>.
+</p>
+
+<p>
+    Breaking up work into specific processes that respond to specific event messages is known as
+    Event Driven Architecture. The Enterprise Service Bus (ESB) is a specific implementation of
+    Event Driven Architecture.
+</p>
+
+<h3>
+    Command Response Architecture
+</h3>
+
+<p>
+    Most implementations on Salesforce make use of an alternative to EDA called Command-Response
+    Architecture. Under this model, work is centrally directed from a command such as a button
+    click or a trigger action.
+</p>
+
+<p>
+    Complexity grows in an geometric manner as possible execution paths and exception handling paths
+    are added to the logic directly attached to the command.
+</p>
+
+<h3>
+    ESB Processes
+</h3>
+
+<p>
+    As previously mentioned, events in an ESB framework are represented as messages. A message
+    received by a process that has previously registered it's interest in that message type will
+    cause the logic of that process to fire.
+</p>
+
+<h3>
+    Processing Sequence
+</h3>
+
+<p>
+    An ESB framework facilitates useful work on the Salesforce platform via processes that have
+    previously registered their interest the occurrence of a specific event types. (In practise this
+    means that a process registers it's interest in events emitted from the process that immediately
+    precedes it.)
+</p>
+
+<p>
+    A register of interest containing sufficient number of processes will naturally resemble a
+    sequence of chained processing steps. This register is called a <em>Sequence</em> and the
+    sequential processing steps within it are called (sequence) <em>Steps</em>.
+</p>
+
+<h3>
+    Summary
+</h3>
+
+<p>
+    The ESB framework is implemented using Event Driven Architecture. The ESB framework logically
+    maps processing steps to an underlying business requirement.
+</p>
+
+<p>
+    Emphasis is placed on narrowly defined, composable units of work. Each unit of work responds to
+    the occurrence of a specific event type.
+</p>
+
+<p>
+    The ESB framework provides a clean model that limits complexity in the system to just the
+    testable apex implementation details of any given process. In contrast, the Command-Response
+    paradigm attempts to attach all possible logical code paths and associated exception handling to
+    a single specific command. This creates code complexity that is not easily tested or modified.
+</p>

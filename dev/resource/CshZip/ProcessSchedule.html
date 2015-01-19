@@ -1,0 +1,48 @@
+<h1>
+    Schedule process
+</h1>
+
+<p>
+    Certain events are time based. Time is a continuous flow but in reality, most systems are
+    interested in the occurrence of discreet time events such as 12:00 pm GMT, Monday.
+</p>
+    
+<p>
+    The <em>Schedule</em> process has a configurable schedule to register interest in the
+    occurrence of discrete future time based events. This register is called a schedule. The
+    <em>Schedule</em> process emits a message whenever a registered scheduled event has occurred.
+</p>
+
+<fieldset>
+    <legend>Note</legend>
+    Any <em>Schedule</em> process must be the first step in a sequence.
+</fieldset>
+
+<h2>
+    Config
+</h2>
+
+<p>
+    To specify a schedule, click the configure link next to a Schedule sequence step. Clicking the
+    configure link will redirect to the Schedule config.
+</p>
+
+<p>
+    A schedule has one or more hourly time intervals defining when the schedule should fire. The
+    schedule can be further filtered by frequency and run dates.
+</p>
+
+<p>
+    In the Run Times field, select one or more hourly time intervals that specify when the schedule
+    should fire. (The framework assumes all times are specified in GMT with no reference to Org or
+    user's time zone settings.)
+</p>
+
+<p>
+    In the Frequency field, select the frequency from Daily, Weekly or Monthly. The value selected
+    defines the available values under the Run dates picklist.
+</p>
+
+<p>
+    <img width="480" src="resources/Processes/Schedule.png" />
+</p>

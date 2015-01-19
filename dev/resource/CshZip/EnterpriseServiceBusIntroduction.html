@@ -1,0 +1,95 @@
+<h1>
+    Introducing Enterprise Service Bus
+</h1>
+
+<p>
+    Enterprise Service Bus (ESB) is the only high performance messaging platform native to
+    Salesforce. It allows systems to react to real world events. You can model sagas, asynchronous
+    processes, and recover from errors without data loss using the drag-and-drop sequence builder.
+</p>
+
+<p>
+    ESB is predicated on the notion that work is broken up into processes that respond to events.
+</p>
+
+<p>
+    Using ESB encourages:
+</p>
+
+<ul>
+    <li>reactive, extensible and event-driven models,</li>
+    <li>testable components which have no knowledge of each other,</li>
+    <li>developers to be able to code to events via an interface.</li>
+</ul>
+
+<h3>Processes</h3>
+
+<p>
+    A Process is a single piece of "encapsulated goodness" with inputs and outputs. Logic should be
+    separated into distinct processes where:
+</p>
+
+<ul>
+    <li>the logic of a process is implemented as an Apex Class,</li>
+    <li>inputs to a process come in the form of exactly one message,</li>
+    <li>outputs of a process consist of zero, one, or many messages,</li>
+</ul>
+
+<p>
+    After a process receives and acts on a message, its output messages are routed to a subsequent
+    process. Processes can split, combine, or alter data, and call Salesforce APIs.
+</p>
+
+<h3>Messages</h3>
+
+<p>
+    In the real world events occur all the time. For example, the clock strikes 12PM, the fuel tank
+    reaches empty, etc. To represent real world events in computer systems, we create a data
+    structure called a Message which contains relevant details about the event.
+</p>
+
+<p>
+    The primary purpose of a message is to provide a useful mechanism to communicate between
+    processes. The terms <strong>Message</strong> and <strong>Event</strong> are therefore used
+    interchangeably but represent the same concept for the purposes of ths guide. 
+</p>
+
+<h3>Sequences</h3>
+
+<p>
+    A Sequence is an arrangement of multiple processing tasks called Steps. Each Sequence is known
+    by a friendly name, for example 'ProcessInvoices', which should in some way indicate  the nature
+    of the work that it's processing steps will perform.
+</p>
+
+<p>
+    The ESB framework will advance Messages through the Steps of a Sequence in the order you specify
+    using drag and drop. A typical sequence will contain many steps. A Sequence is like a
+    configurable event-to-process lookup table that routes a given message to the appropriate
+    process.
+</p>
+
+<!--
+<ul>
+    <li>Events in the ESB framework are represented as messages</li>
+    <li>An event message is handed to specific process. This in turn causes the Apex code contained
+        within that process to execute.<br/> (In other words, the occurrence of a given
+        <code>event</code> causes a process that has previously registered it's interest in that
+        <code>event</code> to perform
+    </li>
+    <li>This is a clean model that limits complexity in the system to just the apex implementation
+        details of any given process</li>
+</ul>
+
+<h3>CHAPTER 02 : Concepts : Process and Processing</h3>
+<b>Processing :</b><br/>
+<ul>
+    <li>Work under the ESB framework is broken  into many specific tasks</li>
+    <li>Each task is implemented as an Apex class and is made available to the ESB framework as a process</li>
+    <li> Every process executes it's task logic in a standard execution method  </li>
+    <li>Some processes are native to the ESB framework
+        (<code>Gate</code> , <code>WireTap</code>, <code>Publish</code>,  etc)
+        while others are implemented as custom plugins (the topic of this guide)
+    <li>All ESB processes (native and plugins) adhere to a standard Apex template  </li>
+</ul>
+-->

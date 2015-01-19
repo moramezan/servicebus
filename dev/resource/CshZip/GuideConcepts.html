@@ -1,0 +1,130 @@
+<h1>
+    Enterprise Service Bus Concepts
+</h1>
+
+<p>
+    ESB concepts described in this chapter are:
+</p>
+
+<ul>
+    <li>Sequences</li>
+    <li>Processes</li>
+    <li>Configuration</li>
+    <li>Logging</li>
+</ul>
+
+<h3>
+    Sequences
+</h3>
+
+<p>
+    Work under the ESB framework is broken up into many specific tasks. Each task is implemented as
+    an Apex class and is called an ESB process.
+</p>
+
+<p>
+    Logically related processes are assembled by the System Configurator (or Business Analyst) into
+    sequential processing steps called a <em>Sequence</em>
+</p>
+
+<h3>
+    Processes
+</h3>
+
+<p>
+    Every ESB process responds to an input message by emitting a list of zero, one or more output
+    messages. The ESB framework is designed so that output messages from a process automatically
+    feed the input stream of the very next process in a <em>Sequence</em>.
+</p>
+
+<p>
+    The ESB framework has by default a number of ready made processes that can be sequenced together
+    so that useful work can be completed. These ready made processes include:
+</p>
+
+<ul>
+    <li><em>Wiretap</em></li>
+    <li><em>Jump</em></li>
+    <li><em>Branch</em></li>
+    <li><em>Subsequence</em></li>
+    <li><em>Publish</em></li>
+    <li><em>Subscribe</em></li>
+</ul>
+
+<p>
+    Additional processes can be easily created to implement tasks specific to
+    your particular requirement(s).
+</p>
+
+<p>
+    Detailed instructions for building processes can be found in the
+    <a href="?topic=GuideDevelopers">Process Developers Guide</a>
+</p>
+
+<h3>
+    Configuration
+</h3>
+
+<p>
+    The ESB framework makes a clear distinction between:
+</p>
+
+<ul>
+    <li>
+        <em>what</em> is to be performed (via declarative point and click assembling of processing
+        steps in a sequence), versus
+    </li>
+    <li>
+        <em>how</em> it is performed (via imperative apex code defining each process - see
+        <a href="?topic=GuideDevelopers">Process Developers Guide</a> for further details.)
+    </li>
+</ul>
+
+<p>
+    Assembling processes in a useful sequence and thereby fulfilling the intent of the underlying
+    business requirement is the domain of the business analyst and not necessarily the Apex
+    Developer.
+</p>
+
+<p>
+    It therefore the role of the System Orchestrator / Business Analyst to configure the ESB
+    framework:
+</p>
+
+<ul>
+    <li>
+        by arranging ESB processes together in a processing Sequence using friendly names that
+        adequately describe the collective nature of the work being preformed (for example
+        <code>ProcessInvoices</code>)
+    </li>
+    <li>
+        by identifying tasks in a Sequence that have no corresponding ESB process (otherwise defined
+        as "missing processes")
+    </li>
+    <li>
+        by specifying and provisioning missing ESB processes, often by securing the development
+        expertise of a suitable Force.com developer
+    </li>
+</ul>
+
+<h3>
+    Logging
+</h3>
+
+<p>
+    Salesforce prevents writing to the system log in a Production environment. As a useful
+    substitute, the EDA framework provides two logging mechanisms:
+</p>
+
+<ul>
+    <li>
+        <em>Wiretap</em> which acts a no-operation process and has no side effects. A Wiretap
+        process will send an email containing the current event message to a nominated user.
+    </li>
+    <li>
+        <em>Audit Writer</em> which acts a no-operation pass through process and has no side
+        effects. An Audit Writer will however store the event message under a useful business
+        identifier. Many Audit Writer processes placed at strategic steps in a Sequence can usefully
+        track and relate the progress of event messages using a common business identifier.
+    </li>
+</ul>

@@ -1,0 +1,209 @@
+<h1>
+    Process Developers Guide
+</h1>
+
+<p>
+    Intended audience: Salesforce Apex Developer.
+</p>
+
+<h2>
+    About This Guide
+</h2>
+
+<p>
+    This guide is intended for Salesforce Apex Developers who are tasked with providing
+    functionality not provided in the out-of-the-box ESB framework. The purpose of this guide is to:
+</p>
+
+<ol>
+    <li>
+        explain basic plugin concepts as they pertain to the ESB framework.
+    </li>
+    <li>
+        describe how to create a plugin that enables processing functionality not directly provided
+        for in the ESB framework.
+    </li>
+</ol>
+
+<p>
+    This guide excludes ESB configuration and ESB monitoring. These topics are covered in the
+    separate <a href="?topic=GuideOrchestrators">Orchestrators Guide</a>.
+</p>
+
+<h2>
+    Getting Started
+</h2>
+
+<p>
+    All ESB processes contain a standard <code>invoke()</code> method. The <code>invoke()</code>
+    method takes a single input message and returns a list containing zero, one or many message(s).
+    The concept can be illustrated as follows:
+</p>
+
+<!--
+ ! TODO confuser?
+ !-->
+
+<pre>
+List&lt;Event&gt; messages = process.invoke(Event message);
+</pre>
+
+<p>
+    The ESB framework is designed so that the output(s) from a given process can be directly
+    re-purposed as input(s) into immediately downstream processes.
+</p>
+
+<p>
+    The ESB framework has by default a number of pre-packaged native processes that can be
+    sequenced together to accomplish useful work.
+</p>
+
+<p>
+    These pre-packaged processes include <em>Branch</em>, <em>Gate</em>, <em>Jump</em>,
+    <em>LogInitializer</em>, <em>LogWriter</em>, <em>Mark</em>, <em>Publish</em>, <em>Schedule</em>,
+    <em>Subscribe</em>, <em>Subsequence</em>, <em>Terminate</em> and <em>WireTap</em>.
+</li>
+
+<p>
+    Additional processes are easily created to implement tasks specific to a particular business
+    requirement.
+</p>
+
+<p>
+    The focus of this guide is to provide detailed guidance for the creation of these processes.
+</p>
+
+<h2>
+    Overview of development lifecycle
+</h2>
+
+<p>
+    The list below describes the order of activities for creating, testing and deploying your ESB
+    process:
+</p>
+
+<ol>
+    <li>
+        Define the input event
+    </li>
+    <li>
+        Define the output event(s) (if any)
+    </li>
+    <li>
+        <p>
+            Define the process activity in the form of a process specification.
+        </p>
+        <fieldset>
+            <legend>Note</legend>
+            This step would normally be performed by the System Architect, System Orchestrator or a
+            Business Analyst.
+        </fieldset>
+    </li>
+    <li>
+        <p>
+            Convert the specification into a plugin with accompanying unit tests - 
+            see <a href="?topic=GuideBuildingTesting">building and testing the process</a>
+        </p>
+        <fieldset>
+            <legend>Note</legend>
+            A Force.com developer would normally perform this step
+        </fieldset>
+    </li>
+    <li>
+        Visually test the  plugin - see <a href="#CHAPTER06">post-build steps</a>
+    </li>
+    <li>
+        Create a package containing your ESB process and install in the runtime enviroment
+        (Sandbox, Production, etc). - see <a href="#CHAPTER06">post-build steps</a>
+    </li>
+</ol>
+
+<h2>
+    Define the Process
+</h2>
+
+<p>
+    Define the input event:
+</p>
+
+<ul>
+    <li>
+        Every input event message is a loosely typed key-value map of the form
+        <code>Map&lt;String,Object&gt;</code>
+    </li>
+    <li>
+        Of particular importance is the <code>esb__Id</code> parameter.
+    </li>
+    <li>
+        The <code>esb__Id</code> parameter points at the underlying data associated with the message.
+    </li>
+    <li>
+        The plugin author should be familiar with the structure of the data (SObject) pointed at by
+        the event so that he/she can adequately retrieve and write to this object.
+    </li>
+</ul>
+
+<p>
+    Define the output event(s):
+</p>
+
+<ul>
+    <li>
+        An output event message is takes the same shape as an input event message - that is, a
+        loosely typed key-value map of the form <code>Map&lt;String,Object&gt;</code>
+    </li>
+    <li>
+        <p>
+            A process returns an output collection containing zero, one or more messages in the form
+            <code>List&lt;Map&lt;String,Object&gt;&gt;</code>
+        </p>
+        <fieldset>
+            <legend>Note</legend>
+            Normally the output collection will simply contain a single output message, namely the
+            re-purposed input message.
+        </fieldset>
+    </li>
+</ul>
+
+<h2>
+    Defining the process activity
+</h2>
+
+<ul>
+    <li>
+        The plugin activity represents specific logic that is unavailable under the ESB framework,
+        either because such logic is is not represented by one of the native framework processes, or
+        such logic has not been previously created and/or registered.
+    </li>
+    <li>
+        The process activity should be <em>specific</em>. An example of specific activity might be
+        converting Unix line terminators to Windows line terminators. An example of
+        <em>un-specific</em> activity might be the counting of word occurrences in a file,
+        alphabetising the summary counts by word and finally reporting the results.
+    </li>
+    <li>
+        Generally defined activities should be re-specified into separate specific activites. Using
+        the example above, one could envisage three separate activities, namely: count, sort and
+        report. The more focused an activity, the easier it becomes to write comprehensive, reliable
+        unit tests. And the easier it becomes to re-purpose the plugin in other sequences cutting
+        down on programmer effort and the potential for bugs (less code).
+    </li>
+</ul>
+
+<p>
+    The ESB framework surfaces the notion of process parameters via <strong>Step Config</strong>
+    and <strong>Process Settings</strong> to accommodate variations in data applied to the same
+    plugin behavior
+</p>
+
+<ul>
+    <li>
+        <strong>Step Config</strong> allows a process to make use of parameters having values
+        configured that are specific to the context of each <em>step</em> the process belongs to.
+    </li>
+    <li>
+        <strong>Process Settings</strong> allow a process to make use of a single set of parameters
+        without reference to the context of the sequence step containing the process. These
+        parameters are defined in a Custom Setting specific to that plugin class.
+    </li>
+</ul>

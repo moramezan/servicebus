@@ -3,10 +3,13 @@ public with sharing class Branch {
     public String Parameters;
     public BranchConfig__c StepConfig;
 
+    /**
+     * @docs ProcessBranchJumpSubsequence.html
+     */
     public class ESB {
         public SObject StepConfig = BranchConfig__c.SObjectType.newSObject();
         public String Icon = 'arrow_branch';
-        public String HelpUrl = Page.BranchConfigCsh.getUrl();
+        public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessBranchJumpSubsequence').getUrl();
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Branch';
         public String Description = 'Copies the message to another sequence.';

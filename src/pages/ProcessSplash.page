@@ -1,1 +1,1 @@
-<apex:page action="{!URLFOR($Page.ProcessCsh)}" />
+<apex:page action="{!URLFOR($Page.Csh, null, ['topic'='SplashProcess','sidebar'='false'])}" />

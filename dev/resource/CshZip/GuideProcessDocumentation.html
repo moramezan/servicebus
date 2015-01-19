@@ -1,0 +1,67 @@
+<h1>
+    Documenting message parameters
+</h1>
+
+<p>
+    It is important to advertise both:
+</p>
+
+<ul>
+    <li>
+        the parameters your plugin expects to be available on the inbound message and
+    </li>
+    <li>
+        the parameters your plugin either adds to or modifies on the outbound message collection.
+    </li>
+</ul>
+
+<p>
+    The mechanism for achieving this is described below.
+</p>
+
+<h2>
+    Input parameters
+</h2>
+
+<p>
+    The snippet below illustrates how to document parameters that your plugin expects on any
+    input message.
+</p>
+
+<pre>
+global Map&lt;String,String&gt; Inputs = new Map&lt;String,String&gt;{
+    'ns__Url' => 'STRING representing url to scrape.'
+};
+</pre>
+
+<h3>
+    Notes
+</h3>
+
+<p>
+    <strong>001- 003</strong> succinctly describe each parameter that the plugin depends on
+</p>
+
+<h2>
+    Output parameters
+</h2>
+
+<p>
+    The snippet below illustrates how to document parameters that your plugin either adds to your
+    output message collection or modifies on your output message collection.
+</p>
+
+<pre>
+global Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
+    'esb__Id' =>'ID referencing a document containing the contents of the scraped input url'
+}
+</pre>
+
+<h3>
+    Notes
+</h3>
+
+<p>
+    <strong>001- 003</strong> succinctly describe each parameter that the plugin either adds or
+    modifies.
+</p>

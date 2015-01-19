@@ -39,6 +39,7 @@ global without sharing class Job implements Process.Plugin, Queueable {
      * Per #702 this enables developers to Enqueue into ESB without a compile-time
      * dependency, by leveraging the Process.Plugin system interface.
      *
+     * @docs ApiJobMethods.html
      * Secondarily it also DOUBLES as a REAL Process.Plugin that people can use
      * in Visual Flow to get stuff into ESB. (Though they would create a dependency.)
      */
@@ -67,6 +68,7 @@ global without sharing class Job implements Process.Plugin, Queueable {
      * This Persisted Data instance is saved to the database and the Broker is
      * immeadiately invoked threreafter
      *
+     * @docs ApiJobConstructors.html
      * @param sequenceName Name of the sequence the data is destined for.
      * @param dataId    Blob representation of the data the sequence will operate on.
      */
@@ -85,6 +87,7 @@ global without sharing class Job implements Process.Plugin, Queueable {
      * Message object. This Message instance is saved to the database and the Broker is immeadiately
      * invoked if it is not already running.
      *
+     * @docs ApiJobConstructors.html
      * @param sequenceName Name of the sequence the data is destined for.
      * @param dataId    Id of some record that the sequence will operate on.
      */
@@ -107,13 +110,19 @@ global without sharing class Job implements Process.Plugin, Queueable {
      * The parameters collection is converted to a Message object. This Message instance is saved 
      * to the database and the Broker is immeadiately invoked if it is not already running.
      *
+     * @docs ApiJobConstructors.html
      * @param  injectedParameters a parametrised description of the message data.
      */
     global Job(Map<String,Object> parameters) {
         this(new List<Map<String,Object>>{parameters});
     }
     
-    //sequence and list<parameters>
+    /**
+     * A collection of multiple parameterized message descriptions, each of which must at minimum
+     * contain esb__SequenceName.
+     * 
+     * @docs ApiJobConstructors.html
+     */
     global Job(List<Map<String,Object>> parameterses) {
         // validate params are supplied:
         if (parameterses == null) {

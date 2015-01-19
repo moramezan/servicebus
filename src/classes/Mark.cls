@@ -2,12 +2,15 @@ public with sharing class Mark {
     
     public String Parameters;
     
+    /**
+     * @docs ProcessMarkGate.html
+     */
     public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Mark';
         public String Description = 'Marks the message with a correlation key, for splitting into a collection.';
         public String Icon = 'tag_blue';
-        public String HelpUrl = Page.GateGroupCsh.getUrl();
+        public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessMarkGate').getUrl();
         public Integer Limits = 75; //leave half of 150 (Total number of DML statements issued)
         
         public Map<String,String> Outputs = new Map<String,String>{

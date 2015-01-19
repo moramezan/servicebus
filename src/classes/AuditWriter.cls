@@ -2,12 +2,15 @@ public with sharing class AuditWriter {
     
     public String Parameters;
     
+    /**
+     * @docs ProcessAudit.html
+     */
     public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Audit Writer';
         public String Description = 'Stores the message parameters under an Audit Group.';
         public String Icon = 'pencil_add';
-        public String HelpUrl = Page.AuditInitializerConfigCsh.getUrl();
+        public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessAudit').getUrl();
         public Integer Limits = 50; //leave half of 200 (Total number of SOQL queries issued)
     }
     

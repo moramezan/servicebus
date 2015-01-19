@@ -1,0 +1,52 @@
+<h1>
+    <code>esb.Job</code> Methods
+</h1>
+
+<p>
+    Salesforce Flows and Lightning Processes can be enhanced by ESB sequences and processes.
+</p>
+
+<p>
+    The <code>esb.Job</code> class is a <code>Process.Plugin</code> that enables Salesforce
+    administrators to enqueue ESB messages.
+</p>
+
+<fieldset>
+    <legend>Note</legend>
+    Apex developers can use <code>Type.forName</code> to construct an <code>esb.Job</code> as a
+    <code>Process.Plugin</code> without introducing any package dependencies. In the context of
+    user-land code or custom processes, this allows messages to be constructed and enqueued
+    completely dynamically.
+</fieldset>
+
+<h2>
+    Invoke Signature
+</h2>
+
+<p>
+    <code>global Process.PluginResult invoke(Process.PluginRequest request)</code>
+</p>
+
+<dl>
+    <dt>request</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_plugin_request.htm" target="_blank">Process.PluginRequest</a></dd>
+    <dd>The request class itself is constructed with a Map&lt;String,Object&gt; that becomes the ESB message parameters.</dd>
+</dl>
+
+<h2>
+    Usage
+</h2>
+
+<pre>
+//assemble message parameters
+Map&lt;String,Object&gt; parameters = new Map&lt;String,Object&gt;();
+parameters.put('esb__SequenceName', 'SendTestEmails');
+
+//immediately enqueue message
+Process.Plugin job = (Process.Plugin)Type.forName('esb.Job').newInstance();
+Process.PluginResult result = job.invoke(new Process.PluginRequest(parameters));
+
+//access queueable job id
+Id queueableId = result.OutputParameters.get('esb__QueueableId');
+System.debug(queueableId); //707j0000008MzD6
+</pre>

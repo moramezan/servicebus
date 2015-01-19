@@ -767,6 +767,10 @@
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>Csh</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>DisperseConfigCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>

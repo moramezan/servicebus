@@ -3,13 +3,16 @@ public with sharing class Publish {
     public String Parameters;
     public PublishConfig__c StepConfig;
     
+    /**
+     * @docs ProcessPublishSubscribe.html
+     */
     public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Publish';
         public String Description = 'Broadcasts the message to other sequences via a named Event Type.';
         public SObject StepConfig = PublishConfig__c.SObjectType.newSObject();
         public String Icon = 'chart_organisation';
-        public String HelpUrl = Page.PublishConfigCsh.getUrl();
+        public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessPublishSubscribe').getUrl();
         public Integer Limits = 50; //leave half of 200 (Total number of SOQL queries issued)
     }
     

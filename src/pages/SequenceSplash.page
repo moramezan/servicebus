@@ -1,1 +1,1 @@
-<apex:page action="{!URLFOR($Page.SequenceCsh)}" />
+<apex:page action="{!URLFOR($Page.Csh, null, ['topic'='SplashSequence','sidebar'='false'])}" />

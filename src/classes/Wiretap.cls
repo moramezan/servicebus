@@ -2,13 +2,16 @@ public with sharing class Wiretap {
    
     public String Parameters;
     
+    /**
+     * @docs ProcessWiretap.html
+     */
     public class ESB {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Wiretap';
         public String Description = 'Emails the message parameters to the user.';
         public SObject ProcessSetting = WiretapSetting__c.SObjectType.newSObject();
         public String Icon = 'email';
-        public String HelpUrl = Page.GateItemCsh.getUrl();
+        public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessWiretap').getUrl();
         public Integer Limits = 5; //leave half of 10 (Total number of sendEmail methods allowed)
     }
     

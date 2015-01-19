@@ -1,0 +1,189 @@
+<h1>
+    Audit Initializer and Audit Writer processes
+</h1>
+
+<p>
+    The <em>Audit Writer</em> and <em>Audit Initializer</em> processes work together. This allows
+    the relationship between data at various steps in one or more sequence(s) to be presented under
+    a meaningful and common business identifier.
+</p>
+
+<p>
+    The <em>Audit Initializer</em> process defines a new business identifier. A message passing
+    through a <em>Audit Initializer</em> process will have its state persisted downstream whenever
+    that same message passes through a subsequent <em>AuditWriter</em> process.
+</p>
+
+<p>
+    <img width="480" src="resources/Processes/Log.png" />
+</p>
+
+<fieldset>
+    <legend>Note</legend>
+    <p>
+        A message passing through a <em>Audit Initializer</em> process results in the creation of a
+        business identifier. Downstream <em>Audit Writer</em> processes will persist the message
+        parameters under that business identifier.
+    </p>
+    <p>
+        A message can carry more than one business identifier. In such cases, the <em>Audit
+        Writer</em> process will persist an entry under each of the business grouping keys.
+    </p>
+</fieldset>
+
+<p>
+    A business identifier is a composite of:
+</p>
+
+
+<ul>
+    <li>A Time Stamp</li>
+    <li>A Business Identifier
+</ul>
+
+<h2>
+    Config
+</h2>
+
+<p>
+    The business identifier (the non-time stamp portion of the business identifier described above)
+    can be configured in be one of the three ways.
+</p>
+
+<h3>
+    Implicit configuration
+</h3>
+
+<p>
+    This is the default mechanism for defining the business identifier and is used when no explicit
+    definition has been configured on the <em>Audit Initializer</em> process.
+</p>
+
+<p>
+    Under this mode, the business identifier will be a composite of the <em>Audit Initializer</em>'s
+    sequence name and sequence position. For example, an <em>Audit Initializer</em> placed as the
+    second step in a sequence named <code>"Test"</code> will auto-configure itself to generate the
+    business identifier <code>"Test#2"</code>.
+</p>
+
+<h3>
+    Static Configuration
+</h3>
+
+<p>
+    To specify the a static business identifier, click the configure link next to an <em>Audit
+    Initializer</em> process. Clicking the configure link will surface the configuration screen for
+    the <em>Audit Initializer</em> process.
+</p>
+
+<ol>
+    <li>
+        Click <strong>Edit</strong>.
+    </li>
+    <li>
+        In the Static Group Identifier field, enter a meaningful static value (eg
+        <code>INVOICE</code> or <code>WEB-DATA</code>) which will form the business identifier.
+    </li>
+    <li>
+        Click <Strong>Save</Strong>.
+    </li>
+</ol>
+
+<p>
+    For example, an <em>Audit Initializer</em> with the value <code>'PAY-SLIP'</code> will
+    generate the business identifier <code>'PAY-SLIP'</code>.
+</p>
+
+<h3>
+    Dynamic Configuration
+</h3>
+
+<p>
+    To specify a dynamic business identifier, click the configure link next to an <em>Audit
+    Initializer</em> process. Clicking the configure link will surface the configuration screen
+    for the <em>Audit Initializer</em> process.
+</p>
+
+<ol>
+    <li>
+        Click <strong>Change Dynamic Group Identifier</strong>. This will surface an
+        <code>SObject</code> field selector screen.
+    </li>
+    <li>
+        <p>
+            Using the picklist, select the <code>SObject</code> and related <code>SObject</code>
+            field that define the data source for the dynamic business identifier.
+        </p>
+        <p>
+            For example, selecting <code>Account</code> and then <code>NaicsCode</code> configures
+            the <em>Audit Initializer</em> process to perform the following steps at runtime:
+        </p>
+        <ul>
+            <li>
+                inspect the contents of underlying data passing through the process
+            </li>
+            <li>
+                extract the value of the <code>NaicsCode</code> from the contents of underlying
+                data (the dynamic business key)
+            </li>
+            <li>
+                create a business grouping identifier using the dynamically derived business key
+                derived under step 2.
+            </li>
+        </ul>
+        <fieldset>
+            <legend>Note</legend>
+            It is the system designer's responsibility to ensure that the selected
+            <code>SObject</code> field will align with underlying data passing through the
+            sequence.
+        </fieldset>
+    </li>
+    <li>
+        A message passing through a dynamically configured <em>Audit Initializer</em> process will
+        have its underlying data inspected and the value of this dynamic field extracted.
+    </li>
+</ol>
+
+<h2>
+    Usage
+</h2>
+
+<p>
+    See the <a href="?topic=TutorialMessageGrouping">Message Grouping Tutorial</a>.
+</p>
+
+<!--
+ ! TODO merge these?
+ ! <h3>About the Audit Processes</h3>
+ ! <p>By making use of a meaningful grouping key, the AuditWriter process and AuditInitializer process work together to surface the status of a message at various points in one or more Sequence(s) </p>
+ ! <p>The AuditInitializer process defines the grouping key.</p>
+ ! <p>The AuditWriter process surfaces the status of a message using the grouping key(s) defined under one or more prior AuditInitializer process(es).</p>
+ ! <p>The  grouping key is a composite of "a Time Stamp" and "A Business Identifier"</p>
+ ! <p>The business identifier (the non-time stamp portion of the  grouping key) can be configured in one of the three ways:
+ !     <ul>
+ !         <li>Implicit Key</li>
+ !         <li>Explicit Static Key</li>    
+ !         <li>Explicit Dynamic Key</li>
+ !     </ul>
+ ! </p>
+ ! 
+ ! <h3>Implicit Key</h3>
+ ! <p>When no explicit definition of the business identifier has been configured on the AuditInitializer process, the business identifier will be a a composite of the AuditInitializer's Sequence name and Sequence Position.
+ !    Whenever a message passes through a AuditInitializer process with an Implicit Key, an audit grouping record will be created  using this default composite Group Identifier.
+ ! </p>   
+ ! 
+ ! <h3>Explicit Static Key</h3>
+ ! <p>Under this configuration, the business identifier is statically defined in the form of a meaningful constant (for example "INVOICE" or "WEB-DATA-FROM-YAHOO") 
+ !    Whenever a message passes through a AuditInitializer process with an Explicit Static Key, an audit grouping record will be created  using the value defined by the Static Group Identifier.
+ ! </p>   
+ ! <p>To define a dynamic Static Group Identifier, enter a value in the editable Static Group Identifier text field.</p>
+ ! 
+ ! <h3>Explicit Dynamic Key</h3>
+ ! <p>Under this configuration, the business identifier is dynamically extracted from a message's underlying data using the field name as defined in the Dynamic Group Identifier.
+ !    Whenever a message passes through a AuditInitializer process with an Explicit Dynamic Key, an audit grouping record will be created  using a value pulled from the underlying SObject data related to that specific message. The SObject data value field is defined by the Dynamic Group Identifier.
+ ! </p>   
+ ! <p>To define a dynamic Group Identifier, click the [Change Dynamic Group Identifier] button on the AuditInitializer config page to reveal a Sobject field selection page.</p>
+ ! <p>From the [Choose Object Name], select the required field's parent SOBject from the dropdown list (for example Account). 
+ !    The associated field drop down list will be enabled after the selection of a valid SObject.
+ ! </p>
+ !-->
