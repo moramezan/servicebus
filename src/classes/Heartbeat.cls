@@ -28,7 +28,7 @@ public with sharing class Heartbeat {
         List<Step__c> steps = [
             SELECT Id, Sequence__r.Name, Position__c
             FROM Step__c
-            WHERE Process__r.Name IN :interestedSubscriberNames
+            WHERE Process__r.FullyQualifiedClassName__c IN :interestedSubscriberNames
         ];
         
         for (Step__c step : steps) {
