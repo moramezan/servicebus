@@ -50,7 +50,7 @@
         ProcessObject.ESB meta = (ProcessObject.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.ESB.class);
         String expectedStepConfig  = meta.StepConfig.getSObjectType().getDescribe().getName();
         String expectedIcon = meta.icon;
-        String expectedHelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + Page.SubscribeConfigCsh.getUrl();
+        String expectedHelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + '/apex/Csh?topic=ProcessPublishSubscribe';
         
         //act 
         Process__c subscribeProcess = ProcessObject.fromType(actualType);
