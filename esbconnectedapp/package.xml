@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>Dev_Enterprise_Service_Bus_API</members>
-        <members>Enterprise_Service_Bus_API</members>
+        <members>DevEnterpriseServiceBus</members>
+        <members>ProductionEnterpriseServiceBus</members>
+        <members>SandboxEnterpriseServiceBus</members>
         <name>ConnectedApp</name>
     </types>
     <types>
-        <members>ConnectedAppResources</members>
         <members>ConnectedAppResources/EsbConnectedAppIcon.png</members>
         <members>ConnectedAppResources/EsbConnectedAppLogo.png</members>
         <name>Document</name>

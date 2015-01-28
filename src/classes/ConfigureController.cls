@@ -1,10 +1,54 @@
 public with sharing class ConfigureController {
     
+    /**
+     * Connected app attributes
+     */
+    final static private String CLIENT;
+    final static private String SECRET;
+    final static private String REDIRECT;
+    final static private String APPNAME;
+    final static private String LOGIN;
+    
+    /**
+     * Environment discovery
+     */
     final static private Boolean ISDEV = ConfigureController.class.getName().substringBefore('ConfigureController').substringBefore('.') == '';
-    final static private String CLIENT = ISDEV ? '3MVG9fMtCkV6eLhfxsgy.rM62Ve5FyYsgesF4WLk.paM5gTwyAEtQLEnPyYB4l7_f1ywAtb4.6lBeo1ZvuEpE' : '3MVG9fMtCkV6eLhfxsgy.rM62VU0VV56FOOkj0Tsgj1CavTLb3N.g2kuagIqfQiJ5hZJgJT0JrZKvsBKk_s1J';
-    final static private String SECRET = ISDEV ? '4608752124209996979' : '2834415504471774418';
-    final static private String REDIRECT = ISDEV ? 'https://login.salesforce.com/apex/Configure' : 'https://login.salesforce.com/apex/esb__Configure';
-    final static private String APPNAME = ISDEV ? 'Dev Enterprise Service Bus' : 'Enterprise Service Bus';
+    final static private Boolean ISTEST = [SELECT IsSandbox FROM Organization].IsSandbox;
+    final static private Boolean ISPROD = !ISDEV && !ISTEST;
+    
+    /** 
+     * Initialize
+     */
+    static {
+        if (ISDEV) {
+            //for unmanaged development
+            CLIENT = '3MVG9fMtCkV6eLhfygiAuT5nj9iYIxQbeYyBbyxFP5TiJIaGaCeNf.6MdNdCTai94zLjQVjZJsPmvrN4gA.yl';
+            SECRET = '134028378901110512';
+            REDIRECT = 'https://login.salesforce.com/apex/Configure';
+            APPNAME = 'Dev Enterprise Service Bus';
+            LOGIN = 'https://login.salesforce.com';
+        }
+        
+        if (ISTEST) {
+            //for sandbox org installs
+            CLIENT = '3MVG9fMtCkV6eLhfygiAuT5nj9pR_VAnJtIE57hGjpvFlGVuq2L97l5Sxd93NxsCDrxdnztE4kVI29fDRjemm';
+            SECRET = '9179586167866560862';
+            REDIRECT = 'https://test.salesforce.com/apex/esb__Configure';
+            APPNAME = 'Sandbox Enterprise Service Bus';
+            LOGIN = 'https://test.salesforce.com';
+        }
+        
+        if (ISPROD) {
+            //for production org installs
+            CLIENT = '3MVG9fMtCkV6eLhfygiAuT5nj9oMZJIarvuh1uEpRNeVc_uwIgCWXzKZQhviO1IjRVXh3EvIy6Qn4wLk1UfRC';
+            SECRET = '1451809242356610984';
+            REDIRECT = 'https://login.salesforce.com/apex/esb__Configure';
+            APPNAME = 'Production Enterprise Service Bus';
+            LOGIN = 'https://login.salesforce.com';
+        }
+    }
+    
+    public class ConfigureException extends Exception {}
     
     public class Token {
         public String id;
@@ -23,7 +67,7 @@ public with sharing class ConfigureController {
      * determine if the user has allowed the connected app,
      * which will catch the case if it has been revoked.
      */
-    static private Boolean IsAllowed {
+    @TestVisible static private Boolean IsAllowed {
         get {
             if (IsAllowed == null) {
                 List<OauthToken> oauthtokens = [
@@ -61,8 +105,8 @@ public with sharing class ConfigureController {
      * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2Fesb__Configure
      * &response_type=code
      */
-    private PageReference buildAuthLink() {
-        PageReference pr = new PageReference('https://login.salesforce.com/services/oauth2/authorize');
+    @TestVisible private PageReference buildAuthLink() {
+        PageReference pr = new PageReference(LOGIN + '/services/oauth2/authorize');
         pr.getParameters().put('response_type', 'code');
         pr.getParameters().put('client_id', CLIENT);
         pr.getParameters().put('redirect_uri', REDIRECT);
@@ -96,7 +140,7 @@ public with sharing class ConfigureController {
      * "access_token":"00Dj0000000I44v!AQYAQLocFFeWV3WywoaS6wjcdnEvm4_FdPrd9MrlB_y1Q.5Xll9mTloey5GIXrIP1fdB2lKlsfmZ7Sqh6UAhFzuD6SzHqtXO"
      * }
      */
-    private PageReference buildCodeLink(String code) {
+    @TestVisible private PageReference buildCodeLink(String code) {
         PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'authorization_code');
         pr.getParameters().put('client_id', CLIENT);
@@ -127,7 +171,7 @@ public with sharing class ConfigureController {
      * "access_token":"00Dj0000000I44v!AQYAQKgWV8FRAfgKVWJE5BETIjEE0hvNWKojZI57zaxpPcLe1tqWrCXgkjhSvRwXHTiIOTF12Hd7TvKZd7WBg8kUbVIbcHeL"
      * }
      */
-    private PageReference buildRefreshLink() {
+    @TestVisible private PageReference buildRefreshLink() {
         PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'refresh_token');
         pr.getParameters().put('client_id', CLIENT);
@@ -148,8 +192,19 @@ public with sharing class ConfigureController {
         request.setMethod('POST');
         request.setEndpoint(new ConfigureController().buildRefreshLink().getUrl());
         
-        String data = new Http().send(request).getBody();
-        Token t = (Token)Json.deserialize(data, Token.class);
+        HttpResponse response = new Http().send(request);
+        if (response.getStatusCode() != 200) {
+            //unlikely, but an unhandled exception means we'll hear about it
+            throw new ConfigureException('Bad response in refreshAccessToken: ' + response.getStatusCode() + ' ' + response.getBody());
+        }
+        
+        String data = Test.isRunningTest() ? '{}' : response.getBody();
+        Token t = Test.isRunningTest() ? new Token() : (Token)Json.deserialize(data, Token.class);
+        if (t.access_token == null) {
+            //unlikely, but an unhandled exception means we'll hear about it
+            throw new ConfigureException('Null access_token in refreshAccessToken: ' + data);
+        }
+        
         setting.AccessToken__c = t.access_token;
         upsert setting;
     }
@@ -194,8 +249,19 @@ public with sharing class ConfigureController {
             request.setMethod('POST');
             request.setEndpoint(codeLink.getUrl());
             
-            String data = new Http().send(request).getBody();
-            Token t = (Token)Json.deserialize(data, Token.class);
+            HttpResponse response = new Http().send(request);
+            if (response.getStatusCode() != 200) {
+                //#724 can happen in orgs via "ip restricted or invalid login hours"
+                throw new ConfigureException('Bad response in handleRedirect: ' + response.getStatusCode() + ' ' + response.getBody());
+            }
+            
+            String data = Test.isRunningTest() ? '{}' : response.getBody();
+            Token t = Test.isRunningTest() ? new Token() : (Token)Json.deserialize(data, Token.class);
+            if (t.refresh_token == null) {
+                //unlikely, but an unhandled exception means we'll hear about it
+                throw new ConfigureException('Null refresh_token in handleRedirect: ' + data);
+            }
+            
             setting.AccessToken__c = t.access_token;
             setting.RefreshToken__c = t.refresh_token;
             upsert setting;

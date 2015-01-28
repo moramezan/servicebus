@@ -2,13 +2,12 @@
 <ConnectedApp xmlns="http://soap.sforce.com/2006/04/metadata">
     <contactEmail>webmaster@bigass.io</contactEmail>
     <description>Click allow to enable the ESB API. (It&apos;s hosted on Salesforce within your own org.)</description>
-    <iconUrl>https://c.na16.content.force.com/servlet/servlet.ImageServer?id=015j0000000VuwW&amp;oid=00Dj0000000Kcak&amp;lastMod=1418921167000</iconUrl>
-    <infoUrl>http://bigass.force.com/</infoUrl>
+    <iconUrl>https://c.na16.content.force.com/servlet/servlet.ImageServer?id=015j00000003mgj&amp;oid=00Dj0000001rXXP</iconUrl>
     <label>Dev Enterprise Service Bus</label>
-    <logoUrl>https://c.na16.content.force.com/servlet/servlet.ImageServer?id=015j0000000WEKG&amp;oid=00Dj0000000Kcak&amp;lastMod=1420515864000</logoUrl>
+    <logoUrl>https://c.na16.content.force.com/servlet/servlet.ImageServer?id=015j00000003mfq&amp;oid=00Dj0000001rXXP</logoUrl>
     <oauthConfig>
         <callbackUrl>https://login.salesforce.com/apex/Configure</callbackUrl>
-        <consumerKey>3MVG9fMtCkV6eLhfxsgy.rM62Ve5FyYsgesF4WLk.paM5gTwyAEtQLEnPyYB4l7_f1ywAtb4.6lBeo1ZvuEpE</consumerKey>
+        <consumerKey>3MVG9fMtCkV6eLhfygiAuT5nj9iYIxQbeYyBbyxFP5TiJIaGaCeNf.6MdNdCTai94zLjQVjZJsPmvrN4gA.yl</consumerKey>
         <scopes>Api</scopes>
         <scopes>RefreshToken</scopes>
     </oauthConfig>

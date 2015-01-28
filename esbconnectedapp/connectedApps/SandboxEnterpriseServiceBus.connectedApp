@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConnectedApp xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contactEmail>webmaster@bigass.io</contactEmail>
+    <description>Click allow to enable the ESB API. (It&apos;s hosted on Salesforce within your own org.)</description>
+    <iconUrl>https://c.na16.content.force.com/servlet/servlet.ImageServer?id=015j00000003mgj&amp;oid=00Dj0000001rXXP</iconUrl>
+    <label>Sandbox Enterprise Service Bus</label>
+    <logoUrl>https://c.na16.content.force.com/servlet/servlet.ImageServer?id=015j00000003mfq&amp;oid=00Dj0000001rXXP</logoUrl>
+    <oauthConfig>
+        <callbackUrl>https://test.salesforce.com/apex/esb__Configure</callbackUrl>
+        <consumerKey>3MVG9fMtCkV6eLhfygiAuT5nj9pR_VAnJtIE57hGjpvFlGVuq2L97l5Sxd93NxsCDrxdnztE4kVI29fDRjemm</consumerKey>
+        <scopes>Api</scopes>
+        <scopes>RefreshToken</scopes>
+    </oauthConfig>
+</ConnectedApp>

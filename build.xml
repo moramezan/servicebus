@@ -6,6 +6,16 @@
     <property file="build.properties"/>
     <property environment="env"/>
     
+    <target name="retrieve-esbconnectedapp" description="Retrieves the connected app definitions from their separate packaging org.">
+        <sf:retrieve
+            username="${esbconnectedapp.username}"
+            password="${esbconnectedapp.password}"
+            serverurl="${esbconnectedapp.serverurl}"
+            retrieveTarget="esbconnectedapp"
+            unpackaged="esbconnectedapp/package.xml"
+        />
+    </target>
+    
     <target name="retrieve" description="Retrieves all package components to dev org">
         <sf:retrieve
             username="${de.username}"
