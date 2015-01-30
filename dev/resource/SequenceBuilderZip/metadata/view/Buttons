@@ -16,6 +16,9 @@
         "width": null
     },
     "name": "MyContainer",
+    "configAlternates": {
+        "scrollable": "boolean"
+    },
     "designerId": "480d533d-4068-47ba-871e-0ec965d4c536",
     "viewControllerInstanceId": "a303fb2f-97fc-4fe6-99c0-47b9d29bca63",
     "viewModelInstanceId": "ae83cb8d-1acb-4a07-ae00-5d0831f7c483",
@@ -35,6 +38,9 @@
                 "text": "New Step"
             },
             "name": "MyButton",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
             "designerId": "76666a75-e111-40e4-b5e3-5fcd1583e383",
             "cn": [
                 {
@@ -52,6 +58,9 @@
                         "width": null
                     },
                     "name": "MyMenu",
+                    "configAlternates": {
+                        "scrollable": "boolean"
+                    },
                     "designerId": "a3f73739-03bc-4399-94a6-56a0703397b0"
                 }
             ]
@@ -70,6 +79,9 @@
                 "text": "Enqueue Test Message"
             },
             "name": "MyButton1",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
             "designerId": "e4e82dd0-f7a3-4cca-bd1e-08b7a7fec65a",
             "cn": [
                 {

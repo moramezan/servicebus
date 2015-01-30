@@ -144,8 +144,6 @@
                 "designer|targetType": "Ext.grid.View",
                 "fn": "onDrop",
                 "implHandler": [
-                    "//return;",
-                    "console.log('got here');",
                     "var controller = this,",
                     "    grid = data.view.ownerCt,",
                     "    fromStep = data.records[0],",
@@ -187,6 +185,9 @@
             "codeClass": null,
             "userConfig": {
                 "designer|controlQuery": "#steps > gridview",
+                "designer|params": [
+                    "dataview"
+                ],
                 "designer|targetType": "Ext.grid.View",
                 "fn": "onViewReady",
                 "implHandler": [

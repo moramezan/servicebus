@@ -1,127 +1,74 @@
 Ext.define('Discover.override.data.proxy.Direct', {
     override: 'Ext.data.proxy.Direct',
-    
-    requires: ['Ext.direct.RemotingMethod'], //We are pinching the implementation of getArgs
-    
-    /* End Definitions */
-    
+
     /**
-     * @cfg {String} [directionParam="dir"]
-     * The name of the direction parameter to send in a request. **This is only used when simpleSortMode is set to
-     * true.**
+     * Salesforce JavaScript Remoting uses none of these
      */
     directionParam: undefined,
-
-    /**
-     * @cfg {String} [filterParam="filter"]
-     * The name of the 'filter' parameter to send in a request. Defaults to 'filter'. Set this to undefined if you don't
-     * want to send a filter parameter.
-     */
     filterParam: undefined,
-
-    /**
-     * @cfg {String} [groupDirectionParam="groupDir"]
-     * The name of the direction parameter to send in a request. **This is only used when simpleGroupMode is set to
-     * true.**
-     */
     groupDirectionParam: undefined,
-
-    /**
-     * @cfg {String} [groupParam="group"]
-     * The name of the 'group' parameter to send in a request. Defaults to 'group'. Set this to undefined if you don't
-     * want to send a group parameter.
-     */
     groupParam: undefined,
-
-    /**
-     * @cfg {String} [idParam="id"]
-     * The name of the parameter which carries the id of the entity being operated upon.
-     */
     idParam: undefined,
-
-    /**
-     * @cfg {String} [limitParam="limit"]
-     * The name of the 'limit' parameter to send in a request. Defaults to 'limit'. Set this to undefined if you don't
-     * want to send a limit parameter.
-     */
     limitParam: undefined,
-
-    /**
-     * @cfg {String} [pageParam="page"]
-     * The name of the 'page' parameter to send in a request. Defaults to 'page'. Set this to undefined if you don't
-     * want to send a page parameter.
-     */
     pageParam: undefined,
-
-    /**
-     * @cfg {String} [sortParam="sort"]
-     * The name of the 'sort' parameter to send in a request. Defaults to 'sort'. Set this to undefined if you don't
-     * want to send a sort parameter.
-     */
     sortParam: undefined,
-
-    /**
-     * @cfg {String} [startParam="start"]
-     * The name of the 'start' parameter to send in a request. Defaults to 'start'. Set this to undefined if you don't
-     * want to send a start parameter.
-     */
     startParam: undefined,
-
-    /**
-     * @cfg {Boolean} paramsAsHash
-     * Lose hash option; VFRM parameters are unnamed
-     */
     paramsAsHash: undefined,
 
     /**
      * Keyholing our invokation here:
      * @param {Ext.data.Operation} operation The Ext.data.Operation object
-     * @param {Function} callback The callback function to call when the Operation has completed
-     * @param {Object} scope The scope in which to execute the callback
      */
-    doRequest: function(operation, callback, scope) {
-        var
-            me = this,
-            writer = me.getWriter(),
-            request = me.buildRequest(operation),
-            fn = me.api[request.getAction()]  || me.directFn,
-            params = request.getParams(),
-            args = [],
-            data = []
-        ;
-        
+    doRequest: function(operation) {
+        var me = this,
+            writer, request, action, params, args, api, fn, callback;
+
+        if (!me.methodsResolved) {
+            me.resolveMethods();
+        }
+
+        request = me.buildRequest(operation);
+        action  = request.getAction();
+        api     = me.getApi();
+
+        if (api) {
+            fn = api[action];
+        }
+
+        fn = fn || me.getDirectFn();
+
         //<debug>
-        if (!fn) Ext.Error.raise('[Bigass.data.proxy.Visualforce] No direct function specified for this proxy');
+        if (!fn) {
+            Ext.Error.raise('[Bigass.data.proxy.Visualforce] No remote action specified for this proxy');
+        }
         //</debug>
 
-        if (operation.allowWrite()) {
+        writer = me.getWriter();
+
+        if (writer && operation.allowWrite()) {
             request = writer.write(request);
         }
 
-        if (operation.getAction() == 'read') {
-            // We need to pass params (thanks Paco)
-            var method = Ext.create('Ext.direct.RemotingMethod', {params: Ext.Object.getSize(me.paramOrder || params)});
-            data = Ext.Object.getValues(method.getArgs(params, me.paramOrder || Ext.Object.getKeys(params), false));
-            if (Ext.Object.getSize(params) != data.length) Ext.Error.raise('[Bigass.data.proxy.Visualforce] paramOrder must account for exactly ' + data.length + ' parameters');
-        } else {
-            data.push(request.getJsonData());
+        // The weird construct below is due to historical way of handling extraParams;
+        // they were mixed in with request data in ServerProxy.buildRequest() and were
+        // inseparable after that point. This does not work well with CUD operations
+        // so instead of using potentially poisoned request params we took the raw
+        // JSON data as Direct function argument payload (but only for CUD!). A side
+        // effect of that was that the request metadata (extraParams) was only available
+        // for read operations.
+        // We keep this craziness for backwards compatibility.
+        if (action === 'read') {
+            params = request.getParams();
+        }
+        else {
+            params = [request.getJsonData()];
         }
 
-        Ext.apply(request, {
-            args: args,
-            directFn: fn
-        });
-
-        var handler = me.createRequestCallback(request, operation, callback, scope);
-
-        //method, eg 'ns.RemoteController.method' per {!$RemoteAction.RemoteController.method}
-        args.push(fn);
-
-        //argument(s)
-        args.push.apply(args, data);
+        //arguments TODO paramOrder
+        args = Ext.Object.getValues(params);
 
         //callback
-        args.push(handler);
+        args.push(me.createRequestCallback(request, operation));
 
         //config
         args.push({
@@ -130,8 +77,17 @@ Ext.define('Discover.override.data.proxy.Direct', {
             timeout: this.timeout //configure remoting timeout on proxy
         });
 
-        //per Visualforce.remoting.Manager.invokeAction(method, argument(s) [...], callback, config)
-        Visualforce.remoting.Manager.invokeAction.apply(Visualforce.remoting.Manager, args);
+        request.setConfig({
+            args: args,
+            directFn: fn
+        });
+
+        fn.apply(window, args);
+
+        // Store expects us to return something to indicate that the request
+        // is pending; not doing so will make a buffered Store repeat the
+        // requests over and over. See https://sencha.jira.com/browse/EXTJSIV-11757
+        return request;
     },
 
     /**
@@ -149,7 +105,7 @@ Ext.define('Discover.override.data.proxy.Direct', {
      * @param {Object} scope The scope in which to execute the callback function
      * @return {Function} The callback function
      */
-    createRequestCallback: function(request, operation, callback, scope) {
+    createRequestCallback: function(request, operation){
         var me = this;
 
         /**
@@ -158,7 +114,7 @@ Ext.define('Discover.override.data.proxy.Direct', {
          * @param {Ext.direct.Transaction} event akin to {@link Ext.direct.RemotingProvider#getCallArgs}
          */
         return function(response, event) {
-            me.processResponse(event.status, operation, request, response || event, callback, scope);
+            me.processResponse(event.status, operation, request, response || event);
         };
     },
 
@@ -186,5 +142,5 @@ Ext.define('Discover.override.data.proxy.Direct', {
         //</debug>
         operation.setException(event.message);
     }
-    
+
 });

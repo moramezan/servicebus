@@ -4,7 +4,7 @@
         "cmd": {
             "license": "commercial",
             "cmdVersion": "5.1.1.39",
-            "frameworkVersion": "5.0.1.1255"
+            "frameworkVersion": "5.1.0.107"
         },
         "canvasControls": {
             "viewportSize": {
@@ -35,7 +35,7 @@
     "xdsBuild": 75,
     "schemaVersion": 1,
     "upgradeVersion": 310000000001,
-    "framework": "ext50",
+    "framework": "ext51",
     "viewOrderMap": {
         "view": [
             "2162a9ba-07cf-4dd3-8e4d-c18119bc08d2",

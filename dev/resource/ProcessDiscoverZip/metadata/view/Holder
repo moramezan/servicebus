@@ -20,6 +20,9 @@
         "width": null
     },
     "name": "MyPanel",
+    "configAlternates": {
+        "scrollable": "boolean"
+    },
     "designerId": "2162a9ba-07cf-4dd3-8e4d-c18119bc08d2",
     "viewControllerInstanceId": "3ceac646-3905-4338-8943-d3562818de61",
     "viewModelInstanceId": "08989e4b-a684-46b7-ad47-dfd9e2ec37e0",
@@ -50,6 +53,9 @@
                 "text": "..."
             },
             "name": "MyProgressBar",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
             "designerId": "3cb19615-2cb0-44b5-a7b9-78fe1f8eb3cf",
             "cn": [
                 {
@@ -104,10 +110,13 @@
                 "title": "My Grid Panel"
             },
             "name": "MyGridPanel",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
             "designerId": "5a6749db-c8c2-4c9f-af27-e20b7c8217c3",
             "cn": [
                 {
-                    "type": "Ext.grid.View",
+                    "type": "Ext.view.Table",
                     "reference": {
                         "name": "viewConfig",
                         "type": "object"
@@ -119,7 +128,8 @@
                     },
                     "name": "MyGridView",
                     "configAlternates": {
-                        "loadMask": "boolean"
+                        "loadMask": "boolean",
+                        "scrollable": "boolean"
                     },
                     "designerId": "7f5dc023-19f0-40eb-9803-35db2611234a"
                 },
@@ -135,6 +145,9 @@
                         "menuDisabled": true
                     },
                     "name": "MyActionColumn",
+                    "configAlternates": {
+                        "scrollable": "boolean"
+                    },
                     "designerId": "feee603c-ddef-4269-a304-29044ded8ad8",
                     "cn": [
                         {
@@ -194,6 +207,9 @@
                         "width": 50
                     },
                     "name": "MyColumn1",
+                    "configAlternates": {
+                        "scrollable": "boolean"
+                    },
                     "designerId": "26f01872-33aa-4797-afc2-d9bc62d00512"
                 },
                 {
@@ -210,6 +226,9 @@
                         "width": 120
                     },
                     "name": "MyColumn2",
+                    "configAlternates": {
+                        "scrollable": "boolean"
+                    },
                     "designerId": "58e9ee7c-20d2-4cd7-9dda-71e76190b866",
                     "cn": [
                         {
@@ -259,6 +278,9 @@
                         "width": 160
                     },
                     "name": "MyColumn5",
+                    "configAlternates": {
+                        "scrollable": "boolean"
+                    },
                     "designerId": "80de35ac-e71a-4e2c-95f2-ae1ebf00d906"
                 },
                 {
@@ -275,6 +297,9 @@
                         "text": "Description"
                     },
                     "name": "MyColumn3",
+                    "configAlternates": {
+                        "scrollable": "boolean"
+                    },
                     "designerId": "c78baf13-3cbf-478d-8d23-84704e8182f1"
                 },
                 {
@@ -292,6 +317,9 @@
                         "width": 100
                     },
                     "name": "MyColumn6",
+                    "configAlternates": {
+                        "scrollable": "boolean"
+                    },
                     "designerId": "92e93b6c-b573-41eb-8c10-93b335d0486c"
                 },
                 {
@@ -309,6 +337,9 @@
                         "width": 50
                     },
                     "name": "MyColumn4",
+                    "configAlternates": {
+                        "scrollable": "boolean"
+                    },
                     "designerId": "8d126fab-1c99-417a-98dd-2191b8c9c7f4"
                 }
             ]

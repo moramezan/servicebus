@@ -19,18 +19,21 @@
         "hideHeaders": true,
         "itemId": "steps",
         "overCls": null,
-        "scroll": "none",
+        "scrollable": false,
         "store": "Steps",
         "title": null,
         "width": null
     },
     "name": "MyGridPanel",
+    "configAlternates": {
+        "scrollable": "boolean"
+    },
     "designerId": "9cbadca1-a42c-4363-90df-7ff570bbc81d",
     "viewControllerInstanceId": "bf39ad9e-82df-4684-8541-a74710b6a191",
     "viewModelInstanceId": "4ae8b5d7-802d-4f04-8a79-a3c87134e2b1",
     "cn": [
         {
-            "type": "Ext.grid.View",
+            "type": "Ext.view.Table",
             "reference": {
                 "name": "viewConfig",
                 "type": "object"
@@ -44,7 +47,8 @@
             },
             "name": "MyGridView",
             "configAlternates": {
-                "loadMask": "boolean"
+                "loadMask": "boolean",
+                "scrollable": "boolean"
             },
             "designerId": "478a0514-b2f2-4e74-b010-979f539974e4",
             "cn": [
@@ -80,6 +84,9 @@
                 "width": 16
             },
             "name": "MyActionColumn",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
             "designerId": "4c5de253-309b-446d-ae37-11aa2d5adcdd",
             "cn": [
                 {
@@ -109,6 +116,9 @@
                 "width": 70
             },
             "name": "MyColumn",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
             "designerId": "5756960b-c7e9-4a88-9e53-477e63b3367c",
             "cn": [
                 {
@@ -161,6 +171,9 @@
                 "width": 26
             },
             "name": "MyColumn1",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
             "designerId": "e0ebddb4-37d7-4571-8f52-30a0ab413b8d",
             "cn": [
                 {
@@ -218,6 +231,9 @@
                 "width": 60
             },
             "name": "MyColumn2",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
             "designerId": "4a7871a4-5a72-476d-9cc9-cb72faf5928d",
             "cn": [
                 {
@@ -269,6 +285,9 @@
                 "width": 25
             },
             "name": "MyActionColumn1",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
             "designerId": "cb648509-0754-4021-9593-b69742cfaac2",
             "cn": [
                 {
@@ -328,6 +347,9 @@
                 "width": 120
             },
             "name": "MyColumn3",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
             "designerId": "00f4d5b1-cdcd-4cbf-885a-f23531ff7ba5"
         },
         {
@@ -345,6 +367,9 @@
                 "text": "ConfigNameOrProcessDescription"
             },
             "name": "MyColumn4",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
             "designerId": "a4276fa2-0c0e-4ebc-8544-ca6ff65676fa",
             "cn": [
                 {
@@ -387,6 +412,9 @@
                 "width": 125
             },
             "name": "MyColumn5",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
             "designerId": "1817ca8c-536e-4ef9-b081-be5d5e6023fc",
             "cn": [
                 {

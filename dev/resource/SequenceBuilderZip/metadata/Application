@@ -14,9 +14,6 @@
             "Step"
         ],
         "name": "Builder",
-        "requires": [
-            "Ext.Msg"
-        ],
         "stores": [
             "Processes",
             "Steps"
