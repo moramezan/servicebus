@@ -212,19 +212,19 @@ global class PayInvoice {
         global String Icon = 'money';
         
         global Map&lt;String,String> Outputs = new Map&lt;String,String&gt;{
-            'Id' =>'ID modified to reference the payment'
+            'esb__Id' =>'ID modified to reference the payment'
         };
     }
     
-    global List&lt;Map&lt;String,Object&gt;&gt; invoke(Map&lt;String,Object&gt; parameters) {  //input message
-    
+    override global String toString() {
+        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters); //input message
         // simulate payment of invoice with payment reference  
         String paymentReference = 'PMT-'+ Math.round(Math.random()*1000);  
         Payment__c payment = new Payment__c(PaymentReference__c = paymentReference);
         insert payment;
         
         // change the underlying document pointed at by the notification  
-        parameters.put('Id', payment.Id);  
+        parameters.put('esb__Id', payment.Id);  
         
         //output message(s)
         return new List&lt;Map&lt;String,Object&gt;&gt;{parameters};

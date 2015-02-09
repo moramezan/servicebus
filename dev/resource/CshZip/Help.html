@@ -193,6 +193,7 @@
         
         div#content h2 {
             color: #51638A;
+            border-top: 1px solid #51638A;
             border-bottom: 1px solid #51638A;
             font-size: 14px;
             font-weight: bold;
@@ -358,7 +359,7 @@
                 }
             
                 var binding = new XMLHttpRequest();
-                //to get the file: drop the query string to get 'Topic.html' plus '/../' plus 'ApiMarkerClass' dot html
+                //to get the file: drop the query string to get 'Topic.html' plus '/../' plus 'ApiProcessMarkers' dot html
                 var topic = new Array().concat(window.location.search.match(/topic=([^&]+)/))[1] || 'EnterpriseServiceBus';
                 binding.open('GET', window.location.pathname + '/../' + topic + '.html');
                 binding.onreadystatechange = function(event) {

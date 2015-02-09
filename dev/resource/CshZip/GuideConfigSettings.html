@@ -5,13 +5,13 @@
 <h3>Configuring process behaviour</h3>
 
 <p>
-    Instead of replicating a large portions of custom logic in a second or third plugin process, a
+    Instead of replicating a large portions of custom logic in a second or third process, a
     process developer may instead choose to expose variation in execution logic through the use of
-    plugin attributes.
+    process attributes.
 </p>
 
 <p>
-    Plugin attributes can apply to:
+    Process attributes can apply to:
 </p>
 
 <ul>
@@ -24,18 +24,18 @@
 </h2>
 
 <p>
-    The snippet below illustrates how to make use of class wide custom settings for your plugin.
+    The snippet below illustrates how to make use of class wide custom settings for your process.
 </p>
 
 <pre>
-global class Meta {
+global class ESB {
     //..
     global SObject CustomSetting = YourCustomSettings__c.SObjectType.newSObject();
     //..
 }
 
 
-global void invoke() {
+override global String toString() {
     //..
     //main code block
     YourCustomSettings__c settings = YourCustomSettings__c.getInstance();
@@ -49,8 +49,8 @@ global void invoke() {
 </h3>
 
 <p>
-    <strong>003</strong> if you wish to surface a link to the Custom Setting of your process on the Processes list view, simply assign an instance of your custom setting SObject to the CustomSetting parameter of the plugin's <code>ESB</code> inner class.
-    <br /><strong>011 - 012</strong> to reference generic plugin configuration settings inside the plugin execution, simply call <code>getInstance()</code> on your custom setting object and access the relevent fields.
+    <strong>003</strong> if you wish to surface a link to the Custom Setting of your process on the Processes list view, simply assign an instance of your custom setting SObject to the CustomSetting parameter of the process's <code>ESB</code> Marker Class.
+    <br /><strong>011 - 012</strong> to reference generic process configuration settings inside the process execution, simply call <code>getInstance()</code> on your custom setting object and access the relevent fields.
 </p>
 
 <h2>
@@ -58,7 +58,7 @@ global void invoke() {
 </h2>
 
 <p>
-    The snippet below illustrates how to make use of a step specific configuration for your plugin.
+    The snippet below illustrates how to make use of a step specific configuration for your process.
 </p>
 
 <pre>
@@ -66,14 +66,14 @@ global void invoke() {
 global YourConfiguration__c StepConfig;
 //..
 
-global class Meta {
+global class ESB {
     //..
     global SObject ConfigObject = YourConfiguration__c.SObjectType.newSObject();
     //..
 }
 
 
-global void invoke() {
+override global String toString() {
     //..
     //main code block
     YourConfiguration__c configuration = this.StepConfig;
@@ -86,8 +86,8 @@ global void invoke() {
 </h3>
 
 <p>
-    <strong>005 - 009</strong> if you wish to surface a link to step specific settings of your plugin, simply assign an instance of your step config SObject to the StepConfig parameter of the plugin's <code>ESB</code> inner class.
-    <br /><strong>012 - 017, 002</strong> To access step specific configuration from code inside the plugin execution, simply declare a class instance global <code>YourConfiguration__c</code> with the name <code>StepConfig</code>.
+    <strong>005 - 009</strong> if you wish to surface a link to step specific settings of your process, simply assign an instance of your step config SObject to the StepConfig parameter of the process's <code>ESB</code> Marker Class.
+    <br /><strong>012 - 017, 002</strong> To access step specific configuration from code inside the process execution, simply declare a class instance global <code>YourConfiguration__c</code> with the name <code>StepConfig</code>.
 </p>
 
 <fieldset>

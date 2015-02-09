@@ -3,7 +3,7 @@
 </h1>
 
 <p>
-    Before creating your first process plugin, it is assumed that the ESB framework has been
+    Before creating your first ESB Process, it is assumed that the ESB framework has been
     installed in your org.
 </p>
 
@@ -17,7 +17,7 @@
 <p>
     <strong>
         The first step is to create a new global class in a development org. Confirm that the class
-        follows the expected ESB process plugin template as set out below. You can also build
+        follows the expected ESB Process template as set out below. You can also build
         appropriate unit tests as required by Salesforce.
     </strong>
 </p>
@@ -27,18 +27,18 @@
 </h2>
 
 <p>
-    Before a custom plugin can be recognised and registered in the ESB framework, the code
-    representing the plugin must conform to an ESB template that at a minimum, consists of:
+    Before your custom ESB Process can be recognised and registered in the framework, the code
+    representing your Apex class must conform to a template that at a minimum, consists of:
 </p>
 
 <ul>
-    <li>an inner <code>ESB</code> Marker Class, and</li>
-    <li>an <code>invoke()</code> method.</li>
+    <li>an <code>ESB</code> Marker Class, and</li>
+    <li>a <code>toString()</code> method.</li>
 </ul>
 
 <p>
-    Below is an annotated non-callout plugin called <em>ChatterTap</em>. This plugin adheres to the
-    required ESB template.
+    Below is an annotated non-callout ESB Process called <em>ChatterTap</em>. This process adheres
+    to the required template.
 </p>
 
 <h3>
@@ -61,7 +61,7 @@
 </ul>
 
 <p>
-    This plugin will replicate the <em>WireTap</em> functionality. But as an alternative to
+    This process will replicate the <em>WireTap</em> functionality. But as an alternative to
     surfacing the message parameters in the form of an email, <em>ChatterTap</em> will instead post
     these parameters on a user's Chatter Feed.
 </p>
@@ -69,7 +69,7 @@
 <pre>
 global class ChatterTap {
 
-    global class Meta {
+    global class ESB {
         global String Tag = 'Example';
         global String Name = 'ChatterTap';
         global String Description = 'Inserts the message parameters on user chatterfeed.';
@@ -80,8 +80,8 @@ global class ChatterTap {
     }
 
 
-    global List&lt;Map&lt;String,Object&gt;&gt; invoke(Map&lt;String,Object&gt; parameters) {  //input message
-
+    override global String toString() {
+        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters); //input message
         //main code block
         Id userId;
         ChatterTapSettings__c setting = ChatterTapSettings__c.getInstance();
@@ -111,22 +111,22 @@ global class ChatterTap {
 </p>
 
 <p>
-    <strong>001</strong> an ESB plugin is a standard Apex class. ESB plugins do not take any dependency on the ESB package.
-    <br /><strong>003 - 036</strong> a valid ESB plugin has two key elements, namely an inner <code>ESB</code> class and an <code>invoke()</code> method.
-    <br /><strong>003 - 011</strong> the inner <code>ESB</code> class exposes important properties about the ESB plugin thereby facilitating correct integration into the ESB framework.
-    <br /><strong>004</strong> the <code>Tag</code> is a string that that groups the ESB plugin with similar plugins. We recommend that you create your own categories for custom plugins.
-    <br /><strong>005</strong> the <code>Name</code> is a string that describes the friendly <code>Name</code> of the ESB plugin
-    <br /><strong>006</strong> the <code>Description</code> is a string that describes the functionality of the plugin and is surfaced on the list view of all ESB processes by the discovery process.
-    <br /><strong>007</strong> the <code>Icon</code> is a unique string that defines the icon that will appear next to the plugin when viewed  on the list view of ESB processes.
+    <strong>001</strong> an ESB Process is a standard Apex class. ESB Processes do not take any dependency on the ESB package.
+    <br /><strong>003 - 036</strong> a valid ESB Process has two key elements, namely an <code>ESB</code> Marker Class and a <code>toString()</code> method.
+    <br /><strong>003 - 011</strong> the <code>ESB</code> Marker Class exposes important properties about the ESB Process thereby facilitating correct integration into the ESB framework.
+    <br /><strong>004</strong> the <code>Tag</code> is a string that that groups the ESB Process with similar processes. We recommend that you create your own categories for custom processes.
+    <br /><strong>005</strong> the <code>Name</code> is a string that describes the friendly <code>Name</code> of the ESB process
+    <br /><strong>006</strong> the <code>Description</code> is a string that describes the functionality of the process and is surfaced on the list view of all ESB processes by the discovery process.
+    <br /><strong>007</strong> the <code>Icon</code> is a unique string that defines the icon that will appear next to the process when viewed on the list view of ESB processes.
 </p>
 
 <fieldset>
     <legend>Note</legend>
-    The full collection of  possible icons can be found <a href=http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png>here</a>.
+    The full collection of  possible icons can be found <a href="http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png">here</a>.
 </fieldset>
 
 <p>
-    <strong>008</strong> <code>Limits</code> constrains the number of times a plugin may be executed in a single context.
+    <strong>008</strong> <code>Limits</code> constrains the number of times a process may be executed in a single context.
 </p>
 
 <fieldset>
@@ -138,12 +138,12 @@ global class ChatterTap {
     <ul>
         <li>The default is implicitly and conservatively set to one.</li>
         <li>
-            A simple plugin that avoids Salesforce governed operations such as SOQL or callouts is
+            A simple process that avoids Salesforce governed operations such as SOQL or callouts is
             a good candidate for a large <code>Limits</code> setting. (100 or greater)
         </li>
         <li>
-            If however, the plugin makes use of a governed operation, ascertain 50% of that
-            particular Salesforce limit and divide by the number of times the plugin uses the
+            If however, the process makes use of a governed operation, ascertain 50% of that
+            particular Salesforce limit and divide by the number of times the process uses the
             governed operation. The <code>Limits</code> property must not exceed this calculated
             value.
         </li>
@@ -152,7 +152,7 @@ global class ChatterTap {
 
 <p>
     <strong>009</strong> the <code>HelpUrl</code> is a string that describes the help page for the
-    plugin.
+    process.
 </p>
 
 <fieldset>
@@ -162,10 +162,10 @@ global class ChatterTap {
 </fieldset>
 
 <p>
-    <strong>010</strong> Surfacing a link to the plugin specific custom settings on the processes list view is possible. Simply assign an instance of the custom setting to the <code>CustomSetting</code> member of the plugin's <code>ESB</code> marker class.
-    <br /><strong>014 - 036</strong> the <code>invoke()</code> method contains the Apex logic that implements the business specification.
-    <br /><strong>014</strong> an input message is injected into the <code>invoke()</code> method in the form of key-value  collection.
-    <br /><strong>035</strong> the <code>invoke()</code> method returns a list of zero, one or more output messages. Each output message consists of a key-value parameter collection.
+    <strong>010</strong> Surfacing a link to the process-specific custom settings on the processes list view is possible. Simply assign an instance of the custom setting to the <code>CustomSetting</code> member of the process's <code>ESB</code> Marker Class.
+    <br /><strong>014 - 036</strong> the <code>toString()</code> method contains the Apex logic that implements the business specification.
+    <br /><strong>014</strong> an input message is injected into the <code>toString()</code> method in the form of key-value  collection.
+    <br /><strong>035</strong> the <code>toString()</code> method returns a serialized list of zero, one or more output messages. Each output message consists of a key-value parameter collection.
 </p>
 
 <!--
@@ -233,7 +233,7 @@ global class ChatterTap {
 
 <p>
     Create a new VisualForce page called <code>ChatterTapHelp</code>. This page represents the help
-    documentation supporting the <code>ChatterTap</code> process plugin.
+    documentation supporting the <code>ChatterTap</code> ESB Process.
 </p>
 
 <p>
@@ -248,19 +248,19 @@ global class ChatterTap {
 </h2>
 
 <p>
-    Create an Apex class that supports the  minimum required plugin layout.
+    Create an Apex class that supports the  minimum required process layout.
 </p>
 
 <pre>
 global  class ChatterTap {
 
-    global class Meta {
+    global class ESB {
         public String Description = 'Inserts the message parameters on user chatterfeed.';
         //..
     }
 
 
-    global void invoke() {
+    override global String toString() {
         //input message
         //..
 
@@ -279,9 +279,9 @@ global  class ChatterTap {
 
 <p>
     <strong>001</strong> The class does not take a dependency on the ESB framework. All methods, classes and properties must be described with the <code>global</code> keyword.
-    <br /><strong>003 - 018</strong> a valid ESB plugin has two key elements, namely an inner <code>ESB</code> class and an <code>invoke()</code> method.
-    <br /><strong>003 - 006</strong> the inner <code>ESB</code> class exposes important properties about the ESB plugin thereby facilitating correct integration into the ESB framework. The <code>Description</code> is required in order for the class to be recognised as a valid ESB process.
-    <br /><strong>009 - 018</strong> the <code>invoke()</code> method contains the Apex logic. The method takes a single event message, and returns  a collection of zero, one or more output messages.
+    <br /><strong>003 - 018</strong> a valid ESB Process has two key elements, namely an <code>ESB</code> Marker Class and a <code>toString()</code> method.
+    <br /><strong>003 - 006</strong> the <code>ESB</code> Marker Class exposes important properties about the ESB Process thereby facilitating correct integration into the ESB framework. The <code>Description</code> is required in order for the class to be recognised as a valid ESB process.
+    <br /><strong>009 - 018</strong> the <code>toString()</code> method contains the Apex logic. The method takes a single event message, and returns  a collection of zero, one or more output messages.
 </p>
 
 <h2>
@@ -295,7 +295,7 @@ global  class ChatterTap {
 <pre>
 global  class ChatterTap {
 
-    global class Meta {
+    global class ESB {
         global String Description = 'Inserts the message parameters on user chatterfeed.';
         global String Tag = 'Example';
         global String Name = 'ChatterTap';
@@ -305,7 +305,7 @@ global  class ChatterTap {
     }
 
 
-    global void invoke() {
+    override global String toString() {
         //input message
         //..
 
@@ -324,12 +324,12 @@ global  class ChatterTap {
 
 
 <p>
-    <strong>004</strong> The <code>Description</code> is a string that describes the functionality of the plugin. This value is surfaced on the processes list view by the ESB discovery process. The <code>Description</code> is required in order for the class to be recognised as a valid ESB process.
-    <br /><strong>005</strong> The <code>Tag</code> is a string that that groups the ESB process amongst similar others. It is best practise to use categories. Failure to include a <code>Tag</code> property will group your plugin under the default 'Untagged' group.
-    <br /><strong>006</strong> The <code>Name</code> is a string that describes the friendly name of the ESB plugin on the list view of the ESB processes. The ESB framework will use the Apex class name of your plugin as the friendly name if you fail to include ths property in your <code>ESB</code> marker class.
-    <br /><strong>007</strong> the <code>Icon</code> is a string that identifies the specific icon to display next to the plugin on the list view of the ESB processes. Select an icon from the <a href=http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png>famfamfam</a> icon collection that most closely represents the functionality of your plugin. Then note the name of the icon and assign it to the <code>Icon</code> property. The ESB framework will use a 'cog' icon to represent your plugin if you fail to include ths property in your <code>ESB</code> marker class.
-    <br /><strong>008</strong> the <code>Limits</code> constrains the number of times a plugin may be executed in a single context. This property  enables more work to be performed than would otherwise be possible within prevailing daily Salesforce execution limits. The default is implicitly and conservatively set to one. A simple plugin that avoids Salesforce governed operations such as SOQL or callouts is a good candidate for a large <code>Limits</code> setting (100 or greater). If however, the process makes use of a governed operation, ascertain 50% of that particular Salesforce limit and divide by the number of times the plugin uses the governed operation. The <code>Limits</code> property should not exceed this calculated value.
-    <br /><strong>009</strong> the <code>HelpUrl</code> is a string that defines the help page for the plugin. The help page is surfaced as a link  on the list view of the ESB processes. Either a VisualForce page reference or an external web page reference can be assigned to this property. If this property is not defined, the ESB framework will surface a user friendly representation of your plugin by making use of the attributes contained within the plugin's <code>ESB</code> marker class.
+    <strong>004</strong> The <code>Description</code> is a string that describes the functionality of the process. This value is surfaced on the processes list view by the ESB discovery process. The <code>Description</code> is required in order for the class to be recognised as a valid ESB process.
+    <br /><strong>005</strong> The <code>Tag</code> is a string that that groups the ESB process amongst similar others. It is best practise to use categories. Failure to include a <code>Tag</code> property will group your process under the default 'Untagged' group.
+    <br /><strong>006</strong> The <code>Name</code> is a string that describes the friendly name of the ESB Process on the list view of the ESB processes. The ESB framework will use the Apex class name of your process as the friendly name if you fail to include ths property in your <code>ESB</code> Marker Class.
+    <br /><strong>007</strong> the <code>Icon</code> is a string that identifies the specific icon to display next to the process on the list view of the ESB processes. Select an icon from the <a href="http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png">famfamfam</a> icon collection that most closely represents the functionality of your ESB Process. Then note the name of the icon and assign it to the <code>Icon</code> property. The ESB framework will use a 'cog' icon to represent your process if you fail to include ths property in your <code>ESB</code> Marker Class.
+    <br /><strong>008</strong> the <code>Limits</code> constrains the number of times an ESB Process may be executed in a single context. This property  enables more work to be performed than would otherwise be possible within prevailing daily Salesforce execution limits. The default is implicitly and conservatively set to one. A simple process that avoids Salesforce governed operations such as SOQL or callouts is a good candidate for a large <code>Limits</code> setting (100 or greater). If however, the process makes use of a governed operation, ascertain 50% of that particular Salesforce limit and divide by the number of times the process uses the governed operation. The <code>Limits</code> property should not exceed this calculated value.
+    <br /><strong>009</strong> the <code>HelpUrl</code> is a string that defines the help page for the process. The help page is surfaced as a link  on the list view of the ESB processes. Either a VisualForce page reference or an external web page reference can be assigned to this property. If this property is not defined, the ESB framework will surface a user friendly representation of your process by making use of the attributes contained within the process's <code>ESB</code> Marker Class.
 </p>
 
 <h2>
@@ -337,7 +337,7 @@ global  class ChatterTap {
 </h2>
 
 <p>
-    Formalise the invoke() method signature by:
+    Formalise the toString() method signature by:
 </p>
 
 <ul>
@@ -352,7 +352,7 @@ global  class ChatterTap {
 <pre>
 global class ChatterTap {
 
-    global class Meta {
+    global class ESB {
         global String Description = 'Inserts the message parameters on user chatterfeed.';
         global String Tag = 'Example';
         global String Name = 'ChatterTap';
@@ -362,13 +362,13 @@ global class ChatterTap {
     }
 
 
-    global List&lt;Map&lt;String,Object&gt;&gt; invoke(Map&lt;String,Object&gt; parameters) {  //input message
-
+    override global String toString() {  //input message
+        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters);
         //main code block
         //..
 
         //output message(s)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{parameters};
+        return Json.serialize(new List&lt;Map&lt;String,Object&gt;&gt;{parameters});
     }
 }
 </pre>
@@ -378,8 +378,8 @@ global class ChatterTap {
 </h3>
 
 <p>
-    <strong>013</strong> the input message is injected into the <code>invoke()</code> method in the form of a key-value collection.
-    <br /><strong>020</strong> the <code>invoke()</code> method returns an output collection of zero, one or more messages.
+    <strong>013</strong> the input message is injected into the <code>toString()</code> method in the form of a key-value collection.
+    <br /><strong>020</strong> the <code>toString()</code> method returns an output collection of zero, one or more messages.
 </p>
 
 <h2>
@@ -387,13 +387,13 @@ global class ChatterTap {
 </h2>
 
 <p>
-    Wire-up plugin Custom Settings and initiate the business logic implementation.
+    Wire up the process settings and initiate the business logic implementation.
 </p>
 
 <pre>
 global class ChatterTap {
 
-    global class Meta {
+    global class ESB {
         global String Description = 'Inserts the message parameters on user chatterfeed.';
         global String Tag = 'Example';
         global String Name = 'ChatterTap';
@@ -404,8 +404,8 @@ global class ChatterTap {
     }
 
 
-    global List&lt;Map&lt;String,Object&gt;&gt; invoke(Map&lt;String,Object&gt; parameters) {  //input message
-
+    override global String toString() {
+        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters); //input message
         //main code block
         Id userId;
         ChatterTapSettings__c setting = ChatterTapSettings__c.getInstance();
@@ -428,8 +428,8 @@ global class ChatterTap {
 </h3>
 
 <p>
-    <strong>016 - 023</strong> Under the main code block, initiate the business logic implementation. The specification defines the preferred chatter feed owner as being the User Id defined the custom settings of the plugin. For this reason, the code references <code>ChatterTapSettings__c</code> to determine if the default chatter (User) Id should been overwritten.
-    <br /><strong>010</strong> To surface a link to the custom settings page of your plugin directly on the ESB processes list view: assign an instance of your custom setting SObject to the CustomSetting parameter of the plugin's <code>Meta</code> inner class.
+    <strong>016 - 023</strong> Under the main code block, initiate the business logic implementation. The specification defines the preferred chatter feed owner as being the User Id defined the custom settings of the process. For this reason, the code references <code>ChatterTapSettings__c</code> to determine if the default chatter (User) Id should been overwritten.
+    <br /><strong>010</strong> To surface a link to the custom settings page of your process directly on the ESB processes list view: assign an instance of your custom setting SObject to the CustomSetting parameter of the process's <code>ESB</code> Marker Class.
 </p>
 
 <h2>
@@ -443,7 +443,7 @@ global class ChatterTap {
 <pre>
 global class ChatterTap {
 
-    global class Meta {
+    global class ESB {
         global String Description = 'Inserts the message parameters on user chatterfeed.';
         global String Tag = 'Example';
         global String Name = 'ChatterTap';
@@ -454,8 +454,8 @@ global class ChatterTap {
     }
 
 
-    global List&lt;Map&lt;String,Object&gt;&gt; invoke(Map&lt;String,Object&gt; parameters) {  //input message
-
+    override global String toString() {
+        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters); //input message
         //main code block
         Id userId;
         ChatterTapSettings__c setting = ChatterTapSettings__c.getInstance();
@@ -475,7 +475,7 @@ global class ChatterTap {
         insert post;
 
         //output message(s)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{parameters};
+        return Json.serialize(new List&lt;Map&lt;String,Object&gt;&gt;{parameters});
     }
 }
 </pre>
@@ -493,19 +493,19 @@ global class ChatterTap {
 </h2>
 
 <p>
-    Test the plugin. Tests will normally cover:
+    Test the process. Tests will normally cover:
 </p>
 
 <ul>
     <li>the expected <code>ESB</code> (for example, the <code>Description</code>)</li>
-    <li>the expected initial state (for example, the Custom settings supporting the plugin)</li>
+    <li>the expected initial state (for example, the Custom settings supporting the process)</li>
     <li>that expected exceptions are thrown for invalid 1initial state</li>
     <li>the expected outputs (for example, the count of the messages in the output collecton)</li>
     <li>the expected side effects (for example, the insertion of certain records such as a <code>FeedItem</code>)</li>
 </ul>
 
 <p>
-    Most plugins will exhibit a set of tests similar to those shown below.
+    Most processes will exhibit a set of tests similar to those shown below.
 </p>
 
 <pre>
@@ -513,60 +513,63 @@ global class ChatterTap {
 private class ChatterTapTest {  
       
     static testmethod void processIsDescribed() {  
-        ChatterTap.Meta meta = new ChatterTap.Meta();  
-        System.assertNotEquals(null, meta.Description);  
+        ChatterTap.ESB marker = new ChatterTap.ESB();  
+        System.assertNotEquals(null, marker.Description);  
     }  
  
  
  
-    static testmethod void callingInvokeDoesNOTThrowErrorWhenCustomSettingSet() {
+    static testmethod void callingToStringDoesNOTThrowErrorWhenCustomSettingSet() {
         //arrange 
         insert new ChatterTapSettings__c ();  // default
         
-        ChatterTap plugin = new ChatterTap();
+        ChatterTap process = new ChatterTap();
         Map&lt;String,Object&gt; parameters = new Map&lt;String,Object&gt;();
  
         //act
-        List&lt;Map&lt;String,Object&gt;&gt; outputs = plugin.invoke(parameters); 
+        process.Parameters = Json.serialize(parameters);
+        String outputs = process.toString(); 
             
         //assert
         System.assert(true, 'ChatterTap ran OK.');
     }
  
  
-    static testmethod void callingInvokeExecutesCorrectly01() {  
+    static testmethod void callingToStringExecutesCorrectly01() {  
         // Arrange   
         insert new ChatterTapSettings__c ();  // default
   
         Map&lt;String,Object&gt; parameters = new Map&lt;String,Object&gt; {
-            'ns_YourKey' =&gt; 'your data'  
+            'c__YourKey' =&gt; 'your data'  
         };  
  
-        // Act  
-        ChatterTap plugin = new ChatterTap();  
-        List&lt;Map&lt;String,Object&gt;&gt; results = plugin.invoke(parameters);  
+        // Act
+        ChatterTap process = new ChatterTap();
+        process.Parameters = Json.serialize(parameters);
+        String results = process.toString();
   
         // Assemble  
-        Integer actualSize = results.size();  
+        Integer actualSize = results.size();
         
         // Assert  
         Integer expectedSize = 1;  
         System.assertEquals(expectedSize, actualSize);  
     }
  
-    static testmethod void callingInvokeExecutesCorrectly02() {  
-        // Arrange   
-        insert new ChatterTapSettings__c ();  // default 
+    static testmethod void callingToStringExecutesCorrectly02() {
+        // Arrange
+        insert new ChatterTapSettings__c ();  // default
   
         Map&lt;String,Object&gt; parameters = new Map&lt;String,Object&gt; {
-            'ns_YourKey' =&gt; 'your data'  
-        };  
-          
-        Integer actualFeedItemsBeforeSize = [SELECT Id, Body FROM FeedItem].Size();  
+            'c__YourKey' =&gt; 'your data'
+        };
+        
+        Integer actualFeedItemsBeforeSize = [SELECT Id, Body FROM FeedItem].Size();
   
         // Act  
-        ChatterTap plugin = new ChatterTap();  
-        List&lt;Map&lt;String,Object&gt;&gt; results = plugin.invoke(parameters);  
+        ChatterTap process = new ChatterTap();  
+        process.Parameters = Json.serialize(parameters);
+        String results = process.toString();  
   
         // Assemble  
         Integer actualFeedItemsAfterSize = [SELECT Id, Body FROM FeedItem].Size();  
@@ -584,8 +587,8 @@ private class ChatterTapTest {
 </h3>
 
 <p>
-    <strong>004 - 007</strong> Test the plugin correctly implements the inner <code>ESB</code> marker class.
-    <br /><strong>011 - 023</strong> The plugin relies on a custom setting instance and should not throw an error if this custom setting exists
-    <br /><strong>026 - 044</strong> The plugin should return exactly one message in the output collection. As this is a no-operation plugin, the test could be further expanded to ensure that the parameters of the input message exactly match the parameters of the output message
-    <br /><strong>046 - 067</strong> The business intent of the plugin is to insert exactly one entry containing details about the sequence and sequence position in a given Chatter Feed. The persistence of state outside the plugin is termed a side effect. The test verifies the correctness of the side effect by ensuring that process adds exactly one post to a given Chatter feed
+    <strong>004 - 007</strong> Test the process correctly implements the <code>ESB</code> Marker Class.
+    <br /><strong>011 - 023</strong> The process relies on a custom setting instance and should not throw an error if this custom setting exists
+    <br /><strong>026 - 044</strong> The process should return exactly one message in the output collection. As this is a no-operation process, the test could be further expanded to ensure that the parameters of the input message exactly match the parameters of the output message
+    <br /><strong>046 - 067</strong> The business intent of the process is to insert exactly one entry containing details about the sequence and sequence position in a given Chatter Feed. The persistence of state outside the process is termed a side effect. The test verifies the correctness of the side effect by ensuring that process adds exactly one post to a given Chatter feed
 </p>

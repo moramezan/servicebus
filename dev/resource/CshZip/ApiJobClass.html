@@ -1,29 +1,237 @@
 <h1>
-    <code>esb.Job</code> Class
+    esb.Job Class
 </h1>
 
+<!--
+ ! Gonna try here not to say "Message" unless it refers to "Message__c"
+ !-->
+
 <p>
-    The <code>esb.Job</code> class is used for enqueueing messages into the Enterprise Service Bus.
-    It implements <code>System.Queueable</code>.
+    A Job is used to pass new events into the Enterprise Service Bus. Jobs can be started in
+    all contexts, such as triggers, batch apex, future methods, and before or after callouts.
 </p>
 
 <p>
-    To submit your Job for asynchronous execution, call <code>System.enqueueJob</code> by
-    passing it the instance of your Job.
+    You can instantiate a Job in one of the following ways:
 </p>
 
-<ul>
-    <li>
-        <a href="?topic=ApiJobConstructors"><strong>Job Constructors</strong></a>
-        
-    </li>
-    <li>
-        <a href="?topic=ApiJobMethods"><strong>Job Methods</strong></a>
-    </li>
-</ul>
+<table>
+        <tr>
+            <th>Usage</th>
+            <th>Signature</th>
+        </tr>
+        <tr>
+            <td>Simple event</td>
+            <td><code>Job(String sequenceName, Id entityId)</code></td>
+        </tr>
+        <tr>
+            <td>Single event</td>
+            <td><code>Job(Map&lt;String,Object&gt;)</code></td>
+        </tr>
+        <tr>
+            <td>Multiple events</td>
+            <td><code>Job(List&lt;Map&lt;String,Object&gt;&gt;)</code></td>
+        </tr>
+        <!--
+        <tr>
+            <td>Lightning Process Builder</td>
+            <td><code>enqueue(String sequenceName, Id entityId)</code></td>
+        </tr>
+        <tr>
+            <td>Salesforce Cloud Flows</td>
+            <td><code>invoke(Process.PluginRequest request)</code></td>
+        </tr>
+        -->
+</table>
+
+<!--
+ ! Stolen from here:
+ ! https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_class_System_Queueable.htm
+ !-->
+
+<p>
+    Then, submit your Job for asynchronous execution by calling <code>System.enqueueJob</code> and
+    passing it the instance of your Job, for example:
+</p>
+
+<pre>
+String sequenceName = 'Payroll_Sequence';
+Id entityId = UserInfo.getUserId();
+
+//submit a simple event to Enterprise Service Bus
+esb.Job j = new esb.Job(sequenceName, entityId);
+Id queueableId = System.enqueueJob(j);
+</pre>
+
+<h1>
+    esb.Job Constructors
+</h1>
+
+<h2>
+    Simple event constructor
+</h2>
+
+<p>
+    Sends known data to a sequence. This is a short-hand method that sets two parameters for you.
+    Use this constructor for simple events that only need to carry an sObject Id.
+</p>
+
+<p>
+    <code>global esb.Job(String sequenceName, Id entityId)</code>
+</p>
+
+<dl>
+    <dt>sequenceName</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Name of the sequence the data is destined for. This is set on the <code>esb__SequenceName</code> event parameter for your convenience.</dd>
+    
+    <dt>entityId</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
+    <dd>Id of some record that the sequence will operate on. This is set on the <code>esb__Id</code> event parameter for your convenience.</dd>
+</dl>
+
+<h2>
+    Single event constructor
+</h2>
+
+<p>
+    Sends an event with any number of parameters to a sequence. Use this constructor for
+    events that need to carry many keys and values.
+</p>
+
+<p>
+    <code>global esb.Job(Map&lt;String,Object&gt; event)</code>
+</p>
+
+<dl>
+    <dt>event</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,Object&gt;</a></dd>
+    <dd>A parameterized event, which must contain the <code>esb__SequenceName</code> key with a string value.</dd>
+</dl>
+
+<h2>
+    Multiple event constructor
+</h2>
+
+<p>
+    Sends multiple events with any number of parameters to sequences. Use this constructor
+    to bulkify multiple events at once without calling enqueueJob inside of a loop.
+</p>
+
+<p>
+    <code>global esb.Job(List&lt;Map&lt;String,Object&gt;&gt; events)</code>
+</p>
+
+<dl>
+    <dt>events</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_list.htm" target="_blank">List&lt;Map&lt;String,Object&gt;&gt;</a></dd>
+    <dd>A collection of multiple parameterized events, each of which must contain an <code>esb__SequenceName</code> key with a string value.</dd>
+</dl>
 
 <!--
  ! TODO
- ! Static usage...
- ! Dynamic usage...
  !-->
+<!--
+<h2>
+    Blob Signature
+</h2>
+
+<p>
+    <code>global esb.Job(String sequenceName, Blob entityData)</code>
+</p>
+
+<dl>
+    <dt>sequenceName</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Name of the sequence the data is destined for. This sets <code>esb__SequenceName</code> as a convenience.</dd>
+    
+    <dt>entityData</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_blob.htm" target="_blank">Blob</a></dd>
+    <dd>Blob representation of the data the sequence will operate on. This sets <code>esb__Id</code> as a convenience.</dd>
+</dl>
+-->
+
+<h1>
+    esb.Job Methods
+</h1>
+
+<h2>
+    Enqueue
+</h2>
+
+<p>
+    Lightning Processes can be enhanced using Jobs, and this method has the 
+    <code>@InvocableMethod</code> annotation. Use this for asynchronous heavy lifting in
+    Lightning Process Builder.
+</p>
+
+<p>
+    <code>global List&lt;Id&gt; enqueue(List&lt;SimpleEvent&gt; events)</code>
+</p>
+
+<dl>
+    <dt>sequenceName</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Indicates which sequence the event is destined for.</dd>
+    
+    <dt>entityId</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
+    <dd>Indicates which sObject the sequence will operate on.</dd>
+</dl>
+
+<fieldset>
+    <legend>Note</legend>
+    The Invocable Action signature is a Simple Event because Lightning Process Builder requires
+    that all Invocable Variables be known at design time.
+</fieldset>
+
+<h2>
+    Invoke
+</h2>
+
+<p>
+    Cloud Flows can be enhanced using Jobs, and this class implements the
+    <code>Process.Plugin</code> interface. Use this to deal with high data volumes in Visual
+    Workflow Cloud Flow Designer.
+</p>
+
+<p>
+    <code>global Process.PluginResult invoke(Process.PluginRequest request)</code>
+</p>
+
+<dl>
+    <dt>request</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_plugin_request.htm" target="_blank">Process.PluginRequest</a></dd>
+    <dd>The request class itself is constructed with a Map&lt;String,Object&gt; that directly becomes the event parameters.</dd>
+</dl>
+
+<p>
+    When the Process.PluginResult is returned, its parameters will contain an <code>esb__QueueableId</code> key identifying the submitted Job.
+</p>
+
+<fieldset>
+    <legend>Note</legend>
+    <p>
+        Advanced users can exploit the Process.Plugin implementation to instantiate Jobs dynamically
+        without creating a package dependency.
+    </p>
+    
+    <p>
+        Use this when authoring and distributing AppExchange processes that need to submit events into Enterprise
+        Service Bus, for example:
+    </p>
+    
+    <pre>
+        //assemble event parameters
+        Map&lt;String,Object&gt; parameters = new Map&lt;String,Object&gt;();
+        parameters.put('esb__SequenceName', 'Generate_PDF_Statements');
+        
+        //immediately submit event to Enterprise Service Bus
+        Process.Plugin job = (Process.Plugin)Type.forName('esb.Job').newInstance();
+        Process.PluginResult result = job.invoke(new Process.PluginRequest(parameters));
+        
+        //access queueable job id
+        Id queueableId = result.OutputParameters.get('esb__QueueableId');
+        System.debug(queueableId); //707j0000008MzD6
+    </pre>
+</fieldset>

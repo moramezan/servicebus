@@ -17,10 +17,10 @@
 
 <ol>
     <li>
-        explain basic plugin concepts as they pertain to the ESB framework.
+        explain basic process concepts as they pertain to the ESB framework.
     </li>
     <li>
-        describe how to create a plugin that enables processing functionality not directly provided
+        describe how to create a process that enables processing functionality not directly provided
         for in the ESB framework.
     </li>
 </ol>
@@ -35,7 +35,7 @@
 </h2>
 
 <p>
-    All ESB processes contain a standard <code>invoke()</code> method. The <code>invoke()</code>
+    All ESB processes contain a standard <code>toString()</code> method. The <code>toString()</code>
     method takes a single input message and returns a list containing zero, one or many message(s).
     The concept can be illustrated as follows:
 </p>
@@ -45,7 +45,7 @@
  !-->
 
 <pre>
-List&lt;Event&gt; messages = process.invoke(Event message);
+List&lt;Event&gt; messages = process.handle(Event message);
 </pre>
 
 <p>
@@ -101,7 +101,7 @@ List&lt;Event&gt; messages = process.invoke(Event message);
     </li>
     <li>
         <p>
-            Convert the specification into a plugin with accompanying unit tests - 
+            Convert the specification into a process with accompanying unit tests - 
             see <a href="?topic=GuideBuildingTesting">building and testing the process</a>
         </p>
         <fieldset>
@@ -110,7 +110,7 @@ List&lt;Event&gt; messages = process.invoke(Event message);
         </fieldset>
     </li>
     <li>
-        Visually test the  plugin - see <a href="#CHAPTER06">post-build steps</a>
+        Visually test the process - see <a href="#CHAPTER06">post-build steps</a>
     </li>
     <li>
         Create a package containing your ESB process and install in the runtime enviroment
@@ -138,7 +138,7 @@ List&lt;Event&gt; messages = process.invoke(Event message);
         The <code>esb__Id</code> parameter points at the underlying data associated with the message.
     </li>
     <li>
-        The plugin author should be familiar with the structure of the data (SObject) pointed at by
+        The process author should be familiar with the structure of the data (SObject) pointed at by
         the event so that he/she can adequately retrieve and write to this object.
     </li>
 </ul>
@@ -171,7 +171,7 @@ List&lt;Event&gt; messages = process.invoke(Event message);
 
 <ul>
     <li>
-        The plugin activity represents specific logic that is unavailable under the ESB framework,
+        The process activity represents specific logic that is unavailable under the ESB framework,
         either because such logic is is not represented by one of the native framework processes, or
         such logic has not been previously created and/or registered.
     </li>
@@ -185,7 +185,7 @@ List&lt;Event&gt; messages = process.invoke(Event message);
         Generally defined activities should be re-specified into separate specific activites. Using
         the example above, one could envisage three separate activities, namely: count, sort and
         report. The more focused an activity, the easier it becomes to write comprehensive, reliable
-        unit tests. And the easier it becomes to re-purpose the plugin in other sequences cutting
+        unit tests. And the easier it becomes to re-purpose the process in other sequences cutting
         down on programmer effort and the potential for bugs (less code).
     </li>
 </ul>
@@ -193,7 +193,7 @@ List&lt;Event&gt; messages = process.invoke(Event message);
 <p>
     The ESB framework surfaces the notion of process parameters via <strong>Step Config</strong>
     and <strong>Process Settings</strong> to accommodate variations in data applied to the same
-    plugin behavior
+    process behavior
 </p>
 
 <ul>
@@ -204,6 +204,6 @@ List&lt;Event&gt; messages = process.invoke(Event message);
     <li>
         <strong>Process Settings</strong> allow a process to make use of a single set of parameters
         without reference to the context of the sequence step containing the process. These
-        parameters are defined in a Custom Setting specific to that plugin class.
+        parameters are defined in a Custom Setting specific to that process class.
     </li>
 </ul>

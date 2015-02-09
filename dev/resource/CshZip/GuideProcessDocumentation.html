@@ -8,10 +8,10 @@
 
 <ul>
     <li>
-        the parameters your plugin expects to be available on the inbound message and
+        the parameters your process expects to be available on the inbound message and
     </li>
     <li>
-        the parameters your plugin either adds to or modifies on the outbound message collection.
+        the parameters your process either adds to or modifies on the outbound message collection.
     </li>
 </ul>
 
@@ -24,13 +24,13 @@
 </h2>
 
 <p>
-    The snippet below illustrates how to document parameters that your plugin expects on any
+    The snippet below illustrates how to document parameters that your process expects on any
     input message.
 </p>
 
 <pre>
 global Map&lt;String,String&gt; Inputs = new Map&lt;String,String&gt;{
-    'ns__Url' => 'STRING representing url to scrape.'
+    'c__Url' => 'STRING representing url to scrape.'
 };
 </pre>
 
@@ -39,7 +39,7 @@ global Map&lt;String,String&gt; Inputs = new Map&lt;String,String&gt;{
 </h3>
 
 <p>
-    <strong>001- 003</strong> succinctly describe each parameter that the plugin depends on
+    <strong>001- 003</strong> succinctly describe each parameter that the process depends on
 </p>
 
 <h2>
@@ -47,7 +47,7 @@ global Map&lt;String,String&gt; Inputs = new Map&lt;String,String&gt;{
 </h2>
 
 <p>
-    The snippet below illustrates how to document parameters that your plugin either adds to your
+    The snippet below illustrates how to document parameters that your process either adds to your
     output message collection or modifies on your output message collection.
 </p>
 
@@ -62,6 +62,6 @@ global Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
 </h3>
 
 <p>
-    <strong>001- 003</strong> succinctly describe each parameter that the plugin either adds or
+    <strong>001- 003</strong> succinctly describe each parameter that the process either adds or
     modifies.
 </p>

@@ -11,16 +11,16 @@
 <p>
     Salesforce requires that callouts execute before DML in any given execution context. For this
     reason, the ESB framework differentiates between <em>callout enabled</em> and <em>non-callout
-    enabled</em> plugins.
+    enabled</em> processes.
 </p>
 
 <p>
-    The ESB framework assumes a plugin is non-callout enabled unless the Apex code that supports the
-    plugin explicitly declares it's intention to make callouts.
+    The ESB framework assumes a process is non-callout enabled unless the Apex code that supports the
+    process explicitly declares its intention to make callouts.
 </p>
 
 <p>
-    The example below demonstrates how to write a callout enabled plugin.
+    The example below demonstrates how to write a callout enabled process.
 </p>
 
 <h3>
@@ -71,7 +71,7 @@
 </h2>
 
 <p>
-    Create an Apex class that supports the minimum required plugin layout.
+    Create an Apex class that supports the minimum required process layout.
 </p>
 
 <pre>
@@ -82,7 +82,7 @@ global class Callout {
         //..
     }
 
-    global void invoke() {
+    override global String toString() {
         //input message
         //..
 
@@ -101,9 +101,9 @@ global class Callout {
 
 <p>
     <strong>001</strong> The class does not take a dependency on the ESB framework. All methods, classes and properties must be described with the <code>global</code> keyword.
-    <br /><strong>003 - 018</strong> a valid ESB plugin has two key elements, namely an inner <code>Meta</code> class and an <code>invoke()</code> method.
-    <br /><strong>003 - 006</strong> the inner <code>ESB</code> class exposes important properties about the ESB plugin thereby facilitating correct integration into the ESB framework. The <code>Description</code> is required in order for the class to be recognised as a valid ESB plugin.
-    <br /><strong>009 - 018</strong> the <code>invoke()</code> method contains the Apex logic. The method takes a single event message, and returns a collection of zero, one or more output messages.
+    <br /><strong>003 - 018</strong> a valid ESB process has two key elements, namely an <code>ESB</code> Marker Class and a <code>toString()</code> method.
+    <br /><strong>003 - 006</strong> the <code>ESB</code> Marker Class exposes important properties about the ESB Process thereby facilitating correct integration into the ESB framework. The <code>Description</code> is required in order for the class to be recognised as a valid ESB Process.
+    <br /><strong>009 - 018</strong> the <code>toString()</code> method contains the Apex logic. The method takes a single event message, and returns a collection of zero, one or more output messages.
 </p>
 
 <h2>
@@ -119,12 +119,12 @@ global class Callout implements Database.AllowsCallouts {
 
     global Boolean AllowsCallouts;
 
-    global class Meta {
+    global class ESB {
         global String Description = 'Does an HTTP CallOut and saves it as a Document.';
         //..
     }
 
-    global void invoke() {
+    override global String toString() {
         //input message
         //..
 
@@ -147,8 +147,8 @@ global class Callout implements Database.AllowsCallouts {
 </h3>
 
 <p>
-    <strong>001</strong> The intent of this ESB plugin is to make a callout. Deliberately declare this intent by annotating the class signature with the <code>Database.AllowsCallouts</code> interface.
-    <br /><strong>003</strong> Any plugin annotated with the <code> Database.AllowsCallouts</code> interface must simultaneously declare a global boolean member called <code>AllowsCallouts</code>.
+    <strong>001</strong> The intent of this ESB Process is to make a callout. Deliberately declare this intent by annotating the class signature with the <code>Database.AllowsCallouts</code> interface.
+    <br /><strong>003</strong> Any process annotated with the <code> Database.AllowsCallouts</code> interface must simultaneously declare a global boolean member called <code>AllowsCallouts</code>.
     <br /><strong>014 - 017</strong> All callout logic must be contained within an <code>AllowsCallouts block</code>. Furthermore, no DML should execute within this block. (By explicitly separating the callout logic from  DML execution via the <code>AllowsCallouts block</code>, the ESB framework is able to contractually support the Salesforce requirement that callouts must precede DML.)
 </p>
 
@@ -174,7 +174,7 @@ global class Callout implements Database.AllowsCallouts {
         global String HelpUrl = Page.CallOutHelp.getUrl();
     }
 
-    global void invoke() {
+    override global String toString() {
         //input message
         //..
 
@@ -197,12 +197,12 @@ global class Callout implements Database.AllowsCallouts {
 </h3>
 
 <p>
-    <strong>006</strong> The <code>Description</code> is a string that describes the functionality of the plugin. This value is surfaced on the processes list view by the ESB discovery process. The <code>Description</code> is the minimum required. <code>Meta</code> in order for the class to be recognised as a valid ESB plugin.
-    <br /><strong>007</strong> The <code>Tag</code> is a string that that groups the ESB plugin amongst similar plugins. It is best practise to create your own category and use that for all your custom plugins. Failure to include a <code>Tag</code> property will group your plugin under the default 'Untagged' group.
-    <br /><strong>008</strong> The <code>Name</code> is a string that describes the friendly name of the ESB plugin  on the list view of the ESB processes. The ESB framework will use the Apex class name of your plugin as the friendly name if you fail to include ths property in your <code>ESB</code> marker class.
-    <br /><strong>009</strong> the <code>Icon</code> is a string that identifies the specific icon to display next to the plugin on the list view of the ESB processes. Select an icon from the <a href=http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png>famfamfam</a> icon collection that most closely represents the functionality of your plugin. Then note the name of the icon and assign it to the <code>Icon</code> property. The ESB framework will use a 'cog' icon to represent your plugin if you fail to include this property in your <code>ESB</code> marker class.
-    <br /><strong>010</strong> the <code>Limits</code> constrains the  number of times a plugin may be executed in a single context. This property  enables  more  work to be performed than would otherwise be possible within prevailing daily Salesforce execution limits. The default is implicitly and conservatively set to <code>1</code>. A simple plugin that avoids Salesforce governed operations such as SOQL or callouts is a good candidate for a large <code>Limits</code> setting (100 or greater). If however, the plugin makes use of a  governed operation, ascertain 50% of that particular Salesforce limit and divide by the number of times the plugin uses the governed operation. The <code>Limits</code> property should not exceed this calculated value.
-    <br /><strong>011</strong> the <code>HelpUrl</code> is a string that defines the help page for the plugin. The help page is surfaced as a link on the list view of the ESB processes. Either a VisualForce page reference or an external web page reference can be assigned to this property. f this property is not defined, the ESB framework will surface a user friendly representation of your plugin by making use of the attributes contained within the plugin's <code>ESB</code> marker class.
+    <strong>006</strong> The <code>Description</code> is a string that describes the functionality of the process. This value is surfaced on the processes list view by the ESB discovery process. The <code>Description</code> is the minimum required property on the <code>ESB</code> Marker Class in order for the class to be recognised as a valid ESB Process.
+    <br /><strong>007</strong> The <code>Tag</code> is a string that that groups the ESB Process amongst similar processes. It is best practise to create your own category and use that for all your custom processes. Failure to include a <code>Tag</code> property will group your process under the default 'Untagged' group.
+    <br /><strong>008</strong> The <code>Name</code> is a string that describes the friendly name of the ESB Process on the list view of the ESB processes. The ESB framework will use the Apex class name of your process as the friendly name if you fail to include ths property in your <code>ESB</code> Marker Class.
+    <br /><strong>009</strong> the <code>Icon</code> is a string that identifies the specific icon to display next to the process on the list view of the ESB processes. Select an icon from the <a href="http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png>famfamfam">icon collection</a> that most closely represents the functionality of your process. Then note the name of the icon and assign it to the <code>Icon</code> property. The ESB framework will use a 'cog' icon to represent your process if you fail to include this property in your <code>ESB</code> Marker Class.
+    <br /><strong>010</strong> the <code>Limits</code> constrains the  number of times a process may be executed in a single context. This property  enables  more  work to be performed than would otherwise be possible within prevailing daily Salesforce execution limits. The default is implicitly and conservatively set to <code>1</code>. A simple process that avoids Salesforce governed operations such as SOQL or callouts is a good candidate for a large <code>Limits</code> setting (100 or greater). If however, the process makes use of a  governed operation, ascertain 50% of that particular Salesforce limit and divide by the number of times the process uses the governed operation. The <code>Limits</code> property should not exceed this calculated value.
+    <br /><strong>011</strong> the <code>HelpUrl</code> is a string that defines the help page for the process. The help page is surfaced as a link on the list view of the ESB processes. Either a VisualForce page reference or an external web page reference can be assigned to this property. If this property is not defined, the ESB framework will surface a user friendly representation of your process by making use of the attributes contained within the process's <code>ESB</code> Marker Class.
 </p>
 
 <h2>
@@ -210,7 +210,7 @@ global class Callout implements Database.AllowsCallouts {
 </h2>
 
 <p>
-    Formalise the invoke() method signature by:
+    Formalise the toString() method signature by:
 </p>
 
 <ul>
@@ -227,7 +227,7 @@ global class Callout implements Database.AllowsCallouts {
 
     global Boolean AllowsCallouts;
 
-    global class Meta {
+    global class ESB {
         global String Description = 'Does an HTTP CallOut and saves it as a Document.';
         global String Tag = 'Example';
         global String Name = 'CallOut';
@@ -236,8 +236,8 @@ global class Callout implements Database.AllowsCallouts {
         global String HelpUrl = Page.CallOutHelp.getUrl();
     }
 
-    global List&lt;Map&lt;String,Object&gt;&gt; invoke(Map&lt;String,Object&gt; parameters) {  //input message
-
+    override global String toString() {
+        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters);
         //callouts block
         if (this.AllowsCallouts) {
             //..
@@ -257,8 +257,8 @@ global class Callout implements Database.AllowsCallouts {
 </h3>
 
 <p>
-    <strong>014</strong> the input message is injected into the <code>invoke()</code> method in the form of a key-value collection.
-    <br /><strong>025</strong> the <code>invoke()</code> method returns an output collection of zero, one or more messages.
+    <strong>014</strong> the input message is injected into the <code>toString()</code> method in the form of a key-value collection.
+    <br /><strong>025</strong> the <code>toString()</code> method returns an output collection of zero, one or more messages.
 </p>
 
 <h2>
@@ -274,7 +274,7 @@ global  class Callout implements Database.AllowsCallouts {
 
     global Boolean AllowsCallouts;
 
-    global class Meta {
+    global class ESB {
         global String Description = 'Does an HTTP CallOut and saves it as a Document.';
         global String Tag = 'Example';
         global String Name = 'CallOut';
@@ -285,8 +285,8 @@ global  class Callout implements Database.AllowsCallouts {
 
     global String Body;
 
-    global List&lt;Map&lt;String,Object&gt;&gt; invoke(Map&lt;String,Object&gt; parameters) {  //input message
-
+    override global String toString() {
+        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters); //input message
         //callouts block
         if (this.AllowsCallouts) {
             HttpRequest request = new HttpRequest();
@@ -328,7 +328,7 @@ global  class Callout implements Database.AllowsCallouts {
 
     global Boolean AllowsCallouts;
 
-    global class Meta {
+    global class ESB {
         global String Description = 'Does an HTTP CallOut and saves it as a Document.';
         global String Tag = 'Example';
         global String Name = 'CallOut';
@@ -337,14 +337,14 @@ global  class Callout implements Database.AllowsCallouts {
         global String HelpUrl = Page.CallOutHelp.getUrl();
 
         global Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
-            'Id' =&gt;'ID modified to reference a document containing the contents of the scraped input url (ns_Url))'
+            'esb__Id' =&gt;'ID modified to reference a document containing the contents of the scraped input url (c__Url))'
         };
     }
 
     global String Body;
 
-    global List&lt;Map&lt;String,Object&gt;&gt; invoke(Map&lt;String,Object&gt; parameters) {  //input message
-        //callouts block
+    override global String toString() {
+        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters); //inputs
         if (this.AllowsCallouts) {
             HttpRequest request = new HttpRequest();
             request.setMethod('GET');
@@ -364,7 +364,7 @@ global  class Callout implements Database.AllowsCallouts {
             Body = Blob.valueOf(this.Body)
         );
         insert document;
-        parameters.put('Id', document.Id);
+        parameters.put('esb__Id', document.Id);
 
 
         //output message(s)
@@ -380,12 +380,12 @@ global  class Callout implements Database.AllowsCallouts {
 <p>
     <strong>034 - 041</strong> The <code>main block</code> completes the implementation of the business specification by the persisting the callout content in a standard <code>Document</code> SObject.
     <br /><strong>018, 038</strong> The content of the callout response is retrieved from the global  member <code>Body</code> and assigned to the body of the <code>document</code> SObject.
-    <br /><strong>041</strong> <code>esb__Id</code> is a standard parameter of any message and it normally points to the underlying data (SObject)of the  message. Any plugin is free to update this <code>esb__Id</code> parameter to conform with the requirements of the plugin business specification. In this example, the response content is persisted as a Salesforce <code>Document</code> and for that reason the <code>esb__Id</code> parameter of the outbound message is updated with the <code>Id</code> of the inserted document.
-    <br /><strong>041, 013 - 015</strong> If a plugin modifies or adds a  parameter on any outbound message, the modification should be formally described by detailing the parameter name and a comment describing the modification.
+    <br /><strong>041</strong> <code>esb__Id</code> is a standard parameter of any message and it normally points to the underlying data (SObject) of the message. Any process is free to update this <code>esb__Id</code> parameter to conform with the requirements of the process business specification. In this example, the response content is persisted as a Salesforce <code>Document</code> and for that reason the <code>esb__Id</code> parameter of the outbound message is updated with the <code>Id</code> of the inserted document.
+    <br /><strong>041, 013 - 015</strong> If a process modifies or adds a parameter on any outbound message, the modification should be formally described by detailing the parameter name and a comment describing the modification.
 </p>
 
 <p>
-    Below is an annotated callout plugin called <code>Callout</code>. This plugin adheres to the
+    Below is an annotated callout process called <code>Callout</code>. This process adheres to the
     required ESB callout template.
 </p>
 
@@ -394,7 +394,7 @@ global  class Callout implements Database.AllowsCallouts {
 </h3>
 
 <p>
-    The plugin inspects the parameters of the inbound message and retrieves the url of a specific
+    The process inspects the parameters of the inbound message and retrieves the url of a specific
     web page to be scraped. The content of the scraped page is stored as a Salesforce document. Most
     importantly, the <code>esb__Id</code> parameter of the outbound message is updated with the Id
     of this Salesforce document so that any downstream processes will have access to that scraped
@@ -406,7 +406,7 @@ global class Callout implements Database.AllowsCallouts {
 
     global Boolean AllowsCallouts;
 
-    global class Meta {
+    global class ESB {
         global String Description = 'Does an HTTP CallOut and saves it as a Document.';
         global String Tag = 'Example';
         global String Name = 'CallOut';
@@ -415,7 +415,7 @@ global class Callout implements Database.AllowsCallouts {
         global String HelpUrl = Page.CallOutHelp.getUrl();
 
         global Map&lt;String,String&gt; Inputs = new Map&lt;String,String&gt;{
-            'ns__Url' => 'STRING representing Url to scrape.'
+            'c__Url' => 'STRING representing Url to scrape.'
         };
         global Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
             'esb__Id' =>'ID of a document containing the contents of the scraped input URL.'
@@ -424,10 +424,10 @@ global class Callout implements Database.AllowsCallouts {
 
     global String Body;
 
-    global List&lt;Map&lt;String,Object&gt;&gt; invoke(Map&lt;String,Object&gt; parameters) {  //input message
-        //callouts block
+    override global String toString() {
+        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters);
         if (this.AllowsCallouts) {
-            String url = (String)parameters.get('ns_Url');
+            String url = (String)parameters.get('c__Url');
             HttpRequest request = new HttpRequest();
             request.setMethod('GET');
             request.setEndpoint(url);
@@ -461,13 +461,13 @@ global class Callout implements Database.AllowsCallouts {
 </h3>
 
 <p>
-    <strong>001</strong> an ESB plugin is a standard Apex class. ESB processes do not take any dependency on the ESB package.
-    <br /><strong>001 - 051</strong> a valid ESB plugin has two key elements, namely an inner <code>ESB</code> class and an <code>invoke()</code>method.
-    <br /><strong>005 - 019</strong> the inner <code>ESB</code> class exposes important properties about the ESB plugin thereby facilitating  correct integration into the ESB framework.
-    <br /><strong>006</strong> the <code>Description</code> is a string that describes the functionality of the plugin and is surfaced on the  list view of the ESB processes by the discovery process.
-    <br /><strong>007</strong> the <code>Tag</code> is a string that that groups the ESB plugin with similar plugins. We recommend that you create your own categories for custom plugins.
+    <strong>001</strong> an ESB process is a standard Apex class. ESB processes do not take any dependency on the ESB package.
+    <br /><strong>001 - 051</strong> a valid ESB process has two key elements, namely an <code>ESB</code> Marker Class and a <code>toString()</code>method.
+    <br /><strong>005 - 019</strong> the <code>ESB</code> Marker Class exposes important properties about the ESB process thereby facilitating correct integration into the ESB framework.
+    <br /><strong>006</strong> the <code>Description</code> is a string that describes the functionality of the process and is surfaced on the list view of the ESB processes by the discovery process.
+    <br /><strong>007</strong> the <code>Tag</code> is a string that that groups the ESB process with similar processes. We recommend that you create your own categories for custom processes.
     <br /><strong>008</strong> the <code>Name</code> is a string that describes the friendly <code>Name</code> of the ESB process.
-    <br /><strong>009</strong> the <code>Icon</code> is a unique string that defines the icon that will appear next to the plugin when viewed on the list view of ESB processes.
+    <br /><strong>009</strong> the <code>Icon</code> is a unique string that defines the icon that will appear next to the process when viewed on the list view of ESB processes.
 </p>
 
 <fieldset>
@@ -476,7 +476,7 @@ global class Callout implements Database.AllowsCallouts {
 </fieldset>
 
 <p>
-    <strong>010</strong> <code>Limits</code> constrains the number of times a  plugin may be executed in a single context.
+    <strong>010</strong> <code>Limits</code> constrains the number of times a process may be executed in a single context.
 </p>
 
 <fieldset>
@@ -488,12 +488,12 @@ global class Callout implements Database.AllowsCallouts {
     <ul>
         <li>The default is implicitly and conservatively set to one.</li>
         <li>
-            A simple plugin that avoids Salesforce governed operations such as SOQL or callouts is
+            A simple process that avoids Salesforce governed operations such as SOQL or callouts is
             a good candidate for a large <code>Limits</code> setting. (100 or greater)
         </li>
         <li>
-            If however, the plugin makes use of a governed operation, ascertain 50% of that
-            particular Salesforce limit and divide by the number of times the plugin uses the
+            If however, the process makes use of a governed operation, ascertain 50% of that
+            particular Salesforce limit and divide by the number of times the process uses the
             governed operation. The <code>Limits</code> property must not exceed this calculated
             value.
         </li>
@@ -502,7 +502,7 @@ global class Callout implements Database.AllowsCallouts {
 
 <p>
     <strong>011</strong> the <code>HelpUrl</code> is a string that describes the help page for the
-    plugin.
+    process.
 </p>
 
 <fieldset>
@@ -517,7 +517,7 @@ global class Callout implements Database.AllowsCallouts {
 
 <fieldset>
     <legend>Note</legend>
-    This documentation supports auto generated help for the plugin.
+    This documentation supports auto generated help for the process.
 </fieldset>
 
 <p>
@@ -527,14 +527,14 @@ global class Callout implements Database.AllowsCallouts {
 
 <fieldset>
     <legend>Note</legend>
-    This documentation supports auto generated help for the plugin.
+    This documentation supports auto generated help for the process.
 </fieldset>
 
 <p>
-    <strong>023 - 050</strong> the <code>invoke()</code> method contains the Apex logic. The method takes a single event message and returns zero, one or more output messages as a collection.
-    <br /><strong>001 - 051</strong> ESB plugins making callouts must be annotated in a manner that declares the plugin's intent to make one or more callouts.
+    <strong>023 - 050</strong> the <code>toString()</code> method contains the Apex logic. The method takes a single event message and returns zero, one or more output messages as a collection.
+    <br /><strong>001 - 051</strong> ESB processes making callouts must be annotated in a manner that declares the process's intent to make one or more callouts.
     <br /><strong>001</strong> the class must implement the the <code>Database.AllowsCallouts</code> interface.
     <br /><strong>003</strong> the class must expose a global Boolean member called <code>AllowsCallouts</code>
     <br /><strong>025 - 035</strong> all <em>callout logic</em> must be implemented within a callout code block. The <em>callout logic</em>  must return null, not the body of the callout response.
-    <br /><strong>021, 042</strong> the <em>main block</em> accesses callout content through class instance properties. Every callout should have a corresponding String class property. It is left to the developer of the plugin to appropriately name the properties.
+    <br /><strong>021, 042</strong> the <em>main block</em> accesses callout content through class instance properties. Every callout should have a corresponding String class property. It is left to the developer of the process to appropriately name the properties.
 </p>

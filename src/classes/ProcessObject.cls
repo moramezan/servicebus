@@ -16,26 +16,26 @@ public with sharing class ProcessObject extends SalesforceObject {
     public class ESB {
         /**
          * Each process MUST provide a grouping tag.
-         * @docs ApiMarkerProperties.html
+         * @docs ApiProcessMarkers.html
          */
         public String Tag {get;}
 
         /**
          * Each process MUST provide a friendly name.
-         * @docs ApiMarkerProperties.html
+         * @docs ApiProcessMarkers.html
          */
         public String Name {get;}
 
         /**
          * Each process MUST provide a succinct description.
-         * @docs ApiMarkerProperties.html
+         * @docs ApiProcessMarkers.html
          */
         public String Description {get;}
 
         /**
          * Each Process can have one associated customization in the form of a Custom Setting. Process Authors must
          * advertise the custom setting type here, and the framework will provide a link from the Process detail page.
-         * @docs ApiMarkerProperties.html
+         * @docs ApiProcessMarkers.html
          */
         public SObject ProcessSetting {get;}
         
@@ -43,42 +43,42 @@ public with sharing class ProcessObject extends SalesforceObject {
          * Each Step can have one associated config record. The type of the record depends on what process
          * is living on the Step. Process Authors must advertise the object type here, and the framework will
          * handle the record lifecycle (creating and deleting them in tandem with the appropriate Step).
-         * @docs ApiMarkerProperties.html
+         * @docs ApiProcessMarkers.html
          */
         public SObject StepConfig {get;}
         
         /**
          * Each Process must name an icon (eg 'arrow_left') from the FamFamFam Silk library:
          * http://www.famfamfam.com/archive/silk-icons-thats-your-lot/
-         * @docs ApiMarkerProperties.html
+         * @docs ApiProcessMarkers.html
          */
         public String Icon {get;}
         
         /**
          * Each Process can have one Visualforce Page for support and documentation purposes. Process Authors can
          * populate the property with a default value like Page.MyProcessDocs.getUrl() to make this available to users.
-         * @docs ApiMarkerProperties.html
+         * @docs ApiProcessMarkers.html
          */
         public String HelpUrl {get;}
         
         /**
          * Each process defines the maximum number of times it can be invoked in a single execution context.
          * No definition implies a default limit of 1.
-         * @docs ApiMarkerProperties.html
+         * @docs ApiProcessMarkers.html
          */
         public Integer Limits {get;}
 
         /**
          * Key represents the parameter name, eg 'ns_URL'
          * Value is a friendly description, eg 'STRING of endpoint to scrape.'
-         * @docs ApiMarkerProperties.html
+         * @docs ApiProcessMarkers.html
          */
         public Map<String,String> Inputs {get;}
         
         /**
          * Key represents the parameter name, eg 'ns_URL'
          * Value is a friendly description, eg 'STRING of endpoint to scrape.'
-         * @docs ApiMarkerProperties.html
+         * @docs ApiProcessMarkers.html
          */
         public Map<String,String> Outputs {get;}
         
