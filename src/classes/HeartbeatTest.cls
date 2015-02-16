@@ -10,7 +10,7 @@
         Step__c scheduleStep = StepObject.generateOne(sequence.Id, scheduleProcess.Id);
         
         //arrange message parameters
-        String parameters = '{"__EventStamp":"2014-01-18T12:00:00.000Z"}';
+        String parameters = '{"esb__EntryPointDatetime":"2014-01-18T12:00:00.000Z"}';
         
         //act
         Heartbeat process = new Heartbeat();
@@ -38,7 +38,7 @@
         //arrange parameters
         String stampAsString = '2014-01-18T12:00:00.000Z';
         Map<String,Object> parameters = new Map<String,Object>{
-            '__EventStamp' => stampAsString 
+            'esb__EntryPointDatetime' => stampAsString 
         };
 
         //act
@@ -69,7 +69,7 @@
         //arrange parameters
         String stampAsString = '2014-01-18T12:00:00.000Z';
         Map<String,Object> parameters = new Map<String,Object>{
-            '__EventStamp' => stampAsString 
+            'esb__EntryPointDatetime' => stampAsString 
         };
 
         //act
@@ -86,7 +86,7 @@
         //arrange parameters
         String stampAsString = 'XXXX-01-18T12:00:00.000Z';  // invalid stamp
         Map<String,Object> parameters = new Map<String,Object>{
-            '__EventStamp' => stampAsString 
+            'esb__EntryPointDatetime' => stampAsString 
         };
 
         //assemble

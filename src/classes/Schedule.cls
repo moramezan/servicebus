@@ -12,6 +12,9 @@ public with sharing class Schedule {
         public String HelpUrl = Page.ScheduleConfigCsh.getUrl();
         public Boolean ConsumesHeartbeat = true;
         public Integer Limits = 5000; //leave half of 10,000 (Total number of records retrieved by Database.getQueryLocator)
+        public Map<String,String> Outputs = new Map<String,String>{
+            'esb__EntryPointDatetime' => 'DATETIME of the point in time this schedule was intended to run.'
+        };
     }
     
     public class ScheduleException  extends Exception {}
@@ -19,13 +22,15 @@ public with sharing class Schedule {
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
 
-        String stampAsString = (String)parameters.get('__EventStamp');
+        String stampAsString = (String)parameters.get('esb__EntryPointDatetime');
 
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
     
         if (stampAsString != null) {
             // evaluate:
             if (isWithinWindow(stampAsString, this.StepConfig)) {
+                Datetime intendedTimestamp = (Datetime)Json.deserialize('"' + stampAsString + '"', Datetime.class);
+                parameters.put('esb__EntryPointDatetime', intendedTimestamp);
                 parametersList.add(parameters);
             } 
         } else { 

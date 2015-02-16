@@ -174,7 +174,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
                 'esb__Id' => UserInfo.getUserId(), 
                 '__SequenceName' => '', //avoid "Mandatory parameter esb__SequenceName not supplied."
                 '__Position' => '', //avoid "Mandatory parameter esb__SequenceName not supplied."
-                '__EventStamp' => getISO8601(heartbeat),
+                'esb__EntryPointDatetime' => getISO8601(heartbeat),
                 '__IsHeartbeatProcess' => true //#575 so that resolve and execute can crow look
             };
             parameterses.add(parameters);

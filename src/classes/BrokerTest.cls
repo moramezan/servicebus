@@ -986,7 +986,7 @@
             'esb__Id' => UserInfo.getUserId(),
             '__SequenceName' => sequenceName,
             '__Position' => position,
-            '__EventStamp' => eventStamp
+            'esb__EntryPointDatetime' => eventStamp
         };
              
         // act
@@ -998,7 +998,7 @@
         String  actualEventStamp;
         if (actualCount == 1) {
             Map<String,Object> actualParameters = (Map<String,Object>)Json.deserializeUntyped(actualMessages[0].Parameters__c);
-            actualEventStamp = (String)actualParameters.get('__EventStamp');
+            actualEventStamp = (String)actualParameters.get('esb__EntryPointDatetime');
         }
  
         // assert

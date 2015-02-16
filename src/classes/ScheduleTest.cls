@@ -85,7 +85,7 @@
          //arrange parameters
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday
         Map<String,Object> parameters = new Map<String,Object>{
-            '__EventStamp' => stampAsString
+            'esb__EntryPointDatetime' => stampAsString
         };
  
         // act 
@@ -100,7 +100,7 @@
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
-            actualStampTruncated = (String)actualParameters.get('__EventStamp');
+            actualStampTruncated = (String)actualParameters.get('esb__EntryPointDatetime');
         }
         
         // assert
@@ -139,7 +139,7 @@
          //arrange parameters
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday, a working day
         Map<String,Object> parameters = new Map<String,Object>{
-            '__EventStamp' => stampAsString
+            'esb__EntryPointDatetime' => stampAsString
         };
  
         // act 
@@ -154,7 +154,7 @@
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
-            actualStampTruncated = (String)actualParameters.get('__EventStamp');
+            actualStampTruncated = (String)actualParameters.get('esb__EntryPointDatetime');
         }
         
         // assert
@@ -193,7 +193,7 @@
          //arrange parameters
         String stampAsString = '2014-01-03T12:00:00.000Z';   
         Map<String,Object> parameters = new Map<String,Object>{
-            '__EventStamp' => stampAsString
+            'esb__EntryPointDatetime' => stampAsString
         };
  
         // act 
@@ -208,7 +208,7 @@
         if (actualCount == 1) {
              Map<String,Object> actualParameters = results[0];
             actualParameterSize = actualParameters.keySet().size();
-            actualStampTruncated = (String)actualParameters.get('__EventStamp');
+            actualStampTruncated = (String)actualParameters.get('esb__EntryPointDatetime');
         }
         
         // assert
@@ -246,7 +246,7 @@
          //arrange parameters
         String stampAsString = '2014-01-18T12:00:00.000Z';
         Map<String,Object> parameters = new Map<String,Object>{
-            '__EventStamp' => stampAsString
+            'esb__EntryPointDatetime' => stampAsString
         };
  
         // act 
@@ -278,7 +278,7 @@
          //arrange parameters
         String invalidStamp = 'XXXX-01-18T12:00:00.000Z';
         Map<String,Object> parameters = new Map<String,Object>{
-            '__EventStamp' => invalidStamp
+            'esb__EntryPointDatetime' => invalidStamp
         };
         
         // assemble

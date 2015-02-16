@@ -10,7 +10,7 @@ public with sharing class Heartbeat {
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
         
-        String  stampAsString = (String)parameters.get('__EventStamp');
+        String  stampAsString = (String)parameters.get('esb__EntryPointDatetime');
 
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         

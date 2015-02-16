@@ -138,9 +138,15 @@ global without sharing class Job implements Process.Plugin, Queueable {
             parameters.putAll(new Map<String,Object>{
                 '__Hops' => 0,
                 '__EntryPointGuid' => Broker.getEntryPointGuid(18),
+                '__EntryPointDatetime' => System.now(), //#753 formerly __EventStamp this is ONLY for our framework use
                 'esb__EnqueueUserId' => UserInfo.getUserId(), //WE use '__' and THEY use 'esb' per #669
                 '__EnqueueUserId' => UserInfo.getUserId()
             });
+            
+            if (!parameters.containsKey('esb__EntryPointDatetime')) {
+                //#753 processes like Schedule are allowed to mess with this}
+                parameters.put('esb__EntryPointDatetime', System.now());
+            }
             
             this.messages.add(new Message__c(
                 Parameters__c = Json.serializePretty(parameters),
