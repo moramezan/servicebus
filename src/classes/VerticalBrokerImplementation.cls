@@ -173,7 +173,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         List<Message__c> fatalMessages = new List<Message__c>();
         for (Id fatalMessageId : this.fatalMessageIds) fatalMessages.add(new Message__c(
             Id = fatalMessageId,
-            Exception__c = asyncApexJob.ExtendedStatus
+            Exception__c = asyncApexJob.ExtendedStatus.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length) //#754
         ));
         
         update fatalMessages;

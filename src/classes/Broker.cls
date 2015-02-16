@@ -115,8 +115,8 @@ abstract public with sharing class Broker {
             this.savepoint = savepoint;
             for (Id messageId : messageIds) this.fuckups.add(new Message__c(
                 Id = messageId,
-                Exception__c = userException.getMessage(),
-                Cause__c = new ExceptionSerializer(userException).getAsString()
+                Exception__c = userException.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length), //#754
+                Cause__c = new ExceptionSerializer(userException).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length) //#754
             ));
         }
         
@@ -133,8 +133,8 @@ abstract public with sharing class Broker {
             this.savepoint = savepoint;
             for (Id messageId : messageIds) this.fuckups.add(new Message__c(
                 Id = messageId,
-                Exception__c = this.getMessage(),
-                Cause__c = new ExceptionSerializer(this).getAsString()
+                Exception__c = this.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length), //#754
+                Cause__c = new ExceptionSerializer(this).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length) //#754
             ));
         }
     }
