@@ -50,7 +50,6 @@
         ProcessObject.ESB meta = (ProcessObject.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.ESB.class);
         String expectedStepConfig  = meta.StepConfig.getSObjectType().getDescribe().getName();
         String expectedIcon = meta.icon;
-        String expectedHelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + '/apex/Csh?topic=ProcessPublishSubscribe';
         
         //act 
         Process__c subscribeProcess = ProcessObject.fromType(actualType);
@@ -62,7 +61,6 @@
         String actualFullyQualifiedClassName = subscribeProcess.FullyQualifiedClassName__c; 
         String actualStepConfig = subscribeProcess.StepConfig__c; 
         String actualIcon = subscribeProcess.Icon__c; 
-        String actualHelpUrl = subscribeProcess.HelpUrl__c;
         Integer actualLimits = (Integer)subscribeProcess.Limits__c;
         
         //assert
@@ -72,7 +70,6 @@
         System.assertEquals(expectedFullyQualifiedClassName , actualFullyQualifiedClassName);
         System.assertEquals(expectedStepConfig , actualStepConfig);
         System.assertEquals(expectedIcon , actualIcon );
-        System.assertEquals(expectedHelpUrl, actualHelpUrl);
         System.assertEquals(expectedLimits, actualLimits);
     } 
  

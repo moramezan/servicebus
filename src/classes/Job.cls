@@ -229,7 +229,7 @@ global without sharing class Job implements Process.Plugin, Queueable {
         // #653 don't use an API call unless necessary
         if (Broker.impl().isAlreadyRunning()) return;
         
-        PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/data/v32.0/tooling/executeAnonymous');
+        PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/data/v33.0/tooling/executeAnonymous');
         pr.getParameters().put('anonymousBody', Job.class.getName() + '.process();');
         String endpoint = pr.getUrl();
         

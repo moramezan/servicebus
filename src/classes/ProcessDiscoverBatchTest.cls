@@ -12,7 +12,7 @@
         }
     } 
     
-    static testmethod void testRecordCreatedForProcessAndStateful() {
+    /*static testmethod void testRecordCreatedForProcessAndStateful() {
         //arrange
         ProcessDiscoverBatch.classes = [
             SELECT Id, Name, NamespacePrefix
@@ -47,7 +47,7 @@
         System.assert(actualDescription.contains(expectedDescription));
         String expectedTag = 'Enterprise Service Bus';
         System.assert(actualDescription.contains(expectedDescription));
-    }
+    }*/
 
  
     static testmethod void testImplementsEsbSubclass() {

@@ -14,7 +14,7 @@ public with sharing class RemoteSiteSettingController {
                 request.setMethod('GET');
                 
                 try {
-                    new Http().send(request);
+                    if (!Test.isRunningTest()) new Http().send(request);
                     isRssPresent = true;
                 } catch (CalloutException e) {
                     //probably 'Unauthorized endpoint'
