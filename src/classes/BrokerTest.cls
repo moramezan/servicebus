@@ -778,7 +778,7 @@
         Set<String> uniqueIds =  new Set<String>();
         Integer count = 1;
         while (count <= uniqueTotal) {
-            uniqueIds.add(Broker.getEntryPointGuid(len));
+            uniqueIds.add(Job.uuidVersionFour());
             count++;
         }
 
@@ -1073,19 +1073,19 @@
         List<Message__c> messagesAfter = [SELECT Parameters__c FROM Message__c LIMIT 1];
         
         
-        String  actualEntryPointGuid ; 
+        String  actualEntryPointUuid ; 
         Id      actualEnqueueUserId  ; 
         Integer actualPosition       ; 
         if (messagesAfter.size() == 1) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(messagesAfter[0].Parameters__c);
-            actualEntryPointGuid = (String) parameters.get('__EntryPointGuid');
+            actualEntryPointUuid = (String) parameters.get('__EntryPointUuid');
             actualEnqueueUserId  = (Id) parameters.get('__EnqueueUserId' );
             actualPosition       = (Integer) parameters.get('__Position');
         }
 
         // assert
-        String  expectedEntryPointGuid = null;
-        System.assertNotEquals(expectedEntryPointGuid,actualEntryPointGuid);
+        String  expectedEntryPointUuid = null;
+        System.assertNotEquals(expectedEntryPointUuid,actualEntryPointUuid);
         Id  expectedEnqueueUserId = UserInfo.getUserId();
         System.assertEquals(expectedEnqueueUserId,actualEnqueueUserId);
         Integer expectedPosition = 1;   

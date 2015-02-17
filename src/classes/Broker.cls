@@ -619,7 +619,4 @@ abstract public with sharing class Broker {
      
     abstract public void restartImpl();
     
-    static public String getEntryPointGuid(Integer size) {
-        return EncodingUtil.convertToHex(crypto.generateAesKey(128)).substring(0, size);
-    }
 }

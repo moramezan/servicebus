@@ -25,9 +25,9 @@ public with sharing class AuditWriter {
         Integer parametersOrder = (Integer)parameters.get('__Hops');
         parametersOrder = (parametersOrder != null) ? parametersOrder : 1;
         
-        String entryPointGuid = (String)parameters.get('__EntryPointGuid');
-        if (String.isBlank(entryPointGuid)) {
-            throw new AuditWriterException('Unable to access the Entry Point GUID');
+        String entryPointUuid = (String)parameters.get('__EntryPointUuid');
+        if (String.isBlank(entryPointUuid)) {
+            throw new AuditWriterException('Unable to access the Entry Point UUID');
         }
                 
         //derive the Step
@@ -66,7 +66,7 @@ public with sharing class AuditWriter {
                     Sequence__c = step.Sequence__c,
                     Hops__c = parametersOrder,
                     AuditGroup__c     = auditGroupId,
-                    EntryPointGuid__c = entryPointGuid,
+                    EntryPointUuid__c = entryPointUuid,
                     Parameters__c    = serializedParameters
                 ));
             }

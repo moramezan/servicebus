@@ -8,7 +8,7 @@
     }
     
     
-    private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessEntryPointGuid() {
+    private static testmethod void callingInvokeThrowsExpectedExceptionWhenCannotAccessEntryPointUuid() {
         //arrange
         String sequenceName  = 'AuditWriterSequence';
         Integer thePosition =  1;
@@ -19,7 +19,7 @@
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            // '__EntryPointGuid' => '1234567abcde',  // null EntryPointGuid
+            // '__EntryPointUuid' => '1234567abcde',  // null EntryPointUuid
             'esb__Id' => theId
         };
         
@@ -38,7 +38,7 @@
         Boolean expectedFlagException = true;
         System.assertEquals(expectedFlagException, actualFlagException);
         
-        String expectedMessage = 'Unable to access the Entry Point GUID';
+        String expectedMessage = 'Unable to access the Entry Point UUID';
         System.assert( actualMessage.contains(expectedMessage) );
     }
     
@@ -53,7 +53,7 @@
         insert sequence;
     
         Map<String,Object> parameters = new Map<String,Object>{
-            '__EntryPointGuid' => '1234567abcde',
+            '__EntryPointUuid' => '1234567abcde',
             'esb__Id' => theId
         };
         
@@ -120,7 +120,7 @@
  
         Map<String,Object> parameters = new Map<String,Object>{
             'esb__Id' => theId,
-            '__EntryPointGuid' => '1234567abcde',
+            '__EntryPointUuid' => '1234567abcde',
             'esb__AuditGroupIds' => auditGroupIds,
             '__SequenceName' => sequenceName,
             '__Position' => positionA2

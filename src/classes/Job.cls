@@ -137,13 +137,18 @@ global without sharing class Job implements Process.Plugin, Queueable {
         for (Map<String,Object> parameters : parameterses) {
             parameters.putAll(new Map<String,Object>{
                 '__Hops' => 0,
-                '__EntryPointGuid' => Broker.getEntryPointGuid(18),
+                '__EntryPointUuid' => uuidVersionFour(), //#751 formerly __EntryPointGuid, this is ONLY for 'our' use
                 '__EntryPointDatetime' => System.now(), //#753 formerly __EventStamp this is ONLY for our framework use
                 'esb__EnqueueUserId' => UserInfo.getUserId(), //WE use '__' and THEY use 'esb' per #669
                 '__EnqueueUserId' => UserInfo.getUserId()
             });
             
-            if (!parameters.containsKey('esb__EntryPointDatetime')) {
+            if (parameters.get('esb__EntryPointUuid') == null) {
+                //#751 'they' are allowed to mess with this, eg for replay
+                parameters.put('esb__EntryPointUuid', uuidVersionFour());
+            }
+            
+            if (parameters.get('esb__EntryPointDatetime') == null) {
                 //#753 processes like Schedule are allowed to mess with this}
                 parameters.put('esb__EntryPointDatetime', System.now());
             }
@@ -237,5 +242,31 @@ global without sharing class Job implements Process.Plugin, Queueable {
         HttpResponse response = new Http().send(request);
         Integer status = response.getStatusCode();
         if (status != 200) throw new JobException(response.getBody());
+    }
+    
+    /**
+     * #751 Generates Universally unique identifier Version 4:
+     * http://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29
+     * Version 4 UUIDs have the form 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+     * where x is any hexadecimal digit and y is one of 8, 9, a, or b
+     */
+    static public String uuidVersionFour() {
+        //gives 32 hexadecimal digits, eg 90a9b3e3541a11cc964557c52e272a14
+        String digits = EncodingUtil.convertToHex(Crypto.generateAesKey(128));
+        
+        //concatenate v4
+        String output = ''
+            + digits.substring(0, 8) //xxxxxxxx
+            + '-'
+            + digits.substring(8, 12) //xxxx
+            + '-'
+            + '4' + digits.substring(12, 16).right(3) //4xxx
+            + '-'
+            + '8' + digits.substring(16, 20).right(3) //yxxx
+            + '-'
+            + digits.substring(20, 32) //xxxxxxxxxxxx
+        ;
+        
+        return output;
     }
 }

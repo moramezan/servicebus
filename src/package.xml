@@ -174,7 +174,7 @@
     </types>
     <types>
         <members>AuditEntry__c.AuditGroup__c</members>
-        <members>AuditEntry__c.EntryPointGuid__c</members>
+        <members>AuditEntry__c.EntryPointUuid__c</members>
         <members>AuditEntry__c.GroupIdentifier__c</members>
         <members>AuditEntry__c.Hops__c</members>
         <members>AuditEntry__c.Parameters__c</members>
