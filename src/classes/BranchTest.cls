@@ -30,19 +30,19 @@
         BranchConfig__c config = new BranchConfig__c(Sequence__c = target.Id);
         insert config;
         
-        Map<String,Object> parameters = new Map<String,Object>{
+        Map<String,Object> inputEvent = new Map<String,Object>{
             '__SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Type reflector = Branch.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
+        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent, config).invokeMain().Outputs;
 
         List<Object> expectedIds = null;
-        List<Object> actualIds = (List<Object>)parametersList[1].get('__SubsequenceStepIds');
+        List<Object> actualIds = (List<Object>)outputEvents[1].get('__SubsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
     }
     
-    static testmethod void testTwoParameterSetsReturned() {
+    static testmethod void testTwoEventsReturned() {
         //arrange sequences
         Sequence__c origin = new Sequence__c(Name = 'originSequence');
         Sequence__c target = new Sequence__c(Name = 'targetSequence');
@@ -53,43 +53,43 @@
         BranchConfig__c config = new BranchConfig__c(Sequence__c = target.Id);
         insert config;
         
-        //arrange parameters
-        Map<String,Object> parameters = new Map<String,Object>{
+        //arrange input event
+        Map<String,Object> inputEvent = new Map<String,Object>{
             '__SequenceName' => origin.Name,
             '__Position' => 1
         };
         
         //act
         Type reflector = Branch.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
+        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent, config).invokeMain().Outputs;
 
         //assert
         Decimal expectedSize = 2;
-        Decimal actualSize = parametersList.size();
+        Decimal actualSize = outputEvents.size();
         System.assertEquals(expectedSize, actualSize);
         
         //act
-        Map<String,Object> normalParameters = parametersList[0]; //the normal parameters continues to the next step
+        Map<String,Object> normalEvent = outputEvents[0]; //the normal event continues to the next step
         
         //asserts
         String expectedNormalSequenceName = origin.Name;
-        String actualNormalSequenceName = (String)normalParameters.get('__SequenceName');
+        String actualNormalSequenceName = (String)normalEvent.get('__SequenceName');
         System.assertEquals(expectedNormalSequenceName, actualNormalSequenceName);
         
         Decimal expectedNormalPosition = 1;
-        Decimal expectedActualPosition = (Decimal)normalParameters.get('__Position');
+        Decimal expectedActualPosition = (Decimal)normalEvent.get('__Position');
         System.assertEquals(expectedNormalPosition, expectedActualPosition);
         
         //act
-        Map<String,Object> branchParameters = parametersList[1]; //the branch parameters goes to the top of another sequence
+        Map<String,Object> branchEvent = outputEvents[1]; //the branch event goes to the top of another sequence
         
         //asserts
         String expectedBranchSequenceName = target.Name;
-        String actualBranchSequenceName = (String)branchParameters.get('__SequenceName');
+        String actualBranchSequenceName = (String)branchEvent.get('__SequenceName');
         System.assertEquals(expectedBranchSequenceName, actualBranchSequenceName);
         
         Decimal expectedBranchPosition = 0;
-        Decimal actualBranchPosition = (Decimal)branchParameters.get('__Position');
+        Decimal actualBranchPosition = (Decimal)branchEvent.get('__Position');
         System.assertEquals(expectedBranchPosition, actualBranchPosition);
     }
     
@@ -102,8 +102,8 @@
         BranchConfig__c config = new BranchConfig__c(Sequence__c = sequence.Id);
         insert config;
         
-        //arrange parameters
-        Map<String,Object> parameters = new Map<String,Object>{
+        //arrange event
+        Map<String,Object> inputEvent = new Map<String,Object>{
             '__SequenceName' => sequence.Name,
             '__Position' => 1
         };
@@ -114,7 +114,7 @@
         //act
         try {
             Type reflector = Branch.class;
-            List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
+            List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent, config).invokeMain().Outputs;
         } catch (Exception e) {
             exceptionThrown = true;
             System.assert(e instanceof Branch.BranchException);

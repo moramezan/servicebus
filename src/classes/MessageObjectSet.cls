@@ -54,10 +54,10 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
     public void incrementPositions() {
         List<Message__c> messages = this.getSObjects();
         for (Message__c message : messages) {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             Integer position = (Integer)parameters.get('__Position');
             parameters.put('__Position', ++position);
-            message.Parameters__c = Json.serializePretty(parameters);
+            message.Event__c = Json.serializePretty(parameters);
         }
     }
     
@@ -70,10 +70,10 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
     public void populateQueueableId(QueueableContext context) {
         List<Message__c> messages = this.getSObjects();
         for(Message__c message : messages) {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             Id queueableId = context.getJobId();
             parameters.put('__QueueableId', queueableId);
-            message.Parameters__c = Json.serializePretty(parameters);
+            message.Event__c = Json.serializePretty(parameters);
         }
     }
     
@@ -94,12 +94,12 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
     public void incrementHops() {
         List<Message__c> messages = this.getSObjects();
         for (Message__c message : messages) {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             Integer hops = (Integer)parameters.get('__Hops');
             if (hops == null) continue; //nothing to do
             
             parameters.put('__Hops', ++hops);
-            message.Parameters__c = Json.serializePretty(parameters);
+            message.Event__c = Json.serializePretty(parameters);
         }
     }
     
@@ -115,13 +115,13 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
         List<Message__c> messages = this.getSObjects();
         for (Message__c message : messages) {
             //user nominated Sequence (no esb prefix)
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             if (parameters.get('esb__SequenceName') == null) continue; //nothing to do
             
             parameters.put('__SequenceName', parameters.get('esb__SequenceName'));
             parameters.put('__Position', 1);
             parameters.put('esb__SequenceName', null);
-            message.Parameters__c = Json.serializePretty(parameters);
+            message.Event__c = Json.serializePretty(parameters);
         }
     }
     
@@ -133,7 +133,7 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
         List<Message__c> messages = this.getSObjects();
         
         for (Message__c message : messages) {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             Boolean isHeartbeatProcess = (Boolean)parameters.get('__IsHeartbeatProcess');
             if (isHeartbeatProcess == true) continue; //#575 crow look, don't try to route
             
@@ -152,9 +152,9 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
         
         for (Message__c message : messages) {
             try {
-                Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+                Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             } catch (JsonException e) {
-                message.Parameters__c.addError(e);
+                message.Event__c.addError(e);
             }
         }
     }

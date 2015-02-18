@@ -1,6 +1,6 @@
 public with sharing class Jump {
 
-    public String Parameters;
+    public String Event;
     public JumpConfig__c StepConfig;
 
     /**
@@ -17,7 +17,7 @@ public with sharing class Jump {
     }
     
     override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         
         //get destination from config
         JumpConfig__c config = this.StepConfig;

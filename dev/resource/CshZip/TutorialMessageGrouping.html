@@ -217,17 +217,17 @@ global class PayInvoice {
     }
     
     override global String toString() {
-        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters); //input message
+        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event); //input message
         // simulate payment of invoice with payment reference  
         String paymentReference = 'PMT-'+ Math.round(Math.random()*1000);  
         Payment__c payment = new Payment__c(PaymentReference__c = paymentReference);
         insert payment;
         
         // change the underlying document pointed at by the notification  
-        parameters.put('esb__Id', payment.Id);  
+        inputEvent.put('esb__Id', payment.Id);  
         
         //output message(s)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{parameters};
+        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
     }
 }</pre>
     </li>

@@ -1,6 +1,6 @@
 public with sharing class Subsequence {
     
-    public String Parameters;
+    public String Event;
     public SubsequenceConfig__c StepConfig;
     
     /**
@@ -17,7 +17,7 @@ public with sharing class Subsequence {
     }
     
     override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         
         //derive the step Id
         Step__c step = [

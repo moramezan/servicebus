@@ -46,8 +46,8 @@
 </h3>
 
 <p>
-    The ESB framework has a built-in <em>WireTap</em> process that surfaces the parameters of an
-    inbound message via an email. The email is sent to either:
+    The ESB framework has a built-in <em>WireTap</em> process that surfaces the parameters of the
+    input event via an email. The email is sent to either:
 </p>
 
 <ul>
@@ -62,8 +62,8 @@
 
 <p>
     This process will replicate the <em>WireTap</em> functionality. But as an alternative to
-    surfacing the message parameters in the form of an email, <em>ChatterTap</em> will instead post
-    these parameters on a user's Chatter Feed.
+    surfacing the event parameters in the form of an email, <em>ChatterTap</em> will instead post
+    these event parameters on a user's Chatter Feed.
 </p>
 
 <pre>
@@ -72,7 +72,7 @@ global class ChatterTap {
     global class ESB {
         global String Tag = 'Example';
         global String Name = 'ChatterTap';
-        global String Description = 'Inserts the message parameters on user chatterfeed.';
+        global String Description = 'Inserts the input event parameters on user chatter feed.';
         global String Icon = 'comment';
         global Integer Limits = 1;
         global String HelpUrl = Page.ChatterTapHelp.getUrl();
@@ -81,7 +81,7 @@ global class ChatterTap {
 
 
     override global String toString() {
-        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters); //input message
+        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event); //input event
         //main code block
         Id userId;
         ChatterTapSettings__c setting = ChatterTapSettings__c.getInstance();
@@ -94,14 +94,14 @@ global class ChatterTap {
         FeedItem post = new FeedItem(
             ParentId = userId,
             Body = '[ChatterTap] '
-            + parameters.get('eda_SequenceName')
+            + inputEvent.get('eda_SequenceName')
             + '#'
-            + parameters.get('eda_Position')
+            + inputEvent.get('eda_Position')
         );
         insert post;
 
         //output message(s)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{parameters};
+        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
     }
 }
 </pre>
@@ -179,7 +179,7 @@ global class ChatterTap {
 <p>
     The <em>WireTap</em> process is a built-in NOOP framework process that sends an email to an
     interested user whenever it receives an event message. The email contains details about the
-    sequence step hosting the <em>WireTap</em> process as well as the injected message parameters
+    sequence step hosting the <em>WireTap</em> process as well as the injected event parameters
 </a>
 
 <p>
@@ -255,7 +255,7 @@ global class ChatterTap {
 global  class ChatterTap {
 
     global class ESB {
-        public String Description = 'Inserts the message parameters on user chatterfeed.';
+        public String Description = 'Inserts the input event parameters on user chatter feed.';
         //..
     }
 
@@ -296,7 +296,7 @@ global  class ChatterTap {
 global  class ChatterTap {
 
     global class ESB {
-        global String Description = 'Inserts the message parameters on user chatterfeed.';
+        global String Description = 'Inserts the input event parameters on user chatter feed.';
         global String Tag = 'Example';
         global String Name = 'ChatterTap';
         global String Icon = 'comment';
@@ -353,7 +353,7 @@ global  class ChatterTap {
 global class ChatterTap {
 
     global class ESB {
-        global String Description = 'Inserts the message parameters on user chatterfeed.';
+        global String Description = 'Inserts the input event parameters on user chatter feed.';
         global String Tag = 'Example';
         global String Name = 'ChatterTap';
         global String Icon = 'comment';
@@ -363,12 +363,12 @@ global class ChatterTap {
 
 
     override global String toString() {  //input message
-        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters);
+        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event);
         //main code block
         //..
 
         //output message(s)
-        return Json.serialize(new List&lt;Map&lt;String,Object&gt;&gt;{parameters});
+        return Json.serialize(new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent});
     }
 }
 </pre>
@@ -394,7 +394,7 @@ global class ChatterTap {
 global class ChatterTap {
 
     global class ESB {
-        global String Description = 'Inserts the message parameters on user chatterfeed.';
+        global String Description = 'Inserts the input event parameters on user chatter feed.';
         global String Tag = 'Example';
         global String Name = 'ChatterTap';
         global String Icon = 'comment';
@@ -405,7 +405,7 @@ global class ChatterTap {
 
 
     override global String toString() {
-        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters); //input message
+        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event); //input message
         //main code block
         Id userId;
         ChatterTapSettings__c setting = ChatterTapSettings__c.getInstance();
@@ -418,7 +418,7 @@ global class ChatterTap {
         //..
 
         //output message(s)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{parameters};
+        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
     }
 }
 </pre>
@@ -444,7 +444,7 @@ global class ChatterTap {
 global class ChatterTap {
 
     global class ESB {
-        global String Description = 'Inserts the message parameters on user chatterfeed.';
+        global String Description = 'Inserts the input event parameters on user chatter feed.';
         global String Tag = 'Example';
         global String Name = 'ChatterTap';
         global String Icon = 'comment';
@@ -455,7 +455,7 @@ global class ChatterTap {
 
 
     override global String toString() {
-        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters); //input message
+        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event); //input event
         //main code block
         Id userId;
         ChatterTapSettings__c setting = ChatterTapSettings__c.getInstance();
@@ -468,14 +468,14 @@ global class ChatterTap {
         FeedItem post = new FeedItem(
             ParentId = userId,
             Body = '[ChatterTap] '
-            + parameters.get('eda_SequenceName')
+            + inputEvent.get('eda_SequenceName')
             + '#'
-            + parameters.get('eda_Position')
+            + inputEvent.get('eda_Position')
         );
         insert post;
 
         //output message(s)
-        return Json.serialize(new List&lt;Map&lt;String,Object&gt;&gt;{parameters});
+        return Json.serialize(new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent});
     }
 }
 </pre>
@@ -485,7 +485,7 @@ global class ChatterTap {
 </h3>
 
 <p>
-    <strong>025 - 032</strong> Complete the implementation of the business specification. In this example, the parameters surfaced to a given chatter feed are deliberately limited to the Sequence Name (<code>esb__SequenceName</code>) and Sequence Position (<code>esb__Position</code>).
+    <strong>025 - 032</strong> Complete the implementation of the business specification. In this example, the event parameters surfaced to a given chatter feed are deliberately limited to the Sequence Name (<code>esb__SequenceName</code>) and Sequence Position (<code>esb__Position</code>).
 </p>
 
 <h2>
@@ -524,10 +524,10 @@ private class ChatterTapTest {
         insert new ChatterTapSettings__c ();  // default
         
         ChatterTap process = new ChatterTap();
-        Map&lt;String,Object&gt; parameters = new Map&lt;String,Object&gt;();
+        Map&lt;String,Object&gt; inputEvent = new Map&lt;String,Object&gt;();
  
         //act
-        process.Parameters = Json.serialize(parameters);
+        process.Event = Json.serialize(inputEvent);
         String outputs = process.toString(); 
             
         //assert
@@ -539,13 +539,13 @@ private class ChatterTapTest {
         // Arrange   
         insert new ChatterTapSettings__c ();  // default
   
-        Map&lt;String,Object&gt; parameters = new Map&lt;String,Object&gt; {
+        Map&lt;String,Object&gt; inputEvent = new Map&lt;String,Object&gt; {
             'c__YourKey' =&gt; 'your data'  
         };  
  
         // Act
         ChatterTap process = new ChatterTap();
-        process.Parameters = Json.serialize(parameters);
+        process.Event = Json.serialize(inputEvent);
         String results = process.toString();
   
         // Assemble  
@@ -560,7 +560,7 @@ private class ChatterTapTest {
         // Arrange
         insert new ChatterTapSettings__c ();  // default
   
-        Map&lt;String,Object&gt; parameters = new Map&lt;String,Object&gt; {
+        Map&lt;String,Object&gt; inputEvent = new Map&lt;String,Object&gt; {
             'c__YourKey' =&gt; 'your data'
         };
         
@@ -568,7 +568,7 @@ private class ChatterTapTest {
   
         // Act  
         ChatterTap process = new ChatterTap();  
-        process.Parameters = Json.serialize(parameters);
+        process.Event = Json.serialize(inputEvent);
         String results = process.toString();  
   
         // Assemble  
@@ -589,6 +589,6 @@ private class ChatterTapTest {
 <p>
     <strong>004 - 007</strong> Test the process correctly implements the <code>ESB</code> Marker Class.
     <br /><strong>011 - 023</strong> The process relies on a custom setting instance and should not throw an error if this custom setting exists
-    <br /><strong>026 - 044</strong> The process should return exactly one message in the output collection. As this is a no-operation process, the test could be further expanded to ensure that the parameters of the input message exactly match the parameters of the output message
+    <br /><strong>026 - 044</strong> The process should return exactly one message in the output collection. As this is a no-operation process, the test could be further expanded to ensure that the input event parameters exactly match the output event parameters.
     <br /><strong>046 - 067</strong> The business intent of the process is to insert exactly one entry containing details about the sequence and sequence position in a given Chatter Feed. The persistence of state outside the process is termed a side effect. The test verifies the correctness of the side effect by ensuring that process adds exactly one post to a given Chatter feed
 </p>

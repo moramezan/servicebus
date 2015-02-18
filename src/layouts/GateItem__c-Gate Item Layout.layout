@@ -19,7 +19,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Parameters__c</field>
+                <field>Event__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns/>

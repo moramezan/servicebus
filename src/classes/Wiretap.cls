@@ -1,6 +1,6 @@
 public with sharing class Wiretap {
    
-    public String Parameters;
+    public String Event;
     
     /**
      * @docs ProcessWiretap.html
@@ -16,7 +16,7 @@ public with sharing class Wiretap {
     }
     
     override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         
         Id userId;
         try {

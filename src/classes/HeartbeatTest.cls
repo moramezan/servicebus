@@ -9,12 +9,12 @@
         
         Step__c scheduleStep = StepObject.generateOne(sequence.Id, scheduleProcess.Id);
         
-        //arrange message parameters
-        String parameters = '{"esb__EntryPointDatetime":"2014-01-18T12:00:00.000Z"}';
+        //arrange input event
+        String inputEvent = '{"esb__EntryPointDatetime":"2014-01-18T12:00:00.000Z"}';
         
         //act
         Heartbeat process = new Heartbeat();
-        process.Parameters = parameters;
+        process.Event = inputEvent;
         String data = process.toString();
         
         //assemble
@@ -35,19 +35,19 @@
     }
 
     static testmethod void noInterestedProcessesReturnsZeroMessages() {
-        //arrange parameters
+        //arrange input event
         String stampAsString = '2014-01-18T12:00:00.000Z';
-        Map<String,Object> parameters = new Map<String,Object>{
+        Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__EntryPointDatetime' => stampAsString 
         };
 
         //act
         Type reflector = Heartbeat.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
 
         //assert
         Integer expectedSize = 0;
-        Integer actualSize = parametersList.size();
+        Integer actualSize = outputEvents.size();
         System.assertEquals(expectedSize, actualSize);
     } 
 
@@ -66,26 +66,26 @@
         Step__c stepA = StepObject.generateOne(interestedSequenceA.Id, ScheduleProcess.Id);
         Step__c stepB = StepObject.generateOne(interestedSequenceB.Id, ScheduleProcess.Id);
         
-        //arrange parameters
+        //arrange events
         String stampAsString = '2014-01-18T12:00:00.000Z';
-        Map<String,Object> parameters = new Map<String,Object>{
+        Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__EntryPointDatetime' => stampAsString 
         };
 
         //act
         Type reflector = Heartbeat.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
 
         //assert
         Integer expectedSize = 2;
-        Integer actualSize = parametersList.size();
+        Integer actualSize = outputEvents.size();
         System.assertEquals(expectedSize, actualSize);
     }  
 
     static testmethod void  ThrowsExceptionForInvalidStampParamAndHeartbeatParamEqToTrue() {
-        //arrange parameters
+        //arrange inputEvent
         String stampAsString = 'XXXX-01-18T12:00:00.000Z';  // invalid stamp
-        Map<String,Object> parameters = new Map<String,Object>{
+        Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__EntryPointDatetime' => stampAsString 
         };
 
@@ -94,7 +94,7 @@
         try {
             //act
             Type reflector = Heartbeat.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
         } catch (Heartbeat.HeartbeatException e) {
             actualFlag = true;
         }

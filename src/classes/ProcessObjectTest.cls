@@ -1,6 +1,6 @@
 @IsTest public class ProcessObjectTest { 
     
-    public String Parameters;
+    public String Event;
     
     @TestVisible private class ESB {
         public String Tag = 'Fake';

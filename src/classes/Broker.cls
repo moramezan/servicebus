@@ -264,7 +264,7 @@ abstract public with sharing class Broker {
         private SObject config;
         
         /**
-         * The input parameters are used twice. For
+         * The input event gets used twice. For
          * assembling the plugin before invocation
          * AND for balance + delta jiggery pokery.
          */
@@ -279,7 +279,7 @@ abstract public with sharing class Broker {
         
         /**
          * @param reflector from the concrete plugin type eg Branch.class
-         * @param parameters that will be handed in when invoking plugin
+         * @param input event that will be handed in when invoking plugin
          * @param config that optionally lives on the step
          */
         public Wrapper(Type reflector, Map<String,Object> inputs, SObject config) {
@@ -288,7 +288,7 @@ abstract public with sharing class Broker {
             this.config = config;
             
             Map<String,Object> untyped = new Map<String,Object>{
-                'Parameters' => Json.serialize(inputs),
+                'Event' => Json.serialize(inputs),
                 'StepConfig' => this.config
             };
             
@@ -404,7 +404,7 @@ abstract public with sharing class Broker {
         }
         
         List<Message__c> messages = [
-            SELECT Id, Route__c, Parameters__c
+            SELECT Id, Route__c, Event__c
             FROM Message__c
             WHERE Status__c = :status
             AND Route__c = :route //chunk by step as opposed to by process
@@ -443,20 +443,20 @@ abstract public with sharing class Broker {
         
         //OUR FUCKUPS (before invocation)
         
-        Map<Id,Map<String,Object>> id2parameters = new Map<Id,Map<String,Object>>();
-        for (Message__c inputMessage : inputMessages) id2parameters.put(inputMessage.Id, (Map<String,Object>)Json.deserializeUntyped(inputMessage.Parameters__c));
+        Map<Id,Map<String,Object>> id2events = new Map<Id,Map<String,Object>>();
+        for (Message__c inputMessage : inputMessages) id2events.put(inputMessage.Id, (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c));
         
-        for (Map<String,Object> parameters : id2parameters.values()) if (!parameters.containsKey('__SequenceName')) throw new Broker.EngineException(null, inputMessageIds, null, 'Mandatory parameter esb__SequenceName not supplied.');
-        for (Map<String,Object> parameters : id2parameters.values()) if (!parameters.containsKey('__Position')) throw new Broker.EngineException(null, inputMessageIds, null, 'Mandatory parameter esb__SequenceName not supplied.');
+        for (Map<String,Object> inputEvent : id2events.values()) if (!inputEvent.containsKey('__SequenceName')) throw new Broker.EngineException(null, inputMessageIds, null, 'Mandatory event parameter esb__SequenceName not supplied.');
+        for (Map<String,Object> inputEvent : id2events.values()) if (!inputEvent.containsKey('__Position')) throw new Broker.EngineException(null, inputMessageIds, null, 'Mandatory event parameter esb__SequenceName not supplied.');
         
         //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
-        if (id2parameters.get(inputMessages[0].Id).get('__IsHeartbeatProcess') != null) {
+        if (id2events.get(inputMessages[0].Id).get('__IsHeartbeatProcess') != null) {
             //invoke and wrap up results into messages
             List<Message__c> outputMessages = new List<Message__c>();
             for (Message__c inputMessage : inputMessages) {
-                Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Parameters__c);
-                List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, parameters, null).invokeMain().Outputs;
-                for (Map<String,Object> output : outputs) outputMessages.add(new Message__c(Parameters__c = Json.serializePretty(output), Status__c = 'Buffered'));
+                Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
+                List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, inputEvent, null).invokeMain().Outputs;
+                for (Map<String,Object> output : outputs) outputMessages.add(new Message__c(Event__c = Json.serializePretty(output), Status__c = 'Buffered'));
             }
             return outputMessages;
         }
@@ -485,8 +485,8 @@ abstract public with sharing class Broker {
         
         //save important message properties (such as __Hops) so that process authors cannot pervert them  
         //THROWS EngineException TODO : requires a more generic approach not specific to just the __Hops
-        for (Map<String,Object> parameters : id2parameters.values()) if ((Integer)parameters.get('__Hops') >= MaxHops) {
-            throw new EngineException(null, inputMessageIds, null, 'Too many hops - to resolve, manually set __Hops on parameters to 0');
+        for (Map<String,Object> inputEvent : id2events.values()) if ((Integer)inputEvent.get('__Hops') >= MaxHops) {
+            throw new EngineException(null, inputMessageIds, null, 'Too many hops - to resolve, manually set __Hops on event parameters to 0');
         }
         
         //step determines whether all have configs or none
@@ -497,7 +497,7 @@ abstract public with sharing class Broker {
         }
         
         Map<Id,Broker.Wrapper> id2wrapper = new Map<Id,Broker.Wrapper>();
-        for (Message__c inputMessage : inputMessages) id2wrapper.put(inputMessage.Id, new Broker.Wrapper(reflector, id2parameters.get(inputMessage.Id), stepConfig));
+        for (Message__c inputMessage : inputMessages) id2wrapper.put(inputMessage.Id, new Broker.Wrapper(reflector, id2events.get(inputMessage.Id), stepConfig));
         
         //THEIR FUCKUPS (invocation)
         
@@ -517,17 +517,17 @@ abstract public with sharing class Broker {
         
         //OUR FUCKUPS (after invocation)
         
-        Map<Id,List<Map<String,Object>>> id2outputParameters = new Map<Id,List<Map<String,Object>>>();
-        for (Id messageId : id2wrapper.keySet()) id2outputParameters.put(messageId, id2wrapper.get(messageId).Outputs);
+        Map<Id,List<Map<String,Object>>> id2outputEvents = new Map<Id,List<Map<String,Object>>>();
+        for (Id messageId : id2wrapper.keySet()) id2outputEvents.put(messageId, id2wrapper.get(messageId).Outputs);
         
         //gate processing support method
-        for (Id messageId : id2outputParameters.keySet()) this.gateHelper(id2parameters.get(messageId), id2outputParameters.get(messageId));
+        for (Id messageId : id2outputEvents.keySet()) this.gateHelper(id2events.get(messageId), id2outputEvents.get(messageId));
         
         //wrap up results into Messages (new guys should have Position = 0)
         List<Message__c> outputMessages = new List<Message__c>();
-        for (List<Map<String,Object>> outputParameters : id2outputParameters.values()) for (Map<String,Object> outputParameter : outputParameters) {
+        for (List<Map<String,Object>> outputEvents : id2outputEvents.values()) for (Map<String,Object> outputEvent : outputEvents) {
             outputMessages.add(new Message__c(
-                Parameters__c = Json.serializePretty(outputParameter),
+                Event__c = Json.serializePretty(outputEvent),
                 Status__c = 'Buffered'
             ));
         }
@@ -568,13 +568,13 @@ abstract public with sharing class Broker {
     
     /**
      * The Mark helper logic is for the Gate process; it determines when a split occurs, and writes away the number of
-     * splitted parameter sets so that a future Gate process can know exactly how many parameter sets form a Gate Group.
+     * splitted output events so that a future Gate process can know exactly how many output events form a Gate Group.
      *
-     * If markCount isn't null, then the preceding process was a Mark; increment THEN put that value on parameters.
-     * If markCount equates to two, then the preceding process was a splitter; write the count of split parameter sets.
+     * If markCount isn't null, then the preceding process was a Mark; increment THEN put that value on event parameters.
+     * If markCount equates to two, then the preceding process was a splitter; write the count of split output events.
      */
-    @TestVisible private void gateHelper(Map<String,Object> parameters, List<Map<String,Object>> outputs) {
-        Decimal markCount = (Decimal)parameters.get('__MarkCount');
+    @TestVisible private void gateHelper(Map<String,Object> inputEvent, List<Map<String,Object>> outputs) {
+        Decimal markCount = (Decimal)inputEvent.get('__MarkCount');
         
         if (null == markCount) {
             //nothing to do, mark process has not tainted the input
@@ -583,7 +583,7 @@ abstract public with sharing class Broker {
         
         if (outputs.isEmpty()) {
             //nothing to do, split process did not return any outputs, tidy up the gate group
-            //Database.delete(new List<Id>{(Id)parameters.get('esb__GateGroupId')});
+            //Database.delete(new List<Id>{(Id)inputEvent.get('esb__GateGroupId')});
             return;
         }
         

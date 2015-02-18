@@ -12,8 +12,8 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         MessageObjectSet.Inhibit = false;
-        insert new Message__c(Parameters__c = '{"esb__SequenceName":"Test"}', Status__c = 'Queued');
-        insert new Message__c(Parameters__c = '{"esb__SequenceName":"Test"}', Status__c = 'Buffered');
+        insert new Message__c(Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Queued');
+        insert new Message__c(Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Buffered');
         MessageObjectSet.Inhibit = true;
         
         //act

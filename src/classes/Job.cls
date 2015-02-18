@@ -24,12 +24,12 @@ global without sharing class Job implements Process.Plugin, Queueable {
         plugin.Tag = 'Enterprise Service Bus';
         plugin.Description = 'Enqueue a Job into the Enterprise Service Bus';
         
-        plugin.inputParameters = new List<Process.PluginDescribeResult.InputParameter>{
+        plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
             new Process.PluginDescribeResult.InputParameter('esb__Id', Process.PluginDescribeResult.ParameterType.ID, true),
             new Process.PluginDescribeResult.InputParameter('esb__SequenceName', Process.PluginDescribeResult.ParameterType.STRING, true)
         };
         
-        plugin.outputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
+        plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
             new Process.PluginDescribeResult.OutputParameter('esb__QueueableId', Process.PluginDescribeResult.ParameterType.STRING)
         };
         
@@ -45,12 +45,12 @@ global without sharing class Job implements Process.Plugin, Queueable {
      * in Visual Flow to get stuff into ESB. (Though they would create a dependency.)
      */
     global Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> parameters = request.inputParameters;
-        Queueable job = new Job(parameters);
+        Map<String,Object> inputEvent = request.InputParameters;
+        Queueable job = new Job(inputEvent);
         Id queueableId = System.enqueueJob(job);
         
-        parameters.put('esb__QueueableId', queueableId);
-        return new Process.PluginResult(parameters);
+        inputEvent.put('esb__QueueableId', queueableId);
+        return new Process.PluginResult(inputEvent);
     }
     
     public class JobException extends Exception {}
@@ -100,21 +100,21 @@ global without sharing class Job implements Process.Plugin, Queueable {
     }
     
     /**
-     * Prepares data (represented a parameters collection) for processing.
+     * Prepares data (represented an input event) for processing.
      * 
-     * The parameters collection should at minimum contain 
+     * The input event collection should at minimum contain 
      *  - an object Id ("Id")
      *  - a sequence name ("__SequenceName")
-     * Failure to provide these parameters in the parameters collection will throw an EngineException
+     * Failure to provide these event parameters in the collection will throw an EngineException
      * 
-     * The parameters collection is converted to a Message object. This Message instance is saved 
+     * The input event collection is converted to a Message object. This Message instance is saved 
      * to the database and the Broker is immeadiately invoked if it is not already running.
      *
      * @docs ApiJobConstructors.html
-     * @param  injectedParameters a parametrised description of the message data.
+     * @param  injectedParameters a parametrised description of the event.
      */
-    global Job(Map<String,Object> parameters) {
-        this(new List<Map<String,Object>>{parameters});
+    global Job(Map<String,Object> inputEvent) {
+        this(new List<Map<String,Object>>{inputEvent});
     }
     
     /**
@@ -123,10 +123,10 @@ global without sharing class Job implements Process.Plugin, Queueable {
      * 
      * @docs ApiJobConstructors.html
      */
-    global Job(List<Map<String,Object>> parameterses) {
-        // validate params are supplied:
-        if (parameterses == null) {
-            throw new Broker.EngineException('Cannot supply a null parameters collection.');
+    global Job(List<Map<String,Object>> inputEvents) {
+        // validate input event parameters are supplied:
+        if (inputEvents == null) {
+            throw new Broker.EngineException('Cannot supply a null input events collection.');
         }
         
         //fetch the custom setting or create an empty one
@@ -134,8 +134,8 @@ global without sharing class Job implements Process.Plugin, Queueable {
         if (setting == null) setting = new BrokerSetting__c();
         
         //create the message destined for the 0th step of the chain
-        for (Map<String,Object> parameters : parameterses) {
-            parameters.putAll(new Map<String,Object>{
+        for (Map<String,Object> inputEvent : inputEvents) {
+            inputEvent.putAll(new Map<String,Object>{
                 '__Hops' => 0,
                 '__EntryPointUuid' => uuidVersionFour(), //#751 formerly __EntryPointGuid, this is ONLY for 'our' use
                 '__EntryPointDatetime' => System.now(), //#753 formerly __EventStamp this is ONLY for our framework use
@@ -143,18 +143,18 @@ global without sharing class Job implements Process.Plugin, Queueable {
                 '__EnqueueUserId' => UserInfo.getUserId()
             });
             
-            if (parameters.get('esb__EntryPointUuid') == null) {
+            if (inputEvent.get('esb__EntryPointUuid') == null) {
                 //#751 'they' are allowed to mess with this, eg for replay
-                parameters.put('esb__EntryPointUuid', uuidVersionFour());
+                inputEvent.put('esb__EntryPointUuid', uuidVersionFour());
             }
             
-            if (parameters.get('esb__EntryPointDatetime') == null) {
+            if (inputEvent.get('esb__EntryPointDatetime') == null) {
                 //#753 processes like Heartbeat are allowed to mess with this}
-                parameters.put('esb__EntryPointDatetime', System.now());
+                inputEvent.put('esb__EntryPointDatetime', System.now());
             }
             
             this.messages.add(new Message__c(
-                Parameters__c = Json.serializePretty(parameters),
+                Event__c = Json.serializePretty(inputEvent),
                 Status__c = setting.IsPaused__c ? 'Queued' : 'Buffered'
             ));
         }
@@ -168,7 +168,7 @@ global without sharing class Job implements Process.Plugin, Queueable {
      * https://success.salesforce.com/issues_view?id=a1p300000008XM1AAM
      * 
      * But since we aren't actually doing anything with the QueueableContext
-     * this works without startTest/stopTest: new Job(parameters).execute(null)
+     * this works without startTest/stopTest: new Job(inputEvent).execute(null)
      */
     public void execute(QueueableContext context) {
         if (context != null) new MessageObjectSet(this.messages).populateQueueableId(context);

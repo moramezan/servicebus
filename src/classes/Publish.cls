@@ -1,6 +1,6 @@
 public with sharing class Publish {
     
-    public String Parameters;
+    public String Event;
     public PublishConfig__c StepConfig;
     
     /**
@@ -19,7 +19,7 @@ public with sharing class Publish {
     public class PublishException extends Exception {}
 
     override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         
         PublishConfig__c publishConfig = this.StepConfig;

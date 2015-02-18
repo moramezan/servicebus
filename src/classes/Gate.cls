@@ -1,6 +1,6 @@
 public with sharing class Gate {
     
-    public String Parameters;
+    public String Event;
     
     /**
      * @docs ProcessMarkGate.html
@@ -34,18 +34,18 @@ public with sharing class Gate {
         Integer maximumItems = 10000;
         performDefaultDeletionStrategy(isDeletionEnabled, maximumDays, maximumItems);
 
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         
-        Id gateGroupId = (Id)parameters.get('esb__GateGroupId');
-        Decimal count = (Decimal)parameters.get('__Count');
+        Id gateGroupId = (Id)inputEvent.get('esb__GateGroupId');
+        Decimal count = (Decimal)inputEvent.get('__Count');
         
         insert new GateItem__c(
             GateGroup__c = gateGroupId,
-            Parameters__c = Json.serializePretty(parameters)
+            Event__c = Json.serializePretty(inputEvent)
         );
         
         List<GateItem__c> gateItems = [
-            SELECT Id, Parameters__c
+            SELECT Id, Event__c
             FROM GateItem__c
             WHERE GateGroup__c = :gateGroupId
         ];
@@ -64,7 +64,7 @@ public with sharing class Gate {
         
         List<Map<String,Object>> parameteres = new List<Map<String,Object>>();
         for (GateItem__c gateItem : gateItems) {
-            parameteres.add((Map<String,Object>)json.deserializeUntyped(gateItem.Parameters__c));   
+            parameteres.add((Map<String,Object>)json.deserializeUntyped(gateItem.Event__c));   
         }
         
         //this is the last item, let's release
@@ -73,15 +73,15 @@ public with sharing class Gate {
         //  that has now metamorphosised into something else.
         //  Because it is a *new* message, extra care taken to
         //  null out conceptually incorrect parameters
-        parameters = cleanParameters(parameters); // start with a clean parameters collection
-        parameters.putAll(commonParameters);   // add the common parameters ...
-        parameters.put('esb__GateItemParameters',parameteres); // add parameters from each message as a list
-        parameters.put('esb__Id', gateGroupId);
-        parameters.put('__Count',null); // confuser - null out
-        parameters.put('__MarkCount',null); // confuser - null out
-        parameters.put('esb__GateGroupId',null); // confuser - null out        
+        inputEvent = cleanParameters(inputEvent); // start with a clean parameters collection
+        inputEvent.putAll(commonParameters);   // add the common parameters ...
+        inputEvent.put('esb__GateItemParameters',parameteres); // add parameters from each message as a list
+        inputEvent.put('esb__Id', gateGroupId);
+        inputEvent.put('__Count',null); // confuser - null out
+        inputEvent.put('__MarkCount',null); // confuser - null out
+        inputEvent.put('esb__GateGroupId',null); // confuser - null out        
 
-        return Json.serialize(new List<Map<String,Object>>{parameters});
+        return Json.serialize(new List<Map<String,Object>>{inputEvent});
     }
     
  
@@ -249,7 +249,7 @@ public with sharing class Gate {
     @testVisible
     private  static List<GateItem__c> getGateItemsOverCountThreshold(Integer countThreshold) {
         return [
-            SELECT Id, Name, GateGroup__c, Parameters__c, CreatedDate
+            SELECT Id, Name, GateGroup__c, Event__c, CreatedDate
             FROM GateItem__c 
             ORDER BY Id 
             LIMIT :countThreshold
@@ -270,8 +270,8 @@ public with sharing class Gate {
     @testVisible
     private static List<GateItem__c> getGateItemsOverDateThresholdMock(String overThreshold) {
         List<GateItem__c> gateItems = new   List<GateItem__c>();
-        for (GateItem__c gateItem : [SELECT Id, Name, GateGroup__c, Parameters__c, CreatedDate FROM GateItem__c]) {
-            if (gateItem.Parameters__c == overThreshold) {
+        for (GateItem__c gateItem : [SELECT Id, Name, GateGroup__c, Event__c, CreatedDate FROM GateItem__c]) {
+            if (gateItem.Event__c == overThreshold) {
                 gateItems.add(gateItem);
             }
         }
@@ -296,7 +296,7 @@ public with sharing class Gate {
         // iteration 1
         Set<String> allKeys = new Set<String>(); 
         for(GateItem__c gateItem :gateItems) {
-            Map<String,Object> gateItemParameters = (Map<String,Object>)json.deserializeUntyped(gateItem.Parameters__c);
+            Map<String,Object> gateItemParameters = (Map<String,Object>)json.deserializeUntyped(gateItem.Event__c);
             allKeys.addAll(gateItemParameters.keySet());
         }
         
@@ -307,7 +307,7 @@ public with sharing class Gate {
             Boolean same = true;
             Object value = null;
             for(GateItem__c gateItem :gateItems) {
-                Map<String,Object> gateItemParameters = (Map<String,Object>)json.deserializeUntyped(gateItem.Parameters__c);
+                Map<String,Object> gateItemParameters = (Map<String,Object>)json.deserializeUntyped(gateItem.Event__c);
                 Object newValue = gateItemParameters.get(key);
                 if (i == 1)
                     value = newValue;
@@ -324,13 +324,13 @@ public with sharing class Gate {
     }  
   
     @testVisible
-    private static Map<String,Object> cleanParameters(Map<String,Object> parameters) {
-        for (String parameter : parameters.keySet()) {
-            Object value = (Object)parameters.get(parameter);
-            value =  (parameter.startsWith('__') || parameter.startsWith('esb__'))  ? value : null;  
-            parameters.put(parameter, value);
+    private static Map<String,Object> cleanParameters(Map<String,Object> inputEvent) {
+        for (String input : inputEvent.keySet()) {
+            Object value = (Object)inputEvent.get(input);
+            value =  (input.startsWith('__') || input.startsWith('esb__'))  ? value : null;  
+            inputEvent.put(input, value);
         }
         
-        return parameters;
+        return inputEvent;
     }
 }

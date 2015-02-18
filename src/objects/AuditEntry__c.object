@@ -80,6 +80,16 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Event__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>What were the event parameters saved by the AuditWriter Process?</inlineHelpText>
+        <label>Event</label>
+        <length>131072</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>2</visibleLines>
+    </fields>
+    <fields>
         <fullName>GroupIdentifier__c</fullName>
         <externalId>false</externalId>
         <formula>AuditGroup__r.GroupIdentifier__c</formula>
@@ -102,16 +112,6 @@
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Parameters__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>What were the message parameters saved by the AuditWriter Process?</inlineHelpText>
-        <label>Parameters</label>
-        <length>131072</length>
-        <trackTrending>false</trackTrending>
-        <type>LongTextArea</type>
-        <visibleLines>2</visibleLines>
     </fields>
     <fields>
         <fullName>Position__c</fullName>

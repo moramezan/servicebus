@@ -1,6 +1,6 @@
 public with sharing class AuditWriter {
     
-    public String Parameters;
+    public String Event;
     
     /**
      * @docs ProcessAudit.html
@@ -19,13 +19,13 @@ public with sharing class AuditWriter {
     override public String toString() {
         if (!SObjectType.AuditEntry__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.AuditEntry__c.Createable');
         
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
-        List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
+        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         
-        Integer parametersOrder = (Integer)parameters.get('__Hops');
-        parametersOrder = (parametersOrder != null) ? parametersOrder : 1;
+        Integer hops = (Integer)inputEvent.get('__Hops');
+        hops = (hops != null) ? hops : 1;
         
-        String entryPointUuid = (String)parameters.get('__EntryPointUuid');
+        String entryPointUuid = (String)inputEvent.get('__EntryPointUuid');
         if (String.isBlank(entryPointUuid)) {
             throw new AuditWriterException('Unable to access the Entry Point UUID');
         }
@@ -34,8 +34,8 @@ public with sharing class AuditWriter {
         List<Step__c> steps = [
             SELECT Id, Position__c, Sequence__c
             FROM Step__c
-            WHERE Sequence__r.Name = :(String)parameters.get('__SequenceName')
-            AND Position__c = :(Decimal) parameters.get('__Position')
+            WHERE Sequence__r.Name = :(String)inputEvent.get('__SequenceName')
+            AND Position__c = :(Decimal)inputEvent.get('__Position')
         ];
         if (steps.size() == 0) {
             throw new AuditWriterException('Unable to access the Step');
@@ -43,7 +43,7 @@ public with sharing class AuditWriter {
         Step__c step = steps[0];
  
         //write audit entry for every audit group identifier
-        List<Object> collection = (List<Object>)parameters.get('esb__AuditGroupIds');
+        List<Object> collection = (List<Object>)inputEvent.get('esb__AuditGroupIds');
         
         if (collection != null) {
             List<Id> auditGroupIds = new List<Id>();
@@ -58,23 +58,23 @@ public with sharing class AuditWriter {
                 WHERE Id IN :auditGroupIds
             ])).keySet();
         
-            String serializedParameters = System.Json.serializePretty(parameters);
+            String serializedEvent = System.Json.serializePretty(inputEvent);
             List<AuditEntry__c> auditEntries =  new List<AuditEntry__c>();
             for (Id auditGroupId  : filteredAuditGroupIds) {
                 auditEntries.add( new AuditEntry__c(
                     Step__c = step.Id,
                     Sequence__c = step.Sequence__c,
-                    Hops__c = parametersOrder,
+                    Hops__c = hops,
                     AuditGroup__c     = auditGroupId,
                     EntryPointUuid__c = entryPointUuid,
-                    Parameters__c    = serializedParameters
+                    Event__c    = serializedEvent
                 ));
             }
             insert auditEntries;
         }
 
-        parametersList.add(parameters);
+        outputEvents.add(inputEvent);
         
-        return Json.serialize(parametersList);
+        return Json.serialize(outputEvents);
     }
 }

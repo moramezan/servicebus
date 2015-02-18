@@ -1,6 +1,6 @@
 public with sharing class Mark {
     
-    public String Parameters;
+    public String Event;
     
     /**
      * @docs ProcessMarkGate.html
@@ -21,7 +21,7 @@ public with sharing class Mark {
     override public String toString() {
         if (!SObjectType.GateGroup__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.GateGroup__c.Createable');
         
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         
         //create a grouping id for what will ultimately be gated
         GateGroup__c gateGroup = new GateGroup__C();

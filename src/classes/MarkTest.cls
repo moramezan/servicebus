@@ -9,13 +9,13 @@ private class MarkTest {
     }
     
     
-    static testmethod void callingExecuteReturnsExpectedParametersCollection() {
+    static testmethod void callingExecuteReturnsExpectedOutputEvents() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Decimal position = 1;
         String data = 'data';
 
-        Map<String,Object> parameters = new Map<String,Object> {
+        Map<String,Object> inputEvent = new Map<String,Object> {
             '__SequenceName' => sequenceName,
             '__Position' => position,
             'data' => data
@@ -28,16 +28,16 @@ private class MarkTest {
 
         // Act
         Type reflector = Mark.class;
-        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutputEvents = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
 
         // prepare
-        Decimal actualSize = actualOutParametersList.size();
+        Decimal actualSize = actualOutputEvents.size();
         Decimal actualMarkCount = null;
         Boolean actualGateGroupIdFlag = false;
         if (actualSize > 0) {
-            Map<String,Object> actualParameters = actualOutParametersList[0];
-            actualMarkCount = (Decimal) actualParameters.get('__MarkCount' );
-            actualGateGroupIdFlag = (actualParameters.get('esb__GateGroupId' ) != null);
+            Map<String,Object> actualOutputEvent = actualOutputEvents[0];
+            actualMarkCount = (Decimal) actualOutputEvent.get('__MarkCount' );
+            actualGateGroupIdFlag = (actualOutputEvent.get('esb__GateGroupId' ) != null);
         }
         Integer actualGateGroupSize = [SELECT COUNT() FROM GateGroup__c];
 

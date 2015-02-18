@@ -1,6 +1,6 @@
 public with sharing class Subscribe {
 
-    public String Parameters;
+    public String Event;
     
     /**
      * @docs ProcessPublishSubscribe.html
@@ -16,7 +16,7 @@ public with sharing class Subscribe {
     }
     
     override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         return Json.serialize(new List<Map<String,Object>>{parameters});
     }
 }

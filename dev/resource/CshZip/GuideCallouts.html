@@ -237,7 +237,7 @@ global class Callout implements Database.AllowsCallouts {
     }
 
     override global String toString() {
-        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters);
+        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event);
         //callouts block
         if (this.AllowsCallouts) {
             //..
@@ -247,7 +247,7 @@ global class Callout implements Database.AllowsCallouts {
         //..
 
         //output message(s)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{parameters};
+        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
     }
 }
 </pre>
@@ -286,7 +286,7 @@ global  class Callout implements Database.AllowsCallouts {
     global String Body;
 
     override global String toString() {
-        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters); //input message
+        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event); //input message
         //callouts block
         if (this.AllowsCallouts) {
             HttpRequest request = new HttpRequest();
@@ -303,7 +303,7 @@ global  class Callout implements Database.AllowsCallouts {
         //..
 
         //output message(s)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{parameters};
+        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
     }
 }
 </pre>
@@ -344,7 +344,7 @@ global  class Callout implements Database.AllowsCallouts {
     global String Body;
 
     override global String toString() {
-        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters); //inputs
+        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event); //inputs
         if (this.AllowsCallouts) {
             HttpRequest request = new HttpRequest();
             request.setMethod('GET');
@@ -364,11 +364,11 @@ global  class Callout implements Database.AllowsCallouts {
             Body = Blob.valueOf(this.Body)
         );
         insert document;
-        parameters.put('esb__Id', document.Id);
+        inputEvent.put('esb__Id', document.Id);
 
 
         //output message(s)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{parameters};
+        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
     }
 }
 </pre>
@@ -394,7 +394,7 @@ global  class Callout implements Database.AllowsCallouts {
 </h3>
 
 <p>
-    The process inspects the parameters of the inbound message and retrieves the url of a specific
+    The process inspects the parameters of the input event and retrieves the url of a specific
     web page to be scraped. The content of the scraped page is stored as a Salesforce document. Most
     importantly, the <code>esb__Id</code> parameter of the outbound message is updated with the Id
     of this Salesforce document so that any downstream processes will have access to that scraped
@@ -425,9 +425,9 @@ global class Callout implements Database.AllowsCallouts {
     global String Body;
 
     override global String toString() {
-        Map&lt;String,Object&gt; parameters = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Parameters);
+        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event);
         if (this.AllowsCallouts) {
-            String url = (String)parameters.get('c__Url');
+            String url = (String)inputEvent.get('c__Url');
             HttpRequest request = new HttpRequest();
             request.setMethod('GET');
             request.setEndpoint(url);
@@ -446,11 +446,11 @@ global class Callout implements Database.AllowsCallouts {
             Body = Blob.valueOf(this.Body)
         );
         insert document;
-        parameters.put('esb__Id', document.Id);
+        inputEvent.put('esb__Id', document.Id);
 
 
         //output message(s)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{parameters};
+        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
     }
 }
 </pre>

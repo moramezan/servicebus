@@ -135,7 +135,7 @@
         System.assertEquals(expectedData, actualData);
     }
     
-    static testmethod void testSubscribersAffectParametersListReturned() {
+    static testmethod void testSubscribersAffectOutputEventsReturned() {
         EventType__c eventType = new EventType__c(
             Name = 'TestEvent'
         );

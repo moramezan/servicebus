@@ -40,7 +40,7 @@ private class WiretapTest {
         System.assertEquals(expectedFlagException , actualFlagException );
     }
    
-    static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenDefinedESBProcessSettingSet() {
+    static testmethod void callingExecuteReturnsExpectedOutputEventsWhenDefinedESBProcessSettingSet() {
         // Arrange :
         String sequenceName = 'the-sequence';
         Integer step = 1;
@@ -48,7 +48,7 @@ private class WiretapTest {
 
         insert new WiretapSetting__c ( UserId__c = UserInfo.getUserId());
 
-        Map<String,Object> parameters = new Map<String,Object> {
+        Map<String,Object> inputEvent = new Map<String,Object> {
             '__SequenceName' => sequenceName,
             'step' => step,
             'data' => data
@@ -59,7 +59,7 @@ private class WiretapTest {
 
         // Act
         Type reflector = Wiretap.class;
-        List<Map<String,Object>> actualParametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+        List<Map<String,Object>> actualParametersList = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
 
         // prepare
         Integer actualSize = actualParametersList.size();

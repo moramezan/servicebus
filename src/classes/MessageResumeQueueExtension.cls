@@ -29,7 +29,7 @@ public with sharing class MessageResumeQueueExtension {
             
             //get all the queued guys
             List<Message__c> messages = [
-                SELECT Id, Parameters__c
+                SELECT Id, Event__c
                 FROM Message__c
                 WHERE Status__c = 'Queued'
                 LIMIT :Limits.getLimitDMLRows() //if more than 10,000 you could click Resume multiple times

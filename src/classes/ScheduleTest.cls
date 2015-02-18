@@ -35,12 +35,12 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
 
 
-         //arrange parameters
-        Map<String,Object> parameters = new Map<String,Object>();
+         //arrange input event
+        Map<String,Object> inputEvent = new Map<String,Object>();
     
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -82,15 +82,15 @@
         update scheduleConfig;
         
 
-         //arrange parameters
+         //arrange input event parameters
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday
-        Map<String,Object> parameters = new Map<String,Object>{
+        Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__EntryPointDatetime' => stampAsString
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, scheduleConfig).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent, scheduleConfig).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -136,15 +136,15 @@
         update scheduleConfig;
         
 
-         //arrange parameters
+         //arrange input event parameters
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday, a working day
-        Map<String,Object> parameters = new Map<String,Object>{
+        Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__EntryPointDatetime' => stampAsString
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, scheduleConfig).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent, scheduleConfig).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -190,15 +190,15 @@
         update scheduleConfig;
         
 
-         //arrange parameters
+         //arrange input event parameters
         String stampAsString = '2014-01-03T12:00:00.000Z';   
-        Map<String,Object> parameters = new Map<String,Object>{
+        Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__EntryPointDatetime' => stampAsString
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, scheduleConfig).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent, scheduleConfig).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -243,15 +243,15 @@
         update scheduleConfig;
         
 
-         //arrange parameters
+         //arrange input event parameters
         String stampAsString = '2014-01-18T12:00:00.000Z';
-        Map<String,Object> parameters = new Map<String,Object>{
+        Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__EntryPointDatetime' => stampAsString
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, scheduleConfig).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent, scheduleConfig).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -275,9 +275,9 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
 
-         //arrange parameters
+         //arrange input event parameters
         String invalidStamp = 'XXXX-01-18T12:00:00.000Z';
-        Map<String,Object> parameters = new Map<String,Object>{
+        Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__EntryPointDatetime' => invalidStamp
         };
         
@@ -286,7 +286,7 @@
         try {
             // act  
             Type reflector = Schedule.class;
-            List<Map<String,Object>> result = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+            List<Map<String,Object>> result = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
         } catch (Schedule.ScheduleException e) {
             actualFlag = true;
         }

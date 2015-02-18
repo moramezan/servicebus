@@ -1,6 +1,6 @@
 public with sharing class AuditInitializer {
     
-    public String Parameters;
+    public String Event;
     public AuditInitializerConfig__c StepConfig;
     
     /**
@@ -26,7 +26,7 @@ public with sharing class AuditInitializer {
     override public String toString() {
         if (!SObjectType.AuditGroup__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.AuditGroup__c.Createable');
      
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
         //get group identifier instruction from config

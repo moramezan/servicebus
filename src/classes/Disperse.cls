@@ -1,6 +1,6 @@
 public with sharing class Disperse {
     
-    public String Parameters;
+    public String Event;
     public DisperseConfig__c StepConfig;
     
     public class ESB {
@@ -16,7 +16,7 @@ public with sharing class Disperse {
     public class DisperseException extends Exception {}
     
     override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         
         //find all the sequences
         List<DisperseDestination__c> destinations = [

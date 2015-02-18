@@ -267,7 +267,7 @@
         
         
         // assemble
-        List<Message__c> actualMessages = [SELECT  Id, Parameters__c FROM Message__c];
+        List<Message__c> actualMessages = [SELECT  Id, Event__c FROM Message__c];
         Integer actualCount  = actualMessages.size();
         
         Set<String> expectedHeartbeatsAsSet =  new Set<String>{
@@ -283,7 +283,7 @@
           
         Boolean actualFlag = true;
         for (Message__c actualMessage : actualMessages) {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(actualMessage.Parameters__c);
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(actualMessage.Event__c);
             String actualEventStamp = (String)parameters.get('esb__EntryPointDatetime');
             if (!expectedHeartbeatsAsSet.contains(actualEventStamp))
                 actualFlag = false;
@@ -327,7 +327,7 @@
         
         
         // assemble
-        List<Message__c> actualMessages = [SELECT  Id, Parameters__c FROM Message__c];
+        List<Message__c> actualMessages = [SELECT  Id, Event__c FROM Message__c];
         Integer actualCount  = actualMessages.size();
         
         Set<String> expectedHeartbeatsAsSet =  new Set<String>{
@@ -343,7 +343,7 @@
           
         Boolean actualFlag = true;
         for (Message__c actualMessage : actualMessages) {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(actualMessage.Parameters__c);
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(actualMessage.Event__c);
             String actualEventStamp = (String)parameters.get('esb__EntryPointDatetime');
             if (!expectedHeartbeatsAsSet.contains(actualEventStamp))
                 actualFlag = false;

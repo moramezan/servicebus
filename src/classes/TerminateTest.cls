@@ -9,7 +9,7 @@ private class TerminateTest
     }
 
 
-    static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenSubsequenceAttribsDefinedOnParameters()
+    static testmethod void callingExecuteReturnsExpectedOutputEventsWhenSubsequenceAttribsDefinedOnInputEvent()
     {
         // Arrange :
         String sequenceName = 'the-sequence';
@@ -30,7 +30,7 @@ private class TerminateTest
         Step__c step1 = StepObject.generateOne(sequence.Id, wiretapProcess.Id);
         Step__c step2 = StepObject.generateOne(sequence.Id, subsequenceProcess.Id);
 
-        Map<String,Object> parameters = new Map<String,Object> {
+        Map<String,Object> inputEvent = new Map<String,Object> {
             '__SequenceName' => sequenceName,
             '__Position' => position,
             '__SubsequenceStepIds' => new List<Id>{step2.Id},
@@ -44,7 +44,7 @@ private class TerminateTest
 
         // Act
         Type reflector = Terminate.class;
-        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -71,7 +71,7 @@ private class TerminateTest
  
  
 
-        Map<String,Object> parameters = new Map<String,Object> {
+        Map<String,Object> inputEvent = new Map<String,Object> {
             '__SequenceName' => sequenceName,
             '__Position' => position,
             'data' => data
@@ -81,7 +81,7 @@ private class TerminateTest
  
         // Act
         Type reflector = Terminate.class;
-        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();

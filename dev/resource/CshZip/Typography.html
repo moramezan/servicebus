@@ -86,13 +86,13 @@ public with sharing class Callout implements Database.AllowsCallouts {
         }
         
         //main code block
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         insert new Document(
             Name = 'Mydoc.html',
             FolderId = UserInfo.getUserId(),
             Body = Blob.valueOf(body)
         );
-        return Json.serialize(new List<Map<String,Object>>{parameters});
+        return Json.serialize(new List<Map<String,Object>>{inputEvent});
     }
 }
 &lt;/pre&gt;

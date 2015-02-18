@@ -1,6 +1,6 @@
 public with sharing class Heartbeat {
     
-    public String Parameters;
+    public String Event;
 
     //#575 heartbeat process evades discovery
     //public class ESB {}
@@ -8,7 +8,7 @@ public with sharing class Heartbeat {
     public class HeartbeatException extends Exception {}
 
     override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         
         String  stampAsString = (String)parameters.get('esb__EntryPointDatetime');
 

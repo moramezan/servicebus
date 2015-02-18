@@ -1,6 +1,6 @@
 public with sharing class Branch {
 
-    public String Parameters;
+    public String Event;
     public BranchConfig__c StepConfig;
 
     /**
@@ -19,7 +19,7 @@ public with sharing class Branch {
     public class BranchException extends Exception {}
     
     override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
 
         //get step config
         BranchConfig__c config = this.StepConfig;

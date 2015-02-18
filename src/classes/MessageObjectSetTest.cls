@@ -3,7 +3,7 @@
     static testmethod void testUnpopulatedRouteKey() {
         //arrange message
         Message__c message = new Message__c(
-            Parameters__c = '{"__IsHeartbeatProcess":true}'
+            Event__c = '{"__IsHeartbeatProcess":true}'
         );
         
         //act
@@ -18,7 +18,7 @@
     static testmethod void testPopulateRouteKey() {
         //arrange message
         Message__c message = new Message__c(
-            Parameters__c = '{"__SequenceName":"test","__Position":1}'
+            Event__c = '{"__SequenceName":"test","__Position":1}'
         );
         
         //act
@@ -33,7 +33,7 @@
     static testmethod void testValidMessageParameters() {
         //arrange message
         Message__c validMessage = new Message__c(
-            Parameters__c = '{"__SequenceName":"test","__Position":1}'
+            Event__c = '{"__SequenceName":"test","__Position":1}'
         );
         
         //assert
@@ -49,7 +49,7 @@
     static testmethod void testInvalidMessageParameters() {
         //arrange message
         Message__c validMessage = new Message__c(
-            Parameters__c = '{...}'
+            Event__c = '{...}'
         );
         
         //assert

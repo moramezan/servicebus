@@ -77,6 +77,17 @@
         <type>DateTime</type>
     </fields>
     <fields>
+        <fullName>Event__c</fullName>
+        <defaultValue>&quot;{}&quot;</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>What is the JSON object representing the event parameters carried by this message?</inlineHelpText>
+        <label>Event</label>
+        <length>131072</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>20</visibleLines>
+    </fields>
+    <fields>
         <fullName>Exception__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>If the process threw an exception when handling this message, what was the error?</inlineHelpText>
@@ -99,17 +110,6 @@
         <label>Overdue</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
-    </fields>
-    <fields>
-        <fullName>Parameters__c</fullName>
-        <defaultValue>&quot;{}&quot;</defaultValue>
-        <externalId>false</externalId>
-        <inlineHelpText>What is the JSON object representing the parameters carried by this message?</inlineHelpText>
-        <label>Parameters</label>
-        <length>131072</length>
-        <trackTrending>false</trackTrending>
-        <type>LongTextArea</type>
-        <visibleLines>20</visibleLines>
     </fields>
     <fields>
         <fullName>Route__c</fullName>

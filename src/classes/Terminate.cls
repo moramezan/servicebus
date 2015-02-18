@@ -1,6 +1,6 @@
 public with sharing class Terminate {
     
-    public String Parameters;
+    public String Event;
     
     /**
      * @docs ProcessTerminate.html
@@ -15,7 +15,7 @@ public with sharing class Terminate {
     }
     
     override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         
         //if we got here from a subsequence, back to where you came from!
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();

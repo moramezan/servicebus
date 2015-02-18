@@ -56,6 +56,16 @@
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
     <fields>
+        <fullName>Event__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>What were the event parameters saved by the Gate Process?</inlineHelpText>
+        <label>Event</label>
+        <length>131072</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>20</visibleLines>
+    </fields>
+    <fields>
         <fullName>GateGroup__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Which Gate Group does this item belong in?</inlineHelpText>
@@ -68,16 +78,6 @@
         <trackTrending>false</trackTrending>
         <type>MasterDetail</type>
         <writeRequiresMasterRead>false</writeRequiresMasterRead>
-    </fields>
-    <fields>
-        <fullName>Parameters__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>What were the message parameters saved by the Gate Process?</inlineHelpText>
-        <label>Parameters</label>
-        <length>131072</length>
-        <trackTrending>false</trackTrending>
-        <type>LongTextArea</type>
-        <visibleLines>20</visibleLines>
     </fields>
     <label>Gate Item</label>
     <nameField>

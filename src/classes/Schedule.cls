@@ -1,6 +1,6 @@
 public with sharing class Schedule {
     
-    public String Parameters;
+    public String Event;
     public ScheduleConfig__c StepConfig;
     
     public class ESB {
@@ -20,7 +20,7 @@ public with sharing class Schedule {
     public class ScheduleException  extends Exception {}
     
     override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
 
         String stampAsString = (String)parameters.get('esb__EntryPointDatetime');
 

@@ -17,7 +17,7 @@
         System.assertEquals(expectedSize, actualSize, 'Wrong number of messages.');
         
         //assemble
-        Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(messages[0].Parameters__c);
+        Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
         
         //assert
         System.assert(event.containsKey('__Hops'));

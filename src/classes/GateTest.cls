@@ -9,7 +9,7 @@ private  class GateTest {
     }
 
 
-    static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenGateItemsCountEqCount() {
+    static testmethod void callingExecuteReturnsExpectedOutputEventsWhenGateItemsCountEqCount() {
         Gate.DeletionEnabled = false; //compensate for former uninserted GateSettings
         
         // Arrange :
@@ -22,7 +22,7 @@ private  class GateTest {
         insert gateGroup;
         Id gateGroupId = gateGroup.Id;
 
-        Map<String,Object> parameters = new Map<String,Object> {
+        Map<String,Object> inputEvent = new Map<String,Object> {
             '__SequenceName' => sequenceName,
             '__Position' => position,
             'esb__GateGroupId' => gateGroupId,
@@ -34,11 +34,11 @@ private  class GateTest {
         integer i = 1;
         while(i <= (count - 1)) // Adjust down by one (to allow the nth one inserted by execute() to equate with value in count)
         {
-            Map<String,Object> n = parameters.clone();
+            Map<String,Object> n = inputEvent.clone();
             n.put('data' , 'x'+i);
             GateItem__c gateItem = new GateItem__c(
                 GateGroup__c = gateGroupId,
-                Parameters__c = json.serializePretty(n)
+                Event__c = json.serializePretty(n)
             );
             gateItems.add(gateItem);
             i++;
@@ -51,14 +51,14 @@ private  class GateTest {
 
         // Act
         Type reflector = Gate.class;
-        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutputEvents = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
 
         // prepare
-        Decimal actualSize = actualOutParametersList.size();
+        Decimal actualSize = actualOutputEvents.size();
         Id actualGateGroupId = null;
         if (actualSize > 0) {
-            Map<String,Object> actualParameters = actualOutParametersList[0];
-            actualGateGroupId = (Id) parameters.get('esb__Id' );
+            Map<String,Object> actualOutputEvent = actualOutputEvents[0];
+            actualGateGroupId = (Id) inputEvent.get('esb__Id' );
         }
         integer actualGateItemsSize = [SELECT COUNT() FROM GateItem__c];
 
@@ -69,7 +69,7 @@ private  class GateTest {
     }
     
     
-    static testmethod void callingExecuteReturnsExpectedParametersCollectionWhenGateItemsCountNotEqCount() {
+    static testmethod void callingExecuteReturnsExpectedOutputEventsWhenGateItemsCountNotEqCount() {
         Gate.DeletionEnabled = false; //compensate for former uninserted GateSettings
         
         // Arrange :
@@ -83,7 +83,7 @@ private  class GateTest {
         insert gateGroup;
         Id gateGroupId = gateGroup.Id;
 
-        Map<String,Object> parameters = new Map<String,Object> {
+        Map<String,Object> inputEvent = new Map<String,Object> {
             '__SequenceName' => sequenceName,
             '__Position' => position,
             'esb__GateGroupId' => gateGroupId,
@@ -94,11 +94,11 @@ private  class GateTest {
         List<GateItem__c> gateItems = new List<GateItem__c> ();
         integer i = 1;
         while(i <= (count - 2)) {// Adjust down by TWO ( one inserted by execute() will NOT  equate with value in count)
-            Map<String,Object> n = parameters.clone();
+            Map<String,Object> n = inputEvent.clone();
             n.put('data' , 'x'+i);
             GateItem__c gateItem = new GateItem__c(
                 GateGroup__c = gateGroupId ,
-                Parameters__c = json.serializePretty(n)
+                Event__c = json.serializePretty(n)
             );
             gateItems.add(gateItem);
             i++;
@@ -110,10 +110,10 @@ private  class GateTest {
 
         // Act
         Type reflector = Gate.class;
-        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutputEvents = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
 
         // prepare
-        Decimal actualSize = actualOutParametersList.size();
+        Decimal actualSize = actualOutputEvents.size();
         Integer actualGateItemsSize = [SELECT COUNT() FROM GateItem__c];
 
         // Assert
@@ -152,11 +152,11 @@ private  class GateTest {
         // inserted in "order"
         // gateItem01 is the oldest
         // gateItem12 is the newest
-        GateItem__c gateItem01 = new GateItem__c(GateGroup__c = gateGroupA.Id, Parameters__c = overThreshold);
+        GateItem__c gateItem01 = new GateItem__c(GateGroup__c = gateGroupA.Id, Event__c = overThreshold);
         insert gateItem01;
-        GateItem__c gateItem02 = new GateItem__c(GateGroup__c = gateGroupA.Id, Parameters__c = overThreshold);
+        GateItem__c gateItem02 = new GateItem__c(GateGroup__c = gateGroupA.Id, Event__c = overThreshold);
         insert  gateItem02;
-        GateItem__c gateItem03 = new GateItem__c(GateGroup__c = gateGroupB.Id, Parameters__c = overThreshold);
+        GateItem__c gateItem03 = new GateItem__c(GateGroup__c = gateGroupB.Id, Event__c = overThreshold);
         insert  gateItem03;
         GateItem__c gateItem04 = new GateItem__c(GateGroup__c = gateGroupB.Id);
         insert  gateItem04;
@@ -250,11 +250,11 @@ private  class GateTest {
         // inserted in "order"
         // gateItem01 is the oldest
         // gateItem12 is the newest
-        GateItem__c gateItem01 = new GateItem__c(GateGroup__c = gateGroupA.Id, Parameters__c = overThreshold);
+        GateItem__c gateItem01 = new GateItem__c(GateGroup__c = gateGroupA.Id, Event__c = overThreshold);
         insert gateItem01;
-        GateItem__c gateItem02 = new GateItem__c(GateGroup__c = gateGroupA.Id, Parameters__c = overThreshold);
+        GateItem__c gateItem02 = new GateItem__c(GateGroup__c = gateGroupA.Id, Event__c = overThreshold);
         insert  gateItem02;
-        GateItem__c gateItem03 = new GateItem__c(GateGroup__c = gateGroupB.Id, Parameters__c = overThreshold);
+        GateItem__c gateItem03 = new GateItem__c(GateGroup__c = gateGroupB.Id, Event__c = overThreshold);
         insert  gateItem03;
         GateItem__c gateItem04 = new GateItem__c(GateGroup__c = gateGroupB.Id);
         insert  gateItem04;
@@ -354,12 +354,12 @@ private  class GateTest {
         };
         insert gateGroups;
 
-        GateItem__c gateItem01 = new GateItem__c(GateGroup__c = gateGroupA.Id, Parameters__c = null);
-        GateItem__c gateItem02 = new GateItem__c(GateGroup__c = gateGroupB.Id, Parameters__c = overThreshold);
-        GateItem__c gateItem03 = new GateItem__c(GateGroup__c = gateGroupC.Id, Parameters__c = null);
-        GateItem__c gateItem04 = new GateItem__c(GateGroup__c = gateGroupA.Id, Parameters__c = null);
-        GateItem__c gateItem05 = new GateItem__c(GateGroup__c = gateGroupB.Id, Parameters__c = overThreshold);
-        GateItem__c gateItem06 = new GateItem__c(GateGroup__c = gateGroupC.Id, Parameters__c = null);
+        GateItem__c gateItem01 = new GateItem__c(GateGroup__c = gateGroupA.Id, Event__c = null);
+        GateItem__c gateItem02 = new GateItem__c(GateGroup__c = gateGroupB.Id, Event__c = overThreshold);
+        GateItem__c gateItem03 = new GateItem__c(GateGroup__c = gateGroupC.Id, Event__c = null);
+        GateItem__c gateItem04 = new GateItem__c(GateGroup__c = gateGroupA.Id, Event__c = null);
+        GateItem__c gateItem05 = new GateItem__c(GateGroup__c = gateGroupB.Id, Event__c = overThreshold);
+        GateItem__c gateItem06 = new GateItem__c(GateGroup__c = gateGroupC.Id, Event__c = null);
         List<GateItem__c> gateItems = new List<GateItem__c> {
             gateItem01,
             gateItem02,
@@ -579,9 +579,9 @@ private  class GateTest {
         };
         insert gateGroups;
 
-        GateItem__c gateItem01 = new GateItem__c(GateGroup__c = gateGroupA.Id, Parameters__c = overThreshold);
+        GateItem__c gateItem01 = new GateItem__c(GateGroup__c = gateGroupA.Id, Event__c = overThreshold);
         insert gateItem01;
-        GateItem__c gateItem02 = new GateItem__c(GateGroup__c = gateGroupA.Id, Parameters__c = overThreshold);
+        GateItem__c gateItem02 = new GateItem__c(GateGroup__c = gateGroupA.Id, Event__c = overThreshold);
         insert  gateItem02;
         GateItem__c gateItem03 = new GateItem__c(GateGroup__c = gateGroupB.Id);
         insert  gateItem03;
@@ -702,7 +702,7 @@ private  class GateTest {
         // Arrange :
         List<GateItem__c> gateItems = new List<GateItem__c>{
             new GateItem__c(
-                Parameters__c = json.serialize(
+                Event__c = json.serialize(
                     new Map<String,Object> {
                         'p1' => 'v1',
                         'p2' => 'v2'
@@ -710,7 +710,7 @@ private  class GateTest {
                 )
             ),
             new GateItem__c(
-                Parameters__c = json.serialize(
+                Event__c = json.serialize(
                     new Map<String,Object> {
                         'p1' => 'v1',
                         'p2' => 'v2'
@@ -736,7 +736,7 @@ private  class GateTest {
         // Arrange :
         List<GateItem__c> gateItems = new List<GateItem__c>{
             new GateItem__c(
-                Parameters__c = json.serialize(
+                Event__c = json.serialize(
                     new Map<String,Object> {
                         'p1' => 'v1',
                         'p2' => 'v2',
@@ -745,7 +745,7 @@ private  class GateTest {
                 )
             ),
             new GateItem__c(
-                Parameters__c = json.serialize(
+                Event__c = json.serialize(
                     new Map<String,Object> {
                         'p1' => 'v1',
                         'p2' => 'v2'
@@ -778,7 +778,7 @@ private  class GateTest {
         // Arrange :
         List<GateItem__c> gateItems = new List<GateItem__c>{
             new GateItem__c(
-                Parameters__c = json.serialize(
+                Event__c = json.serialize(
                     new Map<String,Object> {
                         'p1' => null,  // present on all, but null
                         'p2' => 'v2',
@@ -787,7 +787,7 @@ private  class GateTest {
                 )
             ),
             new GateItem__c(
-                Parameters__c = json.serialize(
+                Event__c = json.serialize(
                     new Map<String,Object> {
                         'p1' => null, // present on all, but null
                         'p2' => 'v2'

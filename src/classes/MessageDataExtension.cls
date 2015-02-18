@@ -8,7 +8,7 @@ public with sharing class MessageDataExtension {
     
     public PageReference doRedirect() {
         Message__c message = (Message__c)SalesforceObject.getById(this.controller.getId());
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Parameters__c);
+        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
         
         try {
             Id dataId = (Id)parameters.get('esb__Id');

@@ -27,7 +27,7 @@
         //arrange invocation
         Disperse process = new Disperse();
         process.StepConfig = config;
-        process.Parameters = '{}';
+        process.Event = '{}';
         
         //act
         String outputs = process.toString();
@@ -58,7 +58,7 @@
         //arrange invocation
         Disperse process = new Disperse();
         process.StepConfig = config;
-        process.Parameters = '{"__SequenceName":"Test"}';
+        process.Event = '{"__SequenceName":"Test"}';
         
         //act
         try {

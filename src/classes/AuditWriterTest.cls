@@ -18,7 +18,7 @@
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
     
-        Map<String,Object> parameters = new Map<String,Object>{
+        Map<String,Object> event = new Map<String,Object>{
             // '__EntryPointUuid' => '1234567abcde',  // null EntryPointUuid
             'esb__Id' => theId
         };
@@ -28,7 +28,7 @@
         String actualMessage;
         try {
             Type reflector = AuditWriter.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, event, null).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -52,7 +52,7 @@
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
     
-        Map<String,Object> parameters = new Map<String,Object>{
+        Map<String,Object> event = new Map<String,Object>{
             '__EntryPointUuid' => '1234567abcde',
             'esb__Id' => theId
         };
@@ -62,7 +62,7 @@
         String actualMessage;
         try {
             Type reflector = AuditWriter.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, event, null).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -118,7 +118,7 @@
  
         List<Object> auditGroupIds = new List<Object>{ auditGroup1.Id, auditGroup2.Id };
  
-        Map<String,Object> parameters = new Map<String,Object>{
+        Map<String,Object> event = new Map<String,Object>{
             'esb__Id' => theId,
             '__EntryPointUuid' => '1234567abcde',
             'esb__AuditGroupIds' => auditGroupIds,
@@ -128,7 +128,7 @@
         
         //act
         Type reflector = AuditWriter.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, event, null).invokeMain().Outputs;
         
         //assemble
         List<AuditEntry__c> auditEntries = SalesforceObjectSet.listAll(AuditEntry__c.SObjectType);
@@ -136,20 +136,20 @@
          
         Boolean actualAuditGroup1 = false;
         Boolean actualAuditGroup2 = false;
-        String actualParametersSerialized1;
-        String actualParametersSerialized2;
+        String actualEventSerialized1;
+        String actualEventSerialized2;
         for (AuditEntry__c  auditEntry : auditEntries) {
             if (auditEntry.AuditGroup__c == auditGroup1.Id) {
                 actualAuditGroup1 = true;
-                actualParametersSerialized1 = auditEntry.Parameters__c;
+                actualEventSerialized1 = auditEntry.Event__c;
             }
             if (auditEntry.AuditGroup__c == auditGroup2.Id) {
                 actualAuditGroup2 = true;
-                actualParametersSerialized2 = auditEntry.Parameters__c;
+                actualEventSerialized2 = auditEntry.Event__c;
             }
         }
         String actualSequenceName;
-        Boolean actualParameters = ( actualParametersSerialized2 != null);
+        Boolean actualEvent = ( actualEventSerialized2 != null);
  
         
             
@@ -164,13 +164,13 @@
 
         Boolean expectedAuditGroup1 = true;
         Boolean expectedAuditGroup2 = true;
-        Boolean expectedParameters = true;
+        Boolean expectedEvent = true;
         String expectedSequenceName = sequenceName;
         System.assertEquals(expectedAuditGroup1, actualAuditGroup1);
         System.assertEquals(expectedAuditGroup2, actualAuditGroup2);
-        System.assertEquals(expectedParameters, actualParameters);
-        System.assertEquals(actualParametersSerialized1, actualParametersSerialized2);
-        System.assert(actualParametersSerialized1.contains(expectedSequenceName));
+        System.assertEquals(expectedEvent, actualEvent);
+        System.assertEquals(actualEventSerialized1, actualEventSerialized2);
+        System.assert(actualEventSerialized1.contains(expectedSequenceName));
     }
 
 }

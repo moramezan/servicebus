@@ -19,7 +19,7 @@
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
-        <apex:pageBlockSection collapsible="false" columns="1" title="Input Parameters" rendered="{!ESB.Inputs != null}">
+        <apex:pageBlockSection collapsible="false" columns="1" title="Input Event Parameters" rendered="{!ESB.Inputs != null}">
             <apex:pageBlockSectionItem >
                 <apex:dataTable cellspacing="10" value="{!ESB.Inputs}" var="key">
                     <apex:column style="font-weight: bold;">{!key}</apex:column>
@@ -28,7 +28,7 @@
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
-        <apex:pageBlockSection collapsible="false" columns="1" title="Output Parameters" rendered="{!ESB.Outputs != null}">
+        <apex:pageBlockSection collapsible="false" columns="1" title="Output Event Parameters" rendered="{!ESB.Outputs != null}">
             <apex:pageBlockSectionItem >
                 <apex:dataTable cellspacing="10" value="{!ESB.Outputs}" var="key">
                     <apex:column style="font-weight: bold;">{!key}</apex:column>

@@ -1,6 +1,6 @@
 @IsTest public class BrokerTest { //formerly FailureProcess
     
-    public String Parameters;
+    public String Event;
     
     @TestVisible private class ESB {
         public String Tag = 'Enterprise Service Bus';
@@ -9,9 +9,9 @@
     }
     
     override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Parameters);
+        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         throw new BrokerException(FailureMessage);
-        return Json.serialize(new List<Map<String,Object>>{parameters});
+        return Json.serialize(new List<Map<String,Object>>{inputEvent});
     }
     
     public class BrokerException extends Exception {}
@@ -49,21 +49,21 @@
         Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange messages
-        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1};
+        Map<String,Object> inputEvent = new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1};
         
-        List<Map<String,Object>> parameterses = new List<Map<String,Object>>{
-            parameters,
-            parameters,
-            parameters,
-            parameters,
-            parameters,
-            parameters,
-            parameters,
-            parameters,
-            parameters
+        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>{
+            inputEvent,
+            inputEvent,
+            inputEvent,
+            inputEvent,
+            inputEvent,
+            inputEvent,
+            inputEvent,
+            inputEvent,
+            inputEvent
         };
         
-        List<Message__c> messages = new Job(parameterses).persist();
+        List<Message__c> messages = new Job(outputEvents).persist();
         
         //act
         List<Message__c> records = Broker.impl().locateMarkableWork();
@@ -121,7 +121,7 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Parameters__c, Status__c, Cause__c
+            SELECT Id, Name, Event__c, Status__c, Cause__c
             FROM Message__c
             WHERE Status__c != 'Completed'
         ];
@@ -131,8 +131,8 @@
         String actualStatus;
         Integer actualCount = messages.size();
         if (actualCount > 0) {
-            Map<String,Object> actualParameters = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Parameters__c);
-            actualHops = (Integer) actualParameters.get('__Hops');
+            Map<String,Object> actualEvent = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Event__c);
+            actualHops = (Integer) actualEvent.get('__Hops');
             
             //assemble
             Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(messages[0].Cause__c);
@@ -146,14 +146,14 @@
         Integer expectedHops = maxHops;
         System.assertEquals(expectedHops, actualHops, 'Wrong hops.');
         
-        String expectedDetail = 'Too many hops - to resolve, manually set __Hops on parameters to 0';
+        String expectedDetail = 'Too many hops - to resolve, manually set __Hops on event parameters to 0';
         System.assertEquals(expectedDetail, actualDetail, 'Wrong message');
         
         String expectedStatus = 'Started';
         System.assertEquals(expectedStatus, actualStatus, 'Wrong message status.'); 
     }
     
-    static testmethod void callingEnforceMaxHopsReturnsExpectedValueWhenHopsParameterLtThreshold() {
+    static testmethod void callingEnforceMaxHopsReturnsExpectedValueWhenHopsLtThreshold() {
         //arrange
         Broker.MaxHops = 2;
         List<Message__c> messages = new Job(new Map<String,Object>{
@@ -164,17 +164,17 @@
         new MessageObjectSet(messages).incrementHops();
         
         //assemble
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(messages[0].Parameters__c);
+        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
 
         //assert
         Integer expectedHops = 1;
-        Integer actualHops = (Integer)parameters.get('__Hops');
+        Integer actualHops = (Integer)inputEvent.get('__Hops');
         System.assertEquals( expectedHops, actualHops);
     }
 
 
 
-    static testmethod void callingEnforceMaxHopsReturnsExpectedValueWhenHopsParameterNotDefined() {
+    static testmethod void callingEnforceMaxHopsReturnsExpectedValueWhenHopsNotDefined() {
        //arrange
         Broker.MaxHops = 10;
         List<Message__c> messages = new Job(new Map<String,Object>{
@@ -185,16 +185,16 @@
         new MessageObjectSet(messages).incrementHops();
         
         //assemble
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(messages[0].Parameters__c);
+        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
 
         //assert
         Integer expectedHops = 1;
-        Integer actualHops = (Integer)parameters.get('__Hops');
+        Integer actualHops = (Integer)inputEvent.get('__Hops');
         System.assertEquals( expectedHops, actualHops);
     }
  
   
-    static testmethod void callingEnforceMaxHopsThrowsExceptionWhenHopsParameterGtOrEqToThreshold() {
+    static testmethod void callingEnforceMaxHopsThrowsExceptionWhenHopsGtOrEqToThreshold() {
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
@@ -247,19 +247,19 @@
         Decimal positionA2 = stepA2.Position__c;
         Decimal positionA3 = stepA3.Position__c;
         
-        List<Map<String,Object>> parameterses = new List<Map<String,Object>>{
+        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>{
             new Map<String,Object>{'__SequenceName' => 'sequenceName1', '__Position' => positionA1},
             new Map<String,Object>{'__SequenceName' => 'sequenceName2', '__Position' => positionA2}
         };
         
         
         //act
-        List<Message__c> messages = new Job(parameterses).persist();
+        List<Message__c> messages = new Job(outputEvents).persist();
         new MessageObjectSet(messages).incrementPositions();
         
         //assemble
-        Map<String,Object> parameters1 = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Parameters__c);
-        Map<String,Object> parameters2 = (Map<String,Object>)System.Json.deserializeUntyped(messages[1].Parameters__c);
+        Map<String,Object> inputEvent1 = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Event__c);
+        Map<String,Object> inputEvent2 = (Map<String,Object>)System.Json.deserializeUntyped(messages[1].Event__c);
         
         // assert
         Integer expectedCount = 2;
@@ -267,19 +267,19 @@
         System.assertEquals(expectedCount, actualCount);
 
         String expectedSequenceName1 = 'sequenceName1';
-        String actualSequenceName1 = (String)parameters1.get('__SequenceName');
+        String actualSequenceName1 = (String)inputEvent1.get('__SequenceName');
         System.assertEquals(expectedSequenceName1, actualSequenceName1, 'Wrong sequence name');
         
         Decimal expectedPosition1 = positionA1 + 1;
-        Decimal actualPosition1 = (Decimal)parameters1.get('__Position');
+        Decimal actualPosition1 = (Decimal)inputEvent1.get('__Position');
         System.assertEquals(expectedPosition1, actualPosition1, 'Wrong position 1.');
 
         String expectedSequenceName2 = 'sequenceName2';
-        String actualSequenceName2 = (String)parameters2.get('__SequenceName');
+        String actualSequenceName2 = (String)inputEvent2.get('__SequenceName');
         System.assertEquals(expectedSequenceName2, actualSequenceName2, 'Wrong sequence name');
         
         Decimal expectedPosition2 = positionA2 + 1;
-        Decimal actualPosition2 = (Decimal)parameters2.get('__Position');
+        Decimal actualPosition2 = (Decimal)inputEvent2.get('__Position');
         System.assertEquals(expectedPosition2, actualPosition2, 'Wrong position 2.');
     }
     
@@ -339,16 +339,16 @@
         //arrange fucked messages
         MessageObjectSet.Inhibit = false;
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Started', Parameters__c = '{"__SequenceName":"test","__Position":1}'),
-            new Message__c(Status__c = 'Started', Parameters__c = '{"__SequenceName":"test","__Position":1}')
+            new Message__c(Status__c = 'Started', Event__c = '{"__SequenceName":"test","__Position":1}'),
+            new Message__c(Status__c = 'Started', Event__c = '{"__SequenceName":"test","__Position":1}')
         };
         MessageObjectSet.Inhibit = true;
         
         //arrange Rebuffered messages
         MessageObjectSet.Inhibit = false;
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Rebuffered', Parameters__c = '{"__SequenceName":"test","__Position":1}'),
-            new Message__c(Status__c = 'Rebuffered', Parameters__c = '{"__SequenceName":"test","__Position":1}')
+            new Message__c(Status__c = 'Rebuffered', Event__c = '{"__SequenceName":"test","__Position":1}'),
+            new Message__c(Status__c = 'Rebuffered', Event__c = '{"__SequenceName":"test","__Position":1}')
         };
         MessageObjectSet.Inhibit = true;
         
@@ -403,7 +403,7 @@
         insert stepC1;
         insert stepC2;
         
-        List<Map<String,Object>> parameterses = new List<Map<String,Object>>{
+        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>{
             new Map<String,Object>{'esb__Id' => 0, '__SequenceName' => sequenceA.Name, '__Position' => positionA1}, // Same Sequence / Position
             new Map<String,Object>{'esb__Id' => 1, '__SequenceName' => sequenceA.Name, '__Position' => positionA1}, // Same Sequence / Position
             new Map<String,Object>{'esb__Id' => 2, '__SequenceName' => sequenceA.Name, '__Position' => positionA2},
@@ -412,7 +412,7 @@
         };
         
         // act
-        List<Message__c> messages = new Job(parameterses).persist();
+        List<Message__c> messages = new Job(outputEvents).persist();
         new MessageObjectSet(messages).incrementPositions();
         
         // assemble
@@ -427,10 +427,10 @@
         Integer actualPosition3 = -1 ;
         Integer actualPosition4 = -1 ;
         for (Message__c message : messages) {
-            Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(message.Parameters__c);
-            Integer theId = (Integer) parameters.get('esb__Id');
-            String theSequenceName = (String)parameters.get('__SequenceName');
-            Integer thePosition = (Integer)parameters.get('__Position');
+            Map<String,Object> inputEvent = (Map<String,Object>)System.Json.deserializeUntyped(message.Event__c);
+            Integer theId = (Integer) inputEvent.get('esb__Id');
+            String theSequenceName = (String)inputEvent.get('__SequenceName');
+            Integer thePosition = (Integer)inputEvent.get('__Position');
             if (theId == 0) {
                 actualSequenceName0 = theSequenceName;
                 actualPosition0 = thePosition;
@@ -568,74 +568,74 @@
         
     }
     
-      static testmethod void callingGateHelperCorrectlySetsCountOnParametersWhenMarkCountIncrementsTo1() {
+      static testmethod void callingGateHelperCorrectlySetsCountWhenMarkCountIncrementsTo1() {
         //arrange
         Integer markCount = 0;
-        Map<String,Object> parametersIn0 = new Map<String,Object> {
+        Map<String,Object> eventIn0 = new Map<String,Object> {
             'esb__Id' => '0',
             '__MarkCount' => markCount
         };
         
-        Map<String,Object> parametersOut1 = new Map<String,Object> {
+        Map<String,Object> eventOut1 = new Map<String,Object> {
             'esb__Id' => '1'
         };
         
-        Map<String,Object> parametersOut2 = new Map<String,Object> {
+        Map<String,Object> eventOut2 = new Map<String,Object> {
             'esb__Id' => '2'
         };
         
-        Map<String,Object> parametersOut3 = new Map<String,Object> {
+        Map<String,Object> eventOut3 = new Map<String,Object> {
             'esb__Id' => '3'
         };
         
-        List<Map<String,Object>> parametersListOut = new List<Map<String,Object>> { parametersOut1, parametersOut2, parametersOut3 };
+        List<Map<String,Object>> eventsListOut = new List<Map<String,Object>> { eventOut1, eventOut2, eventOut3 };
         
         //act
-        new DoNothingBroker().gateHelper(parametersIn0, parametersListOut);
+        new DoNothingBroker().gateHelper(eventIn0, eventsListOut);
         
         //assemble
-        Integer actualCount = (Integer)parametersListOut[0].get('__Count');
+        Integer actualCount = (Integer)eventsListOut[0].get('__Count');
         
         //assert
-        Integer expectedCount = parametersListOut.size();
+        Integer expectedCount = eventsListOut.size();
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testmethod void callingGateHelperDoesNotSetCountOnParametersWhenMarkCountIncrementsToOtherThan1() {
+    static testmethod void callingGateHelperDoesNotSetCountWhenMarkCountIncrementsToOtherThan1() {
         //arrange
         Integer markCount = 0; //will not increment to 1
-        Map<String,Object> parametersIn0 = new Map<String,Object> {
+        Map<String,Object> eventIn0 = new Map<String,Object> {
             'esb__Id' => '0',
             '__MarkCount' => markCount
         };
         
-        List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
+        List<Map<String,Object>> eventsListOut = new List<Map<String,Object>>();
         
         //act
-        new DoNothingBroker().gateHelper(parametersIn0, parametersListOut);
+        new DoNothingBroker().gateHelper(eventIn0, eventsListOut);
         
         //assemble
-        Integer actualCount = (Integer)parametersIn0.get('__Count');
+        Integer actualCount = (Integer)eventIn0.get('__Count');
         
         //assert
         Integer expectedCount = null;
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testmethod void callingGateHelperDoesNotSetCountOnParametersWhenMarkCountIsNull() {
+    static testmethod void callingGateHelperDoesNotSetCountWhenMarkCountIsNull() {
         //arrange
-        Map<String,Object> parametersIn0 = new Map<String,Object> {
+        Map<String,Object> eventIn0 = new Map<String,Object> {
             'esb__Id' => '0'
             //'__MarkCount' => markCount //Not specified; key will return null
         };
         
-        List<Map<String,Object>> parametersListOut = new List<Map<String,Object>>();
+        List<Map<String,Object>> eventsListOut = new List<Map<String,Object>>();
         
         //act
-        new DoNothingBroker().gateHelper(parametersIn0, parametersListOut);
+        new DoNothingBroker().gateHelper(eventIn0, eventsListOut);
         
         //assemble
-        Integer actualCount = (Integer) parametersIn0.get('__Count');
+        Integer actualCount = (Integer) eventIn0.get('__Count');
         
         //assert
         Integer expectedCount = null;
@@ -645,7 +645,7 @@
  
     
     //TODO :: write test for this when you (NReid) understand this ( cant remember right now)
-    // if (count == 0) Database.delete(new List<Id>{(Id)parameters.get('esb__GateGroupId')}); //tidy up split of 0
+    // if (count == 0) Database.delete(new List<Id>{(Id)event.get('esb__GateGroupId')}); //tidy up split of 0
     
     /**
      * Bug with Salesforce:
@@ -660,8 +660,8 @@
     // Stack Trace      Class.BrokerTest.testMissingPositionThrowsExpectedException: line 680, column 1
     static testmethod void testMissingPositionThrowsExpectedException() {
         //arrange message
-        Map<String,Object> parameters = new Map<String,Object>{'not__Position' => 1};
-        List<Message__c> messages = new Job(parameters).persist();
+        Map<String,Object> inputEvent = new Map<String,Object>{'not__Position' => 1};
+        List<Message__c> messages = new Job(inputEvent).persist();
         
         //arrange broker
         Broker broker = new DoNothingBroker();
@@ -677,7 +677,7 @@
         Message__c messageActual = (Message__c)SalesforceObject.getById(messages[0].Id);
         
         //assert
-        String expectedMessage = 'Mandatory parameter esb__SequenceName not supplied.';
+        String expectedMessage = 'Mandatory event parameter esb__SequenceName not supplied.';
         System.assertEquals(expectedMessage, actualMessage, 'Wrong exception message.');
     }
     
@@ -690,8 +690,8 @@
     // Stack Trace      Class.BrokerTest.testNoStepThrowsQueryException: line 705, column 1
     static testmethod void testNoStepThrowsQueryException() {
         //arrange message (note there is no Step__c in database!)
-        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => '', '__Position' => 0};
-        List<Message__c> messages = new Job(parameters).persist();
+        Map<String,Object> inputEvent = new Map<String,Object>{'__SequenceName' => '', '__Position' => 0};
+        List<Message__c> messages = new Job(inputEvent).persist();
         
         //arrange specific broker implementation
         Broker broker = new DoNothingBroker();
@@ -818,7 +818,7 @@
 
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Parameters__c, Status__c
+            SELECT Id, Name, Event__c, Status__c
             FROM Message__c
             WHERE Status__c != 'Completed'
         ];
@@ -878,7 +878,7 @@
         
         //assemble
         List<Message__c> messages = [
-            SELECT Id, Name, Parameters__c, Status__c
+            SELECT Id, Name, Event__c, Status__c
             FROM Message__c
             WHERE Status__c = 'Completed'
         ];
@@ -938,12 +938,12 @@
         
         //assemble
         List<Message__c> messagesOk = [
-            SELECT Id, Name, Parameters__c, Status__c, Cause__c
+            SELECT Id, Name, Event__c, Status__c, Cause__c
             FROM Message__c
             WHERE Status__c = 'Completed'
         ];
         List<Message__c> messagesFailed = [
-            SELECT Id, Name, Parameters__c, Status__c, Cause__c
+            SELECT Id, Name, Event__c, Status__c, Cause__c
             FROM Message__c
             WHERE Status__c != 'Completed'
         ];
@@ -967,7 +967,7 @@
         System.assertEquals(expectedExceptionMessage, (String)actualException.get('Message'), 'Wrong message');         
     }
  
-    static testMethod void callingEnqueueWithParameterCollectionIncludesAllParametersInMessage() {
+    static testMethod void callingEnqueueWithEventParametersIncludesAllEventParametersInMessage() {
         // arrange 
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
 
@@ -982,7 +982,7 @@
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         String eventStamp = HeartbeatImplementation.getISO8601(DateTime.newInstance(2014,12,15,13,11,07));
-        Map<String,Object> parameters = new Map<String,Object>{
+        Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__Id' => UserInfo.getUserId(),
             '__SequenceName' => sequenceName,
             '__Position' => position,
@@ -990,15 +990,15 @@
         };
              
         // act
-        new Job(parameters).execute(null);
+        new Job(inputEvent).execute(null);
 
         // assemble
-        List<Message__c> actualMessages = [  SELECT  Id, Parameters__c FROM Message__c];
+        List<Message__c> actualMessages = [  SELECT  Id, Event__c FROM Message__c];
         Integer actualCount  = actualMessages.size();
         String  actualEventStamp;
         if (actualCount == 1) {
-            Map<String,Object> actualParameters = (Map<String,Object>)Json.deserializeUntyped(actualMessages[0].Parameters__c);
-            actualEventStamp = (String)actualParameters.get('esb__EntryPointDatetime');
+            Map<String,Object> actualEvent = (Map<String,Object>)Json.deserializeUntyped(actualMessages[0].Event__c);
+            actualEventStamp = (String)actualEvent.get('esb__EntryPointDatetime');
         }
  
         // assert
@@ -1008,7 +1008,7 @@
         System.assertEquals(expectedEventStamp, actualEventStamp);
     }
 
-    static testMethod void callingExecuteWithoutMandatoryParametersInParametersCollectionThrowsException() {
+    static testMethod void callingExecuteWithoutMandatoryEventParametersInEventParametersCollectionThrowsException() {
         // arrange process, sequence, step
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
 
@@ -1052,7 +1052,7 @@
     } 
     
     
-    static testMethod void callingEnqueueAlwaysSetsInitiatingParameters() {
+    static testMethod void callingEnqueueAlwaysSetsInitiatingEventParameters() {
         //arrange processes
         Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
         
@@ -1070,17 +1070,17 @@
         new Job(sequence.Name, '000000000000000AAA').execute(null);
         
         // assemble
-        List<Message__c> messagesAfter = [SELECT Parameters__c FROM Message__c LIMIT 1];
+        List<Message__c> messagesAfter = [SELECT Event__c FROM Message__c LIMIT 1];
         
         
         String  actualEntryPointUuid ; 
         Id      actualEnqueueUserId  ; 
         Integer actualPosition       ; 
         if (messagesAfter.size() == 1) {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(messagesAfter[0].Parameters__c);
-            actualEntryPointUuid = (String) parameters.get('__EntryPointUuid');
-            actualEnqueueUserId  = (Id) parameters.get('__EnqueueUserId' );
-            actualPosition       = (Integer) parameters.get('__Position');
+            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(messagesAfter[0].Event__c);
+            actualEntryPointUuid = (String) inputEvent.get('__EntryPointUuid');
+            actualEnqueueUserId  = (Id) inputEvent.get('__EnqueueUserId' );
+            actualPosition       = (Integer) inputEvent.get('__Position');
         }
 
         // assert
@@ -1094,13 +1094,13 @@
 
     static testMethod void callingInvokeMainWithCorrectToToStringOverrideDoesNOTThrowException() {
         //arrange
-        Map<String,Object> parameters = new Map<String,Object>();
+        Map<String,Object> inputEvent = new Map<String,Object>();
         
         //act
         Boolean actualFlag = true;
         Type reflector = Terminate.class;
         try {
-            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters, null).invokeMain();   
+            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent, null).invokeMain();   
         } catch (Exception e) {
             actualFlag = false;   
         }
@@ -1112,13 +1112,13 @@
     
     static testMethod void callingInvokeMainWhenNoToToStringOverrideThrowsExpectedException() {
         //arrange
-        Map<String,Object> parameters = new Map<String,Object>();
+        Map<String,Object> inputEvent = new Map<String,Object>();
         Type reflector = PostInstallHandler.class; // Clearly, no toString() override here!
         
         //act
         Boolean actualFlag = false;
         try {
-            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters, null).invokeMain();
+            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent, null).invokeMain();
             System.assert(false, 'Above should throw exception.');
         } catch (Broker.EngineException e) {
             String expectedMessage = 'Your plugin has not overridden the toString() method. Please refer to the Process Developers Guide for specific guidance.';
