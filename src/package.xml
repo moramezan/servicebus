@@ -24,6 +24,7 @@
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
         <members>Disperse</members>
+        <members>DisperseTest</members>
         <members>Gate</members>
         <members>GateTest</members>
         <members>Heartbeat</members>
@@ -33,6 +34,7 @@
         <members>HeartbeatImplementationTest</members>
         <members>HeartbeatTest</members>
         <members>Job</members>
+        <members>JobTest</members>
         <members>Jump</members>
         <members>JumpTest</members>
         <members>Mark</members>
@@ -63,6 +65,7 @@
         <members>Publish</members>
         <members>PublishTest</members>
         <members>RemoteSiteSettingController</members>
+        <members>RemoteSiteSettingControllerTest</members>
         <members>SalesforceObject</members>
         <members>SalesforceObjectSet</members>
         <members>SalesforceObjectSetTest</members>

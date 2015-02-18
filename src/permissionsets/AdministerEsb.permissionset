@@ -73,6 +73,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>DisperseTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Gate</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -106,6 +110,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>Job</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>JobTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -226,6 +234,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>RemoteSiteSettingController</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>RemoteSiteSettingControllerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

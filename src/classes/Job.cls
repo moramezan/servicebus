@@ -25,6 +25,7 @@ global without sharing class Job implements Process.Plugin, Queueable {
         plugin.Description = 'Enqueue a Job into the Enterprise Service Bus';
         
         plugin.inputParameters = new List<Process.PluginDescribeResult.InputParameter>{
+            new Process.PluginDescribeResult.InputParameter('esb__Id', Process.PluginDescribeResult.ParameterType.ID, true),
             new Process.PluginDescribeResult.InputParameter('esb__SequenceName', Process.PluginDescribeResult.ParameterType.STRING, true)
         };
         
@@ -54,7 +55,7 @@ global without sharing class Job implements Process.Plugin, Queueable {
     
     public class JobException extends Exception {}
     
-    private List<Message__c> messages = new List<Message__c>();
+    @TestVisible private List<Message__c> messages = new List<Message__c>();
     
     /**
      * Note, I can appreciate it seems these constructors are all crammed together. Sorry
@@ -93,8 +94,7 @@ global without sharing class Job implements Process.Plugin, Queueable {
      */
     global Job(String sequenceName, Id entityId) {
         this(new Map<String,Object>{
-            '__SequenceName' => sequenceName,
-            '__Position' => 1,
+            'esb__SequenceName' => sequenceName,
             'esb__Id' => entityId
         });
     }
