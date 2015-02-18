@@ -149,7 +149,7 @@ global without sharing class Job implements Process.Plugin, Queueable {
             }
             
             if (parameters.get('esb__EntryPointDatetime') == null) {
-                //#753 processes like Schedule are allowed to mess with this}
+                //#753 processes like Heartbeat are allowed to mess with this}
                 parameters.put('esb__EntryPointDatetime', System.now());
             }
             

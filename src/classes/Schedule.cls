@@ -12,7 +12,7 @@ public with sharing class Schedule {
         public String HelpUrl = Page.ScheduleConfigCsh.getUrl();
         public Boolean ConsumesHeartbeat = true;
         public Integer Limits = 5000; //leave half of 10,000 (Total number of records retrieved by Database.getQueryLocator)
-        public Map<String,String> Outputs = new Map<String,String>{
+        public Map<String,String> Inputs = new Map<String,String>{
             'esb__EntryPointDatetime' => 'DATETIME of the point in time this schedule was intended to run.'
         };
     }
@@ -29,8 +29,6 @@ public with sharing class Schedule {
         if (stampAsString != null) {
             // evaluate:
             if (isWithinWindow(stampAsString, this.StepConfig)) {
-                Datetime intendedTimestamp = (Datetime)Json.deserialize('"' + stampAsString + '"', Datetime.class);
-                parameters.put('esb__EntryPointDatetime', intendedTimestamp);
                 parametersList.add(parameters);
             } 
         } else { 
