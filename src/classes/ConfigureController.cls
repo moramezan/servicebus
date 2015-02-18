@@ -77,7 +77,7 @@ public with sharing class ConfigureController {
                 ];
                 IsAllowed = !oauthtokens.isEmpty();
             }
-            return Isallowed;
+            return IsAllowed;
         }
     }
     
@@ -255,8 +255,8 @@ public with sharing class ConfigureController {
                 throw new ConfigureException('Bad response in handleRedirect: ' + response.getStatusCode() + ' ' + response.getBody());
             }
             
-            String data = Test.isRunningTest() ? '{}' : response.getBody();
-            Token t = Test.isRunningTest() ? new Token() : (Token)Json.deserialize(data, Token.class);
+            String data = response.getBody();
+            Token t = (Token)Json.deserialize(data, Token.class);
             if (t.refresh_token == null) {
                 //unlikely, but an unhandled exception means we'll hear about it
                 throw new ConfigureException('Null refresh_token in handleRedirect: ' + data);
