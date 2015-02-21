@@ -45,40 +45,20 @@
         <type>Default</type>
     </actionOverrides>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
-    <customHelpPage>GateGroupCsh</customHelpPage>
     <deploymentStatus>Deployed</deploymentStatus>
     <enableActivities>false</enableActivities>
-    <enableBulkApi>false</enableBulkApi>
-    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
-    <enableSharing>false</enableSharing>
-    <enableStreamingApi>false</enableStreamingApi>
-    <fields>
-        <fullName>MarkConfig__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
-        <description>Per #732 this is a lookup, not a master-detail.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>On which MarkConfig can this GateGroup be found?</inlineHelpText>
-        <label>Mark Config</label>
-        <referenceTo>MarkConfig__c</referenceTo>
-        <relationshipLabel>Gate Groups</relationshipLabel>
-        <relationshipName>GateGroups</relationshipName>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Lookup</type>
-    </fields>
-    <label>Gate Group</label>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <label>Mark Config</label>
     <nameField>
-        <label>Gate Group Name</label>
+        <label>What does this step do?</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Gate Groups</pluralLabel>
-    <searchLayouts>
-        <excludedStandardButtons>Accept</excludedStandardButtons>
-        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
-        <excludedStandardButtons>New</excludedStandardButtons>
-    </searchLayouts>
+    <pluralLabel>Mark Configs</pluralLabel>
+    <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
 </CustomObject>

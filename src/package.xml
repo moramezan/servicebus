@@ -162,6 +162,7 @@
         <members>DisperseConfigTriggers</members>
         <members>DisperseDestinationTriggers</members>
         <members>JumpConfigTriggers</members>
+        <members>MarkConfigTriggers</members>
         <members>MessageTriggers</members>
         <members>PublishConfigTriggers</members>
         <members>ScheduleConfigTriggers</members>
@@ -198,6 +199,7 @@
         <members>BrokerSetting__c.IsPaused__c</members>
         <members>DisperseDestination__c.DisperseConfig__c</members>
         <members>DisperseDestination__c.Sequence__c</members>
+        <members>GateGroup__c.MarkConfig__c</members>
         <members>GateItem__c.Event__c</members>
         <members>GateItem__c.GateGroup__c</members>
         <members>JumpConfig__c.Sequence__c</members>
@@ -248,6 +250,7 @@
         <members>GateItem__c</members>
         <members>JumpConfig__c</members>
         <members>KnifeSwitch__c</members>
+        <members>MarkConfig__c</members>
         <members>Message__c</members>
         <members>OAuthSetting__c</members>
         <members>Process__c</members>
@@ -291,6 +294,7 @@
         <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>
         <members>JumpConfig__c-Jump Config Layout</members>
+        <members>MarkConfig__c-Gate Config Layout</members>
         <members>Message__c-Message Layout</members>
         <members>Process__c-Process Layout</members>
         <members>PublishConfig__c-Publish Config Layout</members>

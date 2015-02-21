@@ -1,6 +1,7 @@
 public with sharing class Mark {
     
     public String Event;
+    public MarkConfig__c StepConfig;
     
     /**
      * @docs ProcessMarkGate.html
@@ -12,7 +13,7 @@ public with sharing class Mark {
         public String Icon = 'tag_blue';
         public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessMarkGate').getUrl();
         public Integer Limits = 75; //leave half of 150 (Total number of DML statements issued)
-        
+        public SObject StepConfig = MarkConfig__c.SObjectType.newSObject();
         public Map<String,String> Outputs = new Map<String,String>{
             'esb__GateGroupId' => 'ID of the Gate Group that eventually associates all the marked messages.'
         };
@@ -24,7 +25,7 @@ public with sharing class Mark {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         
         //create a grouping id for what will ultimately be gated
-        GateGroup__c gateGroup = new GateGroup__C();
+        GateGroup__c gateGroup = new GateGroup__c(MarkConfig__c = this.StepConfig.Id);
         insert gateGroup;
         
         //annotate this step as the marker, so the following step must be a splitter

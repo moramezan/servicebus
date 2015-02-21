@@ -26,9 +26,13 @@ private class MarkTest {
         Decimal expectedMarkCount = 0;
         Boolean expectedGateGroupIdFlag = true;
 
+        //arrange config
+        MarkConfig__c config = new MarkConfig__c();
+        insert config;
+        
         // Act
         Type reflector = Mark.class;
-        List<Map<String,Object>> actualOutputEvents = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutputEvents = new Broker.Wrapper(reflector, inputEvent, config).invokeMain().Outputs;
 
         // prepare
         Decimal actualSize = actualOutputEvents.size();

@@ -16,13 +16,7 @@
                 <field>Name</field>
             </layoutItems>
         </layoutColumns>
-        <layoutColumns>
-            <layoutItems>
-                <behavior>Required</behavior>
-                <field>MarkConfig__c</field>
-            </layoutItems>
-        </layoutColumns>
-        <style>TwoColumnsTopToBottom</style>
+        <style>OneColumn</style>
     </layoutSections>
     <layoutSections>
         <customLabel>false</customLabel>
@@ -45,8 +39,10 @@
     </layoutSections>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>Event__c</fields>
-        <relatedList>GateItem__c.GateGroup__c</relatedList>
+        <fields>CREATED_DATE</fields>
+        <relatedList>GateGroup__c.MarkConfig__c</relatedList>
+        <sortField>CREATED_DATE</sortField>
+        <sortOrder>Desc</sortOrder>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>
@@ -54,7 +50,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hj0000001WrQF</masterLabel>
+        <masterLabel>00hj0000002OI2c</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
