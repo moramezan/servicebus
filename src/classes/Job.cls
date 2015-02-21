@@ -40,7 +40,7 @@ global without sharing class Job implements Process.Plugin, Queueable {
      * Per #702 this enables developers to Enqueue into ESB without a compile-time
      * dependency, by leveraging the Process.Plugin system interface.
      *
-     * @docs ApiJobMethods.html
+     * @docs ApiJobClass.html
      * Secondarily it also DOUBLES as a REAL Process.Plugin that people can use
      * in Visual Flow to get stuff into ESB. (Though they would create a dependency.)
      */
@@ -51,6 +51,32 @@ global without sharing class Job implements Process.Plugin, Queueable {
         
         inputEvent.put('esb__QueueableId', queueableId);
         return new Process.PluginResult(inputEvent);
+    }
+    
+    /**
+     * Wrapper class for enqueue parameters.
+     */
+    global class SimpleEvent {
+        @InvocableVariable(required=true) global Id EntityId;
+        @InvocableVariable(required=true) global String SequenceName;
+    }
+    
+    /**
+     * Per #736 this enables developers to leverage ESB Jobs inside Process Builder
+     * @docs ApiJobClass.html
+     */
+    @InvocableMethod(label='Enqueue ESB Job') global static List<Id> enqueue(List<SimpleEvent> simpleEvents) {
+        List<Id> ids = new List<Id>();
+        for (SimpleEvent simpleEvent : simpleEvents) {
+            Map<String,Object> event = new Map<String,Object>{
+                'esb__Id' => simpleEvent.EntityId,
+                'esb__SequenceName' => simpleEvent.SequenceName
+            };
+            Job j = new Job(event);
+            Id queueableId = System.enqueueJob(j);
+            ids.add(queueableId);
+        }
+        return ids;
     }
     
     public class JobException extends Exception {}
