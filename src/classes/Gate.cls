@@ -14,12 +14,12 @@ public with sharing class Gate {
         public Integer Limits = 20; //leave half of 200 (Total number of SOQL queries issued)
 
         public Map<String,String> Inputs = new Map<String,String>{
-            'esb__GateGroupId' => 'ID of the GateGroup the marked messages should belong to.',
-            'esb__GateItemParameters' => 'LIST of message parameters from all gated messages.'
+            'esb__GateGroupId' => 'ID of the GateGroup the marked messages should belong to.'
         };
-
+        
         public Map<String,String> Outputs = new Map<String,String>{
-            'esb__Id' => 'ID of the GateGroup whose members are now all present.'
+            'esb__GateItemsQueryString' => 'STRING of the query that locates the items that hold events correlated by Mark and Gate.',
+            'esb__GateItemsFieldName' => 'STRING of the item field name that contains the serialized event data.'
         };
     }
 
@@ -73,10 +73,20 @@ public with sharing class Gate {
         //  that has now metamorphosised into something else.
         //  Because it is a *new* message, extra care taken to
         //  null out conceptually incorrect parameters
+        
+        //would have been nice to use a QueryLocator to give us compile-time
+        //validation of the query string, but it reads out the binds as :tmpVar1
+        String fieldName = SObjectType.GateItem__c.Fields.Event__c.Name;
+        String queryString = ''
+            + 'SELECT ' + fieldName + ' '
+            + 'FROM GateItem__c '
+            + 'WHERE GateGroup__c = \'' + gateGroupId + '\''
+        ;
+        
         inputEvent = cleanParameters(inputEvent); // start with a clean parameters collection
         inputEvent.putAll(commonParameters);   // add the common parameters ...
-        inputEvent.put('esb__GateItemParameters',parameteres); // add parameters from each message as a list
-        inputEvent.put('esb__Id', gateGroupId);
+        inputEvent.put('esb__GateItemsQueryString', queryString);
+        inputEvent.put('esb__GateItemsFieldName', fieldName);
         inputEvent.put('__Count',null); // confuser - null out
         inputEvent.put('__MarkCount',null); // confuser - null out
         inputEvent.put('esb__GateGroupId',null); // confuser - null out        
