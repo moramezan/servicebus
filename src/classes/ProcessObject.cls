@@ -116,23 +116,21 @@ public with sharing class ProcessObject extends SalesforceObject {
             }
 
             //attempt to populate the short description of the process.
-            process.Description__c = (meta.Description.length() > 255) ? meta.Description.left(252)+'...' : meta.Description;
+            process.Description__c = meta.Description.abbreviate(SObjectType.Process__c.Fields.Description__c.Length);
 
             //attempt to populate the tag of the process (with sensible default)
-            process.Tag__c = meta.Tag == null ? 'Untagged' : (meta.Tag.length() > 255) ? meta.Tag.left(252)+'...' : meta.Tag;
+            process.Tag__c = meta.Tag == null ? 'Untagged' : meta.Tag.abbreviate(SObjectType.Process__c.Fields.Tag__c.Length);
 
             //attempt to populate the tag of the process (with sensible default)
-            String name = meta.Name == null ? outerClass.getName() : meta.Name;
-            process.Name = name.length() > 255 ? name.left(255) : name;
+            process.Name = meta.Name == null ? outerClass.getName() : meta.Name.abbreviate(SObjectType.Process__c.Fields.Name.Length);
             
             //attempt to populate the css class name of the process icon (with sensible default)
-            String icon = meta.Icon == null ? 'cog' : meta.Icon;
-            process.Icon__c = icon.length() > 255 ? 'cog' : icon;
+            process.Icon__c = meta.Icon == null ? 'cog' : meta.Icon.abbreviate(SObjectType.Process__c.Fields.Icon__c.Length);
             
             //attempt to populate the help url
             String helpUrl = meta.HelpUrl == null ? Page.ProcessDescribe.getUrl() + '?fqn=' + outerClass.getName() : meta.HelpUrl;
             if (helpUrl.startsWith('/')) helpUrl = Url.getSalesforceBaseUrl().toExternalForm() + helpUrl;
-            process.HelpUrl__c = helpUrl.length() > 255 ? helpUrl.left(255) : helpUrl;
+            process.HelpUrl__c = helpUrl.abbreviate(SObjectType.Process__c.Fields.HelpUrl__c.Length);
 
             if (meta.ProcessSetting != null) {
                 //attempt to populate the name of the customization object
