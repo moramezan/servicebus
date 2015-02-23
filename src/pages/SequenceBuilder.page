@@ -28,7 +28,7 @@
         
         window.Sequence__c = window.Sequence__c || {};
         Sequence__c.Id = '{!Sequence__c.Id}';
-        Sequence__c.Name = '{!Sequence__c.Name}';
+        Sequence__c.Name = '{!JSENCODE(Sequence__c.Name)}';
         
         window.$ObjectType = window.$ObjectType || {};
         $ObjectType.Step__c = $ObjectType.Step__c || {};
