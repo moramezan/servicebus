@@ -12,7 +12,7 @@
         }
     } 
     
-    /*static testmethod void testRecordCreatedForProcessAndStateful() {
+    static testmethod void testRecordCreatedForProcessAndStateful() {
         //arrange
         ProcessDiscoverBatch.classes = [
             SELECT Id, Name, NamespacePrefix
@@ -36,7 +36,7 @@
         String actualDescription;
         String actualTag;
         for (Process__c process : processes) {
-            if (process.Name ==  Terminate.class.getName()) {
+            if (process.FullyQualifiedClassName__c ==  Terminate.class.getName()) {
                 actualDescription = process.Description__c;
                 actualTag = process.Tag__c;
             }
@@ -47,7 +47,7 @@
         System.assert(actualDescription.contains(expectedDescription));
         String expectedTag = 'Enterprise Service Bus';
         System.assert(actualDescription.contains(expectedDescription));
-    }*/
+    }
 
  
     static testmethod void testImplementsEsbSubclass() {
