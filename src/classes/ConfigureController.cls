@@ -257,7 +257,8 @@ public with sharing class ConfigureController {
             HttpResponse response = new Http().send(request);
             if (response.getStatusCode() != 200) {
                 //#724 can happen in orgs via "ip restricted or invalid login hours"
-                throw new ConfigureException('Bad response in handleRedirect: ' + response.getStatusCode() + ' ' + response.getBody());
+                String help = Url.getSalesforceBaseUrl().toExternalForm() + new PageReference('/apex/Csh?topic=TroubleshootIpRestrictions&sidebar=false').getUrl();
+                throw new ConfigureException('Bad response in handleRedirect: ' + response.getStatusCode() + ' ' + response.getBody() + ' ' + help); //#729
             }
             
             String data = response.getBody();

@@ -1,0 +1,60 @@
+<h1>
+    Troubleshooting IP Restrictions
+</h1>
+
+<p>
+    When installing ESB, an administrator must click the <strong>Configure</strong> button
+    from the package detail page. In rare circumstances, this exception is thrown:
+</p>
+
+<fieldset>
+    <legend>Error</legend>
+    <strong><code>{"error_description":"ip restricted or invalid login hours","error":"invalid_grant"}</code></strong>
+</fieldset>
+
+<h3>
+    Cause
+</h3>
+
+<p>
+    This is a symptom of Salesforce's own API requests being blocked by an organization configured with IP restrictions.
+</p>
+
+<p>
+    These API requests originate from the package components, and support ESB scheduled processes and running user context.
+</p>
+
+<h3>
+    Solution
+</h3>
+
+<p>
+    Locally install the Connected Apps so that Salesforce can be configured to permit loopback API requests.
+</p>
+
+<ol>
+    <li>Install this <a href="https://login.salesforce.com/_ui/core/mfpackage/install/InstallPackageLandingPage?p0=04tj0000001YJZy">companion package</a>  in your organization. Choose <strong>Install for Admins Only</strong> from the install options.</li>
+    <li>When the installation is complete, click <strong>Done</strong> then click <strong>Enterprise Service Bus Connected App</strong> to view the package detail.</li>
+    <li>
+        <p>
+            Click <strong>View Components</strong> to view the two Connected Apps. Follow these steps for the Production or Sandbox app as appropriate:
+        </p>
+        <ul>
+            <li>
+                Open the Connected App detail and click <strong>Edit</strong>.
+            </li>
+            <li>
+                From the IP Relaxation dropdown, choose Relax IP Restrictions.
+            </li>
+            <li>
+                Click <strong>Save</strong>. Don't make any other changes.
+            </li>
+        </ul>
+    </li>
+    <li>
+        Navigate back to the list of <strong>Installed Packages</strong>.
+    </li>
+    <li>
+        Next to the <strong>Enterprise Service Bus</strong> package, click <strong>Configure</strong> again.
+    </li>
+</ol>
