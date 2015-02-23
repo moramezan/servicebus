@@ -76,7 +76,7 @@ global class ChatterTap {
         global String Icon = 'comment';
         global Integer Limits = 1;
         global String HelpUrl = Page.ChatterTapHelp.getUrl();
-        global SObject CustomSetting = ChatterTapSettings__c.SObjectType.newSObject();
+        global SObject ProcessSetting = ChatterTapSetting__c.SObjectType.newSObject();
     }
 
 
@@ -84,7 +84,7 @@ global class ChatterTap {
         Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event); //input event
         //main code block
         Id userId;
-        ChatterTapSettings__c setting = ChatterTapSettings__c.getInstance();
+        ChatterTapSetting__c setting = ChatterTapSetting__c.getInstance();
         if (setting.UserId__c == null) {
             userId = UserInfo.getUserId();
         } else {
@@ -400,7 +400,7 @@ global class ChatterTap {
         global String Icon = 'comment';
         global Integer Limits = 1;
         global String HelpUrl = Page.ChatterTapHelp.getUrl();
-        global SObject CustomSetting = ChatterTapSettings__c.SObjectType.newSObject();
+        global SObject ProcessSetting = ChatterTapSetting__c.SObjectType.newSObject();
     }
 
 
@@ -408,7 +408,7 @@ global class ChatterTap {
         Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event); //input message
         //main code block
         Id userId;
-        ChatterTapSettings__c setting = ChatterTapSettings__c.getInstance();
+        ChatterTapSetting__c setting = ChatterTapSetting__c.getInstance();
         if (setting.UserId__c == null) {
             userId = UserInfo.getUserId();
         } else {
@@ -428,7 +428,7 @@ global class ChatterTap {
 </h3>
 
 <p>
-    <strong>016 - 023</strong> Under the main code block, initiate the business logic implementation. The specification defines the preferred chatter feed owner as being the User Id defined the custom settings of the process. For this reason, the code references <code>ChatterTapSettings__c</code> to determine if the default chatter (User) Id should been overwritten.
+    <strong>016 - 023</strong> Under the main code block, initiate the business logic implementation. The specification defines the preferred chatter feed owner as being the User Id defined the custom settings of the process. For this reason, the code references <code>ChatterTapSetting__c</code> to determine if the default chatter (User) Id should been overwritten.
     <br /><strong>010</strong> To surface a link to the custom settings page of your process directly on the ESB processes list view: assign an instance of your custom setting SObject to the CustomSetting parameter of the process's <code>ESB</code> Marker Class.
 </p>
 
@@ -450,7 +450,7 @@ global class ChatterTap {
         global String Icon = 'comment';
         global Integer Limits = 1;
         global String HelpUrl = Page.ChatterTapHelp.getUrl();
-        global SObject CustomSetting = ChatterTapSettings__c.SObjectType.newSObject();
+        global SObject ProcessSetting = ChatterTapSetting__c.SObjectType.newSObject();
     }
 
 
@@ -458,7 +458,7 @@ global class ChatterTap {
         Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event); //input event
         //main code block
         Id userId;
-        ChatterTapSettings__c setting = ChatterTapSettings__c.getInstance();
+        ChatterTapSetting__c setting = ChatterTapSetting__c.getInstance();
         if (setting.UserId__c == null) {
             userId = UserInfo.getUserId();
         } else {
@@ -521,7 +521,7 @@ private class ChatterTapTest {
  
     static testmethod void callingToStringDoesNOTThrowErrorWhenCustomSettingSet() {
         //arrange 
-        insert new ChatterTapSettings__c ();  // default
+        insert new ChatterTapSetting__c ();  // default
         
         ChatterTap process = new ChatterTap();
         Map&lt;String,Object&gt; inputEvent = new Map&lt;String,Object&gt;();
@@ -537,7 +537,7 @@ private class ChatterTapTest {
  
     static testmethod void callingToStringExecutesCorrectly01() {  
         // Arrange   
-        insert new ChatterTapSettings__c ();  // default
+        insert new ChatterTapSetting__c ();  // default
   
         Map&lt;String,Object&gt; inputEvent = new Map&lt;String,Object&gt; {
             'c__YourKey' =&gt; 'your data'  
@@ -558,7 +558,7 @@ private class ChatterTapTest {
  
     static testmethod void callingToStringExecutesCorrectly02() {
         // Arrange
-        insert new ChatterTapSettings__c ();  // default
+        insert new ChatterTapSetting__c ();  // default
   
         Map&lt;String,Object&gt; inputEvent = new Map&lt;String,Object&gt; {
             'c__YourKey' =&gt; 'your data'

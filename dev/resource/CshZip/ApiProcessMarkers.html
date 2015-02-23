@@ -13,8 +13,8 @@
  !-->
 
 <p>
-    An ESB Process defines a single piece logic with inputs, outputs, and documentation. The logic
-    is contained in an Apex Class. Markers in the Apex Class surface other aspects.
+    In ESB, a process defines a single piece logic with inputs, outputs, and documentation. The logic
+    is contained in an Apex Class. Markers in the Apex Class surface special traits.
 </p>
 
 <p>
@@ -23,25 +23,21 @@
 </p>
 
 <p>
-    Additional markers indicate which ESB features a process has adopted. This example class uses
-    the minimum necessary markers:
+    Additional markers indicate which ESB traits a process has adopted. This example class extends
+    the <a href="?topic=ApiBaseProcess">base process</a> to show a bare minimum process:
 </p>
 
 <pre>
-global with sharing class ExampleProcess {
-    
-    //ESB Marker Properties
-    global String Event;
+global with sharing class ExampleProcess extends BaseProcess {
     
     //ESB Marker Inner Class
     global class ESB {
         global String Description = 'Outputs one event identical to the input event.';
     }
     
-    //ESB Marker Method
-    override global String toString() {
-        //add logic here and emit outputs
-        return '[{}]';
+    //add logic here and emit output events
+    override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
+        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
     }
 }
 </pre>
@@ -58,18 +54,18 @@ global with sharing class ExampleProcess {
 
 <p>
     The presence of a Marker Inner Class in any top-level Apex Class will make that class
-    discoverable as a process. The Marker Inner Class affects how the process is invoked and
+    discoverable as a process. The Marker Inner Class affects how the process is executed and
     is used to generate user interfaces for step configuration.
 </p>
 
 <dl>
     <dt>Description</dt>
     <dd><strong>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></strong></dd>
-    <dd><strong>Required description that succinctly explains what this process does.</strong></dd>
+    <dd><strong>Required description that explains what this process does in simple terms.</strong></dd>
     
     <dt>Tag</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Optional grouping tag that can be used to align related processes together.</dd>
+    <dd>Optional grouping tag that can be used to categorize related processes together.</dd>
     
     <dt>Name</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
@@ -81,16 +77,16 @@ global with sharing class ExampleProcess {
     
     <dt>Cardinality</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_integer.htm" target="_blank">Integer</a></dd>
-    <dd>Optional indicates the expected ratio of output events to input events: <code>-1</code> for fewer outputs (eg Gate), <code>0</code> for no outputs (eg Terminate), <code>1</code> for a single output (eg Audit), <code>null</code> for any or many.</dd>
+    <dd>Optional indicator of the ratio of output events to input events: <code>-1</code> for fewer outputs (eg Gate), <code>0</code> for no outputs (eg Terminate), <code>1</code> for a single output (eg Audit), <code>null</code> for any or many.</dd>
 
     <dt>HelpUrl</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Optional Help link that will be displayed alongside steps of this process type.</dd>
+    <dd>Optional link to process help. This will be displayed alongside steps of this process type.</dd>
     
     <dt>Limits</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">Integer</a></dd>
-    <dd>Optional number of times this process can run within the governor limits.</dd>
-    
+    <dd>Optional number of times this process can run in one execution context, while leaving at least half of all governors. For example, <code>100</code> for a process that only issues a SOQL query.</dd>
+
     <dt>Inputs</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map</a>&lt;String,String&gt;</dd>
     <dd>Optional friendly descriptions of the input event parameters required by this process.</dd>
@@ -101,11 +97,11 @@ global with sharing class ExampleProcess {
     
     <dt>ProcessSetting</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_custom_settings.htm" target="_blank">SObject</a></dd>
-    <dd>Optional Custom Setting <em>prototype object</em>. Data of this type are manageable on each process, to surface Process-wide settings inside the Sequence Builder.</dd>
+    <dd>Optional <em>prototype object</em> of a Custom Setting to be used for Process-specifics settings. Data of this type are manageable on each process, and are surfaced inside the Sequence Builder.</dd>
     
     <dt>StepConfig</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_sobject.htm" target="_blank">SObject</a></dd>
-    <dd>Optional Custom Object <em>prototype object</em>. Records of this type are editable on each step, to surface Step-specific configs inside the Sequence Builder.</dd>
+    <dd>Optional <em>prototype object</em> of a Custom Object to be used for Step-specific config. Records of this type are editable on each step, and are surfaced inside the Sequence Builder.</dd>
 </dl>
 
 <p>
@@ -116,16 +112,16 @@ global with sharing class ExampleProcess {
 //ESB Marker Inner Class
 global class ESB {
     global String Description = 'This process tweets from a Twitter account.';
-    global String Tag = 'Twitter';
-    global String Name = 'Tweet';
+    global String Tag = 'Social';
+    global String Name = 'Twitter';
     global String Icon = 'comment';
     global Integer Cardinality = 1; //one input event always emits exactly one output event
-    global String HelpUrl = Page.TwitterTweetHelp.getUrl();
+    global String HelpUrl = Page.TwitterHelp.getUrl();
     global String Limits = 25; //leave half of 50 (Total number of HTTP callouts permitted)
     global Map&lt;String,Object&gt; Inputs = new Map&lt;String,Object&gt;{'acme__Body' => 'String of the tweet body.'};
     global Map&lt;String,Object&gt; Outputs = new Map&lt;String,Object&gt;{'acme__TweetId' => 'String of tweet Id.'}
-    global SObject ProcessSetting = TwitterTweetSetting__c.SObjectType.newSObject();
-    global SObject StepConfig = TwitterTweetConfig__c.SObjectType.newSObject();
+    global SObject ProcessSetting = TwitterSetting__c.SObjectType.newSObject();
+    global SObject StepConfig = TwitterConfig__c.SObjectType.newSObject();
 }
 </pre>
 
@@ -134,7 +130,7 @@ global class ESB {
 </h1>
 
 <p>
-    Apex class supporting various process traits will have these properties populated prior to invocation.
+    These properties on an Apex Class may be populated by an ESB process. They can be read during execution.
 </p>
 
 <dl>
@@ -148,7 +144,7 @@ global class ESB {
     
     <dt>AllowsCallouts</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_boolean.htm" target="_blank">Boolean</a></dd>
-    <dd>False when handling invocation logic and true when handling callout logic, if that trait is adopted by this process.</dd>
+    <dd>False when handling execution logic and true when handling callout logic, if that trait is adopted by this process.</dd>
 </dl>
 
 <p>
@@ -158,7 +154,7 @@ global class ESB {
 <pre>
 //ESB Marker Properties
 global String Event;
-global MyConfig__c StepConfig;
+global TwitterConfig__c StepConfig;
 global Boolean AllowsCallouts;
 </pre>
 
@@ -168,34 +164,52 @@ global Boolean AllowsCallouts;
 </h1>
 
 <h2>
-    toString
+    callouts
 </h2>
 
 <p>
-    Required method that contains the invokable logic of an ESB process. Returns the list of output events in JSON serialized form.
+    Optional method, implemented for processes that perform callouts.
 </p>
 
 <p>
-    <code>global override String toString()</code>
+    <code>override protected void callouts(Map&lt;String,Object&gt; inputEvent)</code>
 </p>
 
-<fieldset>
-    <legend>Note</legend>
-    The error recovery features of ESB ensure that state can be persisted before and after invocation.
-    <br /><br />
-    Returning the output events in this serialized form ensures event parameters only carry persistable data.
-</fieldset>
+<p>
+    Any web services or HTTP callouts must be performed via this method. The response body
+    can be shared with the <code>execute</code> method by using class properties. For example:
+</p>
 
 <pre>
-override global String toString() {
-    Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;();
-    event.put('c__OutputParameter', 'somevalue');
-    
-    List&lt;Map&lt;String,Object&gt;&gt; events = new List&lt;Map&lt;String,Object&gt;&gt;();
-    events.add(event);
-    
-    //zero, one or many outputs
-    return Json.serialize(events);
+override protected void callouts(Map&lt;String,Object&gt; inputEvent) {
+    HttpRequest request = new HttpRequest();
+    request.setEndpoint('http://headers.jsontest.com/');
+    request.setMethod('GET');
+    this.Content = new Http().send(request).getBody();
+}
+</pre>
+
+<h2>
+    execute
+</h2>
+
+<p>
+    Required method that contains the executable logic of an ESB process.
+</p>
+
+<p>
+    <code>override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent)</code>
+</p>
+
+<p>
+    Any DML operations must be performed via this method. Returns a list of zero, one or many output events.
+</p>
+
+<pre>
+override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
+    Map&lt;String,Object&gt; outputEvent = inputEvent.clone();
+    outputEvent.put('c__Debug', 'Hello world!');
+    return new List&lt;Map&lt;String,Object&gt;&gt;{outputEvent};
 }
 </pre>
 
@@ -216,26 +230,21 @@ override global String toString() {
 </p>
 
 <pre>
-global with sharing class TwitterTweet implements Database.AllowsCallouts {
+//ESB Marker Interface
+global with sharing class TwitterProcess extends BaseProcess implements Database.AllowsCallouts {
     
-    //ESB Marker Properties
-    global String Event;
-    global Boolean AllowsCallouts;
-     
     //ESB Marker Inner Class
     global class ESB {
         global String Description = 'Makes an HTTP callout then performs some DML.';
     }
      
-    //ESB Marker Method
-    override global String toString() {
-        if (this.AllowsCallouts) {
-            //http callouts here
-            return null;
-        } else {
-            //dml operations here
-            return '[{}]';
-        }
+    override protected void callouts(Map&lt;String,Object&gt; inputEvent) {
+        //http callouts here (called first)
+    }
+    
+    override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
+        //dml operations here (called second)
+        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
     }
 }
 </pre>

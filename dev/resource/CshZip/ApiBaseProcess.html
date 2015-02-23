@@ -1,0 +1,56 @@
+<h1>
+    Base Process
+</h1>
+
+<!--
+ ! Trying not to say "Process" unless we refer to "Process__c"
+ ! I like also "Process Definition" ... do we change the label?
+ !-->
+
+<p>
+    All the traits available to ESB process developers can be availed using
+    <a href="?topic=ApiProcessMarkers">Process Markers</a> and the <code>toString</code> marker
+    method.
+</p>
+
+<p>
+    However, you may wish to define a base process class to handle common code such as serialization,
+    deserialization and callouts.
+</p>
+
+<p>
+    This example base process class simplifies the use of markers, and is used throughout tutorials and documentation:
+</p>
+
+<pre>
+abstract public with sharing class BaseProcess {
+    
+    //only override when a process requires callouts
+    virtual protected void callouts(Map&lt;String,Object&gt; event) {}
+    
+    //always override and implement process logic inside
+    abstract protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; event);
+    
+    
+    
+    //ESB Marker Properties
+    public String Event;
+    public SObject StepConfig;
+    public Boolean AllowsCallouts;
+    
+    //ESB Marker Method
+    override public String toString() {
+        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event);
+        if (this.AllowsCallouts == true) {this.callouts(inputEvent);return null;}
+        return Json.serialize(this.execute(inputEvent));
+    }
+    
+}
+</pre>
+
+<fieldset>
+    <legend>Note</legend>
+    The error recovery capability of ESB ensures state can be persisted to the database before and after execution.
+    <br /><br />
+    Returning the serialized output events via <code>toString</code> ensures that event parameters only carry persistable data.
+</fieldset>

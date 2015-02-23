@@ -7,8 +7,8 @@
  !-->
 
 <p>
-    A Job is used to pass new events into the Enterprise Service Bus. Jobs can be started in
-    all contexts, such as triggers, batch apex, future methods, and before or after callouts.
+    A Job is used to inject entry point events into the Enterprise Service Bus. Jobs can be started
+    in any context including triggers, batch apex, future methods, and before or after callouts.
 </p>
 
 <p>
@@ -18,7 +18,7 @@
 <table>
         <tr>
             <th>Usage</th>
-            <th>Signature</th>
+            <th>Constructor Signature</th>
         </tr>
         <tr>
             <td>Simple event</td>
@@ -55,11 +55,11 @@
 </p>
 
 <pre>
-String sequenceName = 'Payroll_Sequence';
-Id entityId = UserInfo.getUserId();
+String sequenceName = 'Payroll_Calculation';
+Id companyId = UserInfo.getOrganizationId();
 
 //submit a simple event to Enterprise Service Bus
-esb.Job j = new esb.Job(sequenceName, entityId);
+esb.Job j = new esb.Job(sequenceName, companyId);
 Id queueableId = System.enqueueJob(j);
 </pre>
 
@@ -72,8 +72,8 @@ Id queueableId = System.enqueueJob(j);
 </h2>
 
 <p>
-    Sends known data to a sequence. This is a short-hand method that sets two parameters for you.
-    Use this constructor for simple events that only need to carry an sObject Id.
+    Sends a known Id to a sequence. This short-hand method sets two event parameters for you.
+    Use this constructor for simple events that only need to point at an sObject.
 </p>
 
 <p>
@@ -95,7 +95,7 @@ Id queueableId = System.enqueueJob(j);
 </h2>
 
 <p>
-    Sends an event with any number of parameters to a sequence. Use this constructor for
+    Sends an event with any number of event parameters to a sequence. Use this constructor for
     events that need to carry many keys and values.
 </p>
 
@@ -106,7 +106,7 @@ Id queueableId = System.enqueueJob(j);
 <dl>
     <dt>event</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,Object&gt;</a></dd>
-    <dd>A parameterized event, which must contain the <code>esb__SequenceName</code> key with a string value.</dd>
+    <dd>An event, which must carry a <code>esb__SequenceName</code> parameter with a string value.</dd>
 </dl>
 
 <h2>
@@ -114,7 +114,7 @@ Id queueableId = System.enqueueJob(j);
 </h2>
 
 <p>
-    Sends multiple events with any number of parameters to sequences. Use this constructor
+    Sends multiple events with any number of event parameters to sequences. Use this constructor
     to bulkify multiple events at once without calling enqueueJob inside of a loop.
 </p>
 
@@ -125,7 +125,7 @@ Id queueableId = System.enqueueJob(j);
 <dl>
     <dt>events</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_list.htm" target="_blank">List&lt;Map&lt;String,Object&gt;&gt;</a></dd>
-    <dd>A collection of multiple parameterized events, each of which must contain an <code>esb__SequenceName</code> key with a string value.</dd>
+    <dd>A collection of multiple events, each of which must carry an <code>esb__SequenceName</code> parameter with a string value.</dd>
 </dl>
 
 <!--
@@ -160,8 +160,8 @@ Id queueableId = System.enqueueJob(j);
 </h2>
 
 <p>
-    Lightning Processes can be enhanced using Jobs, and this method has the 
-    <code>@InvocableMethod</code> annotation. Use this for asynchronous heavy lifting in
+    Lightning Processes can be enhanced using Jobs. This method has the 
+    <code>@InvocableMethod</code> annotation. Use this for asynchronous heavy lifting from
     Lightning Process Builder.
 </p>
 
@@ -181,8 +181,8 @@ Id queueableId = System.enqueueJob(j);
 
 <fieldset>
     <legend>Note</legend>
-    The Invocable Action signature is a Simple Event because Lightning Process Builder requires
-    that all Invocable Variables be known at design time.
+    The Invocable Action signature is a Simple Event with variables for Id and SequenceName.
+    Lightning Process Builder requires that all Invocable Variables be known at design time.
 </fieldset>
 
 <h2>
@@ -190,8 +190,8 @@ Id queueableId = System.enqueueJob(j);
 </h2>
 
 <p>
-    Cloud Flows can be enhanced using Jobs, and this class implements the
-    <code>Process.Plugin</code> interface. Use this to deal with high data volumes in Visual
+    Cloud Flows can be enhanced using Jobs. This class implements the
+    <code>Process.Plugin</code> interface. Use this to deal with high data volumes from Visual
     Workflow Cloud Flow Designer.
 </p>
 
@@ -217,18 +217,18 @@ Id queueableId = System.enqueueJob(j);
     </p>
     
     <p>
-        Use this when authoring and distributing AppExchange processes that need to submit events into Enterprise
-        Service Bus, for example:
+        Use this when authoring and distributing AppExchange packages that need to submit events
+        into Enterprise Service Bus, for example:
     </p>
     
     <pre>
-        //assemble event parameters
-        Map&lt;String,Object&gt; parameters = new Map&lt;String,Object&gt;();
-        parameters.put('esb__SequenceName', 'Generate_PDF_Statements');
+        //assemble input event parameters
+        Map&lt;String,Object&gt; inputEvent = new Map&lt;String,Object&gt;();
+        inputEvent.put('esb__SequenceName', 'Generate_PDF_Statements');
         
         //immediately submit event to Enterprise Service Bus
         Process.Plugin job = (Process.Plugin)Type.forName('esb.Job').newInstance();
-        Process.PluginResult result = job.invoke(new Process.PluginRequest(parameters));
+        Process.PluginResult result = job.invoke(new Process.PluginRequest(inputEvent));
         
         //access queueable job id
         Id queueableId = result.OutputParameters.get('esb__QueueableId');

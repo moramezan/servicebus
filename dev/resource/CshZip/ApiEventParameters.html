@@ -2,20 +2,88 @@
     Event Parameters
 </h1>
 
+<p>
+    Processes communicate with each other using events, and all events carry parameters. Events
+    are always communicated as a <code>Map&lt;String,Object&gt;</code> and developers use string
+    names to get parameter values. All parameter names must be prepended by a namespace prefix or
+    the custom code prefix, then two underscores. For example:
+</p>
+
+<table>
+    <tr>
+        <th>Example Event</th>
+        <th colspan="2">Parameter Prefix</th>
+        <th>Usage</th>
+    </tr>
+    <tr>
+        <td><code>{"c__PayrollPeriod":"December 2015"}</code></td>
+        <td><code>c__</code></td>
+        <td>(Custom)</td>
+        <td>Parameters set by custom code outside a package must use the special <code>c</code> prefix.</td>
+    </tr>
+    <tr>
+        <td><code>{"esb__SequenceName":"Payroll_Calculation"}</code></td>
+        <td><code>esb__</code></td>
+        <td>(ESB API)</td>
+        <td>The Enterprise Service Bus package uses the <code>esb</code> namespace for its parameters.</td>
+    </tr>
+    <tr>
+        <td><code>{"acme__AnvilNames":["INV-1","INV-2","INV-3"]}</code></td>
+        <td><code>acme__</code></td>
+        <td>(Third-party)</td>
+        <td>Processes in managed packages must namespace prefix their event parameters.</td>
+    </tr>
+</table>
+
+<p>
+    All event parameters are:
+</p>
+
+<ul>
+    <li>cumulative: event parameters carry through a sequence and are available to subsequent steps,</li>
+    <li>case sensitive: the namespace prefix is lowercase, and upper camel case for the parameter names,</li>
+    <li>namespace agnostic: any event can carry any number of parameters from any number of namespaces,</li>
+</ul>
+
+<fieldset>
+    <legend>Note</legend>
+    Only read or write to documented parameters with a namespace prefix.
+</fieldset>
+
+<h1>
+    ESB Event Parameters
+</h1>
+
 <dl>
     <dt>esb__Id</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
-    <dd>Entity Id of an SObject handed into a Sequence by a Job constructed using a <a href="?topic=ApiJobClass">Simple Job</a>.</dd>
+    <dd>Entity Id of an SObject handed into a Sequence by a Job. Commonly seen on Jobs constructed using a <a href="?topic=ApiJobClass">Simple Event</a>.</dd>
 
     <dt>esb__SequenceName</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
     <dd>Routes a message to the first step of the sequence named here. This value is case-sensitive.</dd>
 
+    <dt>esb__EntryPointUuid</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Universally unique identifier (36 characters) of the entry point event that spawned this event. The first step in a sequence receives the entry point event when a Job is enqueued.</dd>
+
+    <dt>esb__EntryPointDatetime</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Exact date and time of the entry point event that spawned this event. All events have an entry point event. Use this in the steps that follow <em>Schedule</em> steps to identify the intended run time.</dd>
+
     <dt>esb__EnqueueUserId</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
     <dd>Read-only Id of the user that spawned the message (usually by enqueueing an <code>esb.Job</code>).</dd>
     
-    <dt>esb__GateItemParameters</dt>
+    <dt>esb__GateItemsQueryString</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Query string for locating the items that hold events correlated by <em>Mark</em> and <em>Gate</em> steps. Use <code>Database.query</code> to retrieve the items. Cast to <code>List&lt;sObject&gt;</code> only.</dd>
+    
+    <dt>esb__GateItemsFieldName</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_list.htm" target="_blank">List&lt;Map&lt;String,Object&gt;&gt;</a></dd>
-    <dd>Collection of message parameters from all of the gated messages.</dd>
+    <dd>Field name on the stored items that contains the serialized event data. Use <code>sobject.get()</code> to dereference it, then cast to <code>Map&lt;String,Object&gt;</code> when deserializing the value.</dd>
+    
+    <dt>esb__QueueableId</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
+    <dd>Id of the Queueable AsyncApexJob that injected this event's entry point event. (Not to be confused with esb.Job)</dd>
 </dl>
