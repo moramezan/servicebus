@@ -18,6 +18,11 @@ public with sharing class ConfigureController {
     
     /** 
      * Initialize
+     * 
+     * #730 Commentary about the fragility of the Connected App Name
+     * Note there is a BINDING between all connected app names and ConfigureController.cls
+     * The friendly names (and developer names!) are synchronized by Salesforce to all pods.
+     * Renaming these will cause catastrophic failure of OAuth in all existing package installations.
      */
     static {
         if (ISDEV) {
