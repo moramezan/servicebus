@@ -232,30 +232,30 @@
             <types><members>*</members><name>RemoteSiteSetting</name></types>
             <types><members>*</members><name>AuthProvider</name></types>
             <!--<types><members>*</members><name>CustomSite</name></types>--><!-- CustomSite cannot be a component in a managed or unmanaged package. Remove CustomSite from package.xml to deploy unpackaged components. -->
-            <types><members>*</members><name>LeadSharingRules</name></types>
-            <types><members>*</members><name>LeadOwnerSharingRule</name></types>
-            <types><members>*</members><name>LeadCriteriaBasedSharingRule</name></types>
-            <types><members>*</members><name>CampaignSharingRules</name></types>
-            <types><members>*</members><name>CampaignOwnerSharingRule</name></types>
-            <types><members>*</members><name>CampaignCriteriaBasedSharingRule</name></types>
-            <types><members>*</members><name>CaseSharingRules</name></types>
-            <types><members>*</members><name>CaseOwnerSharingRule</name></types>
-            <types><members>*</members><name>CaseCriteriaBasedSharingRule</name></types>
-            <types><members>*</members><name>ContactSharingRules</name></types>
-            <types><members>*</members><name>ContactOwnerSharingRule</name></types>
-            <types><members>*</members><name>ContactCriteriaBasedSharingRule</name></types>
-            <types><members>*</members><name>OpportunitySharingRules</name></types>
-            <types><members>*</members><name>OpportunityOwnerSharingRule</name></types>
-            <types><members>*</members><name>OpportunityCriteriaBasedSharingRule</name></types>
-            <types><members>*</members><name>AccountSharingRules</name></types>
-            <types><members>*</members><name>AccountOwnerSharingRule</name></types>
-            <types><members>*</members><name>AccountCriteriaBasedSharingRule</name></types>
+            <!--<types><members>*</members><name>LeadSharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>LeadOwnerSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>LeadCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>CampaignSharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>CampaignOwnerSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>CampaignCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>CaseSharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>CaseOwnerSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>CaseCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>ContactSharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>ContactOwnerSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>ContactCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>OpportunitySharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>OpportunityOwnerSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>OpportunityCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>AccountSharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>AccountOwnerSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>AccountCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>UserSharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>UserMembershipSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>UserCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
             <types><members>*</members><name>CustomObjectSharingRules</name></types>
             <types><members>*</members><name>CustomObjectOwnerSharingRule</name></types>
             <types><members>*</members><name>CustomObjectCriteriaBasedSharingRule</name></types>
-            <types><members>*</members><name>UserSharingRules</name></types>
-            <types><members>*</members><name>UserMembershipSharingRule</name></types>
-            <types><members>*</members><name>UserCriteriaBasedSharingRule</name></types>
             <types><members>*</members><name>SharingSet</name></types>
             <!--<types><members>*</members><name>Community</name></types>--><!-- Community cannot be a component in a managed or unmanaged package. Remove Community from package.xml to deploy unpackaged components. -->
             <types><members>*</members><name>CallCenter</name></types>
@@ -387,6 +387,9 @@
         <delete file="purge/layouts/Task-Task Layout.layout" />
         <delete file="purge/layouts/Asset-Asset Layout.layout" />
         <delete file="purge/layouts/WorkFeedback-Feedback Layout.layout" />
+        <delete file="purge/layouts/Macro-Macro Layout.layout" />
+        <delete file="purge/layouts/DuplicateRecordSet-Duplicate Record Set Layout.layout" />
+        <delete file="purge/layouts/ContentVersion-General.layout" />
         
         <!-- name the wildcard package definition -->
         <replace file="purge/package.xml">
