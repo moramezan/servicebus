@@ -63,7 +63,7 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
         for (ApexClass apexClass : scope) {
             Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
             try {
-                Process__c edaProcess = ProcessObject.fromType(reflector);
+                Process__c edaProcess = ProcessModel.fromType(reflector);
                 edaProcess.ApexClassId__c = apexClass.Id;
                 edaProcesses.add(edaProcess);
             } catch (Exception e) {
@@ -126,7 +126,7 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
             
             // obtain a list of process Ids used in sequences
             Set<Id> usedProcessIds = new Set<Id>();
-            List<Step__c> allSteps = SalesforceObjectSet.listAll(Step__c.SObjectType);
+            List<Step__c> allSteps = ApexDomain.listAll(Step__c.SObjectType);
             for (Step__c step : allSteps) {
                 if (step.Process__c != null) {
                     usedProcessIds.add(step.Process__c);    
@@ -134,7 +134,7 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
             }
     
             Map<Id,String> processIdToHealth = new  Map<Id,String>();
-            List<Process__c> allProcesses = SalesforceObjectSet.listAll(Process__c.SObjectType);
+            List<Process__c> allProcesses = ApexDomain.listAll(Process__c.SObjectType);
             for (Process__c process : allProcesses) {
                 Boolean hasApexClass = fullyQualifiedClassNames.contains(process.FullyQualifiedClassName__c);
                 Boolean hasStep  = usedProcessIds.contains(process.Id);

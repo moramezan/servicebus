@@ -197,7 +197,7 @@ global without sharing class Job implements Process.Plugin, Queueable {
      * this works without startTest/stopTest: new Job(inputEvent).execute(null)
      */
     public void execute(QueueableContext context) {
-        if (context != null) new MessageObjectSet(this.messages).populateQueueableId(context);
+        if (context != null) new MessageSetModel(this.messages).populateQueueableId(context);
         List<Message__c> messages = this.persist();
         
         // #653 don't use a @Future call unless necessary

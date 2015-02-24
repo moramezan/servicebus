@@ -1,11 +1,11 @@
-public class ScheduleConfigObjectSet extends SalesforceObjectSet {
+public class ScheduleConfigSetModel extends ApexDomain.StandardSetModel {
     
-    public ScheduleConfigObjectSet(List<ScheduleConfig__c> sobjects) {
+    public ScheduleConfigSetModel(List<ScheduleConfig__c> sobjects) {
         super(sobjects);
     }
     
     private void populateFriendlyNames() {
-        List<ScheduleConfig__c> scheduleConfigs = (List<ScheduleConfig__c>)this.getSObjects();
+        List<ScheduleConfig__c> scheduleConfigs = (List<ScheduleConfig__c>)this.getRecords();
         Set<String> everyHour = new Set<String>{'00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'};
         Set<String> allDaily = new Set<String>{'Working days only','Weekends and holidays'};
         Set<String> allWeekly = new Set<String>{'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'};

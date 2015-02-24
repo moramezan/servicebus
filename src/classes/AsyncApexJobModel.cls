@@ -1,4 +1,4 @@
-public with sharing class AsyncApexJobObject extends SalesforceObject {
+public with sharing class AsyncApexJobModel extends ApexDomain.StandardModel {
     
     /**
      * Domain constructor
@@ -7,7 +7,7 @@ public with sharing class AsyncApexJobObject extends SalesforceObject {
      *
      * @param asyncApexJob The AsyncApexJob.
      */
-    public AsyncApexJobObject(AsyncApexJob asyncApexJob) {
+    public AsyncApexJobModel(AsyncApexJob asyncApexJob) {
         super(asyncApexJob);
     }
     
@@ -15,7 +15,7 @@ public with sharing class AsyncApexJobObject extends SalesforceObject {
      * Abort all batch jobs held in the domain instance.
      */
     public void abort() {
-        System.abortJob(this.getSObject().Id);
+        System.abortJob(this.getRecord().Id);
     }
     
     /**
@@ -25,7 +25,7 @@ public with sharing class AsyncApexJobObject extends SalesforceObject {
      * @param  chunkSize Chunk size for each iteration of the query locator (eg 200).
      * @return           Domain instance holding multiple existing jobs or one started job.
      */
-    static public AsyncApexJobObject runOne(System.Type type, Integer chunkSize) {
+    static public AsyncApexJobModel runOne(System.Type type, Integer chunkSize) {
         String namespacePrefix;
         String name;
         
@@ -50,16 +50,16 @@ public with sharing class AsyncApexJobObject extends SalesforceObject {
         
         if (!existingJobs.isEmpty()) {
             //return existing job
-            return new AsyncApexJobObject(existingJobs[0]);
+            return new AsyncApexJobModel(existingJobs[0]);
         }
         
         //start job
         Id jobId = Database.executeBatch((Database.Batchable<Object>)type.newInstance(), chunkSize);
         
         //find started job
-        AsyncApexJob job = (AsyncApexJob)SalesforceObject.getById(jobId);
+        AsyncApexJob job = (AsyncApexJob)ApexDomain.getById(jobId);
         
         //return started job
-        return new AsyncApexJobObject(job);
+        return new AsyncApexJobModel(job);
     }
 }

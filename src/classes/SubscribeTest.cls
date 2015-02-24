@@ -10,7 +10,7 @@
     
     static testmethod void canDetermineStepConfig() {
         //arrange processes
-        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
+        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
         
         //act
         String actualConfig = subscribeProcess.StepConfig__c;

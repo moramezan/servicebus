@@ -9,7 +9,7 @@
     
     static testmethod void canDetermineStepConfig() {
         //arrange processes
-        Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
+        Process__c subsequenceProcess = ProcessModel.generateOne(Subsequence.class);
         
         //act
         String actualConfig = subsequenceProcess.StepConfig__c;
@@ -21,17 +21,17 @@
 
     static testmethod void testMessageIsRedirected() {
         //arrange processes
-        Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c subsequenceProcess = ProcessModel.generateOne(Subsequence.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequences
         Sequence__c origin = new Sequence__c(Name = 'originSequence');
         insert origin;
-        Step__c originStep = StepObject.generateOne(origin.Id, subsequenceProcess.Id);
+        Step__c originStep = StepModel.generateOne(origin.Id, subsequenceProcess.Id);
         
         Sequence__c target = new Sequence__c(Name = 'targetSequence');
         insert target;
-        Step__c targetStep = StepObject.generateOne(target.Id, terminateProcess.Id);
+        Step__c targetStep = StepModel.generateOne(target.Id, terminateProcess.Id);
         
         //prepare config in db
         SubsequenceConfig__c config = new SubsequenceConfig__c(

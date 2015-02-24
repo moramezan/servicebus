@@ -13,7 +13,7 @@
         String sequenceName  = 'AuditWriterSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c auditWriterProcess = ProcessObject.generateOne(AuditWriter.class);
+        Process__c auditWriterProcess = ProcessModel.generateOne(AuditWriter.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -47,7 +47,7 @@
         String sequenceName  = 'AuditWriterSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c auditWriterProcess = ProcessObject.generateOne(AuditWriter.class);
+        Process__c auditWriterProcess = ProcessModel.generateOne(AuditWriter.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -84,7 +84,7 @@
         String sequenceName  = 'AuditSequence';
         Integer positionA2 =  1;
         Id theId  = '000000000000000AAA';
-        Process__c auditWriterProcess = ProcessObject.generateOne(AuditWriter.class);
+        Process__c auditWriterProcess = ProcessModel.generateOne(AuditWriter.class);
                
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -131,7 +131,7 @@
         List<Map<String,Object>> results = new Broker.Wrapper(reflector, event, null).invokeMain().Outputs;
         
         //assemble
-        List<AuditEntry__c> auditEntries = SalesforceObjectSet.listAll(AuditEntry__c.SObjectType);
+        List<AuditEntry__c> auditEntries = ApexDomain.listAll(AuditEntry__c.SObjectType);
         
          
         Boolean actualAuditGroup1 = false;

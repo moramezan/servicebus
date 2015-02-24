@@ -19,9 +19,9 @@ public with sharing class ProcessDiscoverController {
     public System.PageReference doRedirect() {
         if (ApexPages.currentPage().getParameters().get('asyncApexJobId') == null) {
             //someone tried to view the page... start the batch job and show it
-            AsyncApexJobObject job = AsyncApexJobObject.runOne(ProcessDiscoverBatch.class, 1);
+            AsyncApexJobModel job = AsyncApexJobModel.runOne(ProcessDiscoverBatch.class, 1);
             PageReference processDiscover = Page.ProcessDiscover;
-            processDiscover.getParameters().put('asyncApexJobId', job.getSObject().Id);
+            processDiscover.getParameters().put('asyncApexJobId', job.getRecord().Id);
             processDiscover.getParameters().put('retURL', ApexPages.currentPage().getParameters().get('retURL'));
             processDiscover.setRedirect(true);
             return processDiscover;
@@ -43,7 +43,7 @@ public with sharing class ProcessDiscoverController {
     
     @TestVisible static private List<AsyncApexJob> jobs;
     @RemoteAction static public List<AsyncApexJob> readAsyncApexJobs(Id asyncApexJobId) {
-        return jobs != null ? jobs : new List<AsyncApexJob>{(AsyncApexJob)SalesforceObject.getById(asyncApexJobId)};
+        return jobs != null ? jobs : new List<AsyncApexJob>{(AsyncApexJob)ApexDomain.getById(asyncApexJobId)};
     }
 
 }

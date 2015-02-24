@@ -14,7 +14,7 @@ public with sharing class SchemaSelectorController {
     public List<SelectOption> FieldNameOptions {get; set;}
     
     public PageReference doSave() {
-        SObject record = SalesforceObject.getById(this.id);
+        SObject record = ApexDomain.getById(this.id);
         record.put(this.objectSchemaKey, this.ObjectName);
         record.put(this.fieldSchemaKey, this.FieldName);
         update record;
@@ -22,7 +22,7 @@ public with sharing class SchemaSelectorController {
     }
     
     public PageReference doCancel() {
-        SObject record = SalesforceObject.getById(this.id);
+        SObject record = ApexDomain.getById(this.id);
         ApexPages.StandardController controller = new ApexPages.StandardController(record);
         return controller.view();
     }

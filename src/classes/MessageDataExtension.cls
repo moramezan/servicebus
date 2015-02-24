@@ -7,12 +7,12 @@ public with sharing class MessageDataExtension {
     }
     
     public PageReference doRedirect() {
-        Message__c message = (Message__c)SalesforceObject.getById(this.controller.getId());
+        Message__c message = (Message__c)ApexDomain.getById(this.controller.getId());
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
         
         try {
             Id dataId = (Id)parameters.get('esb__Id');
-            SObject dataObject = SalesforceObject.getById(dataId);
+            SObject dataObject = ApexDomain.getById(dataId);
             return new ApexPages.StandardController(dataObject).view();
         } catch (Exception e) {
             return new ApexPages.StandardController(this.controller.getRecord()).view();

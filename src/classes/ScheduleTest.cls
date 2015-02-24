@@ -10,7 +10,7 @@
     
     static testmethod void canDetermineStepConfig() {
         //arrange processes
-        Process__c ScheduleProcess = ProcessObject.generateOne(Schedule.class);
+        Process__c ScheduleProcess = ProcessModel.generateOne(Schedule.class);
         
         //act
         String actualConfig = ScheduleProcess.StepConfig__c;
@@ -23,16 +23,16 @@
 
     static testmethod void messagePassedThruUntouchedWhenIsHeartbeatEqFalse() {
         //arrange processes
-        Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c scheduleProcess = ProcessModel.generateOne(Schedule.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepObject.generateOne(sequence.Id, scheduleProcess.Id);
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c scheduleStep = StepModel.generateOne(sequence.Id, scheduleProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
 
 
          //arrange input event
@@ -62,16 +62,16 @@
 
     static testmethod void messagePassedThruUntouchedWhenIsHeartbeatEqTrueAndIsWithinWindowReturnsTrue01() {
         //arrange processes
-        Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c scheduleProcess = ProcessModel.generateOne(Schedule.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepObject.generateOne(sequence.Id, scheduleProcess.Id);
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c scheduleStep = StepModel.generateOne(sequence.Id, scheduleProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
 
         //arrange config
         ///Weekly    Sunday;Monday;Tuesday
@@ -116,16 +116,16 @@
 
     static testmethod void messagePassedThruUntouchedWhenIsHeartbeatEqTrueAndIsWithinWindowReturnsTrue02() {
         //arrange processes
-        Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c scheduleProcess = ProcessModel.generateOne(Schedule.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepObject.generateOne(sequence.Id, scheduleProcess.Id);
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c scheduleStep = StepModel.generateOne(sequence.Id, scheduleProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
 
         //arrange config
         ///Daily    Working days only;Weekends and holidays
@@ -170,16 +170,16 @@
 
     static testmethod void messagePassedThruUntouchedWhenIsHeartbeatEqTrueAndIsWithinWindowReturnsTrue03() {
         //arrange processes
-        Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c scheduleProcess = ProcessModel.generateOne(Schedule.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepObject.generateOne(sequence.Id, scheduleProcess.Id);
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c scheduleStep = StepModel.generateOne(sequence.Id, scheduleProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
 
         //arrange config
         ///Monthly    04;06
@@ -224,16 +224,16 @@
 
     static testmethod void messageSwalloweddWhenIsHeartbeatEqTrueAndIsWithinWindowReturnsFalse() {
         //arrange processes
-        Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c scheduleProcess = ProcessModel.generateOne(Schedule.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepObject.generateOne(sequence.Id, scheduleProcess.Id);
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c scheduleStep = StepModel.generateOne(sequence.Id, scheduleProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
 
         //arrange config
         ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c]; 
@@ -263,16 +263,16 @@
 
     static testmethod void isHeartbeatThrowsExceptionWhenInvalidStampParam() {
         //arrange processes
-        Process__c scheduleProcess = ProcessObject.generateOne(Schedule.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c scheduleProcess = ProcessModel.generateOne(Schedule.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepObject.generateOne(sequence.Id, scheduleProcess.Id);
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c scheduleStep = StepModel.generateOne(sequence.Id, scheduleProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
 
          //arrange input event parameters

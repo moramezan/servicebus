@@ -3,7 +3,7 @@ public with sharing class MessageRebufferExtension {
     @TestVisible static private Message__c message;
     
     public MessageRebufferExtension(ApexPages.StandardController controller) {
-        message = (Message__c)SalesforceObject.getById(controller.getId());
+        message = (Message__c)ApexDomain.getById(controller.getId());
     }
     
     public PageReference doRebuffer() {
@@ -22,9 +22,9 @@ public with sharing class MessageRebufferExtension {
 
     public class DoDml {
         public DoDml() {
-            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new SalesforceObject.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');
-            if (!SObjectType.Message__c.Fields.Exception__c.Updateable) throw new SalesforceObject.FlsException('!SObjectType.Message__c.Fields.Exception__c.Updateable');
-            if (!SObjectType.Message__c.Fields.Cause__c.Updateable) throw new SalesforceObject.FlsException('!SObjectType.Message__c.Fields.Cause__c.Updateable');
+            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');
+            if (!SObjectType.Message__c.Fields.Exception__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Exception__c.Updateable');
+            if (!SObjectType.Message__c.Fields.Cause__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Cause__c.Updateable');
             
             message.Exception__c = null;
             message.Cause__c = null;

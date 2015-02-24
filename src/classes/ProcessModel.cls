@@ -1,8 +1,8 @@
-public with sharing class ProcessObject extends SalesforceObject {
+public with sharing class ProcessModel extends ApexDomain.StandardModel {
     
     public without sharing class ProcessException extends Exception {}
     
-    public ProcessObject(Process__c process) {
+    public ProcessModel(Process__c process) {
         super(process);
     }
     
@@ -91,7 +91,7 @@ public with sharing class ProcessObject extends SalesforceObject {
      * @return          Inserted process with all fields
      */
     @TestVisible static private Process__c generateOne(Type reflector) {
-        if (!SObjectType.Process__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.Process__c.Createable');
+        if (!SObjectType.Process__c.Createable) throw new ApexDomain.CrudException('!SObjectType.Process__c.Createable');
             
         Process__c process = fromType(reflector);
         insert process;
@@ -108,7 +108,7 @@ public with sharing class ProcessObject extends SalesforceObject {
                 FullyQualifiedClassName__c = outerClass.getName()
             );
             
-            ProcessObject.ESB meta = (ProcessObject.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessObject.ESB.class);
+            ProcessModel.ESB meta = (ProcessModel.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessModel.ESB.class);
 
             if (meta.Description == null) {
                 //EVERY PROCESS MUST PROVIDE A DESCRIPTION

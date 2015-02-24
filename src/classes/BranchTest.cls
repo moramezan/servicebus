@@ -10,7 +10,7 @@
     
     static testmethod void canDetermineStepConfig() {
         //arrange processes
-        Process__c branchProcess = ProcessObject.generateOne(Branch.class);
+        Process__c branchProcess = ProcessModel.generateOne(Branch.class);
         
         //act
         String actualConfig = branchProcess.StepConfig__c;

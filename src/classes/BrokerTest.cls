@@ -39,14 +39,14 @@
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //arrange processes and sequence and steps
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
         
-        Step__c wiretapStep = StepObject.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c wiretapStep = StepModel.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange messages
         Map<String,Object> inputEvent = new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1};
@@ -84,8 +84,8 @@
         Integer maxHops = 3;
         Broker.MaxHops = maxHops;
 
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -161,7 +161,7 @@
         }).persist();
         
         //act
-        new MessageObjectSet(messages).incrementHops();
+        new MessageSetModel(messages).incrementHops();
         
         //assemble
         Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
@@ -182,7 +182,7 @@
         }).persist();
 
         //act
-        new MessageObjectSet(messages).incrementHops();
+        new MessageSetModel(messages).incrementHops();
         
         //assemble
         Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
@@ -199,9 +199,9 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange message
         Broker.MaxHops = 1;
@@ -212,7 +212,7 @@
         
         //assemble
         //http://salesforce.stackexchange.com/q/61213/320
-        messages = SalesforceObjectSet.listAll(Message__c.SObjectType);
+        messages = ApexDomain.listAll(Message__c.SObjectType);
         
         Boolean actualFlag = false;
         try {
@@ -230,9 +230,9 @@
     
     static testmethod void canCorrectlyIncrementAndPersistMessages() {
         //arrange processes
-        Process__c markProcess = ProcessObject.generateOne(Mark.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
-        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
+        Process__c markProcess = ProcessModel.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
+        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
         
         //arrange sequence
         String sequenceNameA = 'sequenceA';
@@ -240,9 +240,9 @@
         insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = StepObject.generateOne(sequenceA.Id, subscribeProcess.Id);
-        Step__c stepA2 = StepObject.generateOne(sequenceA.Id, markProcess.Id);
-        Step__c stepA3 = StepObject.generateOne(sequenceA.Id, terminateProcess.Id);
+        Step__c stepA1 = StepModel.generateOne(sequenceA.Id, subscribeProcess.Id);
+        Step__c stepA2 = StepModel.generateOne(sequenceA.Id, markProcess.Id);
+        Step__c stepA3 = StepModel.generateOne(sequenceA.Id, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         Decimal positionA3 = stepA3.Position__c;
@@ -255,7 +255,7 @@
         
         //act
         List<Message__c> messages = new Job(outputEvents).persist();
-        new MessageObjectSet(messages).incrementPositions();
+        new MessageSetModel(messages).incrementPositions();
         
         //assemble
         Map<String,Object> inputEvent1 = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Event__c);
@@ -285,12 +285,12 @@
     
     static testmethod void testLocatorMarksCorrectNumberOfMessages() {
         //arrange
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
         
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         new Job(new List<Map<String,Object>>{
             new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1},
@@ -312,12 +312,12 @@
     
     static testmethod void testLocatorOnlyMarksNonStartedWork() {
         //arrange
-        MessageObjectSet.Inhibit = false;
+        MessageSetModel.Inhibit = false;
         insert new List<Message__c>{
             new Message__c(Status__c = 'Started'),
             new Message__c(Status__c = 'Started')
         };
-        MessageObjectSet.Inhibit = true;
+        MessageSetModel.Inhibit = true;
     
         //act
         List<Message__c> messages = Broker.impl().locateMarkableWork();
@@ -329,28 +329,28 @@
     }
     
     static testmethod void testLocatorReturnsOnlyRebufferedWork() {
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
         
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange fucked messages
-        MessageObjectSet.Inhibit = false;
+        MessageSetModel.Inhibit = false;
         insert new List<Message__c>{
             new Message__c(Status__c = 'Started', Event__c = '{"__SequenceName":"test","__Position":1}'),
             new Message__c(Status__c = 'Started', Event__c = '{"__SequenceName":"test","__Position":1}')
         };
-        MessageObjectSet.Inhibit = true;
+        MessageSetModel.Inhibit = true;
         
         //arrange Rebuffered messages
-        MessageObjectSet.Inhibit = false;
+        MessageSetModel.Inhibit = false;
         insert new List<Message__c>{
             new Message__c(Status__c = 'Rebuffered', Event__c = '{"__SequenceName":"test","__Position":1}'),
             new Message__c(Status__c = 'Rebuffered', Event__c = '{"__SequenceName":"test","__Position":1}')
         };
-        MessageObjectSet.Inhibit = true;
+        MessageSetModel.Inhibit = true;
         
         //act
         MockBroker broker = new MockBroker();
@@ -366,10 +366,10 @@
     
     static testmethod void canCorrectlyIncrementMessages() {
         // arrange
-        Process__c markProcess = ProcessObject.generateOne(Mark.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
-        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
+        Process__c markProcess = ProcessModel.generateOne(Mark.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
+        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
 
         String sequenceNameA = 'sequenceA';
         String sequenceNameB = 'sequenceB';
@@ -413,7 +413,7 @@
         
         // act
         List<Message__c> messages = new Job(outputEvents).persist();
-        new MessageObjectSet(messages).incrementPositions();
+        new MessageSetModel(messages).incrementPositions();
         
         // assemble
         String actualSequenceName0 = '' ;
@@ -484,14 +484,14 @@
     
     static testmethod void callingEnqueueSuccessfullyCallsRestartImpl() {
         //arrange processes
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange broker implementation custom setting
         String theSequenceName = 'TestSequence';
@@ -514,14 +514,14 @@
     
     static testmethod void callingEnqueueSuccessfullyCallEnqueueImpAndCreatesDocument() {
         //arrange processes
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange
         insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
@@ -674,7 +674,7 @@
             actualMessage = e.getMessage();
         }
         //assemble
-        Message__c messageActual = (Message__c)SalesforceObject.getById(messages[0].Id);
+        Message__c messageActual = (Message__c)ApexDomain.getById(messages[0].Id);
         
         //assert
         String expectedMessage = 'Mandatory event parameter esb__SequenceName not supplied.';
@@ -710,14 +710,14 @@
     
     static testmethod void testProcessWithoutClassThrowsExpectedException() {
         //arrange processes
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         terminateProcess.FullyQualifiedClassName__c = 'lalala';
         update terminateProcess; //pretend we deleted the class
@@ -738,16 +738,16 @@
         System.assertEquals(expectedMessage, (String)actualEx.get('Message'), 'Wrong message detail.');
     }
     
-    static testmethod void testNonProcessObjectThrowsTypeException() {
+    static testmethod void testNonProcessModelThrowsTypeException() {
         //arrange processes
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange step
-        StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         terminateProcess.FullyQualifiedClassName__c = 'Account';
         update terminateProcess; //Account is DEFINITELY not a toStringable Object
@@ -791,8 +791,8 @@
     static testmethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusQueued() {
         // arrange
         Boolean isPaused =  true;
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -840,8 +840,8 @@
     static testmethod void callingEnqueueWhenBrokerIsNotPausedProcessesMessages() {
         // arrange
         Boolean isPaused =  false;
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -900,8 +900,8 @@
     // Stack Trace      Class.BrokerTest.canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError: line 961, column 1
     static testmethod void canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError() {
         // arrange
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -969,7 +969,7 @@
  
     static testMethod void callingEnqueueWithEventParametersIncludesAllEventParametersInMessage() {
         // arrange 
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
 
         String sequenceName = 'Test';
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
@@ -1010,7 +1010,7 @@
 
     static testMethod void callingExecuteWithoutMandatoryEventParametersInEventParametersCollectionThrowsException() {
         // arrange process, sequence, step
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
 
         String sequenceName = 'Test';
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
@@ -1054,14 +1054,14 @@
     
     static testMethod void callingEnqueueAlwaysSetsInitiatingEventParameters() {
         //arrange processes
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());

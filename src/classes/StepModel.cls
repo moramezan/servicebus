@@ -1,14 +1,14 @@
-public with sharing class StepObject extends SalesforceObject {
+public with sharing class StepModel extends ApexDomain.StandardModel {
 
-    public StepObject(Step__c step) {
+    public StepModel(Step__c step) {
         super(step);
     }
     
     public void moveBefore(Id beforeStepId) {
-        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new SalesforceObject.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
+        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
         
-        Step__c stepToMove = (Step__c)this.getSObject();
-        Step__c beforeStep = (Step__c)SalesforceObject.getById(beforeStepId);
+        Step__c stepToMove = (Step__c)this.getRecord();
+        Step__c beforeStep = (Step__c)ApexDomain.getById(beforeStepId);
         
         //find all steps EXCEPT the guy we are moving
         List<Step__c> readSteps = [
@@ -33,10 +33,10 @@ public with sharing class StepObject extends SalesforceObject {
     }
     
     public void moveAfter(Id afterStepId) {
-        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new SalesforceObject.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
+        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
         
-        Step__c stepToMove = (Step__c)this.getSObject();
-        Step__c afterStep = (Step__c)SalesforceObject.getById(afterStepId);
+        Step__c stepToMove = (Step__c)this.getRecord();
+        Step__c afterStep = (Step__c)ApexDomain.getById(afterStepId);
         
         //find all steps EXCEPT the guy we are moving
         List<Step__c> readSteps = [
@@ -61,7 +61,7 @@ public with sharing class StepObject extends SalesforceObject {
     }
     
     @TestVisible static private Step__c generateOne(Id sequenceId, Id processId) {
-        if (!SObjectType.Step__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.Step__c.Createable');
+        if (!SObjectType.Step__c.Createable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Createable');
      
         Step__c step = new Step__c(
             Sequence__c = sequenceId,
@@ -72,7 +72,7 @@ public with sharing class StepObject extends SalesforceObject {
         insert step;
         
         //requery
-        return (Step__c)SalesforceObject.getById(step.Id);
+        return (Step__c)ApexDomain.getById(step.Id);
     }
     
 }

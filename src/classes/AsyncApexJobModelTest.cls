@@ -1,4 +1,4 @@
-@IsTest private class AsyncApexJobObjectTest {
+@IsTest private class AsyncApexJobModelTest {
     
     static testmethod void testAbortJobs() {
         
@@ -10,7 +10,7 @@
         Test.startTest();
         
         Id one = Database.executeBatch(new ProcessDiscoverBatch(), 1);
-        AsyncApexJobObject asyncApexJob = new AsyncApexJobObject(new AsyncApexJob(Id = one));
+        AsyncApexJobModel asyncApexJob = new AsyncApexJobModel(new AsyncApexJob(Id = one));
         
         //during
         Integer expectedRunning = 1;
@@ -30,16 +30,16 @@
     static testmethod void testRunOneOnlyRunsJobOnce() {
         Test.startTest();
         ProcessDiscoverBatch.classes = new List<ApexClass>();
-        AsyncApexJobObject one = AsyncApexJobObject.runOne(ProcessDiscoverBatch.class, 1);
-        AsyncApexJobObject two = AsyncApexJobObject.runOne(ProcessDiscoverBatch.class, 1);
+        AsyncApexJobModel one = AsyncApexJobModel.runOne(ProcessDiscoverBatch.class, 1);
+        AsyncApexJobModel two = AsyncApexJobModel.runOne(ProcessDiscoverBatch.class, 1);
         Test.stopTest();
         
         Integer expectedRunning = 1;
         Integer actualRunning = [SELECT COUNT() FROM AsyncApexJob];
         System.assertEquals(expectedRunning, actualRunning);
         
-        String serializedOne = System.Json.serializePretty(one.getSObject().Id);
-        String serializedTwo = System.Json.serializePretty(two.getSObject().Id);
+        String serializedOne = System.Json.serializePretty(one.getRecord().Id);
+        String serializedTwo = System.Json.serializePretty(two.getRecord().Id);
         System.assertEquals(serializedOne, serializedTwo);
     }
 

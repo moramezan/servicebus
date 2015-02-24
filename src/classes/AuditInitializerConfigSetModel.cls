@@ -1,10 +1,10 @@
-public class AuditInitializerConfigObjectSet extends SalesforceObjectSet {
+public class AuditInitializerConfigSetModel extends ApexDomain.StandardSetModel {
 
     // this flag is used for testing only
     @testVisible
     private static Boolean isEnabled = true;
     
-    public AuditInitializerConfigObjectSet(List<AuditInitializerConfig__c> sobjects) {
+    public AuditInitializerConfigSetModel(List<AuditInitializerConfig__c> sobjects) {
         super(sobjects);
     }
 
@@ -25,7 +25,7 @@ public class AuditInitializerConfigObjectSet extends SalesforceObjectSet {
 
 
     private void resetIdentifierFields(List<AuditInitializerConfig__c> oldAuditInitializerConfigs) {
-        List<AuditInitializerConfig__c> newAuditInitializerConfigs = (List<AuditInitializerConfig__c>)this.getSObjects();
+        List<AuditInitializerConfig__c> newAuditInitializerConfigs = (List<AuditInitializerConfig__c>)this.getRecords();
  
             Map<Id, AuditInitializerConfig__c> oldAuditInitializerConfigIdToOldAuditInitializerConfig =
                 new Map<Id, AuditInitializerConfig__c>(oldAuditInitializerConfigs);
@@ -52,7 +52,7 @@ public class AuditInitializerConfigObjectSet extends SalesforceObjectSet {
 
 
     private void populateFriendlyNames() {
-        List<AuditInitializerConfig__c> auditInitializerConfigs = (List<AuditInitializerConfig__c>)this.getSObjects();
+        List<AuditInitializerConfig__c> auditInitializerConfigs = (List<AuditInitializerConfig__c>)this.getRecords();
 
         for (AuditInitializerConfig__c auditInitializerConfig : auditInitializerConfigs) {
             if (auditInitializerConfig.StaticGroupIdentifier__c == null && auditInitializerConfig.DynamicGroupIdentifier__c == null) {

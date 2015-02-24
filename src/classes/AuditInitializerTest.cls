@@ -10,7 +10,7 @@
 
     private static testmethod void canDetermineStepConfig() {
         //arrange processes
-        Process__c auditInitializerProcess = ProcessObject.generateOne(AuditInitializer.class);
+        Process__c auditInitializerProcess = ProcessModel.generateOne(AuditInitializer.class);
         
         //act
         String actualConfig = auditInitializerProcess.StepConfig__c;
@@ -25,7 +25,7 @@
         String sequenceName  = 'AuditInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA'; // no data present
-        Process__c auditInitializerProcess = ProcessObject.generateOne(AuditInitializer.class);
+        Process__c auditInitializerProcess = ProcessModel.generateOne(AuditInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -85,7 +85,7 @@
         String sequenceName  = 'AuditInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c auditInitializerProcess = ProcessObject.generateOne(AuditInitializer.class);
+        Process__c auditInitializerProcess = ProcessModel.generateOne(AuditInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -148,7 +148,7 @@
         String sequenceName  = 'AuditInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c auditInitializerProcess = ProcessObject.generateOne(AuditInitializer.class);
+        Process__c auditInitializerProcess = ProcessModel.generateOne(AuditInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;

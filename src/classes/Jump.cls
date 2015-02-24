@@ -21,7 +21,7 @@ public with sharing class Jump {
         
         //get destination from config
         JumpConfig__c config = this.StepConfig;
-        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(config.Sequence__c);
+        Sequence__c sequence = (Sequence__c)ApexDomain.getById(config.Sequence__c);
         
         parameters.put('__SequenceName', sequence.Name);
         parameters.put('__Position', 0);

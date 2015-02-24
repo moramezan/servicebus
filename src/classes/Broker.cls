@@ -421,7 +421,7 @@ abstract public with sharing class Broker {
      */
     public List<Database.SaveResult> mark(List<Message__c> messages) {
         try {
-            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new SalesforceObject.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
+            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
             for (Message__c message : messages) message.Status__c = 'Started';
             return Database.update(messages);
         } catch (Exception e) {
@@ -493,7 +493,7 @@ abstract public with sharing class Broker {
         SObject stepConfig;
         if (step.ConfigId__c != null) {
             //find all steps config ids
-            stepConfig = SalesforceObject.getById(step.ConfigId__c);
+            stepConfig = ApexDomain.getById(step.ConfigId__c);
         }
         
         Map<Id,Broker.Wrapper> id2wrapper = new Map<Id,Broker.Wrapper>();
@@ -533,7 +533,7 @@ abstract public with sharing class Broker {
         }
         
         //position + 1
-        new MessageObjectSet(outputMessages).incrementPositions();
+        new MessageSetModel(outputMessages).incrementPositions();
         
         return outputMessages;
     }
@@ -555,9 +555,9 @@ abstract public with sharing class Broker {
             messages.addAll(inputMessages);
             messages.addAll(outputMessages);
             
-            MessageObjectSet.Inhibit = false;
+            MessageSetModel.Inhibit = false;
             List<Database.UpsertResult> results = Database.upsert(messages, true); //all or none
-            MessageObjectSet.Inhibit = true;
+            MessageSetModel.Inhibit = true;
             
             return results;
         } catch (Exception e) {

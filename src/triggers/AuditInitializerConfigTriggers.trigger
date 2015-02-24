@@ -2,26 +2,26 @@ trigger AuditInitializerConfigTriggers on AuditInitializerConfig__c (before inse
     
     if (Trigger.isBefore && Trigger.isInsert) {
         
-        new AuditInitializerConfigObjectSet (Trigger.new).onBeforeInsert();
+        new AuditInitializerConfigSetModel (Trigger.new).onBeforeInsert();
         
     } else if (Trigger.isAfter && Trigger.isInsert) {
         
-        new AuditInitializerConfigObjectSet (Trigger.new).onAfterInsert();
+        new AuditInitializerConfigSetModel (Trigger.new).onAfterInsert();
         
     } else if (Trigger.isBefore && Trigger.isUpdate) {
         
-        new AuditInitializerConfigObjectSet (Trigger.new).onBeforeUpdate(Trigger.old);
+        new AuditInitializerConfigSetModel (Trigger.new).onBeforeUpdate(Trigger.old);
         
     } else if (Trigger.isAfter && Trigger.isUpdate) {
         
-        new AuditInitializerConfigObjectSet (Trigger.new).onAfterUpdate(Trigger.old);
+        new AuditInitializerConfigSetModel (Trigger.new).onAfterUpdate(Trigger.old);
         
     } else if (Trigger.isBefore && Trigger.isDelete) {
         
-        new AuditInitializerConfigObjectSet (Trigger.old).onBeforeDelete();
+        new AuditInitializerConfigSetModel (Trigger.old).onBeforeDelete();
         
     } else if (Trigger.isAfter && Trigger.isDelete) {
         
-        new AuditInitializerConfigObjectSet (Trigger.old).onAfterDelete();
+        new AuditInitializerConfigSetModel (Trigger.old).onAfterDelete();
     }
 }

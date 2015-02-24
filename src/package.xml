@@ -7,11 +7,11 @@
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>
-        <members>AsyncApexJobObject</members>
-        <members>AsyncApexJobObjectTest</members>
+        <members>AsyncApexJobModel</members>
+        <members>AsyncApexJobModelTest</members>
         <members>AuditInitializer</members>
-        <members>AuditInitializerConfigObjectSet</members>
-        <members>AuditInitializerConfigObjectSetTests</members>
+        <members>AuditInitializerConfigSetModel</members>
+        <members>AuditInitializerConfigSetModelTests</members>
         <members>AuditInitializerTest</members>
         <members>AuditWriter</members>
         <members>AuditWriterTest</members>
@@ -41,8 +41,8 @@
         <members>MarkTest</members>
         <members>MessageDataExtension</members>
         <members>MessageDataExtensionTest</members>
-        <members>MessageObjectSet</members>
-        <members>MessageObjectSetTest</members>
+        <members>MessageSetModel</members>
+        <members>MessageSetModelTest</members>
         <members>MessagePauseQueueExtension</members>
         <members>MessagePauseQueueExtensionTest</members>
         <members>MessageRebufferExtension</members>
@@ -60,32 +60,30 @@
         <members>ProcessDiscoverBatchTest</members>
         <members>ProcessDiscoverController</members>
         <members>ProcessDiscoverControllerTest</members>
-        <members>ProcessObject</members>
-        <members>ProcessObjectTest</members>
+        <members>ProcessModel</members>
+        <members>ProcessModelTest</members>
         <members>Publish</members>
         <members>PublishTest</members>
         <members>RemoteSiteSettingController</members>
         <members>RemoteSiteSettingControllerTest</members>
-        <members>SalesforceObject</members>
-        <members>SalesforceObjectSet</members>
-        <members>SalesforceObjectSetTest</members>
-        <members>SalesforceObjectTest</members>
+        <members>ApexDomain</members>
+        <members>ApexDomainTest</members>
         <members>Schedule</members>
-        <members>ScheduleConfigObjectSet</members>
-        <members>ScheduleConfigObjectSetTest</members>
+        <members>ScheduleConfigSetModel</members>
+        <members>ScheduleConfigSetModelTest</members>
         <members>ScheduleTest</members>
         <members>SchemaSelectorController</members>
         <members>SchemaSelectorControllerTest</members>
         <members>SequenceBuilderExtension</members>
         <members>SequenceBuilderExtensionTest</members>
-        <members>SequenceObject</members>
-        <members>SequenceObjectSet</members>
-        <members>SequenceObjectSetTest</members>
-        <members>SequenceObjectTest</members>
-        <members>StepObject</members>
-        <members>StepObjectSet</members>
-        <members>StepObjectSetTest</members>
-        <members>StepObjectTest</members>
+        <members>SequenceModel</members>
+        <members>SequenceSetModel</members>
+        <members>SequenceSetModelTest</members>
+        <members>SequenceModelTest</members>
+        <members>StepModel</members>
+        <members>StepSetModel</members>
+        <members>StepSetModelTest</members>
+        <members>StepModelTest</members>
         <members>Subscribe</members>
         <members>SubscribeTest</members>
         <members>Subsequence</members>

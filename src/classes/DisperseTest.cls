@@ -2,20 +2,20 @@
     
     static testmethod void testDisperseSendsMultipleMessages() {
         //arrange processes
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequences
         Sequence__c sequence1 = new Sequence__c(Name = 'Test1');
         insert sequence1;
-        Step__c step1 = StepObject.generateOne(sequence1.Id, terminateProcess.Id);
+        Step__c step1 = StepModel.generateOne(sequence1.Id, terminateProcess.Id);
         
         Sequence__c sequence2 = new Sequence__c(Name = 'Test2');
         insert sequence2;
-        Step__c step2 = StepObject.generateOne(sequence2.Id, terminateProcess.Id);
+        Step__c step2 = StepModel.generateOne(sequence2.Id, terminateProcess.Id);
         
         Sequence__c sequence3 = new Sequence__c(Name = 'Test3');
         insert sequence3;
-        Step__c step3 = StepObject.generateOne(sequence3.Id, terminateProcess.Id);
+        Step__c step3 = StepModel.generateOne(sequence3.Id, terminateProcess.Id);
         
         //arrange disperser
         DisperseConfig__c config = new DisperseConfig__c();
@@ -43,12 +43,12 @@
     
     static testmethod void testDisperseDumbConfig() {
         //arrange processes
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequences
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
-        Step__c step1 = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c step1 = StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange disperser
         DisperseConfig__c config = new DisperseConfig__c();

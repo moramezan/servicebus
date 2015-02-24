@@ -2,19 +2,19 @@
     
     static testmethod void testMessagesAggregatedOk() {
         //arrange processes, messages and controller
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c wiretapStep = StepObject.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c wiretapStep = StepModel.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
-        MessageObjectSet.Inhibit = false;
+        MessageSetModel.Inhibit = false;
         insert new Message__c(Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Queued');
         insert new Message__c(Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Buffered');
-        MessageObjectSet.Inhibit = true;
+        MessageSetModel.Inhibit = true;
         
         //act
         List<MonitorController.Statistic> statistics = MonitorController.getStatistics();

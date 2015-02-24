@@ -1,4 +1,4 @@
-@IsTest private class AuditInitializerConfigObjectSetTests {
+@IsTest private class AuditInitializerConfigSetModelTests {
 
     static testmethod void canCorrectlySetStaticGroupIdentifierWhenDynamicGroupIdentifierEqNullDuringInsert() {
         //arrange
@@ -45,7 +45,7 @@
         String staticIdentifier02 = 'STATIC-STEP-02';
         String dynamicIdentifier02 = null;
         
-        AuditInitializerConfigObjectSet.isEnabled = false;
+        AuditInitializerConfigSetModel.isEnabled = false;
         insert new AuditInitializerConfig__c(
             StaticGroupIdentifier__c = staticIdentifier01, 
             DynamicGroupIdentifier__c = dynamicIdentifier01
@@ -64,7 +64,7 @@
         }
         
         //act
-        AuditInitializerConfigObjectSet.isEnabled = true;
+        AuditInitializerConfigSetModel.isEnabled = true;
         auditInitializerConfigsBefore[0].StaticGroupIdentifier__c = staticIdentifier02;
         update auditInitializerConfigsBefore[0];
         
@@ -143,7 +143,7 @@
         String staticIdentifier02 =  null;
         String dynamicIdentifier02 = 'DYNAMIC-STEP-02';
         
-        AuditInitializerConfigObjectSet.isEnabled = false;
+        AuditInitializerConfigSetModel.isEnabled = false;
         insert new AuditInitializerConfig__c(
             StaticGroupIdentifier__c = staticIdentifier01, 
             DynamicGroupIdentifier__c = dynamicIdentifier01
@@ -162,7 +162,7 @@
         }
         
         //act
-        AuditInitializerConfigObjectSet.isEnabled = true;
+        AuditInitializerConfigSetModel.isEnabled = true;
         auditInitializerConfigsBefore[0].DynamicGroupIdentifier__c = dynamicIdentifier02;
         update auditInitializerConfigsBefore[0];
         

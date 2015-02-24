@@ -2,26 +2,26 @@ trigger SequenceTriggers on Sequence__c (before insert, after insert, before upd
     
     if (Trigger.isBefore && Trigger.isInsert) {
        
-        new SequenceObjectSet(Trigger.new).onBeforeInsert();
+        new SequenceSetModel(Trigger.new).onBeforeInsert();
     
     } else if (Trigger.isAfter && Trigger.isInsert) {
     
-        new SequenceObjectSet(Trigger.new).onAfterInsert();
+        new SequenceSetModel(Trigger.new).onAfterInsert();
     
     } else if (Trigger.isBefore && Trigger.isUpdate) {
         
-        new SequenceObjectSet(Trigger.new).onBeforeUpdate(Trigger.old);
+        new SequenceSetModel(Trigger.new).onBeforeUpdate(Trigger.old);
     
     } else if (Trigger.isAfter && Trigger.isUpdate) {
         
-        new SequenceObjectSet(Trigger.new).onAfterUpdate(Trigger.old);
+        new SequenceSetModel(Trigger.new).onAfterUpdate(Trigger.old);
     
     } else if (Trigger.isBefore && Trigger.isDelete) {
         
-        new SequenceObjectSet(Trigger.old).onBeforeDelete();
+        new SequenceSetModel(Trigger.old).onBeforeDelete();
     
     } else if (Trigger.isAfter && Trigger.isDelete) {
         
-        new SequenceObjectSet(Trigger.old).onAfterDelete();
+        new SequenceSetModel(Trigger.old).onAfterDelete();
     }
 }

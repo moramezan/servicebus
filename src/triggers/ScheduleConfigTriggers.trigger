@@ -2,26 +2,26 @@ trigger ScheduleConfigTriggers on ScheduleConfig__c (before insert, after insert
     
     if (Trigger.isBefore && Trigger.isInsert) {
        
-        new ScheduleConfigObjectSet(Trigger.new).onBeforeInsert();
+        new ScheduleConfigSetModel(Trigger.new).onBeforeInsert();
     
     } else if (Trigger.isAfter && Trigger.isInsert) {
     
-        new ScheduleConfigObjectSet(Trigger.new).onAfterInsert();
+        new ScheduleConfigSetModel(Trigger.new).onAfterInsert();
     
     } else if (Trigger.isBefore && Trigger.isUpdate) {
         
-        new ScheduleConfigObjectSet(Trigger.new).onBeforeUpdate(Trigger.old);
+        new ScheduleConfigSetModel(Trigger.new).onBeforeUpdate(Trigger.old);
     
     } else if (Trigger.isAfter && Trigger.isUpdate) {
         
-        new ScheduleConfigObjectSet(Trigger.new).onAfterUpdate(Trigger.old);
+        new ScheduleConfigSetModel(Trigger.new).onAfterUpdate(Trigger.old);
     
     } else if (Trigger.isBefore && Trigger.isDelete) {
         
-        new ScheduleConfigObjectSet(Trigger.old).onBeforeDelete();
+        new ScheduleConfigSetModel(Trigger.old).onBeforeDelete();
     
     } else if (Trigger.isAfter && Trigger.isDelete) {
         
-        new ScheduleConfigObjectSet(Trigger.old).onAfterDelete();
+        new ScheduleConfigSetModel(Trigger.old).onAfterDelete();
     }
 }

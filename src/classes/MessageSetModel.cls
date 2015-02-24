@@ -1,4 +1,4 @@
-public with sharing class MessageObjectSet extends SalesforceObjectSet {
+public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
     
     /**
      * Prevent message inserts per #677
@@ -16,7 +16,7 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
     @TestVisible static private Integer MaxTotalMessages     = 5000; 
     @TestVisible static private Integer MaxDML               = 5000;
     
-    public MessageObjectSet(List<Message__c> messages) {
+    public MessageSetModel(List<Message__c> messages) {
         super(messages);
     }
     
@@ -25,7 +25,7 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
      * used to unset the Inhibit static.
      */
     @TestVisible private void inhibitCreationFromGui() {
-        List<Message__c> messages = this.getSObjects();
+        List<Message__c> messages = this.getRecords();
         
         for (Integer i = 0; i < messages.size(); i++) {
             if (Inhibit) messages[i].addError('Messages cannot be created from the GUI.');
@@ -52,7 +52,7 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
      * this is just a convenience to increment the position of a bunch of messages.
      */
     public void incrementPositions() {
-        List<Message__c> messages = this.getSObjects();
+        List<Message__c> messages = this.getRecords();
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             Integer position = (Integer)parameters.get('__Position');
@@ -68,7 +68,7 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
      * the Queueable AsyncApexJob Id as a correlation later for Capture etc.
      */
     public void populateQueueableId(QueueableContext context) {
-        List<Message__c> messages = this.getSObjects();
+        List<Message__c> messages = this.getRecords();
         for(Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             Id queueableId = context.getJobId();
@@ -92,7 +92,7 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
      * all messages returned from invoke()
      */
     public void incrementHops() {
-        List<Message__c> messages = this.getSObjects();
+        List<Message__c> messages = this.getRecords();
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             Integer hops = (Integer)parameters.get('__Hops');
@@ -112,7 +112,7 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
      * as late and as simply as possible. Doing it here in the trigger works OK.
      */
     public void interpretEsbSequenceName() {
-        List<Message__c> messages = this.getSObjects();
+        List<Message__c> messages = this.getRecords();
         for (Message__c message : messages) {
             //user nominated Sequence (no esb prefix)
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
@@ -130,7 +130,7 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
      * but what we can do is make sure those guys are always concatenated into a key.
      */
     @TestVisible private void populateRouteKey() {
-        List<Message__c> messages = this.getSObjects();
+        List<Message__c> messages = this.getRecords();
         
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
@@ -148,7 +148,7 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
      * So that we can trust them in the Broker and keep code simple.
      */
     @TestVisible private void validateJsonParameters() {
-        List<Message__c> messages = this.getSObjects();
+        List<Message__c> messages = this.getRecords();
         
         for (Message__c message : messages) {
             try {
@@ -204,7 +204,7 @@ public with sharing class MessageObjectSet extends SalesforceObjectSet {
 
     @testVisible private  void deleteExcessiveAll() {
         // excessiveMessagesCount
-        Integer insertableMessagesCount = this.getSObjects().size();
+        Integer insertableMessagesCount = this.getRecords().size();
         Integer persistedMessagesCount =  [SELECT COUNT() FROM Message__c WHERE IsDeleted = false];
         Integer excessiveMessagesCount =  (insertableMessagesCount + persistedMessagesCount) - MaxTotalMessages;
         

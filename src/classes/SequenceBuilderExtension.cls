@@ -16,47 +16,47 @@ public with sharing class SequenceBuilderExtension {
     }
     
     public String getProcesses() {
-        List<Process__c> procs = SalesforceObjectSet.listAll(Process__c.SObjectType);
+        List<Process__c> procs = ApexDomain.listAll(Process__c.SObjectType);
         return Json.serializePretty(procs);
     }
     
     public String getSteps() {
-        SequenceObject sequence = new SequenceObject((Sequence__c)this.controller.getRecord());
-        List<Step__c> steps = sequence.fetchSteps().getSObjects();
+        SequenceModel sequence = new SequenceModel((Sequence__c)this.controller.getRecord());
+        List<Step__c> steps = sequence.fetchSteps().getRecords();
         return Json.serializePretty(steps);
     }
     
     @RemoteAction static public List<Step__c> fetchSteps(Id sequenceId) {
-        SequenceObject sequence = new SequenceObject(new Sequence__c(Id = sequenceId));
+        SequenceModel sequence = new SequenceModel(new Sequence__c(Id = sequenceId));
         sequence.terminate();
-        return sequence.fetchSteps().getSObjects();
+        return sequence.fetchSteps().getRecords();
     }
     
     @RemoteAction static public Step__c appendStep(Id sequenceId, Id processId) {
-        SequenceObject sequence = new SequenceObject(new Sequence__c(Id = sequenceId));
-        StepObject step = sequence.appendStep(processId);
-        return (Step__c)step.getSObject();
+        SequenceModel sequence = new SequenceModel(new Sequence__c(Id = sequenceId));
+        StepModel step = sequence.appendStep(processId);
+        return (Step__c)step.getRecord();
     }
     
     @RemoteAction static public void moveStepBefore(Id stepId, Id beforeStepId) {
-        Step__c step = (Step__c)SalesforceObject.getById(stepId);
-        new StepObject(step).moveBefore(beforeStepId);
+        Step__c step = (Step__c)ApexDomain.getById(stepId);
+        new StepModel(step).moveBefore(beforeStepId);
     }
     
     @RemoteAction static public void moveStepAfter(Id stepId, Id afterStepId) {
-        Step__c step = (Step__c)SalesforceObject.getById(stepId);
-        new StepObject(step).moveAfter(afterStepId);
+        Step__c step = (Step__c)ApexDomain.getById(stepId);
+        new StepModel(step).moveAfter(afterStepId);
     }
     
     @RemoteAction static public void destroySteps(List<Step__c> steps) {
         //requery first step to get sequence id, since it is not transmitted
-        Step__c step = (Step__c)SalesforceObject.getById(steps[0].Id);
-        SequenceObject sequence = new SequenceObject(new Sequence__c(Id = step.Sequence__c));
+        Step__c step = (Step__c)ApexDomain.getById(steps[0].Id);
+        SequenceModel sequence = new SequenceModel(new Sequence__c(Id = step.Sequence__c));
         sequence.destroySteps(new Map<Id,Step__c>(steps).keySet());
     }
     
     @RemoteAction static public String enqueue(Id sequenceId) {
-        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(sequenceId);
+        Sequence__c sequence = (Sequence__c)ApexDomain.getById(sequenceId);
         System.enqueueJob(new Job(sequence.Name, UserInfo.getUserId()));
         return sequence.Name;
     }
@@ -142,9 +142,9 @@ public with sharing class SequenceBuilderExtension {
             WHERE FullyQualifiedClassName__c = :Publish.class.getName()
         ];
         
-        Map<Id,SObject> publishConfigIdToPublishConfig = SalesforceObjectSet.mapAll(PublishConfig__c.SObjectType);
-        List<SubscribeConfig__c> SubscribeConfigs = SalesforceObjectSet.listAll(SubscribeConfig__c.SObjectType);
-        Map<Id,SObject> eventTypeIdToEventType = SalesforceObjectSet.mapAll(EventType__c.SObjectType);
+        Map<Id,SObject> publishConfigIdToPublishConfig = ApexDomain.mapAll(PublishConfig__c.SObjectType);
+        List<SubscribeConfig__c> SubscribeConfigs = ApexDomain.listAll(SubscribeConfig__c.SObjectType);
+        Map<Id,SObject> eventTypeIdToEventType = ApexDomain.mapAll(EventType__c.SObjectType);
         
         for (Sequence__c sequence : sequences) {
             Boolean containsPublish = false;
@@ -213,9 +213,9 @@ public with sharing class SequenceBuilderExtension {
             WHERE FullyQualifiedClassName__c = :Subscribe.class.getName()
         ];
         
-        Map<Id,SObject> subscribeConfigIdToSubscribeConfig = SalesforceObjectSet.mapAll(SubscribeConfig__c.SObjectType);
-        List<PublishConfig__c> publishConfigs = SalesforceObjectSet.listAll(PublishConfig__c.SObjectType);
-        Map<Id,SObject> eventTypeIdToEventType = SalesforceObjectSet.mapAll(EventType__c.SObjectType);
+        Map<Id,SObject> subscribeConfigIdToSubscribeConfig = ApexDomain.mapAll(SubscribeConfig__c.SObjectType);
+        List<PublishConfig__c> publishConfigs = ApexDomain.listAll(PublishConfig__c.SObjectType);
+        Map<Id,SObject> eventTypeIdToEventType = ApexDomain.mapAll(EventType__c.SObjectType);
         
         for (Sequence__c sequence : sequences) {
             List<Step__c> steps = sequence.Steps__r;

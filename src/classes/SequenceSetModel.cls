@@ -1,6 +1,6 @@
-public with sharing class SequenceObjectSet extends SalesforceObjectSet {
+public with sharing class SequenceSetModel extends ApexDomain.StandardSetModel {
 
-    public SequenceObjectSet(List<Sequence__c> sobjects) {
+    public SequenceSetModel(List<Sequence__c> sobjects) {
         super(sobjects);
     }
     
@@ -14,7 +14,7 @@ public with sharing class SequenceObjectSet extends SalesforceObjectSet {
      * So we cascade the delete ourselves manually, to make sure they fire.
      */
     @TestVisible private void cascadeDeletionTriggers() {
-        Set<Id> sequenceIds = new Map<Id,SObject>(this.getSObjects()).keySet();
+        Set<Id> sequenceIds = new Map<Id,SObject>(this.getRecords()).keySet();
         List<Step__c> steps = [
             SELECT Id
             FROM Step__c

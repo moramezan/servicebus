@@ -1,18 +1,18 @@
-@IsTest private class StepObjectSetTest {
+@IsTest private class StepSetModelTest {
     
     //before insert test
     static testmethod void testStepConfigIsCreatedWhenInserted() {
         //arrange processes
-        Process__c subsequenceProcess = ProcessObject.generateOne(Subsequence.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c subsequenceProcess = ProcessModel.generateOne(Subsequence.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        Step__c subsequenceStep = StepObject.generateOne(sequence.Id, subsequenceProcess.Id);
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c subsequenceStep = StepModel.generateOne(sequence.Id, subsequenceProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         //assert
         String expectedId = Schema.SObjectType.SubsequenceConfig__c.KeyPrefix; //this needs to be some config record
@@ -23,8 +23,8 @@
     //after insert test
     static testmethod void testNoResequencingOfStepsWhenAllInsertedStepsHaveAPositionGtZero() {
         //arrange processes
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
@@ -70,8 +70,8 @@
         Integer PositionEqToZero4 = 0;
         
         //arrange processes
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
@@ -143,14 +143,14 @@
         String  data      = 'data';
         
         //arrange processes
-        Process__c branchProcess = ProcessObject.generateOne(Branch.class);
+        Process__c branchProcess = ProcessModel.generateOne(Branch.class);
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'the-sequence');
         insert sequence;
         
         //arrange steps
-        Step__c branchStep = StepObject.generateOne(sequence.Id, branchProcess.Id);
+        Step__c branchStep = StepModel.generateOne(sequence.Id, branchProcess.Id);
         
         Integer expectedSizeBefore =  1;
         Integer expectedSizeAfter =   0;

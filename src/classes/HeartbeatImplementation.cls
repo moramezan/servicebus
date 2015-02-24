@@ -16,7 +16,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
     /**
      * We must do this inside a Future method otherwise we get error:
      * Scheduler: failed to execute scheduled job: jobId: 707j0000004w8PC,
-     * class: common.apex.async.AsyncApexJobObject,
+     * class: common.apex.async.AsyncApexJobModel,
      * reason: Callout from scheduled Apex not supported.
      */
     @Future(callout=true) static private void deferRefreshAccessToken() {

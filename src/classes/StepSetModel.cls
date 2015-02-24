@@ -1,6 +1,6 @@
-public with sharing class StepObjectSet extends SalesforceObjectSet {
+public with sharing class StepSetModel extends ApexDomain.StandardSetModel {
     
-    public StepObjectSet(List<Step__c> sobjects) {
+    public StepSetModel(List<Step__c> sobjects) {
         super(sobjects);
     }
     
@@ -27,7 +27,7 @@ public with sharing class StepObjectSet extends SalesforceObjectSet {
      */
     private void incrementPositions() {
         //get all involved steps
-        List<Step__c> steps = this.getSObjects();
+        List<Step__c> steps = this.getRecords();
         
         //get map of related sequences
         Set<Id> sequenceIds = new Set<Id>();
@@ -53,7 +53,7 @@ public with sharing class StepObjectSet extends SalesforceObjectSet {
      * But now we need to make sure that this composite key is set.
      */
     private void generateNames() {
-        List<Step__c> steps = this.getSObjects();
+        List<Step__c> steps = this.getRecords();
         
         //get map of related sequences
         Set<Id> sequenceIds = new Set<Id>();
@@ -78,7 +78,7 @@ public with sharing class StepObjectSet extends SalesforceObjectSet {
      */
     private void insertConfigs() {
         //get all involved steps
-        List<Step__c> steps = this.getSObjects();
+        List<Step__c> steps = this.getRecords();
         
         //and their respective process ids
         Set<Id> processIds = new Set<Id>();
@@ -121,8 +121,8 @@ public with sharing class StepObjectSet extends SalesforceObjectSet {
      * This trigger takes care of the deletion of the config.
      */
     private void deleteConfigs() {
-        if (!SObjectType.Step__c.Deletable) throw new SalesforceObject.CrudException('!SObjectType.Step__c.Deletable');  
-        Set<Id> stepIds = (new Map<Id,SObject>(this.getSObjects())).keySet();
+        if (!SObjectType.Step__c.Deletable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Deletable');  
+        Set<Id> stepIds = (new Map<Id,SObject>(this.getRecords())).keySet();
         Map<Id,Step__c> id2step = new Map<Id,Step__c>([SELECT id, Name, ConfigId__c FROM Step__c WHERE Id IN :stepIds]);
         
         //prepare list of config ids

@@ -25,7 +25,7 @@
         Test.startTest();
         Database.executeBatch(batch);
         Test.stopTest();
-        List<Process__c> processes = SalesforceObjectSet.listAll(Process__c.SObjectType);
+        List<Process__c> processes = ApexDomain.listAll(Process__c.SObjectType);
         
         //assert
         Integer expectedCount = 10;
@@ -178,7 +178,7 @@
         Process__c processDelete =  new Process__c(Name = processNameDelete, FullyQualifiedClassName__c = processNameDelete);
         insert processDelete;     
 
-        List<Process__c> processesBefore = SalesforceObjectSet.listAll(Process__c.SObjectType);
+        List<Process__c> processesBefore = ApexDomain.listAll(Process__c.SObjectType);
         Integer actualProcessesBeforeSize = processesBefore.size();
         Integer expectedProcessesBeforeSize = 2;
         
@@ -191,7 +191,7 @@
         ProcessDiscoverBatch.deleteInvalidUnusedProcesses(processHealthMap);
  
         //assemble
-        List<Process__c> processesAfter = SalesforceObjectSet.listAll(Process__c.SObjectType);
+        List<Process__c> processesAfter = ApexDomain.listAll(Process__c.SObjectType);
         Integer actualProcessesAfterSize = processesAfter.size();
         Integer expectedProcessesAfterSize = 1;
         

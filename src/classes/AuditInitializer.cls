@@ -24,7 +24,7 @@ public with sharing class AuditInitializer {
     public class AuditInitializerException extends Exception {}
     
     override public String toString() {
-        if (!SObjectType.AuditGroup__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.AuditGroup__c.Createable');
+        if (!SObjectType.AuditGroup__c.Createable) throw new ApexDomain.CrudException('!SObjectType.AuditGroup__c.Createable');
      
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
@@ -63,7 +63,7 @@ public with sharing class AuditInitializer {
     
     @TestVisible private static SObject getHydrated(Id theId) {
         try {
-            return SalesforceObject.getById(theId);
+            return ApexDomain.getById(theId);
         } catch (Exception e) {
             throw new AuditInitializerException('Cannot hydate SObject with Id=[' + theId + ']', e);
         }

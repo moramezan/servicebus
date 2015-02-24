@@ -29,7 +29,7 @@ public with sharing class Subsequence {
   
         //get destination from config
         SubsequenceConfig__c config = this.StepConfig;
-        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(config.Sequence__c);
+        Sequence__c sequence = (Sequence__c)ApexDomain.getById(config.Sequence__c);
         
         List<Object> stepIds = (List<Object>)parameters.get('__SubsequenceStepIds');
         if (stepIds == null) {

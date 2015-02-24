@@ -1,4 +1,4 @@
-@IsTest public class ScheduleConfigObjectSetTest {
+@IsTest public class ScheduleConfigSetModelTest {
     
     static testmethod void testDailyFriendlyNames() {
         //arrange an all day every day schedule

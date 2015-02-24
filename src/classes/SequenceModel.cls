@@ -1,12 +1,12 @@
-public with sharing class SequenceObject extends SalesforceObject {
+public with sharing class SequenceModel extends ApexDomain.StandardModel {
 
     public class SequenceException extends Exception {}
     
-    public SequenceObject(Sequence__c sequence) {
+    public SequenceModel(Sequence__c sequence) {
         super(sequence);
     }
     
-    public StepObjectSet fetchSteps() {
+    public StepSetModel fetchSteps() {
         List<String> fields = new List<String>();
         
         //step fields
@@ -17,7 +17,7 @@ public with sharing class SequenceObject extends SalesforceObject {
         Set<String> processFields = SObjectType.Process__c.Fields.getMap().keySet();
         for (String processField : SObjectType.Process__c.Fields.getMap().keySet()) fields.add(SObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + processField);
         
-        String sequenceId = this.getSObject().Id;
+        String sequenceId = this.getRecord().Id;
         String orderBy = SObjectType.Step__c.Fields.Position__c.Name;
         List<Step__c> steps = Database.query('SELECT ' + String.join(fields, ',') + ' FROM Step__c WHERE Sequence__c = :sequenceId ORDER BY ' + orderBy);
         
@@ -36,20 +36,20 @@ public with sharing class SequenceObject extends SalesforceObject {
             step.ConfigName__c = configName.left(80);
         }
         
-        return new StepObjectSet(steps);
+        return new StepSetModel(steps);
     }
     
-    public StepObject appendStep(Id processId) {
-        if (!SObjectType.Step__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.Step__c.Createable');
+    public StepModel appendStep(Id processId) {
+        if (!SObjectType.Step__c.Createable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Createable');
     
         Step__c step = new Step__c(
-            Sequence__c = this.getSObject().Id,
+            Sequence__c = this.getRecord().Id,
             Process__c = processId
             //Position__c is automatic
         );
         
         insert step;
-        return new StepObject(step);
+        return new StepModel(step);
     }
     
     /**
@@ -57,7 +57,7 @@ public with sharing class SequenceObject extends SalesforceObject {
      * (Invoked by the user interface when viewing a Sequence for the first time)
      */
     public void terminate() {
-        Sequence__c sequence = (Sequence__c)this.getSObject();
+        Sequence__c sequence = (Sequence__c)this.getRecord();
         
         Process__c terminateProcess = [
             SELECT Id
@@ -77,11 +77,11 @@ public with sharing class SequenceObject extends SalesforceObject {
         }
     }
     
-    public StepObjectSet destroySteps(Set<Id> stepIds) {
-        if (!SObjectType.Step__c.Deletable) throw new SalesforceObject.CrudException('!SObjectType.Step__c.Deletable');
-        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new SalesforceObject.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
+    public StepSetModel destroySteps(Set<Id> stepIds) {
+        if (!SObjectType.Step__c.Deletable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Deletable');
+        if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
         
-        Sequence__c sequence = (Sequence__c)this.getSObject();
+        Sequence__c sequence = (Sequence__c)this.getRecord();
         
         List<Step__c> stepsToDelete = [
             SELECT Id, Sequence__c
@@ -113,7 +113,7 @@ public with sharing class SequenceObject extends SalesforceObject {
         update stepsToReorder;
         
         //hand back wrapped deleted steps
-        return new StepObjectSet(stepsToDelete);
+        return new StepSetModel(stepsToDelete);
     }
 
 }

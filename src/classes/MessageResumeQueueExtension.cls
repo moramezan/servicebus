@@ -17,7 +17,7 @@ public with sharing class MessageResumeQueueExtension {
     
     public class DoDml {
         public DoDml() {
-            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new SalesforceObject.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');
+            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');
         
             //fetch custom setting or create for the first time
             BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();

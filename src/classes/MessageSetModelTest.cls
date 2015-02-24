@@ -1,4 +1,4 @@
-@IsTest public class MessageObjectSetTest {
+@IsTest public class MessageSetModelTest {
     
     static testmethod void testUnpopulatedRouteKey() {
         //arrange message
@@ -7,7 +7,7 @@
         );
         
         //act
-        new MessageObjectSet(new List<Message__c>{message}).populateRouteKey();
+        new MessageSetModel(new List<Message__c>{message}).populateRouteKey();
         
         //assert
         String expectedRoute = null;
@@ -22,7 +22,7 @@
         );
         
         //act
-        new MessageObjectSet(new List<Message__c>{message}).populateRouteKey();
+        new MessageSetModel(new List<Message__c>{message}).populateRouteKey();
         
         //assert
         String expectedRoute = 'test#1';
@@ -40,7 +40,7 @@
         System.assert(!ApexPages.hasMessages(), 'Should not have errors before.');
         
         //act
-        new MessageObjectSet(new List<Message__c>{validMessage}).validateJsonParameters();
+        new MessageSetModel(new List<Message__c>{validMessage}).validateJsonParameters();
         
         //assert
         System.assert(!ApexPages.hasMessages(), 'Should not have errors after.');
@@ -56,7 +56,7 @@
         System.assert(!ApexPages.hasMessages(), 'Should not have errors before.');
         
         //act
-        new MessageObjectSet(new List<Message__c>{validMessage}).validateJsonParameters();
+        new MessageSetModel(new List<Message__c>{validMessage}).validateJsonParameters();
         
         //assert
         System.assert(ApexPages.hasMessages(), 'Should have errors after.');
@@ -64,14 +64,14 @@
     
     static testmethod void correctlyDeletesExpiredCompletedMessages() {
         // arrange
-        MessageObjectSet.triggerEnabled = false;
-        MessageObjectSet.MaxTimeToLiveInDays  = 20;
-        MessageObjectSet.MaxCompletedMessages = 5000;
-        MessageObjectSet.MaxTotalMessages     = 5000; 
-        MessageObjectSet.MaxDML               = 5000;
+        MessageSetModel.triggerEnabled = false;
+        MessageSetModel.MaxTimeToLiveInDays  = 20;
+        MessageSetModel.MaxCompletedMessages = 5000;
+        MessageSetModel.MaxTotalMessages     = 5000; 
+        MessageSetModel.MaxDML               = 5000;
         
         DateTime currentStamp =  System.now();
-        DateTime thresholdStamp =  currentStamp.addDays(MessageObjectSet.MaxTimeToLiveInDays  * -1);
+        DateTime thresholdStamp =  currentStamp.addDays(MessageSetModel.MaxTimeToLiveInDays  * -1);
 
         List<String> expectedMissingTags = new List<String>{'0','1','2','3'};
         List<String> expectedExistingTags = new List<String>{'4','5','6'};
@@ -94,13 +94,13 @@
         // -- current stamp 
         //   
 
-        MessageObjectSet.Inhibit = false;
+        MessageSetModel.Inhibit = false;
         insert messagesA; 
-        MessageObjectSet.Inhibit = true;
+        MessageSetModel.Inhibit = true;
 
         // act
-        MessageObjectSet messageObjectSetInstance = new MessageObjectSet(new List<Message__c>{new Message__c(Status__c = 'Buffered')});
-        messageObjectSetInstance.deleteExpiredAndCompleted(currentStamp); 
+        MessageSetModel model = new MessageSetModel(new List<Message__c>{new Message__c(Status__c = 'Buffered')});
+        model.deleteExpiredAndCompleted(currentStamp); 
 
         // assemble
         List<Message__c> actualPersistedCompleted  =  [SELECT Id, Exception__c  FROM Message__c ];
@@ -126,11 +126,11 @@
     static testmethod void correctlyDeletesExcessiveMessages() {
 
         // arrange
-        MessageObjectSet.triggerEnabled = false;
-        MessageObjectSet.MaxTimeToLiveInDays  = 20;
-        MessageObjectSet.MaxCompletedMessages = 5000;
-        MessageObjectSet.MaxTotalMessages     = 4; 
-        MessageObjectSet.MaxDML               = 5000;
+        MessageSetModel.triggerEnabled = false;
+        MessageSetModel.MaxTimeToLiveInDays  = 20;
+        MessageSetModel.MaxCompletedMessages = 5000;
+        MessageSetModel.MaxTotalMessages     = 4; 
+        MessageSetModel.MaxDML               = 5000;
 
         // scenario:
         //  IC  = insertable count
@@ -154,17 +154,17 @@
         // -- current stamp 
         // 
 
-        MessageObjectSet.Inhibit = false;
+        MessageSetModel.Inhibit = false;
         insert messagesA; 
-        MessageObjectSet.Inhibit = true;
+        MessageSetModel.Inhibit = true;
 
         List<Message__c> messagesB = new List<Message__c>();
         messagesB.add(new Message__c(Exception__c = beforeTags[0],  Status__c = 'Buffered'));
         messagesB.add(new Message__c(Exception__c = beforeTags[1],  Status__c = 'Buffered'));
 
         // act
-        MessageObjectSet messageObjectSetInstance = new MessageObjectSet(messagesB);
-        messageObjectSetInstance.deleteExcessiveAll();
+        MessageSetModel model = new MessageSetModel(messagesB);
+        model.deleteExcessiveAll();
 
         // assemble
         List<Message__c> actualPersisted  =  [SELECT Id, Exception__c  FROM Message__c ];
@@ -190,11 +190,11 @@
     static testmethod void correctlyDeletesExcessiveCompletedeMessages() {
 
         // arrange
-        MessageObjectSet.triggerEnabled = false;
-        MessageObjectSet.MaxTimeToLiveInDays  = 20;
-        MessageObjectSet.MaxCompletedMessages = 2;
-        MessageObjectSet.MaxTotalMessages     = 5000; 
-        MessageObjectSet.MaxDML               = 5000;
+        MessageSetModel.triggerEnabled = false;
+        MessageSetModel.MaxTimeToLiveInDays  = 20;
+        MessageSetModel.MaxCompletedMessages = 2;
+        MessageSetModel.MaxTotalMessages     = 5000; 
+        MessageSetModel.MaxDML               = 5000;
 
         // scenario:
         //  PCC  = persisted COMPLETED count
@@ -216,17 +216,17 @@
         // -- current stamp 
         // 
 
-        MessageObjectSet.Inhibit = false;
+        MessageSetModel.Inhibit = false;
         insert messagesA; 
-        MessageObjectSet.Inhibit = true;
+        MessageSetModel.Inhibit = true;
 
         List<Message__c> messagesB = new List<Message__c>();
         messagesB.add(new Message__c(Exception__c = beforeTags[0],  Status__c = 'Buffered'));
         messagesB.add(new Message__c(Exception__c = beforeTags[1],  Status__c = 'Buffered'));
 
         // act
-        MessageObjectSet messageObjectSetInstance = new MessageObjectSet(messagesB);
-        messageObjectSetInstance.deleteExcessiveCompleted();
+        MessageSetModel model = new MessageSetModel(messagesB);
+        model.deleteExcessiveCompleted();
 
         // assemble
         List<Message__c> actualPersisted  =  [SELECT Id, Exception__c  FROM Message__c ];
@@ -250,11 +250,11 @@
     static testmethod void correctlyDeletesExcessiveMessagesUpToDmlConstraint() {
 
         // arrange
-        MessageObjectSet.triggerEnabled = false;
-        MessageObjectSet.MaxTimeToLiveInDays  = 20;
-        MessageObjectSet.MaxCompletedMessages = 5000;
-        MessageObjectSet.MaxTotalMessages     = 4; 
-        MessageObjectSet.MaxDML               = 1;
+        MessageSetModel.triggerEnabled = false;
+        MessageSetModel.MaxTimeToLiveInDays  = 20;
+        MessageSetModel.MaxCompletedMessages = 5000;
+        MessageSetModel.MaxTotalMessages     = 4; 
+        MessageSetModel.MaxDML               = 1;
 
         // scenario - edge case :
         //  IC  = insertable count
@@ -280,17 +280,17 @@
         // -- current stamp 
         // 
 
-        MessageObjectSet.Inhibit = false;
+        MessageSetModel.Inhibit = false;
         insert messagesA; 
-        MessageObjectSet.Inhibit = true;
+        MessageSetModel.Inhibit = true;
 
         List<Message__c> messagesB = new List<Message__c>();
         messagesB.add(new Message__c(Exception__c = beforeTags[0],  Status__c = 'Buffered'));
         messagesB.add(new Message__c(Exception__c = beforeTags[1],  Status__c = 'Buffered'));
 
         // act
-        MessageObjectSet messageObjectSetInstance = new MessageObjectSet(messagesB);
-        messageObjectSetInstance.deleteExcessiveAll();
+        MessageSetModel model = new MessageSetModel(messagesB);
+        model.deleteExcessiveAll();
 
         // assemble
         List<Message__c> actualPersisted  =  [SELECT Id, Exception__c  FROM Message__c ];
@@ -316,11 +316,11 @@
     static testmethod void triggerCorrectlyDeletesCompletedMessages() {
 
         // arrange
-        MessageObjectSet.triggerEnabled = false;
-        MessageObjectSet.MaxTimeToLiveInDays  = 20;
-        MessageObjectSet.MaxCompletedMessages = 1;
-        MessageObjectSet.MaxTotalMessages     = 4; 
-        MessageObjectSet.MaxDML               = 2;
+        MessageSetModel.triggerEnabled = false;
+        MessageSetModel.MaxTimeToLiveInDays  = 20;
+        MessageSetModel.MaxCompletedMessages = 1;
+        MessageSetModel.MaxTotalMessages     = 4; 
+        MessageSetModel.MaxDML               = 2;
 
         // expected scenario   :
         // - deleteExpiredAndCompleted()executes:
@@ -338,7 +338,7 @@
         //  after the trigger fires we therefore expect {5,6,7,8,9,10} to be persisted
 
         DateTime currentStamp =  System.now();
-        DateTime thresholdStamp =  currentStamp.addDays(MessageObjectSet.MaxTimeToLiveInDays  * -1);
+        DateTime thresholdStamp =  currentStamp.addDays(MessageSetModel.MaxTimeToLiveInDays  * -1);
         List<Message__c> messagesA = new List<Message__c>();
 
         List<String> expectedMissingTags = new List<String>{'0','1','2','3','4'};
@@ -359,9 +359,9 @@
         // -- current stamp 
         //   
         
-        MessageObjectSet.Inhibit = false;
+        MessageSetModel.Inhibit = false;
         insert messagesA; 
-        MessageObjectSet.Inhibit = true;
+        MessageSetModel.Inhibit = true;
 
         List<Message__c> messagesB = new List<Message__c>();
         messagesB.add(new Message__c(Exception__c = expectedExistingTags[2],  Status__c = 'Buffered'));
@@ -370,10 +370,10 @@
         messagesB.add(new Message__c(Exception__c = expectedExistingTags[5],  Status__c = 'Buffered')); 
 
         // act
-        MessageObjectSet.triggerEnabled = true;
-        MessageObjectSet.Inhibit = false;
+        MessageSetModel.triggerEnabled = true;
+        MessageSetModel.Inhibit = false;
         insert messagesB; 
-        MessageObjectSet.Inhibit = true;
+        MessageSetModel.Inhibit = true;
 
         // assemble
         List<Message__c> actualPersisted  =  [SELECT Id, Exception__c  FROM Message__c ];
@@ -400,15 +400,15 @@
 
     static testmethod void canDisableTrigger() {
         // arrange
-        MessageObjectSet.MaxTimeToLiveInDays  = 3;
-        MessageObjectSet.MaxCompletedMessages = 2;
-        MessageObjectSet.MaxTotalMessages     = 2; 
-        MessageObjectSet.MaxDML               = 5000;
+        MessageSetModel.MaxTimeToLiveInDays  = 3;
+        MessageSetModel.MaxCompletedMessages = 2;
+        MessageSetModel.MaxTotalMessages     = 2; 
+        MessageSetModel.MaxDML               = 5000;
  
         Integer arbitaryExcessMessageCount = 5;
         List<Message__c> messagesA = new List<Message__c>();
         List<Message__c> messagesB = new List<Message__c>();
-        Integer total = MessageObjectSet.MaxTotalMessages  + arbitaryExcessMessageCount;
+        Integer total = MessageSetModel.MaxTotalMessages  + arbitaryExcessMessageCount;
         Integer i = 1;
         while (i <= total) {
             messagesA.add(new Message__c(Status__c = 'Completed'));
@@ -417,11 +417,11 @@
         }
 
         // act
-        MessageObjectSet.triggerEnabled = false;
-        MessageObjectSet.Inhibit = false;
+        MessageSetModel.triggerEnabled = false;
+        MessageSetModel.Inhibit = false;
         insert messagesA;     
         insert messagesB;
-        MessageObjectSet.Inhibit = true;
+        MessageSetModel.Inhibit = true;
 
         // assemble
         Integer actualPersistedCompletedCount =  [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];

@@ -23,7 +23,7 @@ public with sharing class Branch {
 
         //get step config
         BranchConfig__c config = this.StepConfig;
-        Sequence__c sequence = (Sequence__c)SalesforceObject.getById(config.Sequence__c);
+        Sequence__c sequence = (Sequence__c)ApexDomain.getById(config.Sequence__c);
         
         //get sequence name
         String branchTo = sequence.Name;

@@ -2,16 +2,16 @@
     
     static private Id setupSequence() {
         //arrange processes
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequences
         Sequence__c sequence = new Sequence__c(Name = 'SequenceBuilderExtensionTest');
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = StepObject.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c terminateStep = StepObject.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c wiretapStep = StepModel.generateOne(sequence.Id, wiretapProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         return sequence.Id;
     }
@@ -70,13 +70,13 @@
         Id sequenceId = setupSequence();
         
         //arrange process to append
-        Process__c publishProcess = ProcessObject.generateOne(Publish.class);
+        Process__c publishProcess = ProcessModel.generateOne(Publish.class);
         
         //act
         SequenceBuilderExtension.appendStep(sequenceId, publishProcess.Id);
         
         //assert
-        List<Step__c> steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        List<Step__c> steps = new SequenceModel(new Sequence__c(Id = sequenceId)).fetchSteps().getRecords();
         Step__c lastStep = steps.get(2);
         String expectedClassName = Publish.class.getName();
         String actualClassName = lastStep.Process__r.FullyQualifiedClassName__c;
@@ -86,7 +86,7 @@
     static testmethod void testMoveStepBefore() {
         //arrange sequence
         Id sequenceId = setupSequence();
-        List<Step__c> steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        List<Step__c> steps = new SequenceModel(new Sequence__c(Id = sequenceId)).fetchSteps().getRecords();
         Step__c wiretapStep = steps.get(0);
         Step__c terminateStep = steps.get(1);
         
@@ -94,7 +94,7 @@
         SequenceBuilderExtension.moveStepBefore(terminateStep.Id, wiretapStep.Id);
         
         //assemble
-        steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        steps = new SequenceModel(new Sequence__c(Id = sequenceId)).fetchSteps().getRecords();
         terminateStep = steps.get(0);
         wiretapStep = steps.get(1);
         
@@ -111,7 +111,7 @@
     static testmethod void testMoveStepAfter() {
         //arrange sequence
         Id sequenceId = setupSequence();
-        List<Step__c> steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        List<Step__c> steps = new SequenceModel(new Sequence__c(Id = sequenceId)).fetchSteps().getRecords();
         Step__c wiretapStep = steps.get(0);
         Step__c terminateStep = steps.get(1);
         
@@ -119,7 +119,7 @@
         SequenceBuilderExtension.moveStepAfter(wiretapStep.Id, terminateStep.Id);
         
         //assemble
-        steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        steps = new SequenceModel(new Sequence__c(Id = sequenceId)).fetchSteps().getRecords();
         terminateStep = steps.get(0);
         wiretapStep = steps.get(1);
         
@@ -136,14 +136,14 @@
     static testmethod void testDestroyStep() {
         //arrange
         Id sequenceId = setupSequence();
-        List<Step__c> steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        List<Step__c> steps = new SequenceModel(new Sequence__c(Id = sequenceId)).fetchSteps().getRecords();
         Step__c wiretapStep = steps.get(0);
         
         //act
         SequenceBuilderExtension.destroySteps(new List<Step__c>{wiretapStep});
         
         //assemble
-        steps = new SequenceObject(new Sequence__c(Id = sequenceId)).fetchSteps().getSObjects();
+        steps = new SequenceModel(new Sequence__c(Id = sequenceId)).fetchSteps().getRecords();
         
         //assert
         Integer expectedSize = 1;
@@ -170,24 +170,24 @@
         Sequence__c sequenceD = new Sequence__c(Name = 'SequenceD');
         insert sequenceD;
         
-        Process__c terminateProcess = ProcessObject.generateOne(Terminate.class);
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
         
         // Sequence A - Ok
-        Step__c stepA1 = StepObject.generateOne(sequenceA.Id, wireTapProcess.Id);
-        Step__c stepA2 = StepObject.generateOne(sequenceA.Id, terminateProcess.Id);
+        Step__c stepA1 = StepModel.generateOne(sequenceA.Id, wireTapProcess.Id);
+        Step__c stepA2 = StepModel.generateOne(sequenceA.Id, terminateProcess.Id);
         
         // Sequence B - Problem : Terminate Not last Step
-        Step__c stepB1 = StepObject.generateOne(sequenceB.Id, terminateProcess.Id);
-        Step__c stepB2 = StepObject.generateOne(sequenceB.Id, wireTapProcess.Id);
+        Step__c stepB1 = StepModel.generateOne(sequenceB.Id, terminateProcess.Id);
+        Step__c stepB2 = StepModel.generateOne(sequenceB.Id, wireTapProcess.Id);
  
         // Sequence C - Problem : More than One Terminate
-        Step__c stepC1 = StepObject.generateOne(sequenceC.Id, terminateProcess.Id);
-        Step__c stepC2 = StepObject.generateOne(sequenceC.Id, terminateProcess.Id);
+        Step__c stepC1 = StepModel.generateOne(sequenceC.Id, terminateProcess.Id);
+        Step__c stepC2 = StepModel.generateOne(sequenceC.Id, terminateProcess.Id);
         
         // Sequence D - Problem : Zero Terminate
-        Step__c stepD1 = StepObject.generateOne(sequenceD.Id, wireTapProcess.Id);
-        Step__c stepD2 = StepObject.generateOne(sequenceD.Id, wireTapProcess.Id);
+        Step__c stepD1 = StepModel.generateOne(sequenceD.Id, wireTapProcess.Id);
+        Step__c stepD2 = StepModel.generateOne(sequenceD.Id, wireTapProcess.Id);
 
         // Act :
         SequenceBuilderExtension controller = new SequenceBuilderExtension(null);
@@ -222,12 +222,12 @@
         insert sequenceA;
         
         //arrange proceses
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
-        Process__c publishProcess = ProcessObject.generateOne(Publish.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
+        Process__c publishProcess = ProcessModel.generateOne(Publish.class);
         
         // Sequence A - Warning : Ok but event Not Subscribed
-        Step__c stepA1 = StepObject.generateOne(sequenceA.Id, publishProcess.Id);
-        Step__c stepA2 = StepObject.generateOne(sequenceA.Id, wiretapProcess.Id);
+        Step__c stepA1 = StepModel.generateOne(sequenceA.Id, publishProcess.Id);
+        Step__c stepA2 = StepModel.generateOne(sequenceA.Id, wiretapProcess.Id);
         
         // Event
         EventType__c eventTypeNotSubscribed = new EventType__c(
@@ -236,9 +236,9 @@
         insert eventTypeNotSubscribed;
         
         // Config A1
-        Id configIdA1 = ((Step__c)SalesforceObject.getById(stepA1.Id)).ConfigId__c;
+        Id configIdA1 = ((Step__c)ApexDomain.getById(stepA1.Id)).ConfigId__c;
         
-        PublishConfig__c PublishConfigA1 = (PublishConfig__c)SalesforceObject.getById(configIdA1);
+        PublishConfig__c PublishConfigA1 = (PublishConfig__c)ApexDomain.getById(configIdA1);
         
         PublishConfigA1.EventType__c = eventTypeNotSubscribed.Id;
         update PublishConfigA1;
@@ -266,12 +266,12 @@
         insert sequenceB;
         
         //arrange processes
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
-        Process__c publishProcess = ProcessObject.generateOne(Publish.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
+        Process__c publishProcess = ProcessModel.generateOne(Publish.class);
         
         // Sequence B - Problem : No Config
-        Step__c stepB1 = StepObject.generateOne(sequenceB.Id, publishProcess.Id);
-        Step__c stepB2 = StepObject.generateOne(sequenceB.Id, wiretapProcess.Id);
+        Step__c stepB1 = StepModel.generateOne(sequenceB.Id, publishProcess.Id);
+        Step__c stepB2 = StepModel.generateOne(sequenceB.Id, wiretapProcess.Id);
         
         // Act :
         SequenceBuilderExtension controller = new SequenceBuilderExtension(null);
@@ -292,16 +292,16 @@
     
     static testmethod void callingGetHealthReturnsExpectedListContaningStatusEqWarningSubscribe() {
         //arrange processes
-        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
         
         //arrange sequence
         Sequence__c sequenceA = new Sequence__c(Name = 'SequenceA');
         insert sequenceA;
         
         // Sequence A - Warning : Ok but event Not published
-        Step__c stepA1 = StepObject.generateOne(sequenceA.Id, subscribeProcess.Id);
-        Step__c stepA2 = StepObject.generateOne(sequenceA.Id, wiretapProcess.Id);
+        Step__c stepA1 = StepModel.generateOne(sequenceA.Id, subscribeProcess.Id);
+        Step__c stepA2 = StepModel.generateOne(sequenceA.Id, wiretapProcess.Id);
 
         // Event
         EventType__c eventNotPublished = new EventType__c(
@@ -310,8 +310,8 @@
         insert eventNotPublished;
        
         // Config A1
-        Id configIdA1 = ((Step__c)SalesforceObject.getById(stepA1.Id)).ConfigId__c;
-        SubscribeConfig__c subscribeConfigA1 = (SubscribeConfig__c)SalesforceObject.getById(configIdA1);
+        Id configIdA1 = ((Step__c)ApexDomain.getById(stepA1.Id)).ConfigId__c;
+        SubscribeConfig__c subscribeConfigA1 = (SubscribeConfig__c)ApexDomain.getById(configIdA1);
         subscribeConfigA1.EventType__c = eventNotPublished.Id;
         update subscribeConfigA1;
  
@@ -336,16 +336,16 @@
     
     static testmethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNotFirst() {
         //arrange processes
-        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
         
         //arrange sequence
         Sequence__c sequenceB = new Sequence__c(Name = 'SequenceB');
         insert sequenceB;
         
         // Sequence B - Problem : Subscribe Not first Step
-        Step__c stepB1 = StepObject.generateOne(sequenceB.Id, wiretapProcess.Id);
-        Step__c stepB2 = StepObject.generateOne(sequenceB.Id, subscribeProcess.Id);
+        Step__c stepB1 = StepModel.generateOne(sequenceB.Id, wiretapProcess.Id);
+        Step__c stepB2 = StepModel.generateOne(sequenceB.Id, subscribeProcess.Id);
         
         // Act :
         SequenceBuilderExtension controller = new SequenceBuilderExtension(null);
@@ -367,15 +367,15 @@
     
     static testmethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorGtOne() {
         //arrange processes
-        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
+        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
         
         //arrange sequence
         Sequence__c sequenceC = new Sequence__c(Name = 'SequenceC');
         insert sequenceC;
         
         // Sequence C - Problem : Subscribe Step Occurs more than once
-        Step__c stepC1 = StepObject.generateOne(sequenceC.Id, subscribeProcess.Id);
-        Step__c stepC2 = StepObject.generateOne(sequenceC.Id, subscribeProcess.Id);
+        Step__c stepC1 = StepModel.generateOne(sequenceC.Id, subscribeProcess.Id);
+        Step__c stepC2 = StepModel.generateOne(sequenceC.Id, subscribeProcess.Id);
             
         // Event
         EventType__c eventNotPublished = new EventType__c(
@@ -384,14 +384,14 @@
         insert eventNotPublished;
 
         // Config C1
-        Id configIdC1 = ((Step__c)SalesforceObject.getById(stepC1.Id)).ConfigId__c;
-        SubscribeConfig__c subscribeConfigC1 = (SubscribeConfig__c)SalesforceObject.getById(configIdC1);
+        Id configIdC1 = ((Step__c)ApexDomain.getById(stepC1.Id)).ConfigId__c;
+        SubscribeConfig__c subscribeConfigC1 = (SubscribeConfig__c)ApexDomain.getById(configIdC1);
         subscribeConfigC1.EventType__c = eventNotPublished.Id;
         update subscribeConfigC1;
 
         // Config C2
-        Id configIdC2 = ((Step__c)SalesforceObject.getById(stepC2.Id)).ConfigId__c;
-        SubscribeConfig__c subscribeConfigC2 = (SubscribeConfig__c)SalesforceObject.getById(configIdC2);
+        Id configIdC2 = ((Step__c)ApexDomain.getById(stepC2.Id)).ConfigId__c;
+        SubscribeConfig__c subscribeConfigC2 = (SubscribeConfig__c)ApexDomain.getById(configIdC2);
         subscribeConfigC2.EventType__c = eventNotPublished.Id;
         update subscribeConfigC2;
         
@@ -415,16 +415,16 @@
 
     static testmethod void callingGetHealthReturnsExpectedListContainingStatusEqErrorNoEventConfigSubscribe() {
         //arrange processes
-        Process__c subscribeProcess = ProcessObject.generateOne(Subscribe.class);
-        Process__c wiretapProcess = ProcessObject.generateOne(Wiretap.class);
+        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
+        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
         
         //arrange sequence
         Sequence__c sequenceB = new Sequence__c(Name = 'SequenceB');
         insert sequenceB;
         
         // Sequence B - Problem : No Config
-        Step__c stepB1 = StepObject.generateOne(sequenceB.Id, subscribeProcess.Id);
-        Step__c stepB2 = StepObject.generateOne(sequenceB.Id, wiretapProcess.Id);
+        Step__c stepB1 = StepModel.generateOne(sequenceB.Id, subscribeProcess.Id);
+        Step__c stepB2 = StepModel.generateOne(sequenceB.Id, wiretapProcess.Id);
 
         // Act :
         SequenceBuilderExtension controller = new SequenceBuilderExtension(null);

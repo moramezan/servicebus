@@ -5,11 +5,11 @@
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
-        <apexClass>AsyncApexJobObject</apexClass>
+        <apexClass>AsyncApexJobModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>AsyncApexJobObjectTest</apexClass>
+        <apexClass>AsyncApexJobModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -17,11 +17,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>AuditInitializerConfigObjectSet</apexClass>
+        <apexClass>AuditInitializerConfigSetModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>AuditInitializerConfigObjectSetTests</apexClass>
+        <apexClass>AuditInitializerConfigSetModelTests</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -141,11 +141,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageObjectSet</apexClass>
+        <apexClass>MessageSetModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageObjectSetTest</apexClass>
+        <apexClass>MessageSetModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -217,11 +217,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ProcessObject</apexClass>
+        <apexClass>ProcessModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ProcessObjectTest</apexClass>
+        <apexClass>ProcessModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -241,19 +241,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SalesforceObject</apexClass>
+        <apexClass>ApexDomain</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SalesforceObjectSet</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>SalesforceObjectSetTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>SalesforceObjectTest</apexClass>
+        <apexClass>ApexDomainTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -261,11 +253,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ScheduleConfigObjectSet</apexClass>
+        <apexClass>ScheduleConfigSetModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ScheduleConfigObjectSetTest</apexClass>
+        <apexClass>ScheduleConfigSetModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -289,35 +281,35 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SequenceObject</apexClass>
+        <apexClass>SequenceModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SequenceObjectSet</apexClass>
+        <apexClass>SequenceSetModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SequenceObjectSetTest</apexClass>
+        <apexClass>SequenceSetModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SequenceObjectTest</apexClass>
+        <apexClass>SequenceModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>StepObject</apexClass>
+        <apexClass>StepModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>StepObjectSet</apexClass>
+        <apexClass>StepSetModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>StepObjectSetTest</apexClass>
+        <apexClass>StepSetModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>StepObjectTest</apexClass>
+        <apexClass>StepModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

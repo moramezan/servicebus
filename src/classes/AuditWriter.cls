@@ -17,7 +17,7 @@ public with sharing class AuditWriter {
     public class AuditWriterException extends Exception {}
     
     override public String toString() {
-        if (!SObjectType.AuditEntry__c.Createable) throw new SalesforceObject.CrudException('!SObjectType.AuditEntry__c.Createable');
+        if (!SObjectType.AuditEntry__c.Createable) throw new ApexDomain.CrudException('!SObjectType.AuditEntry__c.Createable');
         
         Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
