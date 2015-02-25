@@ -121,7 +121,7 @@
         Map<String,Object> event = new Map<String,Object>{
             'esb__Id' => theId,
             '__EntryPointUuid' => '1234567abcde',
-            'esb__AuditGroupIds' => auditGroupIds,
+            '__AuditGroupIds' => auditGroupIds,
             '__SequenceName' => sequenceName,
             '__Position' => positionA2
         };

@@ -43,7 +43,7 @@ public with sharing class AuditWriter {
         Step__c step = steps[0];
  
         //write audit entry for every audit group identifier
-        List<Object> collection = (List<Object>)inputEvent.get('esb__AuditGroupIds');
+        List<Object> collection = (List<Object>)inputEvent.get('__AuditGroupIds');
         
         if (collection != null) {
             List<Id> auditGroupIds = new List<Id>();

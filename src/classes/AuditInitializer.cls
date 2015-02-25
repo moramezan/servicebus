@@ -16,7 +16,7 @@ public with sharing class AuditInitializer {
         public Integer Limits = 75; //leave half of 150 (Total number of DML statements issued)
         
         public Map<String,String> Outputs = new Map<String,String>{
-            'esb__AuditGroupIds' => 'LIST<ID> of potentially multiple groups from AuditInitializer steps.'
+            //'__AuditGroupIds' => 'LIST<ID> of potentially multiple groups from AuditInitializer steps.'
         };
         
     }
@@ -48,12 +48,12 @@ public with sharing class AuditInitializer {
          insert auditGroup;
 
          // update outbound message
-         List<Object> auditGroupIds = (List<Object>)parameters.get('esb__AuditGroupIds');
+         List<Object> auditGroupIds = (List<Object>)parameters.get('__AuditGroupIds');
          if (auditGroupIds == null) {
              auditGroupIds = new List<Object>();
          }
          auditGroupIds.add(auditGroup.Id);
-         parameters.put('esb__AuditGroupIds', auditGroupIds);
+         parameters.put('__AuditGroupIds', auditGroupIds);
 
          
          return Json.serialize(new List<Map<String,Object>>{parameters});
