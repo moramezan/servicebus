@@ -276,7 +276,9 @@ abstract public with sharing class Broker {
          * so they're available wherever wrapper scope is.
          */
         public List<Map<String,Object>> Outputs;
-        
+
+        public String SessionId;
+
         /**
          * @param reflector from the concrete plugin type eg Branch.class
          * @param input event that will be handed in when invoking plugin
@@ -292,6 +294,11 @@ abstract public with sharing class Broker {
                 'StepConfig' => this.config
             };
             
+            // Surface SessionId to select few orgs and packages
+            String sessionId = (OAuthSetting__c.getInstance()).AccessToken__c;
+ 			Boolean allowSessionId = isAllowedSessionId(reflector.getName(), UserInfo.getOrganizationId());  
+            if (allowSessionId) untyped.put('SessionId',sessionId);
+   
             //do not call constructor
             //this.plugin = reflector.newInstance();
             this.plugin = Json.deserialize(Json.serialize(untyped), reflector);
@@ -618,5 +625,26 @@ abstract public with sharing class Broker {
     abstract public Boolean isAlreadyRunning();
      
     abstract public void restartImpl();
-    
+
+            
+    @testVisible
+	static private Boolean isAllowedSessionId(String reflectorName, Id orgId) {
+        Set<String> sessionIdOrgs = new Set<String>{
+            '00Dj0000000I44v', // dev org - matt
+            '00Dj0000001oeWV', // dev org - neil
+            '00Dj0000001q22l', // dev org - harsha
+            '00Do0000000dQSB', // dev org - natani
+            '00Dj0000001uJgw'  // dev org - tom 
+        };   
+        Set<String> sessionIdNamespaces = new Set<String>{
+            'esb',
+            'esb_batchpdf',
+            'esb_tooling',
+            'esb_metadata'
+        };
+        String namespacePrefix  = reflectorName.subStringBefore('.');
+        String orgId15 = String.valueOf(orgId).left(15);
+ 
+        return sessionIdOrgs.contains(orgId15) || sessionIdNamespaces.contains(namespacePrefix);
+    }
 }

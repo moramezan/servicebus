@@ -1127,4 +1127,32 @@
         }
     }
 
+     static testMethod void callingIsAllowedSessionIdReturnsExpectedValue() {
+        //arrange
+		String reflectorName01 = 'esb';       // good ns
+        Id orgId01 = '00Dj0000000I44v';       // good org
+		String reflectorName02 = 'whatever';  // bullshit ns
+        Id orgId02 = '00Dj0000000I44v';       // good org
+		String reflectorName03 = 'esb';       // good ns
+        Id orgId03 = '00Dj0000000bull';       // bullshit org
+		String reflectorName04 = 'whatever';  // bullshit ns
+        Id orgId04 = '00Dj0000000bull';       // bullshit org
+         
+        //act
+        Boolean actualFlag01 = Broker.isAllowedSessionId(reflectorName01, orgId01);
+        Boolean actualFlag02 = Broker.isAllowedSessionId(reflectorName02, orgId02);
+        Boolean actualFlag03 = Broker.isAllowedSessionId(reflectorName03, orgId03);
+        Boolean actualFlag04 = Broker.isAllowedSessionId(reflectorName04, orgId04);     
+        
+        //assert
+        Boolean expectedFlag01 = true;
+        Boolean expectedFlag02 = true;
+        Boolean expectedFlag03 = true;
+        Boolean expectedFlag04 = false; 
+        System.assertEquals(expectedFlag01, actualFlag01);
+        System.assertEquals(expectedFlag02, actualFlag02);      
+        System.assertEquals(expectedFlag03, actualFlag03);
+        System.assertEquals(expectedFlag04, actualFlag04);  
+    }  
+    	
 }
