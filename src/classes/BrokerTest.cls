@@ -9,6 +9,7 @@
     }
     
     override public String toString() {
+        System.assert(this.Event != null);
         Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         throw new BrokerException(FailureMessage);
         return Json.serialize(new List<Map<String,Object>>{inputEvent});

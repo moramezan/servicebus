@@ -11,6 +11,7 @@
     }
 
     override public String toString() {
+        System.assert(this.Event != null);
         return Json.serialize(new List<Map<String,Object>>());
     }
 
