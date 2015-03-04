@@ -5,7 +5,7 @@
 public with sharing class HeartbeatImplementation implements System.Schedulable {
     
     public void execute(System.SchedulableContext context) {
-        if (!Test.isRunningTest() && OAuthSetting__c.getOrgDefaults() != null) {
+        if (!Test.isRunningTest() && OAuthSetting__c.getOrgDefaults().RefreshToken__c != null) {
             //#728 keep access token roaring and ready every hour IF configured ok
             defer();
         }
