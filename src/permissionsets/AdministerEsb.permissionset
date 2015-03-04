@@ -5,6 +5,14 @@
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
+        <apexClass>ApexDomain</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ApexDomainTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>AsyncApexJobModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -141,14 +149,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageSetModel</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>MessageSetModelTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>MessagePauseQueueExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -170,6 +170,14 @@
     </classAccesses>
     <classAccesses>
         <apexClass>MessageResumeQueueExtensionTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>MessageSetModel</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>MessageSetModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -241,14 +249,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ApexDomain</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ApexDomainTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>Schedule</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -285,6 +285,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>SequenceModelTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>SequenceSetModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -293,11 +297,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SequenceModelTest</apexClass>
+        <apexClass>StepModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>StepModel</apexClass>
+        <apexClass>StepModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -306,10 +310,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>StepSetModelTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>StepModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

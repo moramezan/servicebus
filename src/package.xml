@@ -7,6 +7,8 @@
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>
+        <members>ApexDomain</members>
+        <members>ApexDomainTest</members>
         <members>AsyncApexJobModel</members>
         <members>AsyncApexJobModelTest</members>
         <members>AuditInitializer</members>
@@ -41,14 +43,14 @@
         <members>MarkTest</members>
         <members>MessageDataExtension</members>
         <members>MessageDataExtensionTest</members>
-        <members>MessageSetModel</members>
-        <members>MessageSetModelTest</members>
         <members>MessagePauseQueueExtension</members>
         <members>MessagePauseQueueExtensionTest</members>
         <members>MessageRebufferExtension</members>
         <members>MessageRebufferExtensionTest</members>
         <members>MessageResumeQueueExtension</members>
         <members>MessageResumeQueueExtensionTest</members>
+        <members>MessageSetModel</members>
+        <members>MessageSetModelTest</members>
         <members>MonitorController</members>
         <members>MonitorControllerTest</members>
         <members>PostInstallHandler</members>
@@ -66,8 +68,6 @@
         <members>PublishTest</members>
         <members>RemoteSiteSettingController</members>
         <members>RemoteSiteSettingControllerTest</members>
-        <members>ApexDomain</members>
-        <members>ApexDomainTest</members>
         <members>Schedule</members>
         <members>ScheduleConfigSetModel</members>
         <members>ScheduleConfigSetModelTest</members>
@@ -77,13 +77,13 @@
         <members>SequenceBuilderExtension</members>
         <members>SequenceBuilderExtensionTest</members>
         <members>SequenceModel</members>
+        <members>SequenceModelTest</members>
         <members>SequenceSetModel</members>
         <members>SequenceSetModelTest</members>
-        <members>SequenceModelTest</members>
         <members>StepModel</members>
+        <members>StepModelTest</members>
         <members>StepSetModel</members>
         <members>StepSetModelTest</members>
-        <members>StepModelTest</members>
         <members>Subscribe</members>
         <members>SubscribeTest</members>
         <members>Subsequence</members>
