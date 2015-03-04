@@ -251,7 +251,7 @@ public with sharing class Gate {
 
     @testVisible
     private static Integer getCountThreshold(Integer maximumItems) {
-        Integer threshold = [SELECT COUNT() FROM GateItem__c] - maximumItems ;
+        Integer threshold = [SELECT COUNT() FROM GateItem__c LIMIT 10000] - maximumItems ; //#782
         return  (threshold > 0) ? threshold : 0;
     }
 
@@ -280,7 +280,7 @@ public with sharing class Gate {
     @testVisible
     private static List<GateItem__c> getGateItemsOverDateThresholdMock(String overThreshold) {
         List<GateItem__c> gateItems = new   List<GateItem__c>();
-        for (GateItem__c gateItem : [SELECT Id, Name, GateGroup__c, Event__c, CreatedDate FROM GateItem__c]) {
+        for (GateItem__c gateItem : [SELECT Id, Name, GateGroup__c, Event__c, CreatedDate FROM GateItem__c LIMIT 10000]) { //#782
             if (gateItem.Event__c == overThreshold) {
                 gateItems.add(gateItem);
             }
