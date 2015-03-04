@@ -7,7 +7,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
     public void execute(System.SchedulableContext context) {
         if (!Test.isRunningTest() && OAuthSetting__c.getOrgDefaults() != null) {
             //#728 keep access token roaring and ready every hour IF configured ok
-            deferRefreshAccessToken();
+            defer();
         }
         
         HeartbeatImplementation.IHeartbeatGenerator heartbeatGenerator = 
@@ -21,7 +21,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
      * class: common.apex.async.AsyncApexJobModel,
      * reason: Callout from scheduled Apex not supported.
      */
-    @Future(callout=true) static private void deferRefreshAccessToken() {
+    @Future(callout=true) static private void defer() {
         ConfigureController.refreshAccessToken();
     }
     

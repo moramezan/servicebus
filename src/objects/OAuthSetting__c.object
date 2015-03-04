@@ -2,7 +2,7 @@
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <customSettingsType>Hierarchy</customSettingsType>
     <customSettingsVisibility>Protected</customSettingsVisibility>
-    <description>Holds the credentials needed to manage the Broker running user context.</description>
+    <description>Holds the credentials needed to manage the Broker running user context. #774 formerly OAuth Setting</description>
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>AccessToken__c</fullName>
@@ -26,5 +26,5 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <label>OAuth Setting</label>
+    <label>Setting</label>
 </CustomObject>
