@@ -24,7 +24,10 @@ public with sharing class SynchronousBroker extends Broker {
                 outputMessages = this.execute(inputMessages);
                 
                 //PERSIST
-                this.persist(inputMessages, outputMessages);
+                List<Message__c> inputAndOutputMessages = new List<Message__c>();
+                inputAndOutputMessages.addAll(inputMessages);
+                inputAndOutputMessages.addAll(outputMessages);
+                this.persist(inputAndOutputMessages); //#782
                 
             } catch (EngineException e) {
             

@@ -224,10 +224,8 @@ global without sharing class Job implements Process.Plugin, Queueable {
      */
     @TestVisible private List<Message__c> persist() {
         //just in time DML
-        List<Message__c> inputs = new List<Message__c>();
-        List<Message__c> outputs = this.messages;
-        Broker.impl().persist(inputs, outputs);
-        return outputs;
+        Broker.impl().persist(this.messages); //#782
+        return this.messages;
     }
     
     /**

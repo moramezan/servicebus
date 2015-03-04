@@ -127,7 +127,10 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
                 List<Message__c> outputMessages = this.execute(inputMessages);
                 
                 //PERSIST
-                this.persist(inputMessages, outputMessages);
+                List<Message__c> inputAndOutputMessages =  new List<Message__c>();
+                inputAndOutputMessages.addAll(inputMessages);
+                inputAndOutputMessages.addAll(outputMessages);
+                this.persist(inputAndOutputMessages); //#782
                 
             } catch (EngineException e) {
                 //revert, except callouts which should really be idempotent anyway

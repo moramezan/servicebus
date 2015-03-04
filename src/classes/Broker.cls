@@ -429,8 +429,15 @@ abstract public with sharing class Broker {
     public List<Database.SaveResult> mark(List<Message__c> messages) {
         try {
             if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
-            for (Message__c message : messages) message.Status__c = 'Started';
-            return Database.update(messages);
+            for (Message__c message : messages) message.Status__c = 'Started'; //in-database
+            List<Database.SaveResult> results = Database.update(messages);
+            
+            for (Message__c message : messages) {
+                //designate all input messages as finished #782 in-memory
+                message.Status__c = 'Completed';
+            }
+            
+            return results;
         } catch (Exception e) {
             throw new EngineException(e.getMessage());
         }
@@ -545,30 +552,45 @@ abstract public with sharing class Broker {
         return outputMessages;
     }
 
-    public List<Database.UpsertResult> persist(List<Message__c> inputMessages, List<Message__c> outputMessages) {
+    /**
+     * #782
+     *
+     * Maybe we can entertain this :( because this method is now PUBLIC and not GLOBAL.
+     *
+     * We used to have two arguments for inputMessages and outputMessages. The idea being:
+     * that inputMessages were all gonna be written away as "Completed"
+     * and outputMessages were all gonna be written away as "Buffered"
+     * (ka-chunk)
+     *
+     * But the checkmarx scanner chokes "Bulkify_Apex_Methods_Using_Collections_In_Methods"
+     * which Salesforce have confirmed to be a bug... however it requires a human to do that.
+     *
+     * To keep the amount of back and forth and delay to a minimum, we can get away with merging
+     * the two collections into one, and doing all the status changes in memory:
+     * the inputMessages get "Completed" by mark()
+     * and outputMessages get "Buffered" by execute()
+     *
+     *
+     */
+    public List<Database.UpsertResult> persist(List<Message__c> inputAndOutputMessages) {
         try {
-            for (Message__c message : inputMessages) {
-                //designate all input messages as finished
-                message.Status__c = 'Completed';
-            }
-            
-            for (Message__c message : outputMessages) {
+            for (Message__c message : inputAndOutputMessages) {
                 //we COULD have designated all output messages as Buffered
                 //but it varies if the Broker is paused (they'd be Queued)
             }
             
             //transact both inputs and outputs in one fell swoop
-            List<Message__c> messages = new List<Message__c>();
-            messages.addAll(inputMessages);
-            messages.addAll(outputMessages);
-            
             MessageSetModel.Inhibit = false;
-            List<Database.UpsertResult> results = Database.upsert(messages, true); //all or none
+            List<Database.UpsertResult> results = Database.upsert(inputAndOutputMessages, true); //all or none
             MessageSetModel.Inhibit = true;
             
             return results;
         } catch (Exception e) {
-            Set<Id> messageIds = new Map<Id,Message__c>(inputMessages).keySet();
+            Set<Id> messageIds = new Set<Id>();
+            for (Message__c message : inputAndOutputMessages) if (message.Id != null) {
+                message.Status__c = 'Started'; //#782 in-memory
+                messageIds.add(message.Id);
+            }
             throw new EngineException(null, messageIds, e, 'Persist failure.');
         }
     }
