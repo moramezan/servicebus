@@ -207,7 +207,6 @@
         <members>Message__c.Event__c</members>
         <members>Message__c.Exception__c</members>
         <members>Message__c.FullyQualifiedClassName__c</members>
-        <members>Message__c.IsOverdue__c</members>
         <members>Message__c.Route__c</members>
         <members>Message__c.Status__c</members>
         <members>OAuthSetting__c.AccessToken__c</members>
@@ -307,8 +306,7 @@
     <types>
         <members>AuditGroup__c.All</members>
         <members>Message__c.All</members>
-        <members>Message__c.AllExceptCompleted</members>
-        <members>Message__c.Overdue</members>
+        <members>Message__c.Exception</members>
         <members>Process__c.All</members>
         <members>Process__c.AllExceptESB</members>
         <members>Process__c.EnterpriseServiceBus</members>

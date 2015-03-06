@@ -7,10 +7,10 @@
         <apex:axis type="Category" position="bottom" title="Process" fields="FullyQualifiedClassName">
             <apex:chartLabel rotate="270" />
         </apex:axis>
-        <apex:axis type="Numeric" position="left" title="Messages" fields="Queued,Buffered,Started,Rebuffered,Overdue">
+        <apex:axis type="Numeric" position="left" title="Messages" fields="Queued,Buffered,Started,Rebuffered,Exceptions">
             <!--<apex:chartLabel />-->
         </apex:axis>
-        <apex:barSeries colorSet="#C00" orientation="vertical" axis="left" xField="FullyQualifiedClassName" yField="Overdue" />
+        <apex:barSeries colorSet="#C00" orientation="vertical" axis="left" xField="FullyQualifiedClassName" yField="Exceptions" title="Exception" />
         <apex:areaSeries colorSet="#999,#3C3,#CC3,#33C"
             opacity="0.6"
             axis="left"

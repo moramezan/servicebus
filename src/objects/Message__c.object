@@ -111,19 +111,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>IsOverdue__c</fullName>
-        <externalId>false</externalId>
-        <formula>/* Shows messages not completed within one hour */
-(NOW() &gt; LastModifiedDate + (1/24))
-&amp;&amp;
-(ISPICKVAL(Status__c, &quot;Started&quot;))</formula>
-        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <inlineHelpText>Is this message stalled or otherwise not processing correctly?</inlineHelpText>
-        <label>Overdue</label>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
         <fullName>Route__c</fullName>
         <description>Composite key that can be runtime-resolved to a Step as late as possible.</description>
         <externalId>true</externalId>
@@ -174,41 +161,27 @@
         <columns>Status__c</columns>
         <columns>Route__c</columns>
         <columns>Exception__c</columns>
-        <columns>IsOverdue__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
     <listViews>
-        <fullName>AllExceptCompleted</fullName>
+        <fullName>Exception</fullName>
         <columns>CreatedDate__c</columns>
         <columns>NAME</columns>
         <columns>Status__c</columns>
         <columns>Route__c</columns>
         <columns>Exception__c</columns>
-        <columns>IsOverdue__c</columns>
         <filterScope>Everything</filterScope>
         <filters>
             <field>Status__c</field>
             <operation>notEqual</operation>
             <value>Completed</value>
         </filters>
-        <label>All except Completed</label>
-    </listViews>
-    <listViews>
-        <fullName>Overdue</fullName>
-        <columns>CreatedDate__c</columns>
-        <columns>NAME</columns>
-        <columns>Status__c</columns>
-        <columns>Route__c</columns>
-        <columns>Exception__c</columns>
-        <columns>IsOverdue__c</columns>
-        <filterScope>Everything</filterScope>
         <filters>
-            <field>IsOverdue__c</field>
-            <operation>equals</operation>
-            <value>1</value>
+            <field>Exception__c</field>
+            <operation>notEqual</operation>
         </filters>
-        <label>Overdue</label>
+        <label>Exception</label>
     </listViews>
     <nameField>
         <label>Message Name</label>
@@ -219,7 +192,6 @@
         <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Exception__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Route__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>IsOverdue__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>CreatedDate__c</customTabListAdditionalFields>
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>

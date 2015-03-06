@@ -6,21 +6,21 @@ public with sharing class MonitorController {
     }
     
     public class Statistic {
-        public Statistic(String name, Integer queued, Integer buffered, Integer started, Integer rebuffered, Integer overdue) {
-            this.FullyQualifiedClassName = name;
+        public Statistic(String fullyQualifiedClassName, Integer queued, Integer buffered, Integer started, Integer exceptions, Integer rebuffered) {
+            this.FullyQualifiedClassName = fullyQualifiedClassName;
             this.Queued = queued;
             this.Buffered = buffered;
             this.Started = started;
+            this.Exceptions = exceptions;
             this.Rebuffered = rebuffered;
-            this.Overdue = overdue;
         }
         
         public String FullyQualifiedClassName {get; set;}
         public Integer Queued {get; set;}
         public Integer Buffered {get; set;}
         public Integer Started {get; set;}
+        public Integer Exceptions {get; set;}
         public Integer Rebuffered {get; set;}
-        public Integer Overdue {get; set;}
     }
     
     @RemoteAction static public List<Statistic> getTestStatistics() {
@@ -36,7 +36,7 @@ public with sharing class MonitorController {
             new Statistic('Schedule',        1,  0,  0,  0,  0),
             new Statistic('AuditWriter',     0,  0,  0,  0,  0),
             new Statistic('Gate',            1,  0,  0,  0,  0),
-            new Statistic('Scrape',          0,  0, 44,  0, 44),
+            new Statistic('Scrape',          0,  0, 44, 10, 10),
             new Statistic('Mark',            0,  0,  0,  0,  0)
         };
     }
@@ -86,10 +86,20 @@ public with sharing class MonitorController {
             SELECT FullyQualifiedClassName__c fqcn, COUNT(Status__c) total
             FROM Message__c
             WHERE Route__c != null
-            AND Status__c = 'Started'
+            AND Status__c = 'Started' AND Exception__c = null
             GROUP BY FullyQualifiedClassName__c
         ]) {
             process2statistic.get((String)result.get('fqcn')).Started = (Integer)result.get('total');
+        }
+        
+        for (AggregateResult result : [
+            SELECT FullyQualifiedClassName__c fqcn, COUNT(Status__c) total
+            FROM Message__c
+            WHERE Route__c != null
+            AND Status__c = 'Started' AND Exception__c != null
+            GROUP BY FullyQualifiedClassName__c
+        ]) {
+            process2statistic.get((String)result.get('fqcn')).Exceptions = (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
@@ -100,16 +110,6 @@ public with sharing class MonitorController {
             GROUP BY FullyQualifiedClassName__c
         ]) {
             process2statistic.get((String)result.get('fqcn')).Rebuffered = (Integer)result.get('total');
-        }
-        
-        for (AggregateResult result : [
-            SELECT FullyQualifiedClassName__c fqcn, COUNT(Id) total
-            FROM Message__c
-            WHERE Route__c != null
-            AND IsOverdue__c = true
-            GROUP BY FullyQualifiedClassName__c
-        ]) {
-            process2statistic.get((String)result.get('fqcn')).Overdue = (Integer)result.get('total');
         }
         
         //pluck out the buffered guys (null per #697)
