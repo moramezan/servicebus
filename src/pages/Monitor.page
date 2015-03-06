@@ -4,17 +4,17 @@
     
     <apex:chart data="{!Statistics}" width="100%" height="500" name="Stats">
         <apex:legend position="right" />
-        <apex:axis type="Category" position="bottom" title="Process" fields="Name">
+        <apex:axis type="Category" position="bottom" title="Process" fields="FullyQualifiedClassName">
             <apex:chartLabel rotate="270" />
         </apex:axis>
         <apex:axis type="Numeric" position="left" title="Messages" fields="Queued,Buffered,Started,Rebuffered,Overdue">
             <!--<apex:chartLabel />-->
         </apex:axis>
-        <apex:barSeries colorSet="#C00" orientation="vertical" axis="left" xField="Name" yField="Overdue" />
+        <apex:barSeries colorSet="#C00" orientation="vertical" axis="left" xField="FullyQualifiedClassName" yField="Overdue" />
         <apex:areaSeries colorSet="#999,#3C3,#CC3,#33C"
             opacity="0.6"
             axis="left"
-            xField="Name"
+            xField="FullyQualifiedClassName"
             yField="Queued,Buffered,Started,Rebuffered"
             title="Queued,Buffered,Started,Rebuffered"
         />

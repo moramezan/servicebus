@@ -12,15 +12,15 @@
         Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         MessageSetModel.Inhibit = false;
-        insert new Message__c(Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Queued');
-        insert new Message__c(Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Buffered');
+        insert new Message__c(FullyQualifiedClassName__c = wiretapProcess.FullyQualifiedClassName__c, Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Queued');
+        insert new Message__c(FullyQualifiedClassName__c = terminateProcess.FullyQualifiedClassName__c, Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Buffered');
         MessageSetModel.Inhibit = true;
         
         //act
         List<MonitorController.Statistic> statistics = MonitorController.getStatistics();
         
         //assert
-        Integer expectedCount = 2;
+        Integer expectedCount = 2 + 1; //one extra for buffered guys - they have no process name so the graph is [' ', 'Wiretap', 'Terminate']
         Integer actualCount = statistics.size();
         System.assertEquals(expectedCount, actualCount);
     }
