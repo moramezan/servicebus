@@ -899,6 +899,7 @@
     // Error Message    System.AssertException: Assertion Failed: Wrong message: Expected: Step unqueryable, eg bad sequence 
     //                  name, position, missing terminate., Actual: Message cannot have a null process.
     // Stack Trace      Class.BrokerTest.canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError: line 961, column 1
+    // #697 is exercised by this test!
     static testmethod void canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError() {
         // arrange
         Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);

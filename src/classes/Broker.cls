@@ -394,17 +394,19 @@ abstract public with sharing class Broker {
         
         //number of times specimen process can run within governor limits
         Integer queryLimit = 1;
+        String className = null; //#697
         String status = specimenMessage.Status__c;
         String route = specimenMessage.Route__c;
         
         Step__c specimenStep;
         try {
             specimenStep = [
-                SELECT Id, Process__r.Limits__c
+                SELECT Id, Process__r.Limits__c, Process__r.FullyQualifiedClassName__c
                 FROM Step__c
                 WHERE Name = :route
                 //LIMIT unnecessary, only one should exist
             ];
+            className = specimenStep.Process__r.FullyQualifiedClassName__c;
             queryLimit = specimenStep.Process__r.Limits__c.intValue();
         } catch (QueryException e) {
             //no step found, resolution problem or might be a heartbeat
@@ -419,6 +421,9 @@ abstract public with sharing class Broker {
             LIMIT :queryLimit
             FOR UPDATE //#695 investigate broker race condition
         ];
+        
+        //#697 let these guys get written away to make monitoring simpler (crow look)
+        for (Message__c message : messages) message.FullyQualifiedClassName__c = className;
         
         return messages;
     }

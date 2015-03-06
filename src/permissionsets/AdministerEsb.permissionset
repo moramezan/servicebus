@@ -476,6 +476,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Message__c.FullyQualifiedClassName__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Message__c.IsOverdue__c</field>
         <readable>true</readable>
     </fieldPermissions>

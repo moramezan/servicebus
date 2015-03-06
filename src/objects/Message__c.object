@@ -99,6 +99,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>FullyQualifiedClassName__c</fullName>
+        <description>Namespace Prefix and Apex Class name per #697</description>
+        <externalId>true</externalId>
+        <inlineHelpText>What is the underlying namespace prefix and Apex class that handles this message?</inlineHelpText>
+        <label>Fully Qualified Class Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>IsOverdue__c</fullName>
         <externalId>false</externalId>
         <formula>/* Shows messages not completed within one hour */
