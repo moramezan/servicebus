@@ -1,4 +1,4 @@
-@IsTest private class AuditInitializerConfigSetModelTests {
+@IsTest private class AuditInitializerConfigSetModelTest {
 
     static testmethod void canCorrectlySetStaticGroupIdentifierWhenDynamicGroupIdentifierEqNullDuringInsert() {
         //arrange

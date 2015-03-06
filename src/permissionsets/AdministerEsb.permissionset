@@ -29,7 +29,7 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>AuditInitializerConfigSetModelTests</apexClass>
+        <apexClass>AuditInitializerConfigSetModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

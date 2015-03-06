@@ -13,7 +13,7 @@
         <members>AsyncApexJobModelTest</members>
         <members>AuditInitializer</members>
         <members>AuditInitializerConfigSetModel</members>
-        <members>AuditInitializerConfigSetModelTests</members>
+        <members>AuditInitializerConfigSetModelTest</members>
         <members>AuditInitializerTest</members>
         <members>AuditWriter</members>
         <members>AuditWriterTest</members>
@@ -206,8 +206,8 @@
         <members>Message__c.CreatedDate__c</members>
         <members>Message__c.Event__c</members>
         <members>Message__c.Exception__c</members>
-        <members>Message__c.IsOverdue__c</members>
         <members>Message__c.FullyQualifiedClassName__c</members>
+        <members>Message__c.IsOverdue__c</members>
         <members>Message__c.Route__c</members>
         <members>Message__c.Status__c</members>
         <members>OAuthSetting__c.AccessToken__c</members>
