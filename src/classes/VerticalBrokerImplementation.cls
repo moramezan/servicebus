@@ -146,7 +146,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     }
     
     public void finish(Database.BatchableContext context) {
-        this.restartIfWorkPending();
+        Broker.run();
     }
     
     public void handleHaywireCondition(Database.BatchableContext context) {
@@ -189,12 +189,12 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
      * Each Broker implementation must provide the smarts of how to restart it.
      * The VerticalBroker executes another Batch Apex job to run itself again.
      */
-    override public void restartImpl() {
+    override public void runImpl() {
         //#653 run Broker under sysadmin user context
         Database.executeBatch(new VerticalBrokerDispatcher(), 1);
     }
     
-    override public Boolean isAlreadyRunning() {
+    override public Boolean isRunning() {
         System.Type type = VerticalBrokerDispatcher.class;
         String namespacePrefix;
         String name;

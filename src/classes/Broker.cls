@@ -634,8 +634,21 @@ abstract public with sharing class Broker {
         }
     }
     
-    public void restartIfWorkPending() {
+    /**
+     * Formerly restartIfWorkPending
+     */
+    static public void run() {
         if (BrokerSetting__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
+        
+        Broker impl = impl();
+        
+        if (impl.isRunning()) {
+            //don't run if already running
+            return;
+        }
+        
+        // #671 first query locator spends less time in 'Preparing'
+        Broker.IsFirstRun = true;
         
         Integer worksPending = [
             SELECT COUNT()
@@ -644,14 +657,18 @@ abstract public with sharing class Broker {
             OR Status__c = 'Rebuffered'
         ];
         
-        if (worksPending > 0) {
-            this.restartImpl();
+        if (worksPending == 0) {
+            //don't run if nothing to do
+            return;
         }
+        
+        //there are messages to process
+        impl.runImpl();
     }
     
-    abstract public Boolean isAlreadyRunning();
+    abstract public Boolean isRunning();
      
-    abstract public void restartImpl();
+    abstract public void runImpl();
 
             
     @testVisible

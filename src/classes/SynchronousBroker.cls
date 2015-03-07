@@ -2,12 +2,18 @@ public with sharing class SynchronousBroker extends Broker {
 
     static private Boolean isRunning = false;
     
-    override public void restartImpl() {
-        SynchronousBroker.isRunning = true;
+    override public void runImpl() {
+        //aligns ok with batch mental model
         this.start();
+        this.execute();
+        this.finish();
     }
     
     public void start() {
+        SynchronousBroker.isRunning = true;
+    }
+    
+    public void execute() {
         //LOCATE
         List<Message__c> messages = this.locateMarkableWork();
         
@@ -39,17 +45,22 @@ public with sharing class SynchronousBroker extends Broker {
                 
                 //stop, don't resolve
                 //finish (invokes broker again in same context)
-                this.restartIfWorkPending();
+                Broker.run();
                 return;
                 
             }
         }
-        
-        //finish (invokes broker again in same context)
-        this.restartIfWorkPending();
     }
     
-    override public Boolean isAlreadyRunning() {
+    public void finish() {
+        //indicate stop because run ONLY runs if stopped
+        SynchronousBroker.isRunning = false;
+        
+        //finish (invokes broker again in same context)
+        Broker.run();
+    }
+    
+    override public Boolean isRunning() {
         return SynchronousBroker.isRunning;
     }
     

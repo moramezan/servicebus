@@ -18,20 +18,20 @@
     public class BrokerException extends Exception {}
 
     public class DoNothingBroker extends Broker {
-        override public void restartImpl() {}
-        override public Boolean isAlreadyRunning() {return true;}
+        override public void runImpl() {}
+        override public Boolean isRunning() {return true;}
     }
     
     @TestVisible static private String FailureMessage = 'Fake Error Thrown in FailureProcess';
     
-    static public Boolean flagRestartImpl = false;
+    static public Boolean flagrunImpl = false;
     public class MockBroker extends Broker {
-        override public Boolean isAlreadyRunning() {
+        override public Boolean isRunning() {
             return false;
         }
         
-        override public void restartImpl() {
-            flagRestartImpl = true;
+        override public void runImpl() {
+            flagrunImpl = true;
         }
     }
 
@@ -483,7 +483,7 @@
         System.assertEquals(expectedSequenceName4, actualSequenceName4);
     }
     
-    static testmethod void callingEnqueueSuccessfullyCallsRestartImpl() {
+    static testmethod void callingEnqueueSuccessfullyCallsrunImpl() {
         //arrange processes
         Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
@@ -501,7 +501,7 @@
         
         //assert
         Boolean expectedBeforeFlag = false;
-        Boolean actualBeforeFlag = BrokerTest.flagRestartImpl;
+        Boolean actualBeforeFlag = BrokerTest.flagrunImpl;
         System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
         //act
@@ -509,7 +509,7 @@
         
         //assert
         Boolean expectedAfterFlag = true;
-        Boolean actualAfterFlag = flagRestartImpl;
+        Boolean actualAfterFlag = flagrunImpl;
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
     }
     
@@ -529,7 +529,7 @@
         
         //assert
         Boolean expectedBeforeFlag = false;
-        Boolean actualBeforeFlag = BrokerTest.flagRestartImpl;
+        Boolean actualBeforeFlag = BrokerTest.flagrunImpl;
         System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
         Integer expectedSizeBefore = 0;
@@ -545,26 +545,26 @@
         System.assertEquals(expectedSizeAfter, actualSizeAfter);
         
         Boolean expectedAfterFlag = true;
-        Boolean actualAfterFlag = BrokerTest.flagRestartImpl;
+        Boolean actualAfterFlag = BrokerTest.flagrunImpl;
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
     }
     
-    static testmethod void callingRestartSuccessfullyCallsRestartImpl() {
+    static testmethod void callingRestartSuccessfullyCallsrunImpl() {
         //arrange
         insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
         List<Message__c> messages = new Job('test', UserInfo.getUserId()).persist();
         
         //assert
         Boolean expectedBeforeFlag = false;
-        Boolean actualBeforeFlag = flagRestartImpl;
+        Boolean actualBeforeFlag = flagrunImpl;
         System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
         //act
-        new MockBroker().restartIfWorkPending();
+        Broker.run();
         
         //assert
         Boolean expectedAfterFlag = true;
-        Boolean actualAfterFlag = flagRestartImpl;
+        Boolean actualAfterFlag = flagrunImpl;
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
         
     }

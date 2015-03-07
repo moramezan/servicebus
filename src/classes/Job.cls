@@ -201,14 +201,14 @@ global without sharing class Job implements Process.Plugin, Queueable {
         List<Message__c> messages = this.persist();
         
         // #653 don't use a @Future call unless necessary
-        if (Broker.impl().isAlreadyRunning()) return;
+        if (Broker.impl().isRunning()) return;
         
         if (!Test.isRunningTest()) {
             //in real life, usurp sysadmin
-            Job.processAsUser();
+            Job.runAsUser();
         } else {
             //in tests, just run the thing
-            Job.process();
+            Job.run();
         }
     }
     
@@ -232,15 +232,15 @@ global without sharing class Job implements Process.Plugin, Queueable {
      * We MUST ALWAYS prevent more than 1 running broker worker
      * otherwise they will fight over the work to be marked etc.
      *
-     * Was formerly Broker.process() but needs to be global now
+     * Was formerly Broker.run() but needs to be global now
      * for the sake of running from Execute Anonymous context.
+     * The "runAsUser" method below needs to be able to call this.
+     *
+     * I think we had 8 global things in Job and 1 in Broker
+     * Lets just have 9 global things in Job, and this proxies?
      */
-    static global void process() {
-        Broker impl = Broker.impl();
-        if (impl.isAlreadyRunning()) return;
-        // #671 first query locator spends less time in 'Preparing'
-        Broker.IsFirstRun = true;
-        impl.restartIfWorkPending();
+    static global void run() {
+        Broker.run();
     }
     
     /**
@@ -249,12 +249,12 @@ global without sharing class Job implements Process.Plugin, Queueable {
      *
      * @throws JobException
      */
-    @Future(callout=true) static private void processAsUser() {
+    @Future(callout=true) static private void runAsUser() {
         // #653 don't use an API call unless necessary
-        if (Broker.impl().isAlreadyRunning()) return;
+        if (Broker.impl().isRunning()) return;
         
         PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/data/v33.0/tooling/executeAnonymous');
-        pr.getParameters().put('anonymousBody', Job.class.getName() + '.process();');
+        pr.getParameters().put('anonymousBody', Job.class.getName() + '.run();');
         String endpoint = pr.getUrl();
         
         HttpRequest request = new HttpRequest();
