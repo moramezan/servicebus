@@ -390,6 +390,7 @@
         <delete file="purge/layouts/Macro-Macro Layout.layout" />
         <delete file="purge/layouts/DuplicateRecordSet-Duplicate Record Set Layout.layout" />
         <delete file="purge/layouts/ContentVersion-General.layout" />
+        <delete file="purge/layouts/WorkFeedbackTemplate-Feedback Template Layout.layout" />
         
         <!-- name the wildcard package definition -->
         <replace file="purge/package.xml">
