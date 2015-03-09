@@ -224,14 +224,14 @@
         <requireRowSelection>false</requireRowSelection>
     </webLinks>
     <webLinks>
-        <fullName>Rebuffer</fullName>
+        <fullName>Restart</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>
-        <masterLabel>Rebuffer Message</masterLabel>
+        <masterLabel>Restart Message</masterLabel>
         <openType>sidebar</openType>
-        <page>MessageRebuffer</page>
+        <page>MessageRestart</page>
         <protected>false</protected>
     </webLinks>
     <webLinks>

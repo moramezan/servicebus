@@ -1,0 +1,3 @@
+<apex:page standardController="Message__c" extensions="MessageRestartExtension" action="{!doRestart}">
+    <apex:pageMessages showDetail="true" />
+</apex:page>

@@ -157,11 +157,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageRebufferExtension</apexClass>
+        <apexClass>MessageRestartExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageRebufferExtensionTest</apexClass>
+        <apexClass>MessageRestartExtensionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -833,7 +833,7 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>MessageRebuffer</apexPage>
+        <apexPage>MessageRestart</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

@@ -1,16 +1,16 @@
-public with sharing class MessageRebufferExtension {
+public with sharing class MessageRestartExtension {
     
     private ApexPages.StandardController controller;
     @TestVisible static private Message__c message;
     
-    public MessageRebufferExtension(ApexPages.StandardController controller) {
+    public MessageRestartExtension(ApexPages.StandardController controller) {
         this.controller = controller;
         message = (Message__c)ApexDomain.getById(controller.getId());
     }
     
-    public PageReference doRebuffer() {
-        //we are happy for Queued, Buffered or Started guys to be force-Processed
-        //but we just note that a Queued message will need to be resolved first!
+    public PageReference doRestart() {
+        //we are happy for ONLY Started guys to be force-Processed
+        //any other kind of message and we risk persisting it twice
         
         if (message.Status__c != 'Started') {
             //prevent inadvertent replay!

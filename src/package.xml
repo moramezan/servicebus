@@ -45,8 +45,8 @@
         <members>MessageDataExtensionTest</members>
         <members>MessagePauseQueueExtension</members>
         <members>MessagePauseQueueExtensionTest</members>
-        <members>MessageRebufferExtension</members>
-        <members>MessageRebufferExtensionTest</members>
+        <members>MessageRestartExtension</members>
+        <members>MessageRestartExtensionTest</members>
         <members>MessageResumeQueueExtension</members>
         <members>MessageResumeQueueExtensionTest</members>
         <members>MessageSetModel</members>
@@ -125,7 +125,7 @@
         <members>MessageCsh</members>
         <members>MessageData</members>
         <members>MessagePauseQueue</members>
-        <members>MessageRebuffer</members>
+        <members>MessageRestart</members>
         <members>MessageResumeQueue</members>
         <members>MessageSplash</members>
         <members>Monitor</members>
@@ -337,7 +337,7 @@
         <members>JumpConfig__c.Step</members>
         <members>Message__c.Data</members>
         <members>Message__c.PauseQueue</members>
-        <members>Message__c.Rebuffer</members>
+        <members>Message__c.Restart</members>
         <members>Message__c.ResumeQueue</members>
         <members>Process__c.ApexClass</members>
         <members>Process__c.Discover</members>

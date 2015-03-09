@@ -1,18 +1,18 @@
-@IsTest public class MessageRebufferExtensionTest {
+@IsTest public class MessageRestartExtensionTest {
 
-    static testmethod void testDoRebufferRunsBroker() {
+    static testmethod void testDoRestartRunsBroker() {
         //arrange message
         List<Message__c> messages = new Job('Test', UserInfo.getUserId()).persist();
         
         //arrange controller and extension
         ApexPages.StandardController controller = new ApexPages.StandardController(messages[0]);
-        MessageRebufferExtension extension = new MessageRebufferExtension(controller);
-        MessageRebufferExtension.message = messages[0];
-        MessageRebufferExtension.message.Status__c = 'Started';
+        MessageRestartExtension extension = new MessageRestartExtension(controller);
+        MessageRestartExtension.message = messages[0];
+        MessageRestartExtension.message.Status__c = 'Started';
         
         //act
         try {
-            extension.doRebuffer();
+            extension.doRestart();
             System.assert(false, 'Line above should throw exception');
         } catch (Broker.EngineException e) {
             String expectedMessage = 'Step unqueryable, eg bad sequence name, position, missing terminate.';
@@ -21,7 +21,7 @@
         }
     }
     
-    static testmethod void testDoRebufferLeavesCompletedAndBufferedMessages() {
+    static testmethod void testDoRestartLeavesCompletedAndBufferedMessages() {
         //TODO
         //input should go from Started to Completed
         //outputs should be persisted as Buffered
@@ -34,11 +34,11 @@
         
         //arrange controller and extension
         ApexPages.StandardController controller = new ApexPages.StandardController(messages[0]);
-        MessageRebufferExtension extension = new MessageRebufferExtension(controller);
-        MessageRebufferExtension.message = messages[0];
+        MessageRestartExtension extension = new MessageRestartExtension(controller);
+        MessageRestartExtension.message = messages[0];
         
         //act
-        extension.doRebuffer();
+        extension.doRestart();
         
         //assert
         System.assert(ApexPages.hasMessages());
