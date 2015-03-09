@@ -252,20 +252,60 @@ global without sharing class Job implements Process.Plugin, Queueable {
     @Future(callout=true) static private void runAsUser() {
         // #653 don't use an API call unless necessary
         if (Broker.impl().isRunning()) return;
+        String command = Job.class.getName() + '.run();';
+        execAnon(command);
+    }
+    
+    /**
+     * This is indeed another variation on the Broker. Unlike the Vertical Broker,
+     * we dictate a single message to handle. (he does not decide what to consume)
+     *
+     * And unlike the synchronous broker (mostly used for unit tests), we make no
+     * attempt to handle errors, catchable or otherwise. ExecAnonResult has them :)
+     */
+    public class RunOneBroker extends Broker {
         
-        PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/data/v33.0/tooling/executeAnonymous');
-        pr.getParameters().put('anonymousBody', Job.class.getName() + '.run();');
-        String endpoint = pr.getUrl();
+        public Id messageId;
         
-        HttpRequest request = new HttpRequest();
-        request.setMethod('GET');
-        request.setEndpoint(endpoint);
-        request.setHeader('Authorization', 'Bearer ' + OAuthSetting__c.getInstance().AccessToken__c);
+        public RunOneBroker(Id messageId) {
+            this.messageId = messageId;
+        }
         
-        // #653 throw unhandled exception in our namespace
-        HttpResponse response = new Http().send(request);
-        Integer status = response.getStatusCode();
-        if (status != 200) throw new JobException(response.getBody());
+        override public void runImpl() {
+            //MARK
+            //nothing to do here because we would kill any callouts that follow,
+            //and runOneAsUser() should only be called on started messages anyway,
+            //not to mention we don't mark() and execute() in the same context :)
+            
+            //EXECUTE
+            Message__c inputMessage = (Message__c)ApexDomain.getById(this.messageId);
+            List<Message__c> outputMessages = this.execute(new List<Message__c>{inputMessage});
+            
+            //PERSIST
+            List<Message__c> inputAndOutputMessages = new List<Message__c>();
+            inputAndOutputMessages.add(inputMessage);
+            inputAndOutputMessages.addAll(outputMessages);
+            this.persist(inputAndOutputMessages);
+        }
+        
+        override public Boolean isRunning() {return true;}
+    }
+    
+    /**
+     * Uses a special Broker to attempt just 1 message.
+     */
+    static global void runOne(Id messageId) {
+        Broker impl = new RunOneBroker(messageId);
+        impl.runImpl();
+    }
+    
+    /**
+     * Adds running user context around Job.runOne()
+     * @throws JobException
+     */
+    static public ExecAnonResult runOneAsUser(Id messageId) {
+        String command = Job.class.getName() + '.runOne(\'' + messageId + '\');';
+        return execAnon(command);
     }
     
     /**
@@ -292,5 +332,45 @@ global without sharing class Job implements Process.Plugin, Queueable {
         ;
         
         return output;
+    }
+    
+    /**
+     * {
+     *     "line": 534,
+     *     "column": 1,
+     *     "compiled": true,
+     *     "success": false,
+     *     "compileProblem": null,
+     *     "exceptionStackTrace": "Class.Broker: line 534, column 1\nClass.Job.RunOneBroker.runImpl: line 282, column 1\nClass.Job.runOne: line 296, column 1\nAnonymousBlock: line 1, column 1\nCaused by\nClass.Fuckup.toString: line 10, column 1\nClass.Broker.Wrapper.invokeMain: line 340, column 1\nClass.Broker: line 529, column 1\nClass.Job.RunOneBroker.runImpl: line 282, column 1\nClass.Job.runOne: line 296, column 1\nAnonymousBlock: line 1, column 1",
+     *     "exceptionMessage": "Broker.EngineException: Kablam again"
+     * }
+     */
+    public class ExecAnonResult {
+        public Integer line;
+        public Integer column;
+        public Boolean compiled;
+        public Boolean success;
+        public String compileProblem;
+        public String exceptionStackTrace;
+        public String exceptionMessage;
+    }
+    
+    static public ExecAnonResult execAnon(String command) {
+        PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/data/v33.0/tooling/executeAnonymous');
+        pr.getParameters().put('anonymousBody', command);
+        String endpoint = pr.getUrl();
+        
+        HttpRequest request = new HttpRequest();
+        request.setMethod('GET');
+        request.setEndpoint(endpoint);
+        request.setHeader('Authorization', 'Bearer ' + OAuthSetting__c.getInstance().AccessToken__c);
+        
+        // #653 throw unhandled exception in our namespace
+        HttpResponse response = new Http().send(request);
+        Integer status = response.getStatusCode();
+        if (status != 200) throw new JobException(response.getBody());
+        
+        ExecAnonResult result = (ExecAnonResult)Json.deserialize(response.getBody(), ExecAnonResult.class);
+        return result;
     }
 }

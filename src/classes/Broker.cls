@@ -436,13 +436,8 @@ abstract public with sharing class Broker {
             if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
             for (Message__c message : messages) message.Status__c = 'Started'; //in-database
             List<Database.SaveResult> results = Database.update(messages);
-            
-            for (Message__c message : messages) {
-                //designate all input messages as finished #782 in-memory
-                message.Status__c = 'Completed';
-            }
-            
             return results;
+            
         } catch (Exception e) {
             throw new EngineException(e.getMessage());
         }
@@ -461,6 +456,9 @@ abstract public with sharing class Broker {
         Set<Id> inputMessageIds = new Map<Id,SObject>(inputMessages).keySet();
         
         //OUR FUCKUPS (before invocation)
+        
+        //designate all input messages as finished #782 in-memory
+        for (Message__c inputMessage : inputMessages) inputMessage.Status__c = 'Completed';
         
         Map<Id,Map<String,Object>> id2events = new Map<Id,Map<String,Object>>();
         for (Message__c inputMessage : inputMessages) id2events.put(inputMessage.Id, (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c));

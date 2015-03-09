@@ -1,1 +1,3 @@
-<apex:page standardController="Message__c" extensions="MessageRebufferExtension" action="{!doRebuffer}" />
+<apex:page standardController="Message__c" extensions="MessageRebufferExtension" action="{!doRebuffer}">
+    <apex:pageMessages showDetail="true" />
+</apex:page>
