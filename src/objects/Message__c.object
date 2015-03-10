@@ -230,7 +230,7 @@
         <displayType>massActionButton</displayType>
         <height>600</height>
         <linkType>page</linkType>
-        <masterLabel>Rebuffer</masterLabel>
+        <masterLabel>Rebuffer Messages</masterLabel>
         <openType>sidebar</openType>
         <page>MessageRebuffer</page>
         <protected>false</protected>
