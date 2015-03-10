@@ -1,0 +1,3 @@
+<apex:page standardController="Message__c" recordSetVar="messageset" extensions="MessageRebufferExtension" action="{!doRebuffer}">
+    <apex:pageMessages showDetail="true" />
+</apex:page>

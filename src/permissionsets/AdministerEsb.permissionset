@@ -157,6 +157,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>MessageRebufferExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>MessageRestartExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -830,6 +834,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>MessagePauseQueue</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>MessageRebuffer</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

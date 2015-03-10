@@ -14,7 +14,7 @@ public with sharing class MessageRestartExtension {
         
         if (message.Status__c != 'Started') {
             //prevent inadvertent replay!
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Only messages with "Started" status can be restarted.'));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Only messages with "Started" status can be restarted.', ''));
             return null;
         }
         
