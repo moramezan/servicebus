@@ -237,6 +237,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ProcessRefreshExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Publish</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -878,6 +882,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>ProcessHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>ProcessRefresh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

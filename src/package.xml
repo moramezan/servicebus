@@ -65,6 +65,7 @@
         <members>ProcessDiscoverControllerTest</members>
         <members>ProcessModel</members>
         <members>ProcessModelTest</members>
+        <members>ProcessRefreshExtension</members>
         <members>Publish</members>
         <members>PublishTest</members>
         <members>RemoteSiteSettingController</members>
@@ -137,6 +138,7 @@
         <members>ProcessDescribe</members>
         <members>ProcessDiscover</members>
         <members>ProcessHelp</members>
+        <members>ProcessRefresh</members>
         <members>ProcessSettings</members>
         <members>ProcessSplash</members>
         <members>PublishConfigCsh</members>
@@ -345,6 +347,7 @@
         <members>Process__c.ApexClass</members>
         <members>Process__c.Discover</members>
         <members>Process__c.Help</members>
+        <members>Process__c.Refresh</members>
         <members>Process__c.Settings</members>
         <members>PublishConfig__c.ManageEventTypes</members>
         <members>PublishConfig__c.Step</members>

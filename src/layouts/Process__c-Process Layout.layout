@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customButtons>Refresh</customButtons>
     <customButtons>Settings</customButtons>
     <customButtons>Help</customButtons>
     <customButtons>ApexClass</customButtons>
@@ -59,7 +60,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hb0000001S6Vo</masterLabel>
+        <masterLabel>00hj0000002pVbb</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

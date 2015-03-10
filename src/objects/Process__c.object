@@ -247,6 +247,17 @@
         <protected>false</protected>
     </webLinks>
     <webLinks>
+        <fullName>Refresh</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Refresh</masterLabel>
+        <openType>sidebar</openType>
+        <page>ProcessRefresh</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
         <fullName>Settings</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
