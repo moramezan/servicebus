@@ -36,6 +36,7 @@ public with sharing class Heartbeat {
             clone.put('__Position', step.Position__c);
             clone.put('__SequenceName', step.Sequence__r.Name);
             clone.put('__IsHeartbeatProcess', null); //#575 so outputs don't get same crow look as input
+            clone.put('__WasHeartbeatProcess', true); //#810 use WasHeartbeat to differentiate Schedule pass throughs
             parametersList.add(clone);
         }
 

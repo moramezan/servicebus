@@ -37,7 +37,9 @@
 
          //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>();
-    
+        inputEvent.put('esb__EntryPointDatetime', Json.serialize(System.now())); //#810
+        inputEvent.put('__WasHeartbeatProcess', false);
+        
         // act 
         Type reflector = Schedule.class;
         List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
@@ -55,7 +57,7 @@
         Integer expectedCount = 1;
         System.assertEquals(expectedCount, actualCount);
 
-        Integer expectedParameterSize = 0;
+        Integer expectedParameterSize = 2;
         System.assertEquals(expectedParameterSize, actualParameterSize); 
     }   
 
@@ -85,7 +87,8 @@
          //arrange input event parameters
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__EntryPointDatetime' => stampAsString
+            'esb__EntryPointDatetime' => stampAsString,
+            '__WasHeartbeatProcess' => true
         };
  
         // act 
@@ -108,7 +111,7 @@
         System.assertEquals(expectedCount, actualCount);
 
         String  expectedStampTruncated = stampAsString;
-        Integer expectedParameterSize = 1;
+        Integer expectedParameterSize = 2;
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
     }  
@@ -139,7 +142,8 @@
          //arrange input event parameters
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday, a working day
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__EntryPointDatetime' => stampAsString
+            'esb__EntryPointDatetime' => stampAsString,
+            '__WasHeartbeatProcess' => true
         };
  
         // act 
@@ -162,7 +166,7 @@
         System.assertEquals(expectedCount, actualCount);
 
         String  expectedStampTruncated = stampAsString;
-        Integer expectedParameterSize = 1;
+        Integer expectedParameterSize = 2;
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
     }  
@@ -193,7 +197,8 @@
          //arrange input event parameters
         String stampAsString = '2014-01-03T12:00:00.000Z';   
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__EntryPointDatetime' => stampAsString
+            'esb__EntryPointDatetime' => stampAsString,
+            '__WasHeartbeatProcess' => true
         };
  
         // act 
@@ -216,7 +221,7 @@
         System.assertEquals(expectedCount, actualCount);
 
         String  expectedStampTruncated = stampAsString;
-        Integer expectedParameterSize = 1;
+        Integer expectedParameterSize = 2;
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
     }  
@@ -246,7 +251,8 @@
          //arrange input event parameters
         String stampAsString = '2014-01-18T12:00:00.000Z';
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__EntryPointDatetime' => stampAsString
+            'esb__EntryPointDatetime' => stampAsString,
+            '__WasHeartbeatProcess' => true
         };
  
         // act 
@@ -278,7 +284,8 @@
          //arrange input event parameters
         String invalidStamp = 'XXXX-01-18T12:00:00.000Z';
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__EntryPointDatetime' => invalidStamp
+            'esb__EntryPointDatetime' => invalidStamp,
+            '__WasHeartbeatProcess' => true
         };
         
         // assemble

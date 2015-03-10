@@ -23,10 +23,11 @@ public with sharing class Schedule {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
 
         String stampAsString = (String)parameters.get('esb__EntryPointDatetime');
+        Boolean wasHeartbeat = (Boolean)parameters.get('__WasHeartbeatProcess'); //#810
 
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
     
-        if (stampAsString != null) {
+        if (wasHeartbeat == true) {
             // evaluate:
             if (isWithinWindow(stampAsString, this.StepConfig)) {
                 parametersList.add(parameters);
