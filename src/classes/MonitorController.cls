@@ -69,7 +69,9 @@ public with sharing class MonitorController {
             AND Status__c = 'Queued'
             GROUP BY FullyQualifiedClassName__c
         ]) {
-            process2statistic.get((String)result.get('fqcn')).Queued = (Integer)result.get('total');
+            Statistic statistic = process2statistic.get((String)result.get('fqcn')); //#761
+            if (statistic == null) statistic = process2statistic.get(' ');
+            statistic.Queued += (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
@@ -89,7 +91,9 @@ public with sharing class MonitorController {
             AND Status__c = 'Started' AND Exception__c = null
             GROUP BY FullyQualifiedClassName__c
         ]) {
-            process2statistic.get((String)result.get('fqcn')).Started = (Integer)result.get('total');
+            Statistic statistic = process2statistic.get((String)result.get('fqcn')); //#761
+            if (statistic == null) statistic = process2statistic.get(' ');
+            statistic.Started += (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
@@ -99,7 +103,9 @@ public with sharing class MonitorController {
             AND Status__c = 'Started' AND Exception__c != null
             GROUP BY FullyQualifiedClassName__c
         ]) {
-            process2statistic.get((String)result.get('fqcn')).Exceptions = (Integer)result.get('total');
+            Statistic statistic = process2statistic.get((String)result.get('fqcn')); //#761
+            if (statistic == null) statistic = process2statistic.get(' ');
+            statistic.Exceptions += (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
@@ -109,7 +115,9 @@ public with sharing class MonitorController {
             AND Status__c = 'Rebuffered'
             GROUP BY FullyQualifiedClassName__c
         ]) {
-            process2statistic.get((String)result.get('fqcn')).Rebuffered = (Integer)result.get('total');
+            Statistic statistic = process2statistic.get((String)result.get('fqcn')); //#761
+            if (statistic == null) statistic = process2statistic.get(' ');
+            statistic.Rebuffered += (Integer)result.get('total');
         }
         
         //pluck out the buffered guys (null per #697)
