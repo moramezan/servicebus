@@ -1,6 +1,11 @@
 <apex:page tabStyle="Monitor__tab" sidebar="false" controller="MonitorController">
     
     <apex:sectionHeader title="Message Queue Monitoring" help="{!URLFOR($Page.MonitorSplash)}" />
+
+    <!-- #769 -->
+    <input checked="checked" type="checkbox" id="realtime" onclick="if(this.checked){var that=this;this.disabled = true;setTimeout(function() {that.checked=false;that.disabled=false;}, 60000);}" />
+    <script>setTimeout(function() {document.getElementById('realtime').checked=false;}, 60000);</script>
+    <label for="realtime">Realtime</label>
     
     <apex:chart data="{!Statistics}" width="100%" height="500" name="Stats">
         <apex:legend position="right" />
@@ -22,6 +27,9 @@
     
     <script>
         (function redraw() {
+            var checkbox = document.getElementById('realtime'); //#769
+            if (!checkbox.checked) return setTimeout(redraw, 1000);
+            
             Visualforce.remoting.Manager.invokeAction(
                 '{!$RemoteAction.MonitorController.getStatistics}', //getTestStatistics
                 function(data) {
