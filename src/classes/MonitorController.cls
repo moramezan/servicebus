@@ -5,6 +5,39 @@ public with sharing class MonitorController {
         return MonitorController.class.getName().substringBefore('MonitorController');
     }
     
+    public void doPing() {}
+    
+    public Boolean getIsBrokerRunning() {
+        return Broker.impl().isRunning();
+    }
+    
+    public Boolean getIsJobsWaiting() {
+        System.Type type = Job.class;
+        String namespacePrefix;
+        String name;
+        
+        if (type.getName().contains('.')) {
+            //managed (namespaceprefix.classname)
+            namespacePrefix = type.getName().substringBefore('.');
+            name = type.getName().substringAfter('.');
+        } else {
+            //unmanaged (classname)
+            namespacePrefix = '';
+            name = type.getName();
+        }
+        
+        //find existing jobs
+        Integer existingQueueableJobs = [
+            SELECT COUNT()
+            FROM AsyncApexJob
+            WHERE ApexClass.NamespacePrefix = :namespacePrefix AND ApexClass.Name = :name
+            AND JobType IN ('Queueable')
+            AND Status IN ('Queued', 'Processing', 'Preparing')
+        ];
+        
+        return existingQueueableJobs != 0;
+    }
+    
     public class Statistic {
         public Statistic(String fullyQualifiedClassName, Integer queued, Integer buffered, Integer started, Integer exceptions, Integer rebuffered) {
             this.FullyQualifiedClassName = fullyQualifiedClassName;

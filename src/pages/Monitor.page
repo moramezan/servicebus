@@ -5,7 +5,14 @@
     <!-- #769 -->
     <input checked="checked" type="checkbox" id="realtime" onclick="if(this.checked){var that=this;this.disabled = true;setTimeout(function() {that.checked=false;that.disabled=false;}, 60000);}" />
     <script>setTimeout(function() {document.getElementById('realtime').checked=false;}, 60000);</script>
-    <label for="realtime">Realtime</label>
+    <label for="realtime" title="Redraw every second for 60 seconds">Realtime</label>
+    
+    <!-- #803 -->
+    <apex:form style="display:inline;" id="busy">
+        <apex:actionPoller action="{!doPing}" interval="15" reRender="busy" />
+        <apex:image id="isBrokerRunning" rendered="{!IsBrokerRunning}" value="{!URLFOR('/img/loading.gif')}" style="position:relative;top:4px;left:8px;" title="Broker is running" />
+        <apex:image id="isJobsWaiting" rendered="{!IsJobsWaiting}" value="{!URLFOR('/img/apex/processing.gif')}" style="position:relative;top:4px;left:16px;" title="Jobs are queued" />
+    </apex:form>
     
     <apex:chart data="{!Statistics}" width="100%" height="500" name="Stats">
         <apex:legend position="right" />
