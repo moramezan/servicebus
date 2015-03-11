@@ -272,6 +272,9 @@ public with sharing class ConfigureController {
             setting.RefreshToken__c = t.refresh_token;
             Type.forName(DoDml.class.getName()).newInstance(); //avoids DML in action method
             
+            //#812 don't wait an hour to refresh access token
+            if (!Test.isRunningTest()) HeartbeatImplementation.defer();
+            
             //get retURL from cookie because we can't pass it in connected app
             Cookie retURL = ApexPages.currentPage().getCookies().get('retURL');
             return retURL != null ? new PageReference(retURL.getValue()) : this.doGetStarted();

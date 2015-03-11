@@ -21,7 +21,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
      * class: common.apex.async.AsyncApexJobModel,
      * reason: Callout from scheduled Apex not supported.
      */
-    @Future(callout=true) static private void defer() {
+    @Future(callout=true) static public void defer() {
         ConfigureController.refreshAccessToken();
     }
     

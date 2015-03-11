@@ -1,8 +1,8 @@
 /**
- * Queueable job = new Job('Wiretaps', userId);
+ * system.Queueable job = new Job('Wiretaps', userId);
  * System.enqueueJob(job);
  */
-global without sharing class Job implements Process.Plugin, Queueable {
+global without sharing class Job implements Process.Plugin, system.Queueable {
     
     /**
      * Unfortunately we need this constructor for Process.Plugin:
@@ -46,7 +46,7 @@ global without sharing class Job implements Process.Plugin, Queueable {
      */
     global Process.PluginResult invoke(Process.PluginRequest request) {
         Map<String,Object> inputEvent = request.InputParameters;
-        Queueable job = new Job(inputEvent);
+        system.Queueable job = new Job(inputEvent);
         Id queueableId = System.enqueueJob(job);
         
         inputEvent.put('esb__QueueableId', queueableId);
