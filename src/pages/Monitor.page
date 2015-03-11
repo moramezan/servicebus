@@ -39,6 +39,17 @@
                 }
             );
         }());
+        
+        setInterval(function() {
+            //#769 redraw once every 15 seconds
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.MonitorController.getStatistics}', //getTestStatistics
+                function(data) {
+                    var inst = window.Stats || window.{!ApexNamespacePrefix}Stats
+                    inst.reload(data);
+                }
+            );
+        }, 15000);
     </script>
     
 </apex:page>
