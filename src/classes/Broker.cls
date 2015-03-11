@@ -296,7 +296,7 @@ abstract public with sharing class Broker {
             
             // Surface SessionId to select few orgs and packages
             String sessionId = (OAuthSetting__c.getInstance()).AccessToken__c;
- 			Boolean allowSessionId = isAllowedSessionId(reflector.getName(), UserInfo.getOrganizationId());  
+            Boolean allowSessionId = isAllowedSessionId(reflector.getName(), UserInfo.getOrganizationId());  
             if (allowSessionId) untyped.put('SessionId',sessionId);
    
             //do not call constructor
@@ -645,9 +645,6 @@ abstract public with sharing class Broker {
             return;
         }
         
-        // #671 first query locator spends less time in 'Preparing'
-        Broker.IsFirstRun = true;
-        
         Integer worksPending = [
             SELECT COUNT()
             FROM Message__c
@@ -670,7 +667,7 @@ abstract public with sharing class Broker {
 
             
     @testVisible
-	static private Boolean isAllowedSessionId(String reflectorName, Id orgId) {
+    static private Boolean isAllowedSessionId(String reflectorName, Id orgId) {
         Set<String> sessionIdOrgs = new Set<String>{
             '00Dj0000000I44v', // dev org - matt
             '00Dj0000001oeWV', // dev org - neil

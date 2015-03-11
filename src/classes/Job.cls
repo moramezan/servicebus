@@ -240,6 +240,9 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      * Lets just have 9 global things in Job, and this proxies?
      */
     static global void run() {
+        // #671 first query locator spends less time in 'Preparing'
+        // 07b55e5b8de3ba09763336ac907a6e66c909f976#commitcomment-10137483
+        Broker.IsFirstRun = true;
         Broker.run();
     }
     
