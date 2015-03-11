@@ -1131,13 +1131,13 @@
 
      static testMethod void callingIsAllowedSessionIdReturnsExpectedValue() {
         //arrange
-		String reflectorName01 = 'esb';       // good ns
+        String reflectorName01 = 'esb';       // good ns
         Id orgId01 = '00Dj0000000I44v';       // good org
-		String reflectorName02 = 'whatever';  // bullshit ns
+        String reflectorName02 = 'whatever';  // bullshit ns
         Id orgId02 = '00Dj0000000I44v';       // good org
-		String reflectorName03 = 'esb';       // good ns
+        String reflectorName03 = 'esb';       // good ns
         Id orgId03 = '00Dj0000000bull';       // bullshit org
-		String reflectorName04 = 'whatever';  // bullshit ns
+        String reflectorName04 = 'whatever';  // bullshit ns
         Id orgId04 = '00Dj0000000bull';       // bullshit org
          
         //act
@@ -1156,5 +1156,5 @@
         System.assertEquals(expectedFlag03, actualFlag03);
         System.assertEquals(expectedFlag04, actualFlag04);  
     }  
-    	
+        
 }
