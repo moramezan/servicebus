@@ -282,13 +282,20 @@ public with sharing class ConfigureController {
     }
     
     public PageReference doGetStarted() {
-        AppMenuItem appMenuItem = [
-            SELECT Id, StartUrl
-            FROM AppMenuItem
-            WHERE Name = 'EnterpriseServiceBus'
-        ];
+        PageReference pr;
+        try {
+            AppMenuItem appMenuItem = [
+                SELECT Id, StartUrl
+                FROM AppMenuItem
+                WHERE Name = 'EnterpriseServiceBus'
+            ];
+            pr = new PageReference(appMenuItem.StartUrl);
+        } catch (QueryException e) {
+            //#813 sandbox missing AppMenuItems sometimes!?
+            pr = new PageReference('/home/home.jsp');
+        }
         
-        return new PageReference(appMenuItem.StartUrl);
+        return pr;
     }
     
     static private OAuthSetting__c setting;
