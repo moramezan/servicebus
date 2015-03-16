@@ -394,6 +394,15 @@
         <type>MultiselectPicklist</type>
         <visibleLines>10</visibleLines>
     </fields>
+    <fields>
+        <fullName>IsActive__c</fullName>
+        <defaultValue>true</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Should this schedule actually run or not?</inlineHelpText>
+        <label>Active</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
     <label>Schedule Config</label>
     <nameField>
         <label>What does this step do?</label>

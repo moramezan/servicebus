@@ -230,6 +230,7 @@
         <members>ScheduleConfig__c.Frequency__c</members>
         <members>ScheduleConfig__c.FriendlyDates__c</members>
         <members>ScheduleConfig__c.FriendlyTimes__c</members>
+        <members>ScheduleConfig__c.IsActive__c</members>
         <members>Sequence__c.StepsCount__c</members>
         <members>Step__c.ConfigId__c</members>
         <members>Step__c.ConfigName__c</members>

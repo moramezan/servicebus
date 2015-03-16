@@ -21,13 +21,19 @@ public with sharing class Schedule {
     
     override public String toString() {
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
-
+        
         String stampAsString = (String)parameters.get('esb__EntryPointDatetime');
         Boolean wasHeartbeat = (Boolean)parameters.get('__WasHeartbeatProcess'); //#810
 
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
     
         if (wasHeartbeat == true) {
+            
+            if (this.StepConfig.IsActive__c != true) {
+                //just swallow if not active
+                return Json.serializePretty(new List<Map<String,Object>>());
+            }
+            
             // evaluate:
             if (isWithinWindow(stampAsString, this.StepConfig)) {
                 parametersList.add(parameters);

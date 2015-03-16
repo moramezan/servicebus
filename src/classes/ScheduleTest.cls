@@ -78,6 +78,7 @@
         //arrange config
         ///Weekly    Sunday;Monday;Tuesday
         ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c]; 
+        scheduleConfig.IsActive__c = true;
         scheduleConfig.Frequency__c = 'Weekly';
         scheduleConfig.FriendlyDates__c = 'Wednesday';
         scheduleConfig.FriendlyTimes__c = '12:00';
@@ -132,7 +133,8 @@
 
         //arrange config
         ///Daily    Working days only;Weekends and holidays
-        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c]; 
+        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c];
+        scheduleConfig.IsActive__c = true; 
         scheduleConfig.Frequency__c = 'Daily';
         scheduleConfig.FriendlyDates__c = 'Working days only';
         scheduleConfig.FriendlyTimes__c = '12:00';
@@ -188,6 +190,7 @@
         //arrange config
         ///Monthly    04;06
         ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c]; 
+        scheduleConfig.IsActive__c = true;
         scheduleConfig.Frequency__c = 'Monthly';
         scheduleConfig.FriendlyDates__c = '03;15;16';
         scheduleConfig.FriendlyTimes__c = '12:00';
@@ -293,7 +296,7 @@
         try {
             // act  
             Type reflector = Schedule.class;
-            List<Map<String,Object>> result = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
+            List<Map<String,Object>> result = new Broker.Wrapper(reflector, inputEvent, new ScheduleConfig__c(IsActive__c = true)).invokeMain().Outputs;
         } catch (Schedule.ScheduleException e) {
             actualFlag = true;
         }
