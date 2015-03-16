@@ -344,13 +344,45 @@
                 "menuDisabled": true,
                 "sortable": false,
                 "text": "Process",
-                "width": 120
+                "width": 180
             },
             "name": "MyColumn3",
             "configAlternates": {
                 "scrollable": "boolean"
             },
-            "designerId": "00f4d5b1-cdcd-4cbf-885a-f23531ff7ba5"
+            "designerId": "00f4d5b1-cdcd-4cbf-885a-f23531ff7ba5",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "//#776",
+                            "return Ext.DomHelper.createHtml({",
+                            "    'tag': 'span',",
+                            "    'html': value,",
+                            "    'title': value",
+                            "});"
+                        ]
+                    },
+                    "name": "renderer",
+                    "designerId": "00e4b76c-a61d-43ad-b398-95eb09176ae6"
+                }
+            ]
         },
         {
             "type": "Ext.grid.column.Column",
@@ -391,7 +423,14 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
-                            "return record.get('ConfigName') || record.get('ProcessDescription');"
+                            "var text = record.get('ConfigName') || record.get('ProcessDescription');",
+                            "",
+                            "//#776",
+                            "return Ext.DomHelper.createHtml({",
+                            "    'tag': 'span',",
+                            "    'html': text,",
+                            "    'title': text",
+                            "});"
                         ]
                     },
                     "name": "renderer",
