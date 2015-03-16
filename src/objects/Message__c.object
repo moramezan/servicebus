@@ -199,6 +199,7 @@
         <listViewButtons>Rebuffer</listViewButtons>
         <listViewButtons>PauseQueue</listViewButtons>
         <listViewButtons>ResumeQueue</listViewButtons>
+        <listViewButtons>Kill</listViewButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
@@ -211,6 +212,18 @@
         <openType>sidebar</openType>
         <page>MessageData</page>
         <protected>false</protected>
+    </webLinks>
+    <webLinks>
+        <fullName>Kill</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Kill Messages</masterLabel>
+        <openType>sidebar</openType>
+        <page>MessageKill</page>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
     </webLinks>
     <webLinks>
         <fullName>PauseQueue</fullName>

@@ -43,6 +43,7 @@
         <members>MarkTest</members>
         <members>MessageDataExtension</members>
         <members>MessageDataExtensionTest</members>
+        <members>MessageKillExtension</members>
         <members>MessagePauseQueueExtension</members>
         <members>MessagePauseQueueExtensionTest</members>
         <members>MessageRebufferExtension</members>
@@ -126,6 +127,7 @@
         <members>JumpConfigStep</members>
         <members>MessageCsh</members>
         <members>MessageData</members>
+        <members>MessageKill</members>
         <members>MessagePauseQueue</members>
         <members>MessageRebuffer</members>
         <members>MessageRestart</members>
@@ -340,6 +342,7 @@
         <members>BranchConfig__c.Step</members>
         <members>JumpConfig__c.Step</members>
         <members>Message__c.Data</members>
+        <members>Message__c.Kill</members>
         <members>Message__c.PauseQueue</members>
         <members>Message__c.Rebuffer</members>
         <members>Message__c.Restart</members>

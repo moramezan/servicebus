@@ -149,6 +149,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>MessageKillExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>MessagePauseQueueExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -834,6 +838,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>MessageData</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>MessageKill</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
