@@ -24827,6 +24827,15 @@ td.z-grid-cell.link div.z-grid-cell-inner {
   padding-bottom: 0px; }
 
 /**
+ * #785 display Step Position on the Sequence Builder, small and grey
+ */
+.z-grid-body.steps td.z-grid-cell.position {
+  font-size: 11px;
+  text-align: right;
+  color: #ccc;
+  white-space: normal; }
+
+/**
 * Steps grid links are blue
 */
 .z-grid-body.steps a {

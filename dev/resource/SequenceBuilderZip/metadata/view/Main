@@ -102,6 +102,25 @@
             ]
         },
         {
+            "type": "Ext.grid.column.Number",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "align": null,
+                "dataIndex": "Position",
+                "defaultWidth": null,
+                "format": "0",
+                "tdCls": "position",
+                "text": "Position",
+                "width": 20
+            },
+            "name": "MyNumberColumn",
+            "designerId": "1bf436e3-408b-4784-8d6a-7e0742dbbdcb"
+        },
+        {
             "type": "Ext.grid.column.Column",
             "reference": {
                 "name": "columns",

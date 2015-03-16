@@ -37,6 +37,15 @@ td.#{$prefix}grid-cell.link div.#{$prefix}grid-cell-inner  {
     padding-bottom: 0px;
 }
 
+/**
+ * #785 display Step Position on the Sequence Builder, small and grey
+ */
+.#{$prefix}grid-body.steps td.#{$prefix}grid-cell.position {
+    font-size: 11px;
+    text-align: right;
+    color: #ccc;
+    white-space: normal; //no ellipsis please
+}
 
 /**
 * Steps grid links are blue
