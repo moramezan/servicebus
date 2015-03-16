@@ -477,7 +477,7 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
+        <editable>true</editable>
         <field>Message__c.Event__c</field>
         <readable>true</readable>
     </fieldPermissions>

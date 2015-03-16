@@ -103,7 +103,7 @@
         <description>Namespace Prefix and Apex Class name per #697</description>
         <externalId>true</externalId>
         <inlineHelpText>What is the underlying namespace prefix and Apex class that handles this message?</inlineHelpText>
-        <label>Fully Qualified Class Name</label>
+        <label>Apex Class</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -156,20 +156,20 @@
     <label>Message</label>
     <listViews>
         <fullName>All</fullName>
-        <columns>CreatedDate__c</columns>
         <columns>NAME</columns>
+        <columns>CreatedDate__c</columns>
         <columns>Status__c</columns>
-        <columns>Route__c</columns>
+        <columns>FullyQualifiedClassName__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
     <listViews>
         <fullName>Exception</fullName>
-        <columns>CreatedDate__c</columns>
         <columns>NAME</columns>
+        <columns>CreatedDate__c</columns>
         <columns>Status__c</columns>
-        <columns>Route__c</columns>
+        <columns>FullyQualifiedClassName__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
         <filters>
@@ -189,10 +189,10 @@
     </nameField>
     <pluralLabel>Messages</pluralLabel>
     <searchLayouts>
-        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Exception__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Route__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>CreatedDate__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>FullyQualifiedClassName__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Exception__c</customTabListAdditionalFields>
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <excludedStandardButtons>New</excludedStandardButtons>
