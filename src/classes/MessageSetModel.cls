@@ -11,6 +11,12 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
      */
     @TestVisible private static Boolean triggerEnabled = true;
     
+    /**
+     * #829 try to prevent "too many query rows" by cleaning
+     * or housekeeping only once per execution context
+     */
+    @TestVisible static private Boolean IsCleaned = false;
+    
     @TestVisible static private Integer MaxTimeToLiveInDays  = 30;
     @TestVisible static private Integer MaxCompletedMessages = 4000;
     @TestVisible static private Integer MaxTotalMessages     = 5000; 
@@ -180,9 +186,17 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
       */
     @testVisible private  void deleteCompletedMessages(DateTime now) {
         if (triggerEnabled) {
+            if (IsCleaned) {
+                //#829 nothing to do if we cleaned already
+                return;
+            }
+            
             deleteExpiredAndCompleted(now);
             deleteExcessiveAll();
             deleteExcessiveCompleted();   
+            
+            //only once per context
+            IsCleaned = true;
         }
     }
 
