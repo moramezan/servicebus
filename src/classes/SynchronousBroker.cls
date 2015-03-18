@@ -23,11 +23,11 @@ public with sharing class SynchronousBroker extends Broker {
         for (Message__c message : messages) {
             List<Message__c> inputMessages = new List<Message__c>{message};
             
-            List<Message__c> outputMessages;
             try {
             
                 //EXECUTE
-                outputMessages = this.execute(inputMessages);
+                List<Message__c> outputMessages = new List<Message__c>();
+                this.execute(inputMessages, outputMessages);
                 
                 //PERSIST
                 List<Message__c> inputAndOutputMessages = new List<Message__c>();
@@ -35,13 +35,15 @@ public with sharing class SynchronousBroker extends Broker {
                 inputAndOutputMessages.addAll(outputMessages);
                 this.persist(inputAndOutputMessages); //#782
                 
-            } catch (EngineException e) {
+            } catch (Exception e) {
             
-                //revert, except callouts which should really be idempotent anyway
-                if (e.savepoint != null) Database.rollback(e.savepoint);
+                for (Message__c inputMessage : inputMessages) {
+                    inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+                    inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+                }
                 
                 //write away error text on messages
-                update e.fuckups;
+                update inputMessages;
                 
                 //stop, don't resolve
                 //finish (invokes broker again in same context)

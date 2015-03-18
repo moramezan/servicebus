@@ -44,7 +44,7 @@
         System.assertEquals(expectedSize, actualSize, 'Locator should have 100 records.');
         
         //act
-        impl.execute(null, null);
+        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), new List<SObject>());
         
         //assert
         expectedContexts = 999;
@@ -57,7 +57,7 @@
         System.assertEquals(expectedMarked, actualMarked, 'Should have five marked messages.');
         
         //act
-        impl.execute(null, null);
+        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), new List<SObject>());
         
         //assert
         expectedContexts = 998;
@@ -70,7 +70,7 @@
         System.assertEquals(expectedMarked, actualMarked, 'Should have zero marked messages.');
         
         //act
-        impl.execute(null, null);
+        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), new List<SObject>());
         
         //assert
         expectedContexts = 997;
@@ -83,7 +83,7 @@
         System.assertEquals(expectedMarked, actualMarked, 'Should have four marked messages.');
         
         //act
-        impl.execute(null, null);
+        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), new List<SObject>());
         
         //assert
         expectedContexts = 996;
@@ -96,7 +96,7 @@
         System.assertEquals(expectedMarked, actualMarked, 'Should have zero marked messages.');
         
         //act
-        impl.execute(null, null);
+        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), new List<SObject>());
         
     }
 
@@ -132,7 +132,7 @@
         
         //act (mark)
         List<SObject> scopes = new List<SObject>();
-        impl.execute(null, scopes);
+        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
         
         //assert
         expectedCount = 1;
@@ -143,7 +143,7 @@
         //act (execute)
         Id messageId = [SELECT Id FROM Message__c WHERE Status__c = 'Started'].Id;
         System.debug(ApexDomain.getById(step.Id));
-        impl.execute(null, scopes);
+        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
         
         //assert
         expectedCount = 1;
@@ -152,7 +152,7 @@
         System.assert(!impl.abortJob, 'Job should not be aborted.');
         
         //act (done)
-        impl.execute(null, scopes);
+        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
         System.assert(impl.abortJob, 'Job should be aborted.');
     }
 
@@ -201,7 +201,7 @@
         
         //act
         List<SObject> scopes = new List<SObject>();
-        impl.execute(null, scopes);
+        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
         
         //assemble
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
@@ -257,7 +257,7 @@
         
         //act
         List<SObject> scopes = new List<SObject>();
-        impl.execute(null, scopes);
+        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
         
         //assemble
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];

@@ -124,7 +124,8 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
             
             try {
                 //EXECUTE
-                List<Message__c> outputMessages = this.execute(inputMessages);
+                List<Message__c> outputMessages = new List<Message__c>();
+                this.execute(inputMessages, outputMessages);
                 
                 //PERSIST
                 List<Message__c> inputAndOutputMessages =  new List<Message__c>();
@@ -132,12 +133,15 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
                 inputAndOutputMessages.addAll(outputMessages);
                 this.persist(inputAndOutputMessages); //#782
                 
-            } catch (EngineException e) {
-                //revert, except callouts which should really be idempotent anyway
-                if (e.savepoint != null) Database.rollback(e.savepoint);
+            } catch (Exception e) {
+                
+                for (Message__c inputMessage : inputMessages) {
+                    inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+                    inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+                }
                 
                 //these had errors
-                update e.fuckups;
+                update inputMessages;
             }
             
             //ultimately not fatal errors

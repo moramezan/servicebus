@@ -143,7 +143,7 @@ abstract public with sharing class Broker {
      * Usage:
      * new ExceptionSerializer(myEx).getAsString();
      */
-    @TestVisible private class ExceptionSerializer {
+    public class ExceptionSerializer {
         
         private JsonGenerator g;
         
@@ -444,38 +444,62 @@ abstract public with sharing class Broker {
     }
     
     /**
+     * TODO #828 very difficult to test processes hiding inside inner classes
+     * but when that is possible, we should be able to get rid of this flag
+     */
+    @TestVisible static private Boolean IgnoreInnerClass = false;
+    
+    /**
      * Resolves and invokes the toStringable Object for one input, handing back an in-memory collection of outputs
      *
-     * @param  inputMessages Messages whose status should be Started
-     * @return               Many Messages whose status should be Buffered
+     * @throws EngineException
+     * @param  inputMessages pass-by-reference Messages whose status should be Started
+     * @param  outputMessages pass-by-reference Messages whose status should be Started
      */
-    public List<Message__c> execute(List<Message__c> inputMessages) {
+    public void execute(List<Message__c> inputMessages, List<Message__c> outputMessages) {
         //empty inputs, empty outputs
-        if (inputMessages.isEmpty()) return new List<Message__c>();
+        //if (inputMessages.isEmpty()) return new List<Message__c>();
+        if (inputMessages.isEmpty()) return;
         
-        Set<Id> inputMessageIds = new Map<Id,SObject>(inputMessages).keySet();
+        //Set<Id> inputMessageIds = new Map<Id,SObject>(inputMessages).keySet();
         
         //OUR FUCKUPS (before invocation)
         
         //designate all input messages as finished #782 in-memory
-        for (Message__c inputMessage : inputMessages) inputMessage.Status__c = 'Completed';
+        //for (Message__c inputMessage : inputMessages) inputMessage.Status__c = 'Completed';
         
+        Boolean biggerProblems = false;
         Map<Id,Map<String,Object>> id2events = new Map<Id,Map<String,Object>>();
-        for (Message__c inputMessage : inputMessages) id2events.put(inputMessage.Id, (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c));
+        for (Message__c inputMessage : inputMessages) {
+            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
+            id2events.put(inputMessage.Id, inputEvent);
+            
+            if (!inputEvent.containsKey('__SequenceName')) {
+                biggerProblems = true;
+                Exception e = new Broker.EngineException('Mandatory event parameter esb__SequenceName not supplied.');
+                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            }
+            
+            if (!inputEvent.containsKey('__Position')) {
+                biggerProblems = true;
+                Exception e = new Broker.EngineException('Mandatory event parameter esb__SequenceName not supplied.');
+                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            }
+        }
         
-        for (Map<String,Object> inputEvent : id2events.values()) if (!inputEvent.containsKey('__SequenceName')) throw new Broker.EngineException(null, inputMessageIds, null, 'Mandatory event parameter esb__SequenceName not supplied.');
-        for (Map<String,Object> inputEvent : id2events.values()) if (!inputEvent.containsKey('__Position')) throw new Broker.EngineException(null, inputMessageIds, null, 'Mandatory event parameter esb__SequenceName not supplied.');
+        if (biggerProblems) return;
         
         //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
         if (id2events.get(inputMessages[0].Id).get('__IsHeartbeatProcess') != null) {
             //invoke and wrap up results into messages
-            List<Message__c> outputMessages = new List<Message__c>();
             for (Message__c inputMessage : inputMessages) {
                 Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
                 List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, inputEvent, null).invokeMain().Outputs;
                 for (Map<String,Object> output : outputs) outputMessages.add(new Message__c(Event__c = Json.serializePretty(output), Status__c = 'Buffered'));
             }
-            return outputMessages;
+            return;
         }
         
         //specimen message will have same process as others
@@ -484,27 +508,50 @@ abstract public with sharing class Broker {
         Step__c step;
         try {
             step = [SELECT ConfigId__c, Process__r.FullyQualifiedClassName__c FROM Step__c WHERE Name = :specimen.Route__c];
-        } catch (QueryException e) {
+        } catch (QueryException qe) {
             //this scenario is really following on from a failed resolve - thinking that we might explicitly set a new message status
             //of FAILED but in due course we hope to do away with resolve step entirely with message names '{sequence}#{position}V{version}'
-            throw new EngineException(null, inputMessageIds, null, 'Step unqueryable, eg bad sequence name, position, missing terminate.');
+            for (Message__c inputMessage : inputMessages) {
+                Exception e = new Broker.EngineException('Step unqueryable, eg bad sequence name, position, missing terminate.', qe);
+                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            }
+            return;
         }
         
         Type reflector = Type.forName(step.Process__r.FullyQualifiedClassName__c);
         if (reflector == null) {
-            throw new EngineException(null, inputMessageIds, null, 'Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c);
+            for (Message__c inputMessage : inputMessages) {
+                Exception e = new Broker.EngineException('Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c);
+                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            }
+            return;
         }
         
         Type meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + '.' + 'ESB');
-        if (meta == null) {
-            throw new EngineException(null, inputMessageIds, null, 'Could not see ESB inner class, this is not a valid process: ' + reflector.getName());
+        if (meta == null && !IgnoreInnerClass) { //TODO #828
+            for (Message__c inputMessage : inputMessages) {
+                Exception e = new Broker.EngineException('Could not see ESB inner class, this is not a valid process: ' + reflector.getName());
+                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            }
+            return;
         }
         
         //save important message properties (such as __Hops) so that process authors cannot pervert them  
         //THROWS EngineException TODO : requires a more generic approach not specific to just the __Hops
-        for (Map<String,Object> inputEvent : id2events.values()) if ((Integer)inputEvent.get('__Hops') >= MaxHops) {
-            throw new EngineException(null, inputMessageIds, null, 'Too many hops - to resolve, manually set __Hops on event parameters to 0');
+        for (Message__c inputMessage : inputMessages) {
+            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
+            if ((Integer)inputEvent.get('__Hops') >= MaxHops) {
+                biggerProblems = true;
+                Exception e = new Broker.EngineException('Too many hops - to resolve, manually set __Hops on event parameters to 0');
+                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            }
         }
+        
+        if (biggerProblems) return;
         
         //step determines whether all have configs or none
         SObject stepConfig;
@@ -513,46 +560,59 @@ abstract public with sharing class Broker {
             stepConfig = ApexDomain.getById(step.ConfigId__c);
         }
         
-        Map<Id,Broker.Wrapper> id2wrapper = new Map<Id,Broker.Wrapper>();
-        for (Message__c inputMessage : inputMessages) id2wrapper.put(inputMessage.Id, new Broker.Wrapper(reflector, id2events.get(inputMessage.Id), stepConfig));
+        List<Broker.Wrapper> wrappers = new List<Broker.Wrapper>();
+        for (Message__c inputMessage : inputMessages) wrappers.add(new Broker.Wrapper(reflector, id2events.get(inputMessage.Id), stepConfig));
         
         //THEIR FUCKUPS (invocation)
         
-        Savepoint sp;
-        try {
-            
+        for (Integer i = 0; i < inputMessages.size(); i++) {
             //TODO COUNT ANY DMLS
-            for (Broker.Wrapper wrapper : id2wrapper.values()) wrapper.invokeCallouts();
-            sp = Database.setSavepoint();
-            for (Broker.Wrapper wrapper : id2wrapper.values()) wrapper.invokeMain();
+            Broker.Wrapper wrapper = wrappers[i];
+            Message__c inputMessage = inputMessages[i];
+            try {
+                wrapper.invokeCallouts();
+            } catch (Exception e) {
+                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            }
+        }
+        
+        for (Integer i = 0; i < inputMessages.size(); i++) {
             //TODO COUNT ANY CALLOUTS
+            Broker.Wrapper wrapper = wrappers[i];
+            Message__c inputMessage = inputMessages[i];
             
-        } catch (Exception e) {
-            //#581 smoking gun should point at the user, NOT at our broker
-            throw new EngineException(sp, inputMessageIds, e);
+            //for incrementally rolling back each message attempted
+            Savepoint minor = Database.setSavepoint();
+            try {
+                wrapper.invokeMain();
+                inputMessage.Status__c = 'Completed';
+                inputMessage.Exception__c = null;
+                inputMessage.Cause__c = null;
+                List<Map<String,Object>> outputEvents = wrapper.Outputs;
+                
+                //gate processing support method
+                this.gateHelper(id2events.get(inputMessage.Id), outputEvents);
+                
+                //wrap up results into Messages (new guys should have Position = 0)
+                for (Map<String,Object> outputEvent : outputEvents) {
+                    outputMessages.add(new Message__c(
+                        Event__c = Json.serializePretty(outputEvent),
+                        Status__c = 'Buffered'
+                    ));
+                }
+            } catch (Exception e) {
+                Database.rollback(minor);
+                //#581 smoking gun should point at the user, NOT at our broker
+                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            }
         }
         
         //OUR FUCKUPS (after invocation)
         
-        Map<Id,List<Map<String,Object>>> id2outputEvents = new Map<Id,List<Map<String,Object>>>();
-        for (Id messageId : id2wrapper.keySet()) id2outputEvents.put(messageId, id2wrapper.get(messageId).Outputs);
-        
-        //gate processing support method
-        for (Id messageId : id2outputEvents.keySet()) this.gateHelper(id2events.get(messageId), id2outputEvents.get(messageId));
-        
-        //wrap up results into Messages (new guys should have Position = 0)
-        List<Message__c> outputMessages = new List<Message__c>();
-        for (List<Map<String,Object>> outputEvents : id2outputEvents.values()) for (Map<String,Object> outputEvent : outputEvents) {
-            outputMessages.add(new Message__c(
-                Event__c = Json.serializePretty(outputEvent),
-                Status__c = 'Buffered'
-            ));
-        }
-        
         //position + 1
         new MessageSetModel(outputMessages).incrementPositions();
-        
-        return outputMessages;
     }
 
     /**

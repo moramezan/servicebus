@@ -1,6 +1,9 @@
 @IsTest public class MessageRestartExtensionTest {
 
     static testmethod void testDoRestartRunsBroker() {
+        //arrange broker implementation
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        
         //arrange message
         List<Message__c> messages = new Job('Test', UserInfo.getUserId()).persist();
         
@@ -11,14 +14,15 @@
         MessageRestartExtension.message.Status__c = 'Started';
         
         //act
-        try {
-            extension.doRestart();
-            System.assert(false, 'Line above should throw exception');
-        } catch (Broker.EngineException e) {
-            String expectedMessage = 'Step unqueryable, eg bad sequence name, position, missing terminate.';
-            String actualMessage = e.getMessage();
-            System.assertEquals(expectedMessage, actualMessage);
-        }
+        extension.doRestart();
+        
+        //assemble
+        MessageRestartExtension.message = [SELECT Id, Exception__c FROM Message__c WHERE Id = :MessageRestartExtension.message.Id];
+        
+        //assert
+        String expectedMessage = 'Step unqueryable, eg bad sequence name, position, missing terminate.';
+        String actualMessage = MessageRestartExtension.message.Exception__c;
+        System.assertEquals(expectedMessage, actualMessage);
     }
     
     static testmethod void testDoRestartLeavesCompletedAndBufferedMessages() {

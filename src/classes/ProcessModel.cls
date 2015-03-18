@@ -108,6 +108,7 @@ public with sharing class ProcessModel extends ApexDomain.StandardModel {
                 FullyQualifiedClassName__c = outerClass.getName()
             );
             
+            //TODO #828 could do ProcessNameEsb or something in here to allow inner classes to be processes for test purposes
             ProcessModel.ESB meta = (ProcessModel.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessModel.ESB.class);
 
             if (meta.Description == null) {

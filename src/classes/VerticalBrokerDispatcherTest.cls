@@ -17,7 +17,7 @@
         VerticalBrokerDispatcher dispatcher = new VerticalBrokerDispatcher();
         
         //act
-        dispatcher.execute(null, scopes);
+        dispatcher.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
         
         //assert
         System.assert(scopes.isEmpty());

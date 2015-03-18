@@ -216,12 +216,13 @@
         messages = ApexDomain.listAll(Message__c.SObjectType);
         
         Boolean actualFlag = false;
-        try {
-            //act
-            Broker.impl().execute(messages);
-        } catch (Broker.EngineException e) {
-            actualFlag = true;
-        }
+        
+        //act
+        Broker.impl().execute(messages, new List<Message__c>());
+        
+        //assemble
+        //messages = [SELECT Exception__c FROM Message__c WHERE Id = :messages[0].Id];
+        actualFlag = messages[0].Exception__c != null;
 
         //assert
         Boolean expectedFlag = true;
@@ -668,14 +669,12 @@
         Broker broker = new DoNothingBroker();
         
         String actualMessage;
-        try {
-            //act
-            broker.execute(messages);
-        } catch (Broker.EngineException e) {
-            actualMessage = e.getMessage();
-        }
+        
+        //act
+        broker.execute(messages, new List<Message__c>());
+        
         //assemble
-        Message__c messageActual = (Message__c)ApexDomain.getById(messages[0].Id);
+        actualMessage = messages[0].Exception__c;
         
         //assert
         String expectedMessage = 'Mandatory event parameter esb__SequenceName not supplied.';
@@ -698,11 +697,12 @@
         Broker broker = new DoNothingBroker();
         
         String actualMessage;
-        try {
-            broker.execute(messages);
-        } catch (Broker.EngineException e) {
-            actualMessage = e.getMessage();
-        }
+        
+        //act
+        broker.execute(messages, new List<Message__c>());
+        
+        //assemble
+        actualMessage = messages[0].Exception__c;
         
         //assert
         String expectedMessage = 'Step unqueryable, eg bad sequence name, position, missing terminate.';
@@ -1030,21 +1030,19 @@
         
         // assemble
         Boolean actualFlagA = false;
-        try {
-            // act
-            Broker.impl().execute(messagesA);
-        } catch (Broker.EngineException e) {
-            actualFlagA = true;
-        }
+        
+        // act
+        Broker.impl().execute(messagesA, new List<Message__c>());
+        
+        actualFlagA = messagesA[0].Exception__c != null;
         
         // assemble
         Boolean actualFlagB = false;
-        try {
-            // act
-            Broker.impl().execute(messagesB);
-        } catch (Broker.EngineException e) {
-            actualFlagB = true;
-        }
+        
+        // act
+        Broker.impl().execute(messagesB, new List<Message__c>());
+        
+        actualFlagB = messagesB[0].Exception__c != null;
         
         // assert
         Boolean expectedFlagA = true;
@@ -1156,5 +1154,54 @@
         System.assertEquals(expectedFlag03, actualFlag03);
         System.assertEquals(expectedFlag04, actualFlag04);  
     }  
+    
+    @TestVisible public class ChunkErrorProcessException extends Exception {}
+    
+    @TestVisible public class ChunkErrorProcess {
         
+        @TestVisible public String Event;
+        
+        override public String toString() {
+            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+            Boolean isError = (Boolean)inputEvent.get('c__IsError');
+            if (isError == true) throw new ChunkErrorProcessException('Test error');
+            return '[{}]'; //one message
+        }
+        
+    }
+    
+    static testmethod void testKamikazeChunkingTakesOutHisMates() {
+        //arrange processes, sequence and steps
+        Broker.IgnoreInnerClass = true; //we generating BS Terminate then "renaming" to our ChunkErrorProcess
+        Process__c errorProcess = ProcessModel.generateOne(Terminate.class);
+        errorProcess.FullyQualifiedClassName__c = ChunkErrorProcess.class.getName();
+        update errorProcess; //TODO #828
+        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
+        
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
+        insert sequence;
+        
+        Step__c errorStep = StepModel.generateOne(sequence.Id, errorProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        
+        //arrange broker implementation and params
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        Map<String,Object> failureEvent = new Map<String,Object>{'c__IsError' => true, '__SequenceName' => 'Test', '__Position' => 1};
+        Map<String,Object> successEvent = new Map<String,Object>{'c__IsError' => false, '__SequenceName' => 'Test', '__Position' => 1};
+        List<Map<String,Object>> events = new List<Map<String,Object>>{failureEvent, successEvent};
+        
+        //arrange messages and broker
+        List<Message__c> messages = new Job(events).persist();
+        Broker impl = Broker.impl();
+        
+        List<Message__c> outputMessages = new List<Message__c>();
+        //act
+        impl.execute(messages, outputMessages);
+        //#798 should only have one message
+        Integer expectedCount = 1;
+        Integer actualCount = outputMessages.size();
+        System.assertEquals(expectedCount, actualCount);
+        
+    }
+    
 }
