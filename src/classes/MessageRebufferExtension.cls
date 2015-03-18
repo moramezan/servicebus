@@ -10,7 +10,11 @@ public with sharing class MessageRebufferExtension {
     public PageReference doRebuffer() {
         Set<Id> messageIds = new Map<Id,SObject>(this.controller.getSelected()).keySet();
         messages = [SELECT Id, Status__c FROM Message__c WHERE Id IN :messageIds AND Status__c = 'Started'];
-        for (Message__c message : messages) message.Status__c = 'Rebuffered';
+        for (Message__c message : messages) {
+            message.Status__c = 'Rebuffered';
+            message.Exception__c = null; //#827
+            message.Cause__c = null; //#827
+        }
         
         //write status and any exception fields ("avoids DML in action method")
         Type.forName(DoDml.class.getName()).newInstance();
