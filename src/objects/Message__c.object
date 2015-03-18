@@ -183,6 +183,25 @@
         </filters>
         <label>Exception</label>
     </listViews>
+    <listViews>
+        <fullName>Killed</fullName>
+        <columns>NAME</columns>
+        <columns>CreatedDate__c</columns>
+        <columns>Status__c</columns>
+        <columns>FullyQualifiedClassName__c</columns>
+        <columns>Exception__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Completed</value>
+        </filters>
+        <filters>
+            <field>Exception__c</field>
+            <operation>notEqual</operation>
+        </filters>
+        <label>Killed</label>
+    </listViews>
     <nameField>
         <label>Message Name</label>
         <type>Text</type>

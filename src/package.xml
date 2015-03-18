@@ -314,6 +314,7 @@
         <members>AuditGroup__c.All</members>
         <members>Message__c.All</members>
         <members>Message__c.Exception</members>
+        <members>Message__c.Killed</members>
         <members>Process__c.All</members>
         <members>Process__c.AllExceptESB</members>
         <members>Process__c.EnterpriseServiceBus</members>
