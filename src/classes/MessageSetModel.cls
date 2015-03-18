@@ -185,6 +185,10 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
       *   For steps 1,2 and 3, limit all DML to MaxDML
       */
     @testVisible private  void deleteCompletedMessages(DateTime now) {
+        //TODO #826 queueable-under-non-admin-context attempts insert/cleanup - do NOT cleanup in that case
+        Profile profile = [SELECT Id, Name FROM Profile WHERE Id = :UserInfo.getProfileId()];
+        if (!profile.Name.contains('System Administrator')) return;
+        
         if (triggerEnabled) {
             if (IsCleaned) {
                 //#829 nothing to do if we cleaned already

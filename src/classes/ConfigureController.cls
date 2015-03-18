@@ -94,6 +94,10 @@ public with sharing class ConfigureController {
      * @return       oauth start point (or null if already allowed)
      */
     static public PageReference doDanceIfNeeded(PageReference retURL) {
+        //#826 couldn't dance even if we wanted to
+        Profile profile = [SELECT Id, Name FROM Profile WHERE Id = :UserInfo.getProfileId()];
+        if (!profile.Name.contains('System Administrator')) return null;
+        
         if (IsAllowed) return null; //all ok
         
         //better do the dance
