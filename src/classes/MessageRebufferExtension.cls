@@ -24,8 +24,18 @@ public with sharing class MessageRebufferExtension {
     public class DoDml {
         public DoDml() {
             update messages;
+            
+            // #653 don't use a @Future call unless necessary
+            if (Broker.impl().isRunning()) return;
+            
             //restart REAL broker
-            Broker.run();
+            if (!Test.isRunningTest()) {
+                //in real life, usurp sysadmin
+                Job.runAsUser();
+            } else {
+                //in tests, just run the thing
+                Job.run();
+            }
         }
     }
     

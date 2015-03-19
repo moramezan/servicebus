@@ -252,7 +252,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      *
      * @throws JobException
      */
-    @Future(callout=true) static private void runAsUser() {
+    @Future(callout=true) static public void runAsUser() {
         // #653 don't use an API call unless necessary
         if (Broker.impl().isRunning()) return;
         String command = Job.class.getName() + '.run();';
