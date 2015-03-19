@@ -467,6 +467,8 @@ abstract public with sharing class Broker {
         
         //designate all input messages as finished #782 in-memory
         //for (Message__c inputMessage : inputMessages) inputMessage.Status__c = 'Completed';
+
+        DateTime startStamp = System.Now();
         
         Boolean biggerProblems = false;
         Map<Id,Map<String,Object>> id2events = new Map<Id,Map<String,Object>>();
@@ -479,6 +481,7 @@ abstract public with sharing class Broker {
                 Exception e = new Broker.EngineException('Mandatory event parameter esb__SequenceName not supplied.');
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
             }
             
             if (!inputEvent.containsKey('__Position')) {
@@ -486,6 +489,7 @@ abstract public with sharing class Broker {
                 Exception e = new Broker.EngineException('Mandatory event parameter esb__SequenceName not supplied.');
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
             }
         }
         
@@ -515,6 +519,7 @@ abstract public with sharing class Broker {
                 Exception e = new Broker.EngineException('Step unqueryable, eg bad sequence name, position, missing terminate.', qe);
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
             }
             return;
         }
@@ -525,6 +530,7 @@ abstract public with sharing class Broker {
                 Exception e = new Broker.EngineException('Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c);
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
             }
             return;
         }
@@ -535,6 +541,7 @@ abstract public with sharing class Broker {
                 Exception e = new Broker.EngineException('Could not see ESB inner class, this is not a valid process: ' + reflector.getName());
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
             }
             return;
         }
@@ -548,6 +555,7 @@ abstract public with sharing class Broker {
                 Exception e = new Broker.EngineException('Too many hops - to resolve, manually set __Hops on event parameters to 0');
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
             }
         }
         
@@ -574,6 +582,7 @@ abstract public with sharing class Broker {
             } catch (Exception e) {
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
             }
         }
         
@@ -589,6 +598,7 @@ abstract public with sharing class Broker {
                 inputMessage.Status__c = 'Completed';
                 inputMessage.Exception__c = null;
                 inputMessage.Cause__c = null;
+                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
                 List<Map<String,Object>> outputEvents = wrapper.Outputs;
                 
                 //gate processing support method
@@ -606,6 +616,7 @@ abstract public with sharing class Broker {
                 //#581 smoking gun should point at the user, NOT at our broker
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
             }
         }
         

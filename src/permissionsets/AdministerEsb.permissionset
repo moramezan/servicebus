@@ -488,6 +488,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Message__c.ExecuteDuration__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Message__c.FullyQualifiedClassName__c</field>
         <readable>true</readable>
     </fieldPermissions>

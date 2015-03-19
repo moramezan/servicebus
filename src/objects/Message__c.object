@@ -99,6 +99,20 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>ExecuteDuration__c</fullName>
+        <defaultValue>0</defaultValue>
+        <description>How many milliseconds elapsed from the start of the processing until successful completion or failure?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>How many milliseconds elapsed from the start of the processing until successful completion or failure?</inlineHelpText>
+        <label>Duration (ms)</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>FullyQualifiedClassName__c</fullName>
         <description>Namespace Prefix and Apex Class name per #697</description>
         <externalId>true</externalId>
@@ -160,6 +174,7 @@
         <columns>CreatedDate__c</columns>
         <columns>Status__c</columns>
         <columns>FullyQualifiedClassName__c</columns>
+        <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
@@ -170,6 +185,7 @@
         <columns>CreatedDate__c</columns>
         <columns>Status__c</columns>
         <columns>FullyQualifiedClassName__c</columns>
+        <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
         <filters>
@@ -189,6 +205,7 @@
         <columns>CreatedDate__c</columns>
         <columns>Status__c</columns>
         <columns>FullyQualifiedClassName__c</columns>
+        <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
         <filters>
@@ -211,6 +228,7 @@
         <customTabListAdditionalFields>CreatedDate__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>FullyQualifiedClassName__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>ExecuteDuration__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Exception__c</customTabListAdditionalFields>
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
