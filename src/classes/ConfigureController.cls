@@ -272,6 +272,7 @@ public with sharing class ConfigureController {
                 throw new ConfigureException('Null refresh_token in handleRedirect: ' + data);
             }
             
+            setting.RunningUserId__c = UserInfo.getUserId();
             setting.AccessToken__c = t.access_token;
             setting.RefreshToken__c = t.refresh_token;
             Type.forName(DoDml.class.getName()).newInstance(); //avoids DML in action method

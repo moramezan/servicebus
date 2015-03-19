@@ -84,6 +84,10 @@
         PageReference pr = controller.handleRedirect();
         
         //assert
+        String expectedRunningUerId = UserInfo.getUserId();
+        String actualRunningUerId = OAuthSetting__c.getOrgDefaults().RunningUserId__c;
+        System.assertEquals(expectedRunningUerId, actualRunningUerId, 'Running User Id not set.');
+        
         String expectedAccessToken = '12345';
         String actualAccessToken = OAuthSetting__c.getOrgDefaults().AccessToken__c;
         System.assertEquals(expectedAccessToken, actualAccessToken, 'Access token not set.');
