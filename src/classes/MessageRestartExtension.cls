@@ -32,8 +32,8 @@ public with sharing class MessageRestartExtension {
         
         if (!result.success) {
             //write status and any exception fields ("avoids DML in action method")
-            message.Exception__c = result.exceptionMessage;
-            message.Cause__c = result.exceptionStackTrace;
+            message.Exception__c = result.exceptionMessage.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+            message.Cause__c = result.exceptionStackTrace.abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
             Type.forName(DoDml.class.getName()).newInstance();
             
             //redirect back to detail view

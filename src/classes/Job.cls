@@ -282,6 +282,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
             
             //EXECUTE
             Message__c inputMessage = (Message__c)ApexDomain.getById(this.messageId);
+            inputMessage.Status__c = 'Completed';
             List<Message__c> outputMessages = new List<Message__c>();
             this.execute(new List<Message__c>{inputMessage}, outputMessages);
             
