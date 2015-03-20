@@ -11,7 +11,7 @@ public with sharing class MessageRebufferExtension {
         Set<Id> messageIds = new Map<Id,SObject>(this.controller.getSelected()).keySet();
         messages = [SELECT Id, Status__c FROM Message__c WHERE Id IN :messageIds AND Status__c = 'Started'];
         for (Message__c message : messages) {
-            message.Status__c = 'Rebuffered';
+            message.Status__c = 'Buffered';
             message.Exception__c = null; //#827
             message.Cause__c = null; //#827
         }

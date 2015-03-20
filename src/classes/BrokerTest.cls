@@ -330,7 +330,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testmethod void testLocatorReturnsOnlyRebufferedWork() {
+    static testmethod void testLocatorReturnsOnlyBufferedWork() {
         Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         Sequence__c sequence = new Sequence__c(Name = 'test');
@@ -346,11 +346,11 @@
         };
         MessageSetModel.Inhibit = true;
         
-        //arrange Rebuffered messages
+        //arrange Buffered messages
         MessageSetModel.Inhibit = false;
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Rebuffered', Event__c = '{"__SequenceName":"test","__Position":1}'),
-            new Message__c(Status__c = 'Rebuffered', Event__c = '{"__SequenceName":"test","__Position":1}')
+            new Message__c(Status__c = 'Buffered', Event__c = '{"__SequenceName":"test","__Position":1}'),
+            new Message__c(Status__c = 'Buffered', Event__c = '{"__SequenceName":"test","__Position":1}')
         };
         MessageSetModel.Inhibit = true;
         
@@ -947,26 +947,25 @@
         List<Message__c> messagesFailed = [
             SELECT Id, Name, Event__c, Status__c, Cause__c
             FROM Message__c
-            WHERE Status__c != 'Completed'
+            WHERE Status__c = 'Started'
         ];
-            
-        Integer actualCountOk = messagesOk.size();
-        Integer actualCountFailed = messagesFailed.size();
-        String actualExceptionMessage;
-        if (actualCountFailed == 1) {
-            actualExceptionMessage = messagesFailed[0].Cause__c;
-        }
         
-        //assemble
-        Map<String,Object> actualException = (Map<String,Object>)Json.deserializeUntyped(actualExceptionMessage);
-
-        // assert
+        //assert
+        Integer actualCountOk = messagesOk.size();
         Integer expectedCountOk = 3;
         System.assertEquals( expectedCountOk, actualCountOk);
+        
+        Integer actualCountFailed = messagesFailed.size();
         Integer expectedCountFailed = 1;
         System.assertEquals( expectedCountFailed, actualCountFailed);
+        
+        //assemble
+        Map<String,Object> actualException = (Map<String,Object>)Json.deserializeUntyped(messagesFailed[0].Cause__c);
+
+        // assert
         String expectedExceptionMessage = 'Step unqueryable, eg bad sequence name, position, missing terminate.';
-        System.assertEquals(expectedExceptionMessage, (String)actualException.get('Message'), 'Wrong message');         
+        String actualExceptionMessage = (String)actualException.get('Message');
+        System.assertEquals(expectedExceptionMessage, actualExceptionMessage, 'Wrong message');
     }
  
     static testMethod void callingEnqueueWithEventParametersIncludesAllEventParametersInMessage() {

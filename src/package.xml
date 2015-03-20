@@ -208,6 +208,7 @@
         <members>GateItem__c.GateGroup__c</members>
         <members>JumpConfig__c.Sequence__c</members>
         <members>KnifeSwitch__c.Url__c</members>
+        <members>Message__c.Attempts__c</members>
         <members>Message__c.Cause__c</members>
         <members>Message__c.CreatedDate__c</members>
         <members>Message__c.Event__c</members>

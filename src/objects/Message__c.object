@@ -56,6 +56,18 @@
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
     <fields>
+        <fullName>Attempts__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>true</externalId>
+        <label>Attempts</label>
+        <precision>4</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Cause__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>If the process threw an exception, what was the stack trace that caused it?</inlineHelpText>
@@ -156,10 +168,6 @@
             </picklistValues>
             <picklistValues>
                 <fullName>Completed</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Rebuffered</fullName>
                 <default>false</default>
             </picklistValues>
             <sorted>false</sorted>

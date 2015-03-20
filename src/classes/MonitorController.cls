@@ -39,13 +39,12 @@ public with sharing class MonitorController {
     }
     
     public class Statistic {
-        public Statistic(String fullyQualifiedClassName, Integer queued, Integer buffered, Integer started, Integer exceptions, Integer rebuffered) {
+        public Statistic(String fullyQualifiedClassName, Integer queued, Integer buffered, Integer started, Integer exceptions) {
             this.FullyQualifiedClassName = fullyQualifiedClassName;
             this.Queued = queued;
             this.Buffered = buffered;
             this.Started = started;
             this.Exceptions = exceptions;
-            this.Rebuffered = rebuffered;
         }
         
         public String FullyQualifiedClassName {get; set;}
@@ -53,24 +52,23 @@ public with sharing class MonitorController {
         public Integer Buffered {get; set;}
         public Integer Started {get; set;}
         public Integer Exceptions {get; set;}
-        public Integer Rebuffered {get; set;}
     }
     
     @RemoteAction static public List<Statistic> getTestStatistics() {
         return new List<Statistic>{
-            new Statistic(' ',               1, 32,  0,  0,  0),
-            new Statistic('Branch',          1,  0,  0,  0,  0),
-            new Statistic('Publish',         2,  0,  0,  0,  0),
-            new Statistic('Wiretap',         1,  0,  4,  0,  0),
-            new Statistic('Jump',            2,  0,  0,  0,  0),
-            new Statistic('AuditInitializer',1,  0,  0,  0,  0),
-            new Statistic('Subsequence',     2,  0,  2,  0,  0),
-            new Statistic('Subscribe',       2,  0,  9,  0,  0),
-            new Statistic('Schedule',        1,  0,  0,  0,  0),
-            new Statistic('AuditWriter',     0,  0,  0,  0,  0),
-            new Statistic('Gate',            1,  0,  0,  0,  0),
-            new Statistic('Scrape',          0,  0, 44, 10, 10),
-            new Statistic('Mark',            0,  0,  0,  0,  0)
+            new Statistic(' ',               1, 32,  0,  0),
+            new Statistic('Branch',          1,  0,  0,  0),
+            new Statistic('Publish',         2,  0,  0,  0),
+            new Statistic('Wiretap',         1,  0,  4,  0),
+            new Statistic('Jump',            2,  0,  0,  0),
+            new Statistic('AuditInitializer',1,  0,  0,  0),
+            new Statistic('Subsequence',     2,  0,  2,  0),
+            new Statistic('Subscribe',       2,  0,  9,  0),
+            new Statistic('Schedule',        1,  0,  0,  0),
+            new Statistic('AuditWriter',     0,  0,  0,  0),
+            new Statistic('Gate',            1,  0,  0,  0),
+            new Statistic('Scrape',          0,  0, 44, 10),
+            new Statistic('Mark',            0,  0,  0,  0)
         };
     }
     
@@ -79,7 +77,7 @@ public with sharing class MonitorController {
         Map<String,Statistic> process2statistic = new Map<String,Statistic>();
         
         //#761 add null guy for all buffered messages
-        process2statistic.put(' ', new Statistic(' ', 0, 0, 0, 0, 0));
+        process2statistic.put(' ', new Statistic(' ', 0, 0, 0, 0));
         
         List<Process__c> processes = [
             SELECT Id, FullyQualifiedClassName__c
@@ -88,7 +86,7 @@ public with sharing class MonitorController {
         ];
         
         for (Process__c process : processes) {
-            Statistic statistic = new Statistic(process.FullyQualifiedClassName__c, 0, 0, 0, 0, 0);
+            Statistic statistic = new Statistic(process.FullyQualifiedClassName__c, 0, 0, 0, 0);
             process2statistic.put(process.FullyQualifiedClassName__c, statistic);
         }
         
@@ -139,18 +137,6 @@ public with sharing class MonitorController {
             Statistic statistic = process2statistic.get((String)result.get('fqcn')); //#761
             if (statistic == null) statistic = process2statistic.get(' ');
             statistic.Exceptions += (Integer)result.get('total');
-        }
-        
-        for (AggregateResult result : [
-            SELECT FullyQualifiedClassName__c fqcn, COUNT(Status__c) total
-            FROM Message__c
-            WHERE Route__c != null
-            AND Status__c = 'Rebuffered'
-            GROUP BY FullyQualifiedClassName__c
-        ]) {
-            Statistic statistic = process2statistic.get((String)result.get('fqcn')); //#761
-            if (statistic == null) statistic = process2statistic.get(' ');
-            statistic.Rebuffered += (Integer)result.get('total');
         }
         
         //pluck out the buffered guys (null per #697)

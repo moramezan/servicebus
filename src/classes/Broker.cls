@@ -360,7 +360,7 @@ abstract public with sharing class Broker {
 
     /**
      * Determines which messages are eligible to be moved into the Started status (by finding Messages
-     * with 'Rebuffered' and 'Buffered' status).
+     * with 'Buffered' status).
      *
      * Messages that should be processed have their status marked as Started in the database before being
      * submitted the query locator. That way, if any given execution fails, those messages will remain in the
@@ -377,14 +377,14 @@ abstract public with sharing class Broker {
      * @return collection of soon-to-be-marked-as-Started Messages.
      */
     public List<Message__c> locateMarkableWork() {
-        //find oldest rebuffered message or oldest buffered message
+        //find oldest buffered message
         Message__c specimenMessage;
         try {
             specimenMessage = [
-                SELECT Id, Status__c, Route__c
+                SELECT Id, Status__c, Route__c, Attempts__c
                 FROM Message__c
-                WHERE Status__c IN ('Rebuffered', 'Buffered')
-                ORDER BY Status__c DESC, CreatedDate__c ASC
+                WHERE Status__c = 'Buffered'
+                ORDER BY Attempts__c DESC, CreatedDate__c ASC //TODO could sort by route
                 LIMIT 1
             ];
         } catch (QueryException e) {
@@ -434,7 +434,11 @@ abstract public with sharing class Broker {
     public List<Database.SaveResult> mark(List<Message__c> messages) {
         try {
             if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
-            for (Message__c message : messages) message.Status__c = 'Started'; //in-database
+            for (Message__c message : messages) {
+                if (message.Attempts__c == null) message.Attempts__c = 0;
+                message.Attempts__c++; //#808
+                message.Status__c = 'Started'; //in-database
+            }
             List<Database.SaveResult> results = Database.update(messages);
             return results;
             
@@ -718,7 +722,6 @@ abstract public with sharing class Broker {
             SELECT COUNT()
             FROM Message__c
             WHERE Status__c = 'Buffered'
-            OR Status__c = 'Rebuffered'
         ];
         
         if (worksPending == 0) {

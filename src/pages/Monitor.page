@@ -19,7 +19,7 @@
         <apex:axis type="Category" position="bottom" title="Process" fields="FullyQualifiedClassName">
             <apex:chartLabel rotate="270" />
         </apex:axis>
-        <apex:axis type="Numeric" position="left" title="Messages" fields="Queued,Buffered,Started,Rebuffered,Exceptions">
+        <apex:axis type="Numeric" position="left" title="Messages" fields="Queued,Buffered,Started,Exceptions">
             <!--<apex:chartLabel />-->
         </apex:axis>
         <apex:barSeries colorSet="#C00" orientation="vertical" axis="left" xField="FullyQualifiedClassName" yField="Exceptions" title="Exception" />
@@ -27,8 +27,8 @@
             opacity="0.6"
             axis="left"
             xField="FullyQualifiedClassName"
-            yField="Queued,Buffered,Started,Rebuffered"
-            title="Queued,Buffered,Started,Rebuffered"
+            yField="Queued,Buffered,Started"
+            title="Queued,Buffered,Started"
         />
     </apex:chart>
     
