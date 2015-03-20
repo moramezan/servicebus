@@ -499,11 +499,15 @@ abstract public with sharing class Broker {
         if (id2events.get(inputMessages[0].Id).get('__IsHeartbeatProcess') != null) {
             //invoke and wrap up results into messages
             for (Message__c inputMessage : inputMessages) {
-                inputMessage.Status__c = 'Completed'; //#798
-                inputMessage.FullyQualifiedClassName__c = Heartbeat.class.getName(); //#697 locateMarkableWork misses this for heartbeats
                 Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
                 List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, inputEvent, null).invokeMain().Outputs;
+                
+                inputMessage.Status__c = 'Completed'; //#798
+                inputMessage.Exception__c = null;
+                inputMessage.Cause__c = null;
                 inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
+                inputMessage.FullyQualifiedClassName__c = Heartbeat.class.getName(); //#697 locateMarkableWork misses this for heartbeats
+                
                 for (Map<String,Object> output : outputs) outputMessages.add(new Message__c(Event__c = Json.serializePretty(output), Status__c = 'Buffered'));
             }
             return;
