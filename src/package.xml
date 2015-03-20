@@ -2,7 +2,7 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Enterprise Service Bus</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
-    <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
+    <description>Message queue for bulk data transformations and error recovery without data loss.</description>
     <namespacePrefix>esb</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
