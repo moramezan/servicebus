@@ -6,21 +6,12 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
      */
     static public Boolean Inhibit = true;
     
-    /*
-     * Note : this flag is purely for TDD purposes 
-     */
-    @TestVisible private static Boolean triggerEnabled = true;
-    
     /**
      * #829 try to prevent "too many query rows" by cleaning
      * or housekeeping only once per execution context
      */
     @TestVisible static private Boolean IsCleaned = false;
-    
-    @TestVisible static private Integer MaxTimeToLiveInDays  = 30;
-    @TestVisible static private Integer MaxCompletedMessages = 4000;
     @TestVisible static private Integer MaxTotalMessages     = 5000; 
-    @TestVisible static private Integer MaxDML               = 5000;
     
     public MessageSetModel(List<Message__c> messages) {
         super(messages);
@@ -40,11 +31,14 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
     
     override public void onBeforeInsert() {
         this.inhibitCreationFromGui();
-        deleteCompletedMessages(System.now());   
         this.validateJsonParameters();
         this.interpretEsbSequenceName();
         this.incrementHops();
         this.populateRouteKey();
+    }
+    
+    override public void onAfterInsert() {
+        this.deleteCompletedMessages(); //#836
     }
     
     override public void onBeforeUpdate(List<SObject> oldObjects) {
@@ -168,97 +162,59 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
      /*
       *  Users may wish to view completed messages. The question then arises,
       *  how many and how long should these completed messages persist for?
-      *  - On the time to live (TTL) question:
-      *    Any completed message older then the TTL should be deleted
       *  - On the how many question:
-      *    Delete completed messages that cause the count of all messages to exceed a 
-      *      specified "all-messages threshold"
       *    Delete completed messages that cause the count of all completed messages
       *      to exceed a specified "completed messages threshold" 
       *
-      *  The following algorithm specifies the above intent
-      *     1. Delete Completed messages that have passed their time to live (TTL)  
-      *     2. Delete Completed messages (oldest first) so that 
-      *        (COUNT[current persisted messages] + COUNT[insertable messages]) <= MaxTotalMessages
-      *     3. Delete Completed messages (oldest first) so that 
-      *        COUNT[Completed persisted messages] <= MaxCompletedMessages
-      *   For steps 1,2 and 3, limit all DML to MaxDML
+      * For example, if an imminent insert of eg 150 messages were to
+      * push the total number of messages over 5000, this would delete
+      * the same number of messages (150) off the old end of the table.
+      * 
+      * For confidence, we keep this away from any user-facing logic
+      * in batchables or queueables, once only per execution context.
       */
-    @testVisible private  void deleteCompletedMessages(DateTime now) {
-        //TODO #826 queueable-under-non-admin-context attempts insert/cleanup - do NOT cleanup in that case
-        Profile profile = [SELECT Id, Name FROM Profile WHERE Id = :UserInfo.getProfileId()];
-        if (!profile.Name.contains('System Administrator')) return;
+    public void deleteCompletedMessages()
+    {
+        if (!Test.isRunningTest() && !System.isBatch())
+        {
+            //only clean in async context or tests
+            return;
+        }
         
-        if (triggerEnabled) {
-            if (IsCleaned) {
-                //#829 nothing to do if we cleaned already
-                return;
-            }
-            
-            deleteExpiredAndCompleted(now);
-            deleteExcessiveAll();
-            deleteExcessiveCompleted();   
-            
-            //only once per context
-            IsCleaned = true;
+        if (IsCleaned)
+        {
+            //nothing to do if we cleaned already
+            return;
+        }
+        
+        Integer news = this.getRecords().size();
+        Integer total = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
+        Integer maximum = MaxTotalMessages;
+        
+        if (total <= maximum)
+        {
+            //not enough to need cleaning
+            return;
+        }
+        
+        //prepare to clean right number of events
+        Integer limits = total - maximum;
+        List<Message__c> messages = [
+            SELECT Id
+            FROM Message__c
+            WHERE Status__c = 'Completed'
+            ORDER BY CreatedDate ASC
+            LIMIT :news
+        ];
+        
+        //only once per context
+        IsCleaned = true;
+        
+        try {
+            delete messages;
+            Database.emptyRecycleBin(messages);
+        } catch (DmlException e) {
+            //#836 swallow for safety
         }
     }
-
-
-    @testVisible private  void deleteExpiredAndCompleted(DateTime now) {
-        DateTime threshold = now.addDays(MaxTimeToLiveInDays * -1);
-        
-        List<Message__c> expiredAndCompletedMessages = [
-            SELECT Id
-            FROM Message__c
-            WHERE Status__c = 'Completed'
-            AND CreatedDate__c < :threshold
-            LIMIT :MaxDML
-        ];
-        
-        delete expiredAndCompletedMessages;
-    } 
-
-
-    @testVisible private  void deleteExcessiveAll() {
-        // excessiveMessagesCount
-        Integer insertableMessagesCount = this.getRecords().size();
-        Integer persistedMessagesCount =  [SELECT COUNT() FROM Message__c WHERE IsDeleted = false];
-        Integer excessiveMessagesCount =  (insertableMessagesCount + persistedMessagesCount) - MaxTotalMessages;
-        
-        // limit clause
-        excessiveMessagesCount = excessiveMessagesCount < 0 ? 0 : excessiveMessagesCount;
-        excessiveMessagesCount = excessiveMessagesCount > MaxDML ? MaxDML : excessiveMessagesCount;
-
-        List<Message__c> excessiveMessages = [
-            SELECT Id
-            FROM Message__c
-            WHERE Status__c = 'Completed'
-            ORDER BY CreatedDate ASC
-            LIMIT :excessiveMessagesCount
-        ];
-        
-        delete excessiveMessages;    
-    } 
-
-
-    @testVisible private  void deleteExcessiveCompleted() {
-        // excessiveCompletedCount
-        Integer persistedCompletedCount =  [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
-        Integer excessiveCompletedCount =  persistedCompletedCount - MaxCompletedMessages;
-        
-        // limit clause
-        excessiveCompletedCount = excessiveCompletedCount < 0 ? 0 : excessiveCompletedCount;
-        excessiveCompletedCount = excessiveCompletedCount > MaxDML ? MaxDML : excessiveCompletedCount;
-
-        List<Message__c> excessiveMessages = [
-            SELECT Id
-            FROM Message__c
-            WHERE Status__c = 'Completed'
-            ORDER BY CreatedDate ASC
-            LIMIT :excessiveCompletedCount
-        ];
-
-        delete excessiveMessages;  
-    } 
 }
