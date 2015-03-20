@@ -39,7 +39,17 @@ public with sharing class MessageRestartExtension {
             //redirect back to detail view
             return this.controller.view();
         } else {
+            // #653 don't use a @Future call unless necessary
+            if (Broker.impl().isRunning()) return new ApexPages.PageReference('/' + SObjectType.Message__c.KeyPrefix);
+            
             //when successful, restart the REAL broker to carry on with the outputs
+            if (!Test.isRunningTest()) {
+                //in real life, usurp sysadmin
+                Job.runAsUser();
+            } else {
+                //in tests, just run the thing
+                Job.run();
+            }
             Broker.run();
             
             //redirect back to list view
