@@ -666,7 +666,8 @@ abstract public with sharing class Broker {
                 message.Status__c = 'Started'; //#782 in-memory
                 messageIds.add(message.Id);
             }
-            throw new EngineException(null, messageIds, e, 'Persist failure.');
+            //#836 https://github.com/bigassforce/esb/issues/836#issuecomment-83969845
+            throw new EngineException(null, messageIds, e, 'Persist failure: ' + e.getMessage());
         }
     }
     
