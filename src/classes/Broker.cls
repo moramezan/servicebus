@@ -657,7 +657,9 @@ abstract public with sharing class Broker {
             }
             
             //transact both inputs and outputs in one fell swoop
+            MessageSetModel.Inhibit = false;
             List<Database.UpsertResult> results = Database.upsert(inputAndOutputMessages, true); //all or none
+            MessageSetModel.Inhibit = true;
             
             return results;
         } catch (Exception e) {
