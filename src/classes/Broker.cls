@@ -464,10 +464,6 @@ abstract public with sharing class Broker {
         //Set<Id> inputMessageIds = new Map<Id,SObject>(inputMessages).keySet();
         
         //OUR FUCKUPS (before invocation)
-        
-        //designate all input messages as finished #782 in-memory
-        //for (Message__c inputMessage : inputMessages) inputMessage.Status__c = 'Completed';
-
         DateTime startStamp = System.Now();
         
         Boolean biggerProblems = false;
@@ -499,6 +495,7 @@ abstract public with sharing class Broker {
         if (id2events.get(inputMessages[0].Id).get('__IsHeartbeatProcess') != null) {
             //invoke and wrap up results into messages
             for (Message__c inputMessage : inputMessages) {
+                inputMessage.Status__c = 'Completed'; //#798
                 Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
                 List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, inputEvent, null).invokeMain().Outputs;
                 for (Map<String,Object> output : outputs) outputMessages.add(new Message__c(Event__c = Json.serializePretty(output), Status__c = 'Buffered'));
@@ -595,7 +592,7 @@ abstract public with sharing class Broker {
             Savepoint minor = Database.setSavepoint();
             try {
                 wrapper.invokeMain();
-                inputMessage.Status__c = 'Completed';
+                inputMessage.Status__c = 'Completed'; //#798
                 inputMessage.Exception__c = null;
                 inputMessage.Cause__c = null;
                 inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
