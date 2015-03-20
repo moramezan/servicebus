@@ -396,7 +396,7 @@
     </fields>
     <fields>
         <fullName>IsActive__c</fullName>
-        <defaultValue>true</defaultValue>
+        <defaultValue>false</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>Should this schedule actually run or not?</inlineHelpText>
         <label>Active</label>
