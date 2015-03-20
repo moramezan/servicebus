@@ -187,6 +187,9 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
             return;
         }
         
+        //only once per context
+        IsCleaned = true;
+        
         Integer news = this.getRecords().size();
         Integer total = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
         Integer maximum = MaxTotalMessages;
@@ -206,9 +209,6 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
             ORDER BY CreatedDate ASC
             LIMIT :news
         ];
-        
-        //only once per context
-        IsCleaned = true;
         
         try {
             delete messages;
