@@ -500,6 +500,7 @@ abstract public with sharing class Broker {
             //invoke and wrap up results into messages
             for (Message__c inputMessage : inputMessages) {
                 inputMessage.Status__c = 'Completed'; //#798
+                inputMessage.FullyQualifiedClassName__c = Heartbeat.class.getName(); //#697 locateMarkableWork misses this for heartbeats
                 Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
                 List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, inputEvent, null).invokeMain().Outputs;
                 inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
