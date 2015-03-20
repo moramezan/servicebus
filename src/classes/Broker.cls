@@ -498,6 +498,7 @@ abstract public with sharing class Broker {
                 inputMessage.Status__c = 'Completed'; //#798
                 Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
                 List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, inputEvent, null).invokeMain().Outputs;
+                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
                 for (Map<String,Object> output : outputs) outputMessages.add(new Message__c(Event__c = Json.serializePretty(output), Status__c = 'Buffered'));
             }
             return;
