@@ -112,12 +112,11 @@
     </fields>
     <fields>
         <fullName>ExecuteDuration__c</fullName>
-        <defaultValue>0</defaultValue>
         <description>How many milliseconds elapsed from the start of the processing until successful completion or failure?</description>
         <externalId>false</externalId>
         <inlineHelpText>How many milliseconds elapsed from the start of the processing until successful completion or failure?</inlineHelpText>
         <label>Duration (ms)</label>
-        <precision>5</precision>
+        <precision>6</precision>
         <required>false</required>
         <scale>0</scale>
         <trackTrending>false</trackTrending>
