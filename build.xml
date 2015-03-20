@@ -63,14 +63,14 @@
             <replacetoken><![CDATA[
     <fullName>Enterprise Service Bus</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
-    <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
+    <description>Message queue for bulk data transformations and error recovery without data loss.</description>
     <namespacePrefix>esb</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
     <fullName>Enterprise Service Bus</fullName>
-    <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
+    <description>Message queue for bulk data transformations and error recovery without data loss.</description>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacevalue>
         </replace>
@@ -89,13 +89,13 @@
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
     <fullName>Enterprise Service Bus</fullName>
-    <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
+    <description>Message queue for bulk data transformations and error recovery without data loss.</description>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
     <fullName>Enterprise Service Bus</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
-    <description>▣▣▣ Please click [CONFIGURE] after install ▣▣▣</description>
+    <description>Message queue for bulk data transformations and error recovery without data loss.</description>
     <namespacePrefix>esb</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
