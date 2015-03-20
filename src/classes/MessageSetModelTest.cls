@@ -1,5 +1,36 @@
 @IsTest public class MessageSetModelTest {
     
+    static testmethod void inhibitCreationFromGuiInhibitsGui() {
+        //arrange
+        Message__c message = (Message__c)Message__c.SObjectType.newSObject(null, true);
+        
+        try {
+            //act
+            MessageSetModel.Inhibit = true;
+            Database.insert(message);
+            MessageSetModel.Inhibit = false;
+            System.assert(false, 'Above should throw exception first');
+        } catch (DmlException e) {
+            //assert
+            String expectedMessage = 'Messages cannot be created from the GUI.';
+            String actualMessage = e.getDmlMessage(0);
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message');
+        }
+    }
+    
+    static testmethod void inhibitCreationFromGuiAllowsApexApi() {
+        //arrange
+        Message__c message = (Message__c)Message__c.SObjectType.newSObject(null, true);
+        
+        //act
+        MessageSetModel.Inhibit = false;
+        Database.SaveResult result = Database.insert(message);
+        MessageSetModel.Inhibit = true;
+        
+        //assert
+        System.assert(result.isSuccess(), 'Should be successful');
+    }
+    
     static testmethod void testUnpopulatedRouteKey() {
         //arrange message
         Message__c message = new Message__c(
@@ -63,7 +94,6 @@
     }
     
     static testmethod void testOneRecordOverflowIsManaged() {
-        MessageSetModel.Inhibit = false;
         //arrange maximum
         MessageSetModel.MaxTotalMessages = 10;
         
@@ -89,7 +119,6 @@
     
     static testmethod void testTwentyRecordOverflowIsManaged()
     {
-        MessageSetModel.Inhibit = false;
         //arrange maximum
         MessageSetModel.MaxTotalMessages = 10;
         
@@ -117,7 +146,6 @@
     
     static testmethod void testOverflowManagerRunsOnceOnly()
     {
-        MessageSetModel.Inhibit = false;
         //arrange maximum
         MessageSetModel.MaxTotalMessages = 5;
         

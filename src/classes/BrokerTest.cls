@@ -314,12 +314,10 @@
     
     static testmethod void testLocatorOnlyMarksNonStartedWork() {
         //arrange
-        MessageSetModel.Inhibit = false;
         insert new List<Message__c>{
             new Message__c(Status__c = 'Started'),
             new Message__c(Status__c = 'Started')
         };
-        MessageSetModel.Inhibit = true;
     
         //act
         List<Message__c> messages = Broker.impl().locateMarkableWork();
@@ -339,20 +337,16 @@
         Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
         //arrange fucked messages
-        MessageSetModel.Inhibit = false;
         insert new List<Message__c>{
             new Message__c(Status__c = 'Started', Event__c = '{"__SequenceName":"test","__Position":1}'),
             new Message__c(Status__c = 'Started', Event__c = '{"__SequenceName":"test","__Position":1}')
         };
-        MessageSetModel.Inhibit = true;
         
         //arrange Buffered messages
-        MessageSetModel.Inhibit = false;
         insert new List<Message__c>{
             new Message__c(Status__c = 'Buffered', Event__c = '{"__SequenceName":"test","__Position":1}'),
             new Message__c(Status__c = 'Buffered', Event__c = '{"__SequenceName":"test","__Position":1}')
         };
-        MessageSetModel.Inhibit = true;
         
         //act
         MockBroker broker = new MockBroker();

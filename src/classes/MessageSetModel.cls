@@ -4,7 +4,7 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
      * Prevent message inserts per #677
      * (Change this flag sparingly only)
      */
-    static public Boolean Inhibit = true;
+    static public Boolean Inhibit = !Test.isRunningTest();
     
     /**
      * #829 try to prevent "too many query rows" by cleaning

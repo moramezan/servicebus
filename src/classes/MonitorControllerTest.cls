@@ -11,10 +11,8 @@
         Step__c wiretapStep = StepModel.generateOne(sequence.Id, wiretapProcess.Id);
         Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
         
-        MessageSetModel.Inhibit = false;
         insert new Message__c(FullyQualifiedClassName__c = wiretapProcess.FullyQualifiedClassName__c, Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Queued');
         insert new Message__c(FullyQualifiedClassName__c = terminateProcess.FullyQualifiedClassName__c, Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Buffered');
-        MessageSetModel.Inhibit = true;
         
         //act
         List<MonitorController.Statistic> statistics = MonitorController.getStatistics();

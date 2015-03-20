@@ -224,9 +224,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      */
     @TestVisible private List<Message__c> persist() {
         //just in time DML
-        MessageSetModel.Inhibit = false;
         insert this.messages; //#836
-        MessageSetModel.Inhibit = true;
         return this.messages;
     }
     
