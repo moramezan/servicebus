@@ -37,10 +37,6 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         this.populateRouteKey();
     }
     
-    override public void onAfterInsert() {
-        this.deleteCompletedMessages(); //#836
-    }
-    
     override public void onBeforeUpdate(List<SObject> oldObjects) {
         this.validateJsonParameters();
         this.interpretEsbSequenceName();
@@ -156,65 +152,6 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
             } catch (JsonException e) {
                 message.Event__c.addError(e);
             }
-        }
-    }
-
-     /*
-      *  Users may wish to view completed messages. The question then arises,
-      *  how many and how long should these completed messages persist for?
-      *  - On the how many question:
-      *    Delete completed messages that cause the count of all completed messages
-      *      to exceed a specified "completed messages threshold" 
-      *
-      * For example, if an imminent insert of eg 150 messages were to
-      * push the total number of messages over 5000, this would delete
-      * the same number of messages (150) off the old end of the table.
-      * 
-      * For confidence, we keep this away from any user-facing logic
-      * in batchables or queueables, once only per execution context.
-      */
-    public void deleteCompletedMessages()
-    {
-        if (!Test.isRunningTest() && !System.isBatch())
-        {
-            //only clean in async context or tests
-            return;
-        }
-        
-        if (IsCleaned)
-        {
-            //nothing to do if we cleaned already
-            return;
-        }
-        
-        //only once per context
-        IsCleaned = true;
-        
-        Integer news = this.getRecords().size();
-        Integer total = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
-        Integer maximum = MaxTotalMessages;
-        
-        if (total <= maximum)
-        {
-            //not enough to need cleaning
-            return;
-        }
-        
-        //prepare to clean right number of events
-        Integer limits = total - maximum;
-        List<Message__c> messages = [
-            SELECT Id
-            FROM Message__c
-            WHERE Status__c = 'Completed'
-            ORDER BY CreatedDate ASC
-            LIMIT :news
-        ];
-        
-        try {
-            delete messages;
-            Database.emptyRecycleBin(messages);
-        } catch (DmlException e) {
-            //#836 swallow for safety
         }
     }
 }
