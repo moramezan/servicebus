@@ -48,6 +48,7 @@
         Integer expectedLimits = describeResult.Limits;
         String expectedFullyQualifiedClassName = actualType.getName();
         Type innerClass = Type.forName(actualType.getName() + '.' + 'ESB'); 
+        if (innerClass == null) innerClass = Type.forName(actualType.getName() + 'ESB');
         ProcessModel.ESB meta = (ProcessModel.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessModel.ESB.class);
         String expectedStepConfig  = meta.StepConfig.getSObjectType().getDescribe().getName();
         String expectedIcon = meta.icon;

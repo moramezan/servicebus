@@ -1163,12 +1163,13 @@
         
     }
     
-    static testmethod void testKamikazeChunkingTakesOutHisMates() {
+    @TestVisible public class ChunkErrorProcessESB {
+        public String Description = 'Process used for testing kamikaze chunking solution.';
+    }
+    
+    static testmethod void testKamikazeChunkingDoesntTakeOutHisMates() {
         //arrange processes, sequence and steps
-        Broker.IgnoreInnerClass = true; //we generating BS Terminate then "renaming" to our ChunkErrorProcess
-        Process__c errorProcess = ProcessModel.generateOne(Terminate.class);
-        errorProcess.FullyQualifiedClassName__c = ChunkErrorProcess.class.getName();
-        update errorProcess; //TODO #828
+        Process__c errorProcess = ProcessModel.generateOne(ChunkErrorProcess.class);
         Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         Sequence__c sequence = new Sequence__c(Name = 'Test');

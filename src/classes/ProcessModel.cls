@@ -102,6 +102,7 @@ public with sharing class ProcessModel extends ApexDomain.StandardModel {
         public Process__c contextFromType(Type reflector) {
             Type outerClass = reflector;
             Type innerClass = Type.forName(reflector.getName() + '.' + 'ESB');
+            if (innerClass == null) innerClass = Type.forName(reflector.getName() + 'ESB');
             
             Object impl = outerClass.newInstance();
             Process__c process = new Process__c(

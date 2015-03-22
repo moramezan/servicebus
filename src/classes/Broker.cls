@@ -448,12 +448,6 @@ abstract public with sharing class Broker {
     }
     
     /**
-     * TODO #828 very difficult to test processes hiding inside inner classes
-     * but when that is possible, we should be able to get rid of this flag
-     */
-    @TestVisible static private Boolean IgnoreInnerClass = false;
-    
-    /**
      * Resolves and invokes the toStringable Object for one input, handing back an in-memory collection of outputs
      *
      * @throws EngineException
@@ -543,7 +537,8 @@ abstract public with sharing class Broker {
         }
         
         Type meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + '.' + 'ESB');
-        if (meta == null && !IgnoreInnerClass) { //TODO #828
+        if (meta == null) meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + 'ESB'); //#828
+        if (meta == null) {
             for (Message__c inputMessage : inputMessages) {
                 Exception e = new Broker.EngineException('Could not see ESB inner class, this is not a valid process: ' + reflector.getName());
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);

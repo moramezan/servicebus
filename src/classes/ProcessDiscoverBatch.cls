@@ -17,6 +17,7 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
             if (reflector != null) {
                 String fullyQualifiedClassName = String.isBlank(apexClass.NamespacePrefix) ? apexClass.Name : apexClass.NamespacePrefix + '.' + apexClass.Name;
                 Type meta = Type.forName(fullyQualifiedClassName + '.' + 'ESB'); 
+                if (meta == null) meta = Type.forName(fullyQualifiedClassName + 'ESB');
                 if (meta != null) {
                        apexClassIds.add(apexClass.Id);
                 }

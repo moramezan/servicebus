@@ -13,6 +13,7 @@ public with sharing class ProcessDescribeController {
         ];
         
         Type innerClass = Type.forName(fqn + '.' + 'ESB');
+        if (innerClass == null) innerClass = Type.forName(fqn + 'ESB'); //#828
         this.ESB = (ProcessModel.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessModel.ESB.class);
     }
     
