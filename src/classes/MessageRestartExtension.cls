@@ -50,7 +50,6 @@ public with sharing class MessageRestartExtension {
                 //in tests, just run the thing
                 Job.run();
             }
-            Broker.run();
             
             //redirect back to list view
             return new ApexPages.PageReference('/' + SObjectType.Message__c.KeyPrefix);

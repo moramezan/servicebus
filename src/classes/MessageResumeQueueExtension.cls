@@ -9,7 +9,13 @@ public with sharing class MessageResumeQueueExtension {
         Type.forName(MessageResumeQueueExtension.DoDml.class.getName()).newInstance();
         
         //restart the broker
-        Broker.run();
+        if (!Test.isRunningTest()) {
+            //in real life, usurp sysadmin
+            Job.runAsUser();
+        } else {
+            //in tests, just run the thing
+            Job.run();
+        }
         
         //redirect to list view
         return new PageReference('/' + SObjectType.Message__c.KeyPrefix);
