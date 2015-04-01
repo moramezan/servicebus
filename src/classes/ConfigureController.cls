@@ -200,6 +200,7 @@ public with sharing class ConfigureController {
         HttpRequest request = new HttpRequest();
         request.setMethod('POST');
         request.setEndpoint(new ConfigureController().buildRefreshLink().getUrl());
+        request.setTimeout(100000); // 100 seconds
         
         HttpResponse response = new Http().send(request);
         if (response.getStatusCode() != 200) {
