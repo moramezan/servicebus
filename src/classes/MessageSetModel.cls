@@ -154,4 +154,15 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
             }
         }
     }
+    
+    /**
+     * Swallow toString() in trace
+     * The intent is to NOT confuse or misdirect the end user ant to .. (cough) .. reveal our secret sauce
+     */
+    @TestVisible private void swallowToString() {
+        List<Message__c> messages = this.getRecords();
+        for (Message__c message : messages) {
+            message.Cause__c = message.Cause__c.replaceAll('Class.BaseProcess.toString[^\n]+\n', '');
+        }
+    } 
 }
