@@ -712,6 +712,15 @@ abstract public with sharing class Broker {
     static public void run() {
         if (BrokerSetting__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
         
+
+        
+        Id runningUserId = OAuthSetting__c.getOrgDefaults().RunningUserId__c;
+        Id userId = UserInfo.getUserId();
+        if (runningUserId == null)
+           throw new EngineException('The configured running user Id=[' + runningUserId + '] is null or invalid');
+        if (runningUserId != userId) 
+            throw new EngineException('The running user context is not the same as the configured running user context');
+        
         Broker impl = impl();
         
         if (impl.isRunning()) {
