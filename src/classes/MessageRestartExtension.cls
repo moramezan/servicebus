@@ -1,68 +1,37 @@
 public with sharing class MessageRestartExtension {
     
     private ApexPages.StandardController controller;
-    @TestVisible static private Message__c message;
+    static private MessageModel model;
+    static private Boolean success;
     
     public MessageRestartExtension(ApexPages.StandardController controller) {
         this.controller = controller;
-        message = (Message__c)ApexDomain.getById(controller.getId());
+        model = MessageModel.fromId(controller.getId());
     }
     
     public PageReference doRestart() {
-        //we are happy for ONLY Started guys to be force-Processed
-        //any other kind of message and we risk persisting it twice
-        
-        if (message.Status__c != 'Started') {
-            //prevent inadvertent replay!
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Only messages with "Started" status can be restarted.', ''));
+        try {
+            //avoids DML in action method
+            Type.forName(DoDml.class.getName()).newInstance();
+            
+        } catch (MessageModel.MessageException e) {
+            //eg you are not allowed to restart this message
+            ApexPages.addMessages(e);
             return null;
         }
         
-        //do special run once broker
-        Job.ExecAnonResult result;
-        if (!Test.isRunningTest()) {
-            //in real life, usurp sysadmin
-            result = Job.runOneAsUser(message.Id);
-        } else {
-            //in tests, just run the thing
-            Job.runOne(message.Id);
-            result = new Job.ExecAnonResult();
-            result.success = true;
-        }
-        
-        if (!result.success) {
-            //write status and any exception fields ("avoids DML in action method")
-            message.Exception__c = result.exceptionMessage.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-            message.Cause__c = result.exceptionStackTrace.abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
-            Type.forName(DoDml.class.getName()).newInstance();
-            
-            //redirect back to detail view
-            return this.controller.view();
-        } else {
-            // #653 don't use a @Future call unless necessary
-            if (Broker.impl().isRunning()) return new ApexPages.PageReference('/' + SObjectType.Message__c.KeyPrefix);
-            
-            //when successful, restart the REAL broker to carry on with the outputs
-            if (!Test.isRunningTest()) {
-                //in real life, usurp sysadmin
-                Job.runAsUser();
-            } else {
-                //in tests, just run the thing
-                Job.run();
-            }
-            
-            //redirect back to list view
+        if (success) {
+            //success, takes them back to list view (cancel does not achieve that)
             return new ApexPages.PageReference('/' + SObjectType.Message__c.KeyPrefix);
+        } else {
+            //failure, refreshes this detail page again
+            return this.controller.view();
         }
     }
-
+    
     public class DoDml {
         public DoDml() {
-            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');
-            if (!SObjectType.Message__c.Fields.Exception__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Exception__c.Updateable');
-            if (!SObjectType.Message__c.Fields.Cause__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Cause__c.Updateable');
-            
-            update message;
+            success = model.restart();
         }
     }
     

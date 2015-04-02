@@ -1,27 +1,32 @@
 public with sharing class MessageKillExtension {
 
     ApexPages.StandardSetController controller;
-    @TestVisible static private List<Message__c> messages;
+    static private MessageSetModel model;
     
     public MessageKillExtension(ApexPages.StandardSetController controller) {
         this.controller = controller;
+        Set<Id> messageIds = new Map<Id,SObject>(controller.getSelected()).keySet();
+        model = MessageSetModel.fromIds(messageIds);
     } 
     
     public PageReference doKill() {
-        Set<Id> messageIds = new Map<Id,SObject>(this.controller.getSelected()).keySet();
-        messages = [SELECT Id, Status__c FROM Message__c WHERE Id IN :messageIds AND Status__c = 'Started'];
-        for (Message__c message : messages) message.Status__c = 'Completed'; //per #825 and #827 we do NOT clear cause/exception
+        try {
+            //avoids DML in action method
+            Type.forName(DoDml.class.getName()).newInstance();
+            
+        } catch (Exception e) {
+            //failure, eg you are not allowed to kill any of those messages
+            ApexPages.addMessages(e);
+            return null;
+        }
         
-        //write status ("avoids DML in action method")
-        Type.forName(DoDml.class.getName()).newInstance();
+        //success, takes them back to list view (cancel does not achieve that)
         return new ApexPages.PageReference('/' + SObjectType.Message__c.KeyPrefix);
     }
     
     public class DoDml {
         public DoDml() {
-            update messages;
-            //restart REAL broker
-            Broker.run();
+            model.kill();
         }
     }
 
