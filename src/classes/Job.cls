@@ -258,7 +258,8 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
         // #653 don't use an API call unless necessary
         if (Broker.impl().isRunning()) return;
         String command = Job.class.getName() + '.run();';
-        execAnon(command);
+        ExecAnonResult result = execAnon(command);
+        if (!result.success) throw new JobException(result.exceptionMessage + '\n' + result.exceptionStackTrace); //#858 don't swallow exceptions
     }
     
     /**
