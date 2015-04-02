@@ -35,12 +35,14 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         this.interpretEsbSequenceName();
         this.incrementHops();
         this.populateRouteKey();
+        this.swallowToString();
     }
     
     override public void onBeforeUpdate(List<SObject> oldObjects) {
         this.validateJsonParameters();
         this.interpretEsbSequenceName();
         this.populateRouteKey();
+        this.swallowToString();
     }
     
     /**
@@ -162,7 +164,10 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
     @TestVisible private void swallowToString() {
         List<Message__c> messages = this.getRecords();
         for (Message__c message : messages) {
-            message.Cause__c = message.Cause__c.replaceAll('Class.BaseProcess.toString[^\n]+\n', '');
+            if (message.Cause__c != null) {
+            	message.Cause__c = message.Cause__c.replaceAll('Class.BaseProcess.toString[^\n]+\n', '');    
+            }
         }
     } 
+
 }
