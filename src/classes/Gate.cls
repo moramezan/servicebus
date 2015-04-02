@@ -41,7 +41,7 @@ public with sharing class Gate {
         
         insert new GateItem__c(
             GateGroup__c = gateGroupId,
-            Event__c = Json.serializePretty(inputEvent)
+            Event__c = Json.serializePretty(stripDoubleUnderScore(inputEvent))
         );
         
         List<GateItem__c> gateItems = [
@@ -343,4 +343,23 @@ public with sharing class Gate {
         
         return inputEvent;
     }
+    
+    /*
+     * #823 stripping any and all __ parameters from Gate Items
+     *  - nobody (inc bigass) can rely on those keys and values
+     *  - the "rehydrated" events are much easier on the eye.
+     */
+    @testVisible
+    private static Map<String,Object> stripDoubleUnderScore(Map<String,Object> inputEvent) {
+        Map<String,Object> result = new Map<String,Object>();
+        for (String key : inputEvent.keySet()) {
+            Object value = (Object)inputEvent.get(key);
+            if (!key.startsWith('__')) {
+                result.put(key, value);
+            }
+        }
+
+        return result;
+    } 
+    
 }

@@ -842,4 +842,30 @@ private  class GateTest {
         System.assertEquals(expected03 , actual03);
     } 
     
+    static testmethod void callingsStripDoubleUnderScoreReturnsExpectedCollection() {
+        // Arrange :
+        Map<String,Object> parameters = new Map<String,Object> {
+            '__x' => 'v1',
+            'esb__x' => 'v2',
+            'balls' => 'v3'
+        };
+
+        // Act
+        Map<String,Object> actualParameters =  Gate.stripDoubleUnderScore(parameters);
+
+
+        // prepare
+        Boolean actual01 = (actualParameters.get('__x') == null);
+        Boolean actual02 = (actualParameters.get('esb__x') != null);
+        Boolean actual03 = (actualParameters.get('balls') != null);
+
+        // Assert
+        Boolean expected01 = true;
+        System.assertEquals(expected01 , actual01);
+        Boolean expected02 = true;
+        System.assertEquals(expected02 , actual02);
+        Boolean expected03 = true;
+        System.assertEquals(expected03 , actual03);
+    }
+  
 }
