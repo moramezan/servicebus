@@ -67,17 +67,8 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         
         Set<Id> killedMessageIds = new Map<Id,SObject>(killableMessages).keySet();
         
-        // #653 don't use a @Future call unless necessary
-        if (Broker.impl().isRunning()) return;
-        
         //restart REAL broker
-        if (!Test.isRunningTest()) {
-            //in real life, usurp sysadmin
-            Job.runAsUser();
-        } else {
-            //in tests, just run the thing
-            Job.run();
-        }
+        Job.runAsUser();
     }
     
     /**
@@ -110,17 +101,8 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         //write status and any exception fields ("avoids DML in action method")
         update rebufferableMessages;
         
-        // #653 don't use a @Future call unless necessary
-        if (Broker.impl().isRunning()) return;
-        
         //restart REAL broker
-        if (!Test.isRunningTest()) {
-            //in real life, usurp sysadmin
-            Job.runAsUser();
-        } else {
-            //in tests, just run the thing
-            Job.run();
-        }
+        Job.runAsUser();
     }
     
     /**

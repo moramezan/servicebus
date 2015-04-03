@@ -499,6 +499,8 @@
         Boolean actualBeforeFlag = BrokerTest.flagrunImpl;
         System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
+        //IT'S a @FUTURE CALL ... dont want that to happen every time
+        
         //act
         new Job(theSequenceName, theId).execute(null);
         

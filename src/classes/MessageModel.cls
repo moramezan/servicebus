@@ -65,16 +65,7 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
         }
         
         //do special run once broker
-        Job.ExecAnonResult result;
-        if (!Test.isRunningTest()) {
-            //in real life, usurp sysadmin
-            result = Job.runOneAsUser(message.Id);
-        } else {
-            //in tests, just run the thing
-            Job.runOne(message.Id);
-            result = new Job.ExecAnonResult();
-            result.success = true;
-        }
+        Job.ExecAnonResult result = Job.runOneAsUser(message.Id);
         
         if (!result.success) {
             //failure, write status and any exception fields ("avoids DML in action method")
@@ -85,19 +76,7 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
         }
         
         //success, restart the REAL broker to carry on with the outputs
-        
-        if (Broker.impl().isRunning()) {
-            //#653 don't use a @Future call unless necessary
-            return true;
-        }
-        
-        if (!Test.isRunningTest()) {
-            //in real life, usurp sysadmin
-            Job.runAsUser();
-        } else {
-            //in tests, just run the thing
-            Job.run();
-        }
+        Job.runAsUser();
         
         return true;
     }

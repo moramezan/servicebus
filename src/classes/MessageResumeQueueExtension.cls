@@ -8,14 +8,8 @@ public with sharing class MessageResumeQueueExtension {
         //update IsPaused setting and update Message statuses ("avoids DML in action method")
         Type.forName(MessageResumeQueueExtension.DoDml.class.getName()).newInstance();
         
-        //restart the broker
-        if (!Test.isRunningTest()) {
-            //in real life, usurp sysadmin
-            Job.runAsUser();
-        } else {
-            //in tests, just run the thing
-            Job.run();
-        }
+        //in real life, usurp sysadmin
+        Job.runAsUser();
         
         //redirect to list view
         return new PageReference('/' + SObjectType.Message__c.KeyPrefix);
