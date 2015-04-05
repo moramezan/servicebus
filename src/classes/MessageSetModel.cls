@@ -1,5 +1,7 @@
 public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
     
+    public class MessageException extends Exception {}
+    
     /**
      * Prevent message inserts per #677
      * (Change this flag sparingly only)
@@ -15,6 +17,92 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
     
     public MessageSetModel(List<Message__c> messages) {
         super(messages);
+    }
+    
+    static public MessageSetModel fromIds(Set<Id> messageIds) {
+        List<Message__c> messages = [
+            SELECT Id, Name, Attempts__c, Exception__c, ExecuteDuration__c, FullyQualifiedClassName__c, Route__c, Status__c
+            FROM Message__c
+            WHERE Id IN :messageIds
+        ];
+        return new MessageSetModel(messages);
+    }
+    
+    /**
+     * Killed messages are really just started exceptions that have been "moved on" to Completed.
+     * We allow users to "kill" them so they don't appear as big ugly red bars in the monitor.
+     * 
+     * @return set of actual killed message ids
+     */
+    public void kill() {
+        Set<Id> attemptedIds = this.keySet();
+        
+        if (attemptedIds.isEmpty()) {
+            throw new MessageException('You must select some messages.');
+        }
+        
+        //we query on both status and exception to ensure guys
+        //held up in database.stateful can't be killed. if
+        //someone aborts the batch job, yep they stuck forever
+        List<Message__c> killableMessages = [
+            SELECT Id, Status__c
+            FROM Message__c
+            WHERE Id IN :attemptedIds
+            AND Status__c = 'Started'
+            AND Exception__c != null
+            FOR UPDATE
+        ];
+        
+        if (killableMessages.isEmpty()) {
+            //maybe selected messages were not killable...
+            throw new MessageException('Only messages with an Exception can be killed.');
+        }
+        
+        for (Message__c killableMessage : killableMessages) {
+            //per #825 and #827 we do NOT clear cause/exception
+            killableMessage.Status__c = 'Completed';
+        }
+        
+        update killableMessages;
+        
+        Set<Id> killedMessageIds = new Map<Id,SObject>(killableMessages).keySet();
+        
+        //restart REAL broker
+        Job.runAsUser();
+    }
+    
+    /**
+     * "Rebuffering" is the asynchronous re-attempt of
+     * several messages, with the hope of them reprocessing
+     * successfully (presumably after changing the process)
+     */
+    public void rebuffer() {
+        Set<Id> attemptedIds = this.keySet();
+        
+        List<Message__c> rebufferableMessages = [
+            SELECT Id, Status__c
+            FROM Message__c
+            WHERE Id IN :attemptedIds
+            AND Status__c IN ('Started', 'Completed')
+            AND Exception__c != null
+        ];
+        
+        if (rebufferableMessages.isEmpty()) {
+            //maybe selected messages were not killable...
+            throw new MessageException('Only messages with an Exception can be rebuffered.');
+        }
+        
+        for (Message__c rebufferableMessage : rebufferableMessages) {
+            rebufferableMessage.Status__c = 'Buffered';
+            rebufferableMessage.Exception__c = null; //#827
+            rebufferableMessage.Cause__c = null; //#827
+        }
+        
+        //write status and any exception fields ("avoids DML in action method")
+        update rebufferableMessages;
+        
+        //restart REAL broker
+        Job.runAsUser();
     }
     
     /**

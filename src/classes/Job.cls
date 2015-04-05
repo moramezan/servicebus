@@ -199,17 +199,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
     public void execute(QueueableContext context) {
         if (context != null) new MessageSetModel(this.messages).populateQueueableId(context);
         List<Message__c> messages = this.persist();
-        
-        // #653 don't use a @Future call unless necessary
-        if (Broker.impl().isRunning()) return;
-        
-        if (!Test.isRunningTest()) {
-            //in real life, usurp sysadmin
-            Job.runAsUser();
-        } else {
-            //in tests, just run the thing
-            Job.run();
-        }
+        Job.runAsUser();
     }
     
     /**
@@ -249,16 +239,33 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
     }
     
     /**
+     * #816 https://cloud.githubusercontent.com/assets/1878631/6813469/15c4d956-d27e-11e4-9d3d-e7026e95eade.jpg
+     */
+    static public void runAsUser() {
+        if (Test.isRunningTest()) {
+            //in tests, just run the thing here and now as me
+            Job.run();
+            return;
+        }
+        
+        //#653 don't use up an ASYNC call unless necessary
+        if (Broker.impl().isRunning()) return;
+        runAsUserDefer();
+    }
+    
+    /**
      * When this blows up we throw an unhandled exception in our namespace,
      * we should receive an email and reach out to the customer to debug this!
      *
      * @throws JobException
      */
-    @Future(callout=true) static public void runAsUser() {
-        // #653 don't use an API call unless necessary
+    @Future(callout=true) static public void runAsUserDefer() {
+        //#653 don't use up an API call unless necessary
         if (Broker.impl().isRunning()) return;
+        
         String command = Job.class.getName() + '.run();';
-        execAnon(command);
+        ExecAnonResult result = execAnon(command);
+        if (!result.success) throw new JobException(result.exceptionMessage + '\n' + result.exceptionStackTrace); //#858 don't swallow exceptions
     }
     
     /**
@@ -313,6 +320,14 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      * @throws JobException
      */
     static public ExecAnonResult runOneAsUser(Id messageId) {
+        if (Test.isRunningTest()) {
+            //in tests, just run the thing here and now as me
+            Job.runOne(messageId);
+            ExecAnonResult result = new ExecAnonResult();
+            result.success = true;
+            return result;
+        }
+        
         String command = Job.class.getName() + '.runOne(\'' + messageId + '\');';
         return execAnon(command);
     }
