@@ -36,6 +36,7 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         this.incrementHops();
         this.populateRouteKey();
         this.swallowToString();
+        this.populateQueueableId();
     }
     
     override public void onBeforeUpdate(List<SObject> oldObjects) {
@@ -169,5 +170,19 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
             }
         }
     } 
+    
+    /**
+     * Populates the enqueue Id
+     * This parameter surfaced onto the message to support the
+     * functionality in the EnqueueGate
+     */
+    @TestVisible private void populateQueueableId() {
+        List<Message__c> messages = this.getRecords();
 
+        for (Message__c message : messages) {
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
+            message.QueueableId__c = (String)parameters.get('__QueueableId');
+        }
+    }
+    
 }

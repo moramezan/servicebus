@@ -136,6 +136,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>QueueableId__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Which Job enqueued this message?</inlineHelpText>
+        <label>Queueable Id</label>
+        <length>18</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Route__c</fullName>
         <description>Composite key that can be runtime-resolved to a Step as late as possible.</description>
         <externalId>true</externalId>
@@ -183,6 +194,7 @@
         <columns>FullyQualifiedClassName__c</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
+        <columns>QueueableId__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>

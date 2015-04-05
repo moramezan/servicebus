@@ -122,4 +122,23 @@
         String actualCause = message.Cause__c;
         System.assertEquals(expectedCause, actualCause, 'Cause should not contain a reference to toString');
     }
+
+
+    
+     static testmethod void callingPopulateQueueableIdCorrectlyPopulatesQueueableId() {
+         //arrange message
+         String queueableId = '123456';
+         Message__c message = new Message__c(
+             Event__c = '{"__QueueableId":"' + queueableId + '"}'
+         );
+
+         //act
+         new MessageSetModel(new List<Message__c>{message}).populateQueueableId();
+
+         //assert
+
+         String actualQueueableId = message.QueueableId__c;
+         String expectedQueueableId = queueableId;
+         System.assertEquals(expectedQueueableId, actualQueueableId, 'Failed to populate QueueableId');
+     }    
 }

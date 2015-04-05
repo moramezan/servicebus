@@ -27,6 +27,8 @@
         <members>ConfigureControllerTest</members>
         <members>Disperse</members>
         <members>DisperseTest</members>
+        <members>EnqueuedGate</members>
+        <members>EnqueuedGateTest</members>
         <members>Gate</members>
         <members>GateTest</members>
         <members>Heartbeat</members>
@@ -203,6 +205,8 @@
         <members>BrokerSetting__c.IsPaused__c</members>
         <members>DisperseDestination__c.DisperseConfig__c</members>
         <members>DisperseDestination__c.Sequence__c</members>
+        <members>EnqueuedGateItem__c.Event__c</members>
+        <members>EnqueuedGateItem__c.GateGroup__c</members>
         <members>GateGroup__c.MarkConfig__c</members>
         <members>GateItem__c.Event__c</members>
         <members>GateItem__c.GateGroup__c</members>
@@ -215,6 +219,7 @@
         <members>Message__c.Exception__c</members>
         <members>Message__c.ExecuteDuration__c</members>
         <members>Message__c.FullyQualifiedClassName__c</members>
+        <members>Message__c.QueueableId__c</members>
         <members>Message__c.Route__c</members>
         <members>Message__c.Status__c</members>
         <members>OAuthSetting__c.AccessToken__c</members>
@@ -253,6 +258,7 @@
         <members>BrokerSetting__c</members>
         <members>DisperseConfig__c</members>
         <members>DisperseDestination__c</members>
+        <members>EnqueuedGateItem__c</members>
         <members>EventType__c</members>
         <members>GateGroup__c</members>
         <members>GateItem__c</members>
@@ -298,6 +304,7 @@
         <members>BranchConfig__c-Branch Config Layout</members>
         <members>DisperseConfig__c-Disperse Config Layout</members>
         <members>DisperseDestination__c-Destination Layout</members>
+        <members>EnqueuedGateItem__c-Enqueue Gate Item Layout</members>
         <members>EventType__c-Event Type Layout</members>
         <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>

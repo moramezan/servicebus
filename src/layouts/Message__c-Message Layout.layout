@@ -43,6 +43,10 @@
                 <behavior>Edit</behavior>
                 <field>Event__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>QueueableId__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>
     </layoutSections>

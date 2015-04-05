@@ -1,0 +1,73 @@
+<h1>
+    Enqueued Gate process
+</h1>
+
+<p>
+<ul>
+    <li>A related collection of messages may proceed down the same sequence
+        in separate execution contexts.
+        <br/>For most requirements, this is acceptable and desired behaviour but
+        a need may  arise for a downstream process <em>to act on these related messages in a single
+            transaction context</em>.
+    </li>
+    <li>An <code>EnqueuedGate</code> process enables the above scenario by utilising
+        the <code>Job Id</code> field as a grouping key on all related messages.
+        <br/>(All messages carry the same unique
+        value in this field when enqueued at the same time.)
+    </li>
+</ul>
+
+</p>
+
+<p> <br/> </p>
+
+<h2>
+    Scenario
+</h2>
+
+<p>
+    Consider a collection of 30 related events that are enqueued simultaneously.
+<ul>
+    <li>Each event signals the execution of an asynchronous downstream process that for example,
+        analyses the internal strength of a specific jet engine fan blade referenced by the event.
+    </li>
+    <li>Naturally, all 30 processes must return "PASS" for the jet engine to be certified as airworthy
+        but until the results of all 30 fan blades have completed, no positive decision can be
+        made about the airworthiness of that jet engine.
+    </li>
+</ul>
+</p>
+
+<p> <br/> </p>
+
+<h2>
+    Scenario Implementation using the Enqueued Gate Process
+</h2>
+<p>
+
+<ul>
+    <li>
+        The enqueue method annotates all 30 "jet blade" events with the same unique <code>Job Id</code>.
+        <br/> (<strong>Note:</strong> This is standard ESB functionality - a collection of simultaneously enqueued
+        events will all receive the same <code>Job Id</code>)
+    </li>
+    <li>
+        Each of the 30 "jet blade" events signals the (asynchronous) execution of a custom
+        <code>"Blade Strength"</code> process and this custom process will emmit a useful "PASS/FAIL" result.
+    </li>
+    <li>
+        After passing though the <code>"Blade Strength"</code> process,
+        all  "jet blade" events are buffered  as and when they arrive by
+        the  <code>EnqueuedGate</code> process
+    </li>
+    <li>
+        As soon as  all 30 "jet blade" events have arrived, the <code>EnqueuedGate</code> process releases
+        a single message that contains a handle to the cumulative results of all 30 "jet blade" events.
+        With access to this handle, all subsequent downstream processes are now equipped with a complete view of
+        prior asynchronous events thereby enabling a valid positive assessment of the airworthiness of the jet engine
+        in a single context.
+    </li>
+</ul>
+</p>
+
+

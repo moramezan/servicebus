@@ -85,6 +85,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>EnqueuedGate</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>EnqueuedGateTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Gate</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -453,6 +461,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>EnqueuedGateItem__c.Event__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>EnqueuedGateItem__c.GateGroup__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>GateGroup__c.MarkConfig__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -499,6 +517,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Message__c.FullyQualifiedClassName__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Message__c.QueueableId__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -665,6 +688,15 @@
         <modifyAllRecords>false</modifyAllRecords>
         <object>DisperseDestination__c</object>
         <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowCreate>false</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>false</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <object>EnqueuedGateItem__c</object>
+        <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
         <allowCreate>true</allowCreate>
