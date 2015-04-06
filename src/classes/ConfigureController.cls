@@ -220,6 +220,36 @@ public with sharing class ConfigureController {
     }
     
     /**
+     * Creates the hourly cron job used by Schedule process steps.
+     * Also makes sure the cron job will use the Batch Broker.
+     *
+     * Per #708 if someone trashes the scheduled job, we don't try
+     * to pick that up in a Configure Page (or anything else). Instead
+     * they should re-install the package over the top of the org.
+     */
+    static public Id installSchedule() {
+        String name = 'Enterprise Service Bus Heartbeat';
+        List<CronJobDetail> cronJobDetails = [SELECT Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
+        
+        //job already scheduled, nothing to do
+        if (!cronJobDetails.isEmpty()) return null;
+        
+        String cronExpr = '0 0 * * * ?';
+        HeartbeatDispatcher schedulable = new HeartbeatDispatcher();
+        return System.schedule(name, cronExpr, schedulable);
+    }
+    
+    static public void uninstallSchedule() {
+        try {
+            CronJobDetail cronJobDetail = [SELECT Id FROM CronJobDetail WHERE Name = 'Enterprise Service Bus Heartbeat'];
+            CronTrigger cronTrigger = [SELECT Id FROM CronTrigger WHERE CronJobDetailId = :cronJobDetail.Id];
+            System.abortJob(cronTrigger.Id);
+        } catch (QueryException e) {
+            //failure, couldn't locate job, probably not running
+        }
+    }
+    
+    /**
      * Per #707 the OAuth stuff has moved across into this ConfigureController because
      * there is no longer any Remote Site Setting or Schedule or Custom App to install.
      *
@@ -243,6 +273,10 @@ public with sharing class ConfigureController {
         
         if (code == null) {
             //STEP ONE
+            uninstallSchedule();
+            installSchedule(); //#811 run heartbeat schedule as admin
+            
+            //this will send them to the oauth allow page
             PageReference authLink = this.buildAuthLink();
             
             //set retURL cookie because we can't pass it in connected app callback

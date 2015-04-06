@@ -5,19 +5,7 @@
 public without sharing class PostUninstallHandler implements UnInstallHandler {
 
     public void onUninstall(UninstallContext context) {
-        unInstallSchedule();
+        //can't script uninstall of cron job, it actually blocks uninstall first
     }
 
-
-    @TestVisible private static void uninstallSchedule() {
-        String  name = 'Enterprise Service Bus Heartbeat';
-        List<CronJobDetail>  cronJobDetails = [SELECT   Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
-        if (cronJobDetails.size() > 0) {
-            Id cronJobDetailId = cronJobDetails[0].Id;
-            List<CronTrigger>  cronTriggers = [SELECT   Id, CronJobDetailId FROM CronTrigger  WHERE CronJobDetailId = :cronJobDetailId ];
-            if (cronTriggers.size() > 0) {
-                system.abortJob(cronTriggers[0].Id);
-            }
-        }
-    }
 }

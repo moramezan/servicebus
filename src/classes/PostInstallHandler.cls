@@ -17,9 +17,6 @@ public without sharing class PostInstallHandler implements InstallHandler {
         Boolean isPush = context == null ? false : context.isPush();
         Boolean isCli = context == null;
         
-        //push upgrades run under the pushing user, not the local user, so keep it simple
-        if (!isPush) installSchedule();
-        
         //permission set assignments must be made on the local user, not the pushing user
         if (!isPush) assignPermissionSet(installerId);
         
@@ -98,26 +95,6 @@ public without sharing class PostInstallHandler implements InstallHandler {
      */
     static public void executeProcessDiscoverBatch() {
         Database.executeBatch(new ProcessDiscoverBatch(), 1);
-    }
-    
-    /**
-     * Creates the hourly cron job used by Schedule process steps.
-     * Also makes sure the cron job will use the Batch Broker.
-     *
-     * Per #708 if someone trashes the scheduled job, we don't try
-     * to pick that up in a Configure Page (or anything else). Instead
-     * they should re-install the package over the top of the org.
-     */
-    static public Id installSchedule() {
-        String name = 'Enterprise Service Bus Heartbeat';
-        List<CronJobDetail> cronJobDetails = [SELECT Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
-        
-        //job already scheduled, nothing to do
-        if (!cronJobDetails.isEmpty()) return null;
-        
-        String cronExpr = '0 0 * * * ?';
-        HeartbeatDispatcher schedulable = new HeartbeatDispatcher();
-        return System.schedule(name, cronExpr, schedulable);
     }
     
     /**

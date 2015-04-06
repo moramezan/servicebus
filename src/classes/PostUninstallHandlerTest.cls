@@ -4,12 +4,12 @@
 
         //arrange
         String  name = 'Enterprise Service Bus Heartbeat';
-        PostInstallHandler.InstallSchedule();
+        ConfigureController.installSchedule();
         List<CronJobDetail>  cronJobDetailsBefore = [SELECT  Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
         Integer actualSizeBefore = cronJobDetailsBefore.size();
 
         //act
-        PostUninstallHandler.uninstallSchedule();
+        ConfigureController.uninstallSchedule();
 
         //assemble
         List<CronJobDetail>  cronJobDetailsAfter = [SELECT  Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];

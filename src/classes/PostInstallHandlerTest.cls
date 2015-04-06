@@ -4,7 +4,7 @@
         String  name = 'Enterprise Service Bus Heartbeat';
         
         //act
-        PostInstallHandler.InstallSchedule();
+        ConfigureController.installSchedule();
         
         //assert
         Integer expectedSizeAfter = 1;
