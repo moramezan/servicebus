@@ -12423,10 +12423,10 @@ ul.z-tagfield-list.z-tagfield-singleselect {
   background-position: 0 -13px; }
 
 .z-grid-tree-loading .z-tree-icon {
-  background-image: url('data:image/gif;base64,R0lGODlhEAAQAPUkAPVhVvLy8tvb2+fn5/j4+Pr6+vn5+eDg4P8gEM/Pz//Dv/Hx8fz8/NbW1v8+MP+ln/9NQP/h3/+If+Pj4+rq6uzs7P8RAOXl5dnZ2czMzNTU1OKJgvZwZvb29vnq6d+GgP3g3dHR0d7e3vX19f/Sz+fY19jY2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCAAkACwAAAAAEAAQAEAGgUCSkDSqXI6XymhIwjgxSyZJYalaFk/RIEAgBAYA64N0wIQy6DT6Y3EICwekHMmJNJ8VKUlitUyeAh1MHghWEEIGDWpqDQZMDBRzSBQMQ2Uikkdhbn9OAo5DIIVVEE9QelRWpnlSfFZYTiEJFwEBFwlsVWMFGouLG3ZMFRhqGKxCQQAh+QQFCAAAACwAAAAAEAAQAAAGXkCAELCYYDDD5LBwOB6VSoHzmRwwklPMZculKDGCymjIvYyThGRhwK1AlYHyG13O2DOB+fCeueiFGHcJZ0IkShV8QwoSCBZKDXZJFpOTSQYJSpSTCH+aDhGdFhAPSUEAIfkEBQgAJAAsAAAAABAAEAAABmVAknAoxGAmC6JyaDQeCkODpkltHoaNTKjaFA0rmXBoOKoIvMxwJtEhGpTqzGUJVwfoeDrhwp/nSQF9fkMeRCADfRVEHwgSCkMAfSNDHxaWFkSRFEMbl5ZKHAxDEQ6ef0IPEJ90QQAh+QQFCAAAACwAAAAAEAAQAAAGYECAEFDBZDLD5NDQOB6VyoTzmRQUktMMZss9KDOJS2DIxSyUoyRBwJ1AlUXuOzkqW+4WxXyIt0j2QhB4CCRJV0kPfUMEAQMXSg53SReUlEkRCEqVlAOAmxQMgCUXFWlDQQAh+QQFCAAkACwAAAAAEAAQAAAGZkCScCjMZDAVonJoNDYMw8imSW1qhg7Lp9oMDR+W8GcYuCS8Q0jYgvAQO8q1RbKMrxX1fH2E6WP0QhV+f0QgRAYCfhNEAAMBBEMifgtDABeXF0SSB0McmJdKBwVDDBSfgEIjFZh1QQAh+QQFCAAAACwAAAAAEAAQAAAGXkCAEPCAWCzD5DDiOB6VSoTzmUwYklNLZsttKC0IiWLIzVSUpOQowcVAlZfyOxkoX+4XwnyIvwT2QhV4AwVJemp9QyMVAm5JFHdJGJOTSQwDSpSTAoCaB4V7kxMLSUEAIfkEBQgAJAAsAAAAABAAEAAABmZAknAotFggD6JyaDQ6IkMGp0ltboaUC6Da/AxHlzBgqJAgvMNK+DIAET3K9SWwjK8J9Xw9kOln9EIXfn9EBkQdCX4YRCICFSNDIX4VQyIYl4uRGQ1DB5iXShqGQgWemIBCCxOgdUEAIfkEBQgAAAAsAAAAABAAEAAABl9AgBAwqlwuw+SQQTkelcqB85lERJLTi2XLdSgvgwBhyLU8lIUkCcGFQJWS8jupKGPumNF8iMdU9kITeAJjQ3pJC31DARcJGUoHd0MmGZWVSQUCSpaVCYCcDQafGX5JQQA7'); }
+  background-image: url('data:image/gif;base64,R0lGODlhEAAQALMMAKqooJGOhp2bk7e1rZ2bkre1rJCPhqqon8PBudDOxXd1bISCef///wAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFAAAMACwAAAAAEAAQAAAET5DJyYyhmAZ7sxQEs1nMsmACGJKmSaVEOLXnK1PuBADepCiMg/DQ+/2GRI8RKOxJfpTCIJNIYArS6aRajWYZCASDa41Ow+Fx2YMWOyfpTAQAIfkEBQAADAAsAAAAABAAEAAABE6QyckEoZgKe7MEQMUxhoEd6FFdQWlOqTq15SlT9VQM3rQsjMKO5/n9hANixgjc9SQ/CgKRUSgw0ynFapVmGYkEg3v1gsPibg8tfk7CnggAIfkEBQAADAAsAAAAABAAEAAABE2QycnOoZjaA/IsRWV1goCBoMiUJTW8A0XMBPZmM4Ug3hQEjN2uZygahDyP0RBMEpmTRCKzWGCkUkq1SsFOFQrG1tr9gsPc3jnco4A9EQAh+QQFAAAMACwAAAAAEAAQAAAETpDJyUqhmFqbJ0LMIA7McWDfF5LmAVApOLUvLFMmlSTdJAiM3a73+wl5HYKSEET2lBSFIhMIYKRSimFriGIZiwWD2/WCw+Jt7xxeU9qZCAAh+QQFAAAMACwAAAAAEAAQAAAETZDJyRCimFqbZ0rVxgwF9n3hSJbeSQ2rCWIkpSjddBzMfee7nQ/XCfJ+OQYAQFksMgQBxumkEKLSCfVpMDCugqyW2w18xZmuwZycdDsRACH5BAUAAAwALAAAAAAQABAAAARNkMnJUqKYWpunUtXGIAj2feFIlt5JrWybkdSydNNQMLaND7pC79YBFnY+HENHMRgyhwPGaQhQotGm00oQMLBSLYPQ9QIASrLAq5x0OxEAIfkEBQAADAAsAAAAABAAEAAABE2QycmUopham+da1cYkCfZ94UiW3kmtbJuRlGF0E4Iwto3rut6tA9wFAjiJjkIgZAYDTLNJgUIpgqyAcTgwCuACJssAdL3gpLmbpLAzEQA7'); }
 
 .z-grid-tree-loading .z-rtl.z-tree-icon {
-  background-image: url('data:image/gif;base64,R0lGODlhEAAQAPUkAPVhVvLy8tvb2+fn5/j4+Pr6+vn5+eDg4P8gEM/Pz//Dv/Hx8fz8/NbW1v8+MP+ln/9NQP/h3/+If+Pj4+rq6uzs7P8RAOXl5dnZ2czMzNTU1OKJgvZwZvb29vnq6d+GgP3g3dHR0d7e3vX19f/Sz+fY19jY2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCAAkACwAAAAAEAAQAEAGgUCSkDSqXI6XymhIwjgxSyZJYalaFk/RIEAgBAYA64N0wIQy6DT6Y3EICwekHMmJNJ8VKUlitUyeAh1MHghWEEIGDWpqDQZMDBRzSBQMQ2Uikkdhbn9OAo5DIIVVEE9QelRWpnlSfFZYTiEJFwEBFwlsVWMFGouLG3ZMFRhqGKxCQQAh+QQFCAAAACwAAAAAEAAQAAAGXkCAELCYYDDD5LBwOB6VSoHzmRwwklPMZculKDGCymjIvYyThGRhwK1AlYHyG13O2DOB+fCeueiFGHcJZ0IkShV8QwoSCBZKDXZJFpOTSQYJSpSTCH+aDhGdFhAPSUEAIfkEBQgAJAAsAAAAABAAEAAABmVAknAoxGAmC6JyaDQeCkODpkltHoaNTKjaFA0rmXBoOKoIvMxwJtEhGpTqzGUJVwfoeDrhwp/nSQF9fkMeRCADfRVEHwgSCkMAfSNDHxaWFkSRFEMbl5ZKHAxDEQ6ef0IPEJ90QQAh+QQFCAAAACwAAAAAEAAQAAAGYECAEFDBZDLD5NDQOB6VyoTzmRQUktMMZss9KDOJS2DIxSyUoyRBwJ1AlUXuOzkqW+4WxXyIt0j2QhB4CCRJV0kPfUMEAQMXSg53SReUlEkRCEqVlAOAmxQMgCUXFWlDQQAh+QQFCAAkACwAAAAAEAAQAAAGZkCScCjMZDAVonJoNDYMw8imSW1qhg7Lp9oMDR+W8GcYuCS8Q0jYgvAQO8q1RbKMrxX1fH2E6WP0QhV+f0QgRAYCfhNEAAMBBEMifgtDABeXF0SSB0McmJdKBwVDDBSfgEIjFZh1QQAh+QQFCAAAACwAAAAAEAAQAAAGXkCAEPCAWCzD5DDiOB6VSoTzmUwYklNLZsttKC0IiWLIzVSUpOQowcVAlZfyOxkoX+4XwnyIvwT2QhV4AwVJemp9QyMVAm5JFHdJGJOTSQwDSpSTAoCaB4V7kxMLSUEAIfkEBQgAJAAsAAAAABAAEAAABmZAknAotFggD6JyaDQ6IkMGp0ltboaUC6Da/AxHlzBgqJAgvMNK+DIAET3K9SWwjK8J9Xw9kOln9EIXfn9EBkQdCX4YRCICFSNDIX4VQyIYl4uRGQ1DB5iXShqGQgWemIBCCxOgdUEAIfkEBQgAAAAsAAAAABAAEAAABl9AgBAwqlwuw+SQQTkelcqB85lERJLTi2XLdSgvgwBhyLU8lIUkCcGFQJWS8jupKGPumNF8iMdU9kITeAJjQ3pJC31DARcJGUoHd0MmGZWVSQUCSpaVCYCcDQafGX5JQQA7'); }
+  background-image: url('data:image/gif;base64,R0lGODlhEAAQALMMAKqooJGOhp2bk7e1rZ2bkre1rJCPhqqon8PBudDOxXd1bISCef///wAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFAAAMACwAAAAAEAAQAAAET5DJyYyhmAZ7sxQEs1nMsmACGJKmSaVEOLXnK1PuBADepCiMg/DQ+/2GRI8RKOxJfpTCIJNIYArS6aRajWYZCASDa41Ow+Fx2YMWOyfpTAQAIfkEBQAADAAsAAAAABAAEAAABE6QyckEoZgKe7MEQMUxhoEd6FFdQWlOqTq15SlT9VQM3rQsjMKO5/n9hANixgjc9SQ/CgKRUSgw0ynFapVmGYkEg3v1gsPibg8tfk7CnggAIfkEBQAADAAsAAAAABAAEAAABE2QycnOoZjaA/IsRWV1goCBoMiUJTW8A0XMBPZmM4Ug3hQEjN2uZygahDyP0RBMEpmTRCKzWGCkUkq1SsFOFQrG1tr9gsPc3jnco4A9EQAh+QQFAAAMACwAAAAAEAAQAAAETpDJyUqhmFqbJ0LMIA7McWDfF5LmAVApOLUvLFMmlSTdJAiM3a73+wl5HYKSEET2lBSFIhMIYKRSimFriGIZiwWD2/WCw+Jt7xxeU9qZCAAh+QQFAAAMACwAAAAAEAAQAAAETZDJyRCimFqbZ0rVxgwF9n3hSJbeSQ2rCWIkpSjddBzMfee7nQ/XCfJ+OQYAQFksMgQBxumkEKLSCfVpMDCugqyW2w18xZmuwZycdDsRACH5BAUAAAwALAAAAAAQABAAAARNkMnJUqKYWpunUtXGIAj2feFIlt5JrWybkdSydNNQMLaND7pC79YBFnY+HENHMRgyhwPGaQhQotGm00oQMLBSLYPQ9QIASrLAq5x0OxEAIfkEBQAADAAsAAAAABAAEAAABE2QycmUopham+da1cYkCfZ94UiW3kmtbJuRlGF0E4Iwto3rut6tA9wFAjiJjkIgZAYDTLNJgUIpgqyAcTgwCuACJssAdL3gpLmbpLAzEQA7'); }
 
 .z-tree-node-text {
   padding-left: 3px; }
@@ -24829,35 +24829,7 @@ a.z-color-picker-item:hover {
 .z-slider-focus .z-slider-thumb {
   outline: 1px dotted #333333; }
 
-/**
- * Grippy icon
- */
-.z-action-col-icon.grippy {
-  background: url("grippy.png") left no-repeat; }
-
-/**
- * NO cursor on other icons
- */
-.z-action-col-cell .z-action-col-icon {
-  cursor: auto; }
-
-/**
- * Grey text with less padding on link columns
- */
-td.z-grid-cell.link div.z-grid-cell-inner {
-  color: #999;
-  /* for the | separators */
-  padding-left: 0;
-  padding-right: 0; }
-
-/**
- * DRAG cursor on grippy cell and icon
- */
-.z-action-col-cell.grippy,
-.z-action-col-cell.grippy .z-action-col-icon.grippy {
-  cursor: move; }
-
-.z-grid-body.steps td.z-grid-cell {
+.z-grid-body.processes td.z-grid-cell {
   font-family: 'Arial';
   font-size: 12px;
   line-height: 13px;
@@ -24865,78 +24837,56 @@ td.z-grid-cell.link div.z-grid-cell-inner {
   padding-bottom: 0px; }
 
 /**
- * #785 display Step Position on the Sequence Builder, small and grey
- */
-.z-grid-body.steps td.z-grid-cell.position {
-  font-size: 11px;
-  text-align: right;
-  color: #ccc;
-  white-space: normal; }
-
-/**
  * Steps grid links are blue
  */
-.z-grid-body.steps a {
+.z-grid-body.processes a {
   color: #015ba7;
   text-decoration: none; }
 
 /**
  * Steps grid links underline on hover
  */
-.z-grid-body.steps a.terminatelink,
-.z-grid-body.steps td.z-grid-cell a.terminatelink:hover {
-  color: #999;
-  cursor: auto;
-  text-decoration: none; }
-
-/**
- * Steps grid links underline on hover
- */
-.z-grid-body.steps td.z-grid-cell a:hover {
+.z-grid-body.processes td.z-grid-cell a:hover {
   text-decoration: underline; }
-
-/**
- * Steps grid documentation links are small
- */
-.z-grid-body.steps a.documentationlink {
-  font-size: 11px; }
-
-/**
- * Twirly under Config window
- */
-iframe.twirly {
-  background: url('data:image/gif;base64,R0lGODlhEAAQAPUkAPVhVvLy8tvb2+fn5/j4+Pr6+vn5+eDg4P8gEM/Pz//Dv/Hx8fz8/NbW1v8+MP+ln/9NQP/h3/+If+Pj4+rq6uzs7P8RAOXl5dnZ2czMzNTU1OKJgvZwZvb29vnq6d+GgP3g3dHR0d7e3vX19f/Sz+fY19jY2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCAAkACwAAAAAEAAQAEAGgUCSkDSqXI6XymhIwjgxSyZJYalaFk/RIEAgBAYA64N0wIQy6DT6Y3EICwekHMmJNJ8VKUlitUyeAh1MHghWEEIGDWpqDQZMDBRzSBQMQ2Uikkdhbn9OAo5DIIVVEE9QelRWpnlSfFZYTiEJFwEBFwlsVWMFGouLG3ZMFRhqGKxCQQAh+QQFCAAAACwAAAAAEAAQAAAGXkCAELCYYDDD5LBwOB6VSoHzmRwwklPMZculKDGCymjIvYyThGRhwK1AlYHyG13O2DOB+fCeueiFGHcJZ0IkShV8QwoSCBZKDXZJFpOTSQYJSpSTCH+aDhGdFhAPSUEAIfkEBQgAJAAsAAAAABAAEAAABmVAknAoxGAmC6JyaDQeCkODpkltHoaNTKjaFA0rmXBoOKoIvMxwJtEhGpTqzGUJVwfoeDrhwp/nSQF9fkMeRCADfRVEHwgSCkMAfSNDHxaWFkSRFEMbl5ZKHAxDEQ6ef0IPEJ90QQAh+QQFCAAAACwAAAAAEAAQAAAGYECAEFDBZDLD5NDQOB6VyoTzmRQUktMMZss9KDOJS2DIxSyUoyRBwJ1AlUXuOzkqW+4WxXyIt0j2QhB4CCRJV0kPfUMEAQMXSg53SReUlEkRCEqVlAOAmxQMgCUXFWlDQQAh+QQFCAAkACwAAAAAEAAQAAAGZkCScCjMZDAVonJoNDYMw8imSW1qhg7Lp9oMDR+W8GcYuCS8Q0jYgvAQO8q1RbKMrxX1fH2E6WP0QhV+f0QgRAYCfhNEAAMBBEMifgtDABeXF0SSB0McmJdKBwVDDBSfgEIjFZh1QQAh+QQFCAAAACwAAAAAEAAQAAAGXkCAEPCAWCzD5DDiOB6VSoTzmUwYklNLZsttKC0IiWLIzVSUpOQowcVAlZfyOxkoX+4XwnyIvwT2QhV4AwVJemp9QyMVAm5JFHdJGJOTSQwDSpSTAoCaB4V7kxMLSUEAIfkEBQgAJAAsAAAAABAAEAAABmZAknAotFggD6JyaDQ6IkMGp0ltboaUC6Da/AxHlzBgqJAgvMNK+DIAET3K9SWwjK8J9Xw9kOln9EIXfn9EBkQdCX4YRCICFSNDIX4VQyIYl4uRGQ1DB5iXShqGQgWemIBCCxOgdUEAIfkEBQgAAAAsAAAAABAAEAAABl9AgBAwqlwuw+SQQTkelcqB85lERJLTi2XLdSgvgwBhyLU8lIUkCcGFQJWS8jupKGPumNF8iMdU9kITeAJjQ3pJC31DARcJGUoHd0MmGZWVSQUCSpaVCYCcDQafGX5JQQA7') center no-repeat; }
 
 table#bodyTable td#bodyCell {
   padding: 10px 10px 10px 0; }
 
-/**
- * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
- * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
- */
-a.z-btn:hover {
-  text-decoration: none; }
+.z-menu-item-icon.atlassian, .z-action-col-icon.atlassian {
+  background-image: url("extraicons/atlassian.png"); }
 
-/**
- * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
- * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
- */
-a.z-datepicker-date:hover {
-  text-decoration: none; }
+.z-menu-item-icon.github, .z-action-col-icon.github {
+  background-image: url("extraicons/github.png"); }
 
-/**
- * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
- * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
- */
-a.z-tab:hover {
-  text-decoration: none; }
+.z-menu-item-icon.linkedin, .z-action-col-icon.linkedin {
+  background-image: url("extraicons/linkedin.png"); }
 
-/**
- * Fixes indents caused by ul li, ol li {margin-left: 1.5em;} in Salesforce:
- * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
- */
-li.z-boundlist-item {
-  margin-left: 0; }
+.z-menu-item-icon.paypal, .z-action-col-icon.paypal {
+  background-image: url("extraicons/paypal.png"); }
+
+.z-menu-item-icon.salesforce, .z-action-col-icon.salesforce {
+  background-image: url("extraicons/salesforce.png"); }
+
+.z-menu-item-icon.stripe, .z-action-col-icon.stripe {
+  background-image: url("extraicons/stripe.png"); }
+
+.z-menu-item-icon.twitter, .z-action-col-icon.twitter {
+  background-image: url("extraicons/twitter.png"); }
+
+.z-menu-item-icon.drive, .z-action-col-icon.drive {
+  background-image: url("extraicons/drive.png"); }
+
+.z-menu-item-icon.gmail, .z-action-col-icon.gmail {
+  background-image: url("extraicons/gmail.png"); }
+
+.z-menu-item-icon.youtube, .z-action-col-icon.youtube {
+  background-image: url("extraicons/youtube.png"); }
+
+.z-menu-item-icon.ebay, .z-action-col-icon.ebay {
+  background-image: url("extraicons/ebay.png"); }
+
+.z-menu-item-icon.filter, .z-action-col-icon.filter {
+  background-image: url("extraicons/filter.png"); }
 
 .z-menu-item-icon.accept, .z-action-col-icon.accept {
   background-image: url("famfamfam/accept.png"); }
@@ -27938,38 +27888,30 @@ li.z-boundlist-item {
 .z-menu-item-icon.zoom_out, .z-action-col-icon.zoom_out {
   background-image: url("famfamfam/zoom_out.png"); }
 
-.z-menu-item-icon.atlassian, .z-action-col-icon.atlassian {
-  background-image: url("extraicons/atlassian.png"); }
+/**
+ * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
+ * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
+ */
+a.z-btn:hover {
+  text-decoration: none; }
 
-.z-menu-item-icon.github, .z-action-col-icon.github {
-  background-image: url("extraicons/github.png"); }
+/**
+ * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
+ * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
+ */
+a.z-datepicker-date:hover {
+  text-decoration: none; }
 
-.z-menu-item-icon.linkedin, .z-action-col-icon.linkedin {
-  background-image: url("extraicons/linkedin.png"); }
+/**
+ * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
+ * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
+ */
+a.z-tab:hover {
+  text-decoration: none; }
 
-.z-menu-item-icon.paypal, .z-action-col-icon.paypal {
-  background-image: url("extraicons/paypal.png"); }
-
-.z-menu-item-icon.salesforce, .z-action-col-icon.salesforce {
-  background-image: url("extraicons/salesforce.png"); }
-
-.z-menu-item-icon.stripe, .z-action-col-icon.stripe {
-  background-image: url("extraicons/stripe.png"); }
-
-.z-menu-item-icon.twitter, .z-action-col-icon.twitter {
-  background-image: url("extraicons/twitter.png"); }
-
-.z-menu-item-icon.drive, .z-action-col-icon.drive {
-  background-image: url("extraicons/drive.png"); }
-
-.z-menu-item-icon.gmail, .z-action-col-icon.gmail {
-  background-image: url("extraicons/gmail.png"); }
-
-.z-menu-item-icon.youtube, .z-action-col-icon.youtube {
-  background-image: url("extraicons/youtube.png"); }
-
-.z-menu-item-icon.ebay, .z-action-col-icon.ebay {
-  background-image: url("extraicons/ebay.png"); }
-
-.z-menu-item-icon.filter, .z-action-col-icon.filter {
-  background-image: url("extraicons/filter.png"); }
+/**
+ * Fixes indents caused by ul li, ol li {margin-left: 1.5em;} in Salesforce:
+ * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
+ */
+li.z-boundlist-item {
+  margin-left: 0; }
