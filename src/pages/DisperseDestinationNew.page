@@ -1,5 +1,6 @@
 <apex:page standardController="DisperseDestination__c">
-    
+    <apex:pageMessages showDetail="true" />
+
     <apex:pageMessages showDetail="true" id="messages" />
     <apex:sectionHeader title="New {!$ObjectType.DisperseDestination__c.Label}" />
     

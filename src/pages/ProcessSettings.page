@@ -1,3 +1,4 @@
 <apex:page standardController="Process__c" action="{!IF(ISBLANK($ObjectType[Process__c.Setting__c]), URLFOR($Action.Process__c.View, Id), '/' + $ObjectType[Process__c.Setting__c].KeyPrefix + '/o')}">
+    <apex:pageMessages showDetail="true" />
     <apex:outputField value="{!Process__c.Setting__c}" rendered="false" />
 </apex:page>

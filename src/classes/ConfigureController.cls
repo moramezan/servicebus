@@ -231,6 +231,7 @@ public with sharing class ConfigureController {
      * - or sends user to the Custom App Start URL (Monitor page)
      */
     public PageReference handleRedirect() {
+        try {
         setting = OAuthSetting__c.getOrgDefaults();
         if (setting == null) setting = new OAuthSetting__c();
         String code = ApexPages.currentPage().getParameters().get('code');
@@ -288,6 +289,10 @@ public with sharing class ConfigureController {
         
         //never gets here
         return null;
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+            return null;
+        }
     }
     
     public PageReference doGetStarted() {

@@ -1,1 +1,3 @@
-<apex:page standardController="SubscribeConfig__c" action="{!URLFOR($Action.EventType__c.List, $ObjectType.EventType__c)}" />
+<apex:page standardController="SubscribeConfig__c" action="{!URLFOR($Action.EventType__c.List, $ObjectType.EventType__c)}">
+    <apex:pageMessages showDetail="true" />
+</apex:page>

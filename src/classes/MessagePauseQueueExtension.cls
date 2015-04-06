@@ -5,11 +5,16 @@ public with sharing class MessagePauseQueueExtension {
     }
     
     public PageReference doPause() {
+        try {
         //update IsPaused setting ("avoids DML in action method")
         Type.forName(MessagePauseQueueExtension.DoDml.class.getName()).newInstance();
         
         //redirect to list view
         return new PageReference('/' + SObjectType.Message__c.KeyPrefix);
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+            return null;
+        }
     }
     
     public class DoDml {

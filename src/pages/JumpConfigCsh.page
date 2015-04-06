@@ -1,1 +1,3 @@
-<apex:page action="{!URLFOR($Page.Csh, null, ['topic'='ProcessJump'])}" />
+<apex:page action="{!URLFOR($Page.Csh, null, ['topic'='ProcessJump'])}">
+    <apex:pageMessages showDetail="true" />
+</apex:page>

@@ -17,6 +17,7 @@ public with sharing class ProcessDiscoverController {
     }
     
     public System.PageReference doRedirect() {
+        try {
         if (ApexPages.currentPage().getParameters().get('asyncApexJobId') == null) {
             //someone tried to view the page... start the batch job and show it
             AsyncApexJobModel job = AsyncApexJobModel.runOne(ProcessDiscoverBatch.class, 1);
@@ -27,6 +28,10 @@ public with sharing class ProcessDiscoverController {
             return processDiscover;
         } else {
             //we are trying to show the batch job... just display the page
+            return null;
+        }
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
             return null;
         }
     }

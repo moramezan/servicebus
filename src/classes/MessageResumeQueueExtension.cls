@@ -5,6 +5,7 @@ public with sharing class MessageResumeQueueExtension {
     }
     
     public PageReference doResume() {
+        try {
         //update IsPaused setting and update Message statuses ("avoids DML in action method")
         Type.forName(MessageResumeQueueExtension.DoDml.class.getName()).newInstance();
         
@@ -13,6 +14,10 @@ public with sharing class MessageResumeQueueExtension {
         
         //redirect to list view
         return new PageReference('/' + SObjectType.Message__c.KeyPrefix);
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+            return null;
+        }
     }
     
     public class DoDml {

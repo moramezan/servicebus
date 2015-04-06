@@ -11,12 +11,17 @@ public with sharing class ConfigStepExtension {
      * it can be accessed from the native interface via a Custom Button.
      */
     public PageReference doRedirect() {
+        try {
         Step__c step = [
             SELECT Id
             FROM Step__c
             WHERE ConfigId__c = :(Id)this.controller.getId()
         ];
         return new ApexPages.StandardController(step).view();
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+            return null;
+        }
     }
     
 }

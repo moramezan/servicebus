@@ -65,6 +65,7 @@ public with sharing class SequenceBuilderExtension {
      * Health check stuff
      */
     public PageReference findTerminateProblems() {
+        try {
         List<Sequence__c> sequences = [
             SELECT Id, Name,
             (SELECT Id, Name, Process__c FROM Steps__r ORDER BY Position__c ASC) steps
@@ -126,9 +127,14 @@ public with sharing class SequenceBuilderExtension {
             //redirect to help
             return new PageReference('/apex/Csh?topic=ProcessTerminate');
         }
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+            return null;
+        }
     }
     
     public PageReference findPublishProblems() {
+        try {
         List<Sequence__c> sequences = [
             SELECT Id, Name,
             (SELECT id, Name, Process__c, ConfigId__c FROM Steps__r ORDER BY Position__c ASC)
@@ -196,10 +202,14 @@ public with sharing class SequenceBuilderExtension {
             //redirect to help
             return new PageReference('/apex/Csh?topic=ProcessPublishSubscribe');
         }
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+            return null;
+        }
     }
     
     public PageReference findSubscribeProblems() {
-        
+        try {
         List<Sequence__c> sequences = [
             SELECT Id, Name,
             (SELECT Id, Name, Process__c, ConfigId__c FROM Steps__r ORDER BY Position__c ASC) steps
@@ -285,6 +295,10 @@ public with sharing class SequenceBuilderExtension {
         } else {
             //redirect to help
             return new PageReference('/apex/Csh?topic=ProcessPublishSubscribe');
+        }
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+            return null;
         }
     }
 }

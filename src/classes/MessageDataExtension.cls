@@ -7,6 +7,7 @@ public with sharing class MessageDataExtension {
     }
     
     public PageReference doRedirect() {
+        try {
         Message__c message = (Message__c)ApexDomain.getById(this.controller.getId());
         Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
         
@@ -16,6 +17,10 @@ public with sharing class MessageDataExtension {
             return new ApexPages.StandardController(dataObject).view();
         } catch (Exception e) {
             return new ApexPages.StandardController(this.controller.getRecord()).view();
+        }
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+            return null;
         }
     }
 
