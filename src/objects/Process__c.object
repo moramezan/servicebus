@@ -111,6 +111,7 @@
         <defaultValue>1</defaultValue>
         <description>How many times can this process run within the governor limits?</description>
         <externalId>false</externalId>
+        <inlineHelpText>How many times can this process run within the governor limits?</inlineHelpText>
         <label>Limits</label>
         <precision>4</precision>
         <required>false</required>
@@ -158,28 +159,18 @@
         <columns>NAME</columns>
         <columns>Tag__c</columns>
         <columns>Description__c</columns>
+        <columns>FullyQualifiedClassName__c</columns>
         <columns>Limits__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
-    </listViews>
-    <listViews>
-        <fullName>AllExceptESB</fullName>
-        <columns>NAME</columns>
-        <columns>Tag__c</columns>
-        <columns>Description__c</columns>
-        <filterScope>Everything</filterScope>
-        <filters>
-            <field>Tag__c</field>
-            <operation>notEqual</operation>
-            <value>Enterprise Service Bus</value>
-        </filters>
-        <label>All except ESB</label>
     </listViews>
     <listViews>
         <fullName>EnterpriseServiceBus</fullName>
         <columns>NAME</columns>
         <columns>Tag__c</columns>
         <columns>Description__c</columns>
+        <columns>FullyQualifiedClassName__c</columns>
+        <columns>Limits__c</columns>
         <filterScope>Everything</filterScope>
         <filters>
             <field>Tag__c</field>
@@ -189,15 +180,31 @@
         <label>Enterprise Service Bus</label>
     </listViews>
     <listViews>
+        <fullName>ExceptEnterpriseServiceBus</fullName>
+        <columns>NAME</columns>
+        <columns>Tag__c</columns>
+        <columns>Description__c</columns>
+        <columns>FullyQualifiedClassName__c</columns>
+        <columns>Limits__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Tag__c</field>
+            <operation>notEqual</operation>
+            <value>Enterprise Service Bus</value>
+        </filters>
+        <label>Except Enterprise Service Bus</label>
+    </listViews>
+    <listViews>
         <fullName>Untagged</fullName>
         <columns>NAME</columns>
         <columns>Tag__c</columns>
         <columns>Description__c</columns>
+        <columns>FullyQualifiedClassName__c</columns>
+        <columns>Limits__c</columns>
         <filterScope>Everything</filterScope>
         <filters>
             <field>Tag__c</field>
             <operation>equals</operation>
-            <value>NULL</value>
         </filters>
         <label>Untagged</label>
     </listViews>
@@ -207,6 +214,10 @@
     </nameField>
     <pluralLabel>Processes</pluralLabel>
     <searchLayouts>
+        <customTabListAdditionalFields>Tag__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Description__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>FullyQualifiedClassName__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Limits__c</customTabListAdditionalFields>
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <excludedStandardButtons>New</excludedStandardButtons>
