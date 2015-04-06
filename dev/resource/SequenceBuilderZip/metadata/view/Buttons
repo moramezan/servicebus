@@ -7,7 +7,6 @@
     "codeClass": null,
     "userConfig": {
         "container|align": "stretch",
-        "container|pack": "center",
         "designer|userAlias": "buttons",
         "designer|userClassName": "Buttons",
         "height": null,
@@ -23,48 +22,6 @@
     "viewControllerInstanceId": "a303fb2f-97fc-4fe6-99c0-47b9d29bca63",
     "viewModelInstanceId": "ae83cb8d-1acb-4a07-ae00-5d0831f7c483",
     "cn": [
-        {
-            "type": "Ext.button.Button",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "itemId": "newStep",
-                "layout|flex": null,
-                "layout|margins": null,
-                "margin": "0 10px 0 0",
-                "text": "New Step"
-            },
-            "name": "MyButton",
-            "configAlternates": {
-                "scrollable": "boolean"
-            },
-            "designerId": "76666a75-e111-40e4-b5e3-5fcd1583e383",
-            "cn": [
-                {
-                    "type": "Ext.menu.Menu",
-                    "reference": {
-                        "name": "menu",
-                        "type": "object"
-                    },
-                    "codeClass": null,
-                    "userConfig": {
-                        "designer|displayName": "Tags",
-                        "ignoreParentClicks": true,
-                        "plain": true,
-                        "showSeparator": false,
-                        "width": null
-                    },
-                    "name": "MyMenu",
-                    "configAlternates": {
-                        "scrollable": "boolean"
-                    },
-                    "designerId": "a3f73739-03bc-4399-94a6-56a0703397b0"
-                }
-            ]
-        },
         {
             "type": "Ext.button.Button",
             "reference": {
@@ -120,6 +77,48 @@
                     },
                     "name": "handler",
                     "designerId": "e2aa1d21-1e6a-4386-a95a-394554baddd3"
+                }
+            ]
+        },
+        {
+            "type": "Ext.button.Button",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "itemId": "newStep",
+                "layout|flex": null,
+                "layout|margins": null,
+                "margin": "0 10px 0 0",
+                "text": "New Step"
+            },
+            "name": "MyButton",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
+            "designerId": "76666a75-e111-40e4-b5e3-5fcd1583e383",
+            "cn": [
+                {
+                    "type": "Ext.menu.Menu",
+                    "reference": {
+                        "name": "menu",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "Tags",
+                        "ignoreParentClicks": true,
+                        "plain": true,
+                        "showSeparator": false,
+                        "width": null
+                    },
+                    "name": "MyMenu",
+                    "configAlternates": {
+                        "scrollable": "boolean"
+                    },
+                    "designerId": "a3f73739-03bc-4399-94a6-56a0703397b0"
                 }
             ]
         }
