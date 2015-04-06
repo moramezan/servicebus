@@ -462,14 +462,16 @@ abstract public with sharing class Broker {
         //Set<Id> inputMessageIds = new Map<Id,SObject>(inputMessages).keySet();
         
         //OUR FUCKUPS (before invocation)
-        DateTime startStamp = System.Now();
-        
         Boolean biggerProblems = false;
         Map<Id,Map<String,Object>> id2events = new Map<Id,Map<String,Object>>();
+        Map<Id,DateTime> idToStartStamp = new Map<Id,DateTime>();
         for (Message__c inputMessage : inputMessages) {
+            DateTime startStamp = System.Now();
+            idToStartStamp.put(inputMessage.Id, startStamp);
+
             Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
             id2events.put(inputMessage.Id, inputEvent);
-            
+
             if (!inputEvent.containsKey('__SequenceName')) {
                 biggerProblems = true;
                 Exception e = new Broker.EngineException('Mandatory event parameter esb__SequenceName not supplied.');
@@ -493,23 +495,26 @@ abstract public with sharing class Broker {
         if (id2events.get(inputMessages[0].Id).get('__IsHeartbeatProcess') != null) {
             //invoke and wrap up results into messages
             for (Message__c inputMessage : inputMessages) {
+                DateTime startStamp = idToStartStamp.get(inputMessage.Id);
+
                 Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
                 List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, inputEvent, null).invokeMain().Outputs;
                 
                 inputMessage.Status__c = 'Completed'; //#798
                 inputMessage.Exception__c = null;
                 inputMessage.Cause__c = null;
-                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
                 inputMessage.FullyQualifiedClassName__c = Heartbeat.class.getName(); //#697 locateMarkableWork misses this for heartbeats
                 
                 for (Map<String,Object> output : outputs) outputMessages.add(new Message__c(Event__c = Json.serializePretty(output), Status__c = 'Buffered'));
+
+                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
             }
             return;
         }
         
         //specimen message will have same process as others
         Message__c specimen = [SELECT Route__c FROM Message__c WHERE Id = :inputMessages[0].Id];
-        
+
         Step__c step;
         try {
             step = [SELECT ConfigId__c, Process__r.FullyQualifiedClassName__c FROM Step__c WHERE Name = :specimen.Route__c];
@@ -517,6 +522,7 @@ abstract public with sharing class Broker {
             //this scenario is really following on from a failed resolve - thinking that we might explicitly set a new message status
             //of FAILED but in due course we hope to do away with resolve step entirely with message names '{sequence}#{position}V{version}'
             for (Message__c inputMessage : inputMessages) {
+                DateTime startStamp = idToStartStamp.get(inputMessage.Id);
                 Exception e = new Broker.EngineException('Step unqueryable, eg bad sequence name, position, missing terminate.', qe);
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
@@ -528,6 +534,7 @@ abstract public with sharing class Broker {
         Type reflector = Type.forName(step.Process__r.FullyQualifiedClassName__c);
         if (reflector == null) {
             for (Message__c inputMessage : inputMessages) {
+                DateTime startStamp = idToStartStamp.get(inputMessage.Id);
                 Exception e = new Broker.EngineException('Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c);
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
@@ -540,6 +547,7 @@ abstract public with sharing class Broker {
         if (meta == null) meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + 'ESB'); //#828
         if (meta == null) {
             for (Message__c inputMessage : inputMessages) {
+                DateTime startStamp = idToStartStamp.get(inputMessage.Id);
                 Exception e = new Broker.EngineException('Could not see ESB inner class, this is not a valid process: ' + reflector.getName());
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
@@ -551,6 +559,7 @@ abstract public with sharing class Broker {
         //save important message properties (such as __Hops) so that process authors cannot pervert them  
         //THROWS EngineException TODO : requires a more generic approach not specific to just the __Hops
         for (Message__c inputMessage : inputMessages) {
+            DateTime startStamp = idToStartStamp.get(inputMessage.Id);
             Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
             if ((Integer)inputEvent.get('__Hops') >= MaxHops) {
                 biggerProblems = true;
@@ -576,11 +585,15 @@ abstract public with sharing class Broker {
         //THEIR FUCKUPS (invocation)
         
         for (Integer i = 0; i < inputMessages.size(); i++) {
+            Message__c inputMessage = inputMessages[i];
+            DateTime startStamp = idToStartStamp.get(inputMessage.Id);
+
             //TODO COUNT ANY DMLS
             Broker.Wrapper wrapper = wrappers[i];
-            Message__c inputMessage = inputMessages[i];
+
             try {
                 wrapper.invokeCallouts();
+                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
             } catch (Exception e) {
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
@@ -589,10 +602,13 @@ abstract public with sharing class Broker {
         }
         
         for (Integer i = 0; i < inputMessages.size(); i++) {
+            Message__c inputMessage = inputMessages[i];
+            DateTime startStamp = idToStartStamp.get(inputMessage.Id);
+            Integer calloutDuration = (Integer)((inputMessage.ExecuteDuration__c == null) ? 0 : inputMessage.ExecuteDuration__c);
+
             //TODO COUNT ANY CALLOUTS
             Broker.Wrapper wrapper = wrappers[i];
-            Message__c inputMessage = inputMessages[i];
-            
+
             //for incrementally rolling back each message attempted
             Savepoint minor = Database.setSavepoint();
             try {
@@ -600,7 +616,6 @@ abstract public with sharing class Broker {
                 inputMessage.Status__c = 'Completed'; //#798
                 inputMessage.Exception__c = null;
                 inputMessage.Cause__c = null;
-                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
                 List<Map<String,Object>> outputEvents = wrapper.Outputs;
                 
                 //gate processing support method
@@ -613,12 +628,15 @@ abstract public with sharing class Broker {
                         Status__c = 'Buffered'
                     ));
                 }
+
+                inputMessage.ExecuteDuration__c = calloutDuration + (System.Now().getTime() - startStamp.getTime());
+
             } catch (Exception e) {
                 Database.rollback(minor);
                 //#581 smoking gun should point at the user, NOT at our broker
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
-                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
+                inputMessage.ExecuteDuration__c = calloutDuration + (System.Now().getTime() - startStamp.getTime());
             }
         }
         
