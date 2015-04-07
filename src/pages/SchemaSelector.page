@@ -1,5 +1,5 @@
 <apex:page controller="SchemaSelectorController" action="{!doInit}" tabStyle="Process__c">
-    <apex:pageMessages showDetail="true" />
+    <apex:pageMessages showDetail="false" />
 
     <apex:form id="form">
         <apex:pageBlock title="{!Describe.Label}" id="pageBlock" mode="maindetail">

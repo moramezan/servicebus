@@ -1,6 +1,6 @@
 <apex:page standardController="Sequence__c" extensions="SequenceBuilderExtension" action="{!initConfigure}">
     
-    <apex:pageMessages showDetail="true" />
+    <apex:pageMessages showDetail="false" />
     
     <apex:sectionHeader help="{!URLFOR($Page.SequenceCsh)}" title="{!$ObjectType.Sequence__c.Label}" subtitle="{!Sequence__c.Name}" />
     

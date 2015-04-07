@@ -1,6 +1,6 @@
 <apex:page showHeader="false" sidebar="false" standardStylesheets="false" controller="ConfigureController" action="{!handleRedirect}" cache="false">
 
-    <apex:pageMessages showDetail="true" />
+    <apex:pageMessages showDetail="false" />
     <c:RemoteSiteSetting />
     
 </apex:page>

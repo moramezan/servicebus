@@ -1,3 +1,3 @@
 <apex:page standardController="PublishConfig__c" extensions="SequenceBuilderExtension" action="{!findPublishProblems}" tabStyle="PublishConfig__c" showHeader="false" standardStylesheets="true">
-    <apex:pageMessages showDetail="true" />
+    <apex:pageMessages showDetail="false" />
 </apex:page>

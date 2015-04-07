@@ -1,3 +1,3 @@
 <apex:page standardController="JumpConfig__c" extensions="ConfigStepExtension" action="{!doRedirect}">
-    <apex:pageMessages showDetail="true" />
+    <apex:pageMessages showDetail="false" />
 </apex:page>

@@ -1,5 +1,5 @@
 <apex:page tabStyle="Process__c" controller="ProcessDiscoverController" action="{!doRedirect}">
-    <apex:pageMessages showDetail="true" />
+    <apex:pageMessages showDetail="false" />
 
     <c:BootstrapExt applicationName="Discover" staticResource="{!$Resource.ProcessDiscoverZip}" baseCSSPrefix="z-" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}">
         window.$ObjectType = window.$ObjectType || {};
