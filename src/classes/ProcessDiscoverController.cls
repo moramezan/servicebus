@@ -41,7 +41,7 @@ public with sharing class ProcessDiscoverController {
         return processes != null ? processes : [
             SELECT Id, Name, Description__c, Tag__c, Icon__c, FullyQualifiedClassName__c
             FROM Process__c
-            WHERE LastModifiedDate > :lastModifiedDate
+            WHERE LastModifiedDate >= :lastModifiedDate //#609 try including the second
             ORDER BY Name DESC //per #240 so the new ones don't run off the bottom of the screen
         ];
     }
