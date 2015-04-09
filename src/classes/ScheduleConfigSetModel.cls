@@ -17,7 +17,7 @@ public class ScheduleConfigSetModel extends ApexDomain.StandardSetModel {
             if (null != scheduleConfig.FriendlyTimes__c) friendlyTimes = scheduleConfig.FriendlyTimes__c.split(';');
             if (null != scheduleConfig.FriendlyDates__c) friendlyDates = scheduleConfig.FriendlyDates__c.split(';');
             
-            String name = 'Fires this sequence ';
+            String name = scheduleConfig.IsActive__c ? 'Fires this sequence ' : '(Inactive) Configured ';
             
             //hourly
             if (new Set<String>(friendlyTimes).containsAll(everyHour)) {

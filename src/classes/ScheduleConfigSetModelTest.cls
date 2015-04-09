@@ -3,6 +3,7 @@
     static testmethod void testDailyFriendlyNames() {
         //arrange an all day every day schedule
         ScheduleConfig__c config = new ScheduleConfig__c(
+            IsActive__c = true,
             Frequency__c = 'Daily',
             FriendlyTimes__c = '00:00;01:00;02:00;03:00;04:00;05:00;06:00;07:00;08:00;09:00;10:00;11:00;12:00;13:00;14:00;15:00;16:00;17:00;18:00;19:00;20:00;21:00;22:00;23:00',
             FriendlyDates__c = 'Working days only;Weekends and holidays'
@@ -23,6 +24,7 @@
     static testmethod void testWeeklyFriendlyNames() {
         //arrange an all day every day schedule
         ScheduleConfig__c config = new ScheduleConfig__c(
+            IsActive__c = true,
             Frequency__c = 'Weekly',
             FriendlyTimes__c = '09:00;17:00',
             FriendlyDates__c = 'Monday;Friday'
@@ -43,6 +45,7 @@
     static testmethod void testMonthlyFriendlyNames() {
         //arrange an all day every day schedule
         ScheduleConfig__c config = new ScheduleConfig__c(
+            IsActive__c = true,
             Frequency__c = 'Monthly',
             FriendlyTimes__c = '12:00',
             FriendlyDates__c = '07;14;21;28'
