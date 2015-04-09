@@ -4,7 +4,7 @@
    "classpath": "${app.dir}/app,${app.dir}/app/override/data/proxy/",
    "overrides": "${app.dir}/overrides",
    "framework": "ext",
-   "theme": "ext-theme-gray-ee0ca2d6-1b8a-417f-91dc-6c9cd19090d7",
+   "theme": "ext-theme-classic-cd97b435-af1c-4339-8e4b-c62402f61d73",
    "requires": [],
    "sass": {
       "namespace": "Discover"

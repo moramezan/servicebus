@@ -1,5 +1,5 @@
 {
-    "name": "ext-theme-gray-ee0ca2d6-1b8a-417f-91dc-6c9cd19090d7",
+    "name": "ext-theme-classic-cd97b435-af1c-4339-8e4b-c62402f61d73",
     "type": "theme",
     "creator": "Architect",
     "summary": "Architect created theme. Edit through Architect. Manual edits here will likly be discarded.",
@@ -18,5 +18,5 @@
     "output": "${package.dir}/build",
     "local": true,
     "requires": [],
-    "extend": "ext-theme-gray"
+    "extend": "ext-theme-classic"
 }

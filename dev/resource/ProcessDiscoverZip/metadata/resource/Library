@@ -8,7 +8,7 @@
     "userConfig": {
         "basePath": "ext/",
         "designer|userClassName": "Library",
-        "theme": "Gray"
+        "theme": "Classic"
     },
     "name": "Library",
     "designerId": "61504695-b19b-490e-85a9-74077e1086c7"
