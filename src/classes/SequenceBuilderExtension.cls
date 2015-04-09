@@ -4,6 +4,32 @@ public with sharing class SequenceBuilderExtension {
     
     public SequenceBuilderExtension(ApexPages.StandardController controller) {
         this.controller = controller;
+        this.countRoutedMessages();
+    }
+    
+    public Integer RoutedMessages {get; set;}
+    
+    /**
+     * #768 this is used to indicate there is work processing
+     * by displaying a twirly alongside the count of messages
+     * that are flowing through this sequence.
+     */
+    public void countRoutedMessages() {
+        Sequence__c sequence = [
+            SELECT Id, Name
+            FROM Sequence__c
+            WHERE Id = :this.controller.getId()
+        ];
+        
+        Integer count = [
+            SELECT COUNT()
+            FROM Message__c
+            WHERE Route__c LIKE :sequence.Name + '#%'
+            AND Status__c != 'Completed'
+            AND Exception__c = null
+        ];
+        
+        this.RoutedMessages = count;
     }
     
     /**

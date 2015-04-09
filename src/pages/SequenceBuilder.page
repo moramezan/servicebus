@@ -5,7 +5,16 @@
     <apex:sectionHeader help="{!URLFOR($Page.SequenceCsh)}" title="{!$ObjectType.Sequence__c.Label}" subtitle="{!Sequence__c.Name}" />
     
     <apex:pageBlock id="pageBlockId" title="{!$ObjectType.Step__c.LabelPlural}">
-        <apex:pageBlockButtons location="top" id="pageBlockButtonsId" />
+        <apex:pageBlockButtons location="top" id="pageBlockButtonsId">
+            
+            <!-- #768 indicate messages flowing through sequence -->
+            <apex:form style="display:inline;float:right;" id="busy">
+                <apex:actionPoller action="{!countRoutedMessages}" interval="5" reRender="busy" />
+                <apex:outputText rendered="{!RoutedMessages > 0}" value="{!RoutedMessages}" style="position:relative;top:0px;right:8px;" title="Messages are processing" />
+                <apex:image rendered="{!RoutedMessages > 0}" value="{!URLFOR('/img/loading.gif')}" style="position:relative;top:4px;" title="Messages are processing" />
+            </apex:form>
+            
+        </apex:pageBlockButtons>
     </apex:pageBlock>
     
     <c:RemoteSiteSetting >
