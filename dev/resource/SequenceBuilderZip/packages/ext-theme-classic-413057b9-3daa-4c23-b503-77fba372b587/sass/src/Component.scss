@@ -2,23 +2,23 @@
  * Grippy icon
  */
 .#{$prefix}action-col-icon.grippy {
-  background: url('grippy.png') left no-repeat;
+    background: url('grippy.png') left no-repeat;
 }
 
 /**
  * NO cursor on other icons
  */
 .#{$prefix}action-col-cell .#{$prefix}action-col-icon {
-  cursor: auto;
+    cursor: auto;
 }
 
 /**
  * Grey text with less padding on link columns
  */
-td.#{$prefix}grid-cell.link div.#{$prefix}grid-cell-inner  {
-  color: #999; /* for the | separators */
-  padding-left: 0;
-  padding-right: 0;
+td.#{$prefix}grid-cell.link div.#{$prefix}grid-cell-inner    {
+    color: #999; /* for the | separators */
+    padding-left: 0;
+    padding-right: 0;
 }
 
 /**
@@ -26,33 +26,33 @@ td.#{$prefix}grid-cell.link div.#{$prefix}grid-cell-inner  {
  */
 .#{$prefix}action-col-cell.grippy,
 .#{$prefix}action-col-cell.grippy .#{$prefix}action-col-icon.grippy {
-  cursor: move;
+    cursor: move;
 }
 
 .#{$prefix}grid-body.steps td.#{$prefix}grid-cell {
-  font-family:'Arial';
-  font-size: 12px;
-  line-height: 13px;
-  padding-top: 2px;
-  padding-bottom: 0px;
+    font-family:'Arial';
+    font-size: 12px;
+    line-height: 13px;
+    padding-top: 2px;
+    padding-bottom: 0px;
 }
 
 /**
  * #785 display Step Position on the Sequence Builder, small and grey
  */
 .#{$prefix}grid-body.steps td.#{$prefix}grid-cell.position {
-  font-size: 11px;
-  text-align: right;
-  color: #ccc;
-  white-space: normal; //no ellipsis please
+    font-size: 11px;
+    text-align: right;
+    color: #ccc;
+    white-space: normal; //no ellipsis please
 }
 
 /**
  * Steps grid links are blue
  */
 .#{$prefix}grid-body.steps a {
-  color: #015ba7;
-  text-decoration: none;
+    color: #015ba7;
+    text-decoration: none;
 }
 
 /**
@@ -60,65 +60,49 @@ td.#{$prefix}grid-cell.link div.#{$prefix}grid-cell-inner  {
  */
 .#{$prefix}grid-body.steps a.terminatelink,
 .#{$prefix}grid-body.steps td.#{$prefix}grid-cell a.terminatelink:hover {
-  color: #999;
-  cursor: auto;
-  text-decoration: none;
+    color: #999;
+    cursor: auto;
+    text-decoration: none;
 }
 
 /**
  * Steps grid links underline on hover
  */
 .#{$prefix}grid-body.steps td.#{$prefix}grid-cell a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 /**
  * Steps grid documentation links are small
  */
 .#{$prefix}grid-body.steps a.documentationlink {
-  font-size: 11px;
+    font-size: 11px;
 }
 
 /**
  * Twirly under Config window
  */
 iframe.twirly {
-  background: url('images/tree/loading.gif') center no-repeat;
+    background: url('images/tree/loading.gif') center no-repeat;
 }
+/**
+ * Harmonize padding
+ */
 table#bodyTable td#bodyCell {
     padding: 10px 10px 10px 0;
 }
-/**
- * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
- * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
- */
-a.#{$prefix}btn:hover {
-    text-decoration: none;
-}
-
-/**
- * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
- * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
- */
-a.#{$prefix}datepicker-date:hover {
-    text-decoration: none;
-}
-
-/**
- * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
- * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
- */
-a.#{$prefix}tab:hover {
-    text-decoration: none;
-}
-
-/**
- * Fixes indents caused by ul li, ol li {margin-left: 1.5em;} in Salesforce:
- * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
- */
-li.#{$prefix}boundlist-item {
-    margin-left: 0;
-}
+.#{$prefix}menu-item-icon.atlassian, .#{$prefix}action-col-icon.atlassian {background-image:url('extraicons/atlassian.png');}
+.#{$prefix}menu-item-icon.github, .#{$prefix}action-col-icon.github {background-image:url('extraicons/github.png');}
+.#{$prefix}menu-item-icon.linkedin, .#{$prefix}action-col-icon.linkedin {background-image:url('extraicons/linkedin.png');}
+.#{$prefix}menu-item-icon.paypal, .#{$prefix}action-col-icon.paypal {background-image:url('extraicons/paypal.png');}
+.#{$prefix}menu-item-icon.salesforce, .#{$prefix}action-col-icon.salesforce {background-image:url('extraicons/salesforce.png');}
+.#{$prefix}menu-item-icon.stripe, .#{$prefix}action-col-icon.stripe {background-image:url('extraicons/stripe.png');}
+.#{$prefix}menu-item-icon.twitter, .#{$prefix}action-col-icon.twitter {background-image:url('extraicons/twitter.png');}
+.#{$prefix}menu-item-icon.drive, .#{$prefix}action-col-icon.drive {background-image:url('extraicons/drive.png');}
+.#{$prefix}menu-item-icon.gmail, .#{$prefix}action-col-icon.gmail {background-image:url('extraicons/gmail.png');}
+.#{$prefix}menu-item-icon.youtube, .#{$prefix}action-col-icon.youtube {background-image:url('extraicons/youtube.png');}
+.#{$prefix}menu-item-icon.ebay, .#{$prefix}action-col-icon.ebay {background-image:url('extraicons/ebay.png');}
+.#{$prefix}menu-item-icon.filter, .#{$prefix}action-col-icon.filter {background-image:url('extraicons/filter.png');} //#783
 
 .#{$prefix}menu-item-icon.accept, .#{$prefix}action-col-icon.accept {background-image:url('famfamfam/accept.png');}
 .#{$prefix}menu-item-icon.add, .#{$prefix}action-col-icon.add {background-image:url('famfamfam/add.png');}
@@ -1121,15 +1105,34 @@ li.#{$prefix}boundlist-item {
 .#{$prefix}menu-item-icon.zoom_in, .#{$prefix}action-col-icon.zoom_in {background-image:url('famfamfam/zoom_in.png');}
 .#{$prefix}menu-item-icon.zoom_out, .#{$prefix}action-col-icon.zoom_out {background-image:url('famfamfam/zoom_out.png');}
 
-.#{$prefix}menu-item-icon.atlassian, .#{$prefix}action-col-icon.atlassian {background-image:url('extraicons/atlassian.png');}
-.#{$prefix}menu-item-icon.github, .#{$prefix}action-col-icon.github {background-image:url('extraicons/github.png');}
-.#{$prefix}menu-item-icon.linkedin, .#{$prefix}action-col-icon.linkedin {background-image:url('extraicons/linkedin.png');}
-.#{$prefix}menu-item-icon.paypal, .#{$prefix}action-col-icon.paypal {background-image:url('extraicons/paypal.png');}
-.#{$prefix}menu-item-icon.salesforce, .#{$prefix}action-col-icon.salesforce {background-image:url('extraicons/salesforce.png');}
-.#{$prefix}menu-item-icon.stripe, .#{$prefix}action-col-icon.stripe {background-image:url('extraicons/stripe.png');}
-.#{$prefix}menu-item-icon.twitter, .#{$prefix}action-col-icon.twitter {background-image:url('extraicons/twitter.png');}
-.#{$prefix}menu-item-icon.drive, .#{$prefix}action-col-icon.drive {background-image:url('extraicons/drive.png');}
-.#{$prefix}menu-item-icon.gmail, .#{$prefix}action-col-icon.gmail {background-image:url('extraicons/gmail.png');}
-.#{$prefix}menu-item-icon.youtube, .#{$prefix}action-col-icon.youtube {background-image:url('extraicons/youtube.png');}
-.#{$prefix}menu-item-icon.ebay, .#{$prefix}action-col-icon.ebay {background-image:url('extraicons/ebay.png');}
-.#{$prefix}menu-item-icon.filter, .#{$prefix}action-col-icon.filter {background-image:url('extraicons/filter.png');} //#783
+/**
+ * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
+ * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
+ */
+a.#{$prefix}btn:hover {
+    text-decoration: none;
+}
+
+/**
+ * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
+ * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
+ */
+a.#{$prefix}datepicker-date:hover {
+    text-decoration: none;
+}
+
+/**
+ * Fixes underlines caused by body a:hover {text-decoration: underline;} in Salesforce:
+ * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
+ */
+a.#{$prefix}tab:hover {
+    text-decoration: none;
+}
+
+/**
+ * Fixes indents caused by ul li, ol li {margin-left: 1.5em;} in Salesforce:
+ * https://eu2.salesforce.com/sCSS/28.0/sprites/1371760580000/Theme3/default/gc/extended.css
+ */
+li.#{$prefix}boundlist-item {
+    margin-left: 0;
+}

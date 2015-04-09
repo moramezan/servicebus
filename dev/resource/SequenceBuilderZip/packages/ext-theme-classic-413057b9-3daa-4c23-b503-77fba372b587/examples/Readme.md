@@ -1,4 +1,4 @@
-# ext-theme-gray-9633b21d-c109-4daa-92b5-f90e272f0f28/examples
+# ext-theme-classic-413057b9-3daa-4c23-b503-77fba372b587/examples
 
 This folder contains example applications demonstrating this package. Each of
 these applications will be built as part of the package build:

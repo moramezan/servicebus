@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="ext-theme-gray-9633b21d-c109-4daa-92b5-f90e272f0f28" default=".help">
+<project name="ext-theme-classic-413057b9-3daa-4c23-b503-77fba372b587" default=".help">
     <!--
     The build-impl.xml file imported here contains the guts of the build process. It is
     a great idea to read that file to understand how the process works, but it is best to
