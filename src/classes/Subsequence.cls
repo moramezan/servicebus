@@ -14,6 +14,7 @@ public with sharing class Subsequence {
         public String Icon = 'arrow_undo';
         public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessBranchJumpSubsequence').getUrl();
         public Integer Limits = 50; //leave half of 200 (Total number of SOQL queries issued)
+        public String Cardinality = 'One';
     }
     
     override public String toString() {

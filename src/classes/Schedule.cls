@@ -15,6 +15,7 @@ public with sharing class Schedule {
         public Map<String,String> Inputs = new Map<String,String>{
             'esb__EntryPointDatetime' => 'DATETIME of the point in time this schedule was intended to run.'
         };
+        public String Cardinality = 'One';
     }
     
     public class ScheduleException  extends Exception {}

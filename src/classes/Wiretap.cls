@@ -13,6 +13,7 @@ public with sharing class Wiretap {
         public String Icon = 'email';
         public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessWiretap').getUrl();
         public Integer Limits = 5; //leave half of 10 (Total number of sendEmail methods allowed)
+        public String Cardinality = 'One';
     }
     
     override public String toString() {

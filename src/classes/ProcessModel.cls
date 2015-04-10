@@ -69,6 +69,14 @@ public with sharing class ProcessModel extends ApexDomain.StandardModel {
         public Integer Limits {get;}
 
         /**
+         * Optional indicator of the ratio of output events to input events: -1 for fewer outputs (eg Gate),
+         * 0 for no outputs (eg Terminate), 1 for a single output (eg Audit), null for any or many.
+         * No definition implies a default cardinality of null.
+         * @docs ApiProcessMarkers.html
+         */
+        public String Cardinality {get;}
+
+        /**
          * Key represents the parameter name, eg 'ns_URL'
          * Value is a friendly description, eg 'STRING of endpoint to scrape.'
          * @docs ApiProcessMarkers.html
@@ -128,6 +136,9 @@ public with sharing class ProcessModel extends ApexDomain.StandardModel {
             
             //attempt to populate the css class name of the process icon (with sensible default)
             process.Icon__c = meta.Icon == null ? 'cog' : meta.Icon.abbreviate(SObjectType.Process__c.Fields.Icon__c.Length);
+            
+            //attempt to populate the cardinality of the process
+            process.Cardinality__c = meta.Cardinality == null ? 'Any' : meta.Cardinality;
             
             //attempt to populate the help url
             String helpUrl = meta.HelpUrl == null ? Page.ProcessDescribe.getUrl() + '?fqn=' + outerClass.getName() : meta.HelpUrl;

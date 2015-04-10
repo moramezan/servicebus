@@ -21,6 +21,7 @@ public with sharing class Gate {
             'esb__GateItemsQueryString' => 'STRING of the query that locates the items that hold events correlated by Mark and Gate.',
             'esb__GateItemsFieldName' => 'STRING of the item field name that contains the serialized event data.'
         };
+        public String Cardinality = 'Fewer';
     }
 
     @TestVisible static private Boolean DeletionEnabled = true;

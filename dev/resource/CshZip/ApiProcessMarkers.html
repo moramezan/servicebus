@@ -76,8 +76,8 @@ global with sharing class ExampleProcess extends BaseProcess {
     <dd>Optional icon name from the <a href="resources/Api/index_abc.png" target="_blank">Silk library</a> that will display alongside steps of this process type.</dd>
     
     <dt>Cardinality</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_integer.htm" target="_blank">Integer</a></dd>
-    <dd>Optional indicator of the ratio of output events to input events: <code>-1</code> for fewer outputs (eg Gate), <code>0</code> for no outputs (eg Terminate), <code>1</code> for a single output (eg Audit), <code>null</code> for any or many.</dd>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Optional indicator of the ratio of output events to input events: eg <code>Fewer</code> outputs (Gate), <code>Zero</code> for no outputs (Terminate), <code>One</code> for a single output (Wiretap), <code>Many</code> for a split.</dd>
 
     <dt>HelpUrl</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>

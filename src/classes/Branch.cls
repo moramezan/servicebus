@@ -14,6 +14,7 @@ public with sharing class Branch {
         public String Name = 'Branch';
         public String Description = 'Copies the message to another sequence.';
         public Integer Limits = 100; //leave half of 200 (Total number of SOQL queries issued)
+        public String Cardinality = 'One';
     }
 
     public class BranchException extends Exception {}

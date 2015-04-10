@@ -143,6 +143,20 @@
             },
             "codeClass": null,
             "userConfig": {
+                "name": "ProcessCardinality",
+                "persist": false
+            },
+            "name": "MyString16",
+            "designerId": "fe6e5cab-8b69-41ef-8f24-49bf37eac40f"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
                 "name": "ConfigId",
                 "persist": false
             },

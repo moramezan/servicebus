@@ -102,6 +102,65 @@
             ]
         },
         {
+            "type": "Ext.grid.column.Action",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "defaultWidth": null,
+                "designer|displayName": "Cardinality",
+                "width": 25
+            },
+            "name": "MyActionColumn2",
+            "designerId": "9b5665d8-3685-4b18-9f1a-10f6f371e5e4",
+            "cn": [
+                {
+                    "type": "actioncolumnitem",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "Icon"
+                    },
+                    "name": "MyActionColumnItem2",
+                    "designerId": "fbd79fa8-58aa-4dc3-a220-757ce6ea3af6"
+                },
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "//set the cardinality column's icon from each process",
+                            "var cardinality = record.get('ProcessCardinality');",
+                            "this.items[0].iconCls = cardinality;",
+                            "if (cardinality == 'One') this.items[0].tooltip = cardinality + ' output event emitted for each input event.';",
+                            "if (cardinality != 'One') this.items[0].tooltip = cardinality + ' output events emitted for each input event.';"
+                        ]
+                    },
+                    "name": "renderer",
+                    "designerId": "8262b9f2-a862-432b-9796-ed271a120e12"
+                }
+            ]
+        },
+        {
             "type": "Ext.grid.column.Number",
             "reference": {
                 "name": "columns",

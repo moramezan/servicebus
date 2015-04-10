@@ -1136,3 +1136,9 @@ a.#{$prefix}tab:hover {
 li.#{$prefix}boundlist-item {
     margin-left: 0;
 }
+
+.#{$prefix}menu-item-icon.Zero, .#{$prefix}action-col-icon.Zero {background-image:url('cardinality/Zero.png');}
+.#{$prefix}menu-item-icon.One, .#{$prefix}action-col-icon.One {background-image:url('cardinality/One.png');}
+.#{$prefix}menu-item-icon.Any, .#{$prefix}action-col-icon.Any {background-image:url('cardinality/Any.png');}
+.#{$prefix}menu-item-icon.Many, .#{$prefix}action-col-icon.Many {background-image:url('cardinality/Many.png');}
+.#{$prefix}menu-item-icon.Fewer, .#{$prefix}action-col-icon.Fewer {background-image:url('cardinality/Fewer.png');}

@@ -75,6 +75,8 @@
         $ObjectType.Process__c.Fields.HelpUrl__c.Name = '{!$ObjectType.Process__c.Fields.HelpUrl__c.Name}';
         $ObjectType.Process__c.Fields.Setting__c = $ObjectType.Process__c.Fields.Setting__c || {};
         $ObjectType.Process__c.Fields.Setting__c.Name = '{!$ObjectType.Process__c.Fields.Setting__c.Name}';
+        $ObjectType.Process__c.Fields.Cardinality__c = $ObjectType.Process__c.Fields.Cardinality__c || {};
+        $ObjectType.Process__c.Fields.Cardinality__c.Name = '{!$ObjectType.Process__c.Fields.Cardinality__c.Name}';
 
         Processes = {!Processes};
         Steps = {!Steps};

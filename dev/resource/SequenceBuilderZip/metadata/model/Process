@@ -102,6 +102,19 @@
             },
             "name": "MyString5",
             "designerId": "b0aad3ad-b08c-498c-b3da-b784850f0973"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Cardinality"
+            },
+            "name": "MyString15",
+            "designerId": "b02f16c4-42ea-46fd-a987-72beea998bdb"
         }
     ]
 }

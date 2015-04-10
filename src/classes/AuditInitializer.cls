@@ -18,7 +18,7 @@ public with sharing class AuditInitializer {
         public Map<String,String> Outputs = new Map<String,String>{
             //'__AuditGroupIds' => 'LIST<ID> of potentially multiple groups from AuditInitializer steps.'
         };
-        
+        public String Cardinality = 'One';
     }
     
     public class AuditInitializerException extends Exception {}

@@ -13,4 +13,5 @@ Ext.define('Builder.model.override.Step', {
     fields.ProcessIcon.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.Icon__c.Name;
     fields.ProcessHelpUrl.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.HelpUrl__c.Name;
     fields.ProcessSetting.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.Setting__c.Name;
+    fields.ProcessCardinality.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.Cardinality__c.Name;
 });

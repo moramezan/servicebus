@@ -12,6 +12,7 @@ public with sharing class Terminate {
         public String Icon = 'stop';
         public String HelpUrl = Page.StepCsh.getUrl();
         public Integer Limits = 100; //leave half of 200 (Total number of SOQL queries issued)
+        public String Cardinality = 'Zero';
     }
     
     override public String toString() {

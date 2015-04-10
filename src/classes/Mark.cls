@@ -17,6 +17,7 @@ public with sharing class Mark {
         public Map<String,String> Outputs = new Map<String,String>{
             'esb__GateGroupId' => 'ID of the Gate Group that eventually associates all the marked messages.'
         };
+        public String Cardinality = 'One';
     }
     
     override public String toString() {

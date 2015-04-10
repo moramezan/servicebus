@@ -14,6 +14,7 @@ public with sharing class Publish {
         public String Icon = 'chart_organisation';
         public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessPublishSubscribe').getUrl();
         public Integer Limits = 50; //leave half of 200 (Total number of SOQL queries issued)
+        public String Cardinality = 'One';
     }
     
     public class PublishException extends Exception {}

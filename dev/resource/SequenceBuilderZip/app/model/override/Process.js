@@ -9,4 +9,5 @@ Ext.define('Builder.model.override.Process', {
     fields.Description.mapping = $ObjectType.Process__c.Fields.Description__c.Name;
     fields.HelpUrl.mapping = $ObjectType.Process__c.Fields.HelpUrl__c.Name;
     fields.Setting.mapping = $ObjectType.Process__c.Fields.Setting__c.Name;
+    fields.Cardinality.mapping = $ObjectType.Process__c.Fields.Cardinality__c.Name;
 });

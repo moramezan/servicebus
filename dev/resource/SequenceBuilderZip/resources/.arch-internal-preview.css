@@ -27938,3 +27938,18 @@ a.z-tab:hover {
  */
 li.z-boundlist-item {
   margin-left: 0; }
+
+.z-menu-item-icon.Zero, .z-action-col-icon.Zero {
+  background-image: url("cardinality/Zero.png"); }
+
+.z-menu-item-icon.One, .z-action-col-icon.One {
+  background-image: url("cardinality/One.png"); }
+
+.z-menu-item-icon.Any, .z-action-col-icon.Any {
+  background-image: url("cardinality/Any.png"); }
+
+.z-menu-item-icon.Many, .z-action-col-icon.Many {
+  background-image: url("cardinality/Many.png"); }
+
+.z-menu-item-icon.Fewer, .z-action-col-icon.Fewer {
+  background-image: url("cardinality/Fewer.png"); }
