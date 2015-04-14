@@ -21,7 +21,7 @@
         Integer actualProcessesBeforeCount = processesBefore.size();  
 
         //act  
-        Process__c markProcess = ProcessModel.generateOne(Mark.class);
+        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
  
         //assemble
         List<Process__c> processesAfter = ApexDomain.listAll(Process__c.SObjectType);

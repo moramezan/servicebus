@@ -27,10 +27,10 @@
         <members>ConfigureControllerTest</members>
         <members>Disperse</members>
         <members>DisperseTest</members>
-        <members>EnqueuedGate</members>
-        <members>EnqueuedGateTest</members>
-        <members>Gate</members>
-        <members>GateTest</members>
+        <members>GateByEntryPoint</members>
+        <members>GateByEntryPointTest</members>
+        <members>GateByJob</members>
+        <members>GateByJobTest</members>
         <members>Heartbeat</members>
         <members>HeartbeatDispatcher</members>
         <members>HeartbeatDispatcherTest</members>
@@ -41,8 +41,6 @@
         <members>JobTest</members>
         <members>Jump</members>
         <members>JumpTest</members>
-        <members>Mark</members>
-        <members>MarkTest</members>
         <members>MessageDataExtension</members>
         <members>MessageDataExtensionTest</members>
         <members>MessageKillExtension</members>
@@ -170,7 +168,6 @@
         <members>DisperseConfigTriggers</members>
         <members>DisperseDestinationTriggers</members>
         <members>JumpConfigTriggers</members>
-        <members>MarkConfigTriggers</members>
         <members>MessageTriggers</members>
         <members>PublishConfigTriggers</members>
         <members>ScheduleConfigTriggers</members>
@@ -207,16 +204,12 @@
         <members>BrokerSetting__c.IsPaused__c</members>
         <members>DisperseDestination__c.DisperseConfig__c</members>
         <members>DisperseDestination__c.Sequence__c</members>
-        <members>EnqueuedGateItem__c.Event__c</members>
-        <members>EnqueuedGateItem__c.GateGroup__c</members>
-        <members>GateGroup__c.MarkConfig__c</members>
-        <members>GateItem__c.Event__c</members>
-        <members>GateItem__c.GateGroup__c</members>
         <members>JumpConfig__c.Sequence__c</members>
         <members>KnifeSwitch__c.Url__c</members>
         <members>Message__c.Attempts__c</members>
         <members>Message__c.Cause__c</members>
         <members>Message__c.CreatedDate__c</members>
+        <members>Message__c.EntryPointUuid__c</members>
         <members>Message__c.Event__c</members>
         <members>Message__c.Exception__c</members>
         <members>Message__c.ExecuteDuration__c</members>
@@ -261,13 +254,10 @@
         <members>BrokerSetting__c</members>
         <members>DisperseConfig__c</members>
         <members>DisperseDestination__c</members>
-        <members>EnqueuedGateItem__c</members>
         <members>EventType__c</members>
-        <members>GateGroup__c</members>
         <members>GateItem__c</members>
         <members>JumpConfig__c</members>
         <members>KnifeSwitch__c</members>
-        <members>MarkConfig__c</members>
         <members>Message__c</members>
         <members>OAuthSetting__c</members>
         <members>Process__c</members>
@@ -307,12 +297,9 @@
         <members>BranchConfig__c-Branch Config Layout</members>
         <members>DisperseConfig__c-Disperse Config Layout</members>
         <members>DisperseDestination__c-Destination Layout</members>
-        <members>EnqueuedGateItem__c-Enqueue Gate Item Layout</members>
         <members>EventType__c-Event Type Layout</members>
-        <members>GateGroup__c-Gate Group Layout</members>
         <members>GateItem__c-Gate Item Layout</members>
         <members>JumpConfig__c-Jump Config Layout</members>
-        <members>MarkConfig__c-Gate Config Layout</members>
         <members>Message__c-Message Layout</members>
         <members>Process__c-Process Layout</members>
         <members>PublishConfig__c-Publish Config Layout</members>

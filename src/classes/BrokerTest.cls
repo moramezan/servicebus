@@ -232,7 +232,7 @@
     
     static testmethod void canCorrectlyIncrementAndPersistMessages() {
         //arrange processes
-        Process__c markProcess = ProcessModel.generateOne(Mark.class);
+        Process__c publishProcess = ProcessModel.generateOne(Publish.class);
         Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
         
@@ -243,7 +243,7 @@
         
         //arrange steps
         Step__c stepA1 = StepModel.generateOne(sequenceA.Id, subscribeProcess.Id);
-        Step__c stepA2 = StepModel.generateOne(sequenceA.Id, markProcess.Id);
+        Step__c stepA2 = StepModel.generateOne(sequenceA.Id, publishProcess.Id);
         Step__c stepA3 = StepModel.generateOne(sequenceA.Id, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
@@ -362,7 +362,7 @@
     
     static testmethod void canCorrectlyIncrementMessages() {
         // arrange
-        Process__c markProcess = ProcessModel.generateOne(Mark.class);
+        Process__c publishProcess = ProcessModel.generateOne(Publish.class);
         Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
         Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
@@ -385,11 +385,11 @@
         Integer positionC1 = 1;
         Integer positionC2 = 2;
         Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = subscribeProcess.Id);
-        Step__c stepA2 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA2,Process__c = markProcess.Id);
+        Step__c stepA2 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA2,Process__c = publishProcess.Id);
         Step__c stepA3 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA3,Process__c = terminateProcess.Id);
         Step__c stepB1 = new Step__c(Sequence__c = sequenceB.Id ,Position__c = positionB1,Process__c = wiretapProcess.Id);
         Step__c stepB2 = new Step__c(Sequence__c = sequenceB.Id ,Position__c = positionB2,Process__c = terminateProcess.Id);
-        Step__c stepC1 = new Step__c(Sequence__c = sequenceC.Id ,Position__c = positionC1,Process__c = markProcess.Id);
+        Step__c stepC1 = new Step__c(Sequence__c = sequenceC.Id ,Position__c = positionC1,Process__c = publishProcess.Id);
         Step__c stepC2 = new Step__c(Sequence__c = sequenceC.Id ,Position__c = positionC2,Process__c = terminateProcess.Id);
         insert stepA1;
         insert stepA2;
@@ -565,85 +565,7 @@
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
         
     }
-    
-      static testmethod void callingGateHelperCorrectlySetsCountWhenMarkCountIncrementsTo1() {
-        //arrange
-        Integer markCount = 0;
-        Map<String,Object> eventIn0 = new Map<String,Object> {
-            'esb__Id' => '0',
-            '__MarkCount' => markCount
-        };
-        
-        Map<String,Object> eventOut1 = new Map<String,Object> {
-            'esb__Id' => '1'
-        };
-        
-        Map<String,Object> eventOut2 = new Map<String,Object> {
-            'esb__Id' => '2'
-        };
-        
-        Map<String,Object> eventOut3 = new Map<String,Object> {
-            'esb__Id' => '3'
-        };
-        
-        List<Map<String,Object>> eventsListOut = new List<Map<String,Object>> { eventOut1, eventOut2, eventOut3 };
-        
-        //act
-        new DoNothingBroker().gateHelper(eventIn0, eventsListOut);
-        
-        //assemble
-        Integer actualCount = (Integer)eventsListOut[0].get('__Count');
-        
-        //assert
-        Integer expectedCount = eventsListOut.size();
-        System.assertEquals(expectedCount, actualCount);
-    }
-    
-    static testmethod void callingGateHelperDoesNotSetCountWhenMarkCountIncrementsToOtherThan1() {
-        //arrange
-        Integer markCount = 0; //will not increment to 1
-        Map<String,Object> eventIn0 = new Map<String,Object> {
-            'esb__Id' => '0',
-            '__MarkCount' => markCount
-        };
-        
-        List<Map<String,Object>> eventsListOut = new List<Map<String,Object>>();
-        
-        //act
-        new DoNothingBroker().gateHelper(eventIn0, eventsListOut);
-        
-        //assemble
-        Integer actualCount = (Integer)eventIn0.get('__Count');
-        
-        //assert
-        Integer expectedCount = null;
-        System.assertEquals(expectedCount, actualCount);
-    }
-    
-    static testmethod void callingGateHelperDoesNotSetCountWhenMarkCountIsNull() {
-        //arrange
-        Map<String,Object> eventIn0 = new Map<String,Object> {
-            'esb__Id' => '0'
-            //'__MarkCount' => markCount //Not specified; key will return null
-        };
-        
-        List<Map<String,Object>> eventsListOut = new List<Map<String,Object>>();
-        
-        //act
-        new DoNothingBroker().gateHelper(eventIn0, eventsListOut);
-        
-        //assemble
-        Integer actualCount = (Integer) eventIn0.get('__Count');
-        
-        //assert
-        Integer expectedCount = null;
-        System.assertEquals(expectedCount , actualCount);
-    }
 
- 
-    
-    //TODO :: write test for this when you (NReid) understand this ( cant remember right now)
-    // if (count == 0) Database.delete(new List<Id>{(Id)event.get('esb__GateGroupId')}); //tidy up split of 0
     
     /**
      * Bug with Salesforce:

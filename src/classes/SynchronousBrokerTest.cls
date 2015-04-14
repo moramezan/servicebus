@@ -2,7 +2,7 @@
 
     private static testmethod void callingEnqueueSuccessfullyExecutesStepsInSequence() {
         //arrange processes
-        Process__c markProcess = ProcessModel.generateOne(Mark.class);
+        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
         Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
         
         //arrange sequence
@@ -11,7 +11,7 @@
         insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = StepModel.generateOne(sequenceA.Id, markProcess.Id);
+        Step__c stepA1 = StepModel.generateOne(sequenceA.Id, subscribeProcess.Id);
         Step__c stepA2 = StepModel.generateOne(sequenceA.Id, terminateProcess.Id);
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;

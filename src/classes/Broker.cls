@@ -617,10 +617,7 @@ abstract public with sharing class Broker {
                 inputMessage.Exception__c = null;
                 inputMessage.Cause__c = null;
                 List<Map<String,Object>> outputEvents = wrapper.Outputs;
-                
-                //gate processing support method
-                this.gateHelper(id2events.get(inputMessage.Id), outputEvents);
-                
+
                 //wrap up results into Messages (new guys should have Position = 0)
                 for (Map<String,Object> outputEvent : outputEvents) {
                     outputMessages.add(new Message__c(
@@ -689,40 +686,7 @@ abstract public with sharing class Broker {
             throw new EngineException(null, messageIds, e, 'Persist failure: ' + e.getMessage());
         }
     }
-    
-    /**
-     * The Mark helper logic is for the Gate process; it determines when a split occurs, and writes away the number of
-     * splitted output events so that a future Gate process can know exactly how many output events form a Gate Group.
-     *
-     * If markCount isn't null, then the preceding process was a Mark; increment THEN put that value on event parameters.
-     * If markCount equates to two, then the preceding process was a splitter; write the count of split output events.
-     */
-    @TestVisible private void gateHelper(Map<String,Object> inputEvent, List<Map<String,Object>> outputs) {
-        Decimal markCount = (Decimal)inputEvent.get('__MarkCount');
-        
-        if (null == markCount) {
-            //nothing to do, mark process has not tainted the input
-            return;
-        }
-        
-        if (outputs.isEmpty()) {
-            //nothing to do, split process did not return any outputs, tidy up the gate group
-            //Database.delete(new List<Id>{(Id)inputEvent.get('esb__GateGroupId')});
-            return;
-        }
-        
-        markCount++;
-        
-        for (Map<String,Object> output : outputs) {
-            //write markCount onto every output
-            output.put('__MarkCount', markCount);
-        }
-        
-        if (1 == markCount) {
-            //write outputSize onto every output
-            for (Map<String,Object> output : outputs) output.put('__Count', outputs.size());
-        }
-    }
+
     
     /**
      * Formerly restartIfWorkPending

@@ -85,19 +85,19 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>EnqueuedGate</apexClass>
+        <apexClass>GateByEntryPoint</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>EnqueuedGateTest</apexClass>
+        <apexClass>GateByEntryPointTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Gate</apexClass>
+        <apexClass>GateByJob</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>GateTest</apexClass>
+        <apexClass>GateByJobTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -138,14 +138,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>JumpTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>Mark</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>MarkTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -468,26 +460,6 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
-        <field>EnqueuedGateItem__c.Event__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>EnqueuedGateItem__c.GateGroup__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>GateGroup__c.MarkConfig__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>GateItem__c.Event__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
         <editable>true</editable>
         <field>JumpConfig__c.Sequence__c</field>
         <readable>true</readable>
@@ -505,6 +477,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Message__c.CreatedDate__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Message__c.EntryPointUuid__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -703,30 +680,12 @@
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
-        <allowCreate>false</allowCreate>
-        <allowDelete>false</allowDelete>
-        <allowEdit>false</allowEdit>
-        <allowRead>true</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
-        <object>EnqueuedGateItem__c</object>
-        <viewAllRecords>true</viewAllRecords>
-    </objectPermissions>
-    <objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>true</allowDelete>
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
         <object>EventType__c</object>
-        <viewAllRecords>true</viewAllRecords>
-    </objectPermissions>
-    <objectPermissions>
-        <allowCreate>false</allowCreate>
-        <allowDelete>false</allowDelete>
-        <allowEdit>false</allowEdit>
-        <allowRead>true</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
-        <object>GateGroup__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -745,15 +704,6 @@
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
         <object>JumpConfig__c</object>
-        <viewAllRecords>true</viewAllRecords>
-    </objectPermissions>
-    <objectPermissions>
-        <allowCreate>false</allowCreate>
-        <allowDelete>false</allowDelete>
-        <allowEdit>false</allowEdit>
-        <allowRead>true</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
-        <object>MarkConfig__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -1046,6 +996,10 @@
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
+        <name>ActivateOrder</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>false</enabled>
         <name>AllowUniversalSearch</name>
     </userPermissions>
     <userPermissions>
@@ -1135,6 +1089,10 @@
     <userPermissions>
         <enabled>false</enabled>
         <name>DistributeFromPersWksp</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>false</enabled>
+        <name>EditActivatedOrders</name>
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>

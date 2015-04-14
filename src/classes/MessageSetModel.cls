@@ -125,6 +125,7 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         this.populateRouteKey();
         this.swallowToString();
         this.populateQueueableId();
+        this.populateEntryPointUuid();
     }
     
     override public void onBeforeUpdate(List<SObject> oldObjects) {
@@ -260,9 +261,9 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
     } 
     
     /**
-     * Populates the enqueue Id
+     * Populates the Queueable Id
      * This parameter surfaced onto the message to support the
-     * functionality in the EnqueueGate
+     * functionality in the Gate By Job process
      */
     @TestVisible private void populateQueueableId() {
         List<Message__c> messages = this.getRecords();
@@ -272,5 +273,19 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
             message.QueueableId__c = (String)parameters.get('__QueueableId');
         }
     }
+    
+    /**
+     * Populates the Unique Entry Point Id
+     * This parameter surfaced onto the message to support the
+     * functionality in the Gate By Entry Point process
+     */
+    @TestVisible private void populateEntryPointUuid() {
+        List<Message__c> messages = this.getRecords();
+
+        for (Message__c message : messages) {
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
+            message.EntryPointUuid__c = (String)parameters.get('esb__EntryPointUuid');
+        }
+    }  
     
 }

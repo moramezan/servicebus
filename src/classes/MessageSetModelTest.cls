@@ -141,4 +141,21 @@
          String expectedQueueableId = queueableId;
          System.assertEquals(expectedQueueableId, actualQueueableId, 'Failed to populate QueueableId');
      }    
+    
+     static testmethod void callingPopulateEntryPointUuidCorrectlyPopulatesEntryPointUuid() {
+         //arrange message
+         String EntryPointUuid = '123456';
+         Message__c message = new Message__c(
+             Event__c = '{"esb__EntryPointUuid":"' + entryPointUuid + '"}'
+         );
+
+         //act
+         new MessageSetModel(new List<Message__c>{message}).populateEntryPointUuid();
+
+         //assert
+
+         String actualEntryPointUuid = message.EntryPointUuid__c;
+         String expectedEntryPointUuid = EntryPointUuid;
+         System.assertEquals(expectedEntryPointUuid, actualEntryPointUuid, 'Failed to populate EntryPointUuid');
+     }    
 }

@@ -55,30 +55,6 @@
     <enableReports>false</enableReports>
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
-    <fields>
-        <fullName>Event__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>What were the event parameters saved by the Gate Process?</inlineHelpText>
-        <label>Event</label>
-        <length>131072</length>
-        <trackTrending>false</trackTrending>
-        <type>LongTextArea</type>
-        <visibleLines>20</visibleLines>
-    </fields>
-    <fields>
-        <fullName>GateGroup__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Which Gate Group does this item belong in?</inlineHelpText>
-        <label>Gate Group</label>
-        <referenceTo>GateGroup__c</referenceTo>
-        <relationshipLabel>Gate Items</relationshipLabel>
-        <relationshipName>GateItems</relationshipName>
-        <relationshipOrder>0</relationshipOrder>
-        <reparentableMasterDetail>false</reparentableMasterDetail>
-        <trackTrending>false</trackTrending>
-        <type>MasterDetail</type>
-        <writeRequiresMasterRead>false</writeRequiresMasterRead>
-    </fields>
     <label>Gate Item</label>
     <nameField>
         <label>GateItem Name</label>
@@ -90,5 +66,5 @@
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <excludedStandardButtons>New</excludedStandardButtons>
     </searchLayouts>
-    <sharingModel>ControlledByParent</sharingModel>
+    <sharingModel>ReadWrite</sharingModel>
 </CustomObject>

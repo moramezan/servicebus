@@ -52,8 +52,8 @@
  
     static testmethod void testImplementsEsbSubclass() {
         // arrange
-        Type gate = Type.forName('Gate.ESB');
-        Type mark = Type.forName('Mark.ESB');
+        Type gateByEntryPoint = Type.forName('GateByEntryPoint.ESB');
+        Type gateByJob = Type.forName('GateByJob.ESB');
         Type terminate = Type.forName('Terminate.ESB');
         Type branch = Type.forName('Branch.ESB');
         Type wiretap = Type.forName('Wiretap.ESB');
@@ -65,8 +65,8 @@
         Type auditWriter = Type.forName('AuditWriter.ESB');
         
         // act
-        Boolean actualGate = (gate != null);
-        Boolean actualMark = (mark != null);
+        Boolean actualGateByEntryPoint = (gateByEntryPoint != null);
+        Boolean actualGateByJob = (gateByJob != null);
         Boolean actualTerminate = (terminate != null);
         Boolean actualBranch = (branch != null);
         Boolean actualWiretap = (wiretap != null);
@@ -80,8 +80,8 @@
         // assert
         System.assert(actualSubsequence);
         System.assert(actualBranch);
-        System.assert(actualGate);
-        System.assert(actualMark);
+        System.assert(actualGateByEntryPoint);
+        System.assert(actualGateByJob);
         System.assert(actualPublish);
         System.assert(actualSchedule);
         System.assert(actualTerminate);
