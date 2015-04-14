@@ -549,6 +549,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Process__c.Cardinality__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Process__c.Description__c</field>
         <readable>true</readable>
     </fieldPermissions>

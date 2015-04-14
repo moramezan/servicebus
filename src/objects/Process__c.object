@@ -66,6 +66,37 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Cardinality__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>What is the ratio of output events to input events? For example &apos;Fewer&apos; for fewer outputs, &apos;Zero&apos; for no outputs, &apos;One&apos; for a single output, &apos;Any&apos; or &apos;Many&apos;</inlineHelpText>
+        <label>Cardinality</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Any</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Zero</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>One</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Many</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Fewer</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
         <fullName>Description__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>What does this process do?</inlineHelpText>

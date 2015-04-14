@@ -228,6 +228,7 @@
         <members>OAuthSetting__c.RefreshToken__c</members>
         <members>OAuthSetting__c.RunningUserId__c</members>
         <members>Process__c.ApexClassId__c</members>
+        <members>Process__c.Cardinality__c</members>
         <members>Process__c.Description__c</members>
         <members>Process__c.FullyQualifiedClassName__c</members>
         <members>Process__c.HelpUrl__c</members>
