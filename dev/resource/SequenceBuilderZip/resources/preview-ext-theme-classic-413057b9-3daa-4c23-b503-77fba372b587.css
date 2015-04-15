@@ -24794,8 +24794,8 @@ a.z-color-picker-item:hover {
 /**
  * Grippy icon
  */
-.z-action-col-icon.grippy {
-  background: url("grippy.png") left no-repeat; }
+.z-grid-cell.grippy .z-grid-cell-inner {
+  background: url("grippy.png") 2px center no-repeat; }
 
 /**
  * NO cursor on other icons
@@ -24815,8 +24815,8 @@ td.z-grid-cell.link div.z-grid-cell-inner {
 /**
  * DRAG cursor on grippy cell and icon
  */
-.z-action-col-cell.grippy,
-.z-action-col-cell.grippy .z-action-col-icon.grippy {
+.z-grid-cell.grippy,
+.z-grid-cell.grippy .z-grid-cell-inner {
   cursor: move; }
 
 .z-grid-body.steps td.z-grid-cell {

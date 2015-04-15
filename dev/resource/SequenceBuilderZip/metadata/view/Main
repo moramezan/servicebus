@@ -69,37 +69,24 @@
             ]
         },
         {
-            "type": "Ext.grid.column.Action",
+            "type": "Ext.grid.column.Column",
             "reference": {
                 "name": "columns",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "iconCls": "grippy",
                 "menuDisabled": true,
                 "tdCls": "grippy",
                 "text": "Order",
                 "tooltip": "Drag and drop to reorganize",
                 "width": 16
             },
-            "name": "MyActionColumn",
+            "name": "MyColumn6",
             "configAlternates": {
                 "scrollable": "boolean"
             },
-            "designerId": "4c5de253-309b-446d-ae37-11aa2d5adcdd",
-            "cn": [
-                {
-                    "type": "actioncolumnitem",
-                    "reference": {
-                        "name": "items",
-                        "type": "array"
-                    },
-                    "codeClass": null,
-                    "name": "MyActionColumnItem",
-                    "designerId": "5533651d-99c8-4e64-9bbd-c5c68e24e2a0"
-                }
-            ]
+            "designerId": "4c5de253-309b-446d-ae37-11aa2d5adcdd"
         },
         {
             "type": "Ext.grid.column.Action",

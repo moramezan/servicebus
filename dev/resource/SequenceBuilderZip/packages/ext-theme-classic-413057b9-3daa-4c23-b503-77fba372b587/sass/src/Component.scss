@@ -1,8 +1,8 @@
 /**
  * Grippy icon
  */
-.#{$prefix}action-col-icon.grippy {
-    background: url('grippy.png') left no-repeat;
+.#{$prefix}grid-cell.grippy .#{$prefix}grid-cell-inner  {
+    background: url('grippy.png') 2px center no-repeat;
 }
 
 /**
@@ -24,8 +24,8 @@ td.#{$prefix}grid-cell.link div.#{$prefix}grid-cell-inner    {
 /**
  * DRAG cursor on grippy cell and icon
  */
-.#{$prefix}action-col-cell.grippy,
-.#{$prefix}action-col-cell.grippy .#{$prefix}action-col-icon.grippy {
+.#{$prefix}grid-cell.grippy,
+.#{$prefix}grid-cell.grippy .#{$prefix}grid-cell-inner {
     cursor: move;
 }
 
