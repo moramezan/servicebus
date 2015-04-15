@@ -1,6 +1,5 @@
-public with sharing class Schedule {
+public with sharing class Schedule extends ProcessModel.BaseProcess {
     
-    public String Event;
     public ScheduleConfig__c StepConfig;
     
     public class ESB {
@@ -20,8 +19,7 @@ public with sharing class Schedule {
     
     public class ScheduleException  extends Exception {}
     
-    override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         String stampAsString = (String)parameters.get('esb__EntryPointDatetime');
         Boolean wasHeartbeat = (Boolean)parameters.get('__WasHeartbeatProcess'); //#810
@@ -32,7 +30,7 @@ public with sharing class Schedule {
             
             if (this.StepConfig.IsActive__c != true) {
                 //just swallow if not active
-                return Json.serializePretty(new List<Map<String,Object>>());
+                return new List<Map<String,Object>>();
             }
             
             // evaluate:
@@ -44,7 +42,7 @@ public with sharing class Schedule {
             parametersList.add(parameters);
         }
     
-        return Json.serialize(parametersList);
+        return parametersList;
     }
 
     @TestVisible static private Boolean isWithinWindow(String stampAsString, ScheduleConfig__c config) {

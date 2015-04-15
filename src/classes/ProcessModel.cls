@@ -176,4 +176,29 @@ public with sharing class ProcessModel extends ApexDomain.StandardModel {
         return new Context().contextFromType(reflector);
     }
     
+    /**
+     * Base process to pretty up our processes
+     */
+    abstract public with sharing class BaseProcess {
+        
+        //only override when a process requires callouts
+        virtual protected void callouts(Map<String,Object> event) {}
+        
+        //always override and implement process logic inside
+        abstract protected List<Map<String,Object>> execute(Map<String,Object> event);
+        
+        //ESB Marker Properties
+        public String Event;
+        public SObject StepConfig;
+        public Boolean AllowsCallouts;
+        
+        //ESB Marker Method
+        override public String toString() {
+            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+            if (this.AllowsCallouts == true) {this.callouts(inputEvent);return null;}
+            return Json.serialize(this.execute(inputEvent));
+        }
+        
+    }
+    
 }

@@ -1,14 +1,11 @@
-public with sharing class Heartbeat {
+public with sharing class Heartbeat extends ProcessModel.BaseProcess {
     
-    public String Event;
-
     //#575 heartbeat process evades discovery
     //public class ESB {}
 
     public class HeartbeatException extends Exception {}
 
-    override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         String  stampAsString = (String)parameters.get('esb__EntryPointDatetime');
 
@@ -41,7 +38,7 @@ public with sharing class Heartbeat {
         }
 
         //This process should act as a Terminate - return empty list
-        return Json.serialize(parametersList);
+        return parametersList;
     }
 
 

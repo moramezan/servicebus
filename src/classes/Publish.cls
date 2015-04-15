@@ -1,6 +1,5 @@
-public with sharing class Publish {
+public with sharing class Publish extends ProcessModel.BaseProcess {
     
-    public String Event;
     public PublishConfig__c StepConfig;
     
     /**
@@ -19,8 +18,7 @@ public with sharing class Publish {
     
     public class PublishException extends Exception {}
 
-    override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         
         PublishConfig__c publishConfig = this.StepConfig;
@@ -53,6 +51,6 @@ public with sharing class Publish {
         //original guy carries on... this is not a Terminate
         parametersList.add(parameters);
         
-        return Json.serialize(parametersList);
+        return parametersList;
     }
 }

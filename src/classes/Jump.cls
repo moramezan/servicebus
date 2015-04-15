@@ -1,6 +1,5 @@
-public with sharing class Jump {
+public with sharing class Jump extends ProcessModel.BaseProcess {
 
-    public String Event;
     public JumpConfig__c StepConfig;
 
     /**
@@ -17,8 +16,7 @@ public with sharing class Jump {
         public String Cardinality = 'Zero';
     }
     
-    override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         //get destination from config
         JumpConfig__c config = this.StepConfig;
@@ -27,7 +25,7 @@ public with sharing class Jump {
         parameters.put('__SequenceName', sequence.Name);
         parameters.put('__Position', 0);
         
-        return Json.serialize(new List<Map<String,Object>>{parameters});
+        return new List<Map<String,Object>>{parameters};
     }
 
 }

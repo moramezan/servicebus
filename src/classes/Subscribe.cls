@@ -1,7 +1,5 @@
-public with sharing class Subscribe {
+public with sharing class Subscribe extends ProcessModel.BaseProcess {
 
-    public String Event;
-    
     /**
      * @docs ProcessPublishSubscribe.html
      */
@@ -16,8 +14,7 @@ public with sharing class Subscribe {
         public String Cardinality = 'One';
     }
     
-    override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
-        return Json.serialize(new List<Map<String,Object>>{parameters});
+    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
+        return new List<Map<String,Object>>{parameters};
     }
 }

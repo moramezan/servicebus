@@ -1,6 +1,5 @@
-public with sharing class Branch {
+public with sharing class Branch extends ProcessModel.BaseProcess {
 
-    public String Event;
     public BranchConfig__c StepConfig;
 
     /**
@@ -19,8 +18,7 @@ public with sharing class Branch {
 
     public class BranchException extends Exception {}
     
-    override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
 
         //get step config
         BranchConfig__c config = this.StepConfig;
@@ -55,6 +53,6 @@ public with sharing class Branch {
         //  event.put('esb__Id', clone.Id);
         //}
         
-        return Json.serialize(new List<Map<String,Object>>{parameters, clone});
+        return new List<Map<String,Object>>{parameters, clone};
     }
 }

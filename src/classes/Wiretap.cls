@@ -1,6 +1,4 @@
-public with sharing class Wiretap {
-   
-    public String Event;
+public with sharing class Wiretap extends ProcessModel.BaseProcess {
     
     /**
      * @docs ProcessWiretap.html
@@ -16,8 +14,7 @@ public with sharing class Wiretap {
         public String Cardinality = 'One';
     }
     
-    override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         Id userId;
         try {
@@ -44,6 +41,6 @@ public with sharing class Wiretap {
         message.setSaveAsActivity(false);
         Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{message});
         
-        return Json.serialize(new List<Map<String,Object>>{parameters});
+        return new List<Map<String,Object>>{parameters};
     }
 }

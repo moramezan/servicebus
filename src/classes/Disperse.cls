@@ -1,6 +1,5 @@
-public with sharing class Disperse {
+public with sharing class Disperse extends ProcessModel.BaseProcess {
     
-    public String Event;
     public DisperseConfig__c StepConfig;
     
     public class ESB {
@@ -15,8 +14,7 @@ public with sharing class Disperse {
     
     public class DisperseException extends Exception {}
     
-    override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         //find all the sequences
         List<DisperseDestination__c> destinations = [
@@ -40,7 +38,7 @@ public with sharing class Disperse {
             });
         }
         
-        return Json.serialize(outputs);
+        return outputs;
     }
 
 }

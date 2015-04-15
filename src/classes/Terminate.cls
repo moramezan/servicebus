@@ -1,6 +1,4 @@
-public with sharing class Terminate {
-    
-    public String Event;
+public with sharing class Terminate extends ProcessModel.BaseProcess {
     
     /**
      * @docs ProcessTerminate.html
@@ -15,8 +13,7 @@ public with sharing class Terminate {
         public String Cardinality = 'Zero';
     }
     
-    override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         //if we got here from a subsequence, back to where you came from!
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
@@ -24,13 +21,13 @@ public with sharing class Terminate {
         
         if (data == null) {
             //no subsequences
-            return Json.serialize(parametersList);
+            return parametersList;
         }
 
         List<Id> stepIds = (List<Id>)System.Json.deserialize(System.Json.serialize(data), List<Id>.class);
         if (stepIds.isEmpty()) {
             //subsequences finished
-            return Json.serialize(parametersList);
+            return parametersList;
         }
         
         //pop one subsequence off stack
@@ -46,7 +43,7 @@ public with sharing class Terminate {
         parameters.put('__Position', step.Position__c);
         parametersList.add(parameters);
 
-        return Json.serialize(parametersList);
+        return parametersList;
     }
     
     

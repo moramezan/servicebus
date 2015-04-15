@@ -1,5 +1,4 @@
-public with sharing class GateByJob {
-    public String Event;
+public with sharing class GateByJob extends ProcessModel.BaseProcess {
 
     private class GateByJobException extends Exception {}
 
@@ -26,10 +25,9 @@ public with sharing class GateByJob {
 
 
 
-    override public String toString() {
+    override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         //// TODO ? if (!SObjectType.MESSAGE__C.Createable) throw new ApexDomain.CrudException('!SObjectType.MESSAGE__C.Createable');
 
-        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
 
         if (!inputEvent.containsKey('__QueueableId'))
             throw new GateByJobException('Input event missing mandatory __QueueableId parameter');
@@ -49,7 +47,7 @@ public with sharing class GateByJob {
 
         if ( !release) {
             //this is not the last item, so let's swallow
-            return Json.serialize(new List<Map<String,Object>>());
+            return new List<Map<String,Object>>();
         }
 
 
@@ -89,7 +87,7 @@ public with sharing class GateByJob {
         inputEvent.put('esb__GateItemsQueryString', queryString);
         inputEvent.put('esb__GateItemsFieldName', fieldName);
 
-        return Json.serialize(new List<Map<String,Object>>{inputEvent});
+        return new List<Map<String,Object>>{inputEvent};
     }
 
 

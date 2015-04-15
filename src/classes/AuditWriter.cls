@@ -1,6 +1,4 @@
-public with sharing class AuditWriter {
-    
-    public String Event;
+public with sharing class AuditWriter extends ProcessModel.BaseProcess {
     
     /**
      * @docs ProcessAudit.html
@@ -17,10 +15,9 @@ public with sharing class AuditWriter {
     
     public class AuditWriterException extends Exception {}
     
-    override public String toString() {
+    override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         if (!SObjectType.AuditEntry__c.Createable) throw new ApexDomain.CrudException('!SObjectType.AuditEntry__c.Createable');
         
-        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         
         Integer hops = (Integer)inputEvent.get('__Hops');
@@ -76,6 +73,6 @@ public with sharing class AuditWriter {
 
         outputEvents.add(inputEvent);
         
-        return Json.serialize(outputEvents);
+        return outputEvents;
     }
 }

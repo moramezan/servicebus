@@ -1,5 +1,4 @@
-public with sharing class GateByEntryPoint {
-    public String Event;
+public with sharing class GateByEntryPoint extends ProcessModel.BaseProcess {
 
     private class GateByEntryPointException extends Exception {}
 
@@ -24,10 +23,9 @@ public with sharing class GateByEntryPoint {
         };
     }
 
-    override public String toString() {
+    override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         /// TODO ??? if (!SObjectType.Message__c.Createable) throw new ApexDomain.CrudException('!SObjectType.Message__c.Createable');
 
-        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
 
         if (!inputEvent.containsKey('esb__EntryPointUuid'))
             throw new GateByEntryPointException('Input event missing mandatory esb__EntryPointUuid parameter');
@@ -47,7 +45,7 @@ public with sharing class GateByEntryPoint {
 
         if ( !release) {
             //this is not the last item, so let's swallow
-            return Json.serialize(new List<Map<String,Object>>());
+            return new List<Map<String,Object>>();
         }
 
         // RELEASE :
@@ -91,7 +89,7 @@ public with sharing class GateByEntryPoint {
         inputEvent.put('esb__GateItemsQueryString', queryString);
         inputEvent.put('esb__GateItemsFieldName', fieldName);
 
-        return Json.serialize(new List<Map<String,Object>>{inputEvent});
+        return new List<Map<String,Object>>{inputEvent};
     }
 
 

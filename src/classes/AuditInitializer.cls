@@ -1,6 +1,5 @@
-public with sharing class AuditInitializer {
+public with sharing class AuditInitializer extends ProcessModel.BaseProcess {
     
-    public String Event;
     public AuditInitializerConfig__c StepConfig;
     
     /**
@@ -23,10 +22,9 @@ public with sharing class AuditInitializer {
     
     public class AuditInitializerException extends Exception {}
     
-    override public String toString() {
+    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         if (!SObjectType.AuditGroup__c.Createable) throw new ApexDomain.CrudException('!SObjectType.AuditGroup__c.Createable');
      
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
         //get group identifier instruction from config
@@ -56,7 +54,7 @@ public with sharing class AuditInitializer {
          parameters.put('__AuditGroupIds', auditGroupIds);
 
          
-         return Json.serialize(new List<Map<String,Object>>{parameters});
+         return new List<Map<String,Object>>{parameters};
     }
 
  

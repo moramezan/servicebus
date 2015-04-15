@@ -1,6 +1,5 @@
-public with sharing class Subsequence {
+public with sharing class Subsequence extends ProcessModel.BaseProcess {
     
-    public String Event;
     public SubsequenceConfig__c StepConfig;
     
     /**
@@ -17,8 +16,7 @@ public with sharing class Subsequence {
         public String Cardinality = 'One';
     }
     
-    override public String toString() {
-        Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         //derive the step Id
         Step__c step = [
@@ -42,6 +40,6 @@ public with sharing class Subsequence {
         parameters.put('__SequenceName', sequence.Name);
         parameters.put('__Position', 0);
         
-        return Json.serialize(new List<Map<String,Object>>{parameters});
+        return new List<Map<String,Object>>{parameters};
     }
 }
