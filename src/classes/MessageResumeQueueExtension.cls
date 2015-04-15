@@ -1,57 +1,28 @@
 public with sharing class MessageResumeQueueExtension {
-
+    
+    private ApexPages.StandardSetController controller;
+    
     public MessageResumeQueueExtension(ApexPages.StandardSetController controller) {
-        //
+        this.controller = controller;
     }
     
     public PageReference doResume() {
         try {
-        //update IsPaused setting and update Message statuses ("avoids DML in action method")
-        Type.forName(MessageResumeQueueExtension.DoDml.class.getName()).newInstance();
-        
-        //in real life, usurp sysadmin
-        Job.runAsUser();
-        
-        //redirect to list view
-        return new PageReference('/' + SObjectType.Message__c.KeyPrefix);
+            //update IsPaused setting and update Message statuses ("avoids DML in action method")
+            Type.forName(DoDml.class.getName()).newInstance();
+            
         } catch (Exception e) {
             ApexPages.addMessages(e);
             return null;
         }
+        
+        //redirect to list view - only works with "Display Checkboxes (for Multi-Record Selection)" on button
+        return this.controller.cancel();
     }
     
     public class DoDml {
         public DoDml() {
-            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');
-        
-            //fetch custom setting or create for the first time
-            BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-            if (setting == null) setting = new BrokerSetting__c();
-            
-            //unset the flag
-            setting.IsPaused__c = false;
-            upsert setting;
-            
-            //get all the queued guys
-            List<Message__c> messages = [
-                SELECT Id, Event__c
-                FROM Message__c
-                WHERE Status__c = 'Queued'
-                LIMIT :Limits.getLimitDMLRows() //if more than 10,000 you could click Resume multiple times
-            ];
-            
-            //Why do we have an extra status Queued?
-            //So that they can be excluded from the RESOLVE / MARK cycle at a very early stage.
-            //We want to be able to reintroduce messages on a one-by-one basis without turning on the tap.
-            
-            //advance them from Queued to Buffered
-            for (Message__c message : messages) {
-                message.Status__c = 'Buffered';
-            }
-            
-            //RESOLVE
-            
-            update messages;
+            MessageSetModel.resumeQueue();
         }
     }
 }

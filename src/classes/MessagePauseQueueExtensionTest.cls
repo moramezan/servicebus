@@ -36,7 +36,5 @@
         // assert
         Boolean expectedIsPaused =  (!isPaused);
         System.assertEquals( expectedIsPaused, actualIsPaused);
-        String expectedPageReference = SObjectType.Message__c.KeyPrefix;
-        System.Assert(actualPageReference.getUrl().contains(expectedPageReference));
     }
 }

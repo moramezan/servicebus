@@ -79,6 +79,10 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
     public void rebuffer() {
         Set<Id> attemptedIds = this.keySet();
         
+        if (attemptedIds.isEmpty()) {
+            throw new MessageException('You must select some messages.');
+        }
+        
         List<Message__c> rebufferableMessages = [
             SELECT Id, Status__c
             FROM Message__c
@@ -287,5 +291,44 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
             message.EntryPointUuid__c = (String)parameters.get('esb__EntryPointUuid');
         }
     }  
+    
+    static public void pauseQueue() {
+        //fetch custom setting or create for the first time
+        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
+        if (setting == null) setting = new BrokerSetting__c();
+        
+        //unset the flag
+        setting.IsPaused__c = true;
+        upsert setting;
+    }
+    
+    static public void resumeQueue() {
+        //fetch custom setting or create for the first time
+        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
+        if (setting == null) setting = new BrokerSetting__c();
+        
+        //unset the flag
+        setting.IsPaused__c = false;
+        upsert setting;
+        
+        //get all the queued guys
+        List<Message__c> messages = [
+            SELECT Id
+            FROM Message__c
+            WHERE Status__c = 'Queued'
+            LIMIT :Limits.getLimitDmlRows() //if more than 10,000 you could click Resume multiple times
+        ];
+        
+        //Why do we have an extra status Queued?
+        //So that they can be excluded from the RESOLVE / MARK cycle at a very early stage.
+        //We want to be able to reintroduce messages on a one-by-one basis without turning on the tap.
+        
+        //advance them from Queued to Buffered
+        for (Message__c message : messages) message.Status__c = 'Buffered';
+        update messages;
+        
+        //in real life, usurp sysadmin
+        Job.runAsUser();
+    }
     
 }

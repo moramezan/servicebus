@@ -302,7 +302,7 @@
         <openType>sidebar</openType>
         <page>MessagePauseQueue</page>
         <protected>false</protected>
-        <requireRowSelection>false</requireRowSelection>
+        <requireRowSelection>true</requireRowSelection>
     </webLinks>
     <webLinks>
         <fullName>Rebuffer</fullName>
@@ -337,6 +337,6 @@
         <openType>sidebar</openType>
         <page>MessageResumeQueue</page>
         <protected>false</protected>
-        <requireRowSelection>false</requireRowSelection>
+        <requireRowSelection>true</requireRowSelection>
     </webLinks>
 </CustomObject>

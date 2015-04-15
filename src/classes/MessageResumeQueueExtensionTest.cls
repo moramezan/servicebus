@@ -26,7 +26,12 @@
         //tee up two messages in queued state
         new Job(sequenceNameA, '000000000000000AAA').execute(null);
         new Job(sequenceNameA, '000000000000000AAA').execute(null);
-
+        
+        //assert
+        Integer expectedCount = 2;
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c != 'Completed'];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count before');
+        
         //act - actions in the ctor
         MessageResumeQueueExtension.DoDml doDmlInstance = new MessageResumeQueueExtension.DoDml();
 
@@ -40,7 +45,7 @@
        BrokerSetting__c actualSettings  = BrokerSetting__c.getInstance();
        Boolean actualIsPaused =  actualSettings.IsPaused__c;
        
-       Integer actualCount = messages.size();
+       actualCount = messages.size();
        Boolean actualBuffered = true;
        for (Message__c message : messages) {
            if (message.Status__c != 'Buffered') {
@@ -49,8 +54,8 @@
        }
 
        // assert
-       Integer expectedCount = 2;
-       System.assertEquals( expectedCount, actualCount);
+       expectedCount = 0;
+       System.assertEquals(expectedCount, actualCount, 'Wrong count after');
        Boolean expectedBuffered = true;
        System.assertEquals( expectedBuffered, actualBuffered);
        Boolean expectedIsPaused =  false;
@@ -97,8 +102,6 @@
        Integer expectedCount = 2 + 2;
        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
        System.assertEquals( expectedCount, actualCount);
-       String expectedPageReference = SObjectType.Message__c.KeyPrefix;
-       System.Assert(actualPageReference.getUrl().contains(expectedPageReference));
     }  
     
 }
