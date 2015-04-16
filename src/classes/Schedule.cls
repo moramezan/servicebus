@@ -52,7 +52,7 @@ public with sharing class Schedule extends ProcessModel.BaseProcess {
            stampAsString =  getISO8601(stampAsString);
            stampAsDateTime = getStamp(stampAsString);
         } catch (Exception e)  {
-            throw new ScheduleException(e.getMessage());
+            throw new ScheduleException('Problem with getISO8601 or getStamp("' + stampAsString + '")', e);
         }
 
         String frequency;
@@ -63,7 +63,7 @@ public with sharing class Schedule extends ProcessModel.BaseProcess {
             details = new Set<String>(config.FriendlyDates__c.split(';'));
             runTimes = new Set<String>(config.FriendlyTimes__c.split(';'));
         } catch (Exception e) {
-            throw new ScheduleException(e);
+            throw new ScheduleException('Problem extracting frequency (' + config.Frequency__c + ') / dates (' + config.FriendlyDates__c + ') / times (' + config.FriendlyTimes__c + ')', e);
         }
 
         if (!isTimeMatch(stampAsString, runTimes)) {

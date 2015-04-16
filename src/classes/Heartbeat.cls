@@ -14,7 +14,7 @@ public with sharing class Heartbeat extends ProcessModel.BaseProcess {
         try {
            stampAsString = getISO8601(stampAsString);
         } catch (Exception e)  {
-            throw new HeartbeatException(e);
+            throw new HeartbeatException('Problem with getISO8601("' + stampAsString + '")', e);
         }
         
         // TODO : re-do this dynamically

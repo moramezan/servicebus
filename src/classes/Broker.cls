@@ -436,7 +436,7 @@ abstract public with sharing class Broker {
             return results;
             
         } catch (Exception e) {
-            throw new EngineException(e.getMessage());
+            throw new EngineException('Mark exception', e);
         }
     }
     
