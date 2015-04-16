@@ -42,7 +42,7 @@
         
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -88,13 +88,14 @@
          //arrange input event parameters
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday
         Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__StepConfig' => scheduleConfig,
             'esb__EntryPointDatetime' => stampAsString,
             '__WasHeartbeatProcess' => true
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent, scheduleConfig).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -112,7 +113,7 @@
         System.assertEquals(expectedCount, actualCount);
 
         String  expectedStampTruncated = stampAsString;
-        Integer expectedParameterSize = 2;
+        Integer expectedParameterSize = 3;
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
     }  
@@ -144,13 +145,14 @@
          //arrange input event parameters
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday, a working day
         Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__StepConfig' => scheduleConfig,
             'esb__EntryPointDatetime' => stampAsString,
             '__WasHeartbeatProcess' => true
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent, scheduleConfig).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -168,7 +170,7 @@
         System.assertEquals(expectedCount, actualCount);
 
         String  expectedStampTruncated = stampAsString;
-        Integer expectedParameterSize = 2;
+        Integer expectedParameterSize = 3;
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
     }  
@@ -200,13 +202,14 @@
          //arrange input event parameters
         String stampAsString = '2014-01-03T12:00:00.000Z';   
         Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__StepConfig' => scheduleConfig,
             'esb__EntryPointDatetime' => stampAsString,
             '__WasHeartbeatProcess' => true
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent, scheduleConfig).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -224,7 +227,7 @@
         System.assertEquals(expectedCount, actualCount);
 
         String  expectedStampTruncated = stampAsString;
-        Integer expectedParameterSize = 2;
+        Integer expectedParameterSize = 3;
         System.assertEquals(expectedStampTruncated, actualStampTruncated); 
         System.assertEquals(expectedParameterSize, actualParameterSize);
     }  
@@ -254,13 +257,14 @@
          //arrange input event parameters
         String stampAsString = '2014-01-18T12:00:00.000Z';
         Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__StepConfig' => scheduleConfig,
             'esb__EntryPointDatetime' => stampAsString,
             '__WasHeartbeatProcess' => true
         };
  
         // act 
         Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent, scheduleConfig).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
         
         // assemble
         Integer actualCount = results.size();
@@ -287,6 +291,7 @@
          //arrange input event parameters
         String invalidStamp = 'XXXX-01-18T12:00:00.000Z';
         Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__StepConfig' => new ScheduleConfig__c(IsActive__c = true),
             'esb__EntryPointDatetime' => invalidStamp,
             '__WasHeartbeatProcess' => true
         };
@@ -296,7 +301,7 @@
         try {
             // act  
             Type reflector = Schedule.class;
-            List<Map<String,Object>> result = new Broker.Wrapper(reflector, inputEvent, new ScheduleConfig__c(IsActive__c = true)).invokeMain().Outputs;
+            List<Map<String,Object>> result = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
         } catch (Schedule.ScheduleException e) {
             actualFlag = true;
         }

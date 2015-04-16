@@ -26,8 +26,9 @@
         
         //arrange invocation
         Disperse process = new Disperse();
-        process.StepConfig = config;
-        process.Event = '{}';
+        process.Event = Json.serialize(new Map<String,Object>{
+            'esb__StepConfig' => config
+        });
         
         //act
         String outputs = process.toString();
@@ -57,8 +58,10 @@
         
         //arrange invocation
         Disperse process = new Disperse();
-        process.StepConfig = config;
-        process.Event = '{"__SequenceName":"Test"}';
+        process.Event = Json.serialize(new Map<String,Object>{
+            'esb__StepConfig' => config,
+            '__SequenceName' => 'Test'
+        });
         
         //act
         try {

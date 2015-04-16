@@ -30,6 +30,7 @@
         
         
         Map<String,Object> parameters = new Map<String,Object>{
+            'esb__StepConfig' => config,
             '__SequenceName' => 'origin',
             '__Position' => 1,
             'data' => 'herpderp'
@@ -37,7 +38,7 @@
         
         //act
         Type reflector = Jump.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assert
         Integer expectedSize = 1;

@@ -16,11 +16,13 @@ public with sharing class Disperse extends ProcessModel.BaseProcess {
     
     override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
+        DisperseConfig__c config = (DisperseConfig__c)Json.deserialize(Json.serialize(parameters.get('esb__StepConfig')), DisperseConfig__c.class);
+        
         //find all the sequences
         List<DisperseDestination__c> destinations = [
             SELECT Id, Sequence__r.Name
             FROM DisperseDestination__c
-            WHERE DisperseConfig__c = :this.StepConfig.Id
+            WHERE DisperseConfig__c = :config.Id
         ];
         
         //catch dumb configuration

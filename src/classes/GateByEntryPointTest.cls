@@ -27,7 +27,7 @@
 
         // Act
         Type reflector = GateByEntryPoint.class;
-        List<Map<String,Object>> actualOutputEvents = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
 
         // Assemble
         Decimal actualSize = actualOutputEvents.size();
@@ -68,7 +68,7 @@
 
         // Act
         Type reflector = GateByEntryPoint.class;
-        List<Map<String,Object>> actualOutputEvents = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
 
         // Assemble
         Decimal actualSize = actualOutputEvents.size();

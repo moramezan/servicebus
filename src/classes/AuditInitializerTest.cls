@@ -42,6 +42,7 @@
         update config;
         
         Map<String,Object> parameters = new Map<String,Object>{
+            'esb__StepConfig' => config,
             'esb__Id' => theId,
             '__SequenceName' => sequenceName,
             '__Position' => thePosition
@@ -49,7 +50,7 @@
         
         //act
         Type reflector = AuditInitializer.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -101,6 +102,7 @@
         update config;
         
         Map<String,Object> parameters = new Map<String,Object>{
+            'esb__StepConfig' => config,
             'esb__Id' => theId,
             '__SequenceName' => sequenceName,
             '__Position' => thePosition
@@ -108,7 +110,7 @@
         
         //act
         Type reflector = AuditInitializer.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -164,6 +166,7 @@
         update config;
         
         Map<String,Object> parameters = new Map<String,Object>{
+            'esb__StepConfig' => config,
             'esb__Id' => theId,
             '__SequenceName' => sequenceName,
             '__Position' => thePosition
@@ -171,7 +174,7 @@
         
         //act
         Type reflector = AuditInitializer.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);

@@ -27,7 +27,7 @@
         
         //act
         Type reflector = Subscribe.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, null).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assert
         integer expectedSize = 1;

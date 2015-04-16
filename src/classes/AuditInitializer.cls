@@ -1,7 +1,5 @@
 public with sharing class AuditInitializer extends ProcessModel.BaseProcess {
     
-    public AuditInitializerConfig__c StepConfig;
-    
     /**
      * @docs ProcessAudit.html
      */
@@ -28,7 +26,7 @@ public with sharing class AuditInitializer extends ProcessModel.BaseProcess {
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
         
         //get group identifier instruction from config
-        AuditInitializerConfig__c config = this.StepConfig;
+        AuditInitializerConfig__c config = (AuditInitializerConfig__c)Json.deserialize(Json.serialize(parameters.get('esb__StepConfig')), AuditInitializerConfig__c.class);
         
          // insert composite key values into audit group :
          // the composite key comprises

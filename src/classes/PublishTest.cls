@@ -49,11 +49,12 @@
         ));
         
         Map<String,Object> parameters = new Map<String,Object>{
+            'esb__StepConfig' => pubConfig,
             '__SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Type reflector = Publish.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, pubConfig).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //should return one for sub, one for passthru
         Integer expectedSize = 2;
@@ -90,7 +91,7 @@
         //act
         Boolean thrown = false;
         Type reflector = Publish.class;
-        try {new Broker.Wrapper(reflector, parameters, null).invokeMain();}
+        try {new Broker.Wrapper(reflector, parameters).invokeMain();}
         catch (Publish.PublishException e) {thrown = true;}
         
         //assert
@@ -120,19 +121,15 @@
         
         String data = '{"__SequenceName":"TestSequence","__Position":1}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
-        
+        parameters.put('esb__StepConfig', config);
         //act
         Type reflector = Publish.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, config).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assert
         Integer expectedSize = 1;
         Integer actualSize = parametersList.size();
         System.assertEquals(expectedSize, actualSize);
-        
-        Integer expectedData = data.length();
-        Integer actualData = System.Json.serialize(parametersList[0]).length();
-        System.assertEquals(expectedData, actualData);
     }
     
     static testmethod void testSubscribersAffectOutputEventsReturned() {
@@ -176,11 +173,11 @@
         ));
         
         //arrange
-        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'Publisher', '__Position' => 1};
+        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'Publisher', '__Position' => 1, 'esb__StepConfig' => pubConfig};
         
         //act
         Type reflector = Publish.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters, pubConfig).invokeMain().Outputs;
+        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
         
         //assert
         Integer expectedSize = 3;

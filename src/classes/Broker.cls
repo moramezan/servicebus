@@ -237,7 +237,7 @@ abstract public with sharing class Broker {
     
     /**
      * Example usage:
-     * Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters, config);
+     * Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters);
      * wrapper.invokeCallouts();
      * wrapper.invokeMain();
      * List<Map<String,Object>> outputs = wrapper.Outputs;
@@ -258,12 +258,6 @@ abstract public with sharing class Broker {
         private Object plugin;
         
         /**
-         * The config instance must be available in
-         * both callouts and invocation contexts.
-         */
-        private SObject config;
-        
-        /**
          * The input event gets used twice. For
          * assembling the plugin before invocation
          * AND for balance + delta jiggery pokery.
@@ -282,16 +276,13 @@ abstract public with sharing class Broker {
         /**
          * @param reflector from the concrete plugin type eg Branch.class
          * @param input event that will be handed in when invoking plugin
-         * @param config that optionally lives on the step
          */
-        public Wrapper(Type reflector, Map<String,Object> inputs, SObject config) {
+        public Wrapper(Type reflector, Map<String,Object> inputs) {
             this.reflector = reflector;
             this.inputs = inputs;
-            this.config = config;
             
             Map<String,Object> untyped = new Map<String,Object>{
-                'Event' => Json.serialize(inputs),
-                'StepConfig' => this.config
+                'Event' => Json.serialize(inputs)
             };
             
             // Surface SessionId to select few orgs and packages
@@ -498,7 +489,7 @@ abstract public with sharing class Broker {
                 DateTime startStamp = idToStartStamp.get(inputMessage.Id);
 
                 Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
-                List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, inputEvent, null).invokeMain().Outputs;
+                List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, inputEvent).invokeMain().Outputs;
                 
                 inputMessage.Status__c = 'Completed'; //#798
                 inputMessage.Exception__c = null;
@@ -577,10 +568,22 @@ abstract public with sharing class Broker {
         if (step.ConfigId__c != null) {
             //find all steps config ids
             stepConfig = ApexDomain.getById(step.ConfigId__c);
+            
+            for (Message__c inputMessage : inputMessages) {
+                Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
+                inputEvent.put('esb__StepConfig', stepConfig);
+                inputMessage.Event__c = Json.serialize(inputEvent);
+            }
+        } else {
+            for (Message__c inputMessage : inputMessages) {
+                Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
+                inputEvent.put('esb__StepConfig', null);
+                inputMessage.Event__c = Json.serialize(inputEvent);
+            }
         }
         
         List<Broker.Wrapper> wrappers = new List<Broker.Wrapper>();
-        for (Message__c inputMessage : inputMessages) wrappers.add(new Broker.Wrapper(reflector, id2events.get(inputMessage.Id), stepConfig));
+        for (Message__c inputMessage : inputMessages) wrappers.add(new Broker.Wrapper(reflector, id2events.get(inputMessage.Id)));
         
         //THEIR FUCKUPS (invocation)
         

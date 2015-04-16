@@ -31,11 +31,12 @@
         insert config;
         
         Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__StepConfig' => config,
             '__SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
         Type reflector = Branch.class;
-        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent, config).invokeMain().Outputs;
+        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
 
         List<Object> expectedIds = null;
         List<Object> actualIds = (List<Object>)outputEvents[1].get('__SubsequenceStepIds');
@@ -55,13 +56,14 @@
         
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__StepConfig' => config,
             '__SequenceName' => origin.Name,
             '__Position' => 1
         };
         
         //act
         Type reflector = Branch.class;
-        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent, config).invokeMain().Outputs;
+        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
 
         //assert
         Decimal expectedSize = 2;
@@ -104,6 +106,7 @@
         
         //arrange event
         Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__StepConfig' => config,
             '__SequenceName' => sequence.Name,
             '__Position' => 1
         };
@@ -114,7 +117,7 @@
         //act
         try {
             Type reflector = Branch.class;
-            List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent, config).invokeMain().Outputs;
+            List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
         } catch (Exception e) {
             exceptionThrown = true;
             System.assert(e instanceof Branch.BranchException);

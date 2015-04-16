@@ -21,6 +21,7 @@ public with sharing class Schedule extends ProcessModel.BaseProcess {
     
     override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
+        ScheduleConfig__c config = (ScheduleConfig__c)Json.deserialize(Json.serialize(parameters.get('esb__StepConfig')), ScheduleConfig__c.class);
         String stampAsString = (String)parameters.get('esb__EntryPointDatetime');
         Boolean wasHeartbeat = (Boolean)parameters.get('__WasHeartbeatProcess'); //#810
 
@@ -28,13 +29,13 @@ public with sharing class Schedule extends ProcessModel.BaseProcess {
     
         if (wasHeartbeat == true) {
             
-            if (this.StepConfig.IsActive__c != true) {
+            if (config.IsActive__c != true) {
                 //just swallow if not active
                 return new List<Map<String,Object>>();
             }
             
             // evaluate:
-            if (isWithinWindow(stampAsString, this.StepConfig)) {
+            if (isWithinWindow(stampAsString, config)) {
                 parametersList.add(parameters);
             } 
         } else { 

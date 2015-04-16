@@ -28,7 +28,7 @@
         String actualMessage;
         try {
             Type reflector = AuditWriter.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, event, null).invokeMain().Outputs;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, event).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -62,7 +62,7 @@
         String actualMessage;
         try {
             Type reflector = AuditWriter.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, event, null).invokeMain().Outputs;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, event).invokeMain().Outputs;
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -128,7 +128,7 @@
         
         //act
         Type reflector = AuditWriter.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, event, null).invokeMain().Outputs;
+        List<Map<String,Object>> results = new Broker.Wrapper(reflector, event).invokeMain().Outputs;
         
         //assemble
         List<AuditEntry__c> auditEntries = ApexDomain.listAll(AuditEntry__c.SObjectType);

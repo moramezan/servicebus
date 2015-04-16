@@ -19,7 +19,7 @@ public with sharing class Jump extends ProcessModel.BaseProcess {
     override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         //get destination from config
-        JumpConfig__c config = this.StepConfig;
+        JumpConfig__c config = (JumpConfig__c)Json.deserialize(Json.serialize(parameters.get('esb__StepConfig')), JumpConfig__c.class);
         Sequence__c sequence = (Sequence__c)ApexDomain.getById(config.Sequence__c);
         
         parameters.put('__SequenceName', sequence.Name);

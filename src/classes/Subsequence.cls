@@ -27,7 +27,7 @@ public with sharing class Subsequence extends ProcessModel.BaseProcess {
         ];
   
         //get destination from config
-        SubsequenceConfig__c config = this.StepConfig;
+        SubsequenceConfig__c config = (SubsequenceConfig__c)Json.deserialize(Json.serialize(parameters.get('esb__StepConfig')), SubsequenceConfig__c.class);
         Sequence__c sequence = (Sequence__c)ApexDomain.getById(config.Sequence__c);
         
         List<Object> stepIds = (List<Object>)parameters.get('__SubsequenceStepIds');

@@ -1017,7 +1017,7 @@
         Boolean actualFlag = true;
         Type reflector = Terminate.class;
         try {
-            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent, null).invokeMain();   
+            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent).invokeMain();   
         } catch (Exception e) {
             actualFlag = false;   
         }
@@ -1035,7 +1035,7 @@
         //act
         Boolean actualFlag = false;
         try {
-            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent, null).invokeMain();
+            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent).invokeMain();
             System.assert(false, 'Above should throw exception.');
         } catch (Broker.EngineException e) {
             String expectedMessage = 'Your plugin has not overridden the toString() method. Please refer to the Process Developers Guide for specific guidance.';

@@ -189,7 +189,6 @@ public with sharing class ProcessModel extends ApexDomain.StandardModel {
         
         //ESB Marker Properties
         public String Event;
-        public SObject StepConfig;
         public Boolean AllowsCallouts;
         
         //ESB Marker Method

@@ -43,7 +43,7 @@
 
         //act
         Type reflector = Heartbeat.class;
-        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
+        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
 
         //assert
         Integer expectedSize = 0;
@@ -74,7 +74,7 @@
 
         //act
         Type reflector = Heartbeat.class;
-        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
+        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
 
         //assert
         Integer expectedSize = 2;
@@ -94,7 +94,7 @@
         try {
             //act
             Type reflector = Heartbeat.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent, null).invokeMain().Outputs;
+            List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
         } catch (Heartbeat.HeartbeatException e) {
             actualFlag = true;
         }

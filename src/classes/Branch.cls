@@ -21,7 +21,7 @@ public with sharing class Branch extends ProcessModel.BaseProcess {
     override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
 
         //get step config
-        BranchConfig__c config = this.StepConfig;
+        BranchConfig__c config = (BranchConfig__c)Json.deserialize(Json.serialize(parameters.get('esb__StepConfig')), BranchConfig__c.class);
         Sequence__c sequence = (Sequence__c)ApexDomain.getById(config.Sequence__c);
         
         //get sequence name
