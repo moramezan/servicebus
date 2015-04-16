@@ -1,4 +1,4 @@
-<apex:page standardController="Sequence__c" extensions="SequenceBuilderExtension" action="{!initConfigure}">
+<apex:page standardController="Sequence__c" extensions="SequenceBuilderExtension" action="{!initConfigure}" title="{!$ObjectType.Sequence__c.Label}: {!Sequence__c.Name}">
     
     <apex:pageMessages showDetail="false" />
     

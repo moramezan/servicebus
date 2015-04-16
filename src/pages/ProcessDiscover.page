@@ -1,4 +1,4 @@
-<apex:page tabStyle="Process__c" controller="ProcessDiscoverController" action="{!doRedirect}">
+<apex:page tabStyle="Process__c" controller="ProcessDiscoverController" action="{!doRedirect}" title="Process Discovery">
     <apex:pageMessages showDetail="false" />
 
     <c:BootstrapExt applicationName="Discover" staticResource="{!$Resource.ProcessDiscoverZip}" baseCSSPrefix="z-" developmentPrefix="{!$Setup.KnifeSwitch__c.Url__c}">

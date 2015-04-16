@@ -1,4 +1,4 @@
-<apex:page showHeader="false" controller="ProcessDescribeController">
+<apex:page showHeader="false" controller="ProcessDescribeController" title="{!$ObjectType.Process__c.Label}: {!Process.Name}">
     <apex:pageMessages showDetail="false" />
 
     <apex:pageBlock mode="maindetail">

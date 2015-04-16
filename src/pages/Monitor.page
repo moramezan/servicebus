@@ -1,4 +1,4 @@
-<apex:page tabStyle="Monitor__tab" sidebar="false" controller="MonitorController">
+<apex:page tabStyle="Monitor__tab" sidebar="false" controller="MonitorController" title="Monitor">
     <apex:pageMessages showDetail="false" />
 
     <apex:sectionHeader title="Message Queue Monitoring" help="{!URLFOR($Page.MonitorSplash)}" />

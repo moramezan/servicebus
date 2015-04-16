@@ -1,4 +1,4 @@
-<apex:page controller="SchemaSelectorController" action="{!doInit}" tabStyle="Process__c">
+<apex:page controller="SchemaSelectorController" action="{!doInit}" tabStyle="Process__c" title="Schema Selector">
     <apex:pageMessages showDetail="false" />
 
     <apex:form id="form">
