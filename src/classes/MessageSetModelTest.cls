@@ -157,5 +157,58 @@
          String actualEntryPointUuid = message.EntryPointUuid__c;
          String expectedEntryPointUuid = EntryPointUuid;
          System.assertEquals(expectedEntryPointUuid, actualEntryPointUuid, 'Failed to populate EntryPointUuid');
-     }    
+     }
+     
+    static testmethod void testKillRequiresSelectedMessages() {
+        try {
+            //act
+            new MessageSetModel(new List<Message__c>()).kill();
+            System.assert(false, 'Above should throw exception');
+        } catch (MessageSetModel.MessageException e) {
+            //assert
+            String expectedMessage = 'You must select some messages.';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+    }
+    
+    static testmethod void testKillComplainsAboutUnkillableMessages() {
+        //arrange messages
+        Message__c message = new Message__c(
+            Status__c = 'Queued',
+            Event__c = '{}'
+        );
+        insert message;
+        
+        try {
+            //act
+            new MessageSetModel(new List<Message__c>{message}).kill();
+            System.assert(false, 'Above should throw exception.');
+        } catch (MessageSetModel.MessageException e) {
+            String expectedMessage = 'Only messages with an Exception can be killed.';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+        
+    }
+    
+    static testmethod void testKillMarksMessagesWithCompletedStatus() {
+        //arrange message
+        Message__c message = new Message__c(
+            Status__c = 'Started',
+            Exception__c = 'Some problem'
+        );
+        insert message;
+        
+        //act
+        new MessageSetModel(new List<Message__c>{message}).kill();
+        
+        //assemble
+        message = [SELECT Status__c FROM Message__c WHERE Id = :message.Id];
+        
+        //assert
+        String expectedStatus = 'Completed';
+        String actualStatus = message.Status__c;
+        System.assertEquals(expectedStatus, actualStatus, 'Wrong status.');
+    }
 }
