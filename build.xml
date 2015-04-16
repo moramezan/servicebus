@@ -16,6 +16,43 @@
         />
     </target>
     
+    <target name="normalize-whitespace">
+        <!-- finds tabs occupying 1 space -->
+        <replaceregexp flags="mg">
+            <fileset dir="src/classes" />
+            <regexp pattern="^((    )+)   \t" />
+            <substitution expression="\1    "/>
+        </replaceregexp>
+
+        <!-- finds tabs occupying 2 spaces -->
+        <replaceregexp flags="mg">
+            <fileset dir="src/classes" />
+            <regexp pattern="^((    )+)  \t" />
+            <substitution expression="\1    "/>
+        </replaceregexp>
+
+        <!-- finds tabs occupying 3 spaces -->
+        <replaceregexp flags="mg">
+            <fileset dir="src/classes" />
+            <regexp pattern="^((    )+) \t" />
+            <substitution expression="\1    "/>
+        </replaceregexp>
+
+        <!-- finds tabs occupying 4 spaces -->
+        <replaceregexp flags="mg">
+            <fileset dir="src/classes" />
+            <regexp pattern="\t" />
+            <substitution expression="    "/>
+        </replaceregexp>
+        
+        <!-- finds trailing whitespace after code -->
+        <replaceregexp flags="mg">
+            <fileset dir="src/classes" />
+            <regexp pattern="([^\s])[ \t]+$" />
+            <substitution expression="\1"/>
+        </replaceregexp>
+    </target>
+    
     <target name="retrieve" description="Retrieves all package components to dev org">
         <sf:retrieve
             username="${de.username}"
@@ -26,6 +63,7 @@
         />
         <antcall target="alphabetize-searchlayouts" />
         <antcall target="optimize-for-release" />
+        <antcall target="normalize-tabs-to-spaces" />
     </target>
 
     <target name="deploy" description="Deploys all package components to dev org">
