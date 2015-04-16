@@ -190,7 +190,8 @@
         Step__c stepD2 = StepModel.generateOne(sequenceD.Id, wireTapProcess.Id);
 
         // Act :
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(null);
+        ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceA);
+        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
         controller.findTerminateProblems();
         
         List<ApexPages.Message> messages = ApexPages.getMessages();
@@ -244,7 +245,8 @@
         update PublishConfigA1;
         
         // Act :
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(null);
+        ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceA);
+        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
         controller.findPublishProblems();
         
         // Assemble :
@@ -274,7 +276,8 @@
         Step__c stepB2 = StepModel.generateOne(sequenceB.Id, wiretapProcess.Id);
         
         // Act :
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(null);
+        ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceB);
+        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
         controller.findPublishProblems();
         
         // Assemble :
@@ -317,7 +320,8 @@
  
  
         // Act :
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(null);
+        ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceA);
+        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
         controller.findSubscribeProblems();
         
         // Assemble :
@@ -348,7 +352,8 @@
         Step__c stepB2 = StepModel.generateOne(sequenceB.Id, subscribeProcess.Id);
         
         // Act :
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(null);
+        ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceB);
+        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
         controller.findSubscribeProblems();
         
         // Assemble :
@@ -396,7 +401,8 @@
         update subscribeConfigC2;
         
         // Act :
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(null);
+        ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceC);
+        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
         controller.findSubscribeProblems();
         
         // Assemble :
@@ -427,7 +433,8 @@
         Step__c stepB2 = StepModel.generateOne(sequenceB.Id, wiretapProcess.Id);
 
         // Act :
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(null);
+        ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceB);
+        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
         controller.findSubscribeProblems();
         
         // Assemble :
