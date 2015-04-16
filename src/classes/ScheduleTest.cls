@@ -41,8 +41,8 @@
         inputEvent.put('__WasHeartbeatProcess', false);
         
         // act 
-        Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Schedule();
+        List<Map<String,Object>> results = process.execute(inputEvent);
         
         // assemble
         Integer actualCount = results.size();
@@ -94,8 +94,8 @@
         };
  
         // act 
-        Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Schedule();
+        List<Map<String,Object>> results = process.execute(inputEvent);
         
         // assemble
         Integer actualCount = results.size();
@@ -151,8 +151,8 @@
         };
  
         // act 
-        Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Schedule();
+        List<Map<String,Object>> results = process.execute(inputEvent);
         
         // assemble
         Integer actualCount = results.size();
@@ -208,8 +208,8 @@
         };
  
         // act 
-        Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Schedule();
+        List<Map<String,Object>> results = process.execute(inputEvent);
         
         // assemble
         Integer actualCount = results.size();
@@ -263,8 +263,8 @@
         };
  
         // act 
-        Type reflector = Schedule.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Schedule();
+        List<Map<String,Object>> results = process.execute(inputEvent);
         
         // assemble
         Integer actualCount = results.size();
@@ -300,8 +300,8 @@
         Boolean actualFlag = false;
         try {
             // act  
-            Type reflector = Schedule.class;
-            List<Map<String,Object>> result = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+            ProcessModel.BaseProcess process =  new Schedule();
+            List<Map<String,Object>> result = process.execute(inputEvent);
         } catch (Schedule.ScheduleException e) {
             actualFlag = true;
         }

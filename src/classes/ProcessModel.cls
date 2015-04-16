@@ -182,10 +182,10 @@ public with sharing class ProcessModel extends ApexDomain.StandardModel {
     abstract public with sharing class BaseProcess {
         
         //only override when a process requires callouts
-        virtual protected void callouts(Map<String,Object> event) {}
+        @TestVisible virtual protected void callouts(Map<String,Object> event) {}
         
         //always override and implement process logic inside
-        abstract protected List<Map<String,Object>> execute(Map<String,Object> event);
+        @TestVisible abstract protected List<Map<String,Object>> execute(Map<String,Object> event);
         
         //ESB Marker Properties
         public String Event;

@@ -27,8 +27,8 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            Type reflector = AuditWriter.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, event).invokeMain().Outputs;
+            ProcessModel.BaseProcess process = new AuditWriter();
+            List<Map<String,Object>> results = process.execute(event);
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -61,8 +61,8 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            Type reflector = AuditWriter.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, event).invokeMain().Outputs;
+            ProcessModel.BaseProcess process = new AuditWriter();
+            List<Map<String,Object>> results = process.execute(event);
         } catch (Exception e) {
             actualFlagException =  true;
             actualMessage = e.getMessage();
@@ -127,8 +127,8 @@
         };
         
         //act
-        Type reflector = AuditWriter.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, event).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new AuditWriter();
+        List<Map<String,Object>> results = process.execute(event);
         
         //assemble
         List<AuditEntry__c> auditEntries = ApexDomain.listAll(AuditEntry__c.SObjectType);

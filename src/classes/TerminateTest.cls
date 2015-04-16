@@ -43,8 +43,8 @@ private class TerminateTest
         Decimal expectedPosition = subsequencePosition;
 
         // Act
-        Type reflector = Terminate.class;
-        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Terminate();
+        List<Map<String,Object>> actualOutParametersList = process.execute(inputEvent);
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -80,8 +80,8 @@ private class TerminateTest
         Decimal expectedSize = 0;
  
         // Act
-        Type reflector = Terminate.class;
-        List<Map<String,Object>> actualOutParametersList = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Terminate();
+        List<Map<String,Object>> actualOutParametersList = process.execute(inputEvent);
 
         // prepare
         Decimal actualSize = actualOutParametersList.size();
@@ -121,12 +121,12 @@ private class TerminateTest
 
 
         // Act
-        Type reflector = Terminate.class;
-        List<Map<String,Object>> actualOutParametersListFirst = new Broker.Wrapper(reflector, parametersFirst).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Terminate();
+        List<Map<String,Object>> actualOutParametersListFirst = process.execute(parametersFirst);
         
         Map<String,Object> parametersSecond = actualOutParametersListFirst[0].clone(); //-- Terminate hands back one
         
-        List<Map<String,Object>> actualOutParametersListSecond = new Broker.Wrapper(reflector, parametersSecond).invokeMain().Outputs;
+        List<Map<String,Object>> actualOutParametersListSecond = process.execute(parametersSecond);
         
         // prepare
         List<Object> actualStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('__SubsequenceStepIds');

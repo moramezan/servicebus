@@ -53,8 +53,8 @@
             '__SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
-        Type reflector = Publish.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Publish();
+        List<Map<String,Object>> parametersList = process.execute(parameters);
         
         //should return one for sub, one for passthru
         Integer expectedSize = 2;
@@ -90,8 +90,8 @@
         
         //act
         Boolean thrown = false;
-        Type reflector = Publish.class;
-        try {new Broker.Wrapper(reflector, parameters).invokeMain();}
+        ProcessModel.BaseProcess process = new Publish();
+        try {process.execute(parameters);}
         catch (Publish.PublishException e) {thrown = true;}
         
         //assert
@@ -123,8 +123,8 @@
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         parameters.put('esb__StepConfig', config);
         //act
-        Type reflector = Publish.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Publish();
+        List<Map<String,Object>> parametersList = process.execute(parameters);
         
         //assert
         Integer expectedSize = 1;
@@ -176,8 +176,8 @@
         Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'Publisher', '__Position' => 1, 'esb__StepConfig' => pubConfig};
         
         //act
-        Type reflector = Publish.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Publish();
+        List<Map<String,Object>> parametersList = process.execute(parameters);
         
         //assert
         Integer expectedSize = 3;

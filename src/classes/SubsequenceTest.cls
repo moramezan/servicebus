@@ -48,8 +48,8 @@
         };
         
         //act
-        Type reflector = Subsequence.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Subsequence();
+        List<Map<String,Object>> parametersList = process.execute(parameters);
         
         //asserts
         Decimal expectedSize = 1;

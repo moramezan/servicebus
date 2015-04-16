@@ -42,8 +42,8 @@
         };
 
         //act
-        Type reflector = Heartbeat.class;
-        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Heartbeat();
+        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
 
         //assert
         Integer expectedSize = 0;
@@ -73,8 +73,8 @@
         };
 
         //act
-        Type reflector = Heartbeat.class;
-        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Heartbeat();
+        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
 
         //assert
         Integer expectedSize = 2;
@@ -93,8 +93,8 @@
         Boolean actualFlag = false;
         try {
             //act
-            Type reflector = Heartbeat.class;
-            List<Map<String,Object>> results = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+            ProcessModel.BaseProcess process = new Heartbeat();
+            List<Map<String,Object>> results = process.execute(inputEvent);
         } catch (Heartbeat.HeartbeatException e) {
             actualFlag = true;
         }

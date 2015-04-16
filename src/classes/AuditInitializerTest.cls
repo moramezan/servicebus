@@ -49,8 +49,8 @@
         };
         
         //act
-        Type reflector = AuditInitializer.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new AuditInitializer();
+        List<Map<String,Object>> results = process.execute(parameters);
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -109,8 +109,8 @@
         };
         
         //act
-        Type reflector = AuditInitializer.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new AuditInitializer();
+        List<Map<String,Object>> results = process.execute(parameters);
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);
@@ -173,8 +173,8 @@
         };
         
         //act
-        Type reflector = AuditInitializer.class;
-        List<Map<String,Object>> results = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new AuditInitializer();
+        List<Map<String,Object>> results = process.execute(parameters);
         
         //assemble
         DateTime expectedStampTo = System.Now().addSeconds(1);

@@ -35,8 +35,8 @@
             '__SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
-        Type reflector = Branch.class;
-        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Branch();
+        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
 
         List<Object> expectedIds = null;
         List<Object> actualIds = (List<Object>)outputEvents[1].get('__SubsequenceStepIds');
@@ -62,8 +62,8 @@
         };
         
         //act
-        Type reflector = Branch.class;
-        List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Branch();
+        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
 
         //assert
         Decimal expectedSize = 2;
@@ -116,8 +116,8 @@
         
         //act
         try {
-            Type reflector = Branch.class;
-            List<Map<String,Object>> outputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+            ProcessModel.BaseProcess process = new Branch();
+            List<Map<String,Object>> outputEvents = process.execute(inputEvent);
         } catch (Exception e) {
             exceptionThrown = true;
             System.assert(e instanceof Branch.BranchException);

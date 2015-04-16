@@ -26,8 +26,8 @@
         insert messages;
 
         // Act
-        Type reflector = GateByJob.class;
-        List<Map<String,Object>> actualOutputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new GateByJob();
+        List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
 
         // Assemble
         Decimal actualSize = actualOutputEvents.size();
@@ -67,8 +67,8 @@
         insert messages;
 
         // Act
-        Type reflector = GateByJob.class;
-        List<Map<String,Object>> actualOutputEvents = new Broker.Wrapper(reflector, inputEvent).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new GateByJob();
+        List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
 
         // Assemble
         Decimal actualSize = actualOutputEvents.size();

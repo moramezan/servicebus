@@ -37,8 +37,8 @@
         };
         
         //act
-        Type reflector = Jump.class;
-        List<Map<String,Object>> parametersList = new Broker.Wrapper(reflector, parameters).invokeMain().Outputs;
+        ProcessModel.BaseProcess process = new Jump();
+        List<Map<String,Object>> parametersList = process.execute(parameters);
         
         //assert
         Integer expectedSize = 1;
