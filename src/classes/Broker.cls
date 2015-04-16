@@ -174,7 +174,7 @@ abstract public with sharing class Broker {
                 //cannot serialize Schema.sObjectField
                 //List<List<Schema.sObjectField>> dmlFields = new List<List<Schema.sObjectField>>();
                 //for (Integer i = 0; i < n; i++) dmlFields.add(e.getDmlFields(i));
-                //g.writeObjectField('DmlFields', dmlFields); 
+                //g.writeObjectField('DmlFields', dmlFields);
                 
                 //the ID of the failed record that caused the error described by the ith failed row
                 List<Id> dmlIds = new List<Id>();
@@ -228,7 +228,7 @@ abstract public with sharing class Broker {
         BrokerSetting__c settings = BrokerSetting__c.getInstance();
         
         //if there is no setting, use a default
-        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = Type.forName('VerticalBrokerImplementation').getName(); 
+        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = Type.forName('VerticalBrokerImplementation').getName();
         
         //new up and return the broker instance
         Broker impl = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
@@ -287,7 +287,7 @@ abstract public with sharing class Broker {
             
             // Surface SessionId to select few orgs and packages
             String sessionId = (OAuthSetting__c.getInstance()).AccessToken__c;
-            Boolean allowSessionId = isAllowedSessionId(reflector.getName(), UserInfo.getOrganizationId());  
+            Boolean allowSessionId = isAllowedSessionId(reflector.getName(), UserInfo.getOrganizationId());
             if (allowSessionId) untyped.put('SessionId',sessionId);
    
             //do not call constructor
@@ -332,8 +332,8 @@ abstract public with sharing class Broker {
             //do invocation
             String data = String.valueOf(this.plugin);
             if (data == null) throw new EngineException('Your main code block should return a serialized List<Map<String,Object>>.');
-            if(data.endsWith(this.reflector.getName().replaceAll('[^.]+\\.', '') + ':[]')) 
-                throw new EngineException('Your plugin has not overridden the toString() method.' + 
+            if(data.endsWith(this.reflector.getName().replaceAll('[^.]+\\.', '') + ':[]'))
+                throw new EngineException('Your plugin has not overridden the toString() method.' +
                                           ' Please refer to the Process Developers Guide for specific guidance.');
             
             //output equals balance plus delta
@@ -426,7 +426,7 @@ abstract public with sharing class Broker {
      */
     public List<Database.SaveResult> mark(List<Message__c> messages) {
         try {
-            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');   
+            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');
             for (Message__c message : messages) {
                 if (message.Attempts__c == null) message.Attempts__c = 0;
                 message.Attempts__c++; //#808
@@ -549,7 +549,7 @@ abstract public with sharing class Broker {
             return;
         }
         
-        //save important message properties (such as __Hops) so that process authors cannot pervert them  
+        //save important message properties (such as __Hops) so that process authors cannot pervert them
         //THROWS EngineException TODO : requires a more generic approach not specific to just the __Hops
         for (Message__c inputMessage : inputMessages) {
             DateTime startStamp = idToStartStamp.get(inputMessage.Id);
@@ -740,8 +740,8 @@ abstract public with sharing class Broker {
             '00Dj0000001oeWV', // dev org - neil
             '00Dj0000001q22l', // dev org - harsha
             '00Do0000000dQSB', // dev org - natani
-            '00Dj0000001uJgw'  // dev org - tom 
-        };   
+            '00Dj0000001uJgw'  // dev org - tom
+        };
         Set<String> sessionIdNamespaces = new Set<String>{
             'esb',
             'esb_batchpdf',

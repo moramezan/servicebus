@@ -13,7 +13,7 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
      * or housekeeping only once per execution context
      */
     @TestVisible static private Boolean IsCleaned = false;
-    @TestVisible static private Integer MaxTotalMessages     = 5000; 
+    @TestVisible static private Integer MaxTotalMessages     = 5000;
     
     public MessageSetModel(List<Message__c> messages) {
         super(messages);
@@ -31,7 +31,7 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
     /**
      * Killed messages are really just started exceptions that have been "moved on" to Completed.
      * We allow users to "kill" them so they don't appear as big ugly red bars in the monitor.
-     * 
+     *
      * @return set of actual killed message ids
      */
     public void kill() {
@@ -199,7 +199,7 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
      * In #658 we hoped to expose esb__SequenceName API in Broker.persist() but
      * it meant we can't insert messages then just 'run' broker over them. Further
      * issue #677 feels like we probably shouldn't be inserting messages at all.
-     * 
+     *
      * We want to interpret esb__SequenceName into __SequenceName and __Position
      * as late and as simply as possible. Doing it here in the trigger works OK.
      */
@@ -259,10 +259,10 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         List<Message__c> messages = this.getRecords();
         for (Message__c message : messages) {
             if (message.Cause__c != null) {
-            	message.Cause__c = message.Cause__c.replaceAll('Class.BaseProcess.toString[^\n]+\n', '');    
+                message.Cause__c = message.Cause__c.replaceAll('Class.BaseProcess.toString[^\n]+\n', '');
             }
         }
-    } 
+    }
     
     /**
      * Populates the Queueable Id
@@ -290,7 +290,7 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             message.EntryPointUuid__c = (String)parameters.get('esb__EntryPointUuid');
         }
-    }  
+    }
     
     static public void pauseQueue() {
         //fetch custom setting or create for the first time

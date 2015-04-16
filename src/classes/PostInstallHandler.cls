@@ -8,7 +8,7 @@ public without sharing class PostInstallHandler implements InstallHandler {
      * Id organizationId();
      * Id installerId();
      * Boolean isUpgrade();
-     * Boolean isPush(); 
+     * Boolean isPush();
      * Version previousVersion();
      */
     public void onInstall(InstallContext context) {

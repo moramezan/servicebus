@@ -13,7 +13,7 @@
         //act
         insert new AuditInitializerConfig__c(StaticGroupIdentifier__c = staticIdentifier);
         
-        // assemble 
+        // assemble
         List<AuditInitializerConfig__c> auditInitializerConfigsAfter = [
             SELECT Id, DynamicGroupIdentifier__c,  StaticGroupIdentifier__c
             FROM AuditInitializerConfig__c
@@ -47,7 +47,7 @@
         
         AuditInitializerConfigSetModel.isEnabled = false;
         insert new AuditInitializerConfig__c(
-            StaticGroupIdentifier__c = staticIdentifier01, 
+            StaticGroupIdentifier__c = staticIdentifier01,
             DynamicGroupIdentifier__c = dynamicIdentifier01
         );
         
@@ -68,7 +68,7 @@
         auditInitializerConfigsBefore[0].StaticGroupIdentifier__c = staticIdentifier02;
         update auditInitializerConfigsBefore[0];
         
-        // assemble 
+        // assemble
         List<AuditInitializerConfig__c> auditInitializerConfigsAfter = [
             SELECT Id, DynamicGroupIdentifier__c,  StaticGroupIdentifier__c
             FROM AuditInitializerConfig__c
@@ -95,7 +95,7 @@
         System.assertEquals(expectedDynamicGroupIdentifierAfter, actualDynamicGroupIdentifierAfter);
         String expectedStaticGroupIdentifierAfter = staticIdentifier02;
         System.assertEquals(expectedStaticGroupIdentifierAfter, actualStaticGroupIdentifierAfter);
-    } 
+    }
 
 
     static testmethod void canCorrectlySetDynamicGroupIdentifierWhenStaticGroupIdentifierEqNullDuringInsert() {
@@ -111,7 +111,7 @@
         //act
         insert new AuditInitializerConfig__c(DynamicGroupIdentifier__c = dynamicIdentifier);
         
-        // assemble 
+        // assemble
         List<AuditInitializerConfig__c> auditInitializerConfigsAfter = [
             SELECT Id, DynamicGroupIdentifier__c,  StaticGroupIdentifier__c
             FROM AuditInitializerConfig__c
@@ -145,7 +145,7 @@
         
         AuditInitializerConfigSetModel.isEnabled = false;
         insert new AuditInitializerConfig__c(
-            StaticGroupIdentifier__c = staticIdentifier01, 
+            StaticGroupIdentifier__c = staticIdentifier01,
             DynamicGroupIdentifier__c = dynamicIdentifier01
         );
         
@@ -166,7 +166,7 @@
         auditInitializerConfigsBefore[0].DynamicGroupIdentifier__c = dynamicIdentifier02;
         update auditInitializerConfigsBefore[0];
         
-        // assemble 
+        // assemble
         List<AuditInitializerConfig__c> auditInitializerConfigsAfter = [
             SELECT Id, DynamicGroupIdentifier__c,  StaticGroupIdentifier__c
             FROM AuditInitializerConfig__c
@@ -193,5 +193,5 @@
         System.assertEquals(expectedDynamicGroupIdentifierAfter, actualDynamicGroupIdentifierAfter);
         String expectedStaticGroupIdentifierAfter = staticIdentifier02;
         System.assertEquals(expectedStaticGroupIdentifierAfter, actualStaticGroupIdentifierAfter);
-    } 
+    }
 }

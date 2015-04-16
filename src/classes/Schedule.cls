@@ -37,8 +37,8 @@ public with sharing class Schedule extends ProcessModel.BaseProcess {
             // evaluate:
             if (isWithinWindow(stampAsString, config)) {
                 parametersList.add(parameters);
-            } 
-        } else { 
+            }
+        } else {
             // passthru:
             parametersList.add(parameters);
         }
@@ -67,7 +67,7 @@ public with sharing class Schedule extends ProcessModel.BaseProcess {
         }
 
         if (!isTimeMatch(stampAsString, runTimes)) {
-            return false;    
+            return false;
         } else {
             if (frequency == 'Daily') {
                if (isWithinDailyWindow(stampAsDateTime, details)) {
@@ -81,7 +81,7 @@ public with sharing class Schedule extends ProcessModel.BaseProcess {
                 if (isWithinMonthlyWindow(stampAsString, details)) {
                     return true;
                 }
-            }  
+            }
         }
 
         return false;
@@ -90,7 +90,7 @@ public with sharing class Schedule extends ProcessModel.BaseProcess {
     @TestVisible static private Boolean isWithinWeeklyWindow(DateTime stampAsDateTime, Set<String> details) {
         String day = stampAsDateTime.format('EEEE');
         return details.contains(day);
-    } 
+    }
     
     @TestVisible static private Boolean isWithinDailyWindow(DateTime stampAsDateTime, Set<String> details) {
         String day = stampAsDateTime.format('EEEE');
@@ -138,7 +138,7 @@ public with sharing class Schedule extends ProcessModel.BaseProcess {
     }
     
     static private DateTime getStamp(String value) {
-        return (DateTime)Json.deserialize('"' + getISO8601(value) + '"', DateTime.class);  
+        return (DateTime)Json.deserialize('"' + getISO8601(value) + '"', DateTime.class);
     }
     
     static private String getISO8601(String value) {

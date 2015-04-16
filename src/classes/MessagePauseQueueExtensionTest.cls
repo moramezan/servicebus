@@ -23,7 +23,7 @@
         Boolean isPaused =  false;
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
         
-        //act 
+        //act
         ApexPages.StandardSetController controller = new ApexPages.StandardSetController([SELECT Id, Name FROM Message__c]);
         MessagePauseQueueExtension messagePauseQueueExtension =  new MessagePauseQueueExtension(controller);
         System.PageReference actualPageReference  = messagePauseQueueExtension.doPause();

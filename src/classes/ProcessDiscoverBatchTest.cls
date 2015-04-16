@@ -4,13 +4,13 @@
         private List<ApexClass> apexClasses;
         
         public MockApexClassProvider(List<ApexClass> apexClasses) {
-          this.apexClasses = apexClasses; 
+          this.apexClasses = apexClasses;
         }
         
         public List<ApexClass> getApexClasses() {
-            return this.apexClasses;  
+            return this.apexClasses;
         }
-    } 
+    }
     
     static testmethod void testRecordCreatedForProcessAndStateful() {
         //arrange
@@ -93,7 +93,7 @@
    
     
     static testmethod void callingGetProcessHealthReturnsOkForProcessWithApexClass() {
-        //arrange - 
+        //arrange -
         String processName = Terminate.class.getName();
         Process__c process =  new Process__c(Name = processName, FullyQualifiedClassName__c = processName);
         insert process;
@@ -102,7 +102,7 @@
         Step__c stepValid = new Step__c(Sequence__c = sequence.Id, Process__c = process.Id, Position__c = 1);
         insert stepValid;
  
-        //act - 
+        //act -
         ProcessDiscoverBatch.IApexClassProvider apexClassProvider = new ProcessDiscoverBatch.ApexClassProvider();
         ProcessDiscoverBatch.ProcessHealth processHealth = new ProcessDiscoverBatch.ProcessHealth(apexClassProvider);
         Map<Id, String> processHealthMap = processHealth.getProcessHealth() ;
@@ -114,18 +114,18 @@
     }
 
   
-    static testmethod void callingGetProcessHealthReturnsDeleteForProcessWithoutApexClassAndNotUsedInAnySequences() {       
-        // arrange - 
+    static testmethod void callingGetProcessHealthReturnsDeleteForProcessWithoutApexClassAndNotUsedInAnySequences() {
+        // arrange -
         String processName = Wiretap.class.getName();
         Process__c process =  new Process__c(Name = processName, FullyQualifiedClassName__c = processName);
         insert process;
         List<ApexClass> apexClasses = new List<ApexClass>{
                 //new ApexClass(Name ='Wiretap' ) ,   // implies deleted!
-                new ApexClass(Name ='Terminate' )  
+                new ApexClass(Name ='Terminate' )
             } ;
  
 
-        //act - 
+        //act -
         ProcessDiscoverBatch.IApexClassProvider apexClassProvider = new MockApexClassProvider(apexClasses);
         ProcessDiscoverBatch.ProcessHealth processHealth = new ProcessDiscoverBatch.ProcessHealth(apexClassProvider);
         Map<Id, String> processHealthMap = processHealth.getProcessHealth() ;
@@ -135,28 +135,28 @@
         //assert
         String expectedProcess = 'Delete';
         String actualProcess = processHealthMap.get(process.Id);
-        System.assertEquals(expectedProcess, actualProcess);      
+        System.assertEquals(expectedProcess, actualProcess);
     
     }
 
     static testmethod void callingGetProcessHealthReturnsErroForProcessWithoutApexClassAndUsedOneOrMoreSequences() {
 
-         // arrange - 
+         // arrange -
         String processName = Wiretap.class.getName();
         Process__c process =  new Process__c(Name = processName, FullyQualifiedClassName__c = processName);
         insert process;
         List<ApexClass> apexClasses = new List<ApexClass>{
                 //new ApexClass(Name ='Wiretap' ) ,   // implies deleted!
-                new ApexClass(Name ='Terminate' )  
+                new ApexClass(Name ='Terminate' )
             } ;
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         Step__c stepValid = new Step__c(Sequence__c = sequence.Id, Process__c = process.Id, Position__c = 1);
-        insert stepValid;     
+        insert stepValid;
                 
  
         
-        //act - 
+        //act -
         ProcessDiscoverBatch.IApexClassProvider apexClassProvider = new MockApexClassProvider(apexClasses);
         ProcessDiscoverBatch.ProcessHealth processHealth = new ProcessDiscoverBatch.ProcessHealth(apexClassProvider);
         Map<Id, String> processHealthMap = processHealth.getProcessHealth() ;
@@ -164,19 +164,19 @@
         //assert
         String expectedProcess = 'Error - Step with no Apex Class';
         String actualProcess = processHealthMap.get(process.Id);
-        System.assertEquals(expectedProcess, actualProcess);      
+        System.assertEquals(expectedProcess, actualProcess);
     }
     
     
     static testmethod void callingDeleteInvalidUnusedProcessesDeletesExpectedProcesses() {
-        //arrange - 
+        //arrange -
         String processNameKeep = Terminate.class.getName();
         Process__c processKeep =  new Process__c(Name = processNameKeep, FullyQualifiedClassName__c = processNameKeep);
         insert processKeep;
         
         String processNameDelete = Wiretap.class.getName();
         Process__c processDelete =  new Process__c(Name = processNameDelete, FullyQualifiedClassName__c = processNameDelete);
-        insert processDelete;     
+        insert processDelete;
 
         List<Process__c> processesBefore = ApexDomain.listAll(Process__c.SObjectType);
         Integer actualProcessesBeforeSize = processesBefore.size();
@@ -184,10 +184,10 @@
         
         Map<Id, String> processHealthMap = new Map<Id, String>{
             processKeep.Id  => 'Ok',
-            processDelete.Id => 'Delete'    
+            processDelete.Id => 'Delete'
         };
  
-        //act 
+        //act
         ProcessDiscoverBatch.deleteInvalidUnusedProcesses(processHealthMap);
  
         //assemble
@@ -197,15 +197,15 @@
         
         //assert
         System.assertEquals(expectedProcessesAfterSize, actualProcessesAfterSize);
-        System.assertEquals(expectedProcessesBeforeSize, actualProcessesBeforeSize); 
-    } 
+        System.assertEquals(expectedProcessesBeforeSize, actualProcessesBeforeSize);
+    }
 
     static testmethod void getQueryLocatorReturnsExpectedIterable() {
         //arrange
         //n/a
         
         //act
-        Database.QueryLocator actualQueryLocator = ProcessDiscoverBatch.getQueryLocator(); 
+        Database.QueryLocator actualQueryLocator = ProcessDiscoverBatch.getQueryLocator();
         
         //assemble
         Set<String> actualApexClassNames = new Set<String>();
@@ -219,7 +219,7 @@
         system.debug(json.serialize(actualApexClassNames));
         system.assert(true,actualApexClassNames.Contains(WireTap.class.getName()));
         system.assert(true,actualApexClassNames.Contains(Publish.class.getName()));
-        system.assert(true,!actualApexClassNames.Contains(ProcessDiscoverBatch.class.getName()));   
-    }  
+        system.assert(true,!actualApexClassNames.Contains(ProcessDiscoverBatch.class.getName()));
+    }
     
 }

@@ -31,7 +31,7 @@ public class AuditInitializerConfigSetModel extends ApexDomain.StandardSetModel 
                 new Map<Id, AuditInitializerConfig__c>(oldAuditInitializerConfigs);
 
             for (AuditInitializerConfig__c newAuditInitializerConfig : newAuditInitializerConfigs) {
-                AuditInitializerConfig__c oldAuditInitializerConfig =  
+                AuditInitializerConfig__c oldAuditInitializerConfig =
                     oldAuditInitializerConfigIdToOldAuditInitializerConfig.get(newAuditInitializerConfig.Id);
                 
                 Boolean isStaticChanged = (

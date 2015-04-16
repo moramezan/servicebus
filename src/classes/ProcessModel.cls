@@ -10,7 +10,7 @@ public with sharing class ProcessModel extends ApexDomain.StandardModel {
      * This class is a template that must exist in every Process. It describes extra metadata around a process that
      * isn't appropriate for Tag, Description, InputParameters or OutputParameters. This inner class must be present
      * for an apex class to appear in the Process list.
-     * 
+     *
      * @docs ApiMarkerClass.html
      */
     public class ESB {
@@ -160,7 +160,7 @@ public with sharing class ProcessModel extends ApexDomain.StandardModel {
             }
 
             //attempt to populate the maximum executions
-            process.Limits__c = (meta.Limits != null) ? meta.Limits : 1;    
+            process.Limits__c = (meta.Limits != null) ? meta.Limits : 1;
             
             return process;
         }

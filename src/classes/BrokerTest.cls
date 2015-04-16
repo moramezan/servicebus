@@ -151,7 +151,7 @@
         System.assertEquals(expectedDetail, actualDetail, 'Wrong message');
         
         String expectedStatus = 'Started';
-        System.assertEquals(expectedStatus, actualStatus, 'Wrong message status.'); 
+        System.assertEquals(expectedStatus, actualStatus, 'Wrong message status.');
     }
     
     static testmethod void callingEnforceMaxHopsReturnsExpectedValueWhenHopsLtThreshold() {
@@ -417,7 +417,7 @@
         String actualSequenceName2 = '' ;
         String actualSequenceName3 = '' ;
         String actualSequenceName4 = '' ;
-        Integer actualPosition0 = -1 ;     
+        Integer actualPosition0 = -1 ;
         Integer actualPosition1 = -1 ;
         Integer actualPosition2 = -1 ;
         Integer actualPosition3 = -1 ;
@@ -430,7 +430,7 @@
             if (theId == 0) {
                 actualSequenceName0 = theSequenceName;
                 actualPosition0 = thePosition;
-            }        
+            }
           
             if (theId == 1) {
                 actualSequenceName1 = theSequenceName;
@@ -456,7 +456,7 @@
         Integer actualCount = messages.size();
         System.assertEquals(expectedCount, actualCount);
         
-        String expectedSequenceName0 = sequenceNameA;      
+        String expectedSequenceName0 = sequenceNameA;
         String expectedSequenceName1 = sequenceNameA;
         String expectedSequenceName2 = sequenceNameA;
         String expectedSequenceName3 = sequenceNameB;
@@ -466,12 +466,12 @@
         Integer expectedPosition2 = positionA2 + 1;
         Integer expectedPosition3 = positionB1 + 1;
         Integer expectedPosition4 = positionC1 + 1;
-        System.assertEquals(expectedPosition0, actualPosition0);     
+        System.assertEquals(expectedPosition0, actualPosition0);
         System.assertEquals(expectedPosition1, actualPosition1);
         System.assertEquals(expectedPosition2, actualPosition2);
         System.assertEquals(expectedPosition3, actualPosition3);
         System.assertEquals(expectedPosition4, actualPosition4);
-        System.assertEquals(expectedSequenceName0, actualSequenceName0);      
+        System.assertEquals(expectedSequenceName0, actualSequenceName0);
         System.assertEquals(expectedSequenceName1, actualSequenceName1);
         System.assertEquals(expectedSequenceName2, actualSequenceName2);
         System.assertEquals(expectedSequenceName3, actualSequenceName3);
@@ -791,7 +791,7 @@
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
         
-        //act 
+        //act
         new Job(sequenceNameA, '000000000000000AAA').execute(null);
 
         
@@ -814,7 +814,7 @@
     // TODO - Test Fails
     //        Assume it will be fixed when deailing with Issue "migrate chunking logic into abstract Broker #636"
     // Method Name      canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError
-    // Error Message    System.AssertException: Assertion Failed: Wrong message: Expected: Step unqueryable, eg bad sequence 
+    // Error Message    System.AssertException: Assertion Failed: Wrong message: Expected: Step unqueryable, eg bad sequence
     //                  name, position, missing terminate., Actual: Message cannot have a null process.
     // Stack Trace      Class.BrokerTest.canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError: line 961, column 1
     // #697 is exercised by this test!
@@ -852,7 +852,7 @@
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = false);
         
-        //act 
+        //act
         new Job(sequenceNameA, '000000000000000AAA').execute(null);
 
         
@@ -887,7 +887,7 @@
     }
  
     static testMethod void callingEnqueueWithEventParametersIncludesAllEventParametersInMessage() {
-        // arrange 
+        // arrange
         Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
 
         String sequenceName = 'Test';
@@ -965,8 +965,8 @@
         Boolean expectedFlagA = true;
         System.assertEquals(expectedFlagA,actualFlagA);
         Boolean expectedFlagB = true;
-        System.assertEquals(expectedFlagB,actualFlagB); 
-    } 
+        System.assertEquals(expectedFlagB,actualFlagB);
+    }
     
     
     static testMethod void callingEnqueueAlwaysSetsInitiatingEventParameters() {
@@ -990,9 +990,9 @@
         List<Message__c> messagesAfter = [SELECT Event__c FROM Message__c LIMIT 1];
         
         
-        String  actualEntryPointUuid ; 
-        Id      actualEnqueueUserId  ; 
-        Integer actualPosition       ; 
+        String  actualEntryPointUuid ;
+        Id      actualEnqueueUserId  ;
+        Integer actualPosition       ;
         if (messagesAfter.size() == 1) {
             Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(messagesAfter[0].Event__c);
             actualEntryPointUuid = (String) inputEvent.get('__EntryPointUuid');
@@ -1005,9 +1005,9 @@
         System.assertNotEquals(expectedEntryPointUuid,actualEntryPointUuid);
         Id  expectedEnqueueUserId = UserInfo.getUserId();
         System.assertEquals(expectedEnqueueUserId,actualEnqueueUserId);
-        Integer expectedPosition = 1;   
+        Integer expectedPosition = 1;
         System.assertEquals(expectedPosition ,actualPosition);
-    } 
+    }
 
     static testMethod void callingInvokeMainWithCorrectToToStringOverrideDoesNOTThrowException() {
         //arrange
@@ -1017,14 +1017,14 @@
         Boolean actualFlag = true;
         Type reflector = Terminate.class;
         try {
-            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent).invokeMain();   
+            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent).invokeMain();
         } catch (Exception e) {
-            actualFlag = false;   
+            actualFlag = false;
         }
         
         //assert
         Boolean expectedFlag = true;
-        System.assertEquals(expectedFlag, actualFlag, 'Unexpected error thrown by wrapper invokeMain()'); 
+        System.assertEquals(expectedFlag, actualFlag, 'Unexpected error thrown by wrapper invokeMain()');
     }
     
     static testMethod void callingInvokeMainWhenNoToToStringOverrideThrowsExpectedException() {
@@ -1059,18 +1059,18 @@
         Boolean actualFlag01 = Broker.isAllowedSessionId(reflectorName01, orgId01);
         Boolean actualFlag02 = Broker.isAllowedSessionId(reflectorName02, orgId02);
         Boolean actualFlag03 = Broker.isAllowedSessionId(reflectorName03, orgId03);
-        Boolean actualFlag04 = Broker.isAllowedSessionId(reflectorName04, orgId04);     
+        Boolean actualFlag04 = Broker.isAllowedSessionId(reflectorName04, orgId04);
         
         //assert
         Boolean expectedFlag01 = true;
         Boolean expectedFlag02 = true;
         Boolean expectedFlag03 = true;
-        Boolean expectedFlag04 = false; 
+        Boolean expectedFlag04 = false;
         System.assertEquals(expectedFlag01, actualFlag01);
-        System.assertEquals(expectedFlag02, actualFlag02);      
+        System.assertEquals(expectedFlag02, actualFlag02);
         System.assertEquals(expectedFlag03, actualFlag03);
-        System.assertEquals(expectedFlag04, actualFlag04);  
-    }  
+        System.assertEquals(expectedFlag04, actualFlag04);
+    }
     
     @TestVisible public class ChunkErrorProcessException extends Exception {}
     

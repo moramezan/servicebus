@@ -47,7 +47,7 @@ public with sharing class AuditWriter extends ProcessModel.BaseProcess {
             List<Id> auditGroupIds = new List<Id>();
             for (Object c : collection) {
                 if  (c != null) {
-                  auditGroupIds.add((Id) c );  
+                  auditGroupIds.add((Id) c );
                 }
             }
             Set<Id> filteredAuditGroupIds = (new Map<Id,AuditGroup__c>([

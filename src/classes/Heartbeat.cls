@@ -17,10 +17,10 @@ public with sharing class Heartbeat extends ProcessModel.BaseProcess {
             throw new HeartbeatException(e);
         }
         
-        // TODO : re-do this dynamically        
+        // TODO : re-do this dynamically
         Set<String> interestedSubscriberNames = new Set<String>{
             Schedule.class.getName()
-        }; 
+        };
         
         List<Step__c> steps = [
             SELECT Id, Sequence__r.Name, Position__c

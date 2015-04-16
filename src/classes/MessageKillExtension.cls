@@ -7,7 +7,7 @@ public with sharing class MessageKillExtension {
         this.controller = controller;
         Set<Id> messageIds = new Map<Id,SObject>(controller.getSelected()).keySet();
         model = MessageSetModel.fromIds(messageIds);
-    } 
+    }
     
     public PageReference doKill() {
         try {

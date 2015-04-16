@@ -21,7 +21,7 @@ public with sharing class StepSetModel extends ApexDomain.StandardSetModel {
     /**
      * Allows us to auto-increment the Step Position within a Sequence if it is
      * unspecified. Does not affect data imports where Position is specified.
-     * 
+     *
      * This position incrementer works for single inserts. Keep in mind that multiple
      * 0-Position steps inserted in the same execution context will not increment separately.
      */
@@ -38,7 +38,7 @@ public with sharing class StepSetModel extends ApexDomain.StandardSetModel {
             WHERE Id IN :sequenceIds
         ]);
         
-        //increment 
+        //increment
         for (Step__c step : steps) {
             //only touch steps whose position is zero (unspecified)
             if (step.Position__c != 0) continue;
@@ -64,7 +64,7 @@ public with sharing class StepSetModel extends ApexDomain.StandardSetModel {
             WHERE Id IN :sequenceIds
         ]);
         
-        //generate 
+        //generate
         for (Step__c step : steps) {
             Sequence__c sequence = id2sequence.get(step.Sequence__c);
             step.Name = sequence.Name + '#' + step.Position__c;
@@ -121,7 +121,7 @@ public with sharing class StepSetModel extends ApexDomain.StandardSetModel {
      * This trigger takes care of the deletion of the config.
      */
     private void deleteConfigs() {
-        if (!SObjectType.Step__c.Deletable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Deletable');  
+        if (!SObjectType.Step__c.Deletable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Deletable');
         Set<Id> stepIds = (new Map<Id,SObject>(this.getRecords())).keySet();
         Map<Id,Step__c> id2step = new Map<Id,Step__c>([SELECT id, Name, ConfigId__c FROM Step__c WHERE Id IN :stepIds]);
         

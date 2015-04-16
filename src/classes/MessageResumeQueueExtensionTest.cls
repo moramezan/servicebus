@@ -49,7 +49,7 @@
        Boolean actualBuffered = true;
        for (Message__c message : messages) {
            if (message.Status__c != 'Buffered') {
-               actualBuffered = false;    
+               actualBuffered = false;
            }
        }
 
@@ -102,6 +102,6 @@
        Integer expectedCount = 2 + 2;
        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
        System.assertEquals( expectedCount, actualCount);
-    }  
+    }
     
 }

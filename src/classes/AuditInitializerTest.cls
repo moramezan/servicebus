@@ -79,7 +79,7 @@
         
         String expectedGroupIdentifier1 = 'DYNAMIC-KEY-ON';
         System.assert(actualGroupIdentifier.contains(expectedGroupIdentifier1));
-    }  
+    }
     
     private static testmethod void callingInvokeInsertsExpectedCompositeIdentifiersOnAuditGroupForConfigIdentifierEqNull() {
         //arrange

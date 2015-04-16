@@ -19,7 +19,7 @@
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
-        //act 
+        //act
         new Job(sequenceNameA, '000000000000000AAA').execute(null);
         
         //assemble

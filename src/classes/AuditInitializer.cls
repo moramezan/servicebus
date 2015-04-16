@@ -114,7 +114,7 @@ public with sharing class AuditInitializer extends ProcessModel.BaseProcess {
         }
 
         if (!flagBusinessIdOk) {
-            groupIdentifier = 'DYNAMIC-KEY-ON-'+defaultGroupIdentifier+'-NOT-FOUND';  
+            groupIdentifier = 'DYNAMIC-KEY-ON-'+defaultGroupIdentifier+'-NOT-FOUND';
         }
         
         return groupIdentifier;

@@ -207,10 +207,10 @@
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
         
         //assert
-        System.assert(actualBufferedCount > 0, 'Buffered Messages should be greater than zero');    
-        Integer expectedCount = (totalPotentialMarks > actualBufferedCount) ? actualBufferedCount : totalPotentialMarks; 
+        System.assert(actualBufferedCount > 0, 'Buffered Messages should be greater than zero');
+        Integer expectedCount = (totalPotentialMarks > actualBufferedCount) ? actualBufferedCount : totalPotentialMarks;
         System.assertEquals(expectedCount, actualCount, 'Message should be started.');
-        System.assert(!impl.abortJob, 'Job should not be aborted.');    
+        System.assert(!impl.abortJob, 'Job should not be aborted.');
     }
 
     static testmethod void testMarkLimitedToTotalBufferedMessagesWhenTotalPotentialMarksGtTotaBufferedMessagesCount() {
@@ -263,25 +263,25 @@
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
         
         //assert
-        System.assert(actualBufferedCount > 0, 'Buffered Messages should be greater than zero');    
-        Integer expectedCount = (totalPotentialMarks > actualBufferedCount) ? actualBufferedCount : totalPotentialMarks; 
+        System.assert(actualBufferedCount > 0, 'Buffered Messages should be greater than zero');
+        Integer expectedCount = (totalPotentialMarks > actualBufferedCount) ? actualBufferedCount : totalPotentialMarks;
         System.assertEquals(expectedCount, actualCount, 'Message should be started.');
-        System.assert(!impl.abortJob, 'Job should not be aborted.');    
+        System.assert(!impl.abortJob, 'Job should not be aborted.');
     }
 
 
 
-    private class IdUtility {    
+    private class IdUtility {
         private Integer Sequence = 0;
         private String  Prefix;
         
         @testVisible
-        public IdUtility(SObjectType sot) {  
+        public IdUtility(SObjectType sot) {
             this.Prefix = sot.getDescribe().getKeyPrefix();
         }
         
         @testVisible
-        private Id getNext() { 
+        private Id getNext() {
             this.Sequence++;
             string sequenceString = string.ValueOf(this.Sequence);
             
@@ -291,16 +291,16 @@
 
             string suffix = '';
             integer flags;
-            for (integer i = 0; i < 3; i++) {            
+            for (integer i = 0; i < 3; i++) {
                 flags = 0;
-                for (integer j = 0; j < 5; j++)  { 
+                for (integer j = 0; j < 5; j++)  {
                     string c = id.substring(i * 5 + j,i * 5 + j + 1);
-                    if (c.toUpperCase().equals(c) && c >= 'A' && c <= 'Z') { 
+                    if (c.toUpperCase().equals(c) && c >= 'A' && c <= 'Z') {
                         flags = flags + (1 << j);
                     }
                 }
                 
-                suffix = (flags <= 25)  ? 
+                suffix = (flags <= 25)  ?
                     suffix + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.substring(flags,flags+1) :
                     suffix + '012345'.substring(flags-25,flags-24);
             }

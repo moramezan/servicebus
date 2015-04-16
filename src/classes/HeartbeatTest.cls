@@ -38,7 +38,7 @@
         //arrange input event
         String stampAsString = '2014-01-18T12:00:00.000Z';
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__EntryPointDatetime' => stampAsString 
+            'esb__EntryPointDatetime' => stampAsString
         };
 
         //act
@@ -49,7 +49,7 @@
         Integer expectedSize = 0;
         Integer actualSize = outputEvents.size();
         System.assertEquals(expectedSize, actualSize);
-    } 
+    }
 
 
     static testmethod void  gtOneInterestedProcessReturnsSameNumberOfMessages() {
@@ -69,7 +69,7 @@
         //arrange events
         String stampAsString = '2014-01-18T12:00:00.000Z';
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__EntryPointDatetime' => stampAsString 
+            'esb__EntryPointDatetime' => stampAsString
         };
 
         //act
@@ -80,13 +80,13 @@
         Integer expectedSize = 2;
         Integer actualSize = outputEvents.size();
         System.assertEquals(expectedSize, actualSize);
-    }  
+    }
 
     static testmethod void  ThrowsExceptionForInvalidStampParamAndHeartbeatParamEqToTrue() {
         //arrange inputEvent
         String stampAsString = 'XXXX-01-18T12:00:00.000Z';  // invalid stamp
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__EntryPointDatetime' => stampAsString 
+            'esb__EntryPointDatetime' => stampAsString
         };
 
         //assemble

@@ -6,7 +6,7 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
 
     @testVisible
     private static Database.QueryLocator  getQueryLocator() {
-        List<Id> apexClassIds = new List<Id>(); 
+        List<Id> apexClassIds = new List<Id>();
         for (ApexClass apexClass : [SELECT Id, Name, NamespacePrefix
                                     FROM ApexClass
                                     ORDER BY Name ASC
@@ -16,7 +16,7 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
             
             if (reflector != null) {
                 String fullyQualifiedClassName = String.isBlank(apexClass.NamespacePrefix) ? apexClass.Name : apexClass.NamespacePrefix + '.' + apexClass.Name;
-                Type meta = Type.forName(fullyQualifiedClassName + '.' + 'ESB'); 
+                Type meta = Type.forName(fullyQualifiedClassName + '.' + 'ESB');
                 if (meta == null) meta = Type.forName(fullyQualifiedClassName + 'ESB');
                 if (meta != null) {
                        apexClassIds.add(apexClass.Id);
@@ -27,27 +27,27 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
         String filterClause01  = '\'' + String.join(apexClassIds,'\',\'')  + '\'' ;
        
        
-        // unfortunately "filterClause02" is really only here 
+        // unfortunately "filterClause02" is really only here
         // for test purposes
         // Matt
-        // ... perhaps you can rework this code so its 
+        // ... perhaps you can rework this code so its
         // less ugly at some point
-        String filterClause02; 
+        String filterClause02;
         if (classes != null) {
             List<String> filteredClassNames = new List<String>();
             for (ApexClass c : classes) {
-                filteredClassNames.add(c.Name);    
-            } 
+                filteredClassNames.add(c.Name);
+            }
             filterClause02  = '\'' + String.join(filteredClassNames,'\',\'')  + '\'' ;
         }
 
 
         String queryString  =
-            ' SELECT Id, Name, NamespacePrefix  ' + 
-            ' FROM ApexClass ' + 
+            ' SELECT Id, Name, NamespacePrefix  ' +
+            ' FROM ApexClass ' +
             ' WHERE Id IN ( ' + filterClause01 + ' ) ';
         queryString  = (filterClause02 == null) ?  queryString : queryString + ' AND Name IN (' +filterClause02+ ')';
-        queryString  = queryString + 
+        queryString  = queryString +
             ' ORDER BY Name ASC ' +
             ' LIMIT 10000 ';
   
@@ -107,22 +107,22 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
             }
             return apexClasses;
         }
-    } 
+    }
     
     public class ProcessHealth {
         private IApexClassProvider apexClassProvider;
         
         public ProcessHealth (IApexClassProvider apexClassProvider) {
-            this.apexClassProvider = apexClassProvider;   
+            this.apexClassProvider = apexClassProvider;
         }
 
         public  Map<Id,String> getProcessHealth() {
             // obtain set of fully qualified apex class names
             List<ApexClass> apexClasses = apexClassProvider.getApexClasses();
-            Set<String> fullyQualifiedClassNames = new Set<String>(); 
+            Set<String> fullyQualifiedClassNames = new Set<String>();
             for (ApexClass apexClass : apexClasses ) {
                 String namespacePrefix = String.IsBlank(apexClass.NamespacePrefix)  ? '' : apexClass.NamespacePrefix + '.';
-                fullyQualifiedClassNames.add(namespacePrefix  + apexClass.Name );  
+                fullyQualifiedClassNames.add(namespacePrefix  + apexClass.Name );
             }
             
             // obtain a list of process Ids used in sequences
@@ -130,7 +130,7 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
             List<Step__c> allSteps = ApexDomain.listAll(Step__c.SObjectType);
             for (Step__c step : allSteps) {
                 if (step.Process__c != null) {
-                    usedProcessIds.add(step.Process__c);    
+                    usedProcessIds.add(step.Process__c);
                 }
             }
     
@@ -145,11 +145,11 @@ public without sharing class ProcessDiscoverBatch implements Database.Batchable<
                     if (hasStep) {
                         health = 'Error - Step with no Apex Class';
                     }
-                }   
+                }
                 processIdToHealth.put(process.Id, health);
             }
     
             return processIdToHealth;
         }
-    }    
+    }
 }

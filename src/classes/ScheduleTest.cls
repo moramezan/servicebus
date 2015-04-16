@@ -40,7 +40,7 @@
         inputEvent.put('esb__EntryPointDatetime', Json.serialize(System.now())); //#810
         inputEvent.put('__WasHeartbeatProcess', false);
         
-        // act 
+        // act
         ProcessModel.BaseProcess process = new Schedule();
         List<Map<String,Object>> results = process.execute(inputEvent);
         
@@ -58,8 +58,8 @@
         System.assertEquals(expectedCount, actualCount);
 
         Integer expectedParameterSize = 2;
-        System.assertEquals(expectedParameterSize, actualParameterSize); 
-    }   
+        System.assertEquals(expectedParameterSize, actualParameterSize);
+    }
 
 
     static testmethod void messagePassedThruUntouchedWhenIsHeartbeatEqTrueAndIsWithinWindowReturnsTrue01() {
@@ -77,7 +77,7 @@
 
         //arrange config
         ///Weekly    Sunday;Monday;Tuesday
-        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c]; 
+        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c];
         scheduleConfig.IsActive__c = true;
         scheduleConfig.Frequency__c = 'Weekly';
         scheduleConfig.FriendlyDates__c = 'Wednesday';
@@ -93,7 +93,7 @@
             '__WasHeartbeatProcess' => true
         };
  
-        // act 
+        // act
         ProcessModel.BaseProcess process = new Schedule();
         List<Map<String,Object>> results = process.execute(inputEvent);
         
@@ -114,9 +114,9 @@
 
         String  expectedStampTruncated = stampAsString;
         Integer expectedParameterSize = 3;
-        System.assertEquals(expectedStampTruncated, actualStampTruncated); 
+        System.assertEquals(expectedStampTruncated, actualStampTruncated);
         System.assertEquals(expectedParameterSize, actualParameterSize);
-    }  
+    }
 
 
     static testmethod void messagePassedThruUntouchedWhenIsHeartbeatEqTrueAndIsWithinWindowReturnsTrue02() {
@@ -135,7 +135,7 @@
         //arrange config
         ///Daily    Working days only;Weekends and holidays
         ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c];
-        scheduleConfig.IsActive__c = true; 
+        scheduleConfig.IsActive__c = true;
         scheduleConfig.Frequency__c = 'Daily';
         scheduleConfig.FriendlyDates__c = 'Working days only';
         scheduleConfig.FriendlyTimes__c = '12:00';
@@ -150,7 +150,7 @@
             '__WasHeartbeatProcess' => true
         };
  
-        // act 
+        // act
         ProcessModel.BaseProcess process = new Schedule();
         List<Map<String,Object>> results = process.execute(inputEvent);
         
@@ -171,9 +171,9 @@
 
         String  expectedStampTruncated = stampAsString;
         Integer expectedParameterSize = 3;
-        System.assertEquals(expectedStampTruncated, actualStampTruncated); 
+        System.assertEquals(expectedStampTruncated, actualStampTruncated);
         System.assertEquals(expectedParameterSize, actualParameterSize);
-    }  
+    }
 
 
     static testmethod void messagePassedThruUntouchedWhenIsHeartbeatEqTrueAndIsWithinWindowReturnsTrue03() {
@@ -191,7 +191,7 @@
 
         //arrange config
         ///Monthly    04;06
-        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c]; 
+        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c];
         scheduleConfig.IsActive__c = true;
         scheduleConfig.Frequency__c = 'Monthly';
         scheduleConfig.FriendlyDates__c = '03;15;16';
@@ -200,14 +200,14 @@
         
 
          //arrange input event parameters
-        String stampAsString = '2014-01-03T12:00:00.000Z';   
+        String stampAsString = '2014-01-03T12:00:00.000Z';
         Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__StepConfig' => scheduleConfig,
             'esb__EntryPointDatetime' => stampAsString,
             '__WasHeartbeatProcess' => true
         };
  
-        // act 
+        // act
         ProcessModel.BaseProcess process = new Schedule();
         List<Map<String,Object>> results = process.execute(inputEvent);
         
@@ -228,9 +228,9 @@
 
         String  expectedStampTruncated = stampAsString;
         Integer expectedParameterSize = 3;
-        System.assertEquals(expectedStampTruncated, actualStampTruncated); 
+        System.assertEquals(expectedStampTruncated, actualStampTruncated);
         System.assertEquals(expectedParameterSize, actualParameterSize);
-    }  
+    }
 
 
     static testmethod void messageSwalloweddWhenIsHeartbeatEqTrueAndIsWithinWindowReturnsFalse() {
@@ -247,7 +247,7 @@
         Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
 
         //arrange config
-        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c]; 
+        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c];
         scheduleConfig.Frequency__c = 'Weekly';
         scheduleConfig.FriendlyDates__c = 'Wednesday';
         scheduleConfig.FriendlyTimes__c = '13:00';
@@ -262,7 +262,7 @@
             '__WasHeartbeatProcess' => true
         };
  
-        // act 
+        // act
         ProcessModel.BaseProcess process = new Schedule();
         List<Map<String,Object>> results = process.execute(inputEvent);
         
@@ -271,8 +271,8 @@
 
         // assert
         Integer expectedCount = 0;
-        System.assertEquals(expectedCount, actualCount);    
-    }  
+        System.assertEquals(expectedCount, actualCount);
+    }
 
     static testmethod void isHeartbeatThrowsExceptionWhenInvalidStampParam() {
         //arrange processes
@@ -299,7 +299,7 @@
         // assemble
         Boolean actualFlag = false;
         try {
-            // act  
+            // act
             ProcessModel.BaseProcess process =  new Schedule();
             List<Map<String,Object>> result = process.execute(inputEvent);
         } catch (Schedule.ScheduleException e) {
@@ -308,13 +308,13 @@
  
         // assert
         Boolean expectedFlag = true;
-        System.assertEquals(expectedFlag, actualFlag); 
-    }   
+        System.assertEquals(expectedFlag, actualFlag);
+    }
 
 
      static testmethod void callingIsTimeMatchReturnsTrueWhenTimeStampIsInRunTimes() {
         // arrange
-        Set<String> runTimesA = new Set<String>{'12:00','11:00'}; 
+        Set<String> runTimesA = new Set<String>{'12:00','11:00'};
         Set<String> runTimesB = new Set<String>{'12:00'};
         String stampAsString1 = '2014-01-18T12:00:00.000Z';
         String stampAsString2 = '2014-01-18 12:00:00.000';
@@ -335,13 +335,13 @@
         Boolean expectedFlag2 = true;
         System.assertEquals(expectedFlag2, actualFlag2);
         Boolean expectedFlag3 = true;
-        System.assertEquals(expectedFlag3, actualFlag3); 
+        System.assertEquals(expectedFlag3, actualFlag3);
         Boolean expectedFlag4 = true;
         System.assertEquals(expectedFlag4, actualFlag4);
         Boolean expectedFlag5 = true;
         System.assertEquals(expectedFlag5, actualFlag5);
         Boolean expectedFlag6 = true;
-        System.assertEquals(expectedFlag6, actualFlag6);   
+        System.assertEquals(expectedFlag6, actualFlag6);
      }
 
 
@@ -381,10 +381,10 @@
         String newYearsDay = '2014-01-01T12:09:00.000Z';
         String independenceDay = '2014-07-04T12:09:00';
 
-        // act  
+        // act
         System.assert(Schedule.isWithinMonthlyWindow(christmasMorning, new Set<String>{'24', '25', '26'}));
         System.assert(!Schedule.isWithinMonthlyWindow(newYearsDay, new Set<String>{'06', '02', '03'}));
-        System.assert(Schedule.isWithinMonthlyWindow(independenceDay, new Set<String>{'04'}));        
-    }  
+        System.assert(Schedule.isWithinMonthlyWindow(independenceDay, new Set<String>{'04'}));
+    }
      
 }

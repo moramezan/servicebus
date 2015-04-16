@@ -127,13 +127,13 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
     
     /**
      * Prepares data (represented an input event) for processing.
-     * 
-     * The input event collection should at minimum contain 
+     *
+     * The input event collection should at minimum contain
      *  - an object Id ("Id")
      *  - a sequence name ("__SequenceName")
      * Failure to provide these event parameters in the collection will throw an EngineException
-     * 
-     * The input event collection is converted to a Message object. This Message instance is saved 
+     *
+     * The input event collection is converted to a Message object. This Message instance is saved
      * to the database and the Broker is immeadiately invoked if it is not already running.
      *
      * @docs ApiJobConstructors.html
@@ -146,7 +146,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
     /**
      * A collection of multiple parameterized message descriptions, each of which must at minimum
      * contain esb__SequenceName.
-     * 
+     *
      * @docs ApiJobConstructors.html
      */
     global Job(List<Map<String,Object>> inputEvents) {
@@ -189,10 +189,10 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
     /**
      * Usually handled within a second or so.
      * NOT TO BE CONFUSED WITH BROKER.EXECUTE
-     * 
+     *
      * We can't really test System.enqueueJob() because of known issue:
      * https://success.salesforce.com/issues_view?id=a1p300000008XM1AAM
-     * 
+     *
      * But since we aren't actually doing anything with the QueueableContext
      * this works without startTest/stopTest: new Job(inputEvent).execute(null)
      */
@@ -209,7 +209,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      *
      * This can be used in lieu of Database.insert(message)
      * like this: new Job('Wiretaps', userId).persist()
-     * 
+     *
      * @return list of persisted output messages
      */
     @TestVisible private List<Message__c> persist() {

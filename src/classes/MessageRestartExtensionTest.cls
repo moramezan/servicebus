@@ -24,7 +24,7 @@
         //TODO
         //input should go from Started to Completed
         //outputs should be persisted as Buffered
-        //real broker should get restarted!!! 
+        //real broker should get restarted!!!
     }
     
     static testmethod void testNonStartedLeavesMessage() {
