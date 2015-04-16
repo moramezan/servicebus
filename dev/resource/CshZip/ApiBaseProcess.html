@@ -26,22 +26,19 @@
 abstract public with sharing class BaseProcess {
     
     //only override when a process requires callouts
-    virtual protected void callouts(Map&lt;String,Object&gt; event) {}
+    @TestVisible virtual protected void callouts(Map&lt;String,Object&gt; event) {}
     
     //always override and implement process logic inside
-    abstract protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; event);
-    
-    
+    @TestVisible abstract protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; event);
     
     //ESB Marker Properties
     public String Event;
-    public SObject StepConfig;
-    public Boolean AllowsCallouts;
     
     //ESB Marker Method
     override public String toString() {
         Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event);
-        if (this.AllowsCallouts == true) {this.callouts(inputEvent);return null;}
+        Boolean allowsCallouts = (Boolean)inputEvent.get('esb__AllowsCallouts');
+        if (allowsCallouts == true) {this.callouts(inputEvent);return null;}
         return Json.serialize(this.execute(inputEvent));
     }
     

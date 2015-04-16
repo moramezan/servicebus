@@ -189,12 +189,12 @@ public with sharing class ProcessModel extends ApexDomain.StandardModel {
         
         //ESB Marker Properties
         public String Event;
-        public Boolean AllowsCallouts;
         
         //ESB Marker Method
         override public String toString() {
             Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
-            if (this.AllowsCallouts == true) {this.callouts(inputEvent);return null;}
+            Boolean allowsCallouts = (Boolean)inputEvent.get('esb__AllowsCallouts');
+            if (allowsCallouts == true) {this.callouts(inputEvent);return null;}
             return Json.serialize(this.execute(inputEvent));
         }
         

@@ -307,7 +307,8 @@ abstract public with sharing class Broker {
             
             //set flag
             Map<String,Object> untyped = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(this.plugin));
-            untyped.put('AllowsCallouts', true);
+            this.Inputs.put('esb__AllowsCallouts', true);
+            untyped.put('Event', Json.serialize(this.Inputs));
             this.plugin = Json.deserialize(Json.serialize(untyped), this.reflector);
             
             //do callouts
@@ -324,7 +325,8 @@ abstract public with sharing class Broker {
         public Wrapper invokeMain() {
             //set flag
             Map<String,Object> untyped = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(this.plugin));
-            untyped.put('AllowsCallouts', false);
+            this.Inputs.put('esb__AllowsCallouts', false);
+            untyped.put('Event', Json.serialize(this.Inputs));
             this.plugin = Json.deserialize(Json.serialize(untyped), this.reflector);
             
             //do invocation
