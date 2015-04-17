@@ -63,7 +63,7 @@
         />
         <antcall target="alphabetize-searchlayouts" />
         <antcall target="optimize-for-release" />
-        <antcall target="normalize-tabs-to-spaces" />
+        <antcall target="normalize-whitespace" />
     </target>
 
     <target name="deploy" description="Deploys all package components to dev org">
