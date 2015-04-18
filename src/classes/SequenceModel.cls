@@ -102,9 +102,19 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
             ORDER BY Position__c ASC
         ];
         
-        //reposition them
+        //custom settings not smart enough to recognize uniqueness in bulk update
+        //https://developer.salesforce.com/forums/ForumsMain?id=906F00000008zF5IAI
+        //so we have to make them unique first so that we can overwrite them second
+        for (Step__c stepToReorder : stepsToReorder) stepToReorder.Name = EncodingUtil.base64encode(Crypto.generateAesKey(192));
+        update stepsToReorder;
+        
+        //reposition them all
         Integer position = 1;
-        for (Step__c stepToReorder : stepsToReorder) stepToReorder.Position__c = position++;
+        for (Step__c stepToReorder : stepsToReorder) {
+            stepToReorder.Name = this.sequence.Name + '#' + position;
+            stepToReorder.Position__c = position;
+            position++;
+        }
         update stepsToReorder;
         
         //hand back wrapped deleted steps
