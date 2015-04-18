@@ -40,14 +40,11 @@
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //arrange processes and sequence and steps
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
         
-        Step__c wiretapStep = StepModel.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c wiretapStep = StepModel.generateOne(sequence.Name, Wiretap.class.getName());
+        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //arrange messages
         Map<String,Object> inputEvent = new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1};
@@ -85,9 +82,6 @@
         Integer maxHops = 3;
         Broker.MaxHops = maxHops;
 
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
         insert sequenceA;
@@ -100,20 +94,13 @@
         Integer positionA5 = 5;
         Integer positionA6 = 6;
 
-        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = wiretapProcess.Id);
-        Step__c stepA2 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA2,Process__c = wiretapProcess.Id);
-        Step__c stepA3 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA3,Process__c = wiretapProcess.Id);
-        Step__c stepA4 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA4,Process__c = wiretapProcess.Id);
-        Step__c stepA5 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA5,Process__c = wiretapProcess.Id);
-        Step__c stepA6 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA6,Process__c = terminateProcess.Id);
+        Step__c stepA1 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA2 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA3 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA4 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA5 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA6 = StepModel.generateOne(sequenceA.Name, Terminate.class.getName());
 
-        insert stepA1;
-        insert stepA2;
-        insert stepA3;
-        insert stepA4;
-        insert stepA5;
-        insert stepA6;
-        
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
@@ -200,9 +187,7 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
-        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //arrange message
         Broker.MaxHops = 1;
@@ -231,20 +216,15 @@
     
     
     static testmethod void canCorrectlyIncrementAndPersistMessages() {
-        //arrange processes
-        Process__c publishProcess = ProcessModel.generateOne(Publish.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
-        
         //arrange sequence
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
         insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = StepModel.generateOne(sequenceA.Id, subscribeProcess.Id);
-        Step__c stepA2 = StepModel.generateOne(sequenceA.Id, publishProcess.Id);
-        Step__c stepA3 = StepModel.generateOne(sequenceA.Id, terminateProcess.Id);
+        Step__c stepA1 = StepModel.generateOne(sequenceA.Name, Subscribe.class.getName());
+        Step__c stepA2 = StepModel.generateOne(sequenceA.Name, Publish.class.getName());
+        Step__c stepA3 = StepModel.generateOne(sequenceA.Name, Terminate.class.getName());
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         Decimal positionA3 = stepA3.Position__c;
@@ -287,12 +267,10 @@
     
     static testmethod void testLocatorMarksCorrectNumberOfMessages() {
         //arrange
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
         
-        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         new Job(new List<Map<String,Object>>{
             new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1},
@@ -329,12 +307,10 @@
     }
     
     static testmethod void testLocatorReturnsOnlyBufferedWork() {
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
         
-        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //arrange fucked messages
         insert new List<Message__c>{
@@ -362,11 +338,6 @@
     
     static testmethod void canCorrectlyIncrementMessages() {
         // arrange
-        Process__c publishProcess = ProcessModel.generateOne(Publish.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
-
         String sequenceNameA = 'sequenceA';
         String sequenceNameB = 'sequenceB';
         String sequenceNameC = 'sequenceC';
@@ -384,20 +355,13 @@
         Integer positionB2 = 2;
         Integer positionC1 = 1;
         Integer positionC2 = 2;
-        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = subscribeProcess.Id);
-        Step__c stepA2 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA2,Process__c = publishProcess.Id);
-        Step__c stepA3 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA3,Process__c = terminateProcess.Id);
-        Step__c stepB1 = new Step__c(Sequence__c = sequenceB.Id ,Position__c = positionB1,Process__c = wiretapProcess.Id);
-        Step__c stepB2 = new Step__c(Sequence__c = sequenceB.Id ,Position__c = positionB2,Process__c = terminateProcess.Id);
-        Step__c stepC1 = new Step__c(Sequence__c = sequenceC.Id ,Position__c = positionC1,Process__c = publishProcess.Id);
-        Step__c stepC2 = new Step__c(Sequence__c = sequenceC.Id ,Position__c = positionC2,Process__c = terminateProcess.Id);
-        insert stepA1;
-        insert stepA2;
-        insert stepA3;
-        insert stepB1;
-        insert stepB2;
-        insert stepC1;
-        insert stepC2;
+        Step__c stepA1 = StepModel.generateOne(sequenceA.Name, Subscribe.class.getName());
+        Step__c stepA2 = StepModel.generateOne(sequenceA.Name, Publish.class.getName());
+        Step__c stepA3 = StepModel.generateOne(sequenceA.Name, Terminate.class.getName());
+        Step__c stepB1 = StepModel.generateOne(sequenceB.Name, Wiretap.class.getName());
+        Step__c stepB2 = StepModel.generateOne(sequenceB.Name, Terminate.class.getName());
+        Step__c stepC1 = StepModel.generateOne(sequenceC.Name, Publish.class.getName());
+        Step__c stepC2 = StepModel.generateOne(sequenceC.Name, Terminate.class.getName());
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>{
             new Map<String,Object>{'esb__Id' => 0, '__SequenceName' => sequenceA.Name, '__Position' => positionA1}, // Same Sequence / Position
@@ -479,15 +443,12 @@
     }
     
     static testmethod void callingEnqueueSuccessfullyCallsrunImpl() {
-        //arrange processes
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //arrange broker implementation custom setting
         String theSequenceName = 'TestSequence';
@@ -511,15 +472,12 @@
     }
     
     static testmethod void callingEnqueueSuccessfullyCallEnqueueImpAndCreatesDocument() {
-        //arrange processes
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //arrange
         insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
@@ -628,18 +586,14 @@
     }
     
     static testmethod void testProcessWithoutClassThrowsExpectedException() {
-        //arrange processes
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        StepModel.generateOne(sequence.Id, terminateProcess.Id);
-        
-        terminateProcess.FullyQualifiedClassName__c = 'lalala';
-        update terminateProcess; //pretend we deleted the class
+        Step__c step = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        step.FullyQualifiedClassName__c = 'lalala';
+        update step;
         
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
@@ -656,37 +610,6 @@
         String expectedMessage = 'Reflector for classname was null: lalala';
         System.assertEquals(expectedMessage, (String)actualEx.get('Message'), 'Wrong message detail.');
     }
-    
-    static testmethod void testNonProcessModelThrowsTypeException() {
-        //arrange processes
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
-        insert sequence;
-        
-        //arrange step
-        StepModel.generateOne(sequence.Id, terminateProcess.Id);
-        
-        terminateProcess.FullyQualifiedClassName__c = 'Account';
-        update terminateProcess; //Account is DEFINITELY not a toStringable Object
-        
-        //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
-        
-        //act
-        new Job(sequence.Name, '000000000000000AAA').execute(null);
-        
-        //assemble
-        Message__c message = [SELECT Id, Cause__c FROM Message__c];
-        Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(message.Cause__c);
-        
-        //assert
-        String actualMessage = (String)ex.get('Message');
-        String expectedMessage = 'Could not see ESB inner class, this is not a valid process: Account';
-        System.assertEquals(expectedMessage, actualMessage, 'Wrong message detail.');
-    }
-    
     
     static testmethod void canGenerateUniqueIds() {
         // arrange
@@ -710,8 +633,6 @@
     static testmethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusQueued() {
         // arrange
         Boolean isPaused =  true;
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -721,11 +642,8 @@
         Integer positionA1 = 1;
         Integer positionA6 = 2;
 
-        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = wiretapProcess.Id);
-        Step__c stepA6 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA6,Process__c = terminateProcess.Id);
-
-        insert stepA1;
-        insert stepA6;
+        Step__c stepA1 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA6 = StepModel.generateOne(sequenceA.Name, Terminate.class.getName());
 
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
@@ -759,8 +677,6 @@
     static testmethod void callingEnqueueWhenBrokerIsNotPausedProcessesMessages() {
         // arrange
         Boolean isPaused =  false;
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -774,20 +690,13 @@
         Integer positionA5 = 5;
         Integer positionA6 = 6;
 
-        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = wiretapProcess.Id);
-        Step__c stepA2 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA2,Process__c = wiretapProcess.Id);
-        Step__c stepA3 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA3,Process__c = wiretapProcess.Id);
-        Step__c stepA4 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA4,Process__c = wiretapProcess.Id);
-        Step__c stepA5 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA5,Process__c = wiretapProcess.Id);
-        Step__c stepA6 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA6,Process__c = terminateProcess.Id);
+        Step__c stepA1 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA2 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA3 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA4 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA5 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA6 = StepModel.generateOne(sequenceA.Name, Terminate.class.getName());
 
-        insert stepA1;
-        insert stepA2;
-        insert stepA3;
-        insert stepA4;
-        insert stepA5;
-        insert stepA6;
-        
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
         
@@ -820,9 +729,6 @@
     // #697 is exercised by this test!
     static testmethod void canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError() {
         // arrange
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
         insert sequenceA;
@@ -835,19 +741,14 @@
         Integer positionA5 = 5;
         Integer positionA6 = 6;
 
-        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = wiretapProcess.Id);
-        Step__c stepA2 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA2,Process__c = wiretapProcess.Id);
-        Step__c stepA3 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA3,Process__c = wiretapProcess.Id);
-        // deleted - implying a resolution issue
-        Step__c stepA5 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA5,Process__c = wiretapProcess.Id);
-        Step__c stepA6 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA6,Process__c = terminateProcess.Id);
-
-        insert stepA1;
-        insert stepA2;
-        insert stepA3;
-        // deleted - implying a resolution issue
-        insert stepA5;
-        insert stepA6;
+        Step__c stepA1 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA2 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA3 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c issue = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName()); // deleted - implying a resolution issue
+        Step__c stepA5 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA6 = StepModel.generateOne(sequenceA.Name, Terminate.class.getName());
+        
+        delete issue;
         
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = false);
@@ -888,15 +789,12 @@
  
     static testMethod void callingEnqueueWithEventParametersIncludesAllEventParametersInMessage() {
         // arrange
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-
         String sequenceName = 'Test';
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
         Integer position = 1;
-        Step__c step  = new Step__c(Sequence__c = sequence.Id ,Position__c = position,Process__c = terminateProcess.Id);
-        insert step;
+        Step__c step = StepModel.generateOne(sequence.Name, Terminate.class.getName());
   
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
@@ -929,14 +827,11 @@
 
     static testMethod void callingExecuteWithoutMandatoryEventParametersInEventParametersCollectionThrowsException() {
         // arrange process, sequence, step
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-
         String sequenceName = 'Test';
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step  = new Step__c(Sequence__c = sequence.Id ,Position__c = 1,Process__c = terminateProcess.Id);
-        insert step;
+        Step__c step = StepModel.generateOne(sequence.Name, Terminate.class.getName());
   
         //arrange broker
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
@@ -970,15 +865,12 @@
     
     
     static testMethod void callingEnqueueAlwaysSetsInitiatingEventParameters() {
-        //arrange processes
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
@@ -1093,14 +985,11 @@
     
     static testmethod void testKamikazeChunkingDoesntTakeOutHisMates() {
         //arrange processes, sequence and steps
-        Process__c errorProcess = ProcessModel.generateOne(ChunkErrorProcess.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c errorStep = StepModel.generateOne(sequence.Id, errorProcess.Id);
-        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c errorStep = StepModel.generateOne(sequence.Name, ChunkErrorProcess.class.getName());
+        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //arrange broker implementation and params
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());

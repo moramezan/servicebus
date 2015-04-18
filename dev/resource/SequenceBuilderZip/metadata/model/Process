@@ -7,7 +7,7 @@
     "codeClass": null,
     "userConfig": {
         "designer|userClassName": "Process",
-        "idProperty": "Id"
+        "idProperty": "FullyQualifiedClassName"
     },
     "name": "MyModel",
     "designerId": "7459911a-fe4d-4b03-8922-843b795633b9",
@@ -20,23 +20,10 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Id"
+                "name": "FullyQualifiedClassName"
             },
             "name": "MyField",
             "designerId": "f2733be1-0b64-4107-991d-f1cf5d6de106"
-        },
-        {
-            "type": "Ext.data.field.String",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "name": "Name"
-            },
-            "name": "MyString",
-            "designerId": "4dbd6e6c-4efc-4cfa-98ef-fa2a7e0520c9"
         },
         {
             "type": "Ext.data.field.String",
@@ -50,6 +37,19 @@
             },
             "name": "MyString1",
             "designerId": "08904ef1-5c67-48ce-8920-17ff5b5174a0"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Name"
+            },
+            "name": "MyString",
+            "designerId": "4dbd6e6c-4efc-4cfa-98ef-fa2a7e0520c9"
         },
         {
             "type": "Ext.data.field.String",
@@ -91,17 +91,17 @@
             "designerId": "0451a599-68e3-40fa-87c4-4d9d1075b862"
         },
         {
-            "type": "Ext.data.field.String",
+            "type": "Ext.data.field.Integer",
             "reference": {
                 "name": "fields",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Setting"
+                "name": "Limits"
             },
-            "name": "MyString5",
-            "designerId": "b0aad3ad-b08c-498c-b3da-b784850f0973"
+            "name": "MyInteger1",
+            "designerId": "20022a51-d1a6-4118-a2f7-49b1480482ba"
         },
         {
             "type": "Ext.data.field.String",
@@ -115,6 +115,32 @@
             },
             "name": "MyString15",
             "designerId": "b02f16c4-42ea-46fd-a987-72beea998bdb"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "ProcessSetting"
+            },
+            "name": "MyString5",
+            "designerId": "b0aad3ad-b08c-498c-b3da-b784850f0973"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "StepConfig"
+            },
+            "name": "MyString17",
+            "designerId": "889afe0c-7da4-4110-a5e3-9132ad3dbf95"
         }
     ]
 }

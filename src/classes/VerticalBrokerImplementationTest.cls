@@ -2,14 +2,11 @@
     
     static testmethod void testChunkedMarkContextsCount() {
         //arrange processes and sequence and steps
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
         
-        Step__c wiretapStep = StepModel.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c wiretapStep = StepModel.generateOne(sequence.Name, Wiretap.class.getName());
+        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //arrange messages
         Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1};
@@ -104,15 +101,12 @@
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = VerticalBrokerImplementation.class.getName());
         
-        //arrange processes
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        Step__c step = StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c step = StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //arrange message
         new Job(
@@ -160,15 +154,12 @@
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = VerticalBrokerImplementation.class.getName());
         
-        //arrange processes
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        Step__c step = StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c step = StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //arrange messages
         new Job(
@@ -217,15 +208,12 @@
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = VerticalBrokerImplementation.class.getName());
         
-        //arrange processes
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        Step__c step = StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c step = StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //arrange messages
         new Job(

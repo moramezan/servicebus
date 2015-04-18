@@ -21,7 +21,6 @@
         
         //act
         InstallHandler handler = new PostInstallHandler();
-        ProcessDiscoverBatch.classes = new List<ApexClass>();
         Test.testInstall(handler, null, false);
         
         //assert

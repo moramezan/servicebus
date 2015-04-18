@@ -1,31 +1,7 @@
 @IsTest private class StepSetModelTest {
     
-    //before insert test
-    static testmethod void testStepConfigIsCreatedWhenInserted() {
-        //arrange processes
-        Process__c subsequenceProcess = ProcessModel.generateOne(Subsequence.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
-        insert sequence;
-        
-        //arrange steps
-        Step__c subsequenceStep = StepModel.generateOne(sequence.Id, subsequenceProcess.Id);
-        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
-        
-        //assert
-        String expectedId = Schema.SObjectType.SubsequenceConfig__c.KeyPrefix; //this needs to be some config record
-        String actualId = subsequenceStep.ConfigId__c;
-        System.assert(actualId.startsWith(expectedId));
-    }
-
     //after insert test
     static testmethod void testNoResequencingOfStepsWhenAllInsertedStepsHaveAPositionGtZero() {
-        //arrange processes
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
@@ -33,14 +9,13 @@
         //arrange steps
         Integer PositionGtZero1 = 1;
         Integer PositionGtZero2 = 2;
-        Step__c step1 = new Step__c(Sequence__c = sequence.Id, Position__c = PositionGtZero1, Process__c = wiretapProcess.Id);
-        Step__c step2 = new Step__c(Sequence__c = sequence.Id, Position__c = PositionGtZero2, Process__c = terminateProcess.Id);
         
         //act
-        insert new List<Step__c> {step1, step2};
+        Step__c step1 = StepModel.generateOne(sequence.Name, Wiretap.class.getName());
+        Step__c step2 = StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //assemble : requery after trigger
-        List<Step__c> steps = [SELECT Id, Sequence__c, Position__c FROM Step__c WHERE Sequence__c = :sequence.Id];
+        List<Step__c> steps = [SELECT Id, SequenceName__c, Position__c FROM Step__c WHERE SequenceName__c = :sequence.Name];
         Integer actualPosition1 = -1;
         Integer actualPosition2 = -1;
         Integer offset = 1;
@@ -69,10 +44,6 @@
         Integer PositionEqToZero3 = 0;
         Integer PositionEqToZero4 = 0;
         
-        //arrange processes
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
@@ -90,21 +61,17 @@
         //WireTap   3
         //WireTap   4
         
-        Step__c step1 = new Step__c(Sequence__c = sequence.Id, Position__c = PositionGtZero1, Process__c = wiretapProcess.Id);
-        Step__c step2 = new Step__c(Sequence__c = sequence.Id, Position__c = PositionGtZero2, Process__c = terminateProcess.Id);
-        Step__c step3 = new Step__c(Sequence__c = sequence.Id, Position__c = PositionEqToZero3, Process__c = wiretapProcess.Id);
-        Step__c step4 = new Step__c(Sequence__c = sequence.Id, Position__c = PositionEqToZero4, Process__c = wiretapProcess.Id);
-        insert step1;
-        insert step2;
-        insert step3;
-        insert step4;
+        Step__c step1 = StepModel.generateOne(sequence.Name, Wiretap.class.getName());
+        Step__c step2 = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c step3 = StepModel.generateOne(sequence.Name, Wiretap.class.getName());
+        Step__c step4 = StepModel.generateOne(sequence.Name, Wiretap.class.getName());
         
             
         //asemble : requery after trigger
         List<Step__c> steps = [
-            SELECT Id, Sequence__c, Position__c
+            SELECT Id, SequenceName__c, Position__c
             FROM Step__c
-            WHERE Sequence__c = :sequence.Id
+            WHERE SequenceName__c = :sequence.Name
             ORDER BY Id
         ];
         Integer actualPosition1 = -1;
@@ -142,22 +109,19 @@
         Decimal position  = 1;
         String  data      = 'data';
         
-        //arrange processes
-        Process__c branchProcess = ProcessModel.generateOne(Branch.class);
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'the-sequence');
         insert sequence;
         
         //arrange steps
-        Step__c branchStep = StepModel.generateOne(sequence.Id, branchProcess.Id);
+        Step__c branchStep = StepModel.generateOne(sequence.Name, Branch.class.getName());
         
         Integer expectedSizeBefore =  1;
         Integer expectedSizeAfter =   0;
         Integer actualSizeBefore = [SELECT COUNT() FROM BranchConfig__c];
         
         //Act
-        delete branchStep;
+        SequenceModel.fromName('the-sequence').destroySteps(new Set<Id>{branchStep.Id});
         
         //Prepare
         Integer actualSizeAfter = [SELECT COUNT() FROM BranchConfig__c];

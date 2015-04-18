@@ -42,7 +42,7 @@
         
         //assert
         String expectedRoute = null;
-        String actualRoute = message.Route__c;
+        String actualRoute = message.Step__c;
         System.assertEquals(expectedRoute, actualRoute, 'Route should be null for heartbeats.');
     }
     
@@ -57,7 +57,7 @@
         
         //assert
         String expectedRoute = 'test#1';
-        String actualRoute = message.Route__c;
+        String actualRoute = message.Step__c;
         System.assertEquals(expectedRoute, actualRoute, 'Route incorrectly populated.');
     }
     

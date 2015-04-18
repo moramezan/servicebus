@@ -5,6 +5,5 @@
     <logo>EnterpriseServiceBus/EsbApp.png</logo>
     <tab>Monitor</tab>
     <tab>Sequence__c</tab>
-    <tab>Process__c</tab>
     <tab>Message__c</tab>
 </CustomApplication>

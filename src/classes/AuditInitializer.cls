@@ -7,7 +7,7 @@ public with sharing class AuditInitializer extends ProcessModel.BaseProcess {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Audit Initializer';
         public String Description = 'Creates a grouping identifier which all subsequent Audit Writer processes audit against.';
-        public SObject StepConfig = AuditInitializerConfig__c.SObjectType.newSobject();
+        public String StepConfig = AuditInitializerConfig__c.class.getName();
         public String Icon = 'pencil';
         public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessAudit').getUrl();
         public Integer Limits = 75; //leave half of 150 (Total number of DML statements issued)

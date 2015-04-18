@@ -158,18 +158,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Route__c</fullName>
-        <description>Composite key that can be runtime-resolved to a Step as late as possible.</description>
-        <externalId>true</externalId>
-        <inlineHelpText>What route should this message take for execution?</inlineHelpText>
-        <label>Route</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Status__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>What stage of its lifecycle is this message at?</inlineHelpText>
@@ -196,6 +184,18 @@
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
+    <fields>
+        <fullName>Step__c</fullName>
+        <description>Composite key that can be runtime-resolved to a Step as late as possible.</description>
+        <externalId>true</externalId>
+        <inlineHelpText>What step should this message take for execution?</inlineHelpText>
+        <label>Step</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
     <label>Message</label>
     <listViews>
         <fullName>All</fullName>
@@ -205,7 +205,6 @@
         <columns>FullyQualifiedClassName__c</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
-        <columns>QueueableId__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>

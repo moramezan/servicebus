@@ -31,7 +31,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Sequence__c</field>
+                <field>SequenceName__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>

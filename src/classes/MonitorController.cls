@@ -79,15 +79,11 @@ public with sharing class MonitorController {
         //#761 add null guy for all buffered messages
         process2statistic.put(' ', new Statistic(' ', 0, 0, 0, 0));
         
-        List<Process__c> processes = [
-            SELECT Id, FullyQualifiedClassName__c
-            FROM Process__c
-            LIMIT 1000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
-        ];
+        List<ProcessModel> processes = SequenceBuilderExtension.findProcesses();
         
-        for (Process__c process : processes) {
-            Statistic statistic = new Statistic(process.FullyQualifiedClassName__c, 0, 0, 0, 0);
-            process2statistic.put(process.FullyQualifiedClassName__c, statistic);
+        for (ProcessModel process : processes) {
+            Statistic statistic = new Statistic(process.FullyQualifiedClassName, 0, 0, 0, 0);
+            process2statistic.put(process.FullyQualifiedClassName, statistic);
         }
         
         //check for null so we don't blow up for unresolved messages
@@ -96,7 +92,7 @@ public with sharing class MonitorController {
         for (AggregateResult result : [
             SELECT FullyQualifiedClassName__c fqcn, COUNT(Status__c) total
             FROM Message__c
-            WHERE Route__c != null
+            WHERE Step__c != null
             AND Status__c = 'Queued'
             GROUP BY FullyQualifiedClassName__c
         ]) {
@@ -108,7 +104,7 @@ public with sharing class MonitorController {
         for (AggregateResult result : [
             SELECT FullyQualifiedClassName__c fqcn, COUNT(Status__c) total
             FROM Message__c
-            WHERE Route__c != null
+            WHERE Step__c != null
             AND Status__c = 'Buffered'
             GROUP BY FullyQualifiedClassName__c
         ]) {
@@ -118,7 +114,7 @@ public with sharing class MonitorController {
         for (AggregateResult result : [
             SELECT FullyQualifiedClassName__c fqcn, COUNT(Status__c) total
             FROM Message__c
-            WHERE Route__c != null
+            WHERE Step__c != null
             AND Status__c = 'Started' AND Exception__c = null
             GROUP BY FullyQualifiedClassName__c
         ]) {
@@ -130,7 +126,7 @@ public with sharing class MonitorController {
         for (AggregateResult result : [
             SELECT FullyQualifiedClassName__c fqcn, COUNT(Status__c) total
             FROM Message__c
-            WHERE Route__c != null
+            WHERE Step__c != null
             AND Status__c = 'Started' AND Exception__c != null
             GROUP BY FullyQualifiedClassName__c
         ]) {

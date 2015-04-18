@@ -1,3 +1,0 @@
-<apex:page showHeader="false" standardStylesheets="true" tabStyle="Step__c" standardController="Step__c" extensions="SequenceBuilderExtension" action="{!findTerminateProblems}">
-    <apex:pageMessages showDetail="false" />
-</apex:page>

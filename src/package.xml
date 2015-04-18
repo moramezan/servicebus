@@ -9,8 +9,6 @@
     <types>
         <members>ApexDomain</members>
         <members>ApexDomainTest</members>
-        <members>AsyncApexJobModel</members>
-        <members>AsyncApexJobModelTest</members>
         <members>AuditInitializer</members>
         <members>AuditInitializerConfigSetModel</members>
         <members>AuditInitializerConfigSetModelTest</members>
@@ -21,8 +19,6 @@
         <members>BranchTest</members>
         <members>Broker</members>
         <members>BrokerTest</members>
-        <members>ConfigStepExtension</members>
-        <members>ConfigStepExtensionTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
         <members>Disperse</members>
@@ -62,13 +58,8 @@
         <members>PostUninstallHandler</members>
         <members>PostUninstallHandlerTest</members>
         <members>ProcessDescribeController</members>
-        <members>ProcessDiscoverBatch</members>
-        <members>ProcessDiscoverBatchTest</members>
-        <members>ProcessDiscoverController</members>
-        <members>ProcessDiscoverControllerTest</members>
         <members>ProcessModel</members>
         <members>ProcessModelTest</members>
-        <members>ProcessRefreshExtension</members>
         <members>Publish</members>
         <members>PublishTest</members>
         <members>RemoteSiteSettingController</members>
@@ -116,7 +107,6 @@
         <members>AuditInitializerConfigCsh</members>
         <members>AuditInitializerConfigSchemaSelector</members>
         <members>BranchConfigCsh</members>
-        <members>BranchConfigStep</members>
         <members>Configure</members>
         <members>Csh</members>
         <members>DisperseConfigCsh</members>
@@ -126,7 +116,6 @@
         <members>GateGroupCsh</members>
         <members>GateItemCsh</members>
         <members>JumpConfigCsh</members>
-        <members>JumpConfigStep</members>
         <members>MessageCsh</members>
         <members>MessageData</members>
         <members>MessageKill</members>
@@ -137,29 +126,18 @@
         <members>MessageSplash</members>
         <members>Monitor</members>
         <members>MonitorSplash</members>
-        <members>ProcessApexClass</members>
-        <members>ProcessCsh</members>
         <members>ProcessDescribe</members>
-        <members>ProcessDiscover</members>
-        <members>ProcessHelp</members>
-        <members>ProcessRefresh</members>
         <members>ProcessSettings</members>
-        <members>ProcessSplash</members>
         <members>PublishConfigCsh</members>
         <members>PublishConfigManageEventTypes</members>
-        <members>PublishConfigStep</members>
         <members>ScheduleConfigCsh</members>
         <members>SchemaSelector</members>
         <members>SequenceBuilder</members>
         <members>SequenceCsh</members>
         <members>SequenceSplash</members>
-        <members>StepConfig</members>
-        <members>StepCsh</members>
         <members>SubscribeConfigCsh</members>
         <members>SubscribeConfigManageEventTypes</members>
-        <members>SubscribeConfigStep</members>
         <members>SubsequenceConfigCsh</members>
-        <members>SubsequenceConfigStep</members>
         <name>ApexPage</name>
     </types>
     <types>
@@ -172,7 +150,6 @@
         <members>PublishConfigTriggers</members>
         <members>ScheduleConfigTriggers</members>
         <members>SequenceTriggers</members>
-        <members>StepTriggers</members>
         <members>SubscribeConfigTriggers</members>
         <members>SubsequenceConfigTriggers</members>
         <name>ApexTrigger</name>
@@ -188,7 +165,7 @@
         <members>AuditEntry__c.GroupIdentifier__c</members>
         <members>AuditEntry__c.Hops__c</members>
         <members>AuditEntry__c.Position__c</members>
-        <members>AuditEntry__c.Sequence__c</members>
+        <members>AuditEntry__c.SequenceName__c</members>
         <members>AuditEntry__c.Stamp__c</members>
         <members>AuditEntry__c.Step__c</members>
         <members>AuditGroup__c.AuditInitializerConfig__c</members>
@@ -215,32 +192,21 @@
         <members>Message__c.ExecuteDuration__c</members>
         <members>Message__c.FullyQualifiedClassName__c</members>
         <members>Message__c.QueueableId__c</members>
-        <members>Message__c.Route__c</members>
         <members>Message__c.Status__c</members>
+        <members>Message__c.Step__c</members>
         <members>OAuthSetting__c.AccessToken__c</members>
         <members>OAuthSetting__c.RefreshToken__c</members>
         <members>OAuthSetting__c.RunningUserId__c</members>
-        <members>Process__c.ApexClassId__c</members>
-        <members>Process__c.Cardinality__c</members>
-        <members>Process__c.Description__c</members>
-        <members>Process__c.FullyQualifiedClassName__c</members>
-        <members>Process__c.HelpUrl__c</members>
-        <members>Process__c.Icon__c</members>
-        <members>Process__c.Limits__c</members>
-        <members>Process__c.Setting__c</members>
-        <members>Process__c.StepConfig__c</members>
-        <members>Process__c.Tag__c</members>
         <members>PublishConfig__c.EventType__c</members>
         <members>ScheduleConfig__c.Frequency__c</members>
         <members>ScheduleConfig__c.FriendlyDates__c</members>
         <members>ScheduleConfig__c.FriendlyTimes__c</members>
         <members>ScheduleConfig__c.IsActive__c</members>
-        <members>Sequence__c.StepsCount__c</members>
         <members>Step__c.ConfigId__c</members>
         <members>Step__c.ConfigName__c</members>
+        <members>Step__c.FullyQualifiedClassName__c</members>
         <members>Step__c.Position__c</members>
-        <members>Step__c.Process__c</members>
-        <members>Step__c.Sequence__c</members>
+        <members>Step__c.SequenceName__c</members>
         <members>SubscribeConfig__c.EventType__c</members>
         <members>SubsequenceConfig__c.Sequence__c</members>
         <members>WiretapSetting__c.UserId__c</members>
@@ -259,7 +225,6 @@
         <members>KnifeSwitch__c</members>
         <members>Message__c</members>
         <members>OAuthSetting__c</members>
-        <members>Process__c</members>
         <members>PublishConfig__c</members>
         <members>ScheduleConfig__c</members>
         <members>Sequence__c</members>
@@ -273,14 +238,12 @@
         <members>Configure</members>
         <members>MessageSplash</members>
         <members>MonitorSplash</members>
-        <members>ProcessSplash</members>
         <members>SequenceSplash</members>
         <name>CustomPageWebLink</name>
     </types>
     <types>
         <members>Message__c</members>
         <members>Monitor</members>
-        <members>Process__c</members>
         <members>Sequence__c</members>
         <name>CustomTab</name>
     </types>
@@ -299,7 +262,6 @@
         <members>EventType__c-Event Type Layout</members>
         <members>JumpConfig__c-Jump Config Layout</members>
         <members>Message__c-Message Layout</members>
-        <members>Process__c-Process Layout</members>
         <members>PublishConfig__c-Publish Config Layout</members>
         <members>ScheduleConfig__c-Schedule Config Layout</members>
         <members>Sequence__c-Sequence Layout</members>
@@ -313,10 +275,6 @@
         <members>Message__c.All</members>
         <members>Message__c.Exception</members>
         <members>Message__c.Killed</members>
-        <members>Process__c.All</members>
-        <members>Process__c.EnterpriseServiceBus</members>
-        <members>Process__c.ExceptEnterpriseServiceBus</members>
-        <members>Process__c.Untagged</members>
         <members>Sequence__c.All</members>
         <name>ListView</name>
     </types>
@@ -326,7 +284,6 @@
     </types>
     <types>
         <members>CshZip</members>
-        <members>ProcessDiscoverZip</members>
         <members>SequenceBuilderZip</members>
         <name>StaticResource</name>
     </types>
@@ -339,25 +296,14 @@
     </types>
     <types>
         <members>AuditInitializerConfig__c.ChangeDynamicGroupIdentifier</members>
-        <members>BranchConfig__c.Step</members>
-        <members>JumpConfig__c.Step</members>
         <members>Message__c.Data</members>
         <members>Message__c.Kill</members>
         <members>Message__c.PauseQueue</members>
         <members>Message__c.Rebuffer</members>
         <members>Message__c.Restart</members>
         <members>Message__c.ResumeQueue</members>
-        <members>Process__c.ApexClass</members>
-        <members>Process__c.Discover</members>
-        <members>Process__c.Help</members>
-        <members>Process__c.Refresh</members>
-        <members>Process__c.Settings</members>
         <members>PublishConfig__c.ManageEventTypes</members>
-        <members>PublishConfig__c.Step</members>
-        <members>Step__c.Config</members>
         <members>SubscribeConfig__c.ManageEventTypes</members>
-        <members>SubscribeConfig__c.Step</members>
-        <members>SubsequenceConfig__c.Step</members>
         <name>WebLink</name>
     </types>
     <uninstallClass>PostUninstallHandler</uninstallClass>

@@ -18,17 +18,13 @@ private class TerminateTest
         String subsequenceName = 'the-subsequence';
         Decimal subsequencePosition = 2;
         
-        //arrange processes
-        Process__c subsequenceProcess = ProcessModel.generateOne(Subsequence.class);
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = subsequenceName);
         insert sequence;
         
         //arrange steps
-        Step__c step1 = StepModel.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c step2 = StepModel.generateOne(sequence.Id, subsequenceProcess.Id);
+        Step__c step1 = StepModel.generateOne(sequence.Name, Wiretap.class.getName());
+        Step__c step2 = StepModel.generateOne(sequence.Name, Subsequence.class.getName());
 
         Map<String,Object> inputEvent = new Map<String,Object> {
             '__SequenceName' => sequenceName,
@@ -101,10 +97,8 @@ private class TerminateTest
         Sequence__c sequence = new Sequence__c(Name = subsequenceName);
         insert sequence;
         
-        Process__c subsequenceProcess = ProcessModel.generateOne(Subsequence.class);
-        
-        Step__c step01 = StepModel.generateOne(sequence.Id, subsequenceProcess.Id);
-        Step__c step02 = StepModel.generateOne(sequence.Id, subsequenceProcess.Id);
+        Step__c step01 = StepModel.generateOne(sequence.Name, Subsequence.class.getName());
+        Step__c step02 = StepModel.generateOne(sequence.Name, Subsequence.class.getName());
         
         Id subsequenceStepId01 = step01.Id ;
         Id subsequenceStepId02 = step02.Id ;

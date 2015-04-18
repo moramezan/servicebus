@@ -25,34 +25,6 @@ public without sharing class PostInstallHandler implements InstallHandler {
         
         //wiretap should send to sysadmin, to prevent confusion with schedule processes
         if (!isPush) createWiretapSettings(installerId);
-        
-        //synchronously install our processes
-        if (!isPush) initializeProcesses();
-        
-        executeProcessDiscoverBatch();
-    }
-    
-    /**
-     * We can generate OUR processes synchronously. This means the sequence builder
-     * will be available immediately. The batch will get around to THEIR processes.
-     */
-    static public void initializeProcesses() {
-        List<Process__c> processes = new List<Process__c>{
-            ProcessModel.fromType(Type.forName(AuditInitializer.class.getName())),
-            ProcessModel.fromType(Type.forName(AuditWriter.class.getName())),
-            ProcessModel.fromType(Type.forName(Branch.class.getName())),
-            ProcessModel.fromType(Type.forName(GateByEntryPoint.class.getName())),
-            ProcessModel.fromType(Type.forName(GateByJob.class.getName())),
-            ProcessModel.fromType(Type.forName(Jump.class.getName())),
-            ProcessModel.fromType(Type.forName(Publish.class.getName())),
-            ProcessModel.fromType(Type.forName(Schedule.class.getName())),
-            ProcessModel.fromType(Type.forName(Subscribe.class.getName())),
-            ProcessModel.fromType(Type.forName(Subsequence.class.getName())),
-            ProcessModel.fromType(Type.forName(Terminate.class.getName())),
-            ProcessModel.fromType(Type.forName(Wiretap.class.getName()))
-        };
-        
-        upsert processes FullyQualifiedClassName__c;
     }
     
     /**
@@ -84,17 +56,6 @@ public without sharing class PostInstallHandler implements InstallHandler {
             PermissionSetId = ps.Id,
             AssigneeId = userId
         );
-    }
-    
-    /**
-     * Kick off process discovery in the background
-     *
-     * AsyncApexJobModel.runOne would need to be WITHOUT SHARING to see AsyncApexJob
-     * because the InstallHandler user context cannot access that table. So here
-     * we just use Database.executeBatch as it's unlikely to already be running.
-     */
-    static public void executeProcessDiscoverBatch() {
-        Database.executeBatch(new ProcessDiscoverBatch(), 1);
     }
     
     /**

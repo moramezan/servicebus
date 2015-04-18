@@ -2,12 +2,10 @@
 
     static testmethod void testHeartbeatDispatchesOneIndexedMessages() {
         //arrange process, sequence, step
-        Process__c scheduleProcess = ProcessModel.generateOne(Schedule.class);
-        
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
         
-        Step__c scheduleStep = StepModel.generateOne(sequence.Id, scheduleProcess.Id);
+        Step__c scheduleStep = StepModel.generateOne(sequence.Name, Schedule.class.getName());
         
         //arrange input event
         String inputEvent = '{"esb__EntryPointDatetime":"2014-01-18T12:00:00.000Z"}';
@@ -53,9 +51,6 @@
 
 
     static testmethod void  gtOneInterestedProcessReturnsSameNumberOfMessages() {
-        //arrange processes
-        Process__c ScheduleProcess = ProcessModel.generateOne(Schedule.class);
-
         //arrange sequence
         Sequence__c interestedSequenceA = new Sequence__c(Name = 'InterestedSequenceA');
         insert interestedSequenceA;
@@ -63,8 +58,8 @@
         insert interestedSequenceB;
 
         //arrange steps
-        Step__c stepA = StepModel.generateOne(interestedSequenceA.Id, ScheduleProcess.Id);
-        Step__c stepB = StepModel.generateOne(interestedSequenceB.Id, ScheduleProcess.Id);
+        Step__c stepA = StepModel.generateOne(interestedSequenceA.Name, Schedule.class.getName());
+        Step__c stepB = StepModel.generateOne(interestedSequenceB.Name, Schedule.class.getName());
         
         //arrange events
         String stampAsString = '2014-01-18T12:00:00.000Z';

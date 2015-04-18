@@ -1,24 +1,20 @@
 @IsTest public class StepModelTest {
     
     static testmethod void testMoveStepBefore() {
-        //arrange processes
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         //arrange sequences
         Sequence__c sequence = new Sequence__c(Name = 'StepTest');
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = StepModel.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c wiretapStep = StepModel.generateOne(sequence.Name, Wiretap.class.getName());
+        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //assert before state
         System.assertEquals(1, wiretapStep.Position__c);
         System.assertEquals(2, terminateStep.Position__c);
             
         //act
-        StepModel step = new StepModel(terminateStep);
+        StepModel step = StepModel.fromId(terminateStep.Id);
         step.moveBefore(wiretapStep.Id);
         
         //assemble
@@ -31,24 +27,20 @@
     }
     
     static testmethod void testMoveStepAfter() {
-        //arrange processes
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
-        
         //arrange sequences
         Sequence__c sequence = new Sequence__c(Name = 'StepTest');
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = StepModel.generateOne(sequence.Id, wiretapProcess.Id);
-        Step__c terminateStep = StepModel.generateOne(sequence.Id, terminateProcess.Id);
+        Step__c wiretapStep = StepModel.generateOne(sequence.Name, Wiretap.class.getName());
+        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
         
         //assert before state
         System.assertEquals(1, wiretapStep.Position__c);
         System.assertEquals(2, terminateStep.Position__c);
             
         //act
-        StepModel step = new StepModel(wiretapStep);
+        StepModel step = StepModel.fromId(wiretapStep.Id);
         step.moveAfter(terminateStep.Id);
         
         //assemble

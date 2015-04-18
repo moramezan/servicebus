@@ -30,9 +30,9 @@ public with sharing class AuditWriter extends ProcessModel.BaseProcess {
                 
         //derive the Step
         List<Step__c> steps = [
-            SELECT Id, Position__c, Sequence__c
+            SELECT Id, Position__c, SequenceName__c
             FROM Step__c
-            WHERE Sequence__r.Name = :(String)inputEvent.get('__SequenceName')
+            WHERE SequenceName__c = :(String)inputEvent.get('__SequenceName')
             AND Position__c = :(Decimal)inputEvent.get('__Position')
         ];
         if (steps.size() == 0) {
@@ -61,7 +61,7 @@ public with sharing class AuditWriter extends ProcessModel.BaseProcess {
             for (Id auditGroupId  : filteredAuditGroupIds) {
                 auditEntries.add( new AuditEntry__c(
                     Step__c = step.Id,
-                    Sequence__c = step.Sequence__c,
+                    SequenceName__c = step.SequenceName__c,
                     Hops__c = hops,
                     AuditGroup__c     = auditGroupId,
                     EntryPointUuid__c = entryPointUuid,

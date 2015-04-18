@@ -13,14 +13,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>AsyncApexJobModel</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>AsyncApexJobModelTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>AuditInitializer</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -58,14 +50,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>BrokerTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ConfigStepExtension</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ConfigStepExtensionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -225,31 +209,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ProcessDiscoverBatch</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ProcessDiscoverBatchTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ProcessDiscoverController</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ProcessDiscoverControllerTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>ProcessModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
         <apexClass>ProcessModelTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ProcessRefreshExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -416,7 +380,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>AuditEntry__c.Sequence__c</field>
+        <field>AuditEntry__c.SequenceName__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -511,62 +475,12 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Message__c.Route__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Message__c.Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Process__c.ApexClassId__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Process__c.Cardinality__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Process__c.Description__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Process__c.FullyQualifiedClassName__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Process__c.HelpUrl__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Process__c.Icon__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Process__c.Limits__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Process__c.Setting__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Process__c.StepConfig__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Process__c.Tag__c</field>
+        <field>Message__c.Step__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -592,26 +506,6 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>ScheduleConfig__c.IsActive__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Sequence__c.StepsCount__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Step__c.ConfigId__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Step__c.ConfigName__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Step__c.Position__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -709,15 +603,6 @@
     <objectPermissions>
         <allowCreate>false</allowCreate>
         <allowDelete>false</allowDelete>
-        <allowEdit>false</allowEdit>
-        <allowRead>true</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
-        <object>Process__c</object>
-        <viewAllRecords>true</viewAllRecords>
-    </objectPermissions>
-    <objectPermissions>
-        <allowCreate>false</allowCreate>
-        <allowDelete>false</allowDelete>
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
@@ -740,15 +625,6 @@
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
         <object>Sequence__c</object>
-        <viewAllRecords>true</viewAllRecords>
-    </objectPermissions>
-    <objectPermissions>
-        <allowCreate>false</allowCreate>
-        <allowDelete>false</allowDelete>
-        <allowEdit>false</allowEdit>
-        <allowRead>true</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
-        <object>Step__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -790,10 +666,6 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>BranchConfigStep</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>Configure</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
@@ -827,10 +699,6 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>JumpConfigCsh</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>JumpConfigStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -874,35 +742,11 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ProcessApexClass</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>ProcessCsh</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>ProcessDescribe</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ProcessDiscover</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>ProcessHelp</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>ProcessRefresh</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>ProcessSettings</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>ProcessSplash</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -911,10 +755,6 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>PublishConfigManageEventTypes</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>PublishConfigStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -938,14 +778,6 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>StepConfig</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>StepCsh</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>SubscribeConfigCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -954,15 +786,7 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SubscribeConfigStep</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>SubsequenceConfigCsh</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>SubsequenceConfigStep</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <tabSettings>
@@ -971,10 +795,6 @@
     </tabSettings>
     <tabSettings>
         <tab>Monitor</tab>
-        <visibility>Visible</visibility>
-    </tabSettings>
-    <tabSettings>
-        <tab>Process__c</tab>
         <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>

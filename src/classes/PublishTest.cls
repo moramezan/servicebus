@@ -8,17 +8,6 @@
     }
     
     
-    static testmethod void canDetermineStepConfig() {
-        //arrange processes
-        Process__c publishProcess = ProcessModel.generateOne(Publish.class);
-        
-        //act
-        String actualConfig = publishProcess.StepConfig__c;
-        
-        //assert
-        String expectedConfig = Schema.SObjectType.PublishConfig__c.Name;
-        System.assertEquals(expectedConfig, actualConfig);
-    }
     
     static testmethod void testSubsequenceDropped() {
         //arrange events
@@ -26,9 +15,6 @@
             Name = 'ready'
         );
         insert eventType;
-        
-        //arrange processes
-        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
         
         //arrange publish config
         PublishConfig__c pubConfig = new PublishConfig__c(
@@ -40,7 +26,7 @@
         Sequence__c target = new Sequence__c(Name = 'target');
         insert target;
         
-        Step__c subscribeStep = StepModel.generateOne(target.Id, subscribeProcess.Id);
+        Step__c subscribeStep = StepModel.generateOne(target.Name, Subscribe.class.getName());
         
         //arrange subscribe config
         Database.update(new SubscribeConfig__c(
@@ -73,15 +59,12 @@
     }
     
     static testmethod void testUnconfiguredPublishProcessThrowsException() {
-        //arrange processes
-        Process__c publishProcess = ProcessModel.generateOne(Publish.class);
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
         
         //arrange steps
-        Step__c step = StepModel.generateOne(sequence.Id, publishProcess.Id);
+        Step__c step = StepModel.generateOne(sequence.Name, Publish.class.getName());
         
         PublishConfig__c config = new PublishConfig__c();
         insert config;
@@ -99,9 +82,6 @@
     }
     
     static testmethod void testNoSubscribersStillReturnsOneMessage() {
-        //arrange processes
-        Process__c publishProcess = ProcessModel.generateOne(Publish.class);
-        
         EventType__c eventType = new EventType__c(
             Name = 'TestEvent'
         );
@@ -112,7 +92,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = StepModel.generateOne(sequence.Id, publishProcess.Id);
+        Step__c step = StepModel.generateOne(sequence.Name, Publish.class.getName());
         PublishConfig__c config = new PublishConfig__c(
             Id = step.ConfigId__c,
             EventType__c = eventType.Id
@@ -138,15 +118,11 @@
         );
         insert eventType;
         
-        //arrange processes
-        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
-        Process__c publishProcess = ProcessModel.generateOne(Publish.class);
-        
         //arrange publish sequences and steps
         Sequence__c publisher = new Sequence__c(Name = 'Publisher');
         insert publisher;
         
-        Step__c publisherStep = StepModel.generateOne(publisher.Id, publishProcess.Id);
+        Step__c publisherStep = StepModel.generateOne(publisher.Name, Publish.class.getName());
         PublishConfig__c pubConfig = new PublishConfig__c(
             Id = publisherStep.ConfigId__c,
             EventType__c = eventType.Id
@@ -157,7 +133,7 @@
         Sequence__c subscriber1 = new Sequence__c(Name = 'Subscriber1');
         insert subscriber1;
         
-        Step__c subscriber1step = StepModel.generateOne(subscriber1.Id, subscribeProcess.Id);
+        Step__c subscriber1step = StepModel.generateOne(subscriber1.Name, Subscribe.class.getName());
         Database.update(new SubscribeConfig__c(
             Id = subscriber1step.ConfigId__c,
             EventType__c = eventType.Id
@@ -166,7 +142,7 @@
         Sequence__c subscriber2 = new Sequence__c(Name = 'Subscriber2');
         insert subscriber2;
         
-        Step__c subscriber2step = StepModel.generateOne(subscriber2.Id, subscribeProcess.Id);
+        Step__c subscriber2step = StepModel.generateOne(subscriber2.Name, Subscribe.class.getName());
         Database.update(new SubscribeConfig__c(
             Id = subscriber2step.ConfigId__c,
             EventType__c = eventType.Id

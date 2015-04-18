@@ -23,15 +23,15 @@ public with sharing class Heartbeat extends ProcessModel.BaseProcess {
         };
         
         List<Step__c> steps = [
-            SELECT Id, Sequence__r.Name, Position__c
+            SELECT Id, SequenceName__c, Position__c
             FROM Step__c
-            WHERE Process__r.FullyQualifiedClassName__c IN :interestedSubscriberNames
+            WHERE FullyQualifiedClassName__c IN :interestedSubscriberNames
         ];
         
         for (Step__c step : steps) {
             Map<String,Object> clone = parameters.clone();
             clone.put('__Position', step.Position__c);
-            clone.put('__SequenceName', step.Sequence__r.Name);
+            clone.put('__SequenceName', step.SequenceName__c);
             clone.put('__IsHeartbeatProcess', null); //#575 so outputs don't get same crow look as input
             clone.put('__WasHeartbeatProcess', true); //#810 use WasHeartbeat to differentiate Schedule pass throughs
             parametersList.add(clone);

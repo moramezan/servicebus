@@ -6,7 +6,7 @@ public with sharing class Branch extends ProcessModel.BaseProcess {
      * @docs ProcessBranchJumpSubsequence.html
      */
     public class ESB {
-        public SObject StepConfig = BranchConfig__c.SObjectType.newSObject();
+        public String StepConfig = BranchConfig__c.class.getName();
         public String Icon = 'arrow_branch';
         public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessBranchJumpSubsequence').getUrl();
         public String Tag = 'Enterprise Service Bus';

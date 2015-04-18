@@ -7,7 +7,7 @@ public with sharing class Schedule extends ProcessModel.BaseProcess {
         public String Name = 'Schedule';
         public String Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages
         public String Icon = 'clock';
-        public SObject StepConfig = ScheduleConfig__c.SObjectType.newSObject();
+        public String StepConfig = ScheduleConfig__c.class.getName();
         public String HelpUrl = Page.ScheduleConfigCsh.getUrl();
         public Boolean ConsumesHeartbeat = true;
         public Integer Limits = 5000; //leave half of 10,000 (Total number of records retrieved by Database.getQueryLocator)

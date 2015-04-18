@@ -7,7 +7,7 @@ public with sharing class Wiretap extends ProcessModel.BaseProcess {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Wiretap';
         public String Description = 'Emails the message parameters to the user.';
-        public SObject ProcessSetting = WiretapSetting__c.SObjectType.newSObject();
+        public String ProcessSetting = WiretapSetting__c.class.getName();
         public String Icon = 'email';
         public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessWiretap').getUrl();
         public Integer Limits = 5; //leave half of 10 (Total number of sendEmail methods allowed)

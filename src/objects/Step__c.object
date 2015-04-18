@@ -1,62 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <actionOverrides>
-        <actionName>Accept</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>CancelEdit</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>Clone</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>Delete</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>Edit</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>Follow</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>List</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>New</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>SaveEdit</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>Tab</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>View</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
-    <deploymentStatus>Deployed</deploymentStatus>
-    <enableActivities>false</enableActivities>
-    <enableBulkApi>false</enableBulkApi>
-    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <customSettingsType>List</customSettingsType>
+    <customSettingsVisibility>Protected</customSettingsVisibility>
+    <description>Holds all routes</description>
     <enableFeeds>false</enableFeeds>
-    <enableHistory>false</enableHistory>
-    <enableReports>false</enableReports>
-    <enableSharing>false</enableSharing>
-    <enableStreamingApi>false</enableStreamingApi>
     <fields>
         <fullName>ConfigId__c</fullName>
-        <caseSensitive>true</caseSensitive>
         <externalId>true</externalId>
         <inlineHelpText>Optionally, what Record Id contains the process config specific to this step?</inlineHelpText>
         <label>Config Id</label>
@@ -64,7 +13,7 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
-        <unique>true</unique>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>ConfigName__c</fullName>
@@ -73,6 +22,17 @@
         <label>Config Name</label>
         <length>80</length>
         <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>FullyQualifiedClassName__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>What process will handle the messages reaching this step?</inlineHelpText>
+        <label>Fully Qualified Class Name</label>
+        <length>80</length>
+        <required>true</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -91,55 +51,15 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Process__c</fullName>
-        <deleteConstraint>Restrict</deleteConstraint>
-        <externalId>false</externalId>
-        <inlineHelpText>What process will handle the messages reaching this step?</inlineHelpText>
-        <label>Process</label>
-        <referenceTo>Process__c</referenceTo>
-        <relationshipLabel>Steps</relationshipLabel>
-        <relationshipName>Steps</relationshipName>
-        <required>true</required>
-        <trackTrending>false</trackTrending>
-        <type>Lookup</type>
-    </fields>
-    <fields>
-        <fullName>Sequence__c</fullName>
+        <fullName>SequenceName__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>What sequence does this step belong to?</inlineHelpText>
-        <label>Sequence</label>
-        <referenceTo>Sequence__c</referenceTo>
-        <relationshipLabel>Steps</relationshipLabel>
-        <relationshipName>Steps</relationshipName>
-        <relationshipOrder>0</relationshipOrder>
-        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <label>Sequence Name</label>
+        <length>80</length>
+        <required>true</required>
         <trackTrending>false</trackTrending>
-        <type>MasterDetail</type>
-        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <label>Step</label>
-    <nameField>
-        <label>Step Name</label>
-        <type>Text</type>
-    </nameField>
-    <pluralLabel>Steps</pluralLabel>
-    <searchLayouts>
-        <excludedStandardButtons>Accept</excludedStandardButtons>
-        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
-        <excludedStandardButtons>New</excludedStandardButtons>
-        <lookupDialogsAdditionalFields>Position__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>Process__c</lookupDialogsAdditionalFields>
-    </searchLayouts>
-    <sharingModel>ControlledByParent</sharingModel>
-    <webLinks>
-        <fullName>Config</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>Show Config</masterLabel>
-        <openType>sidebar</openType>
-        <page>StepConfig</page>
-        <protected>false</protected>
-    </webLinks>
 </CustomObject>

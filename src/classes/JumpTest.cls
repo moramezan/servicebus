@@ -10,23 +10,17 @@
     
     static testmethod void testJumpPervertsExecution() {
         //arrange
-        Process__c jumpProcess = new Process__c(Name = 'Jump');
-        insert jumpProcess;
-        
-        Process__c terminate = new Process__c(Name = 'Terminate');
-        insert terminate;
-        
         Sequence__c target = new Sequence__c(Name = 'target');
         insert target;
-        insert new Step__c(Sequence__c = target.Id, Position__c = 1, Process__c = terminate.Id);
+        StepModel.generateOne(target.Name, Terminate.class.getName());
         
         JumpConfig__c config = new JumpConfig__c(Sequence__c = target.Id);
         insert config;
         
         Sequence__c origin = new Sequence__c(Name = 'origin');
         insert origin;
-        insert new Step__c(Sequence__c = origin.Id, Position__c = 1, Process__c = jumpProcess.Id, ConfigId__c = config.Id);
-        insert new Step__c(Sequence__c = origin.Id, Position__c = 2, Process__c = terminate.Id);
+        StepModel.generateOne(origin.Name, Jump.class.getName());
+        StepModel.generateOne(origin.Name, Terminate.class.getName());
         
         
         Map<String,Object> parameters = new Map<String,Object>{

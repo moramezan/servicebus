@@ -59,8 +59,9 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "ProcessId",
-                "persist": false
+                "name": "FullyQualifiedClassName",
+                "persist": null,
+                "reference": "Process"
             },
             "name": "MyString7",
             "designerId": "2417ac6b-1725-411e-8f3a-b68b98b80d8a"
@@ -73,92 +74,8 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "ProcessName",
-                "persist": false
-            },
-            "name": "MyString8",
-            "designerId": "8404a373-87a5-47cf-9fd4-2d43f6771b09"
-        },
-        {
-            "type": "Ext.data.field.String",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "name": "ProcessDescription",
-                "persist": false
-            },
-            "name": "MyString9",
-            "designerId": "6809464c-862a-4dab-843c-dccc1fa50130"
-        },
-        {
-            "type": "Ext.data.field.String",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "name": "ProcessIcon",
-                "persist": false
-            },
-            "name": "MyString10",
-            "designerId": "833c589a-36c8-4e31-a5e9-6d2830c00760"
-        },
-        {
-            "type": "Ext.data.field.String",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "name": "ProcessHelpUrl",
-                "persist": false
-            },
-            "name": "MyString11",
-            "designerId": "ebd66425-5466-420f-bce4-ca1a4654cce7"
-        },
-        {
-            "type": "Ext.data.field.String",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "name": "ProcessSetting",
-                "persist": false
-            },
-            "name": "MyString12",
-            "designerId": "82f94ccb-b0b1-4054-a2fe-f95677984584"
-        },
-        {
-            "type": "Ext.data.field.String",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "name": "ProcessCardinality",
-                "persist": false
-            },
-            "name": "MyString16",
-            "designerId": "fe6e5cab-8b69-41ef-8f24-49bf37eac40f"
-        },
-        {
-            "type": "Ext.data.field.String",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
                 "name": "ConfigId",
-                "persist": false
+                "persist": null
             },
             "name": "MyString13",
             "designerId": "1bed569e-6744-4c08-8171-39febd9b03c9"
@@ -172,7 +89,7 @@
             "codeClass": null,
             "userConfig": {
                 "name": "ConfigName",
-                "persist": false
+                "persist": null
             },
             "name": "MyString14",
             "designerId": "9203ffa3-24f5-4e0a-824a-37a3a27dcd6b"
@@ -193,7 +110,7 @@
                 ],
                 "designer|displayName": "StepProxy",
                 "extraParams": [
-                    "{sequenceId: Sequence__c.Id}"
+                    "{sequenceId: Sequence__c.Name}"
                 ]
             },
             "name": "MyDirectProxy",

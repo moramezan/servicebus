@@ -1,25 +1,39 @@
 public with sharing class SequenceSetModel extends ApexDomain.StandardSetModel {
-
-    public SequenceSetModel(List<Sequence__c> sobjects) {
-        super(sobjects);
+    
+    public List<Sequence__c> sequences;
+    
+    public SequenceSetModel(List<Sequence__c> sequences) {
+        super(sequences);
+        this.sequences = sequences;
     }
     
     public override void onBeforeDelete() {
-        this.cascadeDeletionTriggers();
+        this.destroyAllStepsAndConfigs();
     }
     
     /**
-     * When deleting a MASTER, Salesforce does not fire the DETAIL delete triggers.
-     * https://success.salesforce.com/ideaView?id=08730000000BqSJ
-     * So we cascade the delete ourselves manually, to make sure they fire.
+     * When deleting a SEQUENCE, we no longer have master-detail to delete the STEP,
+     * so we cascade the delete ourselves manually, and take care of the configs too.
      */
-    @TestVisible private void cascadeDeletionTriggers() {
-        Set<Id> sequenceIds = new Map<Id,SObject>(this.getRecords()).keySet();
-        List<Step__c> steps = [
-            SELECT Id
+    @TestVisible private void destroyAllStepsAndConfigs() {
+        //prepare sequence names
+        Set<String> sequenceNames = new Set<String>();
+        for (Sequence__c sequence : this.sequences) sequenceNames.add(sequence.Name);
+        
+        List<Step__c> stepsToDelete = [
+            SELECT Id, ConfigId__c
             FROM Step__c
-            WHERE Sequence__c IN :sequenceIds
+            WHERE SequenceName__c IN :sequenceNames
         ];
-        delete steps;
+        
+        //perform the step delete
+        delete stepsToDelete;
+        
+        //prepare any configs to delete
+        List<Id> configIds = new List<Id>();
+        for (Step__c stepToDelete : stepsToDelete) if (stepToDelete.ConfigId__c != null) configIds.add(stepToDelete.ConfigId__c);
+        
+        //perform the config delete
+        Database.delete(configIds);
     }
 }

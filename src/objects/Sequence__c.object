@@ -57,21 +57,10 @@
     <enableReports>false</enableReports>
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
-    <fields>
-        <fullName>StepsCount__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>How many processing steps are there on this sequence?</inlineHelpText>
-        <label>Number Of Steps</label>
-        <summaryForeignKey>Step__c.Sequence__c</summaryForeignKey>
-        <summaryOperation>count</summaryOperation>
-        <trackTrending>false</trackTrending>
-        <type>Summary</type>
-    </fields>
     <label>Sequence</label>
     <listViews>
         <fullName>All</fullName>
         <columns>NAME</columns>
-        <columns>StepsCount__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>

@@ -55,7 +55,7 @@
         <fields>NAME</fields>
         <fields>GroupIdentifier__c</fields>
         <fields>Stamp__c</fields>
-        <fields>Sequence__c</fields>
+        <fields>SequenceName__c</fields>
         <fields>Step__c</fields>
         <fields>Position__c</fields>
         <relatedList>AuditEntry__c.AuditGroup__c</relatedList>

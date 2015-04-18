@@ -78,7 +78,7 @@
                             "",
                             "Visualforce.remoting.Manager.invokeAction(",
                             "    $RemoteAction.SequenceBuilderExtension.enqueue,",
-                            "    Sequence__c.Id,",
+                            "    Sequence__c.Name,",
                             "    handler",
                             ");"
                         ]

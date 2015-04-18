@@ -1,3 +1,0 @@
-<apex:page standardController="Process__c" extensions="ProcessRefreshExtension" action="{!doRefresh}">
-    <apex:pageMessages showDetail="false" />
-</apex:page>

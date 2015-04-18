@@ -15,33 +15,12 @@
         return Json.serialize(new List<Map<String,Object>>());
     }
 
-    static testmethod void callingGenerateOneInsertsExpectedProcess() {
-        //arrange
-        List<Process__c> processesBefore = ApexDomain.listAll(Process__c.SObjectType);
-        Integer actualProcessesBeforeCount = processesBefore.size();
-
-        //act
-        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
- 
-        //assemble
-        List<Process__c> processesAfter = ApexDomain.listAll(Process__c.SObjectType);
-        Integer actualProcessesAfterCount = processesAfter.size();
-        
-        //assert
-        Integer expectedProcessesAfterCount = 1;
-        Integer expectedProcessesBeforeCount = 0;
-        
-        System.assertEquals(expectedProcessesAfterCount , actualProcessesAfterCount);
-        System.assertEquals(expectedProcessesBeforeCount, actualProcessesBeforeCount);
-    }
-    
-
     static testmethod void callingFromTypeReturnsProcessWithExpectedValues() {
         //arrange
         Type actualType = Subscribe.class;
         
         Object process = actualType.newInstance();
-        ProcessModel.ESB describeResult = (ProcessModel.ESB)Json.deserialize(Json.serialize(Subscribe.ESB.class.newInstance()), ProcessModel.ESB.class);
+        ProcessModel describeResult = (ProcessModel)Json.deserialize(Json.serialize(Subscribe.ESB.class.newInstance()), ProcessModel.class);
         String expectedName = describeResult.Name;
         String expectedTag = describeResult.Tag;
         String expectedDescription = describeResult.Description;
@@ -49,21 +28,21 @@
         String expectedFullyQualifiedClassName = actualType.getName();
         Type innerClass = Type.forName(actualType.getName() + '.' + 'ESB');
         if (innerClass == null) innerClass = Type.forName(actualType.getName() + 'ESB');
-        ProcessModel.ESB meta = (ProcessModel.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessModel.ESB.class);
-        String expectedStepConfig  = meta.StepConfig.getSObjectType().getDescribe().getName();
+        ProcessModel meta = (ProcessModel)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessModel.ESB.class);
+        String expectedStepConfig  = meta.StepConfig;
         String expectedIcon = meta.icon;
         
         //act
-        Process__c subscribeProcess = ProcessModel.fromType(actualType);
+        ProcessModel subscribeProcess = ProcessModel.fromFqcn(Subscribe.class.getName());
         
         //assemble
         String actualName = subscribeProcess.Name;
-        String actualTag = subscribeProcess.Tag__c;
-        String actualDescription = subscribeProcess.Description__c;
-        String actualFullyQualifiedClassName = subscribeProcess.FullyQualifiedClassName__c;
-        String actualStepConfig = subscribeProcess.StepConfig__c;
-        String actualIcon = subscribeProcess.Icon__c;
-        Integer actualLimits = (Integer)subscribeProcess.Limits__c;
+        String actualTag = subscribeProcess.Tag;
+        String actualDescription = subscribeProcess.Description;
+        String actualFullyQualifiedClassName = subscribeProcess.FullyQualifiedClassName;
+        String actualStepConfig = subscribeProcess.StepConfig;
+        String actualIcon = subscribeProcess.Icon;
+        Integer actualLimits = (Integer)subscribeProcess.Limits;
         
         //assert
         System.assertEquals(expectedName , actualName );

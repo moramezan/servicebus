@@ -1,9 +1,14 @@
 public with sharing class SequenceBuilderExtension {
     
     ApexPages.StandardController controller;
+    SequenceModel model;
     
     public SequenceBuilderExtension(ApexPages.StandardController controller) {
+        if (!Test.isRunningTest()) controller.addFields(new List<String>{'Name'});
         this.controller = controller;
+        
+        Sequence__c sequence = (Sequence__c)controller.getRecord();
+        this.model = SequenceModel.fromName(sequence.Name);
         this.countRoutedMessages();
     }
     
@@ -24,7 +29,7 @@ public with sharing class SequenceBuilderExtension {
         Integer count = [
             SELECT COUNT()
             FROM Message__c
-            WHERE Route__c LIKE :sequence.Name + '#%'
+            WHERE Step__c LIKE :sequence.Name + '#%'
             AND Status__c != 'Completed'
             AND Exception__c = null
         ];
@@ -41,50 +46,85 @@ public with sharing class SequenceBuilderExtension {
         return ConfigureController.doDanceIfNeeded(retURL);
     }
     
+    static public List<ProcessModel> findProcesses() {
+        List<ApexClass> apexClasses = [
+            SELECT Id, Name, NamespacePrefix
+            FROM ApexClass
+            ORDER BY Name ASC
+            LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
+        ];
+        
+        List<String> fullyQualifiedClassNames = new List<String>();
+        for (ApexClass apexClass : apexClasses) {
+            Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
+            if (reflector == null) continue; //eg private classes
+            String fullyQualifiedClassName = reflector.getName();
+            
+            Type meta = Type.forName(fullyQualifiedClassName + '.' + 'ESB');
+            if (meta == null) meta = Type.forName(fullyQualifiedClassName + 'ESB');
+            if (meta != null) fullyQualifiedClassNames.add(fullyQualifiedClassName);
+        }
+        
+        List<ProcessModel> processes = new List<ProcessModel>();
+        for (String fullyQualifiedClassName : fullyQualifiedClassNames) {
+            ProcessModel process = ProcessModel.fromFqcn(fullyQualifiedClassName);
+            if (process == null) continue; //don't discover ProcessModel.ESB
+            processes.add(process);
+        }
+        
+        return processes;
+    }
+    
     public String getProcesses() {
-        List<Process__c> procs = ApexDomain.listAll(Process__c.SObjectType);
-        return Json.serializePretty(procs);
+        List<ProcessModel> processes = findProcesses();
+        return Json.serializePretty(processes);
     }
     
     public String getSteps() {
-        SequenceModel sequence = new SequenceModel((Sequence__c)this.controller.getRecord());
-        List<Step__c> steps = sequence.fetchSteps().getRecords();
+        List<Step__c> steps = this.model.fetchSteps();
         return Json.serializePretty(steps);
     }
     
-    @RemoteAction static public List<Step__c> fetchSteps(Id sequenceId) {
-        SequenceModel sequence = new SequenceModel(new Sequence__c(Id = sequenceId));
-        sequence.terminate();
-        return sequence.fetchSteps().getRecords();
+    @RemoteAction static public void refreshStepConfigName(Id configId) {
+        Step__c step = [SELECT Id FROM Step__c WHERE ConfigId__c = :configId];
+        String objectType = configId.getSObjectType().getDescribe().getName();
+        SObject config = Database.query('SELECT Id, Name FROM ' + objectType + ' WHERE Id = :configId');
+        String configName = (String)config.get('Name');
+        step.ConfigName__c = configName.abbreviate(SObjectType.Step__c.Fields.ConfigName__c.Length);
+        update step;
     }
     
-    @RemoteAction static public Step__c appendStep(Id sequenceId, Id processId) {
-        SequenceModel sequence = new SequenceModel(new Sequence__c(Id = sequenceId));
-        StepModel step = sequence.appendStep(processId);
-        return (Step__c)step.getRecord();
+    @RemoteAction static public List<Step__c> fetchSteps(String sequenceName) {
+        SequenceModel model = SequenceModel.fromName(sequenceName);
+        model.terminate();
+        return model.fetchSteps();
+    }
+    
+    @RemoteAction static public Step__c appendStep(String sequenceName, String fullyQualifiedClassName) {
+        SequenceModel model = SequenceModel.fromName(sequenceName);
+        Step__c step = model.appendStep(fullyQualifiedClassName);
+        return step;
     }
     
     @RemoteAction static public void moveStepBefore(Id stepId, Id beforeStepId) {
-        Step__c step = (Step__c)ApexDomain.getById(stepId);
-        new StepModel(step).moveBefore(beforeStepId);
+        StepModel.fromId(stepId).moveBefore(beforeStepId);
     }
     
     @RemoteAction static public void moveStepAfter(Id stepId, Id afterStepId) {
-        Step__c step = (Step__c)ApexDomain.getById(stepId);
-        new StepModel(step).moveAfter(afterStepId);
+        StepModel.fromId(stepId).moveAfter(afterStepId);
     }
     
     @RemoteAction static public void destroySteps(List<Step__c> steps) {
         //requery first step to get sequence id, since it is not transmitted
         Step__c step = (Step__c)ApexDomain.getById(steps[0].Id);
-        SequenceModel sequence = new SequenceModel(new Sequence__c(Id = step.Sequence__c));
-        sequence.destroySteps(new Map<Id,Step__c>(steps).keySet());
+        SequenceModel model = SequenceModel.fromName(step.SequenceName__c);
+        model.destroySteps(new Map<Id,Step__c>(steps).keySet());
     }
     
-    @RemoteAction static public String enqueue(Id sequenceId) {
-        Sequence__c sequence = (Sequence__c)ApexDomain.getById(sequenceId);
-        System.enqueueJob(new Job(sequence.Name, UserInfo.getUserId()));
-        return sequence.Name;
+    @RemoteAction static public String enqueue(String sequenceName) {
+        Job j = new Job(sequenceName, UserInfo.getOrganizationId());
+        System.enqueueJob(j);
+        return sequenceName;
     }
     
     /**
@@ -93,16 +133,9 @@ public with sharing class SequenceBuilderExtension {
     public PageReference findTerminateProblems() {
         try {
         List<Sequence__c> sequences = [
-            SELECT Id, Name,
-            (SELECT Id, Name, Process__c FROM Steps__r ORDER BY Position__c ASC) steps
+            SELECT Id, Name
             FROM Sequence__c
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
-        ];
-        
-        Process__c terminateProcess = [
-            SELECT Id
-            FROM Process__c
-            WHERE FullyQualifiedClassName__c = :Terminate.class.getName()
         ];
         
         // Error conditions:
@@ -112,8 +145,15 @@ public with sharing class SequenceBuilderExtension {
         for (Sequence__c sequence : sequences) {
             Integer terminateCount = 0;
             
-            for (Step__c step : sequence.Steps__r) {
-                if (step.Process__c == terminateProcess.Id) {
+            List<Step__c> steps = [
+                SELECT Id, Name, FullyQualifiedClassName__c
+                FROM Step__c
+                WHERE SequenceName__c = :sequence.Name
+                ORDER BY Position__c ASC
+            ];
+            
+            for (Step__c step : steps) {
+                if (step.FullyQualifiedClassName__c == Terminate.class.getName()) {
                     terminateCount++;
                 }
             }
@@ -128,7 +168,7 @@ public with sharing class SequenceBuilderExtension {
             }
             
             //terminate not at end error
-            if ((sequence.Steps__r.size() > 0) ? (sequence.Steps__r[sequence.Steps__r.size() - 1].Process__c != terminateProcess.Id) : false) {
+            if ((steps.size() > 0) ? (steps[steps.size() - 1].FullyQualifiedClassName__c != Terminate.class.getName()) : false) {
                 ApexPages.addMessage(new ApexPages.Message(
                     ApexPages.Severity.WARNING,
                     'Terminate process not present at end of sequence ' + sequence.Id
@@ -162,16 +202,9 @@ public with sharing class SequenceBuilderExtension {
     public PageReference findPublishProblems() {
         try {
         List<Sequence__c> sequences = [
-            SELECT Id, Name,
-            (SELECT id, Name, Process__c, ConfigId__c FROM Steps__r ORDER BY Position__c ASC)
+            SELECT Id, Name
             FROM Sequence__c
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
-        ];
-        
-        Process__c publishProcess = [
-            SELECT Id
-            FROM Process__c
-            WHERE FullyQualifiedClassName__c = :Publish.class.getName()
         ];
         
         Map<Id,SObject> publishConfigIdToPublishConfig = ApexDomain.mapAll(PublishConfig__c.SObjectType);
@@ -180,14 +213,22 @@ public with sharing class SequenceBuilderExtension {
         
         for (Sequence__c sequence : sequences) {
             Boolean containsPublish = false;
-            for (Step__c step : sequence.Steps__r) if (step.Process__c == PublishProcess.Id) containsPublish = true;
+            
+            List<Step__c> steps = [
+                SELECT Id, Name, FullyQualifiedClassName__c, ConfigId__c
+                FROM Step__c
+                WHERE SequenceName__c = :sequence.Name
+                ORDER BY Position__c ASC
+            ];
+            
+            for (Step__c step : steps) if (step.FullyQualifiedClassName__c == Publish.class.getName()) containsPublish = true;
             
             //no publish steps to check
             if (!containsPublish) continue;
             
-            for (Step__c step : sequence.Steps__r) {
+            for (Step__c step : steps) {
                 //skip non-publish steps
-                if (step.Process__c != publishProcess.Id) continue;
+                if (step.FullyQualifiedClassName__c != Publish.class.getName()) continue;
                 
                 Id stepId = step.Id;
                 Id publishConfigId = (Id) step.ConfigId__c; // cast from string to Id
@@ -237,16 +278,9 @@ public with sharing class SequenceBuilderExtension {
     public PageReference findSubscribeProblems() {
         try {
         List<Sequence__c> sequences = [
-            SELECT Id, Name,
-            (SELECT Id, Name, Process__c, ConfigId__c FROM Steps__r ORDER BY Position__c ASC) steps
+            SELECT Id, Name
             FROM Sequence__c
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
-        ];
-        
-        Process__c subscribeProcess = [
-            SELECT Id
-            FROM Process__c
-            WHERE FullyQualifiedClassName__c = :Subscribe.class.getName()
         ];
         
         Map<Id,SObject> subscribeConfigIdToSubscribeConfig = ApexDomain.mapAll(SubscribeConfig__c.SObjectType);
@@ -254,7 +288,13 @@ public with sharing class SequenceBuilderExtension {
         Map<Id,SObject> eventTypeIdToEventType = ApexDomain.mapAll(EventType__c.SObjectType);
         
         for (Sequence__c sequence : sequences) {
-            List<Step__c> steps = sequence.Steps__r;
+            List<Step__c> steps = [
+                SELECT Id, Name, FullyQualifiedClassName__c, ConfigId__c
+                FROM Step__c
+                WHERE SequenceName__c = :sequence.Name
+                ORDER BY Position__c ASC
+            ];
+            
             Integer subscribeOccurs = 0;
             Integer count = 1;
             Boolean subscribeFirst = false;
@@ -262,7 +302,7 @@ public with sharing class SequenceBuilderExtension {
             Id subscribeConfigId = null;
             
             for (Step__c step : steps) {
-                if (step.Process__c == SubscribeProcess.Id) {
+                if (step.FullyQualifiedClassName__c == Subscribe.class.getName()) {
                     subscribeOccurs++;
                     subscribeConfigId = (Id) step.ConfigId__c; // cast from string to Id
                     if (count == 1) {

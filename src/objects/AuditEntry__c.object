@@ -116,11 +116,9 @@
     <fields>
         <fullName>Position__c</fullName>
         <externalId>false</externalId>
-        <formula>Step__r.Position__c</formula>
-        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <inlineHelpText>What position in the sequence was the AuditWriter Step that the message passed through?</inlineHelpText>
-        <label>Position</label>
-        <precision>18</precision>
+        <label>Hops</label>
+        <precision>4</precision>
         <required>false</required>
         <scale>0</scale>
         <trackTrending>false</trackTrending>
@@ -128,16 +126,15 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Sequence__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
+        <fullName>SequenceName__c</fullName>
         <externalId>false</externalId>
-        <label>Sequence</label>
-        <referenceTo>Sequence__c</referenceTo>
-        <relationshipLabel>Audit Entries</relationshipLabel>
-        <relationshipName>AuditEntries</relationshipName>
+        <inlineHelpText>Which Sequence did the message pass through?</inlineHelpText>
+        <label>Sequence Name</label>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>Lookup</type>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Stamp__c</fullName>
@@ -152,16 +149,14 @@
     </fields>
     <fields>
         <fullName>Step__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <inlineHelpText>What AuditWriter Step did the message pass through?</inlineHelpText>
         <label>Step</label>
-        <referenceTo>Step__c</referenceTo>
-        <relationshipLabel>Audit Entries</relationshipLabel>
-        <relationshipName>AuditEntries</relationshipName>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>Lookup</type>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <label>Audit Entry</label>
     <nameField>

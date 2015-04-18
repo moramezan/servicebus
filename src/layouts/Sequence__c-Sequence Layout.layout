@@ -37,14 +37,6 @@
         <layoutColumns/>
         <style>CustomLinks</style>
     </layoutSections>
-    <relatedLists>
-        <fields>NAME</fields>
-        <fields>Position__c</fields>
-        <fields>Process__c</fields>
-        <relatedList>Step__c.Sequence__c</relatedList>
-        <sortField>Position__c</sortField>
-        <sortOrder>Asc</sortOrder>
-    </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>
     <showInteractionLogPanel>false</showInteractionLogPanel>

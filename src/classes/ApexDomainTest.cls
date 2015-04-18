@@ -35,21 +35,20 @@
     
     static testmethod void testGetByIdFetchesAllFields() {
         //arrange process
-        Process__c process = new Process__c(
+        Document document = new Document(
             Name = 'foo',
-            Setting__c = 'bar',
-            FullyQualifiedClassName__c = 'baz'
+            FolderId = UserInfo.getUserId(),
+            Body = Blob.valueOf('bar')
         );
-        insert process;
+        insert document;
         
         //act
-        SObject sobj = ApexDomain.getById(process.Id);
+        SObject sobj = ApexDomain.getById(document.Id);
         String data = Json.serialize(sobj);
         
         //assert
         System.assert(data.contains('foo'));
-        System.assert(data.contains('bar'));
-        System.assert(data.contains('baz'));
+        System.assert(data.contains(UserInfo.getUserId()));
     }
     
     class SequenceSetModel extends ApexDomain.StandardSetModel {

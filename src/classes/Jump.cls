@@ -9,7 +9,7 @@ public with sharing class Jump extends ProcessModel.BaseProcess {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Jump';
         public String Description = 'Permanently diverts the message to another sequence, never to return.';
-        public SObject StepConfig = JumpConfig__c.SObjectType.newSObject();
+        public String StepConfig = JumpConfig__c.class.getName();
         public String Icon = 'arrow_switch';
         public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessBranchJumpSubsequence').getUrl();
         public Integer Limits = 100; //leave half of 200 (Total number of SOQL queries issued)

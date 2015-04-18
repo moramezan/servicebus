@@ -9,7 +9,7 @@ public with sharing class Publish extends ProcessModel.BaseProcess {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Publish';
         public String Description = 'Broadcasts the message to other sequences via a named Event Type.';
-        public SObject StepConfig = PublishConfig__c.SObjectType.newSObject();
+        public String StepConfig = PublishConfig__c.class.getName();
         public String Icon = 'chart_organisation';
         public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessPublishSubscribe').getUrl();
         public Integer Limits = 50; //leave half of 200 (Total number of SOQL queries issued)
@@ -34,7 +34,7 @@ public with sharing class Publish extends ProcessModel.BaseProcess {
         ]);
         
         List<Step__c> steps = [
-            SELECT Id, Sequence__r.Name, Position__c
+            SELECT Id, SequenceName__c, Position__c
             FROM Step__c
             WHERE ConfigId__c IN :subscribeConfigs.keySet()
         ];
@@ -44,7 +44,7 @@ public with sharing class Publish extends ProcessModel.BaseProcess {
             //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
             clone.put('__SubsequenceStepIds', null);
             clone.put('__Position', step.Position__c);
-            clone.put('__SequenceName', step.Sequence__r.Name);
+            clone.put('__SequenceName', step.SequenceName__c);
             parametersList.add(clone);
         }
         

@@ -80,15 +80,4 @@
         <excludedStandardButtons>New</excludedStandardButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
-    <webLinks>
-        <fullName>Step</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>Show Step</masterLabel>
-        <openType>sidebar</openType>
-        <page>BranchConfigStep</page>
-        <protected>false</protected>
-    </webLinks>
 </CustomObject>

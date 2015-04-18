@@ -8,7 +8,7 @@ public with sharing class Disperse extends ProcessModel.BaseProcess {
         public String Description = 'Copies the message to multiple sequences simultaneously.';
         public String Icon = 'chart_organisation';
         public String HelpUrl = Page.DisperseConfigCsh.getUrl();
-        public SObject StepConfig = DisperseConfig__c.SObjectType.newSObject();
+        public String StepConfig = DisperseConfig__c.class.getName();
         public Integer Limits = 100; //leave half of 200 (Total number of SOQL queries issued)
     }
     

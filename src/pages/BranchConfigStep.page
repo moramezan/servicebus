@@ -1,3 +1,0 @@
-<apex:page standardController="BranchConfig__c" extensions="ConfigStepExtension" action="{!doRedirect}">
-    <apex:pageMessages showDetail="false" />
-</apex:page>

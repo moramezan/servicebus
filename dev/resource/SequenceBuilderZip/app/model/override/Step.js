@@ -7,11 +7,5 @@ Ext.define('Builder.model.override.Step', {
     fields.Position.mapping = $ObjectType.Step__c.Fields.Position__c.Name;
     fields.ConfigId.mapping = $ObjectType.Step__c.Fields.ConfigId__c.Name;
     fields.ConfigName.mapping = $ObjectType.Step__c.Fields.ConfigName__c.Name;
-    fields.ProcessId.mapping = $ObjectType.Step__c.Fields.Process__c.Name;
-    fields.ProcessName.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.Name.Name;
-    fields.ProcessDescription.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.Description__c.Name;
-    fields.ProcessIcon.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.Icon__c.Name;
-    fields.ProcessHelpUrl.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.HelpUrl__c.Name;
-    fields.ProcessSetting.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.Setting__c.Name;
-    fields.ProcessCardinality.mapping = $ObjectType.Step__c.Fields.Process__c.RelationshipName + '.' + $ObjectType.Process__c.Fields.Cardinality__c.Name;
+    fields.FullyQualifiedClassName.mapping = $ObjectType.Step__c.Fields.FullyQualifiedClassName__c.Name;
 });

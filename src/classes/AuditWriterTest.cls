@@ -13,7 +13,6 @@
         String sequenceName  = 'AuditWriterSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c auditWriterProcess = ProcessModel.generateOne(AuditWriter.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -47,7 +46,6 @@
         String sequenceName  = 'AuditWriterSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c auditWriterProcess = ProcessModel.generateOne(AuditWriter.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -84,13 +82,11 @@
         String sequenceName  = 'AuditSequence';
         Integer positionA2 =  1;
         Id theId  = '000000000000000AAA';
-        Process__c auditWriterProcess = ProcessModel.generateOne(AuditWriter.class);
                
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c stepA2 = new Step__c(Sequence__c = sequence.Id, Position__c = positionA2, Process__c = auditWriterProcess.Id);
-        insert stepA2;
+        Step__c stepA2 = StepModel.generateOne(sequence.Name, AuditInitializer.class.getName());
  
         AuditInitializerConfig__c config1  = new AuditInitializerConfig__c(
             StaticGroupIdentifier__c = theIdentifier1

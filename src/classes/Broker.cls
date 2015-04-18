@@ -374,7 +374,7 @@ abstract public with sharing class Broker {
         Message__c specimenMessage;
         try {
             specimenMessage = [
-                SELECT Id, Status__c, Route__c, Attempts__c
+                SELECT Id, Status__c, Step__c, Attempts__c
                 FROM Message__c
                 WHERE Status__c = 'Buffered'
                 ORDER BY Attempts__c DESC, CreatedDate__c ASC //TODO could sort by route
@@ -389,27 +389,34 @@ abstract public with sharing class Broker {
         Integer queryLimit = 1;
         String className = null; //#697
         String status = specimenMessage.Status__c;
-        String route = specimenMessage.Route__c;
+        String route = specimenMessage.Step__c;
         
         Step__c specimenStep;
         try {
             specimenStep = [
-                SELECT Id, Process__r.Limits__c, Process__r.FullyQualifiedClassName__c
+                SELECT Id, FullyQualifiedClassName__c
                 FROM Step__c
                 WHERE Name = :route
                 //LIMIT unnecessary, only one should exist
             ];
-            className = specimenStep.Process__r.FullyQualifiedClassName__c;
-            queryLimit = specimenStep.Process__r.Limits__c.intValue();
+            
+            try {
+                className = specimenStep.FullyQualifiedClassName__c;
+                ProcessModel process = ProcessModel.fromFqcn(className);
+                queryLimit = process.Limits;
+            } catch (Exception e) {
+                //no process found, apex class may be deleted or renamed
+            }
+            
         } catch (QueryException e) {
             //no step found, resolution problem or might be a heartbeat
         }
         
         List<Message__c> messages = [
-            SELECT Id, Route__c, Event__c
+            SELECT Id, Step__c, Event__c
             FROM Message__c
             WHERE Status__c = :status
-            AND Route__c = :route //chunk by step as opposed to by process
+            AND Step__c = :route //chunk by step as opposed to by process
             //ORDER BY CreatedDate__c ASC //not possible when locking
             LIMIT :queryLimit
             FOR UPDATE //#695 investigate broker race condition
@@ -515,11 +522,11 @@ abstract public with sharing class Broker {
         }
         
         //specimen message will have same process as others
-        Message__c specimen = [SELECT Route__c FROM Message__c WHERE Id = :inputMessages[0].Id];
+        Message__c specimen = [SELECT Step__c FROM Message__c WHERE Id = :inputMessages[0].Id];
 
         Step__c step;
         try {
-            step = [SELECT ConfigId__c, Process__r.FullyQualifiedClassName__c FROM Step__c WHERE Name = :specimen.Route__c];
+            step = [SELECT ConfigId__c, FullyQualifiedClassName__c FROM Step__c WHERE Name = :specimen.Step__c];
         } catch (QueryException qe) {
             //this scenario is really following on from a failed resolve - thinking that we might explicitly set a new message status
             //of FAILED but in due course we hope to do away with resolve step entirely with message names '{sequence}#{position}V{version}'
@@ -533,24 +540,11 @@ abstract public with sharing class Broker {
             return;
         }
         
-        Type reflector = Type.forName(step.Process__r.FullyQualifiedClassName__c);
+        Type reflector = Type.forName(step.FullyQualifiedClassName__c);
         if (reflector == null) {
             for (Message__c inputMessage : inputMessages) {
                 DateTime startStamp = idToStartStamp.get(inputMessage.Id);
-                Exception e = new Broker.EngineException('Reflector for classname was null: ' + step.Process__r.FullyQualifiedClassName__c);
-                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
-                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
-            }
-            return;
-        }
-        
-        Type meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + '.' + 'ESB');
-        if (meta == null) meta = Type.forName(step.Process__r.FullyQualifiedClassName__c + 'ESB'); //#828
-        if (meta == null) {
-            for (Message__c inputMessage : inputMessages) {
-                DateTime startStamp = idToStartStamp.get(inputMessage.Id);
-                Exception e = new Broker.EngineException('Could not see ESB inner class, this is not a valid process: ' + reflector.getName());
+                Exception e = new Broker.EngineException('Reflector for classname was null: ' + step.FullyQualifiedClassName__c);
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
                 inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();

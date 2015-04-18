@@ -101,15 +101,4 @@
         <showsLocation>false</showsLocation>
         <showsStatus>false</showsStatus>
     </webLinks>
-    <webLinks>
-        <fullName>Step</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>Show Step</masterLabel>
-        <openType>sidebar</openType>
-        <page>SubscribeConfigStep</page>
-        <protected>false</protected>
-    </webLinks>
 </CustomObject>

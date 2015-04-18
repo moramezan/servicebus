@@ -135,8 +135,11 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
+                            "var fqcn = record.get('FullyQualifiedClassName');",
+                            "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "",
                             "//set the cardinality column's icon from each process",
-                            "var cardinality = record.get('ProcessCardinality');",
+                            "var cardinality = process.get('Cardinality');",
                             "this.items[0].iconCls = cardinality;",
                             "if (cardinality == 'One') this.items[0].tooltip = cardinality + ' output event emitted for each input event.';",
                             "if (cardinality != 'One') this.items[0].tooltip = cardinality + ' output events emitted for each input event.';"
@@ -260,8 +263,11 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
+                            "var fqcn = record.get('FullyQualifiedClassName');",
+                            "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "",
                             "//TERMINATE step cannot be deleted",
-                            "if (record.get('ProcessName') != 'Terminate') return Ext.DomHelper.createHtml({",
+                            "if (process.get('Name') != 'Terminate') return Ext.DomHelper.createHtml({",
                             "    'tag': 'a',",
                             "    'html': 'Del',",
                             "    'class': 'deletelink',",
@@ -320,14 +326,17 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
+                            "var fqcn = record.get('FullyQualifiedClassName');",
+                            "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "",
                             "//some processes have no settings",
-                            "if (record.get('ProcessSetting')) return '| ' + Ext.DomHelper.createHtml({",
+                            "if (process.get('ProcessSetting')) return '| ' + Ext.DomHelper.createHtml({",
                             "    'tag': 'a',",
                             "    'html': 'Settings',",
                             "    'class': 'settingslink',",
                             "    'onclick': 'return false;',",
                             "    'title': 'Process Settings',",
-                            "    'href': URLFOR[$Page.ProcessSettings] + '?id=' + record.get('ProcessId')",
+                            "    'href': URLFOR[$Page.ProcessSettings] + '?fqcn=' + process.get('ProcessSetting')",
                             "});"
                         ]
                     },
@@ -388,8 +397,11 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
+                            "var fqcn = record.get('FullyQualifiedClassName');",
+                            "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "",
                             "//set the action column's icon from each process",
-                            "this.items[0].iconCls = record.get('ProcessIcon');"
+                            "this.items[0].iconCls = process.get('Icon');"
                         ]
                     },
                     "name": "renderer",
@@ -436,11 +448,14 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
+                            "var fqcn = record.get('FullyQualifiedClassName');",
+                            "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "",
                             "//#776",
                             "return Ext.DomHelper.createHtml({",
                             "    'tag': 'span',",
-                            "    'html': value,",
-                            "    'title': value",
+                            "    'html': process.get('Name'),",
+                            "    'title': process.get('Name')",
                             "});"
                         ]
                     },
@@ -488,7 +503,10 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
-                            "var text = record.get('ConfigName') || record.get('ProcessDescription');",
+                            "var fqcn = record.get('FullyQualifiedClassName');",
+                            "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "",
+                            "var text = record.get('ConfigName') || process.get('Description');",
                             "",
                             "//#776",
                             "return Ext.DomHelper.createHtml({",
@@ -540,15 +558,18 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
+                            "var fqcn = record.get('FullyQualifiedClassName');",
+                            "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "",
                             "//process may not have docs",
                             "var html;",
                             "",
-                            "if (record.get('ProcessHelpUrl')) html = Ext.DomHelper.createHtml({",
+                            "if (process.get('HelpUrl')) html = Ext.DomHelper.createHtml({",
                             "    'tag': 'a',",
                             "    'html': 'Help for this Process',",
                             "    'class': 'documentationlink',",
                             "    'title': 'Configure Step',",
-                            "    'href': record.get('ProcessHelpUrl'),",
+                            "    'href': process.get('HelpUrl'),",
                             "    'target': '_blank'",
                             "});",
                             "",

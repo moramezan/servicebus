@@ -8,18 +8,6 @@
     }
     
     
-    static testmethod void canDetermineStepConfig() {
-        //arrange processes
-        Process__c subscribeProcess = ProcessModel.generateOne(Subscribe.class);
-        
-        //act
-        String actualConfig = subscribeProcess.StepConfig__c;
-        
-        // Assert
-        String expectedConfig = Schema.SobjectType.SubscribeConfig__c.Name;
-        System.assertEquals(expectedConfig, actualConfig);
-    }
-    
     static testmethod void testSubscribeProcessActsAsNoop() {
         //arrange
         String data = '{"herp":"derp"}';

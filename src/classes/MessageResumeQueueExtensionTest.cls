@@ -3,8 +3,6 @@
    static testmethod void  callingDoDmlCtorCorrectlyResolvesFromQueuedToBufferedAndCorrectlySetsPause() {
         // arrange
         Boolean isPaused =  true;
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -14,11 +12,8 @@
         Integer positionA1 = 1;
         Integer positionA6 = 2;
 
-        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = wiretapProcess.Id);
-        Step__c stepA6 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA6,Process__c = terminateProcess.Id);
-
-        insert stepA1;
-        insert stepA6;
+        Step__c stepA1 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA6 = StepModel.generateOne(sequenceA.Name, Terminate.class.getName());
 
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
@@ -69,8 +64,6 @@
    static testmethod void  callingDoResumeOnQueuedMessagesProcessesMessages() {
         // arrange
         Boolean isPaused =  true;
-        Process__c wiretapProcess = ProcessModel.generateOne(Wiretap.class);
-        Process__c terminateProcess = ProcessModel.generateOne(Terminate.class);
 
         String sequenceNameA = 'sequenceA';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
@@ -80,11 +73,8 @@
         Integer positionA1 = 1;
         Integer positionA6 = 2;
 
-        Step__c stepA1 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA1,Process__c = wiretapProcess.Id);
-        Step__c stepA6 = new Step__c(Sequence__c = sequenceA.Id ,Position__c = positionA6,Process__c = terminateProcess.Id);
-
-        insert stepA1;
-        insert stepA6;
+        Step__c stepA1 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
+        Step__c stepA6 = StepModel.generateOne(sequenceA.Name, Terminate.class.getName());
 
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);

@@ -8,18 +8,6 @@
     }
   
     
-    static testmethod void canDetermineStepConfig() {
-        //arrange processes
-        Process__c branchProcess = ProcessModel.generateOne(Branch.class);
-        
-        //act
-        String actualConfig = branchProcess.StepConfig__c;
-        
-        //assert
-        String expectedConfig = Schema.SobjectType.BranchConfig__c.Name;
-        System.assertEquals(expectedConfig, actualConfig);
-    }
-
     static testmethod void testSubsequenceDropped() {
         Sequence__c origin = new Sequence__c(Name = 'origin');
         insert origin;

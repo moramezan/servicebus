@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>Config</customButtons>
     <excludeButtons>Clone</excludeButtons>
     <excludeButtons>Delete</excludeButtons>
     <excludeButtons>Edit</excludeButtons>
@@ -17,11 +16,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>Process__c</field>
+                <field>FullyQualifiedClassName__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>Sequence__c</field>
+                <field>SequenceName__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>

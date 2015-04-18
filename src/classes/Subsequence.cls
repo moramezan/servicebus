@@ -9,7 +9,7 @@ public with sharing class Subsequence extends ProcessModel.BaseProcess {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Subsequence';
         public String Description = 'Temporarily diverts the message to another sequence, then returns it to the next step afterwards.';
-        public SObject StepConfig = SubsequenceConfig__c.SObjectType.newSObject();
+        public String StepConfig = SubsequenceConfig__c.class.getName();
         public String Icon = 'arrow_undo';
         public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessBranchJumpSubsequence').getUrl();
         public Integer Limits = 50; //leave half of 200 (Total number of SOQL queries issued)
@@ -22,7 +22,7 @@ public with sharing class Subsequence extends ProcessModel.BaseProcess {
         Step__c step = [
             SELECT Id
             FROM Step__c
-            WHERE Sequence__r.Name = :(String)parameters.get('__SequenceName')
+            WHERE SequenceName__c = :(String)parameters.get('__SequenceName')
             AND Position__c = :(Decimal) parameters.get('__Position')
         ];
   

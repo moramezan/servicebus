@@ -21,7 +21,7 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
     
     static public MessageSetModel fromIds(Set<Id> messageIds) {
         List<Message__c> messages = [
-            SELECT Id, Name, Attempts__c, Exception__c, ExecuteDuration__c, FullyQualifiedClassName__c, Route__c, Status__c
+            SELECT Id, Name, Attempts__c, Exception__c, ExecuteDuration__c, FullyQualifiedClassName__c, Step__c, Status__c
             FROM Message__c
             WHERE Id IN :messageIds
         ];
@@ -231,7 +231,7 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
             
             String sequence = (String)parameters.get('__SequenceName');
             Integer position = (Integer)parameters.get('__Position');
-            message.Route__c = sequence + '#' + position;
+            message.Step__c = sequence + '#' + position;
         }
     }
     

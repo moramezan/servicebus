@@ -8,30 +8,17 @@
     }
 
 
-    private static testmethod void canDetermineStepConfig() {
-        //arrange processes
-        Process__c auditInitializerProcess = ProcessModel.generateOne(AuditInitializer.class);
-        
-        //act
-        String actualConfig = auditInitializerProcess.StepConfig__c;
-        
-        // Assert
-        String expectedConfig = Schema.SobjectType.AuditInitializerConfig__c.Name;
-        System.assertEquals(expectedConfig, actualConfig);
-    }
     
     private static testmethod void callingInvokeInsertsExpectedCompositeIdentifiersOnAuditGroupForXXXXXXXXX() {
         //arrange
         String sequenceName  = 'AuditInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA'; // no data present
-        Process__c auditInitializerProcess = ProcessModel.generateOne(AuditInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = auditInitializerProcess.Id);
-        insert step;
+        Step__c step = StepModel.generateOne(sequence.Name, AuditInitializer.class.getName());
         
         AuditInitializerConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c
@@ -86,13 +73,11 @@
         String sequenceName  = 'AuditInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c auditInitializerProcess = ProcessModel.generateOne(AuditInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = auditInitializerProcess.Id);
-        insert step;
+        Step__c step = StepModel.generateOne(sequence.Name, AuditInitializer.class.getName());
         
         AuditInitializerConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c
@@ -150,13 +135,11 @@
         String sequenceName  = 'AuditInitializerSequence';
         Integer thePosition =  1;
         Id theId  = '000000000000000AAA';
-        Process__c auditInitializerProcess = ProcessModel.generateOne(AuditInitializer.class);
         
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step = new Step__c(Sequence__c = sequence.Id, Position__c = thePosition, Process__c = auditInitializerProcess.Id);
-        insert step;
+        Step__c step = StepModel.generateOne(sequence.Name, AuditInitializer.class.getName());
         
         AuditInitializerConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c
