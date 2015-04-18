@@ -453,6 +453,15 @@ abstract public with sharing class Broker {
         if (inputMessages.isEmpty()) return;
         
         //Set<Id> inputMessageIds = new Map<Id,SObject>(inputMessages).keySet();
+        Integer chunkTotal = inputMessages.size();
+        Integer chunk = 1;
+        for (Message__c inputMessage :  inputMessages) {
+            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
+            inputEvent.put('__ChunkTotal', chunkTotal);
+            inputEvent.put('__Chunk', chunk);
+            inputMessage.Event__c = Json.serializePretty(inputEvent);
+            chunk++;
+        }
         
         //OUR FUCKUPS (before invocation)
         Boolean biggerProblems = false;

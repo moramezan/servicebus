@@ -255,7 +255,6 @@
         <members>DisperseConfig__c</members>
         <members>DisperseDestination__c</members>
         <members>EventType__c</members>
-        <members>GateItem__c</members>
         <members>JumpConfig__c</members>
         <members>KnifeSwitch__c</members>
         <members>Message__c</members>
@@ -298,7 +297,6 @@
         <members>DisperseConfig__c-Disperse Config Layout</members>
         <members>DisperseDestination__c-Destination Layout</members>
         <members>EventType__c-Event Type Layout</members>
-        <members>GateItem__c-Gate Item Layout</members>
         <members>JumpConfig__c-Jump Config Layout</members>
         <members>Message__c-Message Layout</members>
         <members>Process__c-Process Layout</members>
