@@ -8,6 +8,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     
     @TestVisible private Set<Id> fatalMessageIds = new Set<Id>();
     @TestVisible private Map<Id,Message__c> executableMessages = new Map<Id,Message__c>();
+    @TestVisible private List<Message__c> persistableMessages = new List<Message__c>();
     @TestVisible private Boolean abortJob = false;
 
     /**
@@ -58,6 +59,12 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         //ever decreasing
         this.Contexts--;
         
+        //PERSIST only if we are immediately after an EXECUTE
+        if (!this.persistableMessages.isEmpty()) {
+            this.persist(this.persistableMessages); //#778
+            //no return, carry on and mark...
+        }
+        
         //handle errors progressively
         if (!this.fatalMessageIds.isEmpty()) {
             //dedicate this whole context to fatal exception handling
@@ -65,20 +72,26 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
             return;
         }
         
-        //LOCATE
+        Boolean hasWorkToExecute = !this.executableMessages.isEmpty();
+        Boolean isExecuteContext = hasWorkToExecute;
+        
+        Boolean hasWorkToMark = false;
+        Boolean isMarkContext = false;
+        
         List<Message__c> markableMessages;
-        try {
-            markableMessages = this.locateMarkableWork();
-        } catch (Exception e) {
-            this.isHaywire = true; //this will roll over thanks to stateful
-            throw new Broker.EngineException('Locate haywire condition: ' + e.getMessage());
+        if (!isExecuteContext) {
+            //LOCATE but only if we are not in user execute context
+            try {
+                markableMessages = this.locateMarkableWork();
+            } catch (Exception e) {
+                this.isHaywire = true; //this will roll over thanks to stateful
+                throw new Broker.EngineException('Locate haywire condition: ' + e.getMessage());
+            }
+            
+            hasWorkToMark = !markableMessages.isEmpty();
+            isMarkContext = hasWorkToMark && !hasWorkToExecute;
         }
         
-        Boolean hasWorkToMark = !markableMessages.isEmpty();
-        Boolean hasWorkToExecute = !this.executableMessages.isEmpty();
-        
-        Boolean isMarkContext = hasWorkToMark && !hasWorkToExecute;
-        Boolean isExecuteContext = hasWorkToExecute;
         Boolean isAbortJobContext = !hasWorkToMark && !hasWorkToExecute;
         Boolean isNeedsMoreContexts = this.Contexts == 0;
         
@@ -124,14 +137,13 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
             
             try {
                 //EXECUTE
+                this.persistableMessages = new List<Message__c>();
                 List<Message__c> outputMessages = new List<Message__c>();
                 this.execute(inputMessages, outputMessages);
                 
-                //PERSIST
-                List<Message__c> inputAndOutputMessages =  new List<Message__c>();
-                inputAndOutputMessages.addAll(inputMessages);
-                inputAndOutputMessages.addAll(outputMessages);
-                this.persist(inputAndOutputMessages); //#782
+                //#778 not quite PERSIST
+                this.persistableMessages.addAll(inputMessages);
+                this.persistableMessages.addAll(outputMessages);
                 
             } catch (Exception e) {
                 
