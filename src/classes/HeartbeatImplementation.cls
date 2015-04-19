@@ -154,8 +154,8 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
     
         DateTime lastEventStamp =  heartbeats[count-1];
         String lastEventStampAsString = getISO8601(lastEventStamp);
+        
         BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults(); //#782
-        if (setting == null) setting = new BrokerSetting__c();
         setting.EventStamp__c = lastEventStampAsString;
         upsert setting;
     }

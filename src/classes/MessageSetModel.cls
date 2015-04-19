@@ -293,21 +293,15 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
     }
     
     static public void pauseQueue() {
-        //fetch custom setting or create for the first time
+        //fetch custom setting and set the flag
         BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        if (setting == null) setting = new BrokerSetting__c();
-        
-        //unset the flag
         setting.IsPaused__c = true;
         upsert setting;
     }
     
     static public void resumeQueue() {
-        //fetch custom setting or create for the first time
+        //fetch custom setting and unset the flag
         BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        if (setting == null) setting = new BrokerSetting__c();
-        
-        //unset the flag
         setting.IsPaused__c = false;
         upsert setting;
         

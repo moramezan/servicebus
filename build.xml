@@ -93,7 +93,11 @@
             serverurl="${esb.serverurl}"
             deployRoot="src"
         />
-        <executeAnonymous username="${esb.username}" password="${esb.password}" serverurl="${esb.serverurl}">new PostInstallHandler().onInstall(null);</executeAnonymous>
+        <executeAnonymous username="${esb.username}" password="${esb.password}" serverurl="${esb.serverurl}">
+            ConfigureController.installSchedule();
+            PostInstallHandler.createWiretapSettings();
+            PostInstallHandler.assignPermissionSet();
+        </executeAnonymous>
     </target>
     
     <target name="optimize-for-devorg" description="Removes namespace and management artifacts prior to unmanaged deploy.">

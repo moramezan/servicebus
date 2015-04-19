@@ -86,6 +86,16 @@ public with sharing class ConfigureController {
         }
     }
     
+    @TestVisible static private Boolean HasSetting {
+        get {
+            if (HasSetting == null) {
+                OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
+                HasSetting = setting.AccessToken__c != null;
+            }
+            return HasSetting;
+        }
+    }
+    
     /**
      * This is a universal entry point to the OAuth dance that
      * can be used from places like page action handler code.
@@ -98,7 +108,7 @@ public with sharing class ConfigureController {
         Profile profile = [SELECT Id, Name FROM Profile WHERE Id = :UserInfo.getProfileId()];
         if (!profile.Name.contains('System Administrator')) return null;
         
-        if (IsAllowed) return null; //all ok
+        if (IsAllowed && HasSetting) return null; //all ok
         
         //better do the dance
         PageReference dance = Page.Configure;
@@ -194,9 +204,6 @@ public with sharing class ConfigureController {
      * to get a ready-and-roaring access token, and saves the new one away.
      */
     static public void refreshAccessToken() {
-        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
-        if (setting == null) setting = new OAuthSetting__c();
-        
         HttpRequest request = new HttpRequest();
         request.setMethod('POST');
         request.setEndpoint(new ConfigureController().buildRefreshLink().getUrl());
@@ -215,6 +222,7 @@ public with sharing class ConfigureController {
             throw new ConfigureException('Null access_token in refreshAccessToken: ' + data);
         }
         
+        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
         setting.AccessToken__c = t.access_token;
         upsert setting;
     }
@@ -262,8 +270,6 @@ public with sharing class ConfigureController {
      */
     public PageReference handleRedirect() {
         try {
-        setting = OAuthSetting__c.getOrgDefaults();
-        if (setting == null) setting = new OAuthSetting__c();
         String code = ApexPages.currentPage().getParameters().get('code');
         
         if (!RemoteSiteSettingController.isRssPresent) {
@@ -346,7 +352,7 @@ public with sharing class ConfigureController {
         return pr;
     }
     
-    static private OAuthSetting__c setting;
+    static private OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
     
     /**
      * #781 pass security scanner

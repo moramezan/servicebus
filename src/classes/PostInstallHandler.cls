@@ -101,11 +101,8 @@ public without sharing class PostInstallHandler implements InstallHandler {
      * (Performed in a FUTURE method to prevent MIXED_DML_OPERATION exception)
      */
     @Future static public void createWiretapSettings(Id userId) {
-        //fetch custom setting or create it for the first time
+        //fetch custom setting and write the values
         WiretapSetting__c setting = WiretapSetting__c.getOrgDefaults();
-        if (setting == null) setting = new WiretapSetting__c();
-        
-        //write the values
         setting.UserId__c = userId;
         upsert setting;
     }

@@ -155,10 +155,6 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
             throw new Broker.EngineException('Cannot supply a null input events collection.');
         }
         
-        //fetch the custom setting or create an empty one
-        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        if (setting == null) setting = new BrokerSetting__c();
-        
         //create the message destined for the 0th step of the chain
         for (Map<String,Object> inputEvent : inputEvents) {
             inputEvent.putAll(new Map<String,Object>{
@@ -181,7 +177,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
             
             this.messages.add(new Message__c(
                 Event__c = Json.serializePretty(inputEvent),
-                Status__c = setting.IsPaused__c ? 'Queued' : 'Buffered'
+                Status__c = BrokerSetting__c.getOrgDefaults().IsPaused__c ? 'Queued' : 'Buffered'
             ));
         }
     }
