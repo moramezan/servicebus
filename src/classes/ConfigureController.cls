@@ -235,26 +235,64 @@ public with sharing class ConfigureController {
      * to pick that up in a Configure Page (or anything else). Instead
      * they should re-install the package over the top of the org.
      */
-    static public Id installSchedule() {
+    static public Id reinstallSchedule() {
         String name = 'Enterprise Service Bus Heartbeat';
-        List<CronJobDetail> cronJobDetails = [SELECT Id, Name FROM CronJobDetail WHERE Name = :name LIMIT 1];
         
-        //job already scheduled, nothing to do
-        if (!cronJobDetails.isEmpty()) return null;
-        
-        String cronExpr = '0 0 * * * ?';
-        HeartbeatDispatcher schedulable = new HeartbeatDispatcher();
-        return System.schedule(name, cronExpr, schedulable);
-    }
-    
-    static public void uninstallSchedule() {
         try {
-            CronJobDetail cronJobDetail = [SELECT Id FROM CronJobDetail WHERE Name = 'Enterprise Service Bus Heartbeat'];
+            //first attempt to uninstall the schedule
+            CronJobDetail cronJobDetail = [SELECT Id FROM CronJobDetail WHERE Name = :name];
             CronTrigger cronTrigger = [SELECT Id FROM CronTrigger WHERE CronJobDetailId = :cronJobDetail.Id];
             System.abortJob(cronTrigger.Id);
         } catch (QueryException e) {
             //failure, couldn't locate job, probably not running
         }
+        
+        //now attempt to install it again
+        String cronExpr = '0 0 * * * ?';
+        HeartbeatDispatcher schedulable = new HeartbeatDispatcher();
+        return System.schedule(name, cronExpr, schedulable);
+    }
+    
+    /**
+     * Set the Wiretap Settings
+     * (Performed in a FUTURE method to prevent MIXED_DML_OPERATION exception)
+     */
+    @Future static public void createWiretapSettings(Id userId) {
+        //fetch custom setting and write the values
+        WiretapSetting__c setting = WiretapSetting__c.getOrgDefaults();
+        setting.UserId__c = userId;
+        upsert setting;
+    }
+    
+    /**
+     * Assign Orchestrator permission set to the installer
+     * (Performed in a FUTURE method to prevent MIXED_DML_OPERATION exception)
+     */
+    @Future static public void assignPermissionSet(Id userId) {
+        //resolve package namespace prefix
+        String namespacePrefix = PostInstallHandler.class.getName().substringBefore('PostInstallHandler').substringBefore('.');
+        
+        //find installed permission set
+        PermissionSet ps = [
+            SELECT Id
+            FROM PermissionSet
+            WHERE NamespacePrefix = :namespacePrefix
+            AND Name = 'AdministerEsb'
+        ];
+        
+        //determine if it has been assigned already
+        Integer psas = [
+            SELECT COUNT()
+            FROM PermissionSetAssignment
+            WHERE PermissionSetId = :ps.Id
+            AND AssigneeId = :userId
+        ];
+        
+        //if not, assign it to whoever installs the package
+        if (psas == 0) insert new PermissionSetAssignment(
+            PermissionSetId = ps.Id,
+            AssigneeId = userId
+        );
     }
     
     /**
@@ -279,8 +317,15 @@ public with sharing class ConfigureController {
         
         if (code == null) {
             //STEP ONE
-            uninstallSchedule();
-            installSchedule(); //#811 run heartbeat schedule as admin
+            
+            //#811 run heartbeat schedule as admin
+            reinstallSchedule();
+            
+            //wiretap should send to sysadmin, to prevent confusion with schedule processes
+            createWiretapSettings(UserInfo.getUserId());
+            
+            //permission set assignments must be made on the local user, not the pushing user
+            assignPermissionSet(UserInfo.getUserId());
             
             //this will send them to the oauth allow page
             PageReference authLink = this.buildAuthLink();

@@ -108,4 +108,63 @@
         System.assert(pr.getUrl().contains('tsid'));
     }
     
+    static testmethod void testPermissionSetAssignmentCreated() {
+        //arrange new user
+        User user = new User(
+            ProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator'].Id,
+            Username = DateTime.now().getTime() + 'test@test.com',
+            Alias = 'mgr',
+            LastName = 'Test',
+            LocaleSidKey = 'en_US',
+            Email = 'test@example.com',
+            CommunityNickname = 'mgr',
+            LanguageLocaleKey = 'en_US',
+            EmailEncodingKey = 'ISO-8859-1',
+            TimeZoneSidKey = 'Australia/Sydney'
+        );
+        insert user;
+        
+        System.runAs(user) {
+            //act
+            Test.startTest();
+            Integer countBefore = [SELECT COUNT() FROM PermissionSetAssignment WHERE AssigneeId = :user.Id];
+            ConfigureController.assignPermissionSet(user.Id);
+            Test.stopTest();
+            
+            //assert
+            Integer expectedCount = countBefore + 1;
+            Integer actualCount = [SELECT COUNT() FROM PermissionSetAssignment WHERE AssigneeId = :user.Id];
+            System.assertEquals(expectedCount, actualCount);
+        }
+    }
+    
+    static testmethod void testWiretapSettingsCreated() {
+        //arrange user
+        Id userId = UserInfo.getUserId();
+        
+        //act
+        Test.startTest();
+        Integer countBefore = [SELECT COUNT() FROM WiretapSetting__c];
+        ConfigureController.createWiretapSettings(userId);
+        Test.stopTest();
+        
+        //assert
+        Integer expectedCount = countBefore + 1;
+        Integer actualCount = [SELECT COUNT() FROM WiretapSetting__c];
+        System.assertEquals(expectedCount, actualCount);
+    }
+    
+    static testmethod void callingInstallScheduleCorrectlyInstallsSchedule() {
+        //arrange
+        String  name = 'Enterprise Service Bus Heartbeat';
+        
+        //act
+        ConfigureController.reinstallSchedule();
+        
+        //assert
+        Integer expectedSizeAfter = 1;
+        Integer actualSizeAfter = [SELECT COUNT() FROM CronJobDetail WHERE Name = :name LIMIT 1];
+        System.assertEquals(expectedSizeAfter, actualSizeAfter);
+        
+    }
 }

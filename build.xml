@@ -69,7 +69,11 @@
     <target name="deploy" description="Deploys all package components to dev org">
         <antcall target="optimize-for-devorg" />
         <subant failonerror="false" target="subdeploy" buildpath="." />
-        <executeAnonymous username="${de.username}" password="${de.password}" serverurl="${de.serverurl}">new PostInstallHandler().onInstall(null);</executeAnonymous>
+        <executeAnonymous username="${de.username}" password="${de.password}" serverurl="${de.serverurl}">
+            ConfigureController.reinstallSchedule();
+            ConfigureController.createWiretapSettings(UserInfo.getUserId());
+            ConfigureController.assignPermissionSet(UserInfo.getUserId());
+        </executeAnonymous>
         <!-- #684 always try to restart jobs, so a failed deployment doesn't leave the org with the schedule stopped -->
         <antcall target="optimize-for-release" />
     </target>
@@ -94,9 +98,9 @@
             deployRoot="src"
         />
         <executeAnonymous username="${esb.username}" password="${esb.password}" serverurl="${esb.serverurl}">
-            ConfigureController.installSchedule();
-            PostInstallHandler.createWiretapSettings();
-            PostInstallHandler.assignPermissionSet();
+            ConfigureController.reinstallSchedule();
+            ConfigureController.createWiretapSettings(UserInfo.getUserId());
+            ConfigureController.assignPermissionSet(UserInfo.getUserId());
         </executeAnonymous>
     </target>
     

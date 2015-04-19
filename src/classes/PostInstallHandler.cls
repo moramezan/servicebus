@@ -17,45 +17,8 @@ public without sharing class PostInstallHandler implements InstallHandler {
         Boolean isPush = context == null ? false : context.isPush();
         Boolean isCli = context == null;
         
-        //permission set assignments must be made on the local user, not the pushing user
-        if (!isPush) assignPermissionSet(installerId);
-        
         //only nag about the remote site setting on first install
         if (!isUpgrade && !isCli) sendNotification(installerId);
-        
-        //wiretap should send to sysadmin, to prevent confusion with schedule processes
-        if (!isPush) createWiretapSettings(installerId);
-    }
-    
-    /**
-     * Assign Orchestrator permission set to the installer
-     * (Performed in a FUTURE method to prevent MIXED_DML_OPERATION exception)
-     */
-    @Future static public void assignPermissionSet(Id userId) {
-        //resolve package namespace prefix
-        String namespacePrefix = PostInstallHandler.class.getName().substringBefore('PostInstallHandler').substringBefore('.');
-        
-        //find installed permission set
-        PermissionSet ps = [
-            SELECT Id
-            FROM PermissionSet
-            WHERE NamespacePrefix = :namespacePrefix
-            AND Name = 'AdministerEsb'
-        ];
-        
-        //determine if it has been assigned already
-        Integer psas = [
-            SELECT COUNT()
-            FROM PermissionSetAssignment
-            WHERE PermissionSetId = :ps.Id
-            AND AssigneeId = :userId
-        ];
-        
-        //if not, assign it to whoever installs the package
-        if (psas == 0) insert new PermissionSetAssignment(
-            PermissionSetId = ps.Id,
-            AssigneeId = userId
-        );
     }
     
     /**
@@ -96,14 +59,4 @@ public without sharing class PostInstallHandler implements InstallHandler {
         }
     }
     
-    /**
-     * Set the Wiretap Settings
-     * (Performed in a FUTURE method to prevent MIXED_DML_OPERATION exception)
-     */
-    @Future static public void createWiretapSettings(Id userId) {
-        //fetch custom setting and write the values
-        WiretapSetting__c setting = WiretapSetting__c.getOrgDefaults();
-        setting.UserId__c = userId;
-        upsert setting;
-    }
 }
