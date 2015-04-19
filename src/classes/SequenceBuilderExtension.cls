@@ -1,7 +1,7 @@
 public with sharing class SequenceBuilderExtension {
     
-    ApexPages.StandardController controller;
-    SequenceModel model;
+    private ApexPages.StandardController controller;
+    private SequenceModel model;
     
     public SequenceBuilderExtension(ApexPages.StandardController controller) {
         if (!Test.isRunningTest()) controller.addFields(new List<String>{'Name'});
@@ -20,21 +20,7 @@ public with sharing class SequenceBuilderExtension {
      * that are flowing through this sequence.
      */
     public void countRoutedMessages() {
-        Sequence__c sequence = [
-            SELECT Id, Name
-            FROM Sequence__c
-            WHERE Id = :this.controller.getId()
-        ];
-        
-        Integer count = [
-            SELECT COUNT()
-            FROM Message__c
-            WHERE Step__c LIKE :sequence.Name + '#%'
-            AND Status__c != 'Completed'
-            AND Exception__c = null
-        ];
-        
-        this.RoutedMessages = count;
+        this.RoutedMessages = this.model.countRoutedMessages();
     }
     
     /**
@@ -46,37 +32,8 @@ public with sharing class SequenceBuilderExtension {
         return ConfigureController.doDanceIfNeeded(retURL);
     }
     
-    static public List<ProcessModel> findProcesses() {
-        List<ApexClass> apexClasses = [
-            SELECT Id, Name, NamespacePrefix
-            FROM ApexClass
-            ORDER BY Name ASC
-            LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
-        ];
-        
-        List<String> fullyQualifiedClassNames = new List<String>();
-        for (ApexClass apexClass : apexClasses) {
-            Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
-            if (reflector == null) continue; //eg private classes
-            String fullyQualifiedClassName = reflector.getName();
-            
-            Type meta = Type.forName(fullyQualifiedClassName + '.' + 'ESB');
-            if (meta == null) meta = Type.forName(fullyQualifiedClassName + 'ESB');
-            if (meta != null) fullyQualifiedClassNames.add(fullyQualifiedClassName);
-        }
-        
-        List<ProcessModel> processes = new List<ProcessModel>();
-        for (String fullyQualifiedClassName : fullyQualifiedClassNames) {
-            ProcessModel process = ProcessModel.fromFqcn(fullyQualifiedClassName);
-            if (process == null) continue; //don't discover ProcessModel.ESB
-            processes.add(process);
-        }
-        
-        return processes;
-    }
-    
     public String getProcesses() {
-        List<ProcessModel> processes = findProcesses();
+        List<ProcessModel> processes = ProcessModel.discoverProcesses();
         return Json.serializePretty(processes);
     }
     
@@ -85,13 +42,8 @@ public with sharing class SequenceBuilderExtension {
         return Json.serializePretty(steps);
     }
     
-    @RemoteAction static public void refreshStepConfigName(Id configId) {
-        Step__c step = [SELECT Id FROM Step__c WHERE ConfigId__c = :configId];
-        String objectType = configId.getSObjectType().getDescribe().getName();
-        SObject config = Database.query('SELECT Id, Name FROM ' + objectType + ' WHERE Id = :configId');
-        String configName = (String)config.get('Name');
-        step.ConfigName__c = configName.abbreviate(SObjectType.Step__c.Fields.ConfigName__c.Length);
-        update step;
+    @RemoteAction static public void cacheConfigName(Id configId) {
+        StepModel.cacheConfigName(configId);
     }
     
     @RemoteAction static public List<Step__c> fetchSteps(String sequenceName) {
@@ -106,19 +58,17 @@ public with sharing class SequenceBuilderExtension {
         return step;
     }
     
-    @RemoteAction static public void moveStepBefore(Id stepId, Id beforeStepId) {
-        StepModel.fromId(stepId).moveBefore(beforeStepId);
+    @RemoteAction static public void moveStepBefore(String stepName, String beforeStepName) {
+        StepModel.fromName(stepName).moveBefore(beforeStepName);
     }
     
-    @RemoteAction static public void moveStepAfter(Id stepId, Id afterStepId) {
-        StepModel.fromId(stepId).moveAfter(afterStepId);
+    @RemoteAction static public void moveStepAfter(String stepName, String afterStepName) {
+        StepModel.fromName(stepName).moveAfter(afterStepName);
     }
     
-    @RemoteAction static public void destroySteps(List<Step__c> steps) {
-        //requery first step to get sequence id, since it is not transmitted
-        Step__c step = (Step__c)ApexDomain.getById(steps[0].Id);
-        SequenceModel model = SequenceModel.fromName(step.SequenceName__c);
-        model.destroySteps(new Map<Id,Step__c>(steps).keySet());
+    @RemoteAction static public void destroyStep(String sequenceName, String stepName) {
+        SequenceModel model = SequenceModel.fromName(sequenceName);
+        model.destroyStep(stepName);
     }
     
     @RemoteAction static public String enqueue(String sequenceName) {

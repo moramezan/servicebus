@@ -26,12 +26,12 @@
         window.$RemoteAction = window.$RemoteAction || {};
         $RemoteAction.SequenceBuilderExtension = $RemoteAction.SequenceBuilderExtension || {};
         $RemoteAction.SequenceBuilderExtension.fetchSteps = '{!$RemoteAction.SequenceBuilderExtension.fetchSteps}';
-        $RemoteAction.SequenceBuilderExtension.destroySteps = '{!$RemoteAction.SequenceBuilderExtension.destroySteps}';
+        $RemoteAction.SequenceBuilderExtension.destroyStep = '{!$RemoteAction.SequenceBuilderExtension.destroyStep}';
         $RemoteAction.SequenceBuilderExtension.enqueue = '{!$RemoteAction.SequenceBuilderExtension.enqueue}';
         $RemoteAction.SequenceBuilderExtension.appendStep = '{!$RemoteAction.SequenceBuilderExtension.appendStep}';
         $RemoteAction.SequenceBuilderExtension.moveStepBefore = '{!$RemoteAction.SequenceBuilderExtension.moveStepBefore}';
         $RemoteAction.SequenceBuilderExtension.moveStepAfter = '{!$RemoteAction.SequenceBuilderExtension.moveStepAfter}';
-        $RemoteAction.SequenceBuilderExtension.refreshStepConfigName = '{!$RemoteAction.SequenceBuilderExtension.refreshStepConfigName}';
+        $RemoteAction.SequenceBuilderExtension.cacheConfigName = '{!$RemoteAction.SequenceBuilderExtension.cacheConfigName}';
         
         window.$Page = window.$Page || {};
         $Page.ProcessSettings = '{!$Page.ProcessSettings}';

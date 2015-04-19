@@ -5,8 +5,8 @@
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
         
-        Step__c wiretapStep = StepModel.generateOne(sequence.Name, Wiretap.class.getName());
-        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class.getName());
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
         
         //arrange messages
         Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1};
@@ -106,7 +106,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
         
         //arrange message
         new Job(
@@ -159,7 +159,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
         
         //arrange messages
         new Job(
@@ -213,7 +213,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
         
         //arrange messages
         new Job(

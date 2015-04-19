@@ -103,10 +103,7 @@
             "codeClass": null,
             "userConfig": {
                 "api": [
-                    "{",
-                    "    read: $RemoteAction.SequenceBuilderExtension.fetchSteps,",
-                    "    destroy: $RemoteAction.SequenceBuilderExtension.destroySteps",
-                    "}"
+                    "{read: $RemoteAction.SequenceBuilderExtension.fetchSteps}"
                 ],
                 "designer|displayName": "StepProxy",
                 "extraParams": [
@@ -116,21 +113,6 @@
             "name": "MyDirectProxy",
             "designerId": "c0126497-cee3-4add-98a5-5a05f7c04656",
             "cn": [
-                {
-                    "type": "Ext.data.writer.Json",
-                    "reference": {
-                        "name": "writer",
-                        "type": "object"
-                    },
-                    "codeClass": null,
-                    "userConfig": {
-                        "allowSingle": false,
-                        "designer|displayName": "StepWriter",
-                        "nameProperty": "mapping"
-                    },
-                    "name": "MyJsonWriter",
-                    "designerId": "abba2f4b-1137-4236-8a48-77e720c810a1"
-                },
                 {
                     "type": "Ext.data.reader.Json",
                     "reference": {

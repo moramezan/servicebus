@@ -7,8 +7,8 @@
         insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = StepModel.generateOne(sequenceA.Name, Subscribe.class.getName());
-        Step__c stepA2 = StepModel.generateOne(sequenceA.Name, Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Subscribe.class.getName());
+        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class.getName());
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         

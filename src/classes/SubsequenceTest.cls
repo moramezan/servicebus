@@ -11,11 +11,11 @@
         //arrange sequences
         Sequence__c origin = new Sequence__c(Name = 'originSequence');
         insert origin;
-        Step__c originStep = StepModel.generateOne(origin.Name, Subsequence.class.getName());
+        Step__c originStep = SequenceModel.fromName(origin.Name).appendStep(Subsequence.class.getName());
         
         Sequence__c target = new Sequence__c(Name = 'targetSequence');
         insert target;
-        Step__c targetStep = StepModel.generateOne(target.Name, Terminate.class.getName());
+        Step__c targetStep = SequenceModel.fromName(target.Name).appendStep(Terminate.class.getName());
         
         //prepare config in db
         SubsequenceConfig__c config = new SubsequenceConfig__c(

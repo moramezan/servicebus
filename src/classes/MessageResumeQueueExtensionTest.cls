@@ -12,8 +12,8 @@
         Integer positionA1 = 1;
         Integer positionA6 = 2;
 
-        Step__c stepA1 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
-        Step__c stepA6 = StepModel.generateOne(sequenceA.Name, Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
+        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class.getName());
 
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
@@ -73,8 +73,8 @@
         Integer positionA1 = 1;
         Integer positionA6 = 2;
 
-        Step__c stepA1 = StepModel.generateOne(sequenceA.Name, Wiretap.class.getName());
-        Step__c stepA6 = StepModel.generateOne(sequenceA.Name, Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
+        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class.getName());
 
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);

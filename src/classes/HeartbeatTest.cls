@@ -5,7 +5,7 @@
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
         
-        Step__c scheduleStep = StepModel.generateOne(sequence.Name, Schedule.class.getName());
+        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class.getName());
         
         //arrange input event
         String inputEvent = '{"esb__EntryPointDatetime":"2014-01-18T12:00:00.000Z"}';
@@ -58,8 +58,8 @@
         insert interestedSequenceB;
 
         //arrange steps
-        Step__c stepA = StepModel.generateOne(interestedSequenceA.Name, Schedule.class.getName());
-        Step__c stepB = StepModel.generateOne(interestedSequenceB.Name, Schedule.class.getName());
+        Step__c stepA = SequenceModel.fromName(interestedSequenceA.Name).appendStep(Schedule.class.getName());
+        Step__c stepB = SequenceModel.fromName(interestedSequenceB.Name).appendStep(Schedule.class.getName());
         
         //arrange events
         String stampAsString = '2014-01-18T12:00:00.000Z';

@@ -89,18 +89,40 @@ public with sharing class ProcessModel {
      */
     public Map<String,String> Outputs {get;}
     
+    /**
+     * For advertising domain layer errors
+     */
     public without sharing class ProcessException extends Exception {}
     
+    /**
+     * Privatize constructor to force use of fromFqcn()
+     */
+    private ProcessModel() {}
+    
+    /**
+     * Given a fully qualified class name, attempts to locate
+     * the ESB inner marker class and parse all the properties.
+     *
+     * @throws ProcessException
+     * @param fullyQualifiedClassName of the namespace prefix and apex class
+     * @return domain model of process
+     */
     static public ProcessModel fromFqcn(String fullyQualifiedClassName) {
         Type innerClass = Type.forName(fullyQualifiedClassName + '.' + 'ESB');
         if (innerClass == null) innerClass = Type.forName(fullyQualifiedClassName + 'ESB');
-        ProcessModel model = (ProcessModel)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessModel.class);
+        
+        ProcessModel model;
+        try {
+            model = (ProcessModel)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessModel.class);
+        } catch (JsonException e) {
+            throw new ProcessException('Process discovery exception "' + fullyQualifiedClassName + '"', e);
+        }
+        
+        //populate our key for internal use
         model.FullyQualifiedClassName = fullyQualifiedClassName;
         
-        if (model.Description == null) {
-            //EVERY PROCESS MUST PROVIDE A DESCRIPTION
-            throw new ProcessException('Process "' + fullyQualifiedClassName + '" must provide ESB.Description');
-        }
+        //attempt to populate the description of the process
+        if (model.Description == null) model.Description = 'Undescribed';
 
         //attempt to populate the tag of the process (with sensible default)
         if (model.Tag == null) model.Tag = 'Untagged';
@@ -114,6 +136,9 @@ public with sharing class ProcessModel {
         //attempt to populate the cardinality of the process
         if (model.Cardinality == null) model.Cardinality = 'Any';
         
+        //attempt to populate the maximum executions
+        if (model.Limits == null) model.Limits = 1;
+        
         //attempt to populate the help url
         if (model.HelpUrl == null) model.HelpUrl = Page.ProcessDescribe.getUrl() + '?fqcn=' + fullyQualifiedClassName;
         if (model.HelpUrl.startsWith('/')) model.HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + model.HelpUrl;
@@ -121,11 +146,53 @@ public with sharing class ProcessModel {
         //attempt to populate the name of the customization object
         
         //attempt to populate the name of the config object
-
-        //attempt to populate the maximum executions
-        if (model.Limits == null) model.Limits = 1;
         
         return model;
+    }
+    
+    /**
+     * Locates all ESB processes by attempting to interrogate ESB marker inner class;
+     * for each apex class found with a marker, it will try to parse the properties.
+     */
+    static public List<ProcessModel> discoverProcesses() {
+        //select out all apex classes
+        List<ApexClass> apexClasses = [
+            SELECT Id, Name, NamespacePrefix
+            FROM ApexClass
+            ORDER BY Name ASC
+            LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
+        ];
+        
+        //reflect on each ESB marker inner class
+        List<String> fullyQualifiedClassNames = new List<String>();
+        for (ApexClass apexClass : apexClasses) {
+            Type reflector;
+            try {
+                reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
+            } catch (TypeException e ) {
+                //some compile problem with the class, eg LeadShare when OWD set to public
+                continue;
+            }
+            
+            if (reflector == null) continue; //eg private classes
+            String fullyQualifiedClassName = reflector.getName();
+            
+            Type meta = Type.forName(fullyQualifiedClassName + '.' + 'ESB');
+            if (meta == null) meta = Type.forName(fullyQualifiedClassName + 'ESB');
+            if (meta != null) fullyQualifiedClassNames.add(fullyQualifiedClassName);
+        }
+        
+        //assemble a list of process models where valid
+        List<ProcessModel> processes = new List<ProcessModel>();
+        for (String fullyQualifiedClassName : fullyQualifiedClassNames) {
+            try {
+                processes.add(ProcessModel.fromFqcn(fullyQualifiedClassName));
+            } catch (ProcessException e) {
+                continue;
+            }
+        }
+        
+        return processes;
     }
     
     /**

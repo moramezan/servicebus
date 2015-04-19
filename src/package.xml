@@ -78,8 +78,6 @@
         <members>SequenceSetModelTest</members>
         <members>StepModel</members>
         <members>StepModelTest</members>
-        <members>StepSetModel</members>
-        <members>StepSetModelTest</members>
         <members>Subscribe</members>
         <members>SubscribeTest</members>
         <members>Subsequence</members>

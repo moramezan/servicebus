@@ -6,16 +6,16 @@
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = StepModel.generateOne(sequence.Name, Wiretap.class.getName());
-        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class.getName());
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
         
         //assert before state
         System.assertEquals(1, wiretapStep.Position__c);
         System.assertEquals(2, terminateStep.Position__c);
             
         //act
-        StepModel step = StepModel.fromId(terminateStep.Id);
-        step.moveBefore(wiretapStep.Id);
+        StepModel step = StepModel.fromName(terminateStep.Name);
+        step.moveBefore(wiretapStep.Name);
         
         //assemble
         wiretapStep = (Step__c)ApexDomain.getById(wiretapStep.Id);
@@ -32,16 +32,16 @@
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = StepModel.generateOne(sequence.Name, Wiretap.class.getName());
-        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class.getName());
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
         
         //assert before state
         System.assertEquals(1, wiretapStep.Position__c);
         System.assertEquals(2, terminateStep.Position__c);
             
         //act
-        StepModel step = StepModel.fromId(wiretapStep.Id);
-        step.moveAfter(terminateStep.Id);
+        StepModel step = StepModel.fromName(wiretapStep.Name);
+        step.moveAfter(terminateStep.Name);
         
         //assemble
         wiretapStep = (Step__c)ApexDomain.getById(wiretapStep.Id);

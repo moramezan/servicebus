@@ -86,7 +86,7 @@
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c stepA2 = StepModel.generateOne(sequence.Name, AuditInitializer.class.getName());
+        Step__c stepA2 = SequenceModel.fromName(sequence.Name).appendStep(AuditInitializer.class.getName());
  
         AuditInitializerConfig__c config1  = new AuditInitializerConfig__c(
             StaticGroupIdentifier__c = theIdentifier1

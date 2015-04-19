@@ -79,7 +79,7 @@ public with sharing class MonitorController {
         //#761 add null guy for all buffered messages
         process2statistic.put(' ', new Statistic(' ', 0, 0, 0, 0));
         
-        List<ProcessModel> processes = SequenceBuilderExtension.findProcesses();
+        List<ProcessModel> processes = ProcessModel.discoverProcesses();
         
         for (ProcessModel process : processes) {
             Statistic statistic = new Statistic(process.FullyQualifiedClassName, 0, 0, 0, 0);

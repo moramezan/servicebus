@@ -14,8 +14,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepModel.generateOne(sequence.Name, Schedule.class.getName());
-        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class.getName());
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
 
 
          //arrange input event
@@ -51,8 +51,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepModel.generateOne(sequence.Name, Schedule.class.getName());
-        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class.getName());
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
 
         //arrange config
         ///Weekly    Sunday;Monday;Tuesday
@@ -104,8 +104,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepModel.generateOne(sequence.Name, Schedule.class.getName());
-        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class.getName());
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
 
         //arrange config
         ///Daily    Working days only;Weekends and holidays
@@ -157,8 +157,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepModel.generateOne(sequence.Name, Schedule.class.getName());
-        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class.getName());
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
 
         //arrange config
         ///Monthly    04;06
@@ -210,8 +210,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepModel.generateOne(sequence.Name, Schedule.class.getName());
-        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class.getName());
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
 
         //arrange config
         ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c];
@@ -247,8 +247,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c scheduleStep = StepModel.generateOne(sequence.Name, Schedule.class.getName());
-        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class.getName());
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
         
 
          //arrange input event parameters

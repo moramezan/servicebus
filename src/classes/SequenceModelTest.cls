@@ -7,9 +7,9 @@
         insert soSequence;
         Id soSequenceId = soSequence.Id;
 
-        Step__c stepA1 = StepModel.generateOne(soSequence.Name, Subscribe.class.getName());
-        Step__c stepA2 = StepModel.generateOne(soSequence.Name, Publish.class.getName());
-        Step__c stepA3 = StepModel.generateOne(soSequence.Name, Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(soSequence.Name).appendStep(Subscribe.class.getName());
+        Step__c stepA2 = SequenceModel.fromName(soSequence.Name).appendStep(Publish.class.getName());
+        Step__c stepA3 = SequenceModel.fromName(soSequence.Name).appendStep(Terminate.class.getName());
         Decimal positionA1 = stepA1.Position__c;
         Decimal positionA2 = stepA2.Position__c;
         Decimal positionA3 = stepA3.Position__c;
@@ -125,14 +125,13 @@
         Sequence__c soSequenceA = new Sequence__c(Name = sequenceNameA);
         insert soSequenceA;
         Id soSequenceAId = soSequenceA.Id;
-        Step__c stepA1 = StepModel.generateOne(soSequenceA.Name, Subscribe.class.getName());
-        Step__c stepA2 = StepModel.generateOne(soSequenceA.Name, Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(soSequenceA.Name).appendStep(Subscribe.class.getName());
+        Step__c stepA2 = SequenceModel.fromName(soSequenceA.Name).appendStep(Terminate.class.getName());
  
 
         // act
-        Id deletedStepId =  stepA1.Id;
         SequenceModel sequenceA = SequenceModel.fromName(soSequenceA.Name);
-        StepSetModel actualSteps = sequenceA.destroySteps(new Set<Id>{deletedStepId});
+        SequenceModel.fromName(sequenceNameA).destroyStep(stepA1.Name);
  
         
         // assemble

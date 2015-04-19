@@ -12,15 +12,15 @@
         //arrange
         Sequence__c target = new Sequence__c(Name = 'target');
         insert target;
-        StepModel.generateOne(target.Name, Terminate.class.getName());
+        SequenceModel.fromName(target.Name).appendStep(Terminate.class.getName());
         
         JumpConfig__c config = new JumpConfig__c(Sequence__c = target.Id);
         insert config;
         
         Sequence__c origin = new Sequence__c(Name = 'origin');
         insert origin;
-        StepModel.generateOne(origin.Name, Jump.class.getName());
-        StepModel.generateOne(origin.Name, Terminate.class.getName());
+        SequenceModel.fromName(origin.Name).appendStep(Jump.class.getName());
+        SequenceModel.fromName(origin.Name).appendStep(Terminate.class.getName());
         
         
         Map<String,Object> parameters = new Map<String,Object>{
