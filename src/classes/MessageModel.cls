@@ -65,13 +65,10 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
         }
         
         //do special run once broker
-        Job.ExecAnonResult result = Job.runOneAsUser(message.Id);
+        Boolean result = Job.runOneAsUser(message.Id);
         
-        if (!result.success) {
-            //failure, write status and any exception fields ("avoids DML in action method")
-            this.message.Exception__c = result.exceptionMessage.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-            this.message.Cause__c = result.exceptionStackTrace.abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
-            update message;
+        if (!result) {
+            //stop here and return
             return false;
         }
         

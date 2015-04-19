@@ -577,13 +577,13 @@ abstract public with sharing class Broker {
             for (Message__c inputMessage : inputMessages) {
                 Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
                 inputEvent.put('esb__StepConfig', stepConfig);
-                inputMessage.Event__c = Json.serialize(inputEvent);
+                inputMessage.Event__c = Json.serializePretty(inputEvent);
             }
         } else {
             for (Message__c inputMessage : inputMessages) {
                 Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
                 inputEvent.put('esb__StepConfig', null);
-                inputMessage.Event__c = Json.serialize(inputEvent);
+                inputMessage.Event__c = Json.serializePretty(inputEvent);
             }
         }
         

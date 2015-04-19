@@ -291,7 +291,6 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
             
             //EXECUTE
             Message__c inputMessage = (Message__c)ApexDomain.getById(this.messageId);
-            inputMessage.Status__c = 'Completed';
             if (inputMessage.Attempts__c == null) inputMessage.Attempts__c = 0;
             inputMessage.Attempts__c++; //#808
             List<Message__c> outputMessages = new List<Message__c>();
@@ -319,17 +318,36 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      * Adds running user context around Job.runOne()
      * @throws JobException
      */
-    static public ExecAnonResult runOneAsUser(Id messageId) {
+    static public Boolean runOneAsUser(Id messageId) {
         if (Test.isRunningTest()) {
             //in tests, just run the thing here and now as me
             Job.runOne(messageId);
-            ExecAnonResult result = new ExecAnonResult();
-            result.success = true;
-            return result;
+            return true;
         }
         
         String command = Job.class.getName() + '.runOne(\'' + messageId + '\');';
-        return execAnon(command);
+        Job.ExecAnonResult result = execAnon(command);
+        
+        //handle fatal exceptions
+        if (!result.success) {
+            //failure, write status and any exception fields
+            update new Message__c(
+                Id = messageId,
+                Exception__c = result.exceptionMessage.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length),
+                Cause__c = result.exceptionStackTrace.abbreviate(SObjectType.Message__c.Fields.Cause__c.Length)
+            );
+            return false;
+        }
+        
+        //handle catchable exceptions
+        Message__c message = [SELECT Exception__c FROM Message__c WHERE Id = :messageId];
+        if (message.Exception__c != null) {
+            //failure
+            return false;
+        }
+        
+        //success
+        return true;
     }
     
     /**
