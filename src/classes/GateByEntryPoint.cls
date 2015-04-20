@@ -20,12 +20,11 @@ public with sharing class GateByEntryPoint extends ProcessModel.BaseProcess {
 
         public Map<String,String> Outputs = new Map<String,String>{
             'esb__GateItemsQueryString' => 'STRING of the query that locates the items that hold events correlated by Job Id.',
-                    'esb__GateItemsFieldName' => 'STRING of the item field name that contains the serialized event data.'
+            'esb__GateItemsFieldName' => 'STRING of the item field name that contains the serialized event data.'
         };
     }
 
     override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
-        /// TODO ??? if (!SObjectType.Message__c.Createable) throw new ApexDomain.CrudException('!SObjectType.Message__c.Createable');
 
         if (!inputEvent.containsKey('esb__EntryPointUuid'))
             throw new GateByEntryPointException('Input event missing mandatory esb__EntryPointUuid parameter');
@@ -63,7 +62,7 @@ public with sharing class GateByEntryPoint extends ProcessModel.BaseProcess {
         String queryString = ''
                 + 'SELECT ' + fieldName + ' '
                 + 'FROM Message__c '
-                + 'WHERE EntryPointUuid__c = \'' + entryPointUuid + '\'  AND Route__c  = \'' + route + '\''
+                + 'WHERE EntryPointUuid__c = \'' + entryPointUuid + '\'  AND Step__c  = \'' + route + '\''
                 ;
 
         //this is the last item, let's release

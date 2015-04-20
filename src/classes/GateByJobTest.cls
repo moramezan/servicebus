@@ -1,5 +1,138 @@
 @IsTest public class GateByJobTest {
 
+    static testmethod void callingIsReleaseThrowsExpectedException01() {
+        // Arrange :
+        Map<String,Object> inputEvent = new Map<String,Object> {
+            //   '__QueueableId' => '12345',
+            '__SequenceName' => 'test',
+            '__Position' => 1,
+            '__ChunkTotal' => 1,
+            '__Chunk' => 1
+        };
+                    
+        Boolean actualFlag = false;
+        try {
+            ProcessModel.BaseProcess process = new GateByJob();
+            List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
+        } catch (Exception e) {
+            actualFlag = e.getMessage().contains('missing mandatory __QueueableId');
+        }
+        
+        // Assemble :
+        // n/a
+        
+        // Assert :
+        Boolean expectedFlag = true;
+        System.assertEquals(expectedFlag , actualFlag);
+    }
+    
+    
+    static testmethod void callingIsReleaseThrowsExpectedException02() {
+        // Arrange :
+        Map<String,Object> inputEvent = new Map<String,Object> {
+            '__QueueableId' => '12345',
+            // '__SequenceName' => 'test',
+            '__Position' => 1,
+            '__ChunkTotal' => 1,
+            '__Chunk' => 1
+        };
+                    
+        Boolean actualFlag = false;
+        try {
+            ProcessModel.BaseProcess process = new GateByJob();
+            List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
+        } catch (Exception e) {
+            actualFlag = e.getMessage().contains('missing mandatory __SequenceName');
+        }
+        
+        // Assemble :
+        // n/a
+        
+        // Assert :
+        Boolean expectedFlag = true;
+        System.assertEquals(expectedFlag , actualFlag);
+    }
+    
+    static testmethod void callingIsReleaseThrowsExpectedException03() {
+        // Arrange :
+        Map<String,Object> inputEvent = new Map<String,Object> {
+            '__QueueableId' => '12345',
+            '__SequenceName' => 'test',
+            // '__Position' => 1,
+            '__ChunkTotal' => 1,
+            '__Chunk' => 1
+        };
+                    
+                    Boolean actualFlag = false;
+        try {
+            ProcessModel.BaseProcess process = new GateByJob();
+            List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
+        } catch (Exception e) {
+            actualFlag = e.getMessage().contains('missing mandatory __Position');
+        }
+        
+        // Assemble :
+        // n/a
+        
+        // Assert :
+        Boolean expectedFlag = true;
+        System.assertEquals(expectedFlag , actualFlag);
+    }
+    
+    
+    static testmethod void callingIsReleaseThrowsExpectedException04() {
+        // Arrange :
+        Map<String,Object> inputEvent = new Map<String,Object> {
+            '__QueueableId' => '12345',
+            '__SequenceName' => 'test',
+            '__Position' => 1,
+            // '__ChunkTotal' => 1,
+            '__Chunk' => 1
+        };
+                    
+        Boolean actualFlag = false;
+        try {
+            ProcessModel.BaseProcess process = new GateByJob();
+            List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
+        } catch (Exception e) {
+            actualFlag = e.getMessage().contains('missing mandatory  __ChunkTotal');
+        }
+        
+        // Assemble :
+        // n/a
+        
+        // Assert :
+        Boolean expectedFlag = true;
+        System.assertEquals(expectedFlag , actualFlag);
+    }
+    
+    static testmethod void callingIsReleaseThrowsExpectedException05() {
+        // Arrange :
+        Map<String,Object> inputEvent = new Map<String,Object> {
+            '__QueueableId' => '12345',
+            '__SequenceName' => 'test',
+            '__Position' => 1,
+            '__ChunkTotal' => 1
+            // '__Chunk' => 1
+        };
+                    
+        Boolean actualFlag = false;
+        try {
+            ProcessModel.BaseProcess process = new GateByJob();
+            List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
+        } catch (Exception e) {
+            actualFlag = e.getMessage().contains('missing mandatory __Chunk');
+        }
+        
+        // Assemble :
+        // n/a
+        
+        // Assert :
+        Boolean expectedFlag = true;
+        System.assertEquals(expectedFlag , actualFlag);
+    }
+     
+    
     static testmethod void callingInvokeMainReturnsZeroOutputEventsWhenPersistedCountNotEqOneWithStartedStatus() {
         // Arrange
         Decimal count =  3 ;
@@ -8,7 +141,11 @@
         String queueableId = '1234567';
 
         Map<String,Object> inputEvent = new Map<String,Object> {
-            '__QueueableId' => queueableId
+            '__QueueableId' => queueableId,
+            '__SequenceName' => 'test',
+            '__Position' => 1,
+            '__ChunkTotal' => 1,
+            '__Chunk' => 1
         };
 
         List<Message__c> messages = new List<Message__c> ();
@@ -49,7 +186,11 @@
         String queueableId = '1234567';
 
         Map<String,Object> inputEvent = new Map<String,Object> {
-            '__QueueableId' => queueableId
+            '__QueueableId' => queueableId,
+            '__SequenceName' => 'test',
+            '__Position' => 1,
+            '__ChunkTotal' => 1,
+            '__Chunk' => 1
         };
 
         List<Message__c> messages = new List<Message__c> ();
@@ -234,4 +375,95 @@
         Boolean expected03 = true;
         System.assertEquals(expected03 , actual03);
     }
+    
+    
+    static testmethod void callingIsReleaseReturnsExpectedExpected01() {
+        // Arrange :
+        String queueableId = '12345';
+        Integer chunkTotal = 1;
+        Integer chunk = 1;
+
+        Message__c message = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        insert message;
+
+        // Act :
+        Boolean actualIsRelease = GateByJob.isRelease(queueableId, chunkTotal, chunk);
+
+        // Assemble :
+        // n/a
+        
+        // Assert :
+        Boolean expectedIsRelease = true;
+        System.assertEquals(expectedIsRelease , actualIsRelease);
+    }
+  
+    
+    static testmethod void callingIsReleaseReturnsExpectedExpected02() {
+        // Arrange :
+        String queueableId = '12345';
+        Integer chunkTotal = 2;      // not the last
+        Integer chunk = 1;
+
+        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        insert message1;
+        Message__c message2 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        insert message2;
+
+        // Act :
+        Boolean actualIsRelease = GateByJob.isRelease(queueableId, chunkTotal, chunk);
+
+        // Assemble :
+        // n/a
+        
+        // Assert :
+        Boolean expectedIsRelease = false;
+        System.assertEquals(expectedIsRelease , actualIsRelease);
+    }
+    
+    static testmethod void callingIsReleaseReturnsExpectedExpected03() {
+        // Arrange :
+        String queueableId = '12345';
+        Integer chunkTotal = 1;
+        Integer chunk = 1;
+
+        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        insert message1;
+        Message__c message2 = new Message__c(Exception__c = null, Status__c = 'Buffered', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        insert message2;
+
+        // Act :
+        Boolean actualIsRelease = GateByJob.isRelease(queueableId, chunkTotal, chunk);
+
+        // Assemble :
+        // n/a
+        
+        // Assert :
+        Boolean expectedIsRelease = false;
+        System.assertEquals(expectedIsRelease , actualIsRelease);
+    }
+
+    static testmethod void callingIsReleaseReturnsExpectedExpected04() {
+        // Arrange :
+        String queueableId = '12345';
+        Integer chunkTotal = 2;
+        Integer chunk = 2;
+
+        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        insert message1;
+        Message__c message2 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        insert message2;
+        Message__c message3 = new Message__c(Exception__c = 'Error', Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        insert message3; // this doent count as has an Exception
+        
+        // Act :
+        Boolean actualIsRelease = GateByJob.isRelease(queueableId, chunkTotal, chunk);
+
+        // Assemble :
+        // n/a
+        
+        // Assert :
+        Boolean expectedIsRelease = true;
+        System.assertEquals(expectedIsRelease , actualIsRelease);
+    }
+    
 }

@@ -1,4 +1,4 @@
-public with sharing class GateByJob extends ProcessModel.BaseProcess {
+global with sharing class GateByJob extends ProcessModel.BaseProcess {
 
     private class GateByJobException extends Exception {}
 
@@ -20,14 +20,13 @@ public with sharing class GateByJob extends ProcessModel.BaseProcess {
 
         public Map<String,String> Outputs = new Map<String,String>{
             'esb__GateItemsQueryString' => 'STRING of the query that locates the items that hold events correlated by Job Id.',
-                    'esb__GateItemsFieldName' => 'STRING of the item field name that contains the serialized event data.'
+            'esb__GateItemsFieldName' => 'STRING of the item field name that contains the serialized event data.'
         };
     }
 
 
 
     override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
-        //// TODO ? if (!SObjectType.MESSAGE__C.Createable) throw new ApexDomain.CrudException('!SObjectType.MESSAGE__C.Createable');
 
         if (!inputEvent.containsKey('__QueueableId'))
             throw new GateByJobException('Input event missing mandatory __QueueableId parameter');
@@ -66,7 +65,7 @@ public with sharing class GateByJob extends ProcessModel.BaseProcess {
         String queryString = ''
                 + 'SELECT ' + fieldName + ' '
                 + 'FROM Message__c '
-                + 'WHERE QueueableId__c = \'' + queueableId + '\'  AND Route__c  = \'' + route + '\''
+                + 'WHERE QueueableId__c = \'' + queueableId + '\'  AND Step__c  = \'' + route + '\''
                 ;
 
         //this is the last item, let's release
@@ -140,7 +139,7 @@ public with sharing class GateByJob extends ProcessModel.BaseProcess {
     
     
     @testVisible
-    private static Boolean isRelease(Id queueableId, Integer chunkTotal, Integer chunk) {
+    global static Boolean isRelease(String queueableId, Integer chunkTotal, Integer chunk) {
         // Release trigger:
         // given :
         //   A = [Non-Completed status messages having a given QueueableId]
@@ -166,6 +165,7 @@ public with sharing class GateByJob extends ProcessModel.BaseProcess {
             QueueableId__c = :queueableId
         ];
 
+        
         Integer nonExceptionStartedCount  = 0;
         Boolean onlyStartedStatus = true;
         for (Message__c message : messages) {
