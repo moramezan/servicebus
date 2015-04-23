@@ -16,7 +16,7 @@
         Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class.getName());
 
         //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName(), IsPaused__c = isPaused);
 
         //tee up two messages in queued state
         new Job(sequenceNameA, '000000000000000AAA').execute(null);
@@ -77,7 +77,7 @@
         Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class.getName());
 
         //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName(), IsPaused__c = isPaused);
 
         //tee up two messages in queued state
         new Job(sequenceNameA, '000000000000000AAA').execute(null);

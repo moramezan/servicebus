@@ -2,7 +2,7 @@
 
     static testmethod void testDoRestartRunsBroker() {
         //arrange broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName());
         
         //arrange message
         List<Message__c> messages = new Job('Test', UserInfo.getUserId()).persist();

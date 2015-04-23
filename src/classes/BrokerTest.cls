@@ -1,38 +1,73 @@
 @IsTest public class BrokerTest { //formerly FailureProcess
     
-    public String Event;
+    /**
+     * Synchronous Broker is used inside of unit tests
+     * to traverse sequences with multiple steps without
+     * the "single execute" limit of Database.Batchable
+     * 
+     * Alternatively we can use it to just call individual
+     * broker method implementations like mark() and execute()
+     * without actually starting or running the Broker itself
+     */
+    static private Boolean DidSynchronousBrokerRun = false;
+    static private Boolean IsSynchronousBrokerRunning = false;
+    public with sharing class SynchronousBroker extends Broker {
     
-    @TestVisible private class ESB {
-        public String Tag = 'Enterprise Service Bus';
-        public String Name = 'Failure Process';
-        public String Description = 'A toStringable Object that throws an exception for testing purposes.'; //Will not be listed
-    }
-    
-    override public String toString() {
-        System.assert(this.Event != null);
-        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
-        throw new BrokerException(FailureMessage);
-        return Json.serialize(new List<Map<String,Object>>{inputEvent});
-    }
-    
-    public class BrokerException extends Exception {}
-
-    public class DoNothingBroker extends Broker {
-        override public void runImpl() {}
-        override public Boolean isRunning() {return true;}
-    }
-    
-    @TestVisible static private String FailureMessage = 'Fake Error Thrown in FailureProcess';
-    
-    static public Boolean flagrunImpl = false;
-    public class MockBroker extends Broker {
-        override public Boolean isRunning() {
-            return false;
+        override public void runImpl() {
+            //aligns ok with batch mental model
+            this.start();
+            this.execute();
+            this.finish();
         }
         
-        override public void runImpl() {
-            flagrunImpl = true;
+        public void start() {
+            IsSynchronousBrokerRunning = true;
         }
+        
+        public void execute() {
+            //LOCATE
+            List<Message__c> inputMessages = this.locateMarkableWork();
+            
+            //MARK
+            this.mark(inputMessages);
+            
+            try {
+            
+                //EXECUTE
+                List<Message__c> outputMessages = new List<Message__c>();
+                this.execute(inputMessages, outputMessages);
+                DidSynchronousBrokerRun = true;
+                
+                //PERSIST
+                List<Message__c> inputAndOutputMessages = new List<Message__c>();
+                inputAndOutputMessages.addAll(inputMessages);
+                inputAndOutputMessages.addAll(outputMessages);
+                this.persist(inputAndOutputMessages); //#782
+                
+            } catch (Exception e) {
+            
+                for (Message__c inputMessage : inputMessages) {
+                    inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+                    inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+                }
+                
+                //write away error text on messages
+                update inputMessages;
+            }
+        }
+        
+        public void finish() {
+            //indicate stop because run ONLY runs if stopped
+            IsSynchronousBrokerRunning = false;
+            
+            //finish (invokes broker again in same context)
+            Broker.run();
+        }
+        
+        override public Boolean isRunning() {
+            return IsSynchronousBrokerRunning;
+        }
+        
     }
 
     static testmethod void testChunkingMarkFindsMultipleWork() {
@@ -279,7 +314,7 @@
         }).persist();
         
         //act
-        MockBroker broker = new MockBroker();
+        SynchronousBroker broker = new SynchronousBroker();
         
         //MARK
         List<Message__c> messages = broker.locateMarkableWork();
@@ -325,7 +360,7 @@
         };
         
         //act
-        MockBroker broker = new MockBroker();
+        SynchronousBroker broker = new SynchronousBroker();
         
         //MARK
         List<Message__c> messages = broker.locateMarkableWork();
@@ -453,11 +488,11 @@
         //arrange broker implementation custom setting
         String theSequenceName = 'TestSequence';
         Id theId = '000000000000000AAA';
-        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName());
         
         //assert
         Boolean expectedBeforeFlag = false;
-        Boolean actualBeforeFlag = BrokerTest.flagrunImpl;
+        Boolean actualBeforeFlag = BrokerTest.DidSynchronousBrokerRun;
         System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
         //IT'S a @FUTURE CALL ... dont want that to happen every time
@@ -467,7 +502,7 @@
         
         //assert
         Boolean expectedAfterFlag = true;
-        Boolean actualAfterFlag = flagrunImpl;
+        Boolean actualAfterFlag = DidSynchronousBrokerRun;
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
     }
     
@@ -480,18 +515,18 @@
         SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
         
         //arrange
-        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName());
         
         //assert
         Boolean expectedBeforeFlag = false;
-        Boolean actualBeforeFlag = BrokerTest.flagrunImpl;
+        Boolean actualBeforeFlag = BrokerTest.DidSynchronousBrokerRun;
         System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
         Integer expectedSizeBefore = 0;
         Integer actualSizeBefore = [SELECT COUNT() FROM Document];
         System.assertEquals(expectedSizeBefore , actualSizeBefore);
         
-        //act
+        //act (this calls blob enqueue signature that does inserts a document)
         new Job('TestSequence', Blob.valueOf('balls')).execute(null);
         
         //assert
@@ -500,18 +535,18 @@
         System.assertEquals(expectedSizeAfter, actualSizeAfter);
         
         Boolean expectedAfterFlag = true;
-        Boolean actualAfterFlag = BrokerTest.flagrunImpl;
+        Boolean actualAfterFlag = BrokerTest.DidSynchronousBrokerRun;
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
     }
     
     static testmethod void callingRestartSuccessfullyCallsrunImpl() {
         //arrange
-        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.MockBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName());
         List<Message__c> messages = new Job('test', UserInfo.getUserId()).persist();
         
         //assert
         Boolean expectedBeforeFlag = false;
-        Boolean actualBeforeFlag = flagrunImpl;
+        Boolean actualBeforeFlag = DidSynchronousBrokerRun;
         System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
         //act
@@ -519,7 +554,7 @@
         
         //assert
         Boolean expectedAfterFlag = true;
-        Boolean actualAfterFlag = flagrunImpl;
+        Boolean actualAfterFlag = DidSynchronousBrokerRun;
         System.assertEquals(expectedAfterFlag, actualAfterFlag);
         
     }
@@ -542,7 +577,7 @@
         List<Message__c> messages = new Job(inputEvent).persist();
         
         //arrange broker
-        Broker broker = new DoNothingBroker();
+        Broker broker = new SynchronousBroker();
         
         String actualMessage;
         
@@ -570,7 +605,7 @@
         List<Message__c> messages = new Job(inputEvent).persist();
         
         //arrange specific broker implementation
-        Broker broker = new DoNothingBroker();
+        Broker broker = new SynchronousBroker();
         
         String actualMessage;
         

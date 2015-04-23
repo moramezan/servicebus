@@ -260,7 +260,7 @@
         Time lastEventTime = Time.newInstance(hour, lastEventMinute, 00, 0);
         DateTime lastEventStamp =  DateTime.newInstance(currentDate, lastEventTime);
         
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName());
         
         // act
         HeartbeatImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
@@ -313,7 +313,7 @@
         Time lastEventTime = Time.newInstance(hour, lastEventMinute, 00, 0);
         DateTime lastEventStamp =  DateTime.newInstance(currentDate, lastEventTime);
         
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName());
         
         // act
         HeartbeatImplementation.IHeartbeatGenerator heartbeatGeneratorMock = (HeartbeatImplementation.IHeartbeatGenerator)
