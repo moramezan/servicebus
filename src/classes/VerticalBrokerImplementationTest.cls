@@ -136,7 +136,6 @@
         
         //act (execute)
         Id messageId = [SELECT Id FROM Message__c WHERE Status__c = 'Started'].Id;
-        System.debug(ApexDomain.getById(step.Id));
         impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
         
         //assert

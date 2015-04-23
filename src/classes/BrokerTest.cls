@@ -1011,4 +1011,205 @@
         
     }
     
+    public class Inserter extends ProcessModel.BaseProcess {
+        override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            Map<String,Object> outputEvent = inputEvent.clone();
+            insert new Document(Name = 'Test.txt', FolderId = UserInfo.getUserId());
+            return new List<Map<String,Object>>();
+        }
+    }
+    
+    public class InserterESB {
+        public String Description = 'Inserts 1 document, runs 75 times';
+        public Integer Limits = 75;
+    }
+    
+    static testmethod void testSavepointTaxImposedOnDmlProcess() {
+        //arrange broker
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        Broker impl = Broker.impl();
+        
+        //arrange sequence
+        insert new Sequence__c(Name = 'Sequence');
+        SequenceModel model = SequenceModel.fromName('Sequence');
+        
+        //arrange steps
+        model.appendStep(Inserter.class.getName());
+        
+        //arrange events
+        List<Map<String,Object>> events = new List<Map<String,Object>>();
+        for (Integer i = 0; i < 75; i++) {
+            Map<String,Object> event = new Map<String,Object>{'esb__SequenceName' => 'Sequence'};
+            events.add(event);
+        }
+        
+        //arrange messages
+        new Job(events).persist();
+        List<Message__c> inputMessages = impl.locateMarkableWork();
+        List<Message__c> outputMessages = new List<Message__c>();
+        impl.mark(inputMessages);
+        
+        //act and assemble
+        Test.startTest();
+        impl.execute(inputMessages, outputMessages);
+        Integer dmlStatements = Limits.getDMLStatements();
+        Test.stopTest();
+        
+        //assert
+        Integer expectedStatements = 150; //75 savepoints, 75 documents
+        Integer actualStatements = dmlStatements;
+        System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
+    }
+    
+    public class Memory extends ProcessModel.BaseProcess {
+        override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            inputEvent.put('c__OrganizationId', UserInfo.getOrganizationId());
+            return new List<Map<String,Object>>();
+        }
+    }
+    
+    public class MemoryESB {
+        public String Description = 'Does stuff in memory without side effects.';
+        public Integer Limits = 1000;
+    }
+    
+    static testmethod void testSavepointTaxRelievedOnMemoryProcess() {
+        //arrange broker
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        Broker impl = Broker.impl();
+        
+        //arrange sequence
+        insert new Sequence__c(Name = 'Sequence');
+        SequenceModel model = SequenceModel.fromName('Sequence');
+        
+        //arrange steps
+        model.appendStep(Memory.class.getName());
+        
+        //arrange events
+        List<Map<String,Object>> events = new List<Map<String,Object>>();
+        for (Integer i = 0; i < 1000; i++) {
+            Map<String,Object> event = new Map<String,Object>{'esb__SequenceName' => 'Sequence'};
+            events.add(event);
+        }
+        
+        //arrange messages
+        new Job(events).persist();
+        List<Message__c> inputMessages = impl.locateMarkableWork();
+        List<Message__c> outputMessages = new List<Message__c>();
+        impl.mark(inputMessages);
+        
+        //act and assemble
+        Test.startTest();
+        impl.execute(inputMessages, outputMessages);
+        Integer dmlStatements = Limits.getDMLStatements();
+        Test.stopTest();
+        
+        //assert
+        Integer expectedStatements = 1; //exactly 1 savepoint
+        Integer actualStatements = dmlStatements;
+        System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
+    }
+    
+    public class InserterErrorException extends Exception {}
+    
+    public class InserterError extends ProcessModel.BaseProcess {
+        override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            insert new Document(Name = 'Test.txt', FolderId = UserInfo.getUserId());
+            throw new InserterErrorException('Something catchable.');
+        }
+    }
+    
+    public class InserterErrorESB {
+        public String Description = 'Inserts 1 document, throws an exception needing rollback.';
+        public Integer Limits = 50;
+    }
+    
+    static testmethod void testRollbackTaxImposedOnDmlProcess() {
+        //arrange broker
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        Broker impl = Broker.impl();
+        
+        //arrange sequence
+        insert new Sequence__c(Name = 'Sequence');
+        SequenceModel model = SequenceModel.fromName('Sequence');
+        
+        //arrange steps
+        model.appendStep(InserterError.class.getName());
+        
+        //arrange events
+        List<Map<String,Object>> events = new List<Map<String,Object>>();
+        for (Integer i = 0; i < 50; i++) {
+            Map<String,Object> event = new Map<String,Object>{'esb__SequenceName' => 'Sequence'};
+            events.add(event);
+        }
+        
+        //arrange messages
+        new Job(events).persist();
+        List<Message__c> inputMessages = impl.locateMarkableWork();
+        List<Message__c> outputMessages = new List<Message__c>();
+        impl.mark(inputMessages);
+        
+        //act and assemble
+        Test.startTest();
+        impl.execute(inputMessages, outputMessages);
+        Integer dmlStatements = Limits.getDmlStatements();
+        Test.stopTest();
+        
+        //assert
+        Integer expectedStatements = 150; //50 savepoints, 50 documents, 50 rollbacks
+        Integer actualStatements = dmlStatements;
+        System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
+    }
+    
+    public class MemoryErrorException extends Exception {}
+    
+    public class MemoryError extends ProcessModel.BaseProcess {
+        override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            inputEvent.put('c__OrganizationId', UserInfo.getOrganizationId());
+            throw new MemoryErrorException('Something catchable.');
+        }
+    }
+    
+    public class MemoryErrorESB {
+        public String Description = 'Does stuff in memory, throws an exception not needing rollback.';
+        public Integer Limits = 1000;
+    }
+    
+    static testmethod void testRollbackTaxRelievedOnMemoryProcess() {
+        //arrange broker
+        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
+        Broker impl = Broker.impl();
+        
+        //arrange sequence
+        insert new Sequence__c(Name = 'Sequence');
+        SequenceModel model = SequenceModel.fromName('Sequence');
+        
+        //arrange steps
+        model.appendStep(MemoryError.class.getName());
+        
+        //arrange events
+        List<Map<String,Object>> events = new List<Map<String,Object>>();
+        for (Integer i = 0; i < 1000; i++) {
+            Map<String,Object> event = new Map<String,Object>{'esb__SequenceName' => 'Sequence'};
+            events.add(event);
+        }
+        
+        //arrange messages
+        new Job(events).persist();
+        List<Message__c> inputMessages = impl.locateMarkableWork();
+        List<Message__c> outputMessages = new List<Message__c>();
+        impl.mark(inputMessages);
+        
+        //act and assemble
+        Test.startTest();
+        impl.execute(inputMessages, outputMessages);
+        Integer dmlStatements = Limits.getDmlStatements();
+        Test.stopTest();
+        
+        //assert
+        Integer expectedStatements = 1; //exactly 1 savepoint
+        Integer actualStatements = dmlStatements;
+        System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
+    }
+    
 }

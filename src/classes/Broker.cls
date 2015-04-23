@@ -391,26 +391,16 @@ abstract public with sharing class Broker {
         String status = specimenMessage.Status__c;
         String route = specimenMessage.Step__c;
         
-        Step__c specimenStep;
+        Step__c specimenStep = Step__c.getValues(route);
         try {
-            specimenStep = [
-                SELECT Id, FullyQualifiedClassName__c
-                FROM Step__c
-                WHERE Name = :route
-                //LIMIT unnecessary, only one should exist
-            ];
-            
-            try {
-                className = specimenStep.FullyQualifiedClassName__c;
-                ProcessModel process = ProcessModel.fromFqcn(className);
-                queryLimit = process.Limits;
-            } catch (Exception e) {
-                //no process found, apex class may be deleted or renamed
-            }
-            
-        } catch (QueryException e) {
-            //no step found, resolution problem or might be a heartbeat
+            className = specimenStep.FullyQualifiedClassName__c;
+            ProcessModel process = ProcessModel.fromFqcn(className);
+            queryLimit = process.Limits;
+        } catch (Exception e) {
+            //no process found, apex class may be deleted or renamed
         }
+        
+        //no step found, resolution problem or might be a heartbeat
         
         List<Message__c> messages = [
             SELECT Id, Step__c, Event__c
@@ -522,17 +512,15 @@ abstract public with sharing class Broker {
         }
         
         //specimen message will have same process as others
-        Message__c specimen = [SELECT Step__c FROM Message__c WHERE Id = :inputMessages[0].Id];
+        Message__c specimen = inputMessages[0];
 
-        Step__c step;
-        try {
-            step = [SELECT ConfigId__c, FullyQualifiedClassName__c FROM Step__c WHERE Name = :specimen.Step__c];
-        } catch (QueryException qe) {
+        Step__c step = Step__c.getValues(specimen.Step__c);
+        if (step == null) {
             //this scenario is really following on from a failed resolve - thinking that we might explicitly set a new message status
             //of FAILED but in due course we hope to do away with resolve step entirely with message names '{sequence}#{position}V{version}'
             for (Message__c inputMessage : inputMessages) {
                 DateTime startStamp = idToStartStamp.get(inputMessage.Id);
-                Exception e = new Broker.EngineException('Step unqueryable, eg bad sequence name, position, missing terminate.', qe);
+                Exception e = new Broker.EngineException('Step unqueryable, eg bad sequence name, position, missing terminate.');
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
                 inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
@@ -609,6 +597,16 @@ abstract public with sharing class Broker {
             }
         }
         
+        //for incrementally rolling back each message attempted
+        Savepoint sp = Database.setSavepoint();
+        
+        //savepoint tax only applies if side effects
+        Boolean hadSideEffects = false;
+        Integer queueables;
+        Integer futures;
+        Integer emails;
+        Integer dmls;
+        
         for (Integer i = 0; i < inputMessages.size(); i++) {
             Message__c inputMessage = inputMessages[i];
             DateTime startStamp = idToStartStamp.get(inputMessage.Id);
@@ -617,10 +615,25 @@ abstract public with sharing class Broker {
             //TODO COUNT ANY CALLOUTS
             Broker.Wrapper wrapper = wrappers[i];
 
-            //for incrementally rolling back each message attempted
-            Savepoint minor = Database.setSavepoint();
             try {
+                
+                if (hadSideEffects) sp = Database.setSavepoint();
+                hadSideEffects = false;
+                
+                //measure side effects before
+                queueables = Limits.getQueueableJobs();
+                futures = Limits.getFutureCalls();
+                emails = Limits.getEmailInvocations();
+                dmls = Limits.getDMLStatements();
+                
                 wrapper.invokeMain();
+                
+                //measure side effects after
+                if (Limits.getEmailInvocations() > emails) hadSideEffects = true;
+                if (Limits.getQueueableJobs() > queueables) hadSideEffects = true;
+                if (Limits.getDMLStatements() > dmls) hadSideEffects = true;
+                if (Limits.getFutureCalls() > futures) hadSideEffects = true;
+                
                 inputMessage.Status__c = 'Completed'; //#798
                 inputMessage.Exception__c = null;
                 inputMessage.Cause__c = null;
@@ -637,7 +650,14 @@ abstract public with sharing class Broker {
                 inputMessage.ExecuteDuration__c = calloutDuration + (System.Now().getTime() - startStamp.getTime());
 
             } catch (Exception e) {
-                Database.rollback(minor);
+                //measure side effects after
+                if (Limits.getEmailInvocations() > emails) hadSideEffects = true;
+                if (Limits.getQueueableJobs() > queueables) hadSideEffects = true;
+                if (Limits.getDMLStatements() > dmls) hadSideEffects = true;
+                if (Limits.getFutureCalls() > futures) hadSideEffects = true;
+                
+                if (hadSideEffects) Database.rollback(sp);
+                
                 //#581 smoking gun should point at the user, NOT at our broker
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                 inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
