@@ -272,7 +272,7 @@
                             "    'class': 'deletelink',",
                             "    'onclick': 'return false;',",
                             "    'title': 'Delete Step',",
-                            "    'href': URLFOR['/'] + 'setup/own/deleteredirect.jsp?delId=' + record.get('Id')",
+                            "    'href': '#'",
                             "}); else return Ext.DomHelper.createHtml({",
                             "    'tag': 'a',",
                             "    'html': 'Del',",

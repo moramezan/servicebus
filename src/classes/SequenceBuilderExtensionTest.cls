@@ -40,7 +40,7 @@
         String data = extension.getSteps();
         
         //assemble
-        List<Step__c> steps = (List<Step__c>)Json.deserialize(data, List<Step__c>.class);
+        List<SequenceBuilderExtension.StepDto> steps = (List<SequenceBuilderExtension.StepDto>)Json.deserialize(data, List<SequenceBuilderExtension.StepDto>.class);
         
         //assert
         Integer expectedCount = 2;
@@ -53,7 +53,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        List<Step__c> sequenceSteps = SequenceBuilderExtension.fetchSteps('SequenceBuilderExtensionTest');
+        List<SequenceBuilderExtension.StepDto> sequenceSteps = SequenceBuilderExtension.fetchSteps('SequenceBuilderExtensionTest');
         
         //assert
         Integer expectedCount = 2;

@@ -47,17 +47,17 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
             
             //find all steps EXCEPT the guy we are moving
             List<Step__c> readSteps = [
-                SELECT Id
+                SELECT Name
                 FROM Step__c
                 WHERE SequenceName__c = :stepToMove.SequenceName__c
-                AND Id != :stepToMove.Id
+                AND Name != :stepToMove.Name
                 ORDER BY Position__c ASC
             ];
             
             //normal case: inject the guy we are moving amongst the others
             List<Step__c> writeSteps = new List<Step__c>();
             for (Step__c step : readSteps) {
-                if (step.Id == beforeStep.Id) writeSteps.add(stepToMove);
+                if (step.Name == beforeStep.Name) writeSteps.add(stepToMove);
                 writeSteps.add(step);
             }
             
@@ -96,10 +96,10 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
             
             //find all steps EXCEPT the guy we are moving
             List<Step__c> readSteps = [
-                SELECT Id
+                SELECT Name
                 FROM Step__c
                 WHERE SequenceName__c = :stepToMove.SequenceName__c
-                AND Id != :stepToMove.Id
+                AND Name != :stepToMove.Name
                 ORDER BY Position__c ASC
             ];
             
@@ -107,7 +107,7 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
             List<Step__c> writeSteps = new List<Step__c>();
             for (Step__c step : readSteps) {
                 writeSteps.add(step);
-                if (step.Id == afterStep.Id) writeSteps.add(stepToMove);
+                if (step.Name == afterStep.Name) writeSteps.add(stepToMove);
             }
             
             //custom settings not smart enough to recognize uniqueness in bulk update
@@ -148,7 +148,7 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
      * @param configId of any StepConfig
      */
     static public void cacheConfigName(Id configId) {
-        Step__c step = [SELECT Id FROM Step__c WHERE ConfigId__c = :configId];
+        Step__c step = [SELECT Name FROM Step__c WHERE ConfigId__c = :configId];
         String objectType = configId.getSObjectType().getDescribe().getName();
         SObject config = Database.query('SELECT Id, Name FROM ' + objectType + ' WHERE Id = :configId');
         String configName = (String)config.get('Name');

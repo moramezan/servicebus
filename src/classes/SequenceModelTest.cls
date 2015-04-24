@@ -39,7 +39,7 @@
         Step__c actualStep = sequence.appendStep(Subscribe.class.getName());
         
         // assemble
-        List<Step__c> soSteps = [SELECT Id, Name, FullyQualifiedClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
+        List<Step__c> soSteps = [SELECT Name, FullyQualifiedClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
         // SObject soStep = actualStep.getRecord();
         String actualProcessName;
@@ -70,7 +70,7 @@
         sequence.terminate();
         
         // assemble
-        List<Step__c> soSteps = [SELECT Id, Name, FullyQualifiedClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
+        List<Step__c> soSteps = [SELECT Name, FullyQualifiedClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
         String actualProcessName;
         Decimal actualPosition;
@@ -101,7 +101,7 @@
         sequence.terminate(); // and again!
         
         // assemble
-        List<Step__c> soSteps = [SELECT Id, Name, FullyQualifiedClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
+        List<Step__c> soSteps = [SELECT Name, FullyQualifiedClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
         String actualProcessName;
         Decimal actualPosition;
@@ -135,7 +135,7 @@
  
         
         // assemble
-        List<Step__c> soSteps = [SELECT Id, Name, FullyQualifiedClassName__c, Position__c FROM Step__c];
+        List<Step__c> soSteps = [SELECT Name, FullyQualifiedClassName__c, Position__c FROM Step__c];
         Integer actualStepsCount  = soSteps.size();
         String actualProcessName;
         Decimal actualPosition;

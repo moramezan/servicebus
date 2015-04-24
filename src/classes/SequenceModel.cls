@@ -37,7 +37,7 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
      */
     public List<Step__c> fetchSteps() {
         return [
-            SELECT Id, Name, ConfigId__c, ConfigName__c, FullyQualifiedClassName__c, Position__c, SequenceName__c
+            SELECT Name, ConfigId__c, ConfigName__c, FullyQualifiedClassName__c, Position__c, SequenceName__c
             FROM Step__c
             WHERE SequenceName__c = :this.sequence.Name
             ORDER BY Position__c ASC
@@ -95,7 +95,7 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
     public void terminate() {
         try {
             Step__c terminateStep = [
-                SELECT Id
+                SELECT Name
                 FROM Step__c
                 WHERE SequenceName__c = :this.sequence.Name AND FullyQualifiedClassName__c = :Terminate.class.getName()
             ];
@@ -127,7 +127,7 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
             
             //find the remaining steps
             List<Step__c> stepsToReorder = [
-                SELECT Id
+                SELECT Name
                 FROM Step__c
                 WHERE SequenceName__c = :this.sequence.Name
                 ORDER BY Position__c ASC

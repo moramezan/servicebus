@@ -42,18 +42,46 @@ public with sharing class SequenceBuilderExtension {
     }
     
     public String getSteps() {
-        List<Step__c> steps = this.model.fetchSteps();
-        return Json.serializePretty(steps);
+        Sequence__c sequence = (Sequence__c)this.controller.getRecord();
+        List<StepDto> stepDtos = fetchSteps(sequence.Name);
+        return Json.serializePretty(stepDtos);
     }
     
     @RemoteAction static public void cacheConfigName(Id configId) {
         StepModel.cacheConfigName(configId);
     }
     
-    @RemoteAction static public List<Step__c> fetchSteps(String sequenceName) {
+    /**
+     * Using this DTO instead of
+     * Step__c for a few reasons:
+     * - loses the Step Id
+     * - drops attributes key
+     * - hides our secret sauce
+     */
+    public class StepDto {
+        public String Name;
+        public String SequenceName;
+        public Decimal Position;
+        public String ConfigId;
+        public String ConfigName;
+        public String FullyQualifiedClassName;
+    }
+    
+    @RemoteAction static public List<StepDto> fetchSteps(String sequenceName) {
         SequenceModel model = SequenceModel.fromName(sequenceName);
         model.terminate();
-        return model.fetchSteps();
+        List<StepDto> stepDtos = new List<StepDto>();
+        for (Step__c step : model.fetchSteps()) {
+            StepDto stepDto = new StepDto();
+            stepDto.Name = step.Name;
+            stepDto.SequenceName = step.SequenceName__c;
+            stepDto.Position = step.Position__c;
+            stepDto.ConfigId = step.ConfigId__c;
+            stepDto.ConfigName = step.ConfigName__c;
+            stepDto.FullyQualifiedClassName = step.FullyQualifiedClassName__c;
+            stepDtos.add(stepDto);
+        }
+        return stepDtos;
     }
     
     @RemoteAction static public Step__c appendStep(String sequenceName, String fullyQualifiedClassName) {

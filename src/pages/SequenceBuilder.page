@@ -40,25 +40,6 @@
         Sequence__c.Id = '{!Sequence__c.Id}';
         Sequence__c.Name = '{!JSENCODE(Sequence__c.Name)}';
         
-        window.$ObjectType = window.$ObjectType || {};
-        $ObjectType.Step__c = $ObjectType.Step__c || {};
-        $ObjectType.Step__c.Fields = $ObjectType.Step__c.Fields || {};
-        
-        $ObjectType.Step__c.Fields.Id = $ObjectType.Step__c.Fields.Id || {};
-        $ObjectType.Step__c.Fields.Id.Name = '{!$ObjectType.Step__c.Fields.Id.Name}';
-        $ObjectType.Step__c.Fields.Name = $ObjectType.Step__c.Fields.Name || {};
-        $ObjectType.Step__c.Fields.Name.Name = '{!$ObjectType.Step__c.Fields.Name.Name}';
-        $ObjectType.Step__c.Fields.SequenceName__c = $ObjectType.Step__c.Fields.SequenceName__c || {};
-        $ObjectType.Step__c.Fields.SequenceName__c.Name = '{!$ObjectType.Step__c.Fields.SequenceName__c.Name}';
-        $ObjectType.Step__c.Fields.Position__c = $ObjectType.Step__c.Fields.Position__c || {};
-        $ObjectType.Step__c.Fields.Position__c.Name = '{!$ObjectType.Step__c.Fields.Position__c.Name}';
-        $ObjectType.Step__c.Fields.ConfigId__c = $ObjectType.Step__c.Fields.ConfigId__c || {};
-        $ObjectType.Step__c.Fields.ConfigId__c.Name = '{!$ObjectType.Step__c.Fields.ConfigId__c.Name}';
-        $ObjectType.Step__c.Fields.ConfigName__c = $ObjectType.Step__c.Fields.ConfigName__c || {};
-        $ObjectType.Step__c.Fields.ConfigName__c.Name = '{!$ObjectType.Step__c.Fields.ConfigName__c.Name}';
-        $ObjectType.Step__c.Fields.FullyQualifiedClassName__c = $ObjectType.Step__c.Fields.FullyQualifiedClassName__c || {};
-        $ObjectType.Step__c.Fields.FullyQualifiedClassName__c.Name = '{!$ObjectType.Step__c.Fields.FullyQualifiedClassName__c.Name}';
-
         TerminateFullyQualifiedClassName = '{!TerminateFullyQualifiedClassName}';
         Processes = {!Processes};
         Steps = {!Steps};

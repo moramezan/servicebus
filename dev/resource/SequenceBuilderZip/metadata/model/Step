@@ -7,7 +7,7 @@
     "codeClass": null,
     "userConfig": {
         "designer|userClassName": "Step",
-        "idProperty": "Id"
+        "idProperty": "Name"
     },
     "name": "MyModel",
     "designerId": "2e0af0ff-44fe-40cb-a9bd-7050f68308c5",
@@ -20,22 +20,9 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Id"
-            },
-            "name": "MyField1",
-            "designerId": "557eaff0-f79d-483b-b8c6-c6432bbccf8c"
-        },
-        {
-            "type": "Ext.data.field.String",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
                 "name": "Name"
             },
-            "name": "MyString6",
+            "name": "MyField2",
             "designerId": "8ad199a1-d824-4443-b212-b68b03b097a9"
         },
         {
@@ -95,6 +82,19 @@
             "designerId": "9203ffa3-24f5-4e0a-824a-37a3a27dcd6b"
         },
         {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "SequenceName"
+            },
+            "name": "MyString6",
+            "designerId": "11d09ba7-d84d-49fd-ab68-f3a83b13672d"
+        },
+        {
             "type": "Ext.data.proxy.Direct",
             "reference": {
                 "name": "proxy",
@@ -107,7 +107,7 @@
                 ],
                 "designer|displayName": "StepProxy",
                 "extraParams": [
-                    "{sequenceId: Sequence__c.Name}"
+                    "{sequenceName: Sequence__c.Name}"
                 ]
             },
             "name": "MyDirectProxy",
