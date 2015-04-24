@@ -59,6 +59,7 @@
         $ObjectType.Step__c.Fields.FullyQualifiedClassName__c = $ObjectType.Step__c.Fields.FullyQualifiedClassName__c || {};
         $ObjectType.Step__c.Fields.FullyQualifiedClassName__c.Name = '{!$ObjectType.Step__c.Fields.FullyQualifiedClassName__c.Name}';
 
+        TerminateFullyQualifiedClassName = '{!TerminateFullyQualifiedClassName}';
         Processes = {!Processes};
         Steps = {!Steps};
         

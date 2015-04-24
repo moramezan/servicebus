@@ -422,10 +422,9 @@
                 "implHandler": [
                     "var view = tableview,",
                     "    plugin = view.getPlugin('dragdrop'),",
-                    "    fqcn = record.get('FullyQualifiedClassName'),",
-                    "    process = Ext.getStore('Processes').getById(fqcn);",
+                    "    fqcn = record.get('FullyQualifiedClassName');",
                     "",
-                    "plugin.dragZone.dragText = 'Move ' + process.get('Name') + ' step here';"
+                    "plugin.dragZone.dragText = 'Move ' + fqcn + ' step here';"
                 ],
                 "name": "beforecellmousedown",
                 "scope": "me"

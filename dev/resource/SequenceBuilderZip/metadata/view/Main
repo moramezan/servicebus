@@ -137,12 +137,12 @@
                         "implHandler": [
                             "var fqcn = record.get('FullyQualifiedClassName');",
                             "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "var processCardinality = process && process.get('Cardinality') || 'Zero'; //#875 invalid process",
                             "",
                             "//set the cardinality column's icon from each process",
-                            "var cardinality = process.get('Cardinality');",
-                            "this.items[0].iconCls = cardinality;",
-                            "if (cardinality == 'One') this.items[0].tooltip = cardinality + ' output event emitted for each input event.';",
-                            "if (cardinality != 'One') this.items[0].tooltip = cardinality + ' output events emitted for each input event.';"
+                            "this.items[0].iconCls = processCardinality;",
+                            "if (processCardinality == 'One') this.items[0].tooltip = processCardinality + ' output event emitted for each input event.';",
+                            "if (processCardinality != 'One') this.items[0].tooltip = processCardinality + ' output events emitted for each input event.';"
                         ]
                     },
                     "name": "renderer",
@@ -264,10 +264,9 @@
                         "fn": "renderer",
                         "implHandler": [
                             "var fqcn = record.get('FullyQualifiedClassName');",
-                            "var process = Ext.getStore('Processes').getById(fqcn);",
                             "",
                             "//TERMINATE step cannot be deleted",
-                            "if (process.get('Name') != 'Terminate') return Ext.DomHelper.createHtml({",
+                            "if (fqcn != TerminateFullyQualifiedClassName) return Ext.DomHelper.createHtml({",
                             "    'tag': 'a',",
                             "    'html': 'Del',",
                             "    'class': 'deletelink',",
@@ -280,7 +279,8 @@
                             "    'class': 'terminatelink',",
                             "    'onclick': 'return false;',",
                             "    'title': 'The Terminate step must appear at the end of all sequences and cannot be deleted.'",
-                            "});"
+                            "});",
+                            ""
                         ]
                     },
                     "name": "renderer",
@@ -328,15 +328,16 @@
                         "implHandler": [
                             "var fqcn = record.get('FullyQualifiedClassName');",
                             "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "var processSetting = process && process.get('ProcessSetting'); //#875 invalid process",
                             "",
                             "//some processes have no settings",
-                            "if (process.get('ProcessSetting')) return '| ' + Ext.DomHelper.createHtml({",
+                            "if (processSetting) return '| ' + Ext.DomHelper.createHtml({",
                             "    'tag': 'a',",
                             "    'html': 'Settings',",
                             "    'class': 'settingslink',",
                             "    'onclick': 'return false;',",
                             "    'title': 'Process Settings',",
-                            "    'href': URLFOR[$Page.ProcessSettings] + '?fqcn=' + process.get('ProcessSetting')",
+                            "    'href': URLFOR[$Page.ProcessSettings] + '?fqcn=' + processSetting",
                             "});"
                         ]
                     },
@@ -399,9 +400,10 @@
                         "implHandler": [
                             "var fqcn = record.get('FullyQualifiedClassName');",
                             "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "var processIcon = process && process.get('Icon') || 'cross'; //#875 invalid process",
                             "",
                             "//set the action column's icon from each process",
-                            "this.items[0].iconCls = process.get('Icon');"
+                            "this.items[0].iconCls = processIcon;"
                         ]
                     },
                     "name": "renderer",
@@ -450,12 +452,14 @@
                         "implHandler": [
                             "var fqcn = record.get('FullyQualifiedClassName');",
                             "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "var processName = process && process.get('Name');",
+                            "if (!process) processName = '<strong>' + fqcn + '</strong>'; //#875 invalid process",
                             "",
                             "//#776",
                             "return Ext.DomHelper.createHtml({",
                             "    'tag': 'span',",
-                            "    'html': process.get('Name'),",
-                            "    'title': process.get('Name')",
+                            "    'html': processName,",
+                            "    'title': processName",
                             "});"
                         ]
                     },
@@ -505,8 +509,9 @@
                         "implHandler": [
                             "var fqcn = record.get('FullyQualifiedClassName');",
                             "var process = Ext.getStore('Processes').getById(fqcn);",
-                            "",
-                            "var text = record.get('ConfigName') || process.get('Description');",
+                            "var processDescription = process && process.get('Description');",
+                            "var text = record.get('ConfigName') || processDescription;",
+                            "if (!process) text = '<strong>Invalid process, class is missing or malformed.</strong>'; //#875 invalid process",
                             "",
                             "//#776",
                             "return Ext.DomHelper.createHtml({",
@@ -560,20 +565,17 @@
                         "implHandler": [
                             "var fqcn = record.get('FullyQualifiedClassName');",
                             "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "var processHelpUrl = process && process.get('HelpUrl'); //#875 invalid process",
                             "",
                             "//process may not have docs",
-                            "var html;",
-                            "",
-                            "if (process.get('HelpUrl')) html = Ext.DomHelper.createHtml({",
+                            "if (processHelpUrl) return Ext.DomHelper.createHtml({",
                             "    'tag': 'a',",
                             "    'html': 'Help for this Process',",
                             "    'class': 'documentationlink',",
                             "    'title': 'Configure Step',",
-                            "    'href': process.get('HelpUrl'),",
+                            "    'href': processHelpUrl,",
                             "    'target': '_blank'",
-                            "});",
-                            "",
-                            "return html;"
+                            "});"
                         ]
                     },
                     "name": "renderer",

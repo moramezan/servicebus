@@ -32,6 +32,10 @@ public with sharing class SequenceBuilderExtension {
         return ConfigureController.doDanceIfNeeded(retURL);
     }
     
+    public String getTerminateFullyQualifiedClassName() {
+        return Terminate.class.getName();
+    }
+    
     public String getProcesses() {
         List<ProcessModel> processes = ProcessModel.discoverProcesses();
         return Json.serializePretty(processes);
