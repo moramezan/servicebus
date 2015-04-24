@@ -271,8 +271,6 @@ abstract public with sharing class Broker {
          */
         public List<Map<String,Object>> Outputs;
 
-        public String SessionId;
-
         /**
          * @param reflector from the concrete plugin type eg Branch.class
          * @param input event that will be handed in when invoking plugin
@@ -285,11 +283,6 @@ abstract public with sharing class Broker {
                 'Event' => Json.serialize(inputs)
             };
             
-            // Surface SessionId to select few orgs and packages
-            String sessionId = (OAuthSetting__c.getInstance()).AccessToken__c;
-            Boolean allowSessionId = isAllowedSessionId(reflector.getName(), UserInfo.getOrganizationId());
-            if (allowSessionId) untyped.put('SessionId',sessionId);
-   
             //do not call constructor
             //this.plugin = reflector.newInstance();
             this.plugin = Json.deserialize(Json.serialize(untyped), reflector);
@@ -575,6 +568,15 @@ abstract public with sharing class Broker {
             }
         }
         
+        //#877 surface SessionId to select few orgs and packages
+        Boolean allowSessionId = isAllowedSessionId(reflector.getName(), UserInfo.getOrganizationId());
+        if (allowSessionId) {
+            for (Message__c inputMessage : inputMessages) {
+                Map<String,Object> inputEvent = id2events.get(inputMessage.Id);
+                inputEvent.put('__SessionId', OAuthSetting__c.getInstance().AccessToken__c);
+            }
+        }
+        
         List<Broker.Wrapper> wrappers = new List<Broker.Wrapper>();
         for (Message__c inputMessage : inputMessages) wrappers.add(new Broker.Wrapper(reflector, id2events.get(inputMessage.Id)));
         
@@ -758,6 +760,8 @@ abstract public with sharing class Broker {
             
     @testVisible
     static private Boolean isAllowedSessionId(String reflectorName, Id orgId) {
+        if (!Test.isRunningTest() && Broker.class.getName() == 'Broker') return true; //unmanaged deployment ok
+        
         Set<String> sessionIdOrgs = new Set<String>{
             '00Dj0000000I44v', // dev org - matt
             '00Dj0000001oeWV', // dev org - neil
