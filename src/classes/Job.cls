@@ -37,6 +37,12 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
     }
     
     /**
+     * Per #868 this exists to hold whichever
+     * event the Broker currently deals with.
+     */
+    static public Map<String,Object> Event;
+    
+    /**
      * Per #702 this enables developers to Enqueue into ESB without a compile-time
      * dependency, by leveraging the Process.Plugin system interface.
      *
@@ -45,6 +51,13 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      * in Visual Flow to get stuff into ESB. (Though they would create a dependency.)
      */
     global Process.PluginResult invoke(Process.PluginRequest request) {
+        
+        //#868 this plugin doubles as an event provider, so we don't create a BS one
+        Boolean eventProvider = (Boolean)request.InputParameters.get('esb__EventProvider');
+        if (eventProvider == true) { //specific equality to avoid null object dereference
+            return new Process.PluginResult(Event.clone());
+        }
+        
         Map<String,Object> inputEvent = request.InputParameters;
         system.Queueable job = new Job(inputEvent);
         Id queueableId = System.enqueueJob(job);
@@ -68,11 +81,11 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
     @InvocableMethod(label='Enqueue ESB Job') global static List<Id> enqueue(List<SimpleEvent> simpleEvents) {
         List<Id> ids = new List<Id>();
         for (SimpleEvent simpleEvent : simpleEvents) {
-            Map<String,Object> event = new Map<String,Object>{
+            Map<String,Object> inputEvent = new Map<String,Object>{
                 'esb__Id' => simpleEvent.EntityId,
                 'esb__SequenceName' => simpleEvent.SequenceName
             };
-            Job j = new Job(event);
+            Job j = new Job(inputEvent);
             Id queueableId = System.enqueueJob(j);
             ids.add(queueableId);
         }

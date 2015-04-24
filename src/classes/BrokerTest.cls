@@ -944,7 +944,7 @@
         Boolean actualFlag = true;
         Type reflector = Terminate.class;
         try {
-            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent).invokeMain();
+            System.assert(false, 'TODO'); //TODO Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent).invokeMain();
         } catch (Exception e) {
             actualFlag = false;
         }
@@ -962,7 +962,7 @@
         //act
         Boolean actualFlag = false;
         try {
-            Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent).invokeMain();
+            System.assert(false, 'TODO'); //TODO Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent).invokeMain();
             System.assert(false, 'Above should throw exception.');
         } catch (Broker.EngineException e) {
             String expectedMessage = 'Your plugin has not overridden the toString() method. Please refer to the Process Developers Guide for specific guidance.';
@@ -1001,21 +1001,18 @@
     
     @TestVisible public class ChunkErrorProcessException extends Exception {}
     
-    @TestVisible public class ChunkErrorProcess {
-        
-        @TestVisible public String Event;
-        
-        override public String toString() {
-            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+    public class ChunkErrorProcess extends ProcessModel.BaseProcess {
+        override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            Map<String,Object> outputEvent = inputEvent.clone();
             Boolean isError = (Boolean)inputEvent.get('c__IsError');
             if (isError == true) throw new ChunkErrorProcessException('Test error');
-            return '[{}]'; //one message
+            return new List<Map<String,Object>>{outputEvent}; //one message
         }
-        
     }
     
-    @TestVisible public class ChunkErrorProcessESB {
-        public String Description = 'Process used for testing kamikaze chunking solution.';
+    public class ChunkErrorProcessESB {
+        public String Description = 'Does stuff in memory without side effects.';
+        public Integer Limits = 2;
     }
     
     static testmethod void testKamikazeChunkingDoesntTakeOutHisMates() {

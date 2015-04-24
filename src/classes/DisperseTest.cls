@@ -22,16 +22,13 @@
         insert new DisperseDestination__c(DisperseConfig__c = config.Id, Sequence__c = sequence3.Id);
         
         //arrange invocation
-        Disperse process = new Disperse();
-        process.Event = Json.serialize(new Map<String,Object>{
+        ProcessModel.BaseProcess process = new Disperse();
+        Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__StepConfig' => config
-        });
+        };
         
         //act
-        String outputs = process.toString();
-        
-        //assemble
-        List<Object> events = (List<Object>)Json.deserializeUntyped(outputs);
+        List<Map<String,Object>> events = process.execute(inputEvent);
         
         //assert
         Integer expectedOutputs = 3;
@@ -51,16 +48,16 @@
         insert new DisperseDestination__c(DisperseConfig__c = config.Id, Sequence__c = sequence.Id);
         
         //arrange invocation
-        Disperse process = new Disperse();
-        process.Event = Json.serialize(new Map<String,Object>{
+        ProcessModel.BaseProcess process = new Disperse();
+        Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__StepConfig' => config,
             '__SequenceName' => 'Test'
-        });
+        };
         
         //act
         try {
-            String outputs = process.toString();
-            System.assert(false, '');
+            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            System.assert(false, 'Above should throw exception.');
         } catch (Disperse.DisperseException e) {
             String expectedMessage = 'Disperse cannot include its own Sequence as a Destination.';
             String actualMessage = e.getMessage();

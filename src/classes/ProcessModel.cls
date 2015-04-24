@@ -206,12 +206,10 @@ public with sharing class ProcessModel {
         //always override and implement process logic inside
         @TestVisible abstract protected List<Map<String,Object>> execute(Map<String,Object> event);
         
-        //ESB Marker Properties
-        public String Event;
-        
         //ESB Marker Method
         override public String toString() {
-            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.Event);
+            Process.PluginRequest eventProviderRequest = new Process.PluginRequest(new Map<String,Object>{'esb__EventProvider' => true});
+            Map<String,Object> inputEvent = new Job().invoke(eventProviderRequest).OutputParameters;
             Boolean allowsCallouts = (Boolean)inputEvent.get('esb__AllowsCallouts');
             if (allowsCallouts == true) {this.callouts(inputEvent);return null;}
             return Json.serialize(this.execute(inputEvent));

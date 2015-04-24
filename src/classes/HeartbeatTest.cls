@@ -8,15 +8,15 @@
         Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class.getName());
         
         //arrange input event
-        String inputEvent = '{"esb__EntryPointDatetime":"2014-01-18T12:00:00.000Z"}';
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__EntryPointDatetime' => '2014-01-18T12:00:00.000Z'
+        };
         
         //act
-        Heartbeat process = new Heartbeat();
-        process.Event = inputEvent;
-        String data = process.toString();
+        ProcessModel.BaseProcess process = new Heartbeat();
         
         //assemble
-        List<Object> outputs = (List<Object>)Json.deserializeUntyped(data);
+        List<Map<String,Object>> outputs = process.execute(inputEvent);
         
         //assert
         Integer expectedSize = 1; //one schedule process
@@ -24,11 +24,11 @@
         System.assertEquals(expectedSize, actualSize, 'Should have one output.');
         
         //assemble
-        Map<String,Object> output = (Map<String,Object>)outputs[0];
+        Map<String,Object> output = outputs[0];
         
         //assert
-        Integer expectedPosition = 1;
-        Integer actualPosition = (Integer)output.get('__Position');
+        Decimal expectedPosition = 1;
+        Decimal actualPosition = (Decimal)output.get('__Position');
         System.assertEquals(expectedPosition, actualPosition, 'Position should be 1.');
     }
 

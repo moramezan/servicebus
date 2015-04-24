@@ -236,115 +236,6 @@ abstract public with sharing class Broker {
     }
     
     /**
-     * Example usage:
-     * Broker.Wrapper wrapper = new Broker.Wrapper(reflector, parameters);
-     * wrapper.invokeCallouts();
-     * wrapper.invokeMain();
-     * List<Map<String,Object>> outputs = wrapper.Outputs;
-     */
-    @TestVisible private class Wrapper {
-        /**
-         * We need to know "what" the plugin is
-         * whenever we get or set its properties as
-         * deserialize requires a concrete type.
-         */
-        private Type reflector;
-        
-        /**
-         * Must "hang on to" the plugin instance so it
-         * can be invoked twice and communicate with
-         * itself across invocations.
-         */
-        private Object plugin;
-        
-        /**
-         * The input event gets used twice. For
-         * assembling the plugin before invocation
-         * AND for balance + delta jiggery pokery.
-         */
-        private Map<String,Object> Inputs;
-        
-        /**
-         * The output collection can only be made by
-         * invoking the main plugin logic, save them here
-         * so they're available wherever wrapper scope is.
-         */
-        public List<Map<String,Object>> Outputs;
-
-        /**
-         * @param reflector from the concrete plugin type eg Branch.class
-         * @param input event that will be handed in when invoking plugin
-         */
-        public Wrapper(Type reflector, Map<String,Object> inputs) {
-            this.reflector = reflector;
-            this.inputs = inputs;
-            
-            Map<String,Object> untyped = new Map<String,Object>{
-                'Event' => Json.serialize(inputs)
-            };
-            
-            //do not call constructor
-            //this.plugin = reflector.newInstance();
-            this.plugin = Json.deserialize(Json.serialize(untyped), reflector);
-        }
-        
-        /**
-         * @throws EngineException
-         * @return fluent API
-         */
-        public Wrapper invokeCallouts() {
-            if (!(this.plugin instanceof Database.AllowsCallouts)) {
-                //nothing to do
-                return this;
-            }
-            
-            //set flag
-            Map<String,Object> untyped = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(this.plugin));
-            this.Inputs.put('esb__AllowsCallouts', true);
-            untyped.put('Event', Json.serialize(this.Inputs));
-            this.plugin = Json.deserialize(Json.serialize(untyped), this.reflector);
-            
-            //do callouts
-            String data = String.valueOf(this.plugin);
-            if (data != null) throw new EngineException('Your AllowsCallouts code block should return null.');
-            
-            return this;
-        }
-        
-        /**
-         * @throws EngineException
-         * @return fluent API
-         */
-        public Wrapper invokeMain() {
-            //set flag
-            Map<String,Object> untyped = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(this.plugin));
-            this.Inputs.put('esb__AllowsCallouts', false);
-            untyped.put('Event', Json.serialize(this.Inputs));
-            this.plugin = Json.deserialize(Json.serialize(untyped), this.reflector);
-            
-            //do invocation
-            String data = String.valueOf(this.plugin);
-            if (data == null) throw new EngineException('Your main code block should return a serialized List<Map<String,Object>>.');
-            if(data.endsWith(this.reflector.getName().replaceAll('[^.]+\\.', '') + ':[]'))
-                throw new EngineException('Your plugin has not overridden the toString() method.' +
-                                          ' Please refer to the Process Developers Guide for specific guidance.');
-            
-            //output equals balance plus delta
-            List<Map<String,Object>> outputs = new List<Map<String,Object>>();
-            List<Object> results = (List<Object>)Json.deserializeUntyped(data);
-            for (Object result : results) {
-                Map<String,Object> output = this.inputs.clone();
-                output.putAll((Map<String,Object>)result);
-                outputs.add(output);
-            }
-            
-            this.outputs = outputs;
-            
-            return this;
-        }
-    }
-
-    /**
      * Determines which messages are eligible to be moved into the Started status (by finding Messages
      * with 'Buffered' status).
      *
@@ -488,16 +379,19 @@ abstract public with sharing class Broker {
             //invoke and wrap up results into messages
             for (Message__c inputMessage : inputMessages) {
                 DateTime startStamp = idToStartStamp.get(inputMessage.Id);
-
                 Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
-                List<Map<String,Object>> outputs = new Broker.Wrapper(Heartbeat.class, inputEvent).invokeMain().Outputs;
+                
+                Object process = new Heartbeat();
+                Job.Event = inputEvent;
+                String data = String.valueOf(process);
+                List<Object> outputs = (List<Object>)Json.deserializeUntyped(data);
                 
                 inputMessage.Status__c = 'Completed'; //#798
                 inputMessage.Exception__c = null;
                 inputMessage.Cause__c = null;
                 inputMessage.FullyQualifiedClassName__c = Heartbeat.class.getName(); //#697 locateMarkableWork misses this for heartbeats
                 
-                for (Map<String,Object> output : outputs) outputMessages.add(new Message__c(Event__c = Json.serializePretty(output), Status__c = 'Buffered'));
+                for (Object output : outputs) outputMessages.add(new Message__c(Event__c = Json.serializePretty(output), Status__c = 'Buffered'));
 
                 inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
             }
@@ -577,20 +471,31 @@ abstract public with sharing class Broker {
             }
         }
         
-        List<Broker.Wrapper> wrappers = new List<Broker.Wrapper>();
-        for (Message__c inputMessage : inputMessages) wrappers.add(new Broker.Wrapper(reflector, id2events.get(inputMessage.Id)));
+        List<Object> processes = new List<Object>();
+        for (Integer i = 0; i < inputMessages.size(); i++) {
+            Object process = reflector.newInstance();
+            processes.add(process);
+        }
         
         //THEIR FUCKUPS (invocation)
-        
+        if (processes[0] instanceof Database.AllowsCallouts)
         for (Integer i = 0; i < inputMessages.size(); i++) {
             Message__c inputMessage = inputMessages[i];
             DateTime startStamp = idToStartStamp.get(inputMessage.Id);
-
+            
+            
             //TODO COUNT ANY DMLS
-            Broker.Wrapper wrapper = wrappers[i];
+            Object process = processes[i];
 
             try {
-                wrapper.invokeCallouts();
+                //provide input event and set flag
+                Job.Event = id2events.get(inputMessage.Id);
+                Job.Event.put('esb__AllowsCallouts', true);
+                
+                //do callouts
+                String data = String.valueOf(process);
+                if (data != null) throw new EngineException('Your AllowsCallouts code block should return null.');
+                
                 inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
             } catch (Exception e) {
                 inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
@@ -613,9 +518,9 @@ abstract public with sharing class Broker {
             Message__c inputMessage = inputMessages[i];
             DateTime startStamp = idToStartStamp.get(inputMessage.Id);
             Integer calloutDuration = (Integer)((inputMessage.ExecuteDuration__c == null) ? 0 : inputMessage.ExecuteDuration__c);
-
+            
             //TODO COUNT ANY CALLOUTS
-            Broker.Wrapper wrapper = wrappers[i];
+            Object process = processes[i];
 
             try {
                 
@@ -628,7 +533,15 @@ abstract public with sharing class Broker {
                 emails = Limits.getEmailInvocations();
                 dmls = Limits.getDMLStatements();
                 
-                wrapper.invokeMain();
+                //provide input event and set flag
+                Job.Event = id2events.get(inputMessage.Id);
+                Job.Event.put('esb__AllowsCallouts', false);
+                
+                //do invocation
+                String data = String.valueOf(process);
+                if (data == null) throw new EngineException('Your main code block should return a serialized List<Map<String,Object>>.');
+                if(data.endsWith(reflector.getName().replaceAll('[^.]+\\.', '') + ':[]')) throw new EngineException('Your plugin has not overridden the toString() method. Please refer to the Process Developers Guide for specific guidance.');
+                //output no longer equals balance plus delta
                 
                 //measure side effects after
                 if (Limits.getEmailInvocations() > emails) hadSideEffects = true;
@@ -639,10 +552,10 @@ abstract public with sharing class Broker {
                 inputMessage.Status__c = 'Completed'; //#798
                 inputMessage.Exception__c = null;
                 inputMessage.Cause__c = null;
-                List<Map<String,Object>> outputEvents = wrapper.Outputs;
+                List<Object> outputEvents = (List<Object>)Json.deserializeUntyped(data);
 
                 //wrap up results into Messages (new guys should have Position = 0)
-                for (Map<String,Object> outputEvent : outputEvents) {
+                for (Object outputEvent : outputEvents) {
                     outputMessages.add(new Message__c(
                         Event__c = Json.serializePretty(outputEvent),
                         Status__c = 'Buffered'
