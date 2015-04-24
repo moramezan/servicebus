@@ -12,6 +12,22 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
     public without sharing class StepException extends Exception {}
     
     /**
+     * Using this DTO instead of
+     * Step__c for a few reasons:
+     * - loses the Step Id
+     * - drops attributes key
+     * - hides our secret sauce
+     */
+    public class Dto {
+        public String Name;
+        public String SequenceName;
+        public Decimal Position;
+        public String ConfigId;
+        public String ConfigName;
+        public String FullyQualifiedClassName;
+    }
+    
+    /**
      * Privatize constructor to force use of fromName()
      */
     private StepModel(Step__c step) {

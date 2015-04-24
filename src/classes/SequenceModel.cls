@@ -45,6 +45,25 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
     }
     
     /**
+     * Loads all steps, anonymized
+     * inside data transfer objects
+     */
+    public List<StepModel.Dto> fetchStepDtos() {
+        List<StepModel.Dto> dtos = new List<StepModel.Dto>();
+        for (Step__c step : this.fetchSteps()) {
+            StepModel.Dto dto = new StepModel.Dto();
+            dto.Name = step.Name;
+            dto.SequenceName = step.SequenceName__c;
+            dto.Position = step.Position__c;
+            dto.ConfigId = step.ConfigId__c;
+            dto.ConfigName = step.ConfigName__c;
+            dto.FullyQualifiedClassName = step.FullyQualifiedClassName__c;
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+    
+    /**
      * Appends one step to the end of a sequence,
      * normally it will appear after the Terminate.
      *
