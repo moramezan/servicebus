@@ -1,0 +1,28 @@
+<h1>
+    Pausing the message queue
+</h1>
+
+<p>
+    Pause will temporarily stops the broker. New messages accumulate in an unprocessed state.
+    <br />This is used to ensure safe downtime while modifying a Sequence.
+</p>
+
+<h2>
+    Procedure
+</h2>
+
+<ol>
+    <li>From any Messages listview, click <strong>Pause Queue</strong>.</li>
+    <li>Create a new Sequence containing a 'Wiretap' step in position 1.</li>
+    <li>Click <strong>Enqueue Test Message</strong></li>
+</ol>
+
+<h2>
+    Outcomes
+</h2>
+
+<ol>
+    <li>The monitor should graph exactly one 'Paused' message for 'Wiretap'.</li>
+    <li>Broker should not be running. The red twirly should be absent.</li>
+</ol>
+

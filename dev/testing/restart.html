@@ -1,0 +1,36 @@
+<h1>
+    Restarting unsuccessful messages
+</h1>
+
+<p>
+    This allows users to <em>synchronously</em> re-attempt the processing of unsuccessful messages.
+    <br />Usually the user might first fix the event parameters or fix the process logic.
+</p>
+
+<h2>
+    Procedure
+</h2>
+
+<ol>
+    <li>Create a new Sequence 'RestartTest' containing an <em>unconfigured</em> 'Jump' step in position 1.</li>
+    <li>Click <strong>Enqueue Test Message</strong> to process a message, which should fail.</li>
+    <li>Wait for the monitor to graph the 'Exception' message for 'Jump'.</li>
+    
+    <li>From the Messages tab, go to the 'Exception' listview.</li>
+    <li>Open the sole message and click <strong>Restart</strong>, which should fail leaving exactly the same stack trace etc.</li>
+    
+    <li>Create a new Sequence 'TerminateTest' with just the default 'Terminate' step.</li>
+    <li>View the 'RestartTest' sequence and configure the 'Jump' step to point to 'TerminateTest'</li>
+    
+    <li>Again from the Messages tab, go to the 'Exception' listview.</li>
+    <li>Open the same message and click <strong>Restart</strong> which should redirect back to the list view.</li>
+</ol>
+
+<h2>
+    Outcomes
+</h2>
+
+<ol>
+    <li>Broker should not be running. The red twirly should be absent.</li>
+    <li>No messages should be visible in the 'Exception' listview.</li>
+</ol>

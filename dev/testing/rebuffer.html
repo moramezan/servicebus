@@ -1,0 +1,31 @@
+<h1>
+    Rebuffering unsuccessful messages
+</h1>
+
+<p>
+    This allows users to <em>asynchronously</em> re-attempt the processing of unsuccessful messages.
+    <br />Usually the user might first fix the event parameters or fix the process logic.
+</p>
+
+<h2>
+    Procedure
+</h2>
+
+<ol>
+    <li>Create a new Sequence 'RebufferTest' containing an <em>unconfigured</em> 'Jump' step in position 1.</li>
+    <li>Click <strong>Enqueue Test Message</strong> to process a message, which should fail.</li>
+    <li>Wait for the monitor to graph the 'Exception' message for 'Jump'.</li>
+    
+    <li>Create a new Sequence 'TerminateTest' with just the default 'Terminate' step.</li>
+    <li>View the 'RebufferTest' sequence and configure the 'Jump' step to point to 'TerminateTest'</li>
+    <li>From the Messages tab, go to the 'Exception' listview.</li>
+    <li>Select the checkbox next to the message and click <strong>Rebuffer</strong>.</li>
+</ol>
+
+<h2>
+    Outcomes
+</h2>
+
+<ol>
+    <li>No messages should be graphed in the monitor.</li>
+</ol>

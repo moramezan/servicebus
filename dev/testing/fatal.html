@@ -1,0 +1,43 @@
+<h1>
+    Handling fatal exceptions in user processes
+</h1>
+
+<p>
+    The message broker attempts to "wrap" all user processes with a try-catch.
+    <br />Fatal exceptions should be rare, but are still to be handled gracefully by ESB.
+</p>
+
+<h2>
+    Procedure
+</h2>
+
+<ol>
+    <li>Create a new apex class:
+<pre>
+global with sharing class Fatal extends BaseProcess {
+    
+    global class ESB {
+        global String Description = 'This process throws a fatal exception.';
+    }
+    
+    override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
+        System.assert(false, 'Catch this.');
+    }
+    
+}
+</pre>
+    </li>
+    
+    <li>Create a new Sequence 'FatalTest' containing a 'Fatal' step in position 1.</li>
+    <li>Click <strong>Enqueue Test Message</strong> to process a message, which should fail.</li>
+</ol>
+
+<h2>
+    Outcomes
+</h2>
+
+<ol>
+    <li>The monitor should graph a single 'Exception' message for 'Fatal'.</li>
+    <li>The messages listview 'Exception' should list one message.</li>
+    <li>The message itself should have a blank 'Cause' but an 'Exception' of 'First error: Catch this.'</li>
+</ol>

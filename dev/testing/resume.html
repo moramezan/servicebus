@@ -1,0 +1,30 @@
+<h1>
+    Resuming the message queue
+</h1>
+
+<p>
+    Resume will begin processing new messages again, including any paused ones.
+    <br />This is used to start the broker after system modifications are made.
+</p>
+
+<h2>
+    Procedure
+</h2>
+
+<ol>
+    <li>From any Messages listview, click <strong>Pause Queue</strong>.</li>
+    <li>Create a new Sequence containing a 'Wiretap' step in position 1.</li>
+    <li>Click <strong>Enqueue Test Message</strong>, which will exist in a paused state.</li>
+
+    <li>From any Messages listview, click <strong>Resume Queue</strong></li>
+    <li>Wait for the monitor to show all processing has finished.</li>
+</ol>
+
+<h2>
+    Outcomes
+</h2>
+
+<ol>
+    <li>No messages should be graphed in the monitor.</li>
+    <li>Broker should run and send exactly one Wiretap email.</li>
+</ol>
