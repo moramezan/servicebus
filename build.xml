@@ -1,6 +1,6 @@
 <project default="usage" basedir="." xmlns:sf="antlib:com.salesforce" xmlns:ml="org.missinglink.ant.task.http.HttpClientTask">
 
-    <taskdef uri="antlib:com.salesforce" classpath="lib/salesforce_ant_33.0/ant-salesforce.jar" />
+    <taskdef uri="antlib:com.salesforce" classpath="lib/salesforce_ant_34.0/ant-salesforce.jar" />
     <taskdef name="http" uri="org.missinglink.ant.task.http.HttpClientTask" classname="org.missinglink.ant.task.http.HttpClientTask" classpath="lib/ml-ant-http-1.1.3/ml-ant-http-1.1.3.jar"/><!-- Download from https://code.google.com/p/missing-link/ -->
 
     <property file="build.properties"/>
@@ -124,10 +124,10 @@
             <replacetoken><![CDATA[
     </types>
     <uninstallClass>PostUninstallHandler</uninstallClass>
-    <version>33.0</version>]]></replacetoken>
+    <version>34.0</version>]]></replacetoken>
             <replacevalue><![CDATA[
     </types>
-    <version>33.0</version>]]></replacevalue>
+    <version>34.0</version>]]></replacevalue>
         </replace>
     </target>
 
@@ -150,11 +150,11 @@
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
     </types>
-    <version>33.0</version>]]></replacetoken>
+    <version>34.0</version>]]></replacetoken>
             <replacevalue><![CDATA[
     </types>
     <uninstallClass>PostUninstallHandler</uninstallClass>
-    <version>33.0</version>]]></replacevalue>
+    <version>34.0</version>]]></replacevalue>
         </replace>
     </target>
 
@@ -183,7 +183,7 @@
         <!-- delete Escalation Rules which lack package support -->
         <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><types><members>*</members><name>EscalationRules</name></types></Package>]]></echo>
         <touch file="purge/EscalationRules.txt" />
-        <sf:listMetadata metadataType="EscalationRule" resultFilePath="purge/EscalationRules.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="33.0" />
+        <sf:listMetadata metadataType="EscalationRule" resultFilePath="purge/EscalationRules.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="34.0" />
         <replaceregexp file="purge/EscalationRules.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: ([^/]+)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
         <loadfile property="EscalationRules" srcFile="purge/EscalationRules.txt" />
         <echo file="purge/destructiveChanges.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">]]></echo>
@@ -191,7 +191,7 @@
         <echo file="purge/destructiveChanges.xml" append="true" message="${EscalationRules}" />
         <echo file="purge/destructiveChanges.xml" append="true"><![CDATA[</types>]]></echo>
         <echo file="purge/destructiveChanges.xml" append="true"><![CDATA[</Package>]]></echo>
-        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>33.0</version></Package>]]></echo>
+        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>34.0</version></Package>]]></echo>
         <sf:deploy username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" deployRoot="purge" purgeOnDelete="true" maxPoll="1000" pollWaitMillis="10000" />
         <delete file="purge/package.xml" />
         <delete file="purge/destructiveChanges.xml" />
@@ -199,7 +199,7 @@
         <!-- delete Assignment Rules which lack package support -->
         <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><types><members>*</members><name>AssignmentRule</name></types></Package>]]></echo>
         <touch file="purge/AssignmentRule.txt" />
-        <sf:listMetadata metadataType="AssignmentRule" resultFilePath="purge/AssignmentRule.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="33.0" />
+        <sf:listMetadata metadataType="AssignmentRule" resultFilePath="purge/AssignmentRule.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="34.0" />
         <replaceregexp file="purge/AssignmentRule.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: ([^/]+)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
         <loadfile property="AssignmentRule" srcFile="purge/AssignmentRule.txt" />
         <echo file="purge/destructiveChanges.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">]]></echo>
@@ -207,13 +207,13 @@
         <echo file="purge/destructiveChanges.xml" append="true" message="${AssignmentRule}" />
         <echo file="purge/destructiveChanges.xml" append="true"><![CDATA[</types>]]></echo>
         <echo file="purge/destructiveChanges.xml" append="true"><![CDATA[</Package>]]></echo>
-        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>33.0</version></Package>]]></echo>
+        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>34.0</version></Package>]]></echo>
         <sf:deploy username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" deployRoot="purge" purgeOnDelete="true" maxPoll="1000" pollWaitMillis="10000" />
         <delete file="purge/package.xml" />
         <delete file="purge/destructiveChanges.xml" />
         
         <!-- prepare a wildcard package definition with as many metadata types as possible -->
-        <!-- <sf:describeMetadata username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="33.0" resultFilePath="purge/DescribeMetadata.txt" /> -->
+        <!-- <sf:describeMetadata username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="34.0" resultFilePath="purge/DescribeMetadata.txt" /> -->
         <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
             <Package xmlns="http://soap.sforce.com/2006/04/metadata">]]>
         </echo>
@@ -317,7 +317,7 @@
         <!-- Custom Fields lack wildcard support -->
         <echo file="purge/package.xml" append="true"><![CDATA[<types><name>CustomField</name>]]></echo>
         <touch file="purge/CustomField.txt" />
-        <sf:listMetadata metadataType="CustomField" resultFilePath="purge/CustomField.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="33.0" />
+        <sf:listMetadata metadataType="CustomField" resultFilePath="purge/CustomField.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="34.0" />
         <replaceregexp file="purge/CustomField.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: ([^/]+__c)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
         <loadfile property="CustomField" srcFile="purge/CustomField.txt" />
         <echo file="purge/package.xml" append="true" message="${CustomField}" />
@@ -326,7 +326,7 @@
         <!-- Custom Objects lack wildcard support -->
         <echo file="purge/package.xml" append="true"><![CDATA[<types><name>CustomObject</name>]]></echo>
         <touch file="purge/CustomObject.txt" />
-        <sf:listMetadata metadataType="CustomObject" resultFilePath="purge/CustomObject.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="33.0" />
+        <sf:listMetadata metadataType="CustomObject" resultFilePath="purge/CustomObject.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="34.0" />
         <replaceregexp file="purge/CustomObject.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: ([^/]+__c)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
         <replaceregexp file="purge/CustomObject.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: ([^/]+)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="" />
         <loadfile property="CustomObject" srcFile="purge/CustomObject.txt" />
@@ -336,7 +336,7 @@
         <!-- Documents lack wildcard support -->
         <echo file="purge/package.xml" append="true"><![CDATA[<types><name>Document</name>]]></echo>
         <touch file="purge/Document.txt" />
-        <sf:listMetadata metadataType="Document" folder="EnterpriseServiceBus" resultFilePath="purge/Document.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="33.0" />
+        <sf:listMetadata metadataType="Document" folder="EnterpriseServiceBus" resultFilePath="purge/Document.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="34.0" />
         <replaceregexp file="purge/Document.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: (EnterpriseServiceBus/[^/]+)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
         <loadfile property="Document" srcFile="purge/Document.txt" />
         <echo file="purge/package.xml" append="true" message="${Document}" />
@@ -473,7 +473,7 @@
         <!-- convert package.xml into destructiveChanges.xml and trash local components -->
         <delete includeEmptyDirs="true" dir="purge" includes="**/*" excludes="*.xml" />
         <move tofile="purge/destructiveChanges.xml" file="purge/package.xml" />
-        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>33.0</version></Package>]]></echo>
+        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>34.0</version></Package>]]></echo>
         
         <!-- perform the deletion -->
         <sf:deploy
@@ -569,7 +569,7 @@
             <login username="@{username}" password="@{password}" serverurl="@{serverurl}" />
             
             <!-- Execute using HTTP GET -->
-            <ml:http url="${instance}/services/data/v33.0/tooling/executeAnonymous" method="GET" outfile="lib/executeAnonymousResult.json"  statusProperty="loginResponseStatus">
+            <ml:http url="${instance}/services/data/v34.0/tooling/executeAnonymous" method="GET" outfile="lib/executeAnonymousResult.json"  statusProperty="loginResponseStatus">
                 <headers>
                     <header name="Authorization" value="Bearer ${sessionId}"/>
                 </headers>
@@ -597,7 +597,7 @@
         <attribute name="serverurl" description="Salesforce endpoint."/>    
         <sequential>
             <!-- Obtain Session Id via Login SOAP service -->
-            <ml:http url="@{serverurl}/services/Soap/c/33.0" method="POST" failonunexpected="false" outfile="lib/loginResult.xml" statusProperty="loginResponseStatus">
+            <ml:http url="@{serverurl}/services/Soap/c/34.0" method="POST" failonunexpected="false" outfile="lib/loginResult.xml" statusProperty="loginResponseStatus">
                 <headers>
                     <header name="Content-Type" value="text/xml"/>
                     <header name="SOAPAction" value="login"/>
