@@ -4,8 +4,16 @@
         //arrange broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName());
         
+        //arrange sequence and step
+        insert new Sequence__c(Name = 'Test');
+        SequenceModel model = SequenceModel.fromName('Test');
+        model.appendStep(Terminate.class.getName());
+        
         //arrange message
         List<Message__c> messages = new Job('Test', UserInfo.getUserId()).persist();
+        messages = Broker.impl().locateMarkableWork();
+        messages[0].Exception__c = 'Some exception...';
+        update messages; //saves away fully qualified class name
         
         //arrange controller and extension
         ApexPages.StandardController controller = new ApexPages.StandardController(messages[0]);
@@ -15,9 +23,8 @@
         extension.doRestart();
         
         //assert
-        //String expectedMessage = 'Step unqueryable, eg bad sequence name, position, missing terminate.';
-        //String actualMessage = MessageRestartExtension.message.Exception__c;
-        //System.assertEquals(expectedMessage, actualMessage);
+        System.assert(!ApexPages.hasMessages(), 'Page should not have messages.');
+        System.assert(Broker.IsFirstRun, 'Broker not run.');
     }
     
     static testmethod void testDoRestartLeavesCompletedAndBufferedMessages() {

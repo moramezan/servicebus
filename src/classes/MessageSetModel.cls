@@ -325,4 +325,14 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         Job.runAsUser();
     }
     
+    public void putStepConfig(SObject stepConfig) {
+        List<Message__c> messages = this.getRecords();
+        
+        for (Message__c message : messages) {
+            //hydraged config goes onto each message
+            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
+            inputEvent.put('esb__StepConfig', stepConfig);
+            message.Event__c = Json.serializePretty(inputEvent);
+        }
+    }
 }

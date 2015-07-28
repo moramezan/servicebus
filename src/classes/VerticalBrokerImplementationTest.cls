@@ -28,9 +28,9 @@
         //assert
         Integer expectedContexts = 1000;
         Integer actualContexts = impl.Contexts;
-        System.assertEquals(expectedContexts, actualContexts, 'Should have 1000 contexts.');
+        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
-        //act (List controllers are not supported for FieldPermissions)
+        //act (start up big query locator)
         Database.QueryLocatorIterator iterator = impl.start(null).iterator();
         List<SObject> records = new List<Sobject>();
         while (iterator.hasNext()) records.add(iterator.next());
@@ -38,63 +38,85 @@
         //assert
         Integer expectedSize = 1000;
         Integer actualSize = records.size();
-        System.assertEquals(expectedSize, actualSize, 'Locator should have 100 records.');
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
-        //act
-        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), new List<SObject>());
+        //act (persist none and mark as many as he can fit within remaining contexts)
+        impl.execute(null, new List<SObject>());
         
         //assert
         expectedContexts = 999;
         actualContexts = impl.Contexts;
-        System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
+        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
-        //assert (should have marked as many as he can fit within remaining contexts)
+        //assert
         Integer expectedMarked = 5;
         Integer actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
-        System.assertEquals(expectedMarked, actualMarked, 'Should have five marked messages.');
+        System.assertEquals(expectedMarked, actualMarked, 'Wrong marked.');
         
-        //act
-        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), new List<SObject>());
+        //act (execute the marked guys and move them out of property)
+        impl.execute(null, new List<SObject>());
         
         //assert
         expectedContexts = 998;
         actualContexts = impl.Contexts;
-        System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
+        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
-        //assert (should have executed all marked messages in one chunk)
-        expectedMarked = 0;
-        actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
-        System.assertEquals(expectedMarked, actualMarked, 'Should have zero marked messages.');
+        //assert
+        Integer expectedPersistable = 10; //5 inputs 5 outputs (unless there were exceptions!)
+        Integer actualPersistable = impl.persistableMessages.size();
+        System.assertEquals(expectedPersistable, actualPersistable, 'Wrong persistable.');
         
-        //act
-        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), new List<SObject>());
+        //act (persist previous and mark as many as he can fit within remaining contexts)
+        impl.execute(null, new List<SObject>());
         
         //assert
         expectedContexts = 997;
         actualContexts = impl.Contexts;
-        System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
+        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
-        //assert (should have marked as many as he can fit within remaining contexts)
+        //assert
         expectedMarked = 4;
         actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
-        System.assertEquals(expectedMarked, actualMarked, 'Should have four marked messages.');
+        System.assertEquals(expectedMarked, actualMarked, 'Wrong marked.');
         
-        //act
-        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), new List<SObject>());
+        //act (execute the marked guys and move them out of property)
+        impl.execute(null, new List<SObject>());
         
         //assert
         expectedContexts = 996;
         actualContexts = impl.Contexts;
-        System.assertEquals(expectedContexts, actualContexts, 'Should have decremented contexts.');
+        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
-        //assert (should have executed all marked messages in one chunk)
-        expectedMarked = 0;
+        //assert
+        expectedPersistable = 8; //4 inputs 4 outputs (unless there were exceptions!)
+        actualPersistable = impl.persistableMessages.size();
+        System.assertEquals(expectedPersistable, actualPersistable, 'Wrong persistable.');
+        
+        //act (persist previous and mark as many as he can fit within remaining contexts)
+        impl.execute(null, new List<SObject>());
+        
+        //assert
+        expectedContexts = 995;
+        actualContexts = impl.Contexts;
+        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
+        
+        //assert
+        expectedMarked = 9;
         actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
-        System.assertEquals(expectedMarked, actualMarked, 'Should have zero marked messages.');
+        System.assertEquals(expectedMarked, actualMarked, 'Wrong marked.');
         
-        //act
-        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), new List<SObject>());
+        //act (execute the marked guys and move them out of property)
+        impl.execute(null, new List<SObject>());
         
+        //assert
+        expectedContexts = 994;
+        actualContexts = impl.Contexts;
+        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
+        
+        //assert
+        expectedPersistable = 9; //9 inputs 0 outputs
+        actualPersistable = impl.persistableMessages.size();
+        System.assertEquals(expectedPersistable, actualPersistable, 'Wrong persistable.');
     }
 
     static testmethod void testMarkAndExecuteAndDoneConditions() {
@@ -122,30 +144,28 @@
         //assert
         Integer expectedCount = 1;
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
-        System.assertEquals(expectedCount, actualCount, 'Message should be buffered.');
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
         
-        //act (mark)
-        List<SObject> scopes = new List<SObject>();
-        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
+        //act (persist any and mark as many as he can fit within remaining contexts)
+        impl.execute(null, new List<SObject>());
         
         //assert
         expectedCount = 1;
         actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
-        System.assertEquals(expectedCount, actualCount, 'Message should be started.');
+        System.assertEquals(expectedCount, actualCount, 'Message should be marked.');
         System.assert(!impl.abortJob, 'Job should not be aborted.');
         
-        //act (execute)
-        Id messageId = [SELECT Id FROM Message__c WHERE Status__c = 'Started'].Id;
-        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
+        //act (execute the marked guys and move them out of property)
+        impl.execute(null, new List<SObject>());
         
         //assert
-        expectedCount = 1;
-        actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
-        System.assertEquals(expectedCount, actualCount, 'Message should be completed.');
+        Integer expectedPersistable = 1; //1 input 0 outputs (terminate)
+        Integer actualPersistable = impl.persistableMessages.size();
+        System.assertEquals(expectedCount, actualCount, 'Wrong persistable.');
         System.assert(!impl.abortJob, 'Job should not be aborted.');
         
-        //act (done)
-        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
+        //act (abort condition)
+        impl.execute(null, new List<SObject>());
         System.assert(impl.abortJob, 'Job should be aborted.');
     }
 

@@ -146,7 +146,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
                 this.persistableMessages.addAll(outputMessages);
                 
             } catch (Exception e) {
-                
+                throw e;
                 for (Message__c inputMessage : inputMessages) {
                     inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
                     inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);

@@ -4,7 +4,7 @@
      * Synchronous Broker is used inside of unit tests
      * to traverse sequences with multiple steps without
      * the "single execute" limit of Database.Batchable
-     * 
+     *
      * Alternatively we can use it to just call individual
      * broker method implementations like mark() and execute()
      * without actually starting or running the Broker itself
@@ -62,6 +62,9 @@
             
             //finish (invokes broker again in same context)
             Broker.run();
+            
+            //leave evidence it ran
+            Broker.IsFirstRun = true;
         }
         
         override public Boolean isRunning() {
@@ -233,7 +236,7 @@
         
         //assemble
         //http://salesforce.stackexchange.com/q/61213/320
-        messages = ApexDomain.listAll(Message__c.SObjectType);
+        messages = Broker.impl().locateMarkableWork();
         
         Boolean actualFlag = false;
         
@@ -560,11 +563,9 @@
     }
 
     
-    /**
-     * Bug with Salesforce:
-     * We cannot legitimately test for recycle bin purges - See Andy Fawcett's stackexchange comment:
-     * http://salesforce.stackexchange.com/questions/27180/database-emptyrecyclebin-exhibits-unexpected-behaviour
-     */
+    // Bug with Salesforce:
+    // We cannot legitimately test for recycle bin purges - See Andy Fawcett's stackexchange comment:
+    // http://salesforce.stackexchange.com/questions/27180/database-emptyrecyclebin-exhibits-unexpected-behaviour
     
     // TODO - Test Fails
     //        Assume it will be fixed when deailing with Issue "migrate chunking logic into abstract Broker #636"
@@ -588,7 +589,7 @@
         actualMessage = messages[0].Exception__c;
         
         //assert
-        String expectedMessage = 'Mandatory event parameter esb__SequenceName not supplied.';
+        String expectedMessage = 'This message has no route: ' + messages[0].Id;
         System.assertEquals(expectedMessage, actualMessage, 'Wrong exception message.');
     }
     
@@ -616,7 +617,7 @@
         actualMessage = messages[0].Exception__c;
         
         //assert
-        String expectedMessage = 'Step unqueryable, eg bad sequence name, position, missing terminate.';
+        String expectedMessage = 'This message has no route: ' + messages[0].Id;
         System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
     }
     
@@ -738,7 +739,7 @@
         //act
         new Job(sequenceNameA, '000000000000000AAA').execute(null);
 
-        
+        //System.assert(false, [SELECT Id, Event__c, Status__c, Exception__c, Cause__c FROM Message__c]);
         //assemble
         List<Message__c> messages = [
             SELECT Id, Name, Event__c, Status__c
@@ -817,7 +818,7 @@
         Map<String,Object> actualException = (Map<String,Object>)Json.deserializeUntyped(messagesFailed[0].Cause__c);
 
         // assert
-        String expectedExceptionMessage = 'Step unqueryable, eg bad sequence name, position, missing terminate.';
+        String expectedExceptionMessage = 'Nonexistent route, eg bad sequence name, position, missing terminate: sequenceA#4';
         String actualExceptionMessage = (String)actualException.get('Message');
         System.assertEquals(expectedExceptionMessage, actualExceptionMessage, 'Wrong message');
     }
@@ -1003,10 +1004,9 @@
     
     public class ChunkErrorProcess extends ProcessModel.BaseProcess {
         override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
-            Map<String,Object> outputEvent = inputEvent.clone();
             Boolean isError = (Boolean)inputEvent.get('c__IsError');
             if (isError == true) throw new ChunkErrorProcessException('Test error');
-            return new List<Map<String,Object>>{outputEvent}; //one message
+            return new List<Map<String,Object>>{inputEvent.clone()}; //one message
         }
     }
     
@@ -1032,11 +1032,13 @@
         //arrange messages and broker
         List<Message__c> messages = new Job(events).persist();
         Broker impl = Broker.impl();
+        messages = impl.locateMarkableWork();
         
-        List<Message__c> outputMessages = new List<Message__c>();
         //act
+        List<Message__c> outputMessages = new List<Message__c>();
         impl.execute(messages, outputMessages);
-        //#798 should only have one message
+        
+        //assert #798 should only have one message
         Integer expectedCount = 1;
         Integer actualCount = outputMessages.size();
         System.assertEquals(expectedCount, actualCount);

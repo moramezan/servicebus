@@ -84,7 +84,7 @@
  */
 abstract public with sharing class Broker {
     
-    @TestVisible private static Integer MaxHops = 500;
+    public static Integer MaxHops = 500;
     
     /**
      * #671 first query locator spends less time in 'Preparing'
@@ -254,51 +254,69 @@ abstract public with sharing class Broker {
      * @return collection of soon-to-be-marked-as-Started Messages.
      */
     public List<Message__c> locateMarkableWork() {
-        //find oldest buffered message
-        Message__c specimenMessage;
-        try {
-            specimenMessage = [
-                SELECT Id, Status__c, Step__c, Attempts__c
-                FROM Message__c
-                WHERE Status__c = 'Buffered'
-                ORDER BY Attempts__c DESC, CreatedDate__c ASC //TODO could sort by route
-                LIMIT 1
-            ];
-        } catch (QueryException e) {
-            //no specimen message means no work found, return empty query locator
-            return [SELECT Id FROM Message__c WHERE Id IN (null)];
+        
+        Integer count = [
+            SELECT COUNT()
+            FROM Message__c
+            WHERE Status__c = 'Buffered'
+        ];
+        
+        if (count == 0) {
+            //no work found, return empty
+            return new List<Message__c>();
         }
         
-        //number of times specimen process can run within governor limits
-        Integer queryLimit = 1;
-        String className = null; //#697
-        String status = specimenMessage.Status__c;
-        String route = specimenMessage.Step__c;
+        Message__c specimen = [
+            SELECT Id, Step__c, Event__c, Status__c, Attempts__c
+            FROM Message__c
+            WHERE Status__c = 'Buffered'
+            ORDER BY CreatedDate ASC //reattempts will naturally lead
+            LIMIT 1
+        ];
         
-        Step__c specimenStep = Step__c.getValues(route);
-        try {
-            className = specimenStep.FullyQualifiedClassName__c;
-            ProcessModel process = ProcessModel.fromFqcn(className);
-            queryLimit = process.Limits;
-        } catch (Exception e) {
-            //no process found, apex class may be deleted or renamed
+        ProcessModel model = new MessageModel(specimen).discoverProcessModel();
+        
+        if (model == null) {
+            //cannot discover process, return one specimen
+            return new List<Message__c>{specimen};
         }
         
-        //no step found, resolution problem or might be a heartbeat
+        Integer limits = model.Limits; //number of times specimen process can run within governor limits
         
         List<Message__c> messages = [
-            SELECT Id, Step__c, Event__c
+            SELECT Id, Step__c, Event__c, Status__c, Attempts__c
             FROM Message__c
-            WHERE Status__c = :status
-            AND Step__c = :route //chunk by step as opposed to by process
-            //ORDER BY CreatedDate__c ASC //not possible when locking
-            LIMIT :queryLimit
+            WHERE Status__c = :specimen.Status__c
+            AND Step__c = :specimen.step__c
+            LIMIT :limits
             FOR UPDATE //#695 investigate broker race condition
         ];
         
-        //#697 let these guys get written away to make monitoring simpler (crow look)
-        for (Message__c message : messages) message.FullyQualifiedClassName__c = className;
+        Step__c step = new MessageModel(specimen).resolveStep();
         
+        if (step == null) {
+            //cannot resolve step, return unconfigured
+            return messages;
+        }
+        
+        Id configId = step.ConfigId__c;
+        
+        if (configId == null) {
+            //config id is null, strip and return unconfigured
+            new MessageSetModel(messages).putStepConfig(null);
+            return messages;
+        }
+        
+        SObject stepConfig = ApexDomain.getById(configId);
+        
+        if (stepConfig == null) {
+            //step config is null, strip and return unconfigured
+            new MessageSetModel(messages).putStepConfig(null);
+            return messages;
+        }
+        
+        //put hydrated config on each message and return
+        new MessageSetModel(messages).putStepConfig(stepConfig);
         return messages;
     }
     
@@ -317,7 +335,7 @@ abstract public with sharing class Broker {
             return results;
             
         } catch (Exception e) {
-            throw new EngineException('Mark exception', e);
+            throw new EngineException('Mark exception: ' + e.getMessage(), e);
         }
     }
     
@@ -333,7 +351,6 @@ abstract public with sharing class Broker {
         //if (inputMessages.isEmpty()) return new List<Message__c>();
         if (inputMessages.isEmpty()) return;
         
-        //Set<Id> inputMessageIds = new Map<Id,SObject>(inputMessages).keySet();
         Integer chunkTotal = inputMessages.size();
         Integer chunk = 1;
         for (Message__c inputMessage :  inputMessages) {
@@ -345,162 +362,52 @@ abstract public with sharing class Broker {
         }
         
         //OUR FUCKUPS (before invocation)
-        Boolean biggerProblems = false;
-        Map<Id,Map<String,Object>> id2events = new Map<Id,Map<String,Object>>();
-        Map<Id,DateTime> idToStartStamp = new Map<Id,DateTime>();
+        List<MessageModel> models = new List<MessageModel>();
         for (Message__c inputMessage : inputMessages) {
-            DateTime startStamp = System.Now();
-            idToStartStamp.put(inputMessage.Id, startStamp);
-
-            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
-            id2events.put(inputMessage.Id, inputEvent);
-
-            if (!inputEvent.containsKey('__SequenceName')) {
-                biggerProblems = true;
-                Exception e = new Broker.EngineException('Mandatory event parameter esb__SequenceName not supplied.');
-                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
-                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
+            try {
+                //check sequence, position, step, reflector, etc
+                models.add(new MessageModel(inputMessage));
+                
+            } catch (MessageModel.MessageException e) {
+                //bigger problems (inputMessage shows by reference)
+                return;
+                
+            }
+        }
+        
+        //specimen #575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
+        if (models[0].Event.get('__IsHeartbeatProcess') != null) {
+            
+            for (MessageModel model : models) {
+                
+                //#697 locateMarkableWork misses this for heartbeats
+                model.setFullyQualifiedClassName(Heartbeat.class);
+                
+                try {
+                    //do invocation
+                    model.invokeExecute(outputMessages);
+                    
+                } catch (MessageModel.MessageException e) {
+                    //bigger problems
+                    continue;
+                    
+                }
             }
             
-            if (!inputEvent.containsKey('__Position')) {
-                biggerProblems = true;
-                Exception e = new Broker.EngineException('Mandatory event parameter esb__SequenceName not supplied.');
-                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
-                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
-            }
-        }
-        
-        if (biggerProblems) return;
-        
-        //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
-        if (id2events.get(inputMessages[0].Id).get('__IsHeartbeatProcess') != null) {
-            //invoke and wrap up results into messages
-            for (Message__c inputMessage : inputMessages) {
-                DateTime startStamp = idToStartStamp.get(inputMessage.Id);
-                Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
-                
-                Object process = new Heartbeat();
-                Job.Event = inputEvent;
-                String data = String.valueOf(process);
-                List<Object> outputs = (List<Object>)Json.deserializeUntyped(data);
-                
-                inputMessage.Status__c = 'Completed'; //#798
-                inputMessage.Exception__c = null;
-                inputMessage.Cause__c = null;
-                inputMessage.FullyQualifiedClassName__c = Heartbeat.class.getName(); //#697 locateMarkableWork misses this for heartbeats
-                
-                for (Object output : outputs) outputMessages.add(new Message__c(Event__c = Json.serializePretty(output), Status__c = 'Buffered'));
-
-                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
-            }
+            //end special routing
             return;
-        }
-        
-        //specimen message will have same process as others
-        Message__c specimen = inputMessages[0];
-
-        Step__c step = Step__c.getValues(specimen.Step__c);
-        if (step == null) {
-            //this scenario is really following on from a failed resolve - thinking that we might explicitly set a new message status
-            //of FAILED but in due course we hope to do away with resolve step entirely with message names '{sequence}#{position}V{version}'
-            for (Message__c inputMessage : inputMessages) {
-                DateTime startStamp = idToStartStamp.get(inputMessage.Id);
-                Exception e = new Broker.EngineException('Step unqueryable, eg bad sequence name, position, missing terminate.');
-                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
-                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
-            }
-            return;
-        }
-        
-        Type reflector = Type.forName(step.FullyQualifiedClassName__c);
-        if (reflector == null) {
-            for (Message__c inputMessage : inputMessages) {
-                DateTime startStamp = idToStartStamp.get(inputMessage.Id);
-                Exception e = new Broker.EngineException('Reflector for classname was null: ' + step.FullyQualifiedClassName__c);
-                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
-                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
-            }
-            return;
-        }
-        
-        //save important message properties (such as __Hops) so that process authors cannot pervert them
-        //THROWS EngineException TODO : requires a more generic approach not specific to just the __Hops
-        for (Message__c inputMessage : inputMessages) {
-            DateTime startStamp = idToStartStamp.get(inputMessage.Id);
-            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
-            if ((Integer)inputEvent.get('__Hops') >= MaxHops) {
-                biggerProblems = true;
-                Exception e = new Broker.EngineException('Too many hops - to resolve, manually set __Hops on event parameters to 0');
-                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
-                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
-            }
-        }
-        
-        if (biggerProblems) return;
-        
-        //step determines whether all have configs or none
-        SObject stepConfig;
-        if (step.ConfigId__c != null) {
-            //find all steps config ids
-            stepConfig = ApexDomain.getById(step.ConfigId__c);
-            
-            for (Message__c inputMessage : inputMessages) {
-                Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
-                inputEvent.put('esb__StepConfig', stepConfig);
-                inputMessage.Event__c = Json.serializePretty(inputEvent);
-            }
-        } else {
-            for (Message__c inputMessage : inputMessages) {
-                Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
-                inputEvent.put('esb__StepConfig', null);
-                inputMessage.Event__c = Json.serializePretty(inputEvent);
-            }
-        }
-        
-        //#877 surface SessionId to select few orgs and packages
-        Boolean allowSessionId = isAllowedSessionId(reflector.getName(), UserInfo.getOrganizationId());
-        if (allowSessionId) {
-            for (Message__c inputMessage : inputMessages) {
-                Map<String,Object> inputEvent = id2events.get(inputMessage.Id);
-                inputEvent.put('__SessionId', OAuthSetting__c.getInstance().AccessToken__c);
-            }
-        }
-        
-        List<Object> processes = new List<Object>();
-        for (Integer i = 0; i < inputMessages.size(); i++) {
-            Object process = reflector.newInstance();
-            processes.add(process);
         }
         
         //THEIR FUCKUPS (invocation)
-        if (processes[0] instanceof Database.AllowsCallouts)
-        for (Integer i = 0; i < inputMessages.size(); i++) {
-            Message__c inputMessage = inputMessages[i];
-            DateTime startStamp = idToStartStamp.get(inputMessage.Id);
-            
-            
-            //TODO COUNT ANY DMLS
-            Object process = processes[i];
-
+        for (MessageModel model : models) {
             try {
-                //provide input event and set flag
-                Job.Event = id2events.get(inputMessage.Id);
-                Job.Event.put('esb__AllowsCallouts', true);
+                //do invocation
+                model.invokeCallouts();
                 
-                //do callouts
-                String data = String.valueOf(process);
-                if (data != null) throw new EngineException('Your AllowsCallouts code block should return null.');
+            } catch (MessageModel.MessageException e) {
+                //postpone any handling after finally block
+                continue;
                 
-                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
-            } catch (Exception e) {
-                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
-                inputMessage.ExecuteDuration__c = System.Now().getTime() - startStamp.getTime();
             }
         }
         
@@ -509,75 +416,40 @@ abstract public with sharing class Broker {
         
         //savepoint tax only applies if side effects
         Boolean hadSideEffects = false;
-        Integer queueables;
-        Integer futures;
-        Integer emails;
-        Integer dmls;
         
-        for (Integer i = 0; i < inputMessages.size(); i++) {
-            Message__c inputMessage = inputMessages[i];
-            DateTime startStamp = idToStartStamp.get(inputMessage.Id);
-            Integer calloutDuration = (Integer)((inputMessage.ExecuteDuration__c == null) ? 0 : inputMessage.ExecuteDuration__c);
-            
-            //TODO COUNT ANY CALLOUTS
-            Object process = processes[i];
-
-            try {
-                
-                if (hadSideEffects) sp = Database.setSavepoint();
+        for (MessageModel model : models) {
+            //consume savepoint only if necessary
+            if (hadSideEffects) {
+                sp = Database.setSavepoint();
                 hadSideEffects = false;
-                
-                //measure side effects before
-                queueables = Limits.getQueueableJobs();
-                futures = Limits.getFutureCalls();
-                emails = Limits.getEmailInvocations();
-                dmls = Limits.getDMLStatements();
-                
-                //provide input event and set flag
-                Job.Event = id2events.get(inputMessage.Id);
-                Job.Event.put('esb__AllowsCallouts', false);
-                
-                //do invocation
-                String data = String.valueOf(process);
-                if (data == null) throw new EngineException('Your main code block should return a serialized List<Map<String,Object>>.');
-                if(data.endsWith(reflector.getName().replaceAll('[^.]+\\.', '') + ':[]')) throw new EngineException('Your plugin has not overridden the toString() method. Please refer to the Process Developers Guide for specific guidance.');
-                //output no longer equals balance plus delta
-                
-                //measure side effects after
-                if (Limits.getEmailInvocations() > emails) hadSideEffects = true;
-                if (Limits.getQueueableJobs() > queueables) hadSideEffects = true;
-                if (Limits.getDMLStatements() > dmls) hadSideEffects = true;
-                if (Limits.getFutureCalls() > futures) hadSideEffects = true;
-                
-                inputMessage.Status__c = 'Completed'; //#798
-                inputMessage.Exception__c = null;
-                inputMessage.Cause__c = null;
-                List<Object> outputEvents = (List<Object>)Json.deserializeUntyped(data);
-
-                //wrap up results into Messages (new guys should have Position = 0)
-                for (Object outputEvent : outputEvents) {
-                    outputMessages.add(new Message__c(
-                        Event__c = Json.serializePretty(outputEvent),
-                        Status__c = 'Buffered'
-                    ));
-                }
-
-                inputMessage.ExecuteDuration__c = calloutDuration + (System.Now().getTime() - startStamp.getTime());
-
-            } catch (Exception e) {
-                //measure side effects after
-                if (Limits.getEmailInvocations() > emails) hadSideEffects = true;
-                if (Limits.getQueueableJobs() > queueables) hadSideEffects = true;
-                if (Limits.getDMLStatements() > dmls) hadSideEffects = true;
-                if (Limits.getFutureCalls() > futures) hadSideEffects = true;
-                
-                if (hadSideEffects) Database.rollback(sp);
-                
-                //#581 smoking gun should point at the user, NOT at our broker
-                inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-                inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
-                inputMessage.ExecuteDuration__c = calloutDuration + (System.Now().getTime() - startStamp.getTime());
             }
+            
+            //measure side effects before
+            Integer queueables = Limits.getQueueableJobs();
+            Integer futures = Limits.getFutureCalls();
+            Integer emails = Limits.getEmailInvocations();
+            Integer dmls = Limits.getDMLStatements();
+            
+            Boolean hadException = false;
+            
+            try {
+                //do invocation
+                model.invokeExecute(outputMessages);
+                
+            } catch (MessageModel.MessageException e) {
+                //postpone any handling after finally block
+                hadException = true;
+                
+            } finally {
+                //measure side effects after, whether or not there was an exception
+                if (Limits.getEmailInvocations() > emails) hadSideEffects = true;
+                if (Limits.getQueueableJobs() > queueables) hadSideEffects = true;
+                if (Limits.getDMLStatements() > dmls) hadSideEffects = true;
+                if (Limits.getFutureCalls() > futures) hadSideEffects = true;
+            }
+            
+            //consume rollback only if necessary
+            if (hadSideEffects && hadException) Database.rollback(sp);
         }
         
         //OUR FUCKUPS (after invocation)
@@ -670,9 +542,7 @@ abstract public with sharing class Broker {
      
     abstract public void runImpl();
 
-            
-    @testVisible
-    static private Boolean isAllowedSessionId(String reflectorName, Id orgId) {
+    static public Boolean isAllowedSessionId(String reflectorName, Id orgId) {
         if (!Test.isRunningTest() && Broker.class.getName() == 'Broker') return true; //unmanaged deployment ok
         
         Set<String> sessionIdOrgs = new Set<String>{
