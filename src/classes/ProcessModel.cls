@@ -114,7 +114,7 @@ public with sharing class ProcessModel {
         ProcessModel model;
         try {
             model = (ProcessModel)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessModel.class);
-        } catch (JsonException e) {
+        } catch (Exception e) {
             throw new ProcessException('Process discovery exception "' + fullyQualifiedClassName + '"', e);
         }
         
