@@ -1,0 +1,34 @@
+<h1>
+    Handling panic condition in broker worker
+</h1>
+
+<p>
+    The broker may enter a panic condition when there is an internal mark error.
+    <br />If so, the worker process should be immediately aborted. We test this behaviour.
+</p>
+
+<h2>
+    Procedure
+</h2>
+
+<ol>
+    <li>Create an Apex Trigger on the Message__c object:
+<pre>
+trigger MessagePanic on Message__c (before update) {
+    
+    Integer error = 1 / 0; //should throw exception
+    
+}
+</pre>
+    </li>
+    <li>Create a new Sequence 'PanicTest' containing just 'Terminate' step in position 1.</li>
+    <li>Click <strong>Enqueue Test Message</strong> to process a message, which should fail.</li>
+</ol>
+
+<h2>
+    Outcomes
+</h2>
+
+<ol>
+    <li>In Setup > Apex Jobs, the log should show 'Broker panic' in the aborted job description.</li>
+</ol>

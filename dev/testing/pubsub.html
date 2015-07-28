@@ -1,0 +1,33 @@
+<h1>
+    Publishing and subscribing to events
+</h1>
+
+<p>
+    Publish process is used to broadcast an event to independent sequences.
+    <br />The publish step does not have any knowledge of his subscribers.
+</p>
+
+<h2>
+    Procedure
+</h2>
+
+<ol>
+    <li>Create a new Sequence 'PublishTest' containing a 'Publish' step in position 1.</li>
+    <li>Click <strong>Configure</strong> on the step then <strong>Manage Events</strong>.</li>
+    <li>Create a new Event 'Test Event' and choose this on the Publish step configuration.</li>
+    
+    <li>Create a new Sequence 'SubscribeTest' containing a 'Subscribe' step in position 1.</li>
+    <li>Click <strong>Configure</strong> on the step then choose 'Test Event' from earlier.</li>
+    <li>Append a 'Wiretap' step to the sequence. The 'Terminate' should be at the end.</li>
+
+    <li>Click <strong>Enqueue Test Message</strong>.</li>
+    <li>Wait for the monitor to show all processing has finished.</li>
+</ol>
+
+<h2>
+    Outcomes
+</h2>
+
+<ol>
+    <li></li>
+</ol>
