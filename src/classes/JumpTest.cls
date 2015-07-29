@@ -31,7 +31,7 @@
         };
         
         //act
-        ProcessModel.BaseProcess process = new Jump();
+        ApexClassModel.BaseProcess process = new Jump();
         List<Map<String,Object>> parametersList = process.execute(parameters);
         
         //assert

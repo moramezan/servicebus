@@ -83,7 +83,7 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
     /**
      * Returns MODEL or NULL
      */
-    public ProcessModel discoverProcessModel() {
+    public ApexClassModel.ESB discoverProcessModel() {
         
         Step__c step = this.resolveStep();
         if (step == null) return null; //nonexistent step
@@ -92,8 +92,8 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
         if (fullyQualifiedClassName == null) return null; //step has no fully qualified class name
         
         try {
-            return ProcessModel.fromFqcn(fullyQualifiedClassName);
-        } catch (ProcessModel.ProcessException e) {
+            return new ApexClassModel(Type.forName(fullyQualifiedClassName)).model;
+        } catch (ApexClassModel.ProcessException e) {
             return null; //cannot discover process
         }
     }

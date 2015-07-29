@@ -22,7 +22,7 @@
         String data = extension.getProcesses();
         
         //assemble
-        List<ProcessModel> processes = (List<ProcessModel>)Json.deserialize(data, List<ProcessModel>.class);
+        List<ApexClassModel> processes = (List<ApexClassModel>)Json.deserialize(data, List<ApexClassModel>.class);
         
         //assert
         Integer expectedCount = 10; //about 13

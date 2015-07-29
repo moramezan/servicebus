@@ -7,6 +7,8 @@
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>
+        <members>ApexClassModel</members>
+        <members>ApexClassModelTest</members>
         <members>ApexDomain</members>
         <members>ApexDomainTest</members>
         <members>AuditInitializer</members>
@@ -58,8 +60,6 @@
         <members>PostUninstallHandler</members>
         <members>PostUninstallHandlerTest</members>
         <members>ProcessDescribeController</members>
-        <members>ProcessModel</members>
-        <members>ProcessModelTest</members>
         <members>Publish</members>
         <members>PublishTest</members>
         <members>RemoteSiteSettingController</members>

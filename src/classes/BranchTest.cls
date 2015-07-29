@@ -23,7 +23,7 @@
             '__SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
-        ProcessModel.BaseProcess process = new Branch();
+        ApexClassModel.BaseProcess process = new Branch();
         List<Map<String,Object>> outputEvents = process.execute(inputEvent);
 
         List<Object> expectedIds = null;
@@ -50,7 +50,7 @@
         };
         
         //act
-        ProcessModel.BaseProcess process = new Branch();
+        ApexClassModel.BaseProcess process = new Branch();
         List<Map<String,Object>> outputEvents = process.execute(inputEvent);
 
         //assert
@@ -104,7 +104,7 @@
         
         //act
         try {
-            ProcessModel.BaseProcess process = new Branch();
+            ApexClassModel.BaseProcess process = new Branch();
             List<Map<String,Object>> outputEvents = process.execute(inputEvent);
         } catch (Exception e) {
             exceptionThrown = true;

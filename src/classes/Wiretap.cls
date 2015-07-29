@@ -1,4 +1,4 @@
-public with sharing class Wiretap extends ProcessModel.BaseProcess {
+public with sharing class Wiretap extends ApexClassModel.BaseProcess {
     
     /**
      * @docs ProcessWiretap.html

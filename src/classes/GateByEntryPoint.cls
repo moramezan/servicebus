@@ -1,4 +1,4 @@
-public with sharing class GateByEntryPoint extends ProcessModel.BaseProcess {
+public with sharing class GateByEntryPoint extends ApexClassModel.BaseProcess {
 
     private class GateByEntryPointException extends Exception {}
 

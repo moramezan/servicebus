@@ -1,4 +1,4 @@
-public with sharing class AuditInitializer extends ProcessModel.BaseProcess {
+public with sharing class AuditInitializer extends ApexClassModel.BaseProcess {
     
     /**
      * @docs ProcessAudit.html

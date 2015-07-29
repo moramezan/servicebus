@@ -1,4 +1,4 @@
-public with sharing class Jump extends ProcessModel.BaseProcess {
+public with sharing class Jump extends ApexClassModel.BaseProcess {
 
     public JumpConfig__c StepConfig;
 

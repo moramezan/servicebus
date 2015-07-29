@@ -1,4 +1,4 @@
-public with sharing class Subsequence extends ProcessModel.BaseProcess {
+public with sharing class Subsequence extends ApexClassModel.BaseProcess {
     
     public SubsequenceConfig__c StepConfig;
     

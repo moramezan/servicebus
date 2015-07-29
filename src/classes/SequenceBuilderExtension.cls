@@ -37,7 +37,7 @@ public with sharing class SequenceBuilderExtension {
     }
     
     public String getProcesses() {
-        List<ProcessModel> processes = ProcessModel.discoverProcesses();
+        List<ApexClassModel.ESB> processes = ApexClassModel.discoverProcesses();
         return Json.serializePretty(processes);
     }
     

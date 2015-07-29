@@ -32,7 +32,7 @@
         };
         
         //act
-        ProcessModel.BaseProcess process = new Subsequence();
+        ApexClassModel.BaseProcess process = new Subsequence();
         List<Map<String,Object>> parametersList = process.execute(parameters);
         
         //asserts

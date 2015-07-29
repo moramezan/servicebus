@@ -36,7 +36,7 @@
         };
         
         //act
-        ProcessModel.BaseProcess process = new AuditInitializer();
+        ApexClassModel.BaseProcess process = new AuditInitializer();
         List<Map<String,Object>> results = process.execute(parameters);
         
         //assemble
@@ -94,7 +94,7 @@
         };
         
         //act
-        ProcessModel.BaseProcess process = new AuditInitializer();
+        ApexClassModel.BaseProcess process = new AuditInitializer();
         List<Map<String,Object>> results = process.execute(parameters);
         
         //assemble
@@ -156,7 +156,7 @@
         };
         
         //act
-        ProcessModel.BaseProcess process = new AuditInitializer();
+        ApexClassModel.BaseProcess process = new AuditInitializer();
         List<Map<String,Object>> results = process.execute(parameters);
         
         //assemble

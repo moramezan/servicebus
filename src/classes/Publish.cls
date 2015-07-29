@@ -1,4 +1,4 @@
-public with sharing class Publish extends ProcessModel.BaseProcess {
+public with sharing class Publish extends ApexClassModel.BaseProcess {
     
     public PublishConfig__c StepConfig;
     

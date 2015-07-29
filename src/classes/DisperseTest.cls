@@ -22,7 +22,7 @@
         insert new DisperseDestination__c(DisperseConfig__c = config.Id, Sequence__c = sequence3.Id);
         
         //arrange invocation
-        ProcessModel.BaseProcess process = new Disperse();
+        ApexClassModel.BaseProcess process = new Disperse();
         Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__StepConfig' => config
         };
@@ -48,7 +48,7 @@
         insert new DisperseDestination__c(DisperseConfig__c = config.Id, Sequence__c = sequence.Id);
         
         //arrange invocation
-        ProcessModel.BaseProcess process = new Disperse();
+        ApexClassModel.BaseProcess process = new Disperse();
         Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__StepConfig' => config,
             '__SequenceName' => 'Test'

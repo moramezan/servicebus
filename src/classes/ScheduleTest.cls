@@ -24,7 +24,7 @@
         inputEvent.put('__WasHeartbeatProcess', false);
         
         // act
-        ProcessModel.BaseProcess process = new Schedule();
+        ApexClassModel.BaseProcess process = new Schedule();
         List<Map<String,Object>> results = process.execute(inputEvent);
         
         // assemble
@@ -73,7 +73,7 @@
         };
  
         // act
-        ProcessModel.BaseProcess process = new Schedule();
+        ApexClassModel.BaseProcess process = new Schedule();
         List<Map<String,Object>> results = process.execute(inputEvent);
         
         // assemble
@@ -126,7 +126,7 @@
         };
  
         // act
-        ProcessModel.BaseProcess process = new Schedule();
+        ApexClassModel.BaseProcess process = new Schedule();
         List<Map<String,Object>> results = process.execute(inputEvent);
         
         // assemble
@@ -179,7 +179,7 @@
         };
  
         // act
-        ProcessModel.BaseProcess process = new Schedule();
+        ApexClassModel.BaseProcess process = new Schedule();
         List<Map<String,Object>> results = process.execute(inputEvent);
         
         // assemble
@@ -230,7 +230,7 @@
         };
  
         // act
-        ProcessModel.BaseProcess process = new Schedule();
+        ApexClassModel.BaseProcess process = new Schedule();
         List<Map<String,Object>> results = process.execute(inputEvent);
         
         // assemble
@@ -263,7 +263,7 @@
         Boolean actualFlag = false;
         try {
             // act
-            ProcessModel.BaseProcess process =  new Schedule();
+            ApexClassModel.BaseProcess process =  new Schedule();
             List<Map<String,Object>> result = process.execute(inputEvent);
         } catch (Schedule.ScheduleException e) {
             actualFlag = true;

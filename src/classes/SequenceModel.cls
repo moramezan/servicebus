@@ -76,7 +76,7 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
             if (!SObjectType.Step__c.Createable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Createable');
             
             //insert any StepConfig
-            ProcessModel process = ProcessModel.fromFqcn(fullyQualifiedClassName);
+            ApexClassModel.ESB process = new ApexClassModel(Type.forName(fullyQualifiedClassName)).model;
             SObject config;
             if (process.StepConfig != null) {
                 config = (SObject)Type.forName(process.StepConfig).newInstance();

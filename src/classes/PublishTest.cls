@@ -39,7 +39,7 @@
             '__SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
-        ProcessModel.BaseProcess process = new Publish();
+        ApexClassModel.BaseProcess process = new Publish();
         List<Map<String,Object>> parametersList = process.execute(parameters);
         
         //should return one for sub, one for passthru
@@ -73,7 +73,7 @@
         
         //act
         Boolean thrown = false;
-        ProcessModel.BaseProcess process = new Publish();
+        ApexClassModel.BaseProcess process = new Publish();
         try {process.execute(parameters);}
         catch (Publish.PublishException e) {thrown = true;}
         
@@ -103,7 +103,7 @@
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         parameters.put('esb__StepConfig', config);
         //act
-        ProcessModel.BaseProcess process = new Publish();
+        ApexClassModel.BaseProcess process = new Publish();
         List<Map<String,Object>> parametersList = process.execute(parameters);
         
         //assert
@@ -152,7 +152,7 @@
         Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'Publisher', '__Position' => 1, 'esb__StepConfig' => pubConfig};
         
         //act
-        ProcessModel.BaseProcess process = new Publish();
+        ApexClassModel.BaseProcess process = new Publish();
         List<Map<String,Object>> parametersList = process.execute(parameters);
         
         //assert

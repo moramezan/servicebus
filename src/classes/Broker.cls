@@ -274,7 +274,7 @@ abstract public with sharing class Broker {
             LIMIT 1
         ];
         
-        ProcessModel model = new MessageModel(specimen).discoverProcessModel();
+        ApexClassModel.ESB model = new MessageModel(specimen).discoverProcessModel();
         
         if (model == null) {
             //cannot discover process, return one specimen

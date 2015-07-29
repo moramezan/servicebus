@@ -14,7 +14,7 @@
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
         
         //act
-        ProcessModel.BaseProcess process = new Subscribe();
+        ApexClassModel.BaseProcess process = new Subscribe();
         List<Map<String,Object>> parametersList = process.execute(parameters);
         
         //assert

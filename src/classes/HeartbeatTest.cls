@@ -13,7 +13,7 @@
         };
         
         //act
-        ProcessModel.BaseProcess process = new Heartbeat();
+        ApexClassModel.BaseProcess process = new Heartbeat();
         
         //assemble
         List<Map<String,Object>> outputs = process.execute(inputEvent);
@@ -40,7 +40,7 @@
         };
 
         //act
-        ProcessModel.BaseProcess process = new Heartbeat();
+        ApexClassModel.BaseProcess process = new Heartbeat();
         List<Map<String,Object>> outputEvents = process.execute(inputEvent);
 
         //assert
@@ -68,7 +68,7 @@
         };
 
         //act
-        ProcessModel.BaseProcess process = new Heartbeat();
+        ApexClassModel.BaseProcess process = new Heartbeat();
         List<Map<String,Object>> outputEvents = process.execute(inputEvent);
 
         //assert
@@ -88,7 +88,7 @@
         Boolean actualFlag = false;
         try {
             //act
-            ProcessModel.BaseProcess process = new Heartbeat();
+            ApexClassModel.BaseProcess process = new Heartbeat();
             List<Map<String,Object>> results = process.execute(inputEvent);
         } catch (Heartbeat.HeartbeatException e) {
             actualFlag = true;

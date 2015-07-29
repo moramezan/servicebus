@@ -1,4 +1,4 @@
-public with sharing class Disperse extends ProcessModel.BaseProcess {
+public with sharing class Disperse extends ApexClassModel.BaseProcess {
     
     public DisperseConfig__c StepConfig;
     

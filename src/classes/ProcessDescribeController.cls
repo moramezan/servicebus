@@ -1,10 +1,10 @@
 public with sharing class ProcessDescribeController {
     
-    public ProcessModel Process {public get; private set;}
+    public ApexClassModel.ESB Process {public get; private set;}
     
     public ProcessDescribeController() {
         String fqcn = ApexPages.currentPage().getParameters().get('fqcn');
-        this.Process = ProcessModel.fromFqcn(fqcn);
+        this.Process = new ApexClassModel(Type.forName(fqcn)).model;
     }
     
 }

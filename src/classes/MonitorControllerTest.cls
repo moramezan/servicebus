@@ -15,7 +15,7 @@
         List<MonitorController.Statistic> statistics = MonitorController.getStatistics();
         
         //assert
-        Integer expectedCount = ProcessModel.discoverProcesses().size() + 1; //one extra for buffered guys - they have no process name so the graph is [' ', 'Wiretap', 'Terminate']
+        Integer expectedCount = ApexClassModel.discoverProcesses().size() + 1; //one extra for buffered guys - they have no process name so the graph is [' ', 'Wiretap', 'Terminate']
         Integer actualCount = statistics.size();
         System.assertEquals(expectedCount, actualCount);
     }

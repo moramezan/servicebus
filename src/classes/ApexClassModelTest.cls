@@ -1,4 +1,4 @@
-@IsTest public class ProcessModelTest {
+@IsTest public class ApexClassModelTest {
     
     public String Event;
     
@@ -20,7 +20,7 @@
         Type actualType = Subscribe.class;
         
         Object process = actualType.newInstance();
-        ProcessModel describeResult = (ProcessModel)Json.deserialize(Json.serialize(Subscribe.ESB.class.newInstance()), ProcessModel.class);
+        ApexClassModel.ESB describeResult = (ApexClassModel.ESB)Json.deserialize(Json.serialize(Subscribe.ESB.class.newInstance()), ApexClassModel.ESB.class);
         String expectedName = describeResult.Name;
         String expectedTag = describeResult.Tag;
         String expectedDescription = describeResult.Description;
@@ -28,21 +28,21 @@
         String expectedFullyQualifiedClassName = actualType.getName();
         Type innerClass = Type.forName(actualType.getName() + '.' + 'ESB');
         if (innerClass == null) innerClass = Type.forName(actualType.getName() + 'ESB');
-        ProcessModel meta = (ProcessModel)Json.deserialize(Json.serialize(innerClass.newInstance()), ProcessModel.ESB.class);
+        ApexClassModel.ESB meta = (ApexClassModel.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ApexClassModel.ESB.class);
         String expectedStepConfig  = meta.StepConfig;
         String expectedIcon = meta.icon;
         
         //act
-        ProcessModel subscribeProcess = ProcessModel.fromFqcn(Subscribe.class.getName());
+        ApexClassModel subscribeProcess = new ApexClassModel(Subscribe.class);
         
         //assemble
-        String actualName = subscribeProcess.Name;
-        String actualTag = subscribeProcess.Tag;
-        String actualDescription = subscribeProcess.Description;
-        String actualFullyQualifiedClassName = subscribeProcess.FullyQualifiedClassName;
-        String actualStepConfig = subscribeProcess.StepConfig;
-        String actualIcon = subscribeProcess.Icon;
-        Integer actualLimits = (Integer)subscribeProcess.Limits;
+        String actualName = subscribeProcess.model.Name;
+        String actualTag = subscribeProcess.model.Tag;
+        String actualDescription = subscribeProcess.model.Description;
+        String actualFullyQualifiedClassName = subscribeProcess.model.FullyQualifiedClassName;
+        String actualStepConfig = subscribeProcess.model.StepConfig;
+        String actualIcon = subscribeProcess.model.Icon;
+        Integer actualLimits = (Integer)subscribeProcess.model.Limits;
         
         //assert
         System.assertEquals(expectedName , actualName );

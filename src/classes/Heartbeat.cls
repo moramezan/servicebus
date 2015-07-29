@@ -1,4 +1,4 @@
-public with sharing class Heartbeat extends ProcessModel.BaseProcess {
+public with sharing class Heartbeat extends ApexClassModel.BaseProcess {
     
     //#575 heartbeat process evades discovery
     //public class ESB {}

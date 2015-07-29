@@ -39,7 +39,7 @@ private class TerminateTest
         Decimal expectedPosition = subsequencePosition;
 
         // Act
-        ProcessModel.BaseProcess process = new Terminate();
+        ApexClassModel.BaseProcess process = new Terminate();
         List<Map<String,Object>> actualOutParametersList = process.execute(inputEvent);
 
         // prepare
@@ -76,7 +76,7 @@ private class TerminateTest
         Decimal expectedSize = 0;
  
         // Act
-        ProcessModel.BaseProcess process = new Terminate();
+        ApexClassModel.BaseProcess process = new Terminate();
         List<Map<String,Object>> actualOutParametersList = process.execute(inputEvent);
 
         // prepare
@@ -115,7 +115,7 @@ private class TerminateTest
 
 
         // Act
-        ProcessModel.BaseProcess process = new Terminate();
+        ApexClassModel.BaseProcess process = new Terminate();
         List<Map<String,Object>> actualOutParametersListFirst = process.execute(parametersFirst);
         
         Map<String,Object> parametersSecond = actualOutParametersListFirst[0].clone(); //-- Terminate hands back one

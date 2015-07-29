@@ -26,7 +26,7 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            ProcessModel.BaseProcess process = new AuditWriter();
+            ApexClassModel.BaseProcess process = new AuditWriter();
             List<Map<String,Object>> results = process.execute(event);
         } catch (Exception e) {
             actualFlagException =  true;
@@ -59,7 +59,7 @@
         Boolean actualFlagException =  false;
         String actualMessage;
         try {
-            ProcessModel.BaseProcess process = new AuditWriter();
+            ApexClassModel.BaseProcess process = new AuditWriter();
             List<Map<String,Object>> results = process.execute(event);
         } catch (Exception e) {
             actualFlagException =  true;
@@ -123,7 +123,7 @@
         };
         
         //act
-        ProcessModel.BaseProcess process = new AuditWriter();
+        ApexClassModel.BaseProcess process = new AuditWriter();
         List<Map<String,Object>> results = process.execute(event);
         
         //assemble

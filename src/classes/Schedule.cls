@@ -1,4 +1,4 @@
-public with sharing class Schedule extends ProcessModel.BaseProcess {
+public with sharing class Schedule extends ApexClassModel.BaseProcess {
     
     public ScheduleConfig__c StepConfig;
     

@@ -1002,7 +1002,7 @@
     
     @TestVisible public class ChunkErrorProcessException extends Exception {}
     
-    public class ChunkErrorProcess extends ProcessModel.BaseProcess {
+    public class ChunkErrorProcess extends ApexClassModel.BaseProcess {
         override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             Boolean isError = (Boolean)inputEvent.get('c__IsError');
             if (isError == true) throw new ChunkErrorProcessException('Test error');
@@ -1045,7 +1045,7 @@
         
     }
     
-    public class Inserter extends ProcessModel.BaseProcess {
+    public class Inserter extends ApexClassModel.BaseProcess {
         override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             Map<String,Object> outputEvent = inputEvent.clone();
             insert new Document(Name = 'Test.txt', FolderId = UserInfo.getUserId());
@@ -1095,7 +1095,7 @@
         System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
     }
     
-    public class Memory extends ProcessModel.BaseProcess {
+    public class Memory extends ApexClassModel.BaseProcess {
         override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             inputEvent.put('c__OrganizationId', UserInfo.getOrganizationId());
             return new List<Map<String,Object>>();
@@ -1146,7 +1146,7 @@
     
     public class InserterErrorException extends Exception {}
     
-    public class InserterError extends ProcessModel.BaseProcess {
+    public class InserterError extends ApexClassModel.BaseProcess {
         override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             insert new Document(Name = 'Test.txt', FolderId = UserInfo.getUserId());
             throw new InserterErrorException('Something catchable.');
@@ -1197,7 +1197,7 @@
     
     public class MemoryErrorException extends Exception {}
     
-    public class MemoryError extends ProcessModel.BaseProcess {
+    public class MemoryError extends ApexClassModel.BaseProcess {
         override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             inputEvent.put('c__OrganizationId', UserInfo.getOrganizationId());
             throw new MemoryErrorException('Something catchable.');

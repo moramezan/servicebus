@@ -5,6 +5,14 @@
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
+        <apexClass>ApexClassModel</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ApexClassModelTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ApexDomain</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -206,14 +214,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>ProcessDescribeController</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ProcessModel</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ProcessModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

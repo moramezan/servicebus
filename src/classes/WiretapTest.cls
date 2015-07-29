@@ -28,7 +28,7 @@ private class WiretapTest {
         // Act
         Boolean actualFlagException = false;
         try {
-            ProcessModel.BaseProcess process = new Wiretap();
+            ApexClassModel.BaseProcess process = new Wiretap();
             List<Map<String,Object>> results = process.execute(parameters);
         } catch (Exception e) {
            actualFlagException = true;
@@ -58,7 +58,7 @@ private class WiretapTest {
         Integer expectedSize = 1;
 
         // Act
-        ProcessModel.BaseProcess process = new Wiretap();
+        ApexClassModel.BaseProcess process = new Wiretap();
         List<Map<String,Object>> actualParametersList = process.execute(inputEvent);
 
         // prepare

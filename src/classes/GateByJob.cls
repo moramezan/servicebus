@@ -1,4 +1,4 @@
-global with sharing class GateByJob extends ProcessModel.BaseProcess {
+global with sharing class GateByJob extends ApexClassModel.BaseProcess {
 
     private class GateByJobException extends Exception {}
 
