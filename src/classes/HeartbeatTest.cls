@@ -27,8 +27,8 @@
         Map<String,Object> output = outputs[0];
         
         //assert
-        Decimal expectedPosition = 1;
-        Decimal actualPosition = (Decimal)output.get('__Position');
+        Integer expectedPosition = 1;
+        Integer actualPosition = (Integer)output.get('__Position');
         System.assertEquals(expectedPosition, actualPosition, 'Position should be 1.');
     }
 

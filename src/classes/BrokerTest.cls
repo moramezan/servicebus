@@ -263,9 +263,9 @@
         Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Subscribe.class.getName());
         Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Publish.class.getName());
         Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class.getName());
-        Decimal positionA1 = stepA1.Position__c;
-        Decimal positionA2 = stepA2.Position__c;
-        Decimal positionA3 = stepA3.Position__c;
+        Integer positionA1 = stepA1.Position__c.intValue();
+        Integer positionA2 = stepA2.Position__c.intValue();
+        Integer positionA3 = stepA3.Position__c.intValue();
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>{
             new Map<String,Object>{'__SequenceName' => 'sequenceName1', '__Position' => positionA1},
@@ -290,16 +290,16 @@
         String actualSequenceName1 = (String)inputEvent1.get('__SequenceName');
         System.assertEquals(expectedSequenceName1, actualSequenceName1, 'Wrong sequence name');
         
-        Decimal expectedPosition1 = positionA1 + 1;
-        Decimal actualPosition1 = (Decimal)inputEvent1.get('__Position');
+        Integer expectedPosition1 = positionA1 + 1;
+        Integer actualPosition1 = (Integer)inputEvent1.get('__Position');
         System.assertEquals(expectedPosition1, actualPosition1, 'Wrong position 1.');
 
         String expectedSequenceName2 = 'sequenceName2';
         String actualSequenceName2 = (String)inputEvent2.get('__SequenceName');
         System.assertEquals(expectedSequenceName2, actualSequenceName2, 'Wrong sequence name');
         
-        Decimal expectedPosition2 = positionA2 + 1;
-        Decimal actualPosition2 = (Decimal)inputEvent2.get('__Position');
+        Integer expectedPosition2 = positionA2 + 1;
+        Integer actualPosition2 = (Integer)inputEvent2.get('__Position');
         System.assertEquals(expectedPosition2, actualPosition2, 'Wrong position 2.');
     }
     

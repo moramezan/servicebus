@@ -36,16 +36,16 @@
         List<Map<String,Object>> parametersList = process.execute(parameters);
         
         //asserts
-        Decimal expectedSize = 1;
-        Decimal actualSize = parametersList.size();
+        Integer expectedSize = 1;
+        Integer actualSize = parametersList.size();
         System.assertEquals(expectedSize, actualSize);
         
         String expectedSequenceName = 'targetSequence';
         String actualSequenceName = (String)parametersList[0].get('__SequenceName');
         System.assertEquals(expectedSequenceName, actualSequenceName);
         
-        Decimal expectedPosition = 0;
-        Decimal actualPosition = (Decimal)parametersList[0].get('__Position');
+        Integer expectedPosition = 0;
+        Integer actualPosition = (Integer)parametersList[0].get('__Position');
         System.assertEquals(expectedPosition, actualPosition);
 
         String expectedList = '["' + originStep.Id + '"]';

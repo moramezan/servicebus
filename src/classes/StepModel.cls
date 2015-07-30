@@ -21,7 +21,7 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
     public class Dto {
         public String Name;
         public String SequenceName;
-        public Decimal Position;
+        public Integer Position;
         public String ConfigId;
         public String ConfigName;
         public String FullyQualifiedClassName;

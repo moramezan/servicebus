@@ -135,8 +135,8 @@
     
     static testmethod void callingInvokeMainReturnsZeroOutputEventsWhenPersistedCountNotEqOneWithStartedStatus() {
         // Arrange
-        Decimal count =  3 ;
-        Decimal insertIntoMessageCount = count;
+        Integer count =  3 ;
+        Integer insertIntoMessageCount = count;
 
         String queueableId = '1234567';
 
@@ -167,10 +167,10 @@
         List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
 
         // Assemble
-        Decimal actualSize = actualOutputEvents.size();
+        Integer actualSize = actualOutputEvents.size();
 
         // Assert
-        Decimal expectedSize = 0;
+        Integer expectedSize = 0;
         System.assertEquals(expectedSize , actualSize);
     }
 
@@ -178,9 +178,9 @@
 
     static testmethod void callingInvokeMainReturnsOneOutputEventWhenPersistedCountEqOneWithStartedStatus() {
         // Arrange
-        Decimal count =  3 ;
-        Decimal insertIntoMessageCount = count;
-        Decimal insertIntoGateItemCount = count - 1;  // Adjust down by one
+        Integer count =  3 ;
+        Integer insertIntoMessageCount = count;
+        Integer insertIntoGateItemCount = count - 1;  // Adjust down by one
         // expect: the insertion of additional GateItem under "Act"
 
         String queueableId = '1234567';
@@ -212,10 +212,10 @@
         List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
 
         // Assemble
-        Decimal actualSize = actualOutputEvents.size();
+        Integer actualSize = actualOutputEvents.size();
 
         // Assert
-        Decimal expectedSize = 1;
+        Integer expectedSize = 1;
         System.assertEquals(expectedSize , actualSize);
 
         // Assemble
@@ -254,7 +254,7 @@
         Map<String,Object> actualCommonParameters = GateByJob.getCommonParameters(gateItems);
 
         // prepare
-        Decimal actualSize = actualCommonParameters.keySet().size();
+        Integer actualSize = actualCommonParameters.keySet().size();
 
         // Assert
         Integer expectedSize = 2;
@@ -289,7 +289,7 @@
         Map<String,Object> actualCommonParameters = GateByJob.getCommonParameters(gateItems);
 
         // prepare
-        Decimal actualSize = actualCommonParameters.keySet().size();
+        Integer actualSize = actualCommonParameters.keySet().size();
         Boolean actual01 = actualCommonParameters.keySet().contains('p1');
         Boolean actual02 = actualCommonParameters.keySet().contains('p2');
         Boolean actual03 = actualCommonParameters.keySet().contains('p3');
@@ -333,7 +333,7 @@
         Map<String,Object> actualCommonParameters = GateByJob.getCommonParameters(gateItems);
 
         // prepare
-        Decimal actualSize = actualCommonParameters.keySet().size();
+        Integer actualSize = actualCommonParameters.keySet().size();
         Boolean actual01 = actualCommonParameters.keySet().contains('p1');
         Boolean actual02 = actualCommonParameters.keySet().contains('p2');
         Boolean actual03 = actualCommonParameters.keySet().contains('p3');

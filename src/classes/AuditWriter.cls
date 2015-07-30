@@ -33,7 +33,7 @@ public with sharing class AuditWriter extends ApexClassModel.BaseProcess {
             SELECT Id, Position__c, SequenceName__c
             FROM Step__c
             WHERE SequenceName__c = :(String)inputEvent.get('__SequenceName')
-            AND Position__c = :(Decimal)inputEvent.get('__Position')
+            AND Position__c = :(Integer)inputEvent.get('__Position')
         ];
         if (steps.size() == 0) {
             throw new AuditWriterException('Unable to access the Step');

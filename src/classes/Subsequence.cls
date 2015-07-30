@@ -23,7 +23,7 @@ public with sharing class Subsequence extends ApexClassModel.BaseProcess {
             SELECT Id
             FROM Step__c
             WHERE SequenceName__c = :(String)parameters.get('__SequenceName')
-            AND Position__c = :(Decimal) parameters.get('__Position')
+            AND Position__c = :(Integer)parameters.get('__Position')
         ];
   
         //get destination from config

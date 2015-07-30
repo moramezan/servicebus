@@ -13,10 +13,10 @@ private class TerminateTest
     {
         // Arrange :
         String sequenceName = 'the-sequence';
-        Decimal position = 1;
+        Integer position = 1;
         String data = 'data';
         String subsequenceName = 'the-subsequence';
-        Decimal subsequencePosition = 2;
+        Integer subsequencePosition = 2;
         
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = subsequenceName);
@@ -34,22 +34,22 @@ private class TerminateTest
         };
 
 
-        Decimal expectedSize = 1;
+        Integer expectedSize = 1;
         String expectedSequenceName = subsequenceName;
-        Decimal expectedPosition = subsequencePosition;
+        Integer expectedPosition = subsequencePosition;
 
         // Act
         ApexClassModel.BaseProcess process = new Terminate();
         List<Map<String,Object>> actualOutParametersList = process.execute(inputEvent);
 
         // prepare
-        Decimal actualSize = actualOutParametersList.size();
+        Integer actualSize = actualOutParametersList.size();
         String actualSequenceName = null;
-        Decimal actualPosition = null;
+        Integer actualPosition = null;
         if (actualSize > 0) {
             Map<String,Object> actualParameters = actualOutParametersList[0];
             actualSequenceName = (String)actualParameters.get('__SequenceName');
-            actualPosition = (Decimal)actualParameters.get('__Position');
+            actualPosition = (Integer)actualParameters.get('__Position');
         }
 
         // Assert
@@ -62,7 +62,7 @@ private class TerminateTest
     callingExecuteReturnsExpectedParametersCollectionWhenNoSubsequenceAttribsDefinedOnParameters() {
         // Arrange :
         String sequenceName = 'the-sequence';
-        Decimal position = 1;
+        Integer position = 1;
         String data = 'data';
  
  
@@ -73,14 +73,14 @@ private class TerminateTest
             'data' => data
         };
 
-        Decimal expectedSize = 0;
+        Integer expectedSize = 0;
  
         // Act
         ApexClassModel.BaseProcess process = new Terminate();
         List<Map<String,Object>> actualOutParametersList = process.execute(inputEvent);
 
         // prepare
-        Decimal actualSize = actualOutParametersList.size();
+        Integer actualSize = actualOutParametersList.size();
  
         // Assert
         System.assertEquals(expectedSize , actualSize );
@@ -89,10 +89,10 @@ private class TerminateTest
     static testmethod void testMultipleSubsequencesGetPoppedOffStack() {
         // Arrange :
         String sequenceName = 'the-sequence';
-        Decimal position = 1;
+        Integer position = 1;
         String data = 'data';
         String subsequenceName = 'the-subsequence';
-        Decimal subsequencePosition  = 2;
+        Integer subsequencePosition  = 2;
 
         Sequence__c sequence = new Sequence__c(Name = subsequenceName);
         insert sequence;

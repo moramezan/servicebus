@@ -40,7 +40,7 @@ public with sharing class Terminate extends ApexClassModel.BaseProcess {
         
         parameters.put('__SubsequenceStepIds', stepIds);
         parameters.put('__SequenceName', step.SequenceName__c);
-        parameters.put('__Position', step.Position__c);
+        parameters.put('__Position', step.Position__c.intValue());
         parametersList.add(parameters);
 
         return parametersList;

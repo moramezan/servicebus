@@ -54,8 +54,8 @@
         List<Map<String,Object>> outputEvents = process.execute(inputEvent);
 
         //assert
-        Decimal expectedSize = 2;
-        Decimal actualSize = outputEvents.size();
+        Integer expectedSize = 2;
+        Integer actualSize = outputEvents.size();
         System.assertEquals(expectedSize, actualSize);
         
         //act
@@ -66,8 +66,8 @@
         String actualNormalSequenceName = (String)normalEvent.get('__SequenceName');
         System.assertEquals(expectedNormalSequenceName, actualNormalSequenceName);
         
-        Decimal expectedNormalPosition = 1;
-        Decimal expectedActualPosition = (Decimal)normalEvent.get('__Position');
+        Integer expectedNormalPosition = 1;
+        Integer expectedActualPosition = (Integer)normalEvent.get('__Position');
         System.assertEquals(expectedNormalPosition, expectedActualPosition);
         
         //act
@@ -78,8 +78,8 @@
         String actualBranchSequenceName = (String)branchEvent.get('__SequenceName');
         System.assertEquals(expectedBranchSequenceName, actualBranchSequenceName);
         
-        Decimal expectedBranchPosition = 0;
-        Decimal actualBranchPosition = (Decimal)branchEvent.get('__Position');
+        Integer expectedBranchPosition = 0;
+        Integer actualBranchPosition = (Integer)branchEvent.get('__Position');
         System.assertEquals(expectedBranchPosition, actualBranchPosition);
     }
     

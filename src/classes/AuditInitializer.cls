@@ -33,7 +33,7 @@ public with sharing class AuditInitializer extends ApexClassModel.BaseProcess {
          // 1.  the date-time stamp
          // 2.  a (fairly unique ) business group value
          Id dataId =  (Id)parameters.get('esb__Id');
-         String groupIdentifier = getBusinesGroupIdentifier(config, (String)parameters.get('__SequenceName') + '#' + (Decimal) parameters.get('__Position'), dataId) ;
+         String groupIdentifier = getBusinesGroupIdentifier(config, (String)parameters.get('__SequenceName') + '#' + (Integer)parameters.get('__Position'), dataId) ;
          DateTime now = System.Now();
          AuditGroup__c auditGroup = new AuditGroup__c(
              Name = ((''+now).replace(' ','T'))+'Z' + ' - ' + groupIdentifier,

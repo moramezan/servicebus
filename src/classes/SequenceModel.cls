@@ -54,7 +54,7 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
             StepModel.Dto dto = new StepModel.Dto();
             dto.Name = step.Name;
             dto.SequenceName = step.SequenceName__c;
-            dto.Position = step.Position__c;
+            dto.Position = step.Position__c.intValue();
             dto.ConfigId = step.ConfigId__c;
             dto.ConfigName = step.ConfigName__c;
             dto.FullyQualifiedClassName = step.FullyQualifiedClassName__c;

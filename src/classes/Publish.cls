@@ -43,7 +43,7 @@ public with sharing class Publish extends ApexClassModel.BaseProcess {
             Map<String,Object> clone = parameters.clone();
             //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
             clone.put('__SubsequenceStepIds', null);
-            clone.put('__Position', step.Position__c);
+            clone.put('__Position', step.Position__c.intValue());
             clone.put('__SequenceName', step.SequenceName__c);
             parametersList.add(clone);
         }
