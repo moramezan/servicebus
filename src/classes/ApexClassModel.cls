@@ -146,7 +146,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         if (this.model.Limits == null) this.model.Limits = 1;
         
         //attempt to populate the help url
-        if (this.model.HelpUrl == null) this.model.HelpUrl = Page.ProcessDescribe.getUrl() + '?fqcn=' + reflector.getName();
+        if (this.model.HelpUrl == null) this.model.HelpUrl = Page.ApexClassSummary.getUrl() + '?fqcn=' + reflector.getName();
         if (this.model.HelpUrl.startsWith('/')) this.model.HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + this.model.HelpUrl;
         
         //attempt to populate the name of the customization object

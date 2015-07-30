@@ -9,6 +9,8 @@
     <types>
         <members>ApexClassModel</members>
         <members>ApexClassModelTest</members>
+        <members>ApexClassSummaryExtension</members>
+        <members>ApexClassSummaryExtensionTest</members>
         <members>ApexDomain</members>
         <members>ApexDomainTest</members>
         <members>AuditInitializer</members>
@@ -59,7 +61,6 @@
         <members>PostInstallHandlerTest</members>
         <members>PostUninstallHandler</members>
         <members>PostUninstallHandlerTest</members>
-        <members>ProcessDescribeController</members>
         <members>Publish</members>
         <members>PublishTest</members>
         <members>RemoteSiteSettingController</members>
@@ -98,6 +99,7 @@
         <name>ApexComponent</name>
     </types>
     <types>
+        <members>ApexClassSummary</members>
         <members>AuditEntryCsh</members>
         <members>AuditGroupCsh</members>
         <members>AuditInitializerConfigCsh</members>
@@ -122,7 +124,6 @@
         <members>MessageSplash</members>
         <members>Monitor</members>
         <members>MonitorSplash</members>
-        <members>ProcessDescribe</members>
         <members>ProcessSettings</members>
         <members>PublishConfigCsh</members>
         <members>PublishConfigManageEventTypes</members>

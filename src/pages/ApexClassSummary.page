@@ -1,4 +1,4 @@
-<apex:page showHeader="false" controller="ProcessDescribeController" title="Process: {!Process.Name}">
+<apex:page standardController="ApexClass" showHeader="false" extensions="ApexClassSummaryExtension" title="Process: {!Process.Name}">
     <apex:pageMessages showDetail="false" />
 
     <apex:pageBlock mode="maindetail">
@@ -8,8 +8,11 @@
                     <apex:column breakBefore="true" style="font-weight: bold;">Tag</apex:column>
                     <apex:column value="{!Process.Tag}" />
 
-                    <apex:column breakBefore="true" style="font-weight: bold;">Name</apex:column>
+                    <apex:column breakBefore="true" style="font-weight: bold;">Process Name</apex:column>
                     <apex:column value="{!Process.Name}" />
+                    
+                    <apex:column breakBefore="true" style="font-weight: bold;">Fully Qualified Class Name</apex:column>
+                    <apex:column value="{!Process.FullyQualifiedClassName}" />
                     
                     <apex:column breakBefore="true" style="font-weight: bold;">Description</apex:column>
                     <apex:column value="{!Process.Description}" />

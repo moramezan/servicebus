@@ -13,6 +13,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ApexClassSummaryExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ApexClassSummaryExtensionTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ApexDomain</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -210,10 +218,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>PostUninstallHandlerTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>ProcessDescribeController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -630,6 +634,10 @@
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <pageAccesses>
+        <apexPage>ApexClassSummary</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>AuditEntryCsh</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -723,10 +731,6 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>MonitorSplash</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>ProcessDescribe</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
