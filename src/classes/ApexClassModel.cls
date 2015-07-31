@@ -11,7 +11,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     /**
      * The instance of our process definition
      */
-    public ESB model;
+    public ESB esb;
     
     /**
      * This class is a template that must exist in every Process. It describes extra metadata around a process that
@@ -22,35 +22,29 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      */
     public class ESB {
         /**
-         * Used as the key/id when manipulating ESB processes.
-         * This is a phantom property populated automatically.
-         */
-        public String FullyQualifiedClassName {get; set;}
-        
-        /**
-         * Each process MUST provide a grouping tag.
+         * Each process MAY provide a grouping tag.
          * @docs ApiProcessMarkers.html
          */
-        public String Tag {get; set;}
+        public String Tag;
     
         /**
-         * Each process MUST provide a friendly name.
+         * Each process MAY provide a friendly name.
          * @docs ApiProcessMarkers.html
          */
-        public String Name {get; set;}
+        public String Name;
     
         /**
          * Each process MUST provide a succinct description.
          * @docs ApiProcessMarkers.html
          */
-        public String Description {get; set;}
+        public String Description;
     
         /**
          * Each Process can have one associated customization in the form of a Custom Setting. Process Authors must
          * advertise the custom setting type here, and the framework will provide a link from the Process detail page.
          * @docs ApiProcessMarkers.html
          */
-        public String ProcessSetting {get; set;}
+        public String ProcessSetting;
         
         /**
          * Each Step can have one associated config record. The type of the record depends on what process
@@ -58,28 +52,28 @@ public class ApexClassModel extends ApexDomain.StandardModel {
          * handle the record lifecycle (creating and deleting them in tandem with the appropriate Step).
          * @docs ApiProcessMarkers.html
          */
-        public String StepConfig {get; set;}
+        public String StepConfig;
         
         /**
          * Each Process must name an icon (eg 'arrow_left') from the FamFamFam Silk library:
          * http://www.famfamfam.com/archive/silk-icons-thats-your-lot/
          * @docs ApiProcessMarkers.html
          */
-        public String Icon {get; set;}
+        public String Icon;
         
         /**
          * Each Process can have one Visualforce Page for support and documentation purposes. Process Authors can
          * populate the property with a default value like Page.MyProcessDocs.getUrl() to make this available to users.
          * @docs ApiProcessMarkers.html
          */
-        public String HelpUrl {get; set;}
+        public String HelpUrl;
         
         /**
          * Each process defines the maximum number of times it can be invoked in a single execution context.
          * No definition implies a default limit of 1.
          * @docs ApiProcessMarkers.html
          */
-        public Integer Limits {get; set;}
+        public Integer Limits;
     
         /**
          * Optional indicator of the ratio of output events to input events: -1 for fewer outputs (eg Gate),
@@ -87,21 +81,40 @@ public class ApexClassModel extends ApexDomain.StandardModel {
          * No definition implies a default cardinality of null.
          * @docs ApiProcessMarkers.html
          */
-        public String Cardinality {get; set;}
+        public String Cardinality;
     
         /**
          * Key represents the parameter name, eg 'ns_URL'
          * Value is a friendly description, eg 'STRING of endpoint to scrape.'
          * @docs ApiProcessMarkers.html
          */
-        public Map<String,String> Inputs {get; set;}
+        public Map<String,String> Inputs;
         
         /**
          * Key represents the parameter name, eg 'ns_URL'
          * Value is a friendly description, eg 'STRING of endpoint to scrape.'
          * @docs ApiProcessMarkers.html
          */
-        public Map<String,String> Outputs {get;}
+        public Map<String,String> Outputs;
+    }
+    
+    /**
+     * This guy used in production
+     */
+    public ApexClassModel(ApexClass apexClass) {
+        this(Type.forName(apexClass.NamespacePrefix, apexClass.Name));
+        this.Record.Id = apexClass.Id;
+    }
+    
+    /**
+     * Converts "their" ESB summary class into "our" ESB summary class
+     */
+    static public ApexClassModel.ESB esbFromEsb(Type inflector) {
+        Object theirEsb;
+        ApexClassModel.ESB ourEsb;
+        theirEsb = inflector.newInstance();
+        ourEsb = (ApexClassModel.ESB)Json.deserialize(Json.serialize(theirEsb), ApexClassModel.ESB.class);
+        return ourEsb;
     }
     
     /**
@@ -109,94 +122,29 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      * the ESB inner marker class and parse all the properties.
      *
      * @throws ProcessException
-     * @param fullyQualifiedClassName of the namespace prefix and apex class
+     * @param apexClassName of the namespace prefix and apex class
      * @return domain model of process
      */
     public ApexClassModel(Type reflector) {
-        super(new ApexClass());
+        super(new ApexClass(
+            Name = reflector.getName()
+        ));
         
-        try {
-            String fullyQualifiedClassName = reflector.getName();
-            Type innerClass = Type.forName(fullyQualifiedClassName + '.' + 'ESB');
-            if (innerClass == null) innerClass = Type.forName(fullyQualifiedClassName + 'ESB');
-            this.model = (ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ESB.class);
-        } catch (Exception e) {
-            throw new ProcessException('Process discovery exception "' + reflector + '"', e);
-        }
+        Type inflector; //their esb summary class
         
-        //populate our key for internal use
-        this.model.FullyQualifiedClassName = reflector.getName();
+        if (inflector == null) inflector = Type.forName(reflector.getName() + '.ESB');
+        if (inflector == null) inflector = Type.forName(reflector.getName() + 'ESB');
+        if (inflector == null) throw new ProcessException('Process discovery exception ' + reflector);
         
-        //attempt to populate the description of the process
-        if (this.model.Description == null) this.model.Description = 'Undescribed';
-
-        //attempt to populate the tag of the process (with sensible default)
-        if (this.model.Tag == null) this.model.Tag = 'Untagged';
-
-        //attempt to populate the name of the process (with sensible default)
-        if (this.model.Name == null) this.model.Name = reflector.getName();
+        this.esb = esbFromEsb(inflector);
         
-        //attempt to populate the css class name of the process icon (with sensible default)
-        if (this.model.Icon == null) this.model.Icon = 'cog';
-        
-        //attempt to populate the cardinality of the process
-        if (this.model.Cardinality == null) this.model.Cardinality = 'Any';
-        
-        //attempt to populate the maximum executions
-        if (this.model.Limits == null) this.model.Limits = 1;
-        
-        //attempt to populate the help url
-        if (this.model.HelpUrl == null) this.model.HelpUrl = Page.ApexClassSummary.getUrl() + '?fqcn=' + reflector.getName();
-        if (this.model.HelpUrl.startsWith('/')) this.model.HelpUrl = Url.getSalesforceBaseUrl().toExternalForm() + this.model.HelpUrl;
-        
-        //attempt to populate the name of the customization object
-        
-        //attempt to populate the name of the config object
-    }
-    
-    /**
-     * Locates all ESB processes by attempting to interrogate ESB marker inner class;
-     * for each apex class found with a marker, it will try to parse the properties.
-     */
-    static public List<ApexClassModel.ESB> discoverProcesses() {
-        //select out all apex classes
-        List<ApexClass> apexClasses = [
-            SELECT Id, Name, NamespacePrefix
-            FROM ApexClass
-            ORDER BY Name ASC
-            LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
-        ];
-        
-        //reflect on each ESB marker inner class
-        List<String> fullyQualifiedClassNames = new List<String>();
-        for (ApexClass apexClass : apexClasses) {
-            Type reflector;
-            try {
-                reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
-            } catch (TypeException e ) {
-                //some compile problem with the class, eg LeadShare when OWD set to public
-                continue;
-            }
-            
-            if (reflector == null) continue; //eg private classes
-            String fullyQualifiedClassName = reflector.getName();
-            
-            Type meta = Type.forName(fullyQualifiedClassName + '.' + 'ESB');
-            if (meta == null) meta = Type.forName(fullyQualifiedClassName + 'ESB');
-            if (meta != null) fullyQualifiedClassNames.add(fullyQualifiedClassName);
-        }
-        
-        //assemble a list of process models where valid
-        List<ApexClassModel.ESB> processes = new List<ApexClassModel.ESB>();
-        for (String fullyQualifiedClassName : fullyQualifiedClassNames) {
-            try {
-                processes.add(new ApexClassModel(Type.forName(fullyQualifiedClassName)).model);
-            } catch (ProcessException e) {
-                continue;
-            }
-        }
-        
-        return processes;
+        //sensible defaults
+        if (this.esb.Description == null) this.esb.Description = 'Undescribed';
+        if (this.esb.Tag == null) this.esb.Tag = 'Untagged';
+        if (this.esb.Name == null) this.esb.Name = reflector.getName();
+        if (this.esb.Icon == null) this.esb.Icon = 'cog';
+        if (this.esb.Cardinality == null) this.esb.Cardinality = 'Any';
+        if (this.esb.Limits == null) this.esb.Limits = 1;
     }
     
     /**

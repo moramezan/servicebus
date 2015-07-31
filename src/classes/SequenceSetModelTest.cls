@@ -7,8 +7,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c branchStep = SequenceModel.fromName(sequence.Name).appendStep(Branch.class.getName());
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
+        Step__c branchStep = SequenceModel.fromName(sequence.Name).appendStep(Branch.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         Integer expectedConfigsBefore = 1;
         Integer actualConfigsBefore = [SELECT COUNT() FROM BranchConfig__c];

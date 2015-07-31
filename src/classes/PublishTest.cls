@@ -26,7 +26,7 @@
         Sequence__c target = new Sequence__c(Name = 'target');
         insert target;
         
-        Step__c subscribeStep = SequenceModel.fromName(target.Name).appendStep(Subscribe.class.getName());
+        Step__c subscribeStep = SequenceModel.fromName(target.Name).appendStep(Subscribe.class);
         
         //arrange subscribe config
         Database.update(new SubscribeConfig__c(
@@ -64,7 +64,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Publish.class.getName());
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Publish.class);
         
         PublishConfig__c config = new PublishConfig__c();
         insert config;
@@ -92,7 +92,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Publish.class.getName());
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Publish.class);
         PublishConfig__c config = new PublishConfig__c(
             Id = step.ConfigId__c,
             EventType__c = eventType.Id
@@ -122,7 +122,7 @@
         Sequence__c publisher = new Sequence__c(Name = 'Publisher');
         insert publisher;
         
-        Step__c publisherStep = SequenceModel.fromName(publisher.Name).appendStep(Publish.class.getName());
+        Step__c publisherStep = SequenceModel.fromName(publisher.Name).appendStep(Publish.class);
         PublishConfig__c pubConfig = new PublishConfig__c(
             Id = publisherStep.ConfigId__c,
             EventType__c = eventType.Id
@@ -133,7 +133,7 @@
         Sequence__c subscriber1 = new Sequence__c(Name = 'Subscriber1');
         insert subscriber1;
         
-        Step__c subscriber1step = SequenceModel.fromName(subscriber1.Name).appendStep(Subscribe.class.getName());
+        Step__c subscriber1step = SequenceModel.fromName(subscriber1.Name).appendStep(Subscribe.class);
         Database.update(new SubscribeConfig__c(
             Id = subscriber1step.ConfigId__c,
             EventType__c = eventType.Id
@@ -142,7 +142,7 @@
         Sequence__c subscriber2 = new Sequence__c(Name = 'Subscriber2');
         insert subscriber2;
         
-        Step__c subscriber2step = SequenceModel.fromName(subscriber2.Name).appendStep(Subscribe.class.getName());
+        Step__c subscriber2step = SequenceModel.fromName(subscriber2.Name).appendStep(Subscribe.class);
         Database.update(new SubscribeConfig__c(
             Id = subscriber2step.ConfigId__c,
             EventType__c = eventType.Id

@@ -12,22 +12,6 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
     public without sharing class StepException extends Exception {}
     
     /**
-     * Using this DTO instead of
-     * Step__c for a few reasons:
-     * - loses the Step Id
-     * - drops attributes key
-     * - hides our secret sauce
-     */
-    public class Dto {
-        public String Name;
-        public String SequenceName;
-        public Integer Position;
-        public String ConfigId;
-        public String ConfigName;
-        public String FullyQualifiedClassName;
-    }
-    
-    /**
      * Privatize constructor to force use of fromName()
      */
     private StepModel(Step__c step) {
@@ -145,16 +129,6 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
             Database.rollback(sp);
             throw new StepException('Could not move step "' + this.step.Name + '" after "' + afterStepName + '"', e);
         }
-    }
-    
-    /**
-     * Helper for building sequences in tests
-     */
-    @TestVisible static private Step__c generateOne(String sequenceName, String fullyQualifiedClassName) {
-        if (!SObjectType.Step__c.Createable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Createable');
-        SequenceModel model = SequenceModel.fromName(sequenceName);
-        Step__c step = model.appendStep(fullyQualifiedClassName);
-        return step;
     }
     
     /**

@@ -34,13 +34,14 @@
         $RemoteAction.SequenceBuilderExtension.cacheConfigName = '{!$RemoteAction.SequenceBuilderExtension.cacheConfigName}';
         
         window.$Page = window.$Page || {};
-        $Page.ProcessSettings = '{!$Page.ProcessSettings}';
+        $Page.ApexClassHelp = '{!$Page.ApexClassHelp}';
+        $Page.ApexClassSetting = '{!$Page.ApexClassSetting}';
         
         window.Sequence__c = window.Sequence__c || {};
         Sequence__c.Id = '{!Sequence__c.Id}';
         Sequence__c.Name = '{!JSENCODE(Sequence__c.Name)}';
         
-        TerminateFullyQualifiedClassName = '{!TerminateFullyQualifiedClassName}';
+        TerminateApexClassName = '{!TerminateApexClassName}';
         Processes = {!Processes};
         Steps = {!Steps};
         
@@ -49,7 +50,8 @@
         
         window.URLFOR = window.URLFOR || {};
         URLFOR['/'] = '{!URLFOR("/")}';
-        URLFOR[$Page.ProcessSettings] = '{!URLFOR($Page.ProcessSettings)}';
+        URLFOR[$Page.ApexClassHelp] = '{!URLFOR($Page.ApexClassHelp)}';
+        URLFOR[$Page.ApexClassSetting] = '{!URLFOR($Page.ApexClassSetting)}';
     </c:BootstrapExt>
     </c:RemoteSiteSetting>
 

@@ -39,15 +39,15 @@ public with sharing class MonitorController {
     }
     
     public class Statistic {
-        public Statistic(String fullyQualifiedClassName, Integer queued, Integer buffered, Integer started, Integer exceptions) {
-            this.FullyQualifiedClassName = fullyQualifiedClassName;
+        public Statistic(String apexClassName, Integer queued, Integer buffered, Integer started, Integer exceptions) {
+            this.ApexClassName = apexClassName;
             this.Queued = queued;
             this.Buffered = buffered;
             this.Started = started;
             this.Exceptions = exceptions;
         }
         
-        public String FullyQualifiedClassName {get; set;}
+        public String ApexClassName {get; set;}
         public Integer Queued {get; set;}
         public Integer Buffered {get; set;}
         public Integer Started {get; set;}
@@ -79,58 +79,58 @@ public with sharing class MonitorController {
         //#761 add null guy for all buffered messages
         process2statistic.put(' ', new Statistic(' ', 0, 0, 0, 0));
         
-        List<ApexClassModel.ESB> processes = ApexClassModel.discoverProcesses();
+        List<Map<String,Object>> processes = ApexClassSetModel.discoverProcesses().toDtos();
         
-        for (ApexClassModel.ESB process : processes) {
-            Statistic statistic = new Statistic(process.FullyQualifiedClassName, 0, 0, 0, 0);
-            process2statistic.put(process.FullyQualifiedClassName, statistic);
+        for (Map<String,Object> process : processes) {
+            Statistic statistic = new Statistic((String)process.get('ApexClassName'), 0, 0, 0, 0);
+            process2statistic.put((String)process.get('ApexClassName'), statistic);
         }
         
         //check for null so we don't blow up for unresolved messages
         //TODO is there any point even displaying queued messages?!?!
         //first aggregate by route
         for (AggregateResult result : [
-            SELECT FullyQualifiedClassName__c fqcn, COUNT(Status__c) total
+            SELECT ApexClassName__c apexClassName, COUNT(Status__c) total
             FROM Message__c
             WHERE Step__c != null
             AND Status__c = 'Queued'
-            GROUP BY FullyQualifiedClassName__c
+            GROUP BY ApexClassName__c
         ]) {
-            Statistic statistic = process2statistic.get((String)result.get('fqcn')); //#761
+            Statistic statistic = process2statistic.get((String)result.get('apexClassName')); //#761
             if (statistic == null) statistic = process2statistic.get(' ');
             statistic.Queued += (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
-            SELECT FullyQualifiedClassName__c fqcn, COUNT(Status__c) total
+            SELECT ApexClassName__c apexClassName, COUNT(Status__c) total
             FROM Message__c
             WHERE Step__c != null
             AND Status__c = 'Buffered'
-            GROUP BY FullyQualifiedClassName__c
+            GROUP BY ApexClassName__c
         ]) {
             process2statistic.get(' ').Buffered = (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
-            SELECT FullyQualifiedClassName__c fqcn, COUNT(Status__c) total
+            SELECT ApexClassName__c apexClassName, COUNT(Status__c) total
             FROM Message__c
             WHERE Step__c != null
             AND Status__c = 'Started' AND Exception__c = null
-            GROUP BY FullyQualifiedClassName__c
+            GROUP BY ApexClassName__c
         ]) {
-            Statistic statistic = process2statistic.get((String)result.get('fqcn')); //#761
+            Statistic statistic = process2statistic.get((String)result.get('apexClassName')); //#761
             if (statistic == null) statistic = process2statistic.get(' ');
             statistic.Started += (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
-            SELECT FullyQualifiedClassName__c fqcn, COUNT(Status__c) total
+            SELECT ApexClassName__c apexClassName, COUNT(Status__c) total
             FROM Message__c
             WHERE Step__c != null
             AND Status__c = 'Started' AND Exception__c != null
-            GROUP BY FullyQualifiedClassName__c
+            GROUP BY ApexClassName__c
         ]) {
-            Statistic statistic = process2statistic.get((String)result.get('fqcn')); //#761
+            Statistic statistic = process2statistic.get((String)result.get('apexClassName')); //#761
             if (statistic == null) statistic = process2statistic.get(' ');
             statistic.Exceptions += (Integer)result.get('total');
         }

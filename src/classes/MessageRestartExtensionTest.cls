@@ -6,8 +6,7 @@
         
         //arrange sequence and step
         insert new Sequence__c(Name = 'Test');
-        SequenceModel model = SequenceModel.fromName('Test');
-        model.appendStep(Terminate.class.getName());
+        Step__c step = SequenceModel.fromName('Test').appendStep(Terminate.class);
         
         //arrange message
         List<Message__c> messages = new Job('Test', UserInfo.getUserId()).persist();

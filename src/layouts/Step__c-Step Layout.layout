@@ -16,7 +16,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>FullyQualifiedClassName__c</field>
+                <field>ApexClassName__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>

@@ -18,7 +18,7 @@
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(AuditInitializer.class.getName());
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(AuditInitializer.class);
         
         AuditInitializerConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c
@@ -77,7 +77,7 @@
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(AuditInitializer.class.getName());
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(AuditInitializer.class);
         
         AuditInitializerConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c
@@ -139,7 +139,7 @@
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(AuditInitializer.class.getName());
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(AuditInitializer.class);
         
         AuditInitializerConfig__c config = [
             SELECT Id, StaticGroupIdentifier__c

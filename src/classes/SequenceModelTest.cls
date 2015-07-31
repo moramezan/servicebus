@@ -7,9 +7,9 @@
         insert soSequence;
         Id soSequenceId = soSequence.Id;
 
-        Step__c stepA1 = SequenceModel.fromName(soSequence.Name).appendStep(Subscribe.class.getName());
-        Step__c stepA2 = SequenceModel.fromName(soSequence.Name).appendStep(Publish.class.getName());
-        Step__c stepA3 = SequenceModel.fromName(soSequence.Name).appendStep(Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(soSequence.Name).appendStep(Subscribe.class);
+        Step__c stepA2 = SequenceModel.fromName(soSequence.Name).appendStep(Publish.class);
+        Step__c stepA3 = SequenceModel.fromName(soSequence.Name).appendStep(Terminate.class);
         Integer positionA1 = stepA1.Position__c.intValue();
         Integer positionA2 = stepA2.Position__c.intValue();
         Integer positionA3 = stepA3.Position__c.intValue();
@@ -18,7 +18,7 @@
         SequenceModel sequence = SequenceModel.fromName(soSequence.Name);
         
         // assemble
-        List<Step__c> soSteps = sequence.fetchSteps();
+        List<Map<String,Object>> soSteps = sequence.stepSetModel().toDtos();
         Integer actualStepCount = soSteps.size();
 
         // assert
@@ -35,17 +35,16 @@
         Id soSequenceId = soSequence.Id;
 
         // act
-        SequenceModel sequence = SequenceModel.fromName(soSequence.Name);
-        Step__c actualStep = sequence.appendStep(Subscribe.class.getName());
+        Step__c actualStep = SequenceModel.fromName(soSequence.Name).appendStep(Subscribe.class);
         
         // assemble
-        List<Step__c> soSteps = [SELECT Name, FullyQualifiedClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
+        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
         // SObject soStep = actualStep.getRecord();
         String actualProcessName;
         Integer actualPosition;
         if (soSteps.size() > 0) {
-            actualProcessName = soSteps[0].FullyQualifiedClassName__c;
+            actualProcessName = soSteps[0].ApexClassName__c;
             actualPosition = soSteps[0].Position__c.intValue();
         }
         
@@ -70,12 +69,12 @@
         sequence.terminate();
         
         // assemble
-        List<Step__c> soSteps = [SELECT Name, FullyQualifiedClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
+        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
         String actualProcessName;
         Integer actualPosition;
         if (soSteps.size() > 0) {
-            actualProcessName = soSteps[0].FullyQualifiedClassName__c;
+            actualProcessName = soSteps[0].ApexClassName__c;
             actualPosition = soSteps[0].Position__c.intValue();
         }
         
@@ -101,12 +100,12 @@
         sequence.terminate(); // and again!
         
         // assemble
-        List<Step__c> soSteps = [SELECT Name, FullyQualifiedClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
+        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
         String actualProcessName;
         Integer actualPosition;
         if (soSteps.size() > 0) {
-            actualProcessName = soSteps[0].FullyQualifiedClassName__c;
+            actualProcessName = soSteps[0].ApexClassName__c;
             actualPosition = soSteps[0].Position__c.intValue();
         }
         
@@ -125,8 +124,8 @@
         Sequence__c soSequenceA = new Sequence__c(Name = sequenceNameA);
         insert soSequenceA;
         Id soSequenceAId = soSequenceA.Id;
-        Step__c stepA1 = SequenceModel.fromName(soSequenceA.Name).appendStep(Subscribe.class.getName());
-        Step__c stepA2 = SequenceModel.fromName(soSequenceA.Name).appendStep(Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(soSequenceA.Name).appendStep(Subscribe.class);
+        Step__c stepA2 = SequenceModel.fromName(soSequenceA.Name).appendStep(Terminate.class);
  
 
         // act
@@ -135,12 +134,12 @@
  
         
         // assemble
-        List<Step__c> soSteps = [SELECT Name, FullyQualifiedClassName__c, Position__c FROM Step__c];
+        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c];
         Integer actualStepsCount  = soSteps.size();
         String actualProcessName;
         Integer actualPosition;
         if (soSteps.size() > 0) {
-            actualProcessName = soSteps[0].FullyQualifiedClassName__c;
+            actualProcessName = soSteps[0].ApexClassName__c;
             actualPosition = soSteps[0].Position__c.intValue();
         }
    

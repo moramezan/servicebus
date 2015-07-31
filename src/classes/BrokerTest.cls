@@ -81,8 +81,8 @@
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
         
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class.getName());
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
+        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange messages
         Map<String,Object> inputEvent = new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1};
@@ -132,12 +132,12 @@
         Integer positionA5 = 5;
         Integer positionA6 = 6;
 
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA4 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA5 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA4 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA5 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
 
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
@@ -225,7 +225,7 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange message
         Broker.MaxHops = 1;
@@ -260,9 +260,9 @@
         insert sequenceA;
         
         //arrange steps
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Subscribe.class.getName());
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Publish.class.getName());
-        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Subscribe.class);
+        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Publish.class);
+        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
         Integer positionA1 = stepA1.Position__c.intValue();
         Integer positionA2 = stepA2.Position__c.intValue();
         Integer positionA3 = stepA3.Position__c.intValue();
@@ -308,7 +308,7 @@
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
         
-        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         new Job(new List<Map<String,Object>>{
             new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1},
@@ -348,7 +348,7 @@
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
         
-        Step__c terminateStep = StepModel.generateOne(sequence.Name, Terminate.class.getName());
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange fucked messages
         insert new List<Message__c>{
@@ -393,13 +393,13 @@
         Integer positionB2 = 2;
         Integer positionC1 = 1;
         Integer positionC2 = 2;
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Subscribe.class.getName());
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Publish.class.getName());
-        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class.getName());
-        Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class.getName());
-        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Terminate.class.getName());
-        Step__c stepC1 = SequenceModel.fromName(sequenceC.Name).appendStep(Publish.class.getName());
-        Step__c stepC2 = SequenceModel.fromName(sequenceC.Name).appendStep(Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Subscribe.class);
+        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Publish.class);
+        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
+        Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class);
+        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Terminate.class);
+        Step__c stepC1 = SequenceModel.fromName(sequenceC.Name).appendStep(Publish.class);
+        Step__c stepC2 = SequenceModel.fromName(sequenceC.Name).appendStep(Terminate.class);
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>{
             new Map<String,Object>{'esb__Id' => 0, '__SequenceName' => sequenceA.Name, '__Position' => positionA1}, // Same Sequence / Position
@@ -486,7 +486,7 @@
         insert sequence;
         
         //arrange steps
-        SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
+        SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange broker implementation custom setting
         String theSequenceName = 'TestSequence';
@@ -515,7 +515,7 @@
         insert sequence;
         
         //arrange steps
-        SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
+        SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange
         insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName());
@@ -627,8 +627,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
-        step.FullyQualifiedClassName__c = 'lalala';
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        step.ApexClassName__c = 'lalala';
         update step;
         
         //arrange specific broker implementation
@@ -678,8 +678,8 @@
         Integer positionA1 = 1;
         Integer positionA6 = 2;
 
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
 
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
@@ -726,12 +726,12 @@
         Integer positionA5 = 5;
         Integer positionA6 = 6;
 
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA4 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA5 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA4 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA5 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
 
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
@@ -777,12 +777,12 @@
         Integer positionA5 = 5;
         Integer positionA6 = 6;
 
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c issue =  SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName()); // deleted - implying a resolution issue
-        Step__c stepA5 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c issue =  SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class); // deleted - implying a resolution issue
+        Step__c stepA5 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
         
         delete issue;
         
@@ -830,7 +830,7 @@
         insert sequence;
         
         Integer position = 1;
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
   
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
@@ -867,7 +867,7 @@
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
   
         //arrange broker
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
@@ -906,7 +906,7 @@
         insert sequence;
         
         //arrange steps
-        SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
+        SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
@@ -1020,8 +1020,8 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c errorStep = SequenceModel.fromName(sequence.Name).appendStep(ChunkErrorProcess.class.getName());
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
+        Step__c errorStep = SequenceModel.fromName(sequence.Name).appendStep(ChunkErrorProcess.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange broker implementation and params
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
@@ -1068,7 +1068,7 @@
         SequenceModel model = SequenceModel.fromName('Sequence');
         
         //arrange steps
-        model.appendStep(Inserter.class.getName());
+        model.appendStep(Inserter.class);
         
         //arrange events
         List<Map<String,Object>> events = new List<Map<String,Object>>();
@@ -1117,7 +1117,7 @@
         SequenceModel model = SequenceModel.fromName('Sequence');
         
         //arrange steps
-        model.appendStep(Memory.class.getName());
+        model.appendStep(Memory.class);
         
         //arrange events
         List<Map<String,Object>> events = new List<Map<String,Object>>();
@@ -1168,7 +1168,7 @@
         SequenceModel model = SequenceModel.fromName('Sequence');
         
         //arrange steps
-        model.appendStep(InserterError.class.getName());
+        model.appendStep(InserterError.class);
         
         //arrange events
         List<Map<String,Object>> events = new List<Map<String,Object>>();
@@ -1219,7 +1219,7 @@
         SequenceModel model = SequenceModel.fromName('Sequence');
         
         //arrange steps
-        model.appendStep(MemoryError.class.getName());
+        model.appendStep(MemoryError.class);
         
         //arrange events
         List<Map<String,Object>> events = new List<Map<String,Object>>();

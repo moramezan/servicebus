@@ -1,3 +1,0 @@
-<apex:page action="{!'/' + $ObjectType[$CurrentPage.Parameters.fqcn].KeyPrefix + '/o'}">
-    <apex:pageMessages showDetail="false" />
-</apex:page>

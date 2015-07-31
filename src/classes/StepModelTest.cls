@@ -6,8 +6,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class.getName());
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
+        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //assert before state
         System.assertEquals(1, wiretapStep.Position__c.intValue());
@@ -32,8 +32,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class.getName());
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
+        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //assert before state
         System.assertEquals(1, wiretapStep.Position__c.intValue());

@@ -1,57 +1,61 @@
 @IsTest public class ApexClassModelTest {
     
-    public String Event;
-    
     @TestVisible private class ESB {
-        public String Tag = 'Fake';
-        public String Name = 'Test';
-        public String Description = 'Herpderp';
-        public String Icon = null;
-        public String HelpUrl = 'fakedocspage.html';
+        String Tag = 'Tag';
+        String Name = 'Name';
+        String Description = 'Description';
+        String Icon = 'Icon';
+        Integer Limits = 99;
+        String HelpUrl = 'HelpUrl';
+        String StepConfig = 'StepConfig';
+        String ProcessSetting = 'ProcessSetting';
+        String Cardinality = 'Any';
+        Map<String,String> Inputs = new Map<String,String>{'herp' => 'derp'};
+        Map<String,String> Outputs = new Map<String,String>{'foo' => 'bar'};
     }
 
-    override public String toString() {
-        System.assert(this.Event != null);
-        return Json.serialize(new List<Map<String,Object>>());
-    }
-
-    static testmethod void callingFromTypeReturnsProcessWithExpectedValues() {
+    static testmethod void testEsbFromEsb() {
         //arrange
-        Type actualType = Subscribe.class;
-        
-        Object process = actualType.newInstance();
-        ApexClassModel.ESB describeResult = (ApexClassModel.ESB)Json.deserialize(Json.serialize(Subscribe.ESB.class.newInstance()), ApexClassModel.ESB.class);
-        String expectedName = describeResult.Name;
-        String expectedTag = describeResult.Tag;
-        String expectedDescription = describeResult.Description;
-        Integer expectedLimits = describeResult.Limits;
-        String expectedFullyQualifiedClassName = actualType.getName();
-        Type innerClass = Type.forName(actualType.getName() + '.' + 'ESB');
-        if (innerClass == null) innerClass = Type.forName(actualType.getName() + 'ESB');
-        ApexClassModel.ESB meta = (ApexClassModel.ESB)Json.deserialize(Json.serialize(innerClass.newInstance()), ApexClassModel.ESB.class);
-        String expectedStepConfig  = meta.StepConfig;
-        String expectedIcon = meta.icon;
+        ApexClassModel.ESB actual = ApexClassModel.esbFromEsb(ApexClassModelTest.ESB.class);
         
         //act
-        ApexClassModel subscribeProcess = new ApexClassModel(Subscribe.class);
-        
-        //assemble
-        String actualName = subscribeProcess.model.Name;
-        String actualTag = subscribeProcess.model.Tag;
-        String actualDescription = subscribeProcess.model.Description;
-        String actualFullyQualifiedClassName = subscribeProcess.model.FullyQualifiedClassName;
-        String actualStepConfig = subscribeProcess.model.StepConfig;
-        String actualIcon = subscribeProcess.model.Icon;
-        Integer actualLimits = (Integer)subscribeProcess.model.Limits;
+        ApexClassModelTest.ESB expected = (ApexClassModelTest.ESB)ApexClassModelTest.ESB.class.newInstance();
         
         //assert
-        System.assertEquals(expectedName , actualName );
-        System.assertEquals(expectedTag , actualTag );
-        System.assertEquals(expectedDescription , actualDescription );
-        System.assertEquals(expectedFullyQualifiedClassName , actualFullyQualifiedClassName);
-        System.assertEquals(expectedStepConfig , actualStepConfig);
-        System.assertEquals(expectedIcon , actualIcon );
-        System.assertEquals(expectedLimits, actualLimits);
+        System.assertEquals(expected.Tag, actual.Tag, 'Wrong Tag.');
+        System.assertEquals(expected.Name, actual.Name, 'Wrong Name.');
+        System.assertEquals(expected.Description, actual.Description, 'Wrong Description.');
+        System.assertEquals(expected.Icon, actual.Icon, 'Wrong Icon.');
+        System.assertEquals(expected.Limits, actual.Limits, 'Wrong Limits.');
+        System.assertEquals(expected.HelpUrl, actual.HelpUrl, 'Wrong HelpUrl.');
+        System.assertEquals(expected.StepConfig, actual.StepConfig, 'Wrong StepConfig.');
+        System.assertEquals(expected.ProcessSetting, actual.ProcessSetting, 'Wrong ProcessSetting.');
+        System.assertEquals(expected.Cardinality, actual.Cardinality, 'Wrong Cardinality.');
+        System.assertEquals(expected.Inputs, actual.Inputs, 'Wrong Inputs.');
+        System.assertEquals(expected.Outputs, actual.Outputs, 'Wrong Outputs.');
     }
  
+    //@TestVisible private preferred, but Type.forName does not support
+    public class DefaultProcess extends ApexClassModel.BaseProcess {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            return null;
+        }
+    }
+    
+    //@TestVisible private preferred, but Type.forName does not support
+    public class DefaultProcessESB {}
+    
+    static testmethod void testDefaultValues() {
+        //act
+        ApexClassModel model = new ApexClassModel(DefaultProcess.class);
+        
+        //assert
+        System.assertEquals('Undescribed', model.esb.Description, 'Wrong Description.');
+        System.assertEquals('Untagged', model.esb.Tag, 'Wrong Tag.');
+        System.assertEquals(DefaultProcess.class.getName(), model.esb.Name, 'Wrong Name.');
+        System.assertEquals('cog', model.esb.Icon, 'Wrong Icon.');
+        System.assertEquals('Any', model.esb.Cardinality, 'Wrong Cardinality.');
+        System.assertEquals(1, model.esb.Limits, 'Wrong Limits.');
+    }
+    
 }

@@ -3,6 +3,25 @@ public with sharing class SequenceBuilderExtension {
     private ApexPages.StandardController controller;
     private SequenceModel model;
     
+    /**
+     * "Processing Stage"
+     *
+     * Using this DTO instead of
+     * Step__c for a few reasons:
+     * - loses the Step Id
+     * - drops attributes key
+     * - hides our secret sauce
+     */
+    public class StepDto {
+        public String Name;
+        public String SequenceName;
+        public Integer Position;
+        public String ConfigId;
+        public String ConfigName;
+        public String ApexClassId;
+        public String ApexClassName;
+    }
+    
     public SequenceBuilderExtension(ApexPages.StandardController controller) {
         if (!Test.isRunningTest()) controller.addFields(new List<String>{'Name'});
         this.controller = controller;
@@ -32,17 +51,17 @@ public with sharing class SequenceBuilderExtension {
         return ConfigureController.doDanceIfNeeded(retURL);
     }
     
-    public String getTerminateFullyQualifiedClassName() {
+    public String getTerminateApexClassName() {
         return Terminate.class.getName();
     }
     
     public String getProcesses() {
-        List<ApexClassModel.ESB> processes = ApexClassModel.discoverProcesses();
+        List<Map<String,Object>> processes = ApexClassSetModel.discoverProcesses().toDtos();
         return Json.serializePretty(processes);
     }
     
     public String getSteps() {
-        List<StepModel.Dto> stepDtos = this.model.fetchStepDtos();
+        List<Map<String,Object>> stepDtos = this.model.stepSetModel().toDtos();
         return Json.serializePretty(stepDtos);
     }
     
@@ -50,16 +69,15 @@ public with sharing class SequenceBuilderExtension {
         StepModel.cacheConfigName(configId);
     }
     
-    @RemoteAction static public List<StepModel.Dto> fetchSteps(String sequenceName) {
+    @RemoteAction static public List<Map<String,Object>> fetchSteps(String sequenceName) {
         SequenceModel model = SequenceModel.fromName(sequenceName);
         model.terminate();
-        return model.fetchStepDtos();
+        return model.stepSetModel().toDtos();
     }
     
-    @RemoteAction static public Step__c appendStep(String sequenceName, String fullyQualifiedClassName) {
+    @RemoteAction static public Step__c appendStep(String sequenceName, String apexClassId) {
         SequenceModel model = SequenceModel.fromName(sequenceName);
-        Step__c step = model.appendStep(fullyQualifiedClassName);
-        return step;
+        return model.appendStep(apexClassId);
     }
     
     @RemoteAction static public void moveStepBefore(String stepName, String beforeStepName) {
@@ -100,14 +118,14 @@ public with sharing class SequenceBuilderExtension {
             Integer terminateCount = 0;
             
             List<Step__c> steps = [
-                SELECT Id, Name, FullyQualifiedClassName__c
+                SELECT Id, Name, ApexClassName__c
                 FROM Step__c
                 WHERE SequenceName__c = :sequence.Name
                 ORDER BY Position__c ASC
             ];
             
             for (Step__c step : steps) {
-                if (step.FullyQualifiedClassName__c == Terminate.class.getName()) {
+                if (step.ApexClassName__c == Terminate.class.getName()) {
                     terminateCount++;
                 }
             }
@@ -122,7 +140,7 @@ public with sharing class SequenceBuilderExtension {
             }
             
             //terminate not at end error
-            if ((steps.size() > 0) ? (steps[steps.size() - 1].FullyQualifiedClassName__c != Terminate.class.getName()) : false) {
+            if ((steps.size() > 0) ? (steps[steps.size() - 1].ApexClassName__c != Terminate.class.getName()) : false) {
                 ApexPages.addMessage(new ApexPages.Message(
                     ApexPages.Severity.WARNING,
                     'Terminate process not present at end of sequence ' + sequence.Id
@@ -169,20 +187,20 @@ public with sharing class SequenceBuilderExtension {
             Boolean containsPublish = false;
             
             List<Step__c> steps = [
-                SELECT Id, Name, FullyQualifiedClassName__c, ConfigId__c
+                SELECT Id, Name, ApexClassName__c, ConfigId__c
                 FROM Step__c
                 WHERE SequenceName__c = :sequence.Name
                 ORDER BY Position__c ASC
             ];
             
-            for (Step__c step : steps) if (step.FullyQualifiedClassName__c == Publish.class.getName()) containsPublish = true;
+            for (Step__c step : steps) if (step.ApexClassName__c == Publish.class.getName()) containsPublish = true;
             
             //no publish steps to check
             if (!containsPublish) continue;
             
             for (Step__c step : steps) {
                 //skip non-publish steps
-                if (step.FullyQualifiedClassName__c != Publish.class.getName()) continue;
+                if (step.ApexClassName__c != Publish.class.getName()) continue;
                 
                 Id stepId = step.Id;
                 Id publishConfigId = (Id) step.ConfigId__c; // cast from string to Id
@@ -243,7 +261,7 @@ public with sharing class SequenceBuilderExtension {
         
         for (Sequence__c sequence : sequences) {
             List<Step__c> steps = [
-                SELECT Id, Name, FullyQualifiedClassName__c, ConfigId__c
+                SELECT Id, Name, ApexClassName__c, ConfigId__c
                 FROM Step__c
                 WHERE SequenceName__c = :sequence.Name
                 ORDER BY Position__c ASC
@@ -256,7 +274,7 @@ public with sharing class SequenceBuilderExtension {
             Id subscribeConfigId = null;
             
             for (Step__c step : steps) {
-                if (step.FullyQualifiedClassName__c == Subscribe.class.getName()) {
+                if (step.ApexClassName__c == Subscribe.class.getName()) {
                     subscribeOccurs++;
                     subscribeConfigId = (Id) step.ConfigId__c; // cast from string to Id
                     if (count == 1) {

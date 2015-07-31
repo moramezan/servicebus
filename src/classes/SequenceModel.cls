@@ -35,51 +35,54 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
      * Loads all steps from a sequence in
      * order with most fields populated.
      */
-    public List<Step__c> fetchSteps() {
-        return [
-            SELECT Name, ConfigId__c, ConfigName__c, FullyQualifiedClassName__c, Position__c, SequenceName__c
+    public StepSetModel stepSetModel() {
+        List<Step__c> steps = [
+            SELECT Name, ConfigId__c, ConfigName__c, ApexClassId__c, ApexClassName__c, Position__c, SequenceName__c
             FROM Step__c
             WHERE SequenceName__c = :this.sequence.Name
             ORDER BY Position__c ASC
         ];
-    }
-    
-    /**
-     * Loads all steps, anonymized
-     * inside data transfer objects
-     */
-    public List<StepModel.Dto> fetchStepDtos() {
-        List<StepModel.Dto> dtos = new List<StepModel.Dto>();
-        for (Step__c step : this.fetchSteps()) {
-            StepModel.Dto dto = new StepModel.Dto();
-            dto.Name = step.Name;
-            dto.SequenceName = step.SequenceName__c;
-            dto.Position = step.Position__c.intValue();
-            dto.ConfigId = step.ConfigId__c;
-            dto.ConfigName = step.ConfigName__c;
-            dto.FullyQualifiedClassName = step.FullyQualifiedClassName__c;
-            dtos.add(dto);
-        }
-        return dtos;
+        
+        return new StepSetModel(steps);
     }
     
     /**
      * Appends one step to the end of a sequence,
      * normally it will appear after the Terminate.
+     * PROD scenarios append both class name and id.
      *
-     * @param fullyQualifiedClassName
+     * @param reflector
      * @return the appended step
      */
-    public Step__c appendStep(String fullyQualifiedClassName) {
+    public Step__c appendStep(Id apexClassId) {
+        ApexClass apexClass = [
+            SELECT Id, NamespacePrefix, Name
+            FROM ApexClass
+            WHERE Id = :apexClassId
+        ];
+        
+        Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
+        Step__c step = this.appendStep(reflector);
+        step.ApexClassId__c = apexClassId;
+        update step;
+        
+        return step;
+    }
+    
+    /**
+     * TEST scenarios can append inner classes.
+     */
+    @TestVisible private Step__c appendStep(Type reflector) {
         Savepoint sp = Database.setSavepoint();
         try {
             if (!SObjectType.Step__c.Createable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Createable');
             
+            ApexClassModel model = new ApexClassModel(reflector);
+            
             //insert any StepConfig
-            ApexClassModel.ESB process = new ApexClassModel(Type.forName(fullyQualifiedClassName)).model;
             SObject config;
-            if (process.StepConfig != null) {
-                config = (SObject)Type.forName(process.StepConfig).newInstance();
+            if (model.esb.StepConfig != null) {
+                config = (SObject)Type.forName(model.esb.StepConfig).newInstance();
                 insert config;
                 config = ApexDomain.getById(config.Id);
             }
@@ -90,7 +93,8 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
             Step__c step = new Step__c(
                 Name = this.sequence.Name + '#' + position,
                 SequenceName__c = this.sequence.Name,
-                FullyQualifiedClassName__c = fullyQualifiedClassName,
+                ApexClassId__c = null, //see upstairs
+                ApexClassName__c = reflector.getName(),
                 Position__c = position
             );
             
@@ -103,7 +107,7 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
             return Step__c.getValues(step.Name);
         } catch (Exception e) {
             Database.rollback(sp);
-            throw new SequenceException('Could not append step "' + fullyQualifiedClassName + '"', e);
+            throw new SequenceException('Could not append step "' + reflector + '"', e);
         }
     }
     
@@ -116,11 +120,21 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
             Step__c terminateStep = [
                 SELECT Name
                 FROM Step__c
-                WHERE SequenceName__c = :this.sequence.Name AND FullyQualifiedClassName__c = :Terminate.class.getName()
+                WHERE SequenceName__c = :this.sequence.Name AND ApexClassName__c = :Terminate.class.getName()
             ];
         } catch (QueryException e) {
             //sequence contains no terminate step
-            this.appendStep(Terminate.class.getName());
+            String namespacePrefix = Terminate.class.getName().substringBefore('Terminate').substringBefore('.');
+            String name = 'Terminate';
+            
+            ApexClass apexClass = [
+                SELECT Id, NamespacePrefix, Name
+                FROM ApexClass
+                WHERE NamespacePrefix = :namespacePrefix AND Name = :name
+            ];
+            
+            //TODO add namespace prefix safety
+            this.appendStep(apexClass.Id);
         }
     }
     

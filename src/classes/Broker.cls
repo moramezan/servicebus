@@ -274,14 +274,40 @@ abstract public with sharing class Broker {
             LIMIT 1
         ];
         
-        ApexClassModel.ESB model = new MessageModel(specimen).discoverProcessModel();
-        
-        if (model == null) {
-            //cannot discover process, return one specimen
+        if (specimen.Step__c == null) {
+            //route undefined, return specimen
             return new List<Message__c>{specimen};
         }
         
-        Integer limits = model.Limits; //number of times specimen process can run within governor limits
+        Step__c step = Step__c.getValues(specimen.Step__c);
+        
+        if (step == null) {
+            //nonexistent step, return specimen
+            return new List<Message__c>{specimen};
+        }
+        
+        String apexClassName = step.ApexClassName__c;
+        
+        if (apexClassName == null) {
+            //class undefined, return specimen
+            return new List<Message__c>{specimen};
+        }
+        
+        Type reflector = Type.forName(apexClassName);
+        
+        if (reflector == null) {
+            //reflector undefined, return specimen
+            return new List<Message__c>{specimen};
+        }
+        
+        ApexClassModel model = new ApexClassModel(reflector); //TODO safety
+        
+        if (model.esb.Limits == null) {
+            //limits undefined, return specimen
+            return new List<Message__c>{specimen};
+        }
+        
+        Integer limits = model.esb.Limits; //number of times specimen process can run within governor limits
         
         List<Message__c> messages = [
             SELECT Id, Step__c, Event__c, Status__c, Attempts__c
@@ -291,13 +317,6 @@ abstract public with sharing class Broker {
             LIMIT :limits
             FOR UPDATE //#695 investigate broker race condition
         ];
-        
-        Step__c step = new MessageModel(specimen).resolveStep();
-        
-        if (step == null) {
-            //cannot resolve step, return unconfigured
-            return messages;
-        }
         
         Id configId = step.ConfigId__c;
         
@@ -381,7 +400,7 @@ abstract public with sharing class Broker {
             for (MessageModel model : models) {
                 
                 //#697 locateMarkableWork misses this for heartbeats
-                model.setFullyQualifiedClassName(Heartbeat.class);
+                model.setApexClassName(Heartbeat.class);
                 
                 try {
                     //do invocation

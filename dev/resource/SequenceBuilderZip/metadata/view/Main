@@ -135,8 +135,8 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
-                            "var fqcn = record.get('FullyQualifiedClassName');",
-                            "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "var apexClassId = record.get('ApexClassId');",
+                            "var process = Ext.getStore('Processes').getById(apexClassId);",
                             "var processCardinality = process && process.get('Cardinality') || 'Zero'; //#875 invalid process",
                             "",
                             "//set the cardinality column's icon from each process",
@@ -263,10 +263,10 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
-                            "var fqcn = record.get('FullyQualifiedClassName');",
+                            "var apexClassName = record.get('ApexClassName');",
                             "",
                             "//TERMINATE step cannot be deleted",
-                            "if (fqcn != TerminateFullyQualifiedClassName) return Ext.DomHelper.createHtml({",
+                            "if (apexClassName != TerminateApexClassName) return Ext.DomHelper.createHtml({",
                             "    'tag': 'a',",
                             "    'html': 'Del',",
                             "    'class': 'deletelink',",
@@ -296,7 +296,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "dataIndex": "ConfigId",
+                "dataIndex": "ApexClassId",
                 "tdCls": "link",
                 "text": "Settings",
                 "width": 60
@@ -326,8 +326,8 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
-                            "var fqcn = record.get('FullyQualifiedClassName');",
-                            "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "var apexClassId = record.get('ApexClassId');",
+                            "var process = Ext.getStore('Processes').getById(apexClassId);",
                             "var processSetting = process && process.get('ProcessSetting'); //#875 invalid process",
                             "",
                             "//some processes have no settings",
@@ -337,7 +337,7 @@
                             "    'class': 'settingslink',",
                             "    'onclick': 'return false;',",
                             "    'title': 'Process Settings',",
-                            "    'href': URLFOR[$Page.ProcessSettings] + '?fqcn=' + processSetting",
+                            "    'href': URLFOR[$Page.ApexClassProcessSetting] + '?id=' + apexClassId",
                             "});"
                         ]
                     },
@@ -398,8 +398,8 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
-                            "var fqcn = record.get('FullyQualifiedClassName');",
-                            "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "var apexClassId = record.get('ApexClassId');",
+                            "var process = Ext.getStore('Processes').getById(apexClassId);",
                             "var processIcon = process && process.get('Icon') || 'cross'; //#875 invalid process",
                             "",
                             "//set the action column's icon from each process",
@@ -450,10 +450,10 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
-                            "var fqcn = record.get('FullyQualifiedClassName');",
-                            "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "var apexClassId = record.get('ApexClassId');",
+                            "var process = Ext.getStore('Processes').getById(apexClassId);",
                             "var processName = process && process.get('Name');",
-                            "if (!process) processName = '<strong>' + fqcn + '</strong>'; //#875 invalid process",
+                            "if (!process) processName = '<strong>' + record.get('ApexClassName') + '</strong>'; //#875 invalid process",
                             "",
                             "//#776",
                             "return Ext.DomHelper.createHtml({",
@@ -507,8 +507,8 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
-                            "var fqcn = record.get('FullyQualifiedClassName');",
-                            "var process = Ext.getStore('Processes').getById(fqcn);",
+                            "var apexClassId = record.get('ApexClassId');",
+                            "var process = Ext.getStore('Processes').getById(apexClassId);",
                             "var processDescription = process && process.get('Description');",
                             "var text = record.get('ConfigName') || processDescription;",
                             "if (!process) text = '<strong>Invalid process, class is missing or malformed.</strong>'; //#875 invalid process",
@@ -563,17 +563,16 @@
                         ],
                         "fn": "renderer",
                         "implHandler": [
-                            "var fqcn = record.get('FullyQualifiedClassName');",
-                            "var process = Ext.getStore('Processes').getById(fqcn);",
-                            "var processHelpUrl = process && process.get('HelpUrl'); //#875 invalid process",
+                            "var apexClassId = record.get('ApexClassId');",
+                            "var process = Ext.getStore('Processes').getById(apexClassId);",
                             "",
                             "//process may not have docs",
-                            "if (processHelpUrl) return Ext.DomHelper.createHtml({",
+                            "if (process) return Ext.DomHelper.createHtml({",
                             "    'tag': 'a',",
                             "    'html': 'Help for this Process',",
                             "    'class': 'documentationlink',",
                             "    'title': 'Configure Step',",
-                            "    'href': processHelpUrl,",
+                            "    'href': URLFOR[$Page.ApexClassHelp] + '?id=' + apexClassId,",
                             "    'target': '_blank'",
                             "});"
                         ]

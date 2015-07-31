@@ -6,8 +6,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class.getName());
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
+        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         return sequence.Id;
     }
@@ -22,7 +22,7 @@
         String data = extension.getProcesses();
         
         //assemble
-        List<ApexClassModel> processes = (List<ApexClassModel>)Json.deserialize(data, List<ApexClassModel>.class);
+        List<Object> processes = (List<Object>)Json.deserializeUntyped(data);
         
         //assert
         Integer expectedCount = 10; //about 13
@@ -40,7 +40,7 @@
         String data = extension.getSteps();
         
         //assemble
-        List<StepModel.Dto> steps = (List<StepModel.Dto>)Json.deserialize(data, List<StepModel.Dto>.class);
+        List<Object> steps = (List<Object>)Json.deserializeUntyped(data);
         
         //assert
         Integer expectedCount = 2;
@@ -53,7 +53,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        List<StepModel.Dto> sequenceSteps = SequenceBuilderExtension.fetchSteps('SequenceBuilderExtensionTest');
+        List<Map<String,Object>> sequenceSteps = SequenceBuilderExtension.fetchSteps('SequenceBuilderExtensionTest');
         
         //assert
         Integer expectedCount = 2;
@@ -66,20 +66,20 @@
         Id sequenceId = setupSequence();
         
         //act
-        SequenceBuilderExtension.appendStep('SequenceBuilderExtensionTest', Publish.class.getName());
+        SequenceBuilderExtension.appendStep('SequenceBuilderExtensionTest', [SELECT Id FROM ApexClass WHERE Name = 'Publish'].Id);
         
         //assert
-        List<Step__c> steps = SequenceModel.fromName('SequenceBuilderExtensionTest').fetchSteps();
+        List<Step__c> steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
         Step__c lastStep = steps.get(2);
         String expectedClassName = Publish.class.getName();
-        String actualClassName = lastStep.FullyQualifiedClassName__c;
+        String actualClassName = lastStep.ApexClassName__c;
         System.assertEquals(expectedClassName, actualClassName);
     }
     
     static testmethod void testMoveStepBefore() {
         //arrange sequence
         Id sequenceId = setupSequence();
-        List<Step__c> steps = SequenceModel.fromName('SequenceBuilderExtensionTest').fetchSteps();
+        List<Step__c> steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
         Step__c wiretapStep = steps.get(0);
         Step__c terminateStep = steps.get(1);
         
@@ -87,24 +87,24 @@
         SequenceBuilderExtension.moveStepBefore(terminateStep.Name, wiretapStep.Name);
         
         //assemble
-        steps = SequenceModel.fromName('SequenceBuilderExtensionTest').fetchSteps();
+        steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
         terminateStep = steps.get(0);
         wiretapStep = steps.get(1);
         
         //assert
         String terminateExpectedClassName = Terminate.class.getName();
-        String terminateActualClassName = terminateStep.FullyQualifiedClassName__c;
+        String terminateActualClassName = terminateStep.ApexClassName__c;
         System.assertEquals(terminateExpectedClassName, terminateActualClassName);
         
         String wiretapExpectedClassName = Wiretap.class.getName();
-        String wiretapActualClassName = wiretapStep.FullyQualifiedClassName__c;
+        String wiretapActualClassName = wiretapStep.ApexClassName__c;
         System.assertEquals(wiretapExpectedClassName, wiretapActualClassName);
     }
     
     static testmethod void testMoveStepAfter() {
         //arrange sequence
         Id sequenceId = setupSequence();
-        List<Step__c> steps = SequenceModel.fromName('SequenceBuilderExtensionTest').fetchSteps();
+        List<Step__c> steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
         Step__c wiretapStep = steps.get(0);
         Step__c terminateStep = steps.get(1);
         
@@ -112,31 +112,31 @@
         SequenceBuilderExtension.moveStepAfter(wiretapStep.Name, terminateStep.Name);
         
         //assemble
-        steps = SequenceModel.fromName('SequenceBuilderExtensionTest').fetchSteps();
+        steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
         terminateStep = steps.get(0);
         wiretapStep = steps.get(1);
         
         //assert
         String terminateExpectedClassName = Terminate.class.getName();
-        String terminateActualClassName = terminateStep.FullyQualifiedClassName__c;
+        String terminateActualClassName = terminateStep.ApexClassName__c;
         System.assertEquals(terminateExpectedClassName, terminateActualClassName);
         
         String wiretapExpectedClassName = Wiretap.class.getName();
-        String wiretapActualClassName = wiretapStep.FullyQualifiedClassName__c;
+        String wiretapActualClassName = wiretapStep.ApexClassName__c;
         System.assertEquals(wiretapExpectedClassName, wiretapActualClassName);
     }
     
     static testmethod void testDestroyStep() {
         //arrange
         Id sequenceId = setupSequence();
-        List<Step__c> steps = SequenceModel.fromName('SequenceBuilderExtensionTest').fetchSteps();
+        List<Step__c> steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
         Step__c wiretapStep = steps.get(0);
         
         //act
         SequenceBuilderExtension.destroyStep('SequenceBuilderExtensionTest', wiretapStep.Name);
         
         //assemble
-        steps = SequenceModel.fromName('SequenceBuilderExtensionTest').fetchSteps();
+        steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
         
         //assert
         Integer expectedSize = 1;
@@ -164,20 +164,20 @@
         insert sequenceD;
         
         // Sequence A - Ok
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
+        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
         
         // Sequence B - Problem : Terminate Not last Step
-        Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Terminate.class.getName());
-        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class.getName());
+        Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Terminate.class);
+        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class);
  
         // Sequence C - Problem : More than One Terminate
-        Step__c stepC1 = SequenceModel.fromName(sequenceC.Name).appendStep(Terminate.class.getName());
-        Step__c stepC2 = SequenceModel.fromName(sequenceC.Name).appendStep(Terminate.class.getName());
+        Step__c stepC1 = SequenceModel.fromName(sequenceC.Name).appendStep(Terminate.class);
+        Step__c stepC2 = SequenceModel.fromName(sequenceC.Name).appendStep(Terminate.class);
         
         // Sequence D - Problem : Zero Terminate
-        Step__c stepD1 = SequenceModel.fromName(sequenceD.Name).appendStep(Wiretap.class.getName());
-        Step__c stepD2 = SequenceModel.fromName(sequenceD.Name).appendStep(Wiretap.class.getName());
+        Step__c stepD1 = SequenceModel.fromName(sequenceD.Name).appendStep(Wiretap.class);
+        Step__c stepD2 = SequenceModel.fromName(sequenceD.Name).appendStep(Wiretap.class);
 
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceA);
@@ -213,8 +213,8 @@
         insert sequenceA;
         
         // Sequence A - Warning : Ok but event Not Subscribed
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Publish.class.getName());
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Publish.class);
+        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
         
         // Event
         EventType__c eventTypeNotSubscribed = new EventType__c(
@@ -254,8 +254,8 @@
         insert sequenceB;
         
         // Sequence B - Problem : No Config
-        Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Publish.class.getName());
-        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class.getName());
+        Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Publish.class);
+        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class);
         
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceB);
@@ -281,8 +281,8 @@
         insert sequenceA;
         
         // Sequence A - Warning : Ok but event Not published
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Subscribe.class.getName());
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Subscribe.class);
+        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
 
         // Event
         EventType__c eventNotPublished = new EventType__c(
@@ -322,8 +322,8 @@
         insert sequenceB;
         
         // Sequence B - Problem : Subscribe Not first Step
-        Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class.getName());
-        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Subscribe.class.getName());
+        Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class);
+        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Subscribe.class);
         
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceB);
@@ -350,8 +350,8 @@
         insert sequenceC;
         
         // Sequence C - Problem : Subscribe Step Occurs more than once
-        Step__c stepC1 = SequenceModel.fromName(sequenceC.Name).appendStep(Subscribe.class.getName());
-        Step__c stepC2 = SequenceModel.fromName(sequenceC.Name).appendStep(Subscribe.class.getName());
+        Step__c stepC1 = SequenceModel.fromName(sequenceC.Name).appendStep(Subscribe.class);
+        Step__c stepC2 = SequenceModel.fromName(sequenceC.Name).appendStep(Subscribe.class);
             
         // Event
         EventType__c eventNotPublished = new EventType__c(
@@ -396,8 +396,8 @@
         insert sequenceB;
         
         // Sequence B - Problem : No Config
-        Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Subscribe.class.getName());
-        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class.getName());
+        Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Subscribe.class);
+        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class);
 
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceB);

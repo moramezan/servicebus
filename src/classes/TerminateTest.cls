@@ -23,8 +23,8 @@ private class TerminateTest
         insert sequence;
         
         //arrange steps
-        Step__c step1 = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class.getName());
-        Step__c step2 = SequenceModel.fromName(sequence.Name).appendStep(Subsequence.class.getName());
+        Step__c step1 = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
+        Step__c step2 = SequenceModel.fromName(sequence.Name).appendStep(Subsequence.class);
 
         Map<String,Object> inputEvent = new Map<String,Object> {
             '__SequenceName' => sequenceName,
@@ -97,8 +97,8 @@ private class TerminateTest
         Sequence__c sequence = new Sequence__c(Name = subsequenceName);
         insert sequence;
         
-        Step__c step02 = SequenceModel.fromName(sequence.Name).appendStep(Subsequence.class.getName());
-        Step__c step01 = SequenceModel.fromName(sequence.Name).appendStep(Subsequence.class.getName());
+        Step__c step02 = SequenceModel.fromName(sequence.Name).appendStep(Subsequence.class);
+        Step__c step01 = SequenceModel.fromName(sequence.Name).appendStep(Subsequence.class);
         
         Id subsequenceStepId01 = step01.Id ;
         Id subsequenceStepId02 = step02.Id ;

@@ -5,6 +5,14 @@
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
+        <apexClass>ApexClassHelpExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ApexClassHelpExtensionTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ApexClassModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -13,11 +21,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ApexClassSummaryExtension</apexClass>
+        <apexClass>ApexClassSetModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ApexClassSummaryExtensionTest</apexClass>
+        <apexClass>ApexClassSetModelTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -293,6 +301,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>StepSetModel</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>StepSetModelTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Subscribe</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -418,6 +434,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Message__c.ApexClassName__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Message__c.Attempts__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -449,11 +470,6 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Message__c.ExecuteDuration__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Message__c.FullyQualifiedClassName__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -634,7 +650,11 @@
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <pageAccesses>
-        <apexPage>ApexClassSummary</apexPage>
+        <apexPage>ApexClassHelp</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>ApexClassSetting</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -731,10 +751,6 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>MonitorSplash</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>ProcessSettings</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

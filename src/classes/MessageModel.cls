@@ -81,24 +81,6 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * Returns MODEL or NULL
-     */
-    public ApexClassModel.ESB discoverProcessModel() {
-        
-        Step__c step = this.resolveStep();
-        if (step == null) return null; //nonexistent step
-        
-        String fullyQualifiedClassName = step.FullyQualifiedClassName__c;
-        if (fullyQualifiedClassName == null) return null; //step has no fully qualified class name
-        
-        try {
-            return new ApexClassModel(Type.forName(fullyQualifiedClassName)).model;
-        } catch (ApexClassModel.ProcessException e) {
-            return null; //cannot discover process
-        }
-    }
-    
-    /**
      * This performs actual resolution inside the broker execute method.
      */
     public void prepareProcess() {
@@ -132,18 +114,18 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             throw e;
         }
         
-        String fullyQualifiedClassName = step.FullyQualifiedClassName__c;
+        String apexClassName = step.ApexClassName__c;
         
-        if (fullyQualifiedClassName == null) {
+        if (apexClassName == null) {
             MessageException e = new MessageException('Step fully qualified class name was null: ' + step.Id);
             this.prepareException(e);
             throw e;
         }
         
-        Type reflector = Type.forName(fullyQualifiedClassName);
+        Type reflector = Type.forName(apexClassName);
         
         if (reflector == null) {
-            MessageException e = new MessageException('Reflector for classname was null: ' + fullyQualifiedClassName);
+            MessageException e = new MessageException('Reflector for classname was null: ' + apexClassName);
             this.prepareException(e);
             throw e;
         }
@@ -210,7 +192,7 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             Job.Event.put('esb__AllowsCallouts', false);
             
             //#877 surface SessionId to select few orgs and packages
-            //Boolean allowSessionId = Broker.isAllowedSessionId(this.Message.FullyQualifiedClassName__c, UserInfo.getOrganizationId());
+            //Boolean allowSessionId = Broker.isAllowedSessionId(this.Message.ApexClassName__c, UserInfo.getOrganizationId());
             //if (allowSessionId) Job.Event.put('__SessionId', OAuthSetting__c.getInstance().AccessToken__c);
             //TODO for #886
             
@@ -223,7 +205,7 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             }
             
             //TODO for #886
-            //if (data.endsWith(this.Message.FullyQualifiedClassName__c.replaceAll('[^.]+\\.', '') + ':[]')) {
+            //if (data.endsWith(this.Message.ApexClassName__c.replaceAll('[^.]+\\.', '') + ':[]')) {
                 //MessageException e = new MessageException('Your plugin has not overridden the toString() method. Please refer to the Process Developers Guide for specific guidance.');
                 //this.prepareException(e);
                 //throw e;
@@ -259,9 +241,9 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
         if (hadException) throw new MessageException('Execute exception in message model.');
     }
     
-    public void setFullyQualifiedClassName(Type reflector) {
-        String fqcn = reflector.getName();
-        this.Message.FullyQualifiedClassName__c = fqcn;
+    public void setApexClassName(Type reflector) {
+        String apexClassName = reflector.getName();
+        this.Message.ApexClassName__c = apexClassName;
     }
     
     /**

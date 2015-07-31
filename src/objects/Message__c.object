@@ -57,6 +57,18 @@
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
     <fields>
+        <fullName>ApexClassName__c</fullName>
+        <description>Namespace Prefix and Apex Class name per #697</description>
+        <externalId>true</externalId>
+        <inlineHelpText>What is the underlying namespace prefix and Apex class that handles this message?</inlineHelpText>
+        <label>Apex Class</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Attempts__c</fullName>
         <defaultValue>0</defaultValue>
         <externalId>true</externalId>
@@ -136,18 +148,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>FullyQualifiedClassName__c</fullName>
-        <description>Namespace Prefix and Apex Class name per #697</description>
-        <externalId>true</externalId>
-        <inlineHelpText>What is the underlying namespace prefix and Apex class that handles this message?</inlineHelpText>
-        <label>Apex Class</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>QueueableId__c</fullName>
         <externalId>true</externalId>
         <inlineHelpText>Which Job enqueued this message?</inlineHelpText>
@@ -203,7 +203,7 @@
         <columns>NAME</columns>
         <columns>CreatedDate__c</columns>
         <columns>Status__c</columns>
-        <columns>FullyQualifiedClassName__c</columns>
+        <columns>ApexClassName__c</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
@@ -214,7 +214,7 @@
         <columns>NAME</columns>
         <columns>CreatedDate__c</columns>
         <columns>Status__c</columns>
-        <columns>FullyQualifiedClassName__c</columns>
+        <columns>ApexClassName__c</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
@@ -234,7 +234,7 @@
         <columns>NAME</columns>
         <columns>CreatedDate__c</columns>
         <columns>Status__c</columns>
-        <columns>FullyQualifiedClassName__c</columns>
+        <columns>ApexClassName__c</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
@@ -257,7 +257,7 @@
     <searchLayouts>
         <customTabListAdditionalFields>CreatedDate__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>FullyQualifiedClassName__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>ApexClassName__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>ExecuteDuration__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Exception__c</customTabListAdditionalFields>
         <excludedStandardButtons>Accept</excludedStandardButtons>

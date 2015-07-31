@@ -53,7 +53,7 @@
                     "        //TERMINATE step cannot be created",
                     "        if(process.get('Name') == 'Terminate') return;",
                     "        var processItem = {",
-                    "            itemId: process.get('FullyQualifiedClassName'),",
+                    "            itemId: process.getId(),",
                     "            text: process.get('Name'),",
                     "            iconCls: process.get('Icon')",
                     "        };",
@@ -88,14 +88,14 @@
                     "    grid = me.getGrid(),",
                     "    view = grid.getView(),",
                     "    store = grid.getStore(),",
-                    "    fqcn = item.getItemId(),",
+                    "    id = item.getItemId(),",
                     "    sequenceName = Sequence__c.Name;",
                     "",
                     "view.mask('Saving...');",
                     "Visualforce.remoting.Manager.invokeAction(",
                     "    $RemoteAction.SequenceBuilderExtension.appendStep,",
-                    "    sequenceName,",
-                    "    fqcn,",
+                    "    Sequence__c.Name,",
+                    "    id,",
                     "    function(step, event) {",
                     "        if (event.status) {",
                     "            //success",
@@ -422,9 +422,9 @@
                 "implHandler": [
                     "var view = tableview,",
                     "    plugin = view.getPlugin('dragdrop'),",
-                    "    fqcn = record.get('FullyQualifiedClassName');",
+                    "    apexClassName = record.get('ApexClassName');",
                     "",
-                    "plugin.dragZone.dragText = 'Move ' + fqcn + ' step here';"
+                    "plugin.dragZone.dragText = 'Move ' + apexClassName + ' step here';"
                 ],
                 "name": "beforecellmousedown",
                 "scope": "me"

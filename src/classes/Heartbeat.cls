@@ -25,7 +25,7 @@ public with sharing class Heartbeat extends ApexClassModel.BaseProcess {
         List<Step__c> steps = [
             SELECT Id, SequenceName__c, Position__c
             FROM Step__c
-            WHERE FullyQualifiedClassName__c IN :interestedSubscriberNames
+            WHERE ApexClassName__c IN :interestedSubscriberNames
         ];
         
         for (Step__c step : steps) {

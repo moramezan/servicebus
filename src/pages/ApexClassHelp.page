@@ -1,42 +1,44 @@
-<apex:page standardController="ApexClass" showHeader="false" extensions="ApexClassSummaryExtension" title="Process: {!Process.Name}">
+<apex:page standardController="ApexClass" showHeader="false" extensions="ApexClassHelpExtension" title="Process: {!ApexClass.Name}">
     <apex:pageMessages showDetail="false" />
 
     <apex:pageBlock mode="maindetail">
         <apex:pageBlockSection collapsible="false" columns="1" title="ESB Process">
             <apex:pageBlockSectionItem >
-                <apex:dataTable cellspacing="10" value="{!process}" var="process">
+                <!--
+                <apex:dataTable cellspacing="10" value="{!ApexClass}" var="TODO">
                     <apex:column breakBefore="true" style="font-weight: bold;">Tag</apex:column>
-                    <apex:column value="{!Process.Tag}" />
+                    <apex:column value="{!Tag}" />
 
                     <apex:column breakBefore="true" style="font-weight: bold;">Process Name</apex:column>
-                    <apex:column value="{!Process.Name}" />
+                    <apex:column value="{!Name}" />
                     
                     <apex:column breakBefore="true" style="font-weight: bold;">Fully Qualified Class Name</apex:column>
-                    <apex:column value="{!Process.FullyQualifiedClassName}" />
+                    <apex:column value="{!ISBLANK(ApexClass.NamespacePrefix, ApexClass.Name, ApexClass.NamespacePrefix + '.' + ApexClass.name)}" />
                     
                     <apex:column breakBefore="true" style="font-weight: bold;">Description</apex:column>
-                    <apex:column value="{!Process.Description}" />
+                    <apex:column value="{!Description}" />
                     
                     <apex:column breakBefore="true" style="font-weight: bold;">Icon</apex:column>
-                    <apex:column ><apex:image value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/famfamfam/' + Process.Icon + '.png')}" /> {!Process.Icon}</apex:column>
+                    <apex:column ><apex:image value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/famfamfam/' + Icon + '.png')}" /> {!Icon}</apex:column>
+                </apex:dataTable>
+                -->
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection collapsible="false" columns="1" title="Input Event Parameters" rendered="{!Inputs != null}">
+            <apex:pageBlockSectionItem >
+                <apex:dataTable cellspacing="10" value="{!Inputs}" var="key">
+                    <apex:column style="font-weight: bold;">{!key}</apex:column>
+                    <apex:column >{!Inputs[key]}</apex:column>
                 </apex:dataTable>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
-        <apex:pageBlockSection collapsible="false" columns="1" title="Input Event Parameters" rendered="{!Process.Inputs != null}">
+        <apex:pageBlockSection collapsible="false" columns="1" title="Output Event Parameters" rendered="{!Outputs != null}">
             <apex:pageBlockSectionItem >
-                <apex:dataTable cellspacing="10" value="{!Process.Inputs}" var="key">
+                <apex:dataTable cellspacing="10" value="{!Outputs}" var="key">
                     <apex:column style="font-weight: bold;">{!key}</apex:column>
-                    <apex:column >{!Process.Inputs[key]}</apex:column>
-                </apex:dataTable>
-            </apex:pageBlockSectionItem>
-        </apex:pageBlockSection>
-        
-        <apex:pageBlockSection collapsible="false" columns="1" title="Output Event Parameters" rendered="{!Process.Outputs != null}">
-            <apex:pageBlockSectionItem >
-                <apex:dataTable cellspacing="10" value="{!Process.Outputs}" var="key">
-                    <apex:column style="font-weight: bold;">{!key}</apex:column>
-                    <apex:column >{!Process.Outputs[key]}</apex:column>
+                    <apex:column >{!Outputs[key]}</apex:column>
                 </apex:dataTable>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>

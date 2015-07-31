@@ -4,15 +4,15 @@
         //arrange sequences
         Sequence__c sequence1 = new Sequence__c(Name = 'Test1');
         insert sequence1;
-        Step__c step1 = SequenceModel.fromName(sequence1.Name).appendStep(Terminate.class.getName());
+        Step__c step1 = SequenceModel.fromName(sequence1.Name).appendStep(Terminate.class);
         
         Sequence__c sequence2 = new Sequence__c(Name = 'Test2');
         insert sequence2;
-        Step__c step2 = SequenceModel.fromName(sequence2.Name).appendStep(Terminate.class.getName());
+        Step__c step2 = SequenceModel.fromName(sequence2.Name).appendStep(Terminate.class);
         
         Sequence__c sequence3 = new Sequence__c(Name = 'Test3');
         insert sequence3;
-        Step__c step3 = SequenceModel.fromName(sequence3.Name).appendStep(Terminate.class.getName());
+        Step__c step3 = SequenceModel.fromName(sequence3.Name).appendStep(Terminate.class);
         
         //arrange disperser
         DisperseConfig__c config = new DisperseConfig__c();
@@ -40,7 +40,7 @@
         //arrange sequences
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
-        Step__c step1 = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class.getName());
+        Step__c step1 = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange disperser
         DisperseConfig__c config = new DisperseConfig__c();

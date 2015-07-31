@@ -7,10 +7,12 @@
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>
+        <members>ApexClassHelpExtension</members>
+        <members>ApexClassHelpExtensionTest</members>
         <members>ApexClassModel</members>
         <members>ApexClassModelTest</members>
-        <members>ApexClassSummaryExtension</members>
-        <members>ApexClassSummaryExtensionTest</members>
+        <members>ApexClassSetModel</members>
+        <members>ApexClassSetModelTest</members>
         <members>ApexDomain</members>
         <members>ApexDomainTest</members>
         <members>AuditInitializer</members>
@@ -79,6 +81,8 @@
         <members>SequenceSetModelTest</members>
         <members>StepModel</members>
         <members>StepModelTest</members>
+        <members>StepSetModel</members>
+        <members>StepSetModelTest</members>
         <members>Subscribe</members>
         <members>SubscribeTest</members>
         <members>Subsequence</members>
@@ -99,7 +103,8 @@
         <name>ApexComponent</name>
     </types>
     <types>
-        <members>ApexClassSummary</members>
+        <members>ApexClassHelp</members>
+        <members>ApexClassSetting</members>
         <members>AuditEntryCsh</members>
         <members>AuditGroupCsh</members>
         <members>AuditInitializerConfigCsh</members>
@@ -124,7 +129,6 @@
         <members>MessageSplash</members>
         <members>Monitor</members>
         <members>MonitorSplash</members>
-        <members>ProcessSettings</members>
         <members>PublishConfigCsh</members>
         <members>PublishConfigManageEventTypes</members>
         <members>ScheduleConfigCsh</members>
@@ -180,6 +184,7 @@
         <members>DisperseDestination__c.Sequence__c</members>
         <members>JumpConfig__c.Sequence__c</members>
         <members>KnifeSwitch__c.Url__c</members>
+        <members>Message__c.ApexClassName__c</members>
         <members>Message__c.Attempts__c</members>
         <members>Message__c.Cause__c</members>
         <members>Message__c.CreatedDate__c</members>
@@ -187,7 +192,6 @@
         <members>Message__c.Event__c</members>
         <members>Message__c.Exception__c</members>
         <members>Message__c.ExecuteDuration__c</members>
-        <members>Message__c.FullyQualifiedClassName__c</members>
         <members>Message__c.QueueableId__c</members>
         <members>Message__c.Status__c</members>
         <members>Message__c.Step__c</members>
@@ -199,9 +203,10 @@
         <members>ScheduleConfig__c.FriendlyDates__c</members>
         <members>ScheduleConfig__c.FriendlyTimes__c</members>
         <members>ScheduleConfig__c.IsActive__c</members>
+        <members>Step__c.ApexClassId__c</members>
+        <members>Step__c.ApexClassName__c</members>
         <members>Step__c.ConfigId__c</members>
         <members>Step__c.ConfigName__c</members>
-        <members>Step__c.FullyQualifiedClassName__c</members>
         <members>Step__c.Position__c</members>
         <members>Step__c.SequenceName__c</members>
         <members>SubscribeConfig__c.EventType__c</members>
