@@ -267,19 +267,21 @@ abstract public with sharing class Broker {
         }
         
         Message__c specimen = [
-            SELECT Id, Step__c, Event__c, Status__c, Attempts__c
+            SELECT Id, Step__c, Event__c, Attempts__c
             FROM Message__c
             WHERE Status__c = 'Buffered'
             ORDER BY CreatedDate ASC //reattempts will naturally lead
             LIMIT 1
         ];
         
-        if (specimen.Step__c == null) {
-            //route undefined, return specimen
+        String route = specimen.Step__c;
+        
+        if (route == null) {
+            //undefined route, return specimen
             return new List<Message__c>{specimen};
         }
         
-        Step__c step = Step__c.getValues(specimen.Step__c);
+        Step__c step = Step__c.getValues(route);
         
         if (step == null) {
             //nonexistent step, return specimen
@@ -289,7 +291,7 @@ abstract public with sharing class Broker {
         String apexClassName = step.ApexClassName__c;
         
         if (apexClassName == null) {
-            //class undefined, return specimen
+            //undefined class name, return specimen
             return new List<Message__c>{specimen};
         }
         
@@ -310,9 +312,9 @@ abstract public with sharing class Broker {
         Integer limits = model.esb.Limits; //number of times specimen process can run within governor limits
         
         List<Message__c> messages = [
-            SELECT Id, Step__c, Event__c, Status__c, Attempts__c
+            SELECT Id, Step__c, Event__c, Attempts__c
             FROM Message__c
-            WHERE Status__c = :specimen.Status__c
+            WHERE Status__c = 'Buffered'
             AND Step__c = :specimen.step__c
             LIMIT :limits
             FOR UPDATE //#695 investigate broker race condition

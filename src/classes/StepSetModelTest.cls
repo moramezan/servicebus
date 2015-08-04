@@ -11,6 +11,9 @@
             Position__c = 1.0
         );
         
+        step.SequenceName__c = 'Test';
+        insert step;
+        
         //arrange model
         List<Step__c> steps = new List<Step__c>{step};
         StepSetModel model = new StepSetModel(steps);

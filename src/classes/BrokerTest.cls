@@ -116,67 +116,46 @@
     
 
     static testmethod void hopsExceededWillHaltStartedWithAppropriateMessageDetail() {
-        // arrange
-        Integer maxHops = 3;
-        Broker.MaxHops = maxHops;
-
-        String sequenceNameA = 'sequenceA';
-        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
-        insert sequenceA;
-
-
-        Integer positionA1 = 1;
-        Integer positionA2 = 2;
-        Integer positionA3 = 3;
-        Integer positionA4 = 4;
-        Integer positionA5 = 5;
-        Integer positionA6 = 6;
-
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA4 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA5 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
-
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'sequenceA');
+        insert sequence;
+        
+        //arrange steps
+        SequenceModel model = SequenceModel.fromId(sequence.Id);
+        model.appendStep(Wiretap.class);
+        model.appendStep(Terminate.class);
+        
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
+        //arrange inputs
+        new Job(sequence.Name, '000000000000000AAA').persist();
+        
+        //assert
+        Integer expectedBuffered = 1;
+        Integer actualBuffered = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        System.assertEquals(expectedBuffered, actualBuffered, 'Wrong count.');
+        
         //act
-        new Job(sequenceNameA, '000000000000000AAA').execute(null);
+        Broker.MaxHops = 2;
+        Broker.run();
+        
+        //assert
+        Integer expectedStarted = 1;
+        Integer actualStarted = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
+        System.assertEquals(expectedStarted, actualStarted, 'Wrong count.');
         
         //assemble
-        List<Message__c> messages = [
-            SELECT Id, Name, Event__c, Status__c, Cause__c
+        Message__c message = [
+            SELECT Id, Exception__c
             FROM Message__c
-            WHERE Status__c != 'Completed'
+            WHERE Status__c = 'Started'
         ];
         
-        Integer actualHops;
-        String actualDetail;
-        String actualStatus;
-        Integer actualCount = messages.size();
-        if (actualCount > 0) {
-            Map<String,Object> actualEvent = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Event__c);
-            actualHops = (Integer) actualEvent.get('__Hops');
-            
-            //assemble
-            Map<String,Object> ex = (Map<String,Object>)Json.deserializeUntyped(messages[0].Cause__c);
-            actualDetail = (String)ex.get('Message');
-            actualStatus = messages[0].Status__c;
-        }
-   
-        // assert
-        Integer expectedCount = 1;
-        System.assertEquals( expectedCount, actualCount);
-        Integer expectedHops = maxHops;
-        System.assertEquals(expectedHops, actualHops, 'Wrong hops.');
-        
-        String expectedDetail = 'Too many hops - to resolve, manually set __Hops on event parameters to 0';
-        System.assertEquals(expectedDetail, actualDetail, 'Wrong message');
-        
-        String expectedStatus = 'Started';
-        System.assertEquals(expectedStatus, actualStatus, 'Wrong message status.');
+        //assert
+        String expectedException = 'Too many hops - to resolve, manually set __Hops on event parameters to 0';
+        String actualException = message.Exception__c;
+        System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
     
     static testmethod void callingEnforceMaxHopsReturnsExpectedValueWhenHopsLtThreshold() {
@@ -244,7 +223,6 @@
         Broker.impl().execute(messages, new List<Message__c>());
         
         //assemble
-        //messages = [SELECT Exception__c FROM Message__c WHERE Id = :messages[0].Id];
         actualFlag = messages[0].Exception__c != null;
 
         //assert
@@ -255,14 +233,14 @@
     
     static testmethod void canCorrectlyIncrementAndPersistMessages() {
         //arrange sequence
-        String sequenceNameA = 'sequenceA';
-        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
-        insert sequenceA;
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
+        insert sequence;
         
         //arrange steps
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Subscribe.class);
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Publish.class);
-        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
+        SequenceModel model = SequenceModel.fromId(sequence.Id);
+        Step__c stepA1 = model.appendStep(Subscribe.class);
+        Step__c stepA2 = model.appendStep(Publish.class);
+        Step__c stepA3 = model.appendStep(Terminate.class);
         Integer positionA1 = stepA1.Position__c.intValue();
         Integer positionA2 = stepA2.Position__c.intValue();
         Integer positionA3 = stepA3.Position__c.intValue();
@@ -695,19 +673,15 @@
             FROM Message__c
             WHERE Status__c != 'Completed'
         ];
-
-
-        String actualStatus;
-        Integer actualCount = messages.size();
-        if (actualCount > 0) {
-            actualStatus = messages[0].Status__c;
-        }
-
-        // assert
-        Integer expectedCount = 1;
-        System.assertEquals( expectedCount, actualCount);
+        
+        Integer expectedSize = 1;
+        Integer actualSize = messages.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
+        
+        //assert
         String expectedStatus = 'Queued';
-        System.assertEquals( expectedStatus, actualStatus);
+        String actualStatus = messages[0].Status__c;
+        System.assertEquals(expectedStatus, actualStatus, 'Wrong status.');
     }
 
     static testmethod void callingEnqueueWhenBrokerIsNotPausedProcessesMessages() {
@@ -739,20 +713,9 @@
         //act
         new Job(sequenceNameA, '000000000000000AAA').execute(null);
 
-        //System.assert(false, [SELECT Id, Event__c, Status__c, Exception__c, Cause__c FROM Message__c]);
-        //assemble
-        List<Message__c> messages = [
-            SELECT Id, Name, Event__c, Status__c
-            FROM Message__c
-            WHERE Status__c = 'Completed'
-        ];
-
-        Integer actualCount = messages.size();
-
-   
-        // assert
         Integer expectedCount = 6;
-        System.assertEquals( expectedCount, actualCount);
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
     }
  
  
@@ -792,72 +755,68 @@
         //act
         new Job(sequenceNameA, '000000000000000AAA').execute(null);
 
+        //assert
+        Integer expectedSuccessCount = 3;
+        Integer actualSuccessCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
+        System.assertEquals(expectedSuccessCount, actualSuccessCount, 'Wrong success count.');
         
         //assemble
-        List<Message__c> messagesOk = [
-            SELECT Id, Name, Event__c, Status__c, Cause__c
-            FROM Message__c
-            WHERE Status__c = 'Completed'
-        ];
-        List<Message__c> messagesFailed = [
-            SELECT Id, Name, Event__c, Status__c, Cause__c
+        List<Message__c> messages = [
+            SELECT Id, Name, Event__c, Status__c, Exception__c
             FROM Message__c
             WHERE Status__c = 'Started'
         ];
         
         //assert
-        Integer actualCountOk = messagesOk.size();
-        Integer expectedCountOk = 3;
-        System.assertEquals( expectedCountOk, actualCountOk);
+        Integer expectedFailureCount = 1;
+        Integer actualFailureCount = messages.size();
+        System.assertEquals(expectedFailureCount, actualFailureCount, 'Wrong failure count.');
         
-        Integer actualCountFailed = messagesFailed.size();
-        Integer expectedCountFailed = 1;
-        System.assertEquals( expectedCountFailed, actualCountFailed);
-        
-        //assemble
-        Map<String,Object> actualException = (Map<String,Object>)Json.deserializeUntyped(messagesFailed[0].Cause__c);
-
-        // assert
-        String expectedExceptionMessage = 'Nonexistent route, eg bad sequence name, position, missing terminate: sequenceA#4';
-        String actualExceptionMessage = (String)actualException.get('Message');
-        System.assertEquals(expectedExceptionMessage, actualExceptionMessage, 'Wrong message');
+        String expectedException = 'Nonexistent route, eg bad sequence name, position, missing terminate: sequenceA#4';
+        String actualException = messages[0].Exception__c;
+        System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
  
     static testMethod void callingEnqueueWithEventParametersIncludesAllEventParametersInMessage() {
-        // arrange
-        String sequenceName = 'Test';
-        Sequence__c sequence = new Sequence__c(Name = sequenceName);
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Integer position = 1;
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
-  
+        //arrange steps
+        SequenceModel model = SequenceModel.fromId(sequence.Id);
+        model.appendStep(Terminate.class);
+        
+        //arrange broker
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
+        //arrange input event
         String eventStamp = HeartbeatImplementation.getISO8601(DateTime.newInstance(2014,12,15,13,11,07));
         Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__Id' => UserInfo.getUserId(),
-            '__SequenceName' => sequenceName,
-            '__Position' => position,
+            '__SequenceName' => 'Test',
+            '__Position' => 1,
             'esb__EntryPointDatetime' => eventStamp
         };
              
-        // act
+        //act
         new Job(inputEvent).execute(null);
-
-        // assemble
-        List<Message__c> actualMessages = [  SELECT  Id, Event__c FROM Message__c];
-        Integer actualCount  = actualMessages.size();
-        String  actualEventStamp;
-        if (actualCount == 1) {
-            Map<String,Object> actualEvent = (Map<String,Object>)Json.deserializeUntyped(actualMessages[0].Event__c);
-            actualEventStamp = (String)actualEvent.get('esb__EntryPointDatetime');
-        }
- 
-        // assert
-        Integer expectedCount  = 1;
-        System.assertEquals(expectedCount, actualCount);
-        String  expectedEventStamp = eventStamp;
+        
+        //assemble
+        List<Message__c> messages = [
+            SELECT Id, Event__c
+            FROM Message__c
+        ];
+        
+        //assert
+        Integer expectedCount = 1;
+        Integer actualCount = messages.size();
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
+        
+        //assemble
+        Map<String,Object> actualEvent = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
+        
+        String expectedEventStamp = eventStamp;
+        String actualEventStamp = (String)actualEvent.get('esb__EntryPointDatetime');
         System.assertEquals(expectedEventStamp, actualEventStamp);
     }
 
@@ -902,11 +861,12 @@
     
     static testMethod void callingEnqueueAlwaysSetsInitiatingEventParameters() {
         //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
         //arrange steps
-        SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        SequenceModel model = SequenceModel.fromId(sequence.Id);
+        model.appendStep(Terminate.class);
         
         //arrange specific broker implementation
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
@@ -914,27 +874,32 @@
         //act
         new Job(sequence.Name, '000000000000000AAA').execute(null);
         
-        // assemble
-        List<Message__c> messagesAfter = [SELECT Event__c FROM Message__c LIMIT 1];
+        //assemble
+        List<Message__c> messages = [
+            SELECT Id, Event__c
+            FROM Message__c
+            LIMIT 1
+        ];
         
+        //assert
+        Integer expectedSize = 1;
+        Integer actualSize = messages.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
-        String  actualEntryPointUuid ;
-        Id      actualEnqueueUserId  ;
-        Integer actualPosition       ;
-        if (messagesAfter.size() == 1) {
-            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(messagesAfter[0].Event__c);
-            actualEntryPointUuid = (String) inputEvent.get('__EntryPointUuid');
-            actualEnqueueUserId  = (Id) inputEvent.get('__EnqueueUserId' );
-            actualPosition       = (Integer) inputEvent.get('__Position');
-        }
-
-        // assert
-        String  expectedEntryPointUuid = null;
-        System.assertNotEquals(expectedEntryPointUuid,actualEntryPointUuid);
-        Id  expectedEnqueueUserId = UserInfo.getUserId();
-        System.assertEquals(expectedEnqueueUserId,actualEnqueueUserId);
+        //assemble
+        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
+        
+        String unexpectedEntryPointUuid = null;
+        String actualEntryPointUuid = (String)inputEvent.get('__EntryPointUuid');
+        System.assertNotEquals(unexpectedEntryPointUuid, actualEntryPointUuid, 'Wrong entry point uuid.');
+        
         Integer expectedPosition = 1;
-        System.assertEquals(expectedPosition ,actualPosition);
+        Integer actualPosition = (Integer)inputEvent.get('__Position');
+        System.assertEquals(expectedPosition, actualPosition, 'Wrong position.');
+        
+        Id expectedEnqueueUserId = UserInfo.getUserId();
+        Id actualEnqueueUserId = (Id)inputEvent.get('__EnqueueUserId');
+        System.assertEquals(expectedEnqueueUserId, actualEnqueueUserId, 'Wrong enqueue user id.');
     }
 
     static testMethod void callingInvokeMainWithCorrectToToStringOverrideDoesNOTThrowException() {

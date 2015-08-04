@@ -60,7 +60,7 @@
                             "        //success",
                             "        Ext.Msg.alert(",
                             "            'Success',",
-                            "            'Test message has been enqueued to<br />\\\"' + response + '\\\" sequence.'",
+                            "            'Test message has been enqueued. <br />Submitted Job Id: ' + response",
                             "        ).setIcon(Ext.Msg.QUESTION);",
                             "        button.enable();",
                             "        //button.unmask(); //too dark since #818",
@@ -78,7 +78,7 @@
                             "",
                             "Visualforce.remoting.Manager.invokeAction(",
                             "    $RemoteAction.SequenceBuilderExtension.enqueue,",
-                            "    Sequence__c.Name,",
+                            "    Id,",
                             "    handler",
                             ");"
                         ]

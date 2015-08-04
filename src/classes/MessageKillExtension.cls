@@ -5,8 +5,7 @@ public with sharing class MessageKillExtension {
     
     public MessageKillExtension(ApexPages.StandardSetController controller) {
         this.controller = controller;
-        Set<Id> messageIds = new Map<Id,SObject>(controller.getSelected()).keySet();
-        model = MessageSetModel.fromIds(messageIds);
+        model = new MessageSetModel(controller.getRecords());
     }
     
     public PageReference doKill() {

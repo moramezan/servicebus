@@ -14,8 +14,13 @@
         //act
         List<MonitorController.Statistic> statistics = MonitorController.getStatistics();
         
+        //assemble
+        List<ApexClass> apexClasses = [SELECT Id FROM ApexClass WHERE Name != 'ApexClassModel'];
+        ApexClassSetModel model = new ApexClassSetModel(apexClasses);
+        model.discoverProcesses();
+        
         //assert
-        Integer expectedCount = ApexClassSetModel.discoverProcesses().toDtos().size() + 1; //one extra for buffered guys - they have no process name so the graph is [' ', 'Wiretap', 'Terminate']
+        Integer expectedCount = model.toDtos().size() + 1; //one extra for buffered guys - they have no process name so the graph is [' ', 'Wiretap', 'Terminate']
         Integer actualCount = statistics.size();
         System.assertEquals(expectedCount, actualCount);
     }

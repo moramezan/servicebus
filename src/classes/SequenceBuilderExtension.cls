@@ -3,31 +3,9 @@ public with sharing class SequenceBuilderExtension {
     private ApexPages.StandardController controller;
     private SequenceModel model;
     
-    /**
-     * "Processing Stage"
-     *
-     * Using this DTO instead of
-     * Step__c for a few reasons:
-     * - loses the Step Id
-     * - drops attributes key
-     * - hides our secret sauce
-     */
-    public class StepDto {
-        public String Name;
-        public String SequenceName;
-        public Integer Position;
-        public String ConfigId;
-        public String ConfigName;
-        public String ApexClassId;
-        public String ApexClassName;
-    }
-    
     public SequenceBuilderExtension(ApexPages.StandardController controller) {
-        if (!Test.isRunningTest()) controller.addFields(new List<String>{'Name'});
         this.controller = controller;
-        
-        Sequence__c sequence = (Sequence__c)controller.getRecord();
-        this.model = SequenceModel.fromName(sequence.Name);
+        this.model = SequenceModel.fromId(controller.getId());
         this.countRoutedMessages();
     }
     
@@ -56,7 +34,12 @@ public with sharing class SequenceBuilderExtension {
     }
     
     public String getProcesses() {
-        List<Map<String,Object>> processes = ApexClassSetModel.discoverProcesses().toDtos();
+        //don't discover our ESB summary class template
+        List<ApexClass> apexClasses = [SELECT Id FROM ApexClass WHERE Name != 'ApexClassModel'];
+        ApexClassSetModel model = new ApexClassSetModel(apexClasses);
+        model.discoverProcesses();
+        
+        List<Map<String,Object>> processes = model.toDtos();
         return Json.serializePretty(processes);
     }
     
@@ -69,14 +52,14 @@ public with sharing class SequenceBuilderExtension {
         StepModel.cacheConfigName(configId);
     }
     
-    @RemoteAction static public List<Map<String,Object>> fetchSteps(String sequenceName) {
-        SequenceModel model = SequenceModel.fromName(sequenceName);
-        model.terminate();
+    @RemoteAction static public List<Map<String,Object>> fetchSteps(Id sequenceId) {
+        SequenceModel model = SequenceModel.fromId(sequenceId);
+        model.terminateIfNeeded();
         return model.stepSetModel().toDtos();
     }
     
-    @RemoteAction static public Step__c appendStep(String sequenceName, String apexClassId) {
-        SequenceModel model = SequenceModel.fromName(sequenceName);
+    @RemoteAction static public Step__c appendStep(Id sequenceId, String apexClassId) {
+        SequenceModel model = SequenceModel.fromId(sequenceId);
         return model.appendStep(apexClassId);
     }
     
@@ -88,15 +71,14 @@ public with sharing class SequenceBuilderExtension {
         StepModel.fromName(stepName).moveAfter(afterStepName);
     }
     
-    @RemoteAction static public void destroyStep(String sequenceName, String stepName) {
-        SequenceModel model = SequenceModel.fromName(sequenceName);
+    @RemoteAction static public void destroyStep(Id sequenceId, String stepName) {
+        SequenceModel model = SequenceModel.fromId(sequenceId);
         model.destroyStep(stepName);
     }
     
-    @RemoteAction static public String enqueue(String sequenceName) {
-        Job j = new Job(sequenceName, UserInfo.getOrganizationId());
-        System.enqueueJob(j);
-        return sequenceName;
+    @RemoteAction static public Id enqueue(Id sequenceId) {
+        SequenceModel model = SequenceModel.fromId(sequenceId);
+        return model.enqueueTestMessage();
     }
     
     /**
@@ -179,9 +161,8 @@ public with sharing class SequenceBuilderExtension {
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
         ];
         
-        Map<Id,SObject> publishConfigIdToPublishConfig = ApexDomain.mapAll(PublishConfig__c.SObjectType);
-        List<SubscribeConfig__c> SubscribeConfigs = ApexDomain.listAll(SubscribeConfig__c.SObjectType);
-        Map<Id,SObject> eventTypeIdToEventType = ApexDomain.mapAll(EventType__c.SObjectType);
+        Map<Id,SObject> publishConfigIdToPublishConfig = new Map<Id,SObject>([SELECT Id, EventType__c FROM PublishConfig__c]);
+        List<SubscribeConfig__c> SubscribeConfigs = [SELECT Id, EventType__c FROM SubscribeConfig__c];
         
         for (Sequence__c sequence : sequences) {
             Boolean containsPublish = false;
@@ -255,9 +236,8 @@ public with sharing class SequenceBuilderExtension {
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
         ];
         
-        Map<Id,SObject> subscribeConfigIdToSubscribeConfig = ApexDomain.mapAll(SubscribeConfig__c.SObjectType);
-        List<PublishConfig__c> publishConfigs = ApexDomain.listAll(PublishConfig__c.SObjectType);
-        Map<Id,SObject> eventTypeIdToEventType = ApexDomain.mapAll(EventType__c.SObjectType);
+        Map<Id,SObject> subscribeConfigIdToSubscribeConfig = new Map<Id,SObject>([SELECT Id, EventType__c FROM SubscribeConfig__c]);
+        List<PublishConfig__c> publishConfigs = [SELECT Id, EventType__c FROM PublishConfig__c];
         
         for (Sequence__c sequence : sequences) {
             List<Step__c> steps = [

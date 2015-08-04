@@ -19,15 +19,6 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         super(messages);
     }
     
-    static public MessageSetModel fromIds(Set<Id> messageIds) {
-        List<Message__c> messages = [
-            SELECT Id, Name, Attempts__c, Exception__c, ExecuteDuration__c, ApexClassName__c, Step__c, Status__c
-            FROM Message__c
-            WHERE Id IN :messageIds
-        ];
-        return new MessageSetModel(messages);
-    }
-    
     /**
      * Killed messages are really just started exceptions that have been "moved on" to Completed.
      * We allow users to "kill" them so they don't appear as big ugly red bars in the monitor.
@@ -45,7 +36,7 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         //held up in database.stateful can't be killed. if
         //someone aborts the batch job, yep they stuck forever
         List<Message__c> killableMessages = [
-            SELECT Id, Status__c
+            SELECT Id
             FROM Message__c
             WHERE Id IN :attemptedIds
             AND Status__c = 'Started'
@@ -65,8 +56,6 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         
         update killableMessages;
         
-        Set<Id> killedMessageIds = new Map<Id,SObject>(killableMessages).keySet();
-        
         //restart REAL broker
         Job.runAsUser();
     }
@@ -84,7 +73,7 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         }
         
         List<Message__c> rebufferableMessages = [
-            SELECT Id, Status__c
+            SELECT Id
             FROM Message__c
             WHERE Id IN :attemptedIds
             AND Status__c IN ('Started', 'Completed')
@@ -102,7 +91,6 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
             rebufferableMessage.Cause__c = null; //#827
         }
         
-        //write status and any exception fields ("avoids DML in action method")
         update rebufferableMessages;
         
         //restart REAL broker

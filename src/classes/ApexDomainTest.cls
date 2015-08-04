@@ -1,36 +1,48 @@
 @IsTest public class ApexDomainTest {
     
-    class UserObject extends ApexDomain.StandardModel {
-        public UserObject(User user) {
-            super(user);
+    @TestVisible private class ContactModel extends ApexDomain.StandardModel {
+        public ContactModel(Contact contact) {
+            super(contact);
         }
     }
     
-    static testmethod void testDatabaseAccessorRequeriesObject() {
-        //arrange
-        User user = new User(Id = UserInfo.getUserId());
-        UserObject userObject = new UserObject(user);
-        
-        //act
-        SObject sobj = userObject.getRecord();
-        String data = Json.serialize(sobj);
-        
-        //assert
-        System.assert(data.contains(UserInfo.getUserName()));
-        System.assert(data.contains(UserInfo.getUserEmail()));
-        System.assert(data.contains(UserInfo.getFirstName()));
+    @TestVisible private class ContactSetModel extends ApexDomain.StandardSetModel {
+        public ContactSetModel(List<Contact> contacts) {
+            super(contacts);
+        }
     }
     
-    static testmethod void testInMemoryAccessorJustReturnsObject() {
-        //arrange
-        User user = new User(LastName = 'TestUser');
-        UserObject userObject = new UserObject(user);
+    static testmethod void testAccessors() {
+        //arrange domain layer
+        Contact contact = new Contact(Id = '003000000000000');
+        ContactModel contactObj = new ContactModel(contact);
         
         //act
-        SObject sobj = userObject.getRecord();
+        Id contactId = contactObj.getId();
+        Id recordId = contactObj.getRecord().Id;
         
         //assert
-        System.assertEquals(user, sobj);
+        Id expectedId = '003000000000000AAA';
+        Id actualId = contactId;
+        System.assertEquals(expectedId, actualId, 'Wrong Id');
+
+        expectedId = '003000000000000AAA';
+        actualId = recordId;
+        System.assertEquals(expectedId, actualId, 'Wrong Id');
+    }
+    
+    static testmethod void testSetAccessors() {
+        //arrange domain layer
+        Contact contact = new Contact(Id = '003000000000000');
+        ContactSetModel contactsObj = new ContactSetModel(new List<Contact>{contact});
+        
+        //act
+        Id contactId = contactsObj.getRecords()[0].Id;
+        
+        //assert
+        Id expectedId = '003000000000000AAA';
+        Id actualId = contactId;
+        System.assertEquals(expectedId, actualId, 'Wrong Id');
     }
     
     static testmethod void testGetByIdFetchesAllFields() {
@@ -55,26 +67,6 @@
         public SequenceSetModel(List<Sequence__c> sequences) {
             super(sequences);
         }
-    }
-    
-    static testmethod void testListAllAndMapAllGetsAllObjects() {
-        //arrange data
-        Database.insert(new List<Sequence__c>{
-            new sequence__c(Name = 'TestSequenceOne'),
-            new sequence__c(Name = 'TestSequenceTwo'),
-            new sequence__c(Name = 'TestSequenceThree')
-        });
-        
-        //act
-        List<SObject> sequences = ApexDomain.listAll(Sequence__c.SObjectType);
-        Map<Id,SObject> id2sequence = ApexDomain.mapAll(Sequence__c.SObjectType);
-        Integer expectedSize = 3;
-        
-        //assert
-        Integer actualListSize = sequences.size();
-        Integer actualMapSize = id2sequence.size();
-        System.assertEquals(expectedSize, actualListSize);
-        System.assertEquals(expectedSize, actualMapSize);
     }
     
     static testmethod void testKeySetReturnsIds() {

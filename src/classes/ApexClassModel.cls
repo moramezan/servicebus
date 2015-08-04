@@ -106,6 +106,11 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         this.Record.Id = apexClass.Id;
     }
     
+    static public ApexClassModel fromId(Id apexClassId) {
+        ApexClass apexClass = (ApexClass)ApexDomain.getById(apexClassId);
+        return new ApexClassModel(apexClass);
+    }
+    
     /**
      * Converts "their" ESB summary class into "our" ESB summary class
      */

@@ -2,23 +2,30 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
 
     private Sequence__c sequence;
     
-    public Sequence__c getSequence() {
-        return this.sequence;
-    }
-    
     /**
      * For advertising domain layer errors
      */
     public class SequenceException extends Exception {}
     
     /**
-     * Privatize constructor to force use of fromName()
+     * Privatize constructor to force use of fromName() or fromId()
      */
     private SequenceModel(Sequence__c sequence) {
         super(sequence);
         this.sequence = sequence;
     }
-   
+    
+    /**
+     * Given a sequence id, loads a model with all fields.
+     *
+     * @param sequenceId
+     * @return domain model of sequence
+     */
+    static public SequenceModel fromId(Id sequenceId) {
+        Sequence__c sequence = (Sequence__c)ApexDomain.getById(sequenceId);
+        return new SequenceModel(sequence);
+    }
+    
     /**
      * Given a sequence name, loads a model with all fields.
      *
@@ -27,23 +34,14 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
      */
     static public SequenceModel fromName(String sequenceName) {
         Sequence__c sequence = [SELECT Id FROM Sequence__c WHERE Name = :sequenceName];
-        sequence = (Sequence__c)ApexDomain.getById(sequence.Id);
-        return new SequenceModel(sequence);
+        return fromId(sequence.Id);
     }
     
     /**
-     * Loads all steps from a sequence in
-     * order with most fields populated.
+     * Find the steps from this sequence
      */
     public StepSetModel stepSetModel() {
-        List<Step__c> steps = [
-            SELECT Name, ConfigId__c, ConfigName__c, ApexClassId__c, ApexClassName__c, Position__c, SequenceName__c
-            FROM Step__c
-            WHERE SequenceName__c = :this.sequence.Name
-            ORDER BY Position__c ASC
-        ];
-        
-        return new StepSetModel(steps);
+        return StepSetModel.forSequence(this.Sequence.Name);
     }
     
     /**
@@ -67,6 +65,18 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
         update step;
         
         return step;
+    }
+    
+    /**
+     * Injects a test message to this sequence
+     * carrying just the Organization Id.
+     *
+     * @return the queueable job id
+     */
+    public Id enqueueTestMessage() {
+        Job j = new Job(this.Sequence.Name, UserInfo.getOrganizationId());
+        Id jobId = System.enqueueJob(j);
+        return jobId;
     }
     
     /**
@@ -115,7 +125,7 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
      * If this sequence contains no Terminate step, append one.
      * (Invoked by the user interface when viewing a Sequence for the first time)
      */
-    public void terminate() {
+    public void terminateIfNeeded() {
         try {
             Step__c terminateStep = [
                 SELECT Name

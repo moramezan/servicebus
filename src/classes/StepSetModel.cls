@@ -1,7 +1,25 @@
 public class StepSetModel extends ApexDomain.StandardSetModel {
     
+    /**
+     * Model not allowed to make assumptions about
+     * the fields he is constructed with. Id only.
+     */
     public StepSetModel(List<Step__c> steps) {
         super(steps);
+    }
+    
+    /**
+     * Find the steps from any sequence
+     */
+    static public StepSetModel forSequence(String sequenceName) {
+        List<Step__c> steps = [
+            SELECT Id
+            FROM Step__c
+            WHERE SequenceName__c = :sequenceName
+            ORDER BY Position__c ASC
+        ];
+        
+        return new StepSetModel(steps);
     }
     
     /**
@@ -29,10 +47,17 @@ public class StepSetModel extends ApexDomain.StandardSetModel {
      * ]
      */
     public List<Map<String,Object>> toDtos() {
+        //re-query needed fields
+        List<Step__c> steps = [
+            SELECT Id, Name, ConfigId__c, ConfigName__c, ApexClassId__c, ApexClassName__c, Position__c
+            FROM Step__c
+            WHERE Id IN :this.keySet()
+            ORDER BY Position__c ASC
+        ];
+        
         //prepare list of DTO
         List<Map<String,Object>> dtos = new List<Map<String,Object>>();
         
-        List<Step__c> steps = this.Records;
         for (Step__c step : steps) {
             Map<String,Object> dto = new Map<String,Object>{
                 'Name' => step.Name,

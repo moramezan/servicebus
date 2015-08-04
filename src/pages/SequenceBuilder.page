@@ -37,13 +37,10 @@
         $Page.ApexClassHelp = '{!$Page.ApexClassHelp}';
         $Page.ApexClassSetting = '{!$Page.ApexClassSetting}';
         
-        window.Sequence__c = window.Sequence__c || {};
-        Sequence__c.Id = '{!Sequence__c.Id}';
-        Sequence__c.Name = '{!JSENCODE(Sequence__c.Name)}';
-        
         TerminateApexClassName = '{!TerminateApexClassName}';
         Processes = {!Processes};
         Steps = {!Steps};
+        Id = '{!Id}';
         
         window.$CurrentPage = window.$CurrentPage || {};
         $CurrentPage.Url = '{!$CurrentPage.Url}';

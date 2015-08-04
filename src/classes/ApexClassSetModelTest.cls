@@ -1,49 +1,31 @@
 @IsTest public class ApexClassSetModelTest {
     
     static testmethod void testDiscoverProcesses() {
-        //arrange classes
-        ApexClassSetModel.MockClasses = [
-            SELECT Id, NamespacePrefix, Name
-            FROM ApexClass
-            WHERE Name IN ('ApexClassSetModelTest', 'Terminate', 'Wiretap') //ABC... TUV... WXY...
-            ORDER BY Name ASC
-            LIMIT 10000
-        ];
-        
         //act
-        ApexClassSetModel model = ApexClassSetModel.discoverProcesses();
+        List<ApexClass> apexClasses = [SELECT Id FROM ApexClass WHERE Name = 'Terminate'];
+        ApexClassSetModel model = new ApexClassSetModel(apexClasses);
+        model.discoverProcesses();
         
-        //arrange
-        List<ApexClass> apexClasses = model.getRecords();
+        //assemble
+        apexClasses = model.getRecords();
         
         //assert
-        Integer expectedSize = 2;
+        Integer expectedSize = 1;
         Integer actualSize = apexClasses.size();
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
         String expectedName = 'Terminate';
         String actualName = apexClasses[0].Name;
-        System.assertEquals(expectedName, actualName);
-        
-        expectedName = 'Wiretap';
-        actualName = apexClasses[1].Name;
-        System.assertEquals(expectedName, actualName);
+        System.assertEquals(expectedName, actualName, 'Wrong name.');
     }
     
     static testmethod void testToDtos() {
-        //arrange classes
-        ApexClassSetModel.MockClasses = [
-            SELECT Id, NamespacePrefix, Name
-            FROM ApexClass
-            WHERE Name IN ('Wiretap')
-            ORDER BY Name ASC
-            LIMIT 10000
-        ];
+        //arrange
+        List<ApexClass> apexClasses = [SELECT Id FROM ApexClass WHERE Name = 'Wiretap'];
+        ApexClassSetModel model = new ApexClassSetModel(apexClasses);
+        model.discoverProcesses();
         
         //act
-        ApexClassSetModel model = ApexClassSetModel.discoverProcesses();
-        
-        //arrange
         List<Map<String,Object>> dtos = model.toDtos();
         
         //assert
@@ -51,8 +33,7 @@
         Integer actualSize = dtos.size();
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
-        //assert
-        String expectedId = ApexClassSetModel.MockClasses[0].Id;
+        String expectedId = apexClasses[0].Id;
         String actualId = (String)dtos[0].get('Id');
         System.assertEquals(expectedId, actualId, 'Wrong Id.');
         

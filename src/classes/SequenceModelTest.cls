@@ -66,7 +66,7 @@
 
         // act
         SequenceModel sequence = SequenceModel.fromName(soSequence.Name);
-        sequence.terminate();
+        sequence.terminateIfNeeded();
         
         // assemble
         List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
@@ -96,8 +96,8 @@
 
         // act
         SequenceModel sequence = SequenceModel.fromName(soSequence.Name);
-        sequence.terminate(); // once ( terminate will now exist)
-        sequence.terminate(); // and again!
+        sequence.terminateIfNeeded(); // once ( terminate will now exist)
+        sequence.terminateIfNeeded(); // and again!
         
         // assemble
         List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];

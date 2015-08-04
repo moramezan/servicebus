@@ -108,7 +108,7 @@
                 ],
                 "designer|displayName": "StepProxy",
                 "extraParams": [
-                    "{sequenceName: Sequence__c.Name}"
+                    "{Id: Id}"
                 ]
             },
             "name": "MyDirectProxy",

@@ -2,12 +2,13 @@
     
     static private Id setupSequence() {
         //arrange sequences
-        Sequence__c sequence = new Sequence__c(Name = 'SequenceBuilderExtensionTest');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
+        SequenceModel model = SequenceModel.fromId(sequence.Id);
         
         //arrange steps
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        model.appendStep(Wiretap.class);
+        model.appendStep(Terminate.class);
         
         return sequence.Id;
     }
@@ -53,7 +54,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        List<Map<String,Object>> sequenceSteps = SequenceBuilderExtension.fetchSteps('SequenceBuilderExtensionTest');
+        List<Map<String,Object>> sequenceSteps = SequenceBuilderExtension.fetchSteps(sequenceId);
         
         //assert
         Integer expectedCount = 2;
@@ -66,30 +67,32 @@
         Id sequenceId = setupSequence();
         
         //act
-        SequenceBuilderExtension.appendStep('SequenceBuilderExtensionTest', [SELECT Id FROM ApexClass WHERE Name = 'Publish'].Id);
+        SequenceBuilderExtension.appendStep(sequenceId, [SELECT Id FROM ApexClass WHERE Name = 'Publish'].Id);
+        
+        //assemble
+        Step__c step = [SELECT ApexClassName__c FROM Step__c WHERE Name = 'Test#3'];
         
         //assert
-        List<Step__c> steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
-        Step__c lastStep = steps.get(2);
         String expectedClassName = Publish.class.getName();
-        String actualClassName = lastStep.ApexClassName__c;
+        String actualClassName = step.ApexClassName__c;
         System.assertEquals(expectedClassName, actualClassName);
     }
     
     static testmethod void testMoveStepBefore() {
         //arrange sequence
         Id sequenceId = setupSequence();
-        List<Step__c> steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
-        Step__c wiretapStep = steps.get(0);
-        Step__c terminateStep = steps.get(1);
         
         //act
-        SequenceBuilderExtension.moveStepBefore(terminateStep.Name, wiretapStep.Name);
+        SequenceBuilderExtension.moveStepBefore('Test#2', 'Test#1');
         
         //assemble
-        steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
-        terminateStep = steps.get(0);
-        wiretapStep = steps.get(1);
+        List<Step__c> steps = SequenceModel.fromId(sequenceId).stepSetModel().getRecords();
+        Step__c terminateStep = steps[0];
+        Step__c wiretapStep = steps[1];
+        
+        //assemble
+        terminateStep = [SELECT Id, ApexClassName__c FROM Step__c WHERE Id = :terminateStep.Id];
+        wiretapStep = [SELECT Id, ApexClassName__c FROM Step__c WHERE Id = :wiretapStep.Id];
         
         //assert
         String terminateExpectedClassName = Terminate.class.getName();
@@ -104,17 +107,18 @@
     static testmethod void testMoveStepAfter() {
         //arrange sequence
         Id sequenceId = setupSequence();
-        List<Step__c> steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
-        Step__c wiretapStep = steps.get(0);
-        Step__c terminateStep = steps.get(1);
         
         //act
-        SequenceBuilderExtension.moveStepAfter(wiretapStep.Name, terminateStep.Name);
+        SequenceBuilderExtension.moveStepAfter('Test#1', 'Test#2');
         
         //assemble
-        steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
-        terminateStep = steps.get(0);
-        wiretapStep = steps.get(1);
+        List<Step__c> steps = SequenceModel.fromId(sequenceId).stepSetModel().getRecords();
+        Step__c terminateStep = steps[0];
+        Step__c wiretapStep = steps[1];
+        
+        //assemble
+        terminateStep = [SELECT Id, ApexClassName__c FROM Step__c WHERE Id = :terminateStep.Id];
+        wiretapStep = [SELECT Id, ApexClassName__c FROM Step__c WHERE Id = :wiretapStep.Id];
         
         //assert
         String terminateExpectedClassName = Terminate.class.getName();
@@ -129,18 +133,13 @@
     static testmethod void testDestroyStep() {
         //arrange
         Id sequenceId = setupSequence();
-        List<Step__c> steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
-        Step__c wiretapStep = steps.get(0);
         
         //act
-        SequenceBuilderExtension.destroyStep('SequenceBuilderExtensionTest', wiretapStep.Name);
-        
-        //assemble
-        steps = SequenceModel.fromName('SequenceBuilderExtensionTest').stepSetModel().getRecords();
+        SequenceBuilderExtension.destroyStep(sequenceId, 'Test#1');
         
         //assert
         Integer expectedSize = 1;
-        Integer actualSize = steps.size();
+        Integer actualSize = SequenceModel.fromId(sequenceId).stepSetModel().getRecords().size();
         System.assertEquals(expectedSize, actualSize);
     }
     

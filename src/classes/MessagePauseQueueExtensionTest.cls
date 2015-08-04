@@ -24,7 +24,8 @@
         insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName(), IsPaused__c = isPaused);
         
         //act
-        ApexPages.StandardSetController controller = new ApexPages.StandardSetController([SELECT Id, Name FROM Message__c]);
+        List<Message__c> messages = [SELECT Id FROM Message__c];
+        ApexPages.StandardSetController controller = new ApexPages.StandardSetController(messages);
         MessagePauseQueueExtension messagePauseQueueExtension =  new MessagePauseQueueExtension(controller);
         System.PageReference actualPageReference  = messagePauseQueueExtension.doPause();
         

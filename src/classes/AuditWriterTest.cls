@@ -127,7 +127,7 @@
         List<Map<String,Object>> results = process.execute(event);
         
         //assemble
-        List<AuditEntry__c> auditEntries = ApexDomain.listAll(AuditEntry__c.SObjectType);
+        List<AuditEntry__c> auditEntries = [SELECT Id, AuditGroup__c, Event__c FROM AuditEntry__c];
         
          
         Boolean actualAuditGroup1 = false;

@@ -79,8 +79,11 @@ public with sharing class MonitorController {
         //#761 add null guy for all buffered messages
         process2statistic.put(' ', new Statistic(' ', 0, 0, 0, 0));
         
-        List<Map<String,Object>> processes = ApexClassSetModel.discoverProcesses().toDtos();
+        List<ApexClass> apexClasses = [SELECT Id FROM ApexClass WHERE Name != 'ApexClassModel'];
+        ApexClassSetModel model = new ApexClassSetModel(apexClasses);
+        model.discoverProcesses();
         
+        List<Map<String,Object>> processes = model.toDtos();
         for (Map<String,Object> process : processes) {
             Statistic statistic = new Statistic((String)process.get('ApexClassName'), 0, 0, 0, 0);
             process2statistic.put((String)process.get('ApexClassName'), statistic);

@@ -266,32 +266,37 @@
         HeartbeatImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
         
         
-        // assemble
-        List<Message__c> actualMessages = [SELECT  Id, Event__c FROM Message__c];
-        Integer actualCount  = actualMessages.size();
+        //assemble
+        List<Message__c> messages = [
+            SELECT Id, Event__c
+            FROM Message__c
+        ];
         
-        Set<String> expectedHeartbeatsAsSet =  new Set<String>{
-                  HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 05, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 10, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 15, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 20, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 25, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 30, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 35, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 40, 00, 0)))
-         };
-          
+        //assert
+        Integer expectedSize = 8;
+        Integer actualSize = messages.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong count.');
+        
+        Set<String> expectedHeartbeatsAsSet = new Set<String>{
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 05, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 10, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 15, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 20, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 25, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 30, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 35, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 40, 00, 0)))
+        };
+        
         Boolean actualFlag = true;
-        for (Message__c actualMessage : actualMessages) {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(actualMessage.Event__c);
+        for (Message__c message : messages) {
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             String actualEventStamp = (String)parameters.get('esb__EntryPointDatetime');
             if (!expectedHeartbeatsAsSet.contains(actualEventStamp))
                 actualFlag = false;
         }
 
         // assert
-        Integer expectedCount  = expectedHeartbeatsAsSet.size();
-        System.assertEquals(expectedCount, actualCount);
         Boolean expectedFlag = true;
         System.assertEquals(expectedFlag, actualFlag);
     }
@@ -326,32 +331,37 @@
         heartbeatGeneratorMock.generateHeartbeats();
         
         
-        // assemble
-        List<Message__c> actualMessages = [SELECT  Id, Event__c FROM Message__c];
-        Integer actualCount  = actualMessages.size();
+        //assemble
+        List<Message__c> messages = [
+            SELECT Id, Event__c
+            FROM Message__c
+        ];
+        
+        //assert
+        Integer expectedSize = 8;
+        Integer actualSize = messages.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
         Set<String> expectedHeartbeatsAsSet =  new Set<String>{
-                  HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 05, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 10, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 15, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 20, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 25, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 30, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 35, 00, 0))),
-               HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 40, 00, 0)))
-         };
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 05, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 10, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 15, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 20, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 25, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 30, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 35, 00, 0))),
+            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 40, 00, 0)))
+        };
           
         Boolean actualFlag = true;
-        for (Message__c actualMessage : actualMessages) {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(actualMessage.Event__c);
+        for (Message__c message : messages) {
+            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             String actualEventStamp = (String)parameters.get('esb__EntryPointDatetime');
             if (!expectedHeartbeatsAsSet.contains(actualEventStamp))
                 actualFlag = false;
         }
 
         // assert
-        Integer expectedCount  = expectedHeartbeatsAsSet.size();
-        System.assertEquals(expectedCount, actualCount);
         Boolean expectedFlag = true;
         System.assertEquals(expectedFlag, actualFlag);
     }

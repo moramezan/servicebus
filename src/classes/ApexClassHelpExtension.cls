@@ -5,14 +5,7 @@ public with sharing class ApexClassHelpExtension {
     
     public ApexClassHelpExtension(ApexPages.StandardController controller) {
         this.controller = controller;
-        
-        ApexClass apexClass = [
-            SELECT Id, NamespacePrefix, Name
-            FROM ApexClass
-            WHERE Id = :controller.getId()
-        ];
-        
-        this.model = new ApexClassModel(apexClass);
+        this.model = ApexClassModel.fromId(controller.getId());
     }
     
     public String getTag() {

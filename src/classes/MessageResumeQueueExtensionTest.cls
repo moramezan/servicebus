@@ -1,6 +1,6 @@
 @IsTest private class MessageResumeQueueExtensionTest {
 
-   static testmethod void  callingDoDmlCtorCorrectlyResolvesFromQueuedToBufferedAndCorrectlySetsPause() {
+    static testmethod void  callingDoDmlCtorCorrectlyResolvesFromQueuedToBufferedAndCorrectlySetsPause() {
         // arrange
         Boolean isPaused =  true;
 
@@ -37,31 +37,19 @@
             WHERE Status__c != 'Completed'
         ];
 
-       BrokerSetting__c actualSettings  = BrokerSetting__c.getInstance();
-       Boolean actualIsPaused =  actualSettings.IsPaused__c;
-       
-       actualCount = messages.size();
-       Boolean actualBuffered = true;
-       for (Message__c message : messages) {
-           if (message.Status__c != 'Buffered') {
-               actualBuffered = false;
-           }
-       }
-
-       // assert
-       expectedCount = 0;
-       System.assertEquals(expectedCount, actualCount, 'Wrong count after');
-       Boolean expectedBuffered = true;
-       System.assertEquals( expectedBuffered, actualBuffered);
-       Boolean expectedIsPaused =  false;
-       System.assertEquals( expectedIsPaused, actualIsPaused);
+        BrokerSetting__c actualSettings  = BrokerSetting__c.getInstance();
+        Boolean actualIsPaused =  actualSettings.IsPaused__c;
+        
+        expectedCount = 0;
+        actualCount = messages.size();
+        System.assertEquals(expectedCount, actualCount, 'Wrong count after');
     }
 
     
     
 
         
-   static testmethod void  callingDoResumeOnQueuedMessagesProcessesMessages() {
+    static testmethod void  callingDoResumeOnQueuedMessagesProcessesMessages() {
         // arrange
         Boolean isPaused =  true;
 
@@ -84,14 +72,15 @@
         new Job(sequenceNameA, '000000000000000AAA').execute(null);
 
         //act -
-        ApexPages.StandardSetController controller = new ApexPages.StandardSetController([SELECT Id, Name FROM Message__c]);
+        List<Message__c> messages = [SELECT Id FROM Message__c];
+        ApexPages.StandardSetController controller = new ApexPages.StandardSetController(messages);
         MessageResumeQueueExtension messageResumeQueueExtension =  new MessageResumeQueueExtension(controller);
         System.PageReference actualPageReference  = messageResumeQueueExtension.doResume();
 
-       // assert
-       Integer expectedCount = 2 + 2;
-       Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
-       System.assertEquals( expectedCount, actualCount);
+        // assert
+        Integer expectedCount = 2 + 2;
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
     }
     
 }

@@ -1,26 +1,22 @@
 public class ApexClassSetModel extends ApexDomain.StandardSetModel {
     
     /**
-     * Privatize constructor to force use of factory
+     * Model not allowed to make assumptions about
+     * the fields he is constructed with. Id only.
      */
-    private ApexClassSetModel(List<ApexClass> apexClasses) {
+    public ApexClassSetModel(List<ApexClass> apexClasses) {
         super(apexClasses);
     }
     
-    @TestVisible static List<ApexClass> MockClasses;
-    
     /**
-     * Factory method to locate all ESB processes by
-     * attempting to instantiate ESB summary class
+     * Attempts to instantiate ESB summary classes and
+     * reduces the working record set to valid ones.
      */
-    static public ApexClassSetModel discoverProcesses() {
-        //select out ALL apex classes
-        List<ApexClass> apexClasses = MockClasses != null ? MockClasses : [
+    public void discoverProcesses() {
+        List<ApexClass> apexClasses = [
             SELECT Id, NamespacePrefix, Name
             FROM ApexClass
-            WHERE Name != 'ApexClassModel' //don't discover our ESB summary class template ;)
-            ORDER BY Name ASC
-            LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
+            WHERE Id IN :this.keySet()
         ];
         
         //prepare list of PROCESS apex classes
@@ -40,8 +36,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             if (inflector != null) processes.add(apexClass);
         } catch (Exception e) {}
         
-        //factory
-        return new ApexClassSetModel(processes);
+        this.Records = processes;
     }
     
     /**
