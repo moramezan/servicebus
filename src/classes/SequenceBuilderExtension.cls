@@ -20,6 +20,20 @@ public with sharing class SequenceBuilderExtension {
         this.RoutedMessages = this.model.countRoutedMessages();
     }
     
+    /**
+     * #930 this detects "Configure Not Clicked"
+     * situation and sends user to configure page.
+     */
+    public PageReference doRedirect() {
+        if (OAuthSetting__c.getOrgDefaults().RunningUserId__c == null) {
+            //failure, someone better configure the package
+            return Page.Configure;
+        } else {
+            //success, just display the sequence builder
+            return null;
+        }
+    }
+    
     public String getTerminateApexClassName() {
         return Terminate.class.getName();
     }
