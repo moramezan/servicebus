@@ -33,7 +33,7 @@
     }
     
     /**
-     * test case for Winter '13 Known Issue: 
+     * test case for Winter '13 Known Issue:
      * https://success.salesforce.com/issues_releases_view?release=180008002
      */
     static testMethod void testOnUpgradeSetsCustomSetting() {

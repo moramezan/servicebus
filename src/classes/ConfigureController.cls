@@ -107,7 +107,7 @@ public with sharing class ConfigureController {
      * visualforce callback page, which receives the token off the URL, eg:
      * https://login.salesforce.com/apex/esb__Configure
      * ?code=aPrxHLAg3XMmPXtX1cG.hBCXhs8h5Wli7kDvSxAKd5kEvZ1Fkz3bPK3Jw82iI41iYhs6rk5iIA==
-     * 
+     *
      * Then we perform an out-of-band request with our secret, eg:
      * https://login.salesforce.com/services/oauth2/token
      * ?client_id=3MVG9fMtCkV6eLhfxsgy.rM62VU0VV56FOOkj0Tsgj1CavTLb3N.g2kuagIqfQiJ5hZJgJT0JrZKvsBKk_s1J
@@ -116,7 +116,7 @@ public with sharing class ConfigureController {
      * &format=json
      * &grant_type=authorization_code
      * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2Fesb__Configure
-     * 
+     *
      * The Salesforce OAuth service responds with both and access token and a refresh token like this:
      * {
      * "id":"https://login.salesforce.com/id/00Dj0000000I44vEAC/005j0000000X37nAAC",
@@ -148,7 +148,7 @@ public with sharing class ConfigureController {
      * &client_secret=4608752124209996979
      * &grant_type=refresh_token
      * &refresh_token=5Aep861E3ECfhV22nZpJccJlM3BOtQdGCyk.ptFPOUId8FaxmIl5Fuf1.aLnyFHZo2XLyAobgvmfCqq7qvrRICK
-     * 
+     *
      * The Salesforce OAuth service responds with a new access token like this:
      * {
      * "id":"https://login.salesforce.com/id/00Dj0000000I44vEAC/005j0000000X37nAAC",
