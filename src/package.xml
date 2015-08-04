@@ -21,8 +21,6 @@
         <members>BrokerTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
-        <members>Disperse</members>
-        <members>DisperseTest</members>
         <members>GateByEntryPoint</members>
         <members>GateByEntryPointTest</members>
         <members>GateByJob</members>
@@ -100,9 +98,6 @@
         <members>BranchConfigHelp</members>
         <members>Configure</members>
         <members>ContextSensitiveHelp</members>
-        <members>DisperseConfigHelp</members>
-        <members>DisperseDestinationHelp</members>
-        <members>DisperseDestinationNew</members>
         <members>EventTypeHelp</members>
         <members>GateGroupHelp</members>
         <members>GateItemHelp</members>
@@ -131,8 +126,6 @@
     </types>
     <types>
         <members>BranchConfigTriggers</members>
-        <members>DisperseConfigTriggers</members>
-        <members>DisperseDestinationTriggers</members>
         <members>JumpConfigTriggers</members>
         <members>MessageTriggers</members>
         <members>PublishConfigTriggers</members>
@@ -152,8 +145,6 @@
         <members>BrokerSetting__c.EventStamp__c</members>
         <members>BrokerSetting__c.Inhibit__c</members>
         <members>BrokerSetting__c.IsPaused__c</members>
-        <members>DisperseDestination__c.DisperseConfig__c</members>
-        <members>DisperseDestination__c.Sequence__c</members>
         <members>JumpConfig__c.Sequence__c</members>
         <members>KnifeSwitch__c.Url__c</members>
         <members>Message__c.ApexClassName__c</members>
@@ -194,8 +185,6 @@
     <types>
         <members>BranchConfig__c</members>
         <members>BrokerSetting__c</members>
-        <members>DisperseConfig__c</members>
-        <members>DisperseDestination__c</members>
         <members>EventType__c</members>
         <members>JumpConfig__c</members>
         <members>KnifeSwitch__c</members>
@@ -231,8 +220,6 @@
     </types>
     <types>
         <members>BranchConfig__c-Branch Config Layout</members>
-        <members>DisperseConfig__c-Disperse Config Layout</members>
-        <members>DisperseDestination__c-Destination Layout</members>
         <members>EventType__c-Event Type Layout</members>
         <members>JumpConfig__c-Jump Config Layout</members>
         <members>Message__c-Message Layout</members>
