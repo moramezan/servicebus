@@ -11,7 +11,7 @@ public with sharing class Jump extends ApexClassModel.BaseProcess {
         public String Description = 'Permanently diverts the message to another sequence, never to return.';
         public String StepConfig = JumpConfig__c.class.getName();
         public String Icon = 'arrow_switch';
-        public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessBranchJumpSubsequence').getUrl();
+        public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessBranchJumpSubsequence').getUrl();
         public Integer Limits = 100; //leave half of 200 (Total number of SOQL queries issued)
         public String Cardinality = 'Zero';
     }

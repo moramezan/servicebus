@@ -331,7 +331,7 @@ public with sharing class ConfigureController {
             if (!Test.isRunningTest()) HeartbeatImplementation.defer();
             
             //5. finally send them to the context sensitive help page
-            return new System.PageReference('/apex/Csh?topic=EnterpriseServiceBus');
+            return new System.PageReference('/apex/ContextSensitiveHelp?topic=EnterpriseServiceBus');
         }
         
         //this should never happen

@@ -97,17 +97,17 @@
     <types>
         <members>ApexClassHelp</members>
         <members>ApexClassSetting</members>
-        <members>BranchConfigCsh</members>
+        <members>BranchConfigHelp</members>
         <members>Configure</members>
-        <members>Csh</members>
-        <members>DisperseConfigCsh</members>
-        <members>DisperseDestinationCsh</members>
+        <members>ContextSensitiveHelp</members>
+        <members>DisperseConfigHelp</members>
+        <members>DisperseDestinationHelp</members>
         <members>DisperseDestinationNew</members>
-        <members>EventTypeCsh</members>
-        <members>GateGroupCsh</members>
-        <members>GateItemCsh</members>
-        <members>JumpConfigCsh</members>
-        <members>MessageCsh</members>
+        <members>EventTypeHelp</members>
+        <members>GateGroupHelp</members>
+        <members>GateItemHelp</members>
+        <members>JumpConfigHelp</members>
+        <members>MessageHelp</members>
         <members>MessageData</members>
         <members>MessageKill</members>
         <members>MessagePauseQueue</members>
@@ -118,15 +118,15 @@
         <members>Monitor</members>
         <members>MonitorSplash</members>
         <members>PostInstallInstructions</members>
-        <members>PublishConfigCsh</members>
+        <members>PublishConfigHelp</members>
         <members>PublishConfigManageEventTypes</members>
-        <members>ScheduleConfigCsh</members>
+        <members>ScheduleConfigHelp</members>
         <members>SequenceBuilder</members>
-        <members>SequenceCsh</members>
+        <members>SequenceHelp</members>
         <members>SequenceSplash</members>
-        <members>SubscribeConfigCsh</members>
+        <members>SubscribeConfigHelp</members>
         <members>SubscribeConfigManageEventTypes</members>
-        <members>SubsequenceConfigCsh</members>
+        <members>SubsequenceConfigHelp</members>
         <name>ApexPage</name>
     </types>
     <types>
@@ -252,7 +252,7 @@
         <name>PermissionSet</name>
     </types>
     <types>
-        <members>CshZip</members>
+        <members>ContextSensitiveHelpZip</members>
         <members>SequenceBuilderZip</members>
         <name>StaticResource</name>
     </types>

@@ -2,7 +2,7 @@
     
     <apex:pageMessages showDetail="false" />
     
-    <apex:sectionHeader help="{!URLFOR($Page.SequenceCsh)}" title="{!$ObjectType.Sequence__c.Label}" subtitle="{!Sequence__c.Name}" />
+    <apex:sectionHeader help="{!URLFOR($Page.SequenceHelp)}" title="{!$ObjectType.Sequence__c.Label}" subtitle="{!Sequence__c.Name}" />
     
     <apex:pageBlock id="pageBlockId" title="{!$ObjectType.Step__c.LabelPlural}">
         <apex:pageBlockButtons location="top" id="pageBlockButtonsId">

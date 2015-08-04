@@ -8,7 +8,7 @@ public with sharing class Terminate extends ApexClassModel.BaseProcess {
         public String Name = 'Terminate';
         public String Description = 'Swallows messages at the end of this sequence.';
         public String Icon = 'stop';
-        public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessTerminate').getUrl();
+        public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessTerminate').getUrl();
         public Integer Limits = 100; //leave half of 200 (Total number of SOQL queries issued)
         public String Cardinality = 'Zero';
     }

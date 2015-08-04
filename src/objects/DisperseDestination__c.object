@@ -48,7 +48,7 @@
     </actionOverrides>
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
-    <customHelpPage>DisperseDestinationCsh</customHelpPage>
+    <customHelpPage>DisperseDestinationHelp</customHelpPage>
     <deploymentStatus>Deployed</deploymentStatus>
     <enableActivities>false</enableActivities>
     <enableBulkApi>false</enableBulkApi>

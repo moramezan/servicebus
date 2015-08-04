@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* http://meyerweb.com/eric/tools/css/reset/ 
+        v2.0 | 20110126
+        License: none (public domain)
+        */
+        html, body, div, span, applet, object, iframe,
+        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+        a, abbr, acronym, address, big, cite, code,
+        del, dfn, em, img, ins, kbd, q, s, samp,
+        small, strike, strong, sub, sup, tt, var,
+        b, u, i, center,
+        dl, dt, dd, ol, ul, li,
+        fieldset, form, label, legend,
+        table, caption, tbody, tfoot, thead, tr, th, td,
+        article, aside, canvas, details, embed, 
+        figure, figcaption, footer, header, hgroup, 
+        menu, nav, output, ruby, section, summary,
+        time, mark, audio, video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+        
+        /* HTML5 display-role reset for older browsers */
+        article, aside, details, figcaption, figure, 
+        footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+        
+        body {
+            line-height: 1;
+        }
+        
+        ol, ul {
+            list-style: none;
+        }
+        
+        blockquote, q {
+            quotes: none;
+        }
+        
+        blockquote:before, blockquote:after,
+        q:before, q:after {
+            content: '';
+            content: none;
+        }
+        
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        
+        /**
+         * Standard elements
+         */
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            font-size: 16px;
+        }
+        
+        p, h1, h2, h3, h4, h5, h6, fieldset, table, ul, ol, dl, pre {
+            margin-bottom: 1em;
+        }
+        
+        strong {
+            font-weight: bold;
+        }
+        
+        em {
+            font-style: italic;
+        }
+        
+        /**
+         * Layout
+         */
+        div#header {
+            height: 38px;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        div#header > a.title {
+            width: 300px;
+            display: inline-block;
+            text-align: center;
+            line-height: 38px;
+            font-family: Arial;
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+        }
+        
+        div#header > a.logo {
+            float: right;
+            display: block;
+            width: 38px;
+            height: 38px;
+            background-image: url('resources/esb-help.png');
+            background-position: right;
+            background-repeat: no-repeat;
+            text-decoration: none;
+        }
+
+        div#content {
+            overflow: auto;
+            position: absolute;
+            /*top: 39px;*/
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 303px;
+
+            box-shadow: 0 2px 0 2px #ccc;
+            border-left: 1px solid #666;
+            padding: 10px;
+            font-size: 12px;
+            
+            line-height: 1.2;
+        }
+        
+        div#sidebar {
+            overflow: auto;
+            
+            position: absolute;
+            /*top: 39px;*/
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 300px;
+
+            border-right: 1px solid #999;
+            border-top: 1px solid #666;
+            box-shadow: inset 0px 6px 10px -5px rgba(128, 128, 128, 128);
+            
+            font-size: 13px;
+            line-height: 1.2;
+        }
+        
+        div#sidebar > dl {
+            padding: 10px;
+            border-top: 1px solid #fff;
+        }
+        
+        div#sidebar > dl > dt > a {
+            background-image: url('resources/book_open.gif');
+            background-position: 2px center;
+            background-repeat: no-repeat;
+            margin-top: 2px;
+            padding-left: 17px;
+        }
+        
+        div#sidebar > dl > dd > a {
+            background-image: url('resources/file.gif');
+            background-position: 2px center;
+            background-repeat: no-repeat;
+            margin-left: 15px;
+            padding-left: 15px;
+        }
+        
+        div#sidebar > dl > dt > a,
+        div#sidebar > dl > dd > a {
+            color: #000;
+            text-decoration: none;
+            padding-right: 2px;
+        }
+        
+        
+        div#sidebar > dl > dt > a:hover,
+        div#sidebar > dl > dd > a:hover {
+            color: #f00;
+        }
+        
+        div#sidebar > dl > dt > a:focus,
+        div#sidebar > dl > dd > a:focus {
+            background-color: #ccc;
+        }
+        
+        /**
+         * Typography
+         */
+        div#content h1 {
+            display: block;
+            padding: 10px;
+            background-color: #737E96;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        div#content h2 {
+            color: #51638A;
+            border-top: 1px solid #51638A;
+            border-bottom: 1px solid #51638A;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 4px 0;
+        }
+        
+        div#content h3 {
+            color: #51638A;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        div#content fieldset {
+            border: 1px solid #8E9CBD;
+            padding: 5px 10px 10px 10px;
+        }
+
+        div#content fieldset > legend {
+            color: #333;
+            padding: 0 2px;
+            font-weight: bold;
+        }
+        
+        div#content > table {
+            width: 100%;
+            background-color: #eee;
+        }
+        
+        div#content > table > tbody > tr > th {
+            background-color: #737E96;
+            font-weight: bold;
+            color: #fff;
+            padding: 2px 4px;
+            text-align: left;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        
+        div#content > table > tbody > tr > td {
+            padding: 4px;
+            border-bottom: 1px solid #E3DEB8;
+        }
+        
+        div#content ul > li {
+            list-style: square outside;
+            margin-left: 20px;
+        }
+        
+        div#content ol > li {
+            list-style: decimal outside;
+            margin-left: 20px;
+        }
+        
+        div#content ul > li,
+        div#content ol > li {
+            margin-bottom: 1em;
+        }
+        
+        div#content dl {
+            
+        }
+        
+        div#content dl > dt {
+            margin-top: 1em;
+            font-weight: bold;
+            font-style: italic;
+        }
+        
+        div#content dl > dd {
+            margin-left: 12px;
+        }
+        
+        div#content pre {
+            font-family: 'Courier New', monospace;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            padding: 2px;
+        }
+        
+        div#content code {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+        
+        div#content a {
+            color: #00f;
+        }
+        
+        div#content a:hover {
+            color: #369;
+        }
+        
+        /**
+         * Syntax Highlighter
+         */
+        div.syntaxhighlighter {
+            background-color: #f00 !important;
+            border: 1px solid #ccc;
+            font-size: 14px !important;
+            padding: 2px;
+        }
+        
+        div.syntaxhighlighter,
+        div.syntaxhighlighter .line.alt1,
+        div.syntaxhighlighter .line.alt2,
+        div.syntaxhighlighter .line.highlighted.alt1, .syntaxhighlighter .line.highlighted.alt2 {
+            background-color: #eee !important;
+        }
+        
+        div.syntaxhighlighter .gutter .line {
+            border-right: 3px solid #ccc !important;
+        }
+        
+        div.syntaxhighlighter .keyword {
+            font-weight: normal !important;
+        }
+
+    </style>
+    <script type="text/javascript" src="resources/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+    <script type="text/javascript" src="resources/syntaxhighlighter_3.0.83/scripts/shBrushJavaFX.js"></script>
+    <link rel="stylesheet" type="text/css" href="resources/sh.css" />
+</head>
+<body>
+    <!--<div id="header">-->
+        <!--<a class="title" href="#">Contents</a>-->
+        <!--<a class="logo" target="_blank" href="http://bigass.force.com/">&nbsp;</a>-->
+    <!--</div>-->
+    <div id="sidebar">
+        <script>
+        (function importTopics() {
+            var binding = new XMLHttpRequest();
+            //to get the file: insert the topics listing
+            var topic = new Array().concat(window.location.search.match(/topic=([^&]+)/))[1] || 'EnterpriseServiceBus';
+            binding.open('GET', window.location.pathname + '/../Topics.html');
+            binding.onreadystatechange = function(event) {
+                if(this.readyState == 4) {
+                    //write help to page
+                    document.getElementById('sidebar').innerHTML = binding.responseText;
+                    
+                    //highlight currently selected topic
+                    var rule = 'a[href="/apex/ContextSensitiveHelp?topic=' + topic + '"] {background-color: #ccc;}';
+                    var style = document.createElement('style');
+                    style.appendChild(document.createTextNode(rule));
+                    document.head.appendChild(style);
+                }
+            };
+            binding.send();
+        }());
+        </script>
+    </div>
+    <div id="content">
+        <script>
+            (function importContent() {
+                var sidebar = new Array().concat(window.location.search.match(/sidebar=([^&]+)/))[1] || 'true';
+                if (sidebar == 'false') {
+                    //hide the contents if sidebar=false in url parameters
+                    //document.getElementById('header').style.display = 'none';
+                    document.getElementById('sidebar').style.display = 'none';
+                    document.getElementById('content').style.top = '0';
+                    document.getElementById('content').style.left = '0';
+                    document.getElementById('content').style.borderLeft = 'none';
+                }
+            
+                var binding = new XMLHttpRequest();
+                //to get the file: drop the query string to get 'Topic.html' plus '/../' plus 'ApiProcessMarkers' dot html
+                var topic = new Array().concat(window.location.search.match(/topic=([^&]+)/))[1] || 'EnterpriseServiceBus';
+                binding.open('GET', window.location.pathname + '/../' + topic + '.html');
+                binding.onreadystatechange = function(event) {
+                    if(this.readyState == 4) {
+                        //write help to page
+                        var content = document.getElementById('content');
+                        content.innerHTML = binding.responseText;
+                        
+                        //automatically mark all pre tags as java
+                        var pres = content.getElementsByTagName('pre');
+                        for (var i = 0; i < pres.length; i++) {
+                            //run script inside div
+                            pres[i].className = 'brush:javafx';
+                        }
+                        
+                        //syntax highlight any code samples
+                        //http://stackoverflow.com/a/6485198/1606872
+                        SyntaxHighlighter.highlight();
+                    }
+                };
+                binding.send();
+            }());
+        </script>
+    </div>
+</body>
+</html>

@@ -11,7 +11,7 @@ public with sharing class Subsequence extends ApexClassModel.BaseProcess {
         public String Description = 'Temporarily diverts the message to another sequence, then returns it to the next step afterwards.';
         public String StepConfig = SubsequenceConfig__c.class.getName();
         public String Icon = 'arrow_undo';
-        public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessBranchJumpSubsequence').getUrl();
+        public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessBranchJumpSubsequence').getUrl();
         public Integer Limits = 50; //leave half of 200 (Total number of SOQL queries issued)
         public String Cardinality = 'One';
     }

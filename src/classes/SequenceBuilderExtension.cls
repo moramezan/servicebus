@@ -136,7 +136,7 @@ public with sharing class SequenceBuilderExtension {
             return null;
         } else {
             //redirect to help
-            return new PageReference('/apex/Csh?topic=ProcessTerminate');
+            return new PageReference('/apex/ContextSensitiveHelp?topic=ProcessTerminate');
         }
         } catch (Exception e) {
             ApexPages.addMessages(e);
@@ -211,7 +211,7 @@ public with sharing class SequenceBuilderExtension {
             return null;
         } else {
             //redirect to help
-            return new PageReference('/apex/Csh?topic=ProcessPublishSubscribe');
+            return new PageReference('/apex/ContextSensitiveHelp?topic=ProcessPublishSubscribe');
         }
         } catch (Exception e) {
             ApexPages.addMessages(e);
@@ -303,7 +303,7 @@ public with sharing class SequenceBuilderExtension {
             return null;
         } else {
             //redirect to help
-            return new PageReference('/apex/Csh?topic=ProcessPublishSubscribe');
+            return new PageReference('/apex/ContextSensitiveHelp?topic=ProcessPublishSubscribe');
         }
         } catch (Exception e) {
             ApexPages.addMessages(e);

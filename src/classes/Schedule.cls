@@ -8,7 +8,7 @@ public with sharing class Schedule extends ApexClassModel.BaseProcess {
         public String Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages
         public String Icon = 'clock';
         public String StepConfig = ScheduleConfig__c.class.getName();
-        public String HelpUrl = Page.ScheduleConfigCsh.getUrl();
+        public String HelpUrl = Page.ScheduleConfigHelp.getUrl();
         public Boolean ConsumesHeartbeat = true;
         public Integer Limits = 5000; //leave half of 10,000 (Total number of records retrieved by Database.getQueryLocator)
         public Map<String,String> Inputs = new Map<String,String>{

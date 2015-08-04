@@ -1,0 +1,82 @@
+<h1>
+    Introducing Processes
+</h1>
+
+<p>
+    A Process is a single, logical program with inputs and outputs in the form of Messages. Logic
+    that splits data, combines data or alters data should be encapsulated in distinct processes.
+    When a process receives and acts on a message, it may output multiple new messages that go to
+    subsequent processes.
+</p>
+
+<p>
+    <img src="resources/Splashes/processArtifacts.png" />
+</p>
+
+<p>
+    Processes are implemented as Apex classes. The Enterprise Service Bus framework ("ESB") contains
+    by default a number of ready-made processes, including:
+</p>
+
+<ul>
+    <li>Schedule</li>
+    <li>Publish and Subscribe</li>
+    <li>Branch, Jump and Subsequence</li>
+    <li>Audit and Wiretap</li>
+    <li>Mark and Gate</li>
+</ul>
+
+<p>
+    See the tutorial: <a href="?topic=TutorialProcessDiscovery">How to discover ESB Processes</a>.
+</p>
+
+<h3>
+    List View Buttons
+</h3>
+
+<p>
+    <strong>Discover Processes</strong> can be used to find new Processes. Click this button after
+    authoring or installing Processes to make them available.
+</p>
+
+<h3>
+    Detail Page Buttons
+</h3>
+
+<p>
+    <strong>View Apex Class</strong> will show you the Apex Class that contains the underlying logic
+    for any given Process.
+</p>
+
+<p>
+    <strong>View Settings</strong> takes you to the available Settings for a Process. (Note: Not all
+    process have Settings)
+</p>
+
+<p>
+    <strong>View Documentation</strong> shows the supporting documentation provided by the author of
+    a given Process.
+</p>
+
+<h3>
+    Discovering Processes
+</h3>
+
+<p>
+    Before a process written in Apex can be referenced as a step in a sequence, it must first be
+    discovered and registered in the Enterprise Service Bus framework.
+</p>
+
+<p>
+    This discovery job will be launched automatically when installing the package or trying to build
+    a sequence for the first time.
+</p>
+
+<p>
+    There is also a mechanism for discovering processes manually and is initiated by clicking the
+    [Discover] button from the Processes list view.
+</p>
+
+<p>
+    Learn more about <a href="?topic=TutorialProcessDiscovery">Process Discovery</a> within the ESB framework.
+</p>

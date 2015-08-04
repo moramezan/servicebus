@@ -1,3 +1,0 @@
-<apex:page action="{!URLFOR($Page.Csh, null, ['topic'='ProcessBranchJumpSubsequence'])}">
-    <apex:pageMessages showDetail="false" />
-</apex:page>

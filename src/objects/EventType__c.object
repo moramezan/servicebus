@@ -46,7 +46,7 @@
     </actionOverrides>
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
-    <customHelpPage>EventTypeCsh</customHelpPage>
+    <customHelpPage>EventTypeHelp</customHelpPage>
     <deploymentStatus>Deployed</deploymentStatus>
     <enableActivities>false</enableActivities>
     <enableBulkApi>false</enableBulkApi>

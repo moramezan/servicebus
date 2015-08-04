@@ -168,7 +168,7 @@
         System.PageReference redirect = controller.doRedirect();
         
         //assert
-        String expectedUrl = new System.PageReference('/apex/Csh?topic=EnterpriseServiceBus').getUrl();
+        String expectedUrl = new System.PageReference('/apex/ContextSensitiveHelp?topic=EnterpriseServiceBus').getUrl();
         String actualUrl = redirect.getUrl();
         System.assertEquals(expectedUrl, actualUrl, 'Wrong URL.');
         

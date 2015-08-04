@@ -10,7 +10,7 @@ global with sharing class GateByJob extends ApexClassModel.BaseProcess {
         public String Name = 'Gate By Job';
         public String Description = 'Aggregates a collection of messages having the same Job Id.';
         public String Icon = 'arrow_join';
-        public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessGateByJob').getUrl();
+        public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessGateByJob').getUrl();
         public Integer Limits = 18;
         public String Cardinality = 'Fewer';
         

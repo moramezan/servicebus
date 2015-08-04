@@ -1,0 +1,7 @@
+<apex:page sidebar="false" showHeader="{!$CurrentPage.parameters.header}">
+    <style>
+        table#bodyTable {padding: 0;}
+        table#bodyTable td.noSidebarCell {padding: 0;}
+    </style>
+    <apex:iframe src="{!URLFOR($Resource.ContextSensitiveHelpZip, '/Help.html?topic=' + $CurrentPage.parameters.topic + '&sidebar=' + $CurrentPage.parameters.sidebar)}" />
+</apex:page>

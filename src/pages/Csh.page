@@ -1,3 +1,0 @@
-<apex:page action="{!URLFOR($Resource.CshZip, '/Help.html?topic=' + $CurrentPage.parameters.topic + '&sidebar=' + $CurrentPage.parameters.sidebar)}">
-    <apex:pageMessages showDetail="false" />
-</apex:page>

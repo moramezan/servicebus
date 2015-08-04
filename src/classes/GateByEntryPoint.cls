@@ -10,7 +10,7 @@ public with sharing class GateByEntryPoint extends ApexClassModel.BaseProcess {
         public String Name = 'Gate By Entry Point';
         public String Description = 'Aggregates a collection of messages having the same Entry Point Id.';
         public String Icon = 'arrow_join';
-        public String HelpUrl = new PageReference('/apex/Csh?topic=ProcessGateByEntryPoint').getUrl();
+        public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessGateByEntryPoint').getUrl();
         public Integer Limits = 18;
         public String Cardinality = 'Fewer';
 
