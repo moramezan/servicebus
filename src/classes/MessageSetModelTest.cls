@@ -175,7 +175,7 @@
     static testmethod void testKillComplainsAboutUnkillableMessages() {
         //arrange messages
         Message__c message = new Message__c(
-            Status__c = 'Queued',
+            Status__c = 'Paused',
             Event__c = '{}'
         );
         insert message;

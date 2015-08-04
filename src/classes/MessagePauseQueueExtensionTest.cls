@@ -18,7 +18,7 @@
     }
     
     
-   static testmethod void  callingDoPauseOnQueuedMessagesProcessesMessages() {
+   static testmethod void  callingDoPauseOnPausedMessagesPausesQueue() {
         // arrange
         Boolean isPaused =  false;
         insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName(), IsPaused__c = isPaused);

@@ -160,7 +160,7 @@ global with sharing class GateByJob extends ApexClassModel.BaseProcess {
         List<Message__c> messages = [
             SELECT Id, Status__c, Exception__c
             FROM Message__c
-            WHERE (Status__c = 'Buffered' OR Status__c = 'Queued' OR  Status__c = 'Started')
+            WHERE (Status__c = 'Buffered' OR Status__c = 'Paused' OR  Status__c = 'Started')
             AND
             QueueableId__c = :queueableId
         ];

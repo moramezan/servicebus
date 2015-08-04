@@ -165,7 +165,7 @@
         <label>Status</label>
         <picklist>
             <picklistValues>
-                <fullName>Queued</fullName>
+                <fullName>Paused</fullName>
                 <default>false</default>
             </picklistValues>
             <picklistValues>

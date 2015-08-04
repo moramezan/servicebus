@@ -644,7 +644,7 @@
         System.assertEquals(expectedSize, actualSize);
     }
     
-    static testmethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusQueued() {
+    static testmethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusPaused() {
         // arrange
         Boolean isPaused =  true;
 
@@ -679,7 +679,7 @@
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
         //assert
-        String expectedStatus = 'Queued';
+        String expectedStatus = 'Paused';
         String actualStatus = messages[0].Status__c;
         System.assertEquals(expectedStatus, actualStatus, 'Wrong status.');
     }

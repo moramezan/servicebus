@@ -503,7 +503,7 @@ abstract public with sharing class Broker {
         try {
             for (Message__c message : inputAndOutputMessages) {
                 //we COULD have designated all output messages as Buffered
-                //but it varies if the Broker is paused (they'd be Queued)
+                //but it varies if the Broker is paused (they'd be Paused)
             }
             
             //transact both inputs and outputs in one fell swoop

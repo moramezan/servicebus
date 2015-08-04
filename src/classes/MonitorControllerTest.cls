@@ -8,7 +8,7 @@
         Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
-        insert new Message__c(ApexClassName__c = Wiretap.class.getName(), Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Queued');
+        insert new Message__c(ApexClassName__c = Wiretap.class.getName(), Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Paused');
         insert new Message__c(ApexClassName__c = Terminate.class.getName(), Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Buffered');
         
         //act

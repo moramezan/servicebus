@@ -293,19 +293,19 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         setting.IsPaused__c = false;
         upsert setting;
         
-        //get all the queued guys
+        //get all the paused guys
         List<Message__c> messages = [
             SELECT Id
             FROM Message__c
-            WHERE Status__c = 'Queued'
+            WHERE Status__c = 'Paused'
             LIMIT :Limits.getLimitDmlRows() //if more than 10,000 you could click Resume multiple times
         ];
         
-        //Why do we have an extra status Queued?
+        //Why do we have an extra status Paused?
         //So that they can be excluded from the RESOLVE / MARK cycle at a very early stage.
         //We want to be able to reintroduce messages on a one-by-one basis without turning on the tap.
         
-        //advance them from Queued to Buffered
+        //advance them from Paused to Buffered
         for (Message__c message : messages) message.Status__c = 'Buffered';
         update messages;
         

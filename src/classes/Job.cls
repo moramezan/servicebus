@@ -190,7 +190,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
             
             this.messages.add(new Message__c(
                 Event__c = Json.serializePretty(inputEvent),
-                Status__c = BrokerSetting__c.getOrgDefaults().IsPaused__c ? 'Queued' : 'Buffered'
+                Status__c = BrokerSetting__c.getOrgDefaults().IsPaused__c ? 'Paused' : 'Buffered'
             ));
         }
     }

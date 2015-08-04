@@ -39,16 +39,16 @@ public with sharing class MonitorController {
     }
     
     public class Statistic {
-        public Statistic(String apexClassName, Integer queued, Integer buffered, Integer started, Integer exceptions) {
+        public Statistic(String apexClassName, Integer paused, Integer buffered, Integer started, Integer exceptions) {
             this.ApexClassName = apexClassName;
-            this.Queued = queued;
+            this.Paused = paused;
             this.Buffered = buffered;
             this.Started = started;
             this.Exceptions = exceptions;
         }
         
         public String ApexClassName {get; set;}
-        public Integer Queued {get; set;}
+        public Integer Paused {get; set;}
         public Integer Buffered {get; set;}
         public Integer Started {get; set;}
         public Integer Exceptions {get; set;}
@@ -90,18 +90,18 @@ public with sharing class MonitorController {
         }
         
         //check for null so we don't blow up for unresolved messages
-        //TODO is there any point even displaying queued messages?!?!
+        //TODO is there any point even displaying paused messages?!?!
         //first aggregate by route
         for (AggregateResult result : [
             SELECT ApexClassName__c apexClassName, COUNT(Status__c) total
             FROM Message__c
             WHERE Step__c != null
-            AND Status__c = 'Queued'
+            AND Status__c = 'Paused'
             GROUP BY ApexClassName__c
         ]) {
             Statistic statistic = process2statistic.get((String)result.get('apexClassName')); //#761
             if (statistic == null) statistic = process2statistic.get(' ');
-            statistic.Queued += (Integer)result.get('total');
+            statistic.Paused += (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
