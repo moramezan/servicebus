@@ -1,0 +1,17 @@
+<apex:page showHeader="false">
+
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection columns="1" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <p>
+                    1. <a target="_blank" href="/app/mgmt/forceconnectedapps/forceInstalledConnectedAppList.apexp">Click here to open Setup > Connected Apps</a>
+                    <br /><br />
+                    2. Edit Enterprise Service Bus, choose <strong>Relax IP restrictions</strong>, then Save
+                    <br /><br />
+                    3. Now you will need to <a target="_top" href="/apex/esb__Configure">restart the package configuration process</a>
+                </p>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+
+</apex:page>

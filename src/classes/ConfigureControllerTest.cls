@@ -193,7 +193,7 @@
         System.PageReference redirect = controller.doRedirect();
         
         //assert
-        String expectedUrl = new System.PageReference('/packaging/installPackage.apexp?p0=04tj0000001YJZy').getUrl();
+        String expectedUrl = new System.PageReference('/packaging/installPackage.apexp?p0=04tj0000001Z2IU').getUrl();
         String actualUrl = redirect.getUrl();
         System.assertEquals(expectedUrl, actualUrl, 'Wrong URL.');
     }
