@@ -114,11 +114,25 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     /**
      * Converts "their" ESB summary class into "our" ESB summary class
      */
-    static public ApexClassModel.ESB esbFromEsb(Type inflector) {
+    static public ApexClassModel.ESB esbFromEsb(Type reflector) {
+        Type inflector;
+        if (inflector == null) inflector = Type.forName(reflector.getName() + '.ESB');
+        if (inflector == null) inflector = Type.forName(reflector.getName() + 'ESB');
+        if (inflector == null) throw new ProcessException('Process inflector exception ' + reflector);
+        
         Object theirEsb;
         ApexClassModel.ESB ourEsb;
         theirEsb = inflector.newInstance();
         ourEsb = (ApexClassModel.ESB)Json.deserialize(Json.serialize(theirEsb), ApexClassModel.ESB.class);
+        
+        //sensible defaults
+        if (ourEsb.Description == null) ourEsb.Description = 'Undescribed';
+        if (ourEsb.Tag == null) ourEsb.Tag = 'Untagged';
+        if (ourEsb.Name == null) ourEsb.Name = reflector.getName();
+        if (ourEsb.Icon == null) ourEsb.Icon = 'cog';
+        if (ourEsb.Cardinality == null) ourEsb.Cardinality = 'Any';
+        if (ourEsb.Limits == null) ourEsb.Limits = 1;
+        
         return ourEsb;
     }
     
@@ -141,15 +155,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         if (inflector == null) inflector = Type.forName(reflector.getName() + 'ESB');
         if (inflector == null) throw new ProcessException('Process discovery exception ' + reflector);
         
-        this.esb = esbFromEsb(inflector);
-        
-        //sensible defaults
-        if (this.esb.Description == null) this.esb.Description = 'Undescribed';
-        if (this.esb.Tag == null) this.esb.Tag = 'Untagged';
-        if (this.esb.Name == null) this.esb.Name = reflector.getName();
-        if (this.esb.Icon == null) this.esb.Icon = 'cog';
-        if (this.esb.Cardinality == null) this.esb.Cardinality = 'Any';
-        if (this.esb.Limits == null) this.esb.Limits = 1;
+        this.esb = esbFromEsb(reflector);
     }
     
     /**

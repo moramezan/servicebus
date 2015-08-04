@@ -77,7 +77,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             Type inflector = Type.forName(reflector.getName() + '.ESB');
             if (inflector == null) continue;
             
-            ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(inflector);
+            ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(reflector);
             
             Map<String,Object> dto = new Map<String,Object>{
                 'ApexClassName' => reflector.getName(), //TODO per #886 get rid of this!!!
@@ -89,18 +89,6 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
                 'Cardinality' => esb.Cardinality,
                 'ProcessSetting' => esb.ProcessSetting
             };
-            
-            //attempt to populate the description of the process
-            if (esb.Description == null) dto.put('Description', 'Undescribed');
-            
-            //attempt to populate the tag of the process (with sensible default)
-            if (esb.Tag == null) dto.put('Tag', 'Untagged');
-            
-            //attempt to populate the css class name of the process icon (with sensible default)
-            if (esb.Icon == null) dto.put('Icon', 'cog');
-            
-            //attempt to populate the cardinality of the process
-            if (esb.Cardinality == null) dto.put('Cardinality', 'Any');
             
             dtos.add(dto);
         } catch (Exception e) {}
