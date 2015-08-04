@@ -574,11 +574,11 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>MessageHelp</apexPage>
+        <apexPage>MessageData</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>MessageData</apexPage>
+        <apexPage>MessageHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
