@@ -230,7 +230,7 @@
             <types><members>*</members><name>ExternalDataSource</name></types>
             <!--<types><members>*</members><name>Role</name></types>--><!-- Your attempt to delete the role CEO could not be completed because users are currently assigned to that role or at least one role reports to that role.: -->
             <!--<types><members>*</members><name>Group</name></types>--><!-- These guys seem to stick around in the package GUI with an underscore name -->
-            <types><members>*</members><name>UiPlugin</name></types>
+            <!--<types><members>*</members><name>UiPlugin</name></types>--><!-- UiPlugin cannot be a component in a managed or unmanaged package. Remove UiPlugin from package.xml to deploy unpackaged components. -->
             <types><members>*</members><name>BusinessProcess</name></types>
             <types><members>*</members><name>CompactLayout</name></types>
             <types><members>*</members><name>RecordType</name></types>
@@ -405,15 +405,11 @@
         <!-- leave Standard Layouts intact -->
         <delete file="purge/layouts/Idea-Idea Layout.layout" />
         <delete file="purge/layouts/CampaignMember-Campaign Member Page Layout.layout" />
-        <delete file="purge/layouts/OrderItem-Order Product Layout.layout" />
         <delete file="purge/layouts/Solution-Solution Layout.layout" />
         <delete file="purge/layouts/Campaign-Campaign Layout.layout" />
-        <delete file="purge/layouts/WorkGoal-Goal Layout.layout" />
         <delete file="purge/layouts/WorkFeedbackRequest-Feedback Request Layout.layout" />
         <delete file="purge/layouts/Pricebook2-Price Book Layout.layout" />
-        <delete file="purge/layouts/WorkGoalLink-Goal Link Layout.layout" />
         <delete file="purge/layouts/Event-Event Layout.layout" />
-        <delete file="purge/layouts/WorkGoalCollaborator-Goal Collaborator Layout.layout" />
         <delete file="purge/layouts/OpportunityLineItem-Opportunity Product Layout.layout" />
         <delete file="purge/layouts/DandBCompany-D%26B Company Layout.layout" />
         <delete file="purge/layouts/Global-Global Layout.layout" />
@@ -422,7 +418,6 @@
         <delete file="purge/layouts/Contact-Contact Layout.layout" />
         <delete file="purge/layouts/Product2-Product Layout.layout" />
         <delete file="purge/layouts/Lead-Lead Layout.layout" />
-        <delete file="purge/layouts/Order-Order Layout.layout" />
         <delete file="purge/layouts/Account-Account Layout.layout" />
         <delete file="purge/layouts/WorkFeedbackQuestionSet-Feedback Question Set Layout.layout" />
         <delete file="purge/layouts/Opportunity-Opportunity Layout.layout" />
@@ -437,7 +432,12 @@
         <delete file="purge/layouts/DuplicateRecordSet-Duplicate Record Set Layout.layout" />
         <delete file="purge/layouts/ContentVersion-General.layout" />
         <delete file="purge/layouts/WorkFeedbackTemplate-Feedback Template Layout.layout" />
-        
+        <delete file="purge/layouts/Goal-Goal Layout.layout" />
+        <delete file="purge/layouts/GoalLink-Goal Link Layout.layout" />
+        <delete file="purge/layouts/SOSSession-SOS Session Layout.layout" />
+        <delete file="purge/layouts/Metric-Metric Layout.layout" />
+        <delete file="purge/layouts/MetricDataLink-Metric Data Link Layout.layout" />
+
         <!-- name the wildcard package definition -->
         <replace file="purge/package.xml">
             <replacetoken><![CDATA[</version>]]></replacetoken>
