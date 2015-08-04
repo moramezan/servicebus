@@ -85,6 +85,7 @@
         <antcall target="optimize-for-devorg" />
         <subant failonerror="false" target="subdeploy" buildpath="." />
         <executeAnonymous username="${de.username}" password="${de.password}" serverurl="${de.serverurl}">
+            new PostInstallHandler().onInstall(null);
             ConfigureController.reinstallSchedule();
             ConfigureController.createWiretapSettings(UserInfo.getUserId());
             ConfigureController.assignPermissionSet(UserInfo.getUserId());
@@ -113,6 +114,7 @@
             deployRoot="src"
         />
         <executeAnonymous username="${esb.username}" password="${esb.password}" serverurl="${esb.serverurl}">
+            new PostInstallHandler().onInstall(null);
             ConfigureController.reinstallSchedule();
             ConfigureController.createWiretapSettings(UserInfo.getUserId());
             ConfigureController.assignPermissionSet(UserInfo.getUserId());

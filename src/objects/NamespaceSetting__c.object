@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <description>Holds the namespace prefix needed to normalize custom buttons URLs and javascript.</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>BarPrefix__c</fullName>
+        <description>String that would prefix a Salesforce Object to namespace it, eg &apos;esb__&apos; or &apos;&apos;</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What prefix should I use to fully qualify a Salesforce Object, including the trailing underscore underscore?</inlineHelpText>
+        <label>Bar Prefix</label>
+        <length>17</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>DotPrefix__c</fullName>
+        <description>String that would prefix an Apex Class to namespace it, eg &apos;esb.&apos; or &apos;&apos;</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What prefix should I use to fully qualify an Apex Class, including the trailing dot?</inlineHelpText>
+        <label>Dot Prefix</label>
+        <length>16</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Prefix__c</fullName>
+        <description>Raw namespace prefix, eg &apos;esb&apos; or &apos;&apos;</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What is my namespace prefix?</inlineHelpText>
+        <label>Prefix</label>
+        <length>15</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Setting</label>
+    <visibility>Protected</visibility>
+</CustomObject>

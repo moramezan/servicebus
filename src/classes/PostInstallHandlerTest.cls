@@ -16,4 +16,41 @@
         System.assertEquals(expectedInvocationsAfter, actualInvocationsAfter);
     }
 
+    static testMethod void testOnInstallSetsCustomSetting() {
+        //assert
+        Integer expectedCountBefore = 0;
+        Integer actualCountBefore = [SELECT COUNT() FROM NamespaceSetting__c];
+        System.assertEquals(expectedCountBefore, actualCountBefore);
+        
+        //act
+        PostInstallHandler handler = new PostInstallHandler();
+        handler.upsertNamespaceSetting();
+        
+        //assert
+        Integer expectedCountAfter = 1;
+        Integer actualCountAfter = [SELECT COUNT() FROM NamespaceSetting__c];
+        System.assertEquals(expectedCountAfter, actualCountAfter);
+    }
+    
+    /**
+     * test case for Winter '13 Known Issue: 
+     * https://success.salesforce.com/issues_releases_view?release=180008002
+     */
+    static testMethod void testOnUpgradeSetsCustomSetting() {
+        //assert
+        Integer expectedCountBefore = 0;
+        Integer actualCountBefore = [SELECT COUNT() FROM NamespaceSetting__c];
+        System.assertEquals(expectedCountBefore, actualCountBefore);
+        
+        //act
+        PostInstallHandler handler = new PostInstallHandler();
+        handler.upsertNamespaceSetting();
+        handler.upsertNamespaceSetting();
+        
+        //assert
+        Integer expectedCountAfter = 1;
+        Integer actualCountAfter = [SELECT COUNT() FROM NamespaceSetting__c];
+        System.assertEquals(expectedCountAfter, actualCountAfter);
+    }
+
 }

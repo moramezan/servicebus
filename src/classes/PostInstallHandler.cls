@@ -19,6 +19,21 @@ public without sharing class PostInstallHandler implements InstallHandler {
         
         //only nag about the remote site setting on first install
         if (!isUpgrade && !isCli) sendNotification(installerId);
+        
+        //fetch custom setting or create it for the first time
+        this.upsertNamespaceSetting();
+    }
+    
+    /**
+     * For namespace neutrality, this helps custom button code
+     * to determine fully-qualified object and apex class names.
+     */
+    @TestVisible private void upsertNamespaceSetting() {
+        NamespaceSetting__c setting = NamespaceSetting__c.getOrgDefaults();
+        setting.BarPrefix__c = SObjectType.NamespaceSetting__c.Name.substringBefore('NamespaceSetting__c');
+        setting.DotPrefix__c = PostInstallHandler.class.getName().substringBefore('PostInstallHandler');
+        setting.Prefix__c = PostInstallHandler.class.getName().substringBefore('PostInstallHandler').substringBefore('.');
+        upsert setting;
     }
     
     /**

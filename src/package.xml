@@ -167,6 +167,9 @@
         <members>Message__c.QueueableId__c</members>
         <members>Message__c.Status__c</members>
         <members>Message__c.Step__c</members>
+        <members>NamespaceSetting__c.BarPrefix__c</members>
+        <members>NamespaceSetting__c.DotPrefix__c</members>
+        <members>NamespaceSetting__c.Prefix__c</members>
         <members>OAuthSetting__c.AccessToken__c</members>
         <members>OAuthSetting__c.InstanceUrl__c</members>
         <members>OAuthSetting__c.RefreshToken__c</members>
@@ -197,6 +200,7 @@
         <members>JumpConfig__c</members>
         <members>KnifeSwitch__c</members>
         <members>Message__c</members>
+        <members>NamespaceSetting__c</members>
         <members>OAuthSetting__c</members>
         <members>PublishConfig__c</members>
         <members>ScheduleConfig__c</members>
