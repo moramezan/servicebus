@@ -1,19 +1,39 @@
 @IsTest public class ConfigureControllerTest {
     
-    static testmethod void testIsAllowed() {
-        //assert
-        System.assert(!ConfigureController.IsAllowed);
-    }
-    
-    static testmethod void testDanceIfNeeded() {
-        //arrange
-        PageReference retURL = new PageReference('/home/home.jsp');
+    static testmethod void testRefreshAccessTokenMissingRemoteSiteSetting() {
+        //arrange custom setting
+        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
+        setting.InstanceUrl__c = 'https://localhost'; //not allowed
+        insert setting;
+        
+        //arrange schedule
+        ConfigureController.reinstallSchedule();
+        
+        //assert schedule is started
+        Integer expectedCount = 1;
+        Integer actualCount = [SELECT COUNT() FROM CronJobDetail WHERE Name = :ConfigureController.JobName];
+        System.assertEquals(expectedCount, actualCount, 'Wrong schedule count before.');
+        
+        //assert setting is present
+        expectedCount = 1;
+        actualCount = [SELECT COUNT() FROM OAuthSetting__c];
+        System.assertEquals(expectedCount, actualCount, 'Wrong setting count before.');
         
         //act
-        PageReference pr = ConfigureController.doDanceIfNeeded(retURL);
+        Test.startTest();
+        Test.setMock(HttpCalloutMock.class, new UnauthorizedEndpointResponse());
+        ConfigureController.refreshAccessToken();
+        Test.stopTest();
         
-        //assert
-        System.assert(pr != null);
+        //assert that schedule is stopped
+        expectedCount = 0;
+        actualCount = [SELECT COUNT() FROM CronJobDetail WHERE Name = :ConfigureController.JobName];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count after.');
+        
+        //assert setting is absent
+        expectedCount = 0;
+        actualCount = [SELECT COUNT() FROM OAuthSetting__c];
+        System.assertEquals(expectedCount, actualCount, 'Wrong setting count after.');
     }
     
     static testmethod void testBuildAuthLink() {
@@ -21,7 +41,7 @@
         ConfigureController controller = new ConfigureController();
         
         //act
-        PageReference pr = controller.buildAuthLink();
+        System.PageReference pr = controller.buildAuthLink();
         
         //assert
         System.assert(pr.getUrl().contains('/services/oauth2/authorize'));
@@ -35,7 +55,7 @@
         ConfigureController controller = new ConfigureController();
         
         //act
-        PageReference pr = controller.buildCodeLink('12345');
+        System.PageReference pr = controller.buildCodeLink('12345');
         
         //assert
         System.assert(pr.getUrl().contains('/services/oauth2/token'));
@@ -52,7 +72,7 @@
         ConfigureController controller = new ConfigureController();
         
         //act
-        PageReference pr = controller.buildRefreshLink();
+        System.PageReference pr = controller.buildRefreshLink();
         
         //assert
         System.assert(pr.getUrl().contains('/services/oauth2/token'));
@@ -62,109 +82,148 @@
         System.assert(pr.getUrl().contains('refresh_token'));
     }
     
-    @TestVisible private class HttpCallout implements HttpCalloutMock {
+    static testmethod void testDoRedirectStageNull() {
+        //arrange controller and page
+        ConfigureController controller = new ConfigureController();
+        Test.setCurrentPage(Page.Configure);
+        
+        //act
+        System.PageReference redirect = controller.doRedirect();
+        
+        //assert
+        String expectedLid = [SELECT Id FROM WebLink WHERE Description = 'Enterprise Service Bus configuration link.'].Id;
+        String actualLid = redirect.getParameters().get('lid');
+        System.assertEquals(expectedLid, actualLid, 'Wrong lid.');
+    }
+    
+    static testmethod void testDoRedirectStageCustomSetting() {
+        //arrange controller and page
+        ConfigureController controller = new ConfigureController();
+        System.PageReference configure = Page.Configure;
+        configure.getParameters().put('url', Url.getSalesforceBaseUrl().toExternalForm() + '/services/Soap/c/34.0'); //this implies stage=cs
+        Test.setCurrentPage(configure);
+        
+        //act
+        System.PageReference redirect = controller.doRedirect();
+        
+        //assert
+        Integer expectedCount = 1;
+        Integer actualCount = [SELECT COUNT() FROM OAuthSetting__c];
+        System.assertEquals(expectedCount, actualCount, 'Wrong custom setting count.');
+        
+        String expectedUrl = Page.Configure.getUrl() + '?stage=js';
+        String actualUrl = redirect.getUrl();
+        System.assertEquals(expectedUrl, actualUrl, 'Wrong redirect.');
+        
+        String expectedBase = Url.getSalesforceBaseUrl().toExternalForm();
+        String actualBase = OAuthSetting__c.getOrgDefaults().InstanceUrl__c;
+        System.assertEquals(expectedBase, actualBase, 'Wrong base.');
+        
+        String expectedUnprefixedOrgId = UserInfo.getOrganizationId().substring(3, 15);
+        String actualUnprefixedOrgId = OAuthSetting__c.getOrgDefaults().UnprefixedOrgId__c;
+        System.assertEquals(expectedUnprefixedOrgId, actualUnprefixedOrgId, 'Wrong id.');
+    }
+    
+    static testmethod void testDoRedirectStageJavaScript() {
+        //arrange controller and page
+        ConfigureController controller = new ConfigureController();
+        System.PageReference configure = Page.Configure;
+        configure.getParameters().put('stage', 'js');
+        Test.setCurrentPage(configure);
+        
+        //act
+        System.PageReference redirect = controller.doRedirect();
+        
+        //assert
+        System.PageReference expectedRedirect  = null;
+        System.PageReference actualRedirect = redirect;
+        System.assertEquals(expectedRedirect, actualRedirect, 'Not null.');
+    }
+    
+    static testmethod void testDoRedirectStageOAuth() {
+        //arrange controller and page
+        ConfigureController controller = new ConfigureController();
+        System.PageReference configure = Page.Configure;
+        configure.getParameters().put('stage', 'oa');
+        Test.setCurrentPage(configure);
+        
+        //act
+        System.PageReference redirect = controller.doRedirect();
+        
+        //assert
+        String expectedUrl = controller.buildAuthLink().getUrl();
+        String actualUrl = redirect.getUrl();
+        System.assertEquals(expectedUrl, actualUrl, 'Wrong URL.');
+    }
+    
+    static testmethod void testDoRedirectStageCallBack() {
+        //arrange controller and page
+        ConfigureController controller = new ConfigureController();
+        System.PageReference configure = Page.Configure;
+        configure.getParameters().put('code', '12345'); //this implies stage=cb
+        Test.setCurrentPage(configure);
+        
+        //act
+        Test.setMock(HttpCalloutMock.class, new TokenResponse());
+        System.PageReference redirect = controller.doRedirect();
+        
+        //assert
+        String expectedUrl = new System.PageReference('/apex/Csh?topic=EnterpriseServiceBus').getUrl();
+        String actualUrl = redirect.getUrl();
+        System.assertEquals(expectedUrl, actualUrl, 'Wrong URL.');
+        
+        String expectedRefreshToken = 'rrrrr';
+        String actualRefreshToken = OAuthSetting__c.getOrgDefaults().RefreshToken__c;
+        System.assertEquals(expectedRefreshToken, actualRefreshToken, 'Wrong refresh token.');
+        
+        String expectedAccessToken = 'aaaaa';
+        String actualAccessToken = OAuthSetting__c.getOrgDefaults().AccessToken__c;
+        System.assertEquals(expectedAccessToken, actualAccessToken, 'Wrong access token.');
+    }
+    
+    static testmethod void testDoRedirectStageCallBackIpRestricted() {
+        //arrange controller and page
+        ConfigureController controller = new ConfigureController();
+        System.PageReference configure = Page.Configure;
+        configure.getParameters().put('code', '12345'); //this implies stage=cb
+        Test.setCurrentPage(configure);
+        
+        //act
+        Test.setMock(HttpCalloutMock.class, new IpRestrictedResponse());
+        System.PageReference redirect = controller.doRedirect();
+        
+        //assert
+        String expectedUrl = new System.PageReference('/packaging/installPackage.apexp?p0=04tj0000001YJZy').getUrl();
+        String actualUrl = redirect.getUrl();
+        System.assertEquals(expectedUrl, actualUrl, 'Wrong URL.');
+    }
+    
+    @TestVisible private class UnauthorizedEndpointResponse implements HttpCalloutMock {
+        public HttpResponse respond(HttpRequest request) {
+            CalloutException e = (CalloutException)CalloutException.class.newInstance();
+            e.setMessage('Unauthorized endpoint, please check Setup->Security->Remote site settings.');
+            throw e;
+        }
+    }
+    
+    @TestVisible private class IpRestrictedResponse implements HttpCalloutMock {
         public HttpResponse respond(HttpRequest request) {
             HttpResponse response = new HttpResponse();
-            response.setStatusCode(200);
-            response.setBody('{"refresh_token":"ABCDE","access_token":"12345"}');
+            response.setBody('{"error_description":"ip restricted","error":"invalid_grant"}');
             return response;
         }
     }
     
-    static testmethod void testHandleRedirect() {
-        //arrange page
-        PageReference current = new PageReference('/?code=code');
-        Test.setCurrentPageReference(current);
-        
-        //arrange controller
-        ConfigureController controller = new ConfigureController();
-        
-        //act
-        Test.setMock(HttpCalloutMock.class, new HttpCallout());
-        PageReference pr = controller.handleRedirect();
-        
-        //assert
-        String expectedRunningUerId = UserInfo.getUserId();
-        String actualRunningUerId = OAuthSetting__c.getOrgDefaults().RunningUserId__c;
-        System.assertEquals(expectedRunningUerId, actualRunningUerId, 'Running User Id not set.');
-        
-        String expectedAccessToken = '12345';
-        String actualAccessToken = OAuthSetting__c.getOrgDefaults().AccessToken__c;
-        System.assertEquals(expectedAccessToken, actualAccessToken, 'Access token not set.');
-
-        String expectedRefreshToken = 'ABCDE';
-        String actualRefreshToken = OAuthSetting__c.getOrgDefaults().RefreshToken__c;
-        System.assertEquals(expectedRefreshToken, actualRefreshToken, 'Refresh token not set.');
-    }
-    
-    static testmethod void testGetStarted() {
-        //arrange
-        ConfigureController controller = new ConfigureController();
-        
-        //act
-        PageReference pr = controller.doGetStarted();
-        
-        //assert
-        System.assert(pr.getUrl().contains('tsid'));
-    }
-    
-    static testmethod void testPermissionSetAssignmentCreated() {
-        //arrange new user
-        User user = new User(
-            ProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator'].Id,
-            Username = DateTime.now().getTime() + 'test@test.com',
-            Alias = 'mgr',
-            LastName = 'Test',
-            LocaleSidKey = 'en_US',
-            Email = 'test@example.com',
-            CommunityNickname = 'mgr',
-            LanguageLocaleKey = 'en_US',
-            EmailEncodingKey = 'ISO-8859-1',
-            TimeZoneSidKey = 'Australia/Sydney'
-        );
-        insert user;
-        
-        System.runAs(user) {
-            //act
-            Test.startTest();
-            Integer countBefore = [SELECT COUNT() FROM PermissionSetAssignment WHERE AssigneeId = :user.Id];
-            ConfigureController.assignPermissionSet(user.Id);
-            Test.stopTest();
+    @TestVisible private class TokenResponse implements HttpCalloutMock {
+        public HttpResponse respond(HttpRequest request) {
+            ConfigureController.Token token = new ConfigureController.Token();
+            token.refresh_token = 'rrrrr';
+            token.access_token = 'aaaaa';
             
-            //assert
-            Integer expectedCount = countBefore + 1;
-            Integer actualCount = [SELECT COUNT() FROM PermissionSetAssignment WHERE AssigneeId = :user.Id];
-            System.assertEquals(expectedCount, actualCount);
+            HttpResponse response = new HttpResponse();
+            response.setStatusCode(200);
+            response.setBody(Json.serialize(token));
+            return response;
         }
-    }
-    
-    static testmethod void testWiretapSettingsCreated() {
-        //arrange user
-        Id userId = UserInfo.getUserId();
-        
-        //act
-        Test.startTest();
-        Integer countBefore = [SELECT COUNT() FROM WiretapSetting__c];
-        ConfigureController.createWiretapSettings(userId);
-        Test.stopTest();
-        
-        //assert
-        Integer expectedCount = countBefore + 1;
-        Integer actualCount = [SELECT COUNT() FROM WiretapSetting__c];
-        System.assertEquals(expectedCount, actualCount);
-    }
-    
-    static testmethod void callingInstallScheduleCorrectlyInstallsSchedule() {
-        //arrange
-        String  name = 'Enterprise Service Bus Heartbeat';
-        
-        //act
-        ConfigureController.reinstallSchedule();
-        
-        //assert
-        Integer expectedSizeAfter = 1;
-        Integer actualSizeAfter = [SELECT COUNT() FROM CronJobDetail WHERE Name = :name LIMIT 1];
-        System.assertEquals(expectedSizeAfter, actualSizeAfter);
-        
     }
 }

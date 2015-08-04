@@ -1,0 +1,12 @@
+<apex:page showHeader="false">
+
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection columns="1" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <a id="configure" target="_top" href="{!URLFOR($Page.Configure)}">Click here to begin the package configuration process</a>
+                <img src="/s.gif" onload="document.getElementById('configure').click();" />
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+</apex:page>

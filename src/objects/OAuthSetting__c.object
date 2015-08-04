@@ -15,6 +15,16 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>InstanceUrl__c</fullName>
+        <description>The protocol and host (https://eu2.salesforce.com) of the actual instance. We need to hang onto this because it cannot be part of the callback URL. While the OAuth response indeed contains this, we don&apos;t know it at the time of making the OAuth request.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What is the API protocol and host for this instance?</inlineHelpText>
+        <label>Instance URL</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
         <fullName>RefreshToken__c</fullName>
         <description>The access token should be refreshed periodically using this refresh token.</description>
         <externalId>false</externalId>
@@ -32,6 +42,18 @@
         <inlineHelpText>Which User with a System Administrator profile performed the post install configuration ?</inlineHelpText>
         <label>Running User Id</label>
         <length>18</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>UnprefixedOrgId__c</fullName>
+        <description>Without the 00D Key Prefix, so that the value does not get magically replaced when refreshing sandboxes etc.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What was the unprefixed Organization Id at configuration time?</inlineHelpText>
+        <label>UnprefixedOrgId</label>
+        <length>12</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>

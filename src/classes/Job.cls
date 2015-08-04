@@ -407,7 +407,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
     }
     
     static public ExecAnonResult execAnon(String command) {
-        PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/data/v34.0/tooling/executeAnonymous');
+        PageReference pr = new PageReference(OAuthSetting__c.getOrgDefaults().InstanceUrl__c + '/services/data/v34.0/tooling/executeAnonymous');
         pr.getParameters().put('anonymousBody', command);
         String endpoint = pr.getUrl();
         

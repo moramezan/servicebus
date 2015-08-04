@@ -1,6 +1,5 @@
-<apex:page showHeader="false" sidebar="false" standardStylesheets="false" controller="ConfigureController" action="{!handleRedirect}" cache="false">
+<apex:page showHeader="false" controller="ConfigureController" action="{!doRedirect}" cache="false">
 
-    <apex:pageMessages showDetail="false" />
-    <c:RemoteSiteSetting />
-    
+    <c:RemoteSiteSetting rendered="{!$CurrentPage.parameters.stage == 'js'}" />
+
 </apex:page>

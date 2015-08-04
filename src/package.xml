@@ -117,6 +117,7 @@
         <members>MessageSplash</members>
         <members>Monitor</members>
         <members>MonitorSplash</members>
+        <members>PostInstallInstructions</members>
         <members>PublishConfigCsh</members>
         <members>PublishConfigManageEventTypes</members>
         <members>ScheduleConfigCsh</members>
@@ -167,8 +168,10 @@
         <members>Message__c.Status__c</members>
         <members>Message__c.Step__c</members>
         <members>OAuthSetting__c.AccessToken__c</members>
+        <members>OAuthSetting__c.InstanceUrl__c</members>
         <members>OAuthSetting__c.RefreshToken__c</members>
         <members>OAuthSetting__c.RunningUserId__c</members>
+        <members>OAuthSetting__c.UnprefixedOrgId__c</members>
         <members>PublishConfig__c.EventType__c</members>
         <members>ScheduleConfig__c.Frequency__c</members>
         <members>ScheduleConfig__c.FriendlyDates__c</members>

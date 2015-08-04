@@ -20,15 +20,6 @@ public with sharing class SequenceBuilderExtension {
         this.RoutedMessages = this.model.countRoutedMessages();
     }
     
-    /**
-     * If we don't have an OAuthSetting__c with an AccessToken__c this
-     * quickly sends us through the dance to get that set up correctly.
-     */
-    public PageReference initConfigure() {
-        PageReference retURL = ApexPages.currentPage();
-        return ConfigureController.doDanceIfNeeded(retURL);
-    }
-    
     public String getTerminateApexClassName() {
         return Terminate.class.getName();
     }

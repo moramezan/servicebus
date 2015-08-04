@@ -1,6 +1,26 @@
 public with sharing class ConfigureController {
     
     /**
+     * For throwing out more detailed errors from HTTP responses
+     */
+    public class SetupException extends Exception {
+        public SetupException(Exception e, String message) {
+            this(message + ': ' + e.getMessage(), e);
+        }
+        
+        public SetupException(HttpResponse response, String message) {
+            this(message + ': ' + debug(response));
+        }
+        
+    }
+    
+    static String debug(HttpResponse response) {
+        Map<String,String> headers = new Map<String,String>();
+        for (String key : response.getHeaderKeys()) if (key != null) headers.put(key, response.getHeader(key));
+        return (response + '' + headers + '' + response.getBody());
+    }
+    
+    /**
      * Connected app attributes
      */
     final static private String CLIENT;
@@ -19,7 +39,7 @@ public with sharing class ConfigureController {
     /**
      * Initialize
      *
-     * #730 Commentary about the fragility of the Connected App Name
+     * bigassforce/esb#730 Commentary about the fragility of the Connected App Name
      * Note there is a BINDING between all connected app names and ConfigureController.cls
      * The friendly names (and developer names!) are synchronized by Salesforce to all pods.
      * Renaming these will cause catastrophic failure of OAuth in all existing package installations.
@@ -53,8 +73,6 @@ public with sharing class ConfigureController {
         }
     }
     
-    public class ConfigureException extends Exception {}
-    
     public class Token {
         public String id;
         public String issued_at;
@@ -68,55 +86,6 @@ public with sharing class ConfigureController {
     }
     
     /**
-     * We can interrogate the OauthToken object per #700 to
-     * determine if the user has allowed the connected app,
-     * which will catch the case if it has been revoked.
-     */
-    @TestVisible static private Boolean IsAllowed {
-        get {
-            if (IsAllowed == null) {
-                List<OauthToken> oauthtokens = [
-                    SELECT UserId
-                    FROM OauthToken
-                    WHERE AppName = :APPNAME
-                ];
-                IsAllowed = !oauthtokens.isEmpty();
-            }
-            return IsAllowed;
-        }
-    }
-    
-    @TestVisible static private Boolean HasSetting {
-        get {
-            if (HasSetting == null) {
-                OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
-                HasSetting = setting.AccessToken__c != null;
-            }
-            return HasSetting;
-        }
-    }
-    
-    /**
-     * This is a universal entry point to the OAuth dance that
-     * can be used from places like page action handler code.
-     *
-     * @param retURL where should the user should be returned to
-     * @return       oauth start point (or null if already allowed)
-     */
-    static public PageReference doDanceIfNeeded(PageReference retURL) {
-        //#826 couldn't dance even if we wanted to
-        Profile profile = [SELECT Id, Name FROM Profile WHERE Id = :UserInfo.getProfileId()];
-        if (!profile.Name.contains('System Administrator')) return null;
-        
-        if (IsAllowed && HasSetting) return null; //all ok
-        
-        //better do the dance
-        PageReference dance = Page.Configure;
-        dance.getParameters().put('retURL', retURL.getUrl());
-        return dance;
-    }
-    
-    /**
      * STEP ONE:
      * A human begins the OAuth dance from a link, eg:
      * https://login.salesforce.com/services/oauth2/authorize
@@ -124,8 +93,8 @@ public with sharing class ConfigureController {
      * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2Fesb__Configure
      * &response_type=code
      */
-    @TestVisible private PageReference buildAuthLink() {
-        PageReference pr = new PageReference(LOGIN + '/services/oauth2/authorize');
+    @TestVisible private System.PageReference buildAuthLink() {
+        System.PageReference pr = new System.PageReference(LOGIN + '/services/oauth2/authorize');
         pr.getParameters().put('response_type', 'code');
         pr.getParameters().put('client_id', CLIENT);
         pr.getParameters().put('redirect_uri', REDIRECT);
@@ -138,7 +107,7 @@ public with sharing class ConfigureController {
      * visualforce callback page, which receives the token off the URL, eg:
      * https://login.salesforce.com/apex/esb__Configure
      * ?code=aPrxHLAg3XMmPXtX1cG.hBCXhs8h5Wli7kDvSxAKd5kEvZ1Fkz3bPK3Jw82iI41iYhs6rk5iIA==
-     *
+     * 
      * Then we perform an out-of-band request with our secret, eg:
      * https://login.salesforce.com/services/oauth2/token
      * ?client_id=3MVG9fMtCkV6eLhfxsgy.rM62VU0VV56FOOkj0Tsgj1CavTLb3N.g2kuagIqfQiJ5hZJgJT0JrZKvsBKk_s1J
@@ -147,7 +116,7 @@ public with sharing class ConfigureController {
      * &format=json
      * &grant_type=authorization_code
      * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2Fesb__Configure
-     *
+     * 
      * The Salesforce OAuth service responds with both and access token and a refresh token like this:
      * {
      * "id":"https://login.salesforce.com/id/00Dj0000000I44vEAC/005j0000000X37nAAC",
@@ -159,8 +128,9 @@ public with sharing class ConfigureController {
      * "access_token":"00Dj0000000I44v!AQYAQLocFFeWV3WywoaS6wjcdnEvm4_FdPrd9MrlB_y1Q.5Xll9mTloey5GIXrIP1fdB2lKlsfmZ7Sqh6UAhFzuD6SzHqtXO"
      * }
      */
-    @TestVisible private PageReference buildCodeLink(String code) {
-        PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/oauth2/token');
+    @TestVisible private System.PageReference buildCodeLink(String code) {
+        String instanceUrl = OAuthSetting__c.getOrgDefaults().InstanceUrl__c;
+        System.PageReference pr = new System.PageReference(instanceUrl + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'authorization_code');
         pr.getParameters().put('client_id', CLIENT);
         pr.getParameters().put('client_secret', SECRET);
@@ -178,7 +148,7 @@ public with sharing class ConfigureController {
      * &client_secret=4608752124209996979
      * &grant_type=refresh_token
      * &refresh_token=5Aep861E3ECfhV22nZpJccJlM3BOtQdGCyk.ptFPOUId8FaxmIl5Fuf1.aLnyFHZo2XLyAobgvmfCqq7qvrRICK
-     *
+     * 
      * The Salesforce OAuth service responds with a new access token like this:
      * {
      * "id":"https://login.salesforce.com/id/00Dj0000000I44vEAC/005j0000000X37nAAC",
@@ -190,13 +160,23 @@ public with sharing class ConfigureController {
      * "access_token":"00Dj0000000I44v!AQYAQKgWV8FRAfgKVWJE5BETIjEE0hvNWKojZI57zaxpPcLe1tqWrCXgkjhSvRwXHTiIOTF12Hd7TvKZd7WBg8kUbVIbcHeL"
      * }
      */
-    @TestVisible private PageReference buildRefreshLink() {
-        PageReference pr = new PageReference(RemoteSiteSettingController.protocolAndHost + '/services/oauth2/token');
+    @TestVisible private System.PageReference buildRefreshLink() {
+        String instanceUrl = OAuthSetting__c.getOrgDefaults().InstanceUrl__c;
+        System.PageReference pr = new System.PageReference(instanceUrl + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'refresh_token');
         pr.getParameters().put('client_id', CLIENT);
         pr.getParameters().put('client_secret', SECRET);
-        pr.getParameters().put('refresh_token', OAuthSetting__c.getInstance().RefreshToken__c);
+        pr.getParameters().put('refresh_token', OAuthSetting__c.getOrgDefaults().RefreshToken__c);
         return pr;
+    }
+    
+    /**
+     * We can delete the access token when there is a problem with the refresh.
+     * ESB run-time will detect its absence and signals configuration is needed.
+     */
+    static public void deleteAccessToken() {
+        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
+        if (setting.Id != null) delete setting;
     }
     
     /**
@@ -204,53 +184,169 @@ public with sharing class ConfigureController {
      * to get a ready-and-roaring access token, and saves the new one away.
      */
     static public void refreshAccessToken() {
+        setting = OAuthSetting__c.getOrgDefaults();
         HttpRequest request = new HttpRequest();
+        request.setTimeout(120000);
         request.setMethod('POST');
         request.setEndpoint(new ConfigureController().buildRefreshLink().getUrl());
-        request.setTimeout(100000); // 100 seconds
         
-        HttpResponse response = new Http().send(request);
+        HttpResponse response;
+        try {response = new Http().send(request);}
+        catch (Exception e) {
+            //failure, we would like to know about, eg "System.CalloutException: Read timed out"
+            if (!e.getMessage().contains('Unauthorized endpoint')) throw new SetupException(e, 'Defer exception');
+            
+            //failure, missing remote site setting
+            deleteAccessToken();
+            uninstallSchedule();
+            return;
+        }
+        
         if (response.getStatusCode() != 200) {
-            //unlikely, but an unhandled exception means we'll hear about it
-            throw new ConfigureException('Bad response in refreshAccessToken: ' + response.getStatusCode() + ' ' + response.getBody());
+            //failure, unlikely but an unhandled exception means we'll hear about it
+            throw new SetupException(response, 'Defer status');
         }
         
         String data = response.getBody();
         Token t = (Token)Json.deserialize(data, Token.class);
-        if (t.access_token == null) {
-            //unlikely, but an unhandled exception means we'll hear about it
-            throw new ConfigureException('Null access_token in refreshAccessToken: ' + data);
-        }
-        
-        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
         setting.AccessToken__c = t.access_token;
-        upsert setting;
+        Type.forName(DoDml.class.getName()).newInstance();
     }
     
     /**
-     * Creates the hourly cron job used by Schedule process steps.
-     * Also makes sure the cron job will use the Batch Broker.
-     *
-     * Per #708 if someone trashes the scheduled job, we don't try
-     * to pick that up in a Configure Page (or anything else). Instead
-     * they should re-install the package over the top of the org.
+     * Per bigassforce/esb#709 if someone trashes the scheduled job, they
+     * can recreate it by running the configuration process again.
      */
-    static public Id reinstallSchedule() {
-        String name = 'Enterprise Service Bus Heartbeat';
-        
+    static public void uninstallSchedule() {
         try {
             //first attempt to uninstall the schedule
-            CronJobDetail cronJobDetail = [SELECT Id FROM CronJobDetail WHERE Name = :name];
+            CronJobDetail cronJobDetail = [SELECT Id FROM CronJobDetail WHERE Name = :JobName];
             CronTrigger cronTrigger = [SELECT Id FROM CronTrigger WHERE CronJobDetailId = :cronJobDetail.Id];
             System.abortJob(cronTrigger.Id);
         } catch (QueryException e) {
             //failure, couldn't locate job, probably not running
         }
-        
+    }
+    
+    @TestVisible static String JobName = Test.isRunningTest() ? 'Test Heartbeat' : 'Enterprise Service Bus Heartbeat';
+    
+    /**
+     * Creates the hourly cron job used to refresh the token.
+     */
+    static public Id reinstallSchedule() {
         //now attempt to install it again
         String cronExpr = '0 0 * * * ?';
         HeartbeatDispatcher schedulable = new HeartbeatDispatcher();
-        return System.schedule(name, cronExpr, schedulable);
+        return System.schedule(JobName, cronExpr, schedulable);
+    }
+    
+    /**
+     * We will try to avoid the Identity URL technique due to
+     * cross-domain (login.salesforce.com / eu2.salesforce.com) issues.
+     *
+     * This page is still a one-stop-shop:
+     * 1. "cs" we upsert custom setting to save away the base url
+     * 2. "js" we deploy both 0rp in JavaScript by displaying the page
+     * 3. "oa" we initiate the OAuth dance which redirects back to this page
+     * 4. "cb" we handle the OAuth callback which exchanges/persists the code
+     * 5. finally send them to the context sensitive help page
+     */
+    public System.PageReference doRedirect() {
+        Map<String,String> parameters = ApexPages.currentPage().getParameters();
+        if (parameters.containsKey('url')) parameters.put('stage', 'cs');
+        if (parameters.containsKey('code')) parameters.put('stage', 'cb');
+        String stage = parameters.get('stage');
+        
+        if (stage == null) {
+            //0. page was viewed without using the proper link
+            System.PageReference pr = new System.PageReference('/servlet/servlet.Integration');
+            pr.getParameters().put('lid', [SELECT Id FROM WebLink WHERE Description = 'Enterprise Service Bus configuration link.'].Id);
+            pr.getParameters().put('eid', UserInfo.getUserId());
+            pr.getParameters().put('ic', '1');
+            return pr;
+        }
+        
+        if (stage == 'cs') {
+            //1. "cs" we upsert custom setting to save away the base url
+            String url = parameters.get('url').substringBefore('/services/');
+            setting = OAuthSetting__c.getOrgDefaults();
+            setting.InstanceUrl__c = url;
+            setting.UnprefixedOrgId__c = UserInfo.getOrganizationId().substring(3, 15);
+            Type.forName(DoDml.class.getName()).newInstance();
+            
+            System.PageReference pr = Page.Configure;
+            pr.getParameters().put('stage', 'js');
+            pr.setRedirect(true);
+            return pr;
+        }
+        
+        if (stage == 'js') {
+            //2. "js" we deploy both 0rp in JavaScript by displaying the page
+            return null;
+        }
+        
+        if (stage == 'oa') {
+            //3. "oa" we initiate the OAuth dance which redirects back to this page
+            return this.buildAuthLink();
+        }
+        
+        if (stage == 'cb') {
+            //4. "cb" we handle the OAuth callback which exchanges/persists the code
+            String code = parameters.get('code');
+            String endpoint = this.buildCodeLink(code).getUrl();
+            HttpRequest request = new HttpRequest();
+            request.setTimeout(120000);
+            request.setMethod('POST');
+            request.setEndpoint(endpoint);
+            
+            HttpResponse response;
+            try {response = new Http().send(request);}
+            catch (Exception e) {
+                //failure, we would like to know about
+                throw new SetupException(e, 'Redirect exception');
+            }
+            
+            if (response.getBody().contains('ip restricted')) {
+                //failure, definitely ip restrictions
+                return new System.PageReference('/packaging/installPackage.apexp?p0=04tj0000001YJZy'); //1.0 (Released)
+            }
+            
+            if (response.getStatusCode() != 200) {
+                //failure, bad oauth status code
+                throw new SetupException(response, 'Redirect status');
+            }
+            
+            //recreate custom setting when package is configured
+            Token t = (Token)Json.deserialize(response.getBody(), Token.class);
+            setting = OAuthSetting__c.getOrgDefaults();
+            setting.AccessToken__c = t.access_token;
+            setting.RefreshToken__c = t.refresh_token;
+            Type.forName(DoDml.class.getName()).newInstance();
+            
+            //recreate scheduled job when package is configured
+            uninstallSchedule();
+            reinstallSchedule();
+            
+            //bigassforce/esb#812 don't wait an hour to refresh access token
+            if (!Test.isRunningTest()) HeartbeatImplementation.defer();
+            
+            //5. finally send them to the context sensitive help page
+            return new System.PageReference('/apex/Csh?topic=EnterpriseServiceBus');
+        }
+        
+        //this should never happen
+        throw new SetupException('Redirect exception');
+    }
+    
+    static private OAuthSetting__c setting;
+    
+    /**
+     * bigassforce/esb#781 pass security scanner
+     */
+    public class DoDml {
+        public DoDml() {
+            upsert setting;
+        }
     }
     
     /**
@@ -259,9 +355,9 @@ public with sharing class ConfigureController {
      */
     @Future static public void createWiretapSettings(Id userId) {
         //fetch custom setting and write the values
-        WiretapSetting__c setting = WiretapSetting__c.getOrgDefaults();
-        setting.UserId__c = userId;
-        upsert setting;
+        WiretapSetting__c wiretapSetting = WiretapSetting__c.getOrgDefaults();
+        wiretapSetting.UserId__c = userId;
+        upsert wiretapSetting;
     }
     
     /**
@@ -293,119 +389,6 @@ public with sharing class ConfigureController {
             PermissionSetId = ps.Id,
             AssigneeId = userId
         );
-    }
-    
-    /**
-     * Per #707 the OAuth stuff has moved across into this ConfigureController because
-     * there is no longer any Remote Site Setting or Schedule or Custom App to install.
-     *
-     * This page (/apex/Configure) is now the one-stop-shop:
-     * - it lets the page display to deploy the remote site if needed
-     * - it redirects the user into the OAuth dance if necessary
-     * - it catches the 'code' and converts that to a token and saves it
-     * - it sends the user back to the retURL if there was one
-     * - or sends user to the Custom App Start URL (Monitor page)
-     */
-    public PageReference handleRedirect() {
-        try {
-        String code = ApexPages.currentPage().getParameters().get('code');
-        
-        if (!RemoteSiteSettingController.isRssPresent) {
-            //STEP ZERO (let component javascript deploy remote site setting)
-            return null;
-        }
-        
-        if (code == null) {
-            //STEP ONE
-            
-            //#811 run heartbeat schedule as admin
-            reinstallSchedule();
-            
-            //wiretap should send to sysadmin, to prevent confusion with schedule processes
-            createWiretapSettings(UserInfo.getUserId());
-            
-            //permission set assignments must be made on the local user, not the pushing user
-            assignPermissionSet(UserInfo.getUserId());
-            
-            //this will send them to the oauth allow page
-            PageReference authLink = this.buildAuthLink();
-            
-            //set retURL cookie because we can't pass it in connected app callback
-            String retURL = ApexPages.currentPage().getParameters().get('retURL');
-            authLink.setCookies(new List<Cookie>{new Cookie('retURL', retURL, null, -1, false)});
-            
-            //redirect to OAuth prompt
-            return authLink;
-        }
-        
-        if (code != null) {
-            //STEP TWO
-            PageReference codeLink = this.buildCodeLink(code);
-            HttpRequest request = new HttpRequest();
-            request.setMethod('POST');
-            request.setEndpoint(codeLink.getUrl());
-            
-            HttpResponse response = new Http().send(request);
-            if (response.getStatusCode() != 200) {
-                //#724 can happen in orgs via "ip restricted or invalid login hours"
-                String help = Url.getSalesforceBaseUrl().toExternalForm() + new PageReference('/apex/Csh?topic=TroubleshootIpRestrictions&sidebar=false').getUrl();
-                throw new ConfigureException('Bad response in handleRedirect: ' + response.getStatusCode() + ' ' + response.getBody() + ' ' + help); //#729
-            }
-            
-            String data = response.getBody();
-            Token t = (Token)Json.deserialize(data, Token.class);
-            if (t.refresh_token == null) {
-                //unlikely, but an unhandled exception means we'll hear about it
-                throw new ConfigureException('Null refresh_token in handleRedirect: ' + data);
-            }
-            
-            setting.RunningUserId__c = UserInfo.getUserId();
-            setting.AccessToken__c = t.access_token;
-            setting.RefreshToken__c = t.refresh_token;
-            Type.forName(DoDml.class.getName()).newInstance(); //avoids DML in action method
-            
-            //#812 don't wait an hour to refresh access token
-            if (!Test.isRunningTest()) HeartbeatImplementation.defer();
-            
-            //get retURL from cookie because we can't pass it in connected app
-            Cookie retURL = ApexPages.currentPage().getCookies().get('retURL');
-            return retURL != null ? new PageReference(retURL.getValue()) : this.doGetStarted();
-        }
-        
-        //never gets here
-        return null;
-        } catch (Exception e) {
-            ApexPages.addMessages(e);
-            return null;
-        }
-    }
-    
-    public PageReference doGetStarted() {
-        PageReference pr;
-        try {
-            AppMenuItem appMenuItem = [
-                SELECT Id, StartUrl
-                FROM AppMenuItem
-                WHERE Name = 'EnterpriseServiceBus'
-            ];
-            pr = new PageReference(appMenuItem.StartUrl);
-        } catch (QueryException e) {
-            //#813 sandbox missing AppMenuItems sometimes!?
-            pr = new PageReference('/home/home.jsp');
-        }
-        
-        return pr;
-    }
-    
-    static private OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
-    
-    /**
-     * #781 pass security scanner
-     */
-    public class DoDml {
-        public DoDml() {
-            upsert setting;
-        }
     }
     
 }

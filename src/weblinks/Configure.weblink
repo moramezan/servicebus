@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomPageWebLink xmlns="http://soap.sforce.com/2006/04/metadata">
     <availability>online</availability>
+    <description>Enterprise Service Bus configuration link.</description>
     <displayType>link</displayType>
-    <height>600</height>
-    <linkType>page</linkType>
+    <encodingKey>UTF-8</encodingKey>
+    <linkType>url</linkType>
     <masterLabel>Configure</masterLabel>
-    <openType>noSidebar</openType>
-    <page>Configure</page>
+    <openType>replace</openType>
     <protected>true</protected>
+    <url>{!URLFOR(&quot;/apex/esb__Configure&quot;, null, [&quot;url&quot;=$Api.Enterprise_Server_URL_340])}</url>
 </CustomPageWebLink>
