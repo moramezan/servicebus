@@ -15,12 +15,6 @@
         <members>ApexClassSetModelTest</members>
         <members>ApexDomain</members>
         <members>ApexDomainTest</members>
-        <members>AuditInitializer</members>
-        <members>AuditInitializerConfigSetModel</members>
-        <members>AuditInitializerConfigSetModelTest</members>
-        <members>AuditInitializerTest</members>
-        <members>AuditWriter</members>
-        <members>AuditWriterTest</members>
         <members>Branch</members>
         <members>BranchTest</members>
         <members>Broker</members>
@@ -71,8 +65,6 @@
         <members>ScheduleConfigSetModel</members>
         <members>ScheduleConfigSetModelTest</members>
         <members>ScheduleTest</members>
-        <members>SchemaSelectorController</members>
-        <members>SchemaSelectorControllerTest</members>
         <members>SequenceBuilderExtension</members>
         <members>SequenceBuilderExtensionTest</members>
         <members>SequenceModel</members>
@@ -105,10 +97,6 @@
     <types>
         <members>ApexClassHelp</members>
         <members>ApexClassSetting</members>
-        <members>AuditEntryCsh</members>
-        <members>AuditGroupCsh</members>
-        <members>AuditInitializerConfigCsh</members>
-        <members>AuditInitializerConfigSchemaSelector</members>
         <members>BranchConfigCsh</members>
         <members>Configure</members>
         <members>Csh</members>
@@ -132,7 +120,6 @@
         <members>PublishConfigCsh</members>
         <members>PublishConfigManageEventTypes</members>
         <members>ScheduleConfigCsh</members>
-        <members>SchemaSelector</members>
         <members>SequenceBuilder</members>
         <members>SequenceCsh</members>
         <members>SequenceSplash</members>
@@ -142,7 +129,6 @@
         <name>ApexPage</name>
     </types>
     <types>
-        <members>AuditInitializerConfigTriggers</members>
         <members>BranchConfigTriggers</members>
         <members>DisperseConfigTriggers</members>
         <members>DisperseDestinationTriggers</members>
@@ -160,21 +146,6 @@
         <name>CustomApplication</name>
     </types>
     <types>
-        <members>AuditEntry__c.AuditGroup__c</members>
-        <members>AuditEntry__c.EntryPointUuid__c</members>
-        <members>AuditEntry__c.Event__c</members>
-        <members>AuditEntry__c.GroupIdentifier__c</members>
-        <members>AuditEntry__c.Hops__c</members>
-        <members>AuditEntry__c.Position__c</members>
-        <members>AuditEntry__c.SequenceName__c</members>
-        <members>AuditEntry__c.Stamp__c</members>
-        <members>AuditEntry__c.Step__c</members>
-        <members>AuditGroup__c.AuditInitializerConfig__c</members>
-        <members>AuditGroup__c.GroupIdentifier__c</members>
-        <members>AuditGroup__c.Stamp__c</members>
-        <members>AuditInitializerConfig__c.DynamicGroupIdentifierObjectName__c</members>
-        <members>AuditInitializerConfig__c.DynamicGroupIdentifier__c</members>
-        <members>AuditInitializerConfig__c.StaticGroupIdentifier__c</members>
         <members>BranchConfig__c.Sequence__c</members>
         <members>BrokerSetting__c.BrokerClassName__c</members>
         <members>BrokerSetting__c.EventStamp__c</members>
@@ -215,9 +186,6 @@
         <name>CustomField</name>
     </types>
     <types>
-        <members>AuditEntry__c</members>
-        <members>AuditGroup__c</members>
-        <members>AuditInitializerConfig__c</members>
         <members>BranchConfig__c</members>
         <members>BrokerSetting__c</members>
         <members>DisperseConfig__c</members>
@@ -255,9 +223,6 @@
         <name>Document</name>
     </types>
     <types>
-        <members>AuditEntry__c-Audit Entry Layout</members>
-        <members>AuditGroup__c-Audit Group Layout</members>
-        <members>AuditInitializerConfig__c-Audit Initializer Config Layout</members>
         <members>BranchConfig__c-Branch Config Layout</members>
         <members>DisperseConfig__c-Disperse Config Layout</members>
         <members>DisperseDestination__c-Destination Layout</members>
@@ -273,7 +238,6 @@
         <name>Layout</name>
     </types>
     <types>
-        <members>AuditGroup__c.All</members>
         <members>Message__c.All</members>
         <members>Message__c.Exception</members>
         <members>Message__c.Killed</members>
@@ -297,7 +261,6 @@
         <name>ValidationRule</name>
     </types>
     <types>
-        <members>AuditInitializerConfig__c.ChangeDynamicGroupIdentifier</members>
         <members>Message__c.Data</members>
         <members>Message__c.Kill</members>
         <members>Message__c.PauseQueue</members>
