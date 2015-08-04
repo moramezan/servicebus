@@ -6,6 +6,21 @@
     <property file="build.properties"/>
     <property environment="env"/>
     
+    <target name="pull" description="Pulls (with rebase) the latest remote repository changes.">
+        <exec executable="git">
+            <arg value="pull" />
+            <arg value="--rebase" />
+        </exec>
+    </target>
+
+    <target name="push" description="Pushes (to master) the latest remote repository changes.">
+        <exec executable="git">
+            <arg value="push" />
+            <arg value="origin" />
+            <arg value="master" />
+        </exec>
+    </target>
+    
     <target name="retrieve-esbconnectedapp" description="Retrieves the connected app definitions from their separate packaging org.">
         <sf:retrieve
             username="${esbconnectedapp.username}"
