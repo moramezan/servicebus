@@ -107,8 +107,8 @@
         <members>GateGroupHelp</members>
         <members>GateItemHelp</members>
         <members>JumpConfigHelp</members>
-        <members>MessageHelp</members>
         <members>MessageData</members>
+        <members>MessageHelp</members>
         <members>MessageKill</members>
         <members>MessagePauseQueue</members>
         <members>MessageRebuffer</members>

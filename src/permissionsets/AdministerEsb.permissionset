@@ -614,6 +614,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>PostInstallInstructions</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>PublishConfigHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
