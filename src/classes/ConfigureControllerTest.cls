@@ -172,6 +172,10 @@
         String actualUrl = redirect.getUrl();
         System.assertEquals(expectedUrl, actualUrl, 'Wrong URL.');
         
+        Id expectedUserId = UserInfo.getUserId();
+        Id actualUserId = OAuthSetting__c.getOrgDefaults().RunningUserId__c;
+        System.assertEquals(expectedUserId, actualUserId, 'Wrong running user id.');
+        
         String expectedRefreshToken = 'rrrrr';
         String actualRefreshToken = OAuthSetting__c.getOrgDefaults().RefreshToken__c;
         System.assertEquals(expectedRefreshToken, actualRefreshToken, 'Wrong refresh token.');

@@ -319,6 +319,7 @@ public with sharing class ConfigureController {
             //recreate custom setting when package is configured
             Token t = (Token)Json.deserialize(response.getBody(), Token.class);
             setting = OAuthSetting__c.getOrgDefaults();
+            setting.RunningUserId__c = UserInfo.getUserId();
             setting.AccessToken__c = t.access_token;
             setting.RefreshToken__c = t.refresh_token;
             Type.forName(DoDml.class.getName()).newInstance();
