@@ -3,53 +3,22 @@ public with sharing class ApexClassHelpExtension {
     private ApexPages.StandardController controller;
     private ApexClassModel model;
     
+    public Map<String,Object> Esb {get; set;}
+    public Map<String,Object> Inputs {get; set;}
+    public Map<String,Object> Outputs {get; set;}
+    public String FullyQualifiedClassName {get; set;}
+    
     public ApexClassHelpExtension(ApexPages.StandardController controller) {
         this.controller = controller;
         this.model = ApexClassModel.fromId(controller.getId());
-    }
-    
-    public String getTag() {
-        return this.model.esb.Tag;
-    }
-    
-    public String getName() {
-        return this.model.esb.Name;
-    }
-    
-    public String getDescription() {
-        return this.model.esb.Description;
-    }
-    
-    public String getProcessSetting() {
-        return this.model.esb.ProcessSetting;
-    }
-    
-    public String getStepConfig() {
-        return this.model.esb.StepConfig;
-    }
-    
-    public String getIcon() {
-        return this.model.esb.Icon;
-    }
-    
-    public String getHelpUrl() {
-        return this.model.esb.HelpUrl;
-    }
-    
-    public Integer getLimits() {
-        return this.model.esb.Limits;
-    }
-    
-    public String getCardinality() {
-        return this.model.esb.Cardinality;
-    }
-    
-    public Map<String,String> getInputs() {
-        return this.model.esb.Inputs;
-    }
-    
-    public Map<String,String> getOutputs() {
-        return this.model.esb.Outputs;
+        
+        //by doing this we keep our getters in the controller and not the esb summary class
+        this.ESB = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(this.model.ESB));
+        this.Inputs = this.model.esb.Inputs;
+        this.Outputs = this.model.esb.Outputs;
+        
+        ApexClass apexClass = (ApexClass)this.model.getRecord();
+        this.FullyQualifiedClassName = apexClass.NamespacePrefix == null ? apexClass.Name : apexClass.NamespacePrefix + '.' + apexClass.Name;
     }
     
 }

@@ -4,24 +4,25 @@
     <apex:pageBlock mode="maindetail">
         <apex:pageBlockSection collapsible="false" columns="1" title="ESB Process">
             <apex:pageBlockSectionItem >
-                <!--
-                <apex:dataTable cellspacing="10" value="{!ApexClass}" var="TODO">
+                
+                <apex:dataTable cellspacing="10" value="{!ApexClass}" var="ApexClass">
                     <apex:column breakBefore="true" style="font-weight: bold;">Tag</apex:column>
-                    <apex:column value="{!Tag}" />
+                    <apex:column value="{!Esb['Tag']}" />
 
-                    <apex:column breakBefore="true" style="font-weight: bold;">Process Name</apex:column>
-                    <apex:column value="{!Name}" />
-                    
-                    <apex:column breakBefore="true" style="font-weight: bold;">Fully Qualified Class Name</apex:column>
-                    <apex:column value="{!ISBLANK(ApexClass.NamespacePrefix, ApexClass.Name, ApexClass.NamespacePrefix + '.' + ApexClass.name)}" />
-                    
+                    <apex:column breakBefore="true" style="font-weight: bold;">Name</apex:column>
+                    <apex:column value="{!Esb['Name']}" />
+
                     <apex:column breakBefore="true" style="font-weight: bold;">Description</apex:column>
-                    <apex:column value="{!Description}" />
+                    <apex:column value="{!Esb['Description']}" />
                     
+                    <apex:column rendered="{!FullyQualifiedClassName != Esb['Name']}" breakBefore="{!FullyQualifiedClassName != Esb['Name']}" style="font-weight: bold;">Apex Class</apex:column>
+                    <apex:column rendered="{!FullyQualifiedClassName != Esb['Name']}" value="{!FullyQualifiedClassName}" />
+
                     <apex:column breakBefore="true" style="font-weight: bold;">Icon</apex:column>
-                    <apex:column ><apex:image value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/famfamfam/' + Icon + '.png')}" /> {!Icon}</apex:column>
+                    <apex:column ><apex:image value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/famfamfam/' + Esb['Icon'] + '.png')}" /> {!Esb['Icon']}</apex:column>
+
                 </apex:dataTable>
-                -->
+                
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
