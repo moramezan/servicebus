@@ -527,14 +527,6 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>GateGroupHelp</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>GateItemHelp</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>JumpConfigHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>

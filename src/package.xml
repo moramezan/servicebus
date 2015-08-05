@@ -101,8 +101,6 @@
         <members>Configure</members>
         <members>ContextSensitiveHelp</members>
         <members>EventTypeHelp</members>
-        <members>GateGroupHelp</members>
-        <members>GateItemHelp</members>
         <members>JumpConfigHelp</members>
         <members>MessageData</members>
         <members>MessageHelp</members>

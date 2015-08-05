@@ -58,17 +58,15 @@ public with sharing class MonitorController {
         return new List<Statistic>{
             new Statistic(' ',               1, 32,  0,  0),
             new Statistic('Branch',          1,  0,  0,  0),
-            new Statistic('Publish',         2,  0,  0,  0),
-            new Statistic('Wiretap',         1,  0,  4,  0),
-            new Statistic('Jump',            2,  0,  0,  0),
-            new Statistic('AuditInitializer',1,  0,  0,  0),
+            new Statistic('GateByEntryPoint',         2,  0,  0,  0),
+            new Statistic('GateByJob',         2,  0,  0,  0),
+            new Statistic('Jump',         2,  0,  0,  0),
+            new Statistic('Publish',         1,  0,  4,  0),
+            new Statistic('Schedule',            2,  0,  0,  0),
+            new Statistic('Subscribe',1,  0,  0,  0),
             new Statistic('Subsequence',     2,  0,  2,  0),
-            new Statistic('Subscribe',       2,  0,  9,  0),
-            new Statistic('Schedule',        1,  0,  0,  0),
-            new Statistic('AuditWriter',     0,  0,  0,  0),
-            new Statistic('Gate',            1,  0,  0,  0),
-            new Statistic('Scrape',          0,  0, 44, 10),
-            new Statistic('Mark',            0,  0,  0,  0)
+            new Statistic('Terminate',       2,  0,  9,  0),
+            new Statistic('Wiretap',       2,  0,  9,  0)
         };
     }
     
