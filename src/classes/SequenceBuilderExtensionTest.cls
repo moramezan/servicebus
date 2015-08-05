@@ -26,9 +26,9 @@
         List<Object> processes = (List<Object>)Json.deserializeUntyped(data);
         
         //assert
-        Integer expectedCount = 10; //about 13
+        Integer expectedCount = 5; //about 9
         Integer actualCount = processes.size();
-        System.assert(actualCount > expectedCount);
+        System.assert(actualCount > expectedCount, 'Wrong process count.');
     }
     
     static testmethod void testGetSteps() {

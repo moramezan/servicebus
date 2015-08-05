@@ -1,6 +1,14 @@
 @IsTest public class ApexClassModelTest {
     
-    @TestVisible private class ESB {
+    //@TestVisible private preferred, but Type.forName does not support
+    public class DescribeProcess extends ApexClassModel.BaseProcess {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            return null;
+        }
+    }
+    
+    //@TestVisible private preferred, but Type.forName does not support
+    public class DescribeProcessESB {
         String Tag = 'Tag';
         String Name = 'Name';
         String Description = 'Description';
@@ -16,10 +24,10 @@
 
     static testmethod void testEsbFromEsb() {
         //arrange
-        ApexClassModel.ESB actual = ApexClassModel.esbFromEsb(ApexClassModelTest.ESB.class);
+        ApexClassModel.ESB actual = ApexClassModel.esbFromEsb(DescribeProcess.class);
         
         //act
-        ApexClassModelTest.ESB expected = (ApexClassModelTest.ESB)ApexClassModelTest.ESB.class.newInstance();
+        DescribeProcessESB expected = (DescribeProcessESB)DescribeProcessESB.class.newInstance();
         
         //assert
         System.assertEquals(expected.Tag, actual.Tag, 'Wrong Tag.');
