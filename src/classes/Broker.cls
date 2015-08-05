@@ -267,7 +267,7 @@ abstract public with sharing class Broker {
         }
         
         Message__c specimen = [
-            SELECT Id, Step__c, Event__c, Attempts__c
+            SELECT Id, Step__c, Event__c
             FROM Message__c
             WHERE Status__c = 'Buffered'
             ORDER BY CreatedDate ASC //reattempts will naturally lead
@@ -312,7 +312,7 @@ abstract public with sharing class Broker {
         Integer limits = model.esb.Limits; //number of times specimen process can run within governor limits
         
         List<Message__c> messages = [
-            SELECT Id, Step__c, Event__c, Attempts__c
+            SELECT Id, Step__c, Event__c
             FROM Message__c
             WHERE Status__c = 'Buffered'
             AND Step__c = :specimen.step__c
@@ -348,8 +348,6 @@ abstract public with sharing class Broker {
         try {
             if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');
             for (Message__c message : messages) {
-                if (message.Attempts__c == null) message.Attempts__c = 0;
-                message.Attempts__c++; //#808
                 message.Status__c = 'Started'; //in-database
             }
             List<Database.SaveResult> results = Database.update(messages);
