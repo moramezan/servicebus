@@ -4,4 +4,5 @@
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>ScheduleConfigHelp</label>
+    <description>Documentation for the Schedule Configuration</description>
 </ApexPage>

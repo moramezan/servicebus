@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApexComponent xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>34.0</apiVersion>
+    <description>Component that loads a Sencha Ext application from a static resource thereby enabling the hosting of the Sencha Ext app in a VisualForce page &apos;container&apos;</description>
     <label>BootstrapExt</label>
 </ApexComponent>

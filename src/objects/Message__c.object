@@ -71,7 +71,9 @@
     <fields>
         <fullName>Attempts__c</fullName>
         <defaultValue>0</defaultValue>
+        <description>** DEPRECATED</description>
         <externalId>true</externalId>
+        <inlineHelpText>** DEPRECATED</inlineHelpText>
         <label>Attempts</label>
         <precision>4</precision>
         <required>false</required>
@@ -82,6 +84,7 @@
     </fields>
     <fields>
         <fullName>Cause__c</fullName>
+        <description>The stack trace surfaced to the end user is actually the complete stack trace minus the stack trace related to the base process and broker.</description>
         <externalId>false</externalId>
         <inlineHelpText>If the process threw an exception, what was the stack trace that caused it?</inlineHelpText>
         <label>Cause</label>
@@ -93,9 +96,9 @@
     <fields>
         <fullName>CreatedDate__c</fullName>
         <defaultValue>NOW()</defaultValue>
-        <description>Values in this field will mirror the System generated CreatedDate field</description>
+        <description>** DEPRECATED</description>
         <externalId>false</externalId>
-        <inlineHelpText>Values in this field will mirror the System generated CreatedDate field</inlineHelpText>
+        <inlineHelpText>** DEPRECATED</inlineHelpText>
         <label>Created Date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -103,6 +106,9 @@
     </fields>
     <fields>
         <fullName>EntryPointUuid__c</fullName>
+        <description>Refer #752, &quot;user entry point uuid&quot; (esb__EntryPointUuid)
+This Id  represents the unique handle of the genesis event injected into the ESB.
+Gets set by Job() injecting to the top of a sequence and given a hypothetical message store, this value would not change if the message was replayed.</description>
         <externalId>true</externalId>
         <inlineHelpText>What is the unique Id of the event at the point of entry into the ESB?</inlineHelpText>
         <label>Entry Point Uuid</label>
@@ -115,6 +121,7 @@
     <fields>
         <fullName>Event__c</fullName>
         <defaultValue>&quot;{}&quot;</defaultValue>
+        <description>The the JSON object representing the event parameters carried by the message?</description>
         <externalId>false</externalId>
         <inlineHelpText>What is the JSON object representing the event parameters carried by this message?</inlineHelpText>
         <label>Event</label>
@@ -125,6 +132,7 @@
     </fields>
     <fields>
         <fullName>Exception__c</fullName>
+        <description>The presence or absence of content in this field acts as a mechanism to signal differentiated processing behaviour on messages with the same status. It should be considered as more than a simple logging field.</description>
         <externalId>false</externalId>
         <inlineHelpText>If the process threw an exception when handling this message, what was the error?</inlineHelpText>
         <label>Exception</label>
@@ -136,7 +144,7 @@
     </fields>
     <fields>
         <fullName>ExecuteDuration__c</fullName>
-        <description>How many milliseconds elapsed from the start of the processing until successful completion or failure?</description>
+        <description>The carefully named ExecuteDuration currently represents callout() duration and execute() duration combined. At some point we expect to  measure the callout() duration and execute() duration separately - this will entail one new field</description>
         <externalId>false</externalId>
         <inlineHelpText>How many milliseconds elapsed from the start of the processing until successful completion or failure?</inlineHelpText>
         <label>Duration (ms)</label>
@@ -149,6 +157,8 @@
     </fields>
     <fields>
         <fullName>QueueableId__c</fullName>
+        <description>Refer #752, &quot;capture id&quot;
+This id the Id of the job that enqueued the message representing the &quot;business event&quot; or &quot;business job&quot; or &quot;business occurrence&quot;</description>
         <externalId>true</externalId>
         <inlineHelpText>Which Job enqueued this message?</inlineHelpText>
         <label>Queueable Id</label>
@@ -160,6 +170,7 @@
     </fields>
     <fields>
         <fullName>Status__c</fullName>
+        <description>Refer #808 for a full sequence diagram describing the methods that change the value in this field.</description>
         <externalId>false</externalId>
         <inlineHelpText>What stage of its lifecycle is this message at?</inlineHelpText>
         <label>Status</label>
@@ -272,6 +283,7 @@
     <webLinks>
         <fullName>Data</fullName>
         <availability>online</availability>
+        <description>Redirects to the object represented by the Id contained in esb__Id</description>
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>
@@ -283,6 +295,8 @@
     <webLinks>
         <fullName>Kill</fullName>
         <availability>online</availability>
+        <description>Refer #808 :
+Set the status of message(s) with Exception to a Complete status</description>
         <displayType>massActionButton</displayType>
         <height>600</height>
         <linkType>page</linkType>
@@ -295,6 +309,9 @@
     <webLinks>
         <fullName>PauseQueue</fullName>
         <availability>online</availability>
+        <description>Refer #808 :
+Broker.enqueue() persists new messages with Paused status. 
+The Broker continues to act on Messages with a Buffered or Started status but ignores Paused status messages</description>
         <displayType>massActionButton</displayType>
         <height>600</height>
         <linkType>page</linkType>
@@ -317,6 +334,8 @@
     <webLinks>
         <fullName>Rebuffer</fullName>
         <availability>online</availability>
+        <description>Refer #808 :
+Sets the status of message(s) to Buffered and start the Broker</description>
         <displayType>massActionButton</displayType>
         <height>600</height>
         <linkType>page</linkType>
@@ -329,6 +348,9 @@
     <webLinks>
         <fullName>Restart</fullName>
         <availability>online</availability>
+        <description>Refer #808 :
+Syncronouysly execute a message with an exception. 
+Sucessfull execution initiates processing by the Broker</description>
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>
@@ -340,6 +362,9 @@
     <webLinks>
         <fullName>ResumeQueue</fullName>
         <availability>online</availability>
+        <description>Refer #808 :
+All messages with Paused status are set to Buffered status.
+The Broker will then have zero messages with a Paused status to ignore</description>
         <displayType>massActionButton</displayType>
         <height>600</height>
         <linkType>page</linkType>

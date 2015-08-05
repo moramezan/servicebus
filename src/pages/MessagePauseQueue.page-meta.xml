@@ -3,5 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Page with action to set paused configuration BrokerSetting__c.IsPaused__c to &apos;true&apos; thereby placing  broker in paused mode</description>
     <label>MessagePauseQueue</label>
 </ApexPage>

@@ -4,4 +4,5 @@
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>EventTypeHelp</label>
+    <description>Page that redirects to the help for Publish and Subscribe processes</description>
 </ApexPage>

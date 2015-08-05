@@ -3,5 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Page showing apex class  details (namespace, etc) as well as ESB meta (Tag, etc)</description>
     <label>ApexClassHelp</label>
 </ApexPage>

@@ -4,4 +4,5 @@
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>GateItemHelp</label>
+    <description>Page that directs to documentation for Gate Grouping and Marking</description>
 </ApexPage>

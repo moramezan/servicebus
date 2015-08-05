@@ -3,5 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Documentation for the Sequence Configuration</description>
     <label>SequenceSplash</label>
 </ApexPage>

@@ -3,5 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Page that documents esb  process apex logic attributes( eg namespace) and esb process meta (eg tag)</description>
     <label>ApexClassSetting</label>
 </ApexPage>

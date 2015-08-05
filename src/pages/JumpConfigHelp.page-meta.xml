@@ -3,5 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Page that directs to documentation for the Jump process</description>
     <label>JumpConfigHelp</label>
 </ApexPage>

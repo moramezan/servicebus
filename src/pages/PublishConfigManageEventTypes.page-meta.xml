@@ -3,5 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Page that redirects to list view of Event Types</description>
     <label>PublishConfigManageEventTypes</label>
 </ApexPage>

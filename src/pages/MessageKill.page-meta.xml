@@ -3,5 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Page with action to set the status of message(s) with Exception to a Complete status</description>
     <label>MessageKill</label>
 </ApexPage>

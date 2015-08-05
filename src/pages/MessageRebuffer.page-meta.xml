@@ -3,5 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Page with action to set  status of message(s) to Buffered and start the Broker</description>
     <label>MessageRebuffer</label>
 </ApexPage>

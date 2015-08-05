@@ -3,5 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Page with action to configure the Enterprise Service Bus</description>
     <label>Configure</label>
 </ApexPage>

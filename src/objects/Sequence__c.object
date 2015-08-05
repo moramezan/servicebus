@@ -42,6 +42,7 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>View</actionName>
+        <comment>Container for Sencha drag and drop steps</comment>
         <content>SequenceBuilder</content>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Visualforce</type>
@@ -86,6 +87,7 @@
     <validationRules>
         <fullName>UniqueName</fullName>
         <active>true</active>
+        <description>Name must be unique</description>
         <errorConditionFormula>Name = VLOOKUP(
   $ObjectType.Sequence__c.Fields.Name,
   $ObjectType.Sequence__c.Fields.Name,

@@ -3,5 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Documentation for the Subsequence Configuration</description>
     <label>SubsequenceConfigHelp</label>
 </ApexPage>
