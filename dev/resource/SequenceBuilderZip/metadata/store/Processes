@@ -36,6 +36,20 @@
             },
             "name": "processProcesses",
             "designerId": "1cc8cbbb-425f-4cbf-b962-37d8181b9d05"
+        },
+        {
+            "type": "Ext.util.Sorter",
+            "reference": {
+                "name": "sorters",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|displayName": "alphabetical",
+                "property": "Name"
+            },
+            "name": "MySorter",
+            "designerId": "23caa009-4ce5-47c2-bffc-62cf1584c7a6"
         }
     ]
 }
