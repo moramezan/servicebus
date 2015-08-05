@@ -412,6 +412,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
         String endpoint = pr.getUrl();
         
         HttpRequest request = new HttpRequest();
+        request.setTimeout(120000);
         request.setMethod('GET');
         request.setEndpoint(endpoint);
         request.setHeader('Authorization', 'Bearer ' + OAuthSetting__c.getInstance().AccessToken__c);
