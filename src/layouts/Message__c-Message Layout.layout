@@ -2,7 +2,9 @@
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <customButtons>Restart</customButtons>
     <customButtons>Data</customButtons>
+    <customButtons>Process</customButtons>
     <excludeButtons>Clone</excludeButtons>
+    <excludeButtons>Delete</excludeButtons>
     <excludeButtons>Share</excludeButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
@@ -48,7 +50,7 @@
                 <field>QueueableId__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
+                <behavior>Readonly</behavior>
                 <field>EntryPointUuid__c</field>
             </layoutItems>
         </layoutColumns>
@@ -70,7 +72,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hj0000002e9Nh</masterLabel>
+        <masterLabel>00h24000002VwOE</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

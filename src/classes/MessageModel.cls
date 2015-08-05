@@ -301,4 +301,30 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
         return true;
     }
     
+    public PageReference showApexClass() {
+        
+        String route = this.message.Step__c;
+        
+        if (route == null) {
+            //failure
+            throw new MessageException('This message has no route.');
+        }
+        
+        Step__c step = Step__c.getValues(route);
+        
+        if (step == null) {
+            //failure
+            throw new MessageException('This message has no step.');
+        }
+        
+        ApexClass apexClass = new ApexClass(Id = step.ApexClassId__c);
+        
+        if (apexClass.Id == null) {
+            //failure
+            throw new MessageException('This message has no process.');
+        }
+        
+        return new ApexPages.StandardController(apexClass).view();
+    }
+    
 }

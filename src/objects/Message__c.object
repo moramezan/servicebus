@@ -305,6 +305,16 @@
         <requireRowSelection>true</requireRowSelection>
     </webLinks>
     <webLinks>
+        <fullName>Process</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>page</linkType>
+        <masterLabel>Show Process</masterLabel>
+        <openType>replace</openType>
+        <page>MessageProcess</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
         <fullName>Rebuffer</fullName>
         <availability>online</availability>
         <displayType>massActionButton</displayType>

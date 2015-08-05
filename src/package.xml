@@ -42,6 +42,8 @@
         <members>MessageModelTest</members>
         <members>MessagePauseQueueExtension</members>
         <members>MessagePauseQueueExtensionTest</members>
+        <members>MessageProcessExtension</members>
+        <members>MessageProcessExtensionTest</members>
         <members>MessageRebufferExtension</members>
         <members>MessageRestartExtension</members>
         <members>MessageRestartExtensionTest</members>
@@ -106,6 +108,7 @@
         <members>MessageHelp</members>
         <members>MessageKill</members>
         <members>MessagePauseQueue</members>
+        <members>MessageProcess</members>
         <members>MessageRebuffer</members>
         <members>MessageRestart</members>
         <members>MessageResumeQueue</members>
@@ -258,6 +261,7 @@
         <members>Message__c.Data</members>
         <members>Message__c.Kill</members>
         <members>Message__c.PauseQueue</members>
+        <members>Message__c.Process</members>
         <members>Message__c.Rebuffer</members>
         <members>Message__c.Restart</members>
         <members>Message__c.ResumeQueue</members>

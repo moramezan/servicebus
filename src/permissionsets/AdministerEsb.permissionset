@@ -145,6 +145,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>MessageProcessExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>MessageProcessExtensionTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>MessageRebufferExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -549,6 +557,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>MessagePauseQueue</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>MessageProcess</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
