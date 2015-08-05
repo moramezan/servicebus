@@ -2,7 +2,7 @@ public with sharing class Schedule extends ApexClassModel.BaseProcess {
     
     public ScheduleConfig__c StepConfig;
     
-    public class ESB {
+    public class ESB extends ApexClassModel.BaseSummary {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Schedule';
         public String Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages

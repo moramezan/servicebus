@@ -3,7 +3,7 @@ public with sharing class Wiretap extends ApexClassModel.BaseProcess {
     /**
      * @docs ProcessWiretap.html
      */
-    public class ESB {
+    public class ESB extends ApexClassModel.BaseSummary {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Wiretap';
         public String Description = 'Emails the message parameters to the user.';

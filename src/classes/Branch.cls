@@ -5,7 +5,7 @@ public with sharing class Branch extends ApexClassModel.BaseProcess {
     /**
      * @docs ProcessBranchJumpSubsequence.html
      */
-    public class ESB {
+    public class ESB extends ApexClassModel.BaseSummary {
         public String StepConfig = BranchConfig__c.class.getName();
         public String Icon = 'arrow_branch';
         public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessBranchJumpSubsequence').getUrl();

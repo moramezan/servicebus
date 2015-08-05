@@ -8,7 +8,7 @@
     }
     
     //@TestVisible private preferred, but Type.forName does not support
-    public class DescribeProcessESB {
+    public class DescribeProcessESB extends ApexClassModel.BaseSummary {
         String Tag = 'Tag';
         String Name = 'Name';
         String Description = 'Description';
@@ -51,7 +51,7 @@
     }
     
     //@TestVisible private preferred, but Type.forName does not support
-    public class DefaultProcessESB {}
+    public class DefaultProcessESB extends ApexClassModel.BaseSummary {}
     
     static testmethod void testDefaultValues() {
         //act

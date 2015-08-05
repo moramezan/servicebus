@@ -5,7 +5,7 @@ global with sharing class GateByJob extends ApexClassModel.BaseProcess {
     /**
      * @docs ProcessGateByJob.html
      */
-    public class ESB {
+    public class ESB extends ApexClassModel.BaseSummary {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Gate By Job';
         public String Description = 'Aggregates a collection of messages having the same Job Id.';

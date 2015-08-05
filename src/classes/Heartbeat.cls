@@ -1,7 +1,7 @@
 public with sharing class Heartbeat extends ApexClassModel.BaseProcess {
     
     //#575 heartbeat process evades discovery
-    //public class ESB {}
+    //public class ESB extends ApexClassModel.BaseSummary {}
 
     public class HeartbeatException extends Exception {}
 

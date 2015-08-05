@@ -975,7 +975,7 @@
         }
     }
     
-    public class ChunkErrorProcessESB {
+    public class ChunkErrorProcessESB extends ApexClassModel.BaseSummary {
         public String Description = 'Does stuff in memory without side effects.';
         public Integer Limits = 2;
     }
@@ -1018,7 +1018,7 @@
         }
     }
     
-    public class InserterESB {
+    public class InserterESB extends ApexClassModel.BaseSummary {
         public String Description = 'Inserts 1 document, runs 75 times';
         public Integer Limits = 75;
     }
@@ -1067,7 +1067,7 @@
         }
     }
     
-    public class MemoryESB {
+    public class MemoryESB extends ApexClassModel.BaseSummary {
         public String Description = 'Does stuff in memory without side effects.';
         public Integer Limits = 1000;
     }
@@ -1118,7 +1118,7 @@
         }
     }
     
-    public class InserterErrorESB {
+    public class InserterErrorESB extends ApexClassModel.BaseSummary {
         public String Description = 'Inserts 1 document, throws an exception needing rollback.';
         public Integer Limits = 50;
     }
@@ -1169,7 +1169,7 @@
         }
     }
     
-    public class MemoryErrorESB {
+    public class MemoryErrorESB extends ApexClassModel.BaseSummary {
         public String Description = 'Does stuff in memory, throws an exception not needing rollback.';
         public Integer Limits = 1000;
     }

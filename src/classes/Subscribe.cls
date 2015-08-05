@@ -3,7 +3,7 @@ public with sharing class Subscribe extends ApexClassModel.BaseProcess {
     /**
      * @docs ProcessPublishSubscribe.html
      */
-    public class ESB {
+    public class ESB extends ApexClassModel.BaseSummary {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Subscribe';
         public String Description = 'Listens for messages via a named Event Type.';

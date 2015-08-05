@@ -5,7 +5,7 @@ public with sharing class Publish extends ApexClassModel.BaseProcess {
     /**
      * @docs ProcessPublishSubscribe.html
      */
-    public class ESB {
+    public class ESB extends ApexClassModel.BaseSummary {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Publish';
         public String Description = 'Broadcasts the message to other sequences via a named Event Type.';

@@ -5,7 +5,7 @@ public with sharing class GateByEntryPoint extends ApexClassModel.BaseProcess {
     /**
      * @docs ProcessGateByEntryPoint.html
      */
-    public class ESB {
+    public class ESB extends ApexClassModel.BaseSummary {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Gate By Entry Point';
         public String Description = 'Aggregates a collection of messages having the same Entry Point Id.';

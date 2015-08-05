@@ -20,7 +20,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      *
      * @docs ApiMarkerClass.html
      */
-    public class ESB {
+    public class ESB extends ApexClassModel.BaseSummary {
         /**
          * Each process MAY provide a grouping tag.
          * @docs ApiProcessMarkers.html
@@ -123,7 +123,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         Object theirEsb;
         ApexClassModel.ESB ourEsb;
         theirEsb = inflector.newInstance();
-        ourEsb = (ApexClassModel.ESB)Json.deserialize(Json.serialize(theirEsb), ApexClassModel.ESB.class);
+        ourEsb = (ApexClassModel.ESB)Json.deserialize(String.valueOf(theirEsb), ApexClassModel.ESB.class);
         
         //sensible defaults
         if (ourEsb.Description == null) ourEsb.Description = 'Undescribed';
@@ -178,6 +178,15 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             return Json.serialize(this.execute(inputEvent));
         }
         
+    }
+    
+    /**
+     * Base summary required for cross-namespace per #941
+     */
+    abstract public with sharing class BaseSummary {
+        override public String toString() {
+            return Json.serialize(this);
+        }
     }
     
 }

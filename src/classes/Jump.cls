@@ -5,7 +5,7 @@ public with sharing class Jump extends ApexClassModel.BaseProcess {
     /**
      * @docs ProcessBranchJumpSubsequence.html
      */
-    public class ESB {
+    public class ESB extends ApexClassModel.BaseSummary {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Jump';
         public String Description = 'Permanently diverts the message to another sequence, never to return.';
