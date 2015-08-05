@@ -3,6 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <label>PublishConfigHelp</label>
     <description>Documentation for the Publish Configuration</description>
+    <label>PublishConfigHelp</label>
 </ApexPage>

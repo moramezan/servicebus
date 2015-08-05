@@ -3,6 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <label>BranchConfigHelp</label>
     <description>Documentation for the Branch Configuration</description>
+    <label>BranchConfigHelp</label>
 </ApexPage>

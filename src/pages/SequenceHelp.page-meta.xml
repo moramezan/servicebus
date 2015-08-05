@@ -3,6 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <label>SequenceHelp</label>
     <description>Documentation for Sequence</description>
+    <label>SequenceHelp</label>
 </ApexPage>

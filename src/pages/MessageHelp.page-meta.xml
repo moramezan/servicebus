@@ -3,6 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <label>MessageHelp</label>
     <description>Page that directs to documentation for the Message</description>
+    <label>MessageHelp</label>
 </ApexPage>
