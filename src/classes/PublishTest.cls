@@ -35,7 +35,7 @@
         ));
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb__StepConfig' => pubConfig,
+            'esb__StepConfigId' => pubConfig.Id,
             '__SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
@@ -75,7 +75,7 @@
         Boolean thrown = false;
         ApexClassModel.BaseProcess process = new Publish();
         try {process.execute(parameters);}
-        catch (Publish.PublishException e) {thrown = true;}
+        catch (Exception e) {thrown = true;}
         
         //assert
         System.assert(thrown);
@@ -101,7 +101,7 @@
         
         String data = '{"__SequenceName":"TestSequence","__Position":1}';
         Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
-        parameters.put('esb__StepConfig', config);
+        parameters.put('esb__StepConfigId', config.Id);
         //act
         ApexClassModel.BaseProcess process = new Publish();
         List<Map<String,Object>> parametersList = process.execute(parameters);
@@ -149,7 +149,7 @@
         ));
         
         //arrange
-        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'Publisher', '__Position' => 1, 'esb__StepConfig' => pubConfig};
+        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'Publisher', '__Position' => 1, 'esb__StepConfigId' => pubConfig.Id};
         
         //act
         ApexClassModel.BaseProcess process = new Publish();

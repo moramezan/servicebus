@@ -67,7 +67,7 @@
          //arrange input event parameters
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfig' => scheduleConfig,
+            'esb__StepConfigId' => scheduleConfig.Id,
             'esb__EntryPointDatetime' => stampAsString,
             '__WasHeartbeatProcess' => true
         };
@@ -120,7 +120,7 @@
          //arrange input event parameters
         String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday, a working day
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfig' => scheduleConfig,
+            'esb__StepConfigId' => scheduleConfig.Id,
             'esb__EntryPointDatetime' => stampAsString,
             '__WasHeartbeatProcess' => true
         };
@@ -173,7 +173,7 @@
          //arrange input event parameters
         String stampAsString = '2014-01-03T12:00:00.000Z';
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfig' => scheduleConfig,
+            'esb__StepConfigId' => scheduleConfig.Id,
             'esb__EntryPointDatetime' => stampAsString,
             '__WasHeartbeatProcess' => true
         };
@@ -224,7 +224,7 @@
          //arrange input event parameters
         String stampAsString = '2014-01-18T12:00:00.000Z';
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfig' => scheduleConfig,
+            'esb__StepConfigId' => scheduleConfig.Id,
             'esb__EntryPointDatetime' => stampAsString,
             '__WasHeartbeatProcess' => true
         };
@@ -254,7 +254,7 @@
          //arrange input event parameters
         String invalidStamp = 'XXXX-01-18T12:00:00.000Z';
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfig' => new ScheduleConfig__c(IsActive__c = true),
+            'esb__StepConfigId' => Database.insert(new ScheduleConfig__c(IsActive__c = true)).getId(),
             'esb__EntryPointDatetime' => invalidStamp,
             '__WasHeartbeatProcess' => true
         };

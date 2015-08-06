@@ -267,78 +267,33 @@ abstract public with sharing class Broker {
         }
         
         Message__c specimen = [
-            SELECT Id, Step__c, Event__c
+            SELECT Id, Step__c, Event__c //TODO lose event
             FROM Message__c
             WHERE Status__c = 'Buffered'
             ORDER BY CreatedDate ASC //reattempts will naturally lead
             LIMIT 1
+            //TODO: this guy should be FOR UPDATE or risk race condition
         ];
         
-        String route = specimen.Step__c;
-        
-        if (route == null) {
-            //undefined route, return specimen
+        try {
+            //resolve real limits
+            Step__c step = Step__c.getValues(specimen.Step__c);
+            Type reflector = Type.forName(step.ApexClassName__c);
+            Integer limits = new ApexClassModel(reflector).esb.Limits;
+            
+            return [
+                SELECT Id, Step__c, Event__c //TODO lose event
+                FROM Message__c
+                WHERE Status__c = 'Buffered'
+                AND Step__c = :specimen.step__c
+                LIMIT :limits
+                FOR UPDATE //#695 investigate broker race condition
+            ];
+            
+        } catch (Exception e) {
+            //apex error steamroller... bulletproof
             return new List<Message__c>{specimen};
         }
-        
-        Step__c step = Step__c.getValues(route);
-        
-        if (step == null) {
-            //nonexistent step, return specimen
-            return new List<Message__c>{specimen};
-        }
-        
-        String apexClassName = step.ApexClassName__c;
-        
-        if (apexClassName == null) {
-            //undefined class name, return specimen
-            return new List<Message__c>{specimen};
-        }
-        
-        Type reflector = Type.forName(apexClassName);
-        
-        if (reflector == null) {
-            //reflector undefined, return specimen
-            return new List<Message__c>{specimen};
-        }
-        
-        ApexClassModel model = new ApexClassModel(reflector); //TODO safety
-        
-        if (model.esb.Limits == null) {
-            //limits undefined, return specimen
-            return new List<Message__c>{specimen};
-        }
-        
-        Integer limits = model.esb.Limits; //number of times specimen process can run within governor limits
-        
-        List<Message__c> messages = [
-            SELECT Id, Step__c, Event__c
-            FROM Message__c
-            WHERE Status__c = 'Buffered'
-            AND Step__c = :specimen.step__c
-            LIMIT :limits
-            FOR UPDATE //#695 investigate broker race condition
-        ];
-        
-        Id configId = step.ConfigId__c;
-        
-        if (configId == null) {
-            //config id is null, strip and return unconfigured
-            new MessageSetModel(messages).putStepConfig(null);
-            return messages;
-        }
-        
-        SObject stepConfig = ApexDomain.getById(configId);
-        
-        if (stepConfig == null) {
-            //step config is null, strip and return unconfigured
-            new MessageSetModel(messages).putStepConfig(null);
-            return messages;
-        }
-        
-        //put hydrated config on each message and return
-        new MessageSetModel(messages).putStepConfig(stepConfig);
-        return messages;
     }
     
     /**

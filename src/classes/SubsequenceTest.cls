@@ -26,7 +26,7 @@
         
         //prepare message
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb__StepConfig' => config,
+            'esb__StepConfigId' => config.Id,
             '__SequenceName' => 'originSequence',
             '__Position' => 1
         };

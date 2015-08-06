@@ -275,45 +275,4 @@
         System.assertEquals(expectedCount, actualCount, 'Message should be started.');
         System.assert(!impl.abortJob, 'Job should not be aborted.');
     }
-
-
-
-    private class IdUtility {
-        private Integer Sequence = 0;
-        private String  Prefix;
-        
-        @testVisible
-        public IdUtility(SObjectType sot) {
-            this.Prefix = sot.getDescribe().getKeyPrefix();
-        }
-        
-        @testVisible
-        private Id getNext() {
-            this.Sequence++;
-            string sequenceString = string.ValueOf(this.Sequence);
-            
-            String id = this.Prefix + '0000A0000000' ;
-            id = id.left(id.length() - sequenceString.length() );
-            id = id + sequenceString ;
-
-            string suffix = '';
-            integer flags;
-            for (integer i = 0; i < 3; i++) {
-                flags = 0;
-                for (integer j = 0; j < 5; j++)  {
-                    string c = id.substring(i * 5 + j,i * 5 + j + 1);
-                    if (c.toUpperCase().equals(c) && c >= 'A' && c <= 'Z') {
-                        flags = flags + (1 << j);
-                    }
-                }
-                
-                suffix = (flags <= 25)  ?
-                    suffix + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.substring(flags,flags+1) :
-                    suffix + '012345'.substring(flags-25,flags-24);
-            }
-            
-            return (Id) (id + suffix);
-        }
-    }
-
 }

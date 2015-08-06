@@ -1,7 +1,5 @@
 public with sharing class Subsequence extends ApexClassModel.BaseProcess {
     
-    public SubsequenceConfig__c StepConfig;
-    
     /**
      * @docs ProcessBranchJumpSubsequence.html
      */
@@ -27,7 +25,7 @@ public with sharing class Subsequence extends ApexClassModel.BaseProcess {
         ];
   
         //get destination from config
-        SubsequenceConfig__c config = (SubsequenceConfig__c)Json.deserialize(Json.serialize(parameters.get('esb__StepConfig')), SubsequenceConfig__c.class);
+        SubsequenceConfig__c config = (SubsequenceConfig__c)ApexDomain.getById((Id)parameters.get('esb__StepConfigId'));
         Sequence__c sequence = (Sequence__c)ApexDomain.getById(config.Sequence__c);
         
         List<Object> stepIds = (List<Object>)parameters.get('__SubsequenceStepIds');

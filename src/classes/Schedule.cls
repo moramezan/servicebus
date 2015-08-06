@@ -1,7 +1,5 @@
 public with sharing class Schedule extends ApexClassModel.BaseProcess {
     
-    public ScheduleConfig__c StepConfig;
-    
     public class ESB extends ApexClassModel.BaseSummary {
         public String Tag = 'Enterprise Service Bus';
         public String Name = 'Schedule';
@@ -21,14 +19,13 @@ public with sharing class Schedule extends ApexClassModel.BaseProcess {
     
     override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
-        ScheduleConfig__c config = (ScheduleConfig__c)Json.deserialize(Json.serialize(parameters.get('esb__StepConfig')), ScheduleConfig__c.class);
         String stampAsString = (String)parameters.get('esb__EntryPointDatetime');
         Boolean wasHeartbeat = (Boolean)parameters.get('__WasHeartbeatProcess'); //#810
 
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
     
         if (wasHeartbeat == true) {
-            
+            ScheduleConfig__c config = (ScheduleConfig__c)ApexDomain.getById((Id)parameters.get('esb__StepConfigId'));
             if (config.IsActive__c != true) {
                 //just swallow if not active
                 return new List<Map<String,Object>>();

@@ -131,7 +131,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         if (ourEsb.Name == null) ourEsb.Name = reflector.getName();
         if (ourEsb.Icon == null) ourEsb.Icon = 'cog';
         if (ourEsb.Cardinality == null) ourEsb.Cardinality = 'Any';
-        if (ourEsb.Limits == null) ourEsb.Limits = 1;
+        if (ourEsb.Limits == null || ourEsb.Limits < 1) ourEsb.Limits = 1;
         
         return ourEsb;
     }

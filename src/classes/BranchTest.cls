@@ -19,7 +19,7 @@
         insert config;
         
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfig' => config,
+            'esb__StepConfigId' => config.Id,
             '__SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
         };
         
@@ -44,7 +44,7 @@
         
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfig' => config,
+            'esb__StepConfigId' => config.Id,
             '__SequenceName' => origin.Name,
             '__Position' => 1
         };
@@ -94,7 +94,7 @@
         
         //arrange event
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfig' => config,
+            'esb__StepConfigId' => config.Id,
             '__SequenceName' => sequence.Name,
             '__Position' => 1
         };

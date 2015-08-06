@@ -24,7 +24,7 @@
         
         
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb__StepConfig' => config,
+            'esb__StepConfigId' => config.Id,
             '__SequenceName' => 'origin',
             '__Position' => 1,
             'data' => 'herpderp'

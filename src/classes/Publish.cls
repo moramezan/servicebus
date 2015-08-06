@@ -21,7 +21,7 @@ public with sharing class Publish extends ApexClassModel.BaseProcess {
     override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         
-        PublishConfig__c publishConfig = (PublishConfig__c)Json.deserialize(Json.serialize(parameters.get('esb__StepConfig')), PublishConfig__c.class);
+        PublishConfig__c publishConfig = (PublishConfig__c)ApexDomain.getById((Id)parameters.get('esb__StepConfigId'));
         
         if (publishConfig == null || publishConfig.EventType__c == null) {
             throw new PublishException('Publish Config ' + publishConfig + ' has no Event type');
