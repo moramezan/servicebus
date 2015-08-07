@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <actionOverrides>
         <actionName>Accept</actionName>
         <type>Default</type>
@@ -78,17 +78,6 @@
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
         <visibleLines>20</visibleLines>
-    </fields>
-    <fields>
-        <fullName>CreatedDate__c</fullName>
-        <defaultValue>NOW()</defaultValue>
-        <description>** DEPRECATED</description>
-        <externalId>false</externalId>
-        <inlineHelpText>** DEPRECATED</inlineHelpText>
-        <label>Created Date</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>DateTime</type>
     </fields>
     <fields>
         <fullName>EntryPointUuid__c</fullName>
@@ -198,9 +187,9 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     <listViews>
         <fullName>All</fullName>
         <columns>NAME</columns>
-        <columns>CreatedDate__c</columns>
         <columns>Status__c</columns>
         <columns>ApexClassName__c</columns>
+        <columns>CREATED_DATE</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
@@ -209,9 +198,9 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     <listViews>
         <fullName>Exception</fullName>
         <columns>NAME</columns>
-        <columns>CreatedDate__c</columns>
         <columns>Status__c</columns>
         <columns>ApexClassName__c</columns>
+        <columns>CREATED_DATE</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
@@ -229,9 +218,9 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     <listViews>
         <fullName>Killed</fullName>
         <columns>NAME</columns>
-        <columns>CreatedDate__c</columns>
         <columns>Status__c</columns>
         <columns>ApexClassName__c</columns>
+        <columns>CREATED_DATE</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
@@ -252,7 +241,7 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     </nameField>
     <pluralLabel>Messages</pluralLabel>
     <searchLayouts>
-        <customTabListAdditionalFields>CreatedDate__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields xsi:nil="true"/>
         <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>ApexClassName__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>ExecuteDuration__c</customTabListAdditionalFields>
