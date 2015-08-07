@@ -1,5 +1,6 @@
 @IsTest public class BrokerTest { //formerly FailureProcess
     
+
     /**
      * Synchronous Broker is used inside of unit tests
      * to traverse sequences with multiple steps without
@@ -790,7 +791,7 @@
         insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //arrange input event
-        String eventStamp = HeartbeatImplementation.getISO8601(DateTime.newInstance(2014,12,15,13,11,07));
+        DateTime eventStamp = DateTime.newInstance(2014,12,15,13,11,07);
         Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__Id' => UserInfo.getUserId(),
             '__SequenceName' => 'Test',
@@ -815,8 +816,8 @@
         //assemble
         Map<String,Object> actualEvent = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
         
-        String expectedEventStamp = eventStamp;
-        String actualEventStamp = (String)actualEvent.get('esb__EntryPointDatetime');
+        DateTime expectedEventStamp = eventStamp;
+        DateTime actualEventStamp = (DateTime)Json.deserialize('"' + ((String)actualEvent.get('esb__EntryPointDatetime')) + '"', DateTime.class);
         System.assertEquals(expectedEventStamp, actualEventStamp);
     }
 

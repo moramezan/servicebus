@@ -41,20 +41,15 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
         public DateTime CurrentDateTime    {get; private set;}
  
         public  HeartbeatGeneratorImpl() {
-            //EventStamp: null is still valid (first run)
-            String eventStampAsString = BrokerSetting__c.getInstance().EventStamp__c;
-            DateTime  eventStampAsDateTime =
-                (eventStampAsString != null) ?
-                getISO8601AsDateTime(eventStampAsString) :
-                null;
-
+            DateTime  eventStampAsDateTime = BrokerSetting__c.getInstance().EventStamp__c;
+            
             // no suicide chaining : set to 60
             // suicide schedule : set as low as 5
             // suicide queuable : set as low as 1
             this.IntervalInMinutes = 60;
             
             this.LastEventStamp = eventStampAsDateTime;
-            this.CurrentDateTime = system.now();
+            this.CurrentDateTime = System.now(); // Don't believe we need to GMT this
          }
             
         public void generateHeartbeats() {
@@ -153,10 +148,10 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
             return;
     
         DateTime lastEventStamp =  heartbeats[count-1];
-        String lastEventStampAsString = getISO8601(lastEventStamp);
-        
+ 
         BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults(); //#782
-        setting.EventStamp__c = lastEventStampAsString;
+        setting.EventStamp__c = lastEventStamp;
+      //////  setting.EventStampInfo__c = json.serialize(lastEventStamp).replaceAll('"','').left(19)+'Z';  // Info purposes only
         upsert setting;
     }
 
@@ -173,7 +168,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
                 'esb__Id' => UserInfo.getUserId(),
                 '__SequenceName' => '', //avoid "Mandatory parameter esb__SequenceName not supplied."
                 '__Position' => '', //avoid "Mandatory parameter esb__SequenceName not supplied."
-                'esb__EntryPointDatetime' => getISO8601(heartbeat),
+                'esb__EntryPointDatetime' => heartbeat,
                 '__IsHeartbeatProcess' => true //#575 so that resolve and execute can crow look
             };
             parameterses.add(parameters);
@@ -185,37 +180,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
         else System.enqueueJob(new Job(parameterses));
     }
  
-    
-    /* ISO 8601 Data elements and interchange formats – Information interchange – Representation of dates and times is an
-     * international standard covering the exchange of date and time-related data.  [...]  a basic format with
-     * a minimal number of separators [...]
-     * The separator used between date values is the hyphen,  while the colon is used as the separator between time values
-     *
-     * Time zone designators
-     * Time zones in ISO 8601 are represented as local time (with the location unspecified), as UTC, or as an
-     * offset from UTC. If no UTC relation information is given with a time representation, the time is assumed to be
-     * in local time. While it may be safe to assume local time when communicating in the same time zone, it is ambiguous
-     * when used in communicating across different time zones. It is usually preferable to indicate a time zone
-     * (zone designator) using the standard's notation.
-     *
-     * UTC
-     * If the time is in UTC, add a Z directly after the time without a space.
-     * Z is the zone designator for the zero UTC offset. "09:30 UTC" is therefore represented as "09:30Z"
-     */
-    @testVisible
-    static private String getISO8601(DateTime stamp) {
-        return ((''+stamp).replace(' ','T'))+'Z'; // or json.serialize(stamp) but that returns (unwanted) milliseconds)
-    }
-
-    @testVisible
-    private static DateTime getISO8601AsDateTime(String stamp) {
-        if (stamp == null)
-            return null;
-        
-        return (DateTime)Json.deserialize('"' + stamp + '"', DateTime.class);
-    }
-
-
+ 
     // START OF FUCKERY
     
     /*

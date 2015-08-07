@@ -2,42 +2,36 @@
  
     static testMethod void callingGetInitialStampReturnsExpectedStampForIntervalOf60() {
         // arrange
-        Date currentDate = Date.newInstance(2014,12,16);
         Integer  hour = 03;
         Integer  minute = 22;
         Integer  second = 07;
         Time currentTime = Time.newInstance(hour, minute, second, 0);
-        DateTime currentDateTime = DateTime.newInstance(currentDate, currentTime);
+        DateTime currentDateTime = DateTime.newInstance(2014,12,16, hour, minute, second);
         
         Integer intervalInMinutes = 60;
         
         // act
         DateTime actualInitialStamp = HeartbeatImplementation.getInitialStamp(intervalInMinutes, currentDateTime);
-        
+
         // assert
-        Time expectedInitialTime = Time.newInstance(hour, 0, 0, 0);
-        DateTime expectedInitialStamp = DateTime.newInstance(currentDate, expectedInitialTime);
+        DateTime expectedInitialStamp = DateTime.newInstance(2014,12,16, hour, 0, 0);
         System.assertEquals(expectedInitialStamp, actualInitialStamp);
     }
 
  
     static testMethod void callingGetInitialStampReturnsExpectedStampForIntervalOf15() {
         // arrange
-        Date currentDate = Date.newInstance(2014,12,16);
         Integer  hour = 03;
         Integer  second = 07;
         
         Integer  minuteA = 22;
-        Time currentTimeA = Time.newInstance(hour, minuteA, second, 0);
-        DateTime currentDateTimeA = DateTime.newInstance(currentDate, currentTimeA);
+        DateTime currentDateTimeA = DateTime.newInstance(2014,12,16, hour, minuteA, second);
         
         Integer  minuteB = 34;
-        Time currentTimeB = Time.newInstance(hour, minuteB, second, 0);
-        DateTime currentDateTimeB = DateTime.newInstance(currentDate, currentTimeB);
+        DateTime currentDateTimeB = DateTime.newInstance(2014,12,16, hour, minuteB, second);
         
         Integer  minuteC = 45;
-        Time currentTimeC = Time.newInstance(hour, minuteC, second, 0);
-        DateTime currentDateTimeC = DateTime.newInstance(currentDate, currentTimeC);
+        DateTime currentDateTimeC = DateTime.newInstance(2014,12,16, hour, minuteC, second);
         
         Integer intervalInMinutes = 15;
         
@@ -49,41 +43,35 @@
         // assert
         // minute : 22 --> 15
         Integer expectedMinuteA = 15;
-        Time expectedInitialTimeA = Time.newInstance(hour, expectedMinuteA, 0, 0);
-        DateTime expectedInitialStampA = DateTime.newInstance(currentDate, expectedInitialTimeA);
+        DateTime expectedInitialStampA = DateTime.newInstance(2014,12,16, hour, expectedMinuteA, 0);
         System.assertEquals(expectedInitialStampA, actualInitialStampA);
 
        // minute : 34 --> 30
        Integer expectedMinuteB = 30;
-       Time expectedInitialTimeB = Time.newInstance(hour, expectedMinuteB, 0, 0);
-       DateTime expectedInitialStampB = DateTime.newInstance(currentDate, expectedInitialTimeB);
+       DateTime expectedInitialStampB = DateTime.newInstance(2014,12,16, hour, expectedMinuteB, 0);
        System.assertEquals(expectedInitialStampB, actualInitialStampB);
        
        // minute : 45 --> 45
        Integer expectedMinuteC = 45;
-       Time expectedInitialTimeC = Time.newInstance(hour, expectedMinuteC, 0, 0);
-       DateTime expectedInitialStampC = DateTime.newInstance(currentDate, expectedInitialTimeC);
+       ////Time expectedInitialTimeC = Time.newInstance(hour, expectedMinuteC, 0, 0);
+       DateTime expectedInitialStampC = DateTime.newInstance(2014,12,16, hour, expectedMinuteC, 0);
        System.assertEquals(expectedInitialStampC, actualInitialStampC);
     }
 
  
     static testMethod void callingGetInitialStampReturnsExpectedStampForIntervalOf05() {
         // arrange
-        Date currentDate = Date.newInstance(2014,12,16);
         Integer  hour = 03;
         Integer  second = 07;
         
         Integer  minuteA = 03;
-        Time currentTimeA = Time.newInstance(hour, minuteA, second, 0);
-        DateTime currentDateTimeA = DateTime.newInstance(currentDate, currentTimeA);
+        DateTime currentDateTimeA = DateTime.newInstance(2014,12,16, hour, minuteA, second);
         
         Integer  minuteB = 12;
-        Time currentTimeB = Time.newInstance(hour, minuteB, second, 0);
-        DateTime currentDateTimeB = DateTime.newInstance(currentDate, currentTimeB);
+        DateTime currentDateTimeB = DateTime.newInstance(2014,12,16, hour, minuteB, second);
         
         Integer  minuteC = 45;
-        Time currentTimeC = Time.newInstance(hour, minuteC, second, 0);
-        DateTime currentDateTimeC = DateTime.newInstance(currentDate, currentTimeC);
+        DateTime currentDateTimeC = DateTime.newInstance(2014,12,16, hour, minuteC, second);
         
         Integer intervalInMinutes = 05;
         
@@ -95,32 +83,28 @@
         // assert
         // minute : 03 --> 00
         Integer expectedMinuteA = 00;
-        Time expectedInitialTimeA = Time.newInstance(hour, expectedMinuteA, 0, 0);
-        DateTime expectedInitialStampA = DateTime.newInstance(currentDate, expectedInitialTimeA);
+        DateTime expectedInitialStampA = DateTime.newInstance(2014,12,16, hour, expectedMinuteA, 0);
         System.assertEquals(expectedInitialStampA, actualInitialStampA);
 
        // minute : 12 --> 10
        Integer expectedMinuteB = 10;
-       Time expectedInitialTimeB = Time.newInstance(hour, expectedMinuteB, 0, 0);
-       DateTime expectedInitialStampB = DateTime.newInstance(currentDate, expectedInitialTimeB);
+       DateTime expectedInitialStampB = DateTime.newInstance(2014,12,16, hour, expectedMinuteB, 0);
        System.assertEquals(expectedInitialStampB, actualInitialStampB);
        
        // minute : 45 --> 45
        Integer expectedMinuteC = 45;
-       Time expectedInitialTimeC = Time.newInstance(hour, expectedMinuteC, 0, 0);
-       DateTime expectedInitialStampC = DateTime.newInstance(currentDate, expectedInitialTimeC);
+       DateTime expectedInitialStampC = DateTime.newInstance(2014,12,16, hour, expectedMinuteC, 0);
        System.assertEquals(expectedInitialStampC, actualInitialStampC);
     }
 
- 
+
     static testMethod void callingGetHeartbeatsReturnsExpectedHeartbeatCollectionWhenLastEventStampEqNull() {
         // arrange
-        Date currentDate = Date.newInstance(2014,12,16);
         Integer  hour   = 03;
         Integer  second = 07;
         Integer  minute = 03;
-        Time currentTime = Time.newInstance(hour, minute, second, 0);
-        DateTime currentDateTime = DateTime.newInstance(currentDate, currentTime);
+
+        DateTime currentDateTime = DateTime.newInstance(2014,12,16, hour, minute, second);
         DateTime lastEventStamp = null;
         Integer intervalInMinutes = 05;
 
@@ -152,12 +136,10 @@
         Integer  hour   = 03;
         Integer  second = 07;
         Integer  minute = 42;
-        Time currentTime = Time.newInstance(hour, minute, second, 0);
-        DateTime currentDateTime = DateTime.newInstance(currentDate, currentTime);
+        DateTime currentDateTime = DateTime.newInstance(2014,12,16, hour, minute, second);
 
         Integer lastEventMinute = 00;
-        Time lastEventTime = Time.newInstance(hour, lastEventMinute, 00, 0);
-        DateTime lastEventStamp =  DateTime.newInstance(currentDate, lastEventTime);
+        DateTime lastEventStamp =  DateTime.newInstance(2014,12,16, hour, lastEventMinute, 00);
 
         // act
         List<DateTime> actualHeartbeats = HeartbeatImplementation.getHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
@@ -168,14 +150,14 @@
         Integer actualCount  = actualHeartbeats.size();
         
         Set<DateTime> expectedHeartbeatsAsSet =  new Set<DateTime>{
-            DateTime.newInstance(currentDate, Time.newInstance(hour, 05, 00, 0)),
-            DateTime.newInstance(currentDate, Time.newInstance(hour, 10, 00, 0)),
-            DateTime.newInstance(currentDate, Time.newInstance(hour, 15, 00, 0)),
-            DateTime.newInstance(currentDate, Time.newInstance(hour, 20, 00, 0)),
-            DateTime.newInstance(currentDate, Time.newInstance(hour, 25, 00, 0)),
-            DateTime.newInstance(currentDate, Time.newInstance(hour, 30, 00, 0)),
-            DateTime.newInstance(currentDate, Time.newInstance(hour, 35, 00, 0)),
-            DateTime.newInstance(currentDate, Time.newInstance(hour, 40, 00, 0))
+            DateTime.newInstance(2014,12,16, hour, 05, 00),
+            DateTime.newInstance(2014,12,16, hour, 10, 00),
+            DateTime.newInstance(2014,12,16, hour, 15, 00),
+            DateTime.newInstance(2014,12,16, hour, 20, 00),
+            DateTime.newInstance(2014,12,16, hour, 25, 00),
+            DateTime.newInstance(2014,12,16, hour, 30, 00),
+            DateTime.newInstance(2014,12,16, hour, 35, 00),
+            DateTime.newInstance(2014,12,16, hour, 40, 00)
         };
         Integer expectedCount  = expectedHeartbeatsAsSet.size();
  
@@ -208,12 +190,13 @@
 
         // assemble
         BrokerSetting__c settings = BrokerSetting__c.getInstance();
-        DateTime actualEventStamp = HeartbeatImplementation.getISO8601AsDateTime(settings.EventStamp__c);
-      
+        DateTime actualEventStamp =  settings.EventStamp__c;
+        
         // assert
         DateTime expectedEventStamp = null;
         System.assertEquals(expectedEventStamp, actualEventStamp);
     }
+
 
  
     static testMethod void callingGetHeartbeatsCorrectlyUpdatesLastEventStampSettingWhenHeartbeatsCollectionIsNotEmpty() {
@@ -236,8 +219,8 @@
 
         // assemble
         BrokerSetting__c settings = BrokerSetting__c.getInstance();
-        DateTime actualEventStamp = HeartbeatImplementation.getISO8601AsDateTime(settings.EventStamp__c);
-      
+        DateTime actualEventStamp = settings.EventStamp__c;
+        
         // assert
         DateTime expectedEventStamp =  stampC;
         System.assertEquals(expectedEventStamp, actualEventStamp);
@@ -248,17 +231,13 @@
         // arrange
         Integer intervalInMinutes = 05;
         
-        Date currentDate = Date.newInstance(2014,12,16);
-        
         Integer  hour   = 03;
         Integer  second = 07;
         Integer  minute = 42;
-        Time currentTime = Time.newInstance(hour, minute, second, 0);
-        DateTime currentDateTime = DateTime.newInstance(currentDate, currentTime);
+        DateTime currentDateTime = DateTime.newInstanceGmt(2014,12,16, hour, minute, second);
         
         Integer lastEventMinute = 00;
-        Time lastEventTime = Time.newInstance(hour, lastEventMinute, 00, 0);
-        DateTime lastEventStamp =  DateTime.newInstance(currentDate, lastEventTime);
+        DateTime lastEventStamp =  DateTime.newInstanceGmt(2014,12,16, hour, lastEventMinute, 00);
         
         insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName());
         
@@ -266,57 +245,67 @@
         HeartbeatImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
         
         
-        //assemble
+        //assemble 1
         List<Message__c> messages = [
             SELECT Id, Event__c
             FROM Message__c
         ];
         
-        //assert
+        //assert 1
         Integer expectedSize = 8;
         Integer actualSize = messages.size();
         System.assertEquals(expectedSize, actualSize, 'Wrong count.');
-        
-        Set<String> expectedHeartbeatsAsSet = new Set<String>{
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 05, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 10, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 15, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 20, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 25, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 30, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 35, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 40, 00, 0)))
+
+        //assemble 2
+        Set<DateTime> expectedHeartbeatsAsSet = new Set<DateTime>{
+             DateTime.newInstanceGmt(2014,12,16,  hour, 05, 00 ),
+             DateTime.newInstanceGmt(2014,12,16,  hour, 10, 00 ),
+             DateTime.newInstanceGmt(2014,12,16,  hour, 15, 00 ),
+             DateTime.newInstanceGmt(2014,12,16,  hour, 20, 00 ),
+             DateTime.newInstanceGmt(2014,12,16,  hour, 25, 00 ),
+             DateTime.newInstanceGmt(2014,12,16,  hour, 30, 00 ),
+             DateTime.newInstanceGmt(2014,12,16,  hour, 35, 00 ),
+             DateTime.newInstanceGmt(2014,12,16,  hour, 40, 00 )
         };
-        
+
+        Set<DateTime> actualHeartbeatsAsSet =  new Set<DateTime>();
         Boolean actualFlag = true;
         for (Message__c message : messages) {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
-            String actualEventStamp = (String)parameters.get('esb__EntryPointDatetime');
-            if (!expectedHeartbeatsAsSet.contains(actualEventStamp))
+          Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
+          DateTime actualEventStamp = (DateTime)Json.deserialize('"' + ((String)parameters.get('esb__EntryPointDatetime')) + '"', DateTime.class);
+          actualHeartbeatsAsSet.add(actualEventStamp);
+          if (!expectedHeartbeatsAsSet.contains(actualEventStamp))
                 actualFlag = false;
         }
 
-        // assert
-        Boolean expectedFlag = true;
-        System.assertEquals(expectedFlag, actualFlag);
+        List<String> expectedHeartbeatsAsStringSet =  new List<String>();
+        List<String> actualHeartbeatsAsStringSet =  new List<String>();
+        for (DateTime heartbeat : actualHeartbeatsAsSet) {
+            actualHeartbeatsAsStringSet.add(json.serialize(heartbeat));
+        }
+        for (DateTime heartbeat : expectedHeartbeatsAsSet) {
+            expectedHeartbeatsAsStringSet.add(json.serialize(heartbeat));
+        }
+        actualHeartbeatsAsStringSet.sort();
+        expectedHeartbeatsAsStringSet.sort();
+
+        // assert 2
+        system.assertEquals(json.serialize(expectedHeartbeatsAsStringSet) , json.serialize(actualHeartbeatsAsStringSet));
     }
 
+ 
  
     static testMethod void callingGenerateHeartbeatsViaInterfaceInsertsExpectedMessages() {
         // arrange
         Integer intervalInMinutes = 05;
-        
-        Date currentDate = Date.newInstance(2014,12,16);
-        
+
         Integer  hour   = 03;
         Integer  second = 07;
         Integer  minute = 42;
-        Time currentTime = Time.newInstance(hour, minute, second, 0);
-        DateTime currentDateTime = DateTime.newInstance(currentDate, currentTime);
+        DateTime currentDateTime = DateTime.newInstanceGmt(2014,12,16, hour, minute, second);
         
         Integer lastEventMinute = 00;
-        Time lastEventTime = Time.newInstance(hour, lastEventMinute, 00, 0);
-        DateTime lastEventStamp =  DateTime.newInstance(currentDate, lastEventTime);
+        DateTime lastEventStamp =  DateTime.newInstanceGmt(2014,12,16, hour, lastEventMinute, 00);
         
         insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName());
         
@@ -331,39 +320,75 @@
         heartbeatGeneratorMock.generateHeartbeats();
         
         
-        //assemble
+        //assemble 1
         List<Message__c> messages = [
             SELECT Id, Event__c
             FROM Message__c
         ];
         
-        //assert
+        //assert 1
         Integer expectedSize = 8;
         Integer actualSize = messages.size();
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
-        
-        Set<String> expectedHeartbeatsAsSet =  new Set<String>{
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 05, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 10, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 15, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 20, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 25, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 30, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 35, 00, 0))),
-            HeartbeatImplementation.getISO8601(DateTime.newInstance(currentDate, Time.newInstance(hour, 40, 00, 0)))
+
+        // assemble 2
+        Set<DateTime> expectedHeartbeatsAsSet =  new Set<DateTime>{
+             DateTime.newInstanceGmt(2014,12,16, hour, 05, 00),
+             DateTime.newInstanceGmt(2014,12,16, hour, 10, 00),
+             DateTime.newInstanceGmt(2014,12,16, hour, 15, 00),
+             DateTime.newInstanceGmt(2014,12,16, hour, 20, 00),
+             DateTime.newInstanceGmt(2014,12,16, hour, 25, 00),
+             DateTime.newInstanceGmt(2014,12,16, hour, 30, 00),
+             DateTime.newInstanceGmt(2014,12,16, hour, 35, 00),
+             DateTime.newInstanceGmt(2014,12,16, hour, 40, 00)
         };
-          
+        
+        Set<DateTime> actualHeartbeatsAsSet =  new Set<DateTime>();
         Boolean actualFlag = true;
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
-            String actualEventStamp = (String)parameters.get('esb__EntryPointDatetime');
+            DateTime actualEventStamp = (DateTime)Json.deserialize('"' + ((String)parameters.get('esb__EntryPointDatetime')) + '"', DateTime.class);
+            actualHeartbeatsAsSet.add(actualEventStamp);
             if (!expectedHeartbeatsAsSet.contains(actualEventStamp))
                 actualFlag = false;
         }
 
-        // assert
-        Boolean expectedFlag = true;
-        System.assertEquals(expectedFlag, actualFlag);
-    }
 
+        List<String> expectedHeartbeatsAsStringSet =  new List<String>();
+        List<String> actualHeartbeatsAsStringSet =  new List<String>();
+        for (DateTime heartbeat : actualHeartbeatsAsSet) {
+            actualHeartbeatsAsStringSet.add(json.serialize(heartbeat));
+        }
+        for (DateTime heartbeat : expectedHeartbeatsAsSet) {
+            expectedHeartbeatsAsStringSet.add(json.serialize(heartbeat));
+        }
+        actualHeartbeatsAsStringSet.sort();
+        expectedHeartbeatsAsStringSet.sort();
+        
+        // assert 2
+        system.assertEquals(json.serialize(expectedHeartbeatsAsStringSet) , json.serialize(actualHeartbeatsAsStringSet));
+    }
+  
+    
+    // @testSetUp
+    // static private void setUpBritishSummerTimeUser() {
+    //     User user = new User (
+    //         Alias = 'Test',
+    //         UserName = 'test@14333esb47969.com',
+    //         FirstName = 'Test',
+    //         LastName = 'Test',
+    //         Email = 'test@14333esb47969.com',
+    //         ProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator'].Id,
+    //         EmailEncodingKey = 'UTF-8',
+    //         LanguageLocaleKey = 'en_US',
+    //         LocaleSidKey = 'en_US',
+    //         TimeZoneSidKey = 'Europe/London'    // British Summer Time (Europe/London) ,  'America/Los_Angeles' , etc
+    //     );
+    //
+    //
+    //     insert user;
+    //
+    //     PermissionSet ps = [SELECT Id FROM PermissionSet WHERE Name = 'AdministerEsb'];
+    //     insert new PermissionSetAssignment(AssigneeId = user.Id, PermissionSetId = ps.Id);
+    // }
 }
