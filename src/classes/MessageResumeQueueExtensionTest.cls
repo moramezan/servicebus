@@ -67,7 +67,7 @@
 
         // assert
         Integer expectedJobs = 1;
-        Integer actualCount = Limits.getQueueableJobs();
+        Integer actualJobs = Limits.getQueueableJobs();
         System.assertEquals(expectedJobs, actualJobs, 'Wakeup not enqueued.');
     }
     
