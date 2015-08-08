@@ -157,14 +157,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageRestartExtension</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>MessageRestartExtensionTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>MessageResumeQueueExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -547,10 +539,6 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>MessageRebuffer</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>MessageRestart</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

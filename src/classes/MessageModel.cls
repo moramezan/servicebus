@@ -280,15 +280,8 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
      * @exception MessageException if you are not allowed to restart the message
      * @return true if synchronous reprocess succeeded, false if it failed
      */
-    public Boolean restart() {
-        
-        if (this.Message.Exception__c == null) {
-            //prevent inadvertent replay! yeah, we are not even looking at Status...
-            throw new MessageException('Only messages with an Exception can be restarted.');
-        }
-        
-        //do special run once broker
-        return Job.runOneAsUser(message.Id);
+    private void restart() {
+        System.assert(false, 'This is JavaScript now.');
     }
     
     public PageReference showApexClass() {

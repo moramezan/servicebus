@@ -91,7 +91,8 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         update rebufferableMessages;
         
         //restart REAL broker
-        Job.runAsUser();
+        Job j = new Job('WAKE UP', UserInfo.getOrganizationId()); //TODO #952
+        System.enqueueJob(j);
     }
     
     /**

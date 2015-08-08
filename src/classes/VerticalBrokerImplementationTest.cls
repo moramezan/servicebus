@@ -1,5 +1,11 @@
 @IsTest public class VerticalBrokerImplementationTest {
     
+    @TestSetup static void testSetup() {
+        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
+        setting.RunningUserId__c = UserInfo.getUserId();
+        upsert setting;
+    }
+    
     static testmethod void testChunkedMarkContextsCount() {
         //arrange processes and sequence and steps
         Sequence__c sequence = new Sequence__c(Name = 'test');

@@ -240,6 +240,7 @@
         DateTime lastEventStamp =  DateTime.newInstanceGmt(2014,12,16, hour, lastEventMinute, 00);
         
         // act
+        Test.setMock(HttpCalloutMock.class, new ToolingApiResponse());
         HeartbeatImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
         
         
@@ -313,6 +314,7 @@
                 currentDateTime
             );
 
+        Test.setMock(HttpCalloutMock.class, new ToolingApiResponse());
         heartbeatGeneratorMock.generateHeartbeats();
         
         
@@ -363,6 +365,15 @@
         
         // assert 2
         system.assertEquals(json.serialize(expectedHeartbeatsAsStringSet) , json.serialize(actualHeartbeatsAsStringSet));
+    }
+    
+    @TestVisible private class ToolingApiResponse implements HttpCalloutMock {
+        public HttpResponse respond(HttpRequest request) {
+            HttpResponse response = new HttpResponse();
+            response.setStatusCode(200);
+            response.setBody('{"success":true}');
+            return response;
+        }
     }
   
     

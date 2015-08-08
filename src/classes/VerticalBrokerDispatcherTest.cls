@@ -1,5 +1,11 @@
 @IsTest public class VerticalBrokerDispatcherTest {
     
+    @TestSetup static void testSetup() {
+        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
+        setting.RunningUserId__c = UserInfo.getUserId();
+        upsert setting;
+    }
+    
     static testmethod void coverStart() {
         //arrange
         VerticalBrokerDispatcher dispatcher = new VerticalBrokerDispatcher();

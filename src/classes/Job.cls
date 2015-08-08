@@ -204,11 +204,17 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      *
      * But since we aren't actually doing anything with the QueueableContext
      * this works without startTest/stopTest: new Job(inputEvent).execute(null)
+     *
+     * #816 https://cloud.githubusercontent.com/assets/1878631/6813469/15c4d956-d27e-11e4-9d3d-e7026e95eade.jpg
      */
     public void execute(QueueableContext context) {
         if (context != null) new MessageSetModel(this.messages).populateQueueableId(context);
         List<Message__c> messages = this.persist();
-        if (Test.isRunningTest()) Job.run(); else Job.runAsUser();
+        
+        //#653 don't waste FUTURE ASYNC CALL unnecessarily
+        if (isScheduled()) return;
+        if (isRunning()) return;
+        runAsUser();
     }
     
     /**
@@ -227,23 +233,6 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
         insert this.messages; //#836
         MessageSetModel.Inhibit = true;
         return this.messages;
-    }
-    
-    /**
-     * We MUST ALWAYS prevent more than 1 running broker worker
-     * otherwise they will fight over the work to be marked etc.
-     *
-     * Was formerly Broker.run() but needs to be global now
-     * for the sake of running from Execute Anonymous context.
-     * The "runAsUser" method below needs to be able to call this.
-     *
-     * I think we had 8 global things in Job and 1 in Broker
-     * Lets just have 9 global things in Job, and this proxies?
-     */
-    static global void run() {
-        if (isScheduled()) return;
-        if (isRunning()) return;
-        Broker.impl().run();
     }
     
     static public Boolean isScheduled() {
@@ -272,16 +261,6 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
     }
     
     /**
-     * #816 https://cloud.githubusercontent.com/assets/1878631/6813469/15c4d956-d27e-11e4-9d3d-e7026e95eade.jpg
-     */
-    static public void runAsUser() {
-        //#653 don't waste ASYNC call unnecessarily
-        if (isScheduled()) return;
-        if (isRunning()) return;
-        runAsUserDefer();
-    }
-    
-    /**
      * When this blows up we throw an unhandled exception in our namespace,
      * we should receive an email and reach out to the customer to debug this!
      *
@@ -290,82 +269,60 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      * System.UnexpectedException:
      * common.exception.SqlDupValOnIndexException:
      * ORA-00001: unique constraint (CORE.AKCRON_JOB_DETAIL) violated
-     * 
+     *
      * @throws JobException
      */
-    @Future(callout=true) static public void runAsUserDefer() {
-        //#653 don't waste API call unnecessarily
+    @Future(callout=true) static public void runAsUser() {
+        //#653 don't waste TOOLING API CALL unnecessarily
         if (isScheduled()) return;
         if (isRunning()) return;
         
-        String command = Job.class.getName() + '.run();';
+        String command = Job.class.getName() + '.run(null);';
         ExecAnonResult result = execAnon(command);
-        if (!result.success) throw new JobException(result.exceptionMessage + '\n' + result.exceptionStackTrace); //#858 don't swallow exceptions
+        if (!result.success) throw new JobException(Json.serialize(result)); //#858 don't swallow exceptions
     }
     
     /**
-     * This is indeed another variation on the Broker. Unlike the Vertical Broker,
-     * we dictate a single message to handle. (he does not decide what to consume)
+     * Was formerly Broker.run() but needs to be global now
+     * for the sake of running from Execute Anonymous context.
+     * The "runAsUser" method needs to be able to call this.
      *
-     * And unlike the synchronous broker (mostly used for unit tests), we make no
-     * attempt to handle errors, catchable or otherwise. ExecAnonResult has them :)
+     * I think we had 8 global things in Job and 1 in Broker
+     * Lets just have 9 global things in Job, and this proxies?
+     *
+     * We MUST ALWAYS prevent more than 1 running broker worker
+     * otherwise they will fight over the work to be marked etc.
      */
-    static global void runOne(Id messageId) {
-        //MARK
-        //nothing to do here because we would kill any callouts that follow,
-        //and runOneAsUser() should only be called on started messages anyway,
-        //not to mention we don't mark() and execute() in the same context :)
-        Broker impl = Broker.impl();
+    static global void run(Id strategy) {
         
-        //EXECUTE
-        Message__c inputMessage = (Message__c)ApexDomain.getById(messageId);
-        List<Message__c> outputMessages = new List<Message__c>();
-        impl.execute(new List<Message__c>{inputMessage}, outputMessages);
-        
-        //PERSIST
-        List<Message__c> inputAndOutputMessages = new List<Message__c>();
-        inputAndOutputMessages.add(inputMessage);
-        inputAndOutputMessages.addAll(outputMessages);
-        impl.persist(inputAndOutputMessages);
+        if (strategy != null) {
+            /**
+             * This is indeed another variation on the Broker. Unlike the Vertical Broker,
+             * we dictate a single message to handle. (he does not decide what to consume)
+             *
+             * And unlike the synchronous broker (mostly used for unit tests), we make no
+             * attempt to handle errors, catchable or otherwise. ExecAnonResult has them :)
+             *
+             * No marking here because we would kill any callouts that follow. We
+             * already know that this guy is acting on a started message anyway.
+             */
+            //EXECUTE
+            Message__c inputMessage = (Message__c)ApexDomain.getById(strategy);
+            List<Message__c> outputMessages = new List<Message__c>();
+            Broker.impl().execute(new List<Message__c>{inputMessage}, outputMessages);
+            
+            //PERSIST
+            List<Message__c> inputAndOutputMessages = new List<Message__c>();
+            inputAndOutputMessages.add(inputMessage);
+            inputAndOutputMessages.addAll(outputMessages);
+            Broker.impl().persist(inputAndOutputMessages);
+            
+        }
         
         //success, restart the REAL broker to carry on with the outputs
-        run();
-    }
-    
-    /**
-     * Adds running user context around Job.runOne()
-     * @throws JobException
-     */
-    static public Boolean runOneAsUser(Id messageId) {
-        if (Test.isRunningTest()) {
-            //in tests, just run the thing here and now as me
-            Job.runOne(messageId);
-            return true;
-        }
-        
-        String command = Job.class.getName() + '.runOne(\'' + messageId + '\');';
-        Job.ExecAnonResult result = execAnon(command);
-        
-        //handle fatal exceptions
-        if (!result.success) {
-            //failure, write status and any exception fields
-            update new Message__c(
-                Id = messageId,
-                Exception__c = result.exceptionMessage.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length),
-                Cause__c = result.exceptionStackTrace.abbreviate(SObjectType.Message__c.Fields.Cause__c.Length)
-            );
-            return false;
-        }
-        
-        //handle catchable exceptions
-        Message__c message = [SELECT Exception__c FROM Message__c WHERE Id = :messageId];
-        if (message.Exception__c != null) {
-            //failure
-            return false;
-        }
-        
-        //success
-        return true;
+        if (isScheduled()) return;
+        if (isRunning()) return;
+        Broker.impl().run();
     }
     
     /**

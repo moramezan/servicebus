@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionOverrides>
         <actionName>Accept</actionName>
         <type>Default</type>
@@ -241,7 +241,6 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     </nameField>
     <pluralLabel>Messages</pluralLabel>
     <searchLayouts>
-        <customTabListAdditionalFields xsi:nil="true"/>
         <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>ApexClassName__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>ExecuteDuration__c</customTabListAdditionalFields>
@@ -327,12 +326,11 @@ Sets the status of message(s) to Buffered and start the Broker</description>
 Syncronouysly execute a message with an exception. 
 Sucessfull execution initiates processing by the Broker</description>
         <displayType>button</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
+        <linkType>javascript</linkType>
         <masterLabel>Restart Message</masterLabel>
-        <openType>sidebar</openType>
-        <page>MessageRestart</page>
+        <openType>onClickJavaScript</openType>
         <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/34.0/connection.js&quot;)}</url>
     </webLinks>
     <webLinks>
         <fullName>ResumeQueue</fullName>

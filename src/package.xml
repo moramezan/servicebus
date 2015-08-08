@@ -45,8 +45,6 @@
         <members>MessageProcessExtension</members>
         <members>MessageProcessExtensionTest</members>
         <members>MessageRebufferExtension</members>
-        <members>MessageRestartExtension</members>
-        <members>MessageRestartExtensionTest</members>
         <members>MessageResumeQueueExtension</members>
         <members>MessageResumeQueueExtensionTest</members>
         <members>MessageSetModel</members>
@@ -108,7 +106,6 @@
         <members>MessagePauseQueue</members>
         <members>MessageProcess</members>
         <members>MessageRebuffer</members>
-        <members>MessageRestart</members>
         <members>MessageResumeQueue</members>
         <members>MessageSplash</members>
         <members>Monitor</members>

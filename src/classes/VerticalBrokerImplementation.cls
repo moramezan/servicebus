@@ -10,6 +10,13 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     @TestVisible private Map<Id,Message__c> executableMessages = new Map<Id,Message__c>();
     @TestVisible private List<Message__c> persistableMessages = new List<Message__c>();
     @TestVisible private Boolean abortJob = false;
+    
+    public VerticalBrokerImplementation() {
+        if (UserInfo.getUserId() != OAuthSetting__c.getOrgDefaults().RunningUserId__c) {
+            //#847 broker panic, wrong user context
+            System.assert(false, 'The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
+        }
+    }
 
     /**
      * If we encounter any kind of unexpected exception (catchable or otherwise)
