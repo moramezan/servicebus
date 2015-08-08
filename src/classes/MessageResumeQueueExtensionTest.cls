@@ -16,40 +16,27 @@
         Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
 
         //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        insert new BrokerSetting__c(IsPaused__c = isPaused);
 
         //tee up two messages in queued state
-        new Job(sequenceNameA, '000000000000000AAA').execute(null);
-        new Job(sequenceNameA, '000000000000000AAA').execute(null);
+        new Job(sequenceNameA, '000000000000000AAA').persist();
+        new Job(sequenceNameA, '000000000000000AAA').persist();
         
         //assert
-        Integer expectedCount = 2;
-        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c != 'Completed'];
-        System.assertEquals(expectedCount, actualCount, 'Wrong count before');
+        Integer expectedBefore = 2;
+        Integer actualBefore = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Paused'];
+        System.assertEquals(expectedBefore, actualBefore, 'Wrong count before');
         
         //act - actions in the ctor
         MessageResumeQueueExtension.DoDml doDmlInstance = new MessageResumeQueueExtension.DoDml();
 
         //assemble
-        List<Message__c> messages = [
-            SELECT Id, Name, Event__c, Status__c
-            FROM Message__c
-            WHERE Status__c != 'Completed'
-        ];
-
-        BrokerSetting__c actualSettings  = BrokerSetting__c.getInstance();
-        Boolean actualIsPaused =  actualSettings.IsPaused__c;
-        
-        expectedCount = 0;
-        actualCount = messages.size();
-        System.assertEquals(expectedCount, actualCount, 'Wrong count after');
+        Integer expectedAfter = 2;
+        Integer actualAfter = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        System.assertEquals(expectedAfter, actualAfter, 'Wrong count after.');
     }
 
-    
-    
-
-        
-    static testmethod void  callingDoResumeOnQueuedMessagesProcessesMessages() {
+    static testmethod void  callingDoResumeOnQueuedMessagesEnqueuesWakeup() {
         // arrange
         Boolean isPaused =  true;
 
@@ -65,11 +52,12 @@
         Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
 
         //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        insert new BrokerSetting__c(IsPaused__c = isPaused);
 
         //tee up two messages in queued state
-        new Job(sequenceNameA, '000000000000000AAA').execute(null);
-        new Job(sequenceNameA, '000000000000000AAA').execute(null);
+        new Job(sequenceNameA, '000000000000000AAA').persist();
+        new Job(sequenceNameA, '000000000000000AAA').persist();
+        Broker.impl().run();
 
         //act -
         List<Message__c> messages = [SELECT Id FROM Message__c];
@@ -78,9 +66,9 @@
         System.PageReference actualPageReference  = messageResumeQueueExtension.doResume();
 
         // assert
-        Integer expectedCount = 2 + 2;
-        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
-        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
+        Integer expectedJobs = 1;
+        Integer actualCount = Limits.getQueueableJobs();
+        System.assertEquals(expectedJobs, actualJobs, 'Wakeup not enqueued.');
     }
     
 }

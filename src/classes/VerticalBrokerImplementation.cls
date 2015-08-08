@@ -19,18 +19,12 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     @TestVisible private Boolean isHaywire = false;
     
     /**
-     * Some integer below a hard limit of 4000 (min expected rows in FieldPermissions)
+     * #671 first query locator spends less time in 'Preparing'
      */
-    @TestVisible private Integer Contexts = 1000;
-    
-    public VerticalBrokerImplementation() {
-        // #671 first query locator spends less time in 'Preparing'
-        if (Broker.IsFirstRun) this.Contexts = 50;
-    }
+    @TestVisible private Integer Contexts = System.isBatch() ? 1000 : 50;
     
     /**
-     * If scope is null, execute will never be reacher!
-     * Has to be array of booleans, not nulls
+     * Some integer below a hard limit of 4000 (min expected rows in FieldPermissions)
      */
     public Database.QueryLocator start(Database.BatchableContext context) {
         return Database.getQueryLocator([SELECT Id FROM FieldPermissions LIMIT :this.Contexts]);
@@ -162,7 +156,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     }
     
     public void finish(Database.BatchableContext context) {
-        Broker.run();
+        super.run();
     }
     
     public void handleHaywireCondition(Database.BatchableContext context) {
@@ -206,35 +200,11 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
      * The VerticalBroker executes another Batch Apex job to run itself again.
      */
     override public void runImpl() {
-        //#653 run Broker under sysadmin user context
-        Database.executeBatch(new VerticalBrokerDispatcher(), 1);
-    }
-    
-    override public Boolean isRunning() {
-        System.Type type = VerticalBrokerDispatcher.class;
-        String namespacePrefix;
-        String name;
-        
-        if (type.getName().contains('.')) {
-            //managed (namespaceprefix.classname)
-            namespacePrefix = type.getName().substringBefore('.');
-            name = type.getName().substringAfter('.');
-        } else {
-            //unmanaged (classname)
-            namespacePrefix = '';
-            name = type.getName();
+        if (UserInfo.getUserId() != OAuthSetting__c.getOrgDefaults().RunningUserId__c) {
+            //#847 broker panic, wrong user context
+            System.assert(false, 'The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
         }
         
-        //find existing jobs
-        Integer existingJobsCount = [
-            SELECT COUNT()
-            FROM AsyncApexJob
-            WHERE ApexClass.NamespacePrefix = :namespacePrefix AND ApexClass.Name = :name
-            AND JobType IN ('BatchApex')
-            AND Status IN ('Queued', 'Processing', 'Preparing')
-        ];
-        
-        return existingJobsCount != 0;
+        System.scheduleBatch(new VerticalBrokerDispatcher(), 'Enterprise Service Bus Broker', 0, 1);
     }
-
 }

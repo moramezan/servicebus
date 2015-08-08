@@ -3,7 +3,7 @@
     static testmethod void callingDoDmlCtorCorrectlySetsPauseFlag() {
         // arrange
         Boolean isPaused =  false;
-        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        insert new BrokerSetting__c(IsPaused__c = isPaused);
         
         //act - actions in the ctor
         MessagePauseQueueExtension.DoDml doDmlInstance = new MessagePauseQueueExtension.DoDml();
@@ -21,7 +21,7 @@
    static testmethod void  callingDoPauseOnPausedMessagesPausesQueue() {
         // arrange
         Boolean isPaused =  false;
-        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName(), IsPaused__c = isPaused);
+        insert new BrokerSetting__c(IsPaused__c = isPaused);
         
         //act
         List<Message__c> messages = [SELECT Id FROM Message__c];

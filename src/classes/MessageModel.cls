@@ -288,17 +288,7 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
         }
         
         //do special run once broker
-        Boolean result = Job.runOneAsUser(message.Id);
-        
-        if (!result) {
-            //stop here and return
-            return false;
-        }
-        
-        //success, restart the REAL broker to carry on with the outputs
-        Job.runAsUser();
-        
-        return true;
+        return Job.runOneAsUser(message.Id);
     }
     
     public PageReference showApexClass() {

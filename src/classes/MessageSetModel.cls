@@ -55,9 +55,6 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         }
         
         update killableMessages;
-        
-        //restart REAL broker
-        Job.runAsUser();
     }
     
     /**
@@ -310,7 +307,8 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         update messages;
         
         //in real life, usurp sysadmin
-        Job.runAsUser();
+        Job j = new Job('WAKE UP', UserInfo.getOrganizationId()); //TODO #952
+        System.enqueueJob(j);
     }
     
 }

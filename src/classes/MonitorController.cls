@@ -8,7 +8,7 @@ public with sharing class MonitorController {
     public void doPing() {}
     
     public Boolean getIsBrokerRunning() {
-        return Broker.impl().isRunning();
+        return Job.isScheduled() || Job.isRunning();
     }
     
     public Boolean getIsJobsWaiting() {

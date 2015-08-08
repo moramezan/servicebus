@@ -26,7 +26,7 @@
         VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
         
         //assert
-        Integer expectedContexts = 1000;
+        Integer expectedContexts = 50;
         Integer actualContexts = impl.Contexts;
         System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
@@ -36,7 +36,7 @@
         while (iterator.hasNext()) records.add(iterator.next());
         
         //assert
-        Integer expectedSize = 1000;
+        Integer expectedSize = 50;
         Integer actualSize = records.size();
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
@@ -44,7 +44,7 @@
         impl.execute(null, new List<SObject>());
         
         //assert
-        expectedContexts = 999;
+        expectedContexts = 49;
         actualContexts = impl.Contexts;
         System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
@@ -57,7 +57,7 @@
         impl.execute(null, new List<SObject>());
         
         //assert
-        expectedContexts = 998;
+        expectedContexts = 48;
         actualContexts = impl.Contexts;
         System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
@@ -70,7 +70,7 @@
         impl.execute(null, new List<SObject>());
         
         //assert
-        expectedContexts = 997;
+        expectedContexts = 47;
         actualContexts = impl.Contexts;
         System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
@@ -83,7 +83,7 @@
         impl.execute(null, new List<SObject>());
         
         //assert
-        expectedContexts = 996;
+        expectedContexts = 46;
         actualContexts = impl.Contexts;
         System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
@@ -96,7 +96,7 @@
         impl.execute(null, new List<SObject>());
         
         //assert
-        expectedContexts = 995;
+        expectedContexts = 45;
         actualContexts = impl.Contexts;
         System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
@@ -109,7 +109,7 @@
         impl.execute(null, new List<SObject>());
         
         //assert
-        expectedContexts = 994;
+        expectedContexts = 44;
         actualContexts = impl.Contexts;
         System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
@@ -120,9 +120,6 @@
     }
 
     static testmethod void testMarkAndExecuteAndDoneConditions() {
-        //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = VerticalBrokerImplementation.class.getName());
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
@@ -139,7 +136,7 @@
         ).persist();
         
         //act (enqueue)
-        VerticalBrokerImplementation impl = (VerticalBrokerImplementation)Broker.impl();
+        VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
         
         //assert
         Integer expectedCount = 1;
@@ -170,9 +167,6 @@
     }
 
     static testmethod void testMarkLimitedToTotalPotentialMarksWhenBufferedMessagesGtTotalPotentialMarks() {
-        //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = VerticalBrokerImplementation.class.getName());
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
@@ -206,7 +200,7 @@
         
         
         //arrange resolution
-        VerticalBrokerImplementation impl = (VerticalBrokerImplementation)Broker.impl();
+        VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
         Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
         
         //act
@@ -224,9 +218,6 @@
     }
 
     static testmethod void testMarkLimitedToTotalBufferedMessagesWhenTotalPotentialMarksGtTotaBufferedMessagesCount() {
-        //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = VerticalBrokerImplementation.class.getName());
-        
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
@@ -259,7 +250,7 @@
         Integer totalPotentialMarks = 4;  // Greater than Buffered Messages Count
 
         //arrange resolution
-        VerticalBrokerImplementation impl = (VerticalBrokerImplementation)Broker.impl();
+        VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
         Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
         
         //act

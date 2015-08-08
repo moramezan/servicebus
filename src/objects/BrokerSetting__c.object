@@ -4,17 +4,6 @@
     <description>Controls which broker implementation to use and whether it should run at all.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
-        <fullName>BrokerClassName__c</fullName>
-        <description>Fully qualified name of Broker subclass (eg myns.FutureBroker)</description>
-        <externalId>false</externalId>
-        <label>Broker Class Name</label>
-        <length>97</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>EventStamp__c</fullName>
         <description>A time stamp representing the last time that a heartbeat message was successfully enqueued to the broker</description>
         <externalId>false</externalId>

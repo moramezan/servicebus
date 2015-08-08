@@ -10,22 +10,10 @@
      * broker method implementations like mark() and execute()
      * without actually starting or running the Broker itself
      */
-    static private Boolean DidSynchronousBrokerRun = false;
-    static private Boolean IsSynchronousBrokerRunning = false;
+    @TestVisible static private Boolean DidSynchronousBrokerRun = false;
     public with sharing class SynchronousBroker extends Broker {
-    
+        
         override public void runImpl() {
-            //aligns ok with batch mental model
-            this.start();
-            this.execute();
-            this.finish();
-        }
-        
-        public void start() {
-            IsSynchronousBrokerRunning = true;
-        }
-        
-        public void execute() {
             //LOCATE
             List<Message__c> inputMessages = this.locateMarkableWork();
             
@@ -55,29 +43,13 @@
                 //write away error text on messages
                 update inputMessages;
             }
-        }
-        
-        public void finish() {
-            //indicate stop because run ONLY runs if stopped
-            IsSynchronousBrokerRunning = false;
             
-            //finish (invokes broker again in same context)
-            Broker.run();
-            
-            //leave evidence it ran
-            Broker.IsFirstRun = true;
-        }
-        
-        override public Boolean isRunning() {
-            return IsSynchronousBrokerRunning;
+            super.run();
         }
         
     }
 
     static testmethod void testChunkingMarkFindsMultipleWork() {
-        //arrange broker
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
-        
         //arrange processes and sequence and steps
         Sequence__c sequence = new Sequence__c(Name = 'test');
         insert sequence;
@@ -126,9 +98,6 @@
         model.appendStep(Wiretap.class);
         model.appendStep(Terminate.class);
         
-        //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
-        
         //arrange inputs
         new Job(sequence.Name, '000000000000000AAA').persist();
         
@@ -139,7 +108,7 @@
         
         //act
         Broker.MaxHops = 2;
-        Broker.run();
+        Broker.impl().run();
         
         //assert
         Integer expectedStarted = 1;
@@ -296,10 +265,10 @@
         }).persist();
         
         //act
-        SynchronousBroker broker = new SynchronousBroker();
+        Broker impl = Broker.impl();
         
         //MARK
-        List<Message__c> messages = broker.locateMarkableWork();
+        List<Message__c> messages = impl.locateMarkableWork();
         
         //assert
         Integer actualCount = messages.size();
@@ -342,10 +311,10 @@
         };
         
         //act
-        SynchronousBroker broker = new SynchronousBroker();
+        Broker impl = Broker.impl();
         
         //MARK
-        List<Message__c> messages = broker.locateMarkableWork();
+        List<Message__c> messages = impl.locateMarkableWork();
         
         // assert
         Integer expectedCount = 2;
@@ -470,7 +439,6 @@
         //arrange broker implementation custom setting
         String theSequenceName = 'TestSequence';
         Id theId = '000000000000000AAA';
-        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName());
         
         //assert
         Boolean expectedBeforeFlag = false;
@@ -496,9 +464,6 @@
         //arrange steps
         SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
-        //arrange
-        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName());
-        
         //assert
         Boolean expectedBeforeFlag = false;
         Boolean actualBeforeFlag = BrokerTest.DidSynchronousBrokerRun;
@@ -523,7 +488,6 @@
     
     static testmethod void callingRestartSuccessfullyCallsrunImpl() {
         //arrange
-        insert new BrokerSetting__c(BrokerClassName__c = BrokerTest.SynchronousBroker.class.getName());
         List<Message__c> messages = new Job('test', UserInfo.getUserId()).persist();
         
         //assert
@@ -532,7 +496,7 @@
         System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
         
         //act
-        Broker.run();
+        Broker.impl().run();
         
         //assert
         Boolean expectedAfterFlag = true;
@@ -557,12 +521,12 @@
         List<Message__c> messages = new Job(inputEvent).persist();
         
         //arrange broker
-        Broker broker = new SynchronousBroker();
+        Broker impl = Broker.impl();
         
         String actualMessage;
         
         //act
-        broker.execute(messages, new List<Message__c>());
+        impl.execute(messages, new List<Message__c>());
         
         //assemble
         actualMessage = messages[0].Exception__c;
@@ -585,12 +549,12 @@
         List<Message__c> messages = new Job(inputEvent).persist();
         
         //arrange specific broker implementation
-        Broker broker = new SynchronousBroker();
+        Broker impl = Broker.impl();
         
         String actualMessage;
         
         //act
-        broker.execute(messages, new List<Message__c>());
+        impl.execute(messages, new List<Message__c>());
         
         //assemble
         actualMessage = messages[0].Exception__c;
@@ -609,9 +573,6 @@
         Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         step.ApexClassName__c = 'lalala';
         update step;
-        
-        //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act
         new Job(sequence.Name, '000000000000000AAA').execute(null);
@@ -661,8 +622,7 @@
         Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
 
         //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
-        //insert new BrokerSetting__c();
+        insert new BrokerSetting__c(IsPaused__c = isPaused);
 
         //act
         new Job(sequenceNameA, '000000000000000AAA').execute(null);
@@ -708,9 +668,6 @@
         Step__c stepA5 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
         Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
 
-        //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = isPaused);
-        
         //act
         new Job(sequenceNameA, '000000000000000AAA').execute(null);
 
@@ -750,9 +707,6 @@
         
         delete issue;
         
-        //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName(), IsPaused__c = false);
-        
         //act
         new Job(sequenceNameA, '000000000000000AAA').execute(null);
 
@@ -786,9 +740,6 @@
         //arrange steps
         SequenceModel model = SequenceModel.fromId(sequence.Id);
         model.appendStep(Terminate.class);
-        
-        //arrange broker
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //arrange input event
         DateTime eventStamp = DateTime.newInstance(2014,12,15,13,11,07);
@@ -829,9 +780,6 @@
         
         Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
   
-        //arrange broker
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
-        
         //arrange messages
         List<Message__c> messagesA = new Job(new Map<String,Object>{'__SequenceName' => 'test'}).persist();
         List<Message__c> messagesB = new Job(new Map<String,Object>{'esb__Id' => null}).persist();
@@ -868,9 +816,6 @@
         //arrange steps
         SequenceModel model = SequenceModel.fromId(sequence.Id);
         model.appendStep(Terminate.class);
-        
-        //arrange specific broker implementation
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         
         //act
         new Job(sequence.Name, '000000000000000AAA').execute(null);
@@ -990,7 +935,6 @@
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange broker implementation and params
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         Map<String,Object> failureEvent = new Map<String,Object>{'c__IsError' => true, '__SequenceName' => 'Test', '__Position' => 1};
         Map<String,Object> successEvent = new Map<String,Object>{'c__IsError' => false, '__SequenceName' => 'Test', '__Position' => 1};
         List<Map<String,Object>> events = new List<Map<String,Object>>{failureEvent, successEvent};
@@ -1026,7 +970,6 @@
     
     static testmethod void testSavepointTaxImposedOnDmlProcess() {
         //arrange broker
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         Broker impl = Broker.impl();
         
         //arrange sequence
@@ -1075,7 +1018,6 @@
     
     static testmethod void testSavepointTaxRelievedOnMemoryProcess() {
         //arrange broker
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         Broker impl = Broker.impl();
         
         //arrange sequence
@@ -1126,7 +1068,6 @@
     
     static testmethod void testRollbackTaxImposedOnDmlProcess() {
         //arrange broker
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         Broker impl = Broker.impl();
         
         //arrange sequence
@@ -1177,7 +1118,6 @@
     
     static testmethod void testRollbackTaxRelievedOnMemoryProcess() {
         //arrange broker
-        insert new BrokerSetting__c(BrokerClassName__c = SynchronousBroker.class.getName());
         Broker impl = Broker.impl();
         
         //arrange sequence

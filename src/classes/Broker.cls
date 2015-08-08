@@ -86,11 +86,6 @@ abstract public with sharing class Broker {
     
     public static Integer MaxHops = 500;
     
-    /**
-     * #671 first query locator spends less time in 'Preparing'
-     */
-    static public Boolean IsFirstRun = false;
-    
     public class EngineException extends Exception {
         /**
          * Gotta jettison this guy for rollback later
@@ -224,15 +219,13 @@ abstract public with sharing class Broker {
     }
     
     static public Broker impl() {
-        //first try to resolve broker class from custom setting
-        BrokerSetting__c settings = BrokerSetting__c.getInstance();
-        
-        //if there is no setting, use a default
-        if (settings.BrokerClassName__c == null) settings.BrokerClassName__c = Type.forName('VerticalBrokerImplementation').getName();
-        
-        //new up and return the broker instance
-        Broker impl = (Broker)Type.forName(settings.BrokerClassName__c).newInstance();
-        return impl;
+        if (Test.isRunningTest()) {
+            //unit test broker
+            return new BrokerTest.SynchronousBroker();
+        } else {
+            //production broker
+            return new VerticalBrokerImplementation();
+        }
     }
     
     /**
@@ -255,18 +248,7 @@ abstract public with sharing class Broker {
      */
     public List<Message__c> locateMarkableWork() {
         
-        Integer count = [
-            SELECT COUNT()
-            FROM Message__c
-            WHERE Status__c = 'Buffered'
-        ];
-        
-        if (count == 0) {
-            //no work found, return empty
-            return new List<Message__c>();
-        }
-        
-        Message__c specimen = [
+        List<Message__c> specimen = [
             SELECT Id, Step__c, Event__c //TODO lose event
             FROM Message__c
             WHERE Status__c = 'Buffered'
@@ -275,9 +257,14 @@ abstract public with sharing class Broker {
             //TODO: this guy should be FOR UPDATE or risk race condition
         ];
         
+        if (specimen.isEmpty()) {
+            //no work found, return empty
+            return specimen;
+        }
+        
         try {
             //resolve real limits
-            Step__c step = Step__c.getValues(specimen.Step__c);
+            Step__c step = Step__c.getValues(specimen[0].Step__c);
             Type reflector = Type.forName(step.ApexClassName__c);
             Integer limits = new ApexClassModel(reflector).esb.Limits;
             
@@ -285,14 +272,14 @@ abstract public with sharing class Broker {
                 SELECT Id, Step__c, Event__c //TODO lose event
                 FROM Message__c
                 WHERE Status__c = 'Buffered'
-                AND Step__c = :specimen.step__c
+                AND Step__c = :specimen[0].step__c
                 LIMIT :limits
                 FOR UPDATE //#695 investigate broker race condition
             ];
             
         } catch (Exception e) {
             //apex error steamroller... bulletproof
-            return new List<Message__c>{specimen};
+            return specimen;
         }
     }
     
@@ -479,43 +466,41 @@ abstract public with sharing class Broker {
     
     /**
      * Formerly restartIfWorkPending
+     * The VerticalBroker executes another Batch Apex job to run itself again.
+     *
+     * Per #929 we can use System.scheduleBatch to NAME THE JOB which lets us
+     * lean on the platform to prevent races. Salesforce will block second job!
+     * 
+     * If you try and schedule TWO jobs in ONE execution context:
+     * System.AsyncException: The Apex job named "test" is already scheduled for execution.
+     * 
+     * Or if you scheduled ONE job in each of TWO execution contexts:
+     * System.UnexpectedException: common.exception.SqlDupValOnIndexException: ORA-00001: unique constraint (CORE.AKCRON_JOB_DETAIL) violated
+     * 
+     * We see one of the seven dwarves appearing too:
+     * ORA-06512: at "HAPPY.UDDDMLCRONJOBDETAIL", line 32
+     * ORA-06512: at "HAPPY.CCRONJOBDETAIL", line 95
+     * ORA-06512: at line 1
+     * {call cCronJobDetail.insert_detail(?,?,?,?,?,?,?,?,?,?,?)}
+     * {call cCronJobDetail.insert_detail(?,?,?,?,?,?,?,?,?,?,?)}
      */
-    static public void run() {
-        if (BrokerSetting__c.getInstance().Inhibit__c == true) System.assert(false, 'Inhibit'); //INHIBIT
-        
-        if (!Test.isRunningTest()) {
-            Id runningUserId = OAuthSetting__c.getOrgDefaults().RunningUserId__c;
-            Id userId = UserInfo.getUserId();
-            if (runningUserId == null) throw new EngineException('The configured running user Id=[' + runningUserId + '] is null or invalid');
-            if (runningUserId != userId) throw new EngineException('The running user context is not the same as the configured running user context');
+    public void run() {
+        if (BrokerSetting__c.getOrgDefaults().Inhibit__c) {
+            //INHIBIT
+            System.assert(false, 'Inhibit');
         }
         
-        Broker impl = impl();
-        
-        if (impl.isRunning()) {
-            //don't run if already running
+        if ([SELECT Id FROM Message__c WHERE Status__c = 'Buffered' LIMIT 1].isEmpty()) {
+            //nothing to do
             return;
         }
         
-        Integer worksPending = [
-            SELECT COUNT()
-            FROM Message__c
-            WHERE Status__c = 'Buffered'
-        ];
+        this.runImpl();
         
-        if (worksPending == 0) {
-            //don't run if nothing to do
-            return;
-        }
-        
-        //there are messages to process
-        impl.runImpl();
     }
     
-    abstract public Boolean isRunning();
-     
     abstract public void runImpl();
-
+    
     static public Boolean isAllowedSessionId(String reflectorName, Id orgId) {
         if (!Test.isRunningTest() && Broker.class.getName() == 'Broker') return true; //unmanaged deployment ok
         

@@ -208,7 +208,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
     public void execute(QueueableContext context) {
         if (context != null) new MessageSetModel(this.messages).populateQueueableId(context);
         List<Message__c> messages = this.persist();
-        Job.runAsUser();
+        if (Test.isRunningTest()) Job.run(); else Job.runAsUser();
     }
     
     /**
@@ -241,24 +241,43 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      * Lets just have 9 global things in Job, and this proxies?
      */
     static global void run() {
-        // #671 first query locator spends less time in 'Preparing'
-        // 07b55e5b8de3ba09763336ac907a6e66c909f976#commitcomment-10137483
-        Broker.IsFirstRun = true;
-        Broker.run();
+        if (isScheduled()) return;
+        if (isRunning()) return;
+        Broker.impl().run();
+    }
+    
+    static public Boolean isScheduled() {
+        List<CronJobDetail> cronJobDetails = [
+            SELECT Id
+            FROM CronJobDetail
+            WHERE Name = 'Enterprise Service Bus Broker'
+            LIMIT 1
+        ];
+        
+        return !cronJobDetails.isEmpty();
+    }
+    
+    static public Boolean isRunning() {
+        List<AsyncApexJob> asyncApexJobs = [
+            SELECT Id
+            FROM AsyncApexJob
+            WHERE JobType = 'BatchApex'
+            AND ApexClass.Name = 'VerticalBrokerDispatcher'
+            AND ApexClass.NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
+            AND Status IN ('Holding', 'Queued', 'Processing', 'Preparing')
+            LIMIT 1
+        ];
+        
+        return !asyncApexJobs.isEmpty();
     }
     
     /**
      * #816 https://cloud.githubusercontent.com/assets/1878631/6813469/15c4d956-d27e-11e4-9d3d-e7026e95eade.jpg
      */
     static public void runAsUser() {
-        if (Test.isRunningTest()) {
-            //in tests, just run the thing here and now as me
-            Job.run();
-            return;
-        }
-        
-        //#653 don't use up an ASYNC call unless necessary
-        if (Broker.impl().isRunning()) return;
+        //#653 don't waste ASYNC call unnecessarily
+        if (isScheduled()) return;
+        if (isRunning()) return;
         runAsUserDefer();
     }
     
@@ -266,11 +285,18 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      * When this blows up we throw an unhandled exception in our namespace,
      * we should receive an email and reach out to the customer to debug this!
      *
+     * This guy will sometimes throw JobException from bad ExecAnon result. It
+     * is due to the callout failing to schedule the batch because of #929
+     * System.UnexpectedException:
+     * common.exception.SqlDupValOnIndexException:
+     * ORA-00001: unique constraint (CORE.AKCRON_JOB_DETAIL) violated
+     * 
      * @throws JobException
      */
     @Future(callout=true) static public void runAsUserDefer() {
-        //#653 don't use up an API call unless necessary
-        if (Broker.impl().isRunning()) return;
+        //#653 don't waste API call unnecessarily
+        if (isScheduled()) return;
+        if (isRunning()) return;
         
         String command = Job.class.getName() + '.run();';
         ExecAnonResult result = execAnon(command);
@@ -284,41 +310,26 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      * And unlike the synchronous broker (mostly used for unit tests), we make no
      * attempt to handle errors, catchable or otherwise. ExecAnonResult has them :)
      */
-    public class RunOneBroker extends Broker {
-        
-        public Id messageId;
-        
-        public RunOneBroker(Id messageId) {
-            this.messageId = messageId;
-        }
-        
-        override public void runImpl() {
-            //MARK
-            //nothing to do here because we would kill any callouts that follow,
-            //and runOneAsUser() should only be called on started messages anyway,
-            //not to mention we don't mark() and execute() in the same context :)
-            
-            //EXECUTE
-            Message__c inputMessage = (Message__c)ApexDomain.getById(this.messageId);
-            List<Message__c> outputMessages = new List<Message__c>();
-            this.execute(new List<Message__c>{inputMessage}, outputMessages);
-            
-            //PERSIST
-            List<Message__c> inputAndOutputMessages = new List<Message__c>();
-            inputAndOutputMessages.add(inputMessage);
-            inputAndOutputMessages.addAll(outputMessages);
-            this.persist(inputAndOutputMessages);
-        }
-        
-        override public Boolean isRunning() {return true;}
-    }
-    
-    /**
-     * Uses a special Broker to attempt just 1 message.
-     */
     static global void runOne(Id messageId) {
-        Broker impl = new RunOneBroker(messageId);
-        impl.runImpl();
+        //MARK
+        //nothing to do here because we would kill any callouts that follow,
+        //and runOneAsUser() should only be called on started messages anyway,
+        //not to mention we don't mark() and execute() in the same context :)
+        Broker impl = Broker.impl();
+        
+        //EXECUTE
+        Message__c inputMessage = (Message__c)ApexDomain.getById(messageId);
+        List<Message__c> outputMessages = new List<Message__c>();
+        impl.execute(new List<Message__c>{inputMessage}, outputMessages);
+        
+        //PERSIST
+        List<Message__c> inputAndOutputMessages = new List<Message__c>();
+        inputAndOutputMessages.add(inputMessage);
+        inputAndOutputMessages.addAll(outputMessages);
+        impl.persist(inputAndOutputMessages);
+        
+        //success, restart the REAL broker to carry on with the outputs
+        run();
     }
     
     /**

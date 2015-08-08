@@ -142,7 +142,6 @@
     </types>
     <types>
         <members>BranchConfig__c.Sequence__c</members>
-        <members>BrokerSetting__c.BrokerClassName__c</members>
         <members>BrokerSetting__c.EventStamp__c</members>
         <members>BrokerSetting__c.Inhibit__c</members>
         <members>BrokerSetting__c.IsPaused__c</members>
