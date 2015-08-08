@@ -470,13 +470,13 @@ abstract public with sharing class Broker {
      *
      * Per #929 we can use System.scheduleBatch to NAME THE JOB which lets us
      * lean on the platform to prevent races. Salesforce will block second job!
-     * 
+     *
      * If you try and schedule TWO jobs in ONE execution context:
      * System.AsyncException: The Apex job named "test" is already scheduled for execution.
-     * 
+     *
      * Or if you scheduled ONE job in each of TWO execution contexts:
      * System.UnexpectedException: common.exception.SqlDupValOnIndexException: ORA-00001: unique constraint (CORE.AKCRON_JOB_DETAIL) violated
-     * 
+     *
      * We see one of the seven dwarves appearing too:
      * ORA-06512: at "HAPPY.UDDDMLCRONJOBDETAIL", line 32
      * ORA-06512: at "HAPPY.CCRONJOBDETAIL", line 95
