@@ -90,9 +90,9 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         
         update rebufferableMessages;
         
-        //restart REAL broker
-        Job j = new Job('WAKE UP', UserInfo.getOrganizationId()); //TODO #952
-        System.enqueueJob(j);
+        //#952 restart REAL broker
+        System.Queueable job = new Job();
+        System.enqueueJob(job);
     }
     
     /**
@@ -307,9 +307,9 @@ public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
         for (Message__c message : messages) message.Status__c = 'Buffered';
         update messages;
         
-        //in real life, usurp sysadmin
-        Job j = new Job('WAKE UP', UserInfo.getOrganizationId()); //TODO #952
-        System.enqueueJob(j);
+        //#952 restart REAL broker
+        System.Queueable job = new Job();
+        System.enqueueJob(job);
     }
     
 }
