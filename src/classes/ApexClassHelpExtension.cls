@@ -16,9 +16,7 @@ public with sharing class ApexClassHelpExtension {
         this.ESB = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(this.model.ESB));
         this.Inputs = this.model.esb.Inputs;
         this.Outputs = this.model.esb.Outputs;
-        
-        ApexClass apexClass = (ApexClass)this.model.getRecord();
-        this.FullyQualifiedClassName = apexClass.NamespacePrefix == null ? apexClass.Name : apexClass.NamespacePrefix + '.' + apexClass.Name;
+        this.FullyQualifiedClassName = this.model.fullyQualifiedClassName();
     }
     
 }

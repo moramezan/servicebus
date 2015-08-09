@@ -1,10 +1,5 @@
 public with sharing class MonitorController {
     
-    //eg "ns."
-    public String getApexNamespacePrefix() {
-        return MonitorController.class.getName().substringBefore('MonitorController');
-    }
-    
     public void doPing() {}
     
     public Boolean getIsBrokerRunning() {
@@ -12,26 +7,13 @@ public with sharing class MonitorController {
     }
     
     public Boolean getIsJobsWaiting() {
-        System.Type type = Job.class;
-        String namespacePrefix;
-        String name;
-        
-        if (type.getName().contains('.')) {
-            //managed (namespaceprefix.classname)
-            namespacePrefix = type.getName().substringBefore('.');
-            name = type.getName().substringAfter('.');
-        } else {
-            //unmanaged (classname)
-            namespacePrefix = '';
-            name = type.getName();
-        }
-        
         //find existing jobs
         Integer existingQueueableJobs = [
             SELECT COUNT()
             FROM AsyncApexJob
-            WHERE ApexClass.NamespacePrefix = :namespacePrefix AND ApexClass.Name = :name
-            AND JobType IN ('Queueable')
+            WHERE ApexClass.NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
+            AND ApexClass.Name = 'Job'
+            AND JobType = 'Queueable'
             AND Status IN ('Queued', 'Processing', 'Preparing')
         ];
         

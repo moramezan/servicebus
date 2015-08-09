@@ -366,14 +366,11 @@ public with sharing class ConfigureController {
      * (Performed in a FUTURE method to prevent MIXED_DML_OPERATION exception)
      */
     @Future static public void assignPermissionSet(Id userId) {
-        //resolve package namespace prefix
-        String namespacePrefix = PostInstallHandler.class.getName().substringBefore('PostInstallHandler').substringBefore('.');
-        
         //find installed permission set
         PermissionSet ps = [
             SELECT Id
             FROM PermissionSet
-            WHERE NamespacePrefix = :namespacePrefix
+            WHERE NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
             AND Name = 'AdministerEsb'
         ];
         

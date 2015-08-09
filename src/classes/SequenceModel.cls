@@ -134,13 +134,11 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
             ];
         } catch (QueryException e) {
             //sequence contains no terminate step
-            String namespacePrefix = Terminate.class.getName().substringBefore('Terminate').substringBefore('.');
-            String name = 'Terminate';
-            
             ApexClass apexClass = [
                 SELECT Id, NamespacePrefix, Name
                 FROM ApexClass
-                WHERE NamespacePrefix = :namespacePrefix AND Name = :name
+                WHERE NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
+                AND Name = 'Terminate'
             ];
             
             //TODO add namespace prefix safety

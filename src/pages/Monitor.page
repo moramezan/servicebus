@@ -41,7 +41,7 @@
             Visualforce.remoting.Manager.invokeAction(
                 '{!$RemoteAction.MonitorController.getStatistics}', //getTestStatistics
                 function(data) {
-                    var inst = window.Stats || window.{!ApexNamespacePrefix}Stats
+                    var inst = window.Stats || window.{!$Setup.NamespaceSetting__c.DotPrefix__c}Stats
                     inst.reload(data);
                     setTimeout(redraw, 1000);
                 }
@@ -53,7 +53,7 @@
             Visualforce.remoting.Manager.invokeAction(
                 '{!$RemoteAction.MonitorController.getStatistics}', //getTestStatistics
                 function(data) {
-                    var inst = window.Stats || window.{!ApexNamespacePrefix}Stats
+                    var inst = window.Stats || window.{!$Setup.NamespaceSetting__c.DotPrefix__c}Stats
                     inst.reload(data);
                 }
             );

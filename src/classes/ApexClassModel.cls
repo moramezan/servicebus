@@ -158,6 +158,11 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         this.esb = esbFromEsb(reflector);
     }
     
+    public String fullyQualifiedClassName() {
+        ApexClass apexClass = (ApexClass)this.getRecord();
+        return Type.forName(apexClass.Name).getName();
+    }
+    
     /**
      * Base process to pretty up our own processes
      */
