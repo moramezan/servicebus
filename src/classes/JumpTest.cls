@@ -2,11 +2,50 @@
      
     static testmethod void hasTheCorrectLimits() {
         //assert
-        Integer expectedLimits = 100;
+        Integer expectedLimits = 50; //max sync limit
         Integer actualLimits = new Jump.ESB().Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
- 
+
+
+   static testmethod void withinSystemLimits() {
+        //arrange
+        Sequence__c target = new Sequence__c(Name = 'target');
+        insert target;
+        SequenceModel.fromName(target.Name).appendStep(Terminate.class);
+        
+        JumpConfig__c config = new JumpConfig__c(Sequence__c = target.Id);
+        insert config;
+        
+        Sequence__c origin = new Sequence__c(Name = 'origin');
+        insert origin;
+        SequenceModel.fromName(origin.Name).appendStep(Jump.class);
+        SequenceModel.fromName(origin.Name).appendStep(Terminate.class);
+        
+        
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__StepConfigId' => config.Id,
+            '__SequenceName' => 'origin',
+            '__Position' => 1,
+            'data' => 'herpderp'
+        };
+
+
+        //act
+        Test.startTest();
+        Integer limits = new Jump.Esb().Limits;
+        Integer counter = 0;
+        for (Integer i = 0; i < limits; i++) {
+            ApexClassModel.BaseProcess process = new Jump();
+            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            counter++;
+        }
+        Test.stopTest();
+
+        //assert
+        System.assertEquals(limits, counter, 'Limit not reached.');
+   }
+
     
     static testmethod void testJumpPervertsExecution() {
         //arrange

@@ -12,7 +12,7 @@ public with sharing class Publish extends ApexClassModel.BaseProcess {
         public String StepConfig = PublishConfig__c.class.getName();
         public String Icon = 'chart_organisation';
         public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessPublishSubscribe').getUrl();
-        public Integer Limits = 50; //leave half of 200 (Total number of SOQL queries issued)
+        public Integer Limits = 33; //max sync limit
         public String Cardinality = 'One';
     }
     

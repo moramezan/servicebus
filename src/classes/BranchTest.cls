@@ -2,12 +2,47 @@
 
     static testmethod void hasTheCorrectLimits() {
         //assert
-        Integer expectedLimits = 100;
+        Integer expectedLimits = 50; //max sync limit
         Integer actualLimits = new Branch.ESB().Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
-  
-    
+
+
+   static testmethod void withinSystemLimits() {
+        //arrange
+        Sequence__c origin = new Sequence__c(Name = 'originSequence');
+        Sequence__c target = new Sequence__c(Name = 'targetSequence');
+        insert origin;
+        insert target;
+        
+        //arrange config
+        BranchConfig__c config = new BranchConfig__c(Sequence__c = target.Id);
+        insert config;
+        
+        //arrange input event
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__StepConfigId' => config.Id,
+            '__SequenceName' => origin.Name,
+            '__Position' => 1
+        };
+
+
+        //act
+        Test.startTest();
+        Integer limits = new Branch.Esb().Limits;
+        Integer counter = 0;
+        for (Integer i = 0; i < limits; i++) {
+            ApexClassModel.BaseProcess process = new Branch();
+            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            counter++;
+        }
+        Test.stopTest();
+
+        //assert
+        System.assertEquals(limits, counter, 'Limit not reached.');
+   }
+
+
     static testmethod void testSubsequenceDropped() {
         Sequence__c origin = new Sequence__c(Name = 'origin');
         insert origin;

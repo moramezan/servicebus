@@ -8,6 +8,36 @@ private class WiretapTest {
         System.assertEquals(expectedLimits, actualLimits);
     }
 
+
+   static testmethod void withinSystemLimits() {
+        //arrange
+        Sequence__c sequence = new Sequence__c(Name = 'the-sequence');
+        insert sequence;
+
+        Map<String,Object> inputEvent = new Map<String,Object> {
+            '__SequenceName' => 'the-sequence',
+            '__Position' => 1
+        };
+
+
+        //act
+        Test.startTest();
+        Integer limits = new Wiretap.Esb().Limits;
+        Integer counter = 0;
+        for (Integer i = 0; i < limits; i++) {
+            ApexClassModel.BaseProcess process = new Wiretap();
+            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            counter++;
+        }
+        Test.stopTest();
+
+        //assert
+        System.assertEquals(limits, counter, 'Limit not reached.');
+   }
+
+
+
+
     static testmethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnProcessSettingNOTSet() {
         // Arrange :
         String sequenceName = 'the-sequence';

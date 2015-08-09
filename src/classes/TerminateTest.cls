@@ -3,10 +3,44 @@ private class TerminateTest
 {
     static testmethod void hasTheCorrectLimits() {
         //assert
-        Integer expectedLimits = 100;
+        Integer expectedLimits = 100; //max sync limit
         Integer actualLimits = new Terminate.ESB().Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
+
+    static testmethod void withinSystemLimits() {
+        //arrange
+        Sequence__c sequence = new Sequence__c(Name = 'the-sequence');
+        insert sequence;
+        
+        Step__c step02 = SequenceModel.fromName(sequence.Name).appendStep(Subsequence.class);
+        Step__c step01 = SequenceModel.fromName(sequence.Name).appendStep(Subsequence.class);
+        Id subsequenceStepId01 = step01.Id ;
+        Id subsequenceStepId02 = step02.Id ;
+        List<Id> subsequenceStepIds = new List<Id>{step01.Id, step02.Id};
+
+
+        Map<String,Object> inputEvent = new Map<String,Object> {
+            '__SequenceName' => 'the-sequence',
+            '__Position' => 1,
+            '__SubsequenceStepIds' => subsequenceStepIds
+        };
+
+        //act
+        Test.startTest();
+        Integer limits = new Terminate.Esb().Limits;
+        Integer counter = 0;
+        for (Integer i = 0; i < limits; i++) {
+            ApexClassModel.BaseProcess process = new Terminate();
+            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            counter++;
+        }
+        Test.stopTest();
+
+        //assert
+        System.assertEquals(limits, counter, 'Limit not reached.');
+    }
+
 
 
     static testmethod void callingExecuteReturnsExpectedOutputEventsWhenSubsequenceAttribsDefinedOnInputEvent()

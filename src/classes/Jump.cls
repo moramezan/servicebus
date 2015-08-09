@@ -10,7 +10,7 @@ public with sharing class Jump extends ApexClassModel.BaseProcess {
         public String StepConfig = JumpConfig__c.class.getName();
         public String Icon = 'arrow_switch';
         public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessBranchJumpSubsequence').getUrl();
-        public Integer Limits = 100; //leave half of 200 (Total number of SOQL queries issued)
+        public Integer Limits = 50; //max sync limit
         public String Cardinality = 'Zero';
     }
     

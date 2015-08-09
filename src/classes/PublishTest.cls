@@ -2,12 +2,66 @@
 
     static testmethod void hasTheCorrectLimits() {
         //assert
-        Integer expectedLimits = 50;
+        Integer expectedLimits = 33; //max sync limit
         Integer actualLimits = new Publish.ESB().Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
     
-    
+   static testmethod void withinSystemLimits() {
+        //arrange
+        EventType__c eventType = new EventType__c(
+            Name = 'TestEvent'
+        );
+        insert eventType;
+        
+        //arrange publish sequences and steps
+        Sequence__c publisher = new Sequence__c(Name = 'Publisher');
+        insert publisher;
+        
+        Step__c publisherStep = SequenceModel.fromName(publisher.Name).appendStep(Publish.class);
+        PublishConfig__c pubConfig = new PublishConfig__c(
+            Id = publisherStep.ConfigId__c,
+            EventType__c = eventType.Id
+        );
+        update pubConfig;
+        
+        //arrange subscribe sequences and steps
+        Sequence__c subscriber1 = new Sequence__c(Name = 'Subscriber1');
+        insert subscriber1;
+        
+        Step__c subscriber1step = SequenceModel.fromName(subscriber1.Name).appendStep(Subscribe.class);
+        Database.update(new SubscribeConfig__c(
+            Id = subscriber1step.ConfigId__c,
+            EventType__c = eventType.Id
+        ));
+        
+        Sequence__c subscriber2 = new Sequence__c(Name = 'Subscriber2');
+        insert subscriber2;
+        
+        Step__c subscriber2step = SequenceModel.fromName(subscriber2.Name).appendStep(Subscribe.class);
+        Database.update(new SubscribeConfig__c(
+            Id = subscriber2step.ConfigId__c,
+            EventType__c = eventType.Id
+        ));
+        
+        //arrange
+        Map<String,Object> inputEvent = new Map<String,Object>{'__SequenceName' => 'Publisher', '__Position' => 1, 'esb__StepConfigId' => pubConfig.Id};
+
+        //act
+        Test.startTest();
+        Integer limits = new Publish.Esb().Limits;
+        Integer counter = 0;
+        for (Integer i = 0; i < limits; i++) {
+            ApexClassModel.BaseProcess process = new Publish();
+            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            counter++;
+        }
+        Test.stopTest();
+
+        //assert
+        System.assertEquals(limits, counter, 'Limit not reached.');
+   }
+
     
     static testmethod void testSubsequenceDropped() {
         //arrange events

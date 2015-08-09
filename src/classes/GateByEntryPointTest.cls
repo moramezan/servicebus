@@ -1,5 +1,61 @@
 @IsTest public class GateByEntryPointTest {
 
+
+   static testmethod void hasTheCorrectLimits() {
+        //assert
+        Integer expectedLimits = 50; //max sync limit
+        Integer actualLimits = new GateByEntryPoint.ESB().Limits;
+        System.assertEquals(expectedLimits, actualLimits);
+    }
+
+
+   static testmethod void withinSystemLimits() {
+        // Arrange
+        Integer count =  3 ;
+        Integer insertIntoMessageCount = count;
+        Integer insertIntoGateItemCount = count - 1;  // Adjust down by one
+        // expect: the insertion of additional GateItem under "Act"
+
+        String entryPointUuid = '1234567';
+
+        Map<String,Object> inputEvent = new Map<String,Object> {
+            'esb__EntryPointUuid' => entryPointUuid,
+            '__SequenceName' => 'test',
+            '__Position' => 1,
+            '__ChunkTotal' => 1,
+            '__Chunk' => 1
+        };
+
+        List<Message__c> messages = new List<Message__c> ();
+        integer k = 1;
+        while(k <= count) {
+            Map<String,Object> event = inputEvent.clone();
+            event.put('c__data' , 'x'+k);
+            if (k <= insertIntoMessageCount) {
+                String status = (k == insertIntoMessageCount) ? 'Started' : 'Completed';
+                messages.add(new Message__c(Event__c = json.serialize(event), Status__c = status));
+            }
+
+            k++;
+        }
+        insert messages;
+
+        //act
+        Test.startTest();
+        Integer limits = new GateByEntryPoint.Esb().Limits;
+        Integer counter = 0;
+        for (Integer i = 0; i < limits; i++) {
+            ApexClassModel.BaseProcess process = new GateByEntryPoint();
+            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            counter++;
+        }
+        Test.stopTest();
+
+        //assert
+        System.assertEquals(limits, counter, 'Limit not reached.');
+   }
+
+
     static testmethod void callingIsReleaseThrowsExpectedException01() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
