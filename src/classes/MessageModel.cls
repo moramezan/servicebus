@@ -280,7 +280,7 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
      * @exception MessageException if you are not allowed to restart the message
      * @return true if synchronous reprocess succeeded, false if it failed
      */
-    private void restart() {
+    public void restart() {
         System.assert(false, 'This is JavaScript now.');
     }
     

@@ -306,14 +306,17 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
              * No marking here because we would kill any callouts that follow. We
              * already know that this guy is acting on a started message anyway.
              */
+            //VALIDATE
+            Message__c message = (Message__c)ApexDomain.getById(strategy);
+            if (message.Exception__c == null) return; //Only messages with an Exception can be restarted
+            
             //EXECUTE
-            Message__c inputMessage = (Message__c)ApexDomain.getById(strategy);
             List<Message__c> outputMessages = new List<Message__c>();
-            Broker.impl().execute(new List<Message__c>{inputMessage}, outputMessages);
+            Broker.impl().execute(new List<Message__c>{message}, outputMessages);
             
             //PERSIST
             List<Message__c> inputAndOutputMessages = new List<Message__c>();
-            inputAndOutputMessages.add(inputMessage);
+            inputAndOutputMessages.add(message);
             inputAndOutputMessages.addAll(outputMessages);
             Broker.impl().persist(inputAndOutputMessages);
             

@@ -330,7 +330,32 @@ Sucessfull execution initiates processing by the Broker</description>
         <masterLabel>Restart Message</masterLabel>
         <openType>onClickJavaScript</openType>
         <protected>false</protected>
-        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/34.0/connection.js&quot;)}</url>
+        <url>//TODO obfuscate this
+if ({!Message__c.Exception__c == null}) {
+    //only messages with an exception can be restarted
+    window.location.href = &apos;/{!$ObjectType.Message__c}&apos;;
+} else {
+    var bar = &apos;{!$Setup.NamespaceSetting__c.BarPrefix__c}&apos;;
+    var dot = &apos;{!$Setup.NamespaceSetting__c.DotPrefix__c}&apos;;
+    var sid = &apos;{!$Setup.OAuthSetting__c.AccessToken__c}&apos;;
+    var mark = new Date().getTime();
+    var command = dot + &quot;Job.run(&apos;{!Message__c.Id}&apos;);&quot;;
+
+    sforce.connection.init(sid, &apos;/services/Soap/u/34.0&apos;);
+    var response = sforce.apex.executeAnonymous(command);
+    if (response.success == &quot;false&quot;) {
+        //persist any fatal error
+        var msg = new sforce.SObject(bar + &apos;Message__c&apos;);
+        msg.Id = &apos;{!Message__c.Id}&apos;;
+        msg[bar + &apos;ExecuteDuration__c&apos;] = new Date().getTime() - mark;
+        msg[bar + &apos;Exception__c&apos;] = response.exceptionMessage.substring(0, 255);
+        msg[bar + &apos;Cause__c&apos;] = response.exceptionStackTrace.substring(0, 32768);
+        sforce.connection.update([msg]);
+    }
+    window.location.reload();
+}
+{!REQUIRESCRIPT(&quot;/soap/ajax/34.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/34.0/apex.js&quot;)}</url>
     </webLinks>
     <webLinks>
         <fullName>ResumeQueue</fullName>
