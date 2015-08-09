@@ -72,78 +72,73 @@ public with sharing class MonitorController {
     
     @RemoteAction static public List<Statistic> getStatistics() {
         //initialize empty statistics for each process
-        Map<String,Statistic> process2statistic = new Map<String,Statistic>();
+        Map<String,Statistic> step2statistic = new Map<String,Statistic>();
         
         //#761 add null guy for all buffered messages
-        process2statistic.put(' ', new Statistic(' ', 0, 0, 0, 0));
+        step2statistic.put(' ', new Statistic(' ', 0, 0, 0, 0));
         
-        List<ApexClass> apexClasses = [SELECT Id FROM ApexClass WHERE Name != 'ApexClassModel'];
-        ApexClassSetModel model = new ApexClassSetModel(apexClasses);
-        model.discoverProcesses();
-        
-        List<Map<String,Object>> processes = model.toDtos();
-        for (Map<String,Object> process : processes) {
-            Statistic statistic = new Statistic((String)process.get('ApexClassName'), 0, 0, 0, 0);
-            process2statistic.put((String)process.get('ApexClassName'), statistic);
+        for (Step__c step : Step__c.getAll().values()) {
+            Statistic statistic = new Statistic(step.Name, 0, 0, 0, 0);
+            step2statistic.put(step.Name, statistic);
         }
         
         //check for null so we don't blow up for unresolved messages
         //TODO is there any point even displaying paused messages?!?!
         //first aggregate by route
         for (AggregateResult result : [
-            SELECT ApexClassName__c apexClassName, COUNT(Status__c) total
+            SELECT Step__c step, COUNT(Status__c) total
             FROM Message__c
             WHERE Step__c != null
             AND Status__c = 'Paused'
-            GROUP BY ApexClassName__c
+            GROUP BY Step__c
         ]) {
-            Statistic statistic = process2statistic.get((String)result.get('apexClassName')); //#761
-            if (statistic == null) statistic = process2statistic.get(' ');
+            Statistic statistic = step2statistic.get((String)result.get('step')); //#761
+            if (statistic == null) statistic = step2statistic.get(' ');
             statistic.Paused += (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
-            SELECT ApexClassName__c apexClassName, COUNT(Status__c) total
+            SELECT Step__c step, COUNT(Status__c) total
             FROM Message__c
             WHERE Step__c != null
             AND Status__c = 'Buffered'
-            GROUP BY ApexClassName__c
+            GROUP BY Step__c
         ]) {
-            process2statistic.get(' ').Buffered = (Integer)result.get('total');
+            step2statistic.get(' ').Buffered = (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
-            SELECT ApexClassName__c apexClassName, COUNT(Status__c) total
+            SELECT Step__c step, COUNT(Status__c) total
             FROM Message__c
             WHERE Step__c != null
             AND Status__c = 'Started' AND Exception__c = null
-            GROUP BY ApexClassName__c
+            GROUP BY Step__c
         ]) {
-            Statistic statistic = process2statistic.get((String)result.get('apexClassName')); //#761
-            if (statistic == null) statistic = process2statistic.get(' ');
+            Statistic statistic = step2statistic.get((String)result.get('step')); //#761
+            if (statistic == null) statistic = step2statistic.get(' ');
             statistic.Started += (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
-            SELECT ApexClassName__c apexClassName, COUNT(Status__c) total
+            SELECT Step__c step, COUNT(Status__c) total
             FROM Message__c
             WHERE Step__c != null
             AND Status__c = 'Started' AND Exception__c != null
-            GROUP BY ApexClassName__c
+            GROUP BY Step__c
         ]) {
-            Statistic statistic = process2statistic.get((String)result.get('apexClassName')); //#761
-            if (statistic == null) statistic = process2statistic.get(' ');
+            Statistic statistic = step2statistic.get((String)result.get('step')); //#761
+            if (statistic == null) statistic = step2statistic.get(' ');
             statistic.Exceptions += (Integer)result.get('total');
         }
         
         //pluck out the buffered guys (null per #697)
-        Statistic none = process2statistic.remove(' ');
-        List<String> classNames = new List<String>(process2statistic.keySet());
-        classNames.sort();
+        Statistic none = step2statistic.remove(' ');
+        List<String> stepNames = new List<String>(step2statistic.keySet());
+        stepNames.sort();
         
         //sort buffered then alphabetical
         List<Statistic> statistics = new List<Statistic>{none};
-        for (String className : classNames) statistics.add(process2statistic.get(className));
+        for (String stepName : stepNames) statistics.add(step2statistic.get(stepName));
         return statistics;
     }
     

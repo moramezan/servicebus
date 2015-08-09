@@ -144,7 +144,6 @@
         <members>BrokerSetting__c.IsPaused__c</members>
         <members>JumpConfig__c.Sequence__c</members>
         <members>KnifeSwitch__c.Url__c</members>
-        <members>Message__c.ApexClassName__c</members>
         <members>Message__c.Cause__c</members>
         <members>Message__c.EntryPointUuid__c</members>
         <members>Message__c.Event__c</members>

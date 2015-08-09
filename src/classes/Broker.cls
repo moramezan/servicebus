@@ -341,9 +341,6 @@ abstract public with sharing class Broker {
             
             for (MessageModel model : models) {
                 
-                //#697 locateMarkableWork misses this for heartbeats
-                model.setApexClassName(Heartbeat.class);
-                
                 try {
                     //do invocation
                     model.invokeExecute(outputMessages);

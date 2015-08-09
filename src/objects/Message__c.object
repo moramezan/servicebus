@@ -57,18 +57,6 @@
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
     <fields>
-        <fullName>ApexClassName__c</fullName>
-        <description>Namespace Prefix and Apex Class name per #697</description>
-        <externalId>true</externalId>
-        <inlineHelpText>What is the underlying namespace prefix and Apex class that handles this message?</inlineHelpText>
-        <label>Apex Class</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Cause__c</fullName>
         <description>The stack trace surfaced to the end user is actually the complete stack trace minus the stack trace related to the base process and broker.</description>
         <externalId>false</externalId>
@@ -188,7 +176,6 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         <fullName>All</fullName>
         <columns>NAME</columns>
         <columns>Status__c</columns>
-        <columns>ApexClassName__c</columns>
         <columns>CREATED_DATE</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
@@ -199,7 +186,6 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         <fullName>Exception</fullName>
         <columns>NAME</columns>
         <columns>Status__c</columns>
-        <columns>ApexClassName__c</columns>
         <columns>CREATED_DATE</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
@@ -219,7 +205,6 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         <fullName>Killed</fullName>
         <columns>NAME</columns>
         <columns>Status__c</columns>
-        <columns>ApexClassName__c</columns>
         <columns>CREATED_DATE</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
@@ -242,7 +227,6 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     <pluralLabel>Messages</pluralLabel>
     <searchLayouts>
         <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>ApexClassName__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>ExecuteDuration__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Exception__c</customTabListAdditionalFields>
         <excludedStandardButtons>Accept</excludedStandardButtons>

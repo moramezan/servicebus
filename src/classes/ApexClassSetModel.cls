@@ -80,7 +80,6 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(reflector);
             
             Map<String,Object> dto = new Map<String,Object>{
-                'ApexClassName' => reflector.getName(), //TODO per #886 get rid of this!!!
                 'Id' => apexClass.Id,
                 'Name' => esb.Name,
                 'Description' => esb.Description,
