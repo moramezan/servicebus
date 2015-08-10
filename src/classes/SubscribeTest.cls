@@ -36,9 +36,8 @@
 
     static testmethod void testSubscribeProcessActsAsNoop() {
         //arrange
-        String data = '{"herp":"derp"}';
-        Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
-        
+        Map<String,Object> parameters = new Map<String,Object>{'herp' => 'derp'};
+            
         //act
         ApexClassModel.BaseProcess process = new Subscribe();
         List<Map<String,Object>> parametersList = process.execute(parameters);
@@ -48,8 +47,8 @@
         integer actualSize = parametersList.size();
         System.assertEquals(expectedSize , actualSize);
         
-        string expectedData = data;
-        string actualData = system.json.serialize(parametersList[0]);
+        string expectedData = 'derp';
+        string actualData = (String)parametersList[0].get('herp');
         System.assertEquals(expectedData, actualData);
     }
     

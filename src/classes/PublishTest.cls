@@ -153,9 +153,12 @@
         );
         update config;
         
-        String data = '{"__SequenceName":"TestSequence","__Position":1}';
-        Map<String,Object> parameters = (Map<String,Object>)System.Json.deserializeUntyped(data);
-        parameters.put('esb__StepConfigId', config.Id);
+        Map<String,Object> parameters = new Map<String,Object>{
+            '__SequenceName'=>'TestSequence',
+            '__Position'=>1,
+            'esb__StepConfigId'=>config.Id
+        };
+ 
         //act
         ApexClassModel.BaseProcess process = new Publish();
         List<Map<String,Object>> parametersList = process.execute(parameters);

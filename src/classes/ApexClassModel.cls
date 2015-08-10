@@ -179,6 +179,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             Process.PluginRequest eventProviderRequest = new Process.PluginRequest(new Map<String,Object>{'esb__EventProvider' => true});
             Map<String,Object> inputEvent = new Job().invoke(eventProviderRequest).OutputParameters;
             Boolean allowsCallouts = (Boolean)inputEvent.get('esb__AllowsCallouts');
+            if (Test.isRunningTest()) { inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));} // #797; cycle so process author doesn't have to in tests!
             if (allowsCallouts == true) {this.callouts(inputEvent);return null;}
             return Json.serialize(this.execute(inputEvent));
         }
