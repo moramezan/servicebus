@@ -66,4 +66,17 @@
         System.assertEquals(1, model.esb.Limits, 'Wrong Limits.');
     }
     
+    static testmethod void testShowSetting() {
+        //arrange
+        ApexClassModel model = new ApexClassModel(Wiretap.class);
+        
+        //act
+        PageReference redirect = model.showSetting();
+        
+        //assert
+        String expectedUrl = '/' + SObjectType.WiretapSetting__c.KeyPrefix + '/o';
+        String actualUrl = redirect.getUrl();
+        System.assertEquals(expectedUrl, actualUrl, 'Wrong URL.');
+    }
+    
 }

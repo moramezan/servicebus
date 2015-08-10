@@ -19,7 +19,7 @@ trigger SubscribeConfigTriggers on SubscribeConfig__c (before insert, before upd
     for (SubscribeConfig__c config : configs) {
         EventType__c eventType = id2eventType.get(config.EventType__c);
         if (eventType == null) {
-            config.Name = ('This step must be configured!').left(80);
+            config.Name = ('This step must be configured. Seriously.').left(80);
         } else {
             config.Name = ('Listens for any message published to "' + eventType.Name + '".').left(80);
         }

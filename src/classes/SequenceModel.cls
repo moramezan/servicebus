@@ -83,23 +83,12 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
      * TEST scenarios can append inner classes.
      */
     @TestVisible private Step__c appendStep(Type reflector) {
+        if (!SObjectType.Step__c.Createable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Createable');
         Savepoint sp = Database.setSavepoint();
         try {
-            if (!SObjectType.Step__c.Createable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Createable');
-            
             ApexClassModel model = new ApexClassModel(reflector);
-            
-            //insert any StepConfig
-            SObject config;
-            if (model.esb.StepConfig != null) {
-                config = (SObject)Type.forName(model.esb.StepConfig).newInstance();
-                insert config;
-                config = ApexDomain.getById(config.Id);
-            }
-            
             Integer position = [SELECT COUNT() FROM Step__c WHERE SequenceName__c = :this.sequence.Name] + 1;
             
-            //insert step himself
             Step__c step = new Step__c(
                 Name = this.sequence.Name + '#' + position,
                 SequenceName__c = this.sequence.Name,
@@ -107,11 +96,6 @@ public with sharing class SequenceModel extends ApexDomain.StandardModel {
                 ApexClassName__c = reflector.getName(),
                 Position__c = position
             );
-            
-            if (config != null) {
-                step.ConfigId__c = (Id)config.get('Id');
-                step.ConfigName__c = (String)config.get('Name');
-            }
             
             insert step;
             return Step__c.getValues(step.Name);

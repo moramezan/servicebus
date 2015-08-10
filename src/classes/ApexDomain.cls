@@ -78,4 +78,10 @@ public with sharing class ApexDomain {
         String fields = String.join(new List<String>(description.fields.getMap().keySet()), ',');
         return Database.query('SELECT ' + fields + ' FROM ' + name + ' WHERE Id = :recordId');
     }
+    
+    static public Boolean exists(Id recordId) {
+        if (recordId == null) return false;
+        String name = recordId.getSobjectType().getDescribe().getName();
+        return !Database.query('SELECT Id FROM ' + name + ' WHERE Id = :recordId').isEmpty();
+    }
 }

@@ -7,7 +7,7 @@
     "codeClass": null,
     "userConfig": {
         "designer|userClassName": "Step",
-        "idProperty": "Name"
+        "idProperty": "Id"
     },
     "name": "MyModel",
     "designerId": "2e0af0ff-44fe-40cb-a9bd-7050f68308c5",
@@ -20,9 +20,22 @@
             },
             "codeClass": null,
             "userConfig": {
+                "name": "Id"
+            },
+            "name": "MyField1",
+            "designerId": "b9d98b17-2049-41d3-998f-98ca5ff0528b"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
                 "name": "Name"
             },
-            "name": "MyField2",
+            "name": "MyString4",
             "designerId": "8ad199a1-d824-4443-b212-b68b03b097a9"
         },
         {

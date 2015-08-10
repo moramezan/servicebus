@@ -29,6 +29,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ApexClassSettingExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ApexClassSettingExtensionTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ApexDomain</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -250,6 +258,14 @@
     </classAccesses>
     <classAccesses>
         <apexClass>SequenceSetModelTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>StepConfigureExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>StepConfigureExtensionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -578,6 +594,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>SequenceSplash</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>StepConfigure</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

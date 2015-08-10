@@ -19,7 +19,7 @@ trigger PublishConfigTriggers on PublishConfig__c (before insert, before update)
     for (PublishConfig__c config : configs) {
         EventType__c eventType = id2eventType.get(config.EventType__c);
         if (eventType == null) {
-            config.Name = ('This step must be configured!').left(80);
+            config.Name = ('This step must be configured. Seriously.').left(80);
         } else {
             config.Name = ('Broadcasts the message to all sequences subscribed to "' + eventType.Name + '".').left(80);
         }

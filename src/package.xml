@@ -13,6 +13,8 @@
         <members>ApexClassModelTest</members>
         <members>ApexClassSetModel</members>
         <members>ApexClassSetModelTest</members>
+        <members>ApexClassSettingExtension</members>
+        <members>ApexClassSettingExtensionTest</members>
         <members>ApexDomain</members>
         <members>ApexDomainTest</members>
         <members>Branch</members>
@@ -69,6 +71,8 @@
         <members>SequenceModelTest</members>
         <members>SequenceSetModel</members>
         <members>SequenceSetModelTest</members>
+        <members>StepConfigureExtension</members>
+        <members>StepConfigureExtensionTest</members>
         <members>StepModel</members>
         <members>StepModelTest</members>
         <members>StepSetModel</members>
@@ -117,6 +121,7 @@
         <members>SequenceBuilder</members>
         <members>SequenceHelp</members>
         <members>SequenceSplash</members>
+        <members>StepConfigure</members>
         <members>SubscribeConfigHelp</members>
         <members>SubscribeConfigManageEventTypes</members>
         <members>SubsequenceConfigHelp</members>

@@ -35,6 +35,7 @@
         window.$Page = window.$Page || {};
         $Page.ApexClassHelp = '{!$Page.ApexClassHelp}';
         $Page.ApexClassSetting = '{!$Page.ApexClassSetting}';
+        $Page.StepConfigure = '{!$Page.StepConfigure}';
         
         TerminateApexClassName = '{!TerminateApexClassName}';
         Processes = {!Processes};
@@ -48,6 +49,7 @@
         URLFOR['/'] = '{!URLFOR("/")}';
         URLFOR[$Page.ApexClassHelp] = '{!URLFOR($Page.ApexClassHelp)}';
         URLFOR[$Page.ApexClassSetting] = '{!URLFOR($Page.ApexClassSetting)}';
+        URLFOR[$Page.StepConfigure] = '{!URLFOR($Page.StepConfigure)}';
     </c:BootstrapExt>
 
 </apex:page>

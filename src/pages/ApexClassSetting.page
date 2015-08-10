@@ -1,3 +1,3 @@
-<apex:page standardController="ApexClass" action="{!'/' + $ObjectType[$CurrentPage.Parameters.fqcn].KeyPrefix + '/o'}">
+<apex:page standardController="ApexClass" extensions="ApexClassSettingExtension" action="{!doRedirect}">
     <apex:pageMessages showDetail="false" />
 </apex:page>

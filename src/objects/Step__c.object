@@ -21,7 +21,7 @@
         <inlineHelpText>What process will handle the messages reaching this step?</inlineHelpText>
         <label>Fully Qualified Class Name</label>
         <length>80</length>
-        <required>true</required>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -67,7 +67,7 @@
         <inlineHelpText>What sequence does this step belong to?</inlineHelpText>
         <label>Sequence Name</label>
         <length>80</length>
-        <required>true</required>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>

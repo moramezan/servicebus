@@ -19,7 +19,7 @@ trigger JumpConfigTriggers on JumpConfig__c (before insert, before update) {
     for (JumpConfig__c config : configs) {
         Sequence__c sequence = id2sequence.get(config.Sequence__c);
         if (sequence == null) {
-            config.Name = ('This step must be configured!').left(80);
+            config.Name = ('This step must be configured. Seriously.').left(80);
         } else {
             config.Name = ('Diverts message to sequence "' + sequence.Name + '", never to return.').left(80);
         }

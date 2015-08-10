@@ -86,6 +86,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
                 'Tag' => esb.Tag,
                 'Icon' => esb.Icon,
                 'Cardinality' => esb.Cardinality,
+                'StepConfig' => esb.StepConfig,
                 'ProcessSetting' => esb.ProcessSetting
             };
             

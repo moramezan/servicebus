@@ -60,6 +60,7 @@ public class StepSetModel extends ApexDomain.StandardSetModel {
         
         for (Step__c step : steps) {
             Map<String,Object> dto = new Map<String,Object>{
+                'Id' => step.Id,
                 'Name' => step.Name,
                 'ConfigId' => step.ConfigId__c,
                 'ConfigName' => step.ConfigName__c,

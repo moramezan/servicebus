@@ -29,6 +29,11 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
         return new StepModel(step);
     }
     
+    static public StepModel fromId(Id stepId) {
+        Step__c step = (Step__c)ApexDomain.getById(stepId);
+        return new StepModel(step);
+    }
+    
     /**
      * Moves a step within a sequence
      * and re-orders the other steps.
@@ -127,13 +132,54 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
         }
     }
     
+    public void upsertConfig() {
+        //use apex class name instead of id, for easier testing
+        Type reflector = Type.forName(this.Step.ApexClassName__c);
+        ApexClassModel model = new ApexClassModel(reflector);
+        
+        if (model.esb.StepConfig == null) {
+            //process has no config
+            return;
+        }
+        
+        if (ApexDomain.exists(this.Step.ConfigId__c)) {
+            //config already exists
+            return;
+        }
+        
+        //get type without using global describe
+        SObject prototype = (SObject)Type.forName(model.esb.StepConfig).newInstance();
+        SObjectType objectType = prototype.getSObjectType();
+        
+        //new up with defaults
+        Id recordTypeId = null;
+        Boolean loadDefaults = true;
+        SObject config = objectType.newSObject(recordTypeId, loadDefaults);
+        insert config;
+        
+        //get the name
+        Id configId = config.Id;
+        config = Database.query('SELECT Id, Name FROM ' + model.esb.StepConfig + ' WHERE Id = :configId');
+        
+        this.Step.ConfigId__c = (Id)config.get('Id');
+        this.Step.ConfigName__c = (String)config.get('Name');
+        update this.Step;
+    }
+    
+    public PageReference showConfig() {
+        Id configId = this.Step.ConfigId__c;
+        SObject config = configId.getSObjectType().newSObject(configId);
+        return new ApexPages.StandardController(config).view();
+    }
+    
     /**
      * Locates a Step and his related StepConfig
      * and caches the friendly name on the step.
      *
      * @param configId of any StepConfig
      */
-    static public void cacheConfigName(Id configId) {
+    public void cacheConfigName() {
+        Id configId = this.Step.ConfigId__c;
         Step__c step = [SELECT Name FROM Step__c WHERE ConfigId__c = :configId];
         String objectType = configId.getSObjectType().getDescribe().getName();
         SObject config = Database.query('SELECT Id, Name FROM ' + objectType + ' WHERE Id = :configId');

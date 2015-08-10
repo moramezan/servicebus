@@ -164,6 +164,17 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     }
     
     /**
+     * Redirects the user to the ListView
+     * URL of the specified Process Setting
+     */
+    public PageReference showSetting() {
+        SObject setting = (SObject)Type.forName(this.esb.ProcessSetting).newInstance();
+        DescribeSObjectResult result = setting.getSObjectType().getDescribe();
+        return new PageReference('/' + result.getKeyPrefix() + '/o');
+        //TODO #925 if (!result.isCustomSetting()) return new PageReference('/' + result.getKeyPrefix() + '/l');
+    }
+    
+    /**
      * Base process to pretty up our own processes
      */
     abstract public with sharing class BaseProcess {
