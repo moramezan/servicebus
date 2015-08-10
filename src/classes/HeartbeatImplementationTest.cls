@@ -189,7 +189,7 @@
         HeartbeatImplementation.updateLastEventStamp( heartbeats );
 
         // assemble
-        BrokerSetting__c settings = BrokerSetting__c.getInstance();
+        BrokerSetting__c settings = BrokerSetting__c.getOrgDefaults();
         DateTime actualEventStamp =  settings.EventStamp__c;
         
         // assert
@@ -218,7 +218,7 @@
         HeartbeatImplementation.updateLastEventStamp( heartbeats );
 
         // assemble
-        BrokerSetting__c settings = BrokerSetting__c.getInstance();
+        BrokerSetting__c settings = BrokerSetting__c.getOrgDefaults();
         DateTime actualEventStamp = settings.EventStamp__c;
         
         // assert

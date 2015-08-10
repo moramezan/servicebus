@@ -384,7 +384,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
         request.setTimeout(120000);
         request.setMethod('GET');
         request.setEndpoint(endpoint);
-        request.setHeader('Authorization', 'Bearer ' + OAuthSetting__c.getInstance().AccessToken__c);
+        request.setHeader('Authorization', 'Bearer ' + OAuthSetting__c.getOrgDefaults().AccessToken__c);
         
         // #653 throw unhandled exception in our namespace
         HttpResponse response = new Http().send(request);

@@ -18,7 +18,7 @@ public with sharing class Wiretap extends ApexClassModel.BaseProcess {
         
         Id userId;
         try {
-            WiretapSetting__c setting = WiretapSetting__c.getInstance();
+            WiretapSetting__c setting = WiretapSetting__c.getOrgDefaults();
             userId = setting.UserId__c;
         } catch (Exception e) {
         }

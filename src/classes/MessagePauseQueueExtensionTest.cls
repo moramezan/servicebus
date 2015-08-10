@@ -9,7 +9,7 @@
         MessagePauseQueueExtension.DoDml doDmlInstance = new MessagePauseQueueExtension.DoDml();
         
         //assemble
-        BrokerSetting__c actualSettings  = BrokerSetting__c.getInstance();
+        BrokerSetting__c actualSettings  = BrokerSetting__c.getOrgDefaults();
         Boolean actualIsPaused =  actualSettings.IsPaused__c;
 
         // assert
@@ -30,7 +30,7 @@
         System.PageReference actualPageReference  = messagePauseQueueExtension.doPause();
         
         //assemble
-        BrokerSetting__c actualSettings  = BrokerSetting__c.getInstance();
+        BrokerSetting__c actualSettings  = BrokerSetting__c.getOrgDefaults();
         Boolean actualIsPaused =  actualSettings.IsPaused__c;
         
         

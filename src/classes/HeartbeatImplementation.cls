@@ -41,7 +41,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
         public DateTime CurrentDateTime    {get; private set;}
  
         public  HeartbeatGeneratorImpl() {
-            DateTime  eventStampAsDateTime = BrokerSetting__c.getInstance().EventStamp__c;
+            DateTime  eventStampAsDateTime = BrokerSetting__c.getOrgDefaults().EventStamp__c;
             
             // no suicide chaining : set to 60
             // suicide schedule : set as low as 5

@@ -164,7 +164,7 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             
             //#877 surface SessionId to select few orgs and packages
             //Boolean allowSessionId = Broker.isAllowedSessionId(step.ApexClassName__c, UserInfo.getOrganizationId());
-            //if (allowSessionId) Job.Event.put('__SessionId', OAuthSetting__c.getInstance().AccessToken__c);
+            //if (allowSessionId) Job.Event.put('__SessionId', OAuthSetting__c.getOrgDefaults().AccessToken__c);
             //TODO for #886
             
             //do invocation
