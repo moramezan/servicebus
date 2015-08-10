@@ -14,6 +14,16 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
     public Map<String,Object> Event;
     
     /**
+     * Signal exception, by prepare / callouts / execute
+     */
+    public Boolean IsFucked = false;
+    
+    /**
+     * Signal this process causes any change to any state
+     */
+    public Boolean HadSideEffects = false;
+    
+    /**
      * These are all examples of "bigger problems"
      */
     public MessageModel(Message__c message) {
@@ -51,25 +61,6 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
     private Long Start;
     
     /**
-     * Profiler mark
-     */
-    public void start() {
-        this.Start = System.now().getTime();
-    }
-    
-    /**
-     * Profiler unmark
-     */
-    public void finish() {
-        Long start = this.Start;
-        Long finish = System.now().getTime();
-        Long duration = finish - start;
-        
-        if (this.Message.ExecuteDuration__c == null) this.Message.ExecuteDuration__c = 0;
-        this.Message.ExecuteDuration__c += duration;
-    }
-
-    /**
      * Returns STEP or NULL
      */
     public Step__c resolveStep() {
@@ -84,68 +75,55 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
      * This performs actual resolution inside the broker execute method.
      */
     public void prepareProcess() {
-        
-        Integer hops = (Integer)this.Event.get('__Hops');
-        
-        if (hops >= Broker.MaxHops) {
-            MessageException e = new MessageException('Too many hops - to resolve, manually set __Hops on event parameters to 0');
+        this.Message.ExecuteDuration__c = 0;
+        try {
+            Integer hops = (Integer)this.Event.get('__Hops');
+            
+            if (hops >= Broker.MaxHops) {
+                throw new MessageException('Too many hops - to resolve, manually set __Hops on event parameters to 0');
+            }
+            
+            String route = this.message.Step__c;
+            
+            if (route == null) {
+                throw new MessageException('This message has no route: ' + this.message.Id);
+            }
+            
+            Step__c step = Step__c.getValues(route);
+            
+            if (step == null) {
+                throw new MessageException('Nonexistent route, eg bad sequence name, position, missing terminate: ' + route);
+            }
+            
+            String apexClassName = step.ApexClassName__c;
+            
+            if (apexClassName == null) {
+                throw new MessageException('Step fully qualified class name was null: ' + step.Id);
+            }
+            
+            Type reflector = Type.forName(apexClassName);
+            
+            if (reflector == null) {
+                throw new MessageException('Reflector for classname was null: ' + apexClassName);
+            }
+            
+            this.Process = reflector.newInstance();
+            
+        } catch (Exception e) {
             this.prepareException(e);
-            throw e;
+            this.IsFucked = true;
         }
-        
-        if (this.Process != null) {
-            //success, nothing to do as already prepared
-            return;
-        }
-        
-        String route = this.message.Step__c;
-        
-        if (route == null) {
-            MessageException e = new MessageException('This message has no route: ' + this.message.Id);
-            this.prepareException(e);
-            throw e;
-        }
-        
-        Step__c step = Step__c.getValues(route);
-        
-        if (step == null) {
-            MessageException e = new MessageException('Nonexistent route, eg bad sequence name, position, missing terminate: ' + route);
-            this.prepareException(e);
-            throw e;
-        }
-        
-        String apexClassName = step.ApexClassName__c;
-        
-        if (apexClassName == null) {
-            MessageException e = new MessageException('Step fully qualified class name was null: ' + step.Id);
-            this.prepareException(e);
-            throw e;
-        }
-        
-        Type reflector = Type.forName(apexClassName);
-        
-        if (reflector == null) {
-            MessageException e = new MessageException('Reflector for classname was null: ' + apexClassName);
-            this.prepareException(e);
-            throw e;
-        }
-        
-        this.Process = reflector.newInstance();
     }
     
     /**
      * TODO COUNT ANY DMLS
      */
     public void invokeCallouts() {
-        
-        Boolean hadException = false;
+        Long start = System.now().getTime();
         
         try {
-            //profiler
-            this.start();
-            
-            //instantiate if needed
-            this.prepareProcess();
+            //skip bad guys
+            if (this.IsFucked) return;
             
             //provide input event and set flag
             Job.Event = this.Event.clone();
@@ -153,39 +131,32 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             
             //do callouts
             String data = String.valueOf(process);
-            if (data != null) {
-                MessageException e = new MessageException('Your AllowsCallouts code block should return null.');
-                this.prepareException(e);
-                throw e;
-            }
+            if (data != null) throw new MessageException('Your AllowsCallouts code block should return null.');
             
         } catch (Exception e) {
             //smoking gun should point at user
             this.prepareException(e);
-            hadException = true;
-            
-        } finally {
-            //profiler
-            this.finish();
-            
+            this.IsFucked = true;
         }
         
-        if (hadException) throw new MessageException('Callouts exception in message model.');
+        this.Message.ExecuteDuration__c += System.now().getTime() - start;
     }
     
     /**
      * TODO COUNT ANY CALLOUTS
      */
     public void invokeExecute(List<Message__c> outputMessages) {
+        Long start = System.now().getTime();
         
-        Boolean hadException = false;
+        //measure side effects before
+        Integer queueables = Limits.getQueueableJobs();
+        Integer futures = Limits.getFutureCalls();
+        Integer emails = Limits.getEmailInvocations();
+        Integer dmls = Limits.getDMLStatements();
         
         try {
-            //profiler
-            this.start();
-            
-            //instantiate if needed
-            this.prepareProcess();
+            //skip bad guys
+            if (this.IsFucked) return;
             
             //provide input event and set flag
             Job.Event = this.Event.clone();
@@ -198,11 +169,7 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             
             //do invocation
             String data = String.valueOf(process);
-            if (data == null) {
-                MessageException e = new MessageException('Your main code block should return a serialized List<Map<String,Object>>.');
-                this.prepareException(e);
-                throw e;
-            }
+            if (data == null) throw new MessageException('Your main code block should return a List<Map<String,Object>>.');
             
             //TODO for #886
             //if (data.endsWith(step.ApexClassName__c.replaceAll('[^.]+\\.', '') + ':[]')) {
@@ -211,9 +178,7 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
                 //throw e;
             //}
             
-            //output no longer equals balance plus delta
-            
-            //clear any errors off the record
+            //clear any errors off the input message
             this.Message.Status__c = 'Completed'; //#798
             this.Message.Exception__c = null;
             this.Message.Cause__c = null;
@@ -231,14 +196,16 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
         } catch (Exception e) {
             //#581 smoking gun should point at the user, NOT at our broker
             this.prepareException(e);
-            hadException = true;
-            
-        } finally {
-            //profiler
-            this.finish();
+            this.IsFucked = true;
         }
         
-        if (hadException) throw new MessageException('Execute exception in message model.');
+        //measure side effects after, whether or not there was an exception
+        if (Limits.getEmailInvocations() > emails) this.HadSideEffects = true;
+        if (Limits.getQueueableJobs() > queueables) this.HadSideEffects = true;
+        if (Limits.getDMLStatements() > dmls) this.HadSideEffects = true;
+        if (Limits.getFutureCalls() > futures) this.HadSideEffects = true;
+        
+        this.Message.ExecuteDuration__c += System.now().getTime() - start;
     }
     
     /**
@@ -303,6 +270,11 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
         }
         
         return new ApexPages.StandardController(apexClass).view();
+    }
+    
+    public Boolean isHeartbeat() {
+        Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(this.Message.Event__c);
+        return event.get('__IsHeartbeatProcess') != null;
     }
     
 }

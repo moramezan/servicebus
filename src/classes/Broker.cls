@@ -322,95 +322,52 @@ abstract public with sharing class Broker {
             chunk++;
         }
         
-        //OUR FUCKUPS (before invocation)
+        //OUR FUCKUPS (prepare)
         List<MessageModel> models = new List<MessageModel>();
         for (Message__c inputMessage : inputMessages) {
-            try {
-                //check sequence, position, step, reflector, etc
-                models.add(new MessageModel(inputMessage));
-                
-            } catch (MessageModel.MessageException e) {
-                //bigger problems (inputMessage shows by reference)
-                return;
-                
-            }
+            //check sequence, position, step, reflector etc
+            MessageModel model = new MessageModel(inputMessage);
+            model.prepareProcess();
+            models.add(model);
         }
         
         //specimen #575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
-        if (models[0].Event.get('__IsHeartbeatProcess') != null) {
-            
-            for (MessageModel model : models) {
-                
-                try {
-                    //do invocation
-                    model.invokeExecute(outputMessages);
-                    
-                } catch (MessageModel.MessageException e) {
-                    //bigger problems
-                    continue;
-                    
-                }
-            }
-            
-            //end special routing
+        if (models[0].isHeartbeat()) {
+            for (MessageModel model : models) model.invokeExecute(outputMessages);
+            //TODO #956 end special routing
             return;
         }
         
-        //THEIR FUCKUPS (invocation)
+        //THEIR FUCKUPS (callout)
         for (MessageModel model : models) {
-            try {
-                //do invocation
-                model.invokeCallouts();
-                
-            } catch (MessageModel.MessageException e) {
-                //postpone any handling after finally block
-                continue;
-                
-            }
+            //do invocation
+            model.invokeCallouts();
         }
         
-        //for incrementally rolling back each message attempted
+        //for isolating chunks from each other
         Savepoint sp = Database.setSavepoint();
         
         //savepoint tax only applies if side effects
-        Boolean hadSideEffects = false;
+        Boolean isolate = false;
         
+        //THEIR FUCKUPS (execute)
         for (MessageModel model : models) {
-            //consume savepoint only if necessary
-            if (hadSideEffects) {
+            
+            if (isolate) {
+                //consume savepoint only if necessary
                 sp = Database.setSavepoint();
-                hadSideEffects = false;
+                isolate = false;
             }
             
-            //measure side effects before
-            Integer queueables = Limits.getQueueableJobs();
-            Integer futures = Limits.getFutureCalls();
-            Integer emails = Limits.getEmailInvocations();
-            Integer dmls = Limits.getDMLStatements();
+            //do invocation
+            model.invokeExecute(outputMessages);
+            isolate = model.HadSideEffects;
             
-            Boolean hadException = false;
-            
-            try {
-                //do invocation
-                model.invokeExecute(outputMessages);
-                
-            } catch (MessageModel.MessageException e) {
-                //postpone any handling after finally block
-                hadException = true;
-                
-            } finally {
-                //measure side effects after, whether or not there was an exception
-                if (Limits.getEmailInvocations() > emails) hadSideEffects = true;
-                if (Limits.getQueueableJobs() > queueables) hadSideEffects = true;
-                if (Limits.getDMLStatements() > dmls) hadSideEffects = true;
-                if (Limits.getFutureCalls() > futures) hadSideEffects = true;
+            if (model.HadSideEffects && model.IsFucked) {
+                //consume rollback only if necessary
+                Database.rollback(sp);
             }
-            
-            //consume rollback only if necessary
-            if (hadSideEffects && hadException) Database.rollback(sp);
         }
-        
-        //OUR FUCKUPS (after invocation)
         
         //position + 1
         new MessageSetModel(outputMessages).incrementPositions();
