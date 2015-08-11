@@ -9,7 +9,12 @@ public with sharing class ApexClassSettingExtension {
     }
     
     public PageReference doRedirect() {
-        return this.model.showProcessConfig();
+        try {
+            return this.model.showProcessConfig();
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+            return null;
+        }
     }
 
 }

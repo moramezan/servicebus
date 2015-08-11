@@ -478,17 +478,13 @@
         List<Message__c> messages = new Job('test', UserInfo.getUserId()).persist();
         
         //assert
-        Boolean expectedBeforeFlag = false;
-        Boolean actualBeforeFlag = DidSynchronousBrokerRun;
-        System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
+        System.assert(!DidSynchronousBrokerRun, 'Wrong flag before.');
         
         //act
         Broker.impl().run();
         
         //assert
-        Boolean expectedAfterFlag = true;
-        Boolean actualAfterFlag = DidSynchronousBrokerRun;
-        System.assertEquals(expectedAfterFlag, actualAfterFlag);
+        System.assert(DidSynchronousBrokerRun, 'Wrong flag after.');
         
     }
 

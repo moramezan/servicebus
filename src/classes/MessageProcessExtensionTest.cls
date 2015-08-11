@@ -1,16 +1,14 @@
 @IsTest public class MessageProcessExtensionTest {
-
+    
     static testmethod void coverCode() {
-        //arrange message
+        //arrange record
         Message__c message = new Message__c();
         insert message;
         
-        //arrange controller, extension
+        //act
         ApexPages.StandardController controller = new ApexPages.StandardController(message);
         MessageProcessExtension extension = new MessageProcessExtension(controller);
-        
-        //act
-        PageReference pr = extension.showProcess();
+        extension.showProcess();
         
         //assert
         System.assert(ApexPages.hasMessages());

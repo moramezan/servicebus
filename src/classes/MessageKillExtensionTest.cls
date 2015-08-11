@@ -1,15 +1,15 @@
-@IsTest private class MessagePauseQueueExtensionTest {
-    
+@IsTest public class MessageKillExtensionTest {
+
     static testmethod void coverCode() {
         //arrange controller and extension
         ApexPages.StandardSetController controller = new ApexPages.StandardSetController(new List<Message__c>());
-        MessagePauseQueueExtension extension = new MessagePauseQueueExtension(controller);
+        MessageKillExtension extension = new MessageKillExtension(controller);
         
         //act
-        extension.doPause();
+        extension.doKill();
         
         //assert
-        System.assert(!ApexPages.hasMessages(), 'Wrong messages.');
+        System.assert(ApexPages.hasMessages(), 'Wrong messages.');
     }
-    
+
 }

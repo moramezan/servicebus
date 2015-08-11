@@ -10,6 +10,9 @@ public with sharing class ApexClassHelpExtension {
     
     public ApexClassHelpExtension(ApexPages.StandardController controller) {
         this.controller = controller;
+    }
+    
+    public void doInit() {
         this.model = ApexClassModel.fromId(controller.getId());
         
         //by doing this we keep our getters in the controller and not the esb summary class

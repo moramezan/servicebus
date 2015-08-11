@@ -211,4 +211,42 @@
         String actualStatus = message.Status__c;
         System.assertEquals(expectedStatus, actualStatus, 'Wrong status.');
     }
+    
+    static testmethod void  callingDoPauseOnPausedMessagesPausesQueue() {
+        //assert
+        System.assert(!BrokerSetting__c.getOrgDefaults().IsPaused__c, 'Wrong flag before.');
+        
+        //act
+        MessageSetModel.pauseQueue();
+        
+        //assert
+        System.assert(BrokerSetting__c.getOrgDefaults().IsPaused__c, 'Wrong flag after.');
+    }
+    
+    static testmethod void  callingDoResumeOnQueuedMessagesEnqueuesWakeup() {
+        //arrange broker
+        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
+        setting.IsPaused__c = true;
+        upsert setting;
+        
+        //arrange message
+        insert new Message__c(Status__c = 'Paused', Event__c = '{}');
+        
+        //assert
+        System.assert(BrokerSetting__c.getOrgDefaults().IsPaused__c, 'Wrong flag before.');
+        
+        Integer expectedBefore = 1;
+        Integer actualBefore = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Paused'];
+        System.assertEquals(expectedBefore, actualBefore, 'Wrong count after.');
+        
+        //act
+        MessageSetModel.resumeQueue();
+        
+        //assert
+        System.assert(!BrokerSetting__c.getOrgDefaults().IsPaused__c, 'Wrong flag after.');
+        
+        Integer expectedAfter = 1;
+        Integer actualAfter = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        System.assertEquals(expectedAfter, actualAfter, 'Wrong count after.');
+    }
 }

@@ -40,6 +40,7 @@
         <members>MessageDataExtension</members>
         <members>MessageDataExtensionTest</members>
         <members>MessageKillExtension</members>
+        <members>MessageKillExtensionTest</members>
         <members>MessageModel</members>
         <members>MessageModelTest</members>
         <members>MessagePauseQueueExtension</members>
@@ -47,6 +48,7 @@
         <members>MessageProcessExtension</members>
         <members>MessageProcessExtensionTest</members>
         <members>MessageRebufferExtension</members>
+        <members>MessageRebufferExtensionTest</members>
         <members>MessageResumeQueueExtension</members>
         <members>MessageResumeQueueExtensionTest</members>
         <members>MessageSetModel</members>

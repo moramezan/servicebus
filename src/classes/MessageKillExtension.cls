@@ -1,11 +1,11 @@
 public with sharing class MessageKillExtension {
 
-    ApexPages.StandardSetController controller;
+    private ApexPages.StandardSetController controller;
     static private MessageSetModel model;
     
     public MessageKillExtension(ApexPages.StandardSetController controller) {
         this.controller = controller;
-        model = new MessageSetModel(controller.getRecords());
+        model = new MessageSetModel(controller.getSelected());
     }
     
     public PageReference doKill() {
