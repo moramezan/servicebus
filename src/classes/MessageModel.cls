@@ -57,8 +57,13 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
     
     /**
      * For execution duration profiling
+     * and savepoint / rollback detection
      */
-    private Long Start;
+    private Long Timer = 0;
+    private Integer FutureCalls = 0;
+    private Integer DmlStatements = 0;
+    private Integer QueueableJobs = 0;
+    private Integer EmailInvocations = 0;
     
     /**
      * Returns STEP or NULL
@@ -75,7 +80,6 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
      * This performs actual resolution inside the broker execute method.
      */
     public void prepareProcess() {
-        this.Message.ExecuteDuration__c = 0;
         try {
             Integer hops = (Integer)this.Event.get('__Hops');
             
@@ -119,8 +123,6 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
      * TODO COUNT ANY DMLS
      */
     public void invokeCallouts() {
-        Long start = System.now().getTime();
-        
         try {
             //skip bad guys
             if (this.IsFucked) return;
@@ -130,6 +132,7 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             Job.Event.put('esb__AllowsCallouts', true);
             
             //do callouts
+            this.Timer = System.now().getTime();
             String data = String.valueOf(process);
             if (data != null) throw new MessageException('Your AllowsCallouts code block should return null.');
             
@@ -137,26 +140,27 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             //smoking gun should point at user
             this.prepareException(e);
             this.IsFucked = true;
+            
+        } finally {
+            //execution time profiler
+            if (this.Message.ExecuteDuration__c == null) this.Message.ExecuteDuration__c = 0;
+            this.Message.ExecuteDuration__c += System.now().getTime() - this.Timer;
         }
-        
-        this.Message.ExecuteDuration__c += System.now().getTime() - start;
     }
     
     /**
      * TODO COUNT ANY CALLOUTS
      */
     public void invokeExecute(List<Message__c> outputMessages) {
-        Long start = System.now().getTime();
-        
-        //measure side effects before
-        Integer queueables = Limits.getQueueableJobs();
-        Integer futures = Limits.getFutureCalls();
-        Integer emails = Limits.getEmailInvocations();
-        Integer dmls = Limits.getDMLStatements();
-        
         try {
             //skip bad guys
             if (this.IsFucked) return;
+            
+            //measure side effects before
+            this.FutureCalls = Limits.getFutureCalls();
+            this.QueueableJobs = Limits.getQueueableJobs();
+            this.DmlStatements = Limits.getDMLStatements();
+            this.EmailInvocations = Limits.getEmailInvocations();
             
             //provide input event and set flag
             Job.Event = this.Event.clone();
@@ -168,6 +172,7 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             //TODO for #886
             
             //do invocation
+            this.Timer = System.now().getTime();
             String data = String.valueOf(process);
             if (data == null) throw new MessageException('Your main code block should return a List<Map<String,Object>>.');
             
@@ -197,15 +202,18 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             //#581 smoking gun should point at the user, NOT at our broker
             this.prepareException(e);
             this.IsFucked = true;
+            
+        } finally {
+            //execution time profiler
+            if (this.Message.ExecuteDuration__c == null) this.Message.ExecuteDuration__c = 0;
+            this.Message.ExecuteDuration__c += System.now().getTime() - this.Timer;
+            
+            //measure side effects after, whether or not there was an exception
+            if (Limits.getFutureCalls() > this.FutureCalls) this.HadSideEffects = true;
+            if (Limits.getQueueableJobs() > this.QueueableJobs) this.HadSideEffects = true;
+            if (Limits.getDMLStatements() > this.DmlStatements) this.HadSideEffects = true;
+            if (Limits.getEmailInvocations() > this.EmailInvocations) this.HadSideEffects = true;
         }
-        
-        //measure side effects after, whether or not there was an exception
-        if (Limits.getEmailInvocations() > emails) this.HadSideEffects = true;
-        if (Limits.getQueueableJobs() > queueables) this.HadSideEffects = true;
-        if (Limits.getDMLStatements() > dmls) this.HadSideEffects = true;
-        if (Limits.getFutureCalls() > futures) this.HadSideEffects = true;
-        
-        this.Message.ExecuteDuration__c += System.now().getTime() - start;
     }
     
     /**
