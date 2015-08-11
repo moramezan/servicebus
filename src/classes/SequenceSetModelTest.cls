@@ -24,5 +24,23 @@
         System.assertEquals(expectedConfigsBefore, actualConfigsBefore);
         System.assertEquals(expectedConfigsAfter, actualConfigsAfter);
     }
+    
+    static testmethod void testMissingIdsDontAffectDelete() {
+        //arrange sequence, steps, configs
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
+        insert sequence;
+        
+        Step__c scheduleStep = SequenceModel.fromId(sequence.Id).appendStep(Schedule.class);
+        Id configId = new stepModel(scheduleStep).upsertConfig();
+        Step__c terminateStep = SequenceModel.fromId(sequence.Id).appendStep(Terminate.class);
+        
+        //act
+        Database.delete(configId);
+        delete sequence;
+        
+        Integer expectedCount = 0;
+        Integer actualCount = [SELECT COUNT() FROM Step__c];
+        System.assertEquals(expectedCount, actualCount, 'Wrong step count.');
+    }
 
 }

@@ -1,10 +1,9 @@
 public with sharing class SequenceSetModel extends ApexDomain.StandardSetModel {
     
-    public List<Sequence__c> sequences;
+    public class SequenceException extends Exception {}
     
     public SequenceSetModel(List<Sequence__c> sequences) {
         super(sequences);
-        this.sequences = sequences;
     }
     
     public override void onBeforeDelete() {
@@ -16,24 +15,39 @@ public with sharing class SequenceSetModel extends ApexDomain.StandardSetModel {
      * so we cascade the delete ourselves manually, and take care of the configs too.
      */
     @TestVisible private void destroyAllStepsAndConfigs() {
-        //prepare sequence names
-        Set<String> sequenceNames = new Set<String>();
-        for (Sequence__c sequence : this.sequences) sequenceNames.add(sequence.Name);
-        
-        List<Step__c> stepsToDelete = [
-            SELECT Id, ConfigId__c
-            FROM Step__c
-            WHERE SequenceName__c IN :sequenceNames
-        ];
-        
-        //perform the step delete
-        delete stepsToDelete;
-        
-        //prepare any configs to delete
-        List<Id> configIds = new List<Id>();
-        for (Step__c stepToDelete : stepsToDelete) if (stepToDelete.ConfigId__c != null) configIds.add(stepToDelete.ConfigId__c);
-        
-        //perform the config delete
-        Database.delete(configIds);
+        Savepoint savepoint = Database.setSavepoint();
+        try {
+            //query sequences
+            List<Sequence__c> sequencesToDelete = [
+                SELECT Id, Name
+                FROM Sequence__c
+                WHERE Id IN :this.keySet()
+            ];
+            
+            //prepare sequence names
+            Set<String> sequenceNames = new Set<String>();
+            for (Sequence__c sequence : sequencesToDelete) sequenceNames.add(sequence.Name);
+            
+            //query steps
+            List<Step__c> stepsToDelete = [
+                SELECT Id, ConfigId__c
+                FROM Step__c
+                WHERE SequenceName__c IN :sequenceNames
+            ];
+            
+            //prepare config ids
+            List<Id> configsToDelete = new List<Id>();
+            for (Step__c step : stepsToDelete) {
+                if (step.ConfigId__c == null) continue;
+                configsToDelete.add(step.ConfigId__c);
+            }
+            
+            Database.delete(stepsToDelete, false);
+            Database.delete(configsToDelete, false);
+            
+        } catch (Exception e) {
+            Database.rollback(savepoint);
+            throw new SequenceException('Cannot destroy all steps and configs: ' + e.getMessage(), e);
+        }
     }
 }
