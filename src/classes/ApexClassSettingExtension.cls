@@ -9,7 +9,7 @@ public with sharing class ApexClassSettingExtension {
     }
     
     public PageReference doRedirect() {
-        return this.model.showSetting();
+        return this.model.showProcessConfig();
     }
 
 }

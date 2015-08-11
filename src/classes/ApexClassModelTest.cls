@@ -66,12 +66,12 @@
         System.assertEquals(1, model.esb.Limits, 'Wrong Limits.');
     }
     
-    static testmethod void testShowSetting() {
+    static testmethod void testShowProcessConfig() {
         //arrange
         ApexClassModel model = new ApexClassModel(Wiretap.class);
         
         //act
-        PageReference redirect = model.showSetting();
+        PageReference redirect = model.showProcessConfig();
         
         //assert
         String expectedUrl = '/' + SObjectType.WiretapSetting__c.KeyPrefix + '/o';

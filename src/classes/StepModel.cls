@@ -147,29 +147,46 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
             return;
         }
         
-        //get type without using global describe
-        SObject prototype = (SObject)Type.forName(model.esb.StepConfig).newInstance();
-        SObjectType objectType = prototype.getSObjectType();
+        //describe object and name field dynamically
+        SObjectType objectType = Schema.getGlobalDescribe().get(model.esb.StepConfig);
+        DescribeSObjectResult result = objectType.getDescribe();
+        DescribeFieldResult field = result.Fields.getMap().get('Name').getDescribe();
         
-        //new up with defaults
-        Id recordTypeId = null;
-        Boolean loadDefaults = true;
-        SObject config = objectType.newSObject(recordTypeId, loadDefaults);
-        insert config;
+        if (result.isCustomSetting() && field.getLength() == 80) {
+            //HIERARCHY SETTING
+            throw new StepException('Hierarchy Custom Settings are not supported for Step Config.');
+        }
         
-        //get the name
-        Id configId = config.Id;
-        config = Database.query('SELECT Id, Name FROM ' + model.esb.StepConfig + ' WHERE Id = :configId');
+        SObject config = objectType.newSObject(null, true);
         
-        this.Step.ConfigId__c = (Id)config.get('Id');
-        this.Step.ConfigName__c = (String)config.get('Name');
+        if (result.isCustomSetting() && field.getLength() == 38) {
+            //LIST SETTING
+            config.put('Name', this.Step.Id); //unique
+        }
+        
+        insert config; //with default field values
+        config.put('Name', config.Id);
+        update config;
+        
+        this.Step.ConfigId__c = config.Id;
         update this.Step;
     }
     
-    public PageReference showConfig() {
+    /**
+     * Redirects the user to the detail view
+     * of the config record held on this step.
+     */
+    public PageReference showStepConfig() {
         Id configId = this.Step.ConfigId__c;
         SObject config = configId.getSObjectType().newSObject(configId);
-        return new ApexPages.StandardController(config).view();
+        PageReference view = new ApexPages.StandardController(config).view();
+        
+        if (!configId.getSObjectType().getDescribe().isCustomSetting()) {
+            //console style only for custom objects
+            view.getParameters().put('isdtp', 'vw');
+        }
+        
+        return view;
     }
     
     /**

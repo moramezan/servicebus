@@ -10,6 +10,6 @@ public with sharing class StepConfigureExtension {
     
     public PageReference doRedirect() {
         this.model.upsertConfig();
-        return this.model.showConfig();
+        return this.model.showStepConfig();
     }
 }
