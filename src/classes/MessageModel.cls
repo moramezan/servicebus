@@ -56,10 +56,8 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * For execution duration profiling
-     * and savepoint / rollback detection
+     * For savepoint / rollback detection
      */
-    private Long Timer = 0;
     private Integer FutureCalls = 0;
     private Integer DmlStatements = 0;
     private Integer QueueableJobs = 0;
@@ -123,6 +121,9 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
      * TODO COUNT ANY DMLS
      */
     public void invokeCallouts() {
+        //careful if a L suffix is needed
+        Long timer = System.now().getTime();
+        
         try {
             //skip bad guys
             if (this.IsFucked) return;
@@ -132,7 +133,7 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             Job.Event.put('esb__AllowsCallouts', true);
             
             //do callouts
-            this.Timer = System.now().getTime();
+            
             String data = String.valueOf(process);
             if (data != null) throw new MessageException('Your AllowsCallouts code block should return null.');
             
@@ -141,17 +142,19 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             this.prepareException(e);
             this.IsFucked = true;
             
-        } finally {
-            //execution time profiler
-            if (this.Message.ExecuteDuration__c == null) this.Message.ExecuteDuration__c = 0;
-            this.Message.ExecuteDuration__c += System.now().getTime() - this.Timer;
         }
+        
+        //execution time profiler
+        if (this.Message.ExecuteDuration__c == null) this.Message.ExecuteDuration__c = 0;
+        this.Message.ExecuteDuration__c += System.now().getTime() - timer;
     }
     
     /**
      * TODO COUNT ANY CALLOUTS
      */
     public void invokeExecute(List<Message__c> outputMessages) {
+        Long timer = System.now().getTime();
+        
         try {
             //skip bad guys
             if (this.IsFucked) return;
@@ -172,7 +175,6 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             //TODO for #886
             
             //do invocation
-            this.Timer = System.now().getTime();
             String data = String.valueOf(process);
             if (data == null) throw new MessageException('Your main code block should return a List<Map<String,Object>>.');
             
@@ -204,16 +206,15 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             this.IsFucked = true;
             
         } finally {
-            //execution time profiler
-            if (this.Message.ExecuteDuration__c == null) this.Message.ExecuteDuration__c = 0;
-            this.Message.ExecuteDuration__c += System.now().getTime() - this.Timer;
-            
             //measure side effects after, whether or not there was an exception
             if (Limits.getFutureCalls() > this.FutureCalls) this.HadSideEffects = true;
             if (Limits.getQueueableJobs() > this.QueueableJobs) this.HadSideEffects = true;
             if (Limits.getDMLStatements() > this.DmlStatements) this.HadSideEffects = true;
             if (Limits.getEmailInvocations() > this.EmailInvocations) this.HadSideEffects = true;
         }
+        
+        if (this.Message.ExecuteDuration__c == null) this.Message.ExecuteDuration__c = 0;
+        this.Message.ExecuteDuration__c += System.now().getTime() - timer;
     }
     
     /**
