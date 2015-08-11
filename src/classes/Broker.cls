@@ -86,137 +86,7 @@ abstract public with sharing class Broker {
     
     public static Integer MaxHops = 500;
     
-    public class EngineException extends Exception {
-        /**
-         * Gotta jettison this guy for rollback later
-         */
-        public Savepoint savepoint = null;
-        
-        /**
-         * Persist these guys after rolling back the execute
-         */
-        public List<Message__c> fuckups = new List<Message__c>();
-        
-        /**
-         * User-error constructor for #581
-         * This points the smoking gun at the user process, not our broker.
-         *
-         * @param savepoint holding any DML to be rolled back by handler
-         * @param messageIds which the handler will write away for debug
-         * @param userCause of the originating exception due to THEIR code
-         */
-        public EngineException(Savepoint savepoint, Set<Id> messageIds, Exception userException) {
-            this(userException.getMessage(), userException);
-            this.savepoint = savepoint;
-            for (Id messageId : messageIds) this.fuckups.add(new Message__c(
-                Id = messageId,
-                Exception__c = userException.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length), //#754
-                Cause__c = new ExceptionSerializer(userException).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length) //#754
-            ));
-        }
-        
-        /**
-         * Broker-error constructor for our own fuckups per #598
-         *
-         * @param savepoint holding any DML to be rolled back by handler
-         * @param messageIds which the handler will write away for debug
-         * @param brokerCause of the originating exception due to OUR code
-         * @param error message that lends detail to what WE did wrong
-         */
-        public EngineException(Savepoint savepoint, Set<Id> messageIds, Exception brokerException, String message) {
-            this(message, brokerException);
-            this.savepoint = savepoint;
-            for (Id messageId : messageIds) this.fuckups.add(new Message__c(
-                Id = messageId,
-                Exception__c = this.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length), //#754
-                Cause__c = new ExceptionSerializer(this).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length) //#754
-            ));
-        }
-    }
-    
-    /**
-     * Usage:
-     * new ExceptionSerializer(myEx).getAsString();
-     */
-    public class ExceptionSerializer {
-        
-        private JsonGenerator g;
-        
-        public ExceptionSerializer(Exception e) {
-            //true for pretty printing
-            g = Json.createGenerator(true);
-            
-            g.writeStartObject();
-            traverseException(e);
-            g.writeEndObject();
-        }
-        
-        public String getAsString() {
-            return g.getAsString();
-        }
-        
-        @TestVisible private void traverseException(Exception e) {
-            //special exceptions
-            if (e instanceof DmlException || e instanceof EmailException) {
-                Integer n = e.getNumDml();
-                g.writeNumberField('NumDml', n);
-                
-                //the names of the field or fields that caused the error described by the ith failed row
-                List<List<String>> dmlFieldNames = new List<List<String>>();
-                for (Integer i = 0; i < n; i++) dmlFieldNames.add(e.getDmlFieldNames(i));
-                g.writeObjectField('DmlFieldNames', dmlFieldNames);
-                
-                //cannot serialize Schema.sObjectField
-                //List<List<Schema.sObjectField>> dmlFields = new List<List<Schema.sObjectField>>();
-                //for (Integer i = 0; i < n; i++) dmlFields.add(e.getDmlFields(i));
-                //g.writeObjectField('DmlFields', dmlFields);
-                
-                //the ID of the failed record that caused the error described by the ith failed row
-                List<Id> dmlIds = new List<Id>();
-                for (Integer i = 0; i < n; i++) dmlIds.add(e.getDmlId(i));
-                g.writeObjectField('DmlIds', dmlIds);
-                
-                //the original row position of the ith failed row
-                List<Integer> dmlIndexes = new List<Integer>();
-                for (Integer i = 0; i < n; i++) dmlIndexes.add(e.getDmlIndex(i));
-                g.writeObjectField('DmlIndexes', dmlIndexes);
-                
-                //the user message for the ith failed row
-                List<String> dmlMessages = new List<String>();
-                for (Integer i = 0; i < n; i++) dmlMessages.add(e.getDmlMessage(i));
-                g.writeObjectField('DmlMessages', dmlMessages);
-                
-                //the Apex failure code for the ith failed row
-                List<String> dmlStatusCodes = new List<String>();
-                for (Integer i = 0; i < n; i++) dmlStatusCodes.add(e.getDmlStatusCode(i));
-                g.writeObjectField('DmlStatusCodes', dmlStatusCodes);
-                
-                //cannot serialize Enum
-                //List<System.StatusCode> dmlTypes = new List<System.StatusCode>();
-                //for (Integer i = 0; i < n; i++) dmlTypes.add(e.getDmlType(i));
-                //g.writeObjectField('DmlTpes', dmlTypes);
-            }
-            
-            //normal exceptions
-            g.writeNumberField('LineNumber', e.getLineNumber());
-            g.writeStringField('Message', e.getMessage());
-            g.writeStringField('StackTraceString', e.getStackTraceString());
-            g.writeStringField('TypeName', e.getTypeName());
-            g.writeFieldName('Cause');
-            
-            if (e.getCause() == null) {
-                //time to stop recursing
-                this.g.writeNull();
-                return;
-            }
-            
-            //recurse into causes
-            g.writeStartObject();
-            traverseException(e.getCause());
-            g.writeEndObject();
-        }
-        
-    }
+    public class PanicException extends Exception {}
     
     static public Broker impl() {
         if (Test.isRunningTest()) {
@@ -247,26 +117,45 @@ abstract public with sharing class Broker {
      * @return collection of soon-to-be-marked-as-Started Messages.
      */
     public List<Message__c> locateMarkableWork() {
-        
-        List<Message__c> specimen = [
-            SELECT Id, Step__c, Event__c //TODO lose event
-            FROM Message__c
-            WHERE Status__c = 'Buffered'
-            ORDER BY CreatedDate ASC //reattempts will naturally lead
-            LIMIT 1
-            //TODO: this guy should be FOR UPDATE or risk race condition
-        ];
-        
-        if (specimen.isEmpty()) {
-            //no work found, return empty
-            return specimen;
-        }
-        
         try {
-            //resolve real limits
+            List<Message__c> specimen = [
+                SELECT Id, Step__c, Event__c //TODO lose event
+                FROM Message__c
+                WHERE Status__c = 'Buffered'
+                ORDER BY CreatedDate ASC //reattempts will naturally lead
+                LIMIT 1
+                //TODO: this guy should be FOR UPDATE or risk race condition
+            ];
+            
+            //TODO fucked limits COULD be high if we want performance vs risk
+            
+            if (specimen.isEmpty()) {
+                //no work found, return empty
+                return specimen;
+            }
+            
             Step__c step = Step__c.getValues(specimen[0].Step__c);
+            
+            if (step == null) {
+                //no step found, limits 1
+                return specimen;
+            }
+            
             Type reflector = Type.forName(step.ApexClassName__c);
-            Integer limits = new ApexClassModel(reflector).esb.Limits;
+            
+            if (reflector == null) {
+                //no apex class, limits 1
+                return specimen;
+            }
+            
+            ApexClassModel model;
+            
+            try {model = new ApexClassModel(reflector);} catch (Exception e) {
+                //no model, limits 1
+                return specimen;
+            }
+            
+            Integer limits = model.esb.Limits;
             
             return [
                 SELECT Id, Step__c, Event__c //TODO lose event
@@ -278,8 +167,7 @@ abstract public with sharing class Broker {
             ];
             
         } catch (Exception e) {
-            //apex error steamroller... bulletproof
-            return specimen;
+            throw new PanicException('Locate panic: ' + e.getMessage(), e);
         }
     }
     
@@ -289,88 +177,89 @@ abstract public with sharing class Broker {
     public List<Database.SaveResult> mark(List<Message__c> messages) {
         try {
             if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');
-            for (Message__c message : messages) {
-                message.Status__c = 'Started'; //in-database
-            }
+            for (Message__c message : messages) message.Status__c = 'Started'; //in-database
             List<Database.SaveResult> results = Database.update(messages);
             return results;
             
         } catch (Exception e) {
-            throw new EngineException('Mark exception: ' + e.getMessage(), e);
+            throw new PanicException('Mark panic: ' + e.getMessage(), e);
         }
     }
     
     /**
-     * Resolves and invokes the toStringable Object for one input, handing back an in-memory collection of outputs
+     * Resolves and invokes the toStringable Object for one input, updating an in-memory collection of outputs
      *
-     * @throws EngineException
      * @param  inputMessages pass-by-reference Messages whose status should be Started
      * @param  outputMessages pass-by-reference Messages whose status should be Started
      */
     public void execute(List<Message__c> inputMessages, List<Message__c> outputMessages) {
-        //empty inputs, empty outputs
-        //if (inputMessages.isEmpty()) return new List<Message__c>();
-        if (inputMessages.isEmpty()) return;
-        
-        Integer chunkTotal = inputMessages.size();
-        Integer chunk = 1;
-        for (Message__c inputMessage :  inputMessages) {
-            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
-            inputEvent.put('__ChunkTotal', chunkTotal);
-            inputEvent.put('__Chunk', chunk);
-            inputMessage.Event__c = Json.serializePretty(inputEvent);
-            chunk++;
-        }
-        
-        //OUR FUCKUPS (prepare)
-        List<MessageModel> models = new List<MessageModel>();
-        for (Message__c inputMessage : inputMessages) {
-            //check sequence, position, step, reflector etc
-            MessageModel model = new MessageModel(inputMessage);
-            model.prepareProcess();
-            models.add(model);
-        }
-        
-        //specimen #575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
-        if (models[0].isHeartbeat()) {
-            for (MessageModel model : models) model.invokeExecute(outputMessages);
-            //TODO #956 end special routing
-            return;
-        }
-        
-        //THEIR FUCKUPS (callout)
-        for (MessageModel model : models) {
-            //do invocation
-            model.invokeCallouts();
-        }
-        
-        //for isolating chunks from each other
-        Savepoint sp = Database.setSavepoint();
-        
-        //savepoint tax only applies if side effects
-        Boolean isolate = false;
-        
-        //THEIR FUCKUPS (execute)
-        for (MessageModel model : models) {
+        try {
+            //empty inputs, empty outputs
+            if (inputMessages.isEmpty()) return;
             
-            if (isolate) {
-                //consume savepoint only if necessary
-                sp = Database.setSavepoint();
-                isolate = false;
+            Integer chunkTotal = inputMessages.size();
+            Integer chunk = 1;
+            for (Message__c inputMessage :  inputMessages) {
+                Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
+                inputEvent.put('__ChunkTotal', chunkTotal);
+                inputEvent.put('__Chunk', chunk);
+                inputMessage.Event__c = Json.serializePretty(inputEvent);
+                chunk++;
             }
             
-            //do invocation
-            model.invokeExecute(outputMessages);
-            isolate = model.HadSideEffects;
-            
-            if (model.HadSideEffects && model.IsFucked) {
-                //consume rollback only if necessary
-                Database.rollback(sp);
+            //OUR FUCKUPS (prepare)
+            List<MessageModel> models = new List<MessageModel>();
+            for (Message__c inputMessage : inputMessages) {
+                //check sequence, position, step, reflector etc
+                MessageModel model = new MessageModel(inputMessage);
+                model.prepareProcess();
+                models.add(model);
             }
+            
+            //specimen #575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
+            if (models[0].isHeartbeat()) {
+                for (MessageModel model : models) model.invokeExecute(outputMessages);
+                //TODO #956 end special routing
+                return;
+            }
+            
+            //THEIR FUCKUPS (callout)
+            for (MessageModel model : models) {
+                //do invocation
+                model.invokeCallouts();
+            }
+            
+            //for isolating chunks from each other
+            Savepoint sp = Database.setSavepoint();
+            
+            //savepoint tax only applies if side effects
+            Boolean isolate = false;
+            
+            //THEIR FUCKUPS (execute)
+            for (MessageModel model : models) {
+                
+                if (isolate) {
+                    //consume savepoint only if necessary
+                    sp = Database.setSavepoint();
+                    isolate = false;
+                }
+                
+                //do invocation
+                model.invokeExecute(outputMessages);
+                isolate = model.HadSideEffects;
+                
+                if (model.HadSideEffects && model.IsFucked) {
+                    //consume rollback only if necessary
+                    Database.rollback(sp);
+                }
+            }
+            
+            //position + 1
+            new MessageSetModel(outputMessages).incrementPositions();
+            
+        } catch (Exception e) {
+            throw new PanicException('Execute panic:' + e.getMessage(), e);
         }
-        
-        //position + 1
-        new MessageSetModel(outputMessages).incrementPositions();
     }
 
     /**
@@ -395,28 +284,16 @@ abstract public with sharing class Broker {
      */
     public List<Database.UpsertResult> persist(List<Message__c> inputAndOutputMessages) {
         try {
-            for (Message__c message : inputAndOutputMessages) {
-                //we COULD have designated all output messages as Buffered
-                //but it varies if the Broker is paused (they'd be Paused)
-            }
-            
             //transact both inputs and outputs in one fell swoop
             MessageSetModel.Inhibit = false;
-            List<Database.UpsertResult> results = Database.upsert(inputAndOutputMessages, true); //all or none
+            List<Database.UpsertResult> results = Database.upsert(inputAndOutputMessages);
             MessageSetModel.Inhibit = true;
-            
             return results;
+            
         } catch (Exception e) {
-            Set<Id> messageIds = new Set<Id>();
-            for (Message__c message : inputAndOutputMessages) if (message.Id != null) {
-                message.Status__c = 'Started'; //#782 in-memory
-                messageIds.add(message.Id);
-            }
-            //#836 https://github.com/bigassforce/esb/issues/836#issuecomment-83969845
-            throw new EngineException(null, messageIds, e, 'Persist failure: ' + e.getMessage());
+            throw new PanicException('Persist panic: ' + e.getMessage(), e);
         }
     }
-
     
     /**
      * Formerly restartIfWorkPending

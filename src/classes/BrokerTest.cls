@@ -20,29 +20,16 @@
             //MARK
             this.mark(inputMessages);
             
-            try {
+            //EXECUTE
+            List<Message__c> outputMessages = new List<Message__c>();
+            this.execute(inputMessages, outputMessages);
+            DidSynchronousBrokerRun = true;
             
-                //EXECUTE
-                List<Message__c> outputMessages = new List<Message__c>();
-                this.execute(inputMessages, outputMessages);
-                DidSynchronousBrokerRun = true;
-                
-                //PERSIST
-                List<Message__c> inputAndOutputMessages = new List<Message__c>();
-                inputAndOutputMessages.addAll(inputMessages);
-                inputAndOutputMessages.addAll(outputMessages);
-                this.persist(inputAndOutputMessages); //#782
-                
-            } catch (Exception e) {
-            
-                for (Message__c inputMessage : inputMessages) {
-                    inputMessage.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-                    inputMessage.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
-                }
-                
-                //write away error text on messages
-                update inputMessages;
-            }
+            //PERSIST
+            List<Message__c> inputAndOutputMessages = new List<Message__c>();
+            inputAndOutputMessages.addAll(inputMessages);
+            inputAndOutputMessages.addAll(outputMessages);
+            this.persist(inputAndOutputMessages); //#782
             
             super.run();
         }
@@ -876,7 +863,7 @@
         try {
             System.assert(false, 'TODO'); //TODO Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent).invokeMain();
             System.assert(false, 'Above should throw exception.');
-        } catch (Broker.EngineException e) {
+        } catch (Exception e) {
             String expectedMessage = 'Your plugin has not overridden the toString() method. Please refer to the Process Developers Guide for specific guidance.';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');

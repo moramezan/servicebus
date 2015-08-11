@@ -144,7 +144,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      * The input event collection should at minimum contain
      *  - an object Id ("Id")
      *  - a sequence name ("__SequenceName")
-     * Failure to provide these event parameters in the collection will throw an EngineException
+     * Failure to provide these event parameters in the collection will throw an exception
      *
      * The input event collection is converted to a Message object. This Message instance is saved
      * to the database and the Broker is immeadiately invoked if it is not already running.
@@ -165,7 +165,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
     global Job(List<Map<String,Object>> inputEvents) {
         // validate input event parameters are supplied:
         if (inputEvents == null) {
-            throw new Broker.EngineException('Cannot supply a null input events collection.');
+            throw new JobException('Cannot supply a null input events collection.');
         }
         
         //create the message destined for the 0th step of the chain
@@ -362,7 +362,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      *     "success": false,
      *     "compileProblem": null,
      *     "exceptionStackTrace": "Class.Broker: line 534, column 1\nClass.Job.RunOneBroker.runImpl: line 282, column 1\nClass.Job.runOne: line 296, column 1\nAnonymousBlock: line 1, column 1\nCaused by\nClass.Fuckup.toString: line 10, column 1\nClass.Broker.Wrapper.invokeMain: line 340, column 1\nClass.Broker: line 529, column 1\nClass.Job.RunOneBroker.runImpl: line 282, column 1\nClass.Job.runOne: line 296, column 1\nAnonymousBlock: line 1, column 1",
-     *     "exceptionMessage": "Broker.EngineException: Kablam again"
+     *     "exceptionMessage": "System.AssertException: Kablam again"
      * }
      */
     public class ExecAnonResult {

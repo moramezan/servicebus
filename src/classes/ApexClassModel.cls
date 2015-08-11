@@ -118,7 +118,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         Type inflector;
         if (inflector == null) inflector = Type.forName(reflector.getName() + '.ESB');
         if (inflector == null) inflector = Type.forName(reflector.getName() + 'ESB');
-        if (inflector == null) throw new ProcessException('Process inflector exception ' + reflector);
+        if (inflector == null) inflector = BaseSummary.class; //try and fail quietly
         
         Object theirEsb;
         ApexClassModel.ESB ourEsb;
@@ -148,12 +148,6 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         super(new ApexClass(
             Name = reflector.getName()
         ));
-        
-        Type inflector; //their esb summary class
-        
-        if (inflector == null) inflector = Type.forName(reflector.getName() + '.ESB');
-        if (inflector == null) inflector = Type.forName(reflector.getName() + 'ESB');
-        if (inflector == null) throw new ProcessException('Process discovery exception ' + reflector);
         
         this.esb = esbFromEsb(reflector);
     }
