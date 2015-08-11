@@ -19,8 +19,8 @@
         ApexClassSetModel model = new ApexClassSetModel(apexClasses);
         model.discoverProcesses();
         
-        //assert
-        Integer expectedCount = model.toDtos().size() + 1; //one extra for buffered guys - they have no process name so the graph is [' ', 'Wiretap', 'Terminate']
+        //assert 1 null, 1 wiretap, 1 terminate, 
+        Integer expectedCount = 3; //the graph is [' ', 'Wiretap', 'Terminate']
         Integer actualCount = statistics.size();
         System.assertEquals(expectedCount, actualCount);
     }

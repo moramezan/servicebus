@@ -10,7 +10,7 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
     /**
      * Privatize constructor to force use of fromName() or fromId()
      */
-    private StepModel(Step__c step) {
+    @TestVisible private StepModel(Step__c step) {
         super(step);
         this.step = step;
     }
@@ -132,19 +132,19 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
         }
     }
     
-    public void upsertConfig() {
+    public Id upsertConfig() {
         //use apex class name instead of id, for easier testing
         Type reflector = Type.forName(this.Step.ApexClassName__c);
         ApexClassModel model = new ApexClassModel(reflector);
         
         if (model.esb.StepConfig == null) {
             //process has no config
-            return;
+            return null;
         }
         
         if (ApexDomain.exists(this.Step.ConfigId__c)) {
             //config already exists
-            return;
+            return this.Step.ConfigId__c;
         }
         
         //describe object and name field dynamically
@@ -170,6 +170,7 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
         
         this.Step.ConfigId__c = config.Id;
         update this.Step;
+        return config.Id;
     }
     
     /**

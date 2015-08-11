@@ -9,15 +9,8 @@
 
    static testmethod void withinSystemLimits() {
         //arrange
-        Sequence__c sequence = new Sequence__c(Name = 'the-sequence');
-        insert sequence;
-
-        Map<String,Object> inputEvent = new Map<String,Object> {
-            '__SequenceName' => 'the-sequence',
-            '__Position' => 1
-        };
-
-
+        Map<String,Object> inputEvent = new Map<String,Object> {};
+        
         //act
         Test.startTest();
         Integer limits = new Schedule.Esb().Limits;
@@ -35,342 +28,225 @@
 
     
     static testmethod void messagePassedThruUntouchedWhenIsHeartbeatEqFalse() {
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
-        insert sequence;
-        
-        //arrange steps
-        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class);
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
-
-
-         //arrange input event
+        //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>();
         inputEvent.put('esb__EntryPointDatetime', Json.serialize(System.now())); //#810
         inputEvent.put('__WasHeartbeatProcess', false);
         
-        // act
+        //act
         ApexClassModel.BaseProcess process = new Schedule();
-        List<Map<String,Object>> results = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
         
-        // assemble
-        Integer actualCount = results.size();
-
-        Integer actualParameterSize = null;
-        if (actualCount == 1) {
-             Map<String,Object> actualParameters = results[0];
-            actualParameterSize = actualParameters.keySet().size();
-        }
-        
-        // assert
-        Integer expectedCount = 1;
-        System.assertEquals(expectedCount, actualCount);
-
-        Integer expectedParameterSize = 2;
-        System.assertEquals(expectedParameterSize, actualParameterSize);
+        //assert
+        Integer expectedSize = 1;
+        Integer actualSize = outputEvents.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
     }
-
-
+    
     static testmethod void messagePassedThruUntouchedWhenIsHeartbeatEqTrueAndIsWithinWindowReturnsTrue01() {
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
-        insert sequence;
-        
-        //arrange steps
-        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class);
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
-
         //arrange config
-        ///Weekly    Sunday;Monday;Tuesday
-        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c];
-        scheduleConfig.IsActive__c = true;
-        scheduleConfig.Frequency__c = 'Weekly';
-        scheduleConfig.FriendlyDates__c = 'Wednesday';
-        scheduleConfig.FriendlyTimes__c = '12:00';
-        update scheduleConfig;
-        
+        insert new ScheduleConfig__c(
+            IsActive__c = true,
+            Frequency__c = 'Weekly',
+            FriendlyDates__c = 'Wednesday',
+            FriendlyTimes__c = '12:00'
+        );
 
-         //arrange input event parameters
-        String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday
+        //arrange input
+        Datetime entryPoint = Datetime.newInstanceGmt(2014, 1, 15, 12, 0, 0); //15th Jan 2014 is a Wednesday
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => scheduleConfig.Id,
-            'esb__EntryPointDatetime' => stampAsString,
+            'esb__StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
+            'esb__EntryPointDatetime' => entryPoint,
             '__WasHeartbeatProcess' => true
         };
- 
-        // act
+        inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
+        
+        //act
         ApexClassModel.BaseProcess process = new Schedule();
-        List<Map<String,Object>> results = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
         
-        // assemble
-        Integer actualCount = results.size();
-
-        String  actualStampTruncated = null;
-        Integer actualParameterSize = null;
-        if (actualCount == 1) {
-             Map<String,Object> actualParameters = results[0];
-            actualParameterSize = actualParameters.keySet().size();
-            actualStampTruncated = (String)actualParameters.get('esb__EntryPointDatetime');
-        }
+        //assert
+        Integer expectedSize = 1;
+        Integer actualSize = outputEvents.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
-        // assert
-        Integer expectedCount = 1;
-        System.assertEquals(expectedCount, actualCount);
-
-        String  expectedStampTruncated = stampAsString;
-        Integer expectedParameterSize = 3;
-        System.assertEquals(expectedStampTruncated, actualStampTruncated);
-        System.assertEquals(expectedParameterSize, actualParameterSize);
+        String expectedEntryPoint = '2014-01-15T12:00:00.000Z';
+        String actualEntryPoint = (String)outputEvents[0].get('esb__EntryPointDatetime');
+        System.assertEquals(expectedEntryPoint, actualEntryPoint, 'Wrong entry point datetime.');
     }
-
 
     static testmethod void messagePassedThruUntouchedWhenIsHeartbeatEqTrueAndIsWithinWindowReturnsTrue02() {
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
-        insert sequence;
-        
-        //arrange steps
-        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class);
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
-
         //arrange config
-        ///Daily    Working days only;Weekends and holidays
-        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c];
-        scheduleConfig.IsActive__c = true;
-        scheduleConfig.Frequency__c = 'Daily';
-        scheduleConfig.FriendlyDates__c = 'Working days only';
-        scheduleConfig.FriendlyTimes__c = '12:00';
-        update scheduleConfig;
+        insert new ScheduleConfig__c(
+            IsActive__c = true,
+            Frequency__c = 'Daily',
+            FriendlyDates__c = 'Working days only',
+            FriendlyTimes__c = '12:00'
+        );
         
-
-         //arrange input event parameters
-        String stampAsString = '2014-01-15T12:00:00.000Z'; //15th Jan 2014 is a Wednesday, a working day
+        //arrange input
+        Datetime entryPoint = Datetime.newInstanceGmt(2014, 1, 15, 12, 0, 0); //15th Jan 2014 is a Wednesday, a working day
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => scheduleConfig.Id,
-            'esb__EntryPointDatetime' => stampAsString,
+            'esb__StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
+            'esb__EntryPointDatetime' => entryPoint,
             '__WasHeartbeatProcess' => true
         };
- 
-        // act
+        inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
+        
+        ///act on working days only
         ApexClassModel.BaseProcess process = new Schedule();
-        List<Map<String,Object>> results = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
         
-        // assemble
-        Integer actualCount = results.size();
-
-        String  actualStampTruncated = null;
-        Integer actualParameterSize = null;
-        if (actualCount == 1) {
-             Map<String,Object> actualParameters = results[0];
-            actualParameterSize = actualParameters.keySet().size();
-            actualStampTruncated = (String)actualParameters.get('esb__EntryPointDatetime');
-        }
+        //assert
+        Integer expectedSize = 1;
+        Integer actualSize = outputEvents.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
-        // assert
-        Integer expectedCount = 1;
-        System.assertEquals(expectedCount, actualCount);
-
-        String  expectedStampTruncated = stampAsString;
-        Integer expectedParameterSize = 3;
-        System.assertEquals(expectedStampTruncated, actualStampTruncated);
-        System.assertEquals(expectedParameterSize, actualParameterSize);
+        String expectedEntryPoint = '2014-01-15T12:00:00.000Z';
+        String actualEntryPoint = (String)outputEvents[0].get('esb__EntryPointDatetime');
+        System.assertEquals(expectedEntryPoint, actualEntryPoint, 'Wrong entry point datetime.');
     }
-
-
+    
     static testmethod void messagePassedThruUntouchedWhenIsHeartbeatEqTrueAndIsWithinWindowReturnsTrue03() {
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
-        insert sequence;
-        
-        //arrange steps
-        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class);
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
-
         //arrange config
-        ///Monthly    04;06
-        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c];
-        scheduleConfig.IsActive__c = true;
-        scheduleConfig.Frequency__c = 'Monthly';
-        scheduleConfig.FriendlyDates__c = '03;15;16';
-        scheduleConfig.FriendlyTimes__c = '12:00';
-        update scheduleConfig;
+        insert new ScheduleConfig__c(
+            IsActive__c = true,
+            Frequency__c = 'Monthly',
+            FriendlyDates__c = '03;15;16',
+            FriendlyTimes__c = '12:00'
+        );
         
-
-         //arrange input event parameters
-        String stampAsString = '2014-01-03T12:00:00.000Z';
+        //arrange input
+        Datetime entryPoint = Datetime.newInstanceGmt(2014, 1, 3, 12, 0, 0);
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => scheduleConfig.Id,
-            'esb__EntryPointDatetime' => stampAsString,
+            'esb__StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
+            'esb__EntryPointDatetime' => entryPoint,
             '__WasHeartbeatProcess' => true
         };
+        inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
  
-        // act
+        //act
         ApexClassModel.BaseProcess process = new Schedule();
-        List<Map<String,Object>> results = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
         
-        // assemble
-        Integer actualCount = results.size();
-
-        String  actualStampTruncated = null;
-        Integer actualParameterSize = null;
-        if (actualCount == 1) {
-             Map<String,Object> actualParameters = results[0];
-            actualParameterSize = actualParameters.keySet().size();
-            actualStampTruncated = (String)actualParameters.get('esb__EntryPointDatetime');
-        }
+        //assert
+        Integer expectedSize = 1;
+        Integer actualSize = outputEvents.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
-        // assert
-        Integer expectedCount = 1;
-        System.assertEquals(expectedCount, actualCount);
-
-        String  expectedStampTruncated = stampAsString;
-        Integer expectedParameterSize = 3;
-        System.assertEquals(expectedStampTruncated, actualStampTruncated);
-        System.assertEquals(expectedParameterSize, actualParameterSize);
+        String expectedEntryPoint = '2014-01-03T12:00:00.000Z';
+        String actualEntryPoint = (String)outputEvents[0].get('esb__EntryPointDatetime');
+        System.assertEquals(expectedEntryPoint, actualEntryPoint, 'Wrong entry point datetime.');
     }
-
-
-    static testmethod void messageSwalloweddWhenIsHeartbeatEqTrueAndIsWithinWindowReturnsFalse() {
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
-        insert sequence;
-        
-        //arrange steps
-        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class);
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
-
+    
+    static testmethod void messageSwallowedWhenIsHeartbeatEqTrueAndIsWithinWindowReturnsFalse() {
         //arrange config
-        ScheduleConfig__c scheduleConfig = [SELECT Id FROM ScheduleConfig__c];
-        scheduleConfig.Frequency__c = 'Weekly';
-        scheduleConfig.FriendlyDates__c = 'Wednesday';
-        scheduleConfig.FriendlyTimes__c = '13:00';
-        update scheduleConfig;
+        insert new ScheduleConfig__c(
+            Frequency__c = 'Weekly',
+            FriendlyDates__c = 'Wednesday',
+            FriendlyTimes__c = '13:00'
+        );
         
-
-         //arrange input event parameters
-        String stampAsString = '2014-01-18T12:00:00.000Z';
+        //arrange input event parameters
+        Datetime entryPoint = Datetime.newInstanceGmt(2014, 1, 18, 12, 0, 0);
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => scheduleConfig.Id,
-            'esb__EntryPointDatetime' => stampAsString,
+            'esb__StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
+            'esb__EntryPointDatetime' => entryPoint,
             '__WasHeartbeatProcess' => true
         };
+        inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
  
-        // act
+        //act
         ApexClassModel.BaseProcess process = new Schedule();
-        List<Map<String,Object>> results = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
         
-        // assemble
-        Integer actualCount = results.size();
-
-        // assert
-        Integer expectedCount = 0;
-        System.assertEquals(expectedCount, actualCount);
+        //assert
+        Integer expectedSize = 0;
+        Integer actualSize = outputEvents.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
     }
-
+    
     static testmethod void isHeartbeatThrowsExceptionWhenInvalidStampParam() {
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'ScheduledSequence');
-        insert sequence;
+        //arrange config
+        insert new ScheduleConfig__c(
+            IsActive__c = true
+        );
         
-        //arrange steps
-        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class);
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
-        
-
-         //arrange input event parameters
-        String invalidStamp = 'XXXX-01-18T12:00:00.000Z';
+        //arrange input
+        Datetime entryPoint = null;
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => Database.insert(new ScheduleConfig__c(IsActive__c = true)).getId(),
-            'esb__EntryPointDatetime' => invalidStamp,
+            'esb__StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
+            'esb__EntryPointDatetime' => entryPoint,
             '__WasHeartbeatProcess' => true
         };
+        inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
         
-        // assemble
-        Boolean actualFlag = false;
         try {
-            // act
+            //act
             ApexClassModel.BaseProcess process =  new Schedule();
-            List<Map<String,Object>> result = process.execute(inputEvent);
-        } catch (Schedule.ScheduleException e) {
-            actualFlag = true;
+            process.execute(inputEvent);
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Exception e) {
+            //assert
+            String expectedMessage = 'Problem with getISO8601 or getStamp("null")';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }
- 
-        // assert
-        Boolean expectedFlag = true;
-        System.assertEquals(expectedFlag, actualFlag);
     }
-
-
-     static testmethod void callingIsTimeMatchReturnsTrueWhenTimeStampIsInRunTimes() {
-        // arrange
+    
+    static testmethod void callingIsTimeMatchReturnsTrueWhenTimeStampIsInRunTimes() {
+        //arrange
         Set<String> runTimesA = new Set<String>{'12:00','11:00'};
         Set<String> runTimesB = new Set<String>{'12:00'};
         String stampAsString1 = '2014-01-18T12:00:00.000Z';
         String stampAsString2 = '2014-01-18 12:00:00.000';
         String stampAsString3 = '2014-01-18T12:00:00';
-         
-        // act
-        Boolean actualFlag1 = Schedule.isTimeMatch(stampAsString1, runTimesA);
-        Boolean actualFlag2 = Schedule.isTimeMatch(stampAsString1, runTimesA);
-        Boolean actualFlag3 = Schedule.isTimeMatch(stampAsString1, runTimesA);
-        Boolean actualFlag4 = Schedule.isTimeMatch(stampAsString1, runTimesB);
-        Boolean actualFlag5 = Schedule.isTimeMatch(stampAsString1, runTimesB);
-        Boolean actualFlag6 = Schedule.isTimeMatch(stampAsString1, runTimesB);
-
-         
-        // assert
-        Boolean expectedFlag1 = true;
-        System.assertEquals(expectedFlag1, actualFlag1);
-        Boolean expectedFlag2 = true;
-        System.assertEquals(expectedFlag2, actualFlag2);
-        Boolean expectedFlag3 = true;
-        System.assertEquals(expectedFlag3, actualFlag3);
-        Boolean expectedFlag4 = true;
-        System.assertEquals(expectedFlag4, actualFlag4);
-        Boolean expectedFlag5 = true;
-        System.assertEquals(expectedFlag5, actualFlag5);
-        Boolean expectedFlag6 = true;
-        System.assertEquals(expectedFlag6, actualFlag6);
-     }
-
-
+        
+        //act and assert
+        System.assert(Schedule.isTimeMatch(stampAsString1, runTimesA));
+        System.assert(Schedule.isTimeMatch(stampAsString1, runTimesA));
+        System.assert(Schedule.isTimeMatch(stampAsString1, runTimesA));
+        System.assert(Schedule.isTimeMatch(stampAsString1, runTimesB));
+        System.assert(Schedule.isTimeMatch(stampAsString1, runTimesB));
+        System.assert(Schedule.isTimeMatch(stampAsString1, runTimesB));
+    }
+    
     static testmethod void testDailyWindow() {
+        //arrange
         DateTime sundayNight = DateTime.newInstance(2014, 1, 19, 23, 59, 59); //19th Jan 2014 is a Sunday
+        DateTime wednesday = DateTime.newInstance(2014, 1, 15, 0, 0, 0); //15th Jan 2014 is a Wednesday
+        
+        //act and assert
         System.assert(!Schedule.isWithinDailyWindow(sundayNight, new Set<String>{'Working days only'}));
         System.assert(Schedule.isWithinDailyWindow(sundayNight, new Set<String>{'Weekends and holidays'}));
-
-        DateTime wednesday = DateTime.newInstance(2014, 1, 15, 0, 0, 0); //15th Jan 2014 is a Wednesday
-        System.assert(Schedule.isWithinDailyWindow(wednesday, new Set<String>{'Working days only','Weekends and holidays'}));
         System.assert(Schedule.isWithinDailyWindow(sundayNight, new Set<String>{'Working days only','Weekends and holidays'}));
+        System.assert(Schedule.isWithinDailyWindow(wednesday, new Set<String>{'Working days only','Weekends and holidays'}));
     }
-
-
+    
     static testmethod void testWeeklyWindow() {
+        //arrange
         DateTime wednesday = DateTime.newInstance(2014, 1, 15, 9, 0, 0); //15th Jan 2014 is a Wednesday
-        System.assert(Schedule.isWithinWeeklyWindow(wednesday, new Set<String>{'Tuesday', 'Wednesday', 'Thursday'}));
-        
-        DateTime friday = DateTime.newInstance(2014, 1, 17, 9, 0, 0); //17th Jan 2014 is a Friday
-        System.assert(!Schedule.isWithinWeeklyWindow(wednesday, new Set<String>{'Thursday', 'Saturday'}));
-        
         DateTime saturdayMorning = DateTime.newInstance(2014, 1, 18, 0, 0, 1); //18th Jan 2014 is a Satuday
+        DateTime saturdayNight = DateTime.newInstance(2014, 1, 18, 23, 59, 59); //18th Jan 2014 is a Saturday
+        
+        //act and assert
+        System.assert(Schedule.isWithinWeeklyWindow(wednesday, new Set<String>{'Tuesday', 'Wednesday', 'Thursday'}));
+        System.assert(!Schedule.isWithinWeeklyWindow(wednesday, new Set<String>{'Thursday', 'Saturday'}));
         System.assert(!Schedule.isWithinWeeklyWindow(saturdayMorning, new Set<String>{'Friday'}));
         System.assert(Schedule.isWithinWeeklyWindow(saturdayMorning, new Set<String>{'Saturday'}));
         System.assert(!Schedule.isWithinWeeklyWindow(saturdayMorning, new Set<String>{'Sunday'}));
-        
-        DateTime saturdayNight = DateTime.newInstance(2014, 1, 18, 23, 59, 59); //18th Jan 2014 is a Saturday
         System.assert(!Schedule.isWithinWeeklyWindow(saturdayNight, new Set<String>{'Friday'}));
         System.assert(Schedule.isWithinWeeklyWindow(saturdayNight, new Set<String>{'Saturday'}));
         System.assert(!Schedule.isWithinWeeklyWindow(saturdayNight, new Set<String>{'Sunday'}));
     }
-
-
+    
     static testmethod void testMonthlyWindow() {
-        // arrange
+        //arrange
         String christmasMorning = '2014-12-25T12:09:00.000Z';
         String newYearsDay = '2014-01-01T12:09:00.000Z';
         String independenceDay = '2014-07-04T12:09:00';
 
-        // act
+        //act and assert
         System.assert(Schedule.isWithinMonthlyWindow(christmasMorning, new Set<String>{'24', '25', '26'}));
         System.assert(!Schedule.isWithinMonthlyWindow(newYearsDay, new Set<String>{'06', '02', '03'}));
         System.assert(Schedule.isWithinMonthlyWindow(independenceDay, new Set<String>{'04'}));

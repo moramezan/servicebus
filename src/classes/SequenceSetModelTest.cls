@@ -8,6 +8,7 @@
         
         //arrange steps
         Step__c branchStep = SequenceModel.fromName(sequence.Name).appendStep(Branch.class);
+        new StepModel(branchStep).upsertConfig();
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         Integer expectedConfigsBefore = 1;

@@ -8,44 +8,38 @@
     }
     
    static testmethod void withinSystemLimits() {
-        //arrange
-        EventType__c eventType = new EventType__c(
-            Name = 'TestEvent'
-        );
+        //arrange event
+        EventType__c eventType = new EventType__c(Name = 'Test');
         insert eventType;
         
-        //arrange publish sequences and steps
-        Sequence__c publisher = new Sequence__c(Name = 'Publisher');
-        insert publisher;
+        //arrange publisher config
+        PublishConfig__c pubConfig = new PublishConfig__c(EventType__c = eventType.Id);
+        insert pubConfig;
         
-        Step__c publisherStep = SequenceModel.fromName(publisher.Name).appendStep(Publish.class);
-        PublishConfig__c pubConfig = new PublishConfig__c(
-            Id = publisherStep.ConfigId__c,
-            EventType__c = eventType.Id
-        );
-        update pubConfig;
+        //arrange subscriber 1 sequence, step, config
+        Sequence__c sub1 = new Sequence__c(Name = 'Subscriber1');
+        insert sub1;
         
-        //arrange subscribe sequences and steps
-        Sequence__c subscriber1 = new Sequence__c(Name = 'Subscriber1');
-        insert subscriber1;
+        Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(Subscribe.class);
+        Id sub1configId = new StepModel(sub1step).upsertConfig();
         
-        Step__c subscriber1step = SequenceModel.fromName(subscriber1.Name).appendStep(Subscribe.class);
-        Database.update(new SubscribeConfig__c(
-            Id = subscriber1step.ConfigId__c,
-            EventType__c = eventType.Id
-        ));
+        SubscribeConfig__c sub1config = new SubscribeConfig__c(Id = sub1configId, EventType__c = eventType.Id);
+        update sub1config;
         
-        Sequence__c subscriber2 = new Sequence__c(Name = 'Subscriber2');
-        insert subscriber2;
+        //arrange subscriber 2 sequence, step, config
+        Sequence__c sub2 = new Sequence__c(Name = 'Subscriber2');
+        insert sub2;
         
-        Step__c subscriber2step = SequenceModel.fromName(subscriber2.Name).appendStep(Subscribe.class);
-        Database.update(new SubscribeConfig__c(
-            Id = subscriber2step.ConfigId__c,
-            EventType__c = eventType.Id
-        ));
+        Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(Subscribe.class);
+        Id sub2configId = new StepModel(sub2step).upsertConfig();
         
-        //arrange
-        Map<String,Object> inputEvent = new Map<String,Object>{'__SequenceName' => 'Publisher', '__Position' => 1, 'esb__StepConfigId' => pubConfig.Id};
+        SubscribeConfig__c sub2config = new SubscribeConfig__c(Id = sub2configId, EventType__c = eventType.Id);
+        update sub2config;
+        
+        //arrange input
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__StepConfigId' => pubConfig.Id
+        };
 
         //act
         Test.startTest();
@@ -64,30 +58,25 @@
 
     
     static testmethod void testSubsequenceDropped() {
-        //arrange events
-        EventType__c eventType = new EventType__c(
-            Name = 'ready'
-        );
+        //arrange event
+        EventType__c eventType = new EventType__c(Name = 'Test');
         insert eventType;
         
         //arrange publish config
-        PublishConfig__c pubConfig = new PublishConfig__c(
-            EventType__c = eventType.Id
-        );
+        PublishConfig__c pubConfig = new PublishConfig__c(EventType__c = eventType.Id);
         insert pubConfig;
         
-        //arrange sequence
-        Sequence__c target = new Sequence__c(Name = 'target');
-        insert target;
+        //arrange subscribe sequence, step, config
+        Sequence__c sub = new Sequence__c(Name = 'Subscriber');
+        insert sub;
         
-        Step__c subscribeStep = SequenceModel.fromName(target.Name).appendStep(Subscribe.class);
+        Step__c subStep = SequenceModel.fromName(sub.Name).appendStep(Subscribe.class);
+        Id subConfigId = new StepModel(subStep).upsertConfig();
         
-        //arrange subscribe config
-        Database.update(new SubscribeConfig__c(
-            Id = subscribeStep.ConfigId__c,
-            EventType__c = eventType.Id
-        ));
+        SubscribeConfig__c subConfig = new SubscribeConfig__c(Id = subConfigId, EventType__c = eventType.Id);
+        update subConfig;
         
+        //arrange input
         Map<String,Object> parameters = new Map<String,Object>{
             'esb__StepConfigId' => pubConfig.Id,
             '__SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
@@ -113,109 +102,90 @@
     }
     
     static testmethod void testUnconfiguredPublishProcessThrowsException() {
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
-        insert sequence;
+        //arrange input
+        Map<String,Object> parameters = new Map<String,Object>{
+            'esb__StepConfigId' => null
+        };
         
-        //arrange steps
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Publish.class);
-        
-        PublishConfig__c config = new PublishConfig__c();
-        insert config;
-        
-        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'TestSequence', '__Position' => 1};
-        
-        //act
-        Boolean thrown = false;
-        ApexClassModel.BaseProcess process = new Publish();
-        try {process.execute(parameters);}
-        catch (Exception e) {thrown = true;}
-        
-        //assert
-        System.assert(thrown);
+        try {
+            //act
+            ApexClassModel.BaseProcess process = new Publish();
+            process.execute(parameters);
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Exception e) {
+            //assert
+            String expectedMessage = 'ApexDomain.getById received null recordId.';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
     }
     
     static testmethod void testNoSubscribersStillReturnsOneMessage() {
-        EventType__c eventType = new EventType__c(
-            Name = 'TestEvent'
-        );
+        //arrange event
+        EventType__c eventType = new EventType__c(Name = 'TestEvent');
         insert eventType;
         
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
-        insert sequence;
+        //arrange publisher config
+        PublishConfig__c pubConfig = new PublishConfig__c(EventType__c = eventType.Id);
+        insert pubConfig;
         
-        //arrange steps
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Publish.class);
-        PublishConfig__c config = new PublishConfig__c(
-            Id = step.ConfigId__c,
-            EventType__c = eventType.Id
-        );
-        update config;
-        
-        Map<String,Object> parameters = new Map<String,Object>{
-            '__SequenceName'=>'TestSequence',
-            '__Position'=>1,
-            'esb__StepConfigId'=>config.Id
+        //arrange input
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__StepConfigId' => pubConfig.Id
         };
- 
+        
         //act
         ApexClassModel.BaseProcess process = new Publish();
-        List<Map<String,Object>> parametersList = process.execute(parameters);
+        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
         
         //assert
         Integer expectedSize = 1;
-        Integer actualSize = parametersList.size();
-        System.assertEquals(expectedSize, actualSize);
+        Integer actualSize = outputEvents.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
     }
     
     static testmethod void testSubscribersAffectOutputEventsReturned() {
-        EventType__c eventType = new EventType__c(
-            Name = 'TestEvent'
-        );
+        //arrange event
+        EventType__c eventType = new EventType__c(Name = 'TestEvent');
         insert eventType;
         
-        //arrange publish sequences and steps
-        Sequence__c publisher = new Sequence__c(Name = 'Publisher');
-        insert publisher;
+        //arrange publish config
+        PublishConfig__c pubConfig = new PublishConfig__c(EventType__c = eventType.Id);
+        insert pubConfig;
         
-        Step__c publisherStep = SequenceModel.fromName(publisher.Name).appendStep(Publish.class);
-        PublishConfig__c pubConfig = new PublishConfig__c(
-            Id = publisherStep.ConfigId__c,
-            EventType__c = eventType.Id
-        );
-        update pubConfig;
+        //arrange subscriber 1 sequence, step, config
+        Sequence__c sub1 = new Sequence__c(Name = 'Subscriber1');
+        insert sub1;
         
-        //arrange subscribe sequences and steps
-        Sequence__c subscriber1 = new Sequence__c(Name = 'Subscriber1');
-        insert subscriber1;
+        Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(Subscribe.class);
+        Id sub1configId = new StepModel(sub1step).upsertConfig();
         
-        Step__c subscriber1step = SequenceModel.fromName(subscriber1.Name).appendStep(Subscribe.class);
-        Database.update(new SubscribeConfig__c(
-            Id = subscriber1step.ConfigId__c,
-            EventType__c = eventType.Id
-        ));
+        SubscribeConfig__c sub1config = new SubscribeConfig__c(Id = sub1configId, EventType__c = eventType.Id);
+        update sub1config;
         
-        Sequence__c subscriber2 = new Sequence__c(Name = 'Subscriber2');
-        insert subscriber2;
+        //arrange subscriber 2 sequence, step, config
+        Sequence__c sub2 = new Sequence__c(Name = 'Subscriber2');
+        insert sub2;
         
-        Step__c subscriber2step = SequenceModel.fromName(subscriber2.Name).appendStep(Subscribe.class);
-        Database.update(new SubscribeConfig__c(
-            Id = subscriber2step.ConfigId__c,
-            EventType__c = eventType.Id
-        ));
+        Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(Subscribe.class);
+        Id sub2configId = new StepModel(sub2step).upsertConfig();
         
-        //arrange
-        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'Publisher', '__Position' => 1, 'esb__StepConfigId' => pubConfig.Id};
+        SubscribeConfig__c sub2config = new SubscribeConfig__c(Id = sub2configId, EventType__c = eventType.Id);
+        update sub2config;
+        
+        //arrange input
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__StepConfigId' => pubConfig.Id
+        };
         
         //act
         ApexClassModel.BaseProcess process = new Publish();
-        List<Map<String,Object>> parametersList = process.execute(parameters);
+        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
         
         //assert
         Integer expectedSize = 3;
-        Integer actualSize = parametersList.size();
-        System.assertEquals(expectedSize, actualSize);
+        Integer actualSize = outputEvents.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
     }
     
 }

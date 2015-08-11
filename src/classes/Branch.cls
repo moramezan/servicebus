@@ -1,7 +1,5 @@
 public with sharing class Branch extends ApexClassModel.BaseProcess {
 
-    public BranchConfig__c StepConfig;
-
     /**
      * @docs ProcessBranchJumpSubsequence.html
      */

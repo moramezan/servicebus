@@ -53,26 +53,18 @@
     }
     
     static testmethod void testShowStepConfig() {
-        //arrange config
-        Document document = new Document(Name = 'Test', FolderId = UserInfo.getUserId());
-        insert document;
-        
         //arrange step
-        Step__c step = new Step__c(Name = 'Test#1', ConfigId__c = document.Id);
+        Step__c step = new Step__c(Name = 'Test#1', ConfigId__c = '01524000000FuQh');
         insert step;
         
         //act
-        StepModel model = StepModel.fromid(step.Id);
+        StepModel model = StepModel.fromId(step.Id);
         PageReference view = model.showStepConfig();
         
         //assert
-        String expectedId = document.Id;
-        String actualId = view.getParameters().get('id');
-        System.assertEquals(expectedId, actualId, 'Wrong id.');
-        
-        String expectedIsdtp = 'vw';
-        String actualIsdtp = view.getParameters().get('isdtp');
-        System.assertEquals(expectedIsdtp, actualIsdtp, 'Wrong isdtp.');
+        String expectedUrl = '/01524000000FuQh?isdtp=vw';
+        String actualUrl = view.getUrl();
+        System.assertEquals(expectedUrl, actualUrl, 'Wrong url.');
     }
     
 }

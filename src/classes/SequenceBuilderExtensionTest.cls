@@ -213,6 +213,7 @@
         
         // Sequence A - Warning : Ok but event Not Subscribed
         Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Publish.class);
+        new StepModel(stepA1).upsertConfig();
         Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
         
         // Event
@@ -254,6 +255,7 @@
         
         // Sequence B - Problem : No Config
         Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Publish.class);
+        new StepModel(stepB1).upsertConfig();
         Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class);
         
         // Act :
@@ -281,6 +283,7 @@
         
         // Sequence A - Warning : Ok but event Not published
         Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Subscribe.class);
+        new StepModel(stepA1).upsertConfig();
         Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
 
         // Event
@@ -323,6 +326,7 @@
         // Sequence B - Problem : Subscribe Not first Step
         Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class);
         Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Subscribe.class);
+        new StepModel(stepB2).upsertConfig();
         
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceB);
@@ -350,7 +354,9 @@
         
         // Sequence C - Problem : Subscribe Step Occurs more than once
         Step__c stepC1 = SequenceModel.fromName(sequenceC.Name).appendStep(Subscribe.class);
+        new StepModel(stepC1).upsertConfig();
         Step__c stepC2 = SequenceModel.fromName(sequenceC.Name).appendStep(Subscribe.class);
+        new StepModel(stepC2).upsertConfig();
             
         // Event
         EventType__c eventNotPublished = new EventType__c(
@@ -396,6 +402,7 @@
         
         // Sequence B - Problem : No Config
         Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Subscribe.class);
+        new StepModel(stepB1).upsertConfig();
         Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class);
 
         // Act :

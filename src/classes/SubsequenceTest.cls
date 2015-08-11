@@ -12,6 +12,7 @@
         Sequence__c origin = new Sequence__c(Name = 'originSequence');
         insert origin;
         Step__c originStep = SequenceModel.fromName(origin.Name).appendStep(Subsequence.class);
+        new StepModel(originStep).upsertConfig();
         
         Sequence__c target = new Sequence__c(Name = 'targetSequence');
         insert target;
@@ -54,6 +55,7 @@
         Sequence__c origin = new Sequence__c(Name = 'originSequence');
         insert origin;
         Step__c originStep = SequenceModel.fromName(origin.Name).appendStep(Subsequence.class);
+        new StepModel(originStep).upsertConfig();
         
         Sequence__c target = new Sequence__c(Name = 'targetSequence');
         insert target;
