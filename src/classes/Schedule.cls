@@ -8,7 +8,7 @@ public class Schedule extends ApexClassModel.BaseProcess {
         String StepConfig = ScheduleConfig__c.class.getName();
         String HelpUrl = Page.ScheduleConfigHelp.getUrl();
         Boolean ConsumesHeartbeat = true;
-        Integer Limits = 5000; //leave half of 10,000 (Total number of records retrieved by Database.getQueryLocator)
+        Integer Limits = 100; //could be higher but lets be reasonable
         Map<String,String> Inputs = new Map<String,String>{
             'esb__EntryPointDatetime' => 'DATETIME of the point in time this schedule was intended to run.'
         };

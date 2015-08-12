@@ -5,7 +5,7 @@
         ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Schedule.class);
         
         //assert
-        Integer expectedLimits = 5000;
+        Integer expectedLimits = 100;
         Integer actualLimits = esb.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }

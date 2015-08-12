@@ -10,7 +10,7 @@ public class Subscribe extends ApexClassModel.BaseProcess {
         String StepConfig = SubscribeConfig__c.class.getName();
         String Icon = 'eye';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessPublishSubscribe').getUrl();
-        Integer Limits = 5000; //leave half of 10,000 (Total number of records retrieved by Database.getQueryLocator)
+        Integer Limits = 100; //could be higher but lets be reasonable
         String Cardinality = 'One';
     }
     

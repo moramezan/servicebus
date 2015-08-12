@@ -8,13 +8,6 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
      */
     static public Boolean Inhibit = !Test.isRunningTest();
     
-    /**
-     * #829 try to prevent "too many query rows" by cleaning
-     * or housekeeping only once per execution context
-     */
-    @TestVisible static private Boolean IsCleaned = false;
-    @TestVisible static private Integer MaxTotalMessages     = 5000;
-    
     public MessageSetModel(List<Message__c> messages) {
         super(messages);
     }

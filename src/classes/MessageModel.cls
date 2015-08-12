@@ -83,6 +83,9 @@ public class MessageModel extends ApexDomain.StandardModel {
      * This performs actual resolution inside the broker execute method.
      */
     public void prepareProcess() {
+        this.Message.ExecuteDuration__c = 0;
+        Long timer = System.now().getTime();
+        
         try {
             Integer hops = (Integer)this.Event.get('__Hops');
             
@@ -119,14 +122,18 @@ public class MessageModel extends ApexDomain.StandardModel {
         } catch (Exception e) {
             this.prepareException(e);
             this.IsFucked = true;
+            
         }
+        
+        //execution time profiler
+        if (this.Message.ExecuteDuration__c == null) this.Message.ExecuteDuration__c = 0;
+        this.Message.ExecuteDuration__c += System.now().getTime() - timer;
     }
     
     /**
      * TODO COUNT ANY DMLS
      */
     public void invokeCallouts() {
-        //careful if a L suffix is needed
         Long timer = System.now().getTime();
         
         try {
