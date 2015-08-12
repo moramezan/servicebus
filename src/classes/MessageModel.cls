@@ -176,7 +176,10 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
             
             //do invocation
             String data = String.valueOf(process);
-            if (data == null) throw new MessageException('Your main code block should return a List<Map<String,Object>>.');
+            if (data == 'null') {
+                //#945 watch out for the STRING NULL that comes out
+                throw new MessageException('Your main code block should return a List<Map<String,Object>>.');
+            }
             
             //TODO for #886
             //if (data.endsWith(step.ApexClassName__c.replaceAll('[^.]+\\.', '') + ':[]')) {
@@ -184,11 +187,6 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
                 //this.prepareException(e);
                 //throw e;
             //}
-            
-            //clear any errors off the input message
-            this.Message.Status__c = 'Completed'; //#798
-            this.Message.Exception__c = null;
-            this.Message.Cause__c = null;
             
             //wrap up results into Messages (new guys should have Position = 0)
             List<Object> outputEvents = (List<Object>)Json.deserializeUntyped(data);
@@ -199,6 +197,12 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
                     Status__c = 'Buffered'
                 ));
             }
+            
+            this.Message.Cause__c = null;
+            this.Message.Exception__c = null;
+            this.Message.Status__c = 'Completed'; //#798
+            //clear any errors off the input message as the LAST thing
+            //wait... if it fucks out here, the message is completed! aaaaaa!!!
 
         } catch (Exception e) {
             //#581 smoking gun should point at the user, NOT at our broker
