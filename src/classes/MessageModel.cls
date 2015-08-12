@@ -22,6 +22,11 @@ public class MessageModel extends ApexDomain.StandardModel {
      * Signal this process causes any change to any state
      */
     public Boolean HadSideEffects = false;
+  
+    /**
+     * Used in prepare and later in execute
+     */
+    @TestVisible private Type reflector;
     
     /**
      * These are all examples of "bigger problems"
@@ -103,13 +108,13 @@ public class MessageModel extends ApexDomain.StandardModel {
                 throw new MessageException('Step fully qualified class name was null: ' + step.Id);
             }
             
-            Type reflector = Type.forName(apexClassName);
+            this.reflector = Type.forName(apexClassName);
             
-            if (reflector == null) {
+            if (this.reflector == null) {
                 throw new MessageException('Reflector for classname was null: ' + apexClassName);
             }
             
-            this.Process = reflector.newInstance();
+            this.Process = this.reflector.newInstance();
             
         } catch (Exception e) {
             this.prepareException(e);
@@ -181,13 +186,15 @@ public class MessageModel extends ApexDomain.StandardModel {
                 throw new MessageException('Your main code block should return a List<Map<String,Object>>.');
             }
             
-            //TODO for #886
-            //if (data.endsWith(step.ApexClassName__c.replaceAll('[^.]+\\.', '') + ':[]')) {
-                //MessageException e = new MessageException('Your plugin has not overridden the toString() method. Please refer to the Process Developers Guide for specific guidance.');
-                //this.prepareException(e);
-                //throw e;
-            //}
+            //#886 normalise class name (we will test for absence of this fragment at start of process toString)
+            String fragment = this.Reflector.getName();
+            if (fragment.contains('.')) fragment = fragment.substringAfter('.');
+            fragment += ':[';
             
+            //#886
+            if (data.startsWith(fragment)) throw new MessageException('Your plugin has not extended abstract process. Please refer to the Process Developers Guide for specific guidance.');
+
+
             //wrap up results into Messages (new guys should have Position = 0)
             List<Object> outputEvents = (List<Object>)Json.deserializeUntyped(data);
             
