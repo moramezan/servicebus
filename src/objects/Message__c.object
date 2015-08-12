@@ -239,15 +239,13 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
-        <fullName>RecordData</fullName>
+        <fullName>ApexClass</fullName>
         <availability>online</availability>
-        <description>Redirects to the object represented by the Id contained in esb__RecordId</description>
         <displayType>button</displayType>
-        <height>600</height>
         <linkType>page</linkType>
-        <masterLabel>Show Record Data</masterLabel>
-        <openType>sidebar</openType>
-        <page>MessageRecordData</page>
+        <masterLabel>Show Apex Process</masterLabel>
+        <openType>replace</openType>
+        <page>MessageApexClass</page>
         <protected>false</protected>
     </webLinks>
     <webLinks>
@@ -280,16 +278,6 @@ The Broker continues to act on Messages with a Buffered or Started status but ig
         <requireRowSelection>true</requireRowSelection>
     </webLinks>
     <webLinks>
-        <fullName>ApexProcess</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <linkType>page</linkType>
-        <masterLabel>Show Apex Process</masterLabel>
-        <openType>replace</openType>
-        <page>MessageApexProcess</page>
-        <protected>false</protected>
-    </webLinks>
-    <webLinks>
         <fullName>Rebuffer</fullName>
         <availability>online</availability>
         <description>Refer #808 :
@@ -302,6 +290,18 @@ Sets the status of message(s) to Buffered and start the Broker</description>
         <page>MessageRebuffer</page>
         <protected>false</protected>
         <requireRowSelection>true</requireRowSelection>
+    </webLinks>
+    <webLinks>
+        <fullName>RecordData</fullName>
+        <availability>online</availability>
+        <description>Redirects to the object represented by the Id contained in esb__RecordId</description>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Show Record Data</masterLabel>
+        <openType>sidebar</openType>
+        <page>MessageRecordData</page>
+        <protected>false</protected>
     </webLinks>
     <webLinks>
         <fullName>Restart</fullName>

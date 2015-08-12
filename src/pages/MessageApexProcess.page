@@ -1,3 +1,0 @@
-<apex:page standardController="Message__c" extensions="MessageApexProcessExtension" action="{!showApexProcess}">
-    <apex:pageMessages />
-</apex:page>

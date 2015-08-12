@@ -1,4 +1,4 @@
-public with sharing class ApexClassHelpExtension {
+public with sharing class ApexClassSummaryExtension {
     
     private ApexPages.StandardController controller;
     private ApexClassModel model;
@@ -8,7 +8,7 @@ public with sharing class ApexClassHelpExtension {
     public Map<String,Object> Outputs {get; set;}
     public String FullyQualifiedClassName {get; set;}
     
-    public ApexClassHelpExtension(ApexPages.StandardController controller) {
+    public ApexClassSummaryExtension(ApexPages.StandardController controller) {
         this.controller = controller;
     }
     

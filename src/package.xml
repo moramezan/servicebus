@@ -7,14 +7,14 @@
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>
-        <members>ApexClassHelpExtension</members>
-        <members>ApexClassHelpExtensionTest</members>
         <members>ApexClassModel</members>
         <members>ApexClassModelTest</members>
         <members>ApexClassSetModel</members>
         <members>ApexClassSetModelTest</members>
         <members>ApexClassSettingExtension</members>
         <members>ApexClassSettingExtensionTest</members>
+        <members>ApexClassSummaryExtension</members>
+        <members>ApexClassSummaryExtensionTest</members>
         <members>ApexDomain</members>
         <members>ApexDomainTest</members>
         <members>Branch</members>
@@ -37,18 +37,18 @@
         <members>JobTest</members>
         <members>Jump</members>
         <members>JumpTest</members>
-        <members>MessageRecordDataExtension</members>
-        <members>MessageRecordDataExtensionTest</members>
+        <members>MessageApexClassExtension</members>
+        <members>MessageApexClassExtensionTest</members>
         <members>MessageKillExtension</members>
         <members>MessageKillExtensionTest</members>
         <members>MessageModel</members>
         <members>MessageModelTest</members>
         <members>MessagePauseQueueExtension</members>
         <members>MessagePauseQueueExtensionTest</members>
-        <members>MessageApexProcessExtension</members>
-        <members>MessageApexProcessExtensionTest</members>
         <members>MessageRebufferExtension</members>
         <members>MessageRebufferExtensionTest</members>
+        <members>MessageRecordDataExtension</members>
+        <members>MessageRecordDataExtensionTest</members>
         <members>MessageResumeQueueExtension</members>
         <members>MessageResumeQueueExtensionTest</members>
         <members>MessageSetModel</members>
@@ -99,19 +99,19 @@
         <name>ApexComponent</name>
     </types>
     <types>
-        <members>ApexClassHelp</members>
         <members>ApexClassSetting</members>
+        <members>ApexClassSummary</members>
         <members>BranchConfigHelp</members>
         <members>Configure</members>
         <members>ContextSensitiveHelp</members>
         <members>EventTypeHelp</members>
         <members>JumpConfigHelp</members>
-        <members>MessageRecordData</members>
+        <members>MessageApexClass</members>
         <members>MessageHelp</members>
         <members>MessageKill</members>
         <members>MessagePauseQueue</members>
-        <members>MessageApexProcess</members>
         <members>MessageRebuffer</members>
+        <members>MessageRecordData</members>
         <members>MessageResumeQueue</members>
         <members>MessageSplash</members>
         <members>Monitor</members>
@@ -256,11 +256,11 @@
         <name>ValidationRule</name>
     </types>
     <types>
-        <members>Message__c.RecordData</members>
+        <members>Message__c.ApexClass</members>
         <members>Message__c.Kill</members>
         <members>Message__c.PauseQueue</members>
-        <members>Message__c.ApexProcess</members>
         <members>Message__c.Rebuffer</members>
+        <members>Message__c.RecordData</members>
         <members>Message__c.Restart</members>
         <members>Message__c.ResumeQueue</members>
         <members>PublishConfig__c.ManageEventTypes</members>

@@ -594,7 +594,7 @@
                             "    'html': 'Help for this Process',",
                             "    'class': 'documentationlink',",
                             "    'title': 'Configure Step',",
-                            "    'href': URLFOR[$Page.ApexClassHelp] + '?id=' + apexClassId,",
+                            "    'href': URLFOR[$Page.ApexClassSummary] + '?id=' + apexClassId,",
                             "    'target': '_blank'",
                             "});"
                         ]

@@ -283,7 +283,7 @@ public class MessageModel extends ApexDomain.StandardModel {
         }
     }
     
-    public PageReference showApexProcess() {
+    public PageReference showApexClass() {
         
         String route = this.message.Step__c;
         

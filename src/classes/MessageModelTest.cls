@@ -2,7 +2,7 @@
     
     //TODO
     
-    static testmethod void testShowApexProcessFindsIt() {
+    static testmethod void testShowApexClassFindsIt() {
         //arrange sequence and steps
         insert new Sequence__c(Name = 'Test');
         Step__c step = SequenceModel.fromName('Test').appendStep(Terminate.class);
@@ -17,7 +17,7 @@
         
         //act
         MessageModel model = new MessageModel(message);
-        PageReference view = model.showApexProcess();
+        PageReference view = model.showApexClass();
         
         //assert
         String expectedUrl = '/' + [SELECT Id FROM ApexClass WHERE Name = 'Wiretap'].Id;

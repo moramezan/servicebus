@@ -1,4 +1,4 @@
-<apex:page standardController="ApexClass" showHeader="false" extensions="ApexClassHelpExtension" title="Process: {!ApexClass.Name}" action="{!doInit}">
+<apex:page standardController="ApexClass" showHeader="false" extensions="ApexClassSummaryExtension" title="Process: {!ApexClass.Name}" action="{!doInit}">
     <apex:pageMessages showDetail="false" />
 
     <apex:pageBlock mode="maindetail">

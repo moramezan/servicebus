@@ -1,0 +1,3 @@
+<apex:page standardController="Message__c" extensions="MessageApexClassExtension" action="{!showApexClass}">
+    <apex:pageMessages />
+</apex:page>

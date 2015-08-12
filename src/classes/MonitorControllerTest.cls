@@ -19,7 +19,7 @@
         ApexClassSetModel model = new ApexClassSetModel(apexClasses);
         model.discoverProcesses();
         
-        //assert 1 null, 1 wiretap, 1 terminate, 
+        //assert 1 null, 1 wiretap, 1 terminate,
         Integer expectedCount = 3; //the graph is [' ', 'Wiretap', 'Terminate']
         Integer actualCount = statistics.size();
         System.assertEquals(expectedCount, actualCount);

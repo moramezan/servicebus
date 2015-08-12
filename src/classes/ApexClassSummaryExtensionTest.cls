@@ -1,10 +1,10 @@
-@IsTest public class ApexClassHelpExtensionTest {
+@IsTest public class ApexClassSummaryExtensionTest {
     
     static testmethod void coverCode() {
         //arrange controller and extension
-        ApexClass apexClass = [SELECT Id FROM ApexClass WHERE Name = :ApexClassHelpExtensionTest.class.getName()];
+        ApexClass apexClass = [SELECT Id FROM ApexClass WHERE Name = :ApexClassSummaryExtensionTest.class.getName()];
         ApexPages.StandardController controller = new ApexPages.StandardController(apexClass);
-        ApexClassHelpExtension extension = new ApexClassHelpExtension(controller);
+        ApexClassSummaryExtension extension = new ApexClassSummaryExtension(controller);
         
         //act
         extension.doInit();
