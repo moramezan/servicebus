@@ -16,7 +16,7 @@ public class Branch extends ApexClassModel.BaseProcess {
 
     public class BranchException extends Exception {}
     
-    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
+    List<Map<String,Object>> execute(Map<String,Object> parameters) {
 
         //get step config
         BranchConfig__c config = (BranchConfig__c)ApexDomain.getById((Id)parameters.get('esb__StepConfigId'));

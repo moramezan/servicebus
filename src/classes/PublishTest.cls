@@ -53,7 +53,7 @@
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new Publish();
-            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -89,7 +89,7 @@
         };
         
         ApexClassModel.BaseProcess process = new Publish();
-        List<Map<String,Object>> parametersList = process.execute(parameters);
+        List<Map<String,Object>> parametersList = process.test(parameters);
         
         //should return one for sub, one for passthru
         Integer expectedSize = 2;
@@ -116,7 +116,7 @@
         try {
             //act
             ApexClassModel.BaseProcess process = new Publish();
-            process.execute(parameters);
+            process.test(parameters);
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
             //assert
@@ -142,7 +142,7 @@
         
         //act
         ApexClassModel.BaseProcess process = new Publish();
-        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -186,7 +186,7 @@
         
         //act
         ApexClassModel.BaseProcess process = new Publish();
-        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
         Integer expectedSize = 3;

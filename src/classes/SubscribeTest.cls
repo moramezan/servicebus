@@ -29,7 +29,7 @@
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new Subscribe();
-            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -45,7 +45,7 @@
             
         //act
         ApexClassModel.BaseProcess process = new Subscribe();
-        List<Map<String,Object>> parametersList = process.execute(parameters);
+        List<Map<String,Object>> parametersList = process.test(parameters);
         
         //assert
         integer expectedSize = 1;

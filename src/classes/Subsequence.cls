@@ -14,7 +14,7 @@ public class Subsequence extends ApexClassModel.BaseProcess {
         String Cardinality = 'One';
     }
     
-    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
+    List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         //derive the step Id
         Step__c step = [

@@ -2,7 +2,7 @@
     
     //@TestVisible private preferred, but Type.forName does not support
     public class DescribeProcess extends ApexClassModel.BaseProcess {
-        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return null;
         }
     }
@@ -45,7 +45,7 @@
  
     //@TestVisible private preferred, but Type.forName does not support
     public class DefaultProcess extends ApexClassModel.BaseProcess {
-        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return null;
         }
     }

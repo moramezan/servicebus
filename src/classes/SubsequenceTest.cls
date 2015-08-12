@@ -45,7 +45,7 @@
             };
                 
             ApexClassModel.BaseProcess process = new Subsequence();
-            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -83,7 +83,7 @@
         
         //act
         ApexClassModel.BaseProcess process = new Subsequence();
-        List<Map<String,Object>> parametersList = process.execute(parameters);
+        List<Map<String,Object>> parametersList = process.test(parameters);
         
         //asserts
         Integer expectedSize = 1;

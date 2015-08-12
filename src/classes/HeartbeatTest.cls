@@ -16,7 +16,7 @@
         ApexClassModel.BaseProcess process = new Heartbeat();
         
         //assemble
-        List<Map<String,Object>> outputs = process.execute(inputEvent);
+        List<Map<String,Object>> outputs = process.test(inputEvent);
         
         //assert
         Integer expectedSize = 1; //one schedule process
@@ -41,7 +41,7 @@
 
         //act
         ApexClassModel.BaseProcess process = new Heartbeat();
-        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.test(inputEvent);
 
         //assert
         Integer expectedSize = 0;
@@ -69,7 +69,7 @@
 
         //act
         ApexClassModel.BaseProcess process = new Heartbeat();
-        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.test(inputEvent);
 
         //assert
         Integer expectedSize = 2;
@@ -89,7 +89,7 @@
         try {
             //act
             ApexClassModel.BaseProcess process = new Heartbeat();
-            List<Map<String,Object>> results = process.execute(inputEvent);
+            List<Map<String,Object>> results = process.test(inputEvent);
         } catch (Heartbeat.HeartbeatException e) {
             actualFlag = true;
         }

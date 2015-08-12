@@ -5,7 +5,7 @@ public class Heartbeat extends ApexClassModel.BaseProcess {
 
     public class HeartbeatException extends Exception {}
 
-    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
+    List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         String  stampAsString = (String)parameters.get('esb__EntryPointDatetime');
 

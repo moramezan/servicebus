@@ -13,7 +13,7 @@ public class Terminate extends ApexClassModel.BaseProcess {
         String Cardinality = 'Zero';
     }
     
-    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
+    List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         //if we got here from a subsequence, back to where you came from!
         List<Map<String,Object>> parametersList = new List<Map<String,Object>>();

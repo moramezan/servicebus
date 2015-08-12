@@ -14,7 +14,7 @@ public class Jump extends ApexClassModel.BaseProcess {
         String Cardinality = 'Zero';
     }
     
-    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
+    List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         //get destination from config
         JumpConfig__c config = (JumpConfig__c)ApexDomain.getById((Id)parameters.get('esb__StepConfigId'));

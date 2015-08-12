@@ -48,7 +48,7 @@
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new GateByJob();
-            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -71,7 +71,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.BaseProcess process = new GateByJob();
-            List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory __QueueableId');
         }
@@ -98,7 +98,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.BaseProcess process = new GateByJob();
-            List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory __SequenceName');
         }
@@ -124,7 +124,7 @@
                     Boolean actualFlag = false;
         try {
             ApexClassModel.BaseProcess process = new GateByJob();
-            List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory __Position');
         }
@@ -151,7 +151,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.BaseProcess process = new GateByJob();
-            List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory  __ChunkTotal');
         }
@@ -177,7 +177,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.BaseProcess process = new GateByJob();
-            List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory __Chunk');
         }
@@ -222,7 +222,7 @@
 
         // Act
         ApexClassModel.BaseProcess process = new GateByJob();
-        List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
+        List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
 
         // Assemble
         Integer actualSize = actualOutputEvents.size();
@@ -267,7 +267,7 @@
 
         // Act
         ApexClassModel.BaseProcess process = new GateByJob();
-        List<Map<String,Object>> actualOutputEvents = process.execute(inputEvent);
+        List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
 
         // Assemble
         Integer actualSize = actualOutputEvents.size();

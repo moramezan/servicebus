@@ -24,7 +24,7 @@ public class GateByEntryPoint extends ApexClassModel.BaseProcess {
         };
     }
 
-    override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
 
         if (!inputEvent.containsKey('esb__EntryPointUuid'))
             throw new GateByEntryPointException('Input event missing mandatory esb__EntryPointUuid parameter');

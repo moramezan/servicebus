@@ -14,7 +14,7 @@ public class Wiretap extends ApexClassModel.BaseProcess {
         String Cardinality = 'One';
     }
     
-    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
+    List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         Id userId;
         try {

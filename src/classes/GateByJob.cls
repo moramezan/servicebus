@@ -26,7 +26,7 @@ public class GateByJob extends ApexClassModel.BaseProcess {
 
 
 
-    override protected List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
 
         if (!inputEvent.containsKey('__QueueableId'))
             throw new GateByJobException('Input event missing mandatory __QueueableId parameter');

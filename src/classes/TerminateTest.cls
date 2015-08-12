@@ -38,7 +38,7 @@ private class TerminateTest
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new Terminate();
-            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -80,7 +80,7 @@ private class TerminateTest
 
         // Act
         ApexClassModel.BaseProcess process = new Terminate();
-        List<Map<String,Object>> actualOutParametersList = process.execute(inputEvent);
+        List<Map<String,Object>> actualOutParametersList = process.test(inputEvent);
 
         // prepare
         Integer actualSize = actualOutParametersList.size();
@@ -117,7 +117,7 @@ private class TerminateTest
  
         // Act
         ApexClassModel.BaseProcess process = new Terminate();
-        List<Map<String,Object>> actualOutParametersList = process.execute(inputEvent);
+        List<Map<String,Object>> actualOutParametersList = process.test(inputEvent);
 
         // prepare
         Integer actualSize = actualOutParametersList.size();
@@ -156,11 +156,11 @@ private class TerminateTest
 
         // Act
         ApexClassModel.BaseProcess process = new Terminate();
-        List<Map<String,Object>> actualOutParametersListFirst = process.execute(parametersFirst);
+        List<Map<String,Object>> actualOutParametersListFirst = process.test(parametersFirst);
         
         Map<String,Object> parametersSecond = actualOutParametersListFirst[0].clone(); //-- Terminate hands back one
         
-        List<Map<String,Object>> actualOutParametersListSecond = process.execute(parametersSecond);
+        List<Map<String,Object>> actualOutParametersListSecond = process.test(parametersSecond);
         
         // prepare
         List<Object> actualStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('__SubsequenceStepIds');

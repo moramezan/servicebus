@@ -16,7 +16,7 @@ public class Publish extends ApexClassModel.BaseProcess {
     
     public class PublishException extends Exception {}
 
-    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
+    List<Map<String,Object>> execute(Map<String,Object> parameters) {
         List<Map<String,Object>> parametersList = new List<Map<string,object>>();
         
         PublishConfig__c publishConfig = (PublishConfig__c)ApexDomain.getById((Id)parameters.get('esb__StepConfigId'));

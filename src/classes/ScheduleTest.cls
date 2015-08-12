@@ -23,7 +23,7 @@
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new Schedule();
-            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -36,12 +36,12 @@
     static testmethod void messagePassedThruUntouchedWhenIsHeartbeatEqFalse() {
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>();
-        inputEvent.put('esb__EntryPointDatetime', Json.serialize(System.now())); //#810
+        inputEvent.put('esb__EntryPointDatetime', System.now()); //#810
         inputEvent.put('__WasHeartbeatProcess', false);
         
         //act
         ApexClassModel.BaseProcess process = new Schedule();
-        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -65,11 +65,10 @@
             'esb__EntryPointDatetime' => entryPoint,
             '__WasHeartbeatProcess' => true
         };
-        inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
         
         //act
         ApexClassModel.BaseProcess process = new Schedule();
-        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -97,11 +96,10 @@
             'esb__EntryPointDatetime' => entryPoint,
             '__WasHeartbeatProcess' => true
         };
-        inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
         
         ///act on working days only
         ApexClassModel.BaseProcess process = new Schedule();
-        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -129,11 +127,10 @@
             'esb__EntryPointDatetime' => entryPoint,
             '__WasHeartbeatProcess' => true
         };
-        inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
  
         //act
         ApexClassModel.BaseProcess process = new Schedule();
-        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -160,11 +157,10 @@
             'esb__EntryPointDatetime' => entryPoint,
             '__WasHeartbeatProcess' => true
         };
-        inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
  
         //act
         ApexClassModel.BaseProcess process = new Schedule();
-        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
         Integer expectedSize = 0;
@@ -185,12 +181,11 @@
             'esb__EntryPointDatetime' => entryPoint,
             '__WasHeartbeatProcess' => true
         };
-        inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
         
         try {
             //act
             ApexClassModel.BaseProcess process =  new Schedule();
-            process.execute(inputEvent);
+            process.test(inputEvent);
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
             //assert

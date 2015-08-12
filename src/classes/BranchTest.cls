@@ -39,7 +39,7 @@
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new Branch();
-            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -65,7 +65,7 @@
         };
         
         ApexClassModel.BaseProcess process = new Branch();
-        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.test(inputEvent);
 
         List<Object> expectedIds = null;
         List<Object> actualIds = (List<Object>)outputEvents[1].get('__SubsequenceStepIds');
@@ -92,7 +92,7 @@
         
         //act
         ApexClassModel.BaseProcess process = new Branch();
-        List<Map<String,Object>> outputEvents = process.execute(inputEvent);
+        List<Map<String,Object>> outputEvents = process.test(inputEvent);
 
         //assert
         Integer expectedSize = 2;
@@ -146,7 +146,7 @@
         //act
         try {
             ApexClassModel.BaseProcess process = new Branch();
-            List<Map<String,Object>> outputEvents = process.execute(inputEvent);
+            List<Map<String,Object>> outputEvents = process.test(inputEvent);
         } catch (Exception e) {
             exceptionThrown = true;
             System.assert(e instanceof Branch.BranchException);

@@ -14,7 +14,7 @@ public class Subscribe extends ApexClassModel.BaseProcess {
         String Cardinality = 'One';
     }
     
-    override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {
+    List<Map<String,Object>> execute(Map<String,Object> parameters) {
         return new List<Map<String,Object>>{parameters};
     }
 }

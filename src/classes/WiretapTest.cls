@@ -31,7 +31,7 @@ private class WiretapTest {
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new Wiretap();
-            List<Map<String,Object>> outputs = process.execute(inputEvent);
+            List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -64,7 +64,7 @@ private class WiretapTest {
         Boolean actualFlagException = false;
         try {
             ApexClassModel.BaseProcess process = new Wiretap();
-            List<Map<String,Object>> results = process.execute(parameters);
+            List<Map<String,Object>> results = process.test(parameters);
         } catch (Exception e) {
            actualFlagException = true;
         }
@@ -94,7 +94,7 @@ private class WiretapTest {
 
         // Act
         ApexClassModel.BaseProcess process = new Wiretap();
-        List<Map<String,Object>> actualParametersList = process.execute(inputEvent);
+        List<Map<String,Object>> actualParametersList = process.test(inputEvent);
 
         // prepare
         Integer actualSize = actualParametersList.size();

@@ -178,20 +178,50 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      */
     abstract public class BaseProcess {
         
-        //only override when a process requires callouts
-        @TestVisible virtual protected void callouts(Map<String,Object> event) {}
+        /**
+         * Internal only: we may override when process requires callouts
+         */
+        virtual void callouts(Map<String,Object> event) {}
         
-        //always override and implement process logic inside
-        @TestVisible abstract protected List<Map<String,Object>> execute(Map<String,Object> event);
+        /**
+         * Public implementation: they must put their logic inside
+         */
+        abstract List<Map<String,Object>> execute(Map<String,Object> inputEvent);
         
-        //ESB Marker Method
+        /**
+         * Public execution: they can use this for unit testing etc
+         */
+        public List<Map<String,Object>> test(Map<String,Object> inputEvent) {
+            //#797 cycle inputs so process author sees consistent inputs
+            inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
+            
+            List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
+            
+            //#746 accumulate outputs so event parameters carry forwards
+            for (Map<String,Object> result : this.execute(inputEvent)) {
+                //output equals balance plus delta
+                Map<String,Object> outputEvent = inputEvent.clone();
+                outputEvent.putAll(result);
+                outputEvents.add(outputEvent);
+            }
+            
+            return outputEvents;
+        }
+        
+        /**
+         * Our only cross-namespace capability
+         */
         override public String toString() {
-            Process.PluginRequest eventProviderRequest = new Process.PluginRequest(new Map<String,Object>{'esb__EventProvider' => true});
-            Map<String,Object> inputEvent = new Job().invoke(eventProviderRequest).OutputParameters;
-            Boolean allowsCallouts = (Boolean)inputEvent.get('esb__AllowsCallouts');
-            if (Test.isRunningTest()) { inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));} // #797; cycle so process author doesn't have to in tests!
-            if (allowsCallouts == true) {this.callouts(inputEvent);return null;}
-            return Json.serialize(this.execute(inputEvent));
+            //arrange provider
+            Process.Plugin provider = (Process.Plugin)Type.forName('Job').newInstance();
+            Map<String,Object> request = new Map<String,Object>{'esb__EventProvider' => true};
+            Map<String,Object> inputEvent = provider.invoke(new Process.PluginRequest(request)).OutputParameters;
+            
+            if (inputEvent.get('esb__AllowsCallouts') == true) {
+                this.callouts(inputEvent);return null;
+            } else {
+                return Json.serialize(this.test(inputEvent));
+            }
         }
         
     }
