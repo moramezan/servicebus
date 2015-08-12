@@ -4,14 +4,14 @@ public class Wiretap extends ApexClassModel.BaseProcess {
      * @docs ProcessWiretap.html
      */
     public class ESB extends ApexClassModel.BaseSummary {
-        public String Tag = 'Enterprise Service Bus';
-        public String Name = 'Wiretap';
-        public String Description = 'Emails the message parameters to the user.';
-        public String ProcessSetting = WiretapSetting__c.class.getName();
-        public String Icon = 'email';
-        public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessWiretap').getUrl();
-        public Integer Limits = 5; //leave half of 10 (Total number of sendEmail methods allowed)
-        public String Cardinality = 'One';
+        String Tag = 'Enterprise Service Bus';
+        String Name = 'Wiretap';
+        String Description = 'Emails the message parameters to the user.';
+        String ProcessSetting = WiretapSetting__c.class.getName();
+        String Icon = 'email';
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessWiretap').getUrl();
+        Integer Limits = 5; //leave half of 10 (Total number of sendEmail methods allowed)
+        String Cardinality = 'One';
     }
     
     override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {

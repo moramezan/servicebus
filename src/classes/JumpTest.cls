@@ -1,14 +1,20 @@
 @IsTest private class JumpTest {
      
     static testmethod void hasTheCorrectLimits() {
+        //arrange
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Jump.class);
+        
         //assert
         Integer expectedLimits = 50; //max sync limit
-        Integer actualLimits = new Jump.ESB().Limits;
+        Integer actualLimits = esb.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
 
 
    static testmethod void withinSystemLimits() {
+        //arrange
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Jump.class);
+        
         //arrange
         Sequence__c target = new Sequence__c(Name = 'target');
         insert target;
@@ -33,7 +39,7 @@
 
         //act
         Test.startTest();
-        Integer limits = new Jump.Esb().Limits;
+        Integer limits = esb.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new Jump();

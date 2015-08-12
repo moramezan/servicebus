@@ -4,14 +4,14 @@ public class Subsequence extends ApexClassModel.BaseProcess {
      * @docs ProcessBranchJumpSubsequence.html
      */
     public class ESB extends ApexClassModel.BaseSummary {
-        public String Tag = 'Enterprise Service Bus';
-        public String Name = 'Subsequence';
-        public String Description = 'Temporarily diverts the message to another sequence, then returns it to the next step afterwards.';
-        public String StepConfig = SubsequenceConfig__c.class.getName();
-        public String Icon = 'arrow_undo';
-        public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessBranchJumpSubsequence').getUrl();
-        public Integer Limits = 33; //max sync limit
-        public String Cardinality = 'One';
+        String Tag = 'Enterprise Service Bus';
+        String Name = 'Subsequence';
+        String Description = 'Temporarily diverts the message to another sequence, then returns it to the next step afterwards.';
+        String StepConfig = SubsequenceConfig__c.class.getName();
+        String Icon = 'arrow_undo';
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessBranchJumpSubsequence').getUrl();
+        Integer Limits = 33; //max sync limit
+        String Cardinality = 'One';
     }
     
     override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {

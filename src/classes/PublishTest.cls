@@ -1,9 +1,12 @@
 @IsTest private class PublishTest {
 
     static testmethod void hasTheCorrectLimits() {
+        //arrange
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Publish.class);
+        
         //assert
         Integer expectedLimits = 33; //max sync limit
-        Integer actualLimits = new Publish.ESB().Limits;
+        Integer actualLimits = esb.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
     
@@ -40,10 +43,13 @@
         Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__StepConfigId' => pubConfig.Id
         };
-
+        
+        //assemble
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Publish.class);
+        
         //act
         Test.startTest();
-        Integer limits = new Publish.Esb().Limits;
+        Integer limits = esb.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new Publish();

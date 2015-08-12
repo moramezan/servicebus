@@ -78,7 +78,7 @@
 global class Callout {
 
     global class ESB {
-        global String Description = 'Does an HTTP CallOut and saves it as a Document.';
+        String Description = 'Does an HTTP CallOut and saves it as a Document.';
         //..
     }
 
@@ -120,7 +120,7 @@ global class Callout implements Database.AllowsCallouts {
     global Boolean AllowsCallouts;
 
     global class ESB {
-        global String Description = 'Does an HTTP CallOut and saves it as a Document.';
+        String Description = 'Does an HTTP CallOut and saves it as a Document.';
         //..
     }
 
@@ -166,12 +166,12 @@ global class Callout implements Database.AllowsCallouts {
     global Boolean AllowsCallouts;
 
     global class ESB {
-        global String Description = 'Does an HTTP CallOut and saves it as a Document.';
-        global String Tag = 'Example';
-        global String Name = 'CallOut';
-        global String Icon = 'connect';
-        global Integer Limits = 1;
-        global String HelpUrl = Page.CallOutHelp.getUrl();
+        String Description = 'Does an HTTP CallOut and saves it as a Document.';
+        String Tag = 'Example';
+        String Name = 'CallOut';
+        String Icon = 'connect';
+        Integer Limits = 1;
+        String HelpUrl = Page.CallOutHelp.getUrl();
     }
 
     override global String toString() {
@@ -228,12 +228,12 @@ global class Callout implements Database.AllowsCallouts {
     global Boolean AllowsCallouts;
 
     global class ESB {
-        global String Description = 'Does an HTTP CallOut and saves it as a Document.';
-        global String Tag = 'Example';
-        global String Name = 'CallOut';
-        global String Icon = 'connect';
-        global Integer Limits = 1;
-        global String HelpUrl = Page.CallOutHelp.getUrl();
+        String Description = 'Does an HTTP CallOut and saves it as a Document.';
+        String Tag = 'Example';
+        String Name = 'CallOut';
+        String Icon = 'connect';
+        Integer Limits = 1;
+        String HelpUrl = Page.CallOutHelp.getUrl();
     }
 
     override global String toString() {
@@ -275,12 +275,12 @@ global  class Callout implements Database.AllowsCallouts {
     global Boolean AllowsCallouts;
 
     global class ESB {
-        global String Description = 'Does an HTTP CallOut and saves it as a Document.';
-        global String Tag = 'Example';
-        global String Name = 'CallOut';
-        global String Icon = 'connect';
-        global Integer Limits = 1;
-        global String HelpUrl = Page.CallOutHelp.getUrl();
+        String Description = 'Does an HTTP CallOut and saves it as a Document.';
+        String Tag = 'Example';
+        String Name = 'CallOut';
+        String Icon = 'connect';
+        Integer Limits = 1;
+        String HelpUrl = Page.CallOutHelp.getUrl();
     }
 
     global String Body;
@@ -329,14 +329,14 @@ global  class Callout implements Database.AllowsCallouts {
     global Boolean AllowsCallouts;
 
     global class ESB {
-        global String Description = 'Does an HTTP CallOut and saves it as a Document.';
-        global String Tag = 'Example';
-        global String Name = 'CallOut';
-        global String Icon = 'connect';
-        global Integer Limits = 1;
-        global String HelpUrl = Page.CallOutHelp.getUrl();
+        String Description = 'Does an HTTP CallOut and saves it as a Document.';
+        String Tag = 'Example';
+        String Name = 'CallOut';
+        String Icon = 'connect';
+        Integer Limits = 1;
+        String HelpUrl = Page.CallOutHelp.getUrl();
 
-        global Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
+        Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
             'esb__RecordId' =&gt;'ID modified to reference a document containing the contents of the scraped input url (c__Url))'
         };
     }
@@ -407,17 +407,17 @@ global class Callout implements Database.AllowsCallouts {
     global Boolean AllowsCallouts;
 
     global class ESB {
-        global String Description = 'Does an HTTP CallOut and saves it as a Document.';
-        global String Tag = 'Example';
-        global String Name = 'CallOut';
-        global String Icon = 'connect';
-        global Integer Limits = 1;
-        global String HelpUrl = Page.CallOutHelp.getUrl();
+        String Description = 'Does an HTTP CallOut and saves it as a Document.';
+        String Tag = 'Example';
+        String Name = 'CallOut';
+        String Icon = 'connect';
+        Integer Limits = 1;
+        String HelpUrl = Page.CallOutHelp.getUrl();
 
-        global Map&lt;String,String&gt; Inputs = new Map&lt;String,String&gt;{
+        Map&lt;String,String&gt; Inputs = new Map&lt;String,String&gt;{
             'c__Url' => 'STRING representing Url to scrape.'
         };
-        global Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
+        Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
             'esb__RecordId' =>'ID of a document containing the contents of the scraped input URL.'
         };
     }

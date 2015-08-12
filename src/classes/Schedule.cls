@@ -1,15 +1,15 @@
 public class Schedule extends ApexClassModel.BaseProcess {
     
     public class ESB extends ApexClassModel.BaseSummary {
-        public String Tag = 'Enterprise Service Bus';
-        public String Name = 'Schedule';
-        public String Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages
-        public String Icon = 'clock';
-        public String StepConfig = ScheduleConfig__c.class.getName();
-        public String HelpUrl = Page.ScheduleConfigHelp.getUrl();
-        public Boolean ConsumesHeartbeat = true;
-        public Integer Limits = 5000; //leave half of 10,000 (Total number of records retrieved by Database.getQueryLocator)
-        public Map<String,String> Inputs = new Map<String,String>{
+        String Tag = 'Enterprise Service Bus';
+        String Name = 'Schedule';
+        String Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages
+        String Icon = 'clock';
+        String StepConfig = ScheduleConfig__c.class.getName();
+        String HelpUrl = Page.ScheduleConfigHelp.getUrl();
+        Boolean ConsumesHeartbeat = true;
+        Integer Limits = 5000; //leave half of 10,000 (Total number of records retrieved by Database.getQueryLocator)
+        Map<String,String> Inputs = new Map<String,String>{
             'esb__EntryPointDatetime' => 'DATETIME of the point in time this schedule was intended to run.'
         };
         public String Cardinality = 'One';

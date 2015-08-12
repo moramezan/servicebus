@@ -4,13 +4,13 @@ public class Terminate extends ApexClassModel.BaseProcess {
      * @docs ProcessTerminate.html
      */
     public class ESB extends ApexClassModel.BaseSummary {
-        public String Tag = 'Enterprise Service Bus';
-        public String Name = 'Terminate';
-        public String Description = 'Swallows messages at the end of this sequence.';
-        public String Icon = 'stop';
-        public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessTerminate').getUrl();
-        public Integer Limits = 100; //max sync limit
-        public String Cardinality = 'Zero';
+        String Tag = 'Enterprise Service Bus';
+        String Name = 'Terminate';
+        String Description = 'Swallows messages at the end of this sequence.';
+        String Icon = 'stop';
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessTerminate').getUrl();
+        Integer Limits = 100; //max sync limit
+        String Cardinality = 'Zero';
     }
     
     override protected List<Map<String,Object>> execute(Map<String,Object> parameters) {

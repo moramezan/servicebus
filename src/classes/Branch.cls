@@ -4,14 +4,14 @@ public class Branch extends ApexClassModel.BaseProcess {
      * @docs ProcessBranchJumpSubsequence.html
      */
     public class ESB extends ApexClassModel.BaseSummary {
-        public String StepConfig = BranchConfig__c.class.getName();
-        public String Icon = 'arrow_branch';
-        public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessBranchJumpSubsequence').getUrl();
-        public String Tag = 'Enterprise Service Bus';
-        public String Name = 'Branch';
-        public String Description = 'Copies the message to another sequence.';
-        public Integer Limits = 50; //max sync limit
-        public String Cardinality = 'One';
+        String StepConfig = BranchConfig__c.class.getName();
+        String Icon = 'arrow_branch';
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessBranchJumpSubsequence').getUrl();
+        String Tag = 'Enterprise Service Bus';
+        String Name = 'Branch';
+        String Description = 'Copies the message to another sequence.';
+        Integer Limits = 50; //max sync limit
+        String Cardinality = 'One';
     }
 
     public class BranchException extends Exception {}

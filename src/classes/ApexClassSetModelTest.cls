@@ -28,6 +28,9 @@
         //act
         List<Map<String,Object>> dtos = model.toDtos();
         
+        //assemble
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Wiretap.class);
+        
         //assert
         Integer expectedSize = 1;
         Integer actualSize = dtos.size();
@@ -37,27 +40,27 @@
         String actualId = (String)dtos[0].get('Id');
         System.assertEquals(expectedId, actualId, 'Wrong Id.');
         
-        String expectedName = new Wiretap.ESB().Name;
+        String expectedName = esb.Name;
         String actualName = (String)dtos[0].get('Name');
         System.assertEquals(expectedName, actualName, 'Wrong Name.');
         
-        String expectedDescription = new Wiretap.ESB().Description;
+        String expectedDescription = esb.Description;
         String actualDescription = (String)dtos[0].get('Description');
         System.assertEquals(expectedDescription, actualDescription, 'Wrong Description.');
         
-        String expectedTag = new Wiretap.ESB().Tag;
+        String expectedTag = esb.Tag;
         String actualTag = (String)dtos[0].get('Tag');
         System.assertEquals(expectedTag, actualTag, 'Wrong Tag.');
         
-        String expectedIcon = new Wiretap.ESB().Icon;
+        String expectedIcon = esb.Icon;
         String actualIcon = (String)dtos[0].get('Icon');
         System.assertEquals(expectedIcon, actualIcon, 'Wrong Icon.');
         
-        String expectedCardinality = new Wiretap.ESB().Cardinality;
+        String expectedCardinality = esb.Cardinality;
         String actualCardinality = (String)dtos[0].get('Cardinality');
         System.assertEquals(expectedCardinality, actualCardinality, 'Wrong Cardinality.');
         
-        String expectedProcessSetting = new Wiretap.ESB().ProcessSetting;
+        String expectedProcessSetting = esb.ProcessSetting;
         String actualProcessSetting = (String)dtos[0].get('ProcessSetting');
         System.assertEquals(expectedProcessSetting, actualProcessSetting, 'Wrong ProcessSetting.');
     }

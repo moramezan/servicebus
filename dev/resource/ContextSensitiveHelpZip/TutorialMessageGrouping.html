@@ -206,12 +206,12 @@
 global class PayInvoice {
     
     global class ESB {
-        global String Tag = 'Example';
-        global String Name = 'Pay Invoice';
-        global String Description = 'Demo - takes invoice and creates payment advice';
-        global String Icon = 'money';
+        String Tag = 'Example';
+        String Name = 'Pay Invoice';
+        String Description = 'Demo - takes invoice and creates payment advice';
+        String Icon = 'money';
         
-        global Map&lt;String,String> Outputs = new Map&lt;String,String&gt;{
+        Map&lt;String,String> Outputs = new Map&lt;String,String&gt;{
             'esb__RecordId' =>'ID modified to reference the payment'
         };
     }

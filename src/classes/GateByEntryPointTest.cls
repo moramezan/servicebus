@@ -2,9 +2,12 @@
 
 
    static testmethod void hasTheCorrectLimits() {
+        //arrange
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(GateByEntryPoint.class);
+        
         //assert
         Integer expectedLimits = 50; //max sync limit
-        Integer actualLimits = new GateByEntryPoint.ESB().Limits;
+        Integer actualLimits = esb.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
 
@@ -39,10 +42,13 @@
             k++;
         }
         insert messages;
-
+        
+        //assemble
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(GateByEntryPoint.class);
+        
         //act
         Test.startTest();
-        Integer limits = new GateByEntryPoint.Esb().Limits;
+        Integer limits = esb.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new GateByEntryPoint();

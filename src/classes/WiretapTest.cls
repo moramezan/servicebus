@@ -2,9 +2,12 @@
 private class WiretapTest {
     
     static testmethod void hasTheCorrectLimits() {
+        //arrange
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Wiretap.class);
+        
         //assert
         Integer expectedLimits = 5;
-        Integer actualLimits = new Wiretap.ESB().Limits;
+        Integer actualLimits = esb.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
 
@@ -18,11 +21,13 @@ private class WiretapTest {
             '__SequenceName' => 'the-sequence',
             '__Position' => 1
         };
-
+        
+        //arrange
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Wiretap.class);
 
         //act
         Test.startTest();
-        Integer limits = new Wiretap.Esb().Limits;
+        Integer limits = esb.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new Wiretap();

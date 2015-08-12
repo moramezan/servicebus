@@ -1,9 +1,12 @@
 @IsTest private class SubscribeTest{
 
     static testmethod void hasTheCorrectLimits() {
+        //arrange
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Subscribe.class);
+        
         //assert
         Integer expectedLimits = 5000;
-        Integer actualLimits = new Subscribe.ESB().Limits;
+        Integer actualLimits = esb.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
 
@@ -17,10 +20,12 @@
             '__Position' => 1
         };
 
+        //assemble
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Subscribe.class);
 
         //act
         Test.startTest();
-        Integer limits = new Subscribe.Esb().Limits;
+        Integer limits = esb.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new Subscribe();

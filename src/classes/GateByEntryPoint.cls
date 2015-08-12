@@ -6,19 +6,19 @@ public class GateByEntryPoint extends ApexClassModel.BaseProcess {
      * @docs ProcessGateByEntryPoint.html
      */
     public class ESB extends ApexClassModel.BaseSummary {
-        public String Tag = 'Enterprise Service Bus';
-        public String Name = 'Gate By Entry Point';
-        public String Description = 'Aggregates a collection of messages having the same Entry Point Id.';
-        public String Icon = 'arrow_join';
-        public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessGateByEntryPoint').getUrl();
-        public Integer Limits = 50; //max sync limit
-        public String Cardinality = 'Fewer';
+        String Tag = 'Enterprise Service Bus';
+        String Name = 'Gate By Entry Point';
+        String Description = 'Aggregates a collection of messages having the same Entry Point Id.';
+        String Icon = 'arrow_join';
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessGateByEntryPoint').getUrl();
+        Integer Limits = 50; //max sync limit
+        String Cardinality = 'Fewer';
 
-        public Map<String,String> Inputs = new Map<String,String>{
+        Map<String,String> Inputs = new Map<String,String>{
             'esb__EntryPointUuid' => 'Entry Point Id that associates gated messages.'
         };
 
-        public Map<String,String> Outputs = new Map<String,String>{
+        Map<String,String> Outputs = new Map<String,String>{
             'esb__GateItemsQueryString' => 'STRING of the query that locates the items that hold events correlated by Job Id.',
             'esb__GateItemsFieldName' => 'STRING of the item field name that contains the serialized event data.'
         };

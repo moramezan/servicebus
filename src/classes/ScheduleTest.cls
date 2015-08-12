@@ -1,19 +1,25 @@
 @IsTest private class ScheduleTest {
 
     static testmethod void hasTheCorrectLimits() {
+        //arrange
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Schedule.class);
+        
         //assert
         Integer expectedLimits = 5000;
-        Integer actualLimits = new Schedule.ESB().Limits;
+        Integer actualLimits = esb.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
 
    static testmethod void withinSystemLimits() {
         //arrange
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Schedule.class);
+        
+        //arrange
         Map<String,Object> inputEvent = new Map<String,Object> {};
         
         //act
         Test.startTest();
-        Integer limits = new Schedule.Esb().Limits;
+        Integer limits = esb.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new Schedule();

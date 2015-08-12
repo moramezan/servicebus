@@ -32,7 +32,7 @@ global with sharing class ExampleProcess extends BaseProcess {
     
     //ESB Marker Inner Class
     global class ESB {
-        global String Description = 'Outputs one event identical to the input event.';
+        String Description = 'Outputs one event identical to the input event.';
     }
     
     //add logic here and emit output events
@@ -111,17 +111,17 @@ global with sharing class ExampleProcess extends BaseProcess {
 <pre>
 //ESB Marker Inner Class
 global class ESB {
-    global String Description = 'This process tweets from a Twitter account.';
-    global String Tag = 'Social';
-    global String Name = 'Twitter';
-    global String Icon = 'comment';
-    global Integer Cardinality = 1; //one input event always emits exactly one output event
-    global String HelpUrl = Page.TwitterHelp.getUrl();
-    global String Limits = 25; //leave half of 50 (Total number of HTTP callouts permitted)
-    global Map&lt;String,Object&gt; Inputs = new Map&lt;String,Object&gt;{'acme__Body' => 'String of the tweet body.'};
-    global Map&lt;String,Object&gt; Outputs = new Map&lt;String,Object&gt;{'acme__TweetId' => 'String of tweet Id.'}
-    global SObject ProcessSetting = TwitterSetting__c.SObjectType.newSObject();
-    global SObject StepConfig = TwitterConfig__c.SObjectType.newSObject();
+    String Description = 'This process tweets from a Twitter account.';
+    String Tag = 'Social';
+    String Name = 'Twitter';
+    String Icon = 'comment';
+    Integer Cardinality = 1; //one input event always emits exactly one output event
+    String HelpUrl = Page.TwitterHelp.getUrl();
+    String Limits = 25; //leave half of 50 (Total number of HTTP callouts permitted)
+    Map&lt;String,Object&gt; Inputs = new Map&lt;String,Object&gt;{'acme__Body' => 'String of the tweet body.'};
+    Map&lt;String,Object&gt; Outputs = new Map&lt;String,Object&gt;{'acme__TweetId' => 'String of tweet Id.'}
+    SObject ProcessSetting = TwitterSetting__c.SObjectType.newSObject();
+    SObject StepConfig = TwitterConfig__c.SObjectType.newSObject();
 }
 </pre>
 
@@ -235,7 +235,7 @@ global with sharing class TwitterProcess extends BaseProcess implements Database
     
     //ESB Marker Inner Class
     global class ESB {
-        global String Description = 'Makes an HTTP callout then performs some DML.';
+        String Description = 'Makes an HTTP callout then performs some DML.';
     }
      
     override protected void callouts(Map&lt;String,Object&gt; inputEvent) {

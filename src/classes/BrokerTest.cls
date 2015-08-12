@@ -64,9 +64,12 @@
         //act
         List<Message__c> records = Broker.impl().locateMarkableWork();
         
+        //assemble
+        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Wiretap.class);
+        
         //assert
         Integer expectedLimits = 5;
-        Integer actualLimits = new Wiretap.ESB().Limits;
+        Integer actualLimits = esb.Limits;
         System.assertEquals(expectedLimits, actualLimits, 'Wiretap should have meta limits of five.');
         
         Integer expectedSize = 5;
@@ -905,8 +908,8 @@
     }
     
     public class ChunkErrorProcessESB extends ApexClassModel.BaseSummary {
-        public String Description = 'Does stuff in memory without side effects.';
-        public Integer Limits = 2;
+        String Description = 'Does stuff in memory without side effects.';
+        Integer Limits = 2;
     }
     
     static testmethod void testKamikazeChunkingDoesntTakeOutHisMates() {
@@ -947,8 +950,8 @@
     }
     
     public class InserterESB extends ApexClassModel.BaseSummary {
-        public String Description = 'Inserts 1 document, runs 75 times';
-        public Integer Limits = 75;
+        String Description = 'Inserts 1 document, runs 75 times';
+        Integer Limits = 75;
     }
     
     static testmethod void testSavepointTaxImposedOnDmlProcess() {
@@ -995,8 +998,8 @@
     }
     
     public class MemoryESB extends ApexClassModel.BaseSummary {
-        public String Description = 'Does stuff in memory without side effects.';
-        public Integer Limits = 1000;
+        String Description = 'Does stuff in memory without side effects.';
+        Integer Limits = 1000;
     }
     
     static testmethod void testSavepointTaxRelievedOnMemoryProcess() {
@@ -1045,8 +1048,8 @@
     }
     
     public class InserterErrorESB extends ApexClassModel.BaseSummary {
-        public String Description = 'Inserts 1 document, throws an exception needing rollback.';
-        public Integer Limits = 50;
+        String Description = 'Inserts 1 document, throws an exception needing rollback.';
+        Integer Limits = 50;
     }
     
     static testmethod void testRollbackTaxImposedOnDmlProcess() {
@@ -1095,8 +1098,8 @@
     }
     
     public class MemoryErrorESB extends ApexClassModel.BaseSummary {
-        public String Description = 'Does stuff in memory, throws an exception not needing rollback.';
-        public Integer Limits = 1000;
+        String Description = 'Does stuff in memory, throws an exception not needing rollback.';
+        Integer Limits = 1000;
     }
     
     static testmethod void testRollbackTaxRelievedOnMemoryProcess() {

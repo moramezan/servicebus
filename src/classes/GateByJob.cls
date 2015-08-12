@@ -6,19 +6,19 @@ public class GateByJob extends ApexClassModel.BaseProcess {
      * @docs ProcessGateByJob.html
      */
     public class ESB extends ApexClassModel.BaseSummary {
-        public String Tag = 'Enterprise Service Bus';
-        public String Name = 'Gate By Job';
-        public String Description = 'Aggregates a collection of messages having the same Job Id.';
-        public String Icon = 'arrow_join';
-        public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessGateByJob').getUrl();
-        public Integer Limits = 50; //max sync limit
-        public String Cardinality = 'Fewer';
+        String Tag = 'Enterprise Service Bus';
+        String Name = 'Gate By Job';
+        String Description = 'Aggregates a collection of messages having the same Job Id.';
+        String Icon = 'arrow_join';
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessGateByJob').getUrl();
+        Integer Limits = 50; //max sync limit
+        String Cardinality = 'Fewer';
         
-        public Map<String,String> Inputs = new Map<String,String>{
+        Map<String,String> Inputs = new Map<String,String>{
             '__QueueableId' => 'Job Id that associates gated messages.'
         };
 
-        public Map<String,String> Outputs = new Map<String,String>{
+        Map<String,String> Outputs = new Map<String,String>{
             'esb__GateItemsQueryString' => 'STRING of the query that locates the items that hold events correlated by Job Id.',
             'esb__GateItemsFieldName' => 'STRING of the item field name that contains the serialized event data.'
         };

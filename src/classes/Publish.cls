@@ -4,14 +4,14 @@ public class Publish extends ApexClassModel.BaseProcess {
      * @docs ProcessPublishSubscribe.html
      */
     public class ESB extends ApexClassModel.BaseSummary {
-        public String Tag = 'Enterprise Service Bus';
-        public String Name = 'Publish';
-        public String Description = 'Broadcasts the message to other sequences via a named Event Type.';
-        public String StepConfig = PublishConfig__c.class.getName();
-        public String Icon = 'chart_organisation';
-        public String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessPublishSubscribe').getUrl();
-        public Integer Limits = 33; //max sync limit
-        public String Cardinality = 'One';
+        String Tag = 'Enterprise Service Bus';
+        String Name = 'Publish';
+        String Description = 'Broadcasts the message to other sequences via a named Event Type.';
+        String StepConfig = PublishConfig__c.class.getName();
+        String Icon = 'chart_organisation';
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessPublishSubscribe').getUrl();
+        Integer Limits = 33; //max sync limit
+        String Cardinality = 'One';
     }
     
     public class PublishException extends Exception {}
