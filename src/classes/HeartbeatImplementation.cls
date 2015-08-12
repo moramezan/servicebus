@@ -165,7 +165,7 @@ public with sharing class HeartbeatImplementation implements System.Schedulable 
         List<Map<String,Object>> parameterses = new List<Map<String,Object>>();
         for (DateTime heartbeat : heartbeats) {
             Map<String,Object> parameters = new Map<String,Object>{
-                'esb__Id' => UserInfo.getUserId(),
+                'esb__RecordId' => UserInfo.getUserId(),
                 '__SequenceName' => '', //avoid "Mandatory parameter esb__SequenceName not supplied."
                 '__Position' => '', //avoid "Mandatory parameter esb__SequenceName not supplied."
                 'esb__EntryPointDatetime' => heartbeat,

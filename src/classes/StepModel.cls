@@ -177,7 +177,7 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
      * Redirects the user to the detail view
      * of the config record held on this step.
      */
-    public PageReference showStepConfig() {
+    public PageReference showConfig() {
         Id configId = this.Step.ConfigId__c;
         SObject config = configId.getSObjectType().newSObject(configId);
         PageReference view = new ApexPages.StandardController(config).view();
@@ -191,19 +191,18 @@ public with sharing class StepModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * Locates a Step and his related StepConfig
-     * and caches the friendly name on the step.
-     *
-     * @param configId of any StepConfig
+     * Copies third-party step config name
+     * so sequence builder can describe steps
      */
-    public void cacheConfigName() {
+    public void persistConfigNameOnStep() {
         Id configId = this.Step.ConfigId__c;
-        Step__c step = [SELECT Name FROM Step__c WHERE ConfigId__c = :configId];
         String objectType = configId.getSObjectType().getDescribe().getName();
         SObject config = Database.query('SELECT Id, Name FROM ' + objectType + ' WHERE Id = :configId');
+        
+        //write THEIR config name onto OUR step
         String configName = (String)config.get('Name');
-        step.ConfigName__c = configName.abbreviate(SObjectType.Step__c.Fields.ConfigName__c.Length);
-        update step;
+        this.Step.ConfigName__c = configName.abbreviate(SObjectType.Step__c.Fields.ConfigName__c.Length);
+        update this.Step;
     }
     
 }

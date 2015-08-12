@@ -212,7 +212,7 @@ global class PayInvoice {
         global String Icon = 'money';
         
         global Map&lt;String,String> Outputs = new Map&lt;String,String&gt;{
-            'esb__Id' =>'ID modified to reference the payment'
+            'esb__RecordId' =>'ID modified to reference the payment'
         };
     }
     
@@ -224,7 +224,7 @@ global class PayInvoice {
         insert payment;
         
         // change the underlying document pointed at by the notification  
-        inputEvent.put('esb__Id', payment.Id);  
+        inputEvent.put('esb__RecordId', payment.Id);  
         
         //output message(s)
         return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
@@ -388,7 +388,7 @@ global class PayInvoice {
 </p>
 
 <p>
-    You can construct a Simple Job using the signature <code>esb.Job(String sequenceName, Id entityId)</code>.
+    You can construct a Simple Job using the signature <code>esb.Job(String sequenceName, Id recordId)</code>.
 </p>
 
 <ul>

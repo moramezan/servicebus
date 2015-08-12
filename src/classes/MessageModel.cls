@@ -255,7 +255,17 @@ public with sharing class MessageModel extends ApexDomain.StandardModel {
         System.assert(false, 'This is JavaScript now.');
     }
     
-    public PageReference showApexClass() {
+    public PageReference showRecordData() {
+        try {
+            Id recordId = (Id)this.Event.get('esb__RecordId');
+            SObject recordData = ApexDomain.getById(recordId);
+            return new ApexPages.StandardController(recordData).view();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public PageReference showApexProcess() {
         
         String route = this.message.Step__c;
         

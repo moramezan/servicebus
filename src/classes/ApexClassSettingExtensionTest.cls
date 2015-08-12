@@ -7,7 +7,7 @@
         //act
         ApexPages.StandardController controller = new ApexPages.StandardController(apexClass);
         ApexClassSettingExtension extension = new ApexClassSettingExtension(controller);
-        extension.doRedirect();
+        extension.showSetting();
         
         //assert
         System.assert(ApexPages.hasMessages(), 'Wrong messages.');

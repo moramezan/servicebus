@@ -52,19 +52,40 @@
         System.assertEquals(2, wiretapStep.Position__c.intValue());
     }
     
-    static testmethod void testShowStepConfig() {
+    static testmethod void testShowConfig() {
         //arrange step
         Step__c step = new Step__c(Name = 'Test#1', ConfigId__c = '01524000000FuQh');
         insert step;
         
         //act
         StepModel model = StepModel.fromId(step.Id);
-        PageReference view = model.showStepConfig();
+        PageReference view = model.showConfig();
         
         //assert
         String expectedUrl = '/01524000000FuQh?isdtp=vw';
         String actualUrl = view.getUrl();
         System.assertEquals(expectedUrl, actualUrl, 'Wrong url.');
+    }
+    
+    static testmethod void testPersistConfigNameOnStep() {
+        //arrange config
+        Document document = new Document(Name = 'Test', FolderId = UserInfo.getUserId());
+        insert document;
+        
+        //arrange step
+        Step__c step = new Step__c(Name = 'Test#1', ConfigId__c = document.Id);
+        insert step;
+        
+        //act
+        new StepModel(step).persistConfigNameOnStep();
+        
+        //assemble
+        step = [SELECT Id, ConfigName__c FROM Step__c WHERE Id = :step.Id];
+        
+        //assert
+        String expectedName = 'Test';
+        String actualName = step.ConfigName__c;
+        System.assertEquals(expectedName, actualName, 'Wrong name.');
     }
     
 }

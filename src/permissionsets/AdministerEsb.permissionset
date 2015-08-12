@@ -125,11 +125,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageDataExtension</apexClass>
+        <apexClass>MessageRecordDataExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageDataExtensionTest</apexClass>
+        <apexClass>MessageRecordDataExtensionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -153,11 +153,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageProcessExtension</apexClass>
+        <apexClass>MessageApexProcessExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageProcessExtensionTest</apexClass>
+        <apexClass>MessageApexProcessExtensionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -261,11 +261,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>StepConfigureExtension</apexClass>
+        <apexClass>StepConfigExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>StepConfigureExtensionTest</apexClass>
+        <apexClass>StepConfigExtensionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -529,7 +529,7 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>MessageData</apexPage>
+        <apexPage>MessageRecordData</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -545,7 +545,7 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>MessageProcess</apexPage>
+        <apexPage>MessageApexProcess</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
@@ -597,7 +597,7 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>StepConfigure</apexPage>
+        <apexPage>StepConfig</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

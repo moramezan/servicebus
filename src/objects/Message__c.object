@@ -239,15 +239,15 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <webLinks>
-        <fullName>Data</fullName>
+        <fullName>RecordData</fullName>
         <availability>online</availability>
-        <description>Redirects to the object represented by the Id contained in esb__Id</description>
+        <description>Redirects to the object represented by the Id contained in esb__RecordId</description>
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>
-        <masterLabel>Show Data</masterLabel>
+        <masterLabel>Show Record Data</masterLabel>
         <openType>sidebar</openType>
-        <page>MessageData</page>
+        <page>MessageRecordData</page>
         <protected>false</protected>
     </webLinks>
     <webLinks>
@@ -280,13 +280,13 @@ The Broker continues to act on Messages with a Buffered or Started status but ig
         <requireRowSelection>true</requireRowSelection>
     </webLinks>
     <webLinks>
-        <fullName>Process</fullName>
+        <fullName>ApexProcess</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
         <linkType>page</linkType>
-        <masterLabel>Show Process</masterLabel>
+        <masterLabel>Show Apex Process</masterLabel>
         <openType>replace</openType>
-        <page>MessageProcess</page>
+        <page>MessageApexProcess</page>
         <protected>false</protected>
     </webLinks>
     <webLinks>

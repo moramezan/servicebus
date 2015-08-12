@@ -337,11 +337,11 @@
         Step__c stepC2 = SequenceModel.fromName(sequenceC.Name).appendStep(Terminate.class);
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>{
-            new Map<String,Object>{'esb__Id' => 0, '__SequenceName' => sequenceA.Name, '__Position' => positionA1}, // Same Sequence / Position
-            new Map<String,Object>{'esb__Id' => 1, '__SequenceName' => sequenceA.Name, '__Position' => positionA1}, // Same Sequence / Position
-            new Map<String,Object>{'esb__Id' => 2, '__SequenceName' => sequenceA.Name, '__Position' => positionA2},
-            new Map<String,Object>{'esb__Id' => 3, '__SequenceName' => sequenceB.Name, '__Position' => positionB1},
-            new Map<String,Object>{'esb__Id' => 4, '__SequenceName' => sequenceC.Name, '__Position' => positionC1}
+            new Map<String,Object>{'esb__RecordId' => 0, '__SequenceName' => sequenceA.Name, '__Position' => positionA1}, // Same Sequence / Position
+            new Map<String,Object>{'esb__RecordId' => 1, '__SequenceName' => sequenceA.Name, '__Position' => positionA1}, // Same Sequence / Position
+            new Map<String,Object>{'esb__RecordId' => 2, '__SequenceName' => sequenceA.Name, '__Position' => positionA2},
+            new Map<String,Object>{'esb__RecordId' => 3, '__SequenceName' => sequenceB.Name, '__Position' => positionB1},
+            new Map<String,Object>{'esb__RecordId' => 4, '__SequenceName' => sequenceC.Name, '__Position' => positionC1}
         };
         
         // act
@@ -361,7 +361,7 @@
         Integer actualPosition4 = -1 ;
         for (Message__c message : messages) {
             Map<String,Object> inputEvent = (Map<String,Object>)System.Json.deserializeUntyped(message.Event__c);
-            Integer theId = (Integer) inputEvent.get('esb__Id');
+            Integer theId = (Integer) inputEvent.get('esb__RecordId');
             String theSequenceName = (String)inputEvent.get('__SequenceName');
             Integer thePosition = (Integer)inputEvent.get('__Position');
             if (theId == 0) {
@@ -727,7 +727,7 @@
         //arrange input event
         DateTime eventStamp = DateTime.newInstance(2014,12,15,13,11,07);
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__Id' => UserInfo.getUserId(),
+            'esb__RecordId' => UserInfo.getUserId(),
             '__SequenceName' => 'Test',
             '__Position' => 1,
             'esb__EntryPointDatetime' => eventStamp
@@ -765,7 +765,7 @@
   
         //arrange messages
         List<Message__c> messagesA = new Job(new Map<String,Object>{'__SequenceName' => 'test'}).persist();
-        List<Message__c> messagesB = new Job(new Map<String,Object>{'esb__Id' => null}).persist();
+        List<Message__c> messagesB = new Job(new Map<String,Object>{'esb__RecordId' => null}).persist();
         
         // assemble
         Boolean actualFlagA = false;

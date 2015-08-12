@@ -19,7 +19,7 @@
 
 <ul>
     <li>
-        <code>esb.Job(String sequenceName, Id entityId)</code>
+        <code>esb.Job(String sequenceName, Id recordId)</code>
     </li>
     <!--
      ! TODO
@@ -37,12 +37,12 @@
     <dt><code>sequenceName</code></dt>
     <dd>defines which sequence will respond to the injected message event.</dd>
     
-    <dt><code>entityId</code></dt>
+    <dt><code>recordId</code></dt>
     <dd>defines the SObject that will be subject to the processing steps</dd>
 </dl>
 
 <p>
-    Use the <code>esb.Job(String sequenceName, Id entityId)</code> constructor whenever the data
+    Use the <code>esb.Job(String sequenceName, Id recordId)</code> constructor whenever the data
     related to the external event is retrievable as a Salesforce object using the object's
     <code>Id</code>.
 </p>

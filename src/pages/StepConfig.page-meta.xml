@@ -3,5 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <label>MessageProcess</label>
+    <description>Redirects to Step Configuration</description>
+    <label>StepConfig</label>
 </ApexPage>

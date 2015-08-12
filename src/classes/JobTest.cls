@@ -3,10 +3,10 @@
     static testmethod void testSimpleEventConstructor() {
         //arrange
         String sequenceName = 'TestSequence';
-        String entityId = UserInfo.getOrganizationId();
+        String recordId = UserInfo.getOrganizationId();
         
         //act
-        Job j = new Job(sequenceName, entityId);
+        Job j = new Job(sequenceName, recordId);
         
         //assemble
         List<Message__c> messages = j.messages;
@@ -24,7 +24,7 @@
         System.assert(event.containsKey('__EnqueueUserId'));
         System.assert(event.containsKey('__EntryPointUuid'));
         System.assert(event.containsKey('__EntryPointDatetime'));
-        System.assert(event.containsKey('esb__Id'));
+        System.assert(event.containsKey('esb__RecordId'));
         System.assert(event.containsKey('esb__SequenceName'));
         System.assert(event.containsKey('esb__EnqueueUserId'));
         System.assert(event.containsKey('esb__EntryPointUuid'));

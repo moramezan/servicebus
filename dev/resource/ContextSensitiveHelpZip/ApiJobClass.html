@@ -22,7 +22,7 @@
         </tr>
         <tr>
             <td>Simple event</td>
-            <td><code>Job(String sequenceName, Id entityId)</code></td>
+            <td><code>Job(String sequenceName, Id recordId)</code></td>
         </tr>
         <tr>
             <td>Single event</td>
@@ -35,7 +35,7 @@
         <!--
         <tr>
             <td>Lightning Process Builder</td>
-            <td><code>enqueue(String sequenceName, Id entityId)</code></td>
+            <td><code>enqueue(String sequenceName, Id recordId)</code></td>
         </tr>
         <tr>
             <td>Salesforce Cloud Flows</td>
@@ -77,7 +77,7 @@ Id queueableId = System.enqueueJob(j);
 </p>
 
 <p>
-    <code>global esb.Job(String sequenceName, Id entityId)</code>
+    <code>global esb.Job(String sequenceName, Id recordId)</code>
 </p>
 
 <dl>
@@ -85,9 +85,9 @@ Id queueableId = System.enqueueJob(j);
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
     <dd>Name of the sequence the data is destined for. This is set on the <code>esb__SequenceName</code> event parameter for your convenience.</dd>
     
-    <dt>entityId</dt>
+    <dt>recordId</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
-    <dd>Id of some record that the sequence will operate on. This is set on the <code>esb__Id</code> event parameter for your convenience.</dd>
+    <dd>Id of some record that the sequence will operate on. This is set on the <code>esb__RecordId</code> event parameter for your convenience.</dd>
 </dl>
 
 <h2>
@@ -147,7 +147,7 @@ Id queueableId = System.enqueueJob(j);
     
     <dt>entityData</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_blob.htm" target="_blank">Blob</a></dd>
-    <dd>Blob representation of the data the sequence will operate on. This sets <code>esb__Id</code> as a convenience.</dd>
+    <dd>Blob representation of the data the sequence will operate on. This sets <code>esb__RecordId</code> as a convenience.</dd>
 </dl>
 -->
 
@@ -174,7 +174,7 @@ Id queueableId = System.enqueueJob(j);
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
     <dd>Indicates which sequence the event is destined for.</dd>
     
-    <dt>entityId</dt>
+    <dt>recordId</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
     <dd>Indicates which sObject the sequence will operate on.</dd>
 </dl>

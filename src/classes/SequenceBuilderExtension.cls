@@ -53,8 +53,8 @@ public with sharing class SequenceBuilderExtension {
         return Json.serializePretty(stepDtos);
     }
     
-    @RemoteAction static public void cacheConfigName(Id stepId) {
-        StepModel.fromId(stepId).cacheConfigName();
+    @RemoteAction static public void persistConfigNameOnStep(Id stepId) {
+        StepModel.fromId(stepId).persistConfigNameOnStep();
     }
     
     @RemoteAction static public List<Map<String,Object>> fetchSteps(Id sequenceId) {

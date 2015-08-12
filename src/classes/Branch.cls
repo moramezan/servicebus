@@ -43,12 +43,12 @@ public with sharing class Branch extends ApexClassModel.BaseProcess {
         //to transform the same data - if the pointer was the same they would content
         //so the document is duplicated and the duplicate handed off to the sequence
         //
-        //String id = (String)parameters.get('esb__Id');
+        //String id = (String)parameters.get('esb__RecordId');
         //if (null != id && id.startsWith('015')) {
         //  Document document = [SELECT Id, Body FROM Document WHERE Id = :id];
         //  Document clone = document.clone();
         //  insert clone;
-        //  event.put('esb__Id', clone.Id);
+        //  event.put('esb__RecordId', clone.Id);
         //}
         
         return new List<Map<String,Object>>{parameters, clone};

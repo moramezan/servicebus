@@ -1,17 +1,18 @@
-public with sharing class MessageProcessExtension {
+public with sharing class MessageApexProcessExtension {
     
     ApexPages.StandardController controller;
     MessageModel model;
     
-    public MessageProcessExtension(ApexPages.StandardController controller) {
+    public MessageApexProcessExtension(ApexPages.StandardController controller) {
         this.controller = controller;
         this.model = MessageModel.fromId(controller.getId());
     }
     
-    public PageReference showProcess() {
+    public PageReference showApexProcess() {
         try {
-            PageReference redirect = this.model.showApexClass();
-            return redirect;
+            PageReference detailView = this.model.showApexProcess();
+            return detailView;
+            
         } catch (Exception e) {
             ApexPages.addMessages(e);
             return null;

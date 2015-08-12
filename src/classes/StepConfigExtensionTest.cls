@@ -1,4 +1,4 @@
-@IsTest public class StepConfigureExtensionTest {
+@IsTest public class StepConfigExtensionTest {
     
     static testmethod void coverCode() {
         //arrange record
@@ -10,10 +10,10 @@
         //arrange controller and extension
         Step__c step = Step__c.getValues('Test#1');
         ApexPages.StandardController controller = new ApexPages.StandardController(step);
-        StepConfigureExtension extension = new StepConfigureExtension(controller);
+        StepConfigExtension extension = new StepConfigExtension(controller);
         
         //act
-        PageReference redirect = extension.doRedirect();
+        PageReference redirect = extension.showConfig();
         
         //assert
         Id expectedId = [SELECT Id FROM JumpConfig__c].Id;

@@ -37,16 +37,16 @@
         <members>JobTest</members>
         <members>Jump</members>
         <members>JumpTest</members>
-        <members>MessageDataExtension</members>
-        <members>MessageDataExtensionTest</members>
+        <members>MessageRecordDataExtension</members>
+        <members>MessageRecordDataExtensionTest</members>
         <members>MessageKillExtension</members>
         <members>MessageKillExtensionTest</members>
         <members>MessageModel</members>
         <members>MessageModelTest</members>
         <members>MessagePauseQueueExtension</members>
         <members>MessagePauseQueueExtensionTest</members>
-        <members>MessageProcessExtension</members>
-        <members>MessageProcessExtensionTest</members>
+        <members>MessageApexProcessExtension</members>
+        <members>MessageApexProcessExtensionTest</members>
         <members>MessageRebufferExtension</members>
         <members>MessageRebufferExtensionTest</members>
         <members>MessageResumeQueueExtension</members>
@@ -73,8 +73,8 @@
         <members>SequenceModelTest</members>
         <members>SequenceSetModel</members>
         <members>SequenceSetModelTest</members>
-        <members>StepConfigureExtension</members>
-        <members>StepConfigureExtensionTest</members>
+        <members>StepConfigExtension</members>
+        <members>StepConfigExtensionTest</members>
         <members>StepModel</members>
         <members>StepModelTest</members>
         <members>StepSetModel</members>
@@ -106,11 +106,11 @@
         <members>ContextSensitiveHelp</members>
         <members>EventTypeHelp</members>
         <members>JumpConfigHelp</members>
-        <members>MessageData</members>
+        <members>MessageRecordData</members>
         <members>MessageHelp</members>
         <members>MessageKill</members>
         <members>MessagePauseQueue</members>
-        <members>MessageProcess</members>
+        <members>MessageApexProcess</members>
         <members>MessageRebuffer</members>
         <members>MessageResumeQueue</members>
         <members>MessageSplash</members>
@@ -123,7 +123,7 @@
         <members>SequenceBuilder</members>
         <members>SequenceHelp</members>
         <members>SequenceSplash</members>
-        <members>StepConfigure</members>
+        <members>StepConfig</members>
         <members>SubscribeConfigHelp</members>
         <members>SubscribeConfigManageEventTypes</members>
         <members>SubsequenceConfigHelp</members>
@@ -256,10 +256,10 @@
         <name>ValidationRule</name>
     </types>
     <types>
-        <members>Message__c.Data</members>
+        <members>Message__c.RecordData</members>
         <members>Message__c.Kill</members>
         <members>Message__c.PauseQueue</members>
-        <members>Message__c.Process</members>
+        <members>Message__c.ApexProcess</members>
         <members>Message__c.Rebuffer</members>
         <members>Message__c.Restart</members>
         <members>Message__c.ResumeQueue</members>

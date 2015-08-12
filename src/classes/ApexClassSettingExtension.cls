@@ -8,12 +8,15 @@ public with sharing class ApexClassSettingExtension {
         this.model = ApexClassModel.fromId(controller.getId());
     }
     
-    public PageReference doRedirect() {
+    public PageReference showSetting() {
         try {
-            return this.model.showProcessConfig();
+            PageReference listview = this.model.showSetting();
+            return listview;
+            
         } catch (Exception e) {
             ApexPages.addMessages(e);
             return null;
+            
         }
     }
 

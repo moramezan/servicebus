@@ -161,7 +161,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      * Redirects the user to the ListView
      * URL of the specified Process Setting
      */
-    public PageReference showProcessConfig() {
+    public PageReference showSetting() {
         DescribeSObjectResult result = Schema.getGlobalDescribe().get(this.esb.ProcessSetting).getDescribe();
         
         if (result.isCustomSetting()) {

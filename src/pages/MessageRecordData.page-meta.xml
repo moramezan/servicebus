@@ -3,6 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <description>Page action to redirect to the object represented by the Id contained in esb__Id of the event  of the message referenced by the page</description>
-    <label>MessageData</label>
+    <description>Page action to redirect to the object represented by the Id contained in esb__RecordId of the event  of the message referenced by the page</description>
+    <label>MessageRecordData</label>
 </ApexPage>

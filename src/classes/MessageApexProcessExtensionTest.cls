@@ -1,4 +1,4 @@
-@IsTest public class MessageProcessExtensionTest {
+@IsTest public class MessageApexProcessExtensionTest {
     
     static testmethod void coverCode() {
         //arrange record
@@ -7,8 +7,8 @@
         
         //act
         ApexPages.StandardController controller = new ApexPages.StandardController(message);
-        MessageProcessExtension extension = new MessageProcessExtension(controller);
-        extension.showProcess();
+        MessageApexProcessExtension extension = new MessageApexProcessExtension(controller);
+        extension.showApexProcess();
         
         //assert
         System.assert(ApexPages.hasMessages());

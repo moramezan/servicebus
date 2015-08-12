@@ -25,7 +25,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
         plugin.Description = 'Enqueue a Job into the Enterprise Service Bus';
         
         plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
-            new Process.PluginDescribeResult.InputParameter('esb__Id', Process.PluginDescribeResult.ParameterType.ID, true),
+            new Process.PluginDescribeResult.InputParameter('esb__RecordId', Process.PluginDescribeResult.ParameterType.ID, true),
             new Process.PluginDescribeResult.InputParameter('esb__SequenceName', Process.PluginDescribeResult.ParameterType.STRING, true)
         };
         
@@ -70,7 +70,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      * Wrapper class for enqueue parameters.
      */
     global class SimpleEvent {
-        @InvocableVariable(required=true) global Id EntityId;
+        @InvocableVariable(required=true) global Id RecordId;
         @InvocableVariable(required=true) global String SequenceName;
     }
     
@@ -82,7 +82,7 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
         List<Id> ids = new List<Id>();
         for (SimpleEvent simpleEvent : simpleEvents) {
             Map<String,Object> inputEvent = new Map<String,Object>{
-                'esb__Id' => simpleEvent.EntityId,
+                'esb__RecordId' => simpleEvent.RecordId,
                 'esb__SequenceName' => simpleEvent.SequenceName
             };
             Job j = new Job(inputEvent);
@@ -131,10 +131,10 @@ global without sharing class Job implements Process.Plugin, system.Queueable {
      * @param sequenceName Name of the sequence the data is destined for.
      * @param dataId    Id of some record that the sequence will operate on.
      */
-    global Job(String sequenceName, Id entityId) {
+    global Job(String sequenceName, Id recordId) {
         this(new Map<String,Object>{
             'esb__SequenceName' => sequenceName,
-            'esb__Id' => entityId
+            'esb__RecordId' => recordId
         });
     }
     

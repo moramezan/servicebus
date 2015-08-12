@@ -30,12 +30,12 @@
         $RemoteAction.SequenceBuilderExtension.appendStep = '{!$RemoteAction.SequenceBuilderExtension.appendStep}';
         $RemoteAction.SequenceBuilderExtension.moveStepBefore = '{!$RemoteAction.SequenceBuilderExtension.moveStepBefore}';
         $RemoteAction.SequenceBuilderExtension.moveStepAfter = '{!$RemoteAction.SequenceBuilderExtension.moveStepAfter}';
-        $RemoteAction.SequenceBuilderExtension.cacheConfigName = '{!$RemoteAction.SequenceBuilderExtension.cacheConfigName}';
+        $RemoteAction.SequenceBuilderExtension.persistConfigNameOnStep = '{!$RemoteAction.SequenceBuilderExtension.persistConfigNameOnStep}';
         
         window.$Page = window.$Page || {};
         $Page.ApexClassHelp = '{!$Page.ApexClassHelp}';
         $Page.ApexClassSetting = '{!$Page.ApexClassSetting}';
-        $Page.StepConfigure = '{!$Page.StepConfigure}';
+        $Page.StepConfig = '{!$Page.StepConfig}';
         
         TerminateApexClassName = '{!TerminateApexClassName}';
         Processes = {!Processes};
@@ -49,7 +49,7 @@
         URLFOR['/'] = '{!URLFOR("/")}';
         URLFOR[$Page.ApexClassHelp] = '{!URLFOR($Page.ApexClassHelp)}';
         URLFOR[$Page.ApexClassSetting] = '{!URLFOR($Page.ApexClassSetting)}';
-        URLFOR[$Page.StepConfigure] = '{!URLFOR($Page.StepConfigure)}';
+        URLFOR[$Page.StepConfig] = '{!URLFOR($Page.StepConfig)}';
     </c:BootstrapExt>
 
 </apex:page>

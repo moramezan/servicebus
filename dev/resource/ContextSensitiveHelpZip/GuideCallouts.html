@@ -337,7 +337,7 @@ global  class Callout implements Database.AllowsCallouts {
         global String HelpUrl = Page.CallOutHelp.getUrl();
 
         global Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
-            'esb__Id' =&gt;'ID modified to reference a document containing the contents of the scraped input url (c__Url))'
+            'esb__RecordId' =&gt;'ID modified to reference a document containing the contents of the scraped input url (c__Url))'
         };
     }
 
@@ -364,7 +364,7 @@ global  class Callout implements Database.AllowsCallouts {
             Body = Blob.valueOf(this.Body)
         );
         insert document;
-        inputEvent.put('esb__Id', document.Id);
+        inputEvent.put('esb__RecordId', document.Id);
 
 
         //output message(s)
@@ -380,7 +380,7 @@ global  class Callout implements Database.AllowsCallouts {
 <p>
     <strong>034 - 041</strong> The <code>main block</code> completes the implementation of the business specification by the persisting the callout content in a standard <code>Document</code> SObject.
     <br /><strong>018, 038</strong> The content of the callout response is retrieved from the global  member <code>Body</code> and assigned to the body of the <code>document</code> SObject.
-    <br /><strong>041</strong> <code>esb__Id</code> is a standard parameter of any message and it normally points to the underlying data (SObject) of the message. Any process is free to update this <code>esb__Id</code> parameter to conform with the requirements of the process business specification. In this example, the response content is persisted as a Salesforce <code>Document</code> and for that reason the <code>esb__Id</code> parameter of the outbound message is updated with the <code>Id</code> of the inserted document.
+    <br /><strong>041</strong> <code>esb__RecordId</code> is a standard parameter of any message and it normally points to the underlying data (SObject) of the message. Any process is free to update this <code>esb__RecordId</code> parameter to conform with the requirements of the process business specification. In this example, the response content is persisted as a Salesforce <code>Document</code> and for that reason the <code>esb__RecordId</code> parameter of the outbound message is updated with the <code>Id</code> of the inserted document.
     <br /><strong>041, 013 - 015</strong> If a process modifies or adds a parameter on any outbound message, the modification should be formally described by detailing the parameter name and a comment describing the modification.
 </p>
 
@@ -396,7 +396,7 @@ global  class Callout implements Database.AllowsCallouts {
 <p>
     The process inspects the parameters of the input event and retrieves the url of a specific
     web page to be scraped. The content of the scraped page is stored as a Salesforce document. Most
-    importantly, the <code>esb__Id</code> parameter of the outbound message is updated with the Id
+    importantly, the <code>esb__RecordId</code> parameter of the outbound message is updated with the Id
     of this Salesforce document so that any downstream processes will have access to that scraped
     data.
 </p>
@@ -418,7 +418,7 @@ global class Callout implements Database.AllowsCallouts {
             'c__Url' => 'STRING representing Url to scrape.'
         };
         global Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
-            'esb__Id' =>'ID of a document containing the contents of the scraped input URL.'
+            'esb__RecordId' =>'ID of a document containing the contents of the scraped input URL.'
         };
     }
 
@@ -446,7 +446,7 @@ global class Callout implements Database.AllowsCallouts {
             Body = Blob.valueOf(this.Body)
         );
         insert document;
-        inputEvent.put('esb__Id', document.Id);
+        inputEvent.put('esb__RecordId', document.Id);
 
 
         //output message(s)

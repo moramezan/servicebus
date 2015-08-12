@@ -10,7 +10,7 @@
         extension.doInit();
         
         //assert
-        System.assert(ApexPages.hasMessages(), 'Wrong messages.');
+        System.assert(!ApexPages.hasMessages(), 'Wrong messages.');
     }
     
 }
