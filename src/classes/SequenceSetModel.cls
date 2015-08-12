@@ -1,4 +1,4 @@
-public with sharing class SequenceSetModel extends ApexDomain.StandardSetModel {
+public class SequenceSetModel extends ApexDomain.StandardSetModel {
     
     public class SequenceException extends Exception {}
     

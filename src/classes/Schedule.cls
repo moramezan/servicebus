@@ -1,4 +1,4 @@
-public with sharing class Schedule extends ApexClassModel.BaseProcess {
+public class Schedule extends ApexClassModel.BaseProcess {
     
     public class ESB extends ApexClassModel.BaseSummary {
         public String Tag = 'Enterprise Service Bus';

@@ -6,7 +6,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     /**
      * For advertising domain layer errors
      */
-    public without sharing class ProcessException extends Exception {}
+    public class ProcessException extends Exception {}
     
     /**
      * The instance of our process definition
@@ -176,7 +176,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     /**
      * Base process to pretty up our own processes
      */
-    abstract public with sharing class BaseProcess {
+    abstract public class BaseProcess {
         
         //only override when a process requires callouts
         @TestVisible virtual protected void callouts(Map<String,Object> event) {}
@@ -199,7 +199,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     /**
      * Base summary required for cross-namespace per #941
      */
-    abstract public with sharing class BaseSummary {
+    abstract public class BaseSummary {
         override public String toString() {
             return Json.serialize(this);
         }

@@ -1,4 +1,4 @@
-public with sharing class ApexDomain {
+public class ApexDomain {
     
     /**
      * Used to advertise errors inside models.

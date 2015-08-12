@@ -1,4 +1,4 @@
-global with sharing class GateByJob extends ApexClassModel.BaseProcess {
+public class GateByJob extends ApexClassModel.BaseProcess {
 
     private class GateByJobException extends Exception {}
 
@@ -139,7 +139,7 @@ global with sharing class GateByJob extends ApexClassModel.BaseProcess {
     
     
     @testVisible
-    global static Boolean isRelease(String queueableId, Integer chunkTotal, Integer chunk) {
+    public static Boolean isRelease(String queueableId, Integer chunkTotal, Integer chunk) {
         // Release trigger:
         // given :
         //   A = [Non-Completed status messages having a given QueueableId]

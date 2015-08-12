@@ -1,4 +1,4 @@
-public with sharing class Terminate extends ApexClassModel.BaseProcess {
+public class Terminate extends ApexClassModel.BaseProcess {
     
     /**
      * @docs ProcessTerminate.html

@@ -82,7 +82,10 @@
  * |  PERSIST  |
  * +-----------+
  */
-abstract public with sharing class Broker {
+/**
+ * This class is WITHOUT SHARING to ensure the process can execute regardless of running user context.
+ */
+abstract public without sharing class Broker {
     
     public static Integer MaxHops = 500;
     

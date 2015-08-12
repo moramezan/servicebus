@@ -11,7 +11,7 @@
      * without actually starting or running the Broker itself
      */
     @TestVisible static private Boolean DidSynchronousBrokerRun = false;
-    public with sharing class SynchronousBroker extends Broker {
+    public class SynchronousBroker extends Broker {
         
         override public void runImpl() {
             //LOCATE

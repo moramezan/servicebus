@@ -1,4 +1,4 @@
-public with sharing class MessageSetModel extends ApexDomain.StandardSetModel {
+public class MessageSetModel extends ApexDomain.StandardSetModel {
     
     public class MessageException extends Exception {}
     

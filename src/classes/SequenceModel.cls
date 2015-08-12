@@ -1,4 +1,4 @@
-public with sharing class SequenceModel extends ApexDomain.StandardModel {
+public class SequenceModel extends ApexDomain.StandardModel {
 
     private Sequence__c sequence;
     

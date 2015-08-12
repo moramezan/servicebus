@@ -1,4 +1,4 @@
-public with sharing class HeartbeatDispatcher implements System.Schedulable {
+public class HeartbeatDispatcher implements System.Schedulable {
 
     public void execute(System.SchedulableContext context) {
         Type reflector = Type.forName('HeartbeatImplementation');

@@ -2,7 +2,7 @@
  * DO NOT SCHEDULE THIS CLASS EVER
  * http://salesforce.stackexchange.com/a/24448/320
  */
-public with sharing class HeartbeatImplementation implements System.Schedulable {
+public class HeartbeatImplementation implements System.Schedulable {
     
     public void execute(System.SchedulableContext context) {
         if (!Test.isRunningTest() && OAuthSetting__c.getOrgDefaults().RefreshToken__c != null) {

@@ -2,7 +2,7 @@
  * system.Queueable job = new Job('Wiretaps', userId);
  * System.enqueueJob(job);
  */
-global without sharing class Job implements Process.Plugin, system.Queueable {
+global class Job implements Process.Plugin, system.Queueable {
     
     /**
      * Unfortunately we need this constructor for Process.Plugin:

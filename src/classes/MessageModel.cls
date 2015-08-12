@@ -1,7 +1,7 @@
 /**
  * Domain layer for Message__c model
  */
-public with sharing class MessageModel extends ApexDomain.StandardModel {
+public class MessageModel extends ApexDomain.StandardModel {
     
     /**
      * User process instance (transient prevents inadvertent toString() / serialization)

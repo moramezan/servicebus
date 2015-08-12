@@ -1,11 +1,11 @@
-public with sharing class StepModel extends ApexDomain.StandardModel {
+public class StepModel extends ApexDomain.StandardModel {
 
     private Step__c step;
     
     /**
      * For advertising domain layer errors
      */
-    public without sharing class StepException extends Exception {}
+    public class StepException extends Exception {}
     
     /**
      * Privatize constructor to force use of fromName() or fromId()

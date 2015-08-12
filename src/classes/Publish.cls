@@ -1,4 +1,4 @@
-public with sharing class Publish extends ApexClassModel.BaseProcess {
+public class Publish extends ApexClassModel.BaseProcess {
     
     /**
      * @docs ProcessPublishSubscribe.html

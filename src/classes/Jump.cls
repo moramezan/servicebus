@@ -1,4 +1,4 @@
-public with sharing class Jump extends ApexClassModel.BaseProcess {
+public class Jump extends ApexClassModel.BaseProcess {
 
     /**
      * @docs ProcessBranchJumpSubsequence.html
