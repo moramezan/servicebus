@@ -61,14 +61,6 @@ public class MessageModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * For savepoint / rollback detection
-     */
-    private Integer FutureCalls = 0;
-    private Integer DmlStatements = 0;
-    private Integer QueueableJobs = 0;
-    private Integer EmailInvocations = 0;
-    
-    /**
      * Returns STEP or NULL
      */
     public Step__c resolveStep() {
@@ -136,10 +128,10 @@ public class MessageModel extends ApexDomain.StandardModel {
     public void invokeCallouts() {
         Long timer = System.now().getTime();
         
+        //skip bad guys
+        if (this.IsFucked) return;
+        
         try {
-            //skip bad guys
-            if (this.IsFucked) return;
-            
             //provide input event and set flag
             Job.Event = this.Event.clone();
             Job.Event.put('esb__AllowsCallouts', true);
@@ -167,15 +159,20 @@ public class MessageModel extends ApexDomain.StandardModel {
     public void invokeExecute(List<Message__c> outputMessages) {
         Long timer = System.now().getTime();
         
+        //skip bad guys
+        if (this.IsFucked) return;
+        
+        //measure side effects before
+        Integer futureCalls = Limits.getFutureCalls();
+        Integer queueableJobs = Limits.getQueueableJobs();
+        Integer dmlStatements = Limits.getDMLStatements();
+        Integer emailInvocations = Limits.getEmailInvocations();
+        
         try {
-            //skip bad guys
-            if (this.IsFucked) return;
-            
-            //measure side effects before
-            this.FutureCalls = Limits.getFutureCalls();
-            this.QueueableJobs = Limits.getQueueableJobs();
-            this.DmlStatements = Limits.getDMLStatements();
-            this.EmailInvocations = Limits.getEmailInvocations();
+            if (outputMessages == null) {
+                //our own fault
+                throw new MessageException('MessageModel.invokeExecute must receive REFERENCE to list of output messages.');
+            }
             
             //provide input event and set flag
             Job.Event = this.Event.clone();
@@ -223,13 +220,13 @@ public class MessageModel extends ApexDomain.StandardModel {
             this.prepareException(e);
             this.IsFucked = true;
             
-        } finally {
-            //measure side effects after, whether or not there was an exception
-            if (Limits.getFutureCalls() > this.FutureCalls) this.HadSideEffects = true;
-            if (Limits.getQueueableJobs() > this.QueueableJobs) this.HadSideEffects = true;
-            if (Limits.getDMLStatements() > this.DmlStatements) this.HadSideEffects = true;
-            if (Limits.getEmailInvocations() > this.EmailInvocations) this.HadSideEffects = true;
         }
+        
+        //measure side effects after, whether or not there was an exception
+        if (Limits.getFutureCalls() > futureCalls) this.HadSideEffects = true;
+        if (Limits.getQueueableJobs() > queueableJobs) this.HadSideEffects = true;
+        if (Limits.getDMLStatements() > dmlStatements) this.HadSideEffects = true;
+        if (Limits.getEmailInvocations() > emailInvocations) this.HadSideEffects = true;
         
         if (this.Message.ExecuteDuration__c == null) this.Message.ExecuteDuration__c = 0;
         this.Message.ExecuteDuration__c += System.now().getTime() - timer;
