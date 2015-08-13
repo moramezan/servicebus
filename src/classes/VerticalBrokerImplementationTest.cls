@@ -16,7 +16,7 @@
         
         //arrange messages
         Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1};
-        List<Map<String,Object>> parameterses = new List<Map<String,Object>>{
+        List<Map<String,Object>> inputEvents = new List<Map<String,Object>>{
             parameters,
             parameters,
             parameters,
@@ -28,7 +28,12 @@
             parameters
         };
         
-        List<Message__c> messages = new Job(parameterses).persist();
+        Test.startTest();
+        Job job = new Job(inputEvents);
+        System.enqueueJob(job);
+        Test.stopTest();
+        
+        List<Message__c> messages = [SELECT Id, Step__c, Event__c FROM Message__c];
         VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
         
         //assert
@@ -133,13 +138,17 @@
         //arrange steps
         Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
+        //arrange input
+        Map<String,Object> inputEvent = new Map<String,Object> {
+            '__SequenceName' => 'TestSequence',
+            '__Position' => 1
+        };
+        
         //arrange message
-        new Job(
-            new Map<String,Object> {
-                '__SequenceName' => 'TestSequence',
-                '__Position' => 1
-            }
-        ).persist();
+        Test.startTest();
+        Job job = new Job(inputEvent);
+        System.enqueueJob(job);
+        Test.stopTest();
         
         //act (enqueue)
         VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
@@ -180,28 +189,37 @@
         //arrange steps
         Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
+        //arrange input
+        Map<String,Object> inputEvent1 = new Map<String,Object> {
+            '__SequenceName' => 'TestSequence',
+            '__Position' => 1
+        };
+        
+        Map<String,Object> inputEvent2 = new Map<String,Object> {
+            '__SequenceName' => 'TestSequence',
+            '__Position' => 1
+        };
+        
+        Map<String,Object> inputEvent3 = new Map<String,Object> {
+            '__SequenceName' => 'TestSequence',
+            '__Position' => 1
+        };
+        
         //arrange messages
-        new Job(
-            new Map<String,Object> {
-                '__SequenceName' => 'TestSequence',
-                '__Position' => 1
-            }
-        ).persist();
-            
-        new Job(
-            new Map<String,Object> {
-                '__SequenceName' => 'TestSequence',
-                '__Position' => 1
-            }
-        ).persist();
+        Test.startTest();
         
-        new Job(
-            new Map<String,Object> {
-                '__SequenceName' => 'TestSequence',
-                '__Position' => 1
-            }
-        ).persist();
+        Job job1 = new Job(inputEvent1);
+        System.enqueueJob(job1);
         
+        Job job2 = new Job(inputEvent2);
+        System.enqueueJob(job2);
+        
+        Job job3 = new Job(inputEvent3);
+        System.enqueueJob(job3);
+        
+        Test.stopTest();
+        
+        //arrange
         Integer totalPotentialMarks = 3; // Less than Buffered Messages Count
         
         
@@ -231,28 +249,37 @@
         //arrange steps
         Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
+        //arrange input
+        Map<String,Object> inputEvent1 = new Map<String,Object> {
+            '__SequenceName' => 'TestSequence',
+            '__Position' => 1
+        };
+        
+        Map<String,Object> inputEvent2 = new Map<String,Object> {
+            '__SequenceName' => 'TestSequence',
+            '__Position' => 1
+        };
+        
+        Map<String,Object> inputEvent3 = new Map<String,Object> {
+            '__SequenceName' => 'TestSequence',
+            '__Position' => 1
+        };
+        
         //arrange messages
-        new Job(
-            new Map<String,Object> {
-                '__SequenceName' => 'TestSequence',
-                '__Position' => 1
-            }
-        ).persist();
-            
-        new Job(
-            new Map<String,Object> {
-                '__SequenceName' => 'TestSequence',
-                '__Position' => 1
-            }
-        ).persist();
+        Test.startTest();
         
-        new Job(
-            new Map<String,Object> {
-                '__SequenceName' => 'TestSequence',
-                '__Position' => 1
-            }
-        ).persist();
+        Job job1 = new Job(inputEvent1);
+        System.enqueueJob(job1);
         
+        Job job2 = new Job(inputEvent2);
+        System.enqueueJob(job2);
+        
+        Job job3 = new Job(inputEvent3);
+        System.enqueueJob(job3);
+        
+        Test.stopTest();
+        
+        //arrange
         Integer totalPotentialMarks = 4;  // Greater than Buffered Messages Count
 
         //arrange resolution

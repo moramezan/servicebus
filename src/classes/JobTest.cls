@@ -1,15 +1,20 @@
 @IsTest public class JobTest {
-
+    
+    //TODO needs more tests
+    
     static testmethod void testSimpleEventConstructor() {
         //arrange
         String sequenceName = 'TestSequence';
         String recordId = UserInfo.getOrganizationId();
         
         //act
-        Job j = new Job(sequenceName, recordId);
+        Test.startTest();
+        Job job = new Job(sequenceName, recordId);
+        System.enqueueJob(job);
+        Test.stopTest();
         
         //assemble
-        List<Message__c> messages = j.messages;
+        List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
         
         //assert
         Integer expectedSize = 1;

@@ -94,7 +94,7 @@ global class Job implements Process.Plugin, system.Queueable {
     
     public class JobException extends Exception {}
     
-    @TestVisible private List<Message__c> messages = new List<Message__c>();
+    @TestVisible private List<Map<String,Object>> Events = new List<Map<String,Object>>();
     
     /**
      * Note, I can appreciate it seems these constructors are all crammed together. Sorry
@@ -156,6 +156,9 @@ global class Job implements Process.Plugin, system.Queueable {
         this(new List<Map<String,Object>>{inputEvent});
     }
     
+    //TODO Job(reflector, inputEvent)
+    //TODO Job(reflector, inputEvents)
+    
     /**
      * A collection of multiple parameterized message descriptions, each of which must at minimum
      * contain esb__SequenceName.
@@ -171,7 +174,7 @@ global class Job implements Process.Plugin, system.Queueable {
         //create the message destined for the 0th step of the chain
         for (Map<String,Object> inputEvent : inputEvents) {
             inputEvent.putAll(new Map<String,Object>{
-                '__Hops' => 0,
+                '__Hops' => 1,
                 '__EntryPointUuid' => uuidVersionFour(), //#751 formerly __EntryPointGuid, this is ONLY for 'our' use
                 '__EntryPointDatetime' => System.now(), //#753 formerly __EventStamp this is ONLY for our framework use
                 'esb__EnqueueUserId' => UserInfo.getUserId(), //WE use '__' and THEY use 'esb' per #669
@@ -187,12 +190,9 @@ global class Job implements Process.Plugin, system.Queueable {
                 //#753 processes like Heartbeat are allowed to mess with this}
                 inputEvent.put('esb__EntryPointDatetime', System.now());
             }
-            
-            this.messages.add(new Message__c(
-                Event__c = Json.serializePretty(inputEvent),
-                Status__c = BrokerSetting__c.getOrgDefaults().IsPaused__c ? 'Paused' : 'Buffered'
-            ));
         }
+        
+        this.Events = inputEvents;
     }
     
     /**
@@ -208,31 +208,48 @@ global class Job implements Process.Plugin, system.Queueable {
      * #816 https://cloud.githubusercontent.com/assets/1878631/6813469/15c4d956-d27e-11e4-9d3d-e7026e95eade.jpg
      */
     public void execute(QueueableContext context) {
-        if (context != null) new MessageSetModel(this.messages).populateQueueableId(context);
-        List<Message__c> messages = this.persist();
+        List<Message__c> messages = new List<Message__c>();
+        for (Map<String,Object> inputEvent : this.Events) {
+            
+            /**
+             * #694 puts QueueableContext Job Id on messages. Because when people
+             * use System.enqueueJob to enqueue a message into the system, they will
+             * never get a Message Id. But at least we have a possibility of using
+             * the Queueable AsyncApexJob Id as a correlation later for Capture etc.
+             */
+            if (context != null) {
+                Id queueableId = context.getJobId();
+                inputEvent.put('__QueueableId', queueableId);
+            }
+            
+            /**
+             * In #658 we hoped to expose esb__SequenceName API in Broker.persist() but
+             * it meant we can't insert messages then just 'run' broker over them. Further
+             * issue #677 feels like we probably shouldn't be inserting messages at all.
+             * We want to interpret esb__SequenceName into __SequenceName and __Position
+             * as late and as simply as possible. Doing it here in the execute works OK.
+             */
+            if (inputEvent.get('esb__SequenceName') != null) {
+                inputEvent.put('__SequenceName', inputEvent.get('esb__SequenceName'));
+                inputEvent.put('__Position', 1);
+                inputEvent.put('esb__SequenceName', null);
+            }
+            
+            messages.add(new Message__c(
+                Event__c = Json.serializePretty(inputEvent),
+                Status__c = BrokerSetting__c.getOrgDefaults().IsPaused__c ? 'Paused' : 'Buffered'
+            ));
+        }
+        
+        //just in time DML
+        MessageSetModel.Inhibit = false;
+        insert messages; //#836
+        MessageSetModel.Inhibit = true;
         
         //#653 don't waste FUTURE ASYNC CALL unnecessarily
         if (isScheduled()) return;
         if (isRunning()) return;
-        runAsUser();
-    }
-    
-    /**
-     * NOT TO BE CONFUSED WITH BROKER.PERSIST
-     * Persist, but don't execute yet.
-     * (Useful for writing unit tests)
-     *
-     * This can be used in lieu of Database.insert(message)
-     * like this: new Job('Wiretaps', userId).persist()
-     *
-     * @return list of persisted output messages
-     */
-    @TestVisible private List<Message__c> persist() {
-        //just in time DML
-        MessageSetModel.Inhibit = false;
-        insert this.messages; //#836
-        MessageSetModel.Inhibit = true;
-        return this.messages;
+        if (!Test.isRunningTest()) runAsUser();
     }
     
     static public Boolean isScheduled() {

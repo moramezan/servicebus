@@ -181,7 +181,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         /**
          * Internal only: we may override when process requires callouts
          */
-        virtual void callouts(Map<String,Object> event) {}
+        virtual protected void callouts(Map<String,Object> event) {}
         
         /**
          * Public implementation: they must put their logic inside
@@ -195,14 +195,14 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             //#797 cycle inputs so process author sees consistent inputs
             inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
             
-            List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
+            List<Map<String,Object>> outputEvents = this.execute(inputEvent);
             
             //#746 accumulate outputs so event parameters carry forwards
-            for (Map<String,Object> result : this.execute(inputEvent)) {
-                //output equals balance plus delta
-                Map<String,Object> outputEvent = inputEvent.clone();
-                outputEvent.putAll(result);
-                outputEvents.add(outputEvent);
+            if (outputEvents != null) for (Integer i = 0; i < outputEvents.size(); i++) {
+                //"aggregate" equals our "input balance" plus their "output delta"
+                Map<String,Object> aggregate = inputEvent.clone();
+                aggregate.putAll(outputEvents[i]);
+                outputEvents[i] = aggregate;
             }
             
             return outputEvents;

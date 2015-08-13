@@ -162,22 +162,22 @@ public class HeartbeatImplementation implements System.Schedulable {
       
         updateLastEventStamp(heartbeats);
 
-        List<Map<String,Object>> parameterses = new List<Map<String,Object>>();
+        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         for (DateTime heartbeat : heartbeats) {
-            Map<String,Object> parameters = new Map<String,Object>{
+            Map<String,Object> outputEvent = new Map<String,Object>{
                 'esb__RecordId' => UserInfo.getUserId(),
-                '__SequenceName' => '', //avoid "Mandatory parameter esb__SequenceName not supplied."
-                '__Position' => '', //avoid "Mandatory parameter esb__SequenceName not supplied."
+                '__SequenceName' => '__Heartbeat', //avoid "Mandatory parameter esb__SequenceName not supplied."
+                '__Position' => 0, //avoid "Mandatory parameter esb__SequenceName not supplied."
                 'esb__EntryPointDatetime' => heartbeat,
                 '__IsHeartbeatProcess' => true //#575 so that resolve and execute can crow look
             };
-            parameterses.add(parameters);
+            outputEvents.add(outputEvent);
         }
         
         //Workaround for known issue: "Method only allowed during testing"
         //https://success.salesforce.com/issues_view?id=a1p300000008XM1AAM
-        if (Test.isRunningTest()) new Job(parameterses).execute(null);
-        else System.enqueueJob(new Job(parameterses));
+        if (Test.isRunningTest()) new Job(outputEvents).execute(null);
+        else System.enqueueJob(new Job(outputEvents));
     }
  
  

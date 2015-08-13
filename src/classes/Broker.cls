@@ -87,7 +87,7 @@
  */
 abstract public without sharing class Broker {
     
-    public static Integer MaxHops = 500;
+    static public Integer MaximumHops = 1000;
     
     public class PanicException extends Exception {}
     
@@ -256,9 +256,6 @@ abstract public without sharing class Broker {
                     Database.rollback(sp);
                 }
             }
-            
-            //position + 1
-            new MessageSetModel(outputMessages).incrementPositions();
             
         } catch (Exception e) {
             throw new PanicException('Execute panic:' + e.getMessage(), e);

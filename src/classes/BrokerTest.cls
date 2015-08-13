@@ -59,7 +59,10 @@
             inputEvent
         };
         
-        List<Message__c> messages = new Job(outputEvents).persist();
+        Test.startTest();
+        Job job = new Job(outputEvents);
+        System.enqueueJob(job);
+        Test.stopTest();
         
         //act
         List<Message__c> records = Broker.impl().locateMarkableWork();
@@ -89,7 +92,10 @@
         model.appendStep(Terminate.class);
         
         //arrange inputs
-        new Job(sequence.Name, '000000000000000AAA').persist();
+        Test.startTest();
+        Job job = new Job(sequence.Name, '000000000000000AAA');
+        System.enqueueJob(job);
+        Test.stopTest();
         
         //assert
         Integer expectedBuffered = 1;
@@ -97,7 +103,7 @@
         System.assertEquals(expectedBuffered, actualBuffered, 'Wrong count.');
         
         //act
-        Broker.MaxHops = 2;
+        Broker.MaximumHops = 2;
         Broker.impl().run();
         
         //assert
@@ -113,81 +119,104 @@
         ];
         
         //assert
-        String expectedException = 'Too many hops - to resolve, manually set __Hops on event parameters to 0';
+        String expectedException = 'Maximum hops reached: 2';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
     
-    static testmethod void callingEnforceMaxHopsReturnsExpectedValueWhenHopsLtThreshold() {
-        //arrange
-        Broker.MaxHops = 2;
-        List<Message__c> messages = new Job(new Map<String,Object>{
-            //'__Hops' => 0 //enqueue sets hops
-        }).persist();
+    static testmethod void testSufficientHopsExecutesOk() {
+        //arrange broker
+        Broker.MaximumHops = 2;
+        
+        //arrange message
+        Test.startTest();
+        Job job = new Job(new Map<String,Object>());
+        System.enqueueJob(job);
+        Test.stopTest();
         
         //act
-        new MessageSetModel(messages).incrementHops();
+        Broker.impl().run();
         
         //assemble
-        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
-
+        Message__c message = [SELECT Id, Exception__c FROM Message__c];
+        
         //assert
-        Integer expectedHops = 1;
-        Integer actualHops = (Integer)inputEvent.get('__Hops');
-        System.assertEquals( expectedHops, actualHops);
+        String unexpectedException = 'Maximum hops reached: 2';
+        String actualException = message.Exception__c;
+        System.assertNotEquals(unexpectedException, actualException, 'Wrong exception.');
     }
 
-
-
-    static testmethod void callingEnforceMaxHopsReturnsExpectedValueWhenHopsNotDefined() {
-       //arrange
-        Broker.MaxHops = 10;
-        List<Message__c> messages = new Job(new Map<String,Object>{
-            //enqueue sets hops
-        }).persist();
-
-        //act
-        new MessageSetModel(messages).incrementHops();
+    static testmethod void callingEnqueueSetsHops() {
+        //arrange message
+        Test.startTest();
+        Job job = new Job(new Map<String,Object>()); //enqueue sets hops
+        System.enqueueJob(job);
+        Test.stopTest();
         
         //assemble
-        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
-
+        Message__c message = [SELECT Id, Event__c, Exception__c FROM Message__c];
+        Map<String,Object> outputEvent = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
+        
         //assert
         Integer expectedHops = 1;
-        Integer actualHops = (Integer)inputEvent.get('__Hops');
-        System.assertEquals( expectedHops, actualHops);
+        Integer actualHops = (Integer)outputEvent.get('__Hops');
+        System.assertEquals(expectedHops, actualHops, 'Wrong hops.');
     }
- 
-  
-    static testmethod void callingEnforceMaxHopsThrowsExceptionWhenHopsGtOrEqToThreshold() {
+
+    static testmethod void callingExecuteSetsMissingHops() {
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        //arrange steps
+        SequenceModel.fromId(sequence.Id).appendStep(Wiretap.class);
+        SequenceModel.fromId(sequence.Id).appendStep(Terminate.class);
         
         //arrange message
-        Broker.MaxHops = 1;
-        List<Message__c> messages = new Job(new Map<String,Object>{
-            'esb__SequenceName' => 'Test'
-            //'esb__Hops' => 0 //enqueue sets hops
-        }).persist();
-        
-        //assemble
-        //http://salesforce.stackexchange.com/q/61213/320
-        messages = Broker.impl().locateMarkableWork();
-        
-        Boolean actualFlag = false;
+        Message__c inputMessage = new Message__c(
+            Event__c = '{}',
+            Step__c = 'Test#1'
+        );
+        insert inputMessage;
         
         //act
-        Broker.impl().execute(messages, new List<Message__c>());
+        List<Message__c> outputMessages = new List<Message__c>();
+        Broker.impl().execute(new List<Message__c>{inputMessage}, outputMessages);
+        
+        //assert
+        Integer expectedSize = 1;
+        Integer actualSize = outputMessages.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
         //assemble
-        actualFlag = messages[0].Exception__c != null;
-
+        Map<String,Object> outputEvent = (Map<String,Object>)Json.deserializeUntyped(outputMessages[0].Event__c);
+        
         //assert
-        Boolean expectedFlag = true;
-        System.assertEquals( expectedFlag, actualFlag);
+        Integer expectedHops = 1;
+        Integer actualHops = (Integer)outputEvent.get('__Hops');
+        System.assertEquals(expectedHops, actualHops, 'Wrong hops.');
+    }
+    
+    static testmethod void testTooManyHopsPreparesException() {
+        //arrange broker
+        Broker.MaximumHops = 1;
+        
+        //arrange message
+        Test.startTest();
+        Job job = new Job(new Map<String,Object>());
+        System.enqueueJob(job);
+        Test.stopTest();
+        
+        //act
+        Broker.impl().run();
+        
+        //assemble
+        Message__c message = [SELECT Id, Exception__c FROM Message__c];
+        
+        //assert
+        String expectedException = 'Maximum hops reached: 1';
+        String actualException = message.Exception__c;
+        System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
     
     
@@ -198,47 +227,46 @@
         
         //arrange steps
         SequenceModel model = SequenceModel.fromId(sequence.Id);
-        Step__c stepA1 = model.appendStep(Subscribe.class);
-        Step__c stepA2 = model.appendStep(Publish.class);
-        Step__c stepA3 = model.appendStep(Terminate.class);
-        Integer positionA1 = stepA1.Position__c.intValue();
-        Integer positionA2 = stepA2.Position__c.intValue();
-        Integer positionA3 = stepA3.Position__c.intValue();
+        model.appendStep(Wiretap.class);
+        model.appendStep(Wiretap.class);
+        model.appendStep(Terminate.class);
         
-        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>{
-            new Map<String,Object>{'__SequenceName' => 'sequenceName1', '__Position' => positionA1},
-            new Map<String,Object>{'__SequenceName' => 'sequenceName2', '__Position' => positionA2}
+        List<Message__c> inputMessages = new List<Message__c>{
+            new Message__c(Step__c = 'Test#1', Event__c = '{"__Position":1}'),
+            new Message__c(Step__c = 'Test#2', Event__c = '{"__Position":2}')
         };
         
+        //act
+        List<Message__c> outputMessages = new List<Message__c>();
+        Broker.impl().execute(inputMessages, outputMessages);
+        
+        //assert
+        Integer expectedSize = 2;
+        Integer actualSize = outputMessages.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
+
+        //arrange
+        Map<String,Object> outputEventA = (Map<String,Object>)Json.deserializeUntyped(outputMessages[0].Event__c);
+        Map<String,Object> outputEventB = (Map<String,Object>)Json.deserializeUntyped(outputMessages[1].Event__c);
+
+        Integer expectedPositionA = 2;
+        Integer actualPositionA = (Integer)outputEventA.get('__Position');
+        System.assertEquals(expectedPositionA, actualPositionA, 'Wrong position A.');
+
+        Integer expectedPositionB = 3;
+        Integer actualPositionB = (Integer)outputEventB.get('__Position');
+        System.assertEquals(expectedPositionB, actualPositionB, 'Wrong position B.');
         
         //act
-        List<Message__c> messages = new Job(outputEvents).persist();
-        new MessageSetModel(messages).incrementPositions();
+        List<Message__c> inputAndOutputMessages = new List<Message__c>();
+        inputAndOutputMessages.addAll(inputMessages);
+        inputAndOutputMessages.addAll(outputMessages);
+        Broker.impl().persist(inputAndOutputMessages);
         
-        //assemble
-        Map<String,Object> inputEvent1 = (Map<String,Object>)System.Json.deserializeUntyped(messages[0].Event__c);
-        Map<String,Object> inputEvent2 = (Map<String,Object>)System.Json.deserializeUntyped(messages[1].Event__c);
-        
-        // assert
-        Integer expectedCount = 2;
-        Integer actualCount = messages.size();
-        System.assertEquals(expectedCount, actualCount);
-
-        String expectedSequenceName1 = 'sequenceName1';
-        String actualSequenceName1 = (String)inputEvent1.get('__SequenceName');
-        System.assertEquals(expectedSequenceName1, actualSequenceName1, 'Wrong sequence name');
-        
-        Integer expectedPosition1 = positionA1 + 1;
-        Integer actualPosition1 = (Integer)inputEvent1.get('__Position');
-        System.assertEquals(expectedPosition1, actualPosition1, 'Wrong position 1.');
-
-        String expectedSequenceName2 = 'sequenceName2';
-        String actualSequenceName2 = (String)inputEvent2.get('__SequenceName');
-        System.assertEquals(expectedSequenceName2, actualSequenceName2, 'Wrong sequence name');
-        
-        Integer expectedPosition2 = positionA2 + 1;
-        Integer actualPosition2 = (Integer)inputEvent2.get('__Position');
-        System.assertEquals(expectedPosition2, actualPosition2, 'Wrong position 2.');
+        //assert
+        Integer expectedCount = 4;
+        Integer actualCount = [SELECT COUNT() FROM Message__c];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
     }
     
     static testmethod void testLocatorMarksCorrectNumberOfMessages() {
@@ -248,11 +276,16 @@
         
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
-        new Job(new List<Map<String,Object>>{
+        List<Map<String,Object>> inputEvents = new List<Map<String,Object>>{
             new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1},
             new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1},
             new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1}
-        }).persist();
+        };
+        
+        Test.startTest();
+        Job job = new Job(inputEvents);
+        System.enqueueJob(job);
+        Test.stopTest();
         
         //act
         Broker impl = Broker.impl();
@@ -312,140 +345,6 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testmethod void canCorrectlyIncrementMessages() {
-        // arrange
-        String sequenceNameA = 'sequenceA';
-        String sequenceNameB = 'sequenceB';
-        String sequenceNameC = 'sequenceC';
-        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
-        Sequence__c sequenceB = new Sequence__c(Name = sequenceNameB);
-        Sequence__c sequenceC = new Sequence__c(Name = sequenceNAmeC);
-        insert sequenceA;
-        insert sequenceB;
-        insert sequenceC;
-
-        Integer positionA1 = 1;
-        Integer positionA2 = 2;
-        Integer positionA3 = 3;
-        Integer positionB1 = 1;
-        Integer positionB2 = 2;
-        Integer positionC1 = 1;
-        Integer positionC2 = 2;
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Subscribe.class);
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Publish.class);
-        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
-        Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(Wiretap.class);
-        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(Terminate.class);
-        Step__c stepC1 = SequenceModel.fromName(sequenceC.Name).appendStep(Publish.class);
-        Step__c stepC2 = SequenceModel.fromName(sequenceC.Name).appendStep(Terminate.class);
-        
-        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>{
-            new Map<String,Object>{'esb__RecordId' => 0, '__SequenceName' => sequenceA.Name, '__Position' => positionA1}, // Same Sequence / Position
-            new Map<String,Object>{'esb__RecordId' => 1, '__SequenceName' => sequenceA.Name, '__Position' => positionA1}, // Same Sequence / Position
-            new Map<String,Object>{'esb__RecordId' => 2, '__SequenceName' => sequenceA.Name, '__Position' => positionA2},
-            new Map<String,Object>{'esb__RecordId' => 3, '__SequenceName' => sequenceB.Name, '__Position' => positionB1},
-            new Map<String,Object>{'esb__RecordId' => 4, '__SequenceName' => sequenceC.Name, '__Position' => positionC1}
-        };
-        
-        // act
-        List<Message__c> messages = new Job(outputEvents).persist();
-        new MessageSetModel(messages).incrementPositions();
-        
-        // assemble
-        String actualSequenceName0 = '' ;
-        String actualSequenceName1 = '' ;
-        String actualSequenceName2 = '' ;
-        String actualSequenceName3 = '' ;
-        String actualSequenceName4 = '' ;
-        Integer actualPosition0 = -1 ;
-        Integer actualPosition1 = -1 ;
-        Integer actualPosition2 = -1 ;
-        Integer actualPosition3 = -1 ;
-        Integer actualPosition4 = -1 ;
-        for (Message__c message : messages) {
-            Map<String,Object> inputEvent = (Map<String,Object>)System.Json.deserializeUntyped(message.Event__c);
-            Integer theId = (Integer) inputEvent.get('esb__RecordId');
-            String theSequenceName = (String)inputEvent.get('__SequenceName');
-            Integer thePosition = (Integer)inputEvent.get('__Position');
-            if (theId == 0) {
-                actualSequenceName0 = theSequenceName;
-                actualPosition0 = thePosition;
-            }
-          
-            if (theId == 1) {
-                actualSequenceName1 = theSequenceName;
-                actualPosition1 = thePosition;
-            }
-            if (theId == 2) {
-                actualSequenceName2 = theSequenceName;
-                actualPosition2 = thePosition;
-            
-            }
-            if (theId == 3) {
-                actualSequenceName3 = theSequenceName;
-                actualPosition3 = thePosition;
-            }
-            if (theId == 4) {
-                actualSequenceName4 = theSequenceName;
-                actualPosition4 = thePosition;
-            }
-        }
-        
-        // assert
-        Integer expectedCount = 5;
-        Integer actualCount = messages.size();
-        System.assertEquals(expectedCount, actualCount);
-        
-        String expectedSequenceName0 = sequenceNameA;
-        String expectedSequenceName1 = sequenceNameA;
-        String expectedSequenceName2 = sequenceNameA;
-        String expectedSequenceName3 = sequenceNameB;
-        String expectedSequenceName4 = sequenceNameC;
-        Integer expectedPosition0 = positionA1 + 1;
-        Integer expectedPosition1 = positionA1 + 1;
-        Integer expectedPosition2 = positionA2 + 1;
-        Integer expectedPosition3 = positionB1 + 1;
-        Integer expectedPosition4 = positionC1 + 1;
-        System.assertEquals(expectedPosition0, actualPosition0);
-        System.assertEquals(expectedPosition1, actualPosition1);
-        System.assertEquals(expectedPosition2, actualPosition2);
-        System.assertEquals(expectedPosition3, actualPosition3);
-        System.assertEquals(expectedPosition4, actualPosition4);
-        System.assertEquals(expectedSequenceName0, actualSequenceName0);
-        System.assertEquals(expectedSequenceName1, actualSequenceName1);
-        System.assertEquals(expectedSequenceName2, actualSequenceName2);
-        System.assertEquals(expectedSequenceName3, actualSequenceName3);
-        System.assertEquals(expectedSequenceName4, actualSequenceName4);
-    }
-    
-    static testmethod void callingEnqueueSuccessfullyCallsrunImpl() {
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
-        insert sequence;
-        
-        //arrange steps
-        SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
-        
-        //arrange broker implementation custom setting
-        String theSequenceName = 'TestSequence';
-        Id theId = '000000000000000AAA';
-        
-        //assert
-        Boolean expectedBeforeFlag = false;
-        Boolean actualBeforeFlag = BrokerTest.DidSynchronousBrokerRun;
-        System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
-        
-        //IT'S a @FUTURE CALL ... dont want that to happen every time
-        
-        //act
-        new Job(theSequenceName, theId).execute(null);
-        
-        //assert
-        Boolean expectedAfterFlag = true;
-        Boolean actualAfterFlag = DidSynchronousBrokerRun;
-        System.assertEquals(expectedAfterFlag, actualAfterFlag);
-    }
-    
     static testmethod void callingEnqueueSuccessfullyCallEnqueueImpAndCreatesDocument() {
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
@@ -455,30 +354,28 @@
         SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //assert
-        Boolean expectedBeforeFlag = false;
-        Boolean actualBeforeFlag = BrokerTest.DidSynchronousBrokerRun;
-        System.assertEquals(expectedBeforeFlag, actualBeforeFlag);
-        
-        Integer expectedSizeBefore = 0;
-        Integer actualSizeBefore = [SELECT COUNT() FROM Document];
-        System.assertEquals(expectedSizeBefore , actualSizeBefore);
+        Integer expectedCountBefore = 0;
+        Integer actualCountBefore = [SELECT COUNT() FROM Document];
+        System.assertEquals(expectedCountBefore, actualCountBefore, 'Wrong count before.');
         
         //act (this calls blob enqueue signature that does inserts a document)
-        new Job('TestSequence', Blob.valueOf('balls')).execute(null);
+        Test.startTest();
+        Job job = new Job('TestSequence', Blob.valueOf('test'));
+        System.enqueueJob(job);
+        Test.stopTest();
         
         //assert
-        Integer expectedSizeAfter = 1;
-        Integer actualSizeAfter = [SELECT COUNT() FROM Document];
-        System.assertEquals(expectedSizeAfter, actualSizeAfter);
-        
-        Boolean expectedAfterFlag = true;
-        Boolean actualAfterFlag = BrokerTest.DidSynchronousBrokerRun;
-        System.assertEquals(expectedAfterFlag, actualAfterFlag);
+        Integer expectedCountAfter = 1;
+        Integer actualCountAfter = [SELECT COUNT() FROM Document];
+        System.assertEquals(expectedCountAfter, actualCountAfter, 'Wrong count after.');
     }
     
     static testmethod void callingRestartSuccessfullyCallsrunImpl() {
         //arrange
-        List<Message__c> messages = new Job('test', UserInfo.getUserId()).persist();
+        Test.startTest();
+        Job job = new Job('test', '000000000000000AAA');
+        System.enqueueJob(job);
+        Test.stopTest();
         
         //assert
         System.assert(!DidSynchronousBrokerRun, 'Wrong flag before.');
@@ -502,9 +399,17 @@
     // Error Message    System.AssertException: Assertion Failed: Message cannot have a null process.
     // Stack Trace      Class.BrokerTest.testMissingPositionThrowsExpectedException: line 680, column 1
     static testmethod void testMissingPositionThrowsExpectedException() {
-        //arrange message
+        //arrange input
         Map<String,Object> inputEvent = new Map<String,Object>{'not__Position' => 1};
-        List<Message__c> messages = new Job(inputEvent).persist();
+        
+        //arrange message
+        Test.startTest();
+        Job job = new Job(inputEvent);
+        System.enqueueJob(job);
+        Test.stopTest();
+        
+        //arrange
+        List<Message__c> messages = [SELECT Id, Step__c, Event__c FROM Message__c];
         
         //arrange broker
         Broker impl = Broker.impl();
@@ -518,36 +423,33 @@
         actualMessage = messages[0].Exception__c;
         
         //assert
-        String expectedMessage = 'This message has no route: ' + messages[0].Id;
+        String expectedMessage = 'Message has no step for routing to sequence: ' + messages[0].Id;
         System.assertEquals(expectedMessage, actualMessage, 'Wrong exception message.');
     }
     
-    
-    
-    // TODO - Test Fails
-    //        Assume it will be fixed when deailing with Issue "migrate chunking logic into abstract Broker #636"
-    // Method Name      testNoStepThrowsQueryException
-    // Error Message    System.AssertException: Assertion Failed: Message cannot have a null process.
-    // Stack Trace      Class.BrokerTest.testNoStepThrowsQueryException: line 705, column 1
     static testmethod void testNoStepThrowsQueryException() {
-        //arrange message (note there is no Step__c in database!)
-        Map<String,Object> inputEvent = new Map<String,Object>{'__SequenceName' => '', '__Position' => 0};
-        List<Message__c> messages = new Job(inputEvent).persist();
+        //arrange input (note there is no Step__c in database!)
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            '__SequenceName' => 'Test',
+            '__Position' => 0
+        };
         
-        //arrange specific broker implementation
-        Broker impl = Broker.impl();
-        
-        String actualMessage;
+        //arrange message
+        Test.startTest();
+        Job job = new Job(inputEvent);
+        System.enqueueJob(job);
+        Test.stopTest();
         
         //act
-        impl.execute(messages, new List<Message__c>());
+        Broker.impl().run();
         
         //assemble
-        actualMessage = messages[0].Exception__c;
+        Message__c message = [SELECT Id, Exception__c FROM Message__c];
         
         //assert
-        String expectedMessage = 'This message has no route: ' + messages[0].Id;
-        System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        String expectedException = 'Could not resolve route from message step: Test#0';
+        String actualException = message.Exception__c;
+        System.assertEquals(expectedException, actualException, 'Wrong message.');
     }
     
     static testmethod void testProcessWithoutClassThrowsExpectedException() {
@@ -560,8 +462,14 @@
         step.ApexClassName__c = 'lalala';
         update step;
         
+        //arrange message
+        Test.startTest();
+        Job job = new Job(sequence.Name, '000000000000000AAA');
+        System.enqueueJob(job);
+        Test.stopTest();
+        
         //act
-        new Job(sequence.Name, '000000000000000AAA').execute(null);
+        Broker.impl().run();
         
         //assemble
         Message__c message = [SELECT Id, Cause__c, Exception__c FROM Message__c];
@@ -569,7 +477,7 @@
         
         //assert
         String actualMessage = message.Exception__c;
-        String expectedMessage = 'Reflector for classname was null: lalala';
+        String expectedMessage = 'Class is invalid or not visible: lalala';
         System.assertEquals(expectedMessage, (String)actualEx.get('Message'), 'Wrong message detail.');
     }
     
@@ -593,72 +501,34 @@
     }
     
     static testmethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusPaused() {
-        // arrange
+        //arrange broker
+        insert new BrokerSetting__c(IsPaused__c = true);
         Boolean isPaused =  true;
-
-        String sequenceNameA = 'sequenceA';
-        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
-        insert sequenceA;
-
-
-        Integer positionA1 = 1;
-        Integer positionA6 = 2;
-
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
-
-        //arrange specific broker implementation
-        insert new BrokerSetting__c(IsPaused__c = isPaused);
-
+        
         //act
-        new Job(sequenceNameA, '000000000000000AAA').execute(null);
-
-
+        Test.startTest();
+        Job job = new Job('Test', '000000000000000AAA');
+        System.enqueueJob(job);
+        Test.stopTest();
+        
         //assemble
-        List<Message__c> messages = [
-            SELECT Id, Name, Event__c, Status__c
-            FROM Message__c
-            WHERE Status__c != 'Completed'
-        ];
-        
-        Integer expectedSize = 1;
-        Integer actualSize = messages.size();
-        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
-        
-        //assert
-        String expectedStatus = 'Paused';
-        String actualStatus = messages[0].Status__c;
-        System.assertEquals(expectedStatus, actualStatus, 'Wrong status.');
+        Integer expectedCount = 1;
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Paused'];
+        System.assertEquals(expectedCount, actualCount, 'Wrong size.');
     }
 
     static testmethod void callingEnqueueWhenBrokerIsNotPausedProcessesMessages() {
-        // arrange
-        Boolean isPaused =  false;
-
-        String sequenceNameA = 'sequenceA';
-        Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
-        insert sequenceA;
-
-
-        Integer positionA1 = 1;
-        Integer positionA2 = 2;
-        Integer positionA3 = 3;
-        Integer positionA4 = 4;
-        Integer positionA5 = 5;
-        Integer positionA6 = 6;
-
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA4 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA5 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
-
+        //arrange broker
+        insert new BrokerSetting__c(IsPaused__c = false);
+        
         //act
-        new Job(sequenceNameA, '000000000000000AAA').execute(null);
-
-        Integer expectedCount = 6;
-        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
+        Test.startTest();
+        Job job = new Job('Test', '000000000000000AAA');
+        System.enqueueJob(job);
+        Test.stopTest();
+        
+        Integer expectedCount = 1;
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
         System.assertEquals(expectedCount, actualCount, 'Wrong count.');
     }
  
@@ -694,8 +564,14 @@
         delete issue;
         
         //act
-        new Job(sequenceNameA, '000000000000000AAA').execute(null);
-
+        Test.startTest();
+        Job job = new Job(sequenceNameA, '000000000000000AAA');
+        System.enqueueJob(job);
+        Test.stopTest();
+        
+        //act
+        Broker.impl().run();
+        
         //assert
         Integer expectedSuccessCount = 3;
         Integer actualSuccessCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
@@ -713,7 +589,7 @@
         Integer actualFailureCount = messages.size();
         System.assertEquals(expectedFailureCount, actualFailureCount, 'Wrong failure count.');
         
-        String expectedException = 'Nonexistent route, eg bad sequence name, position, missing terminate: sequenceA#4';
+        String expectedException = 'Could not resolve route from message step: sequenceA#4';
         String actualException = messages[0].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
@@ -766,9 +642,21 @@
         
         Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
   
+        //arrange inputs
+        Map<String,Object> input1 = new Map<String,Object>{'__SequenceName' => 'test'};
+        Map<String,Object> input2 = new Map<String,Object>{'esb__RecordId' => null};
+  
         //arrange messages
-        List<Message__c> messagesA = new Job(new Map<String,Object>{'__SequenceName' => 'test'}).persist();
-        List<Message__c> messagesB = new Job(new Map<String,Object>{'esb__RecordId' => null}).persist();
+        Test.startTest();
+        Job job1 = new Job(input1);
+        System.enqueueJob(job1);
+        Job job2 = new Job(input2);
+        System.enqueueJob(job2);
+        Test.stopTest();
+        
+        List<Message__c> messagesA = [SELECT Id, Event__c FROM Message__c];
+        List<Message__c> messagesB = [SELECT Id, Event__c FROM Message__c];
+        
         
         // assemble
         Boolean actualFlagA = false;
@@ -834,42 +722,7 @@
         System.assertEquals(expectedEnqueueUserId, actualEnqueueUserId, 'Wrong enqueue user id.');
     }
 
-    static testMethod void callingInvokeMainWithCorrectToToStringOverrideDoesNOTThrowException() {
-        //arrange
-        Map<String,Object> inputEvent = new Map<String,Object>();
-        
-        //act
-        Boolean actualFlag = true;
-        Type reflector = Terminate.class;
-        try {
-            System.assert(false, 'TODO'); //TODO Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent).invokeMain();
-        } catch (Exception e) {
-            actualFlag = false;
-        }
-        
-        //assert
-        Boolean expectedFlag = true;
-        System.assertEquals(expectedFlag, actualFlag, 'Unexpected error thrown by wrapper invokeMain()');
-    }
-    
-    static testMethod void callingInvokeMainWhenNoToToStringOverrideThrowsExpectedException() {
-        //arrange
-        Map<String,Object> inputEvent = new Map<String,Object>();
-        Type reflector = PostInstallHandler.class; // Clearly, no toString() override here!
-        
-        //act
-        Boolean actualFlag = false;
-        try {
-            System.assert(false, 'TODO'); //TODO Broker.Wrapper wrapper = new Broker.Wrapper(reflector, inputEvent).invokeMain();
-            System.assert(false, 'Above should throw exception.');
-        } catch (Exception e) {
-            String expectedMessage = 'Your plugin has not overridden the toString() method. Please refer to the Process Developers Guide for specific guidance.';
-            String actualMessage = e.getMessage();
-            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
-        }
-    }
-
-     static testMethod void callingIsAllowedSessionIdReturnsExpectedValue() {
+    static testMethod void callingIsAllowedSessionIdReturnsExpectedValue() {
         //arrange
         String reflectorName01 = 'esb';       // good ns
         Id orgId01 = '00Dj0000000I44v';       // good org
@@ -926,7 +779,12 @@
         List<Map<String,Object>> events = new List<Map<String,Object>>{failureEvent, successEvent};
         
         //arrange messages and broker
-        List<Message__c> messages = new Job(events).persist();
+        Test.startTest();
+        Job job = new Job(events);
+        System.enqueueJob(job);
+        Test.stopTest();
+        
+        List<Message__c> messages = [SELECT Id, Step__c, Event__c FROM Message__c];
         Broker impl = Broker.impl();
         messages = impl.locateMarkableWork();
         
@@ -940,202 +798,4 @@
         System.assertEquals(expectedCount, actualCount);
         
     }
-    
-    public class Inserter extends ApexClassModel.BaseProcess {
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
-            Map<String,Object> outputEvent = inputEvent.clone();
-            insert new Document(Name = 'Test.txt', FolderId = UserInfo.getUserId());
-            return new List<Map<String,Object>>();
-        }
-    }
-    
-    public class InserterESB extends ApexClassModel.BaseSummary {
-        String Description = 'Inserts 1 document, runs 75 times';
-        Integer Limits = 75;
-    }
-    
-    static testmethod void testSavepointTaxImposedOnDmlProcess() {
-        //arrange broker
-        Broker impl = Broker.impl();
-        
-        //arrange sequence
-        insert new Sequence__c(Name = 'Sequence');
-        SequenceModel model = SequenceModel.fromName('Sequence');
-        
-        //arrange steps
-        model.appendStep(Inserter.class);
-        
-        //arrange events
-        List<Map<String,Object>> events = new List<Map<String,Object>>();
-        for (Integer i = 0; i < 75; i++) {
-            Map<String,Object> event = new Map<String,Object>{'esb__SequenceName' => 'Sequence'};
-            events.add(event);
-        }
-        
-        //arrange messages
-        new Job(events).persist();
-        List<Message__c> inputMessages = impl.locateMarkableWork();
-        List<Message__c> outputMessages = new List<Message__c>();
-        impl.mark(inputMessages);
-        
-        //act and assemble
-        Test.startTest();
-        impl.execute(inputMessages, outputMessages);
-        Integer dmlStatements = Limits.getDMLStatements();
-        Test.stopTest();
-        
-        //assert
-        Integer expectedStatements = 150; //75 savepoints, 75 documents
-        Integer actualStatements = dmlStatements;
-        System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
-    }
-    
-    public class Memory extends ApexClassModel.BaseProcess {
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
-            inputEvent.put('c__OrganizationId', UserInfo.getOrganizationId());
-            return new List<Map<String,Object>>();
-        }
-    }
-    
-    public class MemoryESB extends ApexClassModel.BaseSummary {
-        String Description = 'Does stuff in memory without side effects.';
-        Integer Limits = 1000;
-    }
-    
-    static testmethod void testSavepointTaxRelievedOnMemoryProcess() {
-        //arrange broker
-        Broker impl = Broker.impl();
-        
-        //arrange sequence
-        insert new Sequence__c(Name = 'Sequence');
-        SequenceModel model = SequenceModel.fromName('Sequence');
-        
-        //arrange steps
-        model.appendStep(Memory.class);
-        
-        //arrange events
-        List<Map<String,Object>> events = new List<Map<String,Object>>();
-        for (Integer i = 0; i < 1000; i++) {
-            Map<String,Object> event = new Map<String,Object>{'esb__SequenceName' => 'Sequence'};
-            events.add(event);
-        }
-        
-        //arrange messages
-        new Job(events).persist();
-        List<Message__c> inputMessages = impl.locateMarkableWork();
-        List<Message__c> outputMessages = new List<Message__c>();
-        impl.mark(inputMessages);
-        
-        //act and assemble
-        Test.startTest();
-        impl.execute(inputMessages, outputMessages);
-        Integer dmlStatements = Limits.getDMLStatements();
-        Test.stopTest();
-        
-        //assert
-        Integer expectedStatements = 1; //exactly 1 savepoint
-        Integer actualStatements = dmlStatements;
-        System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
-    }
-    
-    public class InserterErrorException extends Exception {}
-    
-    public class InserterError extends ApexClassModel.BaseProcess {
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
-            insert new Document(Name = 'Test.txt', FolderId = UserInfo.getUserId());
-            throw new InserterErrorException('Something catchable.');
-        }
-    }
-    
-    public class InserterErrorESB extends ApexClassModel.BaseSummary {
-        String Description = 'Inserts 1 document, throws an exception needing rollback.';
-        Integer Limits = 50;
-    }
-    
-    static testmethod void testRollbackTaxImposedOnDmlProcess() {
-        //arrange broker
-        Broker impl = Broker.impl();
-        
-        //arrange sequence
-        insert new Sequence__c(Name = 'Sequence');
-        SequenceModel model = SequenceModel.fromName('Sequence');
-        
-        //arrange steps
-        model.appendStep(InserterError.class);
-        
-        //arrange events
-        List<Map<String,Object>> events = new List<Map<String,Object>>();
-        for (Integer i = 0; i < 50; i++) {
-            Map<String,Object> event = new Map<String,Object>{'esb__SequenceName' => 'Sequence'};
-            events.add(event);
-        }
-        
-        //arrange messages
-        new Job(events).persist();
-        List<Message__c> inputMessages = impl.locateMarkableWork();
-        List<Message__c> outputMessages = new List<Message__c>();
-        impl.mark(inputMessages);
-        
-        //act and assemble
-        Test.startTest();
-        impl.execute(inputMessages, outputMessages);
-        Integer dmlStatements = Limits.getDmlStatements();
-        Test.stopTest();
-        
-        //assert
-        Integer expectedStatements = 150; //50 savepoints, 50 documents, 50 rollbacks
-        Integer actualStatements = dmlStatements;
-        System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
-    }
-    
-    public class MemoryErrorException extends Exception {}
-    
-    public class MemoryError extends ApexClassModel.BaseProcess {
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
-            inputEvent.put('c__OrganizationId', UserInfo.getOrganizationId());
-            throw new MemoryErrorException('Something catchable.');
-        }
-    }
-    
-    public class MemoryErrorESB extends ApexClassModel.BaseSummary {
-        String Description = 'Does stuff in memory, throws an exception not needing rollback.';
-        Integer Limits = 1000;
-    }
-    
-    static testmethod void testRollbackTaxRelievedOnMemoryProcess() {
-        //arrange broker
-        Broker impl = Broker.impl();
-        
-        //arrange sequence
-        insert new Sequence__c(Name = 'Sequence');
-        SequenceModel model = SequenceModel.fromName('Sequence');
-        
-        //arrange steps
-        model.appendStep(MemoryError.class);
-        
-        //arrange events
-        List<Map<String,Object>> events = new List<Map<String,Object>>();
-        for (Integer i = 0; i < 1000; i++) {
-            Map<String,Object> event = new Map<String,Object>{'esb__SequenceName' => 'Sequence'};
-            events.add(event);
-        }
-        
-        //arrange messages
-        new Job(events).persist();
-        List<Message__c> inputMessages = impl.locateMarkableWork();
-        List<Message__c> outputMessages = new List<Message__c>();
-        impl.mark(inputMessages);
-        
-        //act and assemble
-        Test.startTest();
-        impl.execute(inputMessages, outputMessages);
-        Integer dmlStatements = Limits.getDmlStatements();
-        Test.stopTest();
-        
-        //assert
-        Integer expectedStatements = 1; //exactly 1 savepoint
-        Integer actualStatements = dmlStatements;
-        System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
-    }
-    
 }

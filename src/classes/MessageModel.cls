@@ -6,7 +6,7 @@ public class MessageModel extends ApexDomain.StandardModel {
     /**
      * User process instance (transient prevents inadvertent toString() / serialization)
      */
-    transient private Object Process;
+    @TestVisible transient private Object Process;
     
     /**
      * Event parameters
@@ -19,7 +19,7 @@ public class MessageModel extends ApexDomain.StandardModel {
     public Boolean IsFucked = false;
     
     /**
-     * Signal this process causes any change to any state
+     * Signal this process causes any change to any state needing savepoint / rollback isolation
      */
     public Boolean HadSideEffects = false;
   
@@ -81,32 +81,32 @@ public class MessageModel extends ApexDomain.StandardModel {
         try {
             Integer hops = (Integer)this.Event.get('__Hops');
             
-            if (hops >= Broker.MaxHops) {
-                throw new MessageException('Too many hops - to resolve, manually set __Hops on event parameters to 0');
+            if (hops >= Broker.MaximumHops) {
+                throw new MessageException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
             }
             
             String route = this.message.Step__c;
             
             if (route == null) {
-                throw new MessageException('This message has no route: ' + this.message.Id);
+                throw new MessageException('Message has no step for routing to sequence: ' + this.message.Id); //a la "List has no rows for assignment to SObject"
             }
             
             Step__c step = Step__c.getValues(route);
             
             if (step == null) {
-                throw new MessageException('Nonexistent route, eg bad sequence name, position, missing terminate: ' + route);
+                throw new MessageException('Could not resolve route from message step: ' + route); //a la "Could not resolve field 'Billing Address' from value binding"
             }
             
             String apexClassName = step.ApexClassName__c;
             
             if (apexClassName == null) {
-                throw new MessageException('Step fully qualified class name was null: ' + step.Id);
+                throw new MessageException('Apex class name cannot be null: ' + route); //a la "Argument cannot be null"
             }
             
             this.reflector = Type.forName(apexClassName);
             
             if (this.reflector == null) {
-                throw new MessageException('Reflector for classname was null: ' + apexClassName);
+                throw new MessageException('Class is invalid or not visible: ' + apexClassName); //a la "Variable is not visible" or "Variable does not exist" or "Dependent class is invalid and needs recompilation"
             }
             
             this.Process = this.reflector.newInstance();
@@ -136,10 +136,13 @@ public class MessageModel extends ApexDomain.StandardModel {
             Job.Event = this.Event.clone();
             Job.Event.put('esb__AllowsCallouts', true);
             
-            //do callouts
-            
+            //do invocation
             String data = String.valueOf(process);
-            if (data != null) throw new MessageException('Your AllowsCallouts code block should return null.');
+            
+            if (data != null) {
+                //#886 a la "MyCustomException: Exception class must extend another Exception class"
+                throw new MessageException(this.Reflector.getName() + ': ' + 'ESB Process must extend Abstract.ESB');
+            }
             
         } catch (Exception e) {
             //smoking gun should point at user
@@ -185,24 +188,49 @@ public class MessageModel extends ApexDomain.StandardModel {
             
             //do invocation
             String data = String.valueOf(process);
-            if (data == 'null') {
-                //#945 watch out for the STRING NULL that comes out
-                throw new MessageException('Your main code block should return a List<Map<String,Object>>.');
+            
+            if (data == null || data == 'null') {
+                //#945 a la "System.VisualforceException: Return type of an Apex action method must be a PageReference. Found: java.lang.Integer"
+                throw new MessageException(this.Reflector.getName() + ': ' + ' Return type of an ESB Process must be a List<Map<String,Object>>');
             }
             
-            //#886 normalise class name (we will test for absence of this fragment at start of process toString)
-            String fragment = this.Reflector.getName();
-            if (fragment.contains('.')) fragment = fragment.substringAfter('.');
-            fragment += ':[';
-            
-            //#886
-            if (data.startsWith(fragment)) throw new MessageException('Your plugin has not extended abstract process. Please refer to the Process Developers Guide for specific guidance.');
+            if (data.startsWith(('.' + this.Reflector.getName()).substringAfterLast('.') + ':[')) {
+                //#886 a la "MyCustomException: Exception class must extend another Exception class"
+                throw new MessageException(this.Reflector.getName() + ': ' + 'ESB Process must extend Abstract.ESB');
+            }
 
 
             //wrap up results into Messages (new guys should have Position = 0)
-            List<Object> outputEvents = (List<Object>)Json.deserializeUntyped(data);
+            List<Object> results = (List<Object>)Json.deserializeUntyped(data);
             
-            for (Object outputEvent : outputEvents) {
+            for (Object result : results) {
+                Map<String,Object> outputEvent = (Map<String,Object>)result;
+                /**
+                 * Context:
+                 * A message can pass through a limited number of steps. This "limit" is a fairly high arbitrary threshold.
+                 * The intent is to prevent a never ending self referencing loop (we cannot control what the system configurators
+                 * configure). A self referencing loop would eventually ring alarm bells with the Salesforce police with the
+                 * possibility of the Munger being blacklisted
+                 * An exception is thrown if the Max Hops threshold is reached
+                 *
+                 * We cannot simply increment __Hops BEFORE calling invoke as a process writer could fuck with this parameter
+                 * Instead we read and increment __Hops BEFORE calling invoke using enforceMaximumHops()
+                 * and assign to an Integer hops variable
+                 * We use applyHops()  to apply the incremented hops variable to the __Hops parameter of
+                 * all messages returned from invoke()
+                 */
+                Integer hops = (Integer)outputEvent.get('__Hops');
+                if (hops == null) hops = 0;
+                outputEvent.put('__Hops', ++hops);
+                
+                /**
+                 * Unrelated to former term "resolve" (which now refers to PROCESS location)
+                 * this is just a convenience to increment the position of a bunch of messages.
+                 */
+                Integer position = (Integer)outputEvent.get('__Position');
+                if (position == null) position = 0;
+                outputEvent.put('__Position', ++position);
+                
                 outputMessages.add(new Message__c(
                     Event__c = Json.serializePretty(outputEvent),
                     Status__c = 'Buffered'
@@ -286,21 +314,21 @@ public class MessageModel extends ApexDomain.StandardModel {
         
         if (route == null) {
             //failure
-            throw new MessageException('This message has no route.');
+            throw new MessageException('Message has no step for routing to sequence');
         }
         
         Step__c step = Step__c.getValues(route);
         
         if (step == null) {
             //failure
-            throw new MessageException('This message has no step.');
+            throw new MessageException('Could not resolve route from message step');
         }
         
         ApexClass apexClass = new ApexClass(Id = step.ApexClassId__c);
         
         if (apexClass.Id == null) {
             //failure
-            throw new MessageException('This message has no process.');
+            throw new MessageException('Apex class id cannot be null');
         }
         
         return new ApexPages.StandardController(apexClass).view();

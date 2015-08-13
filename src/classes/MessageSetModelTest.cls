@@ -31,14 +31,14 @@
         System.assert(result.isSuccess(), 'Should be successful');
     }
     
-    static testmethod void testUnpopulatedRouteKey() {
+    static testmethod void testUnpopulatedJsonFields() {
         //arrange message
         Message__c message = new Message__c(
             Event__c = '{"__IsHeartbeatProcess":true}'
         );
         
         //act
-        new MessageSetModel(new List<Message__c>{message}).populateRouteKey();
+        new MessageSetModel(new List<Message__c>{message}).populateJsonFields();
         
         //assert
         String expectedRoute = null;
@@ -46,14 +46,14 @@
         System.assertEquals(expectedRoute, actualRoute, 'Route should be null for heartbeats.');
     }
     
-    static testmethod void testPopulateRouteKey() {
+    static testmethod void testPopulateJsonFields() {
         //arrange message
         Message__c message = new Message__c(
             Event__c = '{"__SequenceName":"test","__Position":1}'
         );
         
         //act
-        new MessageSetModel(new List<Message__c>{message}).populateRouteKey();
+        new MessageSetModel(new List<Message__c>{message}).populateJsonFields();
         
         //assert
         String expectedRoute = 'test#1';
@@ -125,7 +125,7 @@
 
 
     
-     static testmethod void callingPopulateQueueableIdCorrectlyPopulatesQueueableId() {
+     static testmethod void callingPopulateJsonFieldsCorrectlyPopulatesQueueableId() {
          //arrange message
          String queueableId = '123456';
          Message__c message = new Message__c(
@@ -133,7 +133,7 @@
          );
 
          //act
-         new MessageSetModel(new List<Message__c>{message}).populateQueueableId();
+         new MessageSetModel(new List<Message__c>{message}).populateJsonFields();
 
          //assert
 
@@ -142,7 +142,7 @@
          System.assertEquals(expectedQueueableId, actualQueueableId, 'Failed to populate QueueableId');
      }
     
-     static testmethod void callingPopulateEntryPointUuidCorrectlyPopulatesEntryPointUuid() {
+     static testmethod void callingPopulateJsonFieldsCorrectlyPopulatesEntryPointUuid() {
          //arrange message
          String EntryPointUuid = '123456';
          Message__c message = new Message__c(
@@ -150,7 +150,7 @@
          );
 
          //act
-         new MessageSetModel(new List<Message__c>{message}).populateEntryPointUuid();
+         new MessageSetModel(new List<Message__c>{message}).populateJsonFields();
 
          //assert
 
