@@ -2,7 +2,7 @@
      
     static testmethod void hasTheCorrectLimits() {
         //arrange
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Jump.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Jump.class);
         
         //assert
         Integer expectedLimits = 50; //max sync limit
@@ -13,7 +13,7 @@
 
    static testmethod void withinSystemLimits() {
         //arrange
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Jump.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Jump.class);
         
         //arrange
         Sequence__c target = new Sequence__c(Name = 'target');

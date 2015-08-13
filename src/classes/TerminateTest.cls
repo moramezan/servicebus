@@ -3,7 +3,7 @@ private class TerminateTest
 {
     static testmethod void hasTheCorrectLimits() {
         //arrange
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Terminate.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Terminate.class);
         
         //assert
         Integer expectedLimits = 100; //max sync limit
@@ -30,7 +30,7 @@ private class TerminateTest
         };
         
         //assemble
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Terminate.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Terminate.class);
         
         //act
         Test.startTest();

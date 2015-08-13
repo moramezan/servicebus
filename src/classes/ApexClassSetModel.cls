@@ -12,11 +12,11 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
      * Attempts to instantiate ESB summary classes and
      * reduces the working record set to valid ones.
      */
-    public void discoverProcesses() {
+    static public ApexClassSetModel discoverProcesses(Set<Id> apexClassIds) {
         List<ApexClass> apexClasses = [
-            SELECT Id, NamespacePrefix, Name
+            SELECT Id, NamespacePrefix, Name, ApiVersion, Status
             FROM ApexClass
-            WHERE Id IN :this.keySet()
+            WHERE Id IN :apexClassIds
         ];
         
         //prepare list of PROCESS apex classes
@@ -36,7 +36,24 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             if (inflector != null) processes.add(apexClass);
         } catch (Exception e) {}
         
-        this.Records = processes;
+        return new ApexClassSetModel(processes);
+    }
+    
+    public List<ApexClassModel.Summary> toSummaries() {
+        List<ApexClass> apexClasses = [
+            SELECT Id, NamespacePrefix, Name
+            FROM ApexClass
+            WHERE Id IN :this.keySet()
+        ];
+        
+        //bulletproof list of summaries
+        List<ApexClassModel.Summary> summaries = new List<ApexClassModel.Summary>();
+        for (ApexClass apexClass : apexClasses) try {
+            ApexClassModel model = new ApexClassModel(apexClass);
+            summaries.add(model.esb);
+        } catch (Exception e) {}
+        
+        return summaries;
     }
     
     /**
@@ -77,7 +94,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             Type inflector = Type.forName(reflector.getName() + '.ESB');
             if (inflector == null) continue;
             
-            ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(reflector);
+            ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(reflector);
             
             Map<String,Object> dto = new Map<String,Object>{
                 'Id' => apexClass.Id,

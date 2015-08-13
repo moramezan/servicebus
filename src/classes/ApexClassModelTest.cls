@@ -24,7 +24,7 @@
 
     static testmethod void testEsbFromEsb() {
         //arrange
-        ApexClassModel.ESB actual = ApexClassModel.esbFromEsb(DescribeProcess.class);
+        ApexClassModel.Summary actual = ApexClassModel.esbFromEsb(DescribeProcess.class);
         
         //act
         DescribeProcessESB expected = (DescribeProcessESB)DescribeProcessESB.class.newInstance();

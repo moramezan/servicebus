@@ -3,7 +3,7 @@ private class WiretapTest {
     
     static testmethod void hasTheCorrectLimits() {
         //arrange
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Wiretap.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Wiretap.class);
         
         //assert
         Integer expectedLimits = 5;
@@ -23,7 +23,7 @@ private class WiretapTest {
         };
         
         //arrange
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Wiretap.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Wiretap.class);
 
         //act
         Test.startTest();

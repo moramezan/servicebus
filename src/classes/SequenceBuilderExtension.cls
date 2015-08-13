@@ -39,10 +39,8 @@ public with sharing class SequenceBuilderExtension {
     }
     
     public String getProcesses() {
-        //don't discover our ESB summary class template
-        List<ApexClass> apexClasses = [SELECT Id FROM ApexClass WHERE Name != 'ApexClassModel'];
-        ApexClassSetModel model = new ApexClassSetModel(apexClasses);
-        model.discoverProcesses();
+        Set<Id> apexClassIds = new Map<Id,SObject>([SELECT Id FROM ApexClass LIMIT 10000]).keySet();
+        ApexClassSetModel model = ApexClassSetModel.discoverProcesses(apexClassIds);
         
         List<Map<String,Object>> processes = model.toDtos();
         return Json.serializePretty(processes);

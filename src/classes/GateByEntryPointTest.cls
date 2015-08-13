@@ -3,7 +3,7 @@
 
    static testmethod void hasTheCorrectLimits() {
         //arrange
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(GateByEntryPoint.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(GateByEntryPoint.class);
         
         //assert
         Integer expectedLimits = 50; //max sync limit
@@ -44,7 +44,7 @@
         insert messages;
         
         //assemble
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(GateByEntryPoint.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(GateByEntryPoint.class);
         
         //act
         Test.startTest();

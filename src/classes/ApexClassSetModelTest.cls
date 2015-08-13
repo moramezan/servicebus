@@ -2,12 +2,11 @@
     
     static testmethod void testDiscoverProcesses() {
         //act
-        List<ApexClass> apexClasses = [SELECT Id FROM ApexClass WHERE Name = 'Terminate'];
-        ApexClassSetModel model = new ApexClassSetModel(apexClasses);
-        model.discoverProcesses();
+        Id apexClassId = [SELECT Id FROM ApexClass WHERE Name = 'Terminate'].Id;
+        ApexClassSetModel model = ApexClassSetModel.discoverProcesses(new Set<Id>{apexClassId});
         
         //assemble
-        apexClasses = model.getRecords();
+        List<ApexClass> apexClasses = model.getRecords();
         
         //assert
         Integer expectedSize = 1;
@@ -21,22 +20,21 @@
     
     static testmethod void testToDtos() {
         //arrange
-        List<ApexClass> apexClasses = [SELECT Id FROM ApexClass WHERE Name = 'Wiretap'];
-        ApexClassSetModel model = new ApexClassSetModel(apexClasses);
-        model.discoverProcesses();
+        Id apexClassId = [SELECT Id FROM ApexClass WHERE Name = 'Wiretap'].Id;
+        ApexClassSetModel model = ApexClassSetModel.discoverProcesses(new Set<Id>{apexClassId});
         
         //act
         List<Map<String,Object>> dtos = model.toDtos();
         
         //assemble
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Wiretap.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Wiretap.class);
         
         //assert
         Integer expectedSize = 1;
         Integer actualSize = dtos.size();
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
-        String expectedId = apexClasses[0].Id;
+        String expectedId = apexClassId;
         String actualId = (String)dtos[0].get('Id');
         System.assertEquals(expectedId, actualId, 'Wrong Id.');
         

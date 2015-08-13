@@ -2,7 +2,7 @@
 
     static testmethod void hasTheCorrectLimits() {
         //arrange
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Publish.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Publish.class);
         
         //assert
         Integer expectedLimits = 33; //max sync limit
@@ -45,7 +45,7 @@
         };
         
         //assemble
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Publish.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Publish.class);
         
         //act
         Test.startTest();

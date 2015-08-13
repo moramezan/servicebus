@@ -11,7 +11,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     /**
      * The instance of our process definition
      */
-    public ESB esb;
+    public Summary esb {get; set;}
     
     /**
      * This class is a template that must exist in every Process. It describes extra metadata around a process that
@@ -20,31 +20,31 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      *
      * @docs ApiMarkerClass.html
      */
-    public class ESB extends ApexClassModel.BaseSummary {
+    public class Summary extends ApexClassModel.BaseSummary {
         /**
          * Each process MAY provide a grouping tag.
          * @docs ApiProcessMarkers.html
          */
-        public String Tag;
+        public String Tag {get; set;}
     
         /**
          * Each process MAY provide a friendly name.
          * @docs ApiProcessMarkers.html
          */
-        public String Name;
+        public String Name {get; set;}
     
         /**
          * Each process MUST provide a succinct description.
          * @docs ApiProcessMarkers.html
          */
-        public String Description;
+        public String Description {get; set;}
     
         /**
          * Each Process can have one associated customization in the form of a Custom Setting. Process Authors must
          * advertise the custom setting type here, and the framework will provide a link from the Process detail page.
          * @docs ApiProcessMarkers.html
          */
-        public String ProcessSetting;
+        public String ProcessSetting {get; set;}
         
         /**
          * Each Step can have one associated config record. The type of the record depends on what process
@@ -52,28 +52,28 @@ public class ApexClassModel extends ApexDomain.StandardModel {
          * handle the record lifecycle (creating and deleting them in tandem with the appropriate Step).
          * @docs ApiProcessMarkers.html
          */
-        public String StepConfig;
+        public String StepConfig {get; set;}
         
         /**
          * Each Process must name an icon (eg 'arrow_left') from the FamFamFam Silk library:
          * http://www.famfamfam.com/archive/silk-icons-thats-your-lot/
          * @docs ApiProcessMarkers.html
          */
-        public String Icon;
+        public String Icon {get; set;}
         
         /**
          * Each Process can have one Visualforce Page for support and documentation purposes. Process Authors can
          * populate the property with a default value like Page.MyProcessDocs.getUrl() to make this available to users.
          * @docs ApiProcessMarkers.html
          */
-        public String HelpUrl;
+        public String HelpUrl {get; set;}
         
         /**
          * Each process defines the maximum number of times it can be invoked in a single execution context.
          * No definition implies a default limit of 1.
          * @docs ApiProcessMarkers.html
          */
-        public Integer Limits;
+        public Integer Limits {get; set;}
     
         /**
          * Optional indicator of the ratio of output events to input events: -1 for fewer outputs (eg Gate),
@@ -81,21 +81,21 @@ public class ApexClassModel extends ApexDomain.StandardModel {
          * No definition implies a default cardinality of null.
          * @docs ApiProcessMarkers.html
          */
-        public String Cardinality;
+        public String Cardinality {get; set;}
     
         /**
          * Key represents the parameter name, eg 'ns_URL'
          * Value is a friendly description, eg 'STRING of endpoint to scrape.'
          * @docs ApiProcessMarkers.html
          */
-        public Map<String,String> Inputs;
+        public Map<String,String> Inputs {get; set;}
         
         /**
          * Key represents the parameter name, eg 'ns_URL'
          * Value is a friendly description, eg 'STRING of endpoint to scrape.'
          * @docs ApiProcessMarkers.html
          */
-        public Map<String,String> Outputs;
+        public Map<String,String> Outputs {get; set;}
     }
     
     /**
@@ -114,16 +114,16 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     /**
      * Converts "their" ESB summary class into "our" ESB summary class
      */
-    static public ApexClassModel.ESB esbFromEsb(Type reflector) {
+    static public ApexClassModel.Summary esbFromEsb(Type reflector) {
         Type inflector;
         if (inflector == null) inflector = Type.forName(reflector.getName() + '.ESB');
         if (inflector == null) inflector = Type.forName(reflector.getName() + 'ESB');
         if (inflector == null) inflector = BaseSummary.class; //try and fail quietly
         
         Object theirEsb;
-        ApexClassModel.ESB ourEsb;
+        ApexClassModel.Summary ourEsb;
         theirEsb = inflector.newInstance();
-        ourEsb = (ApexClassModel.ESB)Json.deserialize(String.valueOf(theirEsb), ApexClassModel.ESB.class);
+        ourEsb = (ApexClassModel.Summary)Json.deserialize(String.valueOf(theirEsb), ApexClassModel.Summary.class);
         
         //sensible defaults
         if (ourEsb.Description == null) ourEsb.Description = 'Undescribed';

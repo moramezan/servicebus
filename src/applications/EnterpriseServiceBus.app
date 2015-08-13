@@ -6,4 +6,5 @@
     <tab>Monitor</tab>
     <tab>Sequence__c</tab>
     <tab>Message__c</tab>
+    <tab>ApexClass</tab>
 </CustomApplication>

@@ -15,9 +15,8 @@
         List<MonitorController.Statistic> statistics = MonitorController.getStatistics();
         
         //assemble
-        List<ApexClass> apexClasses = [SELECT Id FROM ApexClass WHERE Name != 'ApexClassModel'];
-        ApexClassSetModel model = new ApexClassSetModel(apexClasses);
-        model.discoverProcesses();
+        Set<Id> apexClassIds = new Map<Id,SObject>([SELECT Id FROM ApexClass LIMIT 10000]).keySet();
+        ApexClassSetModel model = ApexClassSetModel.discoverProcesses(apexClassIds);
         
         //assert 1 null, 1 wiretap, 1 terminate,
         Integer expectedCount = 3; //the graph is [' ', 'Wiretap', 'Terminate']

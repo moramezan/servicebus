@@ -37,6 +37,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ApexClassTabController</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ApexDomain</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -517,6 +521,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>ApexClassTab</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>BranchConfigHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -620,6 +628,10 @@
         <apexPage>SubsequenceConfigHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
+    <tabSettings>
+        <tab>ApexClass</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
     <tabSettings>
         <tab>Message__c</tab>
         <visibility>Visible</visibility>

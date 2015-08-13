@@ -15,6 +15,7 @@
         <members>ApexClassSettingExtensionTest</members>
         <members>ApexClassSummaryExtension</members>
         <members>ApexClassSummaryExtensionTest</members>
+        <members>ApexClassTabController</members>
         <members>ApexDomain</members>
         <members>ApexDomainTest</members>
         <members>Branch</members>
@@ -101,6 +102,7 @@
     <types>
         <members>ApexClassSetting</members>
         <members>ApexClassSummary</members>
+        <members>ApexClassTab</members>
         <members>BranchConfigHelp</members>
         <members>Configure</members>
         <members>ContextSensitiveHelp</members>
@@ -209,6 +211,7 @@
         <name>CustomPageWebLink</name>
     </types>
     <types>
+        <members>ApexClass</members>
         <members>Message__c</members>
         <members>Monitor</members>
         <members>Sequence__c</members>

@@ -2,7 +2,7 @@
 
     static testmethod void hasTheCorrectLimits() {
         //arrange
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Subscribe.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Subscribe.class);
         
         //assert
         Integer expectedLimits = 100;
@@ -21,7 +21,7 @@
         };
 
         //assemble
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Subscribe.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Subscribe.class);
 
         //act
         Test.startTest();

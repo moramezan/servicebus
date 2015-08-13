@@ -2,7 +2,7 @@
 
     static testmethod void hasTheCorrectLimits() {
         //arrange
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Schedule.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Schedule.class);
         
         //assert
         Integer expectedLimits = 100;
@@ -12,7 +12,7 @@
 
    static testmethod void withinSystemLimits() {
         //arrange
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Schedule.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Schedule.class);
         
         //arrange
         Map<String,Object> inputEvent = new Map<String,Object> {};

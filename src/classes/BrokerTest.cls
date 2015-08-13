@@ -65,7 +65,7 @@
         List<Message__c> records = Broker.impl().locateMarkableWork();
         
         //assemble
-        ApexClassModel.ESB esb = ApexClassModel.esbFromEsb(Wiretap.class);
+        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Wiretap.class);
         
         //assert
         Integer expectedLimits = 5;

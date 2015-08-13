@@ -1,0 +1,83 @@
+<!-- this is called "list" cuz a tab would show "recently viewed" etc -->
+<!-- no recordSetVar  as "List controllers are not supported for ApexClass" -->
+<apex:page controller="ApexClassTabController" setup="true" action="{!doInit}">
+
+    <apex:sectionHeader title="Processes" description="A Process is a single, logical program with inputs and outputs in the form of events. Processes are implemented as Apex classes." />
+    
+    <script>
+        (function() {
+            //colour in the process tab... d'oh
+            var li = document.getElementById('{!$CurrentPage.parameters.sfdc.tabName}' + '_Tab');
+            if (!li) return;
+            li.className += ' zen-active primaryPalette';
+            var a = li.children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+        
+        window.addEventListener('focus', function(event) {
+            if (window.summary && !window.summary.closed) {
+                //closes popup if defocussed
+                window.summary.close();
+                delete window.summary;
+            }
+        }, false);
+        
+        function openSummary(url) {
+            var
+                y = window.screenTop || window.screenY,
+                x = window.screenLeft || window.screenX,
+                top = Math.round(window.innerHeight * 0.15) + y,
+                left = Math.round(window.innerWidth * 0.1) + x,
+                width = Math.round(window.innerWidth * 0.8),
+                height = Math.round(window.innerHeight * 0.8)
+            ;
+    
+            window.summary = window.open(
+                url,
+                'esb_config',
+                'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top + ',toolbar=no,status=no,directories=no,menubar=no,resizable=yes'
+            );
+            window.summary.focus();
+        }
+    </script>
+    
+    <apex:pageBlock mode="detail">
+        <apex:pageBlockTable value="{!id2summary}" var="id">
+
+            <apex:column headerValue="Action" width="70" style="color: #999;">
+                <apex:outputLink value="{!URLFOR($Page.ApexClassSummary, null, ['id'=id])}" style="color: #015ba7; text-decoration: none;">Summary</apex:outputLink>
+            </apex:column>
+            
+            <apex:column headerValue="Icon" width="30">
+                <apex:image value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/famfamfam/' + id2summary[id].Icon + '.png')}" />
+            </apex:column>
+            
+            <apex:column headerValue="Name">
+                <apex:outputLink value="/{!id}">{!id2class[id].Name}</apex:outputLink>
+            </apex:column>
+            
+            <apex:column headerValue="Namespace Prefix" value="{!id2class[id].NamespacePrefix}" />
+            
+            <apex:column headerValue="{!$ObjectType.ApexClass.Fields.Status.Label}">
+                <apex:outputField value="{!id2class[id].ApiVersion}" />
+            </apex:column>
+            
+            <apex:column headerValue="{!$ObjectType.ApexClass.Fields.Status.Label}">
+                <apex:outputField value="{!id2class[id].Status}" />
+            </apex:column>
+
+            <apex:column headerValue="{!$ObjectType.ApexClass.Fields.LastModifiedDate.Label}">
+                <apex:outputField value="{!id2class[id].LastModifiedById}" />,&nbsp;
+                <apex:outputField value="{!id2class[id].LastModifiedDate}" />
+            </apex:column>
+            
+            <apex:column headerValue="{!$ObjectType.ApexClass.Fields.IsValid.Label}">
+                <apex:outputField value="{!id2class[id].IsValid}" />
+            </apex:column>
+
+
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    
+</apex:page>

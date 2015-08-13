@@ -7,39 +7,39 @@
                 
                 <apex:dataTable cellspacing="10" value="{!ApexClass}" var="ApexClass">
                     <apex:column breakBefore="true" style="font-weight: bold;">Tag</apex:column>
-                    <apex:column value="{!Esb['Tag']}" />
+                    <apex:column value="{!Summary.Tag}" />
 
                     <apex:column breakBefore="true" style="font-weight: bold;">Name</apex:column>
-                    <apex:column value="{!Esb['Name']}" />
+                    <apex:column value="{!Summary.Name}" />
 
                     <apex:column breakBefore="true" style="font-weight: bold;">Description</apex:column>
-                    <apex:column value="{!Esb['Description']}" />
+                    <apex:column value="{!Summary.Description}" />
                     
-                    <apex:column rendered="{!FullyQualifiedClassName != Esb['Name']}" breakBefore="{!FullyQualifiedClassName != Esb['Name']}" style="font-weight: bold;">Apex Class</apex:column>
-                    <apex:column rendered="{!FullyQualifiedClassName != Esb['Name']}" value="{!FullyQualifiedClassName}" />
+                    <apex:column rendered="{!FullyQualifiedClassName != Summary.Name}" breakBefore="{!FullyQualifiedClassName != Summary.Name}" style="font-weight: bold;">Apex Class</apex:column>
+                    <apex:column rendered="{!FullyQualifiedClassName != Summary.Name}" value="{!FullyQualifiedClassName}" />
 
                     <apex:column breakBefore="true" style="font-weight: bold;">Icon</apex:column>
-                    <apex:column ><apex:image value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/famfamfam/' + Esb['Icon'] + '.png')}" /> {!Esb['Icon']}</apex:column>
+                    <apex:column ><apex:image value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/famfamfam/' + Summary.Icon + '.png')}" /> {!Summary.Icon}</apex:column>
 
                 </apex:dataTable>
                 
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
-        <apex:pageBlockSection collapsible="false" columns="1" title="Input Event Parameters" rendered="{!Inputs != null}">
+        <apex:pageBlockSection collapsible="false" columns="1" title="Input Event Parameters" rendered="{!Summary.Inputs != null}">
             <apex:pageBlockSectionItem >
-                <apex:dataTable cellspacing="10" value="{!Inputs}" var="key">
+                <apex:dataTable cellspacing="10" value="{!Summary.Inputs}" var="key">
                     <apex:column style="font-weight: bold;">{!key}</apex:column>
-                    <apex:column >{!Inputs[key]}</apex:column>
+                    <apex:column >{!Summary.Inputs[key]}</apex:column>
                 </apex:dataTable>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
         
-        <apex:pageBlockSection collapsible="false" columns="1" title="Output Event Parameters" rendered="{!Outputs != null}">
+        <apex:pageBlockSection collapsible="false" columns="1" title="Output Event Parameters" rendered="{!Summary.Outputs != null}">
             <apex:pageBlockSectionItem >
-                <apex:dataTable cellspacing="10" value="{!Outputs}" var="key">
+                <apex:dataTable cellspacing="10" value="{!Summary.Outputs}" var="key">
                     <apex:column style="font-weight: bold;">{!key}</apex:column>
-                    <apex:column >{!Outputs[key]}</apex:column>
+                    <apex:column >{!Summary.Outputs[key]}</apex:column>
                 </apex:dataTable>
             </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
