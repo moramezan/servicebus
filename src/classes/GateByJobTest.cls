@@ -2,11 +2,11 @@
 
    static testmethod void hasTheCorrectLimits() {
         //arrange
-        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(GateByJob.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(GateByJob.class);
         
         //assert
         Integer expectedLimits = 50; //max sync limit
-        Integer actualLimits = esb.Limits;
+        Integer actualLimits = summary.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
 
@@ -40,11 +40,11 @@
         insert messages;
         
         //assemble
-        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(GateByJob.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(GateByJob.class);
         
         //act
         Test.startTest();
-        Integer limits = esb.Limits;
+        Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new GateByJob();

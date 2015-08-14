@@ -3,11 +3,11 @@ private class TerminateTest
 {
     static testmethod void hasTheCorrectLimits() {
         //arrange
-        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Terminate.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(Terminate.class);
         
         //assert
         Integer expectedLimits = 100; //max sync limit
-        Integer actualLimits = esb.Limits;
+        Integer actualLimits = summary.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
 
@@ -30,11 +30,11 @@ private class TerminateTest
         };
         
         //assemble
-        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Terminate.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(Terminate.class);
         
         //act
         Test.startTest();
-        Integer limits = esb.Limits;
+        Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new Terminate();

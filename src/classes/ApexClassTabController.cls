@@ -22,8 +22,9 @@ public with sharing class ApexClassTabController {
         this.id2class = new Map<Id,ApexClass>(apexClasses);
         
         for (ApexClass apexClass : apexClasses) {
-            ApexClassModel model = new ApexClassModel(apexClass);
-            this.id2summary.put(apexClass.Id, model.esb);
+            Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
+            ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
+            this.id2summary.put(apexClass.Id, summary);
         }
         
         //return models;

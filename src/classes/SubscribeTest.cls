@@ -2,11 +2,11 @@
 
     static testmethod void hasTheCorrectLimits() {
         //arrange
-        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Subscribe.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(Subscribe.class);
         
         //assert
         Integer expectedLimits = 100;
-        Integer actualLimits = esb.Limits;
+        Integer actualLimits = summary.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
 
@@ -21,11 +21,11 @@
         };
 
         //assemble
-        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Subscribe.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(Subscribe.class);
 
         //act
         Test.startTest();
-        Integer limits = esb.Limits;
+        Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.BaseProcess process = new Subscribe();

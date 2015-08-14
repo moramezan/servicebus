@@ -135,9 +135,9 @@ public class StepModel extends ApexDomain.StandardModel {
     public Id upsertConfig() {
         //use apex class name instead of id, for easier testing
         Type reflector = Type.forName(this.Step.ApexClassName__c);
-        ApexClassModel model = new ApexClassModel(reflector);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
         
-        if (model.esb.StepConfig == null) {
+        if (summary.StepConfig == null) {
             //process has no config
             return null;
         }
@@ -148,7 +148,7 @@ public class StepModel extends ApexDomain.StandardModel {
         }
         
         //describe object and name field dynamically
-        SObjectType objectType = Schema.getGlobalDescribe().get(model.esb.StepConfig);
+        SObjectType objectType = Schema.getGlobalDescribe().get(summary.StepConfig);
         DescribeSObjectResult result = objectType.getDescribe();
         DescribeFieldResult field = result.Fields.getMap().get('Name').getDescribe();
         

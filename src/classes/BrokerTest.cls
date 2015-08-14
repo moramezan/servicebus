@@ -68,11 +68,11 @@
         List<Message__c> records = Broker.impl().locateMarkableWork();
         
         //assemble
-        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Wiretap.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(Wiretap.class);
         
         //assert
         Integer expectedLimits = 5;
-        Integer actualLimits = esb.Limits;
+        Integer actualLimits = summary.Limits;
         System.assertEquals(expectedLimits, actualLimits, 'Wiretap should have meta limits of five.');
         
         Integer expectedSize = 5;

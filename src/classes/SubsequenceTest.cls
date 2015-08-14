@@ -2,11 +2,11 @@
  
     static testmethod void hasTheCorrectLimits() {
         //arrange
-        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Subsequence.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(Subsequence.class);
         
         //assert
         Integer expectedLimits = 33; //max sync limit
-        Integer actualLimits = esb.Limits;
+        Integer actualLimits = summary.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
 
@@ -29,11 +29,11 @@
         update config;
         
         //assemble
-        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Subsequence.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(Subsequence.class);
         
         //act
         Test.startTest();
-        Integer limits = esb.Limits;
+        Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             //by reference side effects on inputEvent

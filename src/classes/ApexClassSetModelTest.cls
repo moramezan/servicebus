@@ -27,7 +27,7 @@
         List<Map<String,Object>> dtos = model.toDtos();
         
         //assemble
-        ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(Wiretap.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(Wiretap.class);
         
         //assert
         Integer expectedSize = 1;
@@ -38,27 +38,27 @@
         String actualId = (String)dtos[0].get('Id');
         System.assertEquals(expectedId, actualId, 'Wrong Id.');
         
-        String expectedName = esb.Name;
+        String expectedName = summary.Name;
         String actualName = (String)dtos[0].get('Name');
         System.assertEquals(expectedName, actualName, 'Wrong Name.');
         
-        String expectedDescription = esb.Description;
+        String expectedDescription = summary.Description;
         String actualDescription = (String)dtos[0].get('Description');
         System.assertEquals(expectedDescription, actualDescription, 'Wrong Description.');
         
-        String expectedTag = esb.Tag;
+        String expectedTag = summary.Tag;
         String actualTag = (String)dtos[0].get('Tag');
         System.assertEquals(expectedTag, actualTag, 'Wrong Tag.');
         
-        String expectedIcon = esb.Icon;
+        String expectedIcon = summary.Icon;
         String actualIcon = (String)dtos[0].get('Icon');
         System.assertEquals(expectedIcon, actualIcon, 'Wrong Icon.');
         
-        String expectedCardinality = esb.Cardinality;
+        String expectedCardinality = summary.Cardinality;
         String actualCardinality = (String)dtos[0].get('Cardinality');
         System.assertEquals(expectedCardinality, actualCardinality, 'Wrong Cardinality.');
         
-        String expectedProcessSetting = esb.ProcessSetting;
+        String expectedProcessSetting = summary.ProcessSetting;
         String actualProcessSetting = (String)dtos[0].get('ProcessSetting');
         System.assertEquals(expectedProcessSetting, actualProcessSetting, 'Wrong ProcessSetting.');
     }

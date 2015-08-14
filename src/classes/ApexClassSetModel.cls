@@ -49,8 +49,9 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
         //bulletproof list of summaries
         List<ApexClassModel.Summary> summaries = new List<ApexClassModel.Summary>();
         for (ApexClass apexClass : apexClasses) try {
-            ApexClassModel model = new ApexClassModel(apexClass);
-            summaries.add(model.esb);
+            Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
+            ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
+            summaries.add(summary);
         } catch (Exception e) {}
         
         return summaries;
@@ -94,17 +95,17 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             Type inflector = Type.forName(reflector.getName() + '.ESB');
             if (inflector == null) continue;
             
-            ApexClassModel.Summary esb = ApexClassModel.esbFromEsb(reflector);
+            ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
             
             Map<String,Object> dto = new Map<String,Object>{
                 'Id' => apexClass.Id,
-                'Name' => esb.Name,
-                'Description' => esb.Description,
-                'Tag' => esb.Tag,
-                'Icon' => esb.Icon,
-                'Cardinality' => esb.Cardinality,
-                'StepConfig' => esb.StepConfig,
-                'ProcessSetting' => esb.ProcessSetting
+                'Name' => summary.Name,
+                'Description' => summary.Description,
+                'Tag' => summary.Tag,
+                'Icon' => summary.Icon,
+                'Cardinality' => summary.Cardinality,
+                'StepConfig' => summary.StepConfig,
+                'ProcessSetting' => summary.ProcessSetting
             };
             
             dtos.add(dto);

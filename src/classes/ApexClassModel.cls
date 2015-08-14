@@ -6,12 +6,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     /**
      * For advertising domain layer errors
      */
-    public class ProcessException extends Exception {}
-    
-    /**
-     * The instance of our process definition
-     */
-    public Summary esb {get; set;}
+    public class ApexClassException extends Exception {}
     
     /**
      * This class is a template that must exist in every Process. It describes extra metadata around a process that
@@ -21,89 +16,69 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      * @docs ApiMarkerClass.html
      */
     public class Summary extends ApexClassModel.BaseSummary {
-        /**
-         * Each process MAY provide a grouping tag.
-         * @docs ApiProcessMarkers.html
-         */
         public String Tag {get; set;}
-    
-        /**
-         * Each process MAY provide a friendly name.
-         * @docs ApiProcessMarkers.html
-         */
         public String Name {get; set;}
-    
-        /**
-         * Each process MUST provide a succinct description.
-         * @docs ApiProcessMarkers.html
-         */
         public String Description {get; set;}
-    
-        /**
-         * Each Process can have one associated customization in the form of a Custom Setting. Process Authors must
-         * advertise the custom setting type here, and the framework will provide a link from the Process detail page.
-         * @docs ApiProcessMarkers.html
-         */
         public String ProcessSetting {get; set;}
-        
-        /**
-         * Each Step can have one associated config record. The type of the record depends on what process
-         * is living on the Step. Process Authors must advertise the object type here, and the framework will
-         * handle the record lifecycle (creating and deleting them in tandem with the appropriate Step).
-         * @docs ApiProcessMarkers.html
-         */
         public String StepConfig {get; set;}
-        
-        /**
-         * Each Process must name an icon (eg 'arrow_left') from the FamFamFam Silk library:
-         * http://www.famfamfam.com/archive/silk-icons-thats-your-lot/
-         * @docs ApiProcessMarkers.html
-         */
         public String Icon {get; set;}
-        
-        /**
-         * Each Process can have one Visualforce Page for support and documentation purposes. Process Authors can
-         * populate the property with a default value like Page.MyProcessDocs.getUrl() to make this available to users.
-         * @docs ApiProcessMarkers.html
-         */
         public String HelpUrl {get; set;}
-        
-        /**
-         * Each process defines the maximum number of times it can be invoked in a single execution context.
-         * No definition implies a default limit of 1.
-         * @docs ApiProcessMarkers.html
-         */
         public Integer Limits {get; set;}
-    
-        /**
-         * Optional indicator of the ratio of output events to input events: -1 for fewer outputs (eg Gate),
-         * 0 for no outputs (eg Terminate), 1 for a single output (eg Audit), null for any or many.
-         * No definition implies a default cardinality of null.
-         * @docs ApiProcessMarkers.html
-         */
         public String Cardinality {get; set;}
-    
-        /**
-         * Key represents the parameter name, eg 'ns_URL'
-         * Value is a friendly description, eg 'STRING of endpoint to scrape.'
-         * @docs ApiProcessMarkers.html
-         */
         public Map<String,String> Inputs {get; set;}
+        public Map<String,String> Outputs {get; set;}
         
         /**
-         * Key represents the parameter name, eg 'ns_URL'
-         * Value is a friendly description, eg 'STRING of endpoint to scrape.'
-         * @docs ApiProcessMarkers.html
+         * Attempts to parse all ESB summary class properties.
          */
-        public Map<String,String> Outputs {get; set;}
-    }
-    
-    /**
-     * This guy used in production
-     */
-    public ApexClassModel(ApexClass apexClass) {
-        this(Type.forName(apexClass.NamespacePrefix, apexClass.Name));
-        this.Record.Id = apexClass.Id;
+        public Summary(Type reflector) {
+            Type inflector;
+            if (inflector == null) inflector = Type.forName(reflector + '.ESB');
+            if (inflector == null) inflector = Type.forName(reflector + 'ESB');
+            if (inflector == null) {
+                //failure, bad inner class
+                throw new ApexClassException('ESB Process summary class is invalid or not visible: ' + reflector.getName());
+            }
+            
+            Map<String,Object> summary;
+            try {
+                //their summary class
+                Object impl = inflector.newInstance();
+                String toString = String.valueOf(impl);
+                summary = (Map<String,Object>)Json.deserializeUntyped(toString);
+                
+            } catch (Exception e) {
+                //failure, probably bad toString method
+                throw new ApexClassException(inflector.getName() + ': ESB Process summary class must extend Abstract.ESB.Summary');
+            }
+            
+            try {
+                //copy properties across
+                this.Tag = (String)summary.get('Tag');
+                this.Name = (String)summary.get('Name');
+                this.Description = (String)summary.get('Description');
+                this.ProcessSetting = (String)summary.get('ProcessSetting');
+                this.StepConfig = (String)summary.get('StepConfig');
+                this.Icon = (String)summary.get('Icon');
+                this.HelpUrl = (String)summary.get('HelpUrl');
+                this.Limits = (Integer)summary.get('Limits');
+                this.Cardinality = (String)summary.get('Cardinality');
+                this.Inputs = (Map<String,String>)Json.deserialize(Json.serialize(summary.get('Inputs')), Map<String,String>.class);
+                this.Outputs = (Map<String,String>)Json.deserialize(Json.serialize(summary.get('Outputs')), Map<String,String>.class);
+                
+                //set sensible defaults
+                if (this.Tag == null) this.Tag = 'Untagged';
+                if (this.Name == null) this.Name = reflector.getName(); //inflector.getName().replaceAll('\\.?ESB$', ''); //strips .ESB
+                if (this.Description == null) this.Description = 'Undescribed';
+                if (this.Icon == null) this.Icon = 'cog';
+                if (this.Limits == null || this.Limits < 1) this.Limits = 1;
+                if (this.Cardinality == null) this.Cardinality = 'Any';
+                
+            } catch (Exception e) {
+                //failure, probably bad json format
+                throw new ApexClassException(inflector.getName() + ': Could not resolve value binding: ' + e.getMessage());
+            }
+        }
     }
     
     static public ApexClassModel fromId(Id apexClassId) {
@@ -112,49 +87,19 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * Converts "their" ESB summary class into "our" ESB summary class
+     * This guy used in production
      */
-    static public ApexClassModel.Summary esbFromEsb(Type reflector) {
-        Type inflector;
-        if (inflector == null) inflector = Type.forName(reflector.getName() + '.ESB');
-        if (inflector == null) inflector = Type.forName(reflector.getName() + 'ESB');
-        if (inflector == null) inflector = BaseSummary.class; //try and fail quietly
-        
-        Object theirEsb;
-        ApexClassModel.Summary ourEsb;
-        theirEsb = inflector.newInstance();
-        ourEsb = (ApexClassModel.Summary)Json.deserialize(String.valueOf(theirEsb), ApexClassModel.Summary.class);
-        
-        //sensible defaults
-        if (ourEsb.Description == null) ourEsb.Description = 'Undescribed';
-        if (ourEsb.Tag == null) ourEsb.Tag = 'Untagged';
-        if (ourEsb.Name == null) ourEsb.Name = reflector.getName();
-        if (ourEsb.Icon == null) ourEsb.Icon = 'cog';
-        if (ourEsb.Cardinality == null) ourEsb.Cardinality = 'Any';
-        if (ourEsb.Limits == null || ourEsb.Limits < 1) ourEsb.Limits = 1;
-        
-        return ourEsb;
+    public ApexClassModel(ApexClass apexClass) {
+        this(Type.forName(apexClass.NamespacePrefix, apexClass.Name));
+        this.Record = apexClass;
     }
     
     /**
-     * Given a fully qualified class name, attempts to locate
-     * the ESB inner marker class and parse all the properties.
-     *
-     * @throws ProcessException
-     * @param apexClassName of the namespace prefix and apex class
-     * @return domain model of process
+     * This guy more handy in testing
      */
     public ApexClassModel(Type reflector) {
-        super(new ApexClass(
-            Name = reflector.getName()
-        ));
-        
-        this.esb = esbFromEsb(reflector);
-    }
-    
-    public String fullyQualifiedClassName() {
-        ApexClass apexClass = (ApexClass)this.getRecord();
-        return Type.forName(apexClass.Name).getName();
+        super(new ApexClass(Name = reflector.getName()));
+        this.Reflector = reflector;
     }
     
     /**
@@ -162,7 +107,8 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      * URL of the specified Process Setting
      */
     public PageReference showSetting() {
-        DescribeSObjectResult result = Schema.getGlobalDescribe().get(this.esb.ProcessSetting).getDescribe();
+        Summary summary = new Summary(this.Reflector);
+        DescribeSObjectResult result = Schema.getGlobalDescribe().get(summary.ProcessSetting).getDescribe();
         
         if (result.isCustomSetting()) {
             //suffix only for custom settings
@@ -181,7 +127,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         /**
          * Internal only: we may override when process requires callouts
          */
-        virtual protected void callouts(Map<String,Object> event) {}
+        virtual protected void callout(Map<String,Object> inputEvent) {}
         
         /**
          * Public implementation: they must put their logic inside
@@ -218,7 +164,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             Map<String,Object> inputEvent = provider.invoke(new Process.PluginRequest(request)).OutputParameters;
             
             if (inputEvent.get('esb__AllowsCallouts') == true) {
-                this.callouts(inputEvent);return null;
+                this.callout(inputEvent);return null;
             } else {
                 return Json.serialize(this.test(inputEvent));
             }
@@ -233,6 +179,112 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         override public String toString() {
             return Json.serialize(this);
         }
+    }
+    
+    /**
+     * Used in callout and execute
+     */
+    public Type Reflector;
+    
+    /**
+     * User process instance (transient prevents inadvertent toString() / serialization)
+     */
+    transient Object Process;
+    
+    /**
+     * TODO COUNT ANY DMLS
+     */
+    public void invokeCallout(Map<String,Object> inputEvent) {
+        
+        if (inputEvent == null) {
+            //our own fault
+            throw new ApexClassException('ApexClassModel.invokeCallout must receive an input event.');
+        }
+        
+        if (this.Process == null) {
+            //doing this later than earlier
+            this.Process = this.Reflector.newInstance();
+        }
+        
+        //provide input event and set flag
+        Job.Event = inputEvent.clone();
+        Job.Event.put('esb__AllowsCallouts', true);
+        
+        //do invocation
+        String data = String.valueOf(this.Process);
+        
+        if (data != null) {
+            //#886 a la "MyCustomException: Exception class must extend another Exception class"
+            throw new ApexClassException(this.Reflector.getName() + ': ESB Process must extend Abstract.ESB');
+        }
+    }
+    
+    /**
+     * TODO COUNT ANY CALLOUTS
+     */
+    public List<Map<String,Object>> invokeExecute(Map<String,Object> inputEvent) {
+        
+        if (inputEvent == null) {
+            //our own fault
+            throw new ApexClassException('ApexClassModel.invokeExecute must receive an input event.');
+        }
+        
+        if (this.Process == null) {
+            //doing this later than earlier
+            this.Process = this.Reflector.newInstance();
+        }
+        
+        //provide input event and set flag
+        Job.Event = inputEvent.clone();
+        Job.Event.put('esb__AllowsCallouts', false);
+        
+        //#877 surface SessionId to select few orgs and packages
+        //Boolean allowSessionId = Broker.isAllowedSessionId(step.ApexClassName__c, UserInfo.getOrganizationId());
+        //if (allowSessionId) Job.Event.put('__SessionId', OAuthSetting__c.getOrgDefaults().AccessToken__c);
+        //TODO for #886
+        
+        //do invocation
+        String data = String.valueOf(this.Process);
+        
+        if (data == null || data == 'null') {
+            //#945 a la "System.VisualforceException: Return type of an Apex action method must be a PageReference. Found: java.lang.Integer"
+            throw new ApexClassException(this.Reflector.getName() + ': Return type of an ESB Process must be a List<Map<String,Object>>');
+        }
+        
+        if (data.startsWith(('.' + this.Reflector.getName()).substringAfterLast('.') + ':[')) {
+            //#886 a la "MyCustomException: Exception class must extend another Exception class"
+            throw new ApexClassException(this.Reflector.getName() + ': ESB Process must extend Abstract.ESB');
+        }
+        
+        //wrap up results into events (new guys should have Position = 0)
+        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
+        
+        List<Object> results = (List<Object>)Json.deserializeUntyped(data);
+        for (Object result : results) {
+            Map<String,Object> outputEvent = (Map<String,Object>)result;
+            
+            /**
+             * Context:
+             * A message can pass through a limited number of steps. This "limit" is a fairly high arbitrary threshold.
+             * The intent is to prevent a never ending self referencing loop (we cannot control what the system configurators
+             * configure). A self referencing loop would eventually ring alarm bells with the Salesforce police with the
+             * possibility of the Munger being blacklisted
+             * An exception is thrown if the Max Hops threshold is reached
+             *
+             * We cannot simply increment __Hops BEFORE calling invoke as a process writer could fuck with this parameter
+             * Instead we read and increment __Hops BEFORE calling invoke using enforceMaximumHops()
+             * and assign to an Integer hops variable
+             * We use applyHops()  to apply the incremented hops variable to the __Hops parameter of
+             * all messages returned from invoke()
+             */
+            Integer hops = (Integer)outputEvent.get('__Hops');
+            if (hops == null) hops = 0;
+            outputEvent.put('__Hops', ++hops);
+            
+            outputEvents.add(outputEvent);
+        }
+        
+        return outputEvents;
     }
     
 }

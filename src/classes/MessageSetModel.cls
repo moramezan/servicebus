@@ -122,12 +122,12 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             
             /**
-             * It's not sensible to query on the JSON formatted SequenceName and Position
-             * but what we can do is make sure those guys are always concatenated into a key.
+             * We make sure those guys are always concatenated into a key,
+             * using object instead of integer means it works with "" etc
              * TODO #956 try to route everyone except heartbeats per #575
              */
-            String sequence = (String)parameters.get('__SequenceName');
-            Integer position = (Integer)parameters.get('__Position');
+            Object sequence = parameters.get('__SequenceName');
+            Object position = parameters.get('__Position');
             if (sequence != null && position != null) message.Step__c = sequence + '#' + position;
             
             /**

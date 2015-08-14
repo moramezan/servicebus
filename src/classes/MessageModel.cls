@@ -4,33 +4,10 @@
 public class MessageModel extends ApexDomain.StandardModel {
     
     /**
-     * User process instance (transient prevents inadvertent toString() / serialization)
-     */
-    @TestVisible transient private Object Process;
-    
-    /**
      * Event parameters
      */
     public Map<String,Object> Event;
     
-    /**
-     * Signal exception, by prepare / callouts / execute
-     */
-    public Boolean IsFucked = false;
-    
-    /**
-     * Signal this process causes any change to any state needing savepoint / rollback isolation
-     */
-    public Boolean HadSideEffects = false;
-  
-    /**
-     * Used in prepare and later in execute
-     */
-    @TestVisible private Type reflector;
-    
-    /**
-     * These are all examples of "bigger problems"
-     */
     public MessageModel(Message__c message) {
         super(message);
         this.Message = message;
@@ -50,105 +27,81 @@ public class MessageModel extends ApexDomain.StandardModel {
     /**
      * For cast-free convenience
      */
-    private Message__c Message;
+    public Message__c Message;
+    
+    ApexClassModel Model;
     
     /**
-     * Prepare the exception message and the exception cause
+     * This performs actual resolution inside the callout and/or execute method.
      */
-    public void prepareException(Exception e) {
-        this.Message.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-        this.Message.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
-    }
-    
-    /**
-     * Returns STEP or NULL
-     */
-    public Step__c resolveStep() {
+    public ApexClassModel resolveApexClassModel() {
         
-        String route = this.message.Step__c;
-        if (route == null) return null; //message has no route
-        
-        return Step__c.getValues(route);
-    }
-    
-    /**
-     * This performs actual resolution inside the broker execute method.
-     */
-    public void prepareProcess() {
-        this.Message.ExecuteDuration__c = 0;
-        Long timer = System.now().getTime();
-        
-        try {
-            Integer hops = (Integer)this.Event.get('__Hops');
-            
-            if (hops >= Broker.MaximumHops) {
-                throw new MessageException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
-            }
-            
-            String route = this.message.Step__c;
-            
-            if (route == null) {
-                throw new MessageException('Message has no step for routing to sequence: ' + this.message.Id); //a la "List has no rows for assignment to SObject"
-            }
-            
-            Step__c step = Step__c.getValues(route);
-            
-            if (step == null) {
-                throw new MessageException('Could not resolve route from message step: ' + route); //a la "Could not resolve field 'Billing Address' from value binding"
-            }
-            
-            String apexClassName = step.ApexClassName__c;
-            
-            if (apexClassName == null) {
-                throw new MessageException('Apex class name cannot be null: ' + route); //a la "Argument cannot be null"
-            }
-            
-            this.reflector = Type.forName(apexClassName);
-            
-            if (this.reflector == null) {
-                throw new MessageException('Class is invalid or not visible: ' + apexClassName); //a la "Variable is not visible" or "Variable does not exist" or "Dependent class is invalid and needs recompilation"
-            }
-            
-            this.Process = this.reflector.newInstance();
-            
-        } catch (Exception e) {
-            this.prepareException(e);
-            this.IsFucked = true;
-            
+        //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
+        if (this.Event.get('__IsHeartbeatProcess') != null) {
+            //TODO #956 event.get('esb__Process') == Heartbeat.class.getName()
+            return new ApexClassModel(Heartbeat.class);
         }
         
-        //execution time profiler
-        if (this.Message.ExecuteDuration__c == null) this.Message.ExecuteDuration__c = 0;
-        this.Message.ExecuteDuration__c += System.now().getTime() - timer;
+        String route = this.message.Step__c;
+        
+        if (route == null) {
+            throw new MessageException('Message has no step for routing to sequence: ' + this.message.Id); //a la "List has no rows for assignment to SObject"
+        }
+        
+        Step__c step = Step__c.getValues(route);
+        
+        if (step == null) {
+            throw new MessageException('Could not resolve route from message step: ' + route); //a la "Could not resolve field 'Billing Address' from value binding"
+        }
+        
+        String apexClassName = step.ApexClassName__c;
+        
+        if (apexClassName == null) {
+            throw new MessageException('Apex class name cannot be null: ' + route); //a la "Argument cannot be null"
+        }
+        
+        Type reflector = Type.forName(apexClassName);
+        
+        if (reflector == null) {
+            throw new MessageException('Class is invalid or not visible: ' + apexClassName); //a la "Variable is not visible" or "Variable does not exist" or "Dependent class is invalid and needs recompilation"
+        }
+        
+        ApexClassModel model = new ApexClassModel(reflector);
+        model.getRecord().Id = step.ApexClassId__c;
+        return model;
     }
     
     /**
      * TODO COUNT ANY DMLS
      */
-    public void invokeCallouts() {
+    public void invokeCallout() {
+        
+        //execution time profiler
         Long timer = System.now().getTime();
         
-        //skip bad guys
-        if (this.IsFucked) return;
-        
         try {
-            //provide input event and set flag
-            Job.Event = this.Event.clone();
-            Job.Event.put('esb__AllowsCallouts', true);
             
-            //do invocation
-            String data = String.valueOf(process);
-            
-            if (data != null) {
-                //#886 a la "MyCustomException: Exception class must extend another Exception class"
-                throw new MessageException(this.Reflector.getName() + ': ' + 'ESB Process must extend Abstract.ESB');
+            Integer hops = (Integer)this.Event.get('__Hops');
+            if (hops >= Broker.MaximumHops) {
+                throw new MessageException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
             }
             
-        } catch (Exception e) {
-            //smoking gun should point at user
-            this.prepareException(e);
-            this.IsFucked = true;
+            if (this.Model == null) {
+                //doing this later than earlier
+                this.Model = this.resolveApexClassModel();
+            }
             
+            //do invocation
+            this.Model.invokeCallout(this.Event);
+            
+            //clear any errors off the input message as the LAST thing
+            this.Message.Exception__c = null;
+            this.Message.Cause__c = null;
+            
+        } catch (Exception e) {
+            //#581 smoking gun should point at the user, NOT at our broker
+            this.Message.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+            this.Message.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
         }
         
         //execution time profiler
@@ -158,12 +111,17 @@ public class MessageModel extends ApexDomain.StandardModel {
     
     /**
      * TODO COUNT ANY CALLOUTS
+     * @return HAD SIDE EFFECTS
      */
-    public void invokeExecute(List<Message__c> outputMessages) {
-        Long timer = System.now().getTime();
+    public Boolean invokeExecute(List<Message__c> outputMessages) {
         
-        //skip bad guys
-        if (this.IsFucked) return;
+        if (this.Message.Exception__c != null) {
+            //#864 skip bad guys
+            return false;
+        }
+        
+        //execution time profiler
+        Long timer = System.now().getTime();
         
         //measure side effects before
         Integer futureCalls = Limits.getFutureCalls();
@@ -172,92 +130,64 @@ public class MessageModel extends ApexDomain.StandardModel {
         Integer emailInvocations = Limits.getEmailInvocations();
         
         try {
-            if (outputMessages == null) {
-                //our own fault
-                throw new MessageException('MessageModel.invokeExecute must receive REFERENCE to list of output messages.');
+            
+            Integer hops = (Integer)this.Event.get('__Hops');
+            if (hops >= Broker.MaximumHops) {
+                throw new MessageException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
             }
             
-            //provide input event and set flag
-            Job.Event = this.Event.clone();
-            Job.Event.put('esb__AllowsCallouts', false);
-            
-            //#877 surface SessionId to select few orgs and packages
-            //Boolean allowSessionId = Broker.isAllowedSessionId(step.ApexClassName__c, UserInfo.getOrganizationId());
-            //if (allowSessionId) Job.Event.put('__SessionId', OAuthSetting__c.getOrgDefaults().AccessToken__c);
-            //TODO for #886
+            if (this.Model == null) {
+                //doing this later than earlier
+                this.Model = this.resolveApexClassModel();
+            }
             
             //do invocation
-            String data = String.valueOf(process);
+            List<Map<String,Object>> outputEvents = this.Model.invokeExecute(this.Event);
             
-            if (data == null || data == 'null') {
-                //#945 a la "System.VisualforceException: Return type of an Apex action method must be a PageReference. Found: java.lang.Integer"
-                throw new MessageException(this.Reflector.getName() + ': ' + ' Return type of an ESB Process must be a List<Map<String,Object>>');
-            }
-            
-            if (data.startsWith(('.' + this.Reflector.getName()).substringAfterLast('.') + ':[')) {
-                //#886 a la "MyCustomException: Exception class must extend another Exception class"
-                throw new MessageException(this.Reflector.getName() + ': ' + 'ESB Process must extend Abstract.ESB');
-            }
-
-
             //wrap up results into Messages (new guys should have Position = 0)
-            List<Object> results = (List<Object>)Json.deserializeUntyped(data);
-            
-            for (Object result : results) {
-                Map<String,Object> outputEvent = (Map<String,Object>)result;
-                /**
-                 * Context:
-                 * A message can pass through a limited number of steps. This "limit" is a fairly high arbitrary threshold.
-                 * The intent is to prevent a never ending self referencing loop (we cannot control what the system configurators
-                 * configure). A self referencing loop would eventually ring alarm bells with the Salesforce police with the
-                 * possibility of the Munger being blacklisted
-                 * An exception is thrown if the Max Hops threshold is reached
-                 *
-                 * We cannot simply increment __Hops BEFORE calling invoke as a process writer could fuck with this parameter
-                 * Instead we read and increment __Hops BEFORE calling invoke using enforceMaximumHops()
-                 * and assign to an Integer hops variable
-                 * We use applyHops()  to apply the incremented hops variable to the __Hops parameter of
-                 * all messages returned from invoke()
-                 */
-                Integer hops = (Integer)outputEvent.get('__Hops');
-                if (hops == null) hops = 0;
-                outputEvent.put('__Hops', ++hops);
+            for (Map<String,Object> outputEvent : outputEvents) {
                 
-                /**
-                 * Unrelated to former term "resolve" (which now refers to PROCESS location)
-                 * this is just a convenience to increment the position of a bunch of messages.
-                 */
+                //increment the position of a bunch of output events
                 Integer position = (Integer)outputEvent.get('__Position');
                 if (position == null) position = 0;
                 outputEvent.put('__Position', ++position);
+                //TODO #425 enforce overwrite of __ params?
                 
+                if (outputMessages == null) {
+                    //panic, our own fault
+                    throw new MessageException('MessageModel.invokeExecute must receive REFERENCE to list of output messages.');
+                }
+                
+                //TODO #972 alphabetize event parameter json
                 outputMessages.add(new Message__c(
                     Event__c = Json.serializePretty(outputEvent),
                     Status__c = 'Buffered'
                 ));
             }
             
-            this.Message.Cause__c = null;
-            this.Message.Exception__c = null;
-            this.Message.Status__c = 'Completed'; //#798
             //clear any errors off the input message as the LAST thing
-            //wait... if it fucks out here, the message is completed! aaaaaa!!!
+            this.Message.Status__c = 'Completed'; //#798
+            this.Message.Exception__c = null;
+            this.Message.Cause__c = null;
 
         } catch (Exception e) {
             //#581 smoking gun should point at the user, NOT at our broker
-            this.prepareException(e);
-            this.IsFucked = true;
-            
+            this.Message.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+            this.Message.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
         }
         
-        //measure side effects after, whether or not there was an exception
-        if (Limits.getFutureCalls() > futureCalls) this.HadSideEffects = true;
-        if (Limits.getQueueableJobs() > queueableJobs) this.HadSideEffects = true;
-        if (Limits.getDMLStatements() > dmlStatements) this.HadSideEffects = true;
-        if (Limits.getEmailInvocations() > emailInvocations) this.HadSideEffects = true;
-        
+        //execution time profiler
         if (this.Message.ExecuteDuration__c == null) this.Message.ExecuteDuration__c = 0;
         this.Message.ExecuteDuration__c += System.now().getTime() - timer;
+        
+        //measure side effects after, whether or not there was an exception
+        if (Limits.getFutureCalls() > futureCalls) return true;
+        if (Limits.getQueueableJobs() > queueableJobs) return true;
+        if (Limits.getDMLStatements() > dmlStatements) return true;
+        if (Limits.getEmailInvocations() > emailInvocations) return true;
+        
+        //no side effects
+        return false;
     }
     
     /**
@@ -308,35 +238,13 @@ public class MessageModel extends ApexDomain.StandardModel {
         }
     }
     
+    /**
+     * Takes us to the standard salesforce page for the apex class
+     */
     public PageReference showApexClass() {
-        
-        String route = this.message.Step__c;
-        
-        if (route == null) {
-            //failure
-            throw new MessageException('Message has no step for routing to sequence');
-        }
-        
-        Step__c step = Step__c.getValues(route);
-        
-        if (step == null) {
-            //failure
-            throw new MessageException('Could not resolve route from message step');
-        }
-        
-        ApexClass apexClass = new ApexClass(Id = step.ApexClassId__c);
-        
-        if (apexClass.Id == null) {
-            //failure
-            throw new MessageException('Apex class id cannot be null');
-        }
-        
+        ApexClassModel model = this.resolveApexClassModel();
+        ApexClass apexClass = (ApexClass)model.getRecord();
         return new ApexPages.StandardController(apexClass).view();
-    }
-    
-    public Boolean isHeartbeat() {
-        Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(this.Message.Event__c);
-        return event.get('__IsHeartbeatProcess') != null;
     }
     
     /**

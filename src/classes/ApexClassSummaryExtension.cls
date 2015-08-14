@@ -11,11 +11,13 @@ public with sharing class ApexClassSummaryExtension {
     }
     
     public void doInit() {
-        this.model = ApexClassModel.fromId(controller.getId());
-        
-        //by doing this we keep our getters in the controller and not the esb summary class
-        this.Summary = this.model.ESB;
-        this.FullyQualifiedClassName = this.model.fullyQualifiedClassName();
+        try {
+            this.model = ApexClassModel.fromId(controller.getId());
+            this.Summary = new ApexClassModel.Summary(model.Reflector);
+            this.FullyQualifiedClassName = model.Reflector.getName();
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+        }
     }
     
 }

@@ -151,14 +151,14 @@ abstract public without sharing class Broker {
                 return specimen;
             }
             
-            ApexClassModel model;
+            ApexClassModel.Summary summary;
             
-            try {model = new ApexClassModel(reflector);} catch (Exception e) {
-                //no model, limits 1
+            try {summary = new ApexClassModel.Summary(reflector);} catch (Exception e) {
+                //bad summary, limits 1
                 return specimen;
             }
             
-            Integer limits = model.esb.Limits;
+            Integer limits = summary.Limits;
             
             return [
                 SELECT Id, Step__c, Event__c //TODO lose event
@@ -213,46 +213,34 @@ abstract public without sharing class Broker {
             //OUR FUCKUPS (prepare)
             List<MessageModel> models = new List<MessageModel>();
             for (Message__c inputMessage : inputMessages) {
-                //check sequence, position, step, reflector etc
                 MessageModel model = new MessageModel(inputMessage);
-                model.prepareProcess();
                 models.add(model);
-            }
-            
-            //specimen #575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
-            if (models[0].isHeartbeat()) {
-                for (MessageModel model : models) model.invokeExecute(outputMessages);
-                //TODO #956 end special routing
-                return;
             }
             
             //THEIR FUCKUPS (callout)
             for (MessageModel model : models) {
                 //do invocation
-                model.invokeCallouts();
+                model.invokeCallout();
             }
             
             //for isolating chunks from each other
             Savepoint sp = Database.setSavepoint();
-            
-            //savepoint tax only applies if side effects
             Boolean isolate = false;
             
             //THEIR FUCKUPS (execute)
             for (MessageModel model : models) {
                 
                 if (isolate) {
-                    //consume savepoint only if necessary
+                    //consume savepoint only if necessary (side effects)
                     sp = Database.setSavepoint();
                     isolate = false;
                 }
                 
                 //do invocation
-                model.invokeExecute(outputMessages);
-                isolate = model.HadSideEffects;
+                isolate = model.invokeExecute(outputMessages);
                 
-                if (model.HadSideEffects && model.IsFucked) {
-                    //consume rollback only if necessary
+                if (model.Message.Exception__c != null && isolate) {
+                    //consume rollback only if necessary (error AND side effects)
                     Database.rollback(sp);
                 }
             }
