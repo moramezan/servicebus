@@ -21,12 +21,11 @@ public with sharing class ApexClassTabController {
         
         this.id2class = new Map<Id,ApexClass>(apexClasses);
         
-        for (ApexClass apexClass : apexClasses) {
+        //we DO enter each namespace here
+        for (ApexClass apexClass : apexClasses) try {
             Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
             ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
             this.id2summary.put(apexClass.Id, summary);
-        }
-        
-        //return models;
+        } catch (Exception e) {}
     }
 }

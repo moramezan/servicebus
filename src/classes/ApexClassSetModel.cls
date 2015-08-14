@@ -33,6 +33,8 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             
             //fails if there is no ESB summary class
             Type inflector = Type.forName(apexClassName + '.ESB');
+            
+            //we DONT enter each namespace, just assume ok
             if (inflector != null) processes.add(apexClass);
         } catch (Exception e) {}
         
