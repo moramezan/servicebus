@@ -230,4 +230,16 @@
             return response;
         }
     }
+    
+    static testmethod void coverCode() {
+        //arrange controller
+        ConfigureController controller = new ConfigureController();
+        
+        //act
+        controller.requestData();
+        controller.javascript();
+        
+        //assert
+        System.assert(!ApexPages.hasMessages(), 'Wrong messages.');
+    }
 }

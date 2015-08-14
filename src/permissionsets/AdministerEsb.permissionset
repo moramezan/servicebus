@@ -225,14 +225,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>RemoteSiteSettingController</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>RemoteSiteSettingControllerTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>Schedule</apexClass>
         <enabled>false</enabled>
     </classAccesses>

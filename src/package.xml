@@ -62,8 +62,6 @@
         <members>PostUninstallHandlerTest</members>
         <members>Publish</members>
         <members>PublishTest</members>
-        <members>RemoteSiteSettingController</members>
-        <members>RemoteSiteSettingControllerTest</members>
         <members>Schedule</members>
         <members>ScheduleConfigSetModel</members>
         <members>ScheduleConfigSetModelTest</members>
@@ -96,7 +94,6 @@
     </types>
     <types>
         <members>BootstrapExt</members>
-        <members>RemoteSiteSetting</members>
         <name>ApexComponent</name>
     </types>
     <types>

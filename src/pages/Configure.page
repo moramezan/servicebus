@@ -1,5 +1,5 @@
 <apex:page showHeader="false" controller="ConfigureController" action="{!doRedirect}" cache="false">
 
-    <c:RemoteSiteSetting rendered="{!$CurrentPage.parameters.stage == 'js'}" />
+    <apex:dynamicComponent componentValue="{!DynamicComponent}" />
 
 </apex:page>
