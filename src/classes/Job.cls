@@ -171,6 +171,9 @@ global class Job implements Process.Plugin, system.Queueable {
             throw new JobException('Cannot supply a null input events collection.');
         }
         
+        //#977 detect unpersistable types
+        Json.serialize(inputEvents);
+        
         //create the message destined for the 0th step of the chain
         for (Map<String,Object> inputEvent : inputEvents) {
             inputEvent.putAll(new Map<String,Object>{

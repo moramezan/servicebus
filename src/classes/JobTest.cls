@@ -35,5 +35,23 @@
         System.assert(event.containsKey('esb__EntryPointUuid'));
         System.assert(event.containsKey('esb__EntryPointDatetime'));
     }
-
+    
+    static testmethod void testUnpersistableTypesDetectedInConstructor() {
+        //arrange
+        Map<String,Object> input = new Map<String,Object>{
+            'naughty' => Terminate.class
+        };
+        
+        try {
+            //act
+            new Job(input);
+            System.assert(false, 'Line above should throw exception');
+        } catch (Exception e) {
+            //assert
+            String expectedMessage = 'Type unsupported in JSON: common.apex.runtime.bytecode.BytecodeApexObjectType';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage);
+        }
+    }
+    
 }
