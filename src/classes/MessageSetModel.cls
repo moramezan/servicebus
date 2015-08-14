@@ -124,8 +124,11 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             /**
              * We make sure those guys are always concatenated into a key,
              * using object instead of integer means it works with "" etc
-             * TODO #956 try to route everyone except heartbeats per #575
              */
+            //#956 "fire and forget" process without sequences or steps
+            String process = (String)parameters.get('esb__Process');
+            if (process != null) message.Step__c = process;
+            
             Object sequence = parameters.get('__SequenceName');
             Object position = parameters.get('__Position');
             if (sequence != null && position != null) message.Step__c = sequence + '#' + position;

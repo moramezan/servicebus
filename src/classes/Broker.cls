@@ -137,24 +137,13 @@ abstract public without sharing class Broker {
                 return specimen;
             }
             
-            Step__c step = Step__c.getValues(specimen[0].Step__c);
-            
-            if (step == null) {
-                //no step found, limits 1
-                return specimen;
-            }
-            
-            Type reflector = Type.forName(step.ApexClassName__c);
-            
-            if (reflector == null) {
-                //no apex class, limits 1
-                return specimen;
-            }
-            
             ApexClassModel.Summary summary;
             
-            try {summary = new ApexClassModel.Summary(reflector);} catch (Exception e) {
-                //bad summary, limits 1
+            try {
+                ApexClassModel model = new MessageModel(specimen[0]).resolveApexClassModel();
+                summary = new ApexClassModel.Summary(model.Reflector);
+            } catch (Exception e) {
+                //could not resolve, limits 1
                 return specimen;
             }
             
@@ -164,7 +153,7 @@ abstract public without sharing class Broker {
                 SELECT Id, Step__c, Event__c //TODO lose event
                 FROM Message__c
                 WHERE Status__c = 'Buffered'
-                AND Step__c = :specimen[0].step__c
+                AND Step__c = :specimen[0].Step__c
                 LIMIT :limits
                 FOR UPDATE //#695 investigate broker race condition
             ];

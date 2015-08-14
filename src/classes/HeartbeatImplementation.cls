@@ -166,10 +166,8 @@ public class HeartbeatImplementation implements System.Schedulable {
         for (DateTime heartbeat : heartbeats) {
             Map<String,Object> outputEvent = new Map<String,Object>{
                 'esb__RecordId' => UserInfo.getUserId(),
-                '__SequenceName' => '__Heartbeat', //avoid "Mandatory parameter esb__SequenceName not supplied."
-                '__Position' => 0, //avoid "Mandatory parameter esb__SequenceName not supplied."
                 'esb__EntryPointDatetime' => heartbeat,
-                '__IsHeartbeatProcess' => true //#575 so that resolve and execute can crow look
+                'esb__Process' => Type.forName('Heartbeat').getName() //#956 and #575 so that resolve and execute can crow look
             };
             outputEvents.add(outputEvent);
         }

@@ -32,7 +32,7 @@ public class Heartbeat extends ApexClassModel.BaseProcess {
             Map<String,Object> clone = parameters.clone();
             clone.put('__Position', step.Position__c.intValue());
             clone.put('__SequenceName', step.SequenceName__c);
-            clone.put('__IsHeartbeatProcess', null); //#575 so outputs don't get same crow look as input
+            clone.put('esb__Process', null); //#956 "fire and forget" but DO persist outputs
             clone.put('__WasHeartbeatProcess', true); //#810 use WasHeartbeat to differentiate Schedule pass throughs
             parametersList.add(clone);
         }

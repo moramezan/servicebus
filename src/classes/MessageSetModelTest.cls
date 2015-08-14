@@ -34,16 +34,16 @@
     static testmethod void testUnpopulatedJsonFields() {
         //arrange message
         Message__c message = new Message__c(
-            Event__c = '{"__IsHeartbeatProcess":true}'
+            Event__c = '{"esb__Process":"' + Heartbeat.class.getName() + '"}'
         );
         
         //act
         new MessageSetModel(new List<Message__c>{message}).populateJsonFields();
         
         //assert
-        String expectedRoute = null;
+        String expectedRoute = Heartbeat.class.getName();
         String actualRoute = message.Step__c;
-        System.assertEquals(expectedRoute, actualRoute, 'Route should be null for heartbeats.');
+        System.assertEquals(expectedRoute, actualRoute, 'Route should be raw process for heartbeats.');
     }
     
     static testmethod void testPopulateJsonFields() {

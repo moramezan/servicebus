@@ -36,10 +36,10 @@ public class MessageModel extends ApexDomain.StandardModel {
      */
     public ApexClassModel resolveApexClassModel() {
         
-        //#575 crow look, go directly to heartbeat process, do not pass go, do not collect $200
-        if (this.Event.get('__IsHeartbeatProcess') != null) {
-            //TODO #956 event.get('esb__Process') == Heartbeat.class.getName()
-            return new ApexClassModel(Heartbeat.class);
+        String process = (String)this.Event.get('esb__Process');
+        
+        if (process != null) {
+            return new ApexClassModel(Type.forName(process)); //#956 "fire and forget" process without sequences or steps
         }
         
         String route = this.message.Step__c;
