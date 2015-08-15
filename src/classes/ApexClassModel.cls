@@ -263,11 +263,6 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         //wrap up results into events (new guys should have Position = 0)
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         
-        if (inputEvent.get('esb__Process') != null) {
-            //#956 "fire and forget" means don't persist outputs
-            return outputEvents;
-        }
-        
         List<Object> results = (List<Object>)Json.deserializeUntyped(data);
         
         if (results.size() > 5000) {
@@ -277,6 +272,11 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         
         for (Object result : results) {
             Map<String,Object> outputEvent = (Map<String,Object>)result;
+            
+            if (outputEvent.get('esb__Process') != null && inputEvent.get('esb__Process') == outputEvent.get('esb__Process')) {
+                //#956 "fire and forget" means don't persist outputs
+                continue;
+            }
             
             /**
              * Context:

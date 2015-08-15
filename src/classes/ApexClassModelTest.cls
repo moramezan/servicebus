@@ -318,4 +318,83 @@
         System.assertEquals(expectedCount, actualCount, 'Wrong count.');
         //this guy checks that any side effects are rolled back after the 8000 limit reached
     }
+    
+    public class SpecialOneShotWithOutputs extends ApexClassModel.BaseProcess {
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            return new List<Map<String,Object>>{
+                new Map<String,Object>{
+                    'esb__Process' => null,
+                    'esb__Sequence' => 'Test'
+                }
+            };
+        }
+    }
+    
+    static testmethod void testOneShotEmitsOutputsWhenWeWantItTo() {
+        //arrange input event
+        Map<String,Object> inputEvent = new Map<String,Object>();
+        
+        //act
+        ApexClassModel model = new ApexClassModel(SpecialOneShotWithOutputs.class);
+        List<Map<String,Object>> outputEvents = model.invokeExecute(inputEvent);
+        
+        //assert
+        Integer expectedSize = 1;
+        Integer actualSize = outputEvents.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
+    }
+    
+    public class NormalOneShotWithOutputs extends ApexClassModel.BaseProcess {
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            return new List<Map<String,Object>>{
+                new Map<String,Object>{
+                    //outputs aggregate, so this is effectively like:
+                    //'esb__Process' => 'ApexClassModelTest.NormalOneShotWithOutputs'
+                }
+            };
+        }
+    }
+    
+    static testmethod void testOneShotSwallowsOutputsNormally() {
+        //arrange input event
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'esb__Process' => NormalOneShotWithOutputs.class.getName()
+        };
+        
+        //act (note the aggregated output parameters)
+        ApexClassModel model = new ApexClassModel(NormalOneShotWithOutputs.class);
+        List<Map<String,Object>> outputEvents = model.invokeExecute(inputEvent);
+        
+        //assert
+        Integer expectedSize = 0;
+        Integer actualSize = outputEvents.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
+    }
+    
+    public class ChainedOneShotWithOutputs extends ApexClassModel.BaseProcess {
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            return new List<Map<String,Object>>{
+                new Map<String,Object>{
+                    'esb__Process' => 'ApexClassOne'
+                },
+                new Map<String,Object>{
+                    'esb__Process' => 'ApexClassTwo'
+                }
+            };
+        }
+    }
+    
+    static testmethod void testOneShotCanCallAnotherOneShot() {
+        //arrange input event
+        Map<String,Object> inputEvent = new Map<String,Object>();
+        
+        //act
+        ApexClassModel model = new ApexClassModel(ChainedOneShotWithOutputs.class);
+        List<Map<String,Object>> outputEvents = model.invokeExecute(inputEvent);
+        
+        //assert
+        Integer expectedSize = 2;
+        Integer actualSize = outputEvents.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
+    }
 }
