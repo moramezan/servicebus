@@ -71,7 +71,7 @@
         System.assert(!ApexPages.hasMessages(), 'Should not have errors before.');
         
         //act
-        new MessageSetModel(new List<Message__c>{validMessage}).validateJsonParameters();
+        new MessageSetModel(new List<Message__c>{validMessage}).alphabetizeEventJson();
         
         //assert
         System.assert(!ApexPages.hasMessages(), 'Should not have errors after.');
@@ -87,7 +87,7 @@
         System.assert(!ApexPages.hasMessages(), 'Should not have errors before.');
         
         //act
-        new MessageSetModel(new List<Message__c>{validMessage}).validateJsonParameters();
+        new MessageSetModel(new List<Message__c>{validMessage}).alphabetizeEventJson();
         
         //assert
         System.assert(ApexPages.hasMessages(), 'Should have errors after.');

@@ -106,13 +106,13 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     }
     
     override public void onBeforeInsert() {
-        this.validateJsonParameters();
+        this.alphabetizeEventJson();
         this.populateJsonFields();
         this.swallowToString();
     }
     
     override public void onBeforeUpdate(List<SObject> oldObjects) {
-        this.validateJsonParameters();
+        this.alphabetizeEventJson();
         this.populateJsonFields();
         this.swallowToString();
     }
@@ -153,10 +153,13 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
      * Ensure that Message Parameters are always valid JSON #660
      * So that we can trust them in the Broker and keep code simple.
      */
-    @TestVisible private void validateJsonParameters() {
+    @TestVisible private void alphabetizeEventJson() {
         for (Message__c message : this.Messages) {
             try {
-                Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
+                //#972 reserialize in alphabetical order
+                Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
+                message.Event__c = new SortedSerializer(event).toString();
+                
             } catch (JsonException e) {
                 message.Event__c.addError(e);
             }
@@ -207,6 +210,72 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         //#952 restart REAL broker
         System.Queueable job = new Job();
         System.enqueueJob(job);
+    }
+    
+    /**
+     * #972
+     * Usage:
+     * new SortedSerializer(myEx).toString();
+     */
+    public class SortedSerializer {
+        
+        //true for pretty printing
+        JsonGenerator g = Json.createGenerator(true);
+        
+        public SortedSerializer(Object obj) {
+            if (obj == null) {
+                this.g.writeNull();
+            } else if (obj instanceof Map<String,Object>) {
+                this.traverseMap((Map<String,Object>)obj);
+            } else if (obj instanceof List<Object>) {
+                this.traverseList((List<Object>)obj);
+            } else { //obj instanceof Object
+                this.g.writeObject(obj);
+            }
+        }
+        
+        override public String toString() {
+            return g.getAsString();
+        }
+        
+        void traverseMap(Map<String,Object> obj) {
+            List<String> keys = new List<String>(obj.keySet());
+            keys.sort();
+            
+            this.g.writeStartObject();
+            for (String key : keys) {
+                Object value = obj.get(key);
+                this.g.writeFieldName(key);
+                
+                if (value == null) {
+                    this.g.writeNull();
+                } else if (value instanceof Map<String,Object>) {
+                    this.traverseMap((Map<String,Object>)value);
+                } else if (value instanceof List<Object>) {
+                    this.traverseList((List<Object>)value);
+                } else { //value instanceof Object
+                    this.g.writeObject(value);
+                }
+            }
+            this.g.writeEndObject();
+        }
+        
+        void traverseList(List<Object> objs) {
+            this.g.writeStartArray();
+            for (Object obj : objs) {
+                if (obj == null) {
+                    this.g.writeNull();
+                } else if (obj instanceof Map<String,Object>) {
+                    this.traverseMap((Map<String,Object>)obj);
+                } else if (obj instanceof List<Object>) {
+                    this.traverseList((List<Object>)obj);
+                } else { //obj instanceof Object
+                    this.g.writeObject(obj);
+                }
+            }
+            this.g.writeEndArray();
+        }
+        
     }
     
 }
