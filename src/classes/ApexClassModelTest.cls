@@ -222,4 +222,100 @@
         System.assertEquals('baz', (String)outputEvents[0].get('foo'), 'Not overwritten.');
         System.assertEquals('derp', (String)outputEvents[0].get('herp'), 'Not appended.');
     }
+    
+    public class TooManyOutputs extends ApexClassModel.BaseProcess {
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
+            for (Integer i = 0; i < 5123; i++) outputEvents.add(inputEvent);
+            return outputEvents;
+        }
+    }
+    
+    public class TooManyOutputsESB extends ApexClassModel.BaseSummary {
+        Integer Limits = 1;
+    }
+    
+    static testmethod void testTooManyOutputsBlowsUp() {
+        //arrange
+        ApexClassModel model = new ApexClassModel(TooManyOutputs.class);
+        
+        try {
+            //act
+            model.invokeExecute(new Map<String,Object>());
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Exception e) {
+            String expectedMessage = TooManyOutputs.class.getName() + ': Too many output events: 5123';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+    }
+    
+    public class TooManyInputs extends ApexClassModel.BaseProcess {
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            return null;
+        }
+    }
+    
+    public class TooManyInputsESB extends ApexClassModel.BaseSummary {
+        Integer Limits = 2345;
+    }
+    
+    static testmethod void testTooManyInputsCapped() {
+        //arrange
+        ApexClassModel model = new ApexClassModel(TooManyInputs.class);
+        
+        //act
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(TooManyInputs.class);
+        
+        //assert
+        Integer expectedLimits = 2000;
+        Integer actualLimits = summary.Limits;
+        System.assertEquals(expectedLimits, actualLimits, 'Wrong limits.');
+    }
+    
+    public class TooManyEvents extends ApexClassModel.BaseProcess {
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            insert new Document(Name = 'Test', FolderId = UserInfo.getUserId());
+            List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
+            for (Integer i = 0; i < 200; i++) outputEvents.add(new Map<String,Object>{
+                'esb__Process' => null
+            });
+            return outputEvents;
+        }
+    }
+    
+    public class TooManyEventsESB extends ApexClassModel.BaseSummary {
+        Integer Limits = 50; //10000
+    }
+    
+    static testmethod void testTooManyEventsBlowsUp() {
+        //arrange messages (39 would be ok, 40 is bad, 41 is bad)
+        List<Message__c> inputMessages = new List<Message__c>();
+        for (Integer i = 0; i < 41; i++) inputMessages.add(new Message__c(
+            Step__c = 'ApexClassModelTest.TooManyEvents',
+            Event__c = '{"esb__Process":"ApexClassModelTest.TooManyEvents"}'
+        ));
+        
+        //act (39th guy hits 7840, 40th guy hits 8040, 41st guy hits 8240)
+        List<Message__c> outputMessages = new List<Message__c>();
+        Broker.impl().execute(inputMessages, outputMessages);
+        
+        //assert
+        String expectedException = null;
+        String actualException = inputMessages[38].Exception__c;
+        System.assertEquals(expectedException, actualException, 'Wrong exception.');
+
+        expectedException = TooManyEvents.class.getName() + ': Cannot have more than 8000 events in a single operation. Reduce process Limits or emit fewer events.';
+        actualException = inputMessages[39].Exception__c;
+        System.assertEquals(expectedException, actualException, 'Wrong exception.');
+
+        expectedException = TooManyEvents.class.getName() + ': Cannot have more than 8000 events in a single operation. Reduce process Limits or emit fewer events.';
+        actualException = inputMessages[40].Exception__c;
+        System.assertEquals(expectedException, actualException, 'Wrong exception.');
+        
+        Integer expectedCount = 39;
+        Integer actualCount = [SELECT COUNT() FROM Document];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
+        //this guy checks that any side effects are rolled back after the 8000 limit reached
+    }
 }

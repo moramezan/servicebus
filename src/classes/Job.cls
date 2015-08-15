@@ -171,6 +171,11 @@ global class Job implements Process.Plugin, system.Queueable {
             throw new JobException('Cannot supply a null input events collection.');
         }
         
+        if (inputEvents.size() > 10000) {
+            //#955 blow up too many input events enqueued
+            throw new JobException('Too many events: ' + inputEvents.size());
+        }
+        
         //#977 detect unpersistable types
         Json.serialize(inputEvents);
         
@@ -212,7 +217,10 @@ global class Job implements Process.Plugin, system.Queueable {
      */
     public void execute(QueueableContext context) {
         List<Message__c> messages = new List<Message__c>();
-        for (Map<String,Object> inputEvent : this.Events) {
+        
+        //one strategy to reduce heap size during runtime is to
+        //remove items from the collection as you iterate over it
+        for (Integer i = 0; i < this.Events.size(); i++) {
             
             /**
              * #694 puts QueueableContext Job Id on messages. Because when people
@@ -222,7 +230,7 @@ global class Job implements Process.Plugin, system.Queueable {
              */
             if (context != null) {
                 Id queueableId = context.getJobId();
-                inputEvent.put('__QueueableId', queueableId);
+                this.Events[i].put('__QueueableId', queueableId);
             }
             
             /**
@@ -232,16 +240,20 @@ global class Job implements Process.Plugin, system.Queueable {
              * We want to interpret esb__SequenceName into __SequenceName and __Position
              * as late and as simply as possible. Doing it here in the execute works OK.
              */
-            if (inputEvent.get('esb__SequenceName') != null) {
-                inputEvent.put('__SequenceName', inputEvent.get('esb__SequenceName'));
-                inputEvent.put('__Position', 1);
-                inputEvent.put('esb__SequenceName', null);
+            if (this.Events[i].get('esb__SequenceName') != null) {
+                this.Events[i].put('__SequenceName', this.Events[i].get('esb__SequenceName'));
+                this.Events[i].put('__Position', 1);
+                this.Events[i].put('esb__SequenceName', null);
             }
             
             messages.add(new Message__c(
-                Event__c = Json.serializePretty(inputEvent),
+                Event__c = Json.serializePretty(this.Events[i]),
                 Status__c = BrokerSetting__c.getOrgDefaults().IsPaused__c ? 'Paused' : 'Buffered'
             ));
+            
+            //salesforce does not have iterator.remove() method like java
+            //but don't use list.remove(i) that just fucks every odd one!
+            this.Events[i] = null;
         }
         
         //just in time DML

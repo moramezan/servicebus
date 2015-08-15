@@ -144,6 +144,12 @@ public class MessageModel extends ApexDomain.StandardModel {
             //do invocation
             List<Map<String,Object>> outputEvents = this.Model.invokeExecute(this.Event);
             
+            Integer chunkTotal = (Integer)this.Event.get('__ChunkTotal');
+            if (chunkTotal != null && chunkTotal + outputEvents.size() + outputMessages.size() > 8000) {
+                //#955 we throttle inputs+outputs
+                throw new MessageException(this.Model.Reflector.getName() + ': Cannot have more than 8000 events in a single operation. Reduce process Limits or emit fewer events.'); //a la "System.TypeException: Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking."
+            }
+            
             //wrap up results into Messages (new guys should have Position = 0)
             for (Map<String,Object> outputEvent : outputEvents) {
                 

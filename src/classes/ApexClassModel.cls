@@ -71,9 +71,13 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 if (this.Name == null) this.Name = reflector.getName(); //inflector.getName().replaceAll('\\.?ESB$', ''); //strips .ESB
                 if (this.Description == null) this.Description = 'Undescribed';
                 if (this.Icon == null) this.Icon = 'cog';
-                if (this.Limits == null || this.Limits < 1) this.Limits = 1;
+                if (this.Limits == null) this.Limits = 1;
                 if (this.Cardinality == null) this.Cardinality = 'Any';
                 
+                //#955 cap Limits ceiling
+                if (this.Limits > 2000) this.Limits = 2000;
+                if (this.Limits < 1) this.Limits = 1; //be sensible
+
             } catch (Exception e) {
                 //failure, probably bad json format
                 throw new ApexClassException(inflector.getName() + ': Could not resolve value binding: ' + e.getMessage());
@@ -265,6 +269,12 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         }
         
         List<Object> results = (List<Object>)Json.deserializeUntyped(data);
+        
+        if (results.size() > 5000) {
+            //#955 blow up too many output events emitted
+            throw new ApexClassException(this.Reflector.getName() + ': Too many output events: ' + results.size());
+        }
+        
         for (Object result : results) {
             Map<String,Object> outputEvent = (Map<String,Object>)result;
             

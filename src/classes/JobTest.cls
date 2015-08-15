@@ -54,4 +54,46 @@
         }
     }
     
+    static testmethod void testEnoughDmlRowsToEnqueueManyEvents() {
+        //arrange input events
+        List<Map<String,Object>> inputEvents = new List<Map<String,Object>>();
+        for (Integer i = 0; i < 10000; i++) inputEvents.add(new Map<String,Object>());
+        
+        //assert
+        Integer expectedBefore = 0;
+        Integer actualBefore = Limits.getDmlRows();
+        System.assertEquals(expectedBefore, actualBefore, 'Wrong size.');
+
+        //act
+        Job job = new Job(inputEvents);
+        job.execute(null);
+        
+        //assert
+        Integer expectedLimit = 10000;
+        Integer actualLimit = Limits.getLimitDmlRows();
+        System.assertEquals(expectedLimit, actualLimit, 'Wrong size.');
+        
+        Integer expectedAfter = 10000;
+        Integer actualAfter = Limits.getDmlRows();
+        System.assertEquals(expectedAfter, actualAfter, 'Wrong size.');
+    }
+    
+    static testmethod void testTooManyEventsDetectedInConstructor() {
+        //arrange input events
+        List<Map<String,Object>> inputEvents = new List<Map<String,Object>>();
+        for (Integer i = 0; i < 10001; i++) inputEvents.add(new Map<String,Object>());
+        
+        try {
+            //act
+            new Job(inputEvents);
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Exception e) {
+            //assert
+            String expectedMessage = 'Too many events: 10001';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+        
+    }
+    
 }
