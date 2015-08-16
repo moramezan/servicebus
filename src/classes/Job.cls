@@ -40,7 +40,7 @@ global class Job implements Process.Plugin, system.Queueable {
      * Per #868 this exists to hold whichever
      * event the Broker currently deals with.
      */
-    static public Map<String,Object> Event;
+    static public String EventProvider;
     
     /**
      * Per #702 this enables developers to Enqueue into ESB without a compile-time
@@ -53,9 +53,9 @@ global class Job implements Process.Plugin, system.Queueable {
     global Process.PluginResult invoke(Process.PluginRequest request) {
         
         //#868 this plugin doubles as an event provider, so we don't create a BS one
-        Boolean eventProvider = (Boolean)request.InputParameters.get('esb__EventProvider');
-        if (eventProvider == true) { //specific equality to avoid null object dereference
-            return new Process.PluginResult(Event.clone());
+        if (request.InputParameters.get('esb__EventProvider') == true) { //specific equality to avoid null object dereference
+            Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(EventProvider);
+            return new Process.PluginResult(event);
         }
         
         Map<String,Object> inputEvent = request.InputParameters;

@@ -209,8 +209,8 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         }
         
         //provide input event and set flag
-        Job.Event = inputEvent.clone();
-        Job.Event.put('esb__AllowsCallouts', true);
+        inputEvent.put('esb__AllowsCallouts', true);
+        Job.EventProvider = Json.serialize(inputEvent);
         
         //do invocation
         String data = String.valueOf(this.Process);
@@ -237,8 +237,8 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         }
         
         //provide input event and set flag
-        Job.Event = inputEvent.clone();
-        Job.Event.put('esb__AllowsCallouts', false);
+        inputEvent.put('esb__AllowsCallouts', false);
+        Job.EventProvider = Json.serialize(inputEvent);
         
         //#877 surface SessionId to select few orgs and packages
         //Boolean allowSessionId = Broker.isAllowedSessionId(step.ApexClassName__c, UserInfo.getOrganizationId());

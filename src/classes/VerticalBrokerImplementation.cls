@@ -6,10 +6,18 @@
  */
 public without sharing class VerticalBrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
     
-    @TestVisible private Set<Id> fatalMessageIds = new Set<Id>();
-    @TestVisible private Map<Id,Message__c> executableMessages = new Map<Id,Message__c>();
-    @TestVisible private List<Message__c> persistableMessages = new List<Message__c>();
-    @TestVisible private Boolean abortJob = false;
+    @TestVisible Set<Id> FatalIds = new Set<Id>();
+    @TestVisible List<Message__c> Messages = new List<Message__c>();
+    @TestVisible Boolean IsAborted = false;
+    
+    public Stage NextStage = Stage.PersistAndLocateAndMark;
+    
+    Enum Stage {
+        PersistAndLocateAndMark,
+        Execute,
+        Handle,
+        Abort
+    }
     
     public VerticalBrokerImplementation() {
         if (UserInfo.getUserId() != OAuthSetting__c.getOrgDefaults().RunningUserId__c) {
@@ -51,99 +59,85 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
      * +------------------+---------------------+------------------+
      */
     public void execute(Database.BatchableContext context, List<SObject> scopes) {
+        
+        if (this.IsPanic) {
+            System.abortJob(context.getJobId());
+            return;
+        }
+        
+        this.Contexts--;
+        
         try {
-            //#690 prevent panic (do NOT try to persist errors)
-            if (this.IsPanic) {
-                System.abortJob(context.getJobId());
-                return;
-            }
             
-            //ever decreasing
-            this.Contexts--;
-            
-            //PERSIST only if we are immediately after an EXECUTE
-            if (!this.persistableMessages.isEmpty()) {
-                this.persist(this.persistableMessages); //#778
-                //no return, carry on and mark...
-            }
-            
-            //handle errors progressively
-            if (!this.fatalMessageIds.isEmpty()) {
-                //dedicate this whole context to fatal exception handling
-                this.handleFatalExceptions(context);
-                return;
-            }
-            
-            Boolean hasWorkToExecute = !this.executableMessages.isEmpty();
-            Boolean isExecuteContext = hasWorkToExecute;
-            
-            Boolean hasWorkToMark = false;
-            Boolean isMarkContext = false;
-            
-            List<Message__c> markableMessages;
-            
-            if (!isExecuteContext) {
-                //LOCATE but only if we are not in user execute context
-                markableMessages = this.locateMarkableWork();
-                hasWorkToMark = !markableMessages.isEmpty();
-                isMarkContext = hasWorkToMark && !hasWorkToExecute;
-            }
-            
-            Boolean isNeedsMoreContexts = this.Contexts == 0;
-            
-            //MORE
-            if (isNeedsMoreContexts) {
-                //no point to mark OR execute, just restart
-                return;
-            }
-            
-            Boolean isAbortJobContext = !hasWorkToMark && !hasWorkToExecute;
-            
-            //ABORT
-            if (isAbortJobContext) {
-                //exit
-                if (Test.isRunningTest()) this.abortJob = true;
-                else System.abortJob(context.getJobId());
-            }
-            
-            //MARK
-            if (isMarkContext) {
-                //but if we can't execute, don't mark
-                if (this.Contexts == 1) return;
+            if (this.NextStage == Stage.PersistAndLocateAndMark) {
                 
-                //put these guys ready to handle
-                this.mark(markableMessages);
-                this.executableMessages = new Map<Id,Message__c>(markableMessages);
-            }
-            
-            //EXECUTE
-            if (isExecuteContext) {
-                //bulletproof steamroller
-                Set<Id> inputIds = this.executableMessages.keySet();
-                List<Message__c> inputMessages = this.executableMessages.values();
+                //PERSIST
+                this.persist(this.Messages);
                 
-                //clear these guys as handled (successfully or otherwise, thanks to stateful)
-                this.executableMessages = new Map<Id,Message__c>();
+                //MORE
+                if (this.Contexts <= 1) {
+                    //don't mark if we can't execute
+                    return;
+                }
                 
-                //potentially fatal errors
-                this.fatalMessageIds.addAll(inputIds);
+                //LOCATE
+                this.Messages = this.locateMarkableWork();
+                
+                //ABORT
+                if (this.Messages.isEmpty()) {
+                    //don't execute if nothing to do
+                    if (Test.isRunningTest()) this.IsAborted = true;
+                    else System.abortJob(context.getJobId());
+                    return;
+                }
+                
+                //MARK
+                this.mark(this.Messages);
+                
+                //next
+                this.NextStage = Stage.Execute;
+                
+            } else if (this.NextStage == Stage.Execute) {
+                
+                //next
+                this.NextStage = Stage.Handle;
+                this.FatalIds = new Map<Id,SObject>(this.Messages).keySet();
                 
                 //EXECUTE
-                this.persistableMessages = new List<Message__c>();
                 List<Message__c> outputMessages = new List<Message__c>();
+                List<Message__c> inputMessages = this.Messages;
+                this.Messages = new List<Message__c>();
                 this.execute(inputMessages, outputMessages);
+                this.Messages.addAll(inputMessages);
+                this.Messages.addAll(outputMessages);
                 
-                //#778 not quite PERSIST
-                this.persistableMessages.addAll(inputMessages);
-                this.persistableMessages.addAll(outputMessages);
+                //next
+                this.FatalIds = new Set<Id>();
+                this.NextStage = Stage.PersistAndLocateAndMark;
                 
-                //ultimately not fatal errors
-                this.fatalMessageIds.removeAll(inputIds);
+            } else if (this.NextStage == Stage.Handle) {
+                
+                //HANDLE FATAL EXCEPTIONS
+                AsyncApexJob asyncApexJob = [SELECT ExtendedStatus FROM AsyncApexJob WHERE Id = :context.getJobId()];
+                
+                List<Message__c> fatalities = new List<Message__c>();
+                for (Id fatalMessageId : this.FatalIds) fatalities.add(new Message__c(
+                    Id = fatalMessageId,
+                    Exception__c = asyncApexJob.ExtendedStatus
+                ));
+                update fatalities;
+                
+                //next
+                this.FatalIds = new Set<Id>();
+                this.NextStage = Stage.PersistAndLocateAndMark;
+                
             }
+            
         } catch (Exception e) {
             this.IsPanic = true; //this will roll over thanks to stateful
             throw e; //first error appears on our AsyncApexJob log
         }
+        
     }
     
     public void finish(Database.BatchableContext context) {
@@ -160,26 +154,6 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
      *
      * There is always ONE place to go for the information: Message__c.Exception__c
      */
-    public void handleFatalExceptions(Database.BatchableContext context) {
-        if (this.fatalMessageIds.isEmpty()) return;
-        
-        AsyncApexJob asyncApexJob = [
-            SELECT Id, ExtendedStatus
-            FROM AsyncApexJob
-            WHERE Id = :context.getJobId()
-        ];
-        
-        List<Message__c> fatalMessages = new List<Message__c>();
-        for (Id fatalMessageId : this.fatalMessageIds) fatalMessages.add(new Message__c(
-            Id = fatalMessageId,
-            Exception__c = asyncApexJob.ExtendedStatus.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length) //#754
-        ));
-        
-        update fatalMessages;
-        
-        //empty out
-        this.fatalMessageIds = new Set<Id>();
-    }
     
     /**
      * Each Broker implementation must provide the smarts of how to restart it.

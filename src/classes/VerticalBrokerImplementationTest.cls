@@ -74,7 +74,7 @@
         
         //assert
         Integer expectedPersistable = 10; //5 inputs 5 outputs (unless there were exceptions!)
-        Integer actualPersistable = impl.persistableMessages.size();
+        Integer actualPersistable = impl.Messages.size();
         System.assertEquals(expectedPersistable, actualPersistable, 'Wrong persistable.');
         
         //act (persist previous and mark as many as he can fit within remaining contexts)
@@ -100,7 +100,7 @@
         
         //assert
         expectedPersistable = 8; //4 inputs 4 outputs (unless there were exceptions!)
-        actualPersistable = impl.persistableMessages.size();
+        actualPersistable = impl.Messages.size();
         System.assertEquals(expectedPersistable, actualPersistable, 'Wrong persistable.');
         
         //act (persist previous and mark as many as he can fit within remaining contexts)
@@ -126,7 +126,7 @@
         
         //assert
         expectedPersistable = 9; //9 inputs 0 outputs
-        actualPersistable = impl.persistableMessages.size();
+        actualPersistable = impl.Messages.size();
         System.assertEquals(expectedPersistable, actualPersistable, 'Wrong persistable.');
     }
 
@@ -165,20 +165,20 @@
         expectedCount = 1;
         actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
         System.assertEquals(expectedCount, actualCount, 'Message should be marked.');
-        System.assert(!impl.abortJob, 'Job should not be aborted.');
+        System.assert(!impl.IsAborted, 'Job should not be aborted.');
         
         //act (execute the marked guys and move them out of property)
         impl.execute(null, new List<SObject>());
         
         //assert
         Integer expectedPersistable = 1; //1 input 0 outputs (terminate)
-        Integer actualPersistable = impl.persistableMessages.size();
+        Integer actualPersistable = impl.Messages.size();
         System.assertEquals(expectedCount, actualCount, 'Wrong persistable.');
-        System.assert(!impl.abortJob, 'Job should not be aborted.');
+        System.assert(!impl.IsAborted, 'Job should not be aborted.');
         
         //act (abort condition)
         impl.execute(null, new List<SObject>());
-        System.assert(impl.abortJob, 'Job should be aborted.');
+        System.assert(impl.IsAborted, 'Job should be aborted.');
     }
 
     static testmethod void testMarkLimitedToTotalPotentialMarksWhenBufferedMessagesGtTotalPotentialMarks() {
@@ -238,7 +238,7 @@
         System.assert(actualBufferedCount > 0, 'Buffered Messages should be greater than zero');
         Integer expectedCount = (totalPotentialMarks > actualBufferedCount) ? actualBufferedCount : totalPotentialMarks;
         System.assertEquals(expectedCount, actualCount, 'Message should be started.');
-        System.assert(!impl.abortJob, 'Job should not be aborted.');
+        System.assert(!impl.IsAborted, 'Job should not be aborted.');
     }
 
     static testmethod void testMarkLimitedToTotalBufferedMessagesWhenTotalPotentialMarksGtTotaBufferedMessagesCount() {
@@ -297,6 +297,6 @@
         System.assert(actualBufferedCount > 0, 'Buffered Messages should be greater than zero');
         Integer expectedCount = (totalPotentialMarks > actualBufferedCount) ? actualBufferedCount : totalPotentialMarks;
         System.assertEquals(expectedCount, actualCount, 'Message should be started.');
-        System.assert(!impl.abortJob, 'Job should not be aborted.');
+        System.assert(!impl.IsAborted, 'Job should not be aborted.');
     }
 }
