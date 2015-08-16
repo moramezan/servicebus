@@ -185,15 +185,19 @@ public class SequenceModel extends ApexDomain.StandardModel {
      * that are flowing through this sequence.
      */
     public Integer countRoutedMessages() {
-        Integer count = [
-            SELECT COUNT()
+        Integer total = 0;
+        
+        //#954 looped aggregate query to count > 50000 safely
+        for (AggregateResult result : [
+            SELECT COUNT(Id) total
             FROM Message__c
-            WHERE Step__c LIKE :this.sequence.Name + '#%'
+            WHERE Step__c LIKE :this.Sequence.Name + '#%'
             AND Status__c != 'Completed'
             AND Exception__c = null
-        ];
+            GROUP BY Step__c
+        ]) total += (Integer)result.get('total');
         
-        return count;
+        return total;
     }
     
 }
