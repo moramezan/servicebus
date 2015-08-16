@@ -89,6 +89,7 @@ abstract public without sharing class Broker {
     
     static public Integer MaximumHops = 1000;
     
+    public class UserException extends Exception {}
     public class PanicException extends Exception {}
     
     static public Broker impl() {

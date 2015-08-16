@@ -92,7 +92,8 @@ global class Job implements Process.Plugin, system.Queueable {
         return ids;
     }
     
-    public class JobException extends Exception {}
+    public class RunException extends Exception {}
+    public class EnqueueException extends Exception {}
     
     @TestVisible private List<Map<String,Object>> Events = new List<Map<String,Object>>();
     
@@ -166,21 +167,29 @@ global class Job implements Process.Plugin, system.Queueable {
      * @docs ApiJobConstructors.html
      */
     global Job(List<Map<String,Object>> inputEvents) {
-        // validate input event parameters are supplied:
+        
         if (inputEvents == null) {
-            throw new JobException('Cannot supply a null input events collection.');
+            //failure, bad input collection
+            throw new EnqueueException('Enqueued events cannot be null');
         }
         
         if (inputEvents.size() > 10000) {
             //#955 blow up too many input events enqueued
-            throw new JobException('Too many events: ' + inputEvents.size());
+            throw new EnqueueException('Too many events: ' + inputEvents.size());
         }
         
-        //#977 detect unpersistable types
-        Json.serialize(inputEvents);
+        try {Json.serialize(inputEvents);} catch (JsonException e) {
+            //#977 detect unpersistable types
+            throw new EnqueueException(e.getMessage());
+        }
         
-        //create the message destined for the 0th step of the chain
         for (Map<String,Object> inputEvent : inputEvents) {
+            
+            if (inputEvent == null) {
+                //failure, one bad input event
+                throw new EnqueueException('Enqueued event cannot be null'); //a la System.NullPointerException: Argument cannot be null
+            }
+            
             inputEvent.putAll(new Map<String,Object>{
                 '__Hops' => 1,
                 '__EntryPointUuid' => uuidVersionFour(), //#751 formerly __EntryPointGuid, this is ONLY for 'our' use
@@ -296,13 +305,13 @@ global class Job implements Process.Plugin, system.Queueable {
      * When this blows up we throw an unhandled exception in our namespace,
      * we should receive an email and reach out to the customer to debug this!
      *
-     * This guy will sometimes throw JobException from bad ExecAnon result. It
+     * This guy will sometimes throw exceptions from bad ExecAnon result. It
      * is due to the callout failing to schedule the batch because of #929
      * System.UnexpectedException:
      * common.exception.SqlDupValOnIndexException:
      * ORA-00001: unique constraint (CORE.AKCRON_JOB_DETAIL) violated
      *
-     * @throws JobException
+     * @throws RunException
      */
     @Future(callout=true) static public void runAsUser() {
         //#653 don't waste TOOLING API CALL unnecessarily
@@ -311,7 +320,7 @@ global class Job implements Process.Plugin, system.Queueable {
         
         String command = Job.class.getName() + '.run(null);';
         ExecAnonResult result = execAnon(command);
-        if (!result.success) throw new JobException(Json.serialize(result)); //#858 don't swallow exceptions
+        if (!result.success) throw new RunException(Json.serialize(result)); //#858 don't swallow exceptions
     }
     
     /**
@@ -421,7 +430,7 @@ global class Job implements Process.Plugin, system.Queueable {
         // #653 throw unhandled exception in our namespace
         HttpResponse response = new Http().send(request);
         Integer status = response.getStatusCode();
-        if (status != 200) throw new JobException(response.getBody());
+        if (status != 200) throw new RunException(response.getBody());
         
         ExecAnonResult result = (ExecAnonResult)Json.deserialize(response.getBody(), ExecAnonResult.class);
         return result;

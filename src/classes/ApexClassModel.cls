@@ -3,10 +3,8 @@
  */
 public class ApexClassModel extends ApexDomain.StandardModel {
     
-    /**
-     * For advertising domain layer errors
-     */
-    public class ApexClassException extends Exception {}
+    public class InvocationException extends Exception {}
+    public class ProcessDiscoveryException extends Exception {}
     
     /**
      * This class is a template that must exist in every Process. It describes extra metadata around a process that
@@ -37,7 +35,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             if (inflector == null) inflector = Type.forName(reflector + 'ESB');
             if (inflector == null) {
                 //failure, bad inner class
-                throw new ApexClassException('ESB Process summary class is invalid or not visible: ' + reflector.getName());
+                throw new ProcessDiscoveryException('ESB Process summary class is invalid or not visible: ' + reflector.getName());
             }
             
             Map<String,Object> summary;
@@ -49,7 +47,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 
             } catch (Exception e) {
                 //failure, probably bad toString method
-                throw new ApexClassException(inflector.getName() + ': ESB Process summary class must extend Abstract.ESB.Summary');
+                throw new ProcessDiscoveryException(inflector.getName() + ': ESB Process summary class must extend Abstract.ESB.Summary');
             }
             
             try {
@@ -80,7 +78,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
 
             } catch (Exception e) {
                 //failure, probably bad json format
-                throw new ApexClassException(inflector.getName() + ': Could not resolve value binding: ' + e.getMessage());
+                throw new ProcessDiscoveryException(inflector.getName() + ': Could not resolve value binding: ' + e.getMessage());
             }
         }
     }
@@ -202,7 +200,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         
         if (inputEvent == null) {
             //our own fault
-            throw new ApexClassException('ApexClassModel.invokeCallout must receive an input event.');
+            throw new InvocationException('ApexClassModel.invokeCallout must receive an input event.');
         }
         
         if (this.Process == null) {
@@ -219,7 +217,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         
         if (data != null) {
             //#886 a la "MyCustomException: Exception class must extend another Exception class"
-            throw new ApexClassException(this.Reflector.getName() + ': ESB Process must extend Abstract.ESB');
+            throw new Broker.UserException(this.Reflector.getName() + ': ESB Process must extend Abstract.ESB');
         }
     }
     
@@ -230,7 +228,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         
         if (inputEvent == null) {
             //our own fault
-            throw new ApexClassException('ApexClassModel.invokeExecute must receive an input event.');
+            throw new InvocationException('ApexClassModel.invokeExecute must receive an input event.');
         }
         
         if (this.Process == null) {
@@ -252,12 +250,12 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         
         if (data == null || data == 'null') {
             //#945 a la "System.VisualforceException: Return type of an Apex action method must be a PageReference. Found: java.lang.Integer"
-            throw new ApexClassException(this.Reflector.getName() + ': Return type of an ESB Process must be a List<Map<String,Object>>');
+            throw new Broker.UserException(this.Reflector.getName() + ': Return type of an ESB Process must be a List<Map<String,Object>>');
         }
         
         if (data.startsWith(('.' + this.Reflector.getName()).substringAfterLast('.') + ':[')) {
             //#886 a la "MyCustomException: Exception class must extend another Exception class"
-            throw new ApexClassException(this.Reflector.getName() + ': ESB Process must extend Abstract.ESB');
+            throw new Broker.UserException(this.Reflector.getName() + ': ESB Process must extend Abstract.ESB');
         }
         
         //wrap up results into events (new guys should have Position = 0)
@@ -267,7 +265,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         
         if (results.size() > 5000) {
             //#955 blow up too many output events emitted
-            throw new ApexClassException(this.Reflector.getName() + ': Too many output events: ' + results.size());
+            throw new Broker.UserException(this.Reflector.getName() + ': Too many output events: ' + results.size());
         }
         
         for (Object result : results) {

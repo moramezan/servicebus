@@ -20,11 +20,6 @@ public class MessageModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * For advertising domain layer errors
-     */
-    public class MessageException extends Exception {}
-    
-    /**
      * For cast-free convenience
      */
     public Message__c Message;
@@ -45,25 +40,25 @@ public class MessageModel extends ApexDomain.StandardModel {
         String route = this.message.Step__c;
         
         if (route == null) {
-            throw new MessageException('Message has no step for routing to sequence: ' + this.message.Id); //a la "List has no rows for assignment to SObject"
+            throw new Broker.UserException('Message has no step for routing to sequence: ' + this.message.Id); //a la "List has no rows for assignment to SObject"
         }
         
         Step__c step = Step__c.getValues(route);
         
         if (step == null) {
-            throw new MessageException('Could not resolve route from message step: ' + route); //a la "Could not resolve field 'Billing Address' from value binding"
+            throw new Broker.UserException('Could not resolve route from message step: ' + route); //a la "Could not resolve field 'Billing Address' from value binding"
         }
         
         String apexClassName = step.ApexClassName__c;
         
         if (apexClassName == null) {
-            throw new MessageException('Apex class name cannot be null: ' + route); //a la "Argument cannot be null"
+            throw new Broker.UserException('Apex class name cannot be null: ' + route); //a la "Argument cannot be null"
         }
         
         Type reflector = Type.forName(apexClassName);
         
         if (reflector == null) {
-            throw new MessageException('Class is invalid or not visible: ' + apexClassName); //a la "Variable is not visible" or "Variable does not exist" or "Dependent class is invalid and needs recompilation"
+            throw new Broker.UserException('Class is invalid or not visible: ' + apexClassName); //a la "Variable is not visible" or "Variable does not exist" or "Dependent class is invalid and needs recompilation"
         }
         
         ApexClassModel model = new ApexClassModel(reflector);
@@ -83,7 +78,7 @@ public class MessageModel extends ApexDomain.StandardModel {
             
             Integer hops = (Integer)this.Event.get('__Hops');
             if (hops >= Broker.MaximumHops) {
-                throw new MessageException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
+                throw new Broker.UserException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
             }
             
             if (this.Model == null) {
@@ -133,7 +128,7 @@ public class MessageModel extends ApexDomain.StandardModel {
             
             Integer hops = (Integer)this.Event.get('__Hops');
             if (hops >= Broker.MaximumHops) {
-                throw new MessageException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
+                throw new Broker.UserException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
             }
             
             if (this.Model == null) {
@@ -147,7 +142,7 @@ public class MessageModel extends ApexDomain.StandardModel {
             Integer chunkTotal = (Integer)this.Event.get('__ChunkTotal');
             if (chunkTotal != null && chunkTotal + outputEvents.size() + outputMessages.size() > 8000) {
                 //#955 we throttle inputs+outputs
-                throw new MessageException(this.Model.Reflector.getName() + ': Cannot have more than 8000 events in a single operation. Reduce process Limits or emit fewer events.'); //a la "System.TypeException: Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking."
+                throw new Broker.UserException(this.Model.Reflector.getName() + ': Cannot have more than 8000 events in a single operation. Reduce process Limits or emit fewer events.'); //a la "System.TypeException: Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking."
             }
             
             //wrap up results into Messages (new guys should have Position = 0)
@@ -161,7 +156,7 @@ public class MessageModel extends ApexDomain.StandardModel {
                 
                 if (outputMessages == null) {
                     //panic, our own fault
-                    throw new MessageException('MessageModel.invokeExecute must receive REFERENCE to list of output messages.');
+                    throw new Broker.UserException('MessageModel.invokeExecute must receive REFERENCE to list of output messages.');
                 }
                 
                 //TODO #972 alphabetize event parameter json
@@ -226,9 +221,6 @@ public class MessageModel extends ApexDomain.StandardModel {
      *
      * Analogous to how "execute" and "callouts" are both
      * sub-parts of the bigger concept of "invocation"
-     *
-     * @exception MessageException if you are not allowed to restart the message
-     * @return true if synchronous reprocess succeeded, false if it failed
      */
     public void restart() {
         System.assert(false, 'This is JavaScript now.');
