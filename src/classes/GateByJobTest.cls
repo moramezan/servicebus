@@ -16,7 +16,7 @@
         Integer count =  3 ;
         Integer insertIntoMessageCount = count;
         Integer insertIntoGateItemCount = count - 1;
-        String queueableId = '1234567';
+        String queueableId = '707000000000000AAA';
 
         Map<String,Object> inputEvent = new Map<String,Object> {
             '__QueueableId' => queueableId,
@@ -196,7 +196,7 @@
         Integer count =  3 ;
         Integer insertIntoMessageCount = count;
 
-        String queueableId = '1234567';
+        String queueableId = '707000000000000AAA';
 
         Map<String,Object> inputEvent = new Map<String,Object> {
             '__QueueableId' => queueableId,
@@ -241,7 +241,7 @@
         Integer insertIntoGateItemCount = count - 1;  // Adjust down by one
         // expect: the insertion of additional GateItem under "Act"
 
-        String queueableId = '1234567';
+        String queueableId = '707000000000000AAA';
 
         Map<String,Object> inputEvent = new Map<String,Object> {
             '__QueueableId' => queueableId,
@@ -437,7 +437,7 @@
     
     static testmethod void callingIsReleaseReturnsExpectedExpected01() {
         // Arrange :
-        String queueableId = '12345';
+        String queueableId = '707000000000000AAA';
         Integer chunkTotal = 1;
         Integer chunk = 1;
 
@@ -458,7 +458,7 @@
     
     static testmethod void callingIsReleaseReturnsExpectedExpected02() {
         // Arrange :
-        String queueableId = '12345';
+        String queueableId = '707000000000000AAA';
         Integer chunkTotal = 2;      // not the last
         Integer chunk = 1;
 
@@ -480,7 +480,7 @@
     
     static testmethod void callingIsReleaseReturnsExpectedExpected03() {
         // Arrange :
-        String queueableId = '12345';
+        String queueableId = '707000000000000AAA';
         Integer chunkTotal = 1;
         Integer chunk = 1;
 
@@ -502,7 +502,7 @@
 
     static testmethod void callingIsReleaseReturnsExpectedExpected04() {
         // Arrange :
-        String queueableId = '12345';
+        String queueableId = '707000000000000AAA';
         Integer chunkTotal = 2;
         Integer chunk = 2;
 

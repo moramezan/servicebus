@@ -4,9 +4,9 @@
         //arrange step
         Step__c step = new Step__c(
             Name = 'Wiretaps#1',
-            ConfigId__c = 'a0524000002DBXnAAO',
+            ConfigId__c = '015000000000000AAA',
             ConfigName__c = 'This step must be configured. Seriously.',
-            ApexClassId__c = '01p2400000AaMt4AAF',
+            ApexClassId__c = '01p000000000000AAA',
             ApexClassName__c = 'esb.Wiretap',
             Position__c = 1.0
         );

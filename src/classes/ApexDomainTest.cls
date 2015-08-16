@@ -14,7 +14,7 @@
     
     static testmethod void testAccessors() {
         //arrange domain layer
-        Contact contact = new Contact(Id = '003000000000000');
+        Contact contact = new Contact(Id = '003000000000000AAA');
         ContactModel contactObj = new ContactModel(contact);
         
         //act
@@ -33,7 +33,7 @@
     
     static testmethod void testSetAccessors() {
         //arrange domain layer
-        Contact contact = new Contact(Id = '003000000000000');
+        Contact contact = new Contact(Id = '003000000000000AAA');
         ContactSetModel contactsObj = new ContactSetModel(new List<Contact>{contact});
         
         //act

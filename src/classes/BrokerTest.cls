@@ -93,7 +93,7 @@
         
         //arrange inputs
         Test.startTest();
-        Job job = new Job(sequence.Name, '000000000000000AAA');
+        Job job = new Job(sequence.Name, '00D000000000000AAA');
         System.enqueueJob(job);
         Test.stopTest();
         
@@ -373,7 +373,7 @@
     static testmethod void callingRestartSuccessfullyCallsrunImpl() {
         //arrange
         Test.startTest();
-        Job job = new Job('test', '000000000000000AAA');
+        Job job = new Job('test', '00D000000000000AAA');
         System.enqueueJob(job);
         Test.stopTest();
         
@@ -464,7 +464,7 @@
         
         //arrange message
         Test.startTest();
-        Job job = new Job(sequence.Name, '000000000000000AAA');
+        Job job = new Job(sequence.Name, '00D000000000000AAA');
         System.enqueueJob(job);
         Test.stopTest();
         
@@ -507,7 +507,7 @@
         
         //act
         Test.startTest();
-        Job job = new Job('Test', '000000000000000AAA');
+        Job job = new Job('Test', '00D000000000000AAA');
         System.enqueueJob(job);
         Test.stopTest();
         
@@ -523,7 +523,7 @@
         
         //act
         Test.startTest();
-        Job job = new Job('Test', '000000000000000AAA');
+        Job job = new Job('Test', '00D000000000000AAA');
         System.enqueueJob(job);
         Test.stopTest();
         
@@ -565,7 +565,7 @@
         
         //act
         Test.startTest();
-        Job job = new Job(sequenceNameA, '000000000000000AAA');
+        Job job = new Job(sequenceNameA, '00D000000000000AAA');
         System.enqueueJob(job);
         Test.stopTest();
         
@@ -692,7 +692,7 @@
         model.appendStep(Terminate.class);
         
         //act
-        new Job(sequence.Name, '000000000000000AAA').execute(null);
+        new Job(sequence.Name, '00D000000000000AAA').execute(null);
         
         //assemble
         List<Message__c> messages = [

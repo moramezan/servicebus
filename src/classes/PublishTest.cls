@@ -85,7 +85,7 @@
         //arrange input
         Map<String,Object> parameters = new Map<String,Object>{
             'esb__StepConfigId' => pubConfig.Id,
-            '__SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
+            '__SubsequenceStepIds' => new List<Id>{'a01000000000000AAA'}
         };
         
         ApexClassModel.BaseProcess process = new Publish();
@@ -102,7 +102,7 @@
         System.assertEquals(expectedIds, actualIds);
         
         //second one is original/passthru
-        expectedIds = new List<Id>{'000000000000000AAA'};
+        expectedIds = new List<Id>{'a01000000000000AAA'};
         actualIds = (List<Object>)parametersList[1].get('__SubsequenceStepIds');
         System.assertEquals(expectedIds, actualIds);
     }

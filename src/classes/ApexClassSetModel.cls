@@ -66,7 +66,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
      *
      * [
      *     {
-     *         "Id": "01p2400000AaMs1";
+     *         "Id": "01p000000000000AAA";
      *         "Name": "Gate By Entry Point";
      *         "Description": "Aggregates a collection of messages having the same Entry Point Id.",
      *         "Tag": "Enterprise Service Bus",
@@ -75,7 +75,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
      *         "ProcessSetting": null
      *     },
      *     {
-     *         "Id": "01p2400000AaMs3";
+     *         "Id": "01p000000000000AAA";
      *         "Name": "Gate By Job";
      *         "Description": "Aggregates a collection of messages having the same Job Id.",
      *         "Tag": "Enterprise Service Bus",

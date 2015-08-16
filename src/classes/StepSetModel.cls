@@ -32,7 +32,7 @@ public class StepSetModel extends ApexDomain.StandardSetModel {
      *         "Name": "Wiretaps#1",
      *         "ConfigId": null,
      *         "ConfigName": null,
-     *         "ApexClassId": "01p2400000AaMt4",
+     *         "ApexClassId": "01p000000000000AAA",
      *         "ApexClassName": "Wiretap"
      *         "Position": 1.0,
      *     },
@@ -40,7 +40,7 @@ public class StepSetModel extends ApexDomain.StandardSetModel {
      *         "Name": "Wiretaps#2",
      *         "ConfigId": null,
      *         "ConfigName": null,
-     *         "ApexClassId": "01p2400000AaMsy",
+     *         "ApexClassId": "01p000000000000AAA",
      *         "ApexClassName": "Terminate"
      *         "Position": 2.0,
      *     }

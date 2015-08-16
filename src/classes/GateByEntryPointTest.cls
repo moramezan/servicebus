@@ -19,7 +19,7 @@
         Integer insertIntoGateItemCount = count - 1;  // Adjust down by one
         // expect: the insertion of additional GateItem under "Act"
 
-        String entryPointUuid = '1234567';
+        String entryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
 
         Map<String,Object> inputEvent = new Map<String,Object> {
             'esb__EntryPointUuid' => entryPointUuid,
@@ -199,7 +199,7 @@
         Integer count =  3 ;
         Integer insertIntoMessageCount = count;
 
-        String entryPointUuid = '1234567';
+        String entryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
 
         Map<String,Object> inputEvent = new Map<String,Object> {
             'esb__EntryPointUuid' => entryPointUuid,
@@ -244,7 +244,7 @@
         Integer insertIntoGateItemCount = count - 1;  // Adjust down by one
         // expect: the insertion of additional GateItem under "Act"
 
-        String entryPointUuid = '1234567';
+        String entryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
 
         Map<String,Object> inputEvent = new Map<String,Object> {
             'esb__EntryPointUuid' => entryPointUuid,

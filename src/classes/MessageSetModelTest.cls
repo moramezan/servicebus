@@ -144,7 +144,7 @@
     
      static testmethod void callingPopulateJsonFieldsCorrectlyPopulatesEntryPointUuid() {
          //arrange message
-         String EntryPointUuid = '123456';
+         String EntryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
          Message__c message = new Message__c(
              Event__c = '{"esb__EntryPointUuid":"' + entryPointUuid + '"}'
          );

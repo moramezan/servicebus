@@ -9,7 +9,7 @@
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         Test.startTest();
-        Job job = new Job('Test', '000000000000000AAA');
+        Job job = new Job('Test', '00D000000000000AAA');
         System.enqueueJob(job);
         Test.stopTest();
         

@@ -61,7 +61,7 @@
         
         Map<String,Object> inputEvent = new Map<String,Object>{
             'esb__StepConfigId' => config.Id,
-            '__SubsequenceStepIds' => new List<Id>{'000000000000000AAA'}
+            '__SubsequenceStepIds' => new List<Id>{'a01000000000000AAA'}
         };
         
         ApexClassModel.BaseProcess process = new Branch();

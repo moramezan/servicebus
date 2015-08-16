@@ -54,7 +54,7 @@
     
     static testmethod void testShowConfig() {
         //arrange step
-        Step__c step = new Step__c(Name = 'Test#1', ConfigId__c = '01524000000FuQh');
+        Step__c step = new Step__c(Name = 'Test#1', ConfigId__c = '015000000000000AAA');
         insert step;
         
         //act
@@ -62,7 +62,7 @@
         PageReference view = model.showConfig();
         
         //assert
-        String expectedUrl = '/01524000000FuQh?isdtp=vw';
+        String expectedUrl = '/015000000000000?isdtp=vw';
         String actualUrl = view.getUrl();
         System.assertEquals(expectedUrl, actualUrl, 'Wrong url.');
     }
