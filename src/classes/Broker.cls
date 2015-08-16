@@ -150,6 +150,8 @@ abstract public without sharing class Broker {
             
             Integer limits = summary.Limits;
             
+            //TODO what if this guy returns a list of 0, would cause a panic condition, lets check
+            
             return [
                 SELECT Id, Step__c, Event__c //TODO lose event
                 FROM Message__c

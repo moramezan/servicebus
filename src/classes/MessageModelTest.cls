@@ -203,4 +203,41 @@
         Integer actualStatements = dmlStatements;
         System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
     }
+    
+    public class PassThroughProcess extends ApexClassModel.BaseProcess {
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            return new List<Map<String,Object>>{inputEvent};
+        }
+    }
+    
+    static testmethod void testStepConfigIdGetsPopulated() {
+        //arrange config
+        Document document = new Document(Name = 'Config', FolderId = UserInfo.getUserId());
+        insert document;
+        
+        //arrange step
+        Step__c step = new Step__c(Name = 'Test#1', ApexClassName__c = PassThroughProcess.class.getName(), ConfigId__c = document.Id);
+        insert step;
+        
+        //arrange message
+        Message__c message = new Message__c(Step__c = 'Test#1', Event__c = '{}');
+        MessageModel model = new MessageModel(message);
+        
+        //act
+        List<Message__c> outputMessages = new List<Message__c>();
+        model.invokeExecute(outputMessages);
+        
+        //assert
+        Integer expectedSize = 1;
+        Integer actualSize = outputMessages.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
+        
+        //assemble
+        Map<String,Object> outputEvent = (Map<String,Object>)Json.deserializeUntyped(outputMessages[0].Event__c);
+        
+        //assert
+        Id expectedStepConfigId = document.Id;
+        Id actualStepConfigId = (Id)outputEvent.get('esb__StepConfigId');
+        System.assertEquals(expectedStepConfigId, actualStepConfigId, 'Wrong step config id.');
+    }
 }

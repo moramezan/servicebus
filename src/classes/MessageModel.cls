@@ -136,6 +136,10 @@ public class MessageModel extends ApexDomain.StandardModel {
                 this.Model = this.resolveApexClassModel();
             }
             
+            //#856 StepConfig should enter the process instance as an Id
+            Step__c step = Step__c.getValues(this.Message.Step__c);
+            if (step != null) this.Event.put('esb__StepConfigId', step.ConfigId__c);
+            
             //do invocation
             List<Map<String,Object>> outputEvents = this.Model.invokeExecute(this.Event);
             
