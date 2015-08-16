@@ -38,7 +38,7 @@ public with sharing class MonitorController {
     
     @RemoteAction static public List<Statistic> getTestStatistics() {
         return new List<Statistic>{
-            new Statistic(' ',               1, 32,  0,  0),
+            new Statistic(null,               1, 32,  0,  0),
             new Statistic('Branch',          1,  0,  0,  0),
             new Statistic('GateByEntryPoint',         2,  0,  0,  0),
             new Statistic('GateByJob',         2,  0,  0,  0),
@@ -53,74 +53,74 @@ public with sharing class MonitorController {
     }
     
     @RemoteAction static public List<Statistic> getStatistics() {
-        //initialize empty statistics for each process
-        Map<String,Statistic> step2statistic = new Map<String,Statistic>();
+        Map<String,Statistic> route2statistic = new Map<String,Statistic>();
         
-        //#761 add null guy for all buffered messages
-        step2statistic.put(' ', new Statistic(' ', 0, 0, 0, 0));
-        
-        for (Step__c step : Step__c.getAll().values()) {
-            Statistic statistic = new Statistic(step.Name, 0, 0, 0, 0);
-            step2statistic.put(step.Name, statistic);
-        }
-        
-        //check for null so we don't blow up for unresolved messages
-        //TODO is there any point even displaying paused messages?!?!
-        //first aggregate by route
+        //initialize empty statistics for each route
         for (AggregateResult result : [
-            SELECT Step__c step, COUNT(Status__c) total
+            SELECT Step__c route
             FROM Message__c
-            WHERE Step__c != null
-            AND Status__c = 'Paused'
             GROUP BY Step__c
         ]) {
-            Statistic statistic = step2statistic.get((String)result.get('step')); //#761
-            if (statistic == null) statistic = step2statistic.get(' ');
+            Statistic statistic = new Statistic((String)result.get('route'), 0, 0, 0, 0);
+            route2statistic.put((String)result.get('route'), statistic);
+        }
+        
+        //#761 add null guy for unrouted messages
+        route2statistic.put(null, new Statistic(' ', 0, 0, 0, 0));
+        
+        //check for null so we don't blow up for unresolved messages
+        for (AggregateResult result : [
+            SELECT Step__c route, COUNT(Status__c) total
+            FROM Message__c
+            WHERE Status__c = 'Paused'
+            GROUP BY Step__c
+        ]) {
+            Statistic statistic = route2statistic.get((String)result.get('route')); //#761
+            if (statistic == null) statistic = route2statistic.get(null);
             statistic.Paused += (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
-            SELECT Step__c step, COUNT(Status__c) total
+            SELECT Step__c route, COUNT(Status__c) total
             FROM Message__c
-            WHERE Step__c != null
-            AND Status__c = 'Buffered'
+            WHERE Status__c = 'Buffered'
             GROUP BY Step__c
         ]) {
-            step2statistic.get(' ').Buffered = (Integer)result.get('total');
+            Statistic statistic = route2statistic.get((String)result.get('route')); //#761
+            if (statistic == null) statistic = route2statistic.get(null);
+            statistic.Buffered += (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
-            SELECT Step__c step, COUNT(Status__c) total
+            SELECT Step__c route, COUNT(Status__c) total
             FROM Message__c
-            WHERE Step__c != null
-            AND Status__c = 'Started' AND Exception__c = null
+            WHERE Status__c = 'Started' AND Exception__c = null
             GROUP BY Step__c
         ]) {
-            Statistic statistic = step2statistic.get((String)result.get('step')); //#761
-            if (statistic == null) statistic = step2statistic.get(' ');
+            Statistic statistic = route2statistic.get((String)result.get('route')); //#761
+            if (statistic == null) statistic = route2statistic.get(null);
             statistic.Started += (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
-            SELECT Step__c step, COUNT(Status__c) total
+            SELECT Step__c route, COUNT(Status__c) total
             FROM Message__c
-            WHERE Step__c != null
-            AND Status__c = 'Started' AND Exception__c != null
+            WHERE Status__c = 'Started' AND Exception__c != null
             GROUP BY Step__c
         ]) {
-            Statistic statistic = step2statistic.get((String)result.get('step')); //#761
-            if (statistic == null) statistic = step2statistic.get(' ');
+            Statistic statistic = route2statistic.get((String)result.get('route')); //#761
+            if (statistic == null) statistic = route2statistic.get(null);
             statistic.Exceptions += (Integer)result.get('total');
         }
         
         //pluck out the buffered guys (null per #697)
-        Statistic none = step2statistic.remove(' ');
-        List<String> stepNames = new List<String>(step2statistic.keySet());
+        Statistic none = route2statistic.remove(null);
+        List<String> stepNames = new List<String>(route2statistic.keySet());
         stepNames.sort();
         
         //sort buffered then alphabetical
         List<Statistic> statistics = new List<Statistic>{none};
-        for (String stepName : stepNames) statistics.add(step2statistic.get(stepName));
+        for (String stepName : stepNames) statistics.add(route2statistic.get(stepName));
         return statistics;
     }
     

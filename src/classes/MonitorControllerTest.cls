@@ -8,8 +8,12 @@
         Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
-        insert new Message__c(Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Paused');
-        insert new Message__c(Event__c = '{"esb__SequenceName":"Test"}', Status__c = 'Buffered');
+        Test.startTest();
+        Job job = new Job('Test', '000000000000000AAA');
+        System.enqueueJob(job);
+        Test.stopTest();
+        
+        Broker.impl().run();
         
         //act
         List<MonitorController.Statistic> statistics = MonitorController.getStatistics();
@@ -19,7 +23,7 @@
         ApexClassSetModel model = ApexClassSetModel.discoverProcesses(apexClassIds);
         
         //assert 1 null, 1 wiretap, 1 terminate,
-        Integer expectedCount = 3; //the graph is [' ', 'Wiretap', 'Terminate']
+        Integer expectedCount = 3; //the graph is [' ', 'Test#1', 'Test#2']
         Integer actualCount = statistics.size();
         System.assertEquals(expectedCount, actualCount);
     }
