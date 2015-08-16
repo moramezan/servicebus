@@ -38,7 +38,7 @@
         );
         
         //act
-        new MessageSetModel(new List<Message__c>{message}).populateJsonFields();
+        new MessageSetModel(new List<Message__c>{message}).alphabetizeJsonAndPopulateFields();
         
         //assert
         String expectedRoute = Heartbeat.class.getName();
@@ -53,7 +53,7 @@
         );
         
         //act
-        new MessageSetModel(new List<Message__c>{message}).populateJsonFields();
+        new MessageSetModel(new List<Message__c>{message}).alphabetizeJsonAndPopulateFields();
         
         //assert
         String expectedRoute = 'test#1';
@@ -71,7 +71,7 @@
         System.assert(!ApexPages.hasMessages(), 'Should not have errors before.');
         
         //act
-        new MessageSetModel(new List<Message__c>{validMessage}).alphabetizeEventJson();
+        new MessageSetModel(new List<Message__c>{validMessage}).alphabetizeJsonAndPopulateFields();
         
         //assert
         System.assert(!ApexPages.hasMessages(), 'Should not have errors after.');
@@ -87,7 +87,7 @@
         System.assert(!ApexPages.hasMessages(), 'Should not have errors before.');
         
         //act
-        new MessageSetModel(new List<Message__c>{validMessage}).alphabetizeEventJson();
+        new MessageSetModel(new List<Message__c>{validMessage}).alphabetizeJsonAndPopulateFields();
         
         //assert
         System.assert(ApexPages.hasMessages(), 'Should have errors after.');
@@ -127,18 +127,18 @@
     
      static testmethod void callingPopulateJsonFieldsCorrectlyPopulatesQueueableId() {
          //arrange message
-         String queueableId = '123456';
+         Id queueableId = UserInfo.getUserId();
          Message__c message = new Message__c(
              Event__c = '{"__QueueableId":"' + queueableId + '"}'
          );
 
          //act
-         new MessageSetModel(new List<Message__c>{message}).populateJsonFields();
+         new MessageSetModel(new List<Message__c>{message}).alphabetizeJsonAndPopulateFields();
 
          //assert
 
-         String actualQueueableId = message.QueueableId__c;
-         String expectedQueueableId = queueableId;
+         Id actualQueueableId = message.QueueableId__c;
+         Id expectedQueueableId = queueableId;
          System.assertEquals(expectedQueueableId, actualQueueableId, 'Failed to populate QueueableId');
      }
     
@@ -150,7 +150,7 @@
          );
 
          //act
-         new MessageSetModel(new List<Message__c>{message}).populateJsonFields();
+         new MessageSetModel(new List<Message__c>{message}).alphabetizeJsonAndPopulateFields();
 
          //assert
 

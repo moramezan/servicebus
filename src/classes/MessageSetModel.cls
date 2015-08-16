@@ -106,31 +106,40 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     }
     
     override public void onBeforeInsert() {
-        this.alphabetizeEventJson();
-        this.populateJsonFields();
+        this.alphabetizeJsonAndPopulateFields();
         this.swallowToString();
     }
     
     override public void onBeforeUpdate(List<SObject> oldObjects) {
-        this.alphabetizeEventJson();
-        this.populateJsonFields();
+        this.alphabetizeJsonAndPopulateFields();
         this.swallowToString();
     }
     
-    @TestVisible private void populateJsonFields() {
-        for (Message__c message : this.Messages) {
-            Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
+    /**
+     * Ensure that Event parameters are always valid JSON #660
+     * So that we can trust them in the Broker and keep code simple.
+     */
+    @TestVisible private void alphabetizeJsonAndPopulateFields() {
+        for (Message__c message : this.Messages) try {
+            if (message.Event__c == null) message.Event__c = '{}';
+            
+            //#972 reserialize in alphabetical order
+            Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
+            message.Event__c = new SortedSerializer(event).toString();
             
             /**
              * We make sure those guys are always concatenated into a key,
              * using object instead of integer means it works with "" etc
              */
+            //clear before routing to one or the other
+            message.Step__c = null;
+            
             //#956 "fire and forget" process without sequences or steps
-            String process = (String)parameters.get('esb__Process');
+            String process = (String)event.get('esb__Process');
             if (process != null) message.Step__c = process;
             
-            Object sequence = parameters.get('__SequenceName');
-            Object position = parameters.get('__Position');
+            String sequence = (String)event.get('__SequenceName');
+            Integer position = (Integer)event.get('__Position');
             if (sequence != null && position != null) message.Step__c = sequence + '#' + position;
             
             /**
@@ -138,31 +147,18 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
              * This parameter surfaced onto the message to support the
              * functionality in the Gate By Entry Point process
              */
-            message.EntryPointUuid__c = (String)parameters.get('esb__EntryPointUuid');
+            String entryPointUuid = (String)event.get('esb__EntryPointUuid');
+            if (entryPointUuid != null) message.EntryPointUuid__c = entryPointUuid;
             
             /**
              * Populates the Queueable Id
              * This parameter surfaced onto the message to support the
              * functionality in the Gate By Job process
              */
-            message.QueueableId__c = (String)parameters.get('__QueueableId');
-        }
-    }
-    
-    /**
-     * Ensure that Message Parameters are always valid JSON #660
-     * So that we can trust them in the Broker and keep code simple.
-     */
-    @TestVisible private void alphabetizeEventJson() {
-        for (Message__c message : this.Messages) {
-            try {
-                //#972 reserialize in alphabetical order
-                Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
-                message.Event__c = new SortedSerializer(event).toString();
-                
-            } catch (JsonException e) {
-                message.Event__c.addError(e);
-            }
+            Id queueableId = (Id)event.get('__QueueableId');
+            if (queueableId != null) message.QueueableId__c = queueableId;
+        } catch (Exception e) {
+            message.Event__c.addError(e);
         }
     }
     
