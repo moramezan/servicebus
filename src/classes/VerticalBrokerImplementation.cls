@@ -33,6 +33,11 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         Abort
     }
     
+    /**
+     * #671 first query locator spends less time in 'Preparing'
+     */
+    Integer Contexts = System.isBatch() ? 1000 : 50;
+    
     public VerticalBrokerImplementation() {
         if (UserInfo.getUserId() != OAuthSetting__c.getOrgDefaults().RunningUserId__c) {
             //#847 broker panic, wrong user context
@@ -47,13 +52,12 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     
     /**
      * Some integer below a hard limit of 4000 (min expected rows in FieldPermissions)
-     * #671 first query locator spends less time in 'Preparing'
      */
     public Database.QueryLocator start(Database.BatchableContext context) {
         return Database.getQueryLocator([
             SELECT Id
             FROM FieldPermissions
-            LIMIT :System.isBatch() ? 1000 : 50
+            LIMIT :this.Contexts
         ]);
     }
     
