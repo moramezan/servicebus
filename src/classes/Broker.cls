@@ -4,13 +4,13 @@
  * Example sequence:
  * Test#1 [Wiretap]
  * Test#2 [Terminate]
- * 
+ *
  * [interactive] System.enqueueJob(job)
  * [queueable] execute job
  * [future] call tooling api
  * [tooling] System.scheduleBatch(broker)
  * [schedule] ...wait...
- * [batch.start] 
+ * [batch.start]
  * [batch.execute] broker.locate() then broker.mark(wiretap)
  * [batch.execute] broker.execute(wiretap)
  * [batch.execute] broker.locate() then broker.persist(wiretap) then broker.mark(terminate)
@@ -25,8 +25,8 @@ abstract public without sharing class Broker {
     /**
      * #985 helps avoid misleading errors
      */
-    @TestVisible protected Integer BlameCpuTime;
-    @TestVisible protected String BlameRoute;
+    public Integer BlameCpuTime;
+    public String BlameRoute;
     
     static public Integer MaximumHops = 1000;
     
