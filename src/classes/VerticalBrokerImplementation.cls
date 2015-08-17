@@ -7,6 +7,11 @@
 public without sharing class VerticalBrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
     
     /**
+     * #985 helps avoid misleading errors
+     */
+    @TestVisible Boolean IsFirstFatal = true;
+    
+    /**
      * Used for communicating which messages had fatal
      * errors across contexts: execute-to-persist
      */
@@ -148,10 +153,15 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         List<Message__c> fatalities = new List<Message__c>();
         for (Id fatalId : this.FatalIds) fatalities.add(new Message__c(
             Id = fatalId,
-            Exception__c = asyncApexJob.ExtendedStatus
+            ExecuteDuration__c = this.BlameCpuTime, //#987 we fishing to restore this
+            Exception__c = 'Fatal Error: Route to blame: ' + this.BlameRoute, //#985
+            Cause__c = this.IsFirstFatal ? asyncApexJob.ExtendedStatus : null //#985
         ));
         
         update fatalities;
+        this.IsFirstFatal = false;
+        this.BlameCpuTime = null;
+        this.BlameRoute = null;
         
         //prevent repetition
         this.FatalIds = null;

@@ -22,6 +22,12 @@
  */
 abstract public without sharing class Broker {
     
+    /**
+     * #985 helps avoid misleading errors
+     */
+    @TestVisible protected Integer BlameCpuTime;
+    @TestVisible protected String BlameRoute;
+    
     static public Integer MaximumHops = 1000;
     
     public class UserException extends Exception {}
@@ -147,6 +153,8 @@ abstract public without sharing class Broker {
             //THEIR FUCKUPS (callout)
             for (MessageModel model : models) {
                 //do invocation
+                this.BlameCpuTime = Limits.getCpuTime(); //#985
+                this.BlameRoute = model.Message.Step__c; //#985
                 model.invokeCallout();
             }
             
@@ -164,6 +172,8 @@ abstract public without sharing class Broker {
                 }
                 
                 //do invocation
+                this.BlameCpuTime = Limits.getCpuTime(); //#985
+                this.BlameRoute = model.Message.Step__c; //#985
                 isolate = model.invokeExecute(outputMessages);
                 
                 if (model.Message.Exception__c != null && isolate) {
