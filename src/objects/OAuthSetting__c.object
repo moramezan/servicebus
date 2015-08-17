@@ -36,6 +36,16 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>ReturnUrl__c</fullName>
+        <description>Used to redirect users back to some specific page after the configuration flow.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What retURL will the user be redirected to afterwards?</inlineHelpText>
+        <label>Return URL</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
         <fullName>RunningUserId__c</fullName>
         <description>Which User with a System Administrator profile performed the post install configuration ?</description>
         <externalId>false</externalId>

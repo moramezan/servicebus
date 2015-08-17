@@ -25,6 +25,24 @@ public with sharing class SequenceBuilderExtension {
      * situation and sends user to configure page.
      */
     public PageReference doRedirect() {
+        String sessionId = OAuthSetting__c.getOrgDefaults().AccessToken__c;
+        String configuredOrgId = OAuthSetting__c.getOrgDefaults().UnprefixedOrgId__c;
+        String unprefixedOrgId = UserInfo.getOrganizationId().substring(3, 15);
+        
+        if (null == sessionId) {
+            //failure, user never clicked configure button
+            PageReference redirect = Page.Configure;
+            redirect.getParameters().put('retURL', ApexPages.currentPage().getUrl());
+            return redirect;
+        }
+        
+        if (configuredOrgId != unprefixedOrgId) {
+            //failure, new environment probably due to sandbox refresh
+            PageReference redirect = Page.Configure;
+            redirect.getParameters().put('retURL', ApexPages.currentPage().getUrl());
+            return redirect;
+        }
+        
         if (OAuthSetting__c.getOrgDefaults().RunningUserId__c == null) {
             //failure, someone better configure the package
             return Page.Configure;

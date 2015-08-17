@@ -8,5 +8,5 @@
     <masterLabel>Configure</masterLabel>
     <openType>replace</openType>
     <protected>true</protected>
-    <url>{!URLFOR(&quot;/apex/&quot; + $Setup.NamespaceSetting__c.BarPrefix__c + &quot;Configure&quot;, null, [&quot;url&quot;=$Api.Enterprise_Server_URL_340])}</url>
+    <url>{!URLFOR(&quot;/apex/&quot; + $Setup.NamespaceSetting__c.BarPrefix__c + &quot;Configure&quot;, null, [&quot;url&quot;=$Api.Enterprise_Server_URL_340,&quot;retURL&quot;=$Request.retURL])}</url>
 </CustomPageWebLink>

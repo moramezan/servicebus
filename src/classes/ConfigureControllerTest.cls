@@ -85,7 +85,9 @@
     static testmethod void testDoRedirectStageNull() {
         //arrange controller and page
         ConfigureController controller = new ConfigureController();
-        Test.setCurrentPage(Page.Configure);
+        PageReference configure = Page.Configure;
+        configure.getParameters().put('retURL', '/foo/bar');
+        Test.setCurrentPage(configure);
         
         //act
         System.PageReference redirect = controller.doRedirect();
@@ -94,6 +96,10 @@
         String expectedLid = [SELECT Id FROM WebLink WHERE Description = 'Enterprise Service Bus configuration link.'].Id;
         String actualLid = redirect.getParameters().get('lid');
         System.assertEquals(expectedLid, actualLid, 'Wrong lid.');
+        
+        String expectedReturnUrl = '/foo/bar';
+        String actualReturnUrl = redirect.getParameters().get('retURL');
+        System.assertEquals(expectedLid, actualLid, 'Wrong return URL.');
     }
     
     static testmethod void testDoRedirectStageCustomSetting() {
@@ -101,6 +107,7 @@
         ConfigureController controller = new ConfigureController();
         System.PageReference configure = Page.Configure;
         configure.getParameters().put('url', Url.getSalesforceBaseUrl().toExternalForm() + '/services/Soap/c/34.0'); //this implies stage=cs
+        configure.getParameters().put('retURL', '/herp/derp');
         Test.setCurrentPage(configure);
         
         //act
@@ -122,6 +129,10 @@
         String expectedUnprefixedOrgId = UserInfo.getOrganizationId().substring(3, 15);
         String actualUnprefixedOrgId = OAuthSetting__c.getOrgDefaults().UnprefixedOrgId__c;
         System.assertEquals(expectedUnprefixedOrgId, actualUnprefixedOrgId, 'Wrong id.');
+        
+        String expectedReturnUrl = '/herp/derp';
+        String actualReturnUrl = OAuthSetting__c.getOrgDefaults().ReturnUrl__c;
+        System.assertEquals(expectedReturnUrl, actualReturnUrl, 'Wrong return URL.');
     }
     
     static testmethod void testDoRedirectStageJavaScript() {
@@ -163,12 +174,19 @@
         configure.getParameters().put('code', '12345'); //this implies stage=cb
         Test.setCurrentPage(configure);
         
+        //arrange custom setting
+        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
+        setting.ReturnUrl__c = '/apex/test';
+        upsert setting;
+        
         //act
+        Test.startTest();
         Test.setMock(HttpCalloutMock.class, new TokenResponse());
         System.PageReference redirect = controller.doRedirect();
+        Test.stopTest();
         
         //assert
-        String expectedUrl = new System.PageReference('/apex/ContextSensitiveHelp?topic=EnterpriseServiceBus').getUrl();
+        String expectedUrl = '/apex/test';
         String actualUrl = redirect.getUrl();
         System.assertEquals(expectedUrl, actualUrl, 'Wrong URL.');
         

@@ -358,6 +358,7 @@ public with sharing class ConfigureController {
             pr.getParameters().put('lid', [SELECT Id FROM WebLink WHERE Description = 'Enterprise Service Bus configuration link.'].Id);
             pr.getParameters().put('eid', UserInfo.getUserId());
             pr.getParameters().put('ic', '1');
+            pr.getParameters().put('retURL', ApexPages.currentPage().getParameters().get('retURL'));
             return pr;
         }
         
@@ -367,6 +368,7 @@ public with sharing class ConfigureController {
             setting = OAuthSetting__c.getOrgDefaults();
             setting.InstanceUrl__c = url;
             setting.UnprefixedOrgId__c = UserInfo.getOrganizationId().substring(3, 15);
+            setting.ReturnUrl__c = ApexPages.currentPage().getParameters().get('retURL');
             Type.forName(DoDml.class.getName()).newInstance();
             
             System.PageReference pr = Page.Configure;
@@ -427,7 +429,7 @@ public with sharing class ConfigureController {
             if (!Test.isRunningTest()) HeartbeatImplementation.defer();
             
             //5. finally send them to the context sensitive help page
-            return new System.PageReference('/apex/ContextSensitiveHelp?topic=EnterpriseServiceBus');
+            return new PageReference(setting.ReturnUrl__c != null ? setting.ReturnUrl__c : '/apex/ContextSensitiveHelp?topic=EnterpriseServiceBus');
         }
         
         //this should never happen

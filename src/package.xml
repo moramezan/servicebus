@@ -163,6 +163,7 @@
         <members>OAuthSetting__c.AccessToken__c</members>
         <members>OAuthSetting__c.InstanceUrl__c</members>
         <members>OAuthSetting__c.RefreshToken__c</members>
+        <members>OAuthSetting__c.ReturnUrl__c</members>
         <members>OAuthSetting__c.RunningUserId__c</members>
         <members>OAuthSetting__c.UnprefixedOrgId__c</members>
         <members>PublishConfig__c.EventType__c</members>
