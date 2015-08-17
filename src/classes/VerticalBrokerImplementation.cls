@@ -6,16 +6,25 @@
  */
 public without sharing class VerticalBrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
     
-    @TestVisible Set<Id> FatalIds = new Set<Id>();
+    /**
+     * Used for communicating which messages had fatal
+     * errors across contexts: execute-to-persist
+     */
+    @TestVisible Set<Id> FatalIds;
+    
+    /**
+     * Used for communicating across contexts:
+     * mark-to-execute and also execute-to-persist
+     */
     @TestVisible List<Message__c> Messages = new List<Message__c>();
-    @TestVisible Boolean IsAborted = false;
     
-    public Stage NextStage = Stage.PersistAndLocateAndMark;
-    
+    /**
+     * The possible stages of our vertical worker state machine
+     * https://github.com/bigassforce/esb/issues/987#issuecomment-131629798
+     */
     Enum Stage {
-        PersistAndLocateAndMark,
+        PersistMark,
         Execute,
-        Handle,
         Abort
     }
     
@@ -27,80 +36,61 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     }
 
     /**
-     * If we encounter any kind of unexpected exception (catchable or otherwise)
-     * inside this batch job, we risk that the QueryLocator will loop forever. This
-     * flag can be set when that condition is detected.
+     * The first execution context will always be a mark
      */
-    @TestVisible private Boolean IsPanic = false;
-    
-    /**
-     * #671 first query locator spends less time in 'Preparing'
-     */
-    @TestVisible private Integer Contexts = System.isBatch() ? 1000 : 50;
+    @TestVisible Stage NextStage = Stage.PersistMark;
     
     /**
      * Some integer below a hard limit of 4000 (min expected rows in FieldPermissions)
+     * #671 first query locator spends less time in 'Preparing'
      */
     public Database.QueryLocator start(Database.BatchableContext context) {
-        return Database.getQueryLocator([SELECT Id FROM FieldPermissions LIMIT :this.Contexts]);
+        return Database.getQueryLocator([
+            SELECT Id
+            FROM FieldPermissions
+            LIMIT :System.isBatch() ? 1000 : 50
+        ]);
     }
     
     /**
-     * +------------------+---------------------+------------------+
-     * | Has work to MARK | Has work to EXECUTE | Action to take   |
-     * +------------------+---------------------+------------------+
-     * | 0                | 0                   | Done, abort job! |
-     * +------------------+---------------------+------------------+
-     * | 0                | 1                   | Broker.execute   | (would likely abort next)
-     * +------------------+---------------------+------------------+
-     * | 1                | 0                   | Broker.mark      | (would likely execute next)
-     * +------------------+---------------------+------------------+
-     * | 1                | 1                   | Broker.execute   | (would likely mark next)
-     * +------------------+---------------------+------------------+
+     * Each execution context needs to know what to do. Rather than inferring
+     * from the former "markable" or "executable" or "persistable" variables,
+     * we can be more like a state machine that instructs the next STAGE.
      */
     public void execute(Database.BatchableContext context, List<SObject> scopes) {
-        
-        if (this.IsPanic) {
-            System.abortJob(context.getJobId());
-            return;
-        }
-        
-        this.Contexts--;
-        
         try {
-            
-            if (this.NextStage == Stage.PersistAndLocateAndMark) {
+            if (this.NextStage == Stage.PersistMark) {
+                
+                //possible next stage
+                this.NextStage = Stage.Abort; //helps 'done' down there
+                
+                //HANDLE
+                if (this.FatalIds != null) this.handleFatalIds(context);
                 
                 //PERSIST
                 this.persist(this.Messages);
                 
                 //MORE
-                if (this.Contexts <= 1) {
-                    //don't mark if we can't execute
-                    return;
-                }
+                if (this.isLastContext(context)) return; //finish happens next
                 
                 //LOCATE
                 this.Messages = this.locateMarkableWork();
                 
-                //ABORT
-                if (this.Messages.isEmpty()) {
-                    //don't execute if nothing to do
-                    if (Test.isRunningTest()) this.IsAborted = true;
-                    else System.abortJob(context.getJobId());
-                    return;
-                }
+                //DONE
+                if (this.Messages.isEmpty()) return; //uses 'abort' up there
                 
                 //MARK
                 this.mark(this.Messages);
                 
-                //next
+                //actual next stage
                 this.NextStage = Stage.Execute;
                 
             } else if (this.NextStage == Stage.Execute) {
                 
-                //next
-                this.NextStage = Stage.Handle;
+                //actual next stage
+                this.NextStage = Stage.PersistMark;
+                
+                //all fatalities
                 this.FatalIds = new Map<Id,SObject>(this.Messages).keySet();
                 
                 //EXECUTE
@@ -111,37 +101,81 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
                 this.Messages.addAll(inputMessages);
                 this.Messages.addAll(outputMessages);
                 
-                //next
-                this.FatalIds = new Set<Id>();
-                this.NextStage = Stage.PersistAndLocateAndMark;
+                //no fatalities
+                this.FatalIds = null;
                 
-            } else if (this.NextStage == Stage.Handle) {
+            } else if (this.NextStage == Stage.Abort) {
                 
-                //HANDLE FATAL EXCEPTIONS
-                AsyncApexJob asyncApexJob = [SELECT ExtendedStatus FROM AsyncApexJob WHERE Id = :context.getJobId()];
+                //ABORT
+                System.abortJob(context.getJobId());
                 
-                List<Message__c> fatalities = new List<Message__c>();
-                for (Id fatalMessageId : this.FatalIds) fatalities.add(new Message__c(
-                    Id = fatalMessageId,
-                    Exception__c = asyncApexJob.ExtendedStatus
-                ));
-                update fatalities;
+            } else {
                 
-                //next
-                this.FatalIds = new Set<Id>();
-                this.NextStage = Stage.PersistAndLocateAndMark;
+                //PANIC
+                throw new Broker.PanicException('Unexpected stage: ' + this.NextStage);
                 
             }
-            
         } catch (Exception e) {
-            this.IsPanic = true; //this will roll over thanks to stateful
-            throw e; //first error appears on our AsyncApexJob log
+            
+            /**
+             * If we encounter any kind of unexpected exception (catchable or otherwise)
+             * inside this batch job, we risk that the QueryLocator will loop forever. When
+             * that condition is detected, we leave First Error THEN bail on next cycle.
+             */
+            this.NextStage = Stage.Abort;
+            throw e;
+            
         }
-        
     }
     
+    /**
+     * HANDLE is not needed on the last guy here, so
+     * long as number of contexts is an even number?
+     */
     public void finish(Database.BatchableContext context) {
         super.run();
+    }
+    
+    public void handleFatalIds(Database.BatchableContext context) {
+        //gets "First error: ..." off job
+        AsyncApexJob asyncApexJob = [
+            SELECT ExtendedStatus
+            FROM AsyncApexJob
+            WHERE Id = :context.getJobId()
+        ];
+        
+        //write it away on the previous set of messages
+        List<Message__c> fatalities = new List<Message__c>();
+        for (Id fatalId : this.FatalIds) fatalities.add(new Message__c(
+            Id = fatalId,
+            Exception__c = asyncApexJob.ExtendedStatus
+        ));
+        
+        update fatalities;
+        
+        //prevent repetition
+        this.FatalIds = null;
+    }
+    
+    /**
+     * We require TWO contexts to do anything useful, namely MARK
+     * and EXECUTE. So when the very last context comes, we skip it.
+     * Otherwise any marking would be left without an execute after.
+     */
+    public Boolean isLastContext(Database.BatchableContext context) {
+        if (Test.isRunningTest()) {
+            //any context implies last
+            return context != null;
+        }
+        
+        AsyncApexJob asyncApexJob = [
+            SELECT JobItemsProcessed, TotalJobItems
+            FROM AsyncApexJob
+            WHERE Id = :context.getJobId()
+        ];
+        
+        //this is our very last context, dont waste it on a mark!
+        return asyncApexJob.TotalJobItems == asyncApexJob.jobItemsProcessed + 1;
     }
     
     /**

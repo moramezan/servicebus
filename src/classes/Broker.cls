@@ -2,85 +2,20 @@
  * Very fundamental order:
  *
  * Example sequence:
- * TestSequence #1 [Wiretap]
- * TestSequence #2 [Wiretap]
- * TestSequence #3 [Terminate]
- *
- * As used by a queueing broker:
- *
- * +-----------+ (CONTEXT Q FROM STANDARD USER)
- * |  ENQUEUE  |
- * |  PERSIST  | deals with esb__SequenceName etc
- * +-----------+
- *
- * +-----------+ (CONTEXT F FROM STANDARD USER)
- * |  FUTURE   | calls tooling api with admin sid
- * +-----------+
- *
- * +-----------+ (CONTEXT T AS SYSTEM ADMIN)
- * |TOOLING API| ghosts running user in future
- * +-----------+
- *
- * +-----------+ (CONTEXT S batchable.start AS SYSTEM ADMIN)
- * |  BS HERE  | generate 100 context QueryLocator
- * +-----------+
- *
- * +-----------+ (CONTEXT 1 batchable.execute AS SYSTEM ADMIN)
- * |  MARK     |
- * +-----------+
- *
- * +-----------+ (CONTEXT 2 batchable.execute AS SYSTEM ADMIN)
- * |  EXECUTE  | invokes [Wiretap]
- * |  PERSIST  |
- * +-----------+
- *
- * +-----------+ (CONTEXT 3 batchable.execute AS SYSTEM ADMIN)
- * |  MARK     |
- * +-----------+
- *
- * +-----------+ (CONTEXT 4 batchable.execute AS SYSTEM ADMIN)
- * |  EXECUTE  | invokes [Wiretap]
- * |  PERSIST  |
- * +-----------+
- *
- * +-----------+ (CONTEXT 5 batchable.execute AS SYSTEM ADMIN)
- * |  MARK     |
- * +-----------+
- *
- * +-----------+ (CONTEXT 6 batchable.execute AS SYSTEM ADMIN)
- * |  EXECUTE  | invokes [Terminate]
- * |  PERSIST  |
- * +-----------+
- *
- * +-----------+ (CONTEXT 7 batchable.execute AS SYSTEM ADMIN)
- * |  DONE     | detect exit condition
- * |  ABORTJOB | optionally abort IFF we ran out of work
- * +-----------+
- *
- * +-----------+ (CONTEXT F batchable.finish AS SYSTEM ADMIN)
- * |  RESTART  | optionally restart IFF we exhausted the BS query locator
- * +-----------+
- *
- *
- *
- * As used by a synchronous broker:
- *
- * +-----------+ (CONTEXT 1 FROM SYSTEM ADMIN)
- * |  ENQUEUE  |
- * |  PERSIST  | deals with esb__SequenceName etc
- * |           |
- * |  MARK     |
- * |  EXECUTE  | invokes [Wiretap]
- * |  PERSIST  |
- * |           |
- * |  MARK     |
- * |  EXECUTE  | invokes [Wiretap]
- * |  PERSIST  |
- * |           |
- * |  MARK     |
- * |  EXECUTE  | invokes [Terminate]
- * |  PERSIST  |
- * +-----------+
+ * Test#1 [Wiretap]
+ * Test#2 [Terminate]
+ * 
+ * [interactive] System.enqueueJob(job)
+ * [queueable] execute job
+ * [future] call tooling api
+ * [tooling] System.scheduleBatch(broker)
+ * [schedule] ...wait...
+ * [batch.start] 
+ * [batch.execute] broker.locate() then broker.mark(wiretap)
+ * [batch.execute] broker.execute(wiretap)
+ * [batch.execute] broker.locate() then broker.persist(wiretap) then broker.mark(terminate)
+ * [batch.execute] broker.execute(terminate)
+ * [batch.execute] broker.locate() then abort()
  */
 /**
  * This class is WITHOUT SHARING to ensure the process can execute regardless of running user context.
@@ -110,12 +45,12 @@ abstract public without sharing class Broker {
      * submitted the query locator. That way, if any given execution fails, those messages will remain in the
      * easily identifiable 'Started' state.
      *
-     * CONTEXT 1:
+     * CONTEXT A:
+     * - Persist (from previous)
      * - Locate (lock for update)
-     * - Mark   (performs update and puts into stateful, safe from clutches of other jobs)
+     * - Mark (performs update and puts into stateful, safe from clutches of other jobs)
      *
-     * CONTEXT 2:
-     * - Locate  (locks totally unrelated next guys)
+     * CONTEXT B:
      * - Execute (reads guys off stateful property, does work and performs update)
      *
      * @return collection of soon-to-be-marked-as-Started Messages.

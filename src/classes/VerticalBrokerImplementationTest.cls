@@ -36,11 +36,6 @@
         List<Message__c> messages = [SELECT Id, Step__c, Event__c FROM Message__c];
         VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
         
-        //assert
-        Integer expectedContexts = 50;
-        Integer actualContexts = impl.Contexts;
-        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
-        
         //act (start up big query locator)
         Database.QueryLocatorIterator iterator = impl.start(null).iterator();
         List<SObject> records = new List<Sobject>();
@@ -55,22 +50,12 @@
         impl.execute(null, new List<SObject>());
         
         //assert
-        expectedContexts = 49;
-        actualContexts = impl.Contexts;
-        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
-        
-        //assert
         Integer expectedMarked = 5;
         Integer actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
         System.assertEquals(expectedMarked, actualMarked, 'Wrong marked.');
         
         //act (execute the marked guys and move them out of property)
         impl.execute(null, new List<SObject>());
-        
-        //assert
-        expectedContexts = 48;
-        actualContexts = impl.Contexts;
-        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
         //assert
         Integer expectedPersistable = 10; //5 inputs 5 outputs (unless there were exceptions!)
@@ -81,22 +66,12 @@
         impl.execute(null, new List<SObject>());
         
         //assert
-        expectedContexts = 47;
-        actualContexts = impl.Contexts;
-        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
-        
-        //assert
         expectedMarked = 4;
         actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
         System.assertEquals(expectedMarked, actualMarked, 'Wrong marked.');
         
         //act (execute the marked guys and move them out of property)
         impl.execute(null, new List<SObject>());
-        
-        //assert
-        expectedContexts = 46;
-        actualContexts = impl.Contexts;
-        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
         
         //assert
         expectedPersistable = 8; //4 inputs 4 outputs (unless there were exceptions!)
@@ -107,11 +82,6 @@
         impl.execute(null, new List<SObject>());
         
         //assert
-        expectedContexts = 45;
-        actualContexts = impl.Contexts;
-        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
-        
-        //assert
         expectedMarked = 9;
         actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
         System.assertEquals(expectedMarked, actualMarked, 'Wrong marked.');
@@ -120,17 +90,12 @@
         impl.execute(null, new List<SObject>());
         
         //assert
-        expectedContexts = 44;
-        actualContexts = impl.Contexts;
-        System.assertEquals(expectedContexts, actualContexts, 'Wrong contexts.');
-        
-        //assert
         expectedPersistable = 9; //9 inputs 0 outputs
         actualPersistable = impl.Messages.size();
         System.assertEquals(expectedPersistable, actualPersistable, 'Wrong persistable.');
     }
 
-    static testmethod void testMarkAndExecuteAndDoneConditions() {
+    static testmethod void testMarkAndExecuteAndDoneConditionAbortsJobAtEnd() {
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
         insert sequence;
@@ -165,7 +130,6 @@
         expectedCount = 1;
         actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
         System.assertEquals(expectedCount, actualCount, 'Message should be marked.');
-        System.assert(!impl.IsAborted, 'Job should not be aborted.');
         
         //act (execute the marked guys and move them out of property)
         impl.execute(null, new List<SObject>());
@@ -174,11 +138,25 @@
         Integer expectedPersistable = 1; //1 input 0 outputs (terminate)
         Integer actualPersistable = impl.Messages.size();
         System.assertEquals(expectedCount, actualCount, 'Wrong persistable.');
-        System.assert(!impl.IsAborted, 'Job should not be aborted.');
         
-        //act (abort condition)
-        impl.execute(null, new List<SObject>());
-        System.assert(impl.IsAborted, 'Job should be aborted.');
+        //act (handing ANY context causes abort NEXT via isLastContext)
+        impl.execute(new MockContext(), new List<SObject>());
+        
+        //assert
+        expectedPersistable = 0; //nothing to mark
+        actualPersistable = impl.Messages.size();
+        System.assertEquals(expectedCount, actualCount, 'Wrong persistable.');
+        
+        try {
+            //act (stage should be abort)
+            impl.execute(new MockContext(), new List<SObject>());
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Exception e) {
+            //assert that JOB IS ABORTED
+            String expectedMessage = 'Job does not exist or is already aborted.';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message');
+        }
     }
 
     static testmethod void testMarkLimitedToTotalPotentialMarksWhenBufferedMessagesGtTotalPotentialMarks() {
@@ -229,7 +207,7 @@
         
         //act
         List<SObject> scopes = new List<SObject>();
-        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
+        impl.execute(null, scopes);
         
         //assemble
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
@@ -238,7 +216,6 @@
         System.assert(actualBufferedCount > 0, 'Buffered Messages should be greater than zero');
         Integer expectedCount = (totalPotentialMarks > actualBufferedCount) ? actualBufferedCount : totalPotentialMarks;
         System.assertEquals(expectedCount, actualCount, 'Message should be started.');
-        System.assert(!impl.IsAborted, 'Job should not be aborted.');
     }
 
     static testmethod void testMarkLimitedToTotalBufferedMessagesWhenTotalPotentialMarksGtTotaBufferedMessagesCount() {
@@ -288,7 +265,7 @@
         
         //act
         List<SObject> scopes = new List<SObject>();
-        impl.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
+        impl.execute(null, scopes);
         
         //assemble
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
@@ -297,6 +274,41 @@
         System.assert(actualBufferedCount > 0, 'Buffered Messages should be greater than zero');
         Integer expectedCount = (totalPotentialMarks > actualBufferedCount) ? actualBufferedCount : totalPotentialMarks;
         System.assertEquals(expectedCount, actualCount, 'Message should be started.');
-        System.assert(!impl.IsAborted, 'Job should not be aborted.');
     }
+    
+    public class MockContext implements Database.BatchableContext {
+        public Id getJobId() {return '707000000000000AAA';}
+        public Id getChildJobId() {return '707000000000000AAA';}
+    }
+    
+    static testmethod void testPanicConditionAbortsJob() {
+        //arrange
+        VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
+        
+        try {
+            //act, null should cause panic
+            impl.NextStage = null;
+            impl.execute(new MockContext(), new List<SObject>());
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Exception e) {
+            //assert
+            String expectedMessage = 'Unexpected stage: null';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+        
+        //stage property should still be null
+        
+        try {
+            //act (stage should be abort)
+            impl.execute(new MockContext(), new List<SObject>());
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Exception e) {
+            //assert that JOB IS ABORTED
+            String expectedMessage = 'Job does not exist or is already aborted.';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message');
+        }
+    }
+    
 }
