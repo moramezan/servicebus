@@ -4,6 +4,14 @@
 public class MessageModel extends ApexDomain.StandardModel {
     
     /**
+     * #981 help prevent side effects from restart
+     * https://github.com/bigassforce/esb/issues/981#issuecomment-131665156
+     */
+    static public Exception RestartException;
+    
+
+    
+    /**
      * Event parameters
      */
     public Map<String,Object> Event;
@@ -66,9 +74,6 @@ public class MessageModel extends ApexDomain.StandardModel {
         return model;
     }
     
-    /**
-     * TODO COUNT ANY DMLS
-     */
     public void invokeCallout() {
         
         //execution time profiler
@@ -95,6 +100,7 @@ public class MessageModel extends ApexDomain.StandardModel {
             
         } catch (Exception e) {
             //#581 smoking gun should point at the user, NOT at our broker
+            RestartException = e;
             this.Message.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
             this.Message.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
         }
@@ -105,7 +111,6 @@ public class MessageModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * TODO COUNT ANY CALLOUTS
      * @return HAD SIDE EFFECTS
      */
     public Boolean invokeExecute(List<Message__c> outputMessages) {
@@ -177,6 +182,7 @@ public class MessageModel extends ApexDomain.StandardModel {
 
         } catch (Exception e) {
             //#581 smoking gun should point at the user, NOT at our broker
+            RestartException = e;
             this.Message.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
             this.Message.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
         }

@@ -307,7 +307,7 @@ Sets the status of message(s) to Buffered and start the Broker</description>
         <fullName>Restart</fullName>
         <availability>online</availability>
         <description>Refer #808 :
-Syncronouysly execute a message with an exception. 
+Synchronously execute a message with an exception. 
 Sucessfull execution initiates processing by the Broker</description>
         <displayType>button</displayType>
         <linkType>javascript</linkType>
@@ -328,15 +328,20 @@ if ({!Message__c.Exception__c == null}) {
     sforce.connection.init(sid, &apos;/services/Soap/u/34.0&apos;);
     var response = sforce.apex.executeAnonymous(command);
     if (response.success == &quot;false&quot;) {
-        //persist any fatal error
+        //started, persist any fatal error and refresh
         var msg = new sforce.SObject(bar + &apos;Message__c&apos;);
         msg.Id = &apos;{!Message__c.Id}&apos;;
         msg[bar + &apos;ExecuteDuration__c&apos;] = new Date().getTime() - mark;
         msg[bar + &apos;Exception__c&apos;] = response.exceptionMessage.substring(0, 255);
         msg[bar + &apos;Cause__c&apos;] = response.exceptionStackTrace.substring(0, 32768);
         sforce.connection.update([msg]);
+        window.location.reload();
+        
+    } else {
+        //completed, redirect back to list view
+        window.location.href = &apos;/{!$ObjectType.Message__c}&apos;;
+        
     }
-    window.location.reload();
 }
 {!REQUIRESCRIPT(&quot;/soap/ajax/34.0/connection.js&quot;)}
 {!REQUIRESCRIPT(&quot;/soap/ajax/34.0/apex.js&quot;)}</url>

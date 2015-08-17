@@ -361,6 +361,8 @@ global class Job implements Process.Plugin, system.Queueable {
             inputAndOutputMessages.addAll(outputMessages);
             Broker.impl().persist(inputAndOutputMessages);
             
+            //#981#issuecomment-131670372 prevent side effects (like batch jobs) escaping
+            if (MessageModel.RestartException != null) throw MessageModel.RestartException;
         }
         
         //success, restart the REAL broker to carry on with the outputs

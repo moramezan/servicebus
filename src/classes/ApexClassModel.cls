@@ -193,9 +193,6 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      */
     transient Object Process;
     
-    /**
-     * TODO COUNT ANY DMLS
-     */
     public void invokeCallout(Map<String,Object> inputEvent) {
         
         if (inputEvent == null) {
@@ -213,7 +210,28 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         Job.EventProvider = Json.serialize(inputEvent);
         
         //do invocation
-        String data = String.valueOf(this.Process);
+        String data;
+        try {
+            //measure side effects before
+            Integer futureCalls = Limits.getFutureCalls();
+            Integer queueableJobs = Limits.getQueueableJobs();
+            Integer dmlStatements = Limits.getDMLStatements();
+            Integer emailInvocations = Limits.getEmailInvocations();
+            
+            data = String.valueOf(this.Process);
+            
+            //measure side effects after
+            if (Limits.getFutureCalls() > futureCalls) throw new Broker.UserException('You have uncommitted work pending. Please commit or rollback before calling out');
+            if (Limits.getQueueableJobs() > queueableJobs) throw new Broker.UserException('You have uncommitted work pending. Please commit or rollback before calling out');
+            if (Limits.getDMLStatements() > dmlStatements) throw new Broker.UserException('You have uncommitted work pending. Please commit or rollback before calling out');
+            if (Limits.getEmailInvocations() > emailInvocations) throw new Broker.UserException('You have uncommitted work pending. Please commit or rollback before calling out');
+            
+        } catch (Exception e) {
+            if (e.getMessage() == 'You have uncommitted work pending. Please commit or rollback before calling out') {
+                //#981 put work in proper method please... fucking uncommit using system rollback (no savepoint because callout!)
+                System.assert(false, this.Reflector.getName() + ': Side effects from callout() not supported. Please do that in the execute() method.');
+            }
+        }
         
         if (data != null) {
             //#886 a la "MyCustomException: Exception class must extend another Exception class"
@@ -221,9 +239,6 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         }
     }
     
-    /**
-     * TODO COUNT ANY CALLOUTS
-     */
     public List<Map<String,Object>> invokeExecute(Map<String,Object> inputEvent) {
         
         if (inputEvent == null) {
@@ -246,7 +261,15 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         //TODO for #886
         
         //do invocation
-        String data = String.valueOf(this.Process);
+        String data;
+        try {
+            data = String.valueOf(this.Process);
+        } catch (System.CalloutException e) {
+            if (e.getMessage() == 'You have uncommitted work pending. Please commit or rollback before calling out') {
+                //#981 put callout in proper method please
+                throw new Broker.UserException(this.Reflector.getName() + ': Callout from execute() not supported. Please do that in the callout() method.');
+            }
+        }
         
         if (data == null || data == 'null') {
             //#945 a la "System.VisualforceException: Return type of an Apex action method must be a PageReference. Found: java.lang.Integer"
