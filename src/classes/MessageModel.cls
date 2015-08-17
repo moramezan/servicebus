@@ -101,8 +101,8 @@ public class MessageModel extends ApexDomain.StandardModel {
         } catch (Exception e) {
             //#581 smoking gun should point at the user, NOT at our broker
             RestartException = e;
-            this.Message.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-            this.Message.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            this.Message.Exception__c = (e.getTypeName() + ': ' + e.getMessage()).abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+            this.Message.Cause__c = e.getStackTraceString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
         }
         
         //execution time profiler
@@ -183,8 +183,8 @@ public class MessageModel extends ApexDomain.StandardModel {
         } catch (Exception e) {
             //#581 smoking gun should point at the user, NOT at our broker
             RestartException = e;
-            this.Message.Exception__c = e.getMessage().abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-            this.Message.Cause__c = new ExceptionSerializer(e).getAsString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            this.Message.Exception__c = (e.getTypeName() + ': ' + e.getMessage()).abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+            this.Message.Cause__c = e.getStackTraceString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
         }
         
         //execution time profiler
@@ -254,89 +254,4 @@ public class MessageModel extends ApexDomain.StandardModel {
         ApexClass apexClass = (ApexClass)model.getRecord();
         return new ApexPages.StandardController(apexClass).view();
     }
-    
-    /**
-     * Usage:
-     * new ExceptionSerializer(myEx).getAsString();
-     */
-    public class ExceptionSerializer {
-        
-        private JsonGenerator g;
-        
-        public ExceptionSerializer(Exception e) {
-            //true for pretty printing
-            g = Json.createGenerator(true);
-            
-            g.writeStartObject();
-            traverseException(e);
-            g.writeEndObject();
-        }
-        
-        public String getAsString() {
-            return g.getAsString();
-        }
-        
-        @TestVisible private void traverseException(Exception e) {
-            //special exceptions
-            if (e instanceof DmlException || e instanceof EmailException) {
-                Integer n = e.getNumDml();
-                g.writeNumberField('NumDml', n);
-                
-                //the names of the field or fields that caused the error described by the ith failed row
-                List<List<String>> dmlFieldNames = new List<List<String>>();
-                for (Integer i = 0; i < n; i++) dmlFieldNames.add(e.getDmlFieldNames(i));
-                g.writeObjectField('DmlFieldNames', dmlFieldNames);
-                
-                //cannot serialize Schema.sObjectField
-                //List<List<Schema.sObjectField>> dmlFields = new List<List<Schema.sObjectField>>();
-                //for (Integer i = 0; i < n; i++) dmlFields.add(e.getDmlFields(i));
-                //g.writeObjectField('DmlFields', dmlFields);
-                
-                //the ID of the failed record that caused the error described by the ith failed row
-                List<Id> dmlIds = new List<Id>();
-                for (Integer i = 0; i < n; i++) dmlIds.add(e.getDmlId(i));
-                g.writeObjectField('DmlIds', dmlIds);
-                
-                //the original row position of the ith failed row
-                List<Integer> dmlIndexes = new List<Integer>();
-                for (Integer i = 0; i < n; i++) dmlIndexes.add(e.getDmlIndex(i));
-                g.writeObjectField('DmlIndexes', dmlIndexes);
-                
-                //the user message for the ith failed row
-                List<String> dmlMessages = new List<String>();
-                for (Integer i = 0; i < n; i++) dmlMessages.add(e.getDmlMessage(i));
-                g.writeObjectField('DmlMessages', dmlMessages);
-                
-                //the Apex failure code for the ith failed row
-                List<String> dmlStatusCodes = new List<String>();
-                for (Integer i = 0; i < n; i++) dmlStatusCodes.add(e.getDmlStatusCode(i));
-                g.writeObjectField('DmlStatusCodes', dmlStatusCodes);
-                
-                //cannot serialize Enum
-                //List<System.StatusCode> dmlTypes = new List<System.StatusCode>();
-                //for (Integer i = 0; i < n; i++) dmlTypes.add(e.getDmlType(i));
-                //g.writeObjectField('DmlTpes', dmlTypes);
-            }
-            
-            //normal exceptions
-            g.writeNumberField('LineNumber', e.getLineNumber());
-            g.writeStringField('Message', e.getMessage());
-            g.writeStringField('StackTraceString', e.getStackTraceString());
-            g.writeStringField('TypeName', e.getTypeName());
-            g.writeFieldName('Cause');
-            
-            if (e.getCause() == null) {
-                //time to stop recursing
-                this.g.writeNull();
-                return;
-            }
-            
-            //recurse into causes
-            g.writeStartObject();
-            traverseException(e.getCause());
-            g.writeEndObject();
-        }
-        
-    }
-    
 }

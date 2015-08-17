@@ -305,11 +305,11 @@
         String actualException = inputMessages[38].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
 
-        expectedException = TooManyEvents.class.getName() + ': Cannot have more than 8000 events in a single operation. Reduce process Limits or emit fewer events.';
+        expectedException = Broker.UserException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 8000 events in a single operation. Reduce process Limits or emit fewer events.';
         actualException = inputMessages[39].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
 
-        expectedException = TooManyEvents.class.getName() + ': Cannot have more than 8000 events in a single operation. Reduce process Limits or emit fewer events.';
+        expectedException = Broker.UserException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 8000 events in a single operation. Reduce process Limits or emit fewer events.';
         actualException = inputMessages[40].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
         

@@ -119,7 +119,7 @@
         ];
         
         //assert
-        String expectedException = 'Maximum hops reached: 2';
+        String expectedException = Broker.UserException.class.getName() + ': Maximum hops reached: 2';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
@@ -214,7 +214,7 @@
         Message__c message = [SELECT Id, Exception__c FROM Message__c];
         
         //assert
-        String expectedException = 'Maximum hops reached: 1';
+        String expectedException = Broker.UserException.class.getName() + ': Maximum hops reached: 1';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
@@ -423,7 +423,7 @@
         actualMessage = messages[0].Exception__c;
         
         //assert
-        String expectedMessage = 'Message has no step for routing to sequence: ' + messages[0].Id;
+        String expectedMessage = Broker.UserException.class.getName() + ': Message has no step for routing to sequence: ' + messages[0].Id;
         System.assertEquals(expectedMessage, actualMessage, 'Wrong exception message.');
     }
     
@@ -447,7 +447,7 @@
         Message__c message = [SELECT Id, Exception__c FROM Message__c];
         
         //assert
-        String expectedException = 'Could not resolve route from message step: Test#0';
+        String expectedException = Broker.UserException.class.getName() + ': Could not resolve route from message step: Test#0';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong message.');
     }
@@ -473,12 +473,11 @@
         
         //assemble
         Message__c message = [SELECT Id, Cause__c, Exception__c FROM Message__c];
-        Map<String,Object> actualEx = (Map<String,Object>)Json.deserializeUntyped(message.Cause__c);
         
         //assert
         String actualMessage = message.Exception__c;
-        String expectedMessage = 'Class is invalid or not visible: lalala';
-        System.assertEquals(expectedMessage, (String)actualEx.get('Message'), 'Wrong message detail.');
+        String expectedMessage = Broker.UserException.class.getName() + ': Class is invalid or not visible: lalala';
+        System.assertEquals(expectedMessage, actualMessage, 'Wrong message detail.');
     }
     
     static testmethod void canGenerateUniqueIds() {
@@ -589,7 +588,7 @@
         Integer actualFailureCount = messages.size();
         System.assertEquals(expectedFailureCount, actualFailureCount, 'Wrong failure count.');
         
-        String expectedException = 'Could not resolve route from message step: sequenceA#4';
+        String expectedException = Broker.UserException.class.getName() + ': Could not resolve route from message step: sequenceA#4';
         String actualException = messages[0].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
