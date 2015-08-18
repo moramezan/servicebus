@@ -71,8 +71,8 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         try {
             if (this.NextStage == Stage.PersistMark) {
                 
-                //possible next stage
-                this.NextStage = Stage.Abort; //helps 'done' down there
+                //actual next stage
+                this.NextStage = Stage.Execute;
                 
                 //HANDLE
                 if (this.FatalIds != null) this.handleFatalIds(context);
@@ -80,20 +80,14 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
                 //PERSIST
                 this.persist(this.Messages);
                 
-                //MORE
-                if (this.isLastContext(context)) return; //finish happens next
-                
                 //LOCATE
                 this.Messages = this.locateMarkableWork();
-                
-                //DONE
-                if (this.Messages.isEmpty()) return; //uses 'abort' up there
                 
                 //MARK
                 this.mark(this.Messages);
                 
-                //actual next stage
-                this.NextStage = Stage.Execute;
+                //DONE
+                if (this.Messages.isEmpty()) this.NextStage = Stage.Abort;
                 
             } else if (this.NextStage == Stage.Execute) {
                 
@@ -143,6 +137,13 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
      * long as number of contexts is an even number?
      */
     public void finish(Database.BatchableContext context) {
+        
+        //#991 HANDLE
+        if (this.FatalIds != null) this.handleFatalIds(context);
+        
+        //#991 PERSIST
+        this.persist(this.Messages);
+        
         IsRestart = true;
         super.run();
     }
@@ -174,27 +175,6 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     }
     
     /**
-     * We require TWO contexts to do anything useful, namely MARK
-     * and EXECUTE. So when the very last context comes, we skip it.
-     * Otherwise any marking would be left without an execute after.
-     */
-    public Boolean isLastContext(Database.BatchableContext context) {
-        if (Test.isRunningTest()) {
-            //any context implies last
-            return context != null;
-        }
-        
-        AsyncApexJob asyncApexJob = [
-            SELECT JobItemsProcessed, TotalJobItems
-            FROM AsyncApexJob
-            WHERE Id = :context.getJobId()
-        ];
-        
-        //this is our very last context, dont waste it on a mark!
-        return asyncApexJob.TotalJobItems == asyncApexJob.jobItemsProcessed + 1;
-    }
-    
-    /**
      * The new reason we can't persist such errors in the execute() method is
      * because they are uncatchable exceptions like System.assert() or Limits.
      *
@@ -215,7 +195,12 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
             System.assert(false, 'The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
         }
         
-        //TODO this is about 5 - 10 seconds slower to start than executeBatch
-        System.scheduleBatch(new VerticalBrokerDispatcher(), 'Enterprise Service Bus Broker', 0, 1);
+        if (IsRestart) {
+            //TODO consider if finish is exclusive enough to do this
+            Database.executeBatch(new VerticalBrokerDispatcher(), 1);
+        } else {
+            //TODO be aware schedule is about 5 - 10 seconds slower to start
+            System.scheduleBatch(new VerticalBrokerDispatcher(), 'Enterprise Service Bus Broker', 0, 1);
+        }
     }
 }
