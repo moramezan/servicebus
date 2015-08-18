@@ -36,10 +36,11 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     /**
      * #671 first query locator spends less time in 'Preparing'
      */
-    Integer Contexts = System.isBatch() ? 1000 : 50;
+    static Boolean IsRestart = false;
+    Integer Contexts = IsRestart ? 1000 : 50;
     
     public VerticalBrokerImplementation() {
-        if (UserInfo.getUserId() != OAuthSetting__c.getOrgDefaults().RunningUserId__c) {
+        if (!Job.isRunningUser()) {
             //#847 broker panic, wrong user context
             System.assert(false, 'The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
         }
@@ -142,6 +143,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
      * long as number of contexts is an even number?
      */
     public void finish(Database.BatchableContext context) {
+        IsRestart = true;
         super.run();
     }
     
@@ -208,11 +210,12 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
      * The VerticalBroker executes another Batch Apex job to run itself again.
      */
     override public void runImpl() {
-        if (UserInfo.getUserId() != OAuthSetting__c.getOrgDefaults().RunningUserId__c) {
+        if (!Job.isRunningUser()) {
             //#847 broker panic, wrong user context
             System.assert(false, 'The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
         }
         
+        //TODO this is about 5 - 10 seconds slower to start than executeBatch
         System.scheduleBatch(new VerticalBrokerDispatcher(), 'Enterprise Service Bus Broker', 0, 1);
     }
 }

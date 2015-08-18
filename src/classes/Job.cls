@@ -194,7 +194,7 @@ global class Job implements Process.Plugin, system.Queueable {
                 '__Hops' => 1,
                 '__EntryPointUuid' => uuidVersionFour(), //#751 formerly __EntryPointGuid, this is ONLY for 'our' use
                 '__EntryPointDatetime' => System.now(), //#753 formerly __EventStamp this is ONLY for our framework use
-                'esb__EnqueueUserId' => UserInfo.getUserId(), //WE use '__' and THEY use 'esb' per #669
+                'esb__EnqueueUserId' => (Id)UserInfo.getUserId(), //WE use '__' and THEY use 'esb' per #669
                 '__EnqueueUserId' => UserInfo.getUserId()
             });
             
@@ -271,9 +271,18 @@ global class Job implements Process.Plugin, system.Queueable {
         MessageSetModel.Inhibit = true;
         
         //#653 don't waste FUTURE ASYNC CALL unnecessarily
+        if (Test.isRunningTest()) return;
         if (isScheduled()) return;
         if (isRunning()) return;
-        if (!Test.isRunningTest()) runAsUser();
+        
+        //#989 optimize already correct running user context
+        if (isRunningUser()) run(null); else runAsUser();
+    }
+    
+    static public Boolean isRunningUser() {
+        Id userId = UserInfo.getUserId();
+        Id runningId = OAuthSetting__c.getOrgDefaults().RunningUserId__c;
+        return userId == runningId;
     }
     
     static public Boolean isScheduled() {

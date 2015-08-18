@@ -172,10 +172,14 @@ public class HeartbeatImplementation implements System.Schedulable {
             outputEvents.add(outputEvent);
         }
         
-        //Workaround for known issue: "Method only allowed during testing"
-        //https://success.salesforce.com/issues_view?id=a1p300000008XM1AAM
-        if (Test.isRunningTest()) new Job(outputEvents).execute(null);
-        else System.enqueueJob(new Job(outputEvents));
+        if (outputEvents.isEmpty()) {
+            //nothing to do
+            return;
+        }
+        
+        //#952 wake up broker
+        Job job = new Job(outputEvents);
+        System.enqueueJob(job);
     }
  
  

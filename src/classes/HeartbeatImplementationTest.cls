@@ -240,9 +240,9 @@
         DateTime lastEventStamp =  DateTime.newInstanceGmt(2014,12,16, hour, lastEventMinute, 00);
         
         // act
-        Test.setMock(HttpCalloutMock.class, new ToolingApiResponse());
+        Test.startTest();
         HeartbeatImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
-        
+        Test.stopTest();
         
         //assemble 1
         List<Message__c> messages = [
@@ -314,9 +314,9 @@
                 currentDateTime
             );
 
-        Test.setMock(HttpCalloutMock.class, new ToolingApiResponse());
+        Test.startTest();
         heartbeatGeneratorMock.generateHeartbeats();
-        
+        Test.stopTest();
         
         //assemble 1
         List<Message__c> messages = [
