@@ -3,7 +3,7 @@
     //before delete
     static testmethod void testDeleteTriggersAreCascaded() {
         //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'testSequence');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
         //arrange steps

@@ -162,10 +162,10 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         override public String toString() {
             //arrange provider
             Process.Plugin provider = (Process.Plugin)Type.forName('Job').newInstance();
-            Map<String,Object> request = new Map<String,Object>{'esb__EventProvider' => true};
+            Map<String,Object> request = new Map<String,Object>{'EventProvider' => true};
             Map<String,Object> inputEvent = provider.invoke(new Process.PluginRequest(request)).OutputParameters;
             
-            if (inputEvent.get('esb__AllowsCallouts') == true) {
+            if (inputEvent.get('AllowsCallouts') == true) {
                 this.callout(inputEvent);return null;
             } else {
                 return Json.serialize(this.test(inputEvent));
@@ -206,7 +206,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         }
         
         //provide input event and set flag
-        inputEvent.put('esb__AllowsCallouts', true);
+        inputEvent.put('AllowsCallouts', true);
         Job.EventProvider = Json.serialize(inputEvent);
         
         //do invocation
@@ -252,12 +252,12 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         }
         
         //provide input event and set flag
-        inputEvent.put('esb__AllowsCallouts', false);
+        inputEvent.put('AllowsCallouts', false);
         Job.EventProvider = Json.serialize(inputEvent);
         
         //#877 surface SessionId to select few orgs and packages
         //Boolean allowSessionId = Broker.isAllowedSessionId(step.ApexClassName__c, UserInfo.getOrganizationId());
-        //if (allowSessionId) Job.Event.put('__SessionId', OAuthSetting__c.getOrgDefaults().AccessToken__c);
+        //if (allowSessionId) Job.Event.put('SessionId', OAuthSetting__c.getOrgDefaults().AccessToken__c);
         //TODO for #886
         
         //do invocation
@@ -294,8 +294,16 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         for (Object result : results) {
             Map<String,Object> outputEvent = (Map<String,Object>)result;
             
-            if (outputEvent.get('esb__Process') != null && inputEvent.get('esb__Process') == outputEvent.get('esb__Process')) {
-                //#956 "fire and forget" means don't persist outputs
+            if (inputEvent.get('Route') != outputEvent.get('Route')) {
+                //prevent fucking with the route
+                throw new Broker.UserException(this.Reflector.getName() + ': Route is immutable.');
+            }
+            
+            String route = (String)outputEvent.get('Route');
+            String process = (String)outputEvent.get('Process');
+            String sequence = (String)outputEvent.get('Sequence');
+            if (route != null && !route.contains('#') && route != null && !route.contains('#')) {
+                //#956 "fire and forget" means don't persist outputs, unless they were explicitly destined to sequence or process
                 continue;
             }
             
@@ -313,9 +321,9 @@ public class ApexClassModel extends ApexDomain.StandardModel {
              * We use applyHops()  to apply the incremented hops variable to the __Hops parameter of
              * all messages returned from invoke()
              */
-            Integer hops = (Integer)outputEvent.get('__Hops');
+            Integer hops = (Integer)outputEvent.get('Hops');
             if (hops == null) hops = 0;
-            outputEvent.put('__Hops', ++hops);
+            outputEvent.put('Hops', ++hops);
             
             outputEvents.add(outputEvent);
         }

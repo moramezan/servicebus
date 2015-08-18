@@ -127,27 +127,16 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             message.Event__c = new SortedSerializer(event).toString();
             
-            /**
-             * We make sure those guys are always concatenated into a key,
-             * using object instead of integer means it works with "" etc
-             */
-            //clear before routing to one or the other
-            message.Step__c = null;
-            
-            //#956 "fire and forget" process without sequences or steps
-            String process = (String)event.get('esb__Process');
-            if (process != null) message.Step__c = process;
-            
-            String sequence = (String)event.get('__SequenceName');
-            Integer position = (Integer)event.get('__Position');
-            if (sequence != null && position != null) message.Step__c = sequence + '#' + position;
+            //clear before routing
+            message.Route__c = null;
+            if (event.containsKey('Route')) message.Route__c = (String)event.get('Route');
             
             /**
              * Populates the Unique Entry Point Id
              * This parameter surfaced onto the message to support the
              * functionality in the Gate By Entry Point process
              */
-            String entryPointUuid = (String)event.get('esb__EntryPointUuid');
+            String entryPointUuid = (String)event.get('EntryPointUuid');
             if (entryPointUuid != null) message.EntryPointUuid__c = entryPointUuid;
             
             /**
@@ -155,8 +144,8 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
              * This parameter surfaced onto the message to support the
              * functionality in the Gate By Job process
              */
-            Id queueableId = (Id)event.get('__QueueableId');
-            if (queueableId != null) message.QueueableId__c = queueableId;
+            Id jobId = (Id)event.get('JobId');
+            if (jobId != null) message.JobId__c = jobId;
         } catch (Exception e) {
             message.Event__c.addError(e);
         }

@@ -70,7 +70,7 @@
         SequenceBuilderExtension.appendStep(sequenceId, [SELECT Id FROM ApexClass WHERE Name = 'Publish'].Id);
         
         //assemble
-        Step__c step = [SELECT ApexClassName__c FROM Step__c WHERE Name = 'Test#3'];
+        Step__c step = Step__c.getValues('Test#3');
         
         //assert
         String expectedClassName = Publish.class.getName();

@@ -15,12 +15,12 @@ public class GateByJob extends ApexClassModel.BaseProcess {
         String Cardinality = 'Fewer';
         
         Map<String,String> Inputs = new Map<String,String>{
-            '__QueueableId' => 'Job Id that associates gated messages.'
+            'JobId' => 'Job Id that associates gated messages.'
         };
 
         Map<String,String> Outputs = new Map<String,String>{
-            'esb__GateItemsQueryString' => 'STRING of the query that locates the items that hold events correlated by Job Id.',
-            'esb__GateItemsFieldName' => 'STRING of the item field name that contains the serialized event data.'
+            'GateItemsQueryString' => 'STRING of the query that locates the items that hold events correlated by Job Id.',
+            'GateItemsFieldName' => 'STRING of the item field name that contains the serialized event data.'
         };
     }
 
@@ -28,26 +28,22 @@ public class GateByJob extends ApexClassModel.BaseProcess {
 
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
 
-        if (!inputEvent.containsKey('__QueueableId'))
-            throw new GateByJobException('Input event missing mandatory __QueueableId parameter');
-        if (!inputEvent.containsKey('__ChunkTotal'))
-            throw new GateByJobException('Input event missing mandatory  __ChunkTotal parameter');
-        if (!inputEvent.containsKey('__Chunk'))
-            throw new GateByJobException('Input event missing mandatory __Chunk parameter');
-        if (!inputEvent.containsKey('__Position'))
-            throw new GateByJobException('Input event missing mandatory __Position parameter');
-        if (!inputEvent.containsKey('__SequenceName'))
-            throw new GateByJobException('Input event missing mandatory __SequenceName parameter');
+        if (!inputEvent.containsKey('JobId'))
+            throw new GateByJobException('Input event missing mandatory JobId parameter');
+        if (!inputEvent.containsKey('Range'))
+            throw new GateByJobException('Input event missing mandatory Range parameter');
+        if (!inputEvent.containsKey('Chunk'))
+            throw new GateByJobException('Input event missing mandatory Chunk parameter');
+        if (!inputEvent.containsKey('Route'))
+            throw new GateByJobException('Input event missing mandatory Route parameter');
 
 
-        String queueableId = (String)inputEvent.get('__QueueableId');
-        Integer chunkTotal = (Integer)inputEvent.get('__ChunkTotal');
-        Integer chunk = (Integer)inputEvent.get('__Chunk');
-        Integer position = (Integer)inputEvent.get('__Position');
-        String sequenceName = (String)inputEvent.get('__SequenceName');
-        String route = sequenceName + '#' +  position;
+        String jobId = (String)inputEvent.get('JobId');
+        Integer chunkTotal = (Integer)inputEvent.get('Range');
+        Integer chunk = (Integer)inputEvent.get('Chunk');
+        String route = (String)inputEvent.get('Route');
 
-        Boolean release = isRelease(queueableId, chunkTotal, chunk);
+        Boolean release = isRelease(jobId, chunkTotal, chunk);
 
         if ( !release) {
             //this is not the last item, so let's swallow
@@ -65,7 +61,7 @@ public class GateByJob extends ApexClassModel.BaseProcess {
         String queryString = ''
                 + 'SELECT ' + fieldName + ' '
                 + 'FROM Message__c '
-                + 'WHERE QueueableId__c = \'' + queueableId + '\'  AND Step__c  = \'' + route + '\''
+                + 'WHERE JobId__c = \'' + jobId + '\'  AND Route__c  = \'' + route + '\''
                 ;
 
         //this is the last item, let's release
@@ -84,8 +80,8 @@ public class GateByJob extends ApexClassModel.BaseProcess {
 
         inputEvent = cleanParameters(inputEvent); // start with a clean parameters collection
         inputEvent.putAll(commonParameters);   // add the common parameters ...
-        inputEvent.put('esb__GateItemsQueryString', queryString);
-        inputEvent.put('esb__GateItemsFieldName', fieldName);
+        inputEvent.put('GateItemsQueryString', queryString);
+        inputEvent.put('GateItemsFieldName', fieldName);
 
         return new List<Map<String,Object>>{inputEvent};
     }
@@ -139,11 +135,11 @@ public class GateByJob extends ApexClassModel.BaseProcess {
     
     
     @testVisible
-    public static Boolean isRelease(String queueableId, Integer chunkTotal, Integer chunk) {
+    public static Boolean isRelease(String jobId, Integer chunkTotal, Integer chunk) {
         // Release trigger:
         // given :
-        //   A = [Non-Completed status messages having a given QueueableId]
-        //   Z = [Started status messages having a given QueueableId and having null Exception]
+        //   A = [Non-Completed status messages having a given JobId]
+        //   Z = [Started status messages having a given JobId and having null Exception]
         //   T = ChunkTotal
         //   C  = Chunk
         //
@@ -153,7 +149,7 @@ public class GateByJob extends ApexClassModel.BaseProcess {
         //            Count of "Non-Exception Started status messages" should equate to ChunkTotal
         //            implying "no more to execucute after this"
         //  Rule 3: T == C
-        //            Only one release for the given QueueableId at the "end"
+        //            Only one release for the given JobId at the "end"
         //            where "end"
         //            defined as "chunk offset matches chunk total" (eg 10th chunk out of 10 chunks)
 
@@ -162,7 +158,7 @@ public class GateByJob extends ApexClassModel.BaseProcess {
             FROM Message__c
             WHERE (Status__c = 'Buffered' OR Status__c = 'Paused' OR  Status__c = 'Started')
             AND
-            QueueableId__c = :queueableId
+            JobId__c = :jobId
         ];
 
         

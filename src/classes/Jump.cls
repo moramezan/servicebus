@@ -14,16 +14,35 @@ public class Jump extends ApexClassModel.BaseProcess {
         String Cardinality = 'Zero';
     }
     
-    List<Map<String,Object>> execute(Map<String,Object> parameters) {
+    public class JumpException extends Exception {}
+    
+    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
-        //get destination from config
-        JumpConfig__c config = (JumpConfig__c)ApexDomain.getById((Id)parameters.get('esb__StepConfigId'));
-        Sequence__c sequence = (Sequence__c)ApexDomain.getById(config.Sequence__c);
+        Id stepConfigId = (Id)inputEvent.get('StepConfigId');
+        if (stepConfigId == null) throw new JumpException('Null step config id.');
         
-        parameters.put('__SequenceName', sequence.Name);
-        parameters.put('__Position', 0);
+        JumpConfig__c config = [
+            SELECT Id, Sequence__r.Name
+            FROM JumpConfig__c
+            WHERE Id = :stepConfigId
+        ];
         
-        return new List<Map<String,Object>>{parameters};
+        String route = (String)inputEvent.get('Route');
+        if (route == null) throw new JumpException('Null route.');
+        
+        Step__c step = Step__c.getValues(route);
+        if (step == null) throw new JumpException('Null step.');
+        
+        if (step.SequenceName__c == config.Sequence__r.Name) {
+            //prevent recursion
+            throw new JumpException('Not allowed to jump to own sequence.');
+        }
+        
+        Map<String,Object> outputEvent = new Map<String,Object>{
+            'Sequence' => config.Sequence__r.Name
+        };
+        
+        return new List<Map<String,Object>>{outputEvent};
     }
 
 }

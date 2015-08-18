@@ -38,14 +38,14 @@
 
     static testmethod void testChunkingMarkFindsMultipleWork() {
         //arrange processes and sequence and steps
-        Sequence__c sequence = new Sequence__c(Name = 'test');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
         Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange messages
-        Map<String,Object> inputEvent = new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1};
+        Map<String,Object> inputEvent = new Map<String,Object>{'Sequence' => 'Test'};
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>{
             inputEvent,
@@ -159,7 +159,7 @@
         
         //assert
         Integer expectedHops = 1;
-        Integer actualHops = (Integer)outputEvent.get('__Hops');
+        Integer actualHops = (Integer)outputEvent.get('Hops');
         System.assertEquals(expectedHops, actualHops, 'Wrong hops.');
     }
 
@@ -175,7 +175,7 @@
         //arrange message
         Message__c inputMessage = new Message__c(
             Event__c = '{}',
-            Step__c = 'Test#1'
+            Route__c = 'Test#1'
         );
         insert inputMessage;
         
@@ -193,7 +193,7 @@
         
         //assert
         Integer expectedHops = 1;
-        Integer actualHops = (Integer)outputEvent.get('__Hops');
+        Integer actualHops = (Integer)outputEvent.get('Hops');
         System.assertEquals(expectedHops, actualHops, 'Wrong hops.');
     }
     
@@ -232,13 +232,20 @@
         model.appendStep(Terminate.class);
         
         List<Message__c> inputMessages = new List<Message__c>{
-            new Message__c(Step__c = 'Test#1', Event__c = '{"__Position":1}'),
-            new Message__c(Step__c = 'Test#2', Event__c = '{"__Position":2}')
+            new Message__c(Route__c = 'Test#1', Event__c = '{"Route":"Test#1"}'),
+            new Message__c(Route__c = 'Test#2', Event__c = '{"Route":"Test#2"}')
         };
         
-        //act
+        //arranges messages
+        Broker impl = Broker.impl();
         List<Message__c> outputMessages = new List<Message__c>();
-        Broker.impl().execute(inputMessages, outputMessages);
+        impl.execute(inputMessages, outputMessages);
+        
+        //act (performs increment)
+        List<Message__c> inputAndOutputMessages = new List<Message__c>();
+        inputAndOutputMessages.addAll(inputMessages);
+        inputAndOutputMessages.addAll(outputMessages);
+        impl.persist(inputAndOutputMessages);
         
         //assert
         Integer expectedSize = 2;
@@ -249,19 +256,13 @@
         Map<String,Object> outputEventA = (Map<String,Object>)Json.deserializeUntyped(outputMessages[0].Event__c);
         Map<String,Object> outputEventB = (Map<String,Object>)Json.deserializeUntyped(outputMessages[1].Event__c);
 
-        Integer expectedPositionA = 2;
-        Integer actualPositionA = (Integer)outputEventA.get('__Position');
+        String expectedPositionA = '2';
+        String actualPositionA = ((String)outputEventA.get('Route')).substringAfter('#');
         System.assertEquals(expectedPositionA, actualPositionA, 'Wrong position A.');
 
-        Integer expectedPositionB = 3;
-        Integer actualPositionB = (Integer)outputEventB.get('__Position');
+        String expectedPositionB = '3';
+        String actualPositionB = ((String)outputEventB.get('Route')).substringAfter('#');
         System.assertEquals(expectedPositionB, actualPositionB, 'Wrong position B.');
-        
-        //act
-        List<Message__c> inputAndOutputMessages = new List<Message__c>();
-        inputAndOutputMessages.addAll(inputMessages);
-        inputAndOutputMessages.addAll(outputMessages);
-        Broker.impl().persist(inputAndOutputMessages);
         
         //assert
         Integer expectedCount = 4;
@@ -271,15 +272,15 @@
     
     static testmethod void testLocatorMarksCorrectNumberOfMessages() {
         //arrange
-        Sequence__c sequence = new Sequence__c(Name = 'test');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         List<Map<String,Object>> inputEvents = new List<Map<String,Object>>{
-            new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1},
-            new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1},
-            new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1}
+            new Map<String,Object>{'Sequence' => 'Test'},
+            new Map<String,Object>{'Sequence' => 'Test'},
+            new Map<String,Object>{'Sequence' => 'Test'}
         };
         
         Test.startTest();
@@ -316,21 +317,21 @@
     }
     
     static testmethod void testLocatorReturnsOnlyBufferedWork() {
-        Sequence__c sequence = new Sequence__c(Name = 'test');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange fucked messages
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Started', Event__c = '{"__SequenceName":"test","__Position":1}'),
-            new Message__c(Status__c = 'Started', Event__c = '{"__SequenceName":"test","__Position":1}')
+            new Message__c(Status__c = 'Started', Event__c = '{"Route":"Test#1"}'),
+            new Message__c(Status__c = 'Started', Event__c = '{"Route":"Test#1"}')
         };
         
         //arrange Buffered messages
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Buffered', Event__c = '{"__SequenceName":"test","__Position":1}'),
-            new Message__c(Status__c = 'Buffered', Event__c = '{"__SequenceName":"test","__Position":1}')
+            new Message__c(Status__c = 'Buffered', Event__c = '{"Route":"Test#1"}'),
+            new Message__c(Status__c = 'Buffered', Event__c = '{"Route":"Test#1"}')
         };
         
         //act
@@ -347,7 +348,7 @@
     
     static testmethod void callingEnqueueSuccessfullyCallEnqueueImpAndCreatesDocument() {
         //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
         //arrange steps
@@ -360,7 +361,7 @@
         
         //act (this calls blob enqueue signature that does inserts a document)
         Test.startTest();
-        Job job = new Job('TestSequence', Blob.valueOf('test'));
+        Job job = new Job('TestSequence', Blob.valueOf('PDF'));
         System.enqueueJob(job);
         Test.stopTest();
         
@@ -373,7 +374,7 @@
     static testmethod void callingRestartSuccessfullyCallsrunImpl() {
         //arrange
         Test.startTest();
-        Job job = new Job('test', '00D000000000000AAA');
+        Job job = new Job('Test', '00D000000000000AAA');
         System.enqueueJob(job);
         Test.stopTest();
         
@@ -400,7 +401,7 @@
     // Stack Trace      Class.BrokerTest.testMissingPositionThrowsExpectedException: line 680, column 1
     static testmethod void testMissingPositionThrowsExpectedException() {
         //arrange input
-        Map<String,Object> inputEvent = new Map<String,Object>{'not__Position' => 1};
+        Map<String,Object> inputEvent = new Map<String,Object>{'Not_Sequence_Or_Process' => 1};
         
         //arrange message
         Test.startTest();
@@ -409,7 +410,7 @@
         Test.stopTest();
         
         //arrange
-        List<Message__c> messages = [SELECT Id, Step__c, Event__c FROM Message__c];
+        List<Message__c> messages = [SELECT Id, Route__c, Event__c FROM Message__c];
         
         //arrange broker
         Broker impl = Broker.impl();
@@ -423,15 +424,14 @@
         actualMessage = messages[0].Exception__c;
         
         //assert
-        String expectedMessage = Broker.UserException.class.getName() + ': Message has no step for routing to sequence: ' + messages[0].Id;
+        String expectedMessage = Broker.UserException.class.getName() + ': Message has no route: ' + messages[0].Id;
         System.assertEquals(expectedMessage, actualMessage, 'Wrong exception message.');
     }
     
     static testmethod void testNoStepThrowsQueryException() {
         //arrange input (note there is no Step__c in database!)
         Map<String,Object> inputEvent = new Map<String,Object>{
-            '__SequenceName' => 'Test',
-            '__Position' => 0
+            'Sequence' => 'Test'
         };
         
         //arrange message
@@ -447,14 +447,14 @@
         Message__c message = [SELECT Id, Exception__c FROM Message__c];
         
         //assert
-        String expectedException = Broker.UserException.class.getName() + ': Could not resolve route from message step: Test#0';
+        String expectedException = Broker.UserException.class.getName() + ': Could not resolve message route: Test#1';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong message.');
     }
     
     static testmethod void testProcessWithoutClassThrowsExpectedException() {
         //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
         //arrange steps
@@ -541,7 +541,7 @@
     // #697 is exercised by this test!
     static testmethod void canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError() {
         // arrange
-        String sequenceNameA = 'sequenceA';
+        String sequenceNameA = 'Test';
         Sequence__c sequenceA = new Sequence__c(Name = sequenceNameA);
         insert sequenceA;
 
@@ -588,7 +588,7 @@
         Integer actualFailureCount = messages.size();
         System.assertEquals(expectedFailureCount, actualFailureCount, 'Wrong failure count.');
         
-        String expectedException = Broker.UserException.class.getName() + ': Could not resolve route from message step: sequenceA#4';
+        String expectedException = Broker.UserException.class.getName() + ': Could not resolve message route: Test#4';
         String actualException = messages[0].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
@@ -603,12 +603,11 @@
         model.appendStep(Terminate.class);
         
         //arrange input event
-        DateTime eventStamp = DateTime.newInstance(2014,12,15,13,11,07);
+        DateTime timestamp = DateTime.newInstance(2014,12,15,13,11,07);
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__RecordId' => UserInfo.getUserId(),
-            '__SequenceName' => 'Test',
-            '__Position' => 1,
-            'esb__EntryPointDatetime' => eventStamp
+            'RecordId' => UserInfo.getUserId(),
+            'Route' => 'Test#1',
+            'EntryPointTimestamp' => timestamp
         };
              
         //act
@@ -628,9 +627,9 @@
         //assemble
         Map<String,Object> actualEvent = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
         
-        DateTime expectedEventStamp = eventStamp;
-        DateTime actualEventStamp = (DateTime)Json.deserialize('"' + ((String)actualEvent.get('esb__EntryPointDatetime')) + '"', DateTime.class);
-        System.assertEquals(expectedEventStamp, actualEventStamp);
+        DateTime expectedTimestamp = timestamp;
+        DateTime actualTimestamp = (DateTime)Json.deserialize('"' + ((String)actualEvent.get('EntryPointTimestamp')) + '"', DateTime.class);
+        System.assertEquals(expectedTimestamp, actualTimestamp);
     }
 
     static testMethod void callingExecuteWithoutMandatoryEventParametersInEventParametersCollectionThrowsException() {
@@ -642,8 +641,8 @@
         Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
   
         //arrange inputs
-        Map<String,Object> input1 = new Map<String,Object>{'__SequenceName' => 'test'};
-        Map<String,Object> input2 = new Map<String,Object>{'esb__RecordId' => null};
+        Map<String,Object> input1 = new Map<String,Object>{'Route' => 'Test'};
+        Map<String,Object> input2 = new Map<String,Object>{'RecordId' => null};
   
         //arrange messages
         Test.startTest();
@@ -709,15 +708,15 @@
         Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
         
         String unexpectedEntryPointUuid = null;
-        String actualEntryPointUuid = (String)inputEvent.get('__EntryPointUuid');
+        String actualEntryPointUuid = (String)inputEvent.get('EntryPointUuid');
         System.assertNotEquals(unexpectedEntryPointUuid, actualEntryPointUuid, 'Wrong entry point uuid.');
         
-        Integer expectedPosition = 1;
-        Integer actualPosition = (Integer)inputEvent.get('__Position');
+        String expectedPosition = '1';
+        String actualPosition = ((String)inputEvent.get('Route')).substringAfter('#');
         System.assertEquals(expectedPosition, actualPosition, 'Wrong position.');
         
         Id expectedEnqueueUserId = UserInfo.getUserId();
-        Id actualEnqueueUserId = (Id)inputEvent.get('__EnqueueUserId');
+        Id actualEnqueueUserId = (Id)inputEvent.get('EnqueuedById');
         System.assertEquals(expectedEnqueueUserId, actualEnqueueUserId, 'Wrong enqueue user id.');
     }
 
@@ -773,8 +772,8 @@
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange broker implementation and params
-        Map<String,Object> failureEvent = new Map<String,Object>{'c__IsError' => true, '__SequenceName' => 'Test', '__Position' => 1};
-        Map<String,Object> successEvent = new Map<String,Object>{'c__IsError' => false, '__SequenceName' => 'Test', '__Position' => 1};
+        Map<String,Object> failureEvent = new Map<String,Object>{'c__IsError' => true, 'Sequence' => 'Test'};
+        Map<String,Object> successEvent = new Map<String,Object>{'c__IsError' => false, 'Sequence' => 'Test'};
         List<Map<String,Object>> events = new List<Map<String,Object>>{failureEvent, successEvent};
         
         //arrange messages and broker
@@ -783,7 +782,7 @@
         System.enqueueJob(job);
         Test.stopTest();
         
-        List<Message__c> messages = [SELECT Id, Step__c, Event__c FROM Message__c];
+        List<Message__c> messages = [SELECT Id, Route__c, Event__c FROM Message__c];
         Broker impl = Broker.impl();
         messages = impl.locateMarkableWork();
         

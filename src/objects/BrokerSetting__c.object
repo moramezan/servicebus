@@ -4,16 +4,6 @@
     <description>Controls which broker implementation to use and whether it should run at all.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
-        <fullName>EventStamp__c</fullName>
-        <description>A time stamp representing the last time that a heartbeat message was successfully enqueued to the broker</description>
-        <externalId>false</externalId>
-        <inlineHelpText>What was the last Event Stamp generated?</inlineHelpText>
-        <label>Event Stamp</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>DateTime</type>
-    </fields>
-    <fields>
         <fullName>Inhibit__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Set this TRUE to interrupt a haywire Broker during development.</description>
@@ -30,6 +20,16 @@
         <label>IsPaused</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>LastTimestamp__c</fullName>
+        <description>A timestamp representing the last time that a heartbeat message was successfully enqueued to the broker</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What was the last heartbeat timestamp generated?</inlineHelpText>
+        <label>Last Timestamp</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
     </fields>
     <label>Broker Settings</label>
     <visibility>Protected</visibility>

@@ -4,11 +4,16 @@
  */
 public class HeartbeatImplementation implements System.Schedulable {
     
+    static Id RecordId;
+    
     public void execute(System.SchedulableContext context) {
         if (!Test.isRunningTest() && OAuthSetting__c.getOrgDefaults().RefreshToken__c != null) {
             //#728 keep access token roaring and ready every hour IF configured ok
             defer();
         }
+        
+        //#971 used in lieu of __WasHeartbeat
+        RecordId = context.getTriggerId(); //eg 08e24000007paG1AAI
         
         HeartbeatImplementation.IHeartbeatGenerator heartbeatGenerator =
             (HeartbeatImplementation.IHeartbeatGenerator) new HeartbeatImplementation.HeartbeatGeneratorImpl();
@@ -41,7 +46,7 @@ public class HeartbeatImplementation implements System.Schedulable {
         public DateTime CurrentDateTime    {get; private set;}
  
         public  HeartbeatGeneratorImpl() {
-            DateTime  eventStampAsDateTime = BrokerSetting__c.getOrgDefaults().EventStamp__c;
+            DateTime  eventStampAsDateTime = BrokerSetting__c.getOrgDefaults().LastTimestamp__c;
             
             // no suicide chaining : set to 60
             // suicide schedule : set as low as 5
@@ -150,7 +155,7 @@ public class HeartbeatImplementation implements System.Schedulable {
         DateTime lastEventStamp =  heartbeats[count-1];
  
         BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults(); //#782
-        setting.EventStamp__c = lastEventStamp;
+        setting.LastTimestamp__c = lastEventStamp;
       //////  setting.EventStampInfo__c = json.serialize(lastEventStamp).replaceAll('"','').left(19)+'Z';  // Info purposes only
         upsert setting;
     }
@@ -158,19 +163,16 @@ public class HeartbeatImplementation implements System.Schedulable {
 
     @testVisible
     private static void generateHeartbeats(Integer intervalInMinutes, DateTime lastEventStamp, DateTime currentDateTime) {
-        List<DateTime> heartbeats =  getHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
-      
-        updateLastEventStamp(heartbeats);
-
+        List<DateTime> timestamps =  getHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
+        
+        updateLastEventStamp(timestamps);
+        
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
-        for (DateTime heartbeat : heartbeats) {
-            Map<String,Object> outputEvent = new Map<String,Object>{
-                'esb__RecordId' => UserInfo.getUserId(),
-                'esb__EntryPointDatetime' => heartbeat,
-                'esb__Process' => Type.forName('Heartbeat').getName() //#956 and #575 so that resolve and execute can crow look
-            };
-            outputEvents.add(outputEvent);
-        }
+        for (DateTime timestamp : timestamps) outputEvents.add(new Map<String,Object>{
+            'RecordId' => RecordId, //#971 used in lieu of __WasHeartbeat
+            'EntryPointTimestamp' => timestamp,
+            'Process' => Heartbeat.class.getName() //#956 and #575 so that resolve and execute can crow look
+        });
         
         if (outputEvents.isEmpty()) {
             //nothing to do
@@ -181,8 +183,8 @@ public class HeartbeatImplementation implements System.Schedulable {
         Job job = new Job(outputEvents);
         System.enqueueJob(job);
     }
- 
- 
+    
+    
     // START OF FUCKERY
     
     /*

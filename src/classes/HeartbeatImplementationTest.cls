@@ -190,7 +190,7 @@
 
         // assemble
         BrokerSetting__c settings = BrokerSetting__c.getOrgDefaults();
-        DateTime actualEventStamp =  settings.EventStamp__c;
+        DateTime actualEventStamp =  settings.LastTimestamp__c;
         
         // assert
         DateTime expectedEventStamp = null;
@@ -219,7 +219,7 @@
 
         // assemble
         BrokerSetting__c settings = BrokerSetting__c.getOrgDefaults();
-        DateTime actualEventStamp = settings.EventStamp__c;
+        DateTime actualEventStamp = settings.LastTimestamp__c;
         
         // assert
         DateTime expectedEventStamp =  stampC;
@@ -271,7 +271,7 @@
         Boolean actualFlag = true;
         for (Message__c message : messages) {
           Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
-          DateTime actualEventStamp = (DateTime)Json.deserialize('"' + ((String)parameters.get('esb__EntryPointDatetime')) + '"', DateTime.class);
+          DateTime actualEventStamp = (DateTime)Json.deserialize('"' + ((String)parameters.get('EntryPointTimestamp')) + '"', DateTime.class);
           actualHeartbeatsAsSet.add(actualEventStamp);
           if (!expectedHeartbeatsAsSet.contains(actualEventStamp))
                 actualFlag = false;
@@ -345,7 +345,7 @@
         Boolean actualFlag = true;
         for (Message__c message : messages) {
             Map<String,Object> parameters = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
-            DateTime actualEventStamp = (DateTime)Json.deserialize('"' + ((String)parameters.get('esb__EntryPointDatetime')) + '"', DateTime.class);
+            DateTime actualEventStamp = (DateTime)Json.deserialize('"' + ((String)parameters.get('EntryPointTimestamp')) + '"', DateTime.class);
             actualHeartbeatsAsSet.add(actualEventStamp);
             if (!expectedHeartbeatsAsSet.contains(actualEventStamp))
                 actualFlag = false;

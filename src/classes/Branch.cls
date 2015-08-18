@@ -13,44 +13,49 @@ public class Branch extends ApexClassModel.BaseProcess {
         Integer Limits = 50; //max sync limit
         String Cardinality = 'One';
     }
-
+    
     public class BranchException extends Exception {}
     
-    List<Map<String,Object>> execute(Map<String,Object> parameters) {
-
-        //get step config
-        BranchConfig__c config = (BranchConfig__c)ApexDomain.getById((Id)parameters.get('esb__StepConfigId'));
-        Sequence__c sequence = (Sequence__c)ApexDomain.getById(config.Sequence__c);
+    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
-        //get sequence name
-        String branchTo = sequence.Name;
+        String stepConfigId = (Id)inputEvent.get('StepConfigId');
+        if (stepConfigId == null) throw new BranchException('Null step config id.');
         
-        //prevent recursion
-        if (branchTo == (String)parameters.get('__SequenceName')) {
+        BranchConfig__c config = [
+            SELECT Id, Sequence__r.Name
+            FROM BranchConfig__c
+            WHERE Id = :stepConfigId
+        ];
+        
+        String route = (String)inputEvent.get('Route');
+        if (route == null) throw new BranchException('Null route.');
+        
+        Step__c step = Step__c.getValues(route);
+        if (step == null) throw new BranchException('Null step.');
+        
+        if (step.SequenceName__c == config.Sequence__r.Name) {
+            //prevent recursion
             throw new BranchException('Not allowed to branch to own sequence!');
         }
         
-        //careful: by returning 2 parameter sets, the broker may think the process was a splitter
-        Map<String,Object> clone = parameters.clone();
+        Map<String,Object> outputEvent = new Map<String,Object>{
+            'Sequence' => config.Sequence__r.Name
+        };
         
-        //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
-        clone.put('__SubsequenceStepIds', null);
-        clone.put('__SequenceName', branchTo);
-        clone.put('__Position', 0);
+        //original guy carries on... this does not inadvertently Terminate
+        return new List<Map<String,Object>>{inputEvent, outputEvent};
         
         //TODO
         //we might have an inbound document, where parallel sequences are attempting
         //to transform the same data - if the pointer was the same they would content
         //so the document is duplicated and the duplicate handed off to the sequence
         //
-        //String id = (String)parameters.get('esb__RecordId');
+        //String id = (String)parameters.get('RecordId');
         //if (null != id && id.startsWith('015')) {
         //  Document document = [SELECT Id, Body FROM Document WHERE Id = :id];
         //  Document clone = document.clone();
         //  insert clone;
-        //  event.put('esb__RecordId', clone.Id);
+        //  event.put('RecordId', clone.Id);
         //}
-        
-        return new List<Map<String,Object>>{parameters, clone};
     }
 }

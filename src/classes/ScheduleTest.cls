@@ -14,8 +14,20 @@
         //arrange
         ApexClassModel.Summary summary = new ApexClassModel.Summary(Schedule.class);
         
+        ScheduleConfig__c config = new ScheduleConfig__c(
+            IsActive__c = true,
+            Frequency__c = 'Weekly',
+            FriendlyDates__c = 'Wednesday',
+            FriendlyTimes__c = '12:00'
+        );
+        insert config;
+        
         //arrange
-        Map<String,Object> inputEvent = new Map<String,Object> {};
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'RecordId' => '08e000000000000AAA', //was heartbeat = true
+            'StepConfigId' => config.Id,
+            'EntryPointTimestamp' => System.now()
+        };
         
         //act
         Test.startTest();
@@ -35,9 +47,11 @@
     
     static testmethod void messagePassedThruUntouchedWhenIsHeartbeatEqFalse() {
         //arrange input event
-        Map<String,Object> inputEvent = new Map<String,Object>();
-        inputEvent.put('esb__EntryPointDatetime', System.now()); //#810
-        inputEvent.put('__WasHeartbeatProcess', false);
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'RecordId' => '00D000000000000AAA', //was heartbeat true
+            'StepConfigId' => 'a01000000000000AAA',
+            'EntryPointTimestamp' => System.now() //#810
+        };
         
         //act
         ApexClassModel.BaseProcess process = new Schedule();
@@ -61,9 +75,9 @@
         //arrange input
         Datetime entryPoint = Datetime.newInstanceGmt(2014, 1, 15, 12, 0, 0); //15th Jan 2014 is a Wednesday
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
-            'esb__EntryPointDatetime' => entryPoint,
-            '__WasHeartbeatProcess' => true
+            'RecordId' => '08e000000000000AAA', //was heartbeat = true
+            'StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
+            'EntryPointTimestamp' => entryPoint
         };
         
         //act
@@ -76,7 +90,7 @@
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
         String expectedEntryPoint = '2014-01-15T12:00:00.000Z';
-        String actualEntryPoint = (String)outputEvents[0].get('esb__EntryPointDatetime');
+        String actualEntryPoint = (String)outputEvents[0].get('EntryPointTimestamp');
         System.assertEquals(expectedEntryPoint, actualEntryPoint, 'Wrong entry point datetime.');
     }
 
@@ -92,9 +106,9 @@
         //arrange input
         Datetime entryPoint = Datetime.newInstanceGmt(2014, 1, 15, 12, 0, 0); //15th Jan 2014 is a Wednesday, a working day
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
-            'esb__EntryPointDatetime' => entryPoint,
-            '__WasHeartbeatProcess' => true
+            'RecordId' => '08e000000000000AAA', //was heartbeat = true
+            'StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
+            'EntryPointTimestamp' => entryPoint
         };
         
         ///act on working days only
@@ -107,7 +121,7 @@
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
         String expectedEntryPoint = '2014-01-15T12:00:00.000Z';
-        String actualEntryPoint = (String)outputEvents[0].get('esb__EntryPointDatetime');
+        String actualEntryPoint = (String)outputEvents[0].get('EntryPointTimestamp');
         System.assertEquals(expectedEntryPoint, actualEntryPoint, 'Wrong entry point datetime.');
     }
     
@@ -123,9 +137,9 @@
         //arrange input
         Datetime entryPoint = Datetime.newInstanceGmt(2014, 1, 3, 12, 0, 0);
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
-            'esb__EntryPointDatetime' => entryPoint,
-            '__WasHeartbeatProcess' => true
+            'RecordId' => '08e000000000000AAA', //was heartbeat = true
+            'StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
+            'EntryPointTimestamp' => entryPoint
         };
  
         //act
@@ -138,7 +152,7 @@
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         
         String expectedEntryPoint = '2014-01-03T12:00:00.000Z';
-        String actualEntryPoint = (String)outputEvents[0].get('esb__EntryPointDatetime');
+        String actualEntryPoint = (String)outputEvents[0].get('EntryPointTimestamp');
         System.assertEquals(expectedEntryPoint, actualEntryPoint, 'Wrong entry point datetime.');
     }
     
@@ -153,9 +167,9 @@
         //arrange input event parameters
         Datetime entryPoint = Datetime.newInstanceGmt(2014, 1, 18, 12, 0, 0);
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
-            'esb__EntryPointDatetime' => entryPoint,
-            '__WasHeartbeatProcess' => true
+            'RecordId' => '08e000000000000AAA', //was heartbeat = true
+            'StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
+            'EntryPointTimestamp' => entryPoint
         };
  
         //act
@@ -177,9 +191,9 @@
         //arrange input
         Datetime entryPoint = null;
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
-            'esb__EntryPointDatetime' => entryPoint,
-            '__WasHeartbeatProcess' => true
+            'RecordId' => '08e000000000000AAA', //was heartbeat = true
+            'StepConfigId' => [SELECT Id FROM ScheduleConfig__c].Id,
+            'EntryPointTimestamp' => entryPoint
         };
         
         try {
@@ -189,7 +203,7 @@
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
             //assert
-            String expectedMessage = 'Problem with getISO8601 or getStamp("null")';
+            String expectedMessage = 'Null entry point timestamp.';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }

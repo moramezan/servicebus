@@ -64,7 +64,7 @@ abstract public without sharing class Broker {
     public List<Message__c> locateMarkableWork() {
         try {
             List<Message__c> specimen = [
-                SELECT Id, Step__c, Event__c //TODO lose event
+                SELECT Id, Route__c, Event__c //TODO lose event
                 FROM Message__c
                 WHERE Status__c = 'Buffered'
                 ORDER BY CreatedDate ASC //reattempts will naturally lead
@@ -82,6 +82,7 @@ abstract public without sharing class Broker {
             ApexClassModel.Summary summary;
             
             try {
+                //we have to 'peek' at the process
                 ApexClassModel model = new MessageModel(specimen[0]).resolveApexClassModel();
                 summary = new ApexClassModel.Summary(model.Reflector);
             } catch (Exception e) {
@@ -94,10 +95,10 @@ abstract public without sharing class Broker {
             //TODO what if this guy returns a list of 0, would cause a panic condition, lets check
             
             return [
-                SELECT Id, Step__c, Event__c //TODO lose event
+                SELECT Id, Route__c, Event__c //TODO lose event
                 FROM Message__c
                 WHERE Status__c = 'Buffered'
-                AND Step__c = :specimen[0].Step__c
+                AND Route__c = :specimen[0].Route__c
                 LIMIT :limits
                 FOR UPDATE //#695 investigate broker race condition
             ];
@@ -137,8 +138,8 @@ abstract public without sharing class Broker {
             Integer chunk = 1;
             for (Message__c inputMessage :  inputMessages) {
                 Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
-                inputEvent.put('__ChunkTotal', chunkTotal);
-                inputEvent.put('__Chunk', chunk);
+                inputEvent.put('Range', chunkTotal);
+                inputEvent.put('Chunk', chunk);
                 inputMessage.Event__c = Json.serializePretty(inputEvent);
                 chunk++;
             }
@@ -154,7 +155,7 @@ abstract public without sharing class Broker {
             for (MessageModel model : models) {
                 //do invocation
                 this.BlameCpuTime = Limits.getCpuTime(); //#985
-                this.BlameRoute = model.Message.Step__c; //#985
+                this.BlameRoute = model.Message.Route__c; //#985
                 model.invokeCallout();
             }
             
@@ -173,7 +174,7 @@ abstract public without sharing class Broker {
                 
                 //do invocation
                 this.BlameCpuTime = Limits.getCpuTime(); //#985
-                this.BlameRoute = model.Message.Step__c; //#985
+                this.BlameRoute = model.Message.Route__c; //#985
                 isolate = model.invokeExecute(outputMessages);
                 
                 if (model.Message.Exception__c != null && isolate) {
@@ -207,13 +208,53 @@ abstract public without sharing class Broker {
      *
      *
      */
-    public List<Database.UpsertResult> persist(List<Message__c> inputAndOutputMessages) {
+    public void persist(List<Message__c> inputAndOutputMessages) {
         try {
+            
+            /**
+             * In #658 we hoped to expose Sequence API in Broker.persist() since
+             * that is the central entry point for any enqueued AND output messages.
+             *
+             * Since #677 there is history around which operations belong where:
+             * - BaseProcess does bare metal input cycling, output aggregation,
+             * - ApexClassModel can enforce validation at the event level,
+             * - MessageModel takes grabs exceptions for the database,
+             * - Broker deals with executing message collections,
+             *
+             * Since we want any "resolve" to happen in ONE place, this appears to
+             * be the only place left to put it. Here in the persist works OK because
+             * messages "without ids" are NEW ONES. Existing ones won't get re incremented.
+             */
+            for (Message__c message : inputAndOutputMessages) if (message.Id == null) {
+                Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
+                
+                //converts sequence to route
+                if (event.containsKey('Sequence')) {
+                    event.put('Route', event.get('Sequence') + '#' + '0');
+                    event.remove('Sequence');
+                }
+                
+                //converts process to route
+                if (event.containsKey('Process')) {
+                    event.put('Route', event.get('Process'));
+                    event.remove('Process');
+                }
+                
+                //increments route position
+                if (event.containsKey('Route')) {
+                    String route = (String)event.get('Route');
+                    String sequence = route.substringBefore('#');
+                    String position = route.substringAfter('#');
+                    if (route.contains('#')) event.put('Route', sequence + '#' + (Integer.valueOf(position) + 1));
+                }
+                
+                message.Event__c = Json.serialize(event);
+            }
+            
             //transact both inputs and outputs in one fell swoop
             MessageSetModel.Inhibit = false;
-            List<Database.UpsertResult> results = Database.upsert(inputAndOutputMessages);
+            Database.upsert(inputAndOutputMessages);
             MessageSetModel.Inhibit = true;
-            return results;
             
         } catch (Exception e) {
             throw new PanicException('Persist panic: ' + e.getMessage(), e);

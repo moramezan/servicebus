@@ -57,9 +57,9 @@ public with sharing class MonitorController {
         
         //initialize empty statistics for each route
         for (AggregateResult result : [
-            SELECT Step__c route
+            SELECT Route__c route
             FROM Message__c
-            GROUP BY Step__c
+            GROUP BY Route__c
         ]) {
             Statistic statistic = new Statistic((String)result.get('route'), 0, 0, 0, 0);
             route2statistic.put((String)result.get('route'), statistic);
@@ -70,10 +70,10 @@ public with sharing class MonitorController {
         
         //check for null so we don't blow up for unresolved messages
         for (AggregateResult result : [
-            SELECT Step__c route, COUNT(Status__c) total
+            SELECT Route__c route, COUNT(Status__c) total
             FROM Message__c
             WHERE Status__c = 'Paused'
-            GROUP BY Step__c
+            GROUP BY Route__c
         ]) {
             Statistic statistic = route2statistic.get((String)result.get('route')); //#761
             if (statistic == null) statistic = route2statistic.get(null);
@@ -81,10 +81,10 @@ public with sharing class MonitorController {
         }
         
         for (AggregateResult result : [
-            SELECT Step__c route, COUNT(Status__c) total
+            SELECT Route__c route, COUNT(Status__c) total
             FROM Message__c
             WHERE Status__c = 'Buffered'
-            GROUP BY Step__c
+            GROUP BY Route__c
         ]) {
             Statistic statistic = route2statistic.get((String)result.get('route')); //#761
             if (statistic == null) statistic = route2statistic.get(null);
@@ -92,10 +92,10 @@ public with sharing class MonitorController {
         }
         
         for (AggregateResult result : [
-            SELECT Step__c route, COUNT(Status__c) total
+            SELECT Route__c route, COUNT(Status__c) total
             FROM Message__c
             WHERE Status__c = 'Started' AND Exception__c = null
-            GROUP BY Step__c
+            GROUP BY Route__c
         ]) {
             Statistic statistic = route2statistic.get((String)result.get('route')); //#761
             if (statistic == null) statistic = route2statistic.get(null);
@@ -103,10 +103,10 @@ public with sharing class MonitorController {
         }
         
         for (AggregateResult result : [
-            SELECT Step__c route, COUNT(Status__c) total
+            SELECT Route__c route, COUNT(Status__c) total
             FROM Message__c
             WHERE Status__c = 'Started' AND Exception__c != null
-            GROUP BY Step__c
+            GROUP BY Route__c
         ]) {
             Statistic statistic = route2statistic.get((String)result.get('route')); //#761
             if (statistic == null) statistic = route2statistic.get(null);

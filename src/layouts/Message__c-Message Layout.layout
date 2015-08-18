@@ -39,7 +39,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>QueueableId__c</field>
+                <field>JobId__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>

@@ -16,14 +16,13 @@
         Integer count =  3 ;
         Integer insertIntoMessageCount = count;
         Integer insertIntoGateItemCount = count - 1;
-        String queueableId = '707000000000000AAA';
+        String jobId = '707000000000000AAA';
 
         Map<String,Object> inputEvent = new Map<String,Object> {
-            '__QueueableId' => queueableId,
-            '__SequenceName' => 'test',
-            '__Position' => 1,
-            '__ChunkTotal' => 1,
-            '__Chunk' => 1
+            'JobId' => jobId,
+            'Route' => 'Test#1',
+            'Range' => 1,
+            'Chunk' => 1
         };
 
         List<Message__c> messages = new List<Message__c> ();
@@ -61,11 +60,10 @@
     static testmethod void callingIsReleaseThrowsExpectedException01() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            //   '__QueueableId' => '12345',
-            '__SequenceName' => 'test',
-            '__Position' => 1,
-            '__ChunkTotal' => 1,
-            '__Chunk' => 1
+            //'JobId' => '707000000000000AAA',
+            'Route' => 'Test#1',
+            'Range' => 1,
+            'Chunk' => 1
         };
                     
         Boolean actualFlag = false;
@@ -73,7 +71,7 @@
             ApexClassModel.BaseProcess process = new GateByJob();
             List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
-            actualFlag = e.getMessage().contains('missing mandatory __QueueableId');
+            actualFlag = e.getMessage().contains('missing mandatory JobId');
         }
         
         // Assemble :
@@ -88,11 +86,10 @@
     static testmethod void callingIsReleaseThrowsExpectedException02() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            '__QueueableId' => '12345',
-            // '__SequenceName' => 'test',
-            '__Position' => 1,
-            '__ChunkTotal' => 1,
-            '__Chunk' => 1
+            'JobId' => '707000000000000AAA',
+            //'Route' => 'test',
+            'Range' => 1,
+            'Chunk' => 1
         };
                     
         Boolean actualFlag = false;
@@ -100,7 +97,7 @@
             ApexClassModel.BaseProcess process = new GateByJob();
             List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
-            actualFlag = e.getMessage().contains('missing mandatory __SequenceName');
+            actualFlag = e.getMessage().contains('missing mandatory Route');
         }
         
         // Assemble :
@@ -110,42 +107,14 @@
         Boolean expectedFlag = true;
         System.assertEquals(expectedFlag , actualFlag);
     }
-    
-    static testmethod void callingIsReleaseThrowsExpectedException03() {
-        // Arrange :
-        Map<String,Object> inputEvent = new Map<String,Object> {
-            '__QueueableId' => '12345',
-            '__SequenceName' => 'test',
-            // '__Position' => 1,
-            '__ChunkTotal' => 1,
-            '__Chunk' => 1
-        };
-                    
-                    Boolean actualFlag = false;
-        try {
-            ApexClassModel.BaseProcess process = new GateByJob();
-            List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
-        } catch (Exception e) {
-            actualFlag = e.getMessage().contains('missing mandatory __Position');
-        }
-        
-        // Assemble :
-        // n/a
-        
-        // Assert :
-        Boolean expectedFlag = true;
-        System.assertEquals(expectedFlag , actualFlag);
-    }
-    
     
     static testmethod void callingIsReleaseThrowsExpectedException04() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            '__QueueableId' => '12345',
-            '__SequenceName' => 'test',
-            '__Position' => 1,
-            // '__ChunkTotal' => 1,
-            '__Chunk' => 1
+            'JobId' => '707000000000000AAA',
+            'Route' => 'Test#1',
+            //'Range' => 1,
+            'Chunk' => 1
         };
                     
         Boolean actualFlag = false;
@@ -153,7 +122,7 @@
             ApexClassModel.BaseProcess process = new GateByJob();
             List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
-            actualFlag = e.getMessage().contains('missing mandatory  __ChunkTotal');
+            actualFlag = e.getMessage().contains('missing mandatory Range');
         }
         
         // Assemble :
@@ -167,11 +136,10 @@
     static testmethod void callingIsReleaseThrowsExpectedException05() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            '__QueueableId' => '12345',
-            '__SequenceName' => 'test',
-            '__Position' => 1,
-            '__ChunkTotal' => 1
-            // '__Chunk' => 1
+            'JobId' => '707000000000000AAA',
+            'Route' => 'Test#1',
+            'Range' => 1
+            //'Chunk' => 1
         };
                     
         Boolean actualFlag = false;
@@ -179,7 +147,7 @@
             ApexClassModel.BaseProcess process = new GateByJob();
             List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
-            actualFlag = e.getMessage().contains('missing mandatory __Chunk');
+            actualFlag = e.getMessage().contains('missing mandatory Chunk');
         }
         
         // Assemble :
@@ -196,14 +164,13 @@
         Integer count =  3 ;
         Integer insertIntoMessageCount = count;
 
-        String queueableId = '707000000000000AAA';
+        String jobId = '707000000000000AAA';
 
         Map<String,Object> inputEvent = new Map<String,Object> {
-            '__QueueableId' => queueableId,
-            '__SequenceName' => 'test',
-            '__Position' => 1,
-            '__ChunkTotal' => 1,
-            '__Chunk' => 1
+            'JobId' => jobId,
+            'Route' => 'Test#1',
+            'Range' => 1,
+            'Chunk' => 1
         };
 
         List<Message__c> messages = new List<Message__c> ();
@@ -241,14 +208,13 @@
         Integer insertIntoGateItemCount = count - 1;  // Adjust down by one
         // expect: the insertion of additional GateItem under "Act"
 
-        String queueableId = '707000000000000AAA';
+        String jobId = '707000000000000AAA';
 
         Map<String,Object> inputEvent = new Map<String,Object> {
-            '__QueueableId' => queueableId,
-            '__SequenceName' => 'test',
-            '__Position' => 1,
-            '__ChunkTotal' => 1,
-            '__Chunk' => 1
+            'JobId' => jobId,
+            'Route' => 'Test#1',
+            'Range' => 1,
+            'Chunk' => 1
         };
 
         List<Message__c> messages = new List<Message__c> ();
@@ -278,11 +244,11 @@
 
         // Assemble
         Map<String,Object> actualOutputEvent = actualOutputEvents[0];
-        String actualQueueableId = (String)inputEvent.get('__QueueableId' );
+        String actualJobId = (String)inputEvent.get('JobId' );
 
         // Assert
-        String expectedQueueableId = queueableId;
-        System.assertEquals(expectedQueueableId , actualQueueableId );
+        String expectedJobId = jobId;
+        System.assertEquals(expectedJobId, actualJobId);
     }
 
 
@@ -437,15 +403,15 @@
     
     static testmethod void callingIsReleaseReturnsExpectedExpected01() {
         // Arrange :
-        String queueableId = '707000000000000AAA';
+        String jobId = '707000000000000AAA';
         Integer chunkTotal = 1;
         Integer chunk = 1;
 
-        Message__c message = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        Message__c message = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message;
 
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(queueableId, chunkTotal, chunk);
+        Boolean actualIsRelease = GateByJob.isRelease(jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a
@@ -458,17 +424,17 @@
     
     static testmethod void callingIsReleaseReturnsExpectedExpected02() {
         // Arrange :
-        String queueableId = '707000000000000AAA';
+        String jobId = '707000000000000AAA';
         Integer chunkTotal = 2;      // not the last
         Integer chunk = 1;
 
-        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message1;
-        Message__c message2 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        Message__c message2 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message2;
 
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(queueableId, chunkTotal, chunk);
+        Boolean actualIsRelease = GateByJob.isRelease(jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a
@@ -480,17 +446,17 @@
     
     static testmethod void callingIsReleaseReturnsExpectedExpected03() {
         // Arrange :
-        String queueableId = '707000000000000AAA';
+        String jobId = '707000000000000AAA';
         Integer chunkTotal = 1;
         Integer chunk = 1;
 
-        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message1;
-        Message__c message2 = new Message__c(Exception__c = null, Status__c = 'Buffered', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        Message__c message2 = new Message__c(Exception__c = null, Status__c = 'Buffered', Event__c = '{"JobId":"' + jobId + '"}');
         insert message2;
 
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(queueableId, chunkTotal, chunk);
+        Boolean actualIsRelease = GateByJob.isRelease(jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a
@@ -502,19 +468,19 @@
 
     static testmethod void callingIsReleaseReturnsExpectedExpected04() {
         // Arrange :
-        String queueableId = '707000000000000AAA';
+        String jobId = '707000000000000AAA';
         Integer chunkTotal = 2;
         Integer chunk = 2;
 
-        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message1;
-        Message__c message2 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        Message__c message2 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message2;
-        Message__c message3 = new Message__c(Exception__c = 'Error', Status__c = 'Started', Event__c = '{"__QueueableId":"'+queueableId+'"}');
+        Message__c message3 = new Message__c(Exception__c = 'Error', Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message3; // this doent count as has an Exception
         
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(queueableId, chunkTotal, chunk);
+        Boolean actualIsRelease = GateByJob.isRelease(jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a

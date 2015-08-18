@@ -16,23 +16,22 @@
         ApexClassModel.Summary summary = new ApexClassModel.Summary(Jump.class);
         
         //arrange
-        Sequence__c target = new Sequence__c(Name = 'target');
+        Sequence__c target = new Sequence__c(Name = 'Target');
         insert target;
         SequenceModel.fromName(target.Name).appendStep(Terminate.class);
         
         JumpConfig__c config = new JumpConfig__c(Sequence__c = target.Id);
         insert config;
         
-        Sequence__c origin = new Sequence__c(Name = 'origin');
+        Sequence__c origin = new Sequence__c(Name = 'Origin');
         insert origin;
         SequenceModel.fromName(origin.Name).appendStep(Jump.class);
         SequenceModel.fromName(origin.Name).appendStep(Terminate.class);
         
         
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => config.Id,
-            '__SequenceName' => 'origin',
-            '__Position' => 1,
+            'StepConfigId' => config.Id,
+            'Route' => 'Origin#1',
             'data' => 'herpderp'
         };
 
@@ -54,46 +53,42 @@
 
     
     static testmethod void testJumpPervertsExecution() {
-        //arrange
-        Sequence__c target = new Sequence__c(Name = 'target');
-        insert target;
-        SequenceModel.fromName(target.Name).appendStep(Terminate.class);
-        
-        JumpConfig__c config = new JumpConfig__c(Sequence__c = target.Id);
-        insert config;
-        
-        Sequence__c origin = new Sequence__c(Name = 'origin');
+        //arrange sequences
+        Sequence__c origin = new Sequence__c(Name = 'Origin');
         insert origin;
-        SequenceModel.fromName(origin.Name).appendStep(Jump.class);
-        SequenceModel.fromName(origin.Name).appendStep(Terminate.class);
         
+        Sequence__c target = new Sequence__c(Name = 'Target');
+        insert target;
         
-        Map<String,Object> parameters = new Map<String,Object>{
-            'esb__StepConfigId' => config.Id,
-            '__SequenceName' => 'origin',
-            '__Position' => 1,
+        //arrange steps
+        Step__c step = SequenceModel.fromId(origin.Id).appendStep(Jump.class);
+        Id stepConfigId = new StepModel(step).upsertConfig();
+        
+        JumpConfig__c stepConfig = new JumpConfig__c(Id = stepConfigId, Sequence__c = target.Id);
+        update stepConfig;
+        
+        //arrange input event
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'StepConfigId' => stepConfig.Id,
+            'Route' => 'Origin#1',
             'data' => 'herpderp'
         };
         
         //act
         ApexClassModel.BaseProcess process = new Jump();
-        List<Map<String,Object>> parametersList = process.test(parameters);
+        List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
         Integer expectedSize = 1;
-        Integer actualSize = parametersList.size();
+        Integer actualSize = outputEvents.size();
         System.assertEquals(expectedSize, actualSize);
         
-        String expectedSequenceName = 'target';
-        String actualSequenceName = (String)parametersList[0].get('__SequenceName');
-        System.assertEquals(expectedSequenceName, actualSequenceName);
-        
-        Integer expectedPosition = 0;
-        Integer actualPosition = (Integer)parametersList[0].get('__Position');
-        System.assertEquals(expectedPosition, actualPosition);
+        String expectedSequence = 'Target';
+        String actualSequence = (String)outputEvents[0].get('Sequence');
+        System.assertEquals(expectedSequence, actualSequence, 'Wrong sequence.');
         
         String expectedPassThruData = 'herpderp';
-        String actualPassThruData = (String)parametersList[0].get('data');
+        String actualPassThruData = (String)outputEvents[0].get('data');
         System.assertEquals(expectedPassThruData, actualPassThruData);
     }
     

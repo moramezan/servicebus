@@ -6,28 +6,18 @@ private class TerminateTest
         ApexClassModel.Summary summary = new ApexClassModel.Summary(Terminate.class);
         
         //assert
-        Integer expectedLimits = 100; //max sync limit
+        Integer expectedLimits = 1000; //max sync limit
         Integer actualLimits = summary.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
 
     static testmethod void withinSystemLimits() {
         //arrange
-        Sequence__c sequence = new Sequence__c(Name = 'the-sequence');
+        Sequence__c sequence = new Sequence__c(Name = 'Terminate#1');
         insert sequence;
         
-        Step__c step02 = SequenceModel.fromName(sequence.Name).appendStep(Subsequence.class);
-        Step__c step01 = SequenceModel.fromName(sequence.Name).appendStep(Subsequence.class);
-        Id subsequenceStepId01 = step01.Id ;
-        Id subsequenceStepId02 = step02.Id ;
-        List<Id> subsequenceStepIds = new List<Id>{step01.Id, step02.Id};
-
-
-        Map<String,Object> inputEvent = new Map<String,Object> {
-            '__SequenceName' => 'the-sequence',
-            '__Position' => 1,
-            '__SubsequenceStepIds' => subsequenceStepIds
-        };
+        Map<String,Object> inputEvent = new Map<String,Object>();
+        inputEvent.put('Route', 'Terminate#1');
         
         //assemble
         ApexClassModel.Summary summary = new ApexClassModel.Summary(Terminate.class);
@@ -45,136 +35,6 @@ private class TerminateTest
 
         //assert
         System.assertEquals(limits, counter, 'Limit not reached.');
-    }
-
-
-
-    static testmethod void callingExecuteReturnsExpectedOutputEventsWhenSubsequenceAttribsDefinedOnInputEvent()
-    {
-        // Arrange :
-        String sequenceName = 'the-sequence';
-        Integer position = 1;
-        String data = 'data';
-        String subsequenceName = 'the-subsequence';
-        Integer subsequencePosition = 2;
-        
-        //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = subsequenceName);
-        insert sequence;
-        
-        //arrange steps
-        Step__c step1 = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
-        Step__c step2 = SequenceModel.fromName(sequence.Name).appendStep(Subsequence.class);
-
-        Map<String,Object> inputEvent = new Map<String,Object> {
-            '__SequenceName' => sequenceName,
-            '__Position' => position,
-            '__SubsequenceStepIds' => new List<Id>{step2.Id},
-            'data' => data
-        };
-
-
-        Integer expectedSize = 1;
-        String expectedSequenceName = subsequenceName;
-        Integer expectedPosition = subsequencePosition;
-
-        // Act
-        ApexClassModel.BaseProcess process = new Terminate();
-        List<Map<String,Object>> actualOutParametersList = process.test(inputEvent);
-
-        // prepare
-        Integer actualSize = actualOutParametersList.size();
-        String actualSequenceName = null;
-        Integer actualPosition = null;
-        if (actualSize > 0) {
-            Map<String,Object> actualParameters = actualOutParametersList[0];
-            actualSequenceName = (String)actualParameters.get('__SequenceName');
-            actualPosition = (Integer)actualParameters.get('__Position');
-        }
-
-        // Assert
-        System.assertEquals(expectedSize, actualSize);
-        System.assertEquals(expectedSequenceName, actualSequenceName);
-        System.assertEquals(expectedPosition, actualPosition);
-    }
-    
-    static testmethod void
-    callingExecuteReturnsExpectedParametersCollectionWhenNoSubsequenceAttribsDefinedOnParameters() {
-        // Arrange :
-        String sequenceName = 'the-sequence';
-        Integer position = 1;
-        String data = 'data';
- 
- 
-
-        Map<String,Object> inputEvent = new Map<String,Object> {
-            '__SequenceName' => sequenceName,
-            '__Position' => position,
-            'data' => data
-        };
-
-        Integer expectedSize = 0;
- 
-        // Act
-        ApexClassModel.BaseProcess process = new Terminate();
-        List<Map<String,Object>> actualOutParametersList = process.test(inputEvent);
-
-        // prepare
-        Integer actualSize = actualOutParametersList.size();
- 
-        // Assert
-        System.assertEquals(expectedSize , actualSize );
-    }
-    
-    static testmethod void testMultipleSubsequencesGetPoppedOffStack() {
-        // Arrange :
-        String sequenceName = 'the-sequence';
-        Integer position = 1;
-        String data = 'data';
-        String subsequenceName = 'the-subsequence';
-        Integer subsequencePosition  = 2;
-
-        Sequence__c sequence = new Sequence__c(Name = subsequenceName);
-        insert sequence;
-        
-        Step__c step02 = SequenceModel.fromName(sequence.Name).appendStep(Subsequence.class);
-        Step__c step01 = SequenceModel.fromName(sequence.Name).appendStep(Subsequence.class);
-        
-        Id subsequenceStepId01 = step01.Id ;
-        Id subsequenceStepId02 = step02.Id ;
-        List<Id> subsequenceStepIds = new List<Id>();
-        subsequenceStepIds.add(subsequenceStepId01);
-        subsequenceStepIds.add(subsequenceStepId02);
-        
-        Map<String,Object> parametersFirst = new Map<String,Object> {
-            '__SequenceName' => sequenceName,
-            '__Position' => position,
-            '__SubsequenceStepIds' => subsequenceStepIds,
-            'data' => data
-        };
-
-
-        // Act
-        ApexClassModel.BaseProcess process = new Terminate();
-        List<Map<String,Object>> actualOutParametersListFirst = process.test(parametersFirst);
-        
-        Map<String,Object> parametersSecond = actualOutParametersListFirst[0].clone(); //-- Terminate hands back one
-        
-        List<Map<String,Object>> actualOutParametersListSecond = process.test(parametersSecond);
-        
-        // prepare
-        List<Object> actualStepIdsAfterFirst = (List<Object>)actualOutParametersListFirst[0].get('__SubsequenceStepIds');
-        List<Object> actualStepIdsAfterSecond = (List<Object>)actualOutParametersListSecond[0].get('__SubsequenceStepIds');
-        
-        Integer actualSizeAfterFirst = actualStepIdsAfterFirst.size();
-        Integer actualSizeAfterSecond = actualStepIdsAfterSecond.size();
-        
-        Integer expectedSizeAfterFirst = 1;
-        Integer expectedSizeAfterSecond = 0;
-        
-        // Assert
-        System.assertEquals(expectedSizeAfterFirst, actualSizeAfterFirst);
-        System.assertEquals(expectedSizeAfterSecond , actualSizeAfterSecond);
     }
 
 }

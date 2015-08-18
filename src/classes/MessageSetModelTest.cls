@@ -34,37 +34,38 @@
     static testmethod void testUnpopulatedJsonFields() {
         //arrange message
         Message__c message = new Message__c(
-            Event__c = '{"esb__Process":"' + Heartbeat.class.getName() + '"}'
+            Event__c = '{"Process":"' + Heartbeat.class.getName() + '"}'
         );
         
         //act
+        Broker.impl().persist(new List<Message__c>{message});
         new MessageSetModel(new List<Message__c>{message}).alphabetizeJsonAndPopulateFields();
         
         //assert
         String expectedRoute = Heartbeat.class.getName();
-        String actualRoute = message.Step__c;
+        String actualRoute = message.Route__c;
         System.assertEquals(expectedRoute, actualRoute, 'Route should be raw process for heartbeats.');
     }
     
     static testmethod void testPopulateJsonFields() {
         //arrange message
         Message__c message = new Message__c(
-            Event__c = '{"__SequenceName":"test","__Position":1}'
+            Event__c = '{"Route":"Test#1"}'
         );
         
         //act
         new MessageSetModel(new List<Message__c>{message}).alphabetizeJsonAndPopulateFields();
         
         //assert
-        String expectedRoute = 'test#1';
-        String actualRoute = message.Step__c;
+        String expectedRoute = 'Test#1';
+        String actualRoute = message.Route__c;
         System.assertEquals(expectedRoute, actualRoute, 'Route incorrectly populated.');
     }
     
     static testmethod void testValidMessageParameters() {
         //arrange message
         Message__c validMessage = new Message__c(
-            Event__c = '{"__SequenceName":"test","__Position":1}'
+            Event__c = '{"Route":"Test#1"}'
         );
         
         //assert
@@ -125,11 +126,11 @@
 
 
     
-     static testmethod void callingPopulateJsonFieldsCorrectlyPopulatesQueueableId() {
+     static testmethod void callingPopulateJsonFieldsCorrectlyPopulatesJobId() {
          //arrange message
-         Id queueableId = UserInfo.getUserId();
+         Id jobId = UserInfo.getUserId();
          Message__c message = new Message__c(
-             Event__c = '{"__QueueableId":"' + queueableId + '"}'
+             Event__c = '{"JobId":"' + jobId + '"}'
          );
 
          //act
@@ -137,16 +138,16 @@
 
          //assert
 
-         Id actualQueueableId = message.QueueableId__c;
-         Id expectedQueueableId = queueableId;
-         System.assertEquals(expectedQueueableId, actualQueueableId, 'Failed to populate QueueableId');
+         Id expectedJobId = jobId;
+         Id actualJobId = message.JobId__c;
+         System.assertEquals(expectedJobId, actualJobId, 'Failed to populate JobId');
      }
     
      static testmethod void callingPopulateJsonFieldsCorrectlyPopulatesEntryPointUuid() {
          //arrange message
          String EntryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
          Message__c message = new Message__c(
-             Event__c = '{"esb__EntryPointUuid":"' + entryPointUuid + '"}'
+             Event__c = '{"EntryPointUuid":"' + entryPointUuid + '"}'
          );
 
          //act

@@ -69,7 +69,7 @@
     </fields>
     <fields>
         <fullName>EntryPointUuid__c</fullName>
-        <description>Refer #752, &quot;user entry point uuid&quot; (esb__EntryPointUuid)
+        <description>Refer #752, &quot;user entry point uuid&quot; (EntryPointUuid)
 This Id  represents the unique handle of the genesis event injected into the ESB.
 Gets set by Job() injecting to the top of a sequence and given a hypothetical message store, this value would not change if the message was replayed.</description>
         <externalId>true</externalId>
@@ -119,13 +119,25 @@ Gets set by Job() injecting to the top of a sequence and given a hypothetical me
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>QueueableId__c</fullName>
+        <fullName>JobId__c</fullName>
         <description>Refer #752, &quot;capture id&quot;
 This id the Id of the job that enqueued the message representing the &quot;business event&quot; or &quot;business job&quot; or &quot;business occurrence&quot;</description>
         <externalId>true</externalId>
         <inlineHelpText>Which Job enqueued this message?</inlineHelpText>
-        <label>Queueable Id</label>
+        <label>Job Id</label>
         <length>18</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Route__c</fullName>
+        <description>Composite key that can be runtime-resolved to a Step as late as possible.</description>
+        <externalId>true</externalId>
+        <inlineHelpText>What step should this message take for execution?</inlineHelpText>
+        <label>Route</label>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -158,18 +170,6 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         </picklist>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
-    </fields>
-    <fields>
-        <fullName>Step__c</fullName>
-        <description>Composite key that can be runtime-resolved to a Step as late as possible.</description>
-        <externalId>true</externalId>
-        <inlineHelpText>What step should this message take for execution?</inlineHelpText>
-        <label>Step</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
     </fields>
     <label>Message</label>
     <listViews>
@@ -294,7 +294,7 @@ Sets the status of message(s) to Buffered and start the Broker</description>
     <webLinks>
         <fullName>RecordData</fullName>
         <availability>online</availability>
-        <description>Redirects to the object represented by the Id contained in esb__RecordId</description>
+        <description>Redirects to the object represented by the Id contained in RecordId</description>
         <displayType>button</displayType>
         <height>600</height>
         <linkType>page</linkType>

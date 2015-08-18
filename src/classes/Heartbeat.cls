@@ -2,22 +2,10 @@ public class Heartbeat extends ApexClassModel.BaseProcess {
     
     //#575 heartbeat process evades discovery
     //public class ESB extends ApexClassModel.BaseSummary {}
-
-    public class HeartbeatException extends Exception {}
-
-    List<Map<String,Object>> execute(Map<String,Object> parameters) {
+    
+    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
-        String  stampAsString = (String)parameters.get('esb__EntryPointDatetime');
-
-        List<Map<String,Object>> parametersList = new List<Map<string,object>>();
-        
-        try {
-           stampAsString = getISO8601(stampAsString);
-        } catch (Exception e)  {
-            throw new HeartbeatException('Problem with getISO8601("' + stampAsString + '")', e);
-        }
-        
-        // TODO : re-do this dynamically
+        //TODO do this dynamically
         Set<String> interestedSubscriberNames = new Set<String>{
             Schedule.class.getName()
         };
@@ -28,23 +16,17 @@ public class Heartbeat extends ApexClassModel.BaseProcess {
             WHERE ApexClassName__c IN :interestedSubscriberNames
         ];
         
-        for (Step__c step : steps) {
-            Map<String,Object> clone = parameters.clone();
-            clone.put('__Position', step.Position__c.intValue());
-            clone.put('__SequenceName', step.SequenceName__c);
-            clone.put('esb__Process', null); //#956 "fire and forget" but DO persist outputs
-            clone.put('__WasHeartbeatProcess', true); //#810 use WasHeartbeat to differentiate Schedule pass throughs
-            parametersList.add(clone);
-        }
-
-        //This process should act as a Terminate - return empty list
-        return parametersList;
+        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
+        for (Step__c step : steps) outputEvents.add(new Map<String,Object>{
+            'Sequence' => step.SequenceName__c,
+            'RecordId' => inputEvent.get('RecordId') //#971 this carries difference between heartbeat and test message
+        });
+        
+        //#994 re-use enqueue logic to do pre-routing
+        outputEvents = new Job(outputEvents).Events;
+        
+        //destined for any schedule steps
+        return outputEvents;
     }
-
-
-    static private String getISO8601(String value) {
-        value  = (value.endsWith('Z')) ? value :  value+'Z';
-        DateTime localDateTime = (DateTime)Json.deserialize('"' + value + '"', DateTime.class);
-        return ((''+localDateTime).replace(' ','T')); // or json.serialize(stamp) but that returns (unwanted) milliseconds)
-    }
+    
 }

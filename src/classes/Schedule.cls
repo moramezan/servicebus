@@ -10,22 +10,36 @@ public class Schedule extends ApexClassModel.BaseProcess {
         Boolean ConsumesHeartbeat = true;
         Integer Limits = 100; //could be higher but lets be reasonable
         Map<String,String> Inputs = new Map<String,String>{
-            'esb__EntryPointDatetime' => 'DATETIME of the point in time this schedule was intended to run.'
+            'EntryPointTimestamp' => 'DATETIME of the point in time this schedule was intended to run.'
         };
         public String Cardinality = 'One';
     }
     
     public class ScheduleException  extends Exception {}
     
-    List<Map<String,Object>> execute(Map<String,Object> parameters) {
+    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
-        String stampAsString = (String)parameters.get('esb__EntryPointDatetime');
-        Boolean wasHeartbeat = (Boolean)parameters.get('__WasHeartbeatProcess'); //#810
+        String recordId = (String)inputEvent.get('RecordId');
+        if (recordId == null) throw new ScheduleException('Null record id.');
+        
+        Id stepConfigId = (String)inputEvent.get('StepConfigId');
+        if (stepConfigId == null) throw new ScheduleException('Null step config id.');
+        
+        String stampAsString = (String)inputEvent.get('EntryPointTimestamp');
+        if (stampAsString == null) throw new ScheduleException('Null entry point timestamp.');
+        
+        Boolean wasHeartbeat = recordId.startsWith('08e'); //#810
 
-        List<Map<String,Object>> parametersList = new List<Map<String,Object>>();
+        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
     
         if (wasHeartbeat == true) {
-            ScheduleConfig__c config = (ScheduleConfig__c)ApexDomain.getById((Id)parameters.get('esb__StepConfigId'));
+            
+            ScheduleConfig__c config = [
+                SELECT IsActive__c, Frequency__c, FriendlyDates__c, FriendlyTimes__c
+                FROM ScheduleConfig__c
+                WHERE Id = :stepConfigId
+            ];
+            
             if (config.IsActive__c != true) {
                 //just swallow if not active
                 return new List<Map<String,Object>>();
@@ -33,14 +47,14 @@ public class Schedule extends ApexClassModel.BaseProcess {
             
             // evaluate:
             if (isWithinWindow(stampAsString, config)) {
-                parametersList.add(parameters);
+                outputEvents.add(inputEvent);
             }
         } else {
             // passthru:
-            parametersList.add(parameters);
+            outputEvents.add(inputEvent);
         }
     
-        return parametersList;
+        return outputEvents;
     }
 
     @TestVisible static private Boolean isWithinWindow(String stampAsString, ScheduleConfig__c config) {

@@ -12,12 +12,11 @@
 
    static testmethod void withinSystemLimits() {
         //arrange
-        Sequence__c sequence = new Sequence__c(Name = 'the-sequence');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
 
         Map<String,Object> inputEvent = new Map<String,Object> {
-            '__SequenceName' => 'the-sequence',
-            '__Position' => 1
+            'Route' => 'Test#1'
         };
 
         //assemble

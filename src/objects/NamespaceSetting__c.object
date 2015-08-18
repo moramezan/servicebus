@@ -5,7 +5,7 @@
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>BarPrefix__c</fullName>
-        <description>String that would prefix a Salesforce Object to namespace it, eg &apos;esb__&apos; or null</description>
+        <description>String that would prefix a Salesforce Object to namespace it, eg &apos;ns__&apos; or null</description>
         <externalId>false</externalId>
         <inlineHelpText>What prefix should I use to fully qualify a Salesforce Object, including the trailing underscore underscore?</inlineHelpText>
         <label>Bar Prefix</label>

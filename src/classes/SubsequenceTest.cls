@@ -12,12 +12,12 @@
 
 
    static testmethod void withinSystemLimits() {
-        Sequence__c origin = new Sequence__c(Name = 'originSequence');
+        Sequence__c origin = new Sequence__c(Name = 'Origin');
         insert origin;
         Step__c originStep = SequenceModel.fromName(origin.Name).appendStep(Subsequence.class);
         new StepModel(originStep).upsertConfig();
         
-        Sequence__c target = new Sequence__c(Name = 'targetSequence');
+        Sequence__c target = new Sequence__c(Name = 'Target');
         insert target;
         Step__c targetStep = SequenceModel.fromName(target.Name).appendStep(Terminate.class);
         
@@ -39,9 +39,8 @@
             //by reference side effects on inputEvent
             //inside subsequence process logic, so new input event for each iteration!
             Map<String,Object> inputEvent = new Map<String,Object>{
-                'esb__StepConfigId' => config.Id,
-                '__SequenceName' => 'originSequence',
-                '__Position' => 1
+                'StepConfigId' => config.Id,
+                'Route' => 'Origin#1'
             };
                 
             ApexClassModel.BaseProcess process = new Subsequence();
@@ -58,12 +57,12 @@
 
     static testmethod void testMessageIsRedirected() {
         //arrange sequences
-        Sequence__c origin = new Sequence__c(Name = 'originSequence');
+        Sequence__c origin = new Sequence__c(Name = 'Origin');
         insert origin;
         Step__c originStep = SequenceModel.fromName(origin.Name).appendStep(Subsequence.class);
         new StepModel(originStep).upsertConfig();
         
-        Sequence__c target = new Sequence__c(Name = 'targetSequence');
+        Sequence__c target = new Sequence__c(Name = 'Target');
         insert target;
         Step__c targetStep = SequenceModel.fromName(target.Name).appendStep(Terminate.class);
         
@@ -76,9 +75,8 @@
         
         //prepare message
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb__StepConfigId' => config.Id,
-            '__SequenceName' => 'originSequence',
-            '__Position' => 1
+            'StepConfigId' => config.Id,
+            'Route' => 'Origin#1'
         };
         
         //act
@@ -90,16 +88,12 @@
         Integer actualSize = parametersList.size();
         System.assertEquals(expectedSize, actualSize);
         
-        String expectedSequenceName = 'targetSequence';
-        String actualSequenceName = (String)parametersList[0].get('__SequenceName');
-        System.assertEquals(expectedSequenceName, actualSequenceName);
+        String expectedSequence = 'Target';
+        String actualSequence = (String)parametersList[0].get('Sequence');
+        System.assertEquals(expectedSequence, actualSequence, 'Wrong sequence.');
         
-        Integer expectedPosition = 0;
-        Integer actualPosition = (Integer)parametersList[0].get('__Position');
-        System.assertEquals(expectedPosition, actualPosition);
-
-        String expectedList = '["' + originStep.Id + '"]';
-        String actualList = System.Json.serialize(parametersList[0].get('__SubsequenceStepIds'));
+        String expectedList = '["Origin#1"]';
+        String actualList = System.Json.serialize(parametersList[0].get('__SubsequenceRoutes'));
         System.assertEquals(expectedList, actualList);
     }
     

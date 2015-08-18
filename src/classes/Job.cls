@@ -15,8 +15,8 @@ global class Job implements Process.Plugin, system.Queueable {
      * Per #702 we may as well describe this as a "real" Flow plugin
      * although we're intending to just piggy back the system interface.
      *
-     * If someone put this into a real flow, they MUST provide esb__SequenceName
-     * and we can at least hand back the esb__QueueableId as some kind of output.
+     * If someone put this into a real flow, they MUST provide Sequence
+     * and we can at least hand back the JobId as some kind of output.
      */
     global Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
@@ -25,12 +25,12 @@ global class Job implements Process.Plugin, system.Queueable {
         plugin.Description = 'Enqueue a Job into the Enterprise Service Bus';
         
         plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
-            new Process.PluginDescribeResult.InputParameter('esb__RecordId', Process.PluginDescribeResult.ParameterType.ID, true),
-            new Process.PluginDescribeResult.InputParameter('esb__SequenceName', Process.PluginDescribeResult.ParameterType.STRING, true)
+            new Process.PluginDescribeResult.InputParameter('RecordId', Process.PluginDescribeResult.ParameterType.ID, true),
+            new Process.PluginDescribeResult.InputParameter('Sequence', Process.PluginDescribeResult.ParameterType.STRING, true)
         };
         
         plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
-            new Process.PluginDescribeResult.OutputParameter('esb__QueueableId', Process.PluginDescribeResult.ParameterType.STRING)
+            new Process.PluginDescribeResult.OutputParameter('JobId', Process.PluginDescribeResult.ParameterType.STRING)
         };
         
         return plugin;
@@ -53,16 +53,16 @@ global class Job implements Process.Plugin, system.Queueable {
     global Process.PluginResult invoke(Process.PluginRequest request) {
         
         //#868 this plugin doubles as an event provider, so we don't create a BS one
-        if (request.InputParameters.get('esb__EventProvider') == true) { //specific equality to avoid null object dereference
+        if (request.InputParameters.get('EventProvider') == true) { //specific equality to avoid null object dereference
             Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(EventProvider);
             return new Process.PluginResult(event);
         }
         
         Map<String,Object> inputEvent = request.InputParameters;
         system.Queueable job = new Job(inputEvent);
-        Id queueableId = System.enqueueJob(job);
+        Id jobId = System.enqueueJob(job);
         
-        inputEvent.put('esb__QueueableId', queueableId);
+        inputEvent.put('JobId', jobId);
         return new Process.PluginResult(inputEvent);
     }
     
@@ -82,12 +82,12 @@ global class Job implements Process.Plugin, system.Queueable {
         List<Id> ids = new List<Id>();
         for (SimpleEvent simpleEvent : simpleEvents) {
             Map<String,Object> inputEvent = new Map<String,Object>{
-                'esb__RecordId' => simpleEvent.RecordId,
-                'esb__SequenceName' => simpleEvent.SequenceName
+                'RecordId' => simpleEvent.RecordId,
+                'Sequence' => simpleEvent.SequenceName
             };
-            Job j = new Job(inputEvent);
-            Id queueableId = System.enqueueJob(j);
-            ids.add(queueableId);
+            Job job = new Job(inputEvent);
+            Id jobId = System.enqueueJob(job);
+            ids.add(jobId);
         }
         return ids;
     }
@@ -95,7 +95,7 @@ global class Job implements Process.Plugin, system.Queueable {
     public class RunException extends Exception {}
     public class EnqueueException extends Exception {}
     
-    @TestVisible private List<Map<String,Object>> Events = new List<Map<String,Object>>();
+    public List<Map<String,Object>> Events = new List<Map<String,Object>>();
     
     /**
      * Note, I can appreciate it seems these constructors are all crammed together. Sorry
@@ -134,8 +134,8 @@ global class Job implements Process.Plugin, system.Queueable {
      */
     global Job(String sequenceName, Id recordId) {
         this(new Map<String,Object>{
-            'esb__SequenceName' => sequenceName,
-            'esb__RecordId' => recordId
+            'Sequence' => sequenceName,
+            'RecordId' => recordId
         });
     }
     
@@ -144,8 +144,7 @@ global class Job implements Process.Plugin, system.Queueable {
      *
      * The input event collection should at minimum contain
      *  - an object Id ("Id")
-     *  - a sequence name ("__SequenceName")
-     * Failure to provide these event parameters in the collection will throw an exception
+     *  - a sequence ("Sequence") or a process ("Process")
      *
      * The input event collection is converted to a Message object. This Message instance is saved
      * to the database and the Broker is immeadiately invoked if it is not already running.
@@ -162,7 +161,7 @@ global class Job implements Process.Plugin, system.Queueable {
     
     /**
      * A collection of multiple parameterized message descriptions, each of which must at minimum
-     * contain esb__SequenceName.
+     * contain Sequence.
      *
      * @docs ApiJobConstructors.html
      */
@@ -191,25 +190,22 @@ global class Job implements Process.Plugin, system.Queueable {
             }
             
             inputEvent.putAll(new Map<String,Object>{
-                '__Hops' => 1,
-                '__EntryPointUuid' => uuidVersionFour(), //#751 formerly __EntryPointGuid, this is ONLY for 'our' use
-                '__EntryPointDatetime' => System.now(), //#753 formerly __EventStamp this is ONLY for our framework use
-                'esb__EnqueueUserId' => (Id)UserInfo.getUserId(), //WE use '__' and THEY use 'esb' per #669
-                '__EnqueueUserId' => UserInfo.getUserId()
+                'Hops' => 1,
+                'EnqueuedById' => UserInfo.getUserId()
             });
             
-            if (inputEvent.get('esb__EntryPointUuid') == null) {
+            if (inputEvent.get('EntryPointUuid') == null) {
                 //#751 'they' are allowed to mess with this, eg for replay
-                inputEvent.put('esb__EntryPointUuid', uuidVersionFour());
+                inputEvent.put('EntryPointUuid', uuidVersionFour());
             }
             
-            if (inputEvent.get('esb__EntryPointDatetime') == null) {
+            if (inputEvent.get('EntryPointTimestamp') == null) {
                 //#753 processes like Heartbeat are allowed to mess with this}
-                inputEvent.put('esb__EntryPointDatetime', System.now());
+                inputEvent.put('EntryPointTimestamp', System.now());
             }
+            
+            this.Events.add(inputEvent);
         }
-        
-        this.Events = inputEvents;
     }
     
     /**
@@ -238,21 +234,8 @@ global class Job implements Process.Plugin, system.Queueable {
              * the Queueable AsyncApexJob Id as a correlation later for Capture etc.
              */
             if (context != null) {
-                Id queueableId = context.getJobId();
-                this.Events[i].put('__QueueableId', queueableId);
-            }
-            
-            /**
-             * In #658 we hoped to expose esb__SequenceName API in Broker.persist() but
-             * it meant we can't insert messages then just 'run' broker over them. Further
-             * issue #677 feels like we probably shouldn't be inserting messages at all.
-             * We want to interpret esb__SequenceName into __SequenceName and __Position
-             * as late and as simply as possible. Doing it here in the execute works OK.
-             */
-            if (this.Events[i].get('esb__SequenceName') != null) {
-                this.Events[i].put('__SequenceName', this.Events[i].get('esb__SequenceName'));
-                this.Events[i].put('__Position', 1);
-                this.Events[i].put('esb__SequenceName', null);
+                Id jobId = context.getJobId();
+                this.Events[i].put('JobId', jobId);
             }
             
             messages.add(new Message__c(
@@ -266,9 +249,7 @@ global class Job implements Process.Plugin, system.Queueable {
         }
         
         //just in time DML
-        MessageSetModel.Inhibit = false;
-        insert messages; //#836
-        MessageSetModel.Inhibit = true;
+        Broker.impl().persist(messages); //#836
         
         //#653 don't waste FUTURE ASYNC CALL unnecessarily
         if (Test.isRunningTest()) return;

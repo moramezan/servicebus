@@ -8,14 +8,14 @@
     
     static testmethod void testChunkedMarkContextsCount() {
         //arrange processes and sequence and steps
-        Sequence__c sequence = new Sequence__c(Name = 'test');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
         Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange messages
-        Map<String,Object> parameters = new Map<String,Object>{'__SequenceName' => 'test', '__Position' => 1};
+        Map<String,Object> parameters = new Map<String,Object>{'Sequence' => 'Test'};
         List<Map<String,Object>> inputEvents = new List<Map<String,Object>>{
             parameters,
             parameters,
@@ -33,7 +33,7 @@
         System.enqueueJob(job);
         Test.stopTest();
         
-        List<Message__c> messages = [SELECT Id, Step__c, Event__c FROM Message__c];
+        List<Message__c> messages = [SELECT Id, Route__c, Event__c FROM Message__c];
         VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
         
         //act (start up big query locator)
@@ -97,7 +97,7 @@
 
     static testmethod void testMarkAndExecuteAndDoneConditionAbortsJobAtEnd() {
         //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
         //arrange steps
@@ -105,8 +105,7 @@
         
         //arrange input
         Map<String,Object> inputEvent = new Map<String,Object> {
-            '__SequenceName' => 'TestSequence',
-            '__Position' => 1
+            'Sequence' => 'Test'
         };
         
         //arrange message
@@ -161,7 +160,7 @@
 
     static testmethod void testMarkLimitedToTotalPotentialMarksWhenBufferedMessagesGtTotalPotentialMarks() {
         //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
         //arrange steps
@@ -169,18 +168,15 @@
         
         //arrange input
         Map<String,Object> inputEvent1 = new Map<String,Object> {
-            '__SequenceName' => 'TestSequence',
-            '__Position' => 1
+            'Sequence' => 'Test'
         };
         
         Map<String,Object> inputEvent2 = new Map<String,Object> {
-            '__SequenceName' => 'TestSequence',
-            '__Position' => 1
+            'Sequence' => 'Test'
         };
         
         Map<String,Object> inputEvent3 = new Map<String,Object> {
-            '__SequenceName' => 'TestSequence',
-            '__Position' => 1
+            'Sequence' => 'Test'
         };
         
         //arrange messages
@@ -220,7 +216,7 @@
 
     static testmethod void testMarkLimitedToTotalBufferedMessagesWhenTotalPotentialMarksGtTotaBufferedMessagesCount() {
         //arrange sequence
-        Sequence__c sequence = new Sequence__c(Name = 'TestSequence');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
         //arrange steps
@@ -228,18 +224,15 @@
         
         //arrange input
         Map<String,Object> inputEvent1 = new Map<String,Object> {
-            '__SequenceName' => 'TestSequence',
-            '__Position' => 1
+            'Sequence' => 'Test'
         };
         
         Map<String,Object> inputEvent2 = new Map<String,Object> {
-            '__SequenceName' => 'TestSequence',
-            '__Position' => 1
+            'Sequence' => 'Test'
         };
         
         Map<String,Object> inputEvent3 = new Map<String,Object> {
-            '__SequenceName' => 'TestSequence',
-            '__Position' => 1
+            'Sequence' => 'Test'
         };
         
         //arrange messages

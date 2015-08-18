@@ -12,24 +12,27 @@
 
 
    static testmethod void withinSystemLimits() {
-        //arrange
+        //arrange limits
         ApexClassModel.Summary summary = new ApexClassModel.Summary(Branch.class);
         
-        //arrange
-        Sequence__c origin = new Sequence__c(Name = 'originSequence');
-        Sequence__c target = new Sequence__c(Name = 'targetSequence');
+        //arrange sequences
+        Sequence__c origin = new Sequence__c(Name = 'Origin');
         insert origin;
+        
+        Sequence__c target = new Sequence__c(Name = 'Target');
         insert target;
         
-        //arrange config
-        BranchConfig__c config = new BranchConfig__c(Sequence__c = target.Id);
-        insert config;
+        //arrange steps
+        Step__c step = SequenceModel.fromId(origin.Id).appendStep(Branch.class);
+        Id stepConfigId = new StepModel(step).upsertConfig();
+        
+        BranchConfig__c stepConfig = new BranchConfig__c(Id = stepConfigId, Sequence__c = target.Id);
+        update stepConfig;
         
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => config.Id,
-            '__SequenceName' => origin.Name,
-            '__Position' => 1
+            'StepConfigId' => stepConfigId,
+            'Route' => 'Origin#1'
         };
 
 
@@ -48,46 +51,25 @@
         System.assertEquals(limits, counter, 'Limit not reached.');
    }
 
-
-    static testmethod void testSubsequenceDropped() {
-        Sequence__c origin = new Sequence__c(Name = 'origin');
-        insert origin;
-        
-        Sequence__c target = new Sequence__c(Name = 'target');
-        insert target;
-        
-        BranchConfig__c config = new BranchConfig__c(Sequence__c = target.Id);
-        insert config;
-        
-        Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => config.Id,
-            '__SubsequenceStepIds' => new List<Id>{'a01000000000000AAA'}
-        };
-        
-        ApexClassModel.BaseProcess process = new Branch();
-        List<Map<String,Object>> outputEvents = process.test(inputEvent);
-
-        List<Object> expectedIds = null;
-        List<Object> actualIds = (List<Object>)outputEvents[1].get('__SubsequenceStepIds');
-        System.assertEquals(expectedIds, actualIds);
-    }
-    
     static testmethod void testTwoEventsReturned() {
         //arrange sequences
-        Sequence__c origin = new Sequence__c(Name = 'originSequence');
-        Sequence__c target = new Sequence__c(Name = 'targetSequence');
+        Sequence__c origin = new Sequence__c(Name = 'Origin');
         insert origin;
+        
+        Sequence__c target = new Sequence__c(Name = 'Target');
         insert target;
         
-        //arrange config
-        BranchConfig__c config = new BranchConfig__c(Sequence__c = target.Id);
-        insert config;
+        //arrange steps
+        Step__c step = SequenceModel.fromId(origin.Id).appendStep(Branch.class);
+        Id stepConfigId = new StepModel(step).upsertConfig();
+        
+        BranchConfig__c stepConfig = new BranchConfig__c(Id = stepConfigId, Sequence__c = target.Id);
+        update stepConfig;
         
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => config.Id,
-            '__SequenceName' => origin.Name,
-            '__Position' => 1
+            'StepConfigId' => stepConfigId,
+            'Route' => 'Origin#1'
         };
         
         //act
@@ -99,34 +81,26 @@
         Integer actualSize = outputEvents.size();
         System.assertEquals(expectedSize, actualSize);
         
-        //act
+        //arrange
         Map<String,Object> normalEvent = outputEvents[0]; //the normal event continues to the next step
         
         //asserts
-        String expectedNormalSequenceName = origin.Name;
-        String actualNormalSequenceName = (String)normalEvent.get('__SequenceName');
-        System.assertEquals(expectedNormalSequenceName, actualNormalSequenceName);
+        String expectedRoute = 'Origin#1';
+        String actualRoute = (String)normalEvent.get('Route');
+        System.assertEquals(expectedRoute, actualRoute, 'Wrong normal route.');
         
-        Integer expectedNormalPosition = 1;
-        Integer expectedActualPosition = (Integer)normalEvent.get('__Position');
-        System.assertEquals(expectedNormalPosition, expectedActualPosition);
-        
-        //act
+        //arrange
         Map<String,Object> branchEvent = outputEvents[1]; //the branch event goes to the top of another sequence
         
         //asserts
-        String expectedBranchSequenceName = target.Name;
-        String actualBranchSequenceName = (String)branchEvent.get('__SequenceName');
-        System.assertEquals(expectedBranchSequenceName, actualBranchSequenceName);
-        
-        Integer expectedBranchPosition = 0;
-        Integer actualBranchPosition = (Integer)branchEvent.get('__Position');
-        System.assertEquals(expectedBranchPosition, actualBranchPosition);
+        String expectedSequence = target.Name;
+        String actualSequence = (String)branchEvent.get('Sequence');
+        System.assertEquals(expectedSequence, actualSequence, 'Wrong branch sequence.');
     }
     
     static testmethod void testInfiniteLoopFuckupGetsCaught() {
         //arrange sequences
-        Sequence__c sequence = new Sequence__c(Name = 'originSequence');
+        Sequence__c sequence = new Sequence__c(Name = 'Origin');
         insert sequence;
         
         //arrange config
@@ -135,9 +109,8 @@
         
         //arrange event
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => config.Id,
-            '__SequenceName' => sequence.Name,
-            '__Position' => 1
+            'StepConfigId' => config.Id,
+            'Route' => 'Origin#1'
         };
         
         //arrange exception

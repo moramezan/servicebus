@@ -41,7 +41,7 @@
         
         //arrange input
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => pubConfig.Id
+            'StepConfigId' => pubConfig.Id
         };
         
         //assemble
@@ -62,55 +62,10 @@
         System.assertEquals(limits, counter, 'Limit not reached.');
    }
 
-    
-    static testmethod void testSubsequenceDropped() {
-        //arrange event
-        EventType__c eventType = new EventType__c(Name = 'Test');
-        insert eventType;
-        
-        //arrange publish config
-        PublishConfig__c pubConfig = new PublishConfig__c(EventType__c = eventType.Id);
-        insert pubConfig;
-        
-        //arrange subscribe sequence, step, config
-        Sequence__c sub = new Sequence__c(Name = 'Subscriber');
-        insert sub;
-        
-        Step__c subStep = SequenceModel.fromName(sub.Name).appendStep(Subscribe.class);
-        Id subConfigId = new StepModel(subStep).upsertConfig();
-        
-        SubscribeConfig__c subConfig = new SubscribeConfig__c(Id = subConfigId, EventType__c = eventType.Id);
-        update subConfig;
-        
-        //arrange input
-        Map<String,Object> parameters = new Map<String,Object>{
-            'esb__StepConfigId' => pubConfig.Id,
-            '__SubsequenceStepIds' => new List<Id>{'a01000000000000AAA'}
-        };
-        
-        ApexClassModel.BaseProcess process = new Publish();
-        List<Map<String,Object>> parametersList = process.test(parameters);
-        
-        //should return one for sub, one for passthru
-        Integer expectedSize = 2;
-        Integer actualSize = parametersList.size();
-        System.assertEquals(expectedSize, actualSize);
-        
-        //first one is for subscriber
-        List<Object> expectedIds = null;
-        List<Object> actualIds = (List<Object>)parametersList[0].get('__SubsequenceStepIds');
-        System.assertEquals(expectedIds, actualIds);
-        
-        //second one is original/passthru
-        expectedIds = new List<Id>{'a01000000000000AAA'};
-        actualIds = (List<Object>)parametersList[1].get('__SubsequenceStepIds');
-        System.assertEquals(expectedIds, actualIds);
-    }
-    
     static testmethod void testUnconfiguredPublishProcessThrowsException() {
         //arrange input
         Map<String,Object> parameters = new Map<String,Object>{
-            'esb__StepConfigId' => null
+            'StepConfigId' => null
         };
         
         try {
@@ -120,7 +75,7 @@
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
             //assert
-            String expectedMessage = 'ApexDomain.getById received null recordId.';
+            String expectedMessage = 'Null step config id.';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }
@@ -128,7 +83,7 @@
     
     static testmethod void testNoSubscribersStillReturnsOneMessage() {
         //arrange event
-        EventType__c eventType = new EventType__c(Name = 'TestEvent');
+        EventType__c eventType = new EventType__c(Name = 'Test');
         insert eventType;
         
         //arrange publisher config
@@ -137,7 +92,7 @@
         
         //arrange input
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => pubConfig.Id
+            'StepConfigId' => pubConfig.Id
         };
         
         //act
@@ -152,7 +107,7 @@
     
     static testmethod void testSubscribersAffectOutputEventsReturned() {
         //arrange event
-        EventType__c eventType = new EventType__c(Name = 'TestEvent');
+        EventType__c eventType = new EventType__c(Name = 'Test');
         insert eventType;
         
         //arrange publish config
@@ -181,7 +136,7 @@
         
         //arrange input
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__StepConfigId' => pubConfig.Id
+            'StepConfigId' => pubConfig.Id
         };
         
         //act

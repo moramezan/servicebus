@@ -191,10 +191,10 @@ public class SequenceModel extends ApexDomain.StandardModel {
         for (AggregateResult result : [
             SELECT COUNT(Id) total
             FROM Message__c
-            WHERE Step__c LIKE :this.Sequence.Name + '#%'
+            WHERE Route__c LIKE :this.Sequence.Name + '#%'
             AND Status__c != 'Completed'
             AND Exception__c = null
-            GROUP BY Step__c
+            GROUP BY Route__c
         ]) total += (Integer)result.get('total');
         
         return total;

@@ -14,30 +14,34 @@ public class Subsequence extends ApexClassModel.BaseProcess {
         String Cardinality = 'One';
     }
     
-    List<Map<String,Object>> execute(Map<String,Object> parameters) {
+    public class SubsequenceException extends Exception {}
+    
+    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
-        //derive the step Id
-        Step__c step = [
-            SELECT Id
-            FROM Step__c
-            WHERE SequenceName__c = :(String)parameters.get('__SequenceName')
-            AND Position__c = :(Integer)parameters.get('__Position')
+        String stepConfigId = (Id)inputEvent.get('StepConfigId');
+        if (stepConfigId == null) throw new SubsequenceException('Null step config id.');
+        
+        SubsequenceConfig__c config = [
+            SELECT Id, Sequence__r.Name
+            FROM SubsequenceConfig__c
+            WHERE Id = :stepConfigId
         ];
-  
-        //get destination from config
-        SubsequenceConfig__c config = (SubsequenceConfig__c)ApexDomain.getById((Id)parameters.get('esb__StepConfigId'));
-        Sequence__c sequence = (Sequence__c)ApexDomain.getById(config.Sequence__c);
         
-        List<Object> stepIds = (List<Object>)parameters.get('__SubsequenceStepIds');
-        if (stepIds == null) {
-            stepIds = new List<Object>();
-        }
-        stepIds.add(step.Id);
+        String route = (String)inputEvent.get('Route');
+        if (route == null) throw new SubsequenceException('Null route.');
         
-        parameters.put('__SubsequenceStepIds', stepIds);
-        parameters.put('__SequenceName', sequence.Name);
-        parameters.put('__Position', 0);
+        List<String> subsequenceRoutes = (List<String>)inputEvent.get('__SubsequenceRoutes');
+        if (subsequenceRoutes == null) subsequenceRoutes = new List<String>();
+        subsequenceRoutes.add(route);
         
-        return new List<Map<String,Object>>{parameters};
+        Map<String,Object> outputEvent = new Map<String,Object>{
+            'Sequence' => config.Sequence__r.Name,
+            '__SubsequenceRoutes' => subsequenceRoutes
+        };
+        
+        //#994 re-use enqueue logic to do pre-routing
+        List<Map<String,Object>> outputEvents = new Job(outputEvent).Events;
+        
+        return outputEvents;
     }
 }

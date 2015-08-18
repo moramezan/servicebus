@@ -32,9 +32,7 @@ public class Wiretap extends ApexClassModel.BaseProcess {
             + '@'
             + UserInfo.getOrganizationId()
             + ' '
-            + parameters.get('__SequenceName')
-            + '#'
-            + parameters.get('__Position')
+            + parameters.get('Route')
         );
         message.setPlainTextBody(Json.serializePretty(parameters));
         message.setTargetObjectId(userId);

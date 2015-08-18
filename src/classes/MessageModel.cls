@@ -39,22 +39,22 @@ public class MessageModel extends ApexDomain.StandardModel {
      */
     public ApexClassModel resolveApexClassModel() {
         
-        String process = (String)this.Event.get('esb__Process');
-        
-        if (process != null) {
-            return new ApexClassModel(Type.forName(process)); //#956 "fire and forget" process without sequences or steps
-        }
-        
-        String route = this.message.Step__c;
+        String route = this.Message.Route__c;
         
         if (route == null) {
-            throw new Broker.UserException('Message has no step for routing to sequence: ' + this.message.Id); //a la "List has no rows for assignment to SObject"
+            throw new Broker.UserException('Message has no route: ' + this.message.Id); //a la "List has no rows for assignment to SObject"
+        }
+        
+        Type process = Type.forName(route);
+        
+        if (process != null) {
+            return new ApexClassModel(process); //#956 "fire and forget" process without sequences or steps
         }
         
         Step__c step = Step__c.getValues(route);
         
         if (step == null) {
-            throw new Broker.UserException('Could not resolve route from message step: ' + route); //a la "Could not resolve field 'Billing Address' from value binding"
+            throw new Broker.UserException('Could not resolve message route: ' + route); //a la "Could not resolve field 'Billing Address' from value binding"
         }
         
         String apexClassName = step.ApexClassName__c;
@@ -81,7 +81,7 @@ public class MessageModel extends ApexDomain.StandardModel {
         
         try {
             
-            Integer hops = (Integer)this.Event.get('__Hops');
+            Integer hops = (Integer)this.Event.get('Hops');
             if (hops >= Broker.MaximumHops) {
                 throw new Broker.UserException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
             }
@@ -131,7 +131,7 @@ public class MessageModel extends ApexDomain.StandardModel {
         
         try {
             
-            Integer hops = (Integer)this.Event.get('__Hops');
+            Integer hops = (Integer)this.Event.get('Hops');
             if (hops >= Broker.MaximumHops) {
                 throw new Broker.UserException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
             }
@@ -142,13 +142,13 @@ public class MessageModel extends ApexDomain.StandardModel {
             }
             
             //#856 StepConfig should enter the process instance as an Id
-            Step__c step = Step__c.getValues(this.Message.Step__c);
-            if (step != null) this.Event.put('esb__StepConfigId', step.ConfigId__c);
+            Step__c step = Step__c.getValues(this.Message.Route__c);
+            if (step != null) this.Event.put('StepConfigId', step.ConfigId__c);
             
             //do invocation
             List<Map<String,Object>> outputEvents = this.Model.invokeExecute(this.Event);
             
-            Integer chunkTotal = (Integer)this.Event.get('__ChunkTotal');
+            Integer chunkTotal = (Integer)this.Event.get('Range');
             if (chunkTotal != null && chunkTotal + outputEvents.size() + outputMessages.size() > 8000) {
                 //#955 we throttle inputs+outputs
                 throw new Broker.UserException(this.Model.Reflector.getName() + ': Cannot have more than 8000 events in a single operation. Reduce process Limits or emit fewer events.'); //a la "System.TypeException: Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking."
@@ -157,10 +157,6 @@ public class MessageModel extends ApexDomain.StandardModel {
             //wrap up results into Messages (new guys should have Position = 0)
             for (Map<String,Object> outputEvent : outputEvents) {
                 
-                //increment the position of a bunch of output events
-                Integer position = (Integer)outputEvent.get('__Position');
-                if (position == null) position = 0;
-                outputEvent.put('__Position', ++position);
                 //TODO #425 enforce overwrite of __ params?
                 
                 if (outputMessages == null) {
@@ -238,7 +234,7 @@ public class MessageModel extends ApexDomain.StandardModel {
     
     public PageReference showRecordData() {
         try {
-            Id recordId = (Id)this.Event.get('esb__RecordId');
+            Id recordId = (Id)this.Event.get('RecordId');
             SObject recordData = ApexDomain.getById(recordId);
             return new ApexPages.StandardController(recordData).view();
         } catch (Exception e) {

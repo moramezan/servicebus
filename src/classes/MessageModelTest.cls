@@ -9,8 +9,8 @@
         
         //arrange message
         Message__c message = new Message__c(
-            Step__c = 'Test#1',
-            Event__c = '{"__SequenceName":"Test","__Position":1}'
+            Route__c = 'Test#1',
+            Event__c = '{"Route":"Test#1"}'
         );
         
         //act
@@ -52,7 +52,7 @@
         
         for (Integer i = 0; i < 1000; i++) {
             Message__c inputMessage = new Message__c();
-            inputMessage.Step__c = 'Test#1';
+            inputMessage.Route__c = 'Test#1';
             inputMessage.Event__c = '{}';
             inputMessages.add(inputMessage);
         }
@@ -98,7 +98,7 @@
         
         for (Integer i = 0; i < 50; i++) {
             Message__c inputMessage = new Message__c();
-            inputMessage.Step__c = 'Test#1';
+            inputMessage.Route__c = 'Test#1';
             inputMessage.Event__c = '{}';
             inputMessages.add(inputMessage);
         }
@@ -142,7 +142,7 @@
         
         for (Integer i = 0; i < 1000; i++) {
             Message__c inputMessage = new Message__c();
-            inputMessage.Step__c = 'Test#1';
+            inputMessage.Route__c = 'Test#1';
             inputMessage.Event__c = '{}';
             inputMessages.add(inputMessage);
         }
@@ -187,7 +187,7 @@
         
         for (Integer i = 0; i < 75; i++) {
             Message__c inputMessage = new Message__c();
-            inputMessage.Step__c = 'Test#1';
+            inputMessage.Route__c = 'Test#1';
             inputMessage.Event__c = '{}';
             inputMessages.add(inputMessage);
         }
@@ -220,7 +220,7 @@
         insert step;
         
         //arrange message
-        Message__c message = new Message__c(Step__c = 'Test#1', Event__c = '{}');
+        Message__c message = new Message__c(Route__c = 'Test#1', Event__c = '{"Route":"Test#1"}');
         MessageModel model = new MessageModel(message);
         
         //act
@@ -237,7 +237,7 @@
         
         //assert
         Id expectedStepConfigId = document.Id;
-        Id actualStepConfigId = (Id)outputEvent.get('esb__StepConfigId');
+        Id actualStepConfigId = (Id)outputEvent.get('StepConfigId');
         System.assertEquals(expectedStepConfigId, actualStepConfigId, 'Wrong step config id.');
     }
 }

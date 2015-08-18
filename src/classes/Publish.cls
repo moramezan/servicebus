@@ -16,39 +16,43 @@ public class Publish extends ApexClassModel.BaseProcess {
     
     public class PublishException extends Exception {}
 
-    List<Map<String,Object>> execute(Map<String,Object> parameters) {
-        List<Map<String,Object>> parametersList = new List<Map<string,object>>();
+    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
-        PublishConfig__c publishConfig = (PublishConfig__c)ApexDomain.getById((Id)parameters.get('esb__StepConfigId'));
+        String stepConfigId = (Id)inputEvent.get('StepConfigId');
+        if (stepConfigId == null) throw new PublishException('Null step config id.');
         
-        if (publishConfig == null || publishConfig.EventType__c == null) {
-            throw new PublishException('Publish Config ' + publishConfig + ' has no Event type');
-        }
-        
-        Map<Id,SObject> subscribeConfigs = new Map<Id,SObject>([
-            SELECT Id
-            FROM SubscribeConfig__c
-            WHERE EventType__c = :publishConfig.EventType__c
-        ]);
-        
-        List<Step__c> steps = [
-            SELECT Id, SequenceName__c, Position__c
-            FROM Step__c
-            WHERE ConfigId__c IN :subscribeConfigs.keySet()
+        PublishConfig__c publishConfig = [
+            SELECT EventType__c
+            FROM PublishConfig__c
+            WHERE Id = :stepConfigId
         ];
         
-        for (Step__c step : steps) {
-            Map<String,Object> clone = parameters.clone();
-            //#47: Any messages properties affecting the TERMINATE behaviour should be stripped from FLOW CONTROL
-            clone.put('__SubsequenceStepIds', null);
-            clone.put('__Position', step.Position__c.intValue());
-            clone.put('__SequenceName', step.SequenceName__c);
-            parametersList.add(clone);
-        }
+        Id eventTypeId = publishConfig.EventType__c;
+        if (eventTypeId == null) throw new PublishException('No event type.');
         
-        //original guy carries on... this is not a Terminate
-        parametersList.add(parameters);
+        List<SubscribeConfig__c> subscribeConfigs = [
+            SELECT Id
+            FROM SubscribeConfig__c
+            WHERE EventType__c = :eventTypeId
+        ];
         
-        return parametersList;
+        List<Step__c> steps = [
+            SELECT SequenceName__c
+            FROM Step__c
+            WHERE ConfigId__c IN :new Map<Id,SObject>(subscribeConfigs).keySet()
+        ];
+        
+        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
+        for (Step__c step : steps) outputEvents.add(new Map<String,Object>{
+            'Sequence' => step.SequenceName__c
+        });
+        
+        //#994 re-use enqueue logic to do pre-routing
+        outputEvents = new Job(outputEvents).Events;
+        
+        //original guy carries on... this does not inadvertently Terminate
+        outputEvents.add(inputEvent);
+        
+        return outputEvents;
     }
 }

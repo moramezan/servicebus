@@ -4,14 +4,19 @@
     
     static testmethod void testSimpleEventConstructor() {
         //arrange
-        String sequenceName = 'TestSequence';
+        String sequenceName = 'Test';
         String recordId = UserInfo.getOrganizationId();
         
         //act
         Test.startTest();
         Job job = new Job(sequenceName, recordId);
+        
+        System.assert(job.Events[0].containsKey('Sequence'));
+        
         System.enqueueJob(job);
         Test.stopTest();
+        
+        //assert
         
         //assemble
         List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
@@ -25,15 +30,12 @@
         Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
         
         //assert
-        System.assert(event.containsKey('__Hops'));
-        System.assert(event.containsKey('__EnqueueUserId'));
-        System.assert(event.containsKey('__EntryPointUuid'));
-        System.assert(event.containsKey('__EntryPointDatetime'));
-        System.assert(event.containsKey('esb__RecordId'));
-        System.assert(event.containsKey('esb__SequenceName'));
-        System.assert(event.containsKey('esb__EnqueueUserId'));
-        System.assert(event.containsKey('esb__EntryPointUuid'));
-        System.assert(event.containsKey('esb__EntryPointDatetime'));
+        System.assert(event.containsKey('Hops'));
+        System.assert(event.containsKey('EntryPointTimestamp'));
+        System.assert(event.containsKey('RecordId'));
+        System.assert(event.containsKey('Route'));
+        System.assert(event.containsKey('EnqueuedById'));
+        System.assert(event.containsKey('EntryPointUuid'));
     }
     
     static testmethod void testUnpersistableTypesDetectedInConstructor() {

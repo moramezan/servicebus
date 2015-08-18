@@ -278,7 +278,7 @@
             insert new Document(Name = 'Test', FolderId = UserInfo.getUserId());
             List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
             for (Integer i = 0; i < 200; i++) outputEvents.add(new Map<String,Object>{
-                'esb__Process' => null
+                'Sequence' => 'Test#1'
             });
             return outputEvents;
         }
@@ -292,8 +292,8 @@
         //arrange messages (39 would be ok, 40 is bad, 41 is bad)
         List<Message__c> inputMessages = new List<Message__c>();
         for (Integer i = 0; i < 41; i++) inputMessages.add(new Message__c(
-            Step__c = 'ApexClassModelTest.TooManyEvents',
-            Event__c = '{"esb__Process":"ApexClassModelTest.TooManyEvents"}'
+            Route__c = 'ApexClassModelTest.TooManyEvents',
+            Event__c = '{"Process":"ApexClassModelTest.TooManyEvents"}'
         ));
         
         //act (39th guy hits 7840, 40th guy hits 8040, 41st guy hits 8240)
@@ -319,23 +319,46 @@
         //this guy checks that any side effects are rolled back after the 8000 limit reached
     }
     
-    public class SpecialOneShotWithOutputs extends ApexClassModel.BaseProcess {
+    public class SpecialOneShotWithSequenceOutput extends ApexClassModel.BaseProcess {
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
-                    'esb__Process' => null,
-                    'esb__Sequence' => 'Test'
+                    'Sequence' => 'Test'
                 }
             };
         }
     }
     
-    static testmethod void testOneShotEmitsOutputsWhenWeWantItTo() {
+    static testmethod void testOneShotOutputsSurviveWhenDestinedForSequence() {
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>();
         
         //act
-        ApexClassModel model = new ApexClassModel(SpecialOneShotWithOutputs.class);
+        ApexClassModel model = new ApexClassModel(SpecialOneShotWithSequenceOutput.class);
+        List<Map<String,Object>> outputEvents = model.invokeExecute(inputEvent);
+        
+        //assert
+        Integer expectedSize = 1;
+        Integer actualSize = outputEvents.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
+    }
+    
+    public class SpecialOneShotWithProcessOutput extends ApexClassModel.BaseProcess {
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            return new List<Map<String,Object>>{
+                new Map<String,Object>{
+                    'Process' => 'Test'
+                }
+            };
+        }
+    }
+    
+    static testmethod void testOneShotOutputsSurviveWhenDestinedForProcess() {
+        //arrange input event
+        Map<String,Object> inputEvent = new Map<String,Object>();
+        
+        //act
+        ApexClassModel model = new ApexClassModel(SpecialOneShotWithProcessOutput.class);
         List<Map<String,Object>> outputEvents = model.invokeExecute(inputEvent);
         
         //assert
@@ -347,10 +370,7 @@
     public class NormalOneShotWithOutputs extends ApexClassModel.BaseProcess {
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
-                new Map<String,Object>{
-                    //outputs aggregate, so this is effectively like:
-                    //'esb__Process' => 'ApexClassModelTest.NormalOneShotWithOutputs'
-                }
+                new Map<String,Object>()
             };
         }
     }
@@ -358,7 +378,7 @@
     static testmethod void testOneShotSwallowsOutputsNormally() {
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'esb__Process' => NormalOneShotWithOutputs.class.getName()
+            'Route' => NormalOneShotWithOutputs.class.getName()
         };
         
         //act (note the aggregated output parameters)
@@ -375,10 +395,10 @@
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
-                    'esb__Process' => 'ApexClassOne'
+                    'Process' => 'ApexClassOne'
                 },
                 new Map<String,Object>{
-                    'esb__Process' => 'ApexClassTwo'
+                    'Process' => 'ApexClassTwo'
                 }
             };
         }

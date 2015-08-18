@@ -14,12 +14,11 @@ private class WiretapTest {
 
    static testmethod void withinSystemLimits() {
         //arrange
-        Sequence__c sequence = new Sequence__c(Name = 'the-sequence');
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
 
         Map<String,Object> inputEvent = new Map<String,Object> {
-            '__SequenceName' => 'the-sequence',
-            '__Position' => 1
+            'Route' => 'Test#1'
         };
         
         //arrange
@@ -45,14 +44,14 @@ private class WiretapTest {
 
     static testmethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnProcessSettingNOTSet() {
         // Arrange :
-        String sequenceName = 'the-sequence';
+        String sequenceName = 'Test';
         Integer step = 1;
         String data = 'data';
 
        //--NOT-DEFINED insert new WiretapSetting__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
-            '__SequenceName' => sequenceName,
+            'Route' => 'Test#1',
             'step' => step,
             'data' => data
         };
@@ -77,14 +76,14 @@ private class WiretapTest {
    
     static testmethod void callingExecuteReturnsExpectedOutputEventsWhenDefinedESBProcessSettingSet() {
         // Arrange :
-        String sequenceName = 'the-sequence';
+        String sequenceName = 'Test';
         Integer step = 1;
         String data = 'data';
 
         insert new WiretapSetting__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> inputEvent = new Map<String,Object> {
-            '__SequenceName' => sequenceName,
+            'Route' => 'Test#1',
             'step' => step,
             'data' => data
         };

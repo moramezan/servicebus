@@ -15,34 +15,30 @@ public class GateByEntryPoint extends ApexClassModel.BaseProcess {
         String Cardinality = 'Fewer';
 
         Map<String,String> Inputs = new Map<String,String>{
-            'esb__EntryPointUuid' => 'Entry Point Id that associates gated messages.'
+            'EntryPointUuid' => 'Entry Point Id that associates gated messages.'
         };
 
         Map<String,String> Outputs = new Map<String,String>{
-            'esb__GateItemsQueryString' => 'STRING of the query that locates the items that hold events correlated by Job Id.',
-            'esb__GateItemsFieldName' => 'STRING of the item field name that contains the serialized event data.'
+            'GateItemsQueryString' => 'STRING of the query that locates the items that hold events correlated by Job Id.',
+            'GateItemsFieldName' => 'STRING of the item field name that contains the serialized event data.'
         };
     }
 
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
 
-        if (!inputEvent.containsKey('esb__EntryPointUuid'))
-            throw new GateByEntryPointException('Input event missing mandatory esb__EntryPointUuid parameter');
-        if (!inputEvent.containsKey('__ChunkTotal'))
-            throw new GateByEntryPointException('Input event missing mandatory  __ChunkTotal parameter');
-        if (!inputEvent.containsKey('__Chunk'))
-            throw new GateByEntryPointException('Input event missing mandatory __Chunk parameter');
-        if (!inputEvent.containsKey('__Position'))
-            throw new GateByEntryPointException('Input event missing mandatory __Position parameter');
-        if (!inputEvent.containsKey('__SequenceName'))
-            throw new GateByEntryPointException('Input event missing mandatory __SequenceName parameter');
+        if (!inputEvent.containsKey('EntryPointUuid'))
+            throw new GateByEntryPointException('Input event missing mandatory EntryPointUuid parameter');
+        if (!inputEvent.containsKey('Range'))
+            throw new GateByEntryPointException('Input event missing mandatory Range parameter');
+        if (!inputEvent.containsKey('Chunk'))
+            throw new GateByEntryPointException('Input event missing mandatory Chunk parameter');
+        if (!inputEvent.containsKey('Route'))
+            throw new GateByEntryPointException('Input event missing mandatory Route parameter');
 
-        String entryPointUuid = (String)inputEvent.get('esb__EntryPointUuid');
-        Integer chunkTotal = (Integer)inputEvent.get('__ChunkTotal');
-        Integer chunk = (Integer)inputEvent.get('__Chunk');
-        Integer position = (Integer)inputEvent.get('__Position');
-        String sequenceName = (String)inputEvent.get('__SequenceName');
-        String route = sequenceName + '#' +  position;
+        String entryPointUuid = (String)inputEvent.get('EntryPointUuid');
+        Integer chunkTotal = (Integer)inputEvent.get('Range');
+        Integer chunk = (Integer)inputEvent.get('Chunk');
+        String route = (String)inputEvent.get('Route');
 
         Boolean release = isRelease(entryPointUuid, chunkTotal, chunk);
 
@@ -62,7 +58,7 @@ public class GateByEntryPoint extends ApexClassModel.BaseProcess {
         String queryString = ''
                 + 'SELECT ' + fieldName + ' '
                 + 'FROM Message__c '
-                + 'WHERE EntryPointUuid__c = \'' + entryPointUuid + '\'  AND Step__c  = \'' + route + '\''
+                + 'WHERE EntryPointUuid__c = \'' + entryPointUuid + '\'  AND Route__c  = \'' + route + '\''
                 ;
 
         //this is the last item, let's release
@@ -81,8 +77,8 @@ public class GateByEntryPoint extends ApexClassModel.BaseProcess {
 
         inputEvent = cleanParameters(inputEvent); // start with a clean parameters collection
         inputEvent.putAll(commonParameters);   // add the common parameters ...
-        inputEvent.put('esb__GateItemsQueryString', queryString);
-        inputEvent.put('esb__GateItemsFieldName', fieldName);
+        inputEvent.put('GateItemsQueryString', queryString);
+        inputEvent.put('GateItemsFieldName', fieldName);
 
         return new List<Map<String,Object>>{inputEvent};
     }
