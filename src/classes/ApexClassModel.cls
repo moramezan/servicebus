@@ -302,9 +302,9 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             String route = (String)outputEvent.get('Route');
             String process = (String)outputEvent.get('Process');
             String sequence = (String)outputEvent.get('Sequence');
-            if (route != null && !route.contains('#') && route != null && !route.contains('#')) {
+            if (route != null && !route.contains('#') && sequence == null && process == null) {
                 //#956 "fire and forget" means don't persist outputs, unless they were explicitly destined to sequence or process
-                continue;
+                continue; //TODO needs more testing
             }
             
             /**
