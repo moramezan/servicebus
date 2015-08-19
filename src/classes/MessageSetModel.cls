@@ -129,6 +129,9 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             event.remove('Chunk');
             event.remove('Range');
             
+            //is this interesting to us
+            if (message.Id != null) event.put('MessageId', message.Id);
+            
             //clear before routing
             message.Route__c = null;
             if (event.containsKey('Route')) message.Route__c = (String)event.get('Route');

@@ -277,4 +277,21 @@
         System.assert(!message.Event__c.contains('AllowsCallouts'), 'Should not contain allows callouts.');
         
     }
+    
+    static testmethod void testMessageIdUpdatedOnEvent() {
+        //arrange message
+        Message__c message = new Message__c(Event__c = '{}');
+        insert message;
+        
+        //act
+        Broker.impl().mark(new List<Message__c>{message});
+        
+        //assemble
+        message = [SELECT Event__c FROM Message__c];
+        
+        //assert
+        Id expectedId = message.Id;
+        Id actualEvent = message.Event__c;
+        System.assert(actualEvent.contains(expectedId), 'Event should contain message id.');
+    }
 }
