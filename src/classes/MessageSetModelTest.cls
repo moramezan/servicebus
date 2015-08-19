@@ -250,4 +250,31 @@
         Integer actualAfter = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
         System.assertEquals(expectedAfter, actualAfter, 'Wrong count after.');
     }
+    
+    static testmethod void testTriggerStripsOurSecretParameters() {
+        //arrange input
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'Herp' => 'Derp',
+            'Range' => 50,
+            'Chunk' => 1,
+            'AllowsCallouts' => false
+        };
+        
+        //arrange message
+        Message__c message = new Message__c(
+            Event__c = Json.serialize(event);
+        );
+        
+        //act
+        insert message;
+        
+        //assemble
+        message = [SELECT Event__c FROM Message__c];
+        
+        //assert
+        System.assert(!message.Event__c.contains('Range'), 'Should not contain range.');
+        System.assert(!message.Event__c.contains('Chunk'), 'Should not contain chunk.');
+        System.assert(!message.Event__c.contains('AllowsCallouts'), 'Should not contain allows callouts.');
+        
+    }
 }

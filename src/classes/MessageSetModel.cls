@@ -122,10 +122,12 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     @TestVisible private void alphabetizeJsonAndPopulateFields() {
         for (Message__c message : this.Messages) try {
             if (message.Event__c == null) message.Event__c = '{}';
-            
-            //#972 reserialize in alphabetical order
             Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
-            message.Event__c = new SortedSerializer(event).toString();
+            
+            //strip out our little secrets
+            event.remove('AllowsCallouts');
+            event.remove('Chunk');
+            event.remove('Range');
             
             //clear before routing
             message.Route__c = null;
@@ -146,6 +148,9 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
              */
             Id jobId = (Id)event.get('JobId');
             if (jobId != null) message.JobId__c = jobId;
+            
+            //#972 reserialize in alphabetical order
+            message.Event__c = new SortedSerializer(event).toString();
         } catch (Exception e) {
             message.Event__c.addError(e);
         }
