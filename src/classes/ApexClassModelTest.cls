@@ -198,13 +198,14 @@
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
                     'foo' => 'baz',
-                    'herp' => 'derp'
+                    'herp' => 'derp',
+                    'now' => Datetime.now()
                 }
             };
         }
     }
     
-    static testmethod void testBaseProcessAggregatesOutputParameters() {
+    static testmethod void testBaseProcessAggregatesAndCyclesOutputParameters() {
         //arrange process
         ApexClassModel.BaseProcess impl = new OutputProcess();
         
@@ -221,6 +222,7 @@
         System.assert(outputEvents[0].containsKey('herp'));
         System.assertEquals('baz', (String)outputEvents[0].get('foo'), 'Not overwritten.');
         System.assertEquals('derp', (String)outputEvents[0].get('herp'), 'Not appended.');
+        System.assert(outputEvents[0].get('now') instanceof String, 'Wrong now type.');
     }
     
     public class TooManyOutputs extends ApexClassModel.BaseProcess {

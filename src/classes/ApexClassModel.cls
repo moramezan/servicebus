@@ -150,6 +150,9 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 //"aggregate" equals our "input balance" plus their "output delta"
                 Map<String,Object> aggregate = inputEvent.clone();
                 aggregate.putAll(outputEvents[i]);
+                
+                //#797 cycle outputs so process author sees consistent outputs
+                aggregate = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(aggregate));
                 outputEvents[i] = aggregate;
             }
             
