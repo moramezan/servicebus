@@ -145,9 +145,9 @@
     </types>
     <types>
         <members>BranchConfig__c.Sequence__c</members>
+        <members>BrokerSetting__c.EventTimestamp__c</members>
         <members>BrokerSetting__c.Inhibit__c</members>
         <members>BrokerSetting__c.IsPaused__c</members>
-        <members>BrokerSetting__c.LastTimestamp__c</members>
         <members>JumpConfig__c.Sequence__c</members>
         <members>Message__c.Cause__c</members>
         <members>Message__c.EntryPointUuid__c</members>

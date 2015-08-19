@@ -190,7 +190,7 @@
 
         // assemble
         BrokerSetting__c settings = BrokerSetting__c.getOrgDefaults();
-        DateTime actualEventStamp =  settings.LastTimestamp__c;
+        DateTime actualEventStamp =  settings.EventTimestamp__c;
         
         // assert
         DateTime expectedEventStamp = null;
@@ -219,7 +219,7 @@
 
         // assemble
         BrokerSetting__c settings = BrokerSetting__c.getOrgDefaults();
-        DateTime actualEventStamp = settings.LastTimestamp__c;
+        DateTime actualEventStamp = settings.EventTimestamp__c;
         
         // assert
         DateTime expectedEventStamp =  stampC;

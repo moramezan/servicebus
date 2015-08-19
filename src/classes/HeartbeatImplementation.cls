@@ -46,7 +46,7 @@ public class HeartbeatImplementation implements System.Schedulable {
         public DateTime CurrentDateTime    {get; private set;}
  
         public  HeartbeatGeneratorImpl() {
-            DateTime  eventStampAsDateTime = BrokerSetting__c.getOrgDefaults().LastTimestamp__c;
+            DateTime  eventStampAsDateTime = BrokerSetting__c.getOrgDefaults().EventTimestamp__c;
             
             // no suicide chaining : set to 60
             // suicide schedule : set as low as 5
@@ -155,7 +155,7 @@ public class HeartbeatImplementation implements System.Schedulable {
         DateTime lastEventStamp =  heartbeats[count-1];
  
         BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults(); //#782
-        setting.LastTimestamp__c = lastEventStamp;
+        setting.EventTimestamp__c = lastEventStamp;
       //////  setting.EventStampInfo__c = json.serialize(lastEventStamp).replaceAll('"','').left(19)+'Z';  // Info purposes only
         upsert setting;
     }
