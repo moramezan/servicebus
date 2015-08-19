@@ -19,8 +19,8 @@ public class GateByEntryPoint extends ApexClassModel.BaseProcess {
         };
 
         Map<String,String> Outputs = new Map<String,String>{
-            'GateItemsQueryString' => 'STRING of the query that locates the items that hold events correlated by Job Id.',
-            'GateItemsFieldName' => 'STRING of the item field name that contains the serialized event data.'
+            'GateItemQuery' => 'STRING of the query that locates the items that hold events correlated by Job Id.',
+            'GateItemField' => 'STRING of the item field name that contains the serialized event data.'
         };
     }
 
@@ -77,8 +77,8 @@ public class GateByEntryPoint extends ApexClassModel.BaseProcess {
 
         inputEvent = cleanParameters(inputEvent); // start with a clean parameters collection
         inputEvent.putAll(commonParameters);   // add the common parameters ...
-        inputEvent.put('GateItemsQueryString', queryString);
-        inputEvent.put('GateItemsFieldName', fieldName);
+        inputEvent.put('GateItemQuery', queryString);
+        inputEvent.put('GateItemField', fieldName);
 
         return new List<Map<String,Object>>{inputEvent};
     }
