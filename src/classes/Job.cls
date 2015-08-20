@@ -182,7 +182,38 @@ global class Job implements Process.Plugin, system.Queueable {
             throw new EnqueueException(e.getMessage());
         }
         
+        Set<String> legalKeys = new Set<String>{
+            'EnqueuedById',
+            'EntryPointTimestamp',
+            'EntryPointUuid',
+            'JobId',
+            'MessageId',
+            'RecordId',
+            'Sequence',
+            'Process',
+            'Route',
+            'Hops'
+        };
+        
         for (Map<String,Object> inputEvent : inputEvents) {
+            
+            for (String key : inputEvent.keySet()) {
+                
+                if (legalKeys.contains(key)) {
+                    //success, basically our api
+                    continue; //ok
+                }
+                
+                if (key.startsWith('__')) {
+                    //failure, reserved for us
+                    throw new EnqueueException('Namespace \'__\' is not supported. If you are attempting to use a custom event parameter, be sure to prepend the \'c__\' before the parameter name.'); //a la //sObject type 'Messsss' is not supported. If you are attempting to use a custom object, be sure to append the '__c' after the entity name. Please reference your WSDL or the describe call for the appropriate names.
+                }
+                
+                if (!key.contains('__')) {
+                    //failure, namespace is required
+                    throw new EnqueueException('Namespace \'' + key + '\' is not supported. If you are attempting to use a custom event parameter, be sure to prepend the \'c__\' before the parameter name.'); //a la //sObject type 'Messsss' is not supported. If you are attempting to use a custom object, be sure to append the '__c' after the entity name. Please reference your WSDL or the describe call for the appropriate names.
+                }
+            }
             
             if (inputEvent == null) {
                 //failure, one bad input event

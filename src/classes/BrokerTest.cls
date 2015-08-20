@@ -401,7 +401,7 @@
     // Stack Trace      Class.BrokerTest.testMissingPositionThrowsExpectedException: line 680, column 1
     static testmethod void testMissingPositionThrowsExpectedException() {
         //arrange input
-        Map<String,Object> inputEvent = new Map<String,Object>{'Not_Sequence_Or_Process' => 1};
+        Map<String,Object> inputEvent = new Map<String,Object>{'c__Not_Sequence_Or_Process' => 1};
         
         //arrange message
         Test.startTest();

@@ -98,4 +98,37 @@
         
     }
     
+    static testmethod void testNaughtyKeys() {
+        //act (good one)
+        Map<String,Object> inputEvent = new Map<String,Object>{'ns__param' => ''};
+        new Job(inputEvent);
+        System.assert(inputEvent.containsKey('ns__param'));
+        
+        try {
+            //act (ours)
+            inputEvent = new Map<String,Object>{'test' => ''};
+            new Job(inputEvent);
+            System.assert(false, 'Line above should throw exception.');
+            
+        } catch (Exception e) {
+            //assert
+            String expectedException = 'not supported';
+            String actualException = e.getMessage();
+            System.assert(actualException.contains(expectedException), 'Wrong exception.');
+        }
+        
+        try {
+            //act (reserved)
+            inputEvent = new Map<String,Object>{'__test' => ''};
+            new Job(inputEvent);
+            System.assert(false, 'Line above should throw exception.');
+            
+        } catch (Exception e) {
+            //assert
+            String expectedException = 'not supported';
+            String actualException = e.getMessage();
+            System.assert(actualException.contains(expectedException), 'Wrong exception.');
+        }
+    }
+    
 }
