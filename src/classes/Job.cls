@@ -5,9 +5,9 @@
 global class Job implements Process.Plugin, system.Queueable {
     
     /**
-     * Unfortunately we need this constructor for Process.Plugin:
+     * We use this legitimately to "Wakeup" in rebuffer etc
+     * But this constructor has to be public for Process.Plugin:
      * "System.TypeException: Job does not have a no-arg constructor"
-     * At least if someone tries to enqueueJob() it won't insert messages.
      */
     global Job() {}
     
@@ -26,7 +26,9 @@ global class Job implements Process.Plugin, system.Queueable {
         
         plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
             new Process.PluginDescribeResult.InputParameter('RecordId', Process.PluginDescribeResult.ParameterType.ID, true),
-            new Process.PluginDescribeResult.InputParameter('Sequence', Process.PluginDescribeResult.ParameterType.STRING, true)
+            new Process.PluginDescribeResult.InputParameter('ToSequence', Process.PluginDescribeResult.ParameterType.STRING, true),
+            new Process.PluginDescribeResult.InputParameter('ToProcess', Process.PluginDescribeResult.ParameterType.STRING, true),
+            new Process.PluginDescribeResult.InputParameter('ToConfig', Process.PluginDescribeResult.ParameterType.ID, true)
         };
         
         plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
@@ -71,7 +73,9 @@ global class Job implements Process.Plugin, system.Queueable {
      */
     global class SimpleEvent {
         @InvocableVariable(required=true) global Id RecordId;
-        @InvocableVariable(required=true) global String SequenceName;
+        @InvocableVariable(required=true) global String ToSequence;
+        //@InvocableVariable(required=true) global String ToProcess;
+        //@InvocableVariable(required=true) global String ToConfig;
     }
     
     /**
@@ -82,8 +86,10 @@ global class Job implements Process.Plugin, system.Queueable {
         List<Id> ids = new List<Id>();
         for (SimpleEvent simpleEvent : simpleEvents) {
             Map<String,Object> inputEvent = new Map<String,Object>{
-                'RecordId' => simpleEvent.RecordId,
-                'Sequence' => simpleEvent.SequenceName
+                'ToSequence' => simpleEvent.ToSequence,
+                //'ToProcess' => simpleEvent.ToProcess,
+                //'ToConfig' => simpleEvent.ToConfig
+                'RecordId' => simpleEvent.RecordId
             };
             Job job = new Job(inputEvent);
             Id jobId = System.enqueueJob(job);
@@ -132,9 +138,12 @@ global class Job implements Process.Plugin, system.Queueable {
      * @param sequenceName Name of the sequence the data is destined for.
      * @param dataId    Id of some record that the sequence will operate on.
      */
-    global Job(String sequenceName, Id recordId) {
+    public Job(String sequenceName, Id recordId) {
+        //TODO could this become "route" to accommodate either/or, or detect the difference somehow
         this(new Map<String,Object>{
-            'Sequence' => sequenceName,
+            'ToSequence' => sequenceName,
+            //'ToProcess' => sequenceName,
+            //'ToConfig' => sequenceName,
             'RecordId' => recordId
         });
     }
@@ -144,7 +153,7 @@ global class Job implements Process.Plugin, system.Queueable {
      *
      * The input event collection should at minimum contain
      *  - an object Id ("Id")
-     *  - a sequence ("Sequence") or a process ("Process")
+     *  - a sequence ("ToSequence") or a process ("ToProcess") or a config ("ToConfig")
      *
      * The input event collection is converted to a Message object. This Message instance is saved
      * to the database and the Broker is immeadiately invoked if it is not already running.
@@ -189,13 +198,25 @@ global class Job implements Process.Plugin, system.Queueable {
             'JobId',
             'MessageId',
             'RecordId',
-            'Sequence',
-            'Process',
-            'Route',
+            'ToSequence',
+            'ToProcess',
+            'ToConfig',
+            //'Route', //TODO confirm if this disallowed
             'Hops'
         };
         
-        for (Map<String,Object> inputEvent : inputEvents) {
+        //#999 allow third-parties to "enqueue to config"
+        Map<String,String> config2sequence = new Map<String,String>();
+        for (Step__c step : Step__c.getAll().values()) config2sequence.put(step.ConfigId__c, step.SequenceName__c);
+        
+        for (Map<String,Object> input : inputEvents) {
+            
+            if (input == null) {
+                //failure, one bad input event
+                throw new EnqueueException('Enqueued event cannot be null'); //a la System.NullPointerException: Argument cannot be null
+            }
+            
+            Map<String,Object> inputEvent = input.clone();
             
             for (String key : inputEvent.keySet()) {
                 
@@ -215,9 +236,32 @@ global class Job implements Process.Plugin, system.Queueable {
                 }
             }
             
-            if (inputEvent == null) {
-                //failure, one bad input event
-                throw new EnqueueException('Enqueued event cannot be null'); //a la System.NullPointerException: Argument cannot be null
+            //#999 enqueue routing helpers
+            String toSequence = (String)inputEvent.get('ToSequence');
+            String toProcess = (String)inputEvent.get('ToProcess');
+            String toConfig = (String)inputEvent.get('ToConfig');
+            
+            if (toSequence != null) {
+                //converts sequence to route
+                inputEvent.remove('ToSequence');
+                inputEvent.put('__ToSequence', toSequence);
+                inputEvent.put('Route', toSequence + '#' + '0');
+            }
+            
+            if (toProcess != null) {
+                //converts process to route
+                inputEvent.remove('ToProcess');
+                inputEvent.put('__ToProcess', toProcess);
+                inputEvent.put('Route', toProcess);
+                
+            }
+            
+            if (toConfig != null) {
+                //converts config to route
+                inputEvent.remove('ToConfig');
+                inputEvent.put('__ToConfig', toConfig);
+                inputEvent.put('Route', config2sequence.get((String)toConfig) + '#' + '0');
+                
             }
             
             inputEvent.putAll(new Map<String,Object>{

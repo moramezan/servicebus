@@ -171,7 +171,7 @@ public class HeartbeatImplementation implements System.Schedulable {
         for (DateTime timestamp : timestamps) outputEvents.add(new Map<String,Object>{
             'RecordId' => RecordId, //#971 used in lieu of __WasHeartbeat
             'EntryPointTimestamp' => timestamp,
-            'Process' => Heartbeat.class.getName() //#956 and #575 so that resolve and execute can crow look
+            'ToProcess' => Heartbeat.class.getName() //#956 and #575 so that resolve and execute can crow look
         });
         
         if (outputEvents.isEmpty()) {

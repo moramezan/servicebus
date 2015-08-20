@@ -15,17 +15,17 @@
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange messages
-        Map<String,Object> parameters = new Map<String,Object>{'Sequence' => 'Test'};
+        Map<String,Object> inputEvent = new Map<String,Object>{'ToSequence' => 'Test'};
         List<Map<String,Object>> inputEvents = new List<Map<String,Object>>{
-            parameters,
-            parameters,
-            parameters,
-            parameters,
-            parameters,
-            parameters,
-            parameters,
-            parameters,
-            parameters
+            inputEvent,
+            inputEvent,
+            inputEvent,
+            inputEvent,
+            inputEvent,
+            inputEvent,
+            inputEvent,
+            inputEvent,
+            inputEvent
         };
         
         Test.startTest();
@@ -105,7 +105,7 @@
         
         //arrange input
         Map<String,Object> inputEvent = new Map<String,Object> {
-            'Sequence' => 'Test'
+            'ToSequence' => 'Test'
         };
         
         //arrange message
@@ -168,15 +168,15 @@
         
         //arrange input
         Map<String,Object> inputEvent1 = new Map<String,Object> {
-            'Sequence' => 'Test'
+            'ToSequence' => 'Test'
         };
         
         Map<String,Object> inputEvent2 = new Map<String,Object> {
-            'Sequence' => 'Test'
+            'ToSequence' => 'Test'
         };
         
         Map<String,Object> inputEvent3 = new Map<String,Object> {
-            'Sequence' => 'Test'
+            'ToSequence' => 'Test'
         };
         
         //arrange messages
@@ -224,15 +224,15 @@
         
         //arrange input
         Map<String,Object> inputEvent1 = new Map<String,Object> {
-            'Sequence' => 'Test'
+            'ToSequence' => 'Test'
         };
         
         Map<String,Object> inputEvent2 = new Map<String,Object> {
-            'Sequence' => 'Test'
+            'ToSequence' => 'Test'
         };
         
         Map<String,Object> inputEvent3 = new Map<String,Object> {
-            'Sequence' => 'Test'
+            'ToSequence' => 'Test'
         };
         
         //arrange messages

@@ -297,15 +297,8 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         for (Object result : results) {
             Map<String,Object> outputEvent = (Map<String,Object>)result;
             
-            if (inputEvent.get('Route') != outputEvent.get('Route')) {
-                //prevent fucking with the route
-                throw new Broker.UserException(this.Reflector.getName() + ': Route is immutable.');
-            }
-            
             String route = (String)outputEvent.get('Route');
-            String process = (String)outputEvent.get('Process');
-            String sequence = (String)outputEvent.get('Sequence');
-            if (route != null && !route.contains('#') && sequence == null && process == null) {
+            if (route != null && !route.contains('#') && inputEvent.get('Route') == outputEvent.get('Route')) {
                 //#956 "fire and forget" means don't persist outputs, unless they were explicitly destined to sequence or process
                 continue; //TODO needs more testing
             }

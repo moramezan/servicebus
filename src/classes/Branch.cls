@@ -39,7 +39,7 @@ public class Branch extends ApexClassModel.BaseProcess {
         }
         
         Map<String,Object> outputEvent = new Map<String,Object>{
-            'Sequence' => config.Sequence__r.Name
+            'Route' => config.Sequence__r.Name + '#0'
         };
         
         //original guy carries on... this does not inadvertently Terminate

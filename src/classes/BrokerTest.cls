@@ -45,22 +45,22 @@
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange messages
-        Map<String,Object> inputEvent = new Map<String,Object>{'Sequence' => 'Test'};
+        Map<String,Object> inputEvent = new Map<String,Object>{'ToSequence' => 'Test'};
         
-        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>{
-            inputEvent,
-            inputEvent,
-            inputEvent,
-            inputEvent,
-            inputEvent,
-            inputEvent,
-            inputEvent,
-            inputEvent,
-            inputEvent
+        List<Map<String,Object>> inputEvents = new List<Map<String,Object>>{
+            inputEvent.clone(),
+            inputEvent.clone(),
+            inputEvent.clone(),
+            inputEvent.clone(),
+            inputEvent.clone(),
+            inputEvent.clone(),
+            inputEvent.clone(),
+            inputEvent.clone(),
+            inputEvent.clone()
         };
         
         Test.startTest();
-        Job job = new Job(outputEvents);
+        Job job = new Job(inputEvents);
         System.enqueueJob(job);
         Test.stopTest();
         
@@ -278,9 +278,9 @@
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         List<Map<String,Object>> inputEvents = new List<Map<String,Object>>{
-            new Map<String,Object>{'Sequence' => 'Test'},
-            new Map<String,Object>{'Sequence' => 'Test'},
-            new Map<String,Object>{'Sequence' => 'Test'}
+            new Map<String,Object>{'ToSequence' => 'Test'},
+            new Map<String,Object>{'ToSequence' => 'Test'},
+            new Map<String,Object>{'ToSequence' => 'Test'}
         };
         
         Test.startTest();
@@ -431,7 +431,7 @@
     static testmethod void testNoStepThrowsQueryException() {
         //arrange input (note there is no Step__c in database!)
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'Sequence' => 'Test'
+            'ToSequence' => 'Test'
         };
         
         //arrange message
@@ -606,7 +606,7 @@
         DateTime timestamp = DateTime.newInstance(2014,12,15,13,11,07);
         Map<String,Object> inputEvent = new Map<String,Object>{
             'RecordId' => UserInfo.getUserId(),
-            'Route' => 'Test#1',
+            'ToSequence' => 'Test',
             'EntryPointTimestamp' => timestamp
         };
              
@@ -641,7 +641,7 @@
         Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
   
         //arrange inputs
-        Map<String,Object> input1 = new Map<String,Object>{'Route' => 'Test'};
+        Map<String,Object> input1 = new Map<String,Object>{'ToSequence' => 'Test'};
         Map<String,Object> input2 = new Map<String,Object>{'RecordId' => null};
   
         //arrange messages
@@ -772,8 +772,8 @@
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange broker implementation and params
-        Map<String,Object> failureEvent = new Map<String,Object>{'c__IsError' => true, 'Sequence' => 'Test'};
-        Map<String,Object> successEvent = new Map<String,Object>{'c__IsError' => false, 'Sequence' => 'Test'};
+        Map<String,Object> failureEvent = new Map<String,Object>{'c__IsError' => true, 'ToSequence' => 'Test'};
+        Map<String,Object> successEvent = new Map<String,Object>{'c__IsError' => false, 'ToSequence' => 'Test'};
         List<Map<String,Object>> events = new List<Map<String,Object>>{failureEvent, successEvent};
         
         //arrange messages and broker

@@ -228,18 +228,6 @@ abstract public without sharing class Broker {
             for (Message__c message : inputAndOutputMessages) if (message.Id == null) {
                 Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
                 
-                //converts sequence to route
-                if (event.containsKey('Sequence')) {
-                    event.put('Route', event.get('Sequence') + '#' + '0');
-                    event.remove('Sequence');
-                }
-                
-                //converts process to route
-                if (event.containsKey('Process')) {
-                    event.put('Route', event.get('Process'));
-                    event.remove('Process');
-                }
-                
                 //increments route position
                 if (event.containsKey('Route')) {
                     String route = (String)event.get('Route');

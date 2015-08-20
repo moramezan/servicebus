@@ -83,8 +83,8 @@
         Integer actualSize = outputEvents.size();
         System.assertEquals(expectedSize, actualSize);
         
-        String expectedSequence = 'Target';
-        String actualSequence = (String)outputEvents[0].get('Sequence');
+        String expectedSequence = 'Target#0';
+        String actualSequence = (String)outputEvents[0].get('Route');
         System.assertEquals(expectedSequence, actualSequence, 'Wrong sequence.');
         
         String expectedPassThruData = 'herpderp';

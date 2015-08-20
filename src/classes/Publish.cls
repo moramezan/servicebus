@@ -44,11 +44,8 @@ public class Publish extends ApexClassModel.BaseProcess {
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         for (Step__c step : steps) outputEvents.add(new Map<String,Object>{
-            'Sequence' => step.SequenceName__c
+            'Route' => step.SequenceName__c + '#1'
         });
-        
-        //#994 re-use enqueue logic to do pre-routing
-        outputEvents = new Job(outputEvents).Events;
         
         //original guy carries on... this does not inadvertently Terminate
         outputEvents.add(inputEvent);

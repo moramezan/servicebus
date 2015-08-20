@@ -93,8 +93,8 @@
         Map<String,Object> branchEvent = outputEvents[1]; //the branch event goes to the top of another sequence
         
         //asserts
-        String expectedSequence = target.Name;
-        String actualSequence = (String)branchEvent.get('Sequence');
+        String expectedSequence = target.Name + '#0';
+        String actualSequence = (String)branchEvent.get('Route');
         System.assertEquals(expectedSequence, actualSequence, 'Wrong branch sequence.');
     }
     

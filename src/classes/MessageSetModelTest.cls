@@ -32,9 +32,14 @@
     }
     
     static testmethod void testUnpopulatedJsonFields() {
+        //arrange input
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'Route' => Heartbeat.class.getName()
+        };
+        
         //arrange message
         Message__c message = new Message__c(
-            Event__c = '{"Process":"' + Heartbeat.class.getName() + '"}'
+            Event__c = Json.serialize(inputEvent)
         );
         
         //act

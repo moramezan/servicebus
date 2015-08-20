@@ -14,8 +14,6 @@
         
         //act
         ApexClassModel.BaseProcess process = new Heartbeat();
-        
-        //assemble
         List<Map<String,Object>> outputs = process.test(inputEvent);
         
         //assert
@@ -27,8 +25,8 @@
         Map<String,Object> output = outputs[0];
         
         //assert
-        String expectedSequence = 'Test';
-        String actualSequence = (String)output.get('Sequence');
+        String expectedSequence = 'Test#1';
+        String actualSequence = (String)output.get('Route');
         System.assertEquals(expectedSequence, actualSequence, 'Wrong sequence.');
     }
 

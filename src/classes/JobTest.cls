@@ -11,7 +11,8 @@
         Test.startTest();
         Job job = new Job(sequenceName, recordId);
         
-        System.assert(job.Events[0].containsKey('Sequence'));
+        System.assert(job.Events[0].containsKey('__ToSequence'), 'Wrong sequence key.');
+        System.assert(job.Events[0].containsKey('Route'), 'Wrong route key.');
         
         System.enqueueJob(job);
         Test.stopTest();
@@ -67,16 +68,20 @@
         System.assertEquals(expectedBefore, actualBefore, 'Wrong size.');
 
         //act
+        Test.startTest(); //avoid System.LimitException: Apex CPU time limit exceeded
         Job job = new Job(inputEvents);
         job.execute(null);
+        Integer limitDmlRows = Limits.getLimitDmlRows();
+        Integer dmlRows = Limits.getDmlRows();
+        Test.stopTest();
         
         //assert
         Integer expectedLimit = 10000;
-        Integer actualLimit = Limits.getLimitDmlRows();
+        Integer actualLimit = limitDmlRows;
         System.assertEquals(expectedLimit, actualLimit, 'Wrong size.');
         
         Integer expectedAfter = 10000;
-        Integer actualAfter = Limits.getDmlRows();
+        Integer actualAfter = dmlRows;
         System.assertEquals(expectedAfter, actualAfter, 'Wrong size.');
     }
     
@@ -129,6 +134,60 @@
             String actualException = e.getMessage();
             System.assert(actualException.contains(expectedException), 'Wrong exception.');
         }
+    }
+    
+    static testmethod void testEnqueueNormalizesSequenceAndProcessAndConfigToRoute() {
+        //arrange
+        Map<String,Object> inputEvent;
+        List<Map<String,Object>> inputEvents;
+        Object expectedParam;
+        Object actualParam;
+        
+        //act
+        inputEvent = new Map<String,Object>{'ToSequence' => 'Test'};
+        inputEvents = new Job(inputEvent).Events;
+        
+        //assert
+        expectedParam = 'Test#0';
+        actualParam = inputEvents[0].get('Route');
+        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
+        
+        expectedParam = 'Test';
+        actualParam = inputEvents[0].get('__ToSequence');
+        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
+        
+        //act
+        inputEvent = new Map<String,Object>{'ToProcess' => 'Wiretap'};
+        inputEvents = new Job(inputEvent).Events;
+        
+        //assert
+        expectedParam = 'Wiretap';
+        actualParam = inputEvents[0].get('Route');
+        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
+        
+        expectedParam = 'Wiretap';
+        actualParam = inputEvents[0].get('__ToProcess');
+        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
+        
+        //arrange
+        Document document = new Document(Name = 'Config', FolderId = UserInfo.getUserId());
+        insert document;
+        
+        Step__c step = new Step__c(Name = 'Test#1', SequenceName__c = 'Test', ConfigId__c = document.Id);
+        insert step;
+        
+        //act
+        inputEvent = new Map<String,Object>{'ToConfig' => document.Id};
+        inputEvents = new Job(inputEvent).Events;
+        
+        //assert
+        expectedParam = 'Test#0';
+        actualParam = inputEvents[0].get('Route');
+        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
+        
+        expectedParam = document.Id;
+        actualParam = inputEvents[0].get('__ToConfig');
+        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
     }
     
 }

@@ -280,7 +280,7 @@
             insert new Document(Name = 'Test', FolderId = UserInfo.getUserId());
             List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
             for (Integer i = 0; i < 200; i++) outputEvents.add(new Map<String,Object>{
-                'Sequence' => 'Test#1'
+                'Route' => 'Test#1' //dont swallow one shot
             });
             return outputEvents;
         }
@@ -294,8 +294,8 @@
         //arrange messages (39 would be ok, 40 is bad, 41 is bad)
         List<Message__c> inputMessages = new List<Message__c>();
         for (Integer i = 0; i < 41; i++) inputMessages.add(new Message__c(
-            Route__c = 'ApexClassModelTest.TooManyEvents',
-            Event__c = '{"Process":"ApexClassModelTest.TooManyEvents"}'
+            Route__c = TooManyEvents.class.getName(),
+            Event__c = Json.serialize(new Map<String,Object>{'Route' => TooManyEvents.class.getName()})
         ));
         
         //act (39th guy hits 7840, 40th guy hits 8040, 41st guy hits 8240)
@@ -325,7 +325,7 @@
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
-                    'Sequence' => 'Test'
+                    'Route' => 'Test#1'
                 }
             };
         }
@@ -349,7 +349,7 @@
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
-                    'Process' => 'Test'
+                    'Route' => Wiretap.class.getName()
                 }
             };
         }
@@ -397,10 +397,10 @@
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
-                    'Process' => 'ApexClassOne'
+                    'Route' => Wiretap.class.getName()
                 },
                 new Map<String,Object>{
-                    'Process' => 'ApexClassTwo'
+                    'Route' => Terminate.class.getName()
                 }
             };
         }
