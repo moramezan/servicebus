@@ -10,8 +10,7 @@
         System.assertEquals(expectedLimits, actualLimits);
     }
 
-
-   static testmethod void withinSystemLimits() {
+    static testmethod void withinSystemLimits() {
         Sequence__c origin = new Sequence__c(Name = 'Origin');
         insert origin;
         Step__c originStep = SequenceModel.fromName(origin.Name).appendStep(Subsequence.class);
@@ -51,50 +50,123 @@
 
         //assert
         System.assertEquals(limits, counter, 'Limit not reached.');
-   }
-
-
-
-    static testmethod void testMessageIsRedirected() {
-        //arrange sequences
-        Sequence__c origin = new Sequence__c(Name = 'Origin');
-        insert origin;
-        Step__c originStep = SequenceModel.fromName(origin.Name).appendStep(Subsequence.class);
-        new StepModel(originStep).upsertConfig();
-        
-        Sequence__c target = new Sequence__c(Name = 'Target');
-        insert target;
-        Step__c targetStep = SequenceModel.fromName(target.Name).appendStep(Terminate.class);
-        
-        //prepare config in db
-        SubsequenceConfig__c config = new SubsequenceConfig__c(
-            Id = originStep.ConfigId__c,
-            Sequence__c = target.Id
-        );
-        update config;
-        
-        //prepare message
-        Map<String,Object> parameters = new Map<String,Object>{
-            'StepConfigId' => config.Id,
-            'Route' => 'Origin#1'
-        };
-        
-        //act
-        ApexClassModel.BaseProcess process = new Subsequence();
-        List<Map<String,Object>> parametersList = process.test(parameters);
-        
-        //asserts
-        Integer expectedSize = 1;
-        Integer actualSize = parametersList.size();
-        System.assertEquals(expectedSize, actualSize);
-        
-        String expectedSequence = 'Target';
-        String actualSequence = (String)parametersList[0].get('Sequence');
-        System.assertEquals(expectedSequence, actualSequence, 'Wrong sequence.');
-        
-        String expectedList = '["Origin#1"]';
-        String actualList = System.Json.serialize(parametersList[0].get('__SubsequenceRoutes'));
-        System.assertEquals(expectedList, actualList);
     }
     
+    static testmethod void testRoutineExecutesSynchronously() {
+        //arrange routine
+        Sequence__c routine = new Sequence__c(Name = 'Routine');
+        insert routine;
+        
+        SequenceModel.fromId(routine.Id).appendStep(Wiretap.class);
+        SequenceModel.fromId(routine.Id).appendStep(Wiretap.class);
+        SequenceModel.fromId(routine.Id).appendStep(Wiretap.class);
+        SequenceModel.fromId(routine.Id).appendStep(Terminate.class);
+        
+        //arrange caller
+        Sequence__c caller = new Sequence__c(Name = 'Caller');
+        insert caller;
+        
+        Step__c step1 = SequenceModel.fromId(caller.Id).appendStep(Subsequence.class);
+        Step__c step2 = SequenceModel.fromId(caller.Id).appendStep(Subsequence.class);
+        SequenceModel.fromId(caller.Id).appendStep(Terminate.class);
+        
+        //arrange config
+        Id configId1 = new StepModel(step1).upsertConfig();
+        Id configId2 = new StepModel(step2).upsertConfig();
+        
+        update new SubsequenceConfig__c(Id = configId1, Sequence__c = routine.Id);
+        update new SubsequenceConfig__c(Id = configId2, Sequence__c = routine.Id);
+        
+        //act (enqueue)
+        Test.startTest();
+        Job job = new Job('Caller', '00D000000000000AAA');
+        System.enqueueJob(job);
+        Test.stopTest();
+        
+        //assert
+        Integer expectedBefore = 0;
+        Integer actualBefore = Limits.getEmailInvocations();
+        System.assertEquals(expectedBefore, actualBefore, 'Wrong before.');
+        
+        //act (execute)
+        Broker.impl().run();
+
+        //assert
+        Integer expectedAfter = 6;
+        Integer actualAfter = Limits.getEmailInvocations();
+        System.assertEquals(expectedAfter, actualAfter, 'Wrong after.');
+    }
+    
+    static testmethod void testSubsequenceNeedsConfig() {
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
+        insert sequence;
+        
+        SequenceModel.fromId(sequence.Id).appendStep(Subsequence.class);
+        SequenceModel.fromId(sequence.Id).appendStep(Terminate.class);
+        
+        try {
+            //act (no config!)
+            ApexClassModel.BaseProcess process = new Subsequence();
+            process.test(new Map<String,Object>());
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Exception e) {
+            //assert
+            String expectedMessage = 'Null step config id.';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+    }
+
+    public class Inserter extends ApexClassModel.BaseProcess {
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            insert new Document(Name = 'Test', FolderId = UserInfo.getUserId());
+            return new List<Map<String,Object>>{inputEvent};
+        }
+    }
+    
+    public class ErrorException extends Exception {}
+    
+    public class Error extends ApexClassModel.BaseProcess {
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            throw new ErrorException('Some Problem Here');
+        }
+    }
+    
+    static testmethod void testExceptionInSubsequenceGetsCaughtAndRolledBack() {
+        //arrange routine
+        Sequence__c routine = new Sequence__c(Name = 'Routine');
+        insert routine;
+        
+        SequenceModel.fromId(routine.Id).appendStep(Inserter.class);
+        SequenceModel.fromId(routine.Id).appendStep(Error.class);
+        
+        //arrange caller
+        Sequence__c caller = new Sequence__c(Name = 'Caller');
+        insert caller;
+        
+        Step__c step = SequenceModel.fromId(caller.Id).appendStep(Subsequence.class);
+        SequenceModel.fromId(caller.Id).appendStep(Terminate.class);
+        
+        //arrange config
+        Id configId = new StepModel(step).upsertConfig();
+        update new SubsequenceConfig__c(Id = configId, Sequence__c = routine.Id);
+        
+        //arrange input event
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'StepConfigId' => configId
+        };
+        
+        try {
+            //act
+            ApexClassModel.BaseProcess process = new Subsequence();
+            process.test(inputEvent);
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Exception e) {
+            //assert
+            String expectedMessage = 'Some Problem Here';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+    }
 }

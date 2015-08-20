@@ -5,43 +5,69 @@ public class Subsequence extends ApexClassModel.BaseProcess {
      */
     public class ESB extends ApexClassModel.BaseSummary {
         String Tag = 'Enterprise Service Bus';
-        String Name = 'Subsequence';
-        String Description = 'Temporarily diverts the message to another sequence, then returns it to the next step afterwards.';
+        String Name = 'Synchronous Subsequence';
+        String Description = 'Synchronously executes another sequence, then resumes the next step afterwards.';
         String StepConfig = SubsequenceConfig__c.class.getName();
         String Icon = 'arrow_undo';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessBranchJumpSubsequence').getUrl();
-        Integer Limits = 33; //max sync limit
+        Integer Limits = 1; //we dont know what they will do
         String Cardinality = 'One';
     }
     
     public class SubsequenceException extends Exception {}
     
-    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+    public void traverse(Map<String,Object> inputEvent) {
         
+        //route any outputs to next step
+        String route = (String)inputEvent.get('Route');
+        String sequence = route.substringBefore('#');
+        String position = route.substringAfter('#');
+        inputEvent.put('Route', sequence + '#' + (Integer.valueOf(position) + 1));
+        
+        Message__c message = new Message__c(
+            Route__c = (String)inputEvent.get('Route'),
+            Event__c = Json.serialize(inputEvent)
+        );
+        
+        ApexClassModel model = new MessageModel(message).resolveApexClassModel();
+        
+        //invoke callouts (this WILL explode, by design)
+        model.invokeCallout(inputEvent);
+        
+        //invoke execute
+        List<Map<String,Object>> outputEvents = model.invokeExecute(inputEvent);
+        
+        for (Map<String,Object> outputEvent : outputEvents) {
+            //recurse into each output
+            this.traverse(outputEvent);
+        }
+    }
+    
+    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+
         String stepConfigId = (Id)inputEvent.get('StepConfigId');
         if (stepConfigId == null) throw new SubsequenceException('Null step config id.');
-        
+
         SubsequenceConfig__c config = [
             SELECT Id, Sequence__r.Name
             FROM SubsequenceConfig__c
             WHERE Id = :stepConfigId
         ];
         
-        String route = (String)inputEvent.get('Route');
-        if (route == null) throw new SubsequenceException('Null route.');
+        //sorry, no callouts in subsequences
+        Savepoint savepoint = Database.setSavepoint();
         
-        List<String> subsequenceRoutes = (List<String>)inputEvent.get('__SubsequenceRoutes');
-        if (subsequenceRoutes == null) subsequenceRoutes = new List<String>();
-        subsequenceRoutes.add(route);
+        try {
+            //he has inputs but no outputs
+            Map<String,Object> clone = inputEvent.clone();
+            clone.put('Route', config.Sequence__r.Name + '#0');
+            this.traverse(clone);
+        } catch (Exception e) {
+            //TODO catch "callouts not supported in subsequence, jump out and jump back"
+            Database.rollback(savepoint);
+            throw e;
+        }
         
-        Map<String,Object> outputEvent = new Map<String,Object>{
-            'Sequence' => config.Sequence__r.Name,
-            '__SubsequenceRoutes' => subsequenceRoutes
-        };
-        
-        //#994 re-use enqueue logic to do pre-routing
-        List<Map<String,Object>> outputEvents = new Job(outputEvent).Events;
-        
-        return outputEvents;
+        return new List<Map<String,Object>>{inputEvent};
     }
 }
