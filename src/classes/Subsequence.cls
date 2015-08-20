@@ -1,5 +1,7 @@
 public class Subsequence extends ApexClassModel.BaseProcess {
     
+    static public Boolean IsRunning = false;
+    
     /**
      * @docs ProcessBranchJumpSubsequence.html
      */
@@ -44,7 +46,10 @@ public class Subsequence extends ApexClassModel.BaseProcess {
     }
     
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
-
+        
+        //#995 help subsequence bail out
+        IsRunning = true;
+        
         String stepConfigId = (Id)inputEvent.get('StepConfigId');
         if (stepConfigId == null) throw new SubsequenceException('Null step config id.');
 
@@ -62,6 +67,7 @@ public class Subsequence extends ApexClassModel.BaseProcess {
             Map<String,Object> clone = inputEvent.clone();
             clone.put('Route', config.Sequence__r.Name + '#0');
             this.traverse(clone);
+            
         } catch (Exception e) {
             //TODO catch "callouts not supported in subsequence, jump out and jump back"
             Database.rollback(savepoint);

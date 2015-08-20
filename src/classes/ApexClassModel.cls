@@ -230,9 +230,18 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             if (Limits.getEmailInvocations() > emailInvocations) throw new Broker.UserException('You have uncommitted work pending. Please commit or rollback before calling out');
             
         } catch (Exception e) {
+            if (Subsequence.IsRunning) {
+                //#995 help subsequence bail out
+                String message = this.Reflector.getName() + ': Callout from Subsequence not supported. Consider using Jumps instead.';
+                if (!Test.isRunningTest()) System.assert(false, message);
+                else throw new Broker.UserException(message);
+            }
+            
             if (e.getMessage() == 'You have uncommitted work pending. Please commit or rollback before calling out') {
                 //#981 put work in proper method please... fucking uncommit using system rollback (no savepoint because callout!)
-                System.assert(false, this.Reflector.getName() + ': Side effects from callout() not supported. Please do that in the execute() method.');
+                String message = this.Reflector.getName() + ': Side effects from callout() not supported. Please do that in the execute() method.';
+                if (!Test.isRunningTest()) System.assert(false, message);
+                else throw new Broker.UserException(message);
             }
         }
         

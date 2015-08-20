@@ -169,4 +169,64 @@
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }
     }
+    
+    @TestVisible private class CalloutMock implements HttpCalloutMock {
+        public HttpResponse respond(HttpRequest request) {
+            return new HttpResponse();
+        }
+    }
+    
+    public class Callout extends ApexClassModel.BaseProcess {
+        override protected void callout(Map<String,Object> inputEvent) {
+            HttpRequest request = new HttpRequest();
+            request.setMethod('GET');
+            request.setEndpoint('https://localhost/');
+            new Http().send(request);
+        }
+        
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            return new List<Map<String,Object>>{inputEvent};
+        }
+    }
+    
+    static testmethod void testCalloutGetsCaughtWithHelpfulMessage() {
+        //arrange routine
+        Sequence__c routine = new Sequence__c(Name = 'Routine');
+        insert routine;
+        
+        SequenceModel.fromId(routine.Id).appendStep(Callout.class);
+        SequenceModel.fromId(routine.Id).appendStep(Terminate.class);
+        
+        //arrange caller
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
+        insert sequence;
+        
+        Step__c step = SequenceModel.fromId(sequence.Id).appendStep(Subsequence.class);
+        SequenceModel.fromId(sequence.Id).appendStep(Terminate.class);
+        
+        //arrange config
+        Id configId = new StepModel(step).upsertConfig();
+        update new SubsequenceConfig__c(Id = configId, Sequence__c = routine.Id);
+        
+        //arrange input
+        Map<String,Object> event = new Map<String,Object>{
+            'StepConfigId' => configId,
+            'ToSequence' => 'Test'
+        };
+        
+        try {
+            //act
+            Test.setMock(HttpCalloutMock.class, new CalloutMock());
+            ApexClassModel.BaseProcess process = new Subsequence();
+            process.test(event);
+            System.assert(false, 'Line above should throw exception.');
+            
+        } catch (Exception e) {
+            //assert
+            String expectedMessage = Callout.class.getName() + ': Callout from Subsequence not supported. Consider using Jumps instead.';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+        
+    }
 }
