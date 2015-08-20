@@ -262,7 +262,7 @@
         
         //arrange message
         Message__c message = new Message__c(
-            Event__c = Json.serialize(event);
+            Event__c = Json.serialize(inputEvent)
         );
         
         //act
@@ -291,7 +291,7 @@
         
         //assert
         Id expectedId = message.Id;
-        Id actualEvent = message.Event__c;
+        String actualEvent = message.Event__c;
         System.assert(actualEvent.contains(expectedId), 'Event should contain message id.');
     }
 }
