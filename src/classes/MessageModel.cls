@@ -57,6 +57,16 @@ public class MessageModel extends ApexDomain.StandardModel {
             throw new Broker.UserException('Could not resolve message route: ' + route); //a la "Could not resolve field 'Billing Address' from value binding"
         }
         
+        Id configId = step.ConfigId__c; //#856 this will get slurped up by "locate" and "mark" to add the step config id
+        
+        if (configId == null) {
+            this.Event.remove('StepConfigId'); //TODO better
+            this.Message.Event__c = Json.serializePretty(this.Event);
+        } else {
+            this.Event.put('StepConfigId', configId); //TODO better
+            this.Message.Event__c = Json.serializePretty(this.Event);
+        }
+        
         String apexClassName = step.ApexClassName__c;
         
         if (apexClassName == null) {

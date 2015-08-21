@@ -74,8 +74,9 @@ public class SequenceModel extends ApexDomain.StandardModel {
      * @return the queueable job id
      */
     public Id enqueueTestMessage() {
-        Job j = new Job(this.Sequence.Name, UserInfo.getOrganizationId());
-        Id jobId = System.enqueueJob(j);
+        Map<String,Object> event = new Map<String,Object>{'ToSequence' => this.Sequence.Name};
+        Job job = new Job(event);
+        Id jobId = System.enqueueJob(job);
         return jobId;
     }
     

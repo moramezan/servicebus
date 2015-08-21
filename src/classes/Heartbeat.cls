@@ -18,7 +18,7 @@ public class Heartbeat extends ApexClassModel.BaseProcess {
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         for (Step__c step : steps) outputEvents.add(new Map<String,Object>{
-            'Route' => step.SequenceName__c + '#1',
+            'Route' => step.SequenceName__c + '#0',
             'RecordId' => inputEvent.get('RecordId') //#971 this carries difference between heartbeat and test message
         });
         

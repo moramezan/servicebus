@@ -268,7 +268,7 @@
         List<Message__c> outputMessages = new List<Message__c>();
         model.invokeExecute(outputMessages);
         
-        String expectedException = Broker.UserException.class.getName() + ': ' + SurpriseNullOutputs.class.getName() + ': Output events cannot be null';
+        String expectedException = Broker.UserException.class.getName() + ': ' + SurpriseNullOutputs.class.getName() + ': Output event cannot be null';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }

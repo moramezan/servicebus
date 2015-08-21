@@ -25,7 +25,7 @@
         Map<String,Object> output = outputs[0];
         
         //assert
-        String expectedSequence = 'Test#1';
+        String expectedSequence = 'Test#0';
         String actualSequence = (String)output.get('Route');
         System.assertEquals(expectedSequence, actualSequence, 'Wrong sequence.');
     }
