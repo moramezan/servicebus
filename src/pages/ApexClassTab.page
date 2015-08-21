@@ -45,8 +45,10 @@
     <apex:pageBlock mode="detail">
         <apex:pageBlockTable value="{!id2summary}" var="id">
 
-            <apex:column headerValue="Action" width="70" style="color: #999;">
+            <apex:column headerValue="Action" width="110" style="color: #999;">
                 <apex:outputLink value="{!URLFOR($Page.ApexClassSummary, null, ['id'=id])}" style="color: #015ba7; text-decoration: none;">Summary</apex:outputLink>
+                <apex:outputText rendered="{!id2summary[id].ProcessSetting != null}">&nbsp;|&nbsp;</apex:outputText>
+                <apex:outputLink rendered="{!id2summary[id].ProcessSetting != null}" value="{!URLFOR($Page.ApexClassSetting, null, ['id'=id])}" style="color: #015ba7; text-decoration: none;">Setting</apex:outputLink>
             </apex:column>
             
             <apex:column headerValue="Icon" width="30">
