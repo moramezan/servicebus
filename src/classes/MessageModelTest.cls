@@ -240,4 +240,36 @@
         Id actualStepConfigId = (Id)outputEvent.get('StepConfigId');
         System.assertEquals(expectedStepConfigId, actualStepConfigId, 'Wrong step config id.');
     }
+    
+    public class SurpriseNullOutputs extends ApexClassModel.BaseProcess {
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            return new List<Map<String,Object>>{
+                new Map<String,Object>{'herp' => 'derp'},
+                null,
+                new Map<String,Object>{'foo' => 'bar'}
+            };
+        }
+    }
+    
+    static testmethod void testNullEventsReturned() {
+        //arrange input
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'Route' => SurpriseNullOutputs.class.getName()
+        };
+        
+        //arrange message
+        Message__c message = new Message__c(
+            Route__c = SurpriseNullOutputs.class.getName(),
+            Event__c = Json.serialize(inputEvent)
+        );
+        
+        //act
+        MessageModel model = new MessageModel(message);
+        List<Message__c> outputMessages = new List<Message__c>();
+        model.invokeExecute(outputMessages);
+        
+        String expectedException = Broker.UserException.class.getName() + ': ' + SurpriseNullOutputs.class.getName() + ': Output events cannot be null';
+        String actualException = message.Exception__c;
+        System.assertEquals(expectedException, actualException, 'Wrong exception.');
+    }
 }

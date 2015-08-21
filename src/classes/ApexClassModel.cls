@@ -147,6 +147,8 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             
             //#746 accumulate outputs so event parameters carry forwards
             if (outputEvents != null) for (Integer i = 0; i < outputEvents.size(); i++) {
+                if (outputEvents[i] == null) continue;
+                
                 //"aggregate" equals our "input balance" plus their "output delta"
                 Map<String,Object> aggregate = inputEvent.clone();
                 aggregate.putAll(outputEvents[i]);
@@ -304,7 +306,18 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         }
         
         for (Object result : results) {
+            if (result == null) {
+                //#976 catch "surprise" null events
+                throw new Broker.UserException(this.Reflector.getName() + ': Output event cannot be null'); //a la System.NullPointerException: Argument cannot be null
+            }
+            
+            if (!(result instanceof Map<String,Object>)) {
+                //catch non map-string objects (unlikely unless custom nuclear tip)
+                throw new Broker.UserException(this.Reflector.getName() + ': Output event must be a Map<String,Object>'); //a la Return type of an Apex action method must be a PageReference. Found: java.lang.Integer
+            }
+            
             Map<String,Object> outputEvent = (Map<String,Object>)result;
+            
             
             String route = (String)outputEvent.get('Route');
             if (route != null && !route.contains('#') && inputEvent.get('Route') == outputEvent.get('Route')) {
