@@ -64,7 +64,7 @@ abstract public without sharing class Broker {
     public List<Message__c> locateMarkableWork() {
         try {
             List<Message__c> specimen = [
-                SELECT Id, Route__c, Event__c //TODO lose event
+                SELECT Id, Route__c, Event__c //TODO lose event?
                 FROM Message__c
                 WHERE Status__c = 'Buffered'
                 ORDER BY CreatedDate ASC //reattempts will naturally lead
@@ -95,10 +95,10 @@ abstract public without sharing class Broker {
             //TODO what if this guy returns a list of 0, would cause a panic condition, lets check
             
             return [
-                SELECT Id, Route__c, Event__c //TODO lose event
+                SELECT Id, Route__c, Event__c //TODO lose event?
                 FROM Message__c
                 WHERE Status__c = 'Buffered'
-                AND Route__c = :specimen[0].Route__c
+                AND Route__c = :specimen[0].Route__c //#1004 Route__c field only ever used here to LOCATE, and for GATE and MONITOR
                 LIMIT :limits
                 FOR UPDATE //#695 investigate broker race condition
             ];
@@ -155,7 +155,7 @@ abstract public without sharing class Broker {
             for (MessageModel model : models) {
                 //do invocation
                 this.BlameCpuTime = Limits.getCpuTime(); //#985
-                this.BlameRoute = model.Message.Route__c; //#985
+                this.BlameRoute = (String)model.Event.get('Route'); //#985
                 model.invokeCallout();
             }
             
@@ -174,7 +174,7 @@ abstract public without sharing class Broker {
                 
                 //do invocation
                 this.BlameCpuTime = Limits.getCpuTime(); //#985
-                this.BlameRoute = model.Message.Route__c; //#985
+                this.BlameRoute = (String)model.Event.get('Route'); //#985
                 isolate = model.invokeExecute(outputMessages);
                 
                 if (model.Message.Exception__c != null && isolate) {
@@ -257,7 +257,7 @@ abstract public without sharing class Broker {
      * lean on the platform to prevent races. Salesforce will block second job!
      *
      * If you try and schedule TWO jobs in ONE execution context:
-     * System.AsyncException: The Apex job named "test" is already scheduled for execution.
+     * System.AsyncException: The Apex job named 'test' is already scheduled for execution.
      *
      * Or if you scheduled ONE job in each of TWO execution contexts:
      * System.UnexpectedException: common.exception.SqlDupValOnIndexException: ORA-00001: unique constraint (CORE.AKCRON_JOB_DETAIL) violated

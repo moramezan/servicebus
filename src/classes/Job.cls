@@ -139,7 +139,7 @@ global class Job implements Process.Plugin, system.Queueable {
      * @param dataId    Id of some record that the sequence will operate on.
      */
     public Job(String sequenceName, Id recordId) {
-        //TODO could this become "route" to accommodate either/or, or detect the difference somehow
+        //TODO could this become Route to accommodate either/or, by detecting the difference somehow?
         this(new Map<String,Object>{
             'ToSequence' => sequenceName,
             //'ToProcess' => sequenceName,

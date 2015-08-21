@@ -39,7 +39,7 @@ public class MessageModel extends ApexDomain.StandardModel {
      */
     public ApexClassModel resolveApexClassModel() {
         
-        String route = this.Message.Route__c;
+        String route = (String)this.Event.get('Route');
         
         if (route == null) {
             throw new Broker.UserException('Message has no route: ' + this.message.Id); //a la "List has no rows for assignment to SObject"
@@ -150,10 +150,6 @@ public class MessageModel extends ApexDomain.StandardModel {
                 //doing this later than earlier
                 this.Model = this.resolveApexClassModel();
             }
-            
-            //#856 StepConfig should enter the process instance as an Id
-            Step__c step = Step__c.getValues(this.Message.Route__c);
-            if (step != null) this.Event.put('StepConfigId', step.ConfigId__c);
             
             //do invocation
             List<Map<String,Object>> outputEvents = this.Model.invokeExecute(this.Event);

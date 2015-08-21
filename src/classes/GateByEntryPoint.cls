@@ -58,7 +58,7 @@ public class GateByEntryPoint extends ApexClassModel.BaseProcess {
         String queryString = ''
                 + 'SELECT ' + fieldName + ' '
                 + 'FROM Message__c '
-                + 'WHERE EntryPointUuid__c = \'' + entryPointUuid + '\'  AND Route__c  = \'' + route + '\''
+                + 'WHERE EntryPointUuid__c = \'' + entryPointUuid + '\'  AND Route__c  = \'' + route + '\'' //EntryPointUuid__c field only ever used to GATE BY ENTRY POINT
                 ;
 
         //this is the last item, let's release

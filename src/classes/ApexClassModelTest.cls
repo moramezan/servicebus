@@ -294,7 +294,6 @@
         //arrange messages (39 would be ok, 40 is bad, 41 is bad)
         List<Message__c> inputMessages = new List<Message__c>();
         for (Integer i = 0; i < 41; i++) inputMessages.add(new Message__c(
-            Route__c = TooManyEvents.class.getName(),
             Event__c = Json.serialize(new Map<String,Object>{'Route' => TooManyEvents.class.getName()})
         ));
         

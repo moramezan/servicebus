@@ -27,7 +27,6 @@ public class Subsequence extends ApexClassModel.BaseProcess {
         inputEvent.put('Route', sequence + '#' + (Integer.valueOf(position) + 1));
         
         Message__c message = new Message__c(
-            Route__c = (String)inputEvent.get('Route'),
             Event__c = Json.serialize(inputEvent)
         );
         

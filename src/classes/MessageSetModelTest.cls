@@ -54,8 +54,9 @@
     
     static testmethod void testPopulateJsonFields() {
         //arrange message
+        Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
         Message__c message = new Message__c(
-            Event__c = '{"Route":"Test#1"}'
+            Event__c = Json.serialize(event)
         );
         
         //act
@@ -69,8 +70,9 @@
     
     static testmethod void testValidMessageParameters() {
         //arrange message
+        Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
         Message__c validMessage = new Message__c(
-            Event__c = '{"Route":"Test#1"}'
+            Event__c = Json.serialize(event)
         );
         
         //assert

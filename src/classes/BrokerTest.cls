@@ -173,9 +173,9 @@
         SequenceModel.fromId(sequence.Id).appendStep(Terminate.class);
         
         //arrange message
+        Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
         Message__c inputMessage = new Message__c(
-            Event__c = '{}',
-            Route__c = 'Test#1'
+            Event__c = Json.serialize(event)
         );
         insert inputMessage;
         
@@ -231,9 +231,11 @@
         model.appendStep(Wiretap.class);
         model.appendStep(Terminate.class);
         
+        Map<String,Object> event1 = new Map<String,Object>{'Route' => 'Test#1'};
+        Map<String,Object> event2 = new Map<String,Object>{'Route' => 'Test#2'};
         List<Message__c> inputMessages = new List<Message__c>{
-            new Message__c(Route__c = 'Test#1', Event__c = '{"Route":"Test#1"}'),
-            new Message__c(Route__c = 'Test#2', Event__c = '{"Route":"Test#2"}')
+            new Message__c(Event__c = Json.serialize(event1)),
+            new Message__c(Event__c = Json.serialize(event2))
         };
         
         //arranges messages
@@ -253,8 +255,8 @@
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
 
         //arrange
-        Map<String,Object> outputEventA = (Map<String,Object>)Json.deserializeUntyped(outputMessages[0].Event__c);
-        Map<String,Object> outputEventB = (Map<String,Object>)Json.deserializeUntyped(outputMessages[1].Event__c);
+        Map<String,Object> outputEventA = (Map<String,Object>)Json.deserializeUntyped(outputMessages[0].Event__c); //woops, this fails sometimes
+        Map<String,Object> outputEventB = (Map<String,Object>)Json.deserializeUntyped(outputMessages[1].Event__c); //0/1 seems non deterministic
 
         String expectedPositionA = '2';
         String actualPositionA = ((String)outputEventA.get('Route')).substringAfter('#');
@@ -322,16 +324,18 @@
         
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
+        Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
+        
         //arrange fucked messages
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Started', Event__c = '{"Route":"Test#1"}'),
-            new Message__c(Status__c = 'Started', Event__c = '{"Route":"Test#1"}')
+            new Message__c(Status__c = 'Started', Event__c = Json.serialize(event)),
+            new Message__c(Status__c = 'Started', Event__c = Json.serialize(event))
         };
         
         //arrange Buffered messages
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Buffered', Event__c = '{"Route":"Test#1"}'),
-            new Message__c(Status__c = 'Buffered', Event__c = '{"Route":"Test#1"}')
+            new Message__c(Status__c = 'Buffered', Event__c = Json.serialize(event)),
+            new Message__c(Status__c = 'Buffered', Event__c = Json.serialize(event))
         };
         
         //act
@@ -410,7 +414,7 @@
         Test.stopTest();
         
         //arrange
-        List<Message__c> messages = [SELECT Id, Route__c, Event__c FROM Message__c];
+        List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
         
         //arrange broker
         Broker impl = Broker.impl();
@@ -652,33 +656,19 @@
         System.enqueueJob(job2);
         Test.stopTest();
         
-        List<Message__c> messagesA = [SELECT Id, Event__c FROM Message__c];
-        List<Message__c> messagesB = [SELECT Id, Event__c FROM Message__c];
+        //act
+        List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
+        Broker.impl().execute(messages, new List<Message__c>());
         
+        //assert
+        String expectedException = null;
+        String actualException = messages[0].Exception__c;
+        System.assertEquals(expectedException, actualException, 'Wrong exception 1.');
         
-        // assemble
-        Boolean actualFlagA = false;
-        
-        // act
-        Broker.impl().execute(messagesA, new List<Message__c>());
-        
-        actualFlagA = messagesA[0].Exception__c != null;
-        
-        // assemble
-        Boolean actualFlagB = false;
-        
-        // act
-        Broker.impl().execute(messagesB, new List<Message__c>());
-        
-        actualFlagB = messagesB[0].Exception__c != null;
-        
-        // assert
-        Boolean expectedFlagA = true;
-        System.assertEquals(expectedFlagA,actualFlagA);
-        Boolean expectedFlagB = true;
-        System.assertEquals(expectedFlagB,actualFlagB);
+        expectedException = Broker.UserException.class.getName() + ': Message has no route: ' + messages[1].Id;
+        actualException = messages[1].Exception__c;
+        System.assertEquals(expectedException, actualException, 'Wrong exception 1.');
     }
-    
     
     static testMethod void callingEnqueueAlwaysSetsInitiatingEventParameters() {
         //arrange sequence
@@ -782,7 +772,7 @@
         System.enqueueJob(job);
         Test.stopTest();
         
-        List<Message__c> messages = [SELECT Id, Route__c, Event__c FROM Message__c];
+        List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
         Broker impl = Broker.impl();
         messages = impl.locateMarkableWork();
         

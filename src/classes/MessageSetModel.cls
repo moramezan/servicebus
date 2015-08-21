@@ -132,16 +132,15 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             //is this interesting to us
             if (message.Id != null) event.put('MessageId', message.Id);
             
-            //clear before routing
-            message.Route__c = null;
-            if (event.containsKey('Route')) message.Route__c = (String)event.get('Route');
+            //#1004 Route__c field only ever used to LOCATE, and for GATE and MONITOR (we can clear it as well as setting in)
+            if (event.containsKey('Route')) message.Route__c = (String)event.get('Route'); else message.Route__c = null;
             
             /**
              * Populates the Unique Entry Point Id
              * This parameter surfaced onto the message to support the
              * functionality in the Gate By Entry Point process
              */
-            String entryPointUuid = (String)event.get('EntryPointUuid');
+            String entryPointUuid = (String)event.get('EntryPointUuid'); //this field only ever used to GATE BY ENTRY POINT
             if (entryPointUuid != null) message.EntryPointUuid__c = entryPointUuid;
             
             /**
@@ -149,7 +148,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
              * This parameter surfaced onto the message to support the
              * functionality in the Gate By Job process
              */
-            Id jobId = (Id)event.get('JobId');
+            Id jobId = (Id)event.get('JobId'); //this field only ever used to GATE BY JOB
             if (jobId != null) message.JobId__c = jobId;
             
             //#972 reserialize in alphabetical order

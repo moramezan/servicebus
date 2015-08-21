@@ -33,7 +33,7 @@
         System.enqueueJob(job);
         Test.stopTest();
         
-        List<Message__c> messages = [SELECT Id, Route__c, Event__c FROM Message__c];
+        List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
         VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
         
         //act (start up big query locator)

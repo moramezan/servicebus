@@ -8,9 +8,9 @@
         update step;
         
         //arrange message
+        Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
         Message__c message = new Message__c(
-            Route__c = 'Test#1',
-            Event__c = '{"Route":"Test#1"}'
+            Event__c = Json.serialize(event)
         );
         
         //act
@@ -51,9 +51,9 @@
         List<Message__c> outputMessages = new List<Message__c>();
         
         for (Integer i = 0; i < 1000; i++) {
+            Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
             Message__c inputMessage = new Message__c();
-            inputMessage.Route__c = 'Test#1';
-            inputMessage.Event__c = '{}';
+            inputMessage.Event__c = Json.serialize(event);
             inputMessages.add(inputMessage);
         }
         
@@ -97,9 +97,9 @@
         List<Message__c> outputMessages = new List<Message__c>();
         
         for (Integer i = 0; i < 50; i++) {
+            Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
             Message__c inputMessage = new Message__c();
-            inputMessage.Route__c = 'Test#1';
-            inputMessage.Event__c = '{}';
+            inputMessage.Event__c = Json.serialize(event);
             inputMessages.add(inputMessage);
         }
         
@@ -141,9 +141,9 @@
         List<Message__c> outputMessages = new List<Message__c>();
         
         for (Integer i = 0; i < 1000; i++) {
+            Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
             Message__c inputMessage = new Message__c();
-            inputMessage.Route__c = 'Test#1';
-            inputMessage.Event__c = '{}';
+            inputMessage.Event__c = Json.serialize(event);
             inputMessages.add(inputMessage);
         }
         
@@ -186,9 +186,9 @@
         List<Message__c> outputMessages = new List<Message__c>();
         
         for (Integer i = 0; i < 75; i++) {
+            Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
             Message__c inputMessage = new Message__c();
-            inputMessage.Route__c = 'Test#1';
-            inputMessage.Event__c = '{}';
+            inputMessage.Event__c = Json.serialize(event);
             inputMessages.add(inputMessage);
         }
         
@@ -220,7 +220,8 @@
         insert step;
         
         //arrange message
-        Message__c message = new Message__c(Route__c = 'Test#1', Event__c = '{"Route":"Test#1"}');
+        Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
+        Message__c message = new Message__c(Event__c = Json.serialize(event));
         MessageModel model = new MessageModel(message);
         
         //act
@@ -259,7 +260,6 @@
         
         //arrange message
         Message__c message = new Message__c(
-            Route__c = SurpriseNullOutputs.class.getName(),
             Event__c = Json.serialize(inputEvent)
         );
         

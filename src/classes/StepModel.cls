@@ -16,7 +16,7 @@ public class StepModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * Given a "step name" or "route", attempts to locate
+     * Given a step name aka Route, attempts to locate
      * the step custom setting instance with all fields.
      *
      * @throws StepException

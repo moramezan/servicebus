@@ -61,7 +61,7 @@ public class GateByJob extends ApexClassModel.BaseProcess {
         String queryString = ''
                 + 'SELECT ' + fieldName + ' '
                 + 'FROM Message__c '
-                + 'WHERE JobId__c = \'' + jobId + '\'  AND Route__c  = \'' + route + '\''
+                + 'WHERE JobId__c = \'' + jobId + '\'  AND Route__c  = \'' + route + '\'' //JobId__c field only ever used to GATE BY JOB
                 ;
 
         //this is the last item, let's release
