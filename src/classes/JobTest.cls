@@ -60,7 +60,7 @@
     static testmethod void testEnoughDmlRowsToEnqueueManyEvents() {
         //arrange input events
         List<Map<String,Object>> inputEvents = new List<Map<String,Object>>();
-        for (Integer i = 0; i < 10000; i++) inputEvents.add(new Map<String,Object>());
+        for (Integer i = 0; i < 1000; i++) inputEvents.add(new Map<String,Object>()); //#955 possibly 10000, but headspace
         
         //assert
         Integer expectedBefore = 0;
@@ -80,7 +80,7 @@
         Integer actualLimit = limitDmlRows;
         System.assertEquals(expectedLimit, actualLimit, 'Wrong size.');
         
-        Integer expectedAfter = 10000;
+        Integer expectedAfter = 1000; //#955 possibly 10000, but headspace
         Integer actualAfter = dmlRows;
         System.assertEquals(expectedAfter, actualAfter, 'Wrong size.');
     }
@@ -88,7 +88,7 @@
     static testmethod void testTooManyEventsDetectedInConstructor() {
         //arrange input events
         List<Map<String,Object>> inputEvents = new List<Map<String,Object>>();
-        for (Integer i = 0; i < 10001; i++) inputEvents.add(new Map<String,Object>());
+        for (Integer i = 0; i < 1001; i++) inputEvents.add(new Map<String,Object>()); //#955 possibly 10001, but headspace
         
         try {
             //act
@@ -96,7 +96,7 @@
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
             //assert
-            String expectedMessage = 'Too many events: 10001';
+            String expectedMessage = 'Too many events: 1001';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }

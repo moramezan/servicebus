@@ -79,7 +79,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 if (this.Cardinality == null) this.Cardinality = 'Any';
                 
                 //#955 cap Limits ceiling
-                if (this.Limits > 2000) this.Limits = 2000;
+                if (this.Limits > 1000) this.Limits = 1000; //#955 possibly 2000, but headspace
                 if (this.Limits < 1) this.Limits = 1; //be sensible
 
             } catch (Exception e) {
@@ -336,7 +336,7 @@ abstract public class Process {
         
         List<Object> results = (List<Object>)Json.deserializeUntyped(data);
         
-        if (results.size() > 5000) {
+        if (results.size() > 1000) { //#955 possibly 5000, but headspace
             //#955 blow up too many output events emitted
             throw new Broker.UserException(this.Reflector.getName() + ': Too many output events: ' + results.size());
         }

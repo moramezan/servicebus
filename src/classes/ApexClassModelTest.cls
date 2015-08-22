@@ -277,7 +277,7 @@
         ApexClassModel.Summary summary = new ApexClassModel.Summary(TooManyInputs.class);
         
         //assert
-        Integer expectedLimits = 2000;
+        Integer expectedLimits = 1000; //#955 possibly 2000, but headspace
         Integer actualLimits = summary.Limits;
         System.assertEquals(expectedLimits, actualLimits, 'Wrong limits.');
     }
@@ -295,37 +295,37 @@
     }
     
     public class TooManyEventsSummary {
-        Integer Limits = 50; //10000
+        Integer Limits = 50; //50 * 200 = 10000
     }
     
     static testmethod void testTooManyEventsBlowsUp() {
-        //arrange messages (39 would be ok, 40 is bad, 41 is bad)
+        //arrange messages (9 would be ok, 10 is bad, 11 is bad) //#955 formerly (39 would be ok, 40 is bad, 41 is bad)
         List<Message__c> inputMessages = new List<Message__c>();
-        for (Integer i = 0; i < 41; i++) inputMessages.add(new Message__c(
+        for (Integer i = 0; i < 11; i++) inputMessages.add(new Message__c(
             Event__c = Json.serialize(new Map<String,Object>{'Route' => TooManyEvents.class.getName()})
         ));
         
-        //act (39th guy hits 7840, 40th guy hits 8040, 41st guy hits 8240)
+        //act (9/10 guy hits 1810, 10/10 guy hits 2010, 11/11 would hit 2211) //#955 formerly (39/40 guy hits 7840, 40/40 guy hits 8040, 41/411 would hits 8241) sum of inputs + outputs
         List<Message__c> outputMessages = new List<Message__c>();
         Broker.impl().execute(inputMessages, outputMessages);
         
         //assert
         String expectedException = null;
-        String actualException = inputMessages[38].Exception__c;
+        String actualException = inputMessages[8].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
 
-        expectedException = Broker.UserException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 8000 events in a single operation. Reduce process Limits or emit fewer events.';
-        actualException = inputMessages[39].Exception__c;
+        expectedException = Broker.UserException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce process Limits or emit fewer events.'; //#955 possibly 8000, but headspace
+        actualException = inputMessages[9].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
 
-        expectedException = Broker.UserException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 8000 events in a single operation. Reduce process Limits or emit fewer events.';
-        actualException = inputMessages[40].Exception__c;
+        expectedException = Broker.UserException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce process Limits or emit fewer events.'; //#955 possibly 8000, but headspace
+        actualException = inputMessages[10].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
         
-        Integer expectedCount = 39;
+        Integer expectedCount = 9;
         Integer actualCount = [SELECT COUNT() FROM Document];
         System.assertEquals(expectedCount, actualCount, 'Wrong count.');
-        //this guy checks that any side effects are rolled back after the 8000 limit reached
+        //this guy checks that any side effects are rolled back after our limit was reached
     }
     
     public class SpecialOneShotWithSequenceOutput extends ApexClassModel.Process {

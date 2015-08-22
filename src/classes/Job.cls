@@ -168,7 +168,7 @@ global class Job implements Process.Plugin, system.Queueable {
             throw new EnqueueException('Enqueued events cannot be null');
         }
         
-        if (inputEvents.size() > 10000) {
+        if (inputEvents.size() > 1000) { //#955 possibly 10000, but headspace
             //#955 blow up too many input events enqueued
             throw new EnqueueException('Too many events: ' + inputEvents.size());
         }
