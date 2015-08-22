@@ -20,11 +20,23 @@ public with sharing class SequenceBuilderExtension {
         this.RoutedMessages = this.model.countRoutedMessages();
     }
     
+    //#173 terminate sequence on read
+    static SequenceModel TerminateModel;
+    public class DoDml {
+        public DoDml() {
+            TerminateModel.terminateIfNeeded();
+        }
+    }
+    
     /**
      * #930 this detects "Configure Not Clicked"
      * situation and sends user to configure page.
      */
     public PageReference doRedirect() {
+        //#173 terminate sequence on read
+        TerminateModel = SequenceModel.fromId(this.controller.getId());
+        Type.forName(DoDml.class.getName()).newInstance();
+        
         String sessionId = OAuthSetting__c.getOrgDefaults().AccessToken__c;
         String configuredOrgId = OAuthSetting__c.getOrgDefaults().UnprefixedOrgId__c;
         String unprefixedOrgId = UserInfo.getOrganizationId().substring(3, 15);
@@ -69,6 +81,13 @@ public with sharing class SequenceBuilderExtension {
         return Json.serializePretty(processes);
     }
     
+    /**
+     * The application is snappier when all Sequence Steps are already loaded when the page
+     * displays, instead of fetching them for the first time with a RemoteAction call.
+     *
+     * A freshly created Sequence lacks a Terminate! But since the Page Action invokes
+     * sequence.terminate(), the Terminate Step should exist before the page is rendered.
+     */
     public String getSteps() {
         List<Map<String,Object>> stepDtos = this.model.stepSetModel().toDtos();
         return Json.serializePretty(stepDtos);
@@ -80,7 +99,6 @@ public with sharing class SequenceBuilderExtension {
     
     @RemoteAction static public List<Map<String,Object>> fetchSteps(Id sequenceId) {
         SequenceModel model = SequenceModel.fromId(sequenceId);
-        model.terminateIfNeeded();
         return model.stepSetModel().toDtos();
     }
     
