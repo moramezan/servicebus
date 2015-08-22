@@ -155,6 +155,8 @@ global class Job implements Process.Plugin, system.Queueable {
     //TODO Job(reflector, inputEvent)
     //TODO Job(reflector, inputEvents)
     
+    static public Boolean AllowRoute = false; //#999#issuecomment-133751700
+    
     /**
      * A collection of multiple parameterized message descriptions, each of which must at minimum
      * contain Sequence.
@@ -188,8 +190,8 @@ global class Job implements Process.Plugin, system.Queueable {
             'ToSequence',
             'ToProcess',
             'ToConfig',
-            //'Route', //TODO confirm if this disallowed
-            'Hops'
+            'Hops',
+            AllowRoute ? 'Route' : 'Hops' //TODO confirm if this disallowed
         };
         
         //#999 allow third-parties to "enqueue to config"

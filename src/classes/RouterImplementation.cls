@@ -168,11 +168,12 @@ public class RouterImplementation implements System.Schedulable {
         
         updateLastEventStamp(timestamps);
         
+        Job.AllowRoute = true; //#999#issuecomment-133751700
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         for (DateTime timestamp : timestamps) outputEvents.add(new Map<String,Object>{
             'RecordId' => RecordId, //#971 used in lieu of __WasHeartbeat
             'EntryPointTimestamp' => timestamp,
-            'ToProcess' => Router.class.getName() //#956 and #575 so that resolve and execute can crow look
+            'Route' => Router.class.getName() //#956 and #575 so that resolve and execute can crow look //#999#issuecomment-133751700
         });
         
         if (outputEvents.isEmpty()) {
@@ -181,8 +182,8 @@ public class RouterImplementation implements System.Schedulable {
         }
         
         //#952 wake up broker
-        Job job = new Job(outputEvents);
-        System.enqueueJob(job);
+        Job j = new Job(outputEvents);
+        System.enqueueJob(j);
     }
     
     
