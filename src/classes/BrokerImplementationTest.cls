@@ -1,4 +1,4 @@
-@IsTest public class VerticalBrokerImplementationTest {
+@IsTest public class BrokerImplementationTest {
     
     @TestSetup static void testSetup() {
         OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
@@ -34,7 +34,7 @@
         Test.stopTest();
         
         List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
-        VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
+        BrokerImplementation impl = new BrokerImplementation();
         
         //act (start up big query locator)
         Database.QueryLocatorIterator iterator = impl.start(null).iterator();
@@ -115,7 +115,7 @@
         Test.stopTest();
         
         //act (enqueue)
-        VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
+        BrokerImplementation impl = new BrokerImplementation();
         
         //assert
         Integer expectedCount = 1;
@@ -198,7 +198,7 @@
         
         
         //arrange resolution
-        VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
+        BrokerImplementation impl = new BrokerImplementation();
         Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
         
         //act
@@ -253,7 +253,7 @@
         Integer totalPotentialMarks = 4;  // Greater than Buffered Messages Count
 
         //arrange resolution
-        VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
+        BrokerImplementation impl = new BrokerImplementation();
         Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
         
         //act
@@ -276,7 +276,7 @@
     
     static testmethod void testPanicConditionAbortsJob() {
         //arrange
-        VerticalBrokerImplementation impl = new VerticalBrokerImplementation();
+        BrokerImplementation impl = new BrokerImplementation();
         
         try {
             //act, null should cause panic

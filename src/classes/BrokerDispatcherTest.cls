@@ -1,4 +1,4 @@
-@IsTest public class VerticalBrokerDispatcherTest {
+@IsTest public class BrokerDispatcherTest {
     
     @TestSetup static void testSetup() {
         OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
@@ -8,7 +8,7 @@
     
     static testmethod void coverStart() {
         //arrange
-        VerticalBrokerDispatcher dispatcher = new VerticalBrokerDispatcher();
+        BrokerDispatcher dispatcher = new BrokerDispatcher();
         
         //act
         Object iterator = dispatcher.start(null);
@@ -20,7 +20,7 @@
     static testmethod void coverExecute() {
         //arrange
         List<SObject> scopes = new List<SObject>();
-        VerticalBrokerDispatcher dispatcher = new VerticalBrokerDispatcher();
+        BrokerDispatcher dispatcher = new BrokerDispatcher();
         
         //act
         dispatcher.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
@@ -31,7 +31,7 @@
     
     static testmethod void coverFinish() {
         //arrange
-        VerticalBrokerDispatcher dispatcher = new VerticalBrokerDispatcher();
+        BrokerDispatcher dispatcher = new BrokerDispatcher();
         
         //act
         dispatcher.finish(null);

@@ -4,7 +4,7 @@
  *
  * This class is WITHOUT SHARING to ensure the process can execute regardless of running user context.
  */
-public without sharing class VerticalBrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
+public without sharing class BrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
     
     /**
      * #985 helps avoid misleading errors
@@ -39,7 +39,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
     static Boolean IsRestart = false;
     Integer Contexts = IsRestart ? 1000 : 50;
     
-    public VerticalBrokerImplementation() {
+    public BrokerImplementation() {
         if (!Job.isRunningUser()) {
             //#847 broker panic, wrong user context
             System.assert(false, 'The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
@@ -55,6 +55,7 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
      * Some integer below a hard limit of 4000 (min expected rows in FieldPermissions)
      */
     public Database.QueryLocator start(Database.BatchableContext context) {
+        //funnily enough "SLOTS" is almost exactly what this is
         return Database.getQueryLocator([
             SELECT Id
             FROM FieldPermissions
@@ -197,10 +198,10 @@ public without sharing class VerticalBrokerImplementation extends Broker impleme
         
         if (IsRestart) {
             //TODO consider if finish is exclusive enough to do this
-            Database.executeBatch(new VerticalBrokerDispatcher(), 1);
+            Database.executeBatch(new BrokerDispatcher(), 1);
         } else {
             //TODO be aware schedule is about 5 - 10 seconds slower to start
-            System.scheduleBatch(new VerticalBrokerDispatcher(), 'Enterprise Service Bus Broker', 0, 1);
+            System.scheduleBatch(new BrokerDispatcher(), 'Enterprise Service Bus Broker', 0, 1);
         }
     }
 }

@@ -39,7 +39,7 @@ abstract public without sharing class Broker {
             return new BrokerTest.SynchronousBroker();
         } else {
             //production broker
-            return new VerticalBrokerImplementation();
+            return new BrokerImplementation();
         }
     }
     

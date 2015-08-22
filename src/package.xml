@@ -21,6 +21,10 @@
         <members>Branch</members>
         <members>BranchTest</members>
         <members>Broker</members>
+        <members>BrokerDispatcher</members>
+        <members>BrokerDispatcherTest</members>
+        <members>BrokerImplementation</members>
+        <members>BrokerImplementationTest</members>
         <members>BrokerTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
@@ -84,10 +88,6 @@
         <members>SubsequenceTest</members>
         <members>Terminate</members>
         <members>TerminateTest</members>
-        <members>VerticalBrokerDispatcher</members>
-        <members>VerticalBrokerDispatcherTest</members>
-        <members>VerticalBrokerImplementation</members>
-        <members>VerticalBrokerImplementationTest</members>
         <members>Wiretap</members>
         <members>WiretapTest</members>
         <name>ApexClass</name>
