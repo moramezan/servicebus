@@ -4,44 +4,6 @@
 
     <apex:sectionHeader title="Processes" description="A Process is a single, logical program with inputs and outputs in the form of events. Processes are implemented as Apex classes." />
     
-    <script>
-        (function() {
-            //colour in the process tab... d'oh
-            var li = document.getElementById('{!$CurrentPage.parameters.sfdc.tabName}' + '_Tab');
-            if (!li) return;
-            li.className += ' zen-active primaryPalette';
-            var a = li.children[0];
-            if (!a) return;
-            a.className += ' brandPrimaryFgr';
-        }());
-        
-        window.addEventListener('focus', function(event) {
-            if (window.summary && !window.summary.closed) {
-                //closes popup if defocussed
-                window.summary.close();
-                delete window.summary;
-            }
-        }, false);
-        
-        function openSummary(url) {
-            var
-                y = window.screenTop || window.screenY,
-                x = window.screenLeft || window.screenX,
-                top = Math.round(window.innerHeight * 0.15) + y,
-                left = Math.round(window.innerWidth * 0.1) + x,
-                width = Math.round(window.innerWidth * 0.8),
-                height = Math.round(window.innerHeight * 0.8)
-            ;
-    
-            window.summary = window.open(
-                url,
-                'esb_config',
-                'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top + ',toolbar=no,status=no,directories=no,menubar=no,resizable=yes'
-            );
-            window.summary.focus();
-        }
-    </script>
-    
     <apex:pageBlock mode="detail">
         <apex:pageBlockTable value="{!id2summary}" var="id">
 
