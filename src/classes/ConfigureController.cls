@@ -427,7 +427,7 @@ public with sharing class ConfigureController {
             reinstallSchedule();
             
             //bigassforce/esb#812 don't wait an hour to refresh access token
-            if (!Test.isRunningTest()) RouterImplementation.defer();
+            if (!Test.isRunningTest()) RouterImplementation.optimize();
             
             //5. finally send them to the context sensitive help page
             return new PageReference(setting.ReturnUrl__c != null ? setting.ReturnUrl__c : '/apex/ContextSensitiveHelp?topic=EnterpriseServiceBus');

@@ -9,7 +9,7 @@ public class RouterImplementation implements System.Schedulable {
     public void execute(System.SchedulableContext context) {
         if (!Test.isRunningTest() && OAuthSetting__c.getOrgDefaults().RefreshToken__c != null) {
             //#728 keep access token roaring and ready every hour IF configured ok
-            defer();
+            optimize(); //#969 obfuscation of deferRefreshAccessToken
         }
         
         //#971 used in lieu of __WasHeartbeat
@@ -26,7 +26,8 @@ public class RouterImplementation implements System.Schedulable {
      * class: common.apex.async.AsyncApexJobModel,
      * reason: Callout from scheduled Apex not supported.
      */
-    @Future(callout=true) static public void defer() {
+    @Future(callout=true) static public void optimize() {
+        //#969 obfuscation of deferRefreshAccessToken
         ConfigureController.refreshAccessToken();
     }
     
