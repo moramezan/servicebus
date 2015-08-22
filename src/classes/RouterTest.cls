@@ -1,4 +1,4 @@
-@IsTest private class HeartbeatTest {
+@IsTest private class RouterTest {
 
     static testmethod void testHeartbeatDispatchesOneIndexedMessages() {
         //arrange process, sequence, step
@@ -13,7 +13,7 @@
         };
         
         //act
-        ApexClassModel.Process process = new Heartbeat();
+        ApexClassModel.Process process = new Router();
         List<Map<String,Object>> outputs = process.test(inputEvent);
         
         //assert
@@ -38,7 +38,7 @@
         };
 
         //act
-        ApexClassModel.Process process = new Heartbeat();
+        ApexClassModel.Process process = new Router();
         List<Map<String,Object>> outputEvents = process.test(inputEvent);
 
         //assert
@@ -66,7 +66,7 @@
         };
 
         //act
-        ApexClassModel.Process process = new Heartbeat();
+        ApexClassModel.Process process = new Router();
         List<Map<String,Object>> outputEvents = process.test(inputEvent);
 
         //assert

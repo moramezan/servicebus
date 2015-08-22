@@ -323,7 +323,8 @@ public with sharing class ConfigureController {
         }
     }
     
-    @TestVisible static String JobName = Test.isRunningTest() ? 'Test Heartbeat' : 'Enterprise Service Bus Heartbeat';
+    //#969 obfuscation of 'Enterprise Service Bus Heartbeat'
+    @TestVisible static String JobName = Test.isRunningTest() ? 'Test Router' : 'Enterprise Service Bus Router';
     
     /**
      * Creates the hourly cron job used to refresh the token.
@@ -331,7 +332,7 @@ public with sharing class ConfigureController {
     static public Id reinstallSchedule() {
         //now attempt to install it again
         String cronExpr = '0 0 * * * ?';
-        HeartbeatDispatcher schedulable = new HeartbeatDispatcher();
+        RouterDispatcher schedulable = new RouterDispatcher();
         return System.schedule(JobName, cronExpr, schedulable);
     }
     
@@ -426,7 +427,7 @@ public with sharing class ConfigureController {
             reinstallSchedule();
             
             //bigassforce/esb#812 don't wait an hour to refresh access token
-            if (!Test.isRunningTest()) HeartbeatImplementation.defer();
+            if (!Test.isRunningTest()) RouterImplementation.defer();
             
             //5. finally send them to the context sensitive help page
             return new PageReference(setting.ReturnUrl__c != null ? setting.ReturnUrl__c : '/apex/ContextSensitiveHelp?topic=EnterpriseServiceBus');

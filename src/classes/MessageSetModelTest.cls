@@ -34,7 +34,7 @@
     static testmethod void testUnpopulatedJsonFields() {
         //arrange input
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'Route' => Heartbeat.class.getName()
+            'Route' => Router.class.getName()
         };
         
         //arrange message
@@ -47,7 +47,7 @@
         new MessageSetModel(new List<Message__c>{message}).alphabetizeJsonAndPopulateFields();
         
         //assert
-        String expectedRoute = Heartbeat.class.getName();
+        String expectedRoute = Router.class.getName();
         String actualRoute = message.Route__c;
         System.assertEquals(expectedRoute, actualRoute, 'Route should be raw process for heartbeats.');
     }

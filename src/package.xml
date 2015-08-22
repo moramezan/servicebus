@@ -28,12 +28,6 @@
         <members>GateByEntryPointTest</members>
         <members>GateByJob</members>
         <members>GateByJobTest</members>
-        <members>Heartbeat</members>
-        <members>HeartbeatDispatcher</members>
-        <members>HeartbeatDispatcherTest</members>
-        <members>HeartbeatImplementation</members>
-        <members>HeartbeatImplementationTest</members>
-        <members>HeartbeatTest</members>
         <members>Job</members>
         <members>JobTest</members>
         <members>Jump</members>
@@ -62,6 +56,12 @@
         <members>PostUninstallHandlerTest</members>
         <members>Publish</members>
         <members>PublishTest</members>
+        <members>Router</members>
+        <members>RouterDispatcher</members>
+        <members>RouterDispatcherTest</members>
+        <members>RouterImplementation</members>
+        <members>RouterImplementationTest</members>
+        <members>RouterTest</members>
         <members>Schedule</members>
         <members>ScheduleConfigSetModel</members>
         <members>ScheduleConfigSetModelTest</members>

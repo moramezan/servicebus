@@ -2,7 +2,7 @@
  * DO NOT SCHEDULE THIS CLASS EVER
  * http://salesforce.stackexchange.com/a/24448/320
  */
-public class HeartbeatImplementation implements System.Schedulable {
+public class RouterImplementation implements System.Schedulable {
     
     static Id RecordId;
     
@@ -15,8 +15,8 @@ public class HeartbeatImplementation implements System.Schedulable {
         //#971 used in lieu of __WasHeartbeat
         RecordId = context.getTriggerId(); //eg 08e24000007paG1AAI
         
-        HeartbeatImplementation.IHeartbeatGenerator heartbeatGenerator =
-            (HeartbeatImplementation.IHeartbeatGenerator) new HeartbeatImplementation.HeartbeatGeneratorImpl();
+        RouterImplementation.IHeartbeatGenerator heartbeatGenerator =
+            (RouterImplementation.IHeartbeatGenerator) new RouterImplementation.HeartbeatGeneratorImpl();
         heartbeatGenerator.generateHeartbeats();
     }
     
@@ -40,7 +40,7 @@ public class HeartbeatImplementation implements System.Schedulable {
      * Encapsulation of the Hearbeat message generation parameters and logic
      *
      */
-    public class HeartbeatGeneratorImpl implements HeartbeatImplementation.IHeartbeatGenerator {
+    public class HeartbeatGeneratorImpl implements RouterImplementation.IHeartbeatGenerator {
         public Integer  IntervalInMinutes  {get; private set;}
         public DateTime LastEventStamp     {get; private set;}
         public DateTime CurrentDateTime    {get; private set;}
@@ -58,7 +58,7 @@ public class HeartbeatImplementation implements System.Schedulable {
          }
             
         public void generateHeartbeats() {
-            HeartbeatImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
+            RouterImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
         }
     }
 
@@ -67,7 +67,7 @@ public class HeartbeatImplementation implements System.Schedulable {
      * Mock encapsulation of the Hearbeat message generation parameters and logic
      *
      */
-    public class HeartbeatGeneratorMock implements HeartbeatImplementation.IHeartbeatGenerator {
+    public class HeartbeatGeneratorMock implements RouterImplementation.IHeartbeatGenerator {
         public Integer  IntervalInMinutes  {get; private set;}
         public DateTime LastEventStamp     {get; private set;}
         public DateTime CurrentDateTime    {get; private set;}
@@ -79,7 +79,7 @@ public class HeartbeatImplementation implements System.Schedulable {
         }
             
         public void generateHeartbeats() {
-            HeartbeatImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
+            RouterImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
         }
     }
     
@@ -171,7 +171,7 @@ public class HeartbeatImplementation implements System.Schedulable {
         for (DateTime timestamp : timestamps) outputEvents.add(new Map<String,Object>{
             'RecordId' => RecordId, //#971 used in lieu of __WasHeartbeat
             'EntryPointTimestamp' => timestamp,
-            'ToProcess' => Heartbeat.class.getName() //#956 and #575 so that resolve and execute can crow look
+            'ToProcess' => Router.class.getName() //#956 and #575 so that resolve and execute can crow look
         });
         
         if (outputEvents.isEmpty()) {

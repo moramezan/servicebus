@@ -1,4 +1,4 @@
-public class Heartbeat extends ApexClassModel.Process {
+public class Router extends ApexClassModel.Process {
     void callout(Map<String,Object> inputEvent) {}
     
     //#575 heartbeat process evades discovery

@@ -1,4 +1,4 @@
-@IsTest private class HeartbeatImplementationTest {
+@IsTest private class RouterImplementationTest {
  
     static testMethod void callingGetInitialStampReturnsExpectedStampForIntervalOf60() {
         // arrange
@@ -11,7 +11,7 @@
         Integer intervalInMinutes = 60;
         
         // act
-        DateTime actualInitialStamp = HeartbeatImplementation.getInitialStamp(intervalInMinutes, currentDateTime);
+        DateTime actualInitialStamp = RouterImplementation.getInitialStamp(intervalInMinutes, currentDateTime);
 
         // assert
         DateTime expectedInitialStamp = DateTime.newInstance(2014,12,16, hour, 0, 0);
@@ -36,9 +36,9 @@
         Integer intervalInMinutes = 15;
         
         // act
-        DateTime actualInitialStampA = HeartbeatImplementation.getInitialStamp(intervalInMinutes, currentDateTimeA);
-        DateTime actualInitialStampB = HeartbeatImplementation.getInitialStamp(intervalInMinutes, currentDateTimeB);
-        DateTime actualInitialStampC = HeartbeatImplementation.getInitialStamp(intervalInMinutes, currentDateTimeC);
+        DateTime actualInitialStampA = RouterImplementation.getInitialStamp(intervalInMinutes, currentDateTimeA);
+        DateTime actualInitialStampB = RouterImplementation.getInitialStamp(intervalInMinutes, currentDateTimeB);
+        DateTime actualInitialStampC = RouterImplementation.getInitialStamp(intervalInMinutes, currentDateTimeC);
         
         // assert
         // minute : 22 --> 15
@@ -76,9 +76,9 @@
         Integer intervalInMinutes = 05;
         
         // act
-        DateTime actualInitialStampA = HeartbeatImplementation.getInitialStamp(intervalInMinutes, currentDateTimeA);
-        DateTime actualInitialStampB = HeartbeatImplementation.getInitialStamp(intervalInMinutes, currentDateTimeB);
-        DateTime actualInitialStampC = HeartbeatImplementation.getInitialStamp(intervalInMinutes, currentDateTimeC);
+        DateTime actualInitialStampA = RouterImplementation.getInitialStamp(intervalInMinutes, currentDateTimeA);
+        DateTime actualInitialStampB = RouterImplementation.getInitialStamp(intervalInMinutes, currentDateTimeB);
+        DateTime actualInitialStampC = RouterImplementation.getInitialStamp(intervalInMinutes, currentDateTimeC);
         
         // assert
         // minute : 03 --> 00
@@ -109,7 +109,7 @@
         Integer intervalInMinutes = 05;
 
         // act
-        List<DateTime> actualHeartbeats = HeartbeatImplementation.getHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
+        List<DateTime> actualHeartbeats = RouterImplementation.getHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
 
         // assemble
         Integer actualCount  = actualHeartbeats.size();
@@ -122,7 +122,7 @@
         Integer expectedCount  = 1;
         System.assertEquals(expectedCount, actualCount);
         
-        DateTime expectedStamp = HeartbeatImplementation.getInitialStamp(intervalInMinutes, currentDateTime);
+        DateTime expectedStamp = RouterImplementation.getInitialStamp(intervalInMinutes, currentDateTime);
         System.assertEquals(expectedStamp, actualStamp);
     }
 
@@ -142,10 +142,10 @@
         DateTime lastEventStamp =  DateTime.newInstance(2014,12,16, hour, lastEventMinute, 00);
 
         // act
-        List<DateTime> actualHeartbeats = HeartbeatImplementation.getHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
+        List<DateTime> actualHeartbeats = RouterImplementation.getHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
 
         // assemble
-        DateTime endEventStamp = HeartbeatImplementation.getInitialStamp(intervalInMinutes, currentDateTime);
+        DateTime endEventStamp = RouterImplementation.getInitialStamp(intervalInMinutes, currentDateTime);
         Set<DateTime> actualHeartbeatsAsSet =  new Set<DateTime>(actualHeartbeats);
         Integer actualCount  = actualHeartbeats.size();
         
@@ -186,7 +186,7 @@
         List<DateTime> heartbeats = new List<DateTime>();
 
         // act
-        HeartbeatImplementation.updateLastEventStamp( heartbeats );
+        RouterImplementation.updateLastEventStamp( heartbeats );
 
         // assemble
         BrokerSetting__c settings = BrokerSetting__c.getOrgDefaults();
@@ -215,7 +215,7 @@
         };
 
         // act
-        HeartbeatImplementation.updateLastEventStamp( heartbeats );
+        RouterImplementation.updateLastEventStamp( heartbeats );
 
         // assemble
         BrokerSetting__c settings = BrokerSetting__c.getOrgDefaults();
@@ -241,7 +241,7 @@
         
         // act
         Test.startTest();
-        HeartbeatImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
+        RouterImplementation.generateHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
         Test.stopTest();
         
         //assemble 1
@@ -307,8 +307,8 @@
         DateTime lastEventStamp =  DateTime.newInstanceGmt(2014,12,16, hour, lastEventMinute, 00);
         
         // act
-        HeartbeatImplementation.IHeartbeatGenerator heartbeatGeneratorMock = (HeartbeatImplementation.IHeartbeatGenerator)
-            new HeartbeatImplementation.HeartbeatGeneratorMock(
+        RouterImplementation.IHeartbeatGenerator heartbeatGeneratorMock = (RouterImplementation.IHeartbeatGenerator)
+            new RouterImplementation.HeartbeatGeneratorMock(
                 intervalInMinutes,
                 lastEventStamp,
                 currentDateTime
