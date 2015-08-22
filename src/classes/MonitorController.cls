@@ -13,7 +13,7 @@ public with sharing class MonitorController {
             FROM AsyncApexJob
             WHERE ApexClass.NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
             AND ApexClass.Name = 'Job'
-            AND JobType = 'Queueable'
+            AND JobType IN ('Future', 'Queueable') //#890
             AND Status IN ('Queued', 'Processing', 'Preparing')
         ];
         
