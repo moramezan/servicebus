@@ -29,7 +29,7 @@ private class WiretapTest {
         Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
-            ApexClassModel.BaseProcess process = new Wiretap();
+            ApexClassModel.Process process = new Wiretap();
             List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
@@ -62,7 +62,7 @@ private class WiretapTest {
         // Act
         Boolean actualFlagException = false;
         try {
-            ApexClassModel.BaseProcess process = new Wiretap();
+            ApexClassModel.Process process = new Wiretap();
             List<Map<String,Object>> results = process.test(parameters);
         } catch (Exception e) {
            actualFlagException = true;
@@ -74,7 +74,7 @@ private class WiretapTest {
         System.assertEquals(expectedFlagException , actualFlagException );
     }
    
-    static testmethod void callingExecuteReturnsExpectedOutputEventsWhenDefinedESBProcessSettingSet() {
+    static testmethod void callingExecuteReturnsExpectedOutputEventsWhenDefinedProcessSettingSet() {
         // Arrange :
         String sequenceName = 'Test';
         Integer step = 1;
@@ -92,7 +92,7 @@ private class WiretapTest {
         Integer expectedSize = 1;
 
         // Act
-        ApexClassModel.BaseProcess process = new Wiretap();
+        ApexClassModel.Process process = new Wiretap();
         List<Map<String,Object>> actualParametersList = process.test(inputEvent);
 
         // prepare

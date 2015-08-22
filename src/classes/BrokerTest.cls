@@ -740,7 +740,8 @@
     
     @TestVisible public class ChunkErrorProcessException extends Exception {}
     
-    public class ChunkErrorProcess extends ApexClassModel.BaseProcess {
+    public class ChunkErrorProcess extends ApexClassModel.Process {
+        void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             Boolean isError = (Boolean)inputEvent.get('c__IsError');
             if (isError == true) throw new ChunkErrorProcessException('Test error');
@@ -748,7 +749,7 @@
         }
     }
     
-    public class ChunkErrorProcessESB extends ApexClassModel.BaseSummary {
+    public class ChunkErrorProcessSummary {
         String Description = 'Does stuff in memory without side effects.';
         Integer Limits = 2;
     }

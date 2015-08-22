@@ -1,9 +1,10 @@
-public class Branch extends ApexClassModel.BaseProcess {
+public class Branch extends ApexClassModel.Process {
+    void callout(Map<String,Object> inputEvent) {}
 
     /**
      * @docs ProcessBranchJumpSubsequence.html
      */
-    public class ESB extends ApexClassModel.BaseSummary {
+    public class Summary {
         String StepConfig = BranchConfig__c.class.getName();
         String Icon = 'arrow_branch';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessBranchJumpSubsequence').getUrl();

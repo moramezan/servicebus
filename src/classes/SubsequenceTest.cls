@@ -42,7 +42,7 @@
                 'Route' => 'Origin#1'
             };
                 
-            ApexClassModel.BaseProcess process = new Subsequence();
+            ApexClassModel.Process process = new Subsequence();
             List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
@@ -107,7 +107,7 @@
         
         try {
             //act (no config!)
-            ApexClassModel.BaseProcess process = new Subsequence();
+            ApexClassModel.Process process = new Subsequence();
             process.test(new Map<String,Object>());
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
@@ -118,7 +118,8 @@
         }
     }
 
-    public class Inserter extends ApexClassModel.BaseProcess {
+    public class Inserter extends ApexClassModel.Process {
+        void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             insert new Document(Name = 'Test', FolderId = UserInfo.getUserId());
             return new List<Map<String,Object>>{inputEvent};
@@ -127,7 +128,8 @@
     
     public class ErrorException extends Exception {}
     
-    public class Error extends ApexClassModel.BaseProcess {
+    public class Error extends ApexClassModel.Process {
+        void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             throw new ErrorException('Some Problem Here');
         }
@@ -159,7 +161,7 @@
         
         try {
             //act
-            ApexClassModel.BaseProcess process = new Subsequence();
+            ApexClassModel.Process process = new Subsequence();
             process.test(inputEvent);
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
@@ -176,8 +178,8 @@
         }
     }
     
-    public class Callout extends ApexClassModel.BaseProcess {
-        override protected void callout(Map<String,Object> inputEvent) {
+    public class Callout extends ApexClassModel.Process {
+        void callout(Map<String,Object> inputEvent) {
             HttpRequest request = new HttpRequest();
             request.setMethod('GET');
             request.setEndpoint('https://localhost/');
@@ -217,7 +219,7 @@
         try {
             //act
             Test.setMock(HttpCalloutMock.class, new CalloutMock());
-            ApexClassModel.BaseProcess process = new Subsequence();
+            ApexClassModel.Process process = new Subsequence();
             process.test(event);
             System.assert(false, 'Line above should throw exception.');
             

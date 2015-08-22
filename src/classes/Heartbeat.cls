@@ -1,7 +1,8 @@
-public class Heartbeat extends ApexClassModel.BaseProcess {
+public class Heartbeat extends ApexClassModel.Process {
+    void callout(Map<String,Object> inputEvent) {}
     
     //#575 heartbeat process evades discovery
-    //public class ESB extends ApexClassModel.BaseSummary {}
+    //public class Summary {}
     
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         

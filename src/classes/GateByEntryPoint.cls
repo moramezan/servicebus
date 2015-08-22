@@ -1,11 +1,12 @@
-public class GateByEntryPoint extends ApexClassModel.BaseProcess {
+public class GateByEntryPoint extends ApexClassModel.Process {
+    void callout(Map<String,Object> inputEvent) {}
 
     private class GateByEntryPointException extends Exception {}
 
     /**
      * @docs ProcessGateByEntryPoint.html
      */
-    public class ESB extends ApexClassModel.BaseSummary {
+    public class Summary {
         String Tag = 'Enterprise Service Bus';
         String Name = 'Gate By Entry Point';
         String Description = 'Aggregates a collection of messages having the same Entry Point Id.';

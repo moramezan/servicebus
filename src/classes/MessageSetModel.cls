@@ -160,12 +160,14 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     
     /**
      * Swallow toString() in trace
-     * The intent is to NOT confuse or misdirect the end user ant to .. (cough) .. reveal our secret sauce
+     * The intent is to NOT confuse or misdirect the end user and to .. (cough) .. reveal our secret sauce
      */
     @TestVisible private void swallowToString() {
         for (Message__c message : this.Messages) {
             if (message.Cause__c != null) {
-                message.Cause__c = message.Cause__c.replaceAll('Class.BaseProcess.toString[^\n]+\n', '');
+                message.Cause__c = message.Cause__c.replace('\n(esb)', '');
+                message.Cause__c = message.Cause__c.replace('\n(abstract)', '');
+                message.Cause__c = message.Cause__c.replace('\n(servicebus)', '');
             }
         }
     }

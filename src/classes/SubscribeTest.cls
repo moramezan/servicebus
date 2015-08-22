@@ -27,7 +27,7 @@
         Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
-            ApexClassModel.BaseProcess process = new Subscribe();
+            ApexClassModel.Process process = new Subscribe();
             List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
@@ -43,7 +43,7 @@
         Map<String,Object> parameters = new Map<String,Object>{'herp' => 'derp'};
             
         //act
-        ApexClassModel.BaseProcess process = new Subscribe();
+        ApexClassModel.Process process = new Subscribe();
         List<Map<String,Object>> parametersList = process.test(parameters);
         
         //assert

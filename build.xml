@@ -31,6 +31,16 @@
         />
     </target>
     
+    <target name="retrieve-abstract" description="Retrieves the Abstract.Process from its separate packaging org.">
+        <sf:retrieve
+            username="${abstract.username}"
+            password="${abstract.password}"
+            serverurl="${abstract.serverurl}"
+            retrieveTarget="abstract"
+            unpackaged="abstract/package.xml"
+        />
+    </target>
+    
     <target name="normalize-whitespace">
         <!-- finds tabs occupying 1 space -->
         <replaceregexp flags="mg">

@@ -103,30 +103,21 @@
     
     static testmethod void callingSwallowToStringCorrectlySwallowsToStringOnTrace() {
         //arrange message
-        String cause =
-                '{' + '\n' +
-                        '"LineNumber" : 11,' + '\n' +
-                        '"Message" : "null input to JSON parser",' + '\n' +
-                        '"StackTraceString" : "(System Code)\nClass.BaseProcess.toString: line 18, column 1\nClass.Broker.Wrapper.invokeMain: line 340, column 1\nClass.Broker.execute: line 597, column 1\nClass.VerticalBrokerImplementation.execute: line 128, column 1\nExternal entry point\nClass.VerticalBrokerDispatcher.execute: line 13, column 1",' + '\n' +
-                        '"TypeName" : "System.NullPointerException",' + '\n' +
-                        '"Cause" : null' + '\n' +
-                        '}';
+        String cause = 'Class.DoCallout.callout: line 12, column 1'
+            + '\n(servicebus)'
+            + '\n(abstract)'
+            + '\n(esb)'
+        ;
+        
         Message__c message = new Message__c(
                 Cause__c = cause
         );
 
         //act
         new MessageSetModel(new List<Message__c>{message}).swallowToString();
-
+        
         //assert
-        String expectedCause =
-                '{' + '\n' +
-                '"LineNumber" : 11,' + '\n' +
-                '"Message" : "null input to JSON parser",' + '\n' +
-                '"StackTraceString" : "(System Code)\nClass.Broker.Wrapper.invokeMain: line 340, column 1\nClass.Broker.execute: line 597, column 1\nClass.VerticalBrokerImplementation.execute: line 128, column 1\nExternal entry point\nClass.VerticalBrokerDispatcher.execute: line 13, column 1",' + '\n' +
-                '"TypeName" : "System.NullPointerException",' + '\n' +
-                '"Cause" : null' + '\n' +
-                '}';
+        String expectedCause = 'Class.DoCallout.callout: line 12, column 1';
         String actualCause = message.Cause__c;
         System.assertEquals(expectedCause, actualCause, 'Cause should not contain a reference to toString');
     }

@@ -34,7 +34,7 @@
         Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
-            ApexClassModel.BaseProcess process = new Schedule();
+            ApexClassModel.Process process = new Schedule();
             List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
@@ -54,7 +54,7 @@
         };
         
         //act
-        ApexClassModel.BaseProcess process = new Schedule();
+        ApexClassModel.Process process = new Schedule();
         List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
@@ -81,7 +81,7 @@
         };
         
         //act
-        ApexClassModel.BaseProcess process = new Schedule();
+        ApexClassModel.Process process = new Schedule();
         List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
@@ -112,7 +112,7 @@
         };
         
         ///act on working days only
-        ApexClassModel.BaseProcess process = new Schedule();
+        ApexClassModel.Process process = new Schedule();
         List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
@@ -143,7 +143,7 @@
         };
  
         //act
-        ApexClassModel.BaseProcess process = new Schedule();
+        ApexClassModel.Process process = new Schedule();
         List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
@@ -173,7 +173,7 @@
         };
  
         //act
-        ApexClassModel.BaseProcess process = new Schedule();
+        ApexClassModel.Process process = new Schedule();
         List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
@@ -198,7 +198,7 @@
         
         try {
             //act
-            ApexClassModel.BaseProcess process =  new Schedule();
+            ApexClassModel.Process process =  new Schedule();
             process.test(inputEvent);
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {

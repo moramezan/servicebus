@@ -57,7 +57,12 @@ public with sharing class SequenceBuilderExtension {
     }
     
     public String getProcesses() {
-        Set<Id> apexClassIds = new Map<Id,SObject>([SELECT Id FROM ApexClass LIMIT 10000]).keySet();
+        Set<Id> apexClassIds = new Map<Id,SObject>([
+            SELECT Id
+            FROM ApexClass
+            WHERE NamespacePrefix != 'abstract'
+            LIMIT 10000
+        ]).keySet();
         ApexClassSetModel model = ApexClassSetModel.discoverProcesses(apexClassIds);
         
         List<Map<String,Object>> processes = model.toDtos();

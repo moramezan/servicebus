@@ -13,7 +13,7 @@
         };
         
         //act
-        ApexClassModel.BaseProcess process = new Heartbeat();
+        ApexClassModel.Process process = new Heartbeat();
         List<Map<String,Object>> outputs = process.test(inputEvent);
         
         //assert
@@ -38,7 +38,7 @@
         };
 
         //act
-        ApexClassModel.BaseProcess process = new Heartbeat();
+        ApexClassModel.Process process = new Heartbeat();
         List<Map<String,Object>> outputEvents = process.test(inputEvent);
 
         //assert
@@ -66,7 +66,7 @@
         };
 
         //act
-        ApexClassModel.BaseProcess process = new Heartbeat();
+        ApexClassModel.Process process = new Heartbeat();
         List<Map<String,Object>> outputEvents = process.test(inputEvent);
 
         //assert

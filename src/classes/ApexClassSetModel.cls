@@ -9,7 +9,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
     }
     
     /**
-     * Attempts to instantiate ESB summary classes and
+     * Attempts to instantiate Process.Summary classes and
      * reduces the working record set to valid ones.
      */
     static public ApexClassSetModel discoverProcesses(Set<Id> apexClassIds) {
@@ -22,7 +22,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
         //prepare list of PROCESS apex classes
         List<ApexClass> processes = new List<ApexClass>();
         
-        //bulletproof reflection on each ESB summary class
+        //bulletproof reflection on each Process.Summary class
         for (ApexClass apexClass : apexClasses) try {
             //uses two arguments per #910 to reach out of managed package namespace!
             Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
@@ -31,8 +31,8 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             if (reflector == null) continue; //failure, class has private visibility
             String apexClassName = reflector.getName();
             
-            //fails if there is no ESB summary class
-            Type inflector = Type.forName(apexClassName + '.ESB');
+            //fails if there is no Process.Summary class
+            Type inflector = Type.forName(apexClassName + '.Summary');
             
             //we DONT enter each namespace, just assume ok
             if (inflector != null) processes.add(apexClass);
@@ -94,7 +94,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
         for (ApexClass apexClass : apexClasses) try {
             //uses two arguments per #910 to reach out of managed package namespace!
             Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
-            Type inflector = Type.forName(reflector.getName() + '.ESB');
+            Type inflector = Type.forName(reflector.getName() + '.Summary');
             if (inflector == null) continue;
             
             ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);

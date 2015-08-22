@@ -19,7 +19,12 @@
         List<MonitorController.Statistic> statistics = MonitorController.getStatistics();
         
         //assemble
-        Set<Id> apexClassIds = new Map<Id,SObject>([SELECT Id FROM ApexClass LIMIT 10000]).keySet();
+        Set<Id> apexClassIds = new Map<Id,SObject>([
+            SELECT Id
+            FROM ApexClass
+            WHERE Name IN ('Wiretap', 'Terminate')
+            LIMIT 10000
+        ]).keySet();
         ApexClassSetModel model = ApexClassSetModel.discoverProcesses(apexClassIds);
         
         //assert 1 null, 1 wiretap, 1 terminate,

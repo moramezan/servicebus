@@ -1,9 +1,10 @@
-public class Wiretap extends ApexClassModel.BaseProcess {
+public class Wiretap extends ApexClassModel.Process {
+    void callout(Map<String,Object> inputEvent) {}
     
     /**
      * @docs ProcessWiretap.html
      */
-    public class ESB extends ApexClassModel.BaseSummary {
+    public class Summary {
         String Tag = 'Enterprise Service Bus';
         String Name = 'Wiretap';
         String Description = 'Emails the message parameters to the user.';

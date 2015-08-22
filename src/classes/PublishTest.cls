@@ -52,7 +52,7 @@
         Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
-            ApexClassModel.BaseProcess process = new Publish();
+            ApexClassModel.Process process = new Publish();
             List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
@@ -70,7 +70,7 @@
         
         try {
             //act
-            ApexClassModel.BaseProcess process = new Publish();
+            ApexClassModel.Process process = new Publish();
             process.test(parameters);
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
@@ -96,7 +96,7 @@
         };
         
         //act
-        ApexClassModel.BaseProcess process = new Publish();
+        ApexClassModel.Process process = new Publish();
         List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert
@@ -140,7 +140,7 @@
         };
         
         //act
-        ApexClassModel.BaseProcess process = new Publish();
+        ApexClassModel.Process process = new Publish();
         List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert

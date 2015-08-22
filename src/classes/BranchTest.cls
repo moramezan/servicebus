@@ -41,7 +41,7 @@
         Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
-            ApexClassModel.BaseProcess process = new Branch();
+            ApexClassModel.Process process = new Branch();
             List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
@@ -73,7 +73,7 @@
         };
         
         //act
-        ApexClassModel.BaseProcess process = new Branch();
+        ApexClassModel.Process process = new Branch();
         List<Map<String,Object>> outputEvents = process.test(inputEvent);
 
         //assert
@@ -118,7 +118,7 @@
         
         //act
         try {
-            ApexClassModel.BaseProcess process = new Branch();
+            ApexClassModel.Process process = new Branch();
             List<Map<String,Object>> outputEvents = process.test(inputEvent);
         } catch (Exception e) {
             exceptionThrown = true;

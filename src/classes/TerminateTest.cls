@@ -27,7 +27,7 @@ private class TerminateTest
         Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
-            ApexClassModel.BaseProcess process = new Terminate();
+            ApexClassModel.Process process = new Terminate();
             List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }

@@ -267,7 +267,7 @@ public with sharing class ConfigureController {
     
     /**
      * We can delete the access token when there is a problem with the refresh.
-     * ESB run-time will detect its absence and signals configuration is needed.
+     * Sequence Builder detects its absence and signals configuration is needed.
      */
     static public void deleteAccessToken() {
         OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();

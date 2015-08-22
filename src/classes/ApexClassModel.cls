@@ -13,7 +13,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      *
      * @docs ApiMarkerClass.html
      */
-    public class Summary extends ApexClassModel.BaseSummary {
+    public class Summary {
         public String Tag {get; set;}
         public String Name {get; set;}
         public String Description {get; set;}
@@ -27,28 +27,34 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         public Map<String,String> Outputs {get; set;}
         
         /**
-         * Attempts to parse all ESB summary class properties.
+         * Attempts to parse all Process.Summary class properties.
          */
         public Summary(Type reflector) {
             Type inflector;
-            if (inflector == null) inflector = Type.forName(reflector + '.ESB');
-            if (inflector == null) inflector = Type.forName(reflector + 'ESB');
+            if (inflector == null) inflector = Type.forName(reflector + '.Summary');
+            if (inflector == null) inflector = Type.forName(reflector + 'Summary'); //makes testing easier
             if (inflector == null) {
                 //failure, bad inner class
-                throw new ProcessDiscoveryException('ESB Process summary class is invalid or not visible: ' + reflector.getName());
+                throw new ProcessDiscoveryException('Process.Summary class is invalid or not visible: ' + reflector.getName());
             }
             
             Map<String,Object> summary;
-            try {
-                //their summary class
+            if (summary == null) try {
+                //their managed summary class using TOSTRING
                 Object impl = inflector.newInstance();
                 String toString = String.valueOf(impl);
                 summary = (Map<String,Object>)Json.deserializeUntyped(toString);
-                
-            } catch (Exception e) {
-                //failure, probably bad toString method
-                throw new ProcessDiscoveryException(inflector.getName() + ': ESB Process summary class must extend Abstract.ESB.Summary');
-            }
+            } catch (Exception e) {}
+            
+            if (summary == null) try {
+                //their unmanaged summary class using JSON
+                Object impl = inflector.newInstance();
+                String toString = Json.serialize(impl);
+                summary = (Map<String,Object>)Json.deserializeUntyped(toString);
+            } catch (Exception e) {}
+            
+            //failure, probably bad toString method
+            if (summary == null) throw new ProcessDiscoveryException(inflector.getName() + ': Process.Summary class must extend Abstract.Process.Summary');
             
             try {
                 //copy properties across
@@ -66,7 +72,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 
                 //set sensible defaults
                 if (this.Tag == null) this.Tag = 'Untagged';
-                if (this.Name == null) this.Name = reflector.getName(); //inflector.getName().replaceAll('\\.?ESB$', ''); //strips .ESB
+                if (this.Name == null) this.Name = reflector.getName(); //inflector.getName().replaceAll('\\.?Summary$', ''); //strips any '.Summary' or 'Summary'
                 if (this.Description == null) this.Description = 'Undescribed';
                 if (this.Icon == null) this.Icon = 'cog';
                 if (this.Limits == null) this.Limits = 1;
@@ -121,28 +127,76 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         }
     }
     
+//THERE IS A BINDING BETWEEN: abstract/classes/Process.cls and src/classes/ApexClassModel.cls
+/**
+ * MUST BE GLOBAL IN ABSTRACT PACKAGE
+ */
+//abstract global class Process {
+abstract public class Process {
+    
     /**
-     * Base process to pretty up our own processes
+     * MUST BE PRESENT IN ABSTRACT PACKAGE
      */
-    abstract public class BaseProcess {
+    //abstract global class Summary {override public String toString() {return Json.serialize(this);}}
+    
+    /**
+     * MUST BE VIRTUAL GLOBAL IN ABSTRACT PACKAGE
+     */
+    //virtual global void callout(Map<String,Object> inputEvent) {}
+    abstract private void callout(Map<String,Object> inputEvent);
+    
+    /**
+     * MUST BE VIRTUAL GLOBAL IN ABSTRACT PACKAGE
+     */
+    //virtual global List<Map<String,Object>> execute(Map<String,Object> inputEvent) {return new List<Map<String,Object>>{inputEvent};}
+    abstract private List<Map<String,Object>> execute(Map<String,Object> inputEvent);
+    
+    /**
+     * MUST BE GLOBAL IN ABSTRACT PACKAGE
+     */
+    //global List<Map<String,Object>> test(Map<String,Object> inputEvent) {
+    public List<Map<String,Object>> test(Map<String,Object> inputEvent) {
         
-        /**
-         * Internal only: we may override when process requires callouts
-         */
-        virtual protected void callout(Map<String,Object> inputEvent) {}
+        //invoke callout
+        this.EventProvider = Json.serialize(inputEvent);
+        this.AllowsCallouts = true;
+        String.valueOf(this);
         
-        /**
-         * Public implementation: they must put their logic inside
-         */
-        abstract List<Map<String,Object>> execute(Map<String,Object> inputEvent);
+        //invoke execute
+        this.EventProvider = Json.serialize(inputEvent);
+        this.AllowsCallouts = false;
+        String data = String.valueOf(this);
         
-        /**
-         * Public execution: they can use this for unit testing etc
-         */
-        public List<Map<String,Object>> test(Map<String,Object> inputEvent) {
-            //#797 cycle inputs so process author sees consistent inputs
-            inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
+        //respect null return
+        if (data == null) return null;
+        
+        //prepare real outputs
+        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
+        
+        //cast each one
+        for (Object result : (List<Object>)Json.deserializeUntyped(data)) outputEvents.add((Map<String,Object>)result);
+        
+        //eg works with [ {}, null, {} ]
+        return outputEvents;
+    }
+    
+    /**
+     * Our only cross-namespace capability
+     */
+    override public String toString() {
+        //#797 cycle json so process author sees consistent inputs
+        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.EventProvider);
+        
+        if (this.AllowsCallouts == true) {
             
+            //invoke callout
+            this.AllowsCallouts = false;
+            this.callout(inputEvent);
+            return null;
+            
+        } else if (this.AllowsCallouts == false) {
+            
+            //invoke execute
             List<Map<String,Object>> outputEvents = this.execute(inputEvent);
             
             //#746 accumulate outputs so event parameters carry forwards
@@ -152,41 +206,23 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 //"aggregate" equals our "input balance" plus their "output delta"
                 Map<String,Object> aggregate = inputEvent.clone();
                 aggregate.putAll(outputEvents[i]);
-                
-                //#797 cycle outputs so process author sees consistent outputs
-                aggregate = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(aggregate));
                 outputEvents[i] = aggregate;
             }
             
-            return outputEvents;
-        }
-        
-        /**
-         * Our only cross-namespace capability
-         */
-        override public String toString() {
-            //arrange provider
-            Process.Plugin provider = (Process.Plugin)Type.forName('Job').newInstance();
-            Map<String,Object> request = new Map<String,Object>{'EventProvider' => true};
-            Map<String,Object> inputEvent = provider.invoke(new Process.PluginRequest(request)).OutputParameters;
+            //#797 cycle json so process author sees consistent outputs
+            return Json.serialize(outputEvents);
             
-            if (inputEvent.get('AllowsCallouts') == true) {
-                this.callout(inputEvent);return null;
-            } else {
-                return Json.serialize(this.test(inputEvent));
-            }
+        } else { //this.AllowsCallouts == null
+            
+            //camouflage... lol
+            return 'Process:[]';
+            
         }
-        
     }
     
-    /**
-     * Base summary required for cross-namespace per #941
-     */
-    abstract public class BaseSummary {
-        override public String toString() {
-            return Json.serialize(this);
-        }
-    }
+    private String EventProvider = '{}';
+    private Boolean AllowsCallouts;
+}
     
     /**
      * Used in callout and execute
@@ -206,13 +242,10 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         }
         
         if (this.Process == null) {
-            //doing this later than earlier
-            this.Process = this.Reflector.newInstance();
+            //provide input event and set flag
+            Map<String,Object> proxy = new Map<String,Object>{'EventProvider' => Json.serialize(inputEvent), 'AllowsCallouts' => true};
+            this.Process = Json.deserialize(Json.serialize(proxy), this.Reflector);
         }
-        
-        //provide input event and set flag
-        inputEvent.put('AllowsCallouts', true);
-        Job.EventProvider = Json.serialize(inputEvent);
         
         //do invocation
         String data;
@@ -245,11 +278,14 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 if (!Test.isRunningTest()) System.assert(false, message);
                 else throw new Broker.UserException(message);
             }
+            
+            //https://github.com/bigassforce/esb/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843056
+            throw e;
         }
         
         if (data != null) {
             //#886 a la "MyCustomException: Exception class must extend another Exception class"
-            throw new Broker.UserException(this.Reflector.getName() + ': ESB Process must extend Abstract.ESB');
+            throw new Broker.UserException(this.Reflector.getName() + ': Process must extend Abstract.Process');
         }
     }
     
@@ -261,13 +297,10 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         }
         
         if (this.Process == null) {
-            //doing this later than earlier
-            this.Process = this.Reflector.newInstance();
+            //provide input event and set flag
+            Map<String,Object> proxy = new Map<String,Object>{'EventProvider' => Json.serialize(inputEvent), 'AllowsCallouts' => false};
+            this.Process = Json.deserialize(Json.serialize(proxy), this.Reflector);
         }
-        
-        //provide input event and set flag
-        inputEvent.put('AllowsCallouts', false);
-        Job.EventProvider = Json.serialize(inputEvent);
         
         //#877 surface SessionId to select few orgs and packages
         //Boolean allowSessionId = Broker.isAllowedSessionId(step.ApexClassName__c, UserInfo.getOrganizationId());
@@ -283,16 +316,19 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 //#981 put callout in proper method please
                 throw new Broker.UserException(this.Reflector.getName() + ': Callout from execute() not supported. Please do that in the callout() method.');
             }
+            
+            //https://github.com/bigassforce/esb/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843061
+            throw e;
         }
         
         if (data == null || data == 'null') {
             //#945 a la "System.VisualforceException: Return type of an Apex action method must be a PageReference. Found: java.lang.Integer"
-            throw new Broker.UserException(this.Reflector.getName() + ': Return type of an ESB Process must be a List<Map<String,Object>>');
+            throw new Broker.UserException(this.Reflector.getName() + ': Return type of a Process execute method must be a List<Map<String,Object>>');
         }
         
         if (data.startsWith(('.' + this.Reflector.getName()).substringAfterLast('.') + ':[')) {
             //#886 a la "MyCustomException: Exception class must extend another Exception class"
-            throw new Broker.UserException(this.Reflector.getName() + ': ESB Process must extend Abstract.ESB');
+            throw new Broker.UserException(this.Reflector.getName() + ': Process must extend Abstract.Process');
         }
         
         //wrap up results into events (new guys should have Position = 0)

@@ -10,7 +10,13 @@ public with sharing class ApexClassTabController {
     public Map<Id,ApexClassModel.Summary> id2summary {get; set;}
     
     public void doInit() {
-        Set<Id> apexClassIds = new Map<Id,SObject>([SELECT Id FROM ApexClass LIMIT 10000]).keySet();
+        Set<Id> apexClassIds = new Map<Id,SObject>([
+            SELECT Id
+            FROM ApexClass
+            WHERE NamespacePrefix != 'abstract'
+            LIMIT 10000
+        ]).keySet();
+        
         ApexClassSetModel setModel = ApexClassSetModel.discoverProcesses(apexClassIds);
         
         List<ApexClass> apexClasses = [

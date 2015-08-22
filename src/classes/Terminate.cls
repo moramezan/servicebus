@@ -1,9 +1,10 @@
-public class Terminate extends ApexClassModel.BaseProcess {
+public class Terminate extends ApexClassModel.Process {
+    void callout(Map<String,Object> inputEvent) {}
     
     /**
      * @docs ProcessTerminate.html
      */
-    public class ESB extends ApexClassModel.BaseSummary {
+    public class Summary {
         String Tag = 'Enterprise Service Bus';
         String Name = 'Terminate';
         String Description = 'Swallows messages at the end of this sequence.';

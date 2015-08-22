@@ -1,11 +1,12 @@
-public class GateByJob extends ApexClassModel.BaseProcess {
+public class GateByJob extends ApexClassModel.Process {
+    void callout(Map<String,Object> inputEvent) {}
 
     private class GateByJobException extends Exception {}
 
     /**
      * @docs ProcessGateByJob.html
      */
-    public class ESB extends ApexClassModel.BaseSummary {
+    public class Summary {
         String Tag = 'Enterprise Service Bus';
         String Name = 'Gate By Job';
         String Description = 'Aggregates a collection of messages having the same Job Id.';

@@ -216,7 +216,7 @@ abstract public without sharing class Broker {
              * that is the central entry point for any enqueued AND output messages.
              *
              * Since #677 there is history around which operations belong where:
-             * - BaseProcess does bare metal input cycling, output aggregation,
+             * - Process does bare metal input cycling, output aggregation,
              * - ApexClassModel can enforce validation at the event level,
              * - MessageModel takes grabs exceptions for the database,
              * - Broker deals with executing message collections,

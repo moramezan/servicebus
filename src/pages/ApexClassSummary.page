@@ -2,7 +2,7 @@
     <apex:pageMessages showDetail="false" />
 
     <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection collapsible="false" columns="1" title="ESB Process">
+        <apex:pageBlockSection collapsible="false" columns="1" title="Service Bus Process">
             <apex:pageBlockSectionItem >
                 
                 <apex:dataTable cellspacing="10" value="{!ApexClass}" var="ApexClass">

@@ -20,7 +20,7 @@ global class Job implements Process.Plugin, system.Queueable {
      */
     global Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Name = 'ESB Job';
+        plugin.Name = 'Enqueue Service Bus Job';
         plugin.Tag = 'Enterprise Service Bus';
         plugin.Description = 'Enqueue a Job into the Enterprise Service Bus';
         
@@ -39,27 +39,14 @@ global class Job implements Process.Plugin, system.Queueable {
     }
     
     /**
-     * Per #868 this exists to hold whichever
-     * event the Broker currently deals with.
-     */
-    static public String EventProvider;
-    
-    /**
-     * Per #702 this enables developers to Enqueue into ESB without a compile-time
+     * Per #702 this enables developers to Enqueue into Service Bus without a compile-time
      * dependency, by leveraging the Process.Plugin system interface.
      *
      * @docs ApiJobClass.html
      * Secondarily it also DOUBLES as a REAL Process.Plugin that people can use
-     * in Visual Flow to get stuff into ESB. (Though they would create a dependency.)
+     * in Visual Flow to get stuff into Service Bus. (Though they would create a dependency.)
      */
     global Process.PluginResult invoke(Process.PluginRequest request) {
-        
-        //#868 this plugin doubles as an event provider, so we don't create a BS one
-        if (request.InputParameters.get('EventProvider') == true) { //specific equality to avoid null object dereference
-            Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(EventProvider);
-            return new Process.PluginResult(event);
-        }
-        
         Map<String,Object> inputEvent = request.InputParameters;
         system.Queueable job = new Job(inputEvent);
         Id jobId = System.enqueueJob(job);
@@ -79,10 +66,10 @@ global class Job implements Process.Plugin, system.Queueable {
     }
     
     /**
-     * Per #736 this enables developers to leverage ESB Jobs inside Process Builder
+     * Per #736 this enables developers to leverage Service Bus Jobs inside Process Builder
      * @docs ApiJobClass.html
      */
-    @InvocableMethod(label='Enqueue ESB Job') global static List<Id> enqueue(List<SimpleEvent> simpleEvents) {
+    @InvocableMethod(label='Enqueue Service Bus Job') global static List<Id> enqueue(List<SimpleEvent> simpleEvents) {
         List<Id> ids = new List<Id>();
         for (SimpleEvent simpleEvent : simpleEvents) {
             Map<String,Object> inputEvent = new Map<String,Object>{

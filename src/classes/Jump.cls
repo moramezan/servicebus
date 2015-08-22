@@ -1,9 +1,10 @@
-public class Jump extends ApexClassModel.BaseProcess {
+public class Jump extends ApexClassModel.Process {
+    void callout(Map<String,Object> inputEvent) {}
 
     /**
      * @docs ProcessBranchJumpSubsequence.html
      */
-    public class ESB extends ApexClassModel.BaseSummary {
+    public class Summary {
         String Tag = 'Enterprise Service Bus';
         String Name = 'Jump';
         String Description = 'Permanently diverts the message to another sequence, never to return.';

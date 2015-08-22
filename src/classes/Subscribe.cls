@@ -1,9 +1,10 @@
-public class Subscribe extends ApexClassModel.BaseProcess {
+public class Subscribe extends ApexClassModel.Process {
+    void callout(Map<String,Object> inputEvent) {}
 
     /**
      * @docs ProcessPublishSubscribe.html
      */
-    public class ESB extends ApexClassModel.BaseSummary {
+    public class Summary {
         String Tag = 'Enterprise Service Bus';
         String Name = 'Subscribe';
         String Description = 'Listens for messages via a named Event Type.';

@@ -41,7 +41,7 @@
         Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
-            ApexClassModel.BaseProcess process = new Jump();
+            ApexClassModel.Process process = new Jump();
             List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
@@ -75,7 +75,7 @@
         };
         
         //act
-        ApexClassModel.BaseProcess process = new Jump();
+        ApexClassModel.Process process = new Jump();
         List<Map<String,Object>> outputEvents = process.test(inputEvent);
         
         //assert

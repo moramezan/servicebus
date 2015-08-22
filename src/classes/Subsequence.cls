@@ -1,11 +1,12 @@
-public class Subsequence extends ApexClassModel.BaseProcess {
+public class Subsequence extends ApexClassModel.Process {
+    void callout(Map<String,Object> inputEvent) {}
     
     static public Boolean IsRunning = false;
     
     /**
      * @docs ProcessBranchJumpSubsequence.html
      */
-    public class ESB extends ApexClassModel.BaseSummary {
+    public class Summary {
         String Tag = 'Enterprise Service Bus';
         String Name = 'Synchronous Subsequence';
         String Description = 'Synchronously executes another sequence, then resumes the next step afterwards.';

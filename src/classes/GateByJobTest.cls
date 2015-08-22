@@ -46,7 +46,7 @@
         Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
-            ApexClassModel.BaseProcess process = new GateByJob();
+            ApexClassModel.Process process = new GateByJob();
             List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
@@ -68,7 +68,7 @@
                     
         Boolean actualFlag = false;
         try {
-            ApexClassModel.BaseProcess process = new GateByJob();
+            ApexClassModel.Process process = new GateByJob();
             List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory JobId');
@@ -94,7 +94,7 @@
                     
         Boolean actualFlag = false;
         try {
-            ApexClassModel.BaseProcess process = new GateByJob();
+            ApexClassModel.Process process = new GateByJob();
             List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Route');
@@ -119,7 +119,7 @@
                     
         Boolean actualFlag = false;
         try {
-            ApexClassModel.BaseProcess process = new GateByJob();
+            ApexClassModel.Process process = new GateByJob();
             List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Range');
@@ -144,7 +144,7 @@
                     
         Boolean actualFlag = false;
         try {
-            ApexClassModel.BaseProcess process = new GateByJob();
+            ApexClassModel.Process process = new GateByJob();
             List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Chunk');
@@ -188,7 +188,7 @@
         insert messages;
 
         // Act
-        ApexClassModel.BaseProcess process = new GateByJob();
+        ApexClassModel.Process process = new GateByJob();
         List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
 
         // Assemble
@@ -232,7 +232,7 @@
         insert messages;
 
         // Act
-        ApexClassModel.BaseProcess process = new GateByJob();
+        ApexClassModel.Process process = new GateByJob();
         List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
 
         // Assemble

@@ -25,14 +25,15 @@
     
     public class MemoryErrorException extends Exception {}
     
-    public class MemoryError extends ApexClassModel.BaseProcess {
+    public class MemoryError extends ApexClassModel.Process {
+        void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             inputEvent.put('c__OrganizationId', UserInfo.getOrganizationId());
             throw new MemoryErrorException('Something catchable.');
         }
     }
     
-    public class MemoryErrorESB extends ApexClassModel.BaseSummary {
+    public class MemoryErrorSummary {
         String Description = 'Does stuff in memory, throws an exception not needing rollback.';
         Integer Limits = 1000;
     }
@@ -71,14 +72,15 @@
     
     public class InserterErrorException extends Exception {}
     
-    public class InserterError extends ApexClassModel.BaseProcess {
+    public class InserterError extends ApexClassModel.Process {
+        void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             insert new Document(Name = 'Test.txt', FolderId = UserInfo.getUserId());
             throw new InserterErrorException('Something catchable.');
         }
     }
     
-    public class InserterErrorESB extends ApexClassModel.BaseSummary {
+    public class InserterErrorSummary {
         String Description = 'Inserts 1 document, throws an exception needing rollback.';
         Integer Limits = 50;
     }
@@ -115,14 +117,15 @@
         System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
     }
     
-    public class Memory extends ApexClassModel.BaseProcess {
+    public class Memory extends ApexClassModel.Process {
+        void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             inputEvent.put('c__OrganizationId', UserInfo.getOrganizationId());
             return new List<Map<String,Object>>();
         }
     }
     
-    public class MemoryESB extends ApexClassModel.BaseSummary {
+    public class MemorySummary {
         String Description = 'Does stuff in memory without side effects.';
         Integer Limits = 1000;
     }
@@ -159,7 +162,8 @@
         System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
     }
     
-    public class Inserter extends ApexClassModel.BaseProcess {
+    public class Inserter extends ApexClassModel.Process {
+        void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             Map<String,Object> outputEvent = inputEvent.clone();
             insert new Document(Name = 'Test.txt', FolderId = UserInfo.getUserId());
@@ -167,7 +171,7 @@
         }
     }
     
-    public class InserterESB extends ApexClassModel.BaseSummary {
+    public class InserterSummary {
         String Description = 'Inserts 1 document, runs 75 times';
         Integer Limits = 75;
     }
@@ -204,7 +208,8 @@
         System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
     }
     
-    public class PassThroughProcess extends ApexClassModel.BaseProcess {
+    public class PassThroughProcess extends ApexClassModel.Process {
+        void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{inputEvent};
         }
@@ -242,7 +247,8 @@
         System.assertEquals(expectedStepConfigId, actualStepConfigId, 'Wrong step config id.');
     }
     
-    public class SurpriseNullOutputs extends ApexClassModel.BaseProcess {
+    public class SurpriseNullOutputs extends ApexClassModel.Process {
+        void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{'herp' => 'derp'},

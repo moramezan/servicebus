@@ -1,6 +1,7 @@
-public class Schedule extends ApexClassModel.BaseProcess {
+public class Schedule extends ApexClassModel.Process {
+    void callout(Map<String,Object> inputEvent) {}
     
-    public class ESB extends ApexClassModel.BaseSummary {
+    public class Summary {
         String Tag = 'Enterprise Service Bus';
         String Name = 'Schedule';
         String Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages
