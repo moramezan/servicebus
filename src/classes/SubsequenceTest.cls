@@ -182,7 +182,7 @@
         void callout(Map<String,Object> inputEvent) {
             HttpRequest request = new HttpRequest();
             request.setMethod('GET');
-            request.setEndpoint('https://localhost/');
+            request.setEndpoint('https://herp.derp/');
             new Http().send(request);
         }
         

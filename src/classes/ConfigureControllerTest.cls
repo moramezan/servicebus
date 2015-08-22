@@ -3,7 +3,7 @@
     static testmethod void testRefreshAccessTokenMissingRemoteSiteSetting() {
         //arrange custom setting
         OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
-        setting.InstanceUrl__c = 'https://localhost'; //not allowed
+        setting.InstanceUrl__c = 'https://herp.derp'; //not allowed
         insert setting;
         
         //arrange schedule

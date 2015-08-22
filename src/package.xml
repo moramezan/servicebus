@@ -93,10 +93,6 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>BootstrapExt</members>
-        <name>ApexComponent</name>
-    </types>
-    <types>
         <members>ApexClassSetting</members>
         <members>ApexClassSummary</members>
         <members>ApexClassTab</members>
