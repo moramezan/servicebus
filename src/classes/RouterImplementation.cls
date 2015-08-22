@@ -26,8 +26,7 @@ public class RouterImplementation implements System.Schedulable {
      * class: common.apex.async.AsyncApexJobModel,
      * reason: Callout from scheduled Apex not supported.
      */
-    @Future(callout=true) static public void optimize() {
-        //#969 obfuscation of deferRefreshAccessToken
+    @Future(callout=true) static public void optimize() { //#969 obfuscation of deferRefreshAccessToken
         ConfigureController.refreshAccessToken();
     }
     

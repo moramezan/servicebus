@@ -321,7 +321,7 @@ global class Job implements Process.Plugin, system.Queueable {
         if (isRunning()) return;
         
         //#989 optimize already correct running user context
-        if (isRunningUser()) run(null); else runAsUser();
+        if (isRunningUser()) run(null); else engine(); //obfuscation of runAsUser()
     }
     
     static public Boolean isRunningUser() {
@@ -367,7 +367,7 @@ global class Job implements Process.Plugin, system.Queueable {
      *
      * @throws RunException
      */
-    @Future(callout=true) static public void runAsUser() {
+    @Future(callout=true) static public void engine() { //obfuscation of runAsUser()
         //#653 don't waste TOOLING API CALL unnecessarily
         if (isScheduled()) return;
         if (isRunning()) return;
@@ -380,7 +380,7 @@ global class Job implements Process.Plugin, system.Queueable {
     /**
      * Was formerly Broker.run() but needs to be global now
      * for the sake of running from Execute Anonymous context.
-     * The "runAsUser" method needs to be able to call this.
+     * The "runAsUser()" method needs to be able to call this.
      *
      * I think we had 8 global things in Job and 1 in Broker
      * Lets just have 9 global things in Job, and this proxies?
@@ -388,8 +388,8 @@ global class Job implements Process.Plugin, system.Queueable {
      * We MUST ALWAYS prevent more than 1 running broker worker
      * otherwise they will fight over the work to be marked etc.
      */
-    static global void run(Id strategy) {
-        //obfuscation of "messageId"
+    static global void run(Id strategy) { //obfuscation of "messageId"
+        
         if (strategy != null) {
             /**
              * This is indeed another variation on the Broker. Unlike the Vertical Broker,
