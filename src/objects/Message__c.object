@@ -175,8 +175,9 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     <listViews>
         <fullName>All</fullName>
         <columns>NAME</columns>
-        <columns>Status__c</columns>
         <columns>CREATED_DATE</columns>
+        <columns>Status__c</columns>
+        <columns>Route__c</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
@@ -185,8 +186,9 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     <listViews>
         <fullName>Exception</fullName>
         <columns>NAME</columns>
-        <columns>Status__c</columns>
         <columns>CREATED_DATE</columns>
+        <columns>Status__c</columns>
+        <columns>Route__c</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
@@ -204,8 +206,9 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     <listViews>
         <fullName>Killed</fullName>
         <columns>NAME</columns>
-        <columns>Status__c</columns>
         <columns>CREATED_DATE</columns>
+        <columns>Status__c</columns>
+        <columns>Route__c</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
@@ -226,7 +229,9 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     </nameField>
     <pluralLabel>Messages</pluralLabel>
     <searchLayouts>
+        <customTabListAdditionalFields>CREATED_DATE</customTabListAdditionalFields>
         <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Route__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>ExecuteDuration__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Exception__c</customTabListAdditionalFields>
         <excludedStandardButtons>Accept</excludedStandardButtons>
