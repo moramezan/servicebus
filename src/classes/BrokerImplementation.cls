@@ -149,32 +149,6 @@ public without sharing class BrokerImplementation extends Broker implements Data
         super.run();
     }
     
-    public void handleFatalIds(Database.BatchableContext context) {
-        //gets "First error: ..." off job
-        AsyncApexJob asyncApexJob = [
-            SELECT ExtendedStatus
-            FROM AsyncApexJob
-            WHERE Id = :context.getJobId()
-        ];
-        
-        //write it away on the previous set of messages
-        List<Message__c> fatalities = new List<Message__c>();
-        for (Id fatalId : this.FatalIds) fatalities.add(new Message__c(
-            Id = fatalId,
-            ExecuteDuration__c = this.BlameCpuTime, //#987 we fishing to restore this
-            Exception__c = 'Fatal Error: Route to blame: ' + this.BlameRoute, //#985
-            Cause__c = this.IsFirstFatal ? asyncApexJob.ExtendedStatus : null //#985
-        ));
-        
-        update fatalities;
-        this.IsFirstFatal = false;
-        this.BlameCpuTime = null;
-        this.BlameRoute = null;
-        
-        //prevent repetition
-        this.FatalIds = null;
-    }
-    
     /**
      * The new reason we can't persist such errors in the execute() method is
      * because they are uncatchable exceptions like System.assert() or Limits.
@@ -185,6 +159,45 @@ public without sharing class BrokerImplementation extends Broker implements Data
      *
      * There is always ONE place to go for the information: Message__c.Exception__c
      */
+    public void handleFatalIds(Database.BatchableContext context) {
+        //prevent repetition
+        List<Id> messageIds = new List<Id>(this.FatalIds);
+        this.FatalIds = null;
+        
+        //gets "First error: ..." off job
+        AsyncApexJob asyncApexJob = [
+            SELECT ExtendedStatus
+            FROM AsyncApexJob
+            WHERE Id = :context.getJobId()
+        ];
+        
+        String message = this.IsFirstFatal //#985
+            ? ('First error: ' + asyncApexJob.ExtendedStatus).substringAfterLast('First error: ')
+            : 'Fatal error: restart message'
+        ;
+        
+        String cause = '' //#985
+            + 'Class: ' + this.BlameClass
+            + '\nRoute: ' + this.BlameRoute
+            + '\nMessage: ' + this.BlameMessage
+        ;
+        
+        //write it away on the previous set of messages
+        List<Message__c> fatalities = new List<Message__c>();
+        for (Id messageId : messageIds) fatalities.add(new Message__c(
+            Id = messageId,
+            ExecuteDuration__c = this.BlameCpuTime, //#987 we fishing to restore this
+            Exception__c = message, //#985
+            Cause__c = cause //#985
+        ));
+        
+        update fatalities;
+        this.IsFirstFatal = false;
+        this.BlameCpuTime = null;
+        this.BlameClass = null;
+        this.BlameRoute = null;
+        this.BlameMessage = null;
+    }
     
     /**
      * Each Broker implementation must provide the smarts of how to restart it.

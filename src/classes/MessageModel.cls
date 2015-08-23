@@ -39,15 +39,18 @@ public class MessageModel extends ApexDomain.StandardModel {
      */
     public ApexClassModel resolveApexClassModel() {
         
+        if (Broker.Instance != null) Broker.Instance.BlameMessage = this.getId(); //#985
         String route = (String)this.Event.get('Route');
         
         if (route == null) {
             throw new Broker.UserException('Message has no route: ' + this.message.Id); //a la "List has no rows for assignment to SObject"
         }
         
+        if (Broker.Instance != null) Broker.Instance.BlameRoute = route; //#985
         Type process = Type.forName(route);
         
         if (process != null) {
+            if (Broker.Instance != null) Broker.Instance.BlameClass = process.getName(); //#985
             return new ApexClassModel(process); //#956 "fire and forget" process without sequences or steps
         }
         
@@ -73,13 +76,14 @@ public class MessageModel extends ApexDomain.StandardModel {
             throw new Broker.UserException('Apex class name cannot be null: ' + route); //a la "Argument cannot be null"
         }
         
-        Type reflector = Type.forName(apexClassName);
+        process = Type.forName(apexClassName);
         
-        if (reflector == null) {
+        if (process == null) {
             throw new Broker.UserException('Class is invalid or not visible: ' + apexClassName); //a la "Variable is not visible" or "Variable does not exist" or "Dependent class is invalid and needs recompilation"
         }
         
-        ApexClassModel model = new ApexClassModel(reflector);
+        if (Broker.Instance != null) Broker.Instance.BlameClass = process.getName(); //#985
+        ApexClassModel model = new ApexClassModel(process);
         model.getRecord().Id = step.ApexClassId__c;
         return model;
     }

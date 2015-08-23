@@ -25,8 +25,11 @@ abstract public without sharing class Broker {
     /**
      * #985 helps avoid misleading errors
      */
+    static public Broker Instance;
     public Integer BlameCpuTime;
+    public String BlameClass;
     public String BlameRoute;
+    public String BlameMessage;
     
     static public Integer MaximumHops = 1000;
     
@@ -130,6 +133,8 @@ abstract public without sharing class Broker {
      * @param  outputMessages pass-by-reference Messages whose status should be Started
      */
     public void execute(List<Message__c> inputMessages, List<Message__c> outputMessages) {
+        Instance = this; //#985
+        
         try {
             //empty inputs, empty outputs
             if (inputMessages.isEmpty()) return;
@@ -155,7 +160,6 @@ abstract public without sharing class Broker {
             for (MessageModel model : models) {
                 //do invocation
                 this.BlameCpuTime = Limits.getCpuTime(); //#985
-                this.BlameRoute = (String)model.Event.get('Route'); //#985
                 model.invokeCallout();
             }
             
@@ -174,7 +178,6 @@ abstract public without sharing class Broker {
                 
                 //do invocation
                 this.BlameCpuTime = Limits.getCpuTime(); //#985
-                this.BlameRoute = (String)model.Event.get('Route'); //#985
                 isolate = model.invokeExecute(outputMessages);
                 
                 if (model.Message.Exception__c != null && isolate) {
