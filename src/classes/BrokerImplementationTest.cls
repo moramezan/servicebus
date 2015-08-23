@@ -304,4 +304,94 @@
         }
     }
     
+    public class FinishDoesPersist {
+        void callout(Map<String,Object> event) {}
+        List<Map<String,Object>> execute(Map<String,Object> event) {return null;}
+    }
+    
+    public class FinishDoesPersistSummary {
+        Integer Limits = 1;
+    }
+    
+    //for #991 very last Execute should get Persisted
+    static testmethod void testAllContextsDoneOk() {
+        //arrange broker
+        BrokerImplementation impl = new BrokerImplementation();
+        
+        //arrange inputs (25 messages, 1 mark and 1 execute for each, aligns with 50 contexts)
+        List<Map<String,Object>> events = new List<Map<String,Object>>();
+        for (Integer i = 0; i < 25; i++) events.add(new Map<String,Object>{'ToProcess' => FinishDoesPersist.class.getName()});
+        
+        //arrange messages
+        Test.startTest();
+        Job job = new Job(events);
+        System.enqueueJob(job);
+        Test.stopTest();
+        
+        //act
+        impl.start(null);
+        
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        impl.execute(null, new List<SObject>());
+        
+        impl.finish(null);
+        
+        //assert
+        Integer expectedCount = 25;
+        Integer actualCount = [SELECT COUNT() FROM Message__c];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
+    }
+    
 }
