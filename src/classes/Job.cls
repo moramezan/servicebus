@@ -61,8 +61,8 @@ global class Job implements Process.Plugin, system.Queueable {
     global class SimpleEvent {
         @InvocableVariable(required=true) global Id RecordId;
         @InvocableVariable(required=true) global String ToSequence;
-        //@InvocableVariable(required=true) global String ToProcess;
-        //@InvocableVariable(required=true) global String ToConfig;
+        @InvocableVariable(required=true) global String ToProcess;
+        @InvocableVariable(required=true) global String ToConfig;
     }
     
     /**
@@ -74,8 +74,8 @@ global class Job implements Process.Plugin, system.Queueable {
         for (SimpleEvent simpleEvent : simpleEvents) {
             Map<String,Object> inputEvent = new Map<String,Object>{
                 'ToSequence' => simpleEvent.ToSequence,
-                //'ToProcess' => simpleEvent.ToProcess,
-                //'ToConfig' => simpleEvent.ToConfig
+                'ToProcess' => simpleEvent.ToProcess,
+                'ToConfig' => simpleEvent.ToConfig,
                 'RecordId' => simpleEvent.RecordId
             };
             Job job = new Job(inputEvent);
@@ -125,12 +125,23 @@ global class Job implements Process.Plugin, system.Queueable {
      * @param sequenceName Name of the sequence the data is destined for.
      * @param dataId    Id of some record that the sequence will operate on.
      */
-    public Job(String sequenceName, Id recordId) {
-        //TODO could this become Route to accommodate either/or, by detecting the difference somehow?
+    public Job(String sequence, Id recordId) {
         this(new Map<String,Object>{
-            'ToSequence' => sequenceName,
-            //'ToProcess' => sequenceName,
-            //'ToConfig' => sequenceName,
+            'ToSequence' => sequence,
+            'RecordId' => recordId
+        });
+    }
+    
+    public Job(Id configId, Id recordId) {
+        this(new Map<String,Object>{
+            'RecordId' => recordId,
+            'ConfigId' => recordId
+        });
+    }
+    
+    public Job(Type process, Id recordId) {
+        this(new Map<String,Object>{
+            'ToProcess' => process.getName(),
             'RecordId' => recordId
         });
     }
