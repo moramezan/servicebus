@@ -5,4 +5,5 @@
     <mobileReady>false</mobileReady>
     <motif>Custom67: Gears</motif>
     <page>ApexClassTab</page>
+    <splashPageLink>ApexClassSplash</splashPageLink>
 </CustomTab>

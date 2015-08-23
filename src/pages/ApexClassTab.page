@@ -2,6 +2,18 @@
 <!-- no recordSetVar  as "List controllers are not supported for ApexClass" -->
 <apex:page controller="ApexClassTabController" setup="true" action="{!doInit}">
 
+    <script>
+        (function() {
+            //colour in the process tab... d'oh
+            var li = document.getElementById('{!$CurrentPage.parameters.sfdc.tabName}' + '_Tab');
+            if (!li) return;
+            li.className += ' zen-active primaryPalette';
+            var a = li.children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+    </script>
+    
     <apex:sectionHeader title="Processes" description="A Process is a single, logical program with inputs and outputs in the form of events. Processes are implemented as Apex classes." />
     
     <apex:pageBlock mode="detail">

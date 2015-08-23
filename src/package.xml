@@ -94,6 +94,7 @@
     </types>
     <types>
         <members>ApexClassSetting</members>
+        <members>ApexClassSplash</members>
         <members>ApexClassSummary</members>
         <members>ApexClassTab</members>
         <members>BranchConfigHelp</members>
@@ -196,6 +197,7 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>ApexClassSplash</members>
         <members>Configure</members>
         <members>MessageSplash</members>
         <members>MonitorSplash</members>

@@ -509,6 +509,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>ApexClassSplash</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>ApexClassSummary</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
