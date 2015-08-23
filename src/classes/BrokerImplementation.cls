@@ -201,7 +201,8 @@ public without sharing class BrokerImplementation extends Broker implements Data
             Database.executeBatch(new BrokerDispatcher(), 1);
         } else {
             //TODO be aware schedule is about 5 - 10 seconds slower to start
-            System.scheduleBatch(new BrokerDispatcher(), 'Enterprise Service Bus Broker', 0, 1);
+            Database.executeBatch(new BrokerDispatcher(), 1);
+            //System.scheduleBatch(new BrokerDispatcher(), 'Enterprise Service Bus Broker', 0, 1);
         }
     }
 }
