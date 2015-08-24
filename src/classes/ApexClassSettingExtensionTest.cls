@@ -2,7 +2,7 @@
 
     static testmethod void coverCode() {
         //arrange
-        ApexClass apexClass = [SELECT Id FROM ApexClass WHERE Name = :ApexClassSettingExtensionTest.class.getName()];
+        ApexClass apexClass = [SELECT Id FROM ApexClass WHERE Name = 'ApexClassSettingExtensionTest'];
         
         //act
         ApexPages.StandardController controller = new ApexPages.StandardController(apexClass);

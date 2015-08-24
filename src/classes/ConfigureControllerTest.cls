@@ -186,9 +186,9 @@
         Test.stopTest();
         
         //assert
-        String expectedUrl = '/apex/test';
+        String expectedUrl = '/apex/';
         String actualUrl = redirect.getUrl();
-        System.assertEquals(expectedUrl, actualUrl, 'Wrong URL.');
+        System.assert(actualUrl.startsWith(expectedUrl), 'Wrong URL.');
         
         Id expectedUserId = UserInfo.getUserId();
         Id actualUserId = OAuthSetting__c.getOrgDefaults().RunningUserId__c;

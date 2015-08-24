@@ -1,5 +1,9 @@
 @IsTest private class SequenceModelTest {
-            
+    
+    @TestSetup static void testSetup() {
+        new PostInstallHandler().upsertNamespaceSetting();
+    }
+    
     private static testmethod void  callingFetchStepsReturnsExpectedStepCollection() {
         // arrange
         String sequenceName = 'theSequence';
