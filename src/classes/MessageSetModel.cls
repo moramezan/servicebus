@@ -168,6 +168,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
                 message.Cause__c = message.Cause__c.replace('\n(esb)', '');
                 message.Cause__c = message.Cause__c.replace('\n(abstract)', '');
                 message.Cause__c = message.Cause__c.replace('\n(servicebus)', '');
+                message.Cause__c = message.Cause__c.replace('\n(AnonymousBlock: line 1, column 1)', '');
             }
         }
     }
