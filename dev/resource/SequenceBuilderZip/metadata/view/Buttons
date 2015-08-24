@@ -33,7 +33,7 @@
                 "itemId": "inject",
                 "layout|flex": null,
                 "margin": "0 10px 0 0",
-                "text": "Enqueue Test Message"
+                "text": "Enqueue Test Event"
             },
             "name": "MyButton1",
             "configAlternates": {
