@@ -1,28 +1,37 @@
 <h1>
-    Introducing Messages
+    Messages
 </h1>
 
-<p>
-    Messages represent real-world events. These occur all the time, for example, a clock strikes
-    midnight, or a bank account becomes overdrawn.
-</p>
+<h3>
+    What is a message?
+</h3>
 
 <p>
-    <img width="360" src="resources/Splashes/messageProcessFunnel.png" />
+    <img class="right" src="resources/Splashes/messages.png" />
+    A message is a container for holding a real world event. These events occur all the time, for example a clock strikes
+    midnight, or a payment is requested. Wrapping each event in a message gives a handle to identify it.
 </p>
+
+<ol>
+    <li>The event JSON can be seen inside each message.</li>
+    <li>If processing fails, the message remains visible for retry.</li>
+</p>
+
+<h3>
+    How do I deal with failed messages?
+</h3>
 
 <p>
-    A message wraps attributes supporting an event in a common structure.
+    All messages are stored in a queue for review. You can either:
 </p>
 
-<p>
-    A process will perform work upon receipt of a message.
+<ul>
+    <li><strong>Kill</strong> a message to dismiss it, if the failure was expected and acceptable.</li>
+    <li><strong>Restart</strong> a message to process it again, after fixing the apex code or the event.</li>
 </p>
 
-<p>
-    All messages enter a queue, which can be seen from the Messages tab.
-</p>
 
+<!--
 <h3>
     List View buttons
 </h3>
@@ -52,3 +61,4 @@
     Message. This button can be used to edit or audit the data of any specific Message handed into a
     given Process.
 </p>
+-->

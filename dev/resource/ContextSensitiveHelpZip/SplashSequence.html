@@ -1,22 +1,28 @@
 <h1>
-    Introducing Sequences
+    Sequences
 </h1>
 
+<h3>
+    <img class="right" src="resources/Splashes/sequences.png" />
+    What is a sequence?
+</h3>
+
 <p>
-    A Sequence is an arrangement of multiple processing tasks called Steps. Each Sequence is known
-    by a friendly name, for example 'ProcessInvoices', which should in some way indicate the nature
-    of the work that it's processing steps will perform.
+    A Sequence is an arrangement of processing tasks called steps. Each Sequence is known by a friendly name, for example 'HandleRefund', which indicates the nature of the work that its steps will perform.
 </p>
 
 <p>
-    The ESB framework will advance Messages through the Steps of a Sequence in the order you specify
-    using drag and drop. A typical sequence will contain many steps. See diagram:
+    You specify the order of the different steps using drag and drop. The Service Bus advances your events through the steps of the sequence. A typical sequence contains many steps.
 </p>
 
-<p>
-    <img width="480" src="resources/Splashes/sequenceSteps.png" />
-</p>
 
+<fieldset>
+    <legend>Note</legend>
+    The last of every sequence is a 'Terminate' step. This step swallows events that reach the end of the sequence.
+
+</fieldset>
+
+<!--
 <p>
     See the following tutorials:
 </p>
@@ -41,8 +47,6 @@
         Config.
     </li>
     <li>
-        A Terminate process is automatically inserted into a new Sequence at the point that the
-        Sequence is created. This Terminate step cannot be deleted.
     </li>
     <li>
         It is the orchestrator's responsibility to ensure the Terminate Process is the final Step in
@@ -64,3 +68,4 @@
         (referencing your user record as the underlying data entity <code>esb__RecordId</code>).
     </li>
 </ul>
+-->

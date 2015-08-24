@@ -1,18 +1,44 @@
 <h1>
-    Introducing Processes
+    Processes
 </h1>
 
-<p>
-    A Process is a single, logical program with inputs and outputs in the form of Messages. Logic
-    that splits data, combines data or alters data should be encapsulated in distinct processes.
-    When a process receives and acts on a message, it may output multiple new messages that go to
-    subsequent processes.
-</p>
+<h3>
+    <img class="right" src="resources/Splashes/processes.png" />
+    What is a process?
+</h3>
 
 <p>
-    <img src="resources/Splashes/processArtifacts.png" />
+    A process is a single, logical program with inputs and outputs in the form of events. Processes are implemented as Apex classes. Each process handles one event, and may output zero, one, or many new events.
 </p>
 
+<ul>
+    <li>Each process has a Summary that describes it.</li>
+    <li>An event is represented in Apex code as <code>Map&lt;String,Object&gt;</code></li>
+</ul>
+
+<hr />
+
+<h3>
+    How do I write my own process?
+</h3>
+
+<pre>
+public class SendPayment extends Abstract.Process {
+    
+    public class Summary {
+        String Description = 'Short explanation of the process.';
+    }
+    
+    //http requests go here
+    //void callout(Map&lt;String,Object&gt; input) {}
+    
+    //side effects go here
+    //List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; input) {}
+    
+}
+</pre>
+
+<!--
 <p>
     Processes are implemented as Apex classes. The Enterprise Service Bus framework ("ESB") contains
     by default a number of ready-made processes, including:
@@ -80,3 +106,4 @@
 <p>
     Learn more about <a href="?topic=TutorialProcessDiscovery">Process Discovery</a> within the ESB framework.
 </p>
+-->
