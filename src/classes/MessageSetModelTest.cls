@@ -43,7 +43,7 @@
         );
         
         //act
-        Broker.impl().persist(new List<Message__c>{message});
+        Broker.persist(new List<Message__c>{message});
         new MessageSetModel(new List<Message__c>{message}).alphabetizeJsonAndPopulateFields();
         
         //assert

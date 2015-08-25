@@ -324,7 +324,7 @@ global class Job implements Process.Plugin, system.Queueable {
         }
         
         //just in time DML
-        Broker.impl().persist(messages); //#836
+        Broker.persist(messages); //#836
         
         //#653 don't waste FUTURE ASYNC CALL unnecessarily
         if (Test.isRunningTest()) return;
@@ -424,7 +424,7 @@ global class Job implements Process.Plugin, system.Queueable {
             List<Message__c> inputAndOutputMessages = new List<Message__c>();
             inputAndOutputMessages.add(message);
             inputAndOutputMessages.addAll(outputMessages);
-            Broker.impl().persist(inputAndOutputMessages);
+            Broker.persist(inputAndOutputMessages);
             
             //#981#issuecomment-131670372 prevent side effects (like batch jobs) escaping
             if (MessageModel.RestartException != null) throw MessageModel.RestartException;

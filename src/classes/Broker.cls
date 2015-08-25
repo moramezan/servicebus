@@ -211,7 +211,7 @@ abstract public without sharing class Broker {
      *
      *
      */
-    public void persist(List<Message__c> inputAndOutputMessages) {
+    static public void persist(List<Message__c> inputAndOutputMessages) {
         try {
             
             /**

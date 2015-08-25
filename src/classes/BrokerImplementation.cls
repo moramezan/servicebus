@@ -79,7 +79,7 @@ public without sharing class BrokerImplementation extends Broker implements Data
                 if (this.FatalIds != null) this.handleFatalIds(context);
                 
                 //PERSIST
-                this.persist(this.Messages);
+                Broker.persist(this.Messages);
                 
                 //LOCATE
                 this.Messages = this.locateMarkableWork();
@@ -143,7 +143,7 @@ public without sharing class BrokerImplementation extends Broker implements Data
         if (this.FatalIds != null) this.handleFatalIds(context);
         
         //#991 PERSIST
-        this.persist(this.Messages);
+        Broker.persist(this.Messages);
         
         IsRestart = true;
         super.run();

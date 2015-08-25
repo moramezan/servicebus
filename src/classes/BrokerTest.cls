@@ -29,7 +29,7 @@
             List<Message__c> inputAndOutputMessages = new List<Message__c>();
             inputAndOutputMessages.addAll(inputMessages);
             inputAndOutputMessages.addAll(outputMessages);
-            this.persist(inputAndOutputMessages); //#782
+            Broker.persist(inputAndOutputMessages); //#782
             
             super.run();
         }
@@ -247,7 +247,7 @@
         List<Message__c> inputAndOutputMessages = new List<Message__c>();
         inputAndOutputMessages.addAll(inputMessages);
         inputAndOutputMessages.addAll(outputMessages);
-        impl.persist(inputAndOutputMessages);
+        Broker.persist(inputAndOutputMessages);
         
         //assert
         Integer expectedSize = 2;
