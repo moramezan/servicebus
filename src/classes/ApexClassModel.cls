@@ -111,6 +111,20 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     }
     
     /**
+     * Injects a test message to this process
+     * carrying just the Organization Id.
+     *
+     * @return the queueable job id
+     */
+    public Id enqueueTestMessage() {
+        Job.AllowRoute = true; //#999#issuecomment-133751700
+        Map<String,Object> event = new Map<String,Object>{'Route' => this.Reflector.getName()};
+        Job j = new Job(event);
+        Id jobId = System.enqueueJob(j);
+        return jobId;
+    }
+    
+    /**
      * Redirects the user to the ListView
      * URL of the specified Process Setting
      */

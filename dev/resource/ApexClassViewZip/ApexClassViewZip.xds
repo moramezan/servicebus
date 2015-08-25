@@ -1,0 +1,58 @@
+{
+    "name": "ApexClassViewZip",
+    "settings": {
+        "cmd": {
+            "license": "commercial",
+            "cmdVersion": "5.1.1.39",
+            "frameworkVersion": "5.1.0.107"
+        },
+        "canvasControls": {
+            "viewportSize": {
+                "name": "Auto Expand",
+                "builtIn": true,
+                "height": null,
+                "width": null
+            }
+        },
+        "urlPrefix": "http://localhost:1841",
+        "exportPath": "",
+        "spacesToIndent": 4,
+        "sdkPath": "",
+        "lineEnding": "LF",
+        "genTimestamps": false,
+        "cacheBust": false,
+        "buildShouldOverwriteIndex": true,
+        "generateArchitectVersion": true,
+        "projectHasEnabledWebServer": false,
+        "lastBuildSelection": {
+            "value": "webBuild",
+            "display": "Build web app"
+        },
+        "lockUrlPrefix": false,
+        "installStatus": "Not Installed"
+    },
+    "xdsVersion": "3.2.0",
+    "xdsBuild": 239,
+    "schemaVersion": 1,
+    "upgradeVersion": 310000000001,
+    "framework": "ext51",
+    "viewOrderMap": {
+        "view": [
+            "77c91dbf-b12e-45f7-96b5-7b9cf9b388d4",
+            "77fc9e12-d5d4-42f0-b465-6a730fcac57f",
+            "3e7387be-2f5f-4193-a702-0aa1febbf154"
+        ],
+        "store": [],
+        "controller": [],
+        "model": [],
+        "resource": [
+            "98e024ec-5ead-4461-955f-d1ce1c76d4b0",
+            "76ba5df1-7431-428f-b721-9e115f74d99b",
+            "05e7c647-7b44-40cd-b044-062648032a53",
+            "0e91cda3-9542-4754-be2d-96ccbe5dd236"
+        ],
+        "app": [
+            "application"
+        ]
+    }
+}

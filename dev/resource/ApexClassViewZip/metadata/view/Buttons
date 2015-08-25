@@ -1,0 +1,81 @@
+{
+    "type": "Ext.container.Container",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|initialView": null,
+        "designer|userAlias": "buttons",
+        "designer|userClassName": "Buttons",
+        "height": null,
+        "width": null
+    },
+    "name": "MyContainer",
+    "designerId": "77c91dbf-b12e-45f7-96b5-7b9cf9b388d4",
+    "viewControllerInstanceId": "3e7387be-2f5f-4193-a702-0aa1febbf154",
+    "viewModelInstanceId": "77fc9e12-d5d4-42f0-b465-6a730fcac57f",
+    "cn": [
+        {
+            "type": "Ext.button.Button",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "text": "Enqueue Test Event"
+            },
+            "name": "MyButton",
+            "designerId": "4ef25f25-f29a-41c5-97b6-aa6d2f048009",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "button",
+                            "e"
+                        ],
+                        "fn": "handler",
+                        "implHandler": [
+                            "function handler(response, event) {",
+                            "    if (event.status) {",
+                            "        //success",
+                            "        Ext.Msg.alert(",
+                            "        'Success',",
+                            "        'Test message has been enqueued. <br />Submitted Job Id: ' + response",
+                            "        ).setIcon(Ext.Msg.QUESTION);",
+                            "        button.enable();",
+                            "        //button.unmask(); //too dark since #818",
+                            "    } else {",
+                            "        //failure",
+                            "        Ext.Msg.alert(",
+                            "        'Error enqueueing test message',",
+                            "        event.message",
+                            "        ).setIcon(Ext.Msg.ERROR);",
+                            "    }",
+                            "}",
+                            "",
+                            "button.disable();",
+                            "//button.mask(); //too dark since #818",
+                            "",
+                            "Visualforce.remoting.Manager.invokeAction(",
+                            "    $RemoteAction.ApexClassSummaryExtension.enqueue,",
+                            "    Id,",
+                            "    handler",
+                            ");"
+                        ]
+                    },
+                    "name": "handler",
+                    "designerId": "8cd22912-1563-4f16-835f-8e46e7887a11"
+                }
+            ]
+        }
+    ]
+}

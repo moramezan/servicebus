@@ -241,6 +241,7 @@
         <name>PermissionSet</name>
     </types>
     <types>
+        <members>ApexClassViewZip</members>
         <members>ContextSensitiveHelpZip</members>
         <members>SequenceBuilderZip</members>
         <name>StaticResource</name>

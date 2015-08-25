@@ -1,0 +1,16 @@
+{
+    "type": "cssresource",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "css_lr3nalzg",
+        "id": "Viewer-all.css",
+        "remote": true,
+        "url": "build/production/Builder/resources/Builder-all.css"
+    },
+    "name": "css",
+    "designerId": "05e7c647-7b44-40cd-b044-062648032a53"
+}

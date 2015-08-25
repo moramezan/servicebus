@@ -1,48 +1,129 @@
-<apex:page standardController="ApexClass" showHeader="false" extensions="ApexClassSummaryExtension" title="Process: {!ApexClass.Name}" action="{!doInit}">
+<apex:page standardController="ApexClass" setup="true" extensions="ApexClassSummaryExtension" title="Process: {!ApexClass.Name}" action="{!doInit}">
+    
+    <script>
+        (function() {
+            //colour in the process tab... d'oh
+            var li = document.getElementById('01rj0000000lOoP' + '_Tab');
+            if (!li) return;
+            li.className += ' zen-active primaryPalette';
+            var a = li.children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+    </script>
+    
     <apex:pageMessages showDetail="false" />
+    
+    <apex:sectionHeader rendered="{!FullyQualifiedClassName != Summary.Name}" title="Process" subtitle="{!Summary.Name}" />
+    <apex:sectionHeader rendered="{!FullyQualifiedClassName == Summary.Name}" title="Process" subtitle="{!FullyQualifiedClassName}" />
 
-    <apex:pageBlock mode="maindetail">
-        <apex:pageBlockSection collapsible="false" columns="1" title="Service Bus Process">
-            <apex:pageBlockSectionItem >
-                
-                <apex:dataTable cellspacing="10" value="{!ApexClass}" var="ApexClass">
-                    <apex:column breakBefore="true" style="font-weight: bold;">Tag</apex:column>
-                    <apex:column value="{!Summary.Tag}" />
-
-                    <apex:column rendered="{!FullyQualifiedClassName != Summary.Name}" breakBefore="{!FullyQualifiedClassName != Summary.Name}" style="font-weight: bold;">Name</apex:column>
-                    <apex:column rendered="{!FullyQualifiedClassName != Summary.Name}" value="{!Summary.Name}" />
-
-                    <apex:column breakBefore="true" style="font-weight: bold;">Description</apex:column>
-                    <apex:column value="{!Summary.Description}" />
-                    
-                    <apex:column breakBefore="true" style="font-weight: bold;">Apex Class</apex:column>
-                    <apex:column ><apex:outputLink value="/{!Id}">{!FullyQualifiedClassName}</apex:outputLink></apex:column>
-
-                    <apex:column breakBefore="true" style="font-weight: bold;">Icon</apex:column>
-                    <apex:column ><apex:image value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/famfamfam/' + Summary.Icon + '.png')}" /> {!Summary.Icon}</apex:column>
-
-                </apex:dataTable>
-                
-            </apex:pageBlockSectionItem>
-        </apex:pageBlockSection>
+    <apex:pageBlock mode="maindetail" title="Process Detail" id="pageBlockId">
         
-        <apex:pageBlockSection collapsible="false" columns="1" title="Input Event Parameters" rendered="{!Summary.Inputs != null}">
-            <apex:pageBlockSectionItem >
-                <apex:dataTable cellspacing="10" value="{!Summary.Inputs}" var="key">
-                    <apex:column style="font-weight: bold;">{!key}</apex:column>
-                    <apex:column >{!Summary.Inputs[key]}</apex:column>
-                </apex:dataTable>
-            </apex:pageBlockSectionItem>
-        </apex:pageBlockSection>
+        <apex:pageBlockButtons location="top" id="pageBlockButtonsId">
+            
+            <!-- #768 indicate messages flowing through sequence -->
+            <apex:form style="display:inline;float:right;" id="busy">
+                <apex:actionPoller action="{!countRoutedMessages}" interval="5" reRender="busy" />
+                <apex:outputText rendered="{!RoutedMessages > 0}" value="{!RoutedMessages}" style="position:relative;top:0px;right:8px;" title="Messages are processing" />
+                <apex:image rendered="{!RoutedMessages > 0}" value="{!URLFOR('/img/loading.gif')}" style="position:relative;top:4px;" title="Messages are processing" />
+            </apex:form>
+            
+        </apex:pageBlockButtons>
         
-        <apex:pageBlockSection collapsible="false" columns="1" title="Output Event Parameters" rendered="{!Summary.Outputs != null}">
+        
+        <apex:pageBlockSection showHeader="false" collapsible="false" columns="1">
             <apex:pageBlockSectionItem >
-                <apex:dataTable cellspacing="10" value="{!Summary.Outputs}" var="key">
-                    <apex:column style="font-weight: bold;">{!key}</apex:column>
-                    <apex:column >{!Summary.Outputs[key]}</apex:column>
-                </apex:dataTable>
+                <apex:outputLabel >Tag</apex:outputLabel>
+                <apex:outputText value="{!Summary.Tag}" />
             </apex:pageBlockSectionItem>
+
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Name</apex:outputLabel>
+                <apex:outputText value="{!Summary.Name}" />
+            </apex:pageBlockSectionItem>
+            
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Description</apex:outputLabel>
+                <apex:outputText value="{!Summary.Description}" />
+            </apex:pageBlockSectionItem>
+
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Apex Class</apex:outputLabel>
+                <apex:outputLink value="/{!Id}">{!FullyQualifiedClassName}</apex:outputLink>
+            </apex:pageBlockSectionItem>
+            
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel style="font-weight: bold;">Icon</apex:outputLabel>
+                <apex:image value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/famfamfam/' + Summary.Icon + '.png')}" />
+            </apex:pageBlockSectionItem>
+
         </apex:pageBlockSection>
     </apex:pageBlock>
+        
+    <apex:pageBlock mode="maindetail" title="Input Event Parameters" rendered="{!Summary.Inputs != null}">
+        <apex:pageBlockSection showHeader="false" collapsible="false" columns="1" title="Input Event Parameters" rendered="{!Summary.Inputs != null}">
+            <apex:repeat value="{!Summary.Inputs}" var="key">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!key}</apex:outputLabel>
+                    <apex:outputText >{!Summary.Inputs[key]}</apex:outputText>
+                </apex:pageBlockSectionItem>
+            </apex:repeat>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+    <apex:pageBlock mode="maindetail" title="Output Event Parameters" rendered="{!Summary.Outputs != null}">
+        <apex:pageBlockSection showHeader="false" collapsible="false" columns="1" title="Output Event Parameters" rendered="{!Summary.Outputs != null}">
+            <apex:repeat value="{!Summary.Outputs}" var="key">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!key}</apex:outputLabel>
+                    <apex:outputText >{!Summary.Outputs[key]}</apex:outputText>
+                </apex:pageBlockSectionItem>
+            </apex:repeat>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+    <apex:variable var="application" value="Viewer" /><!-- Application namespace such as MyApp -->
+    <apex:variable var="resource" value="{!$Resource.ApexClassViewZip}" /><!-- The $Resource containing app.js -->
+    <apex:variable var="path" value="" /><!-- Development mode prefixes all resources, production mode loads the Sencha Cmd output -->
+    <apex:variable var="baseCSSPrefix" value="z-" /><!-- Ext.buildSettings.baseCSSPrefix which will be applied before the framework loads -->
+    
+    <!-- BASE CSS PREFIX -->
+    <script>Ext = {buildSettings: {baseCSSPrefix: '{!baseCSSPrefix}'}};</script>
+    
+    <!-- BRIDGING COMPONENTS -->
+    <script>
+        window.$Component = window.$Component || {};
+        $Component.pageBlockId = '{!$Component.pageBlockId}';
+        $Component.pageBlockButtonsId = '{!$Component.pageBlockId.pageBlockButtonsId}';
+        
+        Id = '{!Id}';
+        
+        window.$RemoteAction = window.$RemoteAction || {};
+        $RemoteAction.ApexClassSummaryExtension = $RemoteAction.ApexClassSummaryExtension || {};
+        $RemoteAction.ApexClassSummaryExtension.enqueue = '{!$RemoteAction.ApexClassSummaryExtension.enqueue}';
+    </script>
+    
+    <!--
+     ! DEVELOPMENT
+     !-->
+    <!-- uncomment ->
+    <apex:outputPanel rendered="{!LEN(path) != 0}" layout="none">
+        <base href="{!path}{!resource}/" />
+        <script src="{!path}{!resource}/bootstrap.js"></script>
+    </apex:outputPanel>
+    <!- uncomment -->
+    
+    <!--
+     ! PRODUCTION
+     ! see ProcessDiscoverZip/build.xml and ext-baseurl.js
+     ! http://www.sencha.com/forum/showthread.php?290269-CMD-5.0.1.231-production-build-error-Cannot-read-property-baseUrl-of-undefined&p=1064889&viewfull=1#post1064889
+     !-->
+    <!-- comment -->
+    <apex:outputPanel rendered="{!LEN(path) == 0}" layout="none">
+        <script>Ext = window.Ext || {}; Ext.Boot={};</script>
+        <script src="{!URLFOR(resource, '/app.js')}"></script>
+        <link href="{!URLFOR(resource, '/resources/' + application + '-all.css')}" rel="stylesheet" type="text/css" />
+    </apex:outputPanel>
+    <!-- comment -->
     
 </apex:page>
