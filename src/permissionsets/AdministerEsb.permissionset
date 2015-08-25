@@ -1010,10 +1010,6 @@
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
-        <name>ModifySecureAgents</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
         <name>NewReportBuilder</name>
     </userPermissions>
     <userPermissions>
@@ -1115,10 +1111,6 @@
     <userPermissions>
         <enabled>false</enabled>
         <name>ViewSetup</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>false</enabled>
-        <name>WorkCalibrationUser</name>
     </userPermissions>
     <userPermissions>
         <enabled>false</enabled>
