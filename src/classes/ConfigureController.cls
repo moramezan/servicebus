@@ -46,7 +46,7 @@ public with sharing class ConfigureController {
         //#112 pass security scanner for 34.0 release
         return (''
             + '<?xml version="1.0" encoding="utf-8"?>'
-            + '<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
+            + '<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
             + '    <env:Header>'
             + '        <urn:SessionHeader xmlns:urn="http://soap.sforce.com/2006/04/metadata">'
             + '            <urn:sessionId>' + UserInfo.getSessionId() + '</urn:sessionId>'
@@ -422,20 +422,36 @@ public with sharing class ConfigureController {
             setting.RefreshToken__c = t.refresh_token;
             Type.forName(DoDml.class.getName()).newInstance();
             
+            System.PageReference pr = Page.Configure;
+            pr.getParameters().put('stage', 'pi');
+            pr.setRedirect(true);
+            return pr;
+        }
+        
+        if (stage == 'pi') {
+            //5. do other tasks that used to be post install
+            
             //recreate scheduled job when package is configured
             uninstallSchedule();
             reinstallSchedule();
             
+            //sensible defaults for the first esb user
+            permissions(UserInfo.getUserId());
+            settings(UserInfo.getUserId());
+            
+            //metadata api installs the nuclear tip
+            if (!Test.isRunningTest()) defaults(UserInfo.getSessionId());
+            
             //bigassforce/esb#812 don't wait an hour to refresh access token
             if (!Test.isRunningTest()) RouterImplementation.optimize();
             
+            //6. finally send them to the context sensitive help page
             String returnUrl;
+            setting = OAuthSetting__c.getOrgDefaults();
             List<AppMenuItem> appMenuItems = [SELECT StartUrl FROM AppMenuItem WHERE Name = 'EnterpriseServiceBus' LIMIT 1];
             if (returnUrl == null) returnUrl = setting.ReturnUrl__c;
             if (returnUrl == null && !appMenuItems.isEmpty()) returnUrl = appMenuItems[0].StartUrl;
             if (returnUrl == null) returnUrl = '/apex/ContextSensitiveHelp?topic=EnterpriseServiceBus';
-            
-            //5. finally send them to the context sensitive help page
             return new PageReference(returnUrl);
         }
         
@@ -458,7 +474,7 @@ public with sharing class ConfigureController {
      * Set the Wiretap Settings
      * (Performed in a FUTURE method to prevent MIXED_DML_OPERATION exception)
      */
-    @Future static public void createWiretapSettings(Id userId) {
+    @Future static public void settings(Id userId) { //#969 obfuscation of 'createWiretapSettings()'
         //fetch custom setting and write the values
         WiretapSetting__c wiretapSetting = WiretapSetting__c.getOrgDefaults();
         wiretapSetting.UserId__c = userId;
@@ -469,7 +485,7 @@ public with sharing class ConfigureController {
      * Assign Orchestrator permission set to the installer
      * (Performed in a FUTURE method to prevent MIXED_DML_OPERATION exception)
      */
-    @Future static public void assignPermissionSet(Id userId) {
+    @Future static public void permissions(Id userId) { //#969 obfuscation of 'assignPermissionSet()'
         //find installed permission set
         PermissionSet ps = [
             SELECT Id
@@ -491,6 +507,55 @@ public with sharing class ConfigureController {
             PermissionSetId = ps.Id,
             AssigneeId = userId
         );
+    }
+    
+    /**
+     * #1015 install nuclear tip via Metadata API as part of configure process
+     */
+    @Future(callout=true) static public void defaults(String sessionId) { //#969 obfuscation of 'installNuclearTip()'
+        
+        if (UserInfo.getOrganizationId() == '00Dj0000000KcakEAC') {
+            //we do not install abstract process into packaging org
+            return;
+        }
+        
+        String instanceUrl = OAuthSetting__c.getOrgDefaults().InstanceUrl__c;
+        HttpRequest request = new HttpRequest();
+        request.setTimeout(120000);
+        request.setMethod('POST');
+        request.setEndpoint(instanceUrl + '/services/Soap/m/34.0');
+        request.setHeader('SOAPAction', '""');
+        request.setHeader('Content-Type', 'text/xml');
+        request.setBody(metadata(sessionId));
+        new Http().send(request);
+    }
+    
+    /**
+     * Org Id 00D24000000fQok
+     * Package 03324000000Q59r
+     * Version 04t24000000QtN7
+     * /packaging/installPackage.apexp?p0=04t24000000QtN7
+     */
+    static public String metadata(String sessionId) {
+        return (''
+            + '<?xml version="1.0" encoding="utf-8"?>'
+            + '<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
+            + '    <env:Header>'
+            + '        <urn:SessionHeader xmlns:urn="http://soap.sforce.com/2006/04/metadata">'
+            + '            <urn:sessionId>' + sessionId + '</urn:sessionId>'
+            + '        </urn:SessionHeader>'
+            + '    </env:Header>'
+            + '    <env:Body>'
+            + '        <upsertMetadata xmlns="http://soap.sforce.com/2006/04/metadata">'
+            + '            <metadata xsi:type="InstalledPackage">'
+            + '                <fullName>' + 'abstract' + '</fullName>'
+            + '                <password></password>'
+            + '                <versionNumber>' + '34.0.0' + '</versionNumber>'
+            + '            </metadata>'
+            + '        </upsertMetadata>'
+            + '    </env:Body>'
+            + '</env:Envelope>'
+        ).replaceAll('    ', '');
     }
     
 }

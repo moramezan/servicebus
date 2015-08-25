@@ -203,6 +203,24 @@
         System.assertEquals(expectedAccessToken, actualAccessToken, 'Wrong access token.');
     }
     
+    static testmethod void testDoRedirectPostInstall() {
+        //arrange controller and page
+        ConfigureController controller = new ConfigureController();
+        System.PageReference configure = Page.Configure;
+        configure.getParameters().put('stage', 'pi');
+        Test.setCurrentPage(configure);
+        
+        //act
+        Test.startTest();
+        PageReference redirect = controller.doRedirect();
+        Test.stopTest();
+        
+        //assert
+        Id expectedWiretap = UserInfo.getUserId();
+        Id actualWiretap = WiretapSetting__c.getOrgDefaults().UserId__c;
+        System.assertEquals(expectedWiretap, actualWiretap, 'Wrong wiretap user id.');
+    }
+    
     static testmethod void testDoRedirectStageCallBackIpRestricted() {
         //arrange controller and page
         ConfigureController controller = new ConfigureController();
