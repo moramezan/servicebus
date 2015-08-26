@@ -35,7 +35,32 @@ public class Wiretap extends ApexClassModel.Process {
             + ' '
             + parameters.get('Route')
         );
-        message.setPlainTextBody(Json.serializePretty(parameters));
+        
+        String body = '';
+        
+        //#1022 show RecordId list from gated messages
+        if (parameters.containsKey('GateItemQuery') && parameters.containsKey('GateItemField')) {
+            List<String> recordIds = new List<String>();
+            
+            String query = (String)parameters.get('GateItemQuery');
+            String field = (String)parameters.get('GateItemField');
+            List<SObject> items = Database.query(query);
+            
+            for (SObject item : items) {
+                String data = (String)item.get(field);
+                Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(data);
+                String recordId = (String)event.get('RecordId');
+                recordIds.add(recordId);
+            }
+            
+            body += 'Gated Record Ids:\n';
+            body += Json.serializePretty(recordIds) + '\n\n';
+        }
+        
+        body += 'Event parameters:\n';
+        body += new MessageSetModel.SortedSerializer(parameters).toString();
+        
+        message.setPlainTextBody(body);
         message.setTargetObjectId(userId);
         message.setSaveAsActivity(false);
         Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{message});
