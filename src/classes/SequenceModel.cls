@@ -75,7 +75,10 @@ public class SequenceModel extends ApexDomain.StandardModel {
      */
     public Id enqueueTestMessage() {
         Job.AllowRoute = true; //#999#issuecomment-133751700
-        Map<String,Object> event = new Map<String,Object>{'Route' => this.Sequence.Name + '#0'};
+        Map<String,Object> event = new Map<String,Object>{
+            'Route' => this.Sequence.Name + '#0',
+            'RecordId' => UserInfo.getOrganizationId()
+        };
         Job j = new Job(event);
         Id jobId = System.enqueueJob(j);
         return jobId;
