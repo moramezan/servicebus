@@ -7,7 +7,7 @@ public class GateByJob extends ApexClassModel.Process {
      * @docs ProcessGateByJob.html
      */
     public class Summary {
-        String Tag = 'Enterprise Service Bus';
+        String Tag = 'Service Bus';
         String Name = 'Gate By Job';
         String Description = 'Aggregates a collection of messages having the same Job Id.';
         String Icon = 'arrow_join';

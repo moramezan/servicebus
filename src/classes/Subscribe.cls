@@ -5,7 +5,7 @@ public class Subscribe extends ApexClassModel.Process {
      * @docs ProcessPublishSubscribe.html
      */
     public class Summary {
-        String Tag = 'Enterprise Service Bus';
+        String Tag = 'Service Bus';
         String Name = 'Subscribe';
         String Description = 'Listens for messages via a named Event Type.';
         String StepConfig = SubscribeConfig__c.class.getName();

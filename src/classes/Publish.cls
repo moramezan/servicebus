@@ -5,7 +5,7 @@ public class Publish extends ApexClassModel.Process {
      * @docs ProcessPublishSubscribe.html
      */
     public class Summary {
-        String Tag = 'Enterprise Service Bus';
+        String Tag = 'Service Bus';
         String Name = 'Publish';
         String Description = 'Broadcasts the message to other sequences via a named Event Type.';
         String StepConfig = PublishConfig__c.class.getName();

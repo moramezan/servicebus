@@ -8,7 +8,7 @@ public class Branch extends ApexClassModel.Process {
         String StepConfig = BranchConfig__c.class.getName();
         String Icon = 'arrow_branch';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessBranchJumpSubsequence').getUrl();
-        String Tag = 'Enterprise Service Bus';
+        String Tag = 'Service Bus';
         String Name = 'Branch';
         String Description = 'Copies the message to another sequence.';
         Integer Limits = 50; //max sync limit

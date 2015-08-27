@@ -5,7 +5,7 @@ public class Jump extends ApexClassModel.Process {
      * @docs ProcessBranchJumpSubsequence.html
      */
     public class Summary {
-        String Tag = 'Enterprise Service Bus';
+        String Tag = 'Service Bus';
         String Name = 'Jump';
         String Description = 'Permanently diverts the message to another sequence, never to return.';
         String StepConfig = JumpConfig__c.class.getName();

@@ -7,7 +7,7 @@ public class GateByEntryPoint extends ApexClassModel.Process {
      * @docs ProcessGateByEntryPoint.html
      */
     public class Summary {
-        String Tag = 'Enterprise Service Bus';
+        String Tag = 'Service Bus';
         String Name = 'Gate By Entry Point';
         String Description = 'Aggregates a collection of messages having the same Entry Point Id.';
         String Icon = 'arrow_join';

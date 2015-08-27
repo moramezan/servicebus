@@ -5,7 +5,7 @@ public class Wiretap extends ApexClassModel.Process {
      * @docs ProcessWiretap.html
      */
     public class Summary {
-        String Tag = 'Enterprise Service Bus';
+        String Tag = 'Service Bus';
         String Name = 'Wiretap';
         String Description = 'Emails the message parameters to the user.';
         String ProcessSetting = WiretapSetting__c.class.getName();

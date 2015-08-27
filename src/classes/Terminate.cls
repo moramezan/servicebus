@@ -5,7 +5,7 @@ public class Terminate extends ApexClassModel.Process {
      * @docs ProcessTerminate.html
      */
     public class Summary {
-        String Tag = 'Enterprise Service Bus';
+        String Tag = 'Service Bus';
         String Name = 'Terminate';
         String Description = 'Swallows messages at the end of this sequence.';
         String Icon = 'stop';
