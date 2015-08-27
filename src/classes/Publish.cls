@@ -45,7 +45,7 @@ public class Publish extends ApexClassModel.Process {
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         for (Step__c step : steps) outputEvents.add(new Map<String,Object>{
-            'Route' => step.SequenceName__c + '#1'
+            'Route' => step.SequenceName__c + '#0' //#1024 zero not one
         });
         
         //original guy carries on... this does not inadvertently Terminate

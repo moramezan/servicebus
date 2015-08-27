@@ -147,6 +147,14 @@
         Integer expectedSize = 3;
         Integer actualSize = outputEvents.size();
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
+        
+        //assemble
+        Map<String,Object> outputEvent = outputEvents[0];
+        
+        //assert
+        String expectedSequence = 'Subscriber1#0';
+        String actualSequence = (String)outputEvent.get('Route');
+        System.assertEquals(expectedSequence, actualSequence, 'Wrong sequence.');
     }
     
 }
