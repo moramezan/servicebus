@@ -12,7 +12,7 @@ public class GateByJob extends ApexClassModel.Process {
         String Description = 'Aggregates a collection of messages having the same Job Id.';
         String Icon = 'arrow_join';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessGateByJob').getUrl();
-        Integer Limits = 50; //max sync limit
+        Integer Limits = 1; //#1026 TODO
         String Cardinality = 'Fewer';
         
         Map<String,String> Inputs = new Map<String,String>{
@@ -43,8 +43,15 @@ public class GateByJob extends ApexClassModel.Process {
         Integer chunkTotal = (Integer)inputEvent.get('Range');
         Integer chunk = (Integer)inputEvent.get('Chunk');
         String route = (String)inputEvent.get('Route');
-
-        Boolean release = isRelease(jobId, chunkTotal, chunk);
+        String messageId = (String)inputEvent.get('MessageId');
+        //#1026 TODO
+        Boolean release = [
+            SELECT Id
+            FROM Message__c
+            WHERE Status__c != 'Completed'
+            AND JobId__c = :jobId
+            AND Id != :messageId
+        ].isEmpty();
 
         if ( !release) {
             //this is not the last item, so let's swallow
