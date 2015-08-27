@@ -22,7 +22,7 @@ trigger MessagePanic on Message__c (before update) {
 </pre>
     </li>
     <li>Create a new Sequence 'PanicTest' containing just 'Terminate' step in position 1.</li>
-    <li>Click <strong>Enqueue Test Message</strong> to process a message, which should fail.</li>
+    <li>Click <strong>Enqueue Test Event</strong> to process a message, which should fail.</li>
 </ol>
 
 <h2>
@@ -32,3 +32,11 @@ trigger MessagePanic on Message__c (before update) {
 <ol>
     <li>In Setup > Apex Jobs, the log should show 'Broker panic' in the aborted job description.</li>
 </ol>
+
+<h2>
+    Post Test Action(s)
+</h2>
+
+<ul>
+    <li>Delete MessagePanic trigger created earlier.</li>
+</ul>

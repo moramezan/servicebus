@@ -14,14 +14,15 @@
 <ol>
     <li>Create a new apex class:
 <pre>
-global with sharing class Fatal extends BaseProcess {
+global with sharing class Fatal extends Abstract.Process {
     
-    global class ESB {
+    global class Summary {
         String Description = 'This process throws a fatal exception.';
     }
     
-    override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
+    override public List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
         System.assert(false, 'Catch this.');
+        return null;
     }
     
 }
@@ -29,7 +30,7 @@ global with sharing class Fatal extends BaseProcess {
     </li>
     
     <li>Create a new Sequence 'FatalTest' containing a 'Fatal' step in position 1.</li>
-    <li>Click <strong>Enqueue Test Message</strong> to process a message, which should fail.</li>
+    <li>Click <strong>Enqueue Test Event</strong> to process a message, which should fail.</li>
 </ol>
 
 <h2>
