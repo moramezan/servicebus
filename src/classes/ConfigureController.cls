@@ -132,6 +132,12 @@ public with sharing class ConfigureController {
     final static private Boolean ISPROD = !ISDEV && !ISTEST;
     
     /**
+     * Package namespace
+     */
+    final static private Boolean ISSERVICEBUS = ConfigureController.class.getName().substringBefore('ConfigureController').substringBefore('.') == 'servicebus';
+    final static private Boolean ISENTERPRISE = ConfigureController.class.getName().substringBefore('ConfigureController').substringBefore('.') != 'servicebus';
+    
+    /**
      * Initialize
      *
      * bigassforce/esb#730 Commentary about the fragility of the Connected App Name
@@ -140,31 +146,63 @@ public with sharing class ConfigureController {
      * Renaming these will cause catastrophic failure of OAuth in all existing package installations.
      */
     static {
-        if (ISDEV) {
-            //for unmanaged development
-            CLIENT = '3MVG9fMtCkV6eLhfygiAuT5nj9iYIxQbeYyBbyxFP5TiJIaGaCeNf.6MdNdCTai94zLjQVjZJsPmvrN4gA.yl';
-            SECRET = '134028378901110512';
-            REDIRECT = 'https://login.salesforce.com/apex/Configure';
-            APPNAME = 'Dev Enterprise Service Bus';
-            LOGIN = 'https://login.salesforce.com';
-        }
-        
-        if (ISTEST) {
-            //for sandbox org installs
-            CLIENT = '3MVG9fMtCkV6eLhfygiAuT5nj9pR_VAnJtIE57hGjpvFlGVuq2L97l5Sxd93NxsCDrxdnztE4kVI29fDRjemm';
-            SECRET = '9179586167866560862';
-            REDIRECT = 'https://test.salesforce.com/apex/esb__Configure';
-            APPNAME = 'Sandbox Enterprise Service Bus';
-            LOGIN = 'https://test.salesforce.com';
-        }
-        
-        if (ISPROD) {
-            //for production org installs
-            CLIENT = '3MVG9fMtCkV6eLhfygiAuT5nj9oMZJIarvuh1uEpRNeVc_uwIgCWXzKZQhviO1IjRVXh3EvIy6Qn4wLk1UfRC';
-            SECRET = '1451809242356610984';
-            REDIRECT = 'https://login.salesforce.com/apex/esb__Configure';
-            APPNAME = 'Production Enterprise Service Bus';
-            LOGIN = 'https://login.salesforce.com';
+        if (ISSERVICEBUS) {
+            
+            if (ISDEV) {
+                //for servicebus unmanaged development
+                CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZH2ObWGVCMzchtRYMSGmA_VyIAXNcBrUQ569cLTCDaEeIagOYTjpk0kGL05M';
+                SECRET = '1234901574505073561';
+                REDIRECT = 'https://login.salesforce.com/apex/Configure';
+                APPNAME = 'Service Bus (Dev)';
+                LOGIN = 'https://login.salesforce.com';
+            }
+            
+            if (ISTEST) {
+                //for servicebus sandbox org installs
+                CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZM6N.zPbMF26H_MROM5B06LVVBqaYbQy5HGJqu.nl.0uIJOFznnB8_nyyEC_';
+                SECRET = '8880236383124022841';
+                REDIRECT = 'https://test.salesforce.com/apex/servicebus__Configure';
+                APPNAME = 'Service Bus (Sandbox)';
+                LOGIN = 'https://test.salesforce.com';
+            }
+            
+            if (ISPROD) {
+                //for servicebus production org installs
+                CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZIwedhrpiB2qIyLft2CxyJx.DzHvTLvZhrXOF1PjeMtO2HcWPYxX1gnhWOn4';
+                SECRET = '4773069420004741227';
+                REDIRECT = 'https://login.salesforce.com/apex/servicebus__Configure';
+                APPNAME = 'Service Bus (Production)';
+                LOGIN = 'https://login.salesforce.com';
+            }
+            
+        } else if (ISENTERPRISE) {
+            
+            if (ISDEV) {
+                //for enterprise unmanaged development
+                CLIENT = '3MVG9fMtCkV6eLhfygiAuT5nj9iYIxQbeYyBbyxFP5TiJIaGaCeNf.6MdNdCTai94zLjQVjZJsPmvrN4gA.yl';
+                SECRET = '134028378901110512';
+                REDIRECT = 'https://login.salesforce.com/apex/Configure';
+                APPNAME = 'Enterprise Service Bus (Dev)';
+                LOGIN = 'https://login.salesforce.com';
+            }
+            
+            if (ISTEST) {
+                //for enterprise sandbox org installs
+                CLIENT = '3MVG9fMtCkV6eLhfygiAuT5nj9pR_VAnJtIE57hGjpvFlGVuq2L97l5Sxd93NxsCDrxdnztE4kVI29fDRjemm';
+                SECRET = '9179586167866560862';
+                REDIRECT = 'https://test.salesforce.com/apex/esb__Configure';
+                APPNAME = 'Enterprise Service Bus (Sandbox)';
+                LOGIN = 'https://test.salesforce.com';
+            }
+            
+            if (ISPROD) {
+                //for enterprise production org installs
+                CLIENT = '3MVG9fMtCkV6eLhfygiAuT5nj9oMZJIarvuh1uEpRNeVc_uwIgCWXzKZQhviO1IjRVXh3EvIy6Qn4wLk1UfRC';
+                SECRET = '1451809242356610984';
+                REDIRECT = 'https://login.salesforce.com/apex/esb__Configure';
+                APPNAME = 'Enterprise Service Bus (Production)';
+                LOGIN = 'https://login.salesforce.com';
+            }
         }
     }
     

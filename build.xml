@@ -30,13 +30,23 @@
         </exec>
     </target>
     
-    <target name="retrieve-esbconnectedapp" description="Retrieves the connected app definitions from their separate packaging org.">
+    <target name="retrieve-esbconnectedapp" description="Retrieves the ENTERPRISE connected app definitions from their separate packaging org.">
         <sf:retrieve
             username="${esbconnectedapp.username}"
             password="${esbconnectedapp.password}"
             serverurl="${esbconnectedapp.serverurl}"
             retrieveTarget="esbconnectedapp"
             unpackaged="esbconnectedapp/package.xml"
+        />
+    </target>
+    
+    <target name="retrieve-busconnectedapp" description="Retrieves the SERVICEBUS connected app definitions from their separate packaging org.">
+        <sf:retrieve
+            username="${busconnectedapp.username}"
+            password="${busconnectedapp.password}"
+            serverurl="${busconnectedapp.serverurl}"
+            retrieveTarget="busconnectedapp"
+            unpackaged="busconnectedapp/package.xml"
         />
     </target>
     
