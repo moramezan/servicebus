@@ -4,6 +4,9 @@
     
     <apex:sectionHeader help="{!URLFOR($Page.SequenceHelp)}" title="{!$ObjectType.Sequence__c.Label}" subtitle="{!Sequence__c.Name}" />
     
+    <!-- make the loading mask a little bit less harsh -->
+    <style>div[id="{!$Component.pageBlockId}"] div.z-mask {background-color: rgba(204,204,204,0.6);}</style>
+    
     <apex:pageBlock id="pageBlockId" title="{!$ObjectType.Step__c.LabelPlural}">
         <apex:pageBlockButtons location="top" id="pageBlockButtonsId">
             
