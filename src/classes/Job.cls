@@ -59,10 +59,10 @@ global class Job implements Process.Plugin, system.Queueable {
      * Wrapper class for enqueue parameters.
      */
     global class SimpleEvent {
-        @InvocableVariable(required=true) global Id RecordId;
-        @InvocableVariable(required=true) global String ToSequence;
-        @InvocableVariable(required=true) global String ToProcess;
-        @InvocableVariable(required=true) global String ToConfig;
+        @InvocableVariable(required=false) global Id RecordId;
+        @InvocableVariable(required=false) global String ToSequence;
+        @InvocableVariable(required=false) global String ToProcess;
+        @InvocableVariable(required=false) global String ToConfig;
     }
     
     /**
