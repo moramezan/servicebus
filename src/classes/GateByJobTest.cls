@@ -474,10 +474,33 @@
 
         Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message1;
+        Message__c message2 = new Message__c(Exception__c = 'Error', Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        insert message2;
+
+        // Act :
+        Boolean actualIsRelease = GateByJob.isRelease(jobId, chunkTotal, chunk);
+
+        // Assemble :
+        // n/a
+        
+        // Assert :
+        Boolean expectedIsRelease = false;
+        System.assertEquals(expectedIsRelease , actualIsRelease);
+    }
+    
+    
+    static testmethod void callingIsReleaseReturnsExpectedExpected05() {
+        // Arrange :
+        String jobId = '707000000000000AAA';
+        Integer chunkTotal = 2;
+        Integer chunk = 2;
+
+        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        insert message1;
         Message__c message2 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message2;
-        Message__c message3 = new Message__c(Exception__c = 'Error', Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
-        insert message3; // this doent count as has an Exception
+        Message__c message3 = new Message__c(Exception__c = 'An Error', Status__c = 'Completed', Event__c = '{"JobId":"' + jobId + '"}');
+        insert message3;
         
         // Act :
         Boolean actualIsRelease = GateByJob.isRelease(jobId, chunkTotal, chunk);
@@ -489,5 +512,5 @@
         Boolean expectedIsRelease = true;
         System.assertEquals(expectedIsRelease , actualIsRelease);
     }
-    
+
 }
