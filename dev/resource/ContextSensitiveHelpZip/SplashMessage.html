@@ -25,10 +25,28 @@
     All messages are stored in a queue for review. You can either:
 </p>
 
-<ul>
-    <li><strong>Kill</strong> a message to dismiss it, if the failure was expected and acceptable.</li>
-    <li><strong>Restart</strong> a message to process it again, after fixing the apex code or the event.</li>
-</p>
+<dl>
+    <dt>Restart</dt>
+    <dd>
+        to process it again synchronously, after fixing the apex code or the event;
+        <br />
+        this is immediate and highly responsive, used to the benefit of developers.
+    </dd>
+    
+    <dt>Rebuffer</dt>
+    <dd>
+        to queue it again asynchronously, after fixing the apex code or the event;
+        <br />
+        this is asynchronous, and can be performed on large groups of messages.
+    </dd>
+    
+    <dt>Kill</dt>
+    <dd>
+        to dismiss it, if the failure was expected and acceptable;
+        <br />
+        this should only be used when the situation is unrecoverable.
+    </dd>
+</dl>
 
 
 <!--

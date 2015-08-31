@@ -15,12 +15,33 @@
     You specify the order of the different steps using drag and drop. The Service Bus advances your events through the steps of the sequence. A typical sequence contains many steps.
 </p>
 
-
-<fieldset>
-    <legend>Note</legend>
+<p>
     The last of every sequence is a 'Terminate' step. This step swallows events that reach the end of the sequence.
+</p>
 
-</fieldset>
+<h3>
+    How do I enqueue events to a sequence?
+</h3>
+
+<p>
+    <code>
+        event = {'ToSequence' => 'MySequenceName'};
+        <br />
+        job = new ServiceBus.Job(event);
+        <br />
+        System.enqueueJob(job);
+    </code>
+</p>
+
+<h3>
+    When do I use a sequence instead of just a process?
+</h3>
+
+<ul>
+    <li>To break down work into individual steps.</li>
+    <li>If you need to split and then aggregate multiple events.</li>
+    <li>When processes need to communicate with each other through events.</li>
+</ul>
 
 <!--
 <p>

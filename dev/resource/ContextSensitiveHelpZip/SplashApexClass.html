@@ -16,6 +16,20 @@
     <li>An event is represented in Apex code as <code>Map&lt;String,Object&gt;</code></li>
 </ul>
 
+<h3>
+    How do I enqueue events to a process?
+</h3>
+
+<p>
+    <code>
+        event = {'ToProcess' => 'SendPayment'};
+        <br />
+        job = new ServiceBus.Job(event);
+        <br />
+        System.enqueueJob(job);
+    </code>
+</p>
+
 <hr />
 
 <h3>
