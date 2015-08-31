@@ -226,6 +226,9 @@ abstract public class Process {
                 outputEvents[i] = aggregate;
             }
             
+            //retain camouflage after
+            this.AllowsCallouts = null;
+            
             //#797 cycle json so process author sees consistent outputs
             return Json.serialize(outputEvents);
             
