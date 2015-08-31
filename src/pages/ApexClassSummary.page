@@ -32,17 +32,17 @@
         
         
         <apex:pageBlockSection showHeader="false" collapsible="false" columns="1">
-            <apex:pageBlockSectionItem >
+            <apex:pageBlockSectionItem rendered="{!Summary.Tag != 'Untagged'}">
                 <apex:outputLabel >Tag</apex:outputLabel>
                 <apex:outputText value="{!Summary.Tag}" />
             </apex:pageBlockSectionItem>
 
-            <apex:pageBlockSectionItem >
+            <apex:pageBlockSectionItem rendered="{!Summary.Name != FullyQualifiedClassName}">
                 <apex:outputLabel >Name</apex:outputLabel>
                 <apex:outputText value="{!Summary.Name}" />
             </apex:pageBlockSectionItem>
             
-            <apex:pageBlockSectionItem >
+            <apex:pageBlockSectionItem rendered="{!Summary.Description != 'Undescribed'}">
                 <apex:outputLabel >Description</apex:outputLabel>
                 <apex:outputText value="{!Summary.Description}" />
             </apex:pageBlockSectionItem>
@@ -52,7 +52,7 @@
                 <apex:outputLink value="/{!Id}">{!FullyQualifiedClassName}</apex:outputLink>
             </apex:pageBlockSectionItem>
             
-            <apex:pageBlockSectionItem >
+            <apex:pageBlockSectionItem rendered="{!Summary.Icon != 'cog'}">
                 <apex:outputLabel style="font-weight: bold;">Icon</apex:outputLabel>
                 <apex:image value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/famfamfam/' + Summary.Icon + '.png')}" />
             </apex:pageBlockSectionItem>
