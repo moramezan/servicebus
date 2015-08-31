@@ -1,6 +1,6 @@
 <!-- this is called "list" cuz a tab would show "recently viewed" etc -->
 <!-- no recordSetVar  as "List controllers are not supported for ApexClass" -->
-<apex:page controller="ApexClassTabController" setup="true" action="{!doInit}">
+<apex:page controller="ApexClassTabController" setup="true" action="{!doInit}" title="Processes">
 
     <script>
         (function() {
