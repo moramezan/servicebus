@@ -67,7 +67,7 @@ abstract public without sharing class Broker {
     public List<Message__c> locateMarkableWork() {
         try {
             List<Message__c> specimen = [
-                SELECT Id, Route__c, Event__c //TODO lose event?
+                SELECT Id, Route__c, Event__c //TODO lose event? //#1026
                 FROM Message__c
                 WHERE Status__c = 'Buffered'
                 ORDER BY CreatedDate ASC //reattempts will naturally lead
@@ -98,7 +98,7 @@ abstract public without sharing class Broker {
             //TODO what if this guy returns a list of 0, would cause a panic condition, lets check
             
             return [
-                SELECT Id, Route__c, Event__c //TODO lose event?
+                SELECT Id, Route__c, Event__c //TODO lose event? //#1026
                 FROM Message__c
                 WHERE Status__c = 'Buffered'
                 AND Route__c = :specimen[0].Route__c //#1004 Route__c field only ever used here to LOCATE, and for GATE and MONITOR
@@ -118,7 +118,17 @@ abstract public without sharing class Broker {
         try {
             if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');
             for (Message__c message : messages) message.Status__c = 'Started'; //in-database
+            
+            //#1026 the update populates the MessageId event parameter
+            Set<Id> messageIds = new Map<Id,SObject>(messages).keySet();
             List<Database.SaveResult> results = Database.update(messages);
+            messages.clear();
+            
+            for (Message__c message : [SELECT Id, Event__c FROM Message__c WHERE Id IN :messageIds]) {
+                //#1026 gotta re-query the event for it to contain the MessageId
+                messages.add(message);
+            }
+            
             return results;
             
         } catch (Exception e) {

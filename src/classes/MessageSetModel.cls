@@ -129,7 +129,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             event.remove('Chunk');
             event.remove('Range');
             
-            //is this interesting to us
+            //#1026 this guy wont be visible unless requeried after update
             if (message.Id != null) event.put('MessageId', message.Id);
             
             //#1004 Route__c field only ever used to LOCATE, and for GATE and MONITOR (we can clear it as well as setting in)
