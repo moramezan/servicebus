@@ -133,42 +133,72 @@ public class GateByEntryPoint extends ApexClassModel.Process {
     
     @testVisible
     private static Boolean isRelease(String entryPointUuid, Integer chunkTotal, Integer chunk) {
-        // Release trigger:
-        // given :
-        //   A = [Non-Completed status messages having a given entryPointUuid]
-        //   Z = [Started status messages having a given entryPointUuid and having null Exception]
-        //   T = ChunkTotal
-        //   C  = Chunk
-        //
-        //  Rule 1: For-Each[A] we expect a status of Started
-        //            Only Started messages on database
-        //  Rule 2: Size(Z) == T
-        //            Count of "Non-Exception Started status messages" should equate to ChunkTotal
-        //            implying "no more to execucute after this"
-        //  Rule 3: T == C
-        //            Only one release for the given entryPointUuid at the "end"
-        //            where "end"
-        //            defined as "chunk offset matches chunk total" (eg 10th chunk out of 10 chunks)
+    // Release trigger:
+    //
+    //   Every message passing into the gate must be evaluated to see if its a release message
+    //
+    //   given :
+    //     C = Completed messages
+    //     B = Buffered messages   // Non-Completed
+    //     P = Paused messages     // Non-Completed
+    //     S = Started messages    // Non-Completed
+    ////
+    //  RULE : 01
+    //   We are only interested in the presence of non-Completed messages on the database -
+    //   Why?
+    //   Because Completed are by definition Completed and therefore have no bearing on the release decision
+    //
+    //  RULE : 02
+    //   So we look at B, P, and S messages on the database
+    //   The presence of B and P messages on the database suggests the mark has not yet
+    //   switched these messages to S  implying we can't possible be ready to evaluate in this execute
+    //
+    //  That leaves us with Started [S] messages
+    //  RULE : 03
+    //  - we need to rely on some behaviour of the Restart and Rebuffer methods here
+    //    'specifically, we assume that any message Rebuffered or Restarted has it's Exception
+    //    immediately set to  null
+    //    Why?
+    //    Because when we look at messages that are started on the database, we assume any messages
+    //    with an exception in started will mean that we are not ready to release regardless of the
+    //    successful completion of all messages processed in the current chunk
+    //  RULE : 04
+    //  - next, we need to know we are on the last message of the current chunk range - the broker
+    //    injects the chunk offset and chunk range as parameters on the input message
+    //    and these values then  are passed into the function so that this rule can
+    //    be evaluated correctly
+    //  RULE : 05
+    //  - Finally, if any message in the current chunk range failed, we cannot release
+    //    because when we persist, at least one message will be persisted in in started status
+    //    with an exception and it would make no sense to release
+    //
+    //    //TODO
+    //    NR / MB : agreed this rule only comes into play when the in-memory execution contexts
+    //              belong to the Gate process itself
+    //              ... we assume the Gate process will never fail making the evaluation of this
+    //              rule mute  - HOWEVER - let's revisit and implement at some point
 
         List<Message__c> messages = [
             SELECT Id, Status__c, Exception__c
             FROM Message__c
-            WHERE (Status__c = 'Buffered' OR Status__c = 'Paused' OR  Status__c = 'Started')
+            WHERE (Status__c = 'Buffered' OR Status__c = 'Paused' OR  Status__c = 'Started')  //  RULE : 01
             AND
             EntryPointUuid__c = :entryPointUuid
         ];
 
+        Boolean allStartedWithoutExceptions = true; //  RULE : 03
         Integer nonExceptionStartedCount  = 0;
-        Boolean onlyStartedStatus = true;
+        Boolean onlyStartedStatus = true; //  RULE : 02
         for (Message__c message : messages) {
+            if ((message.Status__c == 'Started')  && (!String.isBlank(message.Exception__c))) allStartedWithoutExceptions = false;
             if (message.Status__c != 'Started') onlyStartedStatus = false;
             if ((message.Status__c == 'Started')  && (message.Exception__c == null)) nonExceptionStartedCount++;
         }
-        Boolean correctChunks = (chunkTotal == nonExceptionStartedCount);
-        Boolean lastChunk = (chunkTotal == chunk);
+        Boolean correctChunks = (chunkTotal == nonExceptionStartedCount); //  RULE : 03
+        Boolean lastChunk = (chunkTotal == chunk); // RULE : 04
 
 
-        return  (onlyStartedStatus && correctChunks && lastChunk);
+        return  (onlyStartedStatus && correctChunks && lastChunk && allStartedWithoutExceptions);
     }
     
 }
