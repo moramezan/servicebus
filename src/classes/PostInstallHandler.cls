@@ -57,7 +57,7 @@ public without sharing class PostInstallHandler implements InstallHandler {
         message.setPlainTextBody(''
             + 'hey ' + user.FirstName + ','
             + '\n\n'
-            + '    your Enterprise Service Bus package has installed alright.'
+            + '    your Service Bus package has installed alright.'
             + '\n\n'
             + 'Please feel free to reach out if you have any difficulties'
             + '\nwith Service Bus, and we can better learn how people apply it.'

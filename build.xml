@@ -103,7 +103,7 @@
             password="${de.password}"
             serverurl="${de.serverurl}"
             retrieveTarget="src"
-            packageNames="Enterprise Service Bus"
+            packageNames="Service Bus"
         />
         <antcall target="alphabetize-searchlayouts" />
         <antcall target="optimize-for-release" />
@@ -160,7 +160,7 @@
     <target name="optimize-for-devorg" description="Removes namespace and management artifacts prior to unmanaged deploy.">
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
-    <fullName>Enterprise Service Bus</fullName>
+    <fullName>Service Bus</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
     <description>Message queue for bulk data transformations and error recovery without data loss.</description>
     <namespacePrefix>esb</namespacePrefix>
@@ -168,7 +168,7 @@
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
-    <fullName>Enterprise Service Bus</fullName>
+    <fullName>Service Bus</fullName>
     <description>Message queue for bulk data transformations and error recovery without data loss.</description>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacevalue>
@@ -187,12 +187,12 @@
     <target name="optimize-for-release" description="Restores namespace and management artifacts following unmanaged deploy.">
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
-    <fullName>Enterprise Service Bus</fullName>
+    <fullName>Service Bus</fullName>
     <description>Message queue for bulk data transformations and error recovery without data loss.</description>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
-    <fullName>Enterprise Service Bus</fullName>
+    <fullName>Service Bus</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
     <description>Message queue for bulk data transformations and error recovery without data loss.</description>
     <namespacePrefix>esb</namespacePrefix>
@@ -390,7 +390,7 @@
         <echo file="purge/package.xml" append="true"><![CDATA[<types><name>Document</name>]]></echo>
         <touch file="purge/Document.txt" />
         <sf:listMetadata metadataType="Document" folder="EnterpriseServiceBus" resultFilePath="purge/Document.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="34.0" />
-        <replaceregexp file="purge/Document.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: (EnterpriseServiceBus/[^/]+)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
+        <replaceregexp file="purge/Document.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: (ServiceBus/[^/]+)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
         <loadfile property="Document" srcFile="purge/Document.txt" />
         <echo file="purge/package.xml" append="true" message="${Document}" />
         <echo file="purge/package.xml" append="true"><![CDATA[</types>]]></echo>

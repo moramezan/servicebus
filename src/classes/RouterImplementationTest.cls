@@ -395,7 +395,7 @@
     //
     //     insert user;
     //
-    //     PermissionSet ps = [SELECT Id FROM PermissionSet WHERE Name = 'AdministerEsb'];
+    //     PermissionSet ps = [SELECT Id FROM PermissionSet WHERE Name = 'AdministerServiceBus'];
     //     insert new PermissionSetAssignment(AssigneeId = user.Id, PermissionSetId = ps.Id);
     // }
 }

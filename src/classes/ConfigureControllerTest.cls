@@ -93,7 +93,7 @@
         System.PageReference redirect = controller.doRedirect();
         
         //assert
-        String expectedLid = [SELECT Id FROM WebLink WHERE Description = 'Enterprise Service Bus configuration link.'].Id;
+        String expectedLid = [SELECT Id FROM WebLink WHERE Description = 'Service Bus configuration link.'].Id;
         String actualLid = redirect.getParameters().get('lid');
         System.assertEquals(expectedLid, actualLid, 'Wrong lid.');
         

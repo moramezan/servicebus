@@ -361,8 +361,8 @@ public with sharing class ConfigureController {
         }
     }
     
-    //#969 obfuscation of 'Enterprise Service Bus Heartbeat'
-    @TestVisible static String JobName = Test.isRunningTest() ? 'Test Router' : 'Enterprise Service Bus Router';
+    //#969 obfuscation of 'Service Bus Heartbeat'
+    @TestVisible static String JobName = Test.isRunningTest() ? 'Test Router' : 'Service Bus Router';
     
     /**
      * Creates the hourly cron job used to refresh the token.
@@ -394,7 +394,7 @@ public with sharing class ConfigureController {
         if (stage == null) {
             //0. page was viewed without using the proper link
             System.PageReference pr = new System.PageReference('/servlet/servlet.Integration');
-            pr.getParameters().put('lid', [SELECT Id FROM WebLink WHERE Description = 'Enterprise Service Bus configuration link.'].Id);
+            pr.getParameters().put('lid', [SELECT Id FROM WebLink WHERE Description = 'Service Bus configuration link.'].Id);
             pr.getParameters().put('eid', UserInfo.getUserId());
             pr.getParameters().put('ic', '1');
             pr.getParameters().put('retURL', ApexPages.currentPage().getParameters().get('retURL'));
@@ -486,7 +486,7 @@ public with sharing class ConfigureController {
             //6. finally send them to the context sensitive help page
             String returnUrl;
             setting = OAuthSetting__c.getOrgDefaults();
-            List<AppMenuItem> appMenuItems = [SELECT StartUrl FROM AppMenuItem WHERE Name = 'EnterpriseServiceBus' LIMIT 1];
+            List<AppMenuItem> appMenuItems = [SELECT StartUrl FROM AppMenuItem WHERE Name = 'ServiceBus' LIMIT 1];
             if (returnUrl == null) returnUrl = setting.ReturnUrl__c;
             if (returnUrl == null && !appMenuItems.isEmpty()) returnUrl = appMenuItems[0].StartUrl;
             if (returnUrl == null) returnUrl = '/apex/ContextSensitiveHelp?topic=EnterpriseServiceBus';
@@ -529,7 +529,7 @@ public with sharing class ConfigureController {
             SELECT Id
             FROM PermissionSet
             WHERE NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
-            AND Name = 'AdministerEsb'
+            AND Name = 'AdministerServiceBus'
         ];
         
         //determine if it has been assigned already

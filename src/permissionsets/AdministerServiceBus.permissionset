@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <applicationVisibilities>
-        <application>EnterpriseServiceBus</application>
+        <application>ServiceBus</application>
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
@@ -336,7 +336,7 @@
         <apexClass>WiretapTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
-    <description>Administer Sequences, Steps and Processes as part of Enterprise Service Bus.</description>
+    <description>Administer Sequences, Steps and Processes as part of Service Bus.</description>
     <fieldPermissions>
         <editable>true</editable>
         <field>BranchConfig__c.Sequence__c</field>
@@ -422,7 +422,7 @@
         <field>SubsequenceConfig__c.Sequence__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <label>Administer Enterprise Service Bus</label>
+    <label>Administer Service Bus</label>
     <objectPermissions>
         <allowCreate>false</allowCreate>
         <allowDelete>false</allowDelete>

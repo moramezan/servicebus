@@ -21,8 +21,8 @@ global class Job implements Process.Plugin, system.Queueable {
     global Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
         plugin.Name = 'Enqueue Service Bus Job';
-        plugin.Tag = 'Enterprise Service Bus';
-        plugin.Description = 'Enqueue a Job into the Enterprise Service Bus';
+        plugin.Tag = 'Service Bus';
+        plugin.Description = 'Enqueue a Job into the Service Bus';
         
         plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
             new Process.PluginDescribeResult.InputParameter('RecordId', Process.PluginDescribeResult.ParameterType.ID, true),
@@ -345,7 +345,7 @@ global class Job implements Process.Plugin, system.Queueable {
         List<CronJobDetail> cronJobDetails = [
             SELECT Id
             FROM CronJobDetail
-            WHERE Name = 'Enterprise Service Bus Broker'
+            WHERE Name = 'Service Bus Broker'
             LIMIT 1
         ];
         
