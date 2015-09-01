@@ -155,6 +155,15 @@ abstract public without sharing class Broker {
                 Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(inputMessage.Event__c);
                 inputEvent.put('Range', chunkTotal);
                 inputEvent.put('Chunk', chunk);
+                
+                if (inputMessage.Id != null) {
+                    //#1026 can't use map and keySet()
+                    //because Row with null Id at index: 0
+                    Set<Id> siblingIds = new Set<Id>();
+                    siblingIds.add(inputMessage.Id);
+                    inputEvent.put('SiblingIds', siblingIds);
+                }
+                
                 inputMessage.Event__c = Json.serializePretty(inputEvent);
                 chunk++;
             }

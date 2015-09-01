@@ -128,6 +128,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             event.remove('AllowsCallouts');
             event.remove('Chunk');
             event.remove('Range');
+            event.remove('SiblingIds'); //#1026
             
             //#1026 this guy wont be visible unless requeried after update
             if (message.Id != null) event.put('MessageId', message.Id);
