@@ -310,6 +310,7 @@ public with sharing class ConfigureController {
     static public void deleteAccessToken() {
         OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
         if (setting.Id != null) delete setting;
+        if (setting.Id != null) Database.emptyRecycleBin(setting);
     }
     
     /**
