@@ -1,5 +1,11 @@
 @IsTest public class ConfigureControllerTest {
     
+    //needed in packaging org, or
+    //he cant see his own namespace
+    @TestSetup static void testSetup() {
+        new PostInstallHandler().onInstall(null);
+    }
+    
     static testmethod void testRefreshAccessTokenMissingRemoteSiteSetting() {
         //arrange custom setting
         OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
@@ -229,8 +235,10 @@
         Test.setCurrentPage(configure);
         
         //act
+        Test.startTest();
         Test.setMock(HttpCalloutMock.class, new IpRestrictedResponse());
         System.PageReference redirect = controller.doRedirect();
+        Test.stopTest();
         
         //assert
         String expectedUrl = new System.PageReference('/packaging/installPackage.apexp?p0=04tj0000001Z2IU').getUrl();
