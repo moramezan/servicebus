@@ -10,6 +10,12 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         this.destroyAllStepsAndConfigs();
     }
     
+    public override void onAfterDelete() {
+        //#1016 skip recycle bin
+        List<Sequence__c> sequences = this.Records;
+        Database.emptyRecycleBin(sequences);
+    }
+    
     /**
      * When deleting a SEQUENCE, we no longer have master-detail to delete the STEP,
      * so we cascade the delete ourselves manually, and take care of the configs too.
@@ -44,6 +50,10 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
             
             Database.delete(stepsToDelete, false);
             Database.delete(configsToDelete, false);
+            
+            //#1016 skip recycle bin
+            if (!stepsToDelete.isEmpty()) Database.emptyRecycleBin(stepsToDelete);
+            if (!configsToDelete.isEmpty()) Database.emptyRecycleBin(configsToDelete);
             
         } catch (Exception e) {
             Database.rollback(savepoint);

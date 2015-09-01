@@ -151,9 +151,11 @@ public class SequenceModel extends ApexDomain.StandardModel {
             
             //perform the delete
             delete stepToDelete;
+            Database.emptyRecycleBin(stepToDelete); //#1016
             
             //any config to delete
             if (stepToDelete.ConfigId__c != null) Database.delete(stepToDelete.ConfigId__c);
+            if (stepToDelete.ConfigId__c != null) Database.emptyRecycleBin(new List<Id>{stepToDelete.ConfigId__c}); //#1016
             
             //find the remaining steps
             List<Step__c> stepsToReorder = [
