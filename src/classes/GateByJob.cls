@@ -12,7 +12,7 @@ public class GateByJob extends ApexClassModel.Process {
         String Description = 'Aggregates a collection of messages having the same Job Id.';
         String Icon = 'arrow_join';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessGateByJob').getUrl();
-        Integer Limits =  50; //max sync limit
+        Integer Limits =  1000; //max sync limit
         String Cardinality = 'Fewer';
         
         Map<String,String> Inputs = new Map<String,String>{
@@ -37,14 +37,17 @@ public class GateByJob extends ApexClassModel.Process {
             throw new GateByJobException('Input event missing mandatory Chunk parameter');
         if (!inputEvent.containsKey('Route'))
             throw new GateByJobException('Input event missing mandatory Route parameter');
-
+        if (!inputEvent.containsKey('SiblingIds'))
+            throw new GateByJobException('Input event missing mandatory SiblingIds parameter');
 
         String jobId = (String)inputEvent.get('JobId');
         Integer chunkTotal = (Integer)inputEvent.get('Range');
         Integer chunk = (Integer)inputEvent.get('Chunk');
         String route = (String)inputEvent.get('Route');
+        Set<Id>  siblingIds  = (Set<Id>)Json.deserialize(Json.serialize(inputEvent.get('SiblingIds')), Set<Id>.class);
 
-        Boolean release = isRelease(jobId, chunkTotal, chunk);
+        
+        Boolean release = isRelease(siblingIds, jobId, chunkTotal, chunk);
 
         if ( !release) {
             //this is not the last item, so let's swallow
@@ -136,72 +139,29 @@ public class GateByJob extends ApexClassModel.Process {
     
     
     @testVisible
-    public static Boolean isRelease(String jobId, Integer chunkTotal, Integer chunk) {
+    public static Boolean isRelease(Set<Id> siblingIds, String jobId, Integer chunkTotal, Integer chunk) {
         // Release trigger:
         //
-        //   Every message passing into the gate must be evaluated to see if its a release message
+        //    NR / MB : we assume the Gate process will never fail
+        //              let's revisit and implement at some point
         //
-        //   given :
-        //     C = Completed messages
-        //     B = Buffered messages   // Non-Completed
-        //     P = Paused messages     // Non-Completed
-        //     S = Started messages    // Non-Completed
-        ////
-        //  RULE : 01
-        //   We are only interested in the presence of non-Completed messages on the database -
-        //   Why?
-        //   Because Completed are by definition Completed and therefore have no bearing on the release decision
-        //
-        //  RULE : 02
-        //   So we look at B, P, and S messages on the database
-        //   The presence of B and P messages on the database suggests the mark has not yet
-        //   switched these messages to S  implying we can't possible be ready to evaluate in this execute
-        //
-        //  That leaves us with Started [S] messages
-        //  RULE : 03
-        //  - we need to rely on some behaviour of the Restart and Rebuffer methods here
-        //    'specifically, we assume that any message Rebuffered or Restarted has it's Exception
-        //    immediately set to  null
-        //    Why?
-        //    Because when we look at messages that are started on the database, we assume any messages
-        //    with an exception in started will mean that we are not ready to release regardless of the
-        //    successful completion of all messages processed in the current chunk
-        //  RULE : 04
-        //  - next, we need to know we are on the last message of the current chunk range - the broker
-        //    injects the chunk offset and chunk range as parameters on the input message
-        //    and these values then  are passed into the function so that this rule can
-        //    be evaluated correctly
-        //  RULE : 05
-        //  - Finally, if any message in the current chunk range failed, we cannot release
-        //    because when we persist, at least one message will be persisted in in started status
-        //    with an exception and it would make no sense to release
-        //
-        //    //TODO
-        //    NR / MB : agreed this rule only comes into play when the in-memory execution contexts
-        //              belong to the Gate process itself
-        //              ... we assume the Gate process will never fail making the evaluation of this
-        //              rule mute  - HOWEVER - let's revist and implement at some point
 
-        List<Message__c> messages = [
-            SELECT Id, Status__c, Exception__c
+
+        // no release if we are not the last in the chunk
+        if (chunkTotal != chunk)
+            return false;
+
+        // are there any messages on the database that are
+        // not completed and not part of the current chunk range
+        // for the given job id
+        return  [
+            SELECT Id
             FROM Message__c
-            WHERE (Status__c = 'Buffered' OR Status__c = 'Paused' OR  Status__c = 'Started')  //  RULE : 01
-            AND
-            JobId__c = :jobId
-        ];
-
-        Boolean allStartedWithoutExceptions = true; //  RULE : 03
-        Integer nonExceptionStartedCount  = 0;
-        Boolean onlyStartedStatus = true; //  RULE : 02
-        for (Message__c message : messages) {
-            if ((message.Status__c == 'Started')  && (!String.isBlank(message.Exception__c))) allStartedWithoutExceptions = false;
-            if (message.Status__c != 'Started') onlyStartedStatus = false;
-            if ((message.Status__c == 'Started')  && (message.Exception__c == null)) nonExceptionStartedCount++;
-        }
-        Boolean correctChunks = (chunkTotal == nonExceptionStartedCount); //  RULE : 03
-        Boolean lastChunk = (chunkTotal == chunk); // RULE : 04
-
-        return(onlyStartedStatus && correctChunks && lastChunk && allStartedWithoutExceptions);
+            WHERE Status__c != 'Completed'
+            AND JobId__c = :jobId
+            AND Id NOT IN :siblingIds
+            LIMIT 1
+        ].isEmpty();
     }
     
 }

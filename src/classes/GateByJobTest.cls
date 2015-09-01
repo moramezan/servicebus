@@ -3,49 +3,59 @@
    static testmethod void hasTheCorrectLimits() {
         //arrange
         ApexClassModel.Summary summary = new ApexClassModel.Summary(GateByJob.class);
-        
+
         //assert
-        Integer expectedLimits = 50; //max sync limit
+        Integer expectedLimits = 1000; //max sync limit
         Integer actualLimits = summary.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
 
 
    static testmethod void withinSystemLimits() {
-        // Arrange
-        Integer count =  3 ;
-        Integer insertIntoMessageCount = count;
-        Integer insertIntoGateItemCount = count - 1;
-        String jobId = '707000000000000AAA';
-
-        Map<String,Object> inputEvent = new Map<String,Object> {
-            'JobId' => jobId,
-            'Route' => 'Test#1',
-            'Range' => 1,
-            'Chunk' => 1
-        };
-
-        List<Message__c> messages = new List<Message__c> ();
-        integer k = 1;
-        while(k <= count) {
-            Map<String,Object> event = inputEvent.clone();
-            event.put('c__data' , 'x'+k);
-            if (k <= insertIntoMessageCount) {
-                String status = (k == insertIntoMessageCount) ? 'Started' : 'Completed';
-                messages.add(new Message__c(Event__c = json.serialize(event), Status__c = status));
-            }
-            k++;
-        }
-        insert messages;
-        
         //assemble
         ApexClassModel.Summary summary = new ApexClassModel.Summary(GateByJob.class);
-        
+        Integer limits = summary.Limits;
+
+        // Arrange
+        Integer rangeCount =  limits;
+        Integer otherCount  = 4;
+        Integer totalCount = rangeCount + otherCount;
+        String jobId = '707000000000000AAA';
+
+        Map<String,Object> templateEvent = new Map<String,Object> {
+            'JobId' => jobId,
+            'Route' => 'Test#1',
+            'Range' => rangeCount,
+            'Chunk' => null,
+            'SiblingIds' => null
+        };
+
+        List<Message__c> rangeMessages = new List<Message__c> ();
+        Integer z = 1;
+        while (z <= rangeCount) {
+            rangeMessages.add( new Message__c(Status__c = 'Started', JobId__c = jobId ) );
+            z++;
+        }
+        insert rangeMessages;
+        Set<Id> siblingIds =  new Map<Id,Message__c>(rangeMessages).keySet();
+
+
+        List<Message__c> otherMessages = new List<Message__c> ();
+        z = 1;
+        while (z <= otherCount) {
+            otherMessages.add(new Message__c(Status__c = 'Completed', JobId__c = jobId) );  //Completed
+            z++;
+        }
+        insert otherMessages;
+
         //act
         Test.startTest();
-        Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
+            Map<String,Object> inputEvent = templateEvent.clone();
+            inputEvent.put('SiblingIds' , siblingIds);
+            inputEvent.put('Chunk' , i+1);
+
             ApexClassModel.Process process = new GateByJob();
             List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
@@ -54,6 +64,7 @@
 
         //assert
         System.assertEquals(limits, counter, 'Limit not reached.');
+
    }
 
 
@@ -63,9 +74,10 @@
             //'JobId' => '707000000000000AAA',
             'Route' => 'Test#1',
             'Range' => 1,
-            'Chunk' => 1
+            'Chunk' => 1,
+            'SiblingIds' => new Set<Id>{'000000000000000AAA'}
         };
-                    
+
         Boolean actualFlag = false;
         try {
             ApexClassModel.Process process = new GateByJob();
@@ -73,25 +85,26 @@
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory JobId');
         }
-        
+
         // Assemble :
         // n/a
-        
+
         // Assert :
         Boolean expectedFlag = true;
         System.assertEquals(expectedFlag , actualFlag);
     }
-    
-    
+
+
     static testmethod void callingIsReleaseThrowsExpectedException02() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
             'JobId' => '707000000000000AAA',
             //'Route' => 'test',
             'Range' => 1,
-            'Chunk' => 1
+            'Chunk' => 1,
+            'SiblingIds' => new Set<Id>{'000000000000000AAA'}
         };
-                    
+
         Boolean actualFlag = false;
         try {
             ApexClassModel.Process process = new GateByJob();
@@ -99,24 +112,25 @@
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Route');
         }
-        
+
         // Assemble :
         // n/a
-        
+
         // Assert :
         Boolean expectedFlag = true;
         System.assertEquals(expectedFlag , actualFlag);
     }
-    
+
     static testmethod void callingIsReleaseThrowsExpectedException04() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
             'JobId' => '707000000000000AAA',
             'Route' => 'Test#1',
             //'Range' => 1,
-            'Chunk' => 1
+            'Chunk' => 1,
+            'SiblingIds' => new Set<Id>{'000000000000000AAA'}
         };
-                    
+
         Boolean actualFlag = false;
         try {
             ApexClassModel.Process process = new GateByJob();
@@ -124,24 +138,25 @@
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Range');
         }
-        
+
         // Assemble :
         // n/a
-        
+
         // Assert :
         Boolean expectedFlag = true;
         System.assertEquals(expectedFlag , actualFlag);
     }
-    
+
     static testmethod void callingIsReleaseThrowsExpectedException05() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
             'JobId' => '707000000000000AAA',
             'Route' => 'Test#1',
-            'Range' => 1
+            'Range' => 1,
             //'Chunk' => 1
+            'SiblingIds' => new Set<Id>{'000000000000000AAA'}
         };
-                    
+
         Boolean actualFlag = false;
         try {
             ApexClassModel.Process process = new GateByJob();
@@ -149,43 +164,154 @@
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Chunk');
         }
-        
+
         // Assemble :
         // n/a
-        
+
         // Assert :
         Boolean expectedFlag = true;
         System.assertEquals(expectedFlag , actualFlag);
     }
-     
-    
-    static testmethod void callingInvokeMainReturnsZeroOutputEventsWhenPersistedCountNotEqOneWithStartedStatus() {
-        // Arrange
-        Integer count =  3 ;
-        Integer insertIntoMessageCount = count;
 
-        String jobId = '707000000000000AAA';
-
+    static testmethod void callingIsReleaseThrowsExpectedException06() {
+        // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            'JobId' => jobId,
+            'JobId' => '707000000000000AAA',
             'Route' => 'Test#1',
             'Range' => 1,
             'Chunk' => 1
+            //'SiblingIds' => new Set<Id>{'000000000000000AAA'}
         };
 
-        List<Message__c> messages = new List<Message__c> ();
-        integer i = 1;
-        while(i <= count) {
-            Map<String,Object> event = inputEvent.clone();
-            event.put('c__data' , 'x'+i);
-            if (i <= insertIntoMessageCount) {
-                String status = (i == insertIntoMessageCount) ? 'Started' : 'Buffered';
-                messages.add(new Message__c(Event__c = json.serialize(event), Status__c = status));
-            }
+        Boolean actualFlag = false;
+        try {
+            ApexClassModel.Process process = new GateByJob();
+            List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
+        } catch (Exception e) {
+            actualFlag = e.getMessage().contains('missing mandatory SiblingIds');
+        }
 
+        // Assemble :
+        // n/a
+
+        // Assert :
+        Boolean expectedFlag = true;
+        System.assertEquals(expectedFlag , actualFlag);
+    }
+
+
+
+
+    static testmethod void  callingExecuteReturnsOneWhenLastInChunkAndOthersInGroupCompleted() {
+        // Arrange
+        Integer totalCount = 5;
+        Integer rangeCount =  3 ;
+        Integer otherCount  = totalCount - rangeCount;
+        String jobId = '707000000000000AAA';
+
+        Map<String,Object> templateEvent = new Map<String,Object> {
+            'JobId' => jobId,
+            'Route' => 'Test#1',
+            'Range' => rangeCount,
+            'Chunk' => null,
+            'SiblingIds' => null
+        };
+
+        List<Message__c> rangeMessages = new List<Message__c> ();
+        Integer i = 1;
+        while (i <= rangeCount) {
+            rangeMessages.add( new Message__c(Status__c = 'Started' , JobId__c = jobId) );
             i++;
         }
-        insert messages;
+        insert rangeMessages;
+        List<Id> siblingIds = new List<Id>((new Map<Id,Message__c>(rangeMessages)).keySet());
+
+        List<Message__c> otherMessages = new List<Message__c> ();
+        i = 1;
+        while (i <= otherCount) {
+            otherMessages.add(new Message__c(Status__c = 'Completed' , JobId__c = jobId) );  // Completed
+            i++;
+        }
+        insert otherMessages;
+
+        Map<Integer,Map<String,Object>> chunkToEvent = new Map<Integer,Map<String,Object>>();
+        i = 1;
+        while(i <= rangeCount) {
+            Map<String,Object> event = templateEvent.clone();
+            event.put('SiblingIds' , siblingIds);
+            event.put('Chunk' , i);
+            chunkToEvent.put(i,event);
+            rangeMessages[i-1].Event__c = json.serialize(event);
+            i++;
+        }
+        update rangeMessages;
+
+        // last event
+        Integer lastOffset = rangeCount;
+        Map<String,Object> inputEvent = chunkToEvent.get(rangeCount);
+
+        // Act
+        ApexClassModel.Process process = new GateByJob();
+        List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
+
+        // Assemble
+        Integer actualSize = actualOutputEvents.size();
+
+        // Assert
+        Integer expectedSize = 1;
+        System.assertEquals(expectedSize , actualSize);
+    }
+
+
+    static testmethod void  callingExecuteReturnsZeroWhenNotLastInChunkAndOthersInGroupCompleted() {
+        // Arrange
+        Integer totalCount = 5;
+        Integer rangeCount =  3 ;
+        Integer otherCount  = totalCount - rangeCount;
+        String jobId = '707000000000000AAA';
+
+        Map<String,Object> templateEvent = new Map<String,Object> {
+            'JobId' => jobId,
+            'Route' => 'Test#1',
+            'Range' => rangeCount,
+            'Chunk' => null,
+            'SiblingIds' => null
+        };
+
+        List<Message__c> rangeMessages = new List<Message__c> ();
+        Integer i = 1;
+        while (i <= rangeCount) {
+            rangeMessages.add( new Message__c(Status__c = 'Started', JobId__c = jobId ) );
+            i++;
+        }
+        insert rangeMessages;
+        Set<Id> siblingIds =  new Map<Id,Message__c>(rangeMessages).keySet();
+
+
+        List<Message__c> otherMessages = new List<Message__c> ();
+        i = 1;
+        while (i <= otherCount) {
+            otherMessages.add(new Message__c(Status__c = 'Completed', JobId__c = jobId) );  //Completed
+            i++;
+        }
+        insert otherMessages;
+
+        Map<Integer,Map<String,Object>> chunkToEvent = new Map<Integer,Map<String,Object>>();
+        i = 1;
+        while(i <= rangeCount) {
+            Map<String,Object> event = templateEvent.clone();
+            event.put('SiblingIds' , siblingIds);
+            event.put('Chunk' , i);
+            chunkToEvent.put(i,event);
+            rangeMessages[i-1].Event__c = json.serialize(event);
+            i++;
+        }
+        update rangeMessages;
+
+        // NOT last event
+        Integer lastOffset = rangeCount;
+        Integer notLastOffset = lastOffset - 1;
+        Map<String,Object> inputEvent = chunkToEvent.get(notLastOffset);
 
         // Act
         ApexClassModel.Process process = new GateByJob();
@@ -201,35 +327,53 @@
 
 
 
-    static testmethod void callingInvokeMainReturnsOneOutputEventWhenPersistedCountEqOneWithStartedStatus() {
+    static testmethod void  callingExecuteReturnsZeroWhenOthersInGroupBufferedOrPaused() {
         // Arrange
-        Integer count =  3 ;
-        Integer insertIntoMessageCount = count;
-        Integer insertIntoGateItemCount = count - 1;  // Adjust down by one
-        // expect: the insertion of additional GateItem under "Act"
-
+        Integer totalCount = 5;
+        Integer rangeCount =  3 ;
+        Integer otherCount  = totalCount - rangeCount;
         String jobId = '707000000000000AAA';
 
-        Map<String,Object> inputEvent = new Map<String,Object> {
+        Map<String,Object> templateEvent = new Map<String,Object> {
             'JobId' => jobId,
             'Route' => 'Test#1',
-            'Range' => 1,
-            'Chunk' => 1
+            'Range' => rangeCount,
+            'Chunk' => null,
+            'SiblingIds' => null
         };
 
-        List<Message__c> messages = new List<Message__c> ();
-        integer i = 1;
-        while(i <= count) {
-            Map<String,Object> event = inputEvent.clone();
-            event.put('c__data' , 'x'+i);
-            if (i <= insertIntoMessageCount) {
-                String status = (i == insertIntoMessageCount) ? 'Started' : 'Completed';
-                messages.add(new Message__c(Event__c = json.serialize(event), Status__c = status));
-            }
-
+        List<Message__c> rangeMessages = new List<Message__c> ();
+        Integer i = 1;
+        while (i <= rangeCount) {
+            rangeMessages.add( new Message__c(Status__c = 'Started',  JobId__c = jobId ) );
             i++;
         }
-        insert messages;
+        insert rangeMessages;
+        List<Id> siblingIds = new List<Id>((new Map<Id,Message__c>(rangeMessages)).keySet());
+
+        List<Message__c> otherMessages = new List<Message__c> ();
+        i = 1;
+        while (i <= otherCount) {
+            otherMessages.add(new Message__c(Status__c = 'Buffered', JobId__c = jobId) );  //Buffered or Paused
+            i++;
+        }
+        insert otherMessages;
+
+        Map<Integer,Map<String,Object>> chunkToEvent = new Map<Integer,Map<String,Object>>();
+        i = 1;
+        while(i <= rangeCount) {
+            Map<String,Object> event = templateEvent.clone();
+            event.put('SiblingIds' , siblingIds);
+            event.put('Chunk' , i);
+            chunkToEvent.put(i,event);
+            rangeMessages[i-1].Event__c = json.serialize(event);
+            i++;
+        }
+        update rangeMessages;
+
+        // last event
+        Integer lastOffset = rangeCount;
+        Map<String,Object> inputEvent = chunkToEvent.get(lastOffset);
 
         // Act
         ApexClassModel.Process process = new GateByJob();
@@ -239,17 +383,10 @@
         Integer actualSize = actualOutputEvents.size();
 
         // Assert
-        Integer expectedSize = 1;
+        Integer expectedSize = 0;
         System.assertEquals(expectedSize , actualSize);
-
-        // Assemble
-        Map<String,Object> actualOutputEvent = actualOutputEvents[0];
-        String actualJobId = (String)inputEvent.get('JobId' );
-
-        // Assert
-        String expectedJobId = jobId;
-        System.assertEquals(expectedJobId, actualJobId);
     }
+
 
 
 
@@ -399,70 +536,75 @@
         Boolean expected03 = true;
         System.assertEquals(expected03 , actual03);
     }
-    
-    
+
+
+
     static testmethod void callingIsReleaseReturnsExpectedExpected01() {
         // Arrange :
         String jobId = '707000000000000AAA';
         Integer chunkTotal = 1;
         Integer chunk = 1;
 
-        Message__c message = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message;
+        Set<Id> siblingIds =  new Set<Id>{ message.Id };
 
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = GateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a
-        
+
         // Assert :
         Boolean expectedIsRelease = true;
         System.assertEquals(expectedIsRelease , actualIsRelease);
     }
-  
-    
+
     static testmethod void callingIsReleaseReturnsExpectedExpected02() {
         // Arrange :
         String jobId = '707000000000000AAA';
-        Integer chunkTotal = 2;      // not the last
+        Integer chunkTotal = 2;
         Integer chunk = 1;
 
-        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message1 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message1;
-        Message__c message2 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message2 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message2;
+        Set<Id> siblingIds =  new Set<Id>{ message1.Id,  message2.Id };
+
 
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = GateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a
-        
+
         // Assert :
         Boolean expectedIsRelease = false;
         System.assertEquals(expectedIsRelease , actualIsRelease);
     }
-    
+
     static testmethod void callingIsReleaseReturnsExpectedExpected03() {
         // Arrange :
         String jobId = '707000000000000AAA';
-        Integer chunkTotal = 1;
-        Integer chunk = 1;
+        Integer chunkTotal = 2;
+        Integer chunk = 2;
 
-        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message1 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message1;
-        Message__c message2 = new Message__c(Exception__c = null, Status__c = 'Buffered', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message2 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message2;
+        Set<Id> siblingIds =  new Set<Id>{ message1.Id,  message2.Id };
+
 
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = GateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a
-        
+
         // Assert :
-        Boolean expectedIsRelease = false;
+        Boolean expectedIsRelease = true;
         System.assertEquals(expectedIsRelease , actualIsRelease);
     }
 
@@ -472,42 +614,49 @@
         Integer chunkTotal = 2;
         Integer chunk = 2;
 
-        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c messageB = new Message__c( Status__c = 'Buffered', Event__c = '{"JobId":"' + jobId + '"}');
+        insert messageB;
+
+        Message__c message1 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message1;
-        Message__c message2 = new Message__c(Exception__c = 'Error', Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message2 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message2;
+        Set<Id> siblingIds =  new Set<Id>{ message1.Id,  message2.Id };
+
 
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = GateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a
-        
+
         // Assert :
         Boolean expectedIsRelease = false;
         System.assertEquals(expectedIsRelease , actualIsRelease);
     }
-    
-    
+
     static testmethod void callingIsReleaseReturnsExpectedExpected05() {
         // Arrange :
         String jobId = '707000000000000AAA';
         Integer chunkTotal = 2;
         Integer chunk = 2;
 
-        Message__c message1 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c messageB = new Message__c( Status__c = 'Completed', Event__c = '{"JobId":"' + jobId + '"}');
+        insert messageB;
+
+        Message__c message1 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message1;
-        Message__c message2 = new Message__c(Exception__c = null, Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message2 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
         insert message2;
-        Message__c message3 = new Message__c(Exception__c = 'An Error', Status__c = 'Completed', Event__c = '{"JobId":"' + jobId + '"}');
-        insert message3;
-        
+        Set<Id> siblingIds =  new Set<Id>{ message1.Id,  message2.Id };
+
+
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = GateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a
-        
+
         // Assert :
         Boolean expectedIsRelease = true;
         System.assertEquals(expectedIsRelease , actualIsRelease);
