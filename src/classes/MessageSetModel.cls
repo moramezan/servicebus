@@ -161,6 +161,8 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     /**
      * Swallow toString() in trace
      * The intent is to NOT confuse or misdirect the end user and to .. (cough) .. reveal our secret sauce
+     * https://github.com/bigassforce/esb/issues/581
+     * https://github.com/bigassforce/esb/commit/2dd94e19c156170b86dc30b50e5e375876f5e758
      */
     @TestVisible private void swallowToString() {
         for (Message__c message : this.Messages) {
@@ -168,7 +170,8 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
                 message.Cause__c = message.Cause__c.replace('\n(esb)', '');
                 message.Cause__c = message.Cause__c.replace('\n(abstract)', '');
                 message.Cause__c = message.Cause__c.replace('\n(servicebus)', '');
-                message.Cause__c = message.Cause__c.replace('\n(AnonymousBlock: line 1, column 1)', '');
+                message.Cause__c = message.Cause__c.replace('\nExternal entry point', '');
+                message.Cause__c = message.Cause__c.replace('\nAnonymousBlock: line 1, column 1', '');
             }
         }
     }
