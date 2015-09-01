@@ -154,7 +154,7 @@
         </executeAnonymous>
         
         <echo message="#############################################" />
-        <input message="MAKE SURE TO CHOOSE 'PostInstallInstructions' WHEN UPLOADING PACKAGE" addproperty="tag.confirm" validargs="gotit" />
+        <input message="MAKE SURE TO CHOOSE 'PostInstallInstructions' WHEN UPLOADING PACKAGE" addproperty="tag.postinstall" validargs="gotit" />
     </target>
     
     <target name="optimize-for-devorg" description="Removes namespace and management artifacts prior to unmanaged deploy.">
