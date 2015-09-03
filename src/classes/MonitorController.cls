@@ -40,8 +40,8 @@ public with sharing class MonitorController {
         return new List<Statistic>{
             new Statistic(null,               1, 32,  0,  0),
             new Statistic('Branch',          1,  0,  0,  0),
-            new Statistic('GateByEntryPoint',         2,  0,  0,  0),
-            new Statistic('GateByJob',         2,  0,  0,  0),
+            new Statistic('AggregateByEntryPoint',         2,  0,  0,  0),
+            new Statistic('AggregateByJob',         2,  0,  0,  0),
             new Statistic('Jump',         2,  0,  0,  0),
             new Statistic('Publish',         1,  0,  4,  0),
             new Statistic('Schedule',            2,  0,  0,  0),

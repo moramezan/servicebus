@@ -28,10 +28,10 @@
         <members>BrokerTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
-        <members>GateByEntryPoint</members>
-        <members>GateByEntryPointTest</members>
-        <members>GateByJob</members>
-        <members>GateByJobTest</members>
+        <members>AggregateByEntryPoint</members>
+        <members>AggregateByEntryPointTest</members>
+        <members>AggregateByJob</members>
+        <members>AggregateByJobTest</members>
         <members>Job</members>
         <members>JobTest</members>
         <members>Jump</members>

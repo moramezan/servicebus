@@ -1,8 +1,8 @@
-@IsTest public class GateByJobTest {
+@IsTest public class AggregateByEntryPointTest {
 
    static testmethod void hasTheCorrectLimits() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(GateByJob.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByEntryPoint.class);
 
         //assert
         Integer expectedLimits = 1000; //max sync limit
@@ -13,17 +13,17 @@
 
    static testmethod void withinSystemLimits() {
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(GateByJob.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByEntryPoint.class);
         Integer limits = summary.Limits;
 
         // Arrange
         Integer rangeCount =  limits;
         Integer otherCount  = 4;
         Integer totalCount = rangeCount + otherCount;
-        String jobId = '707000000000000AAA';
+        String entryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
 
         Map<String,Object> templateEvent = new Map<String,Object> {
-            'JobId' => jobId,
+            'EntryPointUuid' => EntryPointUuid,
             'Route' => 'Test#1',
             'Range' => rangeCount,
             'Chunk' => null,
@@ -33,7 +33,7 @@
         List<Message__c> rangeMessages = new List<Message__c> ();
         Integer z = 1;
         while (z <= rangeCount) {
-            rangeMessages.add( new Message__c(Status__c = 'Started', JobId__c = jobId ) );
+            rangeMessages.add( new Message__c(Status__c = 'Started', EntryPointUuid__c = entryPointUuid ) );
             z++;
         }
         insert rangeMessages;
@@ -43,7 +43,7 @@
         List<Message__c> otherMessages = new List<Message__c> ();
         z = 1;
         while (z <= otherCount) {
-            otherMessages.add(new Message__c(Status__c = 'Completed', JobId__c = jobId) );  //Completed
+            otherMessages.add(new Message__c(Status__c = 'Completed', EntryPointUuid__c = entryPointUuid) );  //Completed
             z++;
         }
         insert otherMessages;
@@ -56,7 +56,7 @@
             inputEvent.put('SiblingIds' , siblingIds);
             inputEvent.put('Chunk' , i+1);
 
-            ApexClassModel.Process process = new GateByJob();
+            ApexClassModel.Process process = new AggregateByEntryPoint();
             List<Map<String,Object>> outputs = process.test(inputEvent);
             counter++;
         }
@@ -71,7 +71,7 @@
     static testmethod void callingIsReleaseThrowsExpectedException01() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            //'JobId' => '707000000000000AAA',
+            //'EntryPointUuid' => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx',
             'Route' => 'Test#1',
             'Range' => 1,
             'Chunk' => 1,
@@ -80,10 +80,10 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Process process = new GateByJob();
+            ApexClassModel.Process process = new AggregateByEntryPoint();
             List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
-            actualFlag = e.getMessage().contains('missing mandatory JobId');
+            actualFlag = e.getMessage().contains('missing mandatory EntryPointUuid');
         }
 
         // Assemble :
@@ -98,7 +98,7 @@
     static testmethod void callingIsReleaseThrowsExpectedException02() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            'JobId' => '707000000000000AAA',
+            'EntryPointUuid' => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx',
             //'Route' => 'test',
             'Range' => 1,
             'Chunk' => 1,
@@ -107,7 +107,7 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Process process = new GateByJob();
+            ApexClassModel.Process process = new AggregateByEntryPoint();
             List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Route');
@@ -124,7 +124,7 @@
     static testmethod void callingIsReleaseThrowsExpectedException04() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            'JobId' => '707000000000000AAA',
+            'EntryPointUuid' => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx',
             'Route' => 'Test#1',
             //'Range' => 1,
             'Chunk' => 1,
@@ -133,7 +133,7 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Process process = new GateByJob();
+            ApexClassModel.Process process = new AggregateByEntryPoint();
             List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Range');
@@ -150,7 +150,7 @@
     static testmethod void callingIsReleaseThrowsExpectedException05() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            'JobId' => '707000000000000AAA',
+            'EntryPointUuid' => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx',
             'Route' => 'Test#1',
             'Range' => 1,
             //'Chunk' => 1
@@ -159,7 +159,7 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Process process = new GateByJob();
+            ApexClassModel.Process process = new AggregateByEntryPoint();
             List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Chunk');
@@ -176,7 +176,7 @@
     static testmethod void callingIsReleaseThrowsExpectedException06() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            'JobId' => '707000000000000AAA',
+            'EntryPointUuid' => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx',
             'Route' => 'Test#1',
             'Range' => 1,
             'Chunk' => 1
@@ -185,7 +185,7 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Process process = new GateByJob();
+            ApexClassModel.Process process = new AggregateByEntryPoint();
             List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory SiblingIds');
@@ -207,10 +207,10 @@
         Integer totalCount = 5;
         Integer rangeCount =  3 ;
         Integer otherCount  = totalCount - rangeCount;
-        String jobId = '707000000000000AAA';
+        String entryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
 
         Map<String,Object> templateEvent = new Map<String,Object> {
-            'JobId' => jobId,
+            'EntryPointUuid' => EntryPointUuid,
             'Route' => 'Test#1',
             'Range' => rangeCount,
             'Chunk' => null,
@@ -220,7 +220,7 @@
         List<Message__c> rangeMessages = new List<Message__c> ();
         Integer i = 1;
         while (i <= rangeCount) {
-            rangeMessages.add( new Message__c(Status__c = 'Started' , JobId__c = jobId) );
+            rangeMessages.add( new Message__c(Status__c = 'Started' , EntryPointUuid__c = entryPointUuid) );
             i++;
         }
         insert rangeMessages;
@@ -229,7 +229,7 @@
         List<Message__c> otherMessages = new List<Message__c> ();
         i = 1;
         while (i <= otherCount) {
-            otherMessages.add(new Message__c(Status__c = 'Completed' , JobId__c = jobId) );  // Completed
+            otherMessages.add(new Message__c(Status__c = 'Completed' , EntryPointUuid__c = entryPointUuid) );  // Completed
             i++;
         }
         insert otherMessages;
@@ -251,7 +251,7 @@
         Map<String,Object> inputEvent = chunkToEvent.get(rangeCount);
 
         // Act
-        ApexClassModel.Process process = new GateByJob();
+        ApexClassModel.Process process = new AggregateByEntryPoint();
         List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
 
         // Assemble
@@ -268,10 +268,10 @@
         Integer totalCount = 5;
         Integer rangeCount =  3 ;
         Integer otherCount  = totalCount - rangeCount;
-        String jobId = '707000000000000AAA';
+        String entryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
 
         Map<String,Object> templateEvent = new Map<String,Object> {
-            'JobId' => jobId,
+            'EntryPointUuid' => EntryPointUuid,
             'Route' => 'Test#1',
             'Range' => rangeCount,
             'Chunk' => null,
@@ -281,7 +281,7 @@
         List<Message__c> rangeMessages = new List<Message__c> ();
         Integer i = 1;
         while (i <= rangeCount) {
-            rangeMessages.add( new Message__c(Status__c = 'Started', JobId__c = jobId ) );
+            rangeMessages.add( new Message__c(Status__c = 'Started', EntryPointUuid__c = entryPointUuid ) );
             i++;
         }
         insert rangeMessages;
@@ -291,7 +291,7 @@
         List<Message__c> otherMessages = new List<Message__c> ();
         i = 1;
         while (i <= otherCount) {
-            otherMessages.add(new Message__c(Status__c = 'Completed', JobId__c = jobId) );  //Completed
+            otherMessages.add(new Message__c(Status__c = 'Completed', EntryPointUuid__c = entryPointUuid) );  //Completed
             i++;
         }
         insert otherMessages;
@@ -314,7 +314,7 @@
         Map<String,Object> inputEvent = chunkToEvent.get(notLastOffset);
 
         // Act
-        ApexClassModel.Process process = new GateByJob();
+        ApexClassModel.Process process = new AggregateByEntryPoint();
         List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
 
         // Assemble
@@ -332,10 +332,10 @@
         Integer totalCount = 5;
         Integer rangeCount =  3 ;
         Integer otherCount  = totalCount - rangeCount;
-        String jobId = '707000000000000AAA';
+        String entryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
 
         Map<String,Object> templateEvent = new Map<String,Object> {
-            'JobId' => jobId,
+            'EntryPointUuid' => EntryPointUuid,
             'Route' => 'Test#1',
             'Range' => rangeCount,
             'Chunk' => null,
@@ -345,7 +345,7 @@
         List<Message__c> rangeMessages = new List<Message__c> ();
         Integer i = 1;
         while (i <= rangeCount) {
-            rangeMessages.add( new Message__c(Status__c = 'Started',  JobId__c = jobId ) );
+            rangeMessages.add( new Message__c(Status__c = 'Started',  EntryPointUuid__c = entryPointUuid ) );
             i++;
         }
         insert rangeMessages;
@@ -354,7 +354,7 @@
         List<Message__c> otherMessages = new List<Message__c> ();
         i = 1;
         while (i <= otherCount) {
-            otherMessages.add(new Message__c(Status__c = 'Buffered', JobId__c = jobId) );  //Buffered or Paused
+            otherMessages.add(new Message__c(Status__c = 'Buffered', EntryPointUuid__c = entryPointUuid) );  //Buffered or Paused
             i++;
         }
         insert otherMessages;
@@ -376,7 +376,7 @@
         Map<String,Object> inputEvent = chunkToEvent.get(lastOffset);
 
         // Act
-        ApexClassModel.Process process = new GateByJob();
+        ApexClassModel.Process process = new AggregateByEntryPoint();
         List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
 
         // Assemble
@@ -412,7 +412,7 @@
         };
 
         // Act
-        Map<String,Object> actualCommonParameters = GateByJob.getCommonParameters(gateItems);
+        Map<String,Object> actualCommonParameters = AggregateByEntryPoint.getCommonParameters(gateItems);
 
         // prepare
         Integer actualSize = actualCommonParameters.keySet().size();
@@ -447,7 +447,7 @@
         };
 
         // Act
-        Map<String,Object> actualCommonParameters = GateByJob.getCommonParameters(gateItems);
+        Map<String,Object> actualCommonParameters = AggregateByEntryPoint.getCommonParameters(gateItems);
 
         // prepare
         Integer actualSize = actualCommonParameters.keySet().size();
@@ -491,7 +491,7 @@
         };
 
         // Act
-        Map<String,Object> actualCommonParameters = GateByJob.getCommonParameters(gateItems);
+        Map<String,Object> actualCommonParameters = AggregateByEntryPoint.getCommonParameters(gateItems);
 
         // prepare
         Integer actualSize = actualCommonParameters.keySet().size();
@@ -521,7 +521,7 @@
         };
 
         // Act
-        Map<String,Object> actualParameters =  GateByJob.cleanParameters(parameters);
+        Map<String,Object> actualParameters =  AggregateByEntryPoint.cleanParameters(parameters);
 
         // prepare
         Boolean actual01 = (actualParameters.get('__x') != null);
@@ -541,16 +541,16 @@
 
     static testmethod void callingIsReleaseReturnsExpectedExpected01() {
         // Arrange :
-        String jobId = '707000000000000AAA';
+        String entryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
         Integer chunkTotal = 1;
         Integer chunk = 1;
 
-        Message__c message = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message = new Message__c( Status__c = 'Started', Event__c = '{"EntryPointUuid":"' + EntryPointUuid + '"}');
         insert message;
         Set<Id> siblingIds =  new Set<Id>{ message.Id };
 
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = AggregateByEntryPoint.isRelease(siblingIds, EntryPointUuid, chunkTotal, chunk);
 
         // Assemble :
         // n/a
@@ -562,19 +562,19 @@
 
     static testmethod void callingIsReleaseReturnsExpectedExpected02() {
         // Arrange :
-        String jobId = '707000000000000AAA';
+        String entryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
         Integer chunkTotal = 2;
         Integer chunk = 1;
 
-        Message__c message1 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message1 = new Message__c( Status__c = 'Started', Event__c = '{"EntryPointUuid":"' + EntryPointUuid + '"}');
         insert message1;
-        Message__c message2 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message2 = new Message__c( Status__c = 'Started', Event__c = '{"EntryPointUuid":"' + EntryPointUuid + '"}');
         insert message2;
         Set<Id> siblingIds =  new Set<Id>{ message1.Id,  message2.Id };
 
 
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = AggregateByEntryPoint.isRelease(siblingIds, EntryPointUuid, chunkTotal, chunk);
 
         // Assemble :
         // n/a
@@ -586,19 +586,19 @@
 
     static testmethod void callingIsReleaseReturnsExpectedExpected03() {
         // Arrange :
-        String jobId = '707000000000000AAA';
+        String entryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
         Integer chunkTotal = 2;
         Integer chunk = 2;
 
-        Message__c message1 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message1 = new Message__c( Status__c = 'Started', Event__c = '{"EntryPointUuid":"' + EntryPointUuid + '"}');
         insert message1;
-        Message__c message2 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message2 = new Message__c( Status__c = 'Started', Event__c = '{"EntryPointUuid":"' + EntryPointUuid + '"}');
         insert message2;
         Set<Id> siblingIds =  new Set<Id>{ message1.Id,  message2.Id };
 
 
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = AggregateByEntryPoint.isRelease(siblingIds, EntryPointUuid, chunkTotal, chunk);
 
         // Assemble :
         // n/a
@@ -610,22 +610,22 @@
 
     static testmethod void callingIsReleaseReturnsExpectedExpected04() {
         // Arrange :
-        String jobId = '707000000000000AAA';
+        String entryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
         Integer chunkTotal = 2;
         Integer chunk = 2;
 
-        Message__c messageB = new Message__c( Status__c = 'Buffered', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c messageB = new Message__c( Status__c = 'Buffered', Event__c = '{"EntryPointUuid":"' + EntryPointUuid + '"}');
         insert messageB;
 
-        Message__c message1 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message1 = new Message__c( Status__c = 'Started', Event__c = '{"EntryPointUuid":"' + EntryPointUuid + '"}');
         insert message1;
-        Message__c message2 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message2 = new Message__c( Status__c = 'Started', Event__c = '{"EntryPointUuid":"' + EntryPointUuid + '"}');
         insert message2;
         Set<Id> siblingIds =  new Set<Id>{ message1.Id,  message2.Id };
 
 
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = AggregateByEntryPoint.isRelease(siblingIds, EntryPointUuid, chunkTotal, chunk);
 
         // Assemble :
         // n/a
@@ -637,22 +637,22 @@
 
     static testmethod void callingIsReleaseReturnsExpectedExpected05() {
         // Arrange :
-        String jobId = '707000000000000AAA';
+        String entryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
         Integer chunkTotal = 2;
         Integer chunk = 2;
 
-        Message__c messageB = new Message__c( Status__c = 'Completed', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c messageB = new Message__c( Status__c = 'Completed', Event__c = '{"EntryPointUuid":"' + EntryPointUuid + '"}');
         insert messageB;
 
-        Message__c message1 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message1 = new Message__c( Status__c = 'Started', Event__c = '{"EntryPointUuid":"' + EntryPointUuid + '"}');
         insert message1;
-        Message__c message2 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c message2 = new Message__c( Status__c = 'Started', Event__c = '{"EntryPointUuid":"' + EntryPointUuid + '"}');
         insert message2;
         Set<Id> siblingIds =  new Set<Id>{ message1.Id,  message2.Id };
 
 
         // Act :
-        Boolean actualIsRelease = GateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = AggregateByEntryPoint.isRelease(siblingIds, EntryPointUuid, chunkTotal, chunk);
 
         // Assemble :
         // n/a

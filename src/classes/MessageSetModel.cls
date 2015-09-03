@@ -139,17 +139,17 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             /**
              * Populates the Unique Entry Point Id
              * This parameter surfaced onto the message to support the
-             * functionality in the Gate By Entry Point process
+             * functionality in the Aggregate By Entry Point process
              */
-            String entryPointUuid = (String)event.get('EntryPointUuid'); //this field only ever used to GATE BY ENTRY POINT
+            String entryPointUuid = (String)event.get('EntryPointUuid'); //this field only ever used to AGGREGATE BY ENTRY POINT
             if (entryPointUuid != null) message.EntryPointUuid__c = entryPointUuid;
             
             /**
              * Populates the Queueable Id
              * This parameter surfaced onto the message to support the
-             * functionality in the Gate By Job process
+             * functionality in the Aggregate By Job process
              */
-            Id jobId = (Id)event.get('JobId'); //this field only ever used to GATE BY JOB
+            Id jobId = (Id)event.get('JobId'); //this field only ever used to AGGREGATE BY JOB
             if (jobId != null) message.JobId__c = jobId;
             
             //#972 reserialize in alphabetical order

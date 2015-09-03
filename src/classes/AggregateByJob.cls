@@ -1,22 +1,22 @@
-public class GateByEntryPoint extends ApexClassModel.Process {
+public class AggregateByJob extends ApexClassModel.Process {
     void callout(Map<String,Object> inputEvent) {}
 
-    private class GateByEntryPointException extends Exception {}
+    private class AggregateByJobException extends Exception {}
 
     /**
-     * @docs ProcessGateByEntryPoint.html
+     * @docs ProcessAggregateByJob.html
      */
     public class Summary {
         String Tag = 'Service Bus';
-        String Name = 'Gate By Entry Point';
-        String Description = 'Aggregates a collection of messages having the same Entry Point Id.';
+        String Name = 'Aggregate By Job';
+        String Description = 'Aggregates a collection of messages having the same Job Id.';
         String Icon = 'arrow_join';
-        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessGateByEntryPoint').getUrl();
-        Integer Limits = 1000; //max sync limit
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessAggregateByJob').getUrl();
+        Integer Limits =  1000; //max sync limit
         String Cardinality = 'Fewer';
-
+        
         Map<String,String> Inputs = new Map<String,String>{
-            'EntryPointUuid' => 'Entry Point Id that associates gated messages.'
+            'JobId' => 'Job Id that associates gated messages.'
         };
 
         Map<String,String> Outputs = new Map<String,String>{
@@ -25,45 +25,47 @@ public class GateByEntryPoint extends ApexClassModel.Process {
         };
     }
 
+
+
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
 
-        if (!inputEvent.containsKey('EntryPointUuid'))
-            throw new GateByEntryPointException('Input event missing mandatory EntryPointUuid parameter');
+        if (!inputEvent.containsKey('JobId'))
+            throw new AggregateByJobException('Input event missing mandatory JobId parameter');
         if (!inputEvent.containsKey('Range'))
-            throw new GateByEntryPointException('Input event missing mandatory Range parameter');
+            throw new AggregateByJobException('Input event missing mandatory Range parameter');
         if (!inputEvent.containsKey('Chunk'))
-            throw new GateByEntryPointException('Input event missing mandatory Chunk parameter');
+            throw new AggregateByJobException('Input event missing mandatory Chunk parameter');
         if (!inputEvent.containsKey('Route'))
-            throw new GateByEntryPointException('Input event missing mandatory Route parameter');
+            throw new AggregateByJobException('Input event missing mandatory Route parameter');
         if (!inputEvent.containsKey('SiblingIds'))
-            throw new GateByEntryPointException('Input event missing mandatory SiblingIds parameter');
+            throw new AggregateByJobException('Input event missing mandatory SiblingIds parameter');
 
-        
-        String entryPointUuid = (String)inputEvent.get('EntryPointUuid');
+        String jobId = (String)inputEvent.get('JobId');
         Integer chunkTotal = (Integer)inputEvent.get('Range');
         Integer chunk = (Integer)inputEvent.get('Chunk');
         String route = (String)inputEvent.get('Route');
         Set<Id>  siblingIds  = (Set<Id>)Json.deserialize(Json.serialize(inputEvent.get('SiblingIds')), Set<Id>.class);
 
-        Boolean release = isRelease(siblingIds, entryPointUuid, chunkTotal, chunk);
+        
+        Boolean release = isRelease(siblingIds, jobId, chunkTotal, chunk);
 
         if ( !release) {
             //this is not the last item, so let's swallow
             return new List<Map<String,Object>>();
         }
+        
 
-        
-        
 
         // RELEASE :
 
+        
         //would have been nice to use a QueryLocator to give us compile-time
         //validation of the query string, but it reads out the binds as :tmpVar1
         String fieldName = SObjectType.Message__c.Fields.Event__c.Name;
         String queryString = ''
                 + 'SELECT ' + fieldName + ' '
                 + 'FROM Message__c '
-                + 'WHERE EntryPointUuid__c = \'' + entryPointUuid + '\'  AND Route__c  = \'' + route + '\'' //EntryPointUuid__c field only ever used to GATE BY ENTRY POINT
+                + 'WHERE JobId__c = \'' + jobId + '\'  AND Route__c  = \'' + route + '\'' //JobId__c field only ever used to AGGREGATE BY JOB
                 ;
 
         //this is the last item, let's release
@@ -135,8 +137,9 @@ public class GateByEntryPoint extends ApexClassModel.Process {
         return inputEvent;
     }
     
+    
     @testVisible
-    private static Boolean isRelease(Set<Id> siblingIds, String entryPointUuid, Integer chunkTotal, Integer chunk) {
+    public static Boolean isRelease(Set<Id> siblingIds, String jobId, Integer chunkTotal, Integer chunk) {
         // Release trigger:
         //
         //    NR / MB : we assume the Gate process will never fail
@@ -155,7 +158,7 @@ public class GateByEntryPoint extends ApexClassModel.Process {
             SELECT Id
             FROM Message__c
             WHERE Status__c != 'Completed'
-            AND EntryPointUuid__c = :entryPointUuid
+            AND JobId__c = :jobId
             AND Id NOT IN :siblingIds
             LIMIT 1
         ].isEmpty();

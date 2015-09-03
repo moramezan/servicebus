@@ -89,19 +89,19 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>GateByEntryPoint</apexClass>
+        <apexClass>AggregateByEntryPoint</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>GateByEntryPointTest</apexClass>
+        <apexClass>AggregateByEntryPointTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>GateByJob</apexClass>
+        <apexClass>AggregateByJob</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>GateByJobTest</apexClass>
+        <apexClass>AggregateByJobTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
