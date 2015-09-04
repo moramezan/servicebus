@@ -7,6 +7,10 @@
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>
+        <members>AggregateByEntryPoint</members>
+        <members>AggregateByEntryPointTest</members>
+        <members>AggregateByJob</members>
+        <members>AggregateByJobTest</members>
         <members>ApexClassModel</members>
         <members>ApexClassModelTest</members>
         <members>ApexClassSetModel</members>
@@ -28,10 +32,6 @@
         <members>BrokerTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
-        <members>AggregateByEntryPoint</members>
-        <members>AggregateByEntryPointTest</members>
-        <members>AggregateByJob</members>
-        <members>AggregateByJobTest</members>
         <members>Job</members>
         <members>JobTest</members>
         <members>Jump</members>
