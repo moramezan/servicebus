@@ -787,4 +787,49 @@
         System.assertEquals(expectedCount, actualCount);
         
     }
+    
+    /**
+     * Sibling ID population...
+     */
+    public class FakeGate extends ApexClassModel.Process {
+        void callout(Map<String,Object> inputEvent) {}
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            DidRun = true;
+            SiblingIds = (Set<Id>)Json.deserialize(Json.serialize(inputEvent.get('SiblingIds')), Set<Id>.class);
+            return new List<Map<String,Object>>();
+        }
+    }
+    
+    public class FakeGateSummary {
+        String Description = 'fake gate';
+        Integer Limits = 999;
+    }
+    
+    static Boolean DidRun = false;
+    static Set<Id> SiblingIds;
+    
+    static testmethod void testBrokerPopulatesSiblingIds() {
+        //arrange event
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'Route' => FakeGate.class.getName()
+        };
+        
+        //arrange messages
+        List<Message__c> inputMessages = new List<Message__c>{
+            new Message__c(Event__c = Json.serialize(inputEvent)),
+            new Message__c(Event__c = Json.serialize(inputEvent))
+        };
+        insert inputMessages;
+        
+        //act
+        Broker impl = Broker.impl();
+        impl.mark(inputMessages);
+        impl.execute(inputMessages, new List<Message__c>());
+        if (!DidRun) System.assert(false, 'Process probably did not run.');
+        System.assertEquals(null, inputMessages[0].Exception__c, 'Wrong exception.');
+        
+        //assert
+        System.assert(SiblingIds.contains(inputMessages[0].Id), 'Message1 id missing.');
+        System.assert(SiblingIds.contains(inputMessages[1].Id), 'Message2 id missing.');
+    }
 }

@@ -113,6 +113,7 @@ abstract public without sharing class Broker {
     
     /**
      * Sets many Messages statuses to 'Started' and writes them away.
+     * TODO we should be REALLY careful here because it modifies BY REFERENCE
      */
     public List<Database.SaveResult> mark(List<Message__c> messages) {
         try {
@@ -122,7 +123,7 @@ abstract public without sharing class Broker {
             //#1026 the update populates the MessageId event parameter
             Set<Id> messageIds = new Map<Id,SObject>(messages).keySet();
             List<Database.SaveResult> results = Database.update(messages);
-            messages.clear();
+            messages.clear(); //this is messing with list reference!
             
             for (Message__c message : [SELECT Id, Event__c FROM Message__c WHERE Id IN :messageIds]) {
                 //#1026 gotta re-query the event for it to contain the MessageId
@@ -160,7 +161,7 @@ abstract public without sharing class Broker {
                     //#1026 can't use map and keySet()
                     //because Row with null Id at index: 0
                     Set<Id> siblingIds = new Set<Id>();
-                    siblingIds.add(inputMessage.Id);
+                    for (Message__c sibling : inputMessages) siblingIds.add(sibling.Id);
                     inputEvent.put('SiblingIds', siblingIds);
                 }
                 

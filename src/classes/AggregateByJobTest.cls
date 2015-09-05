@@ -662,4 +662,45 @@
         System.assertEquals(expectedIsRelease , actualIsRelease);
     }
 
+    public class Split extends ApexClassModel.Process {
+        void callout(Map<String,Object> inputEvent) {}
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            return new List<Map<String,Object>>{
+                new Map<String,Object>{'RecordId' => '001,Account'},
+                new Map<String,Object>{'RecordId' => '0ca,ChatterActivity'},
+                new Map<String,Object>{'RecordId' => '0cs,OauthConsumerScope'},
+                new Map<String,Object>{'RecordId' => '0eb,EntityBlacklist'},
+                new Map<String,Object>{'RecordId' => '0en,Endorsement'}
+            };
+        }
+    }
+    
+    public class SplitSummary {
+        String Description = 'the big split';
+    }
+
+    static testmethod void testBrokerAggregateSiblings() {
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
+        insert sequence;
+        
+        //arrange steps
+        SequenceModel.fromId(sequence.Id).appendStep(Split.class);
+        SequenceModel.fromId(sequence.Id).appendStep(AggregateByJob.class);
+        SequenceModel.fromId(sequence.Id).appendStep(Terminate.class);
+        
+        //act (enqueue)
+        Test.startTest();
+        SequenceModel.fromId(sequence.Id).enqueueTestMessage();
+        Test.stopTest();
+        
+        //act (broker)
+        Broker.impl().run();
+        
+        //assert
+        Integer expectedCount = 7;
+        Integer actualCount = [SELECT COUNT() FROM Message__c];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count. Gate probably did not release.');
+    }
+    
 }
