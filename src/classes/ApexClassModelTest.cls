@@ -277,7 +277,7 @@
         ApexClassModel.Summary summary = new ApexClassModel.Summary(TooManyInputs.class);
         
         //assert
-        Integer expectedLimits = 1000; //#955 possibly 2000, but headspace
+        Integer expectedLimits = 200; //#955 possibly 2000, but headspace
         Integer actualLimits = summary.Limits;
         System.assertEquals(expectedLimits, actualLimits, 'Wrong limits.');
     }

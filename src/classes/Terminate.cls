@@ -10,7 +10,7 @@ public class Terminate extends ApexClassModel.Process {
         String Description = 'Swallows messages at the end of this sequence.';
         String Icon = 'stop';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessTerminate').getUrl();
-        Integer Limits = 1000; //max sync limit
+        Integer Limits = 200; //max sync limit
         String Cardinality = 'Zero';
     }
     

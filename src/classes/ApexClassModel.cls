@@ -79,7 +79,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 if (this.Cardinality == null) this.Cardinality = 'Any';
                 
                 //#955 cap Limits ceiling
-                if (this.Limits > 1000) this.Limits = 1000; //#955 possibly 2000, but headspace
+                if (this.Limits > 200) this.Limits = 200; //#1038 even more breathing room //#955 possibly 2000, but headspace
                 if (this.Limits < 1) this.Limits = 1; //be sensible
 
             } catch (Exception e) {

@@ -12,7 +12,7 @@ public class AggregateByJob extends ApexClassModel.Process {
         String Description = 'Aggregates a collection of messages having the same Job Id.';
         String Icon = 'arrow_join';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessAggregateByJob').getUrl();
-        Integer Limits =  1000; //max sync limit
+        Integer Limits =  200; //max sync limit
         String Cardinality = 'Fewer';
         
         Map<String,String> Inputs = new Map<String,String>{

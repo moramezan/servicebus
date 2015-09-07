@@ -5,7 +5,7 @@
         ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByEntryPoint.class);
 
         //assert
-        Integer expectedLimits = 1000; //max sync limit
+        Integer expectedLimits = 200; //max sync limit
         Integer actualLimits = summary.Limits;
         System.assertEquals(expectedLimits, actualLimits);
     }
