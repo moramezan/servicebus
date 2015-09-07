@@ -115,22 +115,12 @@ abstract public without sharing class Broker {
      * Sets many Messages statuses to 'Started' and writes them away.
      * TODO we should be REALLY careful here because it modifies BY REFERENCE
      */
-    public List<Database.SaveResult> mark(List<Message__c> messages) {
+    public void mark(List<Message__c> messages) {
         try {
             if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');
             for (Message__c message : messages) message.Status__c = 'Started'; //in-database
-            
-            //#1026 the update populates the MessageId event parameter
-            Set<Id> messageIds = new Map<Id,SObject>(messages).keySet();
             List<Database.SaveResult> results = Database.update(messages);
-            messages.clear(); //this is messing with list reference!
-            
-            for (Message__c message : [SELECT Id, Event__c FROM Message__c WHERE Id IN :messageIds]) {
-                //#1026 gotta re-query the event for it to contain the MessageId
-                messages.add(message);
-            }
-            
-            return results;
+            //#1038 avoid playing with list by reference, hope to avoid memory leak
             
         } catch (Exception e) {
             throw new PanicException('Mark panic: ' + e.getMessage(), e);

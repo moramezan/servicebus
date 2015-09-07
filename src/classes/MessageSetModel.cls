@@ -101,13 +101,17 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         }
     }
     
-    override public void onAfterInsert() {
-        this.inhibitCreationFromGui();
-    }
-    
     override public void onBeforeInsert() {
+        this.inhibitCreationFromGui();
         this.alphabetizeJsonAndPopulateFields();
         this.swallowToString();
+    }
+    
+    override public void onAfterInsert() {
+        //#1038 update immediately to populate message ids, avoid memory leak in mark
+        List<Message__c> messages = new List<Message__c>();
+        for (Message__c message : this.Messages) messages.add(new Message__c(Id = message.Id));
+        update messages; //touch
     }
     
     override public void onBeforeUpdate(List<SObject> oldObjects) {

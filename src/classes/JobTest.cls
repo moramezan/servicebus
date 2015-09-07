@@ -80,7 +80,8 @@
         Integer actualLimit = limitDmlRows;
         System.assertEquals(expectedLimit, actualLimit, 'Wrong size.');
         
-        Integer expectedAfter = 1000; //#955 possibly 10000, but headspace
+        //x2 due to #1038 we are doing update immediately after insert
+        Integer expectedAfter = 2000; //#955 possibly 10000, but headspace
         Integer actualAfter = dmlRows;
         System.assertEquals(expectedAfter, actualAfter, 'Wrong size.');
     }
