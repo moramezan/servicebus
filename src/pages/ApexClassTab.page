@@ -1,10 +1,10 @@
 <!-- this is called "list" cuz a tab would show "recently viewed" etc -->
 <!-- no recordSetVar  as "List controllers are not supported for ApexClass" -->
-<apex:page controller="ApexClassTabController" setup="true" action="{!doInit}" title="Processes">
+<apex:page controller="ApexClassTabController" setup="true" action="{!doInit}" title="Services">
 
     <script>
         (function() {
-            //colour in the process tab... d'oh
+            //colour in the service tab... d'oh
             var li = document.getElementById('{!$CurrentPage.parameters.sfdc.tabName}' + '_Tab');
             if (!li) return;
             li.className += ' zen-active primaryPalette';
@@ -14,15 +14,15 @@
         }());
     </script>
     
-    <apex:sectionHeader title="Processes" description="A Process is a single, logical program with inputs and outputs in the form of events. Processes are implemented as Apex classes." />
+    <apex:sectionHeader title="Services" description="A Service is a single, logical program with inputs and outputs in the form of events. Services are implemented as Apex classes." />
     
     <apex:pageBlock mode="detail">
         <apex:pageBlockTable value="{!id2summary}" var="id">
 
             <apex:column headerValue="Action" width="110" style="color: #999;">
                 <apex:outputLink value="/{!id}" style="color: #015ba7; text-decoration: none;">Apex</apex:outputLink>
-                <apex:outputText rendered="{!id2summary[id].ProcessSetting != null}">&nbsp;|&nbsp;</apex:outputText>
-                <apex:outputLink rendered="{!id2summary[id].ProcessSetting != null}" value="{!URLFOR($Page.ApexClassSetting, null, ['id'=id])}" style="color: #015ba7; text-decoration: none;">Setting</apex:outputLink>
+                <apex:outputText rendered="{!id2summary[id].ServiceSetting != null}">&nbsp;|&nbsp;</apex:outputText>
+                <apex:outputLink rendered="{!id2summary[id].ServiceSetting != null}" value="{!URLFOR($Page.ApexClassSetting, null, ['id'=id])}" style="color: #015ba7; text-decoration: none;">Setting</apex:outputLink>
             </apex:column>
             
             <apex:column headerValue="Icon" width="30">

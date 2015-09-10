@@ -13,22 +13,22 @@
         return sequence.Id;
     }
     
-    static testmethod void testGetProcesses() {
+    static testmethod void testGetServices() {
         //arrange sequence, controller and extension
         Id sequenceId = setupSequence();
         ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c(Id = sequenceId, Name = 'SequenceBuilderExtensionTest'));
         SequenceBuilderExtension extension = new SequenceBuilderExtension(controller);
         
         //act
-        String data = extension.getProcesses();
+        String data = extension.getServices();
         
         //assemble
-        List<Object> processes = (List<Object>)Json.deserializeUntyped(data);
+        List<Object> services = (List<Object>)Json.deserializeUntyped(data);
         
         //assert
         Integer expectedCount = 5; //about 9
-        Integer actualCount = processes.size();
-        System.assert(actualCount > expectedCount, 'Wrong process count.');
+        Integer actualCount = services.size();
+        System.assert(actualCount > expectedCount, 'Wrong count.');
     }
     
     static testmethod void testGetSteps() {
@@ -191,7 +191,7 @@
         System.assertEquals(expectedCount, actualCount);
         
         String actualSequenceTerminateNotLastStep = sequenceB.Id;
-        String expectedSequenceTerminateNotLastStep = 'Terminate process not present at end of sequence';
+        String expectedSequenceTerminateNotLastStep = 'Terminate not present at end of sequence';
         System.assert(messages[0].getSummary().contains(actualSequenceTerminateNotLastStep));
         System.assert(messages[0].getSummary().contains(expectedSequenceTerminateNotLastStep));
         
@@ -342,7 +342,7 @@
         System.assertEquals(expectedErrorCount, actualErrorCount);
 
         String actualSequenceSubscribeNotLastStep = sequenceB.Id;
-        String expectedSequenceSubscribeNotLastStep = 'Subscribe process not first step of sequence';
+        String expectedSequenceSubscribeNotLastStep = 'Subscribe not first step of sequence';
         System.assert(messages[0].getSummary().contains(expectedSequenceSubscribeNotLastStep));
         System.assert(messages[0].getSummary().contains(actualSequenceSubscribeNotLastStep));
     }

@@ -1,28 +1,28 @@
 <h1>
-    Processes
+    Services
 </h1>
 
 <h3>
     <img class="right" src="resources/Splashes/processes.png" />
-    What is a process?
+    What is a service?
 </h3>
 
 <p>
-    A process is a single, logical program with inputs and outputs in the form of events. Processes are implemented as Apex classes. Each process handles one event, and may output zero, one, or many new events.
+    A service is a single, logical program with inputs and outputs in the form of events. Services are implemented as Apex classes. Each service handles one event, and may output zero, one, or many new events.
 </p>
 
 <ul>
-    <li>Each process has a Summary that describes it.</li>
+    <li>Each service has a Summary that describes it.</li>
     <li>An event is represented in Apex code as <code>Map&lt;String,Object&gt;</code></li>
 </ul>
 
 <h3>
-    How do I enqueue events to a process?
+    How do I enqueue events to a service?
 </h3>
 
 <p>
     <code>
-        event = {'ToProcess' => 'SendPayment'};
+        event = {'ToService' => 'SendPayment'};
         <br />
         job = new ServiceBus.Job(event);
         <br />
@@ -33,14 +33,14 @@
 <hr />
 
 <h3>
-    How do I write my own process?
+    How do I write my own service?
 </h3>
 
 <pre>
-global class SendPayment extends Abstract.Process {
+global class SendPayment extends Abstract.Service {
     
     global class Summary {
-        String Description = 'Short explanation of the process.';
+        String Description = 'Short explanation of the service.';
     }
     
     //http requests go here

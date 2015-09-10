@@ -7,7 +7,7 @@
         <fullName>ApexClassId__c</fullName>
         <description>Held in addition to the Apex Class Name, which helps us to heal the routing table after renames etc.</description>
         <externalId>false</externalId>
-        <inlineHelpText>What is the Apex Class Id of the process represented by this step?</inlineHelpText>
+        <inlineHelpText>What is the Apex Class Id of the service represented by this step?</inlineHelpText>
         <label>Apex Class Id</label>
         <length>18</length>
         <required>false</required>
@@ -18,7 +18,7 @@
     <fields>
         <fullName>ApexClassName__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>What process will handle the messages reaching this step?</inlineHelpText>
+        <inlineHelpText>What service will handle the messages reaching this step?</inlineHelpText>
         <label>Fully Qualified Class Name</label>
         <length>80</length>
         <required>false</required>
@@ -29,7 +29,7 @@
     <fields>
         <fullName>ConfigId__c</fullName>
         <externalId>true</externalId>
-        <inlineHelpText>Optionally, what Record Id contains the process config specific to this step?</inlineHelpText>
+        <inlineHelpText>Optionally, what Record Id contains the service config specific to this step?</inlineHelpText>
         <label>Config Id</label>
         <length>18</length>
         <required>false</required>

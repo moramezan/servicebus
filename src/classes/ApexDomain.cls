@@ -7,13 +7,13 @@ public class ApexDomain {
     
     /**
      * Used to enforce read-write permissions
-     * for AppExchange security review process.
+     * for AppExchange security review.
      */
     public class CrudException extends Exception {}
     
     /**
      * Used to enforce field-level permissions
-     * for AppExchange security review process.
+     * for AppExchange security review.
      */
     public class FlsException extends Exception {}
     

@@ -29,8 +29,8 @@ private class WiretapTest {
         Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
-            ApexClassModel.Process process = new Wiretap();
-            List<Map<String,Object>> outputs = process.test(inputEvent);
+            ApexClassModel.Service service = new Wiretap();
+            List<Map<String,Object>> outputs = service.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -42,7 +42,7 @@ private class WiretapTest {
 
 
 
-    static testmethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnProcessSettingNOTSet() {
+    static testmethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnServiceSettingNOTSet() {
         // Arrange :
         String sequenceName = 'Test';
         Integer step = 1;
@@ -62,8 +62,8 @@ private class WiretapTest {
         // Act
         Boolean actualFlagException = false;
         try {
-            ApexClassModel.Process process = new Wiretap();
-            List<Map<String,Object>> results = process.test(parameters);
+            ApexClassModel.Service service = new Wiretap();
+            List<Map<String,Object>> results = service.test(parameters);
         } catch (Exception e) {
            actualFlagException = true;
         }
@@ -74,7 +74,7 @@ private class WiretapTest {
         System.assertEquals(expectedFlagException , actualFlagException );
     }
    
-    static testmethod void callingExecuteReturnsExpectedOutputEventsWhenDefinedProcessSettingSet() {
+    static testmethod void callingExecuteReturnsExpectedOutputEventsWhenDefinedServiceSettingSet() {
         // Arrange :
         String sequenceName = 'Test';
         Integer step = 1;
@@ -92,8 +92,8 @@ private class WiretapTest {
         Integer expectedSize = 1;
 
         // Act
-        ApexClassModel.Process process = new Wiretap();
-        List<Map<String,Object>> actualParametersList = process.test(inputEvent);
+        ApexClassModel.Service service = new Wiretap();
+        List<Map<String,Object>> actualParametersList = service.test(inputEvent);
 
         // prepare
         Integer actualSize = actualParametersList.size();

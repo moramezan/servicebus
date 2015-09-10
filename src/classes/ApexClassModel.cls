@@ -1,15 +1,15 @@
 /**
- * Domain layer for ApexClass (basically our processes)
+ * Domain layer for ApexClass (basically our services)
  */
 public class ApexClassModel extends ApexDomain.StandardModel {
     
     public class InvocationException extends Exception {}
-    public class ProcessDiscoveryException extends Exception {}
+    public class ServiceDiscoveryException extends Exception {}
     
     /**
-     * This class is a template that must exist in every Process. It describes extra metadata around a process that
+     * This class is a template that must exist in every Service. It describes extra metadata around a service that
      * isn't appropriate for Tag, Description, InputParameters or OutputParameters. This inner class must be present
-     * for an apex class to appear in the Process list.
+     * for an apex class to appear in the Services list.
      *
      * @docs ApiMarkerClass.html
      */
@@ -17,7 +17,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         public String Tag {get; set;}
         public String Name {get; set;}
         public String Description {get; set;}
-        public String ProcessSetting {get; set;}
+        public String ServiceSetting {get; set;}
         public String StepConfig {get; set;}
         public String Icon {get; set;}
         public String HelpUrl {get; set;}
@@ -27,7 +27,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         public Map<String,String> Outputs {get; set;}
         
         /**
-         * Attempts to parse all Process.Summary class properties.
+         * Attempts to parse all Service.Summary class properties.
          */
         public Summary(Type reflector) {
             Type inflector;
@@ -35,7 +35,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             if (inflector == null) inflector = Type.forName(reflector + 'Summary'); //makes testing easier
             if (inflector == null) {
                 //failure, bad inner class
-                throw new ProcessDiscoveryException('Process.Summary class is invalid or not visible: ' + reflector.getName());
+                throw new ServiceDiscoveryException('Service.Summary class is invalid or not visible: ' + reflector.getName());
             }
             
             Map<String,Object> summary;
@@ -54,14 +54,14 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             } catch (Exception e) {}
             
             //failure, probably bad toString method
-            if (summary == null) throw new ProcessDiscoveryException(inflector.getName() + ': Process.Summary class must extend Abstract.Process.Summary');
+            if (summary == null) throw new ServiceDiscoveryException(inflector.getName() + ': Service.Summary class must extend Abstract.Service.Summary');
             
             try {
                 //copy properties across
                 this.Tag = (String)summary.get('Tag');
                 this.Name = (String)summary.get('Name');
                 this.Description = (String)summary.get('Description');
-                this.ProcessSetting = (String)summary.get('ProcessSetting');
+                this.ServiceSetting = (String)summary.get('ServiceSetting');
                 this.StepConfig = (String)summary.get('StepConfig');
                 this.Icon = (String)summary.get('Icon');
                 this.HelpUrl = (String)summary.get('HelpUrl');
@@ -84,7 +84,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
 
             } catch (Exception e) {
                 //failure, probably bad json format
-                throw new ProcessDiscoveryException(inflector.getName() + ': Could not resolve value binding: ' + e.getMessage());
+                throw new ServiceDiscoveryException(inflector.getName() + ': Could not resolve value binding: ' + e.getMessage());
             }
         }
     }
@@ -111,7 +111,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * Injects a test message to this process
+     * Injects a test message to this service
      * carrying just the Organization Id.
      *
      * @return the queueable job id
@@ -128,11 +128,11 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     
     /**
      * Redirects the user to the ListView
-     * URL of the specified Process Setting
+     * URL of the specified Service Setting
      */
     public PageReference showSetting() {
         Summary summary = new Summary(this.Reflector);
-        DescribeSObjectResult result = Schema.getGlobalDescribe().get(summary.ProcessSetting).getDescribe();
+        DescribeSObjectResult result = Schema.getGlobalDescribe().get(summary.ServiceSetting).getDescribe();
         
         if (result.isCustomSetting()) {
             //suffix only for custom settings
@@ -143,12 +143,12 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         }
     }
     
-//THERE IS A BINDING BETWEEN: abstract/classes/Process.cls and src/classes/ApexClassModel.cls
+//THERE IS A BINDING BETWEEN: abstract/classes/Service.cls and src/classes/ApexClassModel.cls
 /**
  * MUST BE GLOBAL IN ABSTRACT PACKAGE
  */
-//abstract global class Process {
-abstract public class Process {
+//abstract global class Service {
+abstract public class Service {
     
     /**
      * MUST BE PRESENT IN ABSTRACT PACKAGE
@@ -200,7 +200,7 @@ abstract public class Process {
      * Our only cross-namespace capability
      */
     override public String toString() {
-        //#797 cycle json so process author sees consistent inputs
+        //#797 cycle json so service author sees consistent inputs
         Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.EventProvider);
         
         if (this.AllowsCallouts == true) {
@@ -228,13 +228,13 @@ abstract public class Process {
             //retain camouflage after
             this.AllowsCallouts = null;
             
-            //#797 cycle json so process author sees consistent outputs
+            //#797 cycle json so service author sees consistent outputs
             return Json.serialize(outputEvents);
             
         } else { //this.AllowsCallouts == null
             
             //camouflage... lol
-            return 'Process:[]';
+            return 'Service:[]';
             
         }
     }
@@ -249,9 +249,9 @@ abstract public class Process {
     public Type Reflector;
     
     /**
-     * User process instance (transient prevents inadvertent toString() / serialization)
+     * User service instance (transient prevents inadvertent toString() / serialization)
      */
-    transient Object Process;
+    transient Object Service;
     
     public void invokeCallout(Map<String,Object> inputEvent) {
         
@@ -260,10 +260,10 @@ abstract public class Process {
             throw new InvocationException('ApexClassModel.invokeCallout must receive an input event.');
         }
         
-        if (this.Process == null) {
+        if (this.Service == null) {
             //provide input event and set flag
             Map<String,Object> proxy = new Map<String,Object>{'EventProvider' => Json.serialize(inputEvent), 'AllowsCallouts' => true};
-            this.Process = Json.deserialize(Json.serialize(proxy), this.Reflector);
+            this.Service = Json.deserialize(Json.serialize(proxy), this.Reflector);
         }
         
         //do invocation
@@ -275,7 +275,7 @@ abstract public class Process {
             Integer dmlStatements = Limits.getDMLStatements();
             Integer emailInvocations = Limits.getEmailInvocations();
             
-            data = String.valueOf(this.Process);
+            data = String.valueOf(this.Service);
             
             //measure side effects after
             if (Limits.getFutureCalls() > futureCalls) throw new Broker.UserException('You have uncommitted work pending. Please commit or rollback before calling out');
@@ -304,7 +304,7 @@ abstract public class Process {
         
         if (data != null) {
             //#886 a la "MyCustomException: Exception class must extend another Exception class"
-            throw new Broker.UserException(this.Reflector.getName() + ': Process must extend Abstract.Process');
+            throw new Broker.UserException(this.Reflector.getName() + ': Service must extend Abstract.Service');
         }
     }
     
@@ -315,10 +315,10 @@ abstract public class Process {
             throw new InvocationException('ApexClassModel.invokeExecute must receive an input event.');
         }
         
-        if (this.Process == null) {
+        if (this.Service == null) {
             //provide input event and set flag
             Map<String,Object> proxy = new Map<String,Object>{'EventProvider' => Json.serialize(inputEvent), 'AllowsCallouts' => false};
-            this.Process = Json.deserialize(Json.serialize(proxy), this.Reflector);
+            this.Service = Json.deserialize(Json.serialize(proxy), this.Reflector);
         }
         
         //#877 surface SessionId to select few orgs and packages
@@ -329,7 +329,7 @@ abstract public class Process {
         //do invocation
         String data;
         try {
-            data = String.valueOf(this.Process);
+            data = String.valueOf(this.Service);
         } catch (System.CalloutException e) {
             if (e.getMessage() == 'You have uncommitted work pending. Please commit or rollback before calling out') {
                 //#981 put callout in proper method please
@@ -342,12 +342,12 @@ abstract public class Process {
         
         if (data == null || data == 'null') {
             //#945 a la "System.VisualforceException: Return type of an Apex action method must be a PageReference. Found: java.lang.Integer"
-            throw new Broker.UserException(this.Reflector.getName() + ': Return type of a Process execute method must be a List<Map<String,Object>>');
+            throw new Broker.UserException(this.Reflector.getName() + ': Return type of a Service execute method must be a List<Map<String,Object>>');
         }
         
         if (data.startsWith(('.' + this.Reflector.getName()).substringAfterLast('.') + ':[')) {
             //#886 a la "MyCustomException: Exception class must extend another Exception class"
-            throw new Broker.UserException(this.Reflector.getName() + ': Process must extend Abstract.Process');
+            throw new Broker.UserException(this.Reflector.getName() + ': Service must extend Abstract.Service');
         }
         
         //wrap up results into events (new guys should have Position = 0)
@@ -376,7 +376,7 @@ abstract public class Process {
             
             String route = (String)outputEvent.get('Route');
             if (route != null && !route.contains('#') && inputEvent.get('Route') == outputEvent.get('Route')) {
-                //#956 "fire and forget" means don't persist outputs, unless they were explicitly destined to sequence or process
+                //#956 "fire and forget" means don't persist outputs, unless they were explicitly destined to sequence or service
                 continue; //TODO needs more testing
             }
             
@@ -388,7 +388,7 @@ abstract public class Process {
              * possibility of the Munger being blacklisted
              * An exception is thrown if the Max Hops threshold is reached
              *
-             * We cannot simply increment __Hops BEFORE calling invoke as a process writer could fuck with this parameter
+             * We cannot simply increment __Hops BEFORE calling invoke as a service author could fuck with this parameter
              * Instead we read and increment __Hops BEFORE calling invoke using enforceMaximumHops()
              * and assign to an Integer hops variable
              * We use applyHops()  to apply the incremented hops variable to the __Hops parameter of

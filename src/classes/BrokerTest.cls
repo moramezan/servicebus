@@ -1,4 +1,4 @@
-@IsTest public class BrokerTest { //formerly FailureProcess
+@IsTest public class BrokerTest {
     
 
     /**
@@ -37,7 +37,7 @@
     }
 
     static testmethod void testChunkingMarkFindsMultipleWork() {
-        //arrange processes and sequence and steps
+        //arrange services and sequence and steps
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
@@ -401,11 +401,11 @@
     // TODO - Test Fails
     //        Assume it will be fixed when deailing with Issue "migrate chunking logic into abstract Broker #636"
     // Method Name      testMissingPositionThrowsExpectedException
-    // Error Message    System.AssertException: Assertion Failed: Message cannot have a null process.
+    // Error Message    System.AssertException: Assertion Failed: Message cannot have a null service.
     // Stack Trace      Class.BrokerTest.testMissingPositionThrowsExpectedException: line 680, column 1
     static testmethod void testMissingPositionThrowsExpectedException() {
         //arrange input
-        Map<String,Object> inputEvent = new Map<String,Object>{'c__Not_Sequence_Or_Process' => 1};
+        Map<String,Object> inputEvent = new Map<String,Object>{'c__Not_Sequence_Or_Service' => 1};
         
         //arrange message
         Test.startTest();
@@ -456,7 +456,7 @@
         System.assertEquals(expectedException, actualException, 'Wrong message.');
     }
     
-    static testmethod void testProcessWithoutClassThrowsExpectedException() {
+    static testmethod void testServiceWithoutClassThrowsExpectedException() {
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
@@ -520,7 +520,7 @@
         System.assertEquals(expectedCount, actualCount, 'Wrong size.');
     }
 
-    static testmethod void callingEnqueueWhenBrokerIsNotPausedProcessesMessages() {
+    static testmethod void callingEnqueueWhenBrokerIsNotPausedWorksOnMessages() {
         //arrange broker
         insert new BrokerSetting__c(IsPaused__c = false);
         
@@ -540,7 +540,7 @@
     //        Assume it will be fixed when deailing with Issue "migrate chunking logic into abstract Broker #636"
     // Method Name      canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError
     // Error Message    System.AssertException: Assertion Failed: Wrong message: Expected: Step unqueryable, eg bad sequence
-    //                  name, position, missing terminate., Actual: Message cannot have a null process.
+    //                  name, position, missing terminate., Actual: Message cannot have a null service.
     // Stack Trace      Class.BrokerTest.canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError: line 961, column 1
     // #697 is exercised by this test!
     static testmethod void canFailureToCorrectlyResolveAndPersistMessagesPersistsExpectedError() {
@@ -637,7 +637,7 @@
     }
 
     static testMethod void callingExecuteWithoutMandatoryEventParametersInEventParametersCollectionThrowsException() {
-        // arrange process, sequence, step
+        // arrange service, sequence, step
         String sequenceName = 'Test';
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
@@ -738,28 +738,28 @@
         System.assertEquals(expectedFlag04, actualFlag04);
     }
     
-    @TestVisible public class ChunkErrorProcessException extends Exception {}
+    @TestVisible public class ChunkErrorServiceException extends Exception {}
     
-    public class ChunkErrorProcess extends ApexClassModel.Process {
+    public class ChunkErrorService extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             Boolean isError = (Boolean)inputEvent.get('c__IsError');
-            if (isError == true) throw new ChunkErrorProcessException('Test error');
+            if (isError == true) throw new ChunkErrorServiceException('Test error');
             return new List<Map<String,Object>>{inputEvent.clone()}; //one message
         }
     }
     
-    public class ChunkErrorProcessSummary {
+    public class ChunkErrorServiceSummary {
         String Description = 'Does stuff in memory without side effects.';
         Integer Limits = 2;
     }
     
     static testmethod void testKamikazeChunkingDoesntTakeOutHisMates() {
-        //arrange processes, sequence and steps
+        //arrange services, sequence and steps
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c errorStep = SequenceModel.fromName(sequence.Name).appendStep(ChunkErrorProcess.class);
+        Step__c errorStep = SequenceModel.fromName(sequence.Name).appendStep(ChunkErrorService.class);
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange broker implementation and params
@@ -791,7 +791,7 @@
     /**
      * Sibling ID population...
      */
-    public class FakeGate extends ApexClassModel.Process {
+    public class FakeGate extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             DidRun = true;
@@ -825,7 +825,7 @@
         Broker impl = Broker.impl();
         impl.mark(inputMessages);
         impl.execute(inputMessages, new List<Message__c>());
-        if (!DidRun) System.assert(false, 'Process probably did not run.');
+        if (!DidRun) System.assert(false, 'Service probably did not run.');
         System.assertEquals(null, inputMessages[0].Exception__c, 'Wrong exception.');
         
         //assert

@@ -12,7 +12,7 @@ public with sharing class SequenceBuilderExtension {
     public Integer RoutedMessages {get; set;}
     
     /**
-     * #768 this is used to indicate there is work processing
+     * #768 this is used to indicate there is work ongoing
      * by displaying a twirly alongside the count of messages
      * that are flowing through this sequence.
      */
@@ -68,17 +68,17 @@ public with sharing class SequenceBuilderExtension {
         return Terminate.class.getName();
     }
     
-    public String getProcesses() {
+    public String getServices() {
         Set<Id> apexClassIds = new Map<Id,SObject>([
             SELECT Id
             FROM ApexClass
             WHERE NamespacePrefix != 'abstract'
             LIMIT 10000
         ]).keySet();
-        ApexClassSetModel model = ApexClassSetModel.discoverProcesses(apexClassIds);
+        ApexClassSetModel model = ApexClassSetModel.discoverServices(apexClassIds);
         
-        List<Map<String,Object>> processes = model.toDtos();
-        return Json.serializePretty(processes);
+        List<Map<String,Object>> services = model.toDtos();
+        return Json.serializePretty(services);
     }
     
     /**
@@ -169,7 +169,7 @@ public with sharing class SequenceBuilderExtension {
             if ((steps.size() > 0) ? (steps[steps.size() - 1].ApexClassName__c != Terminate.class.getName()) : false) {
                 ApexPages.addMessage(new ApexPages.Message(
                     ApexPages.Severity.WARNING,
-                    'Terminate process not present at end of sequence ' + sequence.Id
+                    'Terminate not present at end of sequence ' + sequence.Id
                 ));
                 continue;
             }
@@ -189,7 +189,7 @@ public with sharing class SequenceBuilderExtension {
             return null;
         } else {
             //redirect to help
-            return new PageReference('/apex/ContextSensitiveHelp?topic=ProcessTerminate');
+            return new PageReference('/apex/ContextSensitiveHelp?topic=ServiceTerminate');
         }
         } catch (Exception e) {
             ApexPages.addMessages(e);
@@ -264,7 +264,7 @@ public with sharing class SequenceBuilderExtension {
             return null;
         } else {
             //redirect to help
-            return new PageReference('/apex/ContextSensitiveHelp?topic=ProcessPublishSubscribe');
+            return new PageReference('/apex/ContextSensitiveHelp?topic=ServicePublishSubscribe');
         }
         } catch (Exception e) {
             ApexPages.addMessages(e);
@@ -315,7 +315,7 @@ public with sharing class SequenceBuilderExtension {
             if (!subscribeFirst) {
                 ApexPages.addMessage(new ApexPages.Message(
                     ApexPages.Severity.WARNING,
-                    'Subscribe process not first step of sequence ' + sequence.Id
+                    'Subscribe not first step of sequence ' + sequence.Id
                 ));
                 continue;
             }
@@ -356,7 +356,7 @@ public with sharing class SequenceBuilderExtension {
             return null;
         } else {
             //redirect to help
-            return new PageReference('/apex/ContextSensitiveHelp?topic=ProcessPublishSubscribe');
+            return new PageReference('/apex/ContextSensitiveHelp?topic=ServicePublishSubscribe');
         }
         } catch (Exception e) {
             ApexPages.addMessages(e);

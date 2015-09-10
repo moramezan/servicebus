@@ -1,9 +1,9 @@
 @IsTest public class ApexClassSetModelTest {
     
-    static testmethod void testDiscoverProcesses() {
+    static testmethod void testDiscoverServices() {
         //act
         Id apexClassId = [SELECT Id FROM ApexClass WHERE Name = 'Terminate'].Id;
-        ApexClassSetModel model = ApexClassSetModel.discoverProcesses(new Set<Id>{apexClassId});
+        ApexClassSetModel model = ApexClassSetModel.discoverServices(new Set<Id>{apexClassId});
         
         //assemble
         List<ApexClass> apexClasses = model.getRecords();
@@ -21,7 +21,7 @@
     static testmethod void testToDtos() {
         //arrange
         Id apexClassId = [SELECT Id FROM ApexClass WHERE Name = 'Wiretap'].Id;
-        ApexClassSetModel model = ApexClassSetModel.discoverProcesses(new Set<Id>{apexClassId});
+        ApexClassSetModel model = ApexClassSetModel.discoverServices(new Set<Id>{apexClassId});
         
         //act
         List<Map<String,Object>> dtos = model.toDtos();
@@ -58,9 +58,9 @@
         String actualCardinality = (String)dtos[0].get('Cardinality');
         System.assertEquals(expectedCardinality, actualCardinality, 'Wrong Cardinality.');
         
-        String expectedProcessSetting = summary.ProcessSetting;
-        String actualProcessSetting = (String)dtos[0].get('ProcessSetting');
-        System.assertEquals(expectedProcessSetting, actualProcessSetting, 'Wrong ProcessSetting.');
+        String expectedServiceSetting = summary.ServiceSetting;
+        String actualServiceSetting = (String)dtos[0].get('ServiceSetting');
+        System.assertEquals(expectedServiceSetting, actualServiceSetting, 'Wrong ServiceSetting.');
     }
     
 }

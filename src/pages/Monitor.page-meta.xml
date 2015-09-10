@@ -3,6 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <description>Container for presenting Broker activity : 3 dimensions are incorporated - x-axis is process, y-axis is message count and colour is message state</description>
+    <description>Container for presenting Broker activity : 3 dimensions are incorporated - x-axis is service, y-axis is message count and colour is message state</description>
     <label>Monitor</label>
 </ApexPage>

@@ -25,7 +25,7 @@
     <fields>
         <fullName>IsPaused__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>When checked, this setting prevents new Messages from being processed. They will still enter the queue, but unresolved in a &apos;Paused&apos; status.</description>
+        <description>When checked, this setting prevents new Messages from being worked on. They will still enter the queue, but unresolved in a &apos;Paused&apos; status.</description>
         <externalId>false</externalId>
         <label>IsPaused</label>
         <trackTrending>false</trackTrending>

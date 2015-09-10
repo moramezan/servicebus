@@ -3,6 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <description>Page showing apex class summary (namespace, etc) as well as Process.Summary (Tag, etc)</description>
+    <description>Page showing apex class summary (namespace, etc) as well as Service.Summary (Tag, etc)</description>
     <label>ApexClassSummary</label>
 </ApexPage>

@@ -60,7 +60,7 @@
             "codeClass": null,
             "userConfig": {
                 "name": "ApexClassId",
-                "reference": "Process"
+                "reference": "Service"
             },
             "name": "MyString8",
             "designerId": "418a8f5a-ee31-4cb4-b214-504d4732333f"

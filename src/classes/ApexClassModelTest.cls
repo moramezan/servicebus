@@ -1,7 +1,7 @@
 @IsTest public class ApexClassModelTest {
     
     //@TestVisible private preferred, but Type.forName does not support
-    public class DescribeProcess extends ApexClassModel.Process {
+    public class DescribeService extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return null;
@@ -9,7 +9,7 @@
     }
     
     //@TestVisible private preferred, but Type.forName does not support
-    public class DescribeProcessSummary {
+    public class DescribeServiceSummary {
         String Tag = 'Tag';
         String Name = 'Name';
         String Description = 'Description';
@@ -17,7 +17,7 @@
         Integer Limits = 99;
         String HelpUrl = 'HelpUrl';
         String StepConfig = 'StepConfig';
-        String ProcessSetting = 'ProcessSetting';
+        String ServiceSetting = 'ServiceSetting';
         String Cardinality = 'Any';
         Map<String,String> Inputs = new Map<String,String>{'herp' => 'derp'};
         Map<String,String> Outputs = new Map<String,String>{'foo' => 'bar'};
@@ -25,10 +25,10 @@
 
     static testmethod void testSummary() {
         //arrange
-        ApexClassModel.Summary actual = new ApexClassModel.Summary(DescribeProcess.class);
+        ApexClassModel.Summary actual = new ApexClassModel.Summary(DescribeService.class);
         
         //act
-        DescribeProcessSummary expected = new DescribeProcessSummary();
+        DescribeServiceSummary expected = new DescribeServiceSummary();
         
         //assert
         System.assertEquals(expected.Tag, actual.Tag, 'Wrong Tag.');
@@ -38,14 +38,14 @@
         System.assertEquals(expected.Limits, actual.Limits, 'Wrong Limits.');
         System.assertEquals(expected.HelpUrl, actual.HelpUrl, 'Wrong HelpUrl.');
         System.assertEquals(expected.StepConfig, actual.StepConfig, 'Wrong StepConfig.');
-        System.assertEquals(expected.ProcessSetting, actual.ProcessSetting, 'Wrong ProcessSetting.');
+        System.assertEquals(expected.ServiceSetting, actual.ServiceSetting, 'Wrong ServiceSetting.');
         System.assertEquals(expected.Cardinality, actual.Cardinality, 'Wrong Cardinality.');
         System.assertEquals(expected.Inputs, actual.Inputs, 'Wrong Inputs.');
         System.assertEquals(expected.Outputs, actual.Outputs, 'Wrong Outputs.');
     }
  
     //@TestVisible private preferred, but Type.forName does not support
-    public class DefaultProcess extends ApexClassModel.Process {
+    public class DefaultService extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return null;
@@ -53,16 +53,16 @@
     }
     
     //@TestVisible private preferred, but Type.forName does not support
-    public class DefaultProcessSummary {}
+    public class DefaultServiceSummary {}
     
     static testmethod void testDefaultValues() {
         //act
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(DefaultProcess.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(DefaultService.class);
         
         //assert
         System.assertEquals('Undescribed', summary.Description, 'Wrong Description.');
         System.assertEquals('Untagged', summary.Tag, 'Wrong Tag.');
-        System.assertEquals(DefaultProcess.class.getName(), summary.Name, 'Wrong Name.');
+        System.assertEquals(DefaultService.class.getName(), summary.Name, 'Wrong Name.');
         System.assertEquals('cog', summary.Icon, 'Wrong Icon.');
         System.assertEquals('Any', summary.Cardinality, 'Wrong Cardinality.');
         System.assertEquals(1, summary.Limits, 'Wrong Limits.');
@@ -93,7 +93,7 @@
             System.assert(false, 'Line above should throw exception');
         } catch (Exception e) {
             //assert
-            String expectedMessage = MissingToString.class.getName() + ': Process must extend Abstract.Process';
+            String expectedMessage = MissingToString.class.getName() + ': Service must extend Abstract.Service';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }
@@ -109,13 +109,13 @@
             System.assert(false, 'Line above should throw exception');
         } catch (Exception e) {
             //assert
-            String expectedMessage = MissingToString.class.getName() + ': Process must extend Abstract.Process';
+            String expectedMessage = MissingToString.class.getName() + ': Service must extend Abstract.Service';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }
     }
     
-    public class NullReturnValue extends ApexClassModel.Process {
+    public class NullReturnValue extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {return null;}
     }
@@ -140,13 +140,13 @@
             model.invokeExecute(new Map<String,Object>());
         } catch (Exception e) {
             //assert
-            String expectedMessage = NullReturnValue.class.getName() + ': Return type of a Process execute method must be a List<Map<String,Object>>';
+            String expectedMessage = NullReturnValue.class.getName() + ': Return type of a Service execute method must be a List<Map<String,Object>>';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }
     }
     
-    public class GoodReturnValue extends ApexClassModel.Process {
+    public class GoodReturnValue extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>();
@@ -175,7 +175,7 @@
         System.assertNotEquals(null, outputEvents, 'Wrong output events.');
     }
     
-    public class InputProcess extends ApexClassModel.Process {
+    public class InputService extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             String expectedChristmas = '"2015-12-25T13:59:59.000Z"';
@@ -185,19 +185,19 @@
         }
     }
     
-    static testmethod void testProcessCyclesInputParameters() {
-        //arrange process
-        ApexClassModel.Process impl = new InputProcess();
+    static testmethod void testServiceCyclesInputParameters() {
+        //arrange service
+        ApexClassModel.Service impl = new InputService();
         
         //arrange input
         Datetime christmas = Datetime.newInstanceGmt(2015, 12, 25, 13, 59, 59);
         Map<String,Object> inputEvent = new Map<String,Object>{'christmas' => christmas};
         
-        //assert (inside process)
+        //assert (inside service)
         impl.test(inputEvent);
     }
     
-    public class OutputProcess extends ApexClassModel.Process {
+    public class OutputService extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
@@ -210,9 +210,9 @@
         }
     }
     
-    static testmethod void testProcessAggregatesAndCyclesOutputParameters() {
-        //arrange process
-        ApexClassModel.Process impl = new OutputProcess();
+    static testmethod void testServiceAggregatesAndCyclesOutputParameters() {
+        //arrange service
+        ApexClassModel.Service impl = new OutputService();
         
         //arrange input
         Map<String,Object> inputEvent = new Map<String,Object>{
@@ -230,7 +230,7 @@
         System.assert(outputEvents[0].get('now') instanceof String, 'Wrong now type.');
     }
     
-    public class TooManyOutputs extends ApexClassModel.Process {
+    public class TooManyOutputs extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
@@ -258,7 +258,7 @@
         }
     }
     
-    public class TooManyInputs extends ApexClassModel.Process {
+    public class TooManyInputs extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return null;
@@ -282,7 +282,7 @@
         System.assertEquals(expectedLimits, actualLimits, 'Wrong limits.');
     }
     
-    public class TooManyEvents extends ApexClassModel.Process {
+    public class TooManyEvents extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             insert new Document(Name = 'Test', FolderId = UserInfo.getUserId());
@@ -314,11 +314,11 @@
         String actualException = inputMessages[8].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
 
-        expectedException = Broker.UserException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce process Limits or emit fewer events.'; //#955 possibly 8000, but headspace
+        expectedException = Broker.UserException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Limits or emit fewer events.'; //#955 possibly 8000, but headspace
         actualException = inputMessages[9].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
 
-        expectedException = Broker.UserException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce process Limits or emit fewer events.'; //#955 possibly 8000, but headspace
+        expectedException = Broker.UserException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Limits or emit fewer events.'; //#955 possibly 8000, but headspace
         actualException = inputMessages[10].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
         
@@ -328,7 +328,7 @@
         //this guy checks that any side effects are rolled back after our limit was reached
     }
     
-    public class SpecialOneShotWithSequenceOutput extends ApexClassModel.Process {
+    public class SpecialOneShotWithSequenceOutput extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
@@ -353,7 +353,7 @@
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
     }
     
-    public class SpecialOneShotWithProcessOutput extends ApexClassModel.Process {
+    public class SpecialOneShotWithServiceOutput extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
@@ -364,12 +364,12 @@
         }
     }
     
-    static testmethod void testOneShotOutputsSurviveWhenDestinedForProcess() {
+    static testmethod void testOneShotOutputsSurviveWhenDestinedForService() {
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>();
         
         //act
-        ApexClassModel model = new ApexClassModel(SpecialOneShotWithProcessOutput.class);
+        ApexClassModel model = new ApexClassModel(SpecialOneShotWithServiceOutput.class);
         List<Map<String,Object>> outputEvents = model.invokeExecute(inputEvent);
         
         //assert
@@ -378,7 +378,7 @@
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
     }
     
-    public class NormalOneShotWithOutputs extends ApexClassModel.Process {
+    public class NormalOneShotWithOutputs extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
@@ -403,7 +403,7 @@
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
     }
     
-    public class ChainedOneShotWithOutputs extends ApexClassModel.Process {
+    public class ChainedOneShotWithOutputs extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
@@ -431,7 +431,7 @@
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
     }
     
-    public class ThrowerProcess extends ApexClassModel.Process {
+    public class ThrowerService extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {
             Integer i = 1 / 0; //System.MathException: Divide by 0
             throw new Broker.UserException('Line above should throw exception.');
@@ -445,7 +445,7 @@
     static testmethod void testCatchableExceptionIsThrown() {
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>();
-        ApexClassModel model = new ApexClassModel(ThrowerProcess.class);
+        ApexClassModel model = new ApexClassModel(ThrowerService.class);
         
         try {
             //act

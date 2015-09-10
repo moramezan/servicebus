@@ -1,7 +1,7 @@
-public class Router extends ApexClassModel.Process {
+public class Router extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
-    //#575 heartbeat process evades discovery
+    //#575 heartbeat evades discovery
     //public class Summary {}
     
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {

@@ -46,7 +46,7 @@
     }
     
     static testmethod void testGetByIdFetchesAllFields() {
-        //arrange process
+        //arrange data
         Document document = new Document(
             Name = 'foo',
             FolderId = UserInfo.getUserId(),

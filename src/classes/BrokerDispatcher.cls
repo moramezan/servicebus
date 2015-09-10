@@ -1,5 +1,5 @@
 /**
- * This class is WITHOUT SHARING to ensure the process can execute regardless of running user context.
+ * This class is WITHOUT SHARING to ensure the service can execute regardless of running user context.
  */
 public without sharing class BrokerDispatcher implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
     

@@ -3,6 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <description>Page that configures event types for the Subscribe and Publish processes</description>
+    <description>Page that configures event types for the Subscribe and Publish services</description>
     <label>SubscribeConfigManageEventTypes</label>
 </ApexPage>

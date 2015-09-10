@@ -49,7 +49,7 @@
         //assert
         String expectedRoute = Router.class.getName();
         String actualRoute = message.Route__c;
-        System.assertEquals(expectedRoute, actualRoute, 'Route should be raw process for heartbeats.');
+        System.assertEquals(expectedRoute, actualRoute, 'Route should be raw service for heartbeats.');
     }
     
     static testmethod void testPopulateJsonFields() {

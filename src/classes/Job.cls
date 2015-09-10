@@ -27,7 +27,7 @@ global class Job implements Process.Plugin, system.Queueable {
         plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
             new Process.PluginDescribeResult.InputParameter('RecordId', Process.PluginDescribeResult.ParameterType.ID, true),
             new Process.PluginDescribeResult.InputParameter('ToSequence', Process.PluginDescribeResult.ParameterType.STRING, true),
-            new Process.PluginDescribeResult.InputParameter('ToProcess', Process.PluginDescribeResult.ParameterType.STRING, true),
+            new Process.PluginDescribeResult.InputParameter('ToService', Process.PluginDescribeResult.ParameterType.STRING, true),
             new Process.PluginDescribeResult.InputParameter('ToConfig', Process.PluginDescribeResult.ParameterType.ID, true)
         };
         
@@ -61,7 +61,7 @@ global class Job implements Process.Plugin, system.Queueable {
     global class SimpleEvent {
         @InvocableVariable(required=false) global Id RecordId;
         @InvocableVariable(required=false) global String ToSequence;
-        @InvocableVariable(required=false) global String ToProcess;
+        @InvocableVariable(required=false) global String ToService;
         @InvocableVariable(required=false) global String ToConfig;
     }
     
@@ -74,7 +74,7 @@ global class Job implements Process.Plugin, system.Queueable {
         for (SimpleEvent simpleEvent : simpleEvents) {
             Map<String,Object> inputEvent = new Map<String,Object>{
                 'ToSequence' => simpleEvent.ToSequence,
-                'ToProcess' => simpleEvent.ToProcess,
+                'ToService' => simpleEvent.ToService,
                 'ToConfig' => simpleEvent.ToConfig,
                 'RecordId' => simpleEvent.RecordId
             };
@@ -97,7 +97,7 @@ global class Job implements Process.Plugin, system.Queueable {
      */
     
     /**
-     * Prepares Blob data for processing at the start of a nominated sequence
+     * Prepares Blob data for work at the start of a nominated sequence
      * by wrapping the pointer to the data (an id) in a Message object
      * This Persisted Data instance is saved to the database and the Broker is
      * immeadiately invoked threreafter
@@ -117,7 +117,7 @@ global class Job implements Process.Plugin, system.Queueable {
     }
     
     /**
-     * Prepares data for processing at the start of a nominated sequence by wrapping the pointer to the data (an id) in a
+     * Prepares data for work at the start of a nominated sequence by wrapping the pointer to the data (an id) in a
      * Message object. This Message instance is saved to the database and the Broker is immeadiately
      * invoked if it is not already running.
      *
@@ -139,19 +139,19 @@ global class Job implements Process.Plugin, system.Queueable {
         });
     }
     
-    public Job(Type process, Id recordId) {
+    public Job(Type service, Id recordId) {
         this(new Map<String,Object>{
-            'ToProcess' => process.getName(),
+            'ToService' => service.getName(),
             'RecordId' => recordId
         });
     }
     
     /**
-     * Prepares data (represented an input event) for processing.
+     * Prepares data (represented an input event) for work.
      *
      * The input event collection should at minimum contain
      *  - an object Id ("Id")
-     *  - a sequence ("ToSequence") or a process ("ToProcess") or a config ("ToConfig")
+     *  - a sequence ("ToSequence") or a service ("ToService") or a config ("ToConfig")
      *
      * The input event collection is converted to a Message object. This Message instance is saved
      * to the database and the Broker is immeadiately invoked if it is not already running.
@@ -199,7 +199,7 @@ global class Job implements Process.Plugin, system.Queueable {
             'MessageId',
             'RecordId',
             'ToSequence',
-            'ToProcess',
+            'ToService',
             'ToConfig',
             'Hops',
             AllowRoute ? 'Route' : 'Hops' //TODO confirm if this disallowed
@@ -238,7 +238,7 @@ global class Job implements Process.Plugin, system.Queueable {
             
             //#999 enqueue routing helpers
             String toSequence = (String)inputEvent.get('ToSequence');
-            String toProcess = (String)inputEvent.get('ToProcess');
+            String toService = (String)inputEvent.get('ToService');
             String toConfig = (String)inputEvent.get('ToConfig');
             
             if (toSequence != null) {
@@ -248,11 +248,11 @@ global class Job implements Process.Plugin, system.Queueable {
                 inputEvent.put('Route', toSequence + '#' + '0');
             }
             
-            if (toProcess != null) {
-                //converts process to route
-                inputEvent.remove('ToProcess');
-                inputEvent.put('__ToProcess', toProcess);
-                inputEvent.put('Route', toProcess);
+            if (toService != null) {
+                //converts service to route
+                inputEvent.remove('ToService');
+                inputEvent.put('__ToService', toService);
+                inputEvent.put('Route', toService);
                 
             }
             
@@ -275,7 +275,7 @@ global class Job implements Process.Plugin, system.Queueable {
             }
             
             if (inputEvent.get('EntryPointTimestamp') == null) {
-                //#753 processes like Heartbeat are allowed to mess with this}
+                //#753 services like Heartbeat are allowed to mess with this}
                 inputEvent.put('EntryPointTimestamp', System.now());
             }
             

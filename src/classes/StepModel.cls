@@ -138,7 +138,7 @@ public class StepModel extends ApexDomain.StandardModel {
         ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
         
         if (summary.StepConfig == null) {
-            //process has no config
+            //service has no config
             return null;
         }
         

@@ -243,12 +243,12 @@ public class RouterImplementation implements System.Schedulable {
      * Again the ** events happened and events that happened need to be captured **
      *
      * (Incidentally, the fuckery inherent in the  enqueue() method surfaces itself again when we
-     * attempt to present a graph of messages versus processes on the monitor page )
+     * attempt to present a graph of messages versus services on the monitor page )
      *
      * With the above theoretical foundation in mind, it's Neil's considered opinion that given the current
      * fuckery in the enqueue() method (see comments above) we should do everything possible to make sure
      * the "event store" matches reality as close as as possible -  that, ... in practical terms means ensuring the
-     * requisite Sequence, Steps and Processes are ALWAYS in place to deal with the resolution logic that is called
+     * requisite Sequence, Steps and Services are ALWAYS in place to deal with the resolution logic that is called
      * by an enqueue() method that (for good reason) unfortunately does too much - we do everything
      * we possibly can to avoid an exception being thrown and that's why we do the following code
      * here ... it's "dirty compensating fuckery" code to deal with "pre-existing fuckery"

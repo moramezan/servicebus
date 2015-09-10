@@ -58,9 +58,9 @@
     <enableStreamingApi>false</enableStreamingApi>
     <fields>
         <fullName>Cause__c</fullName>
-        <description>The stack trace surfaced to the end user is actually the complete stack trace minus the stack trace related to the base process and broker.</description>
+        <description>The stack trace surfaced to the end user is actually the complete stack trace minus the stack trace related to the abstract service and broker.</description>
         <externalId>false</externalId>
-        <inlineHelpText>If the process threw an exception, what was the stack trace that caused it?</inlineHelpText>
+        <inlineHelpText>If the service threw an exception, what was the stack trace that caused it?</inlineHelpText>
         <label>Cause</label>
         <length>32768</length>
         <trackTrending>false</trackTrending>
@@ -95,9 +95,9 @@ Gets set by Job() injecting to the top of a sequence and given a hypothetical me
     </fields>
     <fields>
         <fullName>Exception__c</fullName>
-        <description>The presence or absence of content in this field acts as a mechanism to signal differentiated processing behaviour on messages with the same status. It should be considered as more than a simple logging field.</description>
+        <description>The presence or absence of content in this field acts as a mechanism to signal differentiated behaviour on messages with the same status. It should be considered as more than a simple logging field.</description>
         <externalId>false</externalId>
-        <inlineHelpText>If the process threw an exception when handling this message, what was the error?</inlineHelpText>
+        <inlineHelpText>If the service threw an exception when handling this message, what was the error?</inlineHelpText>
         <label>Exception</label>
         <length>255</length>
         <required>false</required>
@@ -109,7 +109,7 @@ Gets set by Job() injecting to the top of a sequence and given a hypothetical me
         <fullName>ExecuteDuration__c</fullName>
         <description>The carefully named ExecuteDuration currently represents callout() duration and execute() duration combined. At some point we expect to  measure the callout() duration and execute() duration separately - this will entail one new field</description>
         <externalId>false</externalId>
-        <inlineHelpText>How many milliseconds elapsed from the start of the processing until successful completion or failure?</inlineHelpText>
+        <inlineHelpText>How many milliseconds elapsed from the start until successful completion or failure?</inlineHelpText>
         <label>Duration (ms)</label>
         <precision>6</precision>
         <required>false</required>
@@ -248,7 +248,7 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         <availability>online</availability>
         <displayType>button</displayType>
         <linkType>page</linkType>
-        <masterLabel>Show Apex Process</masterLabel>
+        <masterLabel>Show Apex Service</masterLabel>
         <openType>replace</openType>
         <page>MessageApexClass</page>
         <protected>false</protected>
@@ -313,7 +313,7 @@ Sets the status of message(s) to Buffered and start the Broker</description>
         <availability>online</availability>
         <description>Refer #808 :
 Synchronously execute a message with an exception. 
-Sucessfull execution initiates processing by the Broker</description>
+Sucessfull execution initiates work by the Broker</description>
         <displayType>button</displayType>
         <linkType>javascript</linkType>
         <masterLabel>Restart Message</masterLabel>

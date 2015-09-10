@@ -349,7 +349,7 @@ public with sharing class ConfigureController {
     
     /**
      * Per bigassforce/esb#709 if someone trashes the scheduled job, they
-     * can recreate it by running the configuration process again.
+     * can recreate it by running the configuration service again.
      */
     static public void uninstallSchedule() {
         try {
@@ -549,12 +549,12 @@ public with sharing class ConfigureController {
     }
     
     /**
-     * #1015 install nuclear tip via Metadata API as part of configure process
+     * #1015 install nuclear tip via Metadata API as part of configure service
      */
     @Future(callout=true) static public void defaults(String sessionId) { //#969 obfuscation of 'installNuclearTip()'
         
         if (UserInfo.getOrganizationId() == '00Dj0000000KcakEAC') {
-            //we do not install abstract process into packaging org
+            //we do not install abstract service into packaging org
             return;
         }
         

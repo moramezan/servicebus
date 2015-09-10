@@ -1,5 +1,5 @@
 <h1>
-    Process Markers
+    Service Summary
 </h1>
 
 <!--
@@ -8,8 +8,8 @@
  !-->
 
 <!--
- ! Trying not to say "Process" unless we refer to "Process__c"
- ! I like also "Process Definition" ... do we change the label?
+ ! Trying not to say "Service" unless we refer to "ApexClass"
+ ! I like also "Service Definition" ... do we change the label?
  !-->
 
 <p>
@@ -95,7 +95,7 @@ global with sharing class ExampleProcess extends BaseProcess {
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map</a>&lt;String,String&gt;</dd>
     <dd>Optional friendly descriptions of the output event parameters emitted by this process. (Not to be confused with events themselves, of which a process may emit zero, one or many.)</dd>
     
-    <dt>ProcessSetting</dt>
+    <dt>ServiceSetting</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_custom_settings.htm" target="_blank">SObject</a></dd>
     <dd>Optional <em>prototype object</em> of a Custom Setting to be used for Process-specifics settings. Data of this type are manageable on each process, and are surfaced inside the Sequence Builder.</dd>
     
@@ -120,7 +120,7 @@ global class ESB {
     String Limits = 25; //leave half of 50 (Total number of HTTP callouts permitted)
     Map&lt;String,Object&gt; Inputs = new Map&lt;String,Object&gt;{'acme__Body' => 'String of the tweet body.'};
     Map&lt;String,Object&gt; Outputs = new Map&lt;String,Object&gt;{'acme__TweetId' => 'String of tweet Id.'}
-    SObject ProcessSetting = TwitterSetting__c.SObjectType.newSObject();
+    SObject ServiceSetting = TwitterSetting__c.SObjectType.newSObject();
     SObject StepConfig = TwitterConfig__c.SObjectType.newSObject();
 }
 </pre>

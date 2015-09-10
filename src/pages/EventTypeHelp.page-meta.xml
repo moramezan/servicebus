@@ -3,6 +3,6 @@
     <apiVersion>34.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <description>Page that redirects to the help for Publish and Subscribe processes</description>
+    <description>Page that redirects to the help for Publish and Subscribe services</description>
     <label>EventTypeHelp</label>
 </ApexPage>

@@ -7,7 +7,7 @@
     }
     
     static testmethod void testChunkedMarkContextsCount() {
-        //arrange processes and sequence and steps
+        //arrange services and sequence and steps
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
@@ -320,7 +320,7 @@
         
         //arrange inputs (25 messages, 1 mark and 1 execute for each, aligns with 50 contexts)
         List<Map<String,Object>> events = new List<Map<String,Object>>();
-        for (Integer i = 0; i < 25; i++) events.add(new Map<String,Object>{'ToProcess' => FinishDoesPersist.class.getName()});
+        for (Integer i = 0; i < 25; i++) events.add(new Map<String,Object>{'ToService' => FinishDoesPersist.class.getName()});
         
         //arrange messages
         Test.startTest();

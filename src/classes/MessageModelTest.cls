@@ -25,7 +25,7 @@
     
     public class MemoryErrorException extends Exception {}
     
-    public class MemoryError extends ApexClassModel.Process {
+    public class MemoryError extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             inputEvent.put('c__OrganizationId', UserInfo.getOrganizationId());
@@ -38,7 +38,7 @@
         Integer Limits = 1000;
     }
     
-    static testmethod void testRollbackTaxRelievedOnMemoryProcess() {
+    static testmethod void testRollbackTaxRelievedOnMemoryService() {
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
@@ -72,7 +72,7 @@
     
     public class InserterErrorException extends Exception {}
     
-    public class InserterError extends ApexClassModel.Process {
+    public class InserterError extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             insert new Document(Name = 'Test.txt', FolderId = UserInfo.getUserId());
@@ -85,7 +85,7 @@
         Integer Limits = 50;
     }
     
-    static testmethod void testRollbackTaxImposedOnDmlProcess() {
+    static testmethod void testRollbackTaxImposedOnDmlService() {
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
@@ -117,7 +117,7 @@
         System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
     }
     
-    public class Memory extends ApexClassModel.Process {
+    public class Memory extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             inputEvent.put('c__OrganizationId', UserInfo.getOrganizationId());
@@ -130,7 +130,7 @@
         Integer Limits = 1000;
     }
     
-    static testmethod void testSavepointTaxRelievedOnMemoryProcess() {
+    static testmethod void testSavepointTaxRelievedOnMemoryService() {
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
@@ -162,7 +162,7 @@
         System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
     }
     
-    public class Inserter extends ApexClassModel.Process {
+    public class Inserter extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             Map<String,Object> outputEvent = inputEvent.clone();
@@ -176,7 +176,7 @@
         Integer Limits = 75;
     }
     
-    static testmethod void testSavepointTaxImposedOnDmlProcess() {
+    static testmethod void testSavepointTaxImposedOnDmlService() {
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
@@ -208,7 +208,7 @@
         System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
     }
     
-    public class PassThroughProcess extends ApexClassModel.Process {
+    public class PassThroughService extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{inputEvent};
@@ -221,7 +221,7 @@
         insert document;
         
         //arrange step
-        Step__c step = new Step__c(Name = 'Test#1', ApexClassName__c = PassThroughProcess.class.getName(), ConfigId__c = document.Id);
+        Step__c step = new Step__c(Name = 'Test#1', ApexClassName__c = PassThroughService.class.getName(), ConfigId__c = document.Id);
         insert step;
         
         //arrange message
@@ -247,7 +247,7 @@
         System.assertEquals(expectedStepConfigId, actualStepConfigId, 'Wrong step config id.');
     }
     
-    public class SurpriseNullOutputs extends ApexClassModel.Process {
+    public class SurpriseNullOutputs extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{

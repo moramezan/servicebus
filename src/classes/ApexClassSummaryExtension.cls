@@ -14,7 +14,7 @@ public with sharing class ApexClassSummaryExtension {
     public Integer RoutedMessages {get; set;}
     
     /**
-     * #768 this is used to indicate there is work processing
+     * #768 this is used to indicate there is work ongoing
      * by displaying a twirly alongside the count of messages
      * that are flowing through this sequence.
      */

@@ -186,7 +186,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * #768 this is used to indicate there is work processing
+     * #768 this is used to indicate there is work ongoing
      * by displaying a twirly alongside the count of messages
      * that are flowing through this sequence.
      */

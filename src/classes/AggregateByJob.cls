@@ -1,17 +1,14 @@
-public class AggregateByJob extends ApexClassModel.Process {
+public class AggregateByJob extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
     private class AggregateByJobException extends Exception {}
 
-    /**
-     * @docs ProcessAggregateByJob.html
-     */
     public class Summary {
         String Tag = 'Service Bus';
         String Name = 'Aggregate By Job';
         String Description = 'Aggregates a collection of messages having the same Job Id.';
         String Icon = 'arrow_join';
-        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessAggregateByJob').getUrl();
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceAggregateByJob').getUrl();
         Integer Limits =  200; //max sync limit
         String Cardinality = 'Fewer';
         
@@ -142,7 +139,7 @@ public class AggregateByJob extends ApexClassModel.Process {
     public static Boolean isRelease(Set<Id> siblingIds, String jobId, Integer chunkTotal, Integer chunk) {
         // Release trigger:
         //
-        //    NR / MB : we assume the Gate process will never fail
+        //    NR / MB : we assume the Gate will never fail
         //              let's revisit and implement at some point
         //
 

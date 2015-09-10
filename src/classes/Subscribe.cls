@@ -1,16 +1,13 @@
-public class Subscribe extends ApexClassModel.Process {
+public class Subscribe extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
-    /**
-     * @docs ProcessPublishSubscribe.html
-     */
     public class Summary {
         String Tag = 'Service Bus';
         String Name = 'Subscribe';
         String Description = 'Listens for messages via a named Event Type.';
         String StepConfig = SubscribeConfig__c.class.getName();
         String Icon = 'eye';
-        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessPublishSubscribe').getUrl();
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServicePublishSubscribe').getUrl();
         Integer Limits = 100; //could be higher but lets be reasonable
         String Cardinality = 'One';
     }

@@ -1,18 +1,15 @@
-public class Subsequence extends ApexClassModel.Process {
+public class Subsequence extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
     static public Boolean IsRunning = false;
     
-    /**
-     * @docs ProcessBranchJumpSubsequence.html
-     */
     public class Summary {
         String Tag = 'Service Bus';
         String Name = 'Synchronous Subsequence';
         String Description = 'Synchronously executes another sequence, then resumes the next step afterwards.';
         String StepConfig = SubsequenceConfig__c.class.getName();
         String Icon = 'arrow_undo';
-        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessBranchJumpSubsequence').getUrl();
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceBranchJumpSubsequence').getUrl();
         Integer Limits = 1; //we dont know what they will do
         String Cardinality = 'One';
     }

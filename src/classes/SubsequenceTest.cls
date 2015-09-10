@@ -36,14 +36,14 @@
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             //by reference side effects on inputEvent
-            //inside subsequence process logic, so new input event for each iteration!
+            //inside subsequence logic, so new input event for each iteration!
             Map<String,Object> inputEvent = new Map<String,Object>{
                 'StepConfigId' => config.Id,
                 'Route' => 'Origin#1'
             };
                 
-            ApexClassModel.Process process = new Subsequence();
-            List<Map<String,Object>> outputs = process.test(inputEvent);
+            ApexClassModel.Service service = new Subsequence();
+            List<Map<String,Object>> outputs = service.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -107,8 +107,8 @@
         
         try {
             //act (no config!)
-            ApexClassModel.Process process = new Subsequence();
-            process.test(new Map<String,Object>());
+            ApexClassModel.Service service = new Subsequence();
+            service.test(new Map<String,Object>());
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
             //assert
@@ -118,7 +118,7 @@
         }
     }
 
-    public class Inserter extends ApexClassModel.Process {
+    public class Inserter extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             insert new Document(Name = 'Test', FolderId = UserInfo.getUserId());
@@ -128,7 +128,7 @@
     
     public class ErrorException extends Exception {}
     
-    public class Error extends ApexClassModel.Process {
+    public class Error extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             throw new ErrorException('Some Problem Here');
@@ -161,8 +161,8 @@
         
         try {
             //act
-            ApexClassModel.Process process = new Subsequence();
-            process.test(inputEvent);
+            ApexClassModel.Service service = new Subsequence();
+            service.test(inputEvent);
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
             //assert
@@ -178,7 +178,7 @@
         }
     }
     
-    public class Callout extends ApexClassModel.Process {
+    public class Callout extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {
             HttpRequest request = new HttpRequest();
             request.setMethod('GET');
@@ -219,8 +219,8 @@
         try {
             //act
             Test.setMock(HttpCalloutMock.class, new CalloutMock());
-            ApexClassModel.Process process = new Subsequence();
-            process.test(event);
+            ApexClassModel.Service service = new Subsequence();
+            service.test(event);
             System.assert(false, 'Line above should throw exception.');
             
         } catch (Exception e) {

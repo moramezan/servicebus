@@ -1,3 +1,3 @@
-<apex:page action="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='ProcessPublishSubscribe'])}">
+<apex:page action="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='ServicePublishSubscribe'])}">
     <apex:pageMessages showDetail="false" />
 </apex:page>

@@ -34,8 +34,8 @@
         Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
-            ApexClassModel.Process process = new Schedule();
-            List<Map<String,Object>> outputs = process.test(inputEvent);
+            ApexClassModel.Service service = new Schedule();
+            List<Map<String,Object>> outputs = service.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -54,8 +54,8 @@
         };
         
         //act
-        ApexClassModel.Process process = new Schedule();
-        List<Map<String,Object>> outputEvents = process.test(inputEvent);
+        ApexClassModel.Service service = new Schedule();
+        List<Map<String,Object>> outputEvents = service.test(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -81,8 +81,8 @@
         };
         
         //act
-        ApexClassModel.Process process = new Schedule();
-        List<Map<String,Object>> outputEvents = process.test(inputEvent);
+        ApexClassModel.Service service = new Schedule();
+        List<Map<String,Object>> outputEvents = service.test(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -112,8 +112,8 @@
         };
         
         ///act on working days only
-        ApexClassModel.Process process = new Schedule();
-        List<Map<String,Object>> outputEvents = process.test(inputEvent);
+        ApexClassModel.Service service = new Schedule();
+        List<Map<String,Object>> outputEvents = service.test(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -143,8 +143,8 @@
         };
  
         //act
-        ApexClassModel.Process process = new Schedule();
-        List<Map<String,Object>> outputEvents = process.test(inputEvent);
+        ApexClassModel.Service service = new Schedule();
+        List<Map<String,Object>> outputEvents = service.test(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -173,8 +173,8 @@
         };
  
         //act
-        ApexClassModel.Process process = new Schedule();
-        List<Map<String,Object>> outputEvents = process.test(inputEvent);
+        ApexClassModel.Service service = new Schedule();
+        List<Map<String,Object>> outputEvents = service.test(inputEvent);
         
         //assert
         Integer expectedSize = 0;
@@ -198,8 +198,8 @@
         
         try {
             //act
-            ApexClassModel.Process process =  new Schedule();
-            process.test(inputEvent);
+            ApexClassModel.Service service = new Schedule();
+            service.test(inputEvent);
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
             //assert

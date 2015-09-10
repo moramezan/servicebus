@@ -10,12 +10,12 @@
             "Application"
         ],
         "models": [
-            "Process",
+            "Service",
             "Step"
         ],
         "name": "Builder",
         "stores": [
-            "Processes",
+            "Services",
             "Steps"
         ],
         "views": [

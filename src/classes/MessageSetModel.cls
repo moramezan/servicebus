@@ -55,8 +55,8 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     
     /**
      * "Rebuffering" is the asynchronous re-attempt of
-     * several messages, with the hope of them reprocessing
-     * successfully (presumably after changing the process)
+     * several messages, with the hope of them re doing
+     * successfully (presumably after changing the service)
      */
     public void rebuffer() {
         Set<Id> attemptedIds = this.keySet();
@@ -143,7 +143,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             /**
              * Populates the Unique Entry Point Id
              * This parameter surfaced onto the message to support the
-             * functionality in the Aggregate By Entry Point process
+             * functionality in the Aggregate By Entry Point service
              */
             String entryPointUuid = (String)event.get('EntryPointUuid'); //this field only ever used to AGGREGATE BY ENTRY POINT
             if (entryPointUuid != null) message.EntryPointUuid__c = entryPointUuid;
@@ -151,7 +151,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             /**
              * Populates the Queueable Id
              * This parameter surfaced onto the message to support the
-             * functionality in the Aggregate By Job process
+             * functionality in the Aggregate By Job service
              */
             Id jobId = (Id)event.get('JobId'); //this field only ever used to AGGREGATE BY JOB
             if (jobId != null) message.JobId__c = jobId;

@@ -14,8 +14,8 @@
 
 <ol>
     <li>The event JSON can be seen inside each message.</li>
-    <li>If processing fails, the message remains visible for retry.</li>
-</p>
+    <li>If a service ever fails, the message remains visible for retry.</li>
+</ol>
 
 <h3>
     How do I deal with failed messages?
@@ -28,14 +28,14 @@
 <dl>
     <dt>Restart</dt>
     <dd>
-        to process it again synchronously, after fixing the apex code or the event;
+        to reprocess it again synchronously, after fixing the apex code or the event;
         <br />
         this is immediate and highly responsive, used to the benefit of developers.
     </dd>
     
     <dt>Rebuffer</dt>
     <dd>
-        to queue it again asynchronously, after fixing the apex code or the event;
+        to requeue it again asynchronously, after fixing the apex code or the event;
         <br />
         this is asynchronous, and can be performed on large groups of messages.
     </dd>

@@ -17,7 +17,7 @@ public with sharing class ApexClassTabController {
             LIMIT 10000
         ]).keySet();
         
-        ApexClassSetModel setModel = ApexClassSetModel.discoverProcesses(apexClassIds);
+        ApexClassSetModel setModel = ApexClassSetModel.discoverServices(apexClassIds);
         
         List<ApexClass> apexClasses = [
             SELECT Id, Name, NamespacePrefix, ApiVersion, Status, IsValid, LastModifiedById, LastModifiedDate

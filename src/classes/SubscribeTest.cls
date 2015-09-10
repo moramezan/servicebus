@@ -27,8 +27,8 @@
         Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
-            ApexClassModel.Process process = new Subscribe();
-            List<Map<String,Object>> outputs = process.test(inputEvent);
+            ApexClassModel.Service service = new Subscribe();
+            List<Map<String,Object>> outputs = service.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -38,13 +38,13 @@
    }
 
 
-    static testmethod void testSubscribeProcessActsAsNoop() {
+    static testmethod void testSubscribeActsAsNoop() {
         //arrange
         Map<String,Object> parameters = new Map<String,Object>{'herp' => 'derp'};
             
         //act
-        ApexClassModel.Process process = new Subscribe();
-        List<Map<String,Object>> parametersList = process.test(parameters);
+        ApexClassModel.Service service = new Subscribe();
+        List<Map<String,Object>> parametersList = service.test(parameters);
         
         //assert
         integer expectedSize = 1;

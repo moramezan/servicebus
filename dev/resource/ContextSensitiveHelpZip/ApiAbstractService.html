@@ -1,34 +1,34 @@
 <h1>
-    Base Process
+    Abstract Service
 </h1>
 
 <!--
- ! Trying not to say "Process" unless we refer to "Process__c"
- ! I like also "Process Definition" ... do we change the label?
+ ! Trying not to say "Service" unless we refer to "ApexClass"
+ ! I like also "Service Definition" ... do we change the label?
  !-->
 
 <p>
-    All the traits available to ESB process developers can be availed using
-    <a href="?topic=ApiProcessMarkers">Process Markers</a> and the <code>toString</code> marker
+    All the traits available to service authors can be availed using
+    <a href="?topic=ApiServiceSummary">Service Summary</a> and the <code>toString</code> marker
     method.
 </p>
 
 <p>
-    However, you may wish to define a base process class to handle common code such as serialization,
+    However, you may wish to define an abstract service class to handle common code such as serialization,
     deserialization and callouts.
 </p>
 
 <p>
-    This example base process class simplifies the use of markers, and is used throughout tutorials and documentation:
+    This example abstract service class simplifies the use of markers, and is used throughout tutorials and documentation:
 </p>
 
 <pre>
-abstract public with sharing class BaseProcess {
+abstract public with sharing class AbstractService {
     
-    //only override when a process requires callouts
+    //only override when a service requires callouts
     @TestVisible virtual protected void callouts(Map&lt;String,Object&gt; event) {}
     
-    //always override and implement process logic inside
+    //always override and implement service logic inside
     @TestVisible abstract protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; event);
     
     //ESB Marker Properties

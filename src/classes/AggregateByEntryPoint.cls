@@ -1,17 +1,14 @@
-public class AggregateByEntryPoint extends ApexClassModel.Process {
+public class AggregateByEntryPoint extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
     private class AggregateByEntryPointException extends Exception {}
 
-    /**
-     * @docs ProcessAggregateByEntryPoint.html
-     */
     public class Summary {
         String Tag = 'Service Bus';
         String Name = 'Aggregate By Entry Point';
         String Description = 'Aggregates a collection of messages having the same Entry Point Id.';
         String Icon = 'arrow_join';
-        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessAggregateByEntryPoint').getUrl();
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceAggregateByEntryPoint').getUrl();
         Integer Limits = 200; //max sync limit
         String Cardinality = 'Fewer';
 
@@ -139,7 +136,7 @@ public class AggregateByEntryPoint extends ApexClassModel.Process {
     private static Boolean isRelease(Set<Id> siblingIds, String entryPointUuid, Integer chunkTotal, Integer chunk) {
         // Release trigger:
         //
-        //    NR / MB : we assume the Gate process will never fail
+        //    NR / MB : we assume the Gate will never fail
         //              let's revisit and implement at some point
         //
 

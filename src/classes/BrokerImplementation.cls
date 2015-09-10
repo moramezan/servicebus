@@ -2,7 +2,7 @@
  * DO NOT ENQUEUE THIS JOB EVER
  * see http://salesforce.stackexchange.com/a/24448/320
  *
- * This class is WITHOUT SHARING to ensure the process can execute regardless of running user context.
+ * This class is WITHOUT SHARING to ensure the service can execute regardless of running user context.
  */
 public without sharing class BrokerImplementation extends Broker implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
     
@@ -155,7 +155,7 @@ public without sharing class BrokerImplementation extends Broker implements Data
      *
      * While we can't get the stack trace of these exceptions, we can do ever so
      * slightly better and pull the detail off the job's ExtendedStatus to give
-     * a tiny bit of visibility about the problem to the process author / user.
+     * a tiny bit of visibility about the problem to the service author / user.
      *
      * There is always ONE place to go for the information: Message__c.Exception__c
      */

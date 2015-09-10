@@ -17,7 +17,7 @@
     
     <apex:chart data="{!Statistics}" width="100%" height="500" name="Stats">
         <apex:legend position="right" />
-        <apex:axis type="Category" position="bottom" title="Process" fields="ApexClassName">
+        <apex:axis type="Category" position="bottom" title="Service" fields="ApexClassName">
             <apex:chartLabel rotate="270" />
         </apex:axis>
         <apex:axis type="Numeric" position="left" title="Messages" fields="Paused,Buffered,Started,Exceptions">

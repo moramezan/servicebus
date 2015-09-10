@@ -1,7 +1,7 @@
 @IsTest private class RouterTest {
 
     static testmethod void testHeartbeatDispatchesOneIndexedMessages() {
-        //arrange process, sequence, step
+        //arrange services, sequence, step
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
@@ -13,11 +13,11 @@
         };
         
         //act
-        ApexClassModel.Process process = new Router();
-        List<Map<String,Object>> outputs = process.test(inputEvent);
+        ApexClassModel.Service service = new Router();
+        List<Map<String,Object>> outputs = service.test(inputEvent);
         
         //assert
-        Integer expectedSize = 1; //one schedule process
+        Integer expectedSize = 1; //one schedule
         Integer actualSize = outputs.size();
         System.assertEquals(expectedSize, actualSize, 'Should have one output.');
         
@@ -30,7 +30,7 @@
         System.assertEquals(expectedSequence, actualSequence, 'Wrong sequence.');
     }
 
-    static testmethod void noInterestedProcessesReturnsZeroMessages() {
+    static testmethod void noInterestedServicesReturnsZeroMessages() {
         //arrange input event
         String stampAsString = '2014-01-18T12:00:00.000Z';
         Map<String,Object> inputEvent = new Map<String,Object>{
@@ -38,8 +38,8 @@
         };
 
         //act
-        ApexClassModel.Process process = new Router();
-        List<Map<String,Object>> outputEvents = process.test(inputEvent);
+        ApexClassModel.Service service = new Router();
+        List<Map<String,Object>> outputEvents = service.test(inputEvent);
 
         //assert
         Integer expectedSize = 0;
@@ -48,7 +48,7 @@
     }
 
 
-    static testmethod void  gtOneInterestedProcessReturnsSameNumberOfMessages() {
+    static testmethod void  gtOneInterestedServiceReturnsSameNumberOfMessages() {
         //arrange sequence
         Sequence__c interestedSequenceA = new Sequence__c(Name = 'InterestedSequenceA');
         insert interestedSequenceA;
@@ -66,8 +66,8 @@
         };
 
         //act
-        ApexClassModel.Process process = new Router();
-        List<Map<String,Object>> outputEvents = process.test(inputEvent);
+        ApexClassModel.Service service = new Router();
+        List<Map<String,Object>> outputEvents = service.test(inputEvent);
 
         //assert
         Integer expectedSize = 2;

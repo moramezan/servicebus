@@ -1,15 +1,12 @@
-public class Terminate extends ApexClassModel.Process {
+public class Terminate extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
-    /**
-     * @docs ProcessTerminate.html
-     */
     public class Summary {
         String Tag = 'Service Bus';
         String Name = 'Terminate';
         String Description = 'Swallows messages at the end of this sequence.';
         String Icon = 'stop';
-        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessTerminate').getUrl();
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceTerminate').getUrl();
         Integer Limits = 200; //max sync limit
         String Cardinality = 'Zero';
     }

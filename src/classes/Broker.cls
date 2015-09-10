@@ -18,7 +18,7 @@
  * [batch.execute] broker.locate() then abort()
  */
 /**
- * This class is WITHOUT SHARING to ensure the process can execute regardless of running user context.
+ * This class is WITHOUT SHARING to ensure the service can execute regardless of running user context.
  */
 abstract public without sharing class Broker {
     
@@ -50,7 +50,7 @@ abstract public without sharing class Broker {
      * Determines which messages are eligible to be moved into the Started status (by finding Messages
      * with 'Buffered' status).
      *
-     * Messages that should be processed have their status marked as Started in the database before being
+     * Messages that should be worked on have their status marked as Started in the database before being
      * submitted the query locator. That way, if any given execution fails, those messages will remain in the
      * easily identifiable 'Started' state.
      *
@@ -85,7 +85,7 @@ abstract public without sharing class Broker {
             ApexClassModel.Summary summary;
             
             try {
-                //we have to 'peek' at the process
+                //we have to 'peek' at the service
                 ApexClassModel model = new MessageModel(specimen[0]).resolveApexClassModel();
                 summary = new ApexClassModel.Summary(model.Reflector);
             } catch (Exception e) {
@@ -229,7 +229,7 @@ abstract public without sharing class Broker {
              * that is the central entry point for any enqueued AND output messages.
              *
              * Since #677 there is history around which operations belong where:
-             * - Process does bare metal input cycling, output aggregation,
+             * - Service does bare metal input cycling, output aggregation,
              * - ApexClassModel can enforce validation at the event level,
              * - MessageModel takes grabs exceptions for the database,
              * - Broker deals with executing message collections,

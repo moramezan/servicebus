@@ -1,7 +1,7 @@
 @IsTest public class MonitorControllerTest {
     
     static testmethod void testMessagesAggregatedOk() {
-        //arrange processes, messages and controller
+        //arrange services, messages and controller
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
@@ -25,7 +25,7 @@
             WHERE Name IN ('Wiretap', 'Terminate')
             LIMIT 10000
         ]).keySet();
-        ApexClassSetModel model = ApexClassSetModel.discoverProcesses(apexClassIds);
+        ApexClassSetModel model = ApexClassSetModel.discoverServices(apexClassIds);
         
         //assert 1 null, 1 wiretap, 1 terminate,
         Integer expectedCount = 3; //the graph is [' ', 'Test#1', 'Test#2']

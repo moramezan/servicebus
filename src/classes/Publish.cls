@@ -1,16 +1,13 @@
-public class Publish extends ApexClassModel.Process {
+public class Publish extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
-    /**
-     * @docs ProcessPublishSubscribe.html
-     */
     public class Summary {
         String Tag = 'Service Bus';
         String Name = 'Publish';
         String Description = 'Broadcasts the message to other sequences via a named Event Type.';
         String StepConfig = PublishConfig__c.class.getName();
         String Icon = 'chart_organisation';
-        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessPublishSubscribe').getUrl();
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServicePublishSubscribe').getUrl();
         Integer Limits = 33; //max sync limit
         String Cardinality = 'One';
     }

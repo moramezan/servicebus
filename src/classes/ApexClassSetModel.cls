@@ -9,20 +9,20 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
     }
     
     /**
-     * Attempts to instantiate Process.Summary classes and
+     * Attempts to instantiate Service.Summary classes and
      * reduces the working record set to valid ones.
      */
-    static public ApexClassSetModel discoverProcesses(Set<Id> apexClassIds) {
+    static public ApexClassSetModel discoverServices(Set<Id> apexClassIds) {
         List<ApexClass> apexClasses = [
             SELECT Id, NamespacePrefix, Name, ApiVersion, Status
             FROM ApexClass
             WHERE Id IN :apexClassIds
         ];
         
-        //prepare list of PROCESS apex classes
-        List<ApexClass> processes = new List<ApexClass>();
+        //prepare list of SERVICE apex classes
+        List<ApexClass> services = new List<ApexClass>();
         
-        //bulletproof reflection on each Process.Summary class
+        //bulletproof reflection on each Service.Summary class
         for (ApexClass apexClass : apexClasses) try {
             //uses two arguments per #910 to reach out of managed package namespace!
             Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
@@ -31,14 +31,14 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             if (reflector == null) continue; //failure, class has private visibility
             String apexClassName = reflector.getName();
             
-            //fails if there is no Process.Summary class
+            //fails if there is no Service.Summary class
             Type inflector = Type.forName(apexClassName + '.Summary');
             
             //we DONT enter each namespace, just assume ok
-            if (inflector != null) processes.add(apexClass);
+            if (inflector != null) services.add(apexClass);
         } catch (Exception e) {}
         
-        return new ApexClassSetModel(processes);
+        return new ApexClassSetModel(services);
     }
     
     public List<ApexClassModel.Summary> toSummaries() {
@@ -72,7 +72,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
      *         "Tag": "Service Bus",
      *         "Icon": "arrow_join",
      *         "Cardinality": "Fewer",
-     *         "ProcessSetting": null
+     *         "ServiceSetting": null
      *     },
      *     {
      *         "Id": "01p000000000000AAA";
@@ -81,7 +81,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
      *         "Tag": "Service Bus",
      *         "Icon": "arrow_join",
      *         "Cardinality": "Fewer",
-     *         "ProcessSetting": null
+     *         "ServiceSetting": null
      *     }
      * ]
      */
@@ -107,7 +107,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
                 'Icon' => summary.Icon,
                 'Cardinality' => summary.Cardinality,
                 'StepConfig' => summary.StepConfig,
-                'ProcessSetting' => summary.ProcessSetting
+                'ServiceSetting' => summary.ServiceSetting
             };
             
             dtos.add(dto);

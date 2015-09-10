@@ -6,7 +6,7 @@
     },
     "codeClass": null,
     "userConfig": {
-        "designer|userClassName": "Process",
+        "designer|userClassName": "Service",
         "idProperty": "Id"
     },
     "name": "MyModel",
@@ -111,7 +111,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "ProcessSetting"
+                "name": "ServiceSetting"
             },
             "name": "MyString5",
             "designerId": "b0aad3ad-b08c-498c-b3da-b784850f0973"

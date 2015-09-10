@@ -47,11 +47,11 @@ public class MessageModel extends ApexDomain.StandardModel {
         }
         
         if (Broker.Instance != null) Broker.Instance.BlameRoute = route; //#985
-        Type process = Type.forName(route);
+        Type service = Type.forName(route);
         
-        if (process != null) {
-            if (Broker.Instance != null) Broker.Instance.BlameClass = process.getName(); //#985
-            return new ApexClassModel(process); //#956 "fire and forget" process without sequences or steps
+        if (service != null) {
+            if (Broker.Instance != null) Broker.Instance.BlameClass = service.getName(); //#985
+            return new ApexClassModel(service); //#956 "fire and forget" service without sequences or steps
         }
         
         Step__c step = Step__c.getValues(route);
@@ -76,14 +76,14 @@ public class MessageModel extends ApexDomain.StandardModel {
             throw new Broker.UserException('Apex class name cannot be null: ' + route); //a la "Argument cannot be null"
         }
         
-        process = Type.forName(apexClassName);
+        service = Type.forName(apexClassName);
         
-        if (process == null) {
+        if (service == null) {
             throw new Broker.UserException('Class is invalid or not visible: ' + apexClassName); //a la "Variable is not visible" or "Variable does not exist" or "Dependent class is invalid and needs recompilation"
         }
         
-        if (Broker.Instance != null) Broker.Instance.BlameClass = process.getName(); //#985
-        ApexClassModel model = new ApexClassModel(process);
+        if (Broker.Instance != null) Broker.Instance.BlameClass = service.getName(); //#985
+        ApexClassModel model = new ApexClassModel(service);
         model.getRecord().Id = step.ApexClassId__c;
         return model;
     }
@@ -161,7 +161,7 @@ public class MessageModel extends ApexDomain.StandardModel {
             Integer chunkTotal = (Integer)this.Event.get('Range');
             if (chunkTotal != null && chunkTotal + outputEvents.size() + outputMessages.size() > 2000) { //#955 possibly 8000, but headspace
                 //#955 we throttle inputs+outputs
-                throw new Broker.UserException(this.Model.Reflector.getName() + ': Cannot have more than 2000 events in a single operation. Reduce process Limits or emit fewer events.'); //#955 possibly 8000, but headspace //a la "System.TypeException: Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking."
+                throw new Broker.UserException(this.Model.Reflector.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Limits or emit fewer events.'); //#955 possibly 8000, but headspace //a la "System.TypeException: Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking."
             }
             
             //wrap up results into Messages (new guys should have Position = 0)
@@ -209,12 +209,12 @@ public class MessageModel extends ApexDomain.StandardModel {
     
     /**
      * "Restarting" is the synchronous re-attempt of
-     * a single message, with the hope of it reprocessing
+     * a single message, with the hope of it re doing
      * successfully (presumably after changing something)
      *
      * In order to prevent inadvertent replay and keep
      * the message lifecycle correct, we do not allow casual
-     * reprocessing of messages unless they Fucked or Killed.
+     * re doing of messages unless they Fucked or Killed.
      *
      * Fucked messages and Killed messages SHOULD both have
      * some non-null Exception. While that's not completely

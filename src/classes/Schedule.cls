@@ -1,4 +1,4 @@
-public class Schedule extends ApexClassModel.Process {
+public class Schedule extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
     public class Summary {

@@ -56,8 +56,8 @@
             inputEvent.put('SiblingIds' , siblingIds);
             inputEvent.put('Chunk' , i+1);
 
-            ApexClassModel.Process process = new AggregateByJob();
-            List<Map<String,Object>> outputs = process.test(inputEvent);
+            ApexClassModel.Service service = new AggregateByJob();
+            List<Map<String,Object>> outputs = service.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -80,8 +80,8 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Process process = new AggregateByJob();
-            List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
+            ApexClassModel.Service service = new AggregateByJob();
+            List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory JobId');
         }
@@ -107,8 +107,8 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Process process = new AggregateByJob();
-            List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
+            ApexClassModel.Service service = new AggregateByJob();
+            List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Route');
         }
@@ -133,8 +133,8 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Process process = new AggregateByJob();
-            List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
+            ApexClassModel.Service service = new AggregateByJob();
+            List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Range');
         }
@@ -159,8 +159,8 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Process process = new AggregateByJob();
-            List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
+            ApexClassModel.Service service = new AggregateByJob();
+            List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Chunk');
         }
@@ -185,8 +185,8 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Process process = new AggregateByJob();
-            List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
+            ApexClassModel.Service service = new AggregateByJob();
+            List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory SiblingIds');
         }
@@ -251,8 +251,8 @@
         Map<String,Object> inputEvent = chunkToEvent.get(rangeCount);
 
         // Act
-        ApexClassModel.Process process = new AggregateByJob();
-        List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
+        ApexClassModel.Service service = new AggregateByJob();
+        List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
 
         // Assemble
         Integer actualSize = actualOutputEvents.size();
@@ -314,8 +314,8 @@
         Map<String,Object> inputEvent = chunkToEvent.get(notLastOffset);
 
         // Act
-        ApexClassModel.Process process = new AggregateByJob();
-        List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
+        ApexClassModel.Service service = new AggregateByJob();
+        List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
 
         // Assemble
         Integer actualSize = actualOutputEvents.size();
@@ -376,8 +376,8 @@
         Map<String,Object> inputEvent = chunkToEvent.get(lastOffset);
 
         // Act
-        ApexClassModel.Process process = new AggregateByJob();
-        List<Map<String,Object>> actualOutputEvents = process.test(inputEvent);
+        ApexClassModel.Service service = new AggregateByJob();
+        List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
 
         // Assemble
         Integer actualSize = actualOutputEvents.size();
@@ -662,7 +662,7 @@
         System.assertEquals(expectedIsRelease , actualIsRelease);
     }
 
-    public class Split extends ApexClassModel.Process {
+    public class Split extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{

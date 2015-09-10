@@ -41,8 +41,8 @@
         Integer limits = summary.Limits;
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
-            ApexClassModel.Process process = new Branch();
-            List<Map<String,Object>> outputs = process.test(inputEvent);
+            ApexClassModel.Service service = new Branch();
+            List<Map<String,Object>> outputs = service.test(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -73,8 +73,8 @@
         };
         
         //act
-        ApexClassModel.Process process = new Branch();
-        List<Map<String,Object>> outputEvents = process.test(inputEvent);
+        ApexClassModel.Service service = new Branch();
+        List<Map<String,Object>> outputEvents = service.test(inputEvent);
 
         //assert
         Integer expectedSize = 2;
@@ -118,8 +118,8 @@
         
         //act
         try {
-            ApexClassModel.Process process = new Branch();
-            List<Map<String,Object>> outputEvents = process.test(inputEvent);
+            ApexClassModel.Service service = new Branch();
+            List<Map<String,Object>> outputEvents = service.test(inputEvent);
         } catch (Exception e) {
             exceptionThrown = true;
             System.assert(e instanceof Branch.BranchException);

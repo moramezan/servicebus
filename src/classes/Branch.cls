@@ -1,13 +1,10 @@
-public class Branch extends ApexClassModel.Process {
+public class Branch extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
-    /**
-     * @docs ProcessBranchJumpSubsequence.html
-     */
     public class Summary {
         String StepConfig = BranchConfig__c.class.getName();
         String Icon = 'arrow_branch';
-        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ProcessBranchJumpSubsequence').getUrl();
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceBranchJumpSubsequence').getUrl();
         String Tag = 'Service Bus';
         String Name = 'Branch';
         String Description = 'Copies the message to another sequence.';

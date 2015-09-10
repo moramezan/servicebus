@@ -3,7 +3,7 @@
 </h1>
 
 <p>
-    Processes communicate with each other using events, and all events carry parameters. Events
+    Services communicate with each other using events, and all events carry parameters. Events
     are always communicated as a <code>Map&lt;String,Object&gt;</code> and developers use string
     names to get parameter values. All parameter names must be prepended by a namespace prefix or
     the custom code prefix, then two underscores. For example:
@@ -31,7 +31,7 @@
         <td><code>{"acme__AnvilNames":["INV-1","INV-2","INV-3"]}</code></td>
         <td><code>acme__</code></td>
         <td>(Third-party)</td>
-        <td>Processes in managed packages must namespace prefix their event parameters.</td>
+        <td>Services in managed packages must namespace prefix their event parameters.</td>
     </tr>
 </table>
 

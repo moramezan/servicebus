@@ -31,7 +31,7 @@
         System.assertEquals( expectedStepCount , actualStepCount  );
     }
     
-    private static testmethod void callingAppendStepAddStepWithExpectedProcessInExpectedPosition() {
+    private static testmethod void callingAppendStepAddStepWithExpectedServiceInExpectedPosition() {
         // arrange
         String sequenceName = 'theSequence';
         Sequence__c soSequence = new Sequence__c(Name = sequenceName);
@@ -45,18 +45,18 @@
         List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
         // SObject soStep = actualStep.getRecord();
-        String actualProcessName;
+        String actualServiceName;
         Integer actualPosition;
         if (soSteps.size() > 0) {
-            actualProcessName = soSteps[0].ApexClassName__c;
+            actualServiceName = soSteps[0].ApexClassName__c;
             actualPosition = soSteps[0].Position__c.intValue();
         }
         
         // assert
         Integer expectedPosition = 1;
         System.assertEquals( expectedPosition , actualPosition  );
-        String expectedProcessName = Subscribe.class.getName();
-        System.assertEquals( expectedProcessName , actualProcessName  );
+        String expectedServiceName = Subscribe.class.getName();
+        System.assertEquals( expectedServiceName , actualServiceName  );
         Integer expectedStepCount = 1;
         System.assertEquals( expectedStepCount , actualStepCount  );
     }
@@ -75,18 +75,18 @@
         // assemble
         List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
-        String actualProcessName;
+        String actualServiceName;
         Integer actualPosition;
         if (soSteps.size() > 0) {
-            actualProcessName = soSteps[0].ApexClassName__c;
+            actualServiceName = soSteps[0].ApexClassName__c;
             actualPosition = soSteps[0].Position__c.intValue();
         }
         
         // assert
         Integer expectedPosition = 1;
         System.assertEquals( expectedPosition , actualPosition  );
-        String expectedProcessName = Terminate.class.getName();
-        System.assertEquals( expectedProcessName , actualProcessName  );
+        String expectedServiceName = Terminate.class.getName();
+        System.assertEquals( expectedServiceName , actualServiceName  );
         Integer expectedStepCount = 1;
         System.assertEquals( expectedStepCount , actualStepCount  );
     }
@@ -106,18 +106,18 @@
         // assemble
         List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
-        String actualProcessName;
+        String actualServiceName;
         Integer actualPosition;
         if (soSteps.size() > 0) {
-            actualProcessName = soSteps[0].ApexClassName__c;
+            actualServiceName = soSteps[0].ApexClassName__c;
             actualPosition = soSteps[0].Position__c.intValue();
         }
         
         // assert
         Integer expectedPosition = 1;
         System.assertEquals( expectedPosition , actualPosition  );
-        String expectedProcessName = Terminate.class.getName();
-        System.assertEquals( expectedProcessName , actualProcessName  );
+        String expectedServiceName = Terminate.class.getName();
+        System.assertEquals( expectedServiceName , actualServiceName  );
         Integer expectedStepCount = 1;
         System.assertEquals( expectedStepCount , actualStepCount  );
     }
@@ -140,18 +140,18 @@
         // assemble
         List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c];
         Integer actualStepsCount  = soSteps.size();
-        String actualProcessName;
+        String actualServiceName;
         Integer actualPosition;
         if (soSteps.size() > 0) {
-            actualProcessName = soSteps[0].ApexClassName__c;
+            actualServiceName = soSteps[0].ApexClassName__c;
             actualPosition = soSteps[0].Position__c.intValue();
         }
    
         // assert
         Integer expectedPosition = 1;
         System.assertEquals( expectedPosition , actualPosition  );
-        String expectedProcessName = Terminate.class.getName();
-        System.assertEquals( expectedProcessName , actualProcessName  );
+        String expectedServiceName = Terminate.class.getName();
+        System.assertEquals( expectedServiceName , actualServiceName  );
         Integer expectedStepCount = 1;
         System.assertEquals( expectedStepCount , actualStepsCount  );
     }

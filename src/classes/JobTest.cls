@@ -137,7 +137,7 @@
         }
     }
     
-    static testmethod void testEnqueueNormalizesSequenceAndProcessAndConfigToRoute() {
+    static testmethod void testEnqueueNormalizesSequenceAndServiceAndConfigToRoute() {
         //arrange
         Map<String,Object> inputEvent;
         List<Map<String,Object>> inputEvents;
@@ -158,7 +158,7 @@
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         //act
-        inputEvent = new Map<String,Object>{'ToProcess' => 'Wiretap'};
+        inputEvent = new Map<String,Object>{'ToService' => 'Wiretap'};
         inputEvents = new Job(inputEvent).Events;
         
         //assert
@@ -167,7 +167,7 @@
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         expectedParam = 'Wiretap';
-        actualParam = inputEvents[0].get('__ToProcess');
+        actualParam = inputEvents[0].get('__ToService');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         //arrange
