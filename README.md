@@ -34,3 +34,32 @@ Event[] execute(Event);
 ```
 
 The service inputs and outputs take the form of events. An event is a loosely structured object with parameters set as keys and values. All event parameters are optional. These domain-agnostic events can be routed in different ways to the services that operate on them.
+
+# Reflection
+
+The use of a 'service summary' inner class behaves as a discovery mechanism. Given just the class name string, the presence or absence of the marker class inside can be readily detected:
+
+```
+Boolean isService(String className) {
+    Type reflector = className + '.' + 'Summary';
+    return reflector != null;
+}
+```
+
+Further, this service summary class is capable of providing information about the behaviour of a microservice. Such as its event parameters and its cardinality. Properties such as the setting object expose configuration mechanisms.
+
+```
+public class Summary extends Abstract.Service.Summary {
+    String Tag = 'Order Management';
+    String Name = 'Order Extract Items';
+    String Icon = 'arrow_divide';
+    String Description = 'Splits an order into its component order product line items.';
+    String Cardinality = 'Many';
+    Integer Limits = 200;
+    String HelpUrl = Page.OrderExtractItemsHelp.getUrl();
+    String StepConfig = OrderExtractItemConfig__c.class.getName();
+    String ServiceSetting = OrderExtractItemSetting__c.class.getName();
+    Map<String,String> Inputs = new Map<String,String>{'RecordId' => 'ID of the subject Order.'};
+    Map<String,String> Outputs = new Map<String,String>{'RecordId' => 'ID of the Order Item'};
+}
+```
