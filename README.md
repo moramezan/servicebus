@@ -37,7 +37,7 @@ The service inputs and outputs take the form of events. An event is a loosely st
 
 # Reflection
 
-The use of a 'service summary' inner class behaves as a discovery mechanism. Given just the class name string, the presence or absence of the marker class inside can be readily detected:
+The use of a '[service summary](https://github.com/bigassforce/amos/blob/master/src/Summary.cls)' inner class behaves as a discovery mechanism. Given just the class name string, the presence or absence of the marker class inside can be readily detected:
 
 ```
 Boolean isService(String className) {
@@ -46,20 +46,20 @@ Boolean isService(String className) {
 }
 ```
 
-Further, this service summary class is capable of providing information about the behaviour of a microservice. Such as its event parameters and its cardinality. Properties such as the setting object expose configuration mechanisms.
+Further, this service summary class is capable of providing information about the behaviour of a service. Such as its event parameters and its cardinality. Properties such as the setting object expose configuration mechanisms.
 
 ```
 public class Summary extends Abstract.Service.Summary {
     String Tag = 'Order Management';
     String Name = 'Order Extract Items';
     String Icon = 'arrow_divide';
-    String Description = 'Splits an order into its component order product line items.';
+    String Description = 'Splits an order into its component order product line items';
     String Cardinality = 'Many';
     Integer Limits = 200;
     String HelpUrl = Page.OrderExtractItemsHelp.getUrl();
     String StepConfig = OrderExtractItemConfig__c.class.getName();
     String ServiceSetting = OrderExtractItemSetting__c.class.getName();
-    Map<String,String> Inputs = new Map<String,String>{'RecordId' => 'ID of the subject Order.'};
+    Map<String,String> Inputs = new Map<String,String>{'RecordId' => 'ID of the subject Order'};
     Map<String,String> Outputs = new Map<String,String>{'RecordId' => 'ID of the Order Item'};
 }
 ```
