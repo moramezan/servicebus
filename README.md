@@ -63,3 +63,26 @@ public class Summary extends Abstract.Service.Summary {
     Map<String,String> Outputs = new Map<String,String>{'RecordId' => 'ID of the Order Item'};
 }
 ```
+
+# Runtime Context
+
+Services are consumed in a variety of contexts, both synchronous and asynchronous. These differing runtime environments of batches, triggers, schedules, and interactive contexts all have impacts on the capabilities of any service. As an example, consider the situation of DML before a callout.
+
+Detective mechanisms like `isBatch()` and `isScheduled()` and `isRunningTest()` are available. These can be used to work around those differing capabilities. But the multiple resulting code paths are secondary to the business concerns of the code being authored. With AMOS, the goal is [consistency and developer ease](https://en.wikipedia.org/wiki/Principle_of_least_astonishment).
+
+Salesforce explicitly encourages the use of asynchronous runtime contexts, evidenced by the higher limits provided, and guaranteed enqueue / persistence / dequeue behaviours of platform worker threads.
+
+This model ultimately enables services to leverage such desirable attributes at-will:
+
+```
+event = new Map<String,Object>{
+    'ToService' => 'Handle_Payroll',
+    'RecordId' => '00D300000000iTzEAI'
+};
+
+//salesforce asynchronous interface
+Queueable job = new Queueable(events);
+
+//used for aggregation and sagas
+Id correlationId = System.enqueueJob(job);
+```
