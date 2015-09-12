@@ -53,7 +53,7 @@
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.Service service = new Publish();
-            List<Map<String,Object>> outputs = service.test(inputEvent);
+            List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -71,7 +71,7 @@
         try {
             //act
             ApexClassModel.Service service = new Publish();
-            service.test(parameters);
+            service.handle(parameters);
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
             //assert
@@ -97,7 +97,7 @@
         
         //act
         ApexClassModel.Service service = new Publish();
-        List<Map<String,Object>> outputEvents = service.test(inputEvent);
+        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -141,7 +141,7 @@
         
         //act
         ApexClassModel.Service service = new Publish();
-        List<Map<String,Object>> outputEvents = service.test(inputEvent);
+        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
         
         //assert
         Integer expectedSize = 3;

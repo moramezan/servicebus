@@ -42,7 +42,7 @@
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.Service service = new Jump();
-            List<Map<String,Object>> outputs = service.test(inputEvent);
+            List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -76,7 +76,7 @@
         
         //act
         ApexClassModel.Service service = new Jump();
-        List<Map<String,Object>> outputEvents = service.test(inputEvent);
+        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
         
         //assert
         Integer expectedSize = 1;

@@ -14,7 +14,7 @@
         
         //act
         ApexClassModel.Service service = new Router();
-        List<Map<String,Object>> outputs = service.test(inputEvent);
+        List<Map<String,Object>> outputs = service.handle(inputEvent);
         
         //assert
         Integer expectedSize = 1; //one schedule
@@ -39,7 +39,7 @@
 
         //act
         ApexClassModel.Service service = new Router();
-        List<Map<String,Object>> outputEvents = service.test(inputEvent);
+        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
 
         //assert
         Integer expectedSize = 0;
@@ -67,7 +67,7 @@
 
         //act
         ApexClassModel.Service service = new Router();
-        List<Map<String,Object>> outputEvents = service.test(inputEvent);
+        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
 
         //assert
         Integer expectedSize = 2;

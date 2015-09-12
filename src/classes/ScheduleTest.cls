@@ -35,7 +35,7 @@
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.Service service = new Schedule();
-            List<Map<String,Object>> outputs = service.test(inputEvent);
+            List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -55,7 +55,7 @@
         
         //act
         ApexClassModel.Service service = new Schedule();
-        List<Map<String,Object>> outputEvents = service.test(inputEvent);
+        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -82,7 +82,7 @@
         
         //act
         ApexClassModel.Service service = new Schedule();
-        List<Map<String,Object>> outputEvents = service.test(inputEvent);
+        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -113,7 +113,7 @@
         
         ///act on working days only
         ApexClassModel.Service service = new Schedule();
-        List<Map<String,Object>> outputEvents = service.test(inputEvent);
+        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -144,7 +144,7 @@
  
         //act
         ApexClassModel.Service service = new Schedule();
-        List<Map<String,Object>> outputEvents = service.test(inputEvent);
+        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -174,7 +174,7 @@
  
         //act
         ApexClassModel.Service service = new Schedule();
-        List<Map<String,Object>> outputEvents = service.test(inputEvent);
+        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
         
         //assert
         Integer expectedSize = 0;
@@ -199,7 +199,7 @@
         try {
             //act
             ApexClassModel.Service service = new Schedule();
-            service.test(inputEvent);
+            service.handle(inputEvent);
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
             //assert

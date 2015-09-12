@@ -43,7 +43,7 @@
             };
                 
             ApexClassModel.Service service = new Subsequence();
-            List<Map<String,Object>> outputs = service.test(inputEvent);
+            List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -108,7 +108,7 @@
         try {
             //act (no config!)
             ApexClassModel.Service service = new Subsequence();
-            service.test(new Map<String,Object>());
+            service.handle(new Map<String,Object>());
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
             //assert
@@ -162,7 +162,7 @@
         try {
             //act
             ApexClassModel.Service service = new Subsequence();
-            service.test(inputEvent);
+            service.handle(inputEvent);
             System.assert(false, 'Line above should throw exception.');
         } catch (Exception e) {
             //assert
@@ -220,7 +220,7 @@
             //act
             Test.setMock(HttpCalloutMock.class, new CalloutMock());
             ApexClassModel.Service service = new Subsequence();
-            service.test(event);
+            service.handle(event);
             System.assert(false, 'Line above should throw exception.');
             
         } catch (Exception e) {

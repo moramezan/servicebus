@@ -573,7 +573,8 @@ public with sharing class ConfigureController {
      * Org Id 00D24000000fQok
      * Package 03324000000Q59r
      * Version 04t24000000QtN7
-     * /packaging/installPackage.apexp?p0=04t24000000QtN7
+     * /packaging/installPackage.apexp?p0=04t24000000QuGy
+     * 34.0 (Released)
      */
     static public String metadata(String sessionId) {
         return (''

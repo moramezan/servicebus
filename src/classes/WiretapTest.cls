@@ -30,7 +30,7 @@ private class WiretapTest {
         Integer counter = 0;
         for (Integer i = 0; i < limits; i++) {
             ApexClassModel.Service service = new Wiretap();
-            List<Map<String,Object>> outputs = service.test(inputEvent);
+            List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -63,7 +63,7 @@ private class WiretapTest {
         Boolean actualFlagException = false;
         try {
             ApexClassModel.Service service = new Wiretap();
-            List<Map<String,Object>> results = service.test(parameters);
+            List<Map<String,Object>> results = service.handle(parameters);
         } catch (Exception e) {
            actualFlagException = true;
         }
@@ -93,7 +93,7 @@ private class WiretapTest {
 
         // Act
         ApexClassModel.Service service = new Wiretap();
-        List<Map<String,Object>> actualParametersList = service.test(inputEvent);
+        List<Map<String,Object>> actualParametersList = service.handle(inputEvent);
 
         // prepare
         Integer actualSize = actualParametersList.size();

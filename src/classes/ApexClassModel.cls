@@ -170,8 +170,8 @@ abstract public class Service {
     /**
      * MUST BE GLOBAL IN ABSTRACT PACKAGE
      */
-    //global List<Map<String,Object>> test(Map<String,Object> inputEvent) {
-    public List<Map<String,Object>> test(Map<String,Object> inputEvent) {
+    //global List<Map<String,Object>> handle(Map<String,Object> inputEvent) {
+    public List<Map<String,Object>> handle(Map<String,Object> inputEvent) {
         
         //invoke callout
         this.EventProvider = Json.serialize(inputEvent);

@@ -194,7 +194,7 @@
         Map<String,Object> inputEvent = new Map<String,Object>{'christmas' => christmas};
         
         //assert (inside service)
-        impl.test(inputEvent);
+        impl.handle(inputEvent);
     }
     
     public class OutputService extends ApexClassModel.Service {
@@ -220,7 +220,7 @@
         };
         
         //act
-        List<Map<String,Object>> outputEvents = impl.test(inputEvent);
+        List<Map<String,Object>> outputEvents = impl.handle(inputEvent);
         
         //assert
         System.assert(outputEvents[0].containsKey('foo'));

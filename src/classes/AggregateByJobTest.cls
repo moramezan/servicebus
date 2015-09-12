@@ -57,7 +57,7 @@
             inputEvent.put('Chunk' , i+1);
 
             ApexClassModel.Service service = new AggregateByJob();
-            List<Map<String,Object>> outputs = service.test(inputEvent);
+            List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -81,7 +81,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.Service service = new AggregateByJob();
-            List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory JobId');
         }
@@ -108,7 +108,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.Service service = new AggregateByJob();
-            List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Route');
         }
@@ -134,7 +134,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.Service service = new AggregateByJob();
-            List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Range');
         }
@@ -160,7 +160,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.Service service = new AggregateByJob();
-            List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory Chunk');
         }
@@ -186,7 +186,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.Service service = new AggregateByJob();
-            List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
         } catch (Exception e) {
             actualFlag = e.getMessage().contains('missing mandatory SiblingIds');
         }
@@ -252,7 +252,7 @@
 
         // Act
         ApexClassModel.Service service = new AggregateByJob();
-        List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
+        List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
 
         // Assemble
         Integer actualSize = actualOutputEvents.size();
@@ -315,7 +315,7 @@
 
         // Act
         ApexClassModel.Service service = new AggregateByJob();
-        List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
+        List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
 
         // Assemble
         Integer actualSize = actualOutputEvents.size();
@@ -377,7 +377,7 @@
 
         // Act
         ApexClassModel.Service service = new AggregateByJob();
-        List<Map<String,Object>> actualOutputEvents = service.test(inputEvent);
+        List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
 
         // Assemble
         Integer actualSize = actualOutputEvents.size();
