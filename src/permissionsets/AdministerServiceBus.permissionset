@@ -336,7 +336,7 @@
         <apexClass>WiretapTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
-    <description>Administer Sequences, Steps and Processes as part of Service Bus.</description>
+    <description>Administer Sequences, Steps and Services as part of Service Bus.</description>
     <fieldPermissions>
         <editable>true</editable>
         <field>BranchConfig__c.Sequence__c</field>
