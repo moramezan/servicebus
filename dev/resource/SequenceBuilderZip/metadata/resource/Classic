@@ -11,7 +11,7 @@
     "name": "MyClassicTheme",
     "designerId": "413057b9-3daa-4c23-b503-77fba372b587",
     "storage": {
-        "needsCompile": false,
+        "needsCompile": true,
         "simple": {
             "pkgVersion": 1,
             "pkgPath": "packages"
@@ -266,11 +266,11 @@
                 "designer|displayName": "body",
                 "implHandler": [
                     "/**",
-                    " * Harmonize padding",
-                    " */",
-                    "table#bodyTable td#bodyCell {",
-                    "    padding: 10px 10px 10px 0;",
-                    "}"
+                    "* Harmonize padding",
+                    "*/",
+                    "/*table#bodyTable td#bodyCell {",
+                    "padding: 10px 10px 10px 0;",
+                    "}*/"
                 ]
             },
             "name": "scss1",

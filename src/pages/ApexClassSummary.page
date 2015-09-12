@@ -1,5 +1,7 @@
 <apex:page standardController="ApexClass" setup="true" extensions="ApexClassSummaryExtension" title="Service: {!ApexClass.Name}" action="{!doInit}">
     
+    <apex:stylesheet value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/Builder-all.css')}" />
+    
     <script>
         (function() {
             //colour in the services tab... d'oh
@@ -54,7 +56,7 @@
             
             <apex:pageBlockSectionItem rendered="{!Summary.Icon != 'cog'}">
                 <apex:outputLabel style="font-weight: bold;">Icon</apex:outputLabel>
-                <apex:image value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/famfamfam/' + Summary.Icon + '.png')}" />
+                <apex:image value="{!URLFOR('/s.gif')}" styleClass="z-action-col-icon {!Summary.Icon}" />
             </apex:pageBlockSectionItem>
 
         </apex:pageBlockSection>

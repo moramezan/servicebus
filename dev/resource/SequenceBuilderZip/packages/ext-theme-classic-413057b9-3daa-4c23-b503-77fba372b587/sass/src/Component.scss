@@ -86,11 +86,11 @@ iframe.twirly {
     background: url('images/tree/loading.gif') center no-repeat;
 }
 /**
- * Harmonize padding
- */
-table#bodyTable td#bodyCell {
-    padding: 10px 10px 10px 0;
-}
+* Harmonize padding
+*/
+/*table#bodyTable td#bodyCell {
+padding: 10px 10px 10px 0;
+}*/
 .#{$prefix}menu-item-icon.atlassian, .#{$prefix}action-col-icon.atlassian {background-image:url('extraicons/atlassian.png');}
 .#{$prefix}menu-item-icon.github, .#{$prefix}action-col-icon.github {background-image:url('extraicons/github.png');}
 .#{$prefix}menu-item-icon.linkedin, .#{$prefix}action-col-icon.linkedin {background-image:url('extraicons/linkedin.png');}

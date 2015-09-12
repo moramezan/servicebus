@@ -2,6 +2,8 @@
 <!-- no recordSetVar  as "List controllers are not supported for ApexClass" -->
 <apex:page controller="ApexClassTabController" setup="true" action="{!doInit}" title="Services">
 
+    <apex:stylesheet value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/Builder-all.css')}" />
+    
     <script>
         (function() {
             //colour in the service tab... d'oh
@@ -26,7 +28,7 @@
             </apex:column>
             
             <apex:column headerValue="Icon" width="30">
-                <apex:image value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/famfamfam/' + id2summary[id].Icon + '.png')}" />
+                <apex:image value="{!URLFOR('/s.gif')}" styleClass="z-action-col-icon {!id2summary[id].Icon}" />
             </apex:column>
             
             <apex:column headerValue="Name">
