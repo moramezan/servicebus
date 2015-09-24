@@ -83,11 +83,11 @@ Id queueableId = System.enqueueJob(j);
 <dl>
     <dt>sequenceName</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Name of the sequence the data is destined for. This is set on the <code>esb__SequenceName</code> event parameter for your convenience.</dd>
+    <dd>Name of the sequence the data is destined for. This is set on the <code>SequenceName</code> event parameter for your convenience.</dd>
     
     <dt>recordId</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
-    <dd>Id of some record that the sequence will operate on. This is set on the <code>esb__RecordId</code> event parameter for your convenience.</dd>
+    <dd>Id of some record that the sequence will operate on. This is set on the <code>RecordId</code> event parameter for your convenience.</dd>
 </dl>
 
 <h2>
@@ -106,7 +106,7 @@ Id queueableId = System.enqueueJob(j);
 <dl>
     <dt>event</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,Object&gt;</a></dd>
-    <dd>An event, which must carry a <code>esb__SequenceName</code> parameter with a string value.</dd>
+    <dd>An event, which must carry a <code>SequenceName</code> parameter with a string value.</dd>
 </dl>
 
 <h2>
@@ -125,7 +125,7 @@ Id queueableId = System.enqueueJob(j);
 <dl>
     <dt>events</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_list.htm" target="_blank">List&lt;Map&lt;String,Object&gt;&gt;</a></dd>
-    <dd>A collection of multiple events, each of which must carry an <code>esb__SequenceName</code> parameter with a string value.</dd>
+    <dd>A collection of multiple events, each of which must carry an <code>SequenceName</code> parameter with a string value.</dd>
 </dl>
 
 <!--
@@ -143,11 +143,11 @@ Id queueableId = System.enqueueJob(j);
 <dl>
     <dt>sequenceName</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Name of the sequence the data is destined for. This sets <code>esb__SequenceName</code> as a convenience.</dd>
+    <dd>Name of the sequence the data is destined for. This sets <code>SequenceName</code> as a convenience.</dd>
     
     <dt>entityData</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_blob.htm" target="_blank">Blob</a></dd>
-    <dd>Blob representation of the data the sequence will operate on. This sets <code>esb__RecordId</code> as a convenience.</dd>
+    <dd>Blob representation of the data the sequence will operate on. This sets <code>RecordId</code> as a convenience.</dd>
 </dl>
 -->
 
@@ -206,7 +206,7 @@ Id queueableId = System.enqueueJob(j);
 </dl>
 
 <p>
-    When the Process.PluginResult is returned, its parameters will contain an <code>esb__QueueableId</code> key identifying the submitted Job.
+    When the Process.PluginResult is returned, its parameters will contain an <code>QueueableId</code> key identifying the submitted Job.
 </p>
 
 <fieldset>
@@ -224,14 +224,14 @@ Id queueableId = System.enqueueJob(j);
     <pre>
         //assemble input event parameters
         Map&lt;String,Object&gt; inputEvent = new Map&lt;String,Object&gt;();
-        inputEvent.put('esb__SequenceName', 'Generate_PDF_Statements');
+        inputEvent.put('SequenceName', 'Generate_PDF_Statements');
         
         //immediately submit event to Enterprise Service Bus
         Process.Plugin job = (Process.Plugin)Type.forName('esb.Job').newInstance();
         Process.PluginResult result = job.invoke(new Process.PluginRequest(inputEvent));
         
         //access queueable job id
-        Id queueableId = result.OutputParameters.get('esb__QueueableId');
+        Id queueableId = result.OutputParameters.get('JobId');
         System.debug(queueableId); //707j0000008MzD6
     </pre>
 </fieldset>

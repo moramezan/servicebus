@@ -11,7 +11,7 @@
         Test.startTest();
         Job job = new Job(sequenceName, recordId);
         
-        System.assert(job.Events[0].containsKey('__ToSequence'), 'Wrong sequence key.');
+        System.assert(job.Events[0].containsKey('servicebus:ToSequence'), 'Wrong sequence key.');
         System.assert(job.Events[0].containsKey('Route'), 'Wrong route key.');
         
         System.enqueueJob(job);
@@ -106,9 +106,9 @@
     
     static testmethod void testNaughtyKeys() {
         //act (good one)
-        Map<String,Object> inputEvent = new Map<String,Object>{'ns__param' => ''};
+        Map<String,Object> inputEvent = new Map<String,Object>{'ns:param' => ''};
         new Job(inputEvent);
-        System.assert(inputEvent.containsKey('ns__param'));
+        System.assert(inputEvent.containsKey('ns:param'));
         
         try {
             //act (ours)
@@ -125,7 +125,7 @@
         
         try {
             //act (reserved)
-            inputEvent = new Map<String,Object>{'__test' => ''};
+            inputEvent = new Map<String,Object>{':test' => ''};
             new Job(inputEvent);
             System.assert(false, 'Line above should throw exception.');
             
@@ -154,7 +154,7 @@
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         expectedParam = 'Test';
-        actualParam = inputEvents[0].get('__ToSequence');
+        actualParam = inputEvents[0].get('servicebus:ToSequence');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         //act
@@ -167,7 +167,7 @@
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         expectedParam = 'Wiretap';
-        actualParam = inputEvents[0].get('__ToService');
+        actualParam = inputEvents[0].get('servicebus:ToService');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         //arrange
@@ -187,7 +187,7 @@
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         expectedParam = document.Id;
-        actualParam = inputEvents[0].get('__ToConfig');
+        actualParam = inputEvents[0].get('servicebus:ToConfig');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
     }
     

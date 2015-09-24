@@ -12,7 +12,7 @@ public class RouterImplementation implements System.Schedulable {
             optimize(); //#969 obfuscation of deferRefreshAccessToken
         }
         
-        //#971 used in lieu of __WasHeartbeat
+        //#971 used in lieu of :WasHeartbeat
         RecordId = context.getTriggerId(); //eg 08e24000007paG1AAI
         
         RouterImplementation.IHeartbeatGenerator heartbeatGenerator =
@@ -170,7 +170,7 @@ public class RouterImplementation implements System.Schedulable {
         Job.AllowRoute = true; //#999#issuecomment-133751700
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         for (DateTime timestamp : timestamps) outputEvents.add(new Map<String,Object>{
-            'RecordId' => RecordId, //#971 used in lieu of __WasHeartbeat
+            'RecordId' => RecordId, //#971 used in lieu of :WasHeartbeat
             'EntryPointTimestamp' => timestamp,
             'Route' => Router.class.getName() //#956 and #575 so that resolve and execute can crow look //#999#issuecomment-133751700
         });

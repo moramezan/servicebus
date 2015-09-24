@@ -485,7 +485,7 @@ global class ChatterTap {
 </h3>
 
 <p>
-    <strong>025 - 032</strong> Complete the implementation of the business specification. In this example, the event parameters surfaced to a given chatter feed are deliberately limited to the Sequence Name (<code>esb__SequenceName</code>) and Sequence Position (<code>esb__Position</code>).
+    <strong>025 - 032</strong> Complete the implementation of the business specification. In this example, the event parameters surfaced to a given chatter feed are deliberately limited to the Sequence Name (<code>SequenceName</code>) and Sequence Position (<code>Position</code>).
 </p>
 
 <h2>
@@ -540,7 +540,7 @@ private class ChatterTapTest {
         insert new ChatterTapSetting__c ();  // default
   
         Map&lt;String,Object&gt; inputEvent = new Map&lt;String,Object&gt; {
-            'c__YourKey' =&gt; 'your data'  
+            'c:YourKey' =&gt; 'your data'  
         };  
  
         // Act
@@ -561,7 +561,7 @@ private class ChatterTapTest {
         insert new ChatterTapSetting__c ();  // default
   
         Map&lt;String,Object&gt; inputEvent = new Map&lt;String,Object&gt; {
-            'c__YourKey' =&gt; 'your data'
+            'c:YourKey' =&gt; 'your data'
         };
         
         Integer actualFeedItemsBeforeSize = [SELECT Id, Body FROM FeedItem].Size();

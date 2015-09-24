@@ -28,7 +28,7 @@
     public class MemoryError extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
-            inputEvent.put('c__OrganizationId', UserInfo.getOrganizationId());
+            inputEvent.put('c:OrganizationId', UserInfo.getOrganizationId());
             throw new MemoryErrorException('Something catchable.');
         }
     }
@@ -120,7 +120,7 @@
     public class Memory extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
-            inputEvent.put('c__OrganizationId', UserInfo.getOrganizationId());
+            inputEvent.put('c:OrganizationId', UserInfo.getOrganizationId());
             return new List<Map<String,Object>>();
         }
     }

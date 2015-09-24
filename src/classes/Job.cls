@@ -225,14 +225,14 @@ global class Job implements Process.Plugin, system.Queueable {
                     continue; //ok
                 }
                 
-                if (key.startsWith('__')) {
+                if (key.startsWith(':')) {
                     //failure, reserved for us
-                    throw new EnqueueException('Namespace \'__\' is not supported. If you are attempting to use a custom event parameter, be sure to prepend the \'c__\' before the parameter name.'); //a la //sObject type 'Messsss' is not supported. If you are attempting to use a custom object, be sure to append the '__c' after the entity name. Please reference your WSDL or the describe call for the appropriate names.
+                    throw new EnqueueException('Namespace \':\' is not supported. If you are attempting to use a custom event parameter, be sure to prepend the \'c:\' before the parameter name.'); //a la //sObject type 'Messsss' is not supported. If you are attempting to use a custom object, be sure to append the '__c' after the entity name. Please reference your WSDL or the describe call for the appropriate names.
                 }
                 
-                if (!key.contains('__')) {
+                if (!key.contains(':')) {
                     //failure, namespace is required
-                    throw new EnqueueException('Namespace \'' + key + '\' is not supported. If you are attempting to use a custom event parameter, be sure to prepend the \'c__\' before the parameter name.'); //a la //sObject type 'Messsss' is not supported. If you are attempting to use a custom object, be sure to append the '__c' after the entity name. Please reference your WSDL or the describe call for the appropriate names.
+                    throw new EnqueueException('Namespace \'' + key + '\' is not supported. If you are attempting to use a custom event parameter, be sure to prepend the \'c:\' before the parameter name.'); //a la //sObject type 'Messsss' is not supported. If you are attempting to use a custom object, be sure to append the '__c' after the entity name. Please reference your WSDL or the describe call for the appropriate names.
                 }
             }
             
@@ -244,14 +244,14 @@ global class Job implements Process.Plugin, system.Queueable {
             if (toSequence != null) {
                 //converts sequence to route
                 inputEvent.remove('ToSequence');
-                inputEvent.put('__ToSequence', toSequence);
+                inputEvent.put('servicebus:ToSequence', toSequence);
                 inputEvent.put('Route', toSequence + '#' + '0');
             }
             
             if (toService != null) {
                 //converts service to route
                 inputEvent.remove('ToService');
-                inputEvent.put('__ToService', toService);
+                inputEvent.put('servicebus:ToService', toService);
                 inputEvent.put('Route', toService);
                 
             }
@@ -259,7 +259,7 @@ global class Job implements Process.Plugin, system.Queueable {
             if (toConfig != null) {
                 //converts config to route
                 inputEvent.remove('ToConfig');
-                inputEvent.put('__ToConfig', toConfig);
+                inputEvent.put('servicebus:ToConfig', toConfig);
                 inputEvent.put('Route', config2sequence.get((String)toConfig) + '#' + '0');
                 
             }

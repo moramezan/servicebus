@@ -515,8 +515,8 @@
     static testmethod void callingCleanParametersReturnsExpectedCollection() {
         // Arrange :
         Map<String,Object> parameters = new Map<String,Object> {
-            '__x' => 'v1',
-            'esb__x' => 'v2',
+            ':x' => 'v1',
+            'servicebus:x' => 'v2',
             'balls' => 'v3'
         };
 
@@ -524,8 +524,8 @@
         Map<String,Object> actualParameters =  AggregateByJob.cleanParameters(parameters);
 
         // prepare
-        Boolean actual01 = (actualParameters.get('__x') != null);
-        Boolean actual02 = (actualParameters.get('esb__x') != null);
+        Boolean actual01 = (actualParameters.get(':x') != null);
+        Boolean actual02 = (actualParameters.get('servicebus:x') != null);
         Boolean actual03 = (actualParameters.get('balls') == null);
 
         // Assert

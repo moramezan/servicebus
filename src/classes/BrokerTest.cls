@@ -405,7 +405,7 @@
     // Stack Trace      Class.BrokerTest.testMissingPositionThrowsExpectedException: line 680, column 1
     static testmethod void testMissingPositionThrowsExpectedException() {
         //arrange input
-        Map<String,Object> inputEvent = new Map<String,Object>{'c__Not_Sequence_Or_Service' => 1};
+        Map<String,Object> inputEvent = new Map<String,Object>{'c:Not_Sequence_Or_Service' => 1};
         
         //arrange message
         Test.startTest();
@@ -743,7 +743,7 @@
     public class ChunkErrorService extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
-            Boolean isError = (Boolean)inputEvent.get('c__IsError');
+            Boolean isError = (Boolean)inputEvent.get('c:IsError');
             if (isError == true) throw new ChunkErrorServiceException('Test error');
             return new List<Map<String,Object>>{inputEvent.clone()}; //one message
         }

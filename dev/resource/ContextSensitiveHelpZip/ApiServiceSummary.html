@@ -118,8 +118,8 @@ global class ESB {
     Integer Cardinality = 1; //one input event always emits exactly one output event
     String HelpUrl = Page.TwitterHelp.getUrl();
     String Limits = 25; //leave half of 50 (Total number of HTTP callouts permitted)
-    Map&lt;String,Object&gt; Inputs = new Map&lt;String,Object&gt;{'acme__Body' => 'String of the tweet body.'};
-    Map&lt;String,Object&gt; Outputs = new Map&lt;String,Object&gt;{'acme__TweetId' => 'String of tweet Id.'}
+    Map&lt;String,Object&gt; Inputs = new Map&lt;String,Object&gt;{'acme:Body' => 'String of the tweet body.'};
+    Map&lt;String,Object&gt; Outputs = new Map&lt;String,Object&gt;{'acme:TweetId' => 'String of tweet Id.'}
     SObject ServiceSetting = TwitterSetting__c.SObjectType.newSObject();
     SObject StepConfig = TwitterConfig__c.SObjectType.newSObject();
 }
@@ -208,7 +208,7 @@ override protected void callouts(Map&lt;String,Object&gt; inputEvent) {
 <pre>
 override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
     Map&lt;String,Object&gt; outputEvent = inputEvent.clone();
-    outputEvent.put('c__Debug', 'Hello world!');
+    outputEvent.put('c:Debug', 'Hello world!');
     return new List&lt;Map&lt;String,Object&gt;&gt;{outputEvent};
 }
 </pre>

@@ -212,7 +212,7 @@ global class PayInvoice {
         String Icon = 'money';
         
         Map&lt;String,String> Outputs = new Map&lt;String,String&gt;{
-            'esb__RecordId' =>'ID modified to reference the payment'
+            'RecordId' =>'ID modified to reference the payment'
         };
     }
     
@@ -224,7 +224,7 @@ global class PayInvoice {
         insert payment;
         
         // change the underlying document pointed at by the notification  
-        inputEvent.put('esb__RecordId', payment.Id);  
+        inputEvent.put('RecordId', payment.Id);  
         
         //output message(s)
         return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};

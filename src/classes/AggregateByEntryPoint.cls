@@ -125,7 +125,7 @@ public class AggregateByEntryPoint extends ApexClassModel.Service {
     private static Map<String,Object> cleanParameters(Map<String,Object> inputEvent) {
         for (String input : inputEvent.keySet()) {
             Object value = (Object)inputEvent.get(input);
-            value =  (input.startsWith('__') || input.startsWith('esb__'))  ? value : null;
+            value =  (input.startsWith(':') || input.startsWith('servicebus:'))  ? value : null;
             inputEvent.put(input, value);
         }
 

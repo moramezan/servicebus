@@ -388,10 +388,10 @@ abstract public class Service {
              * possibility of the Munger being blacklisted
              * An exception is thrown if the Max Hops threshold is reached
              *
-             * We cannot simply increment __Hops BEFORE calling invoke as a service author could fuck with this parameter
-             * Instead we read and increment __Hops BEFORE calling invoke using enforceMaximumHops()
+             * We cannot simply increment Hops BEFORE calling invoke as a service author could fuck with this parameter
+             * Instead we read and increment Hops BEFORE calling invoke using enforceMaximumHops()
              * and assign to an Integer hops variable
-             * We use applyHops()  to apply the incremented hops variable to the __Hops parameter of
+             * We use applyHops()  to apply the incremented hops variable to the Hops parameter of
              * all messages returned from invoke()
              */
             Integer hops = (Integer)outputEvent.get('Hops');
