@@ -40,7 +40,7 @@
             </apex:pageBlockSectionItem>
 
             <apex:pageBlockSectionItem rendered="{!Summary.Label != FullyQualifiedClassName}">
-                <apex:outputLabel >Name</apex:outputLabel>
+                <apex:outputLabel >Label</apex:outputLabel>
                 <apex:outputText value="{!Summary.Label}" />
             </apex:pageBlockSectionItem>
             
@@ -54,6 +54,11 @@
                 <apex:outputLink value="/{!Id}">{!FullyQualifiedClassName}</apex:outputLink>
             </apex:pageBlockSectionItem>
             
+            <apex:pageBlockSectionItem rendered="{!Summary.Limits != 1}">
+                <apex:outputLabel style="font-weight: bold;">Limits</apex:outputLabel>
+                <apex:outputText value="{!Summary.Limits}" />
+            </apex:pageBlockSectionItem>
+
             <apex:pageBlockSectionItem rendered="{!Summary.Icon != 'cog'}">
                 <apex:outputLabel style="font-weight: bold;">Icon</apex:outputLabel>
                 <apex:image value="{!URLFOR('/s.gif')}" styleClass="z-action-col-icon {!Summary.Icon}" />
