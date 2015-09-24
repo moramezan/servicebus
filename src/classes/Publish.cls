@@ -3,7 +3,7 @@ public class Publish extends ApexClassModel.Service {
     
     public class Summary {
         String Tag = 'Service Bus';
-        String Name = 'Publish';
+        String Label = 'Publish';
         String Description = 'Broadcasts the message to other sequences via a named Event Type.';
         String StepConfig = PublishConfig__c.class.getName();
         String Icon = 'chart_organisation';

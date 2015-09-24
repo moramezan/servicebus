@@ -3,7 +3,7 @@ public class Subscribe extends ApexClassModel.Service {
 
     public class Summary {
         String Tag = 'Service Bus';
-        String Name = 'Subscribe';
+        String Label = 'Subscribe';
         String Description = 'Listens for messages via a named Event Type.';
         String StepConfig = SubscribeConfig__c.class.getName();
         String Icon = 'eye';

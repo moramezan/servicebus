@@ -3,7 +3,7 @@ public class Schedule extends ApexClassModel.Service {
     
     public class Summary {
         String Tag = 'Service Bus';
-        String Name = 'Schedule';
+        String Label = 'Schedule';
         String Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages
         String Icon = 'clock';
         String StepConfig = ScheduleConfig__c.class.getName();

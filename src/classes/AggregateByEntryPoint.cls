@@ -5,7 +5,7 @@ public class AggregateByEntryPoint extends ApexClassModel.Service {
 
     public class Summary {
         String Tag = 'Service Bus';
-        String Name = 'Aggregate By Entry Point';
+        String Label = 'Aggregate By Entry Point';
         String Description = 'Aggregates a collection of messages having the same Entry Point Id.';
         String Icon = 'arrow_join';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceAggregateByEntryPoint').getUrl();

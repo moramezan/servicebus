@@ -5,7 +5,7 @@ public class Subsequence extends ApexClassModel.Service {
     
     public class Summary {
         String Tag = 'Service Bus';
-        String Name = 'Synchronous Subsequence';
+        String Label = 'Synchronous Subsequence';
         String Description = 'Synchronously executes another sequence, then resumes the next step afterwards.';
         String StepConfig = SubsequenceConfig__c.class.getName();
         String Icon = 'arrow_undo';

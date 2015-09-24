@@ -46,7 +46,7 @@
             "codeClass": null,
             "userConfig": {
                 "designer|displayName": "alphabetical",
-                "property": "Name"
+                "property": "Label"
             },
             "name": "MySorter",
             "designerId": "23caa009-4ce5-47c2-bffc-62cf1584c7a6"

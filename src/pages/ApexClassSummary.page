@@ -16,8 +16,8 @@
     
     <apex:pageMessages showDetail="false" />
     
-    <apex:sectionHeader rendered="{!FullyQualifiedClassName != Summary.Name}" title="Service" subtitle="{!Summary.Name}" />
-    <apex:sectionHeader rendered="{!FullyQualifiedClassName == Summary.Name}" title="Service" subtitle="{!FullyQualifiedClassName}" />
+    <apex:sectionHeader rendered="{!FullyQualifiedClassName != Summary.Label}" title="Service" subtitle="{!Summary.Label}" />
+    <apex:sectionHeader rendered="{!FullyQualifiedClassName == Summary.Label}" title="Service" subtitle="{!FullyQualifiedClassName}" />
 
     <apex:pageBlock mode="maindetail" title="Service Detail" id="pageBlockId">
         
@@ -39,9 +39,9 @@
                 <apex:outputText value="{!Summary.Tag}" />
             </apex:pageBlockSectionItem>
 
-            <apex:pageBlockSectionItem rendered="{!Summary.Name != FullyQualifiedClassName}">
+            <apex:pageBlockSectionItem rendered="{!Summary.Label != FullyQualifiedClassName}">
                 <apex:outputLabel >Name</apex:outputLabel>
-                <apex:outputText value="{!Summary.Name}" />
+                <apex:outputText value="{!Summary.Label}" />
             </apex:pageBlockSectionItem>
             
             <apex:pageBlockSectionItem rendered="{!Summary.Description != 'Undescribed'}">

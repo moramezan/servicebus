@@ -46,7 +46,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "Name"
+                "name": "Label"
             },
             "name": "MyString",
             "designerId": "4dbd6e6c-4efc-4cfa-98ef-fa2a7e0520c9"

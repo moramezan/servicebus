@@ -15,7 +15,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      */
     public class Summary {
         public String Tag {get; set;}
-        public String Name {get; set;}
+        public String Label {get; set;}
         public String Description {get; set;}
         public String ServiceSetting {get; set;}
         public String StepConfig {get; set;}
@@ -59,7 +59,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             try {
                 //copy properties across
                 this.Tag = (String)summary.get('Tag');
-                this.Name = (String)summary.get('Name');
+                this.Label = (String)summary.get('Label');
                 this.Description = (String)summary.get('Description');
                 this.ServiceSetting = (String)summary.get('ServiceSetting');
                 this.StepConfig = (String)summary.get('StepConfig');
@@ -72,7 +72,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 
                 //set sensible defaults
                 if (this.Tag == null) this.Tag = 'Untagged';
-                if (this.Name == null) this.Name = reflector.getName(); //inflector.getName().replaceAll('\\.?Summary$', ''); //strips any '.Summary' or 'Summary'
+                if (this.Label == null) this.Label = reflector.getName(); //inflector.getName().replaceAll('\\.?Summary$', ''); //strips any '.Summary' or 'Summary'
                 if (this.Description == null) this.Description = 'Undescribed';
                 if (this.Icon == null) this.Icon = 'cog';
                 if (this.Limits == null) this.Limits = 1;

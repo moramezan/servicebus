@@ -5,7 +5,7 @@ public class AggregateByJob extends ApexClassModel.Service {
 
     public class Summary {
         String Tag = 'Service Bus';
-        String Name = 'Aggregate By Job';
+        String Label = 'Aggregate By Job';
         String Description = 'Aggregates a collection of messages having the same Job Id.';
         String Icon = 'arrow_join';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceAggregateByJob').getUrl();

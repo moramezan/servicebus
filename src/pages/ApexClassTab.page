@@ -32,7 +32,7 @@
             </apex:column>
             
             <apex:column headerValue="Name">
-                <apex:outputLink value="{!URLFOR($Page.ApexClassSummary, null, ['id'=id])}">{!id2class[id].Name}</apex:outputLink>
+                <apex:outputLink value="{!URLFOR($Page.ApexClassSummary, null, ['id'=id])}">{!id2class[id].Label}</apex:outputLink>
             </apex:column>
             
             <apex:column headerValue="Namespace Prefix" value="{!id2class[id].NamespacePrefix}" />

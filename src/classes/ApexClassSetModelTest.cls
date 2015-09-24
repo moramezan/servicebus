@@ -38,8 +38,8 @@
         String actualId = (String)dtos[0].get('Id');
         System.assertEquals(expectedId, actualId, 'Wrong Id.');
         
-        String expectedName = summary.Name;
-        String actualName = (String)dtos[0].get('Name');
+        String expectedName = summary.Label;
+        String actualName = (String)dtos[0].get('Label');
         System.assertEquals(expectedName, actualName, 'Wrong Name.');
         
         String expectedDescription = summary.Description;

@@ -456,7 +456,7 @@
                         "implHandler": [
                             "var apexClassId = record.get('ApexClassId');",
                             "var service = Ext.getStore('Services').getById(apexClassId);",
-                            "var name = service && service.get('Name');",
+                            "var name = service && service.get('Label');",
                             "if (!service) name = '<strong>' + record.get('ApexClassName') + '</strong>'; //#875 invalid service",
                             "",
                             "//#776",

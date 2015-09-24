@@ -101,7 +101,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             
             Map<String,Object> dto = new Map<String,Object>{
                 'Id' => apexClass.Id,
-                'Name' => summary.Name,
+                'Label' => summary.Label,
                 'Description' => summary.Description,
                 'Tag' => summary.Tag,
                 'Icon' => summary.Icon,

@@ -11,7 +11,7 @@
     //@TestVisible private preferred, but Type.forName does not support
     public class DescribeServiceSummary {
         String Tag = 'Tag';
-        String Name = 'Name';
+        String Label = 'Name';
         String Description = 'Description';
         String Icon = 'Icon';
         Integer Limits = 99;
@@ -32,7 +32,7 @@
         
         //assert
         System.assertEquals(expected.Tag, actual.Tag, 'Wrong Tag.');
-        System.assertEquals(expected.Name, actual.Name, 'Wrong Name.');
+        System.assertEquals(expected.Label, actual.Label, 'Wrong Name.');
         System.assertEquals(expected.Description, actual.Description, 'Wrong Description.');
         System.assertEquals(expected.Icon, actual.Icon, 'Wrong Icon.');
         System.assertEquals(expected.Limits, actual.Limits, 'Wrong Limits.');
@@ -62,7 +62,7 @@
         //assert
         System.assertEquals('Undescribed', summary.Description, 'Wrong Description.');
         System.assertEquals('Untagged', summary.Tag, 'Wrong Tag.');
-        System.assertEquals(DefaultService.class.getName(), summary.Name, 'Wrong Name.');
+        System.assertEquals(DefaultService.class.getName(), summary.Label, 'Wrong Name.');
         System.assertEquals('cog', summary.Icon, 'Wrong Icon.');
         System.assertEquals('Any', summary.Cardinality, 'Wrong Cardinality.');
         System.assertEquals(1, summary.Limits, 'Wrong Limits.');

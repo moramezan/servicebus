@@ -6,7 +6,7 @@ public class Branch extends ApexClassModel.Service {
         String Icon = 'arrow_branch';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceBranchJumpSubsequence').getUrl();
         String Tag = 'Service Bus';
-        String Name = 'Branch';
+        String Label = 'Branch';
         String Description = 'Copies the message to another sequence.';
         Integer Limits = 50; //max sync limit
         String Cardinality = 'One';

@@ -3,7 +3,7 @@ public class Wiretap extends ApexClassModel.Service {
     
     public class Summary {
         String Tag = 'Service Bus';
-        String Name = 'Wiretap';
+        String Label = 'Wiretap';
         String Description = 'Emails the message parameters to the user.';
         String ServiceSetting = WiretapSetting__c.class.getName();
         String Icon = 'email';

@@ -763,8 +763,8 @@
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //arrange broker implementation and params
-        Map<String,Object> failureEvent = new Map<String,Object>{'c__IsError' => true, 'ToSequence' => 'Test'};
-        Map<String,Object> successEvent = new Map<String,Object>{'c__IsError' => false, 'ToSequence' => 'Test'};
+        Map<String,Object> failureEvent = new Map<String,Object>{'c:IsError' => true, 'ToSequence' => 'Test'};
+        Map<String,Object> successEvent = new Map<String,Object>{'c:IsError' => false, 'ToSequence' => 'Test'};
         List<Map<String,Object>> events = new List<Map<String,Object>>{failureEvent, successEvent};
         
         //arrange messages and broker

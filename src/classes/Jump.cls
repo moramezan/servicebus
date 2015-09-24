@@ -3,7 +3,7 @@ public class Jump extends ApexClassModel.Service {
 
     public class Summary {
         String Tag = 'Service Bus';
-        String Name = 'Jump';
+        String Label = 'Jump';
         String Description = 'Permanently diverts the message to another sequence, never to return.';
         String StepConfig = JumpConfig__c.class.getName();
         String Icon = 'arrow_switch';

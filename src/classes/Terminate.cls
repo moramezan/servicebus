@@ -3,7 +3,7 @@ public class Terminate extends ApexClassModel.Service {
     
     public class Summary {
         String Tag = 'Service Bus';
-        String Name = 'Terminate';
+        String Label = 'Terminate';
         String Description = 'Swallows messages at the end of this sequence.';
         String Icon = 'stop';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceTerminate').getUrl();
