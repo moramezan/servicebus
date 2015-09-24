@@ -24870,11 +24870,11 @@ iframe.twirly {
   background: url('data:image/gif;base64,R0lGODlhEAAQAPUkAPVhVvLy8tvb2+fn5/j4+Pr6+vn5+eDg4P8gEM/Pz//Dv/Hx8fz8/NbW1v8+MP+ln/9NQP/h3/+If+Pj4+rq6uzs7P8RAOXl5dnZ2czMzNTU1OKJgvZwZvb29vnq6d+GgP3g3dHR0d7e3vX19f/Sz+fY19jY2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCAAkACwAAAAAEAAQAEAGgUCSkDSqXI6XymhIwjgxSyZJYalaFk/RIEAgBAYA64N0wIQy6DT6Y3EICwekHMmJNJ8VKUlitUyeAh1MHghWEEIGDWpqDQZMDBRzSBQMQ2Uikkdhbn9OAo5DIIVVEE9QelRWpnlSfFZYTiEJFwEBFwlsVWMFGouLG3ZMFRhqGKxCQQAh+QQFCAAAACwAAAAAEAAQAAAGXkCAELCYYDDD5LBwOB6VSoHzmRwwklPMZculKDGCymjIvYyThGRhwK1AlYHyG13O2DOB+fCeueiFGHcJZ0IkShV8QwoSCBZKDXZJFpOTSQYJSpSTCH+aDhGdFhAPSUEAIfkEBQgAJAAsAAAAABAAEAAABmVAknAoxGAmC6JyaDQeCkODpkltHoaNTKjaFA0rmXBoOKoIvMxwJtEhGpTqzGUJVwfoeDrhwp/nSQF9fkMeRCADfRVEHwgSCkMAfSNDHxaWFkSRFEMbl5ZKHAxDEQ6ef0IPEJ90QQAh+QQFCAAAACwAAAAAEAAQAAAGYECAEFDBZDLD5NDQOB6VyoTzmRQUktMMZss9KDOJS2DIxSyUoyRBwJ1AlUXuOzkqW+4WxXyIt0j2QhB4CCRJV0kPfUMEAQMXSg53SReUlEkRCEqVlAOAmxQMgCUXFWlDQQAh+QQFCAAkACwAAAAAEAAQAAAGZkCScCjMZDAVonJoNDYMw8imSW1qhg7Lp9oMDR+W8GcYuCS8Q0jYgvAQO8q1RbKMrxX1fH2E6WP0QhV+f0QgRAYCfhNEAAMBBEMifgtDABeXF0SSB0McmJdKBwVDDBSfgEIjFZh1QQAh+QQFCAAAACwAAAAAEAAQAAAGXkCAEPCAWCzD5DDiOB6VSoTzmUwYklNLZsttKC0IiWLIzVSUpOQowcVAlZfyOxkoX+4XwnyIvwT2QhV4AwVJemp9QyMVAm5JFHdJGJOTSQwDSpSTAoCaB4V7kxMLSUEAIfkEBQgAJAAsAAAAABAAEAAABmZAknAotFggD6JyaDQ6IkMGp0ltboaUC6Da/AxHlzBgqJAgvMNK+DIAET3K9SWwjK8J9Xw9kOln9EIXfn9EBkQdCX4YRCICFSNDIX4VQyIYl4uRGQ1DB5iXShqGQgWemIBCCxOgdUEAIfkEBQgAAAAsAAAAABAAEAAABl9AgBAwqlwuw+SQQTkelcqB85lERJLTi2XLdSgvgwBhyLU8lIUkCcGFQJWS8jupKGPumNF8iMdU9kITeAJjQ3pJC31DARcJGUoHd0MmGZWVSQUCSpaVCYCcDQafGX5JQQA7') center no-repeat; }
 
 /**
- * Harmonize padding
- */
-table#bodyTable td#bodyCell {
-  padding: 10px 10px 10px 0; }
-
+* Harmonize padding
+*/
+/*table#bodyTable td#bodyCell {
+padding: 10px 10px 10px 0;
+}*/
 .z-menu-item-icon.atlassian, .z-action-col-icon.atlassian {
   background-image: url("extraicons/atlassian.png"); }
 
@@ -24910,6 +24910,9 @@ table#bodyTable td#bodyCell {
 
 .z-menu-item-icon.filter, .z-action-col-icon.filter {
   background-image: url("extraicons/filter.png"); }
+
+.z-menu-item-icon.square, .z-action-col-icon.square {
+  background-image: url("extraicons/square.png"); }
 
 .z-menu-item-icon.accept, .z-action-col-icon.accept {
   background-image: url("famfamfam/accept.png"); }

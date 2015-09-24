@@ -24911,6 +24911,9 @@ padding: 10px 10px 10px 0;
 .z-menu-item-icon.filter, .z-action-col-icon.filter {
   background-image: url("extraicons/filter.png"); }
 
+.z-menu-item-icon.square, .z-action-col-icon.square {
+  background-image: url("extraicons/square.png"); }
+
 .z-menu-item-icon.accept, .z-action-col-icon.accept {
   background-image: url("famfamfam/accept.png"); }
 
