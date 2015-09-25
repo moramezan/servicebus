@@ -51,7 +51,7 @@ Further, this service summary class is capable of providing information about th
 ```
 public class Summary extends Abstract.Service.Summary {
     String Tag = 'Order Management';
-    String Name = 'Order Extract Items';
+    String Label = 'Order Extract Items';
     String Icon = 'arrow_divide';
     String Description = 'Splits an order into its component order product line items';
     String Cardinality = 'Many';
