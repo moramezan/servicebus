@@ -67,7 +67,7 @@ public class Summary extends Abstract.Service.Summary {
      * Optional friendly name to be displayed instead
      * of the fully-qualified Apex Class name.
      */
-    String Name;
+    String Label;
     
     /**
      * Optional grouping tag that can be used to
