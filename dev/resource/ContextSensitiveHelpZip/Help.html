@@ -350,7 +350,7 @@
         (function importTopics() {
             var binding = new XMLHttpRequest();
             //to get the file: insert the topics listing
-            var topic = new Array().concat(window.location.search.match(/topic=([^&]+)/))[1] || 'EnterpriseServiceBus';
+            var topic = new Array().concat(window.location.search.match(/topic=([^&]+)/))[1] || 'ServiceBus';
             binding.open('GET', window.location.pathname + '/../Topics.html');
             binding.onreadystatechange = function(event) {
                 if(this.readyState == 4) {
@@ -383,7 +383,7 @@
             
                 var binding = new XMLHttpRequest();
                 //to get the file: drop the query string to get 'Topic.html' plus '/../' plus 'ApiProcessMarkers' dot html
-                var topic = new Array().concat(window.location.search.match(/topic=([^&]+)/))[1] || 'EnterpriseServiceBus';
+                var topic = new Array().concat(window.location.search.match(/topic=([^&]+)/))[1] || 'ServiceBus';
                 binding.open('GET', window.location.pathname + '/../' + topic + '.html');
                 binding.onreadystatechange = function(event) {
                     if(this.readyState == 4) {

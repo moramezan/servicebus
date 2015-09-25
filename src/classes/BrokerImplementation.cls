@@ -25,7 +25,7 @@ public without sharing class BrokerImplementation extends Broker implements Data
     
     /**
      * The possible stages of our vertical worker state machine
-     * https://github.com/bigassforce/esb/issues/987#issuecomment-131629798
+     * https://github.com/bigassforce/servicebus/issues/987#issuecomment-131629798
      */
     Enum Stage {
         PersistMark,

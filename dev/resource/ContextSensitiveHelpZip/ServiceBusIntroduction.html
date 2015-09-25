@@ -3,17 +3,17 @@
 </h1>
 
 <p>
-    Enterprise Service Bus (ESB) is the only high performance messaging platform native to
+    Service Bus is the only high performance messaging platform native to
     Salesforce. It allows systems to react to real world events. You can model sagas, asynchronous
     processes, and recover from errors without data loss using the drag-and-drop sequence builder.
 </p>
 
 <p>
-    ESB is predicated on the notion that work is broken up into processes that respond to events.
+    Service Bus is predicated on the notion that work is broken up into processes that respond to events.
 </p>
 
 <p>
-    Using ESB encourages:
+    Using Service Bus encourages:
 </p>
 
 <ul>
@@ -63,7 +63,7 @@
 </p>
 
 <p>
-    The ESB framework will advance Messages through the Steps of a Sequence in the order you specify
+    The Service Bus framework will advance Messages through the Steps of a Sequence in the order you specify
     using drag and drop. A typical sequence will contain many steps. A Sequence is like a
     configurable event-to-process lookup table that routes a given message to the appropriate
     process.
@@ -71,7 +71,7 @@
 
 <!--
 <ul>
-    <li>Events in the ESB framework are represented as messages</li>
+    <li>Events in the Service Bus are represented as messages</li>
     <li>An event message is handed to specific process. This in turn causes the Apex code contained
         within that process to execute.<br/> (In other words, the occurrence of a given
         <code>event</code> causes a process that has previously registered it's interest in that
@@ -84,12 +84,12 @@
 <h3>CHAPTER 02 : Concepts : Process and Processing</h3>
 <b>Processing :</b><br/>
 <ul>
-    <li>Work under the ESB framework is broken  into many specific tasks</li>
-    <li>Each task is implemented as an Apex class and is made available to the ESB framework as a process</li>
+    <li>Work under the Service Bus is broken  into many specific tasks</li>
+    <li>Each task is implemented as an Apex class and is made available to the Service Bus as a service</li>
     <li> Every process executes it's task logic in a standard execution method  </li>
-    <li>Some processes are native to the ESB framework
+    <li>Some processes are native to the Service Bus
         (<code>Gate</code> , <code>WireTap</code>, <code>Publish</code>,  etc)
         while others are implemented as custom processes (the topic of this guide)
-    <li>All ESB processes (native and custom) adhere to a standard Apex template  </li>
+    <li>All services (native and custom) adhere to a standard Apex template  </li>
 </ul>
 -->

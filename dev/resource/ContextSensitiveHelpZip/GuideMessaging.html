@@ -29,7 +29,7 @@
 
 <p>
     Breaking up work into specific processes that respond to specific event messages is known as
-    Event Driven Architecture. The Enterprise Service Bus (ESB) is a specific implementation of
+    Event Driven Architecture. The Service Bus is a specific implementation of
     Event Driven Architecture.
 </p>
 
@@ -49,11 +49,11 @@
 </p>
 
 <h3>
-    ESB Processes
+    Services
 </h3>
 
 <p>
-    As previously mentioned, events in an ESB framework are represented as messages. A message
+    As previously mentioned, events in a Service Bus are represented as messages. A message
     received by a process that has previously registered it's interest in that message type will
     cause the logic of that process to fire.
 </p>
@@ -63,7 +63,7 @@
 </h3>
 
 <p>
-    An ESB framework facilitates useful work on the Salesforce platform via processes that have
+    An Service Bus facilitates useful work on the Salesforce platform via processes that have
     previously registered their interest the occurrence of a specific event types. (In practise this
     means that a process registers it's interest in events emitted from the process that immediately
     precedes it.)
@@ -80,7 +80,7 @@
 </h3>
 
 <p>
-    The ESB framework is implemented using Event Driven Architecture. The ESB framework logically
+    The Service Bus is implemented using Event Driven Architecture. The Service Bus logically
     maps processing steps to an underlying business requirement.
 </p>
 
@@ -90,7 +90,7 @@
 </p>
 
 <p>
-    The ESB framework provides a clean model that limits complexity in the system to just the
+    The Service Bus provides a clean model that limits complexity in the system to just the
     testable apex implementation details of any given process. In contrast, the Command-Response
     paradigm attempts to attach all possible logical code paths and associated exception handling to
     a single specific command. This creates code complexity that is not easily tested or modified.

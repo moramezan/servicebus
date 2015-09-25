@@ -5,7 +5,7 @@ public class MessageModel extends ApexDomain.StandardModel {
     
     /**
      * #981 help prevent side effects from restart
-     * https://github.com/bigassforce/esb/issues/981#issuecomment-131665156
+     * https://github.com/bigassforce/servicebus/issues/981#issuecomment-131665156
      */
     static public Exception RestartException;
     

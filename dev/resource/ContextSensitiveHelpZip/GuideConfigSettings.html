@@ -28,7 +28,7 @@
 </p>
 
 <pre>
-global class ESB {
+global class Summary {
     //..
     global SObject ServiceSetting = YourCustomSettings__c.SObjectType.newSObject();
     //..
@@ -49,7 +49,7 @@ override global String toString() {
 </h3>
 
 <p>
-    <strong>003</strong> if you wish to surface a link to the Custom Setting of your process on the Processes list view, simply assign an instance of your custom setting SObject to the CustomSetting parameter of the process's <code>ESB</code> Marker Class.
+    <strong>003</strong> if you wish to surface a link to the Custom Setting of your process on the Processes list view, simply assign an instance of your custom setting SObject to the CustomSetting parameter of the process's <code>Summary</code> Marker Class.
     <br /><strong>011 - 012</strong> to reference generic process configuration settings inside the process execution, simply call <code>getInstance()</code> on your custom setting object and access the relevent fields.
 </p>
 
@@ -66,7 +66,7 @@ override global String toString() {
 global YourConfiguration__c StepConfig;
 //..
 
-global class ESB {
+global class Summary {
     //..
     global SObject ConfigObject = YourConfiguration__c.SObjectType.newSObject();
     //..
@@ -86,11 +86,11 @@ override global String toString() {
 </h3>
 
 <p>
-    <strong>005 - 009</strong> if you wish to surface a link to step specific settings of your process, simply assign an instance of your step config SObject to the StepConfig parameter of the process's <code>ESB</code> Marker Class.
+    <strong>005 - 009</strong> if you wish to surface a link to step specific settings of your process, simply assign an instance of your step config SObject to the StepConfig parameter of the process's <code>Summary</code> Marker Class.
     <br /><strong>012 - 017, 002</strong> To access step specific configuration from code inside the process execution, simply declare a class instance global <code>YourConfiguration__c</code> with the name <code>StepConfig</code>.
 </p>
 
 <fieldset>
     <legend>Note</legend>
-    The ESB framework will correctly hydrate the instance for you.
+    The Service Bus will correctly hydrate the instance for you.
 </fieldset>

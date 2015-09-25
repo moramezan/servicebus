@@ -62,7 +62,7 @@
 
 <ul>
     <li>create two custom objects: <code>PurchaseInvoice__c</code> and <code>Payment__c</code>,</li>
-    <li>create a custom <em>Pay Invoice</em> ESB process that simulates the payment of supplier
+    <li>create a custom <em>Pay Invoice</em> service that simulates the payment of supplier
         invoices,</li>
     <li>use the <em>Audit Initializer</em> and <em>Audit Writer</em> processes to
         relate the Purchase Invoice Reference (<code>PurchaseInvoice__c.PurchaseRef__c</code>) and
@@ -205,7 +205,7 @@
         <pre>
 global class PayInvoice {
     
-    global class ESB {
+    global class Summary {
         String Tag = 'Example';
         String Name = 'Pay Invoice';
         String Description = 'Demo - takes invoice and creates payment advice';
@@ -383,12 +383,12 @@ global class PayInvoice {
 </h2>
 
 <p>
-    All work in the ESB framework is initiated by invoking <code>System.enqueueJob</code> on an
-    <code>esb.Job</code>.
+    All work in the Service Bus is initiated by invoking <code>System.enqueueJob</code> on a
+    <code>ServiceBus.Job</code>.
 </p>
 
 <p>
-    You can construct a Simple Job using the signature <code>esb.Job(String sequenceName, Id recordId)</code>.
+    You can construct a Simple Job using the signature <code>ServiceBus.Job(String sequenceName, Id recordId)</code>.
 </p>
 
 <ul>
@@ -413,7 +413,7 @@ global class PayInvoice {
     </li>
     <li>
         <p>
-            Enter <code>System.enqueueJob(new esb.Job('Purchase', 'a0Pb0000004AAo5'));</code>
+            Enter <code>System.enqueueJob(new ServiceBus.Job('Purchase', 'a0Pb0000004AAo5'));</code>
         </p>
         <fieldset>
             <legend>Note</legend>

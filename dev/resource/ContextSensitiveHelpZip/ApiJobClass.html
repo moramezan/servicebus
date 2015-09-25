@@ -1,5 +1,5 @@
 <h1>
-    esb.Job Class
+    ServiceBus.Job Class
 </h1>
 
 <!--
@@ -59,12 +59,12 @@ String sequenceName = 'Payroll_Calculation';
 Id companyId = UserInfo.getOrganizationId();
 
 //submit a simple event to Enterprise Service Bus
-esb.Job j = new esb.Job(sequenceName, companyId);
-Id queueableId = System.enqueueJob(j);
+Queueable job = new ServiceBus.Job(sequenceName, companyId);
+Id jobId = System.enqueueJob(job);
 </pre>
 
 <h1>
-    esb.Job Constructors
+    ServiceBus.Job Constructors
 </h1>
 
 <h2>
@@ -77,7 +77,7 @@ Id queueableId = System.enqueueJob(j);
 </p>
 
 <p>
-    <code>global esb.Job(String sequenceName, Id recordId)</code>
+    <code>global ServiceBus.Job(String sequenceName, Id recordId)</code>
 </p>
 
 <dl>
@@ -100,7 +100,7 @@ Id queueableId = System.enqueueJob(j);
 </p>
 
 <p>
-    <code>global esb.Job(Map&lt;String,Object&gt; event)</code>
+    <code>global ServiceBus.Job(Map&lt;String,Object&gt; event)</code>
 </p>
 
 <dl>
@@ -119,7 +119,7 @@ Id queueableId = System.enqueueJob(j);
 </p>
 
 <p>
-    <code>global esb.Job(List&lt;Map&lt;String,Object&gt;&gt; events)</code>
+    <code>global ServiceBus.Job(List&lt;Map&lt;String,Object&gt;&gt; events)</code>
 </p>
 
 <dl>
@@ -137,7 +137,7 @@ Id queueableId = System.enqueueJob(j);
 </h2>
 
 <p>
-    <code>global esb.Job(String sequenceName, Blob entityData)</code>
+    <code>global ServiceBus.Job(String sequenceName, Blob entityData)</code>
 </p>
 
 <dl>
@@ -152,7 +152,7 @@ Id queueableId = System.enqueueJob(j);
 -->
 
 <h1>
-    esb.Job Methods
+    ServiceBus.Job Methods
 </h1>
 
 <h2>
@@ -227,7 +227,7 @@ Id queueableId = System.enqueueJob(j);
         inputEvent.put('SequenceName', 'Generate_PDF_Statements');
         
         //immediately submit event to Enterprise Service Bus
-        Process.Plugin job = (Process.Plugin)Type.forName('esb.Job').newInstance();
+        Process.Plugin job = (Process.Plugin)Type.forName('ServiceBus.Job').newInstance();
         Process.PluginResult result = job.invoke(new Process.PluginRequest(inputEvent));
         
         //access queueable job id

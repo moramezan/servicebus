@@ -22,10 +22,10 @@
         <td>Parameters set by custom code outside a package must use the special <code>c</code> prefix.</td>
     </tr>
     <tr>
-        <td><code>{"esb:SequenceName":"Payroll_Calculation"}</code></td>
-        <td><code>esb:</code></td>
-        <td>(ESB API)</td>
-        <td>The Enterprise Service Bus package uses the <code>esb</code> namespace for its parameters.</td>
+        <td><code>{"servicebus:SequenceName":"Payroll_Calculation"}</code></td>
+        <td><code>servicebus:</code></td>
+        <td>(Service Bus API)</td>
+        <td>The Service Bus package uses the <code>servicebus</code> namespace for its parameters.</td>
     </tr>
     <tr>
         <td><code>{"acme:AnvilNames":["INV-1","INV-2","INV-3"]}</code></td>
@@ -51,7 +51,7 @@
 </fieldset>
 
 <h1>
-    ESB Event Parameters
+    Service Bus Event Parameters
 </h1>
 
 <dl>
@@ -73,7 +73,7 @@
 
     <dt>EnqueueUserId</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
-    <dd>Read-only Id of the user that spawned the message (usually by enqueueing an <code>esb.Job</code>).</dd>
+    <dd>Read-only Id of the user that spawned the message (usually by enqueueing an <code>ServiceBus.Job</code>).</dd>
     
     <dt>GateItemsQueryString</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
@@ -83,7 +83,7 @@
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_list.htm" target="_blank">List&lt;Map&lt;String,Object&gt;&gt;</a></dd>
     <dd>Field name on the stored items that contains the serialized event data. Use <code>sobject.get()</code> to dereference it, then cast to <code>Map&lt;String,Object&gt;</code> when deserializing the value.</dd>
     
-    <dt>QueueableId</dt>
+    <dt>JobId</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
-    <dd>Id of the Queueable AsyncApexJob that injected this event's entry point event. (Not to be confused with esb.Job)</dd>
+    <dd>Id of the Queueable AsyncApexJob that injected this event's entry point event. (Not to be confused with ServiceBus.Job)</dd>
 </dl>

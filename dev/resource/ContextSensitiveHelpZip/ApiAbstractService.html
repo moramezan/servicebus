@@ -31,10 +31,11 @@ abstract public with sharing class AbstractService {
     //always override and implement service logic inside
     @TestVisible abstract protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; event);
     
-    //ESB Marker Properties
-    public String Event;
+    //Service Marker Properties
+    public Boolean AllowsCallouts;
+    public String EventProvider;
     
-    //ESB Marker Method
+    //Service Marker Method
     override public String toString() {
         Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event);
         Boolean allowsCallouts = (Boolean)inputEvent.get('servicebus:AllowsCallouts');
@@ -47,7 +48,7 @@ abstract public with sharing class AbstractService {
 
 <fieldset>
     <legend>Note</legend>
-    The error recovery capability of ESB ensures state can be persisted to the database before and after execution.
+    The error recovery capability of Service Bus ensures state can be persisted to the database before and after execution.
     <br /><br />
     Returning the serialized output events via <code>toString</code> ensures that event parameters only carry persistable data.
 </fieldset>

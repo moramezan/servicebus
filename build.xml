@@ -30,16 +30,6 @@
         </exec>
     </target>
     
-    <target name="retrieve-esbconnectedapp" description="Retrieves the ENTERPRISE connected app definitions from their separate packaging org.">
-        <sf:retrieve
-            username="${esbconnectedapp.username}"
-            password="${esbconnectedapp.password}"
-            serverurl="${esbconnectedapp.serverurl}"
-            retrieveTarget="esbconnectedapp"
-            unpackaged="esbconnectedapp/package.xml"
-        />
-    </target>
-    
     <target name="retrieve-busconnectedapp" description="Retrieves the SERVICEBUS connected app definitions from their separate packaging org.">
         <sf:retrieve
             username="${busconnectedapp.username}"
@@ -137,14 +127,14 @@
         <input message="ARE YOU SURE TO DEPLOY TO THE PACKAGING ORG?" addproperty="tag.confirm" validargs="ok" />
         
         <antcall target="optimize-for-release" />
-        <executeAnonymous username="${esb.username}" password="${esb.password}" serverurl="${esb.serverurl}">for (SObject j : [SELECT Id FROM CronTrigger]) System.abortJob(j.Id);</executeAnonymous>
+        <executeAnonymous username="${servicebus.username}" password="${servicebus.password}" serverurl="${servicebus.serverurl}">for (SObject j : [SELECT Id FROM CronTrigger]) System.abortJob(j.Id);</executeAnonymous>
         <sf:deploy
-            username="${esb.username}"
-            password="${esb.password}"
-            serverurl="${esb.serverurl}"
+            username="${servicebus.username}"
+            password="${servicebus.password}"
+            serverurl="${servicebus.serverurl}"
             deployRoot="src"
         />
-        <executeAnonymous username="${esb.username}" password="${esb.password}" serverurl="${esb.serverurl}">
+        <executeAnonymous username="${servicebus.username}" password="${servicebus.password}" serverurl="${servicebus.serverurl}">
             new PostInstallHandler().onInstall(null);
             RouterImplementation.optimize();
             ConfigureController.settings(UserInfo.getUserId());
@@ -163,7 +153,7 @@
     <fullName>Service Bus</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
     <description>Message queue for bulk data transformations and error recovery without data loss.</description>
-    <namespacePrefix>esb</namespacePrefix>
+    <namespacePrefix>servicebus</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacetoken>
@@ -195,7 +185,7 @@
     <fullName>Service Bus</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
     <description>Message queue for bulk data transformations and error recovery without data loss.</description>
-    <namespacePrefix>esb</namespacePrefix>
+    <namespacePrefix>servicebus</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacevalue>

@@ -166,8 +166,8 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     /**
      * Swallow toString() in trace
      * The intent is to NOT confuse or misdirect the end user and to .. (cough) .. reveal our secret sauce
-     * https://github.com/bigassforce/esb/issues/581
-     * https://github.com/bigassforce/esb/commit/2dd94e19c156170b86dc30b50e5e375876f5e758
+     * https://github.com/bigassforce/servicebus/issues/581
+     * https://github.com/bigassforce/servicebus/commit/2dd94e19c156170b86dc30b50e5e375876f5e758
      */
     @TestVisible private void swallowToString() {
         for (Message__c message : this.Messages) {

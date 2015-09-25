@@ -3,21 +3,21 @@
 </h1>
 
 <p>
-    Before creating your first ESB Process, it is assumed that the ESB framework has been
+    Before creating your first Service, it is assumed that the Service Bus framework has been
     installed in your org.
 </p>
 
 <fieldset>
     <legend>Note</legend>
-    This requirement merely facilitates the visual testing of newly created ESB processes and
+    This requirement merely facilitates the visual testing of newly created Services and
     nothing more. A fundamental principle of the Event Driven Architecture is a dependency reduced
-    environment. For this reason, custom processes never take a dependency on the ESB framework.
+    environment. For this reason, custom services never take a dependency on the Service Bus framework.
 </fieldset>
 
 <p>
     <strong>
         The first step is to create a new global class in a development org. Confirm that the class
-        follows the expected ESB Process template as set out below. You can also build
+        follows the expected Service template as set out below. You can also build
         appropriate unit tests as required by Salesforce.
     </strong>
 </p>
@@ -27,17 +27,17 @@
 </h2>
 
 <p>
-    Before your custom ESB Process can be recognised and registered in the framework, the code
+    Before your custom Service can be recognised and registered in the framework, the code
     representing your Apex class must conform to a template that at a minimum, consists of:
 </p>
 
 <ul>
-    <li>an <code>ESB</code> Marker Class, and</li>
+    <li>a <code>Summary</code> Marker Class, and</li>
     <li>a <code>toString()</code> method.</li>
 </ul>
 
 <p>
-    Below is an annotated non-callout ESB Process called <em>ChatterTap</em>. This process adheres
+    Below is an annotated non-callout Service called <em>ChatterTap</em>. This process adheres
     to the required template.
 </p>
 
@@ -46,7 +46,7 @@
 </h3>
 
 <p>
-    The ESB framework has a built-in <em>WireTap</em> process that surfaces the parameters of the
+    The Service Bus framework has a built-in <em>WireTap</em> process that surfaces the parameters of the
     input event via an email. The email is sent to either:
 </p>
 
@@ -69,7 +69,7 @@
 <pre>
 global class ChatterTap {
 
-    global class ESB {
+    global class Summary {
         String Tag = 'Example';
         String Name = 'ChatterTap';
         String Description = 'Inserts the input event parameters on user chatter feed.';
@@ -111,13 +111,13 @@ global class ChatterTap {
 </p>
 
 <p>
-    <strong>001</strong> an ESB Process is a standard Apex class. ESB Processes do not take any dependency on the ESB package.
-    <br /><strong>003 - 036</strong> a valid ESB Process has two key elements, namely an <code>ESB</code> Marker Class and a <code>toString()</code> method.
-    <br /><strong>003 - 011</strong> the <code>ESB</code> Marker Class exposes important properties about the ESB Process thereby facilitating correct integration into the ESB framework.
-    <br /><strong>004</strong> the <code>Tag</code> is a string that that groups the ESB Process with similar processes. We recommend that you create your own categories for custom processes.
-    <br /><strong>005</strong> the <code>Name</code> is a string that describes the friendly <code>Name</code> of the ESB process
-    <br /><strong>006</strong> the <code>Description</code> is a string that describes the functionality of the process and is surfaced on the list view of all ESB processes by the discovery process.
-    <br /><strong>007</strong> the <code>Icon</code> is a unique string that defines the icon that will appear next to the process when viewed on the list view of ESB processes.
+    <strong>001</strong> an Service is a standard Apex class. Services do not take any dependency on the Service Bus package.
+    <br /><strong>003 - 036</strong> a valid Service has two key elements, namely an <code>Summary</code> Marker Class and a <code>toString()</code> method.
+    <br /><strong>003 - 011</strong> the <code>Summary</code> Marker Class exposes important properties about the Service Bus thereby facilitating correct integration into the Service Bus framework.
+    <br /><strong>004</strong> the <code>Tag</code> is a string that that groups similar Services. We recommend that you create your own categories for custom services.
+    <br /><strong>005</strong> the <code>Label</code> is a string that describes the friendly <code>Label</code> of the Service
+    <br /><strong>006</strong> the <code>Description</code> is a string that describes the functionality of the process and is surfaced on the list view of all Services by the discovery process.
+    <br /><strong>007</strong> the <code>Icon</code> is a unique string that defines the icon that will appear next to the process when viewed on the list view of Services.
 </p>
 
 <fieldset>
@@ -162,7 +162,7 @@ global class ChatterTap {
 </fieldset>
 
 <p>
-    <strong>010</strong> Surfacing a link to the process-specific custom settings on the processes list view is possible. Simply assign an instance of the custom setting to the <code>CustomSetting</code> member of the process's <code>ESB</code> Marker Class.
+    <strong>010</strong> Surfacing a link to the process-specific custom settings on the processes list view is possible. Simply assign an instance of the custom setting to the <code>CustomSetting</code> member of the process's <code>Summary</code> Marker Class.
     <br /><strong>014 - 036</strong> the <code>toString()</code> method contains the Apex logic that implements the business specification.
     <br /><strong>014</strong> an input message is injected into the <code>toString()</code> method in the form of key-value  collection.
     <br /><strong>035</strong> the <code>toString()</code> method returns a serialized list of zero, one or more output messages. Each output message consists of a key-value parameter collection.
@@ -233,7 +233,7 @@ global class ChatterTap {
 
 <p>
     Create a new VisualForce page called <code>ChatterTapHelp</code>. This page represents the help
-    documentation supporting the <code>ChatterTap</code> ESB Process.
+    documentation supporting the <code>ChatterTap</code> Service.
 </p>
 
 <p>
@@ -254,7 +254,7 @@ global class ChatterTap {
 <pre>
 global  class ChatterTap {
 
-    global class ESB {
+    global class Summary {
         String Description = 'Inserts the input event parameters on user chatter feed.';
         //..
     }
@@ -278,9 +278,9 @@ global  class ChatterTap {
 </h3>
 
 <p>
-    <strong>001</strong> The class does not take a dependency on the ESB framework. All methods, classes and properties must be described with the <code>global</code> keyword.
-    <br /><strong>003 - 018</strong> a valid ESB Process has two key elements, namely an <code>ESB</code> Marker Class and a <code>toString()</code> method.
-    <br /><strong>003 - 006</strong> the <code>ESB</code> Marker Class exposes important properties about the ESB Process thereby facilitating correct integration into the ESB framework. The <code>Description</code> is required in order for the class to be recognised as a valid ESB process.
+    <strong>001</strong> The class does not take a dependency on the Service Bus. All methods, classes and properties must be described with the <code>global</code> keyword.
+    <br /><strong>003 - 018</strong> a valid Service has two key elements, namely an <code>Summary</code> Marker Class and a <code>toString()</code> method.
+    <br /><strong>003 - 006</strong> the <code>Summary</code> Marker Class exposes important properties about the service thereby facilitating correct integration into the Service Bus framework. The <code>Description</code> is required in order for the class to be recognised as a valid service.
     <br /><strong>009 - 018</strong> the <code>toString()</code> method contains the Apex logic. The method takes a single event message, and returns  a collection of zero, one or more output messages.
 </p>
 
@@ -295,7 +295,7 @@ global  class ChatterTap {
 <pre>
 global  class ChatterTap {
 
-    global class ESB {
+    global class Summary {
         String Description = 'Inserts the input event parameters on user chatter feed.';
         String Tag = 'Example';
         String Name = 'ChatterTap';
@@ -324,12 +324,12 @@ global  class ChatterTap {
 
 
 <p>
-    <strong>004</strong> The <code>Description</code> is a string that describes the functionality of the process. This value is surfaced on the processes list view by the ESB discovery process. The <code>Description</code> is required in order for the class to be recognised as a valid ESB process.
-    <br /><strong>005</strong> The <code>Tag</code> is a string that that groups the ESB process amongst similar others. It is best practise to use categories. Failure to include a <code>Tag</code> property will group your process under the default 'Untagged' group.
-    <br /><strong>006</strong> The <code>Name</code> is a string that describes the friendly name of the ESB Process on the list view of the ESB processes. The ESB framework will use the Apex class name of your process as the friendly name if you fail to include ths property in your <code>ESB</code> Marker Class.
-    <br /><strong>007</strong> the <code>Icon</code> is a string that identifies the specific icon to display next to the process on the list view of the ESB processes. Select an icon from the <a href="http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png">famfamfam</a> icon collection that most closely represents the functionality of your ESB Process. Then note the name of the icon and assign it to the <code>Icon</code> property. The ESB framework will use a 'cog' icon to represent your process if you fail to include ths property in your <code>ESB</code> Marker Class.
-    <br /><strong>008</strong> the <code>Limits</code> constrains the number of times an ESB Process may be executed in a single context. This property  enables more work to be performed than would otherwise be possible within prevailing daily Salesforce execution limits. The default is implicitly and conservatively set to one. A simple process that avoids Salesforce governed operations such as SOQL or callouts is a good candidate for a large <code>Limits</code> setting (100 or greater). If however, the process makes use of a governed operation, ascertain 50% of that particular Salesforce limit and divide by the number of times the process uses the governed operation. The <code>Limits</code> property should not exceed this calculated value.
-    <br /><strong>009</strong> the <code>HelpUrl</code> is a string that defines the help page for the process. The help page is surfaced as a link  on the list view of the ESB processes. Either a VisualForce page reference or an external web page reference can be assigned to this property. If this property is not defined, the ESB framework will surface a user friendly representation of your process by making use of the attributes contained within the process's <code>ESB</code> Marker Class.
+    <strong>004</strong> The <code>Description</code> is a string that describes the functionality of the process. This value is surfaced on the processes list view by the Service Bus. The <code>Description</code> is required in order for the class to be recognised as a valid service.
+    <br /><strong>005</strong> The <code>Tag</code> is a string that that groups the services amongst similar others. It is best practise to use categories. Failure to include a <code>Tag</code> property will group your process under the default 'Untagged' group.
+    <br /><strong>006</strong> The <code>Name</code> is a string that describes the friendly name of the service on the list view of the services. The Service Bus will use the Apex class name of your process as the friendly name if you fail to include ths property in your <code>Summary</code> Marker Class.
+    <br /><strong>007</strong> the <code>Icon</code> is a string that identifies the specific icon to display next to the process on the list view of the services. Select an icon from the <a href="http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png">famfamfam</a> icon collection that most closely represents the functionality of your service. Then note the name of the icon and assign it to the <code>Icon</code> property. The Service Bus will use a 'cog' icon to represent your process if you fail to include ths property in your <code>Summary</code> Marker Class.
+    <br /><strong>008</strong> the <code>Limits</code> constrains the number of times an service may be executed in a single context. This property  enables more work to be performed than would otherwise be possible within prevailing daily Salesforce execution limits. The default is implicitly and conservatively set to one. A simple process that avoids Salesforce governed operations such as SOQL or callouts is a good candidate for a large <code>Limits</code> setting (100 or greater). If however, the process makes use of a governed operation, ascertain 50% of that particular Salesforce limit and divide by the number of times the process uses the governed operation. The <code>Limits</code> property should not exceed this calculated value.
+    <br /><strong>009</strong> the <code>HelpUrl</code> is a string that defines the help page for the process. The help page is surfaced as a link  on the list view of the services. Either a VisualForce page reference or an external web page reference can be assigned to this property. If this property is not defined, the Service Bus will surface a user friendly representation of your process by making use of the attributes contained within the process's <code>Summary</code> Marker Class.
 </p>
 
 <h2>
@@ -352,7 +352,7 @@ global  class ChatterTap {
 <pre>
 global class ChatterTap {
 
-    global class ESB {
+    global class Summary {
         String Description = 'Inserts the input event parameters on user chatter feed.';
         String Tag = 'Example';
         String Name = 'ChatterTap';
@@ -393,7 +393,7 @@ global class ChatterTap {
 <pre>
 global class ChatterTap {
 
-    global class ESB {
+    global class Summary {
         String Description = 'Inserts the input event parameters on user chatter feed.';
         String Tag = 'Example';
         String Name = 'ChatterTap';
@@ -429,7 +429,7 @@ global class ChatterTap {
 
 <p>
     <strong>016 - 023</strong> Under the main code block, initiate the business logic implementation. The specification defines the preferred chatter feed owner as being the User Id defined the custom settings of the process. For this reason, the code references <code>ChatterTapSetting__c</code> to determine if the default chatter (User) Id should been overwritten.
-    <br /><strong>010</strong> To surface a link to the custom settings page of your process directly on the ESB processes list view: assign an instance of your custom setting SObject to the CustomSetting parameter of the process's <code>ESB</code> Marker Class.
+    <br /><strong>010</strong> To surface a link to the custom settings page of your process directly on the services list view: assign an instance of your custom setting SObject to the CustomSetting parameter of the process's <code>Summary</code> Marker Class.
 </p>
 
 <h2>
@@ -443,7 +443,7 @@ global class ChatterTap {
 <pre>
 global class ChatterTap {
 
-    global class ESB {
+    global class Summary {
         String Description = 'Inserts the input event parameters on user chatter feed.';
         String Tag = 'Example';
         String Name = 'ChatterTap';
@@ -497,7 +497,7 @@ global class ChatterTap {
 </p>
 
 <ul>
-    <li>the expected <code>ESB</code> (for example, the <code>Description</code>)</li>
+    <li>the expected <code>Summary</code> (for example, the <code>Description</code>)</li>
     <li>the expected initial state (for example, the Custom settings supporting the process)</li>
     <li>that expected exceptions are thrown for invalid 1initial state</li>
     <li>the expected outputs (for example, the count of the messages in the output collecton)</li>
@@ -513,7 +513,7 @@ global class ChatterTap {
 private class ChatterTapTest {  
       
     static testmethod void processIsDescribed() {  
-        ChatterTap.ESB marker = new ChatterTap.ESB();  
+        ChatterTap.Summary marker = new ChatterTap.Summary();  
         System.assertNotEquals(null, marker.Description);  
     }  
  
@@ -587,7 +587,7 @@ private class ChatterTapTest {
 </h3>
 
 <p>
-    <strong>004 - 007</strong> Test the process correctly implements the <code>ESB</code> Marker Class.
+    <strong>004 - 007</strong> Test the process correctly implements the <code>Summary</code> Marker Class.
     <br /><strong>011 - 023</strong> The process relies on a custom setting instance and should not throw an error if this custom setting exists
     <br /><strong>026 - 044</strong> The process should return exactly one message in the output collection. As this is a no-operation process, the test could be further expanded to ensure that the input event parameters exactly match the output event parameters.
     <br /><strong>046 - 067</strong> The business intent of the process is to insert exactly one entry containing details about the sequence and sequence position in a given Chatter Feed. The persistence of state outside the process is termed a side effect. The test verifies the correctness of the side effect by ensuring that process adds exactly one post to a given Chatter feed

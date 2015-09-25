@@ -17,7 +17,7 @@
     </fields>
     <fields>
         <fullName>DotPrefix__c</fullName>
-        <description>String that would prefix an Apex Class to namespace it, eg &apos;esb.&apos; or null</description>
+        <description>String that would prefix an Apex Class to namespace it, eg &apos;ns.&apos; or null</description>
         <externalId>false</externalId>
         <inlineHelpText>What prefix should I use to fully qualify an Apex Class, including the trailing dot?</inlineHelpText>
         <label>Dot Prefix</label>
@@ -29,7 +29,7 @@
     </fields>
     <fields>
         <fullName>Prefix__c</fullName>
-        <description>Raw namespace prefix, eg &apos;esb&apos; or null</description>
+        <description>Raw namespace prefix, eg &apos;ns&apos; or null</description>
         <externalId>false</externalId>
         <inlineHelpText>What is my namespace prefix?</inlineHelpText>
         <label>Prefix</label>

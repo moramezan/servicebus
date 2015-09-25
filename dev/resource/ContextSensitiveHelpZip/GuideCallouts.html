@@ -10,12 +10,12 @@
 
 <p>
     Salesforce requires that callouts execute before DML in any given execution context. For this
-    reason, the ESB framework differentiates between <em>callout enabled</em> and <em>non-callout
+    reason, the Service Bus differentiates between <em>callout enabled</em> and <em>non-callout
     enabled</em> processes.
 </p>
 
 <p>
-    The ESB framework assumes a process is non-callout enabled unless the Apex code that supports the
+    The Service Bus assumes a process is non-callout enabled unless the Apex code that supports the
     process explicitly declares its intention to make callouts.
 </p>
 
@@ -77,7 +77,7 @@
 <pre>
 global class Callout {
 
-    global class ESB {
+    global class Summary {
         String Description = 'Does an HTTP CallOut and saves it as a Document.';
         //..
     }
@@ -100,9 +100,9 @@ global class Callout {
 </h3>
 
 <p>
-    <strong>001</strong> The class does not take a dependency on the ESB framework. All methods, classes and properties must be described with the <code>global</code> keyword.
-    <br /><strong>003 - 018</strong> a valid ESB process has two key elements, namely an <code>ESB</code> Marker Class and a <code>toString()</code> method.
-    <br /><strong>003 - 006</strong> the <code>ESB</code> Marker Class exposes important properties about the ESB Process thereby facilitating correct integration into the ESB framework. The <code>Description</code> is required in order for the class to be recognised as a valid ESB Process.
+    <strong>001</strong> The class does not take a dependency on the Service Bus. All methods, classes and properties must be described with the <code>global</code> keyword.
+    <br /><strong>003 - 018</strong> a valid service has two key elements, namely an <code>Summary</code> Marker Class and a <code>toString()</code> method.
+    <br /><strong>003 - 006</strong> the <code>Summary</code> Marker Class exposes important properties about the service thereby facilitating correct integration into the Service Bus. The <code>Description</code> is required in order for the class to be recognised as a valid service.
     <br /><strong>009 - 018</strong> the <code>toString()</code> method contains the Apex logic. The method takes a single event message, and returns a collection of zero, one or more output messages.
 </p>
 
@@ -119,7 +119,7 @@ global class Callout implements Database.AllowsCallouts {
 
     global Boolean AllowsCallouts;
 
-    global class ESB {
+    global class Summary {
         String Description = 'Does an HTTP CallOut and saves it as a Document.';
         //..
     }
@@ -147,9 +147,9 @@ global class Callout implements Database.AllowsCallouts {
 </h3>
 
 <p>
-    <strong>001</strong> The intent of this ESB Process is to make a callout. Deliberately declare this intent by annotating the class signature with the <code>Database.AllowsCallouts</code> interface.
+    <strong>001</strong> The intent of this service is to make a callout. Deliberately declare this intent by annotating the class signature with the <code>Database.AllowsCallouts</code> interface.
     <br /><strong>003</strong> Any process annotated with the <code> Database.AllowsCallouts</code> interface must simultaneously declare a global boolean member called <code>AllowsCallouts</code>.
-    <br /><strong>014 - 017</strong> All callout logic must be contained within an <code>AllowsCallouts block</code>. Furthermore, no DML should execute within this block. (By explicitly separating the callout logic from  DML execution via the <code>AllowsCallouts block</code>, the ESB framework is able to contractually support the Salesforce requirement that callouts must precede DML.)
+    <br /><strong>014 - 017</strong> All callout logic must be contained within an <code>AllowsCallouts block</code>. Furthermore, no DML should execute within this block. (By explicitly separating the callout logic from  DML execution via the <code>AllowsCallouts block</code>, the Service Bus is able to contractually support the Salesforce requirement that callouts must precede DML.)
 </p>
 
 <h2>
@@ -157,7 +157,7 @@ global class Callout implements Database.AllowsCallouts {
 </h2>
 
 <p>
-    Annotate the process with the full ESB Marker Class.
+    Annotate the process with the full Summary Marker Class.
 </p>
 
 <pre>
@@ -165,7 +165,7 @@ global class Callout implements Database.AllowsCallouts {
 
     global Boolean AllowsCallouts;
 
-    global class ESB {
+    global class Summary {
         String Description = 'Does an HTTP CallOut and saves it as a Document.';
         String Tag = 'Example';
         String Name = 'CallOut';
@@ -197,12 +197,12 @@ global class Callout implements Database.AllowsCallouts {
 </h3>
 
 <p>
-    <strong>006</strong> The <code>Description</code> is a string that describes the functionality of the process. This value is surfaced on the processes list view by the ESB discovery process. The <code>Description</code> is the minimum required property on the <code>ESB</code> Marker Class in order for the class to be recognised as a valid ESB Process.
-    <br /><strong>007</strong> The <code>Tag</code> is a string that that groups the ESB Process amongst similar processes. It is best practise to create your own category and use that for all your custom processes. Failure to include a <code>Tag</code> property will group your process under the default 'Untagged' group.
-    <br /><strong>008</strong> The <code>Name</code> is a string that describes the friendly name of the ESB Process on the list view of the ESB processes. The ESB framework will use the Apex class name of your process as the friendly name if you fail to include ths property in your <code>ESB</code> Marker Class.
-    <br /><strong>009</strong> the <code>Icon</code> is a string that identifies the specific icon to display next to the process on the list view of the ESB processes. Select an icon from the <a href="http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png>famfamfam">icon collection</a> that most closely represents the functionality of your process. Then note the name of the icon and assign it to the <code>Icon</code> property. The ESB framework will use a 'cog' icon to represent your process if you fail to include this property in your <code>ESB</code> Marker Class.
+    <strong>006</strong> The <code>Description</code> is a string that describes the functionality of the process. This value is surfaced on the processes list view by the discovery process. The <code>Description</code> is the minimum required property on the <code>Summary</code> Marker Class in order for the class to be recognised as a valid service.
+    <br /><strong>007</strong> The <code>Tag</code> is a string that that groups the service amongst similar processes. It is best practise to create your own category and use that for all your custom processes. Failure to include a <code>Tag</code> property will group your process under the default 'Untagged' group.
+    <br /><strong>008</strong> The <code>Name</code> is a string that describes the friendly name of the service on the list view of the services. The Service Bus will use the Apex class name of your process as the friendly name if you fail to include ths property in your <code>Summary</code> Marker Class.
+    <br /><strong>009</strong> the <code>Icon</code> is a string that identifies the specific icon to display next to the process on the list view of the services. Select an icon from the <a href="http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png>famfamfam">icon collection</a> that most closely represents the functionality of your process. Then note the name of the icon and assign it to the <code>Icon</code> property. The Service Bus will use a 'cog' icon to represent your process if you fail to include this property in your <code>Summary</code> Marker Class.
     <br /><strong>010</strong> the <code>Limits</code> constrains the  number of times a process may be executed in a single context. This property  enables  more  work to be performed than would otherwise be possible within prevailing daily Salesforce execution limits. The default is implicitly and conservatively set to <code>1</code>. A simple process that avoids Salesforce governed operations such as SOQL or callouts is a good candidate for a large <code>Limits</code> setting (100 or greater). If however, the process makes use of a  governed operation, ascertain 50% of that particular Salesforce limit and divide by the number of times the process uses the governed operation. The <code>Limits</code> property should not exceed this calculated value.
-    <br /><strong>011</strong> the <code>HelpUrl</code> is a string that defines the help page for the process. The help page is surfaced as a link on the list view of the ESB processes. Either a VisualForce page reference or an external web page reference can be assigned to this property. If this property is not defined, the ESB framework will surface a user friendly representation of your process by making use of the attributes contained within the process's <code>ESB</code> Marker Class.
+    <br /><strong>011</strong> the <code>HelpUrl</code> is a string that defines the help page for the process. The help page is surfaced as a link on the list view of the services. Either a VisualForce page reference or an external web page reference can be assigned to this property. If this property is not defined, the Service Bus will surface a user friendly representation of your process by making use of the attributes contained within the process's <code>Summary</code> Marker Class.
 </p>
 
 <h2>
@@ -227,7 +227,7 @@ global class Callout implements Database.AllowsCallouts {
 
     global Boolean AllowsCallouts;
 
-    global class ESB {
+    global class Summary {
         String Description = 'Does an HTTP CallOut and saves it as a Document.';
         String Tag = 'Example';
         String Name = 'CallOut';
@@ -274,7 +274,7 @@ global  class Callout implements Database.AllowsCallouts {
 
     global Boolean AllowsCallouts;
 
-    global class ESB {
+    global class Summary {
         String Description = 'Does an HTTP CallOut and saves it as a Document.';
         String Tag = 'Example';
         String Name = 'CallOut';
@@ -328,7 +328,7 @@ global  class Callout implements Database.AllowsCallouts {
 
     global Boolean AllowsCallouts;
 
-    global class ESB {
+    global class Summary {
         String Description = 'Does an HTTP CallOut and saves it as a Document.';
         String Tag = 'Example';
         String Name = 'CallOut';
@@ -386,7 +386,7 @@ global  class Callout implements Database.AllowsCallouts {
 
 <p>
     Below is an annotated callout process called <code>Callout</code>. This process adheres to the
-    required ESB callout template.
+    required Service Bus callout template.
 </p>
 
 <h3>
@@ -406,7 +406,7 @@ global class Callout implements Database.AllowsCallouts {
 
     global Boolean AllowsCallouts;
 
-    global class ESB {
+    global class Summary {
         String Description = 'Does an HTTP CallOut and saves it as a Document.';
         String Tag = 'Example';
         String Name = 'CallOut';
@@ -461,13 +461,13 @@ global class Callout implements Database.AllowsCallouts {
 </h3>
 
 <p>
-    <strong>001</strong> an ESB process is a standard Apex class. ESB processes do not take any dependency on the ESB package.
-    <br /><strong>001 - 051</strong> a valid ESB process has two key elements, namely an <code>ESB</code> Marker Class and a <code>toString()</code>method.
-    <br /><strong>005 - 019</strong> the <code>ESB</code> Marker Class exposes important properties about the ESB process thereby facilitating correct integration into the ESB framework.
-    <br /><strong>006</strong> the <code>Description</code> is a string that describes the functionality of the process and is surfaced on the list view of the ESB processes by the discovery process.
-    <br /><strong>007</strong> the <code>Tag</code> is a string that that groups the ESB process with similar processes. We recommend that you create your own categories for custom processes.
-    <br /><strong>008</strong> the <code>Name</code> is a string that describes the friendly <code>Name</code> of the ESB process.
-    <br /><strong>009</strong> the <code>Icon</code> is a unique string that defines the icon that will appear next to the process when viewed on the list view of ESB processes.
+    <strong>001</strong> an service is a standard Apex class. Services do not take any dependency on the Service Bus.
+    <br /><strong>001 - 051</strong> a valid service has two key elements, namely a <code>Summary</code> Marker Class and a <code>toString()</code>method.
+    <br /><strong>005 - 019</strong> the <code>Summary</code> Marker Class exposes important properties about the service thereby facilitating correct integration into the Service Bus.
+    <br /><strong>006</strong> the <code>Description</code> is a string that describes the functionality of the process and is surfaced on the list view of the services by the discovery process.
+    <br /><strong>007</strong> the <code>Tag</code> is a string that that groups the service with similar processes. We recommend that you create your own categories for custom processes.
+    <br /><strong>008</strong> the <code>Name</code> is a string that describes the friendly <code>Name</code> of the service.
+    <br /><strong>009</strong> the <code>Icon</code> is a unique string that defines the icon that will appear next to the process when viewed on the list view of services.
 </p>
 
 <fieldset>
@@ -532,7 +532,7 @@ global class Callout implements Database.AllowsCallouts {
 
 <p>
     <strong>023 - 050</strong> the <code>toString()</code> method contains the Apex logic. The method takes a single event message and returns zero, one or more output messages as a collection.
-    <br /><strong>001 - 051</strong> ESB processes making callouts must be annotated in a manner that declares the process's intent to make one or more callouts.
+    <br /><strong>001 - 051</strong> services making callouts must be annotated in a manner that declares the process's intent to make one or more callouts.
     <br /><strong>001</strong> the class must implement the the <code>Database.AllowsCallouts</code> interface.
     <br /><strong>003</strong> the class must expose a global Boolean member called <code>AllowsCallouts</code>
     <br /><strong>025 - 035</strong> all <em>callout logic</em> must be implemented within a callout code block. The <em>callout logic</em>  must return null, not the body of the callout response.

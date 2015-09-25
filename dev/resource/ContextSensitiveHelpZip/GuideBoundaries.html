@@ -8,23 +8,23 @@
 
 <p>
     External events (for example <em>"Time is 12:01"</em> or <em>"Stock price changed"</em>) are
-    not directly consumable by the ESB framework. Instead, ESB configurators make use of the
-    <code>esb.Job</code> object to transform an external events into event messages that are
-    consumable by the ESB framework.
+    not directly consumable by the Service Bus framework. Instead, Service Bus configurators make use of the
+    <code>ServiceBus.Job</code> object to transform an external events into event messages that are
+    consumable by the Service Bus framework.
 </p>
 
 <p>
-    The <code>esb.Job</code> object supports several signatures, namely:
+    The <code>ServiceBus.Job</code> object supports several signatures, namely:
 </p>
 
 <ul>
     <li>
-        <code>esb.Job(String sequenceName, Id recordId)</code>
+        <code>ServiceBus.Job(String sequenceName, Id recordId)</code>
     </li>
     <!--
      ! TODO
      ! <li>
-     !     <code>esb.Job(String sequenceName, Blob data)</code>
+     !     <code>ServiceBus.Job(String sequenceName, Blob data)</code>
      ! </li>
      !-->
 </ul>
@@ -42,7 +42,7 @@
 </dl>
 
 <p>
-    Use the <code>esb.Job(String sequenceName, Id recordId)</code> constructor whenever the data
+    Use the <code>ServiceBus.Job(String sequenceName, Id recordId)</code> constructor whenever the data
     related to the external event is retrievable as a Salesforce object using the object's
     <code>Id</code>.
 </p>

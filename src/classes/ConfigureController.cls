@@ -66,7 +66,7 @@ public with sharing class ConfigureController {
             + '                <description>' + this.InstanceName + '_Visualforce</description>'
             + '                <disableProtocolSecurity>false</disableProtocolSecurity>'
             + '                <isActive>true</isActive>'
-            + '                <url>' + this.BaseUrl.replace('esb', 'c') + '</url>'
+            + '                <url>' + this.BaseUrl.replace('servicebus', 'c') + '</url>'
             + '            </metadata>'
             + '        </upsertMetadata>'
             + '    </env:Body>'
@@ -88,7 +88,7 @@ public with sharing class ConfigureController {
             outputPanel.childComponents.add(includeScript);
             
             Component.Apex.OutputText outputText = new Component.Apex.OutputText();
-            outputText.escape = false; //https://github.com/bigassforce/esb/issues/1013#issuecomment-134331035
+            outputText.escape = false; //https://github.com/bigassforce/servicebus/issues/1013#issuecomment-134331035
             outputText.value = '<script>var requestData = \'' + requestData() + '\';' + javascript() + '</script>';
             outputPanel.childComponents.add(outputText);
         
@@ -132,77 +132,39 @@ public with sharing class ConfigureController {
     final static private Boolean ISPROD = !ISDEV && !ISTEST;
     
     /**
-     * Package namespace
-     */
-    final static private Boolean ISSERVICEBUS = ConfigureController.class.getName().substringBefore('ConfigureController').substringBefore('.') == 'servicebus';
-    final static private Boolean ISENTERPRISE = ConfigureController.class.getName().substringBefore('ConfigureController').substringBefore('.') != 'servicebus';
-    
-    /**
      * Initialize
      *
-     * bigassforce/esb#730 Commentary about the fragility of the Connected App Name
+     * bigassforce/servicebus#730 Commentary about the fragility of the Connected App Name
      * Note there is a BINDING between all connected app names and ConfigureController.cls
      * The friendly names (and developer names!) are synchronized by Salesforce to all pods.
      * Renaming these will cause catastrophic failure of OAuth in all existing package installations.
      */
     static {
-        if (ISSERVICEBUS) {
-            
-            if (ISDEV) {
-                //for servicebus unmanaged development
-                CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZH2ObWGVCMzchtRYMSGmA_VyIAXNcBrUQ569cLTCDaEeIagOYTjpk0kGL05M';
-                SECRET = '1234901574505073561';
-                REDIRECT = 'https://login.salesforce.com/apex/Configure';
-                APPNAME = 'Service Bus (Dev)';
-                LOGIN = 'https://login.salesforce.com';
-            }
-            
-            if (ISTEST) {
-                //for servicebus sandbox org installs
-                CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZM6N.zPbMF26H_MROM5B06LVVBqaYbQy5HGJqu.nl.0uIJOFznnB8_nyyEC_';
-                SECRET = '8880236383124022841';
-                REDIRECT = 'https://test.salesforce.com/apex/servicebus__Configure';
-                APPNAME = 'Service Bus (Sandbox)';
-                LOGIN = 'https://test.salesforce.com';
-            }
-            
-            if (ISPROD) {
-                //for servicebus production org installs
-                CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZIwedhrpiB2qIyLft2CxyJx.DzHvTLvZhrXOF1PjeMtO2HcWPYxX1gnhWOn4';
-                SECRET = '4773069420004741227';
-                REDIRECT = 'https://login.salesforce.com/apex/servicebus__Configure';
-                APPNAME = 'Service Bus (Production)';
-                LOGIN = 'https://login.salesforce.com';
-            }
-            
-        } else if (ISENTERPRISE) {
-            
-            if (ISDEV) {
-                //for enterprise unmanaged development
-                CLIENT = '3MVG9fMtCkV6eLhfygiAuT5nj9iYIxQbeYyBbyxFP5TiJIaGaCeNf.6MdNdCTai94zLjQVjZJsPmvrN4gA.yl';
-                SECRET = '134028378901110512';
-                REDIRECT = 'https://login.salesforce.com/apex/Configure';
-                APPNAME = 'Enterprise Service Bus (Dev)';
-                LOGIN = 'https://login.salesforce.com';
-            }
-            
-            if (ISTEST) {
-                //for enterprise sandbox org installs
-                CLIENT = '3MVG9fMtCkV6eLhfygiAuT5nj9pR_VAnJtIE57hGjpvFlGVuq2L97l5Sxd93NxsCDrxdnztE4kVI29fDRjemm';
-                SECRET = '9179586167866560862';
-                REDIRECT = 'https://test.salesforce.com/apex/esb__Configure';
-                APPNAME = 'Enterprise Service Bus (Sandbox)';
-                LOGIN = 'https://test.salesforce.com';
-            }
-            
-            if (ISPROD) {
-                //for enterprise production org installs
-                CLIENT = '3MVG9fMtCkV6eLhfygiAuT5nj9oMZJIarvuh1uEpRNeVc_uwIgCWXzKZQhviO1IjRVXh3EvIy6Qn4wLk1UfRC';
-                SECRET = '1451809242356610984';
-                REDIRECT = 'https://login.salesforce.com/apex/esb__Configure';
-                APPNAME = 'Enterprise Service Bus (Production)';
-                LOGIN = 'https://login.salesforce.com';
-            }
+        if (ISDEV) {
+            //for servicebus unmanaged development
+            CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZH2ObWGVCMzchtRYMSGmA_VyIAXNcBrUQ569cLTCDaEeIagOYTjpk0kGL05M';
+            SECRET = '1234901574505073561';
+            REDIRECT = 'https://login.salesforce.com/apex/Configure';
+            APPNAME = 'Service Bus (Dev)';
+            LOGIN = 'https://login.salesforce.com';
+        }
+        
+        if (ISTEST) {
+            //for servicebus sandbox org installs
+            CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZM6N.zPbMF26H_MROM5B06LVVBqaYbQy5HGJqu.nl.0uIJOFznnB8_nyyEC_';
+            SECRET = '8880236383124022841';
+            REDIRECT = 'https://test.salesforce.com/apex/servicebus__Configure';
+            APPNAME = 'Service Bus (Sandbox)';
+            LOGIN = 'https://test.salesforce.com';
+        }
+        
+        if (ISPROD) {
+            //for servicebus production org installs
+            CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZIwedhrpiB2qIyLft2CxyJx.DzHvTLvZhrXOF1PjeMtO2HcWPYxX1gnhWOn4';
+            SECRET = '4773069420004741227';
+            REDIRECT = 'https://login.salesforce.com/apex/servicebus__Configure';
+            APPNAME = 'Service Bus (Production)';
+            LOGIN = 'https://login.salesforce.com';
         }
     }
     
@@ -248,7 +210,7 @@ public with sharing class ConfigureController {
      * &code=aPrxHLAg3XMmPXtX1cG.hBCXhkPQ89rfuQTvHhmuu16Jm.DL5lYIjdeGFLdNIh0OGO17V2QD3A%3D%3D
      * &format=json
      * &grant_type=authorization_code
-     * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2Fesb__Configure
+     * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2Fservicebus__Configure
      *
      * The Salesforce OAuth service responds with both and access token and a refresh token like this:
      * {
@@ -348,7 +310,7 @@ public with sharing class ConfigureController {
     }
     
     /**
-     * Per bigassforce/esb#709 if someone trashes the scheduled job, they
+     * Per bigassforce/servicebus#709 if someone trashes the scheduled job, they
      * can recreate it by running the configuration service again.
      */
     static public void uninstallSchedule() {
@@ -474,14 +436,14 @@ public with sharing class ConfigureController {
             uninstallSchedule();
             reinstallSchedule();
             
-            //sensible defaults for the first esb user
+            //sensible defaults for the first user
             permissions(UserInfo.getUserId());
             settings(UserInfo.getUserId());
             
             //metadata api installs the nuclear tip
             if (!Test.isRunningTest()) defaults(UserInfo.getSessionId());
             
-            //bigassforce/esb#812 don't wait an hour to refresh access token
+            //bigassforce/servicebus#812 don't wait an hour to refresh access token
             if (!Test.isRunningTest()) RouterImplementation.optimize();
             
             //6. finally send them to the context sensitive help page
@@ -490,7 +452,7 @@ public with sharing class ConfigureController {
             List<AppMenuItem> appMenuItems = [SELECT StartUrl FROM AppMenuItem WHERE Name = 'ServiceBus' LIMIT 1];
             if (returnUrl == null) returnUrl = setting.ReturnUrl__c;
             if (returnUrl == null && !appMenuItems.isEmpty()) returnUrl = appMenuItems[0].StartUrl;
-            if (returnUrl == null) returnUrl = '/apex/ContextSensitiveHelp?topic=EnterpriseServiceBus';
+            if (returnUrl == null) returnUrl = '/apex/ContextSensitiveHelp?topic=ServiceBus';
             return new PageReference(returnUrl);
         }
         
@@ -501,7 +463,7 @@ public with sharing class ConfigureController {
     static private OAuthSetting__c setting;
     
     /**
-     * bigassforce/esb#781 pass security scanner
+     * bigassforce/servicebus#781 pass security scanner
      */
     public class DoDml {
         public DoDml() {

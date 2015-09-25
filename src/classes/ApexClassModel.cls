@@ -298,7 +298,7 @@ abstract public class Service {
                 else throw new Broker.UserException(message);
             }
             
-            //https://github.com/bigassforce/esb/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843056
+            //https://github.com/bigassforce/servicebus/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843056
             throw e;
         }
         
@@ -336,7 +336,7 @@ abstract public class Service {
                 throw new Broker.UserException(this.Reflector.getName() + ': Callout from execute() not supported. Please do that in the callout() method.');
             }
             
-            //https://github.com/bigassforce/esb/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843061
+            //https://github.com/bigassforce/servicebus/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843061
             throw e;
         }
         

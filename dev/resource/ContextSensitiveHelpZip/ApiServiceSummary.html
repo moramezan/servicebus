@@ -13,7 +13,7 @@
  !-->
 
 <p>
-    In ESB, a process defines a single piece logic with inputs, outputs, and documentation. The logic
+    In Service Bus, a process defines a single piece logic with inputs, outputs, and documentation. The logic
     is contained in an Apex Class. Markers in the Apex Class surface special traits.
 </p>
 
@@ -23,15 +23,15 @@
 </p>
 
 <p>
-    Additional markers indicate which ESB traits a process has adopted. This example class extends
+    Additional markers indicate which Service traits a process has adopted. This example class extends
     the <a href="?topic=ApiBaseProcess">base process</a> to show a bare minimum process:
 </p>
 
 <pre>
 global with sharing class ExampleProcess extends BaseProcess {
     
-    //ESB Marker Inner Class
-    global class ESB {
+    //Service Marker Inner Class
+    global class Summary {
         String Description = 'Outputs one event identical to the input event.';
     }
     
@@ -109,8 +109,8 @@ global with sharing class ExampleProcess extends BaseProcess {
 </p>
 
 <pre>
-//ESB Marker Inner Class
-global class ESB {
+//Service Summary Inner Class
+global class Summary {
     String Description = 'This process tweets from a Twitter account.';
     String Tag = 'Social';
     String Name = 'Twitter';
@@ -130,7 +130,7 @@ global class ESB {
 </h1>
 
 <p>
-    These properties on an Apex Class may be populated by an ESB process. They can be read during execution.
+    These properties on an Apex Class may be populated by a Service. They can be read during execution.
 </p>
 
 <dl>
@@ -152,7 +152,7 @@ global class ESB {
 </p>
 
 <pre>
-//ESB Marker Properties
+//Service Marker Properties
 global String Event;
 global TwitterConfig__c StepConfig;
 global Boolean AllowsCallouts;
@@ -194,7 +194,7 @@ override protected void callouts(Map&lt;String,Object&gt; inputEvent) {
 </h2>
 
 <p>
-    Required method that contains the executable logic of an ESB process.
+    Required method that contains the executable logic of a Service.
 </p>
 
 <p>
@@ -230,11 +230,11 @@ override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Ob
 </p>
 
 <pre>
-//ESB Marker Interface
+//Service Marker Interface
 global with sharing class TwitterProcess extends BaseProcess implements Database.AllowsCallouts {
     
-    //ESB Marker Inner Class
-    global class ESB {
+    //Service Marker Inner Class
+    global class Summary {
         String Description = 'Makes an HTTP callout then performs some DML.';
     }
      

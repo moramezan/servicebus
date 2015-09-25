@@ -310,10 +310,10 @@ abstract public without sharing class Broker {
             '00Dj0000001uJgw'  // dev org - tom
         };
         Set<String> sessionIdNamespaces = new Set<String>{
-            'esb',
-            'esb_batchpdf',
-            'esb_tooling',
-            'esb_metadata'
+            'servicebus',
+            'servicebus_batchpdf',
+            'servicebus_tooling',
+            'servicebus_metadata'
         };
         String namespacePrefix  = reflectorName.subStringBefore('.');
         String orgId15 = String.valueOf(orgId).left(15);

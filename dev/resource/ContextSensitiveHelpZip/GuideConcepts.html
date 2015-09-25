@@ -3,12 +3,12 @@
 </h1>
 
 <p>
-    ESB concepts described in this chapter are:
+    Service Bus concepts described in this chapter are:
 </p>
 
 <ul>
     <li>Sequences</li>
-    <li>Processes</li>
+    <li>Services</li>
     <li>Configuration</li>
     <li>Logging</li>
 </ul>
@@ -18,8 +18,8 @@
 </h3>
 
 <p>
-    Work under the ESB framework is broken up into many specific tasks. Each task is implemented as
-    an Apex class and is called an ESB process.
+    Work under the Service Bus is broken up into many specific tasks. Each task is implemented as
+    an Apex class and is called a Service.
 </p>
 
 <p>
@@ -28,17 +28,17 @@
 </p>
 
 <h3>
-    Processes
+    Services
 </h3>
 
 <p>
-    Every ESB process responds to an input message by emitting a list of zero, one or more output
-    messages. The ESB framework is designed so that output messages from a process automatically
+    Every service responds to an input message by emitting a list of zero, one or more output
+    messages. The Service Bus is designed so that output messages from a process automatically
     feed the input stream of the very next process in a <em>Sequence</em>.
 </p>
 
 <p>
-    The ESB framework has by default a number of ready made processes that can be sequenced together
+    The Service Bus has by default a number of ready made processes that can be sequenced together
     so that useful work can be completed. These ready made processes include:
 </p>
 
@@ -66,7 +66,7 @@
 </h3>
 
 <p>
-    The ESB framework makes a clear distinction between:
+    The Service Bus makes a clear distinction between:
 </p>
 
 <ul>
@@ -87,22 +87,21 @@
 </p>
 
 <p>
-    It therefore the role of the System Orchestrator / Business Analyst to configure the ESB
-    framework:
+    It therefore the role of the System Orchestrator / Business Analyst to configure the Service Bus:
 </p>
 
 <ul>
     <li>
-        by arranging ESB processes together in a processing Sequence using friendly names that
+        by arranging services together in a processing Sequence using friendly names that
         adequately describe the collective nature of the work being preformed (for example
         <code>ProcessInvoices</code>)
     </li>
     <li>
-        by identifying tasks in a Sequence that have no corresponding ESB process (otherwise defined
+        by identifying tasks in a Sequence that have no corresponding service (otherwise defined
         as "missing processes")
     </li>
     <li>
-        by specifying and provisioning missing ESB processes, often by securing the development
+        by specifying and provisioning missing services, often by securing the development
         expertise of a suitable Force.com developer
     </li>
 </ul>

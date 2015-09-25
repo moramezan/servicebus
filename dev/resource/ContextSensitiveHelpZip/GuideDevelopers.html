@@ -12,21 +12,21 @@
 
 <p>
     This guide is intended for Salesforce Apex Developers who are tasked with providing
-    functionality not provided in the out-of-the-box ESB framework. The purpose of this guide is to:
+    functionality not provided in the out-of-the-box Service Bus. The purpose of this guide is to:
 </p>
 
 <ol>
     <li>
-        explain basic process concepts as they pertain to the ESB framework.
+        explain basic process concepts as they pertain to the Service Bus.
     </li>
     <li>
         describe how to create a process that enables processing functionality not directly provided
-        for in the ESB framework.
+        for in the Service Bus.
     </li>
 </ol>
 
 <p>
-    This guide excludes ESB configuration and ESB monitoring. These topics are covered in the
+    This guide excludes Service Bus configuration and monitoring. These topics are covered in the
     separate <a href="?topic=GuideOrchestrators">Orchestrators Guide</a>.
 </p>
 
@@ -35,7 +35,7 @@
 </h2>
 
 <p>
-    All ESB processes contain a standard <code>toString()</code> method. The <code>toString()</code>
+    All services contain a standard <code>toString()</code> method. The <code>toString()</code>
     method takes a single input message and returns a list containing zero, one or many message(s).
     The concept can be illustrated as follows:
 </p>
@@ -49,12 +49,12 @@ List&lt;Event&gt; messages = process.handle(Event message);
 </pre>
 
 <p>
-    The ESB framework is designed so that the output(s) from a given process can be directly
+    The Service Bus is designed so that the output(s) from a given process can be directly
     re-purposed as input(s) into immediately downstream processes.
 </p>
 
 <p>
-    The ESB framework has by default a number of pre-packaged native processes that can be
+    The Service Bus has by default a number of pre-packaged native processes that can be
     sequenced together to accomplish useful work.
 </p>
 
@@ -78,8 +78,7 @@ List&lt;Event&gt; messages = process.handle(Event message);
 </h2>
 
 <p>
-    The list below describes the order of activities for creating, testing and deploying your ESB
-    process:
+    The list below describes the order of activities for creating, testing and deploying your service:
 </p>
 
 <ol>
@@ -113,7 +112,7 @@ List&lt;Event&gt; messages = process.handle(Event message);
         Visually test the process - see <a href="#CHAPTER06">post-build steps</a>
     </li>
     <li>
-        Create a package containing your ESB process and install in the runtime enviroment
+        Create a package containing your service and install in the runtime enviroment
         (Sandbox, Production, etc). - see <a href="#CHAPTER06">post-build steps</a>
     </li>
 </ol>
@@ -171,7 +170,7 @@ List&lt;Event&gt; messages = process.handle(Event message);
 
 <ul>
     <li>
-        The process activity represents specific logic that is unavailable under the ESB framework,
+        The process activity represents specific logic that is unavailable under the Service Bus,
         either because such logic is is not represented by one of the native framework processes, or
         such logic has not been previously created and/or registered.
     </li>
@@ -191,7 +190,7 @@ List&lt;Event&gt; messages = process.handle(Event message);
 </ul>
 
 <p>
-    The ESB framework surfaces the notion of attributes via <strong>Step Config</strong>
+    The Service Bus surfaces the notion of attributes via <strong>Step Config</strong>
     and <strong>Process Settings</strong> to accommodate variations in data applied to the same
     process behavior
 </p>
