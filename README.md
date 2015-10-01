@@ -6,6 +6,10 @@ That process showed us how we needed to change the services to make them behave 
 
 AMOS is used every day in AppExchange products and by Salesforce consultants. If you like the results, please comment and contribute.
 
+# Example implementations
+
+- ![lightning](https://cloud.githubusercontent.com/assets/1878631/10218248/37fdadc8-682d-11e5-9134-86a8cdf5f9f4.png) [Webhooks connector for Salesforce](https://github.com/bigassforce/webhooks)
+
 # Goals
 
 **Avoid package dependencies**. These [become difficult to manage if there is shared code leveraged in multiple apps](https://success.salesforce.com/ideaview?id=08730000000BqDaAAK). Prefer callee-agnostic service inputs and outputs while maintaining expressiveness, like `Map<String,Object>`
