@@ -87,6 +87,14 @@
         </replaceregexp>
     </target>
     
+    <target name="agnostic-permissions">
+        <replaceregexp flags="sg    ">
+            <fileset dir="src/permissionsets" />
+            <regexp pattern="\n    &lt;userPermissions&gt;.*&lt;/userPermissions&gt;" />
+            <substitution expression=""/>
+        </replaceregexp>
+    </target>
+    
     <target name="retrieve" description="Retrieves all package components to dev org">
         <sf:retrieve
             username="${de.username}"
@@ -98,6 +106,7 @@
         <antcall target="alphabetize-searchlayouts" />
         <antcall target="optimize-for-release" />
         <antcall target="normalize-whitespace" />
+        <antcall target="agnostic-permissions" />
     </target>
 
     <target name="deploy" description="Deploys all package components to dev org">
