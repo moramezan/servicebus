@@ -125,21 +125,21 @@ global class Job implements Process.Plugin, system.Queueable {
      * @param sequenceName Name of the sequence the data is destined for.
      * @param dataId    Id of some record that the sequence will operate on.
      */
-    public Job(String sequence, Id recordId) {
+    global Job(String sequence, Id recordId) {
         this(new Map<String,Object>{
             'ToSequence' => sequence,
             'RecordId' => recordId
         });
     }
     
-    public Job(Id configId, Id recordId) {
+    global Job(Id configId, Id recordId) {
         this(new Map<String,Object>{
             'RecordId' => recordId,
             'ConfigId' => recordId
         });
     }
     
-    public Job(Type service, Id recordId) {
+    global Job(Type service, Id recordId) {
         this(new Map<String,Object>{
             'ToService' => service.getName(),
             'RecordId' => recordId
