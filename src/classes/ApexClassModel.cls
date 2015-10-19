@@ -143,6 +143,16 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         }
     }
     
+    /**
+     * Redirects user to the HelpURL
+     * specified on the Service Summary
+     */
+    public PageReference showHelpUrl() {
+        Summary summary = new Summary(this.Reflector);
+        if (summary.HelpUrl == null) return null;
+        return new PageReference(summary.HelpUrl);
+    }
+    
 //THERE IS A BINDING BETWEEN: abstract/classes/Service.cls and src/classes/ApexClassModel.cls
 /**
  * MUST BE GLOBAL IN ABSTRACT PACKAGE

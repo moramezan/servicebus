@@ -22,13 +22,16 @@ public with sharing class ApexClassSummaryExtension {
         this.RoutedMessages = 0;
     }
     
-    public void doInit() {
+    public PageReference doInit() {
         try {
             this.model = ApexClassModel.fromId(controller.getId());
             this.Summary = new ApexClassModel.Summary(model.Reflector);
             this.FullyQualifiedClassName = model.Reflector.getName();
+            return this.model.showHelpUrl();
+            
         } catch (Exception e) {
             ApexPages.addMessages(e);
+            return null;
         }
     }
     

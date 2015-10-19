@@ -59,6 +59,11 @@
                 <apex:outputText value="{!Summary.Limits}" />
             </apex:pageBlockSectionItem>
 
+            <apex:pageBlockSectionItem rendered="{!Summary.HelpUrl != null}">
+                <apex:outputLabel style="font-weight: bold;">Help</apex:outputLabel>
+                <apex:outputLink value="{!URLFOR(Summary.HelpUrl)}" target="_blank">{!Summary.HelpUrl}</apex:outputLink>
+            </apex:pageBlockSectionItem>
+
             <apex:pageBlockSectionItem rendered="{!Summary.Icon != 'cog'}">
                 <apex:outputLabel style="font-weight: bold;">Icon</apex:outputLabel>
                 <apex:image value="{!URLFOR('/s.gif')}" styleClass="z-action-col-icon {!Summary.Icon}" />
