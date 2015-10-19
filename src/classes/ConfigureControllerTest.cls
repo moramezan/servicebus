@@ -112,7 +112,7 @@
         //arrange controller and page
         ConfigureController controller = new ConfigureController();
         System.PageReference configure = Page.Configure;
-        configure.getParameters().put('url', Url.getSalesforceBaseUrl().toExternalForm() + '/services/Soap/c/34.0'); //this implies stage=cs
+        configure.getParameters().put('url', Url.getSalesforceBaseUrl().toExternalForm() + '/services/Soap/c/35.0'); //this implies stage=cs
         configure.getParameters().put('retURL', '/herp/derp');
         Test.setCurrentPage(configure);
         

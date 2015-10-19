@@ -331,7 +331,7 @@ if ({!Message__c.Exception__c == null}) {
     var mark = new Date().getTime();
     var command = dot + &quot;Job.run(&apos;{!Message__c.Id}&apos;);&quot;;
 
-    sforce.connection.init(sid, &apos;/services/Soap/u/34.0&apos;);
+    sforce.connection.init(sid, &apos;/services/Soap/u/35.0&apos;);
     var response = sforce.apex.executeAnonymous(command);
     if (response.success == &quot;false&quot;) {
         //started, persist any fatal error and refresh
@@ -349,8 +349,8 @@ if ({!Message__c.Exception__c == null}) {
         
     }
 }
-{!REQUIRESCRIPT(&quot;/soap/ajax/34.0/connection.js&quot;)}
-{!REQUIRESCRIPT(&quot;/soap/ajax/34.0/apex.js&quot;)}</url>
+{!REQUIRESCRIPT(&quot;/soap/ajax/35.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/35.0/apex.js&quot;)}</url>
     </webLinks>
     <webLinks>
         <fullName>ResumeQueue</fullName>

@@ -16,7 +16,7 @@ public with sharing class ConfigureController {
         return (''
             + 'sforce.connection.init("' + UserInfo.getSessionId() + '");'
             + 'sforce.connection.remoteFunction({'
-            + '    url: "' + this.BaseUrl + '/services/Soap/m/34.0",'
+            + '    url: "' + this.BaseUrl + '/services/Soap/m/35.0",'
             + '    onSuccess: function(response, xhr) {'
             + '        var oa = window.location.href.replace("stage=js", "stage=oa");' //force redirect with no history
             + '        window.location.replace ? window.location.replace(oa) : window.location.href = oa;'
@@ -43,7 +43,7 @@ public with sharing class ConfigureController {
      * keep the new sauce "secret".
      */
     public String requestData() {
-        //#112 pass security scanner for 34.0 release
+        //#112 pass security scanner for 35.0 release
         return (''
             + '<?xml version="1.0" encoding="utf-8"?>'
             + '<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
@@ -84,7 +84,7 @@ public with sharing class ConfigureController {
         outputPanel.expressions.rendered = '{!$CurrentPage.parameters.stage == "js"}';
             
             Component.Apex.IncludeScript includeScript = new Component.Apex.IncludeScript();
-            includeScript.value = '/soap/ajax/34.0/connection.js';
+            includeScript.value = '/soap/ajax/35.0/connection.js';
             outputPanel.childComponents.add(includeScript);
             
             Component.Apex.OutputText outputText = new Component.Apex.OutputText();
@@ -524,7 +524,7 @@ public with sharing class ConfigureController {
         HttpRequest request = new HttpRequest();
         request.setTimeout(120000);
         request.setMethod('POST');
-        request.setEndpoint(instanceUrl + '/services/Soap/m/34.0');
+        request.setEndpoint(instanceUrl + '/services/Soap/m/35.0');
         request.setHeader('SOAPAction', '""');
         request.setHeader('Content-Type', 'text/xml');
         request.setBody(metadata(sessionId));
