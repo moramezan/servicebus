@@ -37,7 +37,7 @@
             
             <apex:column headerValue="Namespace Prefix" value="{!id2class[id].NamespacePrefix}" />
             
-            <apex:column headerValue="{!$ObjectType.ApexClass.Fields.Status.Label}">
+            <apex:column headerValue="{!$ObjectType.ApexClass.Fields.ApiVersion.Label}">
                 <apex:outputField value="{!id2class[id].ApiVersion}" />
             </apex:column>
             
