@@ -1,8 +1,16 @@
 <apex:page tabStyle="Monitor__tab" sidebar="false" controller="MonitorController" title="Monitor">
     <apex:pageMessages showDetail="false" />
-
+    
+    <apex:form >
+        Version
+        <apex:selectList size="1" value="{!Version}">
+            <apex:selectOptions value="{!SelectOptions}" />
+            <apex:actionSupport event="onchange" action="{!changeVersion}" />
+        </apex:selectList>
+    </apex:form>
+    
     <apex:sectionHeader title="Message Queue Monitoring" help="{!URLFOR($Page.MonitorSplash)}" />
-
+    
     <!-- #769 -->
     <input checked="checked" type="checkbox" id="realtime" onclick="if(this.checked){var that=this;this.disabled = true;setTimeout(function() {that.checked=false;that.disabled=false;}, 60000);}" />
     <script>setTimeout(function() {document.getElementById('realtime').checked=false;}, 60000);</script>

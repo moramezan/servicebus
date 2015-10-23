@@ -75,6 +75,9 @@
     <searchLayouts>
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <listViewButtons>Checkout</listViewButtons>
+        <listViewButtons>Commit</listViewButtons>
+        <listViewButtons>Discard</listViewButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <validationRules>
@@ -103,4 +106,43 @@ Id &lt;&gt; VLOOKUP(
         <errorDisplayField>Name</errorDisplayField>
         <errorMessage>Name must be unique</errorMessage>
     </validationRules>
+    <webLinks>
+        <fullName>Checkout</fullName>
+        <availability>online</availability>
+        <description>Checks out new draft version.</description>
+        <displayType>massActionButton</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Checkout</masterLabel>
+        <openType>sidebar</openType>
+        <page>SequenceCheckout</page>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+    </webLinks>
+    <webLinks>
+        <fullName>Commit</fullName>
+        <availability>online</availability>
+        <description>Commits the draft version.</description>
+        <displayType>massActionButton</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Commit</masterLabel>
+        <openType>sidebar</openType>
+        <page>SequenceCommit</page>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+    </webLinks>
+    <webLinks>
+        <fullName>Discard</fullName>
+        <availability>online</availability>
+        <description>Discards the draft version.</description>
+        <displayType>massActionButton</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Discard</masterLabel>
+        <openType>sidebar</openType>
+        <page>SequenceDiscard</page>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+    </webLinks>
 </CustomObject>

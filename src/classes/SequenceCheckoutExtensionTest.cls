@@ -1,0 +1,5 @@
+@IsTest class SequenceCheckoutExtensionTest {
+
+    //TODO
+    
+}

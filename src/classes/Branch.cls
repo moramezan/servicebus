@@ -36,8 +36,11 @@ public class Branch extends ApexClassModel.Service {
             throw new BranchException('Not allowed to branch to own sequence!');
         }
         
+        Integer version = Integer.valueOf(route.substringBefore('#'));
+        Integer position = 0;
+        
         Map<String,Object> outputEvent = new Map<String,Object>{
-            'Route' => config.Sequence__r.Name + '#0'
+            'Route' => version + '#' + config.Sequence__r.Name + '#' + position
         };
         
         //original guy carries on... this does not inadvertently Terminate

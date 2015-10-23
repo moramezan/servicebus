@@ -49,6 +49,16 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>IsDraft__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Used for eyeballing current working copy etc.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Is this route part of the current staging area?</inlineHelpText>
+        <label>Is Draft</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Position__c</fullName>
         <defaultValue>0</defaultValue>
         <externalId>false</externalId>
@@ -70,6 +80,18 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Version__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Which version is this?</inlineHelpText>
+        <label>Version</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
         <unique>false</unique>
     </fields>
     <label>Step</label>

@@ -70,7 +70,7 @@
         SequenceBuilderExtension.appendStep(sequenceId, [SELECT Id FROM ApexClass WHERE Name = 'Publish'].Id);
         
         //assemble
-        Step__c step = Step__c.getValues('Test#3');
+        Step__c step = Step__c.getValues('1#Test#3');
         
         //assert
         String expectedClassName = Publish.class.getName();
@@ -83,7 +83,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        SequenceBuilderExtension.moveStepBefore('Test#2', 'Test#1');
+        SequenceBuilderExtension.moveStepBefore('1#Test#2', '1#Test#1');
         
         //assemble
         List<Step__c> steps = SequenceModel.fromId(sequenceId).stepSetModel().getRecords();
@@ -109,7 +109,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        SequenceBuilderExtension.moveStepAfter('Test#1', 'Test#2');
+        SequenceBuilderExtension.moveStepAfter('1#Test#1', '1#Test#2');
         
         //assemble
         List<Step__c> steps = SequenceModel.fromId(sequenceId).stepSetModel().getRecords();
@@ -135,7 +135,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        SequenceBuilderExtension.destroyStep(sequenceId, 'Test#1');
+        SequenceBuilderExtension.destroyStep(sequenceId, '1#Test#1');
         
         //assert
         Integer expectedSize = 1;

@@ -173,7 +173,7 @@
         SequenceModel.fromId(sequence.Id).appendStep(Terminate.class);
         
         //arrange message
-        Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
+        Map<String,Object> event = new Map<String,Object>{'Route' => '1#Test#1'};
         Message__c inputMessage = new Message__c(
             Event__c = Json.serialize(event)
         );
@@ -231,8 +231,8 @@
         model.appendStep(Wiretap.class);
         model.appendStep(Terminate.class);
         
-        Map<String,Object> event1 = new Map<String,Object>{'Route' => 'Test#1'};
-        Map<String,Object> event2 = new Map<String,Object>{'Route' => 'Test#2'};
+        Map<String,Object> event1 = new Map<String,Object>{'Route' => '1#Test#1'};
+        Map<String,Object> event2 = new Map<String,Object>{'Route' => '1#Test#2'};
         List<Message__c> inputMessages = new List<Message__c>{
             new Message__c(Event__c = Json.serialize(event1)),
             new Message__c(Event__c = Json.serialize(event2))
@@ -259,11 +259,11 @@
         Map<String,Object> outputEventB = (Map<String,Object>)Json.deserializeUntyped(outputMessages[1].Event__c); //0/1 seems non deterministic
 
         String expectedPositionA = '2';
-        String actualPositionA = ((String)outputEventA.get('Route')).substringAfter('#');
+        String actualPositionA = ((String)outputEventA.get('Route')).substringAfterLast('#');
         System.assertEquals(expectedPositionA, actualPositionA, 'Wrong position A.');
 
         String expectedPositionB = '3';
-        String actualPositionB = ((String)outputEventB.get('Route')).substringAfter('#');
+        String actualPositionB = ((String)outputEventB.get('Route')).substringAfterLast('#');
         System.assertEquals(expectedPositionB, actualPositionB, 'Wrong position B.');
         
         //assert
@@ -324,7 +324,7 @@
         
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
-        Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
+        Map<String,Object> event = new Map<String,Object>{'Route' => '1#Test#1'};
         
         //arrange fucked messages
         insert new List<Message__c>{
@@ -451,7 +451,7 @@
         Message__c message = [SELECT Id, Exception__c FROM Message__c];
         
         //assert
-        String expectedException = Broker.UserException.class.getName() + ': Could not resolve message route: Test#1';
+        String expectedException = Broker.UserException.class.getName() + ': Could not resolve message route: 1#Test#1';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong message.');
     }
@@ -592,7 +592,7 @@
         Integer actualFailureCount = messages.size();
         System.assertEquals(expectedFailureCount, actualFailureCount, 'Wrong failure count.');
         
-        String expectedException = Broker.UserException.class.getName() + ': Could not resolve message route: Test#4';
+        String expectedException = Broker.UserException.class.getName() + ': Could not resolve message route: 1#Test#4';
         String actualException = messages[0].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
@@ -702,7 +702,7 @@
         System.assertNotEquals(unexpectedEntryPointUuid, actualEntryPointUuid, 'Wrong entry point uuid.');
         
         String expectedPosition = '1';
-        String actualPosition = ((String)inputEvent.get('Route')).substringAfter('#');
+        String actualPosition = ((String)inputEvent.get('Route')).substringAfterLast('#');
         System.assertEquals(expectedPosition, actualPosition, 'Wrong position.');
         
         Id expectedEnqueueUserId = UserInfo.getUserId();

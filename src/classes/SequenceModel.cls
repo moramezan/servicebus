@@ -74,9 +74,22 @@ public class SequenceModel extends ApexDomain.StandardModel {
      * @return the queueable job id
      */
     public Id enqueueTestMessage() {
+        
+        //find draft version
+        Decimal version = (Decimal)[
+            SELECT AVG(Version__c)
+            FROM Step__c
+            WHERE IsDraft__c = true
+        ][0].get('expr0');
+        
+        if (version == null) version = 1;
+        
+        //initial position
+        Decimal position = 0;
+        
         Job.AllowRoute = true; //#999#issuecomment-133751700
         Map<String,Object> event = new Map<String,Object>{
-            'Route' => this.Sequence.Name + '#0'
+            'Route' => version.intValue() + '#' + this.Sequence.Name + '#' + position.intValue()
         };
         Job j = new Job(event);
         Id jobId = System.enqueueJob(j);
@@ -91,14 +104,35 @@ public class SequenceModel extends ApexDomain.StandardModel {
         Savepoint sp = Database.setSavepoint();
         try {
             ApexClassModel model = new ApexClassModel(reflector);
-            Integer position = [SELECT COUNT() FROM Step__c WHERE SequenceName__c = :this.sequence.Name] + 1;
+            
+            //find draft version
+            Decimal version = (Decimal)[
+                SELECT AVG(Version__c)
+                FROM Step__c
+                WHERE IsDraft__c = true
+            ][0].get('expr0');
+            
+            if (version == null) version = 1;
+            
+            //last sibling position
+            Decimal position = (Decimal)[
+                SELECT MAX(Position__c)
+                FROM Step__c
+                WHERE IsDraft__c = true
+                AND SequenceName__c = :this.sequence.Name
+            ][0].get('expr0');
+            
+            //next position after siblings
+            if (position == null) position = 1; else position++;
             
             Step__c step = new Step__c(
-                Name = this.sequence.Name + '#' + position,
+                IsDraft__c = true,
+                Version__c = version.intValue(),
+                Name = version.intValue() + '#' + this.sequence.Name + '#' + position.intValue(),
                 SequenceName__c = this.sequence.Name,
                 ApexClassId__c = null, //see upstairs
                 ApexClassName__c = reflector.getName(),
-                Position__c = position
+                Position__c = position.intValue()
             );
             
             insert step;
@@ -118,7 +152,9 @@ public class SequenceModel extends ApexDomain.StandardModel {
             Step__c terminateStep = [
                 SELECT Name
                 FROM Step__c
-                WHERE SequenceName__c = :this.sequence.Name AND ApexClassName__c = :Terminate.class.getName()
+                WHERE IsDraft__c = true
+                AND SequenceName__c = :this.sequence.Name
+                AND ApexClassName__c = :Terminate.class.getName()
             ];
         } catch (QueryException e) {
             //sequence contains no terminate step
@@ -160,7 +196,8 @@ public class SequenceModel extends ApexDomain.StandardModel {
             List<Step__c> stepsToReorder = [
                 SELECT Name
                 FROM Step__c
-                WHERE SequenceName__c = :this.sequence.Name
+                WHERE IsDraft__c = true
+                AND SequenceName__c = :this.sequence.Name
                 ORDER BY Position__c ASC
             ];
             
@@ -171,10 +208,10 @@ public class SequenceModel extends ApexDomain.StandardModel {
             update stepsToReorder;
             
             //reposition them all
-            Integer position = 1;
+            Decimal position = 1;
             for (Step__c stepToReorder : stepsToReorder) {
-                stepToReorder.Name = this.sequence.Name + '#' + position;
-                stepToReorder.Position__c = position;
+                stepToReorder.Name = stepToDelete.Version__c.intValue() + '#' + this.sequence.Name + '#' + position.intValue();
+                stepToReorder.Position__c = position.intValue();
                 position++;
             }
             

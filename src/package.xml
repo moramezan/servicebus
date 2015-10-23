@@ -72,6 +72,12 @@
         <members>ScheduleTest</members>
         <members>SequenceBuilderExtension</members>
         <members>SequenceBuilderExtensionTest</members>
+        <members>SequenceCheckoutExtension</members>
+        <members>SequenceCheckoutExtensionTest</members>
+        <members>SequenceCommitExtension</members>
+        <members>SequenceCommitExtensionTest</members>
+        <members>SequenceDiscardExtension</members>
+        <members>SequenceDiscardExtensionTest</members>
         <members>SequenceModel</members>
         <members>SequenceModelTest</members>
         <members>SequenceSetModel</members>
@@ -117,6 +123,9 @@
         <members>PublishConfigManageEventTypes</members>
         <members>ScheduleConfigHelp</members>
         <members>SequenceBuilder</members>
+        <members>SequenceCheckout</members>
+        <members>SequenceCommit</members>
+        <members>SequenceDiscard</members>
         <members>SequenceHelp</members>
         <members>SequenceSplash</members>
         <members>StepConfig</members>
@@ -145,6 +154,7 @@
         <members>BrokerSetting__c.EventTimestamp__c</members>
         <members>BrokerSetting__c.Inhibit__c</members>
         <members>BrokerSetting__c.IsPaused__c</members>
+        <members>BrokerSetting__c.Version__c</members>
         <members>JumpConfig__c.Sequence__c</members>
         <members>Message__c.Cause__c</members>
         <members>Message__c.EntryPointUuid__c</members>
@@ -172,8 +182,10 @@
         <members>Step__c.ApexClassName__c</members>
         <members>Step__c.ConfigId__c</members>
         <members>Step__c.ConfigName__c</members>
+        <members>Step__c.IsDraft__c</members>
         <members>Step__c.Position__c</members>
         <members>Step__c.SequenceName__c</members>
+        <members>Step__c.Version__c</members>
         <members>SubscribeConfig__c.EventType__c</members>
         <members>SubsequenceConfig__c.Sequence__c</members>
         <members>WiretapSetting__c.UserId__c</members>
@@ -262,6 +274,9 @@
         <members>Message__c.Restart</members>
         <members>Message__c.ResumeQueue</members>
         <members>PublishConfig__c.ManageEventTypes</members>
+        <members>Sequence__c.Checkout</members>
+        <members>Sequence__c.Commit</members>
+        <members>Sequence__c.Discard</members>
         <members>SubscribeConfig__c.ManageEventTypes</members>
         <name>WebLink</name>
     </types>

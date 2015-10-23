@@ -149,7 +149,7 @@
         inputEvents = new Job(inputEvent).Events;
         
         //assert
-        expectedParam = 'Test#0';
+        expectedParam = '1#Test#0';
         actualParam = inputEvents[0].get('Route');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
@@ -182,7 +182,7 @@
         inputEvents = new Job(inputEvent).Events;
         
         //assert
-        expectedParam = 'Test#0';
+        expectedParam = '1#Test#0';
         actualParam = inputEvents[0].get('Route');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         

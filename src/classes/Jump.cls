@@ -36,8 +36,11 @@ public class Jump extends ApexClassModel.Service {
             throw new JumpException('Not allowed to jump to own sequence.');
         }
         
+        Integer version = Integer.valueOf(route.substringBefore('#'));
+        Integer position = 0;
+        
         Map<String,Object> outputEvent = new Map<String,Object>{
-            'Route' => config.Sequence__r.Name + '#0'
+            'Route' => version + '#' + config.Sequence__r.Name + '#' + position
         };
         
         return new List<Map<String,Object>>{outputEvent};

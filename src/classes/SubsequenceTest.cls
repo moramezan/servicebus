@@ -39,7 +39,7 @@
             //inside subsequence logic, so new input event for each iteration!
             Map<String,Object> inputEvent = new Map<String,Object>{
                 'StepConfigId' => config.Id,
-                'Route' => 'Origin#1'
+                'Route' => '1#Origin#1'
             };
                 
             ApexClassModel.Service service = new Subsequence();
@@ -156,6 +156,7 @@
         
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>{
+            'Route' => '1#Caller#1',
             'StepConfigId' => configId
         };
         
@@ -212,6 +213,7 @@
         
         //arrange input
         Map<String,Object> event = new Map<String,Object>{
+            'Route' => '1#Test#1',
             'StepConfigId' => configId,
             'ToSequence' => 'Test'
         };

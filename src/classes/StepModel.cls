@@ -43,22 +43,22 @@ public class StepModel extends ApexDomain.StandardModel {
         try {
             if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
             
-            Step__c stepToMove = this.step;
-            Step__c beforeStep = Step__c.getValues(beforeStepName);
-            
             //find all steps EXCEPT the guy we are moving
             List<Step__c> readSteps = [
                 SELECT Name
                 FROM Step__c
-                WHERE SequenceName__c = :stepToMove.SequenceName__c
-                AND Name != :stepToMove.Name
+                WHERE IsDraft__c = true
+                AND Version__c = :this.step.Version__c
+                AND SequenceName__c = :this.step.SequenceName__c
+                AND Name != :this.step.Name
                 ORDER BY Position__c ASC
             ];
             
             //normal case: inject the guy we are moving amongst the others
+            Step__c beforeStep = Step__c.getValues(beforeStepName);
             List<Step__c> writeSteps = new List<Step__c>();
             for (Step__c step : readSteps) {
-                if (step.Name == beforeStep.Name) writeSteps.add(stepToMove);
+                if (step.Name == beforeStep.Name) writeSteps.add(this.step);
                 writeSteps.add(step);
             }
             
@@ -69,10 +69,10 @@ public class StepModel extends ApexDomain.StandardModel {
             update writeSteps;
             
             //reposition them all
-            Integer position = 1;
+            Decimal position = 1;
             for (Step__c step : writeSteps) {
-                step.Name = this.step.SequenceName__c + '#' + position;
-                step.Position__c = position;
+                step.Name = this.step.Version__c.intValue() + '#' + this.step.SequenceName__c + '#' + position.intValue();
+                step.Position__c = position.intValue();
                 position++;
             }
             
@@ -92,23 +92,23 @@ public class StepModel extends ApexDomain.StandardModel {
         try {
             if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
             
-            Step__c stepToMove = this.step;
-            Step__c afterStep = Step__c.getValues(afterStepName);
-            
             //find all steps EXCEPT the guy we are moving
             List<Step__c> readSteps = [
                 SELECT Name
                 FROM Step__c
-                WHERE SequenceName__c = :stepToMove.SequenceName__c
-                AND Name != :stepToMove.Name
+                WHERE IsDraft__c = true
+                AND Version__c = :this.step.Version__c
+                AND SequenceName__c = :this.step.SequenceName__c
+                AND Name != :this.step.Name
                 ORDER BY Position__c ASC
             ];
             
             //normal case: inject the guy we are moving amongst the others
+            Step__c afterStep = Step__c.getValues(afterStepName);
             List<Step__c> writeSteps = new List<Step__c>();
             for (Step__c step : readSteps) {
                 writeSteps.add(step);
-                if (step.Name == afterStep.Name) writeSteps.add(stepToMove);
+                if (step.Name == afterStep.Name) writeSteps.add(this.step);
             }
             
             //custom settings not smart enough to recognize uniqueness in bulk update
@@ -118,10 +118,10 @@ public class StepModel extends ApexDomain.StandardModel {
             update writeSteps;
             
             //reposition them all
-            Integer position = 1;
+            Decimal position = 1;
             for (Step__c step : writeSteps) {
-                step.Name = this.step.SequenceName__c + '#' + position;
-                step.Position__c = position;
+                step.Name = this.step.Version__c.intValue() + '#' + this.step.SequenceName__c + '#' + position.intValue();
+                step.Position__c = position.intValue();
                 position++;
             }
             

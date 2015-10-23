@@ -32,7 +32,7 @@
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>{
             'StepConfigId' => stepConfigId,
-            'Route' => 'Origin#1'
+            'Route' => '1#Origin#1'
         };
 
 
@@ -69,7 +69,7 @@
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>{
             'StepConfigId' => stepConfigId,
-            'Route' => 'Origin#1'
+            'Route' => '1#Origin#1'
         };
         
         //act
@@ -85,7 +85,7 @@
         Map<String,Object> normalEvent = outputEvents[0]; //the normal event continues to the next step
         
         //asserts
-        String expectedRoute = 'Origin#1';
+        String expectedRoute = '1#Origin#1';
         String actualRoute = (String)normalEvent.get('Route');
         System.assertEquals(expectedRoute, actualRoute, 'Wrong normal route.');
         
@@ -93,7 +93,7 @@
         Map<String,Object> branchEvent = outputEvents[1]; //the branch event goes to the top of another sequence
         
         //asserts
-        String expectedSequence = target.Name + '#0';
+        String expectedSequence = '1' + '#' + target.Name + '#' + '0';
         String actualSequence = (String)branchEvent.get('Route');
         System.assertEquals(expectedSequence, actualSequence, 'Wrong branch sequence.');
     }
@@ -110,7 +110,7 @@
         //arrange event
         Map<String,Object> inputEvent = new Map<String,Object>{
             'StepConfigId' => config.Id,
-            'Route' => 'Origin#1'
+            'Route' => '1#Origin#1'
         };
         
         //arrange exception

@@ -244,9 +244,10 @@ abstract public without sharing class Broker {
                 //increments route position
                 if (event.containsKey('Route')) {
                     String route = (String)event.get('Route');
-                    String sequence = route.substringBefore('#');
-                    String position = route.substringAfter('#');
-                    if (route.contains('#')) event.put('Route', sequence + '#' + (Integer.valueOf(position) + 1));
+                    String version = route.substringBefore('#');
+                    String sequence = route.substringAfter('#').substringBefore('#');
+                    String position = route.substringAfterLast('#');
+                    if (route.contains('#')) event.put('Route', (Integer.valueOf(version)) + '#' + sequence + '#' + (Integer.valueOf(position) + 1));
                 }
                 
                 message.Event__c = Json.serialize(event);

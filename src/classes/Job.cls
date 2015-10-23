@@ -236,6 +236,11 @@ global class Job implements Process.Plugin, system.Queueable {
                 }
             }
             
+            //stamp with version
+            Integer version = Integer.valueOf(BrokerSetting__c.getOrgDefaults().Version__c);
+            if (version == null) version = 1;
+            integer position = 0;
+            
             //#999 enqueue routing helpers
             String toSequence = (String)inputEvent.get('ToSequence');
             String toService = (String)inputEvent.get('ToService');
@@ -245,7 +250,7 @@ global class Job implements Process.Plugin, system.Queueable {
                 //converts sequence to route
                 inputEvent.remove('ToSequence');
                 inputEvent.put('servicebus:ToSequence', toSequence);
-                inputEvent.put('Route', toSequence + '#' + '0');
+                inputEvent.put('Route', version + '#' + toSequence + '#' + position);
             }
             
             if (toService != null) {
@@ -260,8 +265,7 @@ global class Job implements Process.Plugin, system.Queueable {
                 //converts config to route
                 inputEvent.remove('ToConfig');
                 inputEvent.put('servicebus:ToConfig', toConfig);
-                inputEvent.put('Route', config2sequence.get((String)toConfig) + '#' + '0');
-                
+                inputEvent.put('Route', version + '#' + config2sequence.get(toConfig) + '#' + position);
             }
             
             inputEvent.putAll(new Map<String,Object>{

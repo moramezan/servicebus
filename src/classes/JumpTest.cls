@@ -31,7 +31,7 @@
         
         Map<String,Object> inputEvent = new Map<String,Object>{
             'StepConfigId' => config.Id,
-            'Route' => 'Origin#1',
+            'Route' => '1#Origin#1',
             'data' => 'herpderp'
         };
 
@@ -70,7 +70,7 @@
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>{
             'StepConfigId' => stepConfig.Id,
-            'Route' => 'Origin#1',
+            'Route' => '1#Origin#1',
             'data' => 'herpderp'
         };
         
@@ -83,7 +83,7 @@
         Integer actualSize = outputEvents.size();
         System.assertEquals(expectedSize, actualSize);
         
-        String expectedSequence = 'Target#0';
+        String expectedSequence = '1#Target#0';
         String actualSequence = (String)outputEvents[0].get('Route');
         System.assertEquals(expectedSequence, actualSequence, 'Wrong sequence.');
         

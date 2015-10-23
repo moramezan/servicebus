@@ -2,6 +2,29 @@ public with sharing class MonitorController {
     
     public void doPing() {}
     
+    public Integer Version {get; set;}
+    {
+        Version = Integer.valueOf(BrokerSetting__c.getOrgDefaults().Version__c);
+        if (Version == null) Version = 1;
+    }
+    
+    public List<SelectOption> getSelectOptions() {
+        Set<Integer> versions = new Set<Integer>();
+        for (Step__c step : Step__c.getAll().values()) versions.add(step.Version__c.intValue());
+        
+        List<SelectOption> selectOptions = new List<SelectOption>();
+        for (Integer version : versions) selectOptions.add(new SelectOption('' + version, '' + version));
+        
+        selectOptions.sort();
+        return selectOptions;
+    }
+    
+    public void changeVersion() {
+        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
+        setting.Version__c = this.Version;
+        upsert setting;
+    }
+    
     public Boolean getIsBrokerRunning() {
         return Job.isScheduled() || Job.isRunning();
     }

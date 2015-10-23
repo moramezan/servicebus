@@ -20,9 +20,10 @@ public class Subsequence extends ApexClassModel.Service {
         
         //route any outputs to next step
         String route = (String)inputEvent.get('Route');
-        String sequence = route.substringBefore('#');
-        String position = route.substringAfter('#');
-        inputEvent.put('Route', sequence + '#' + (Integer.valueOf(position) + 1));
+        String sequence = route.substringAfter('#').substringBefore('#');
+        Integer version = Integer.valueOf(route.substringBefore('#'));
+        Integer position = Integer.valueOf(route.substringAfterLast('#'));
+        inputEvent.put('Route', version + '#' + sequence + '#' + (position + 1));
         
         Message__c message = new Message__c(
             Event__c = Json.serialize(inputEvent)
@@ -49,7 +50,7 @@ public class Subsequence extends ApexClassModel.Service {
         
         String stepConfigId = (Id)inputEvent.get('StepConfigId');
         if (stepConfigId == null) throw new SubsequenceException('Null step config id.');
-
+        
         SubsequenceConfig__c config = [
             SELECT Id, Sequence__r.Name
             FROM SubsequenceConfig__c
@@ -60,9 +61,13 @@ public class Subsequence extends ApexClassModel.Service {
         Savepoint savepoint = Database.setSavepoint();
         
         try {
+            String route = (String)inputEvent.get('Route');
+            Integer version = Integer.valueOf(route.substringBefore('#'));
+            Integer position = 0;
+            
             //he has inputs but no outputs
             Map<String,Object> clone = inputEvent.clone();
-            clone.put('Route', config.Sequence__r.Name + '#0');
+            clone.put('Route', version + '#' + config.Sequence__r.Name + '#' + position);
             this.traverse(clone);
             
         } catch (Exception e) {
