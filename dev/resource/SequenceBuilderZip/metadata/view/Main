@@ -601,7 +601,7 @@
                             "    'html': 'Help for this Service',",
                             "    'class': 'documentationlink',",
                             "    'title': 'Configure Step',",
-                            "    'href': URLFOR[$Page.ApexClassSummary] + '?id=' + apexClassId,",
+                            "    'href': URLFOR[$Page.ApexClassSummary + apexClassId],",
                             "    'target': '_blank'",
                             "});"
                         ]
