@@ -16,7 +16,7 @@
         Broker.impl().run();
         
         //act
-        List<MonitorController.Statistic> statistics = MonitorController.getStatistics();
+        List<MonitorController.Statistic> statistics = MonitorController.fetchStatistics();
         
         //assemble
         Set<Id> apexClassIds = new Map<Id,SObject>([
@@ -34,7 +34,7 @@
     }
     
     static testmethod void coverDummyData() {
-        Integer count = MonitorController.getTestStatistics().size();
+        Integer count = MonitorController.fetchTestStatistics().size();
         System.assert(count > 1);
     }
 

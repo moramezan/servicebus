@@ -1,13 +1,13 @@
-<apex:page tabStyle="Monitor__tab" sidebar="false" controller="MonitorController" title="Monitor">
+<apex:page tabStyle="Monitor__tab" sidebar="false" controller="MonitorController" title="Monitor" readOnly="true">
     <apex:pageMessages showDetail="false" />
     
-    <apex:form >
-        Version
-        <apex:selectList size="1" value="{!Version}">
-            <apex:selectOptions value="{!SelectOptions}" />
-            <apex:actionSupport event="onchange" action="{!changeVersion}" />
-        </apex:selectList>
-    </apex:form>
+    Change live system:
+    <select onchange="Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.MonitorController.ChooseVersion}', this.value, function() {});">
+        <apex:repeat value="{!RunnableVersions}" var="runnableVersion">
+            <option selected="{LiveVersion == runnableVersion}" value="{!runnableVersion}">Version {!runnableVersion}</option>
+        </apex:repeat>
+        <apex:outputPanel layout="none" rendered="{!DraftVersion != null}"><optgroup label="Version {!DraftVersion} (Draft)" /></apex:outputPanel>
+    </select>
     
     <apex:sectionHeader title="Message Queue Monitoring" help="{!URLFOR($Page.MonitorSplash)}" />
     
@@ -17,19 +17,38 @@
     <label for="realtime" title="Redraw every second for 60 seconds">Realtime</label>
     
     <!-- #803 -->
-    <apex:form style="display:inline;" id="busy">
-        <apex:actionPoller action="{!doPing}" interval="15" reRender="busy" />
-        <apex:image id="isBrokerRunning" rendered="{!IsBrokerRunning}" value="{!URLFOR('/img/loading.gif')}" style="position:relative;top:4px;left:8px;" title="Broker is running" />
-        <apex:image id="isJobsWaiting" rendered="{!IsJobsWaiting}" value="{!URLFOR('/img/apex/processing.gif')}" style="position:relative;top:4px;left:16px;" title="Jobs are pending" />
-    </apex:form>
+    <img id="isBrokerRunning" src="{!URLFOR('/img/loading.gif')}" style="display:none;position:relative;top:4px;left:8px;" title="Broker is running" />
+    <img id="hasQueueableJobs" src="{!URLFOR('/img/apex/processing.gif')}" style="display:none;position:relative;top:4px;left:16px;" title="Jobs are pending" />
     
-    <apex:chart data="{!Statistics}" width="100%" height="500" name="Stats">
+    <script>
+        (function() {
+            function drawJobs() {
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MonitorController.fetchJobs}',
+                    function(data) {
+                        var isBrokerRunning = data[0];
+                        var hasQueueableJobs = data[1];
+                        document.getElementById('isBrokerRunning').style.display = isBrokerRunning ? 'inline' : 'none';
+                        document.getElementById('hasQueueableJobs').style.display = isBrokerRunning ? 'inline' : 'none';
+                    }
+                );
+            }
+            
+            //background count every 5 seconds
+            setInterval(drawJobs, 5000);
+            
+            //start off once
+            drawJobs();
+        }());
+    </script>
+    
+    <apex:chart data="{!null}" width="100%" height="500" name="Stats">
         <apex:legend position="right" />
-        <apex:axis type="Category" position="bottom" title="Service" fields="ApexClassName">
+        <apex:axis type="Category" position="bottom" title="Step" fields="ApexClassName">
             <apex:chartLabel rotate="270" />
         </apex:axis>
-        <apex:axis type="Numeric" position="left" title="Messages" fields="Paused,Buffered,Started,Exceptions">
-            <!--<apex:chartLabel />-->
+        <apex:axis type="Numeric" position="left" fields="Paused,Buffered,Started,Exceptions">
+            <apex:chartLabel />
         </apex:axis>
         <apex:barSeries colorSet="#C00" orientation="vertical" axis="left" xField="ApexClassName" yField="Exceptions" title="Exception" />
         <apex:areaSeries colorSet="#999,#3C3,#CC3,#33C"
@@ -42,30 +61,32 @@
     </apex:chart>
     
     <script>
-        (function redraw() {
+        (function redrawStatistics() {
+            //realtime checkbox empty, look again soon
             var checkbox = document.getElementById('realtime'); //#769
-            if (!checkbox.checked) return setTimeout(redraw, 1000);
+            if (!checkbox.checked) return setTimeout(redrawStatistics, 1000);
             
+            //realtime checkbox full, draw every ~1 second
             Visualforce.remoting.Manager.invokeAction(
-                '{!$RemoteAction.MonitorController.getStatistics}', //getTestStatistics
+                '{!$RemoteAction.MonitorController.fetchStatistics}', //fetchTestStatistics
                 function(data) {
-                    var inst = window.Stats || window.{!$Setup.NamespaceSetting__c.DotPrefix__c}Stats
-                    inst.reload(data);
-                    setTimeout(redraw, 1000);
+                    {!$Setup.NamespaceSetting__c.DotPrefix__c}Stats.reload(data);
+                    setTimeout(redrawStatistics, 1000);
                 }
             );
         }());
-        
-        setInterval(function() {
-            //#769 redraw once every 15 seconds
-            Visualforce.remoting.Manager.invokeAction(
-                '{!$RemoteAction.MonitorController.getStatistics}', //getTestStatistics
-                function(data) {
-                    var inst = window.Stats || window.{!$Setup.NamespaceSetting__c.DotPrefix__c}Stats
-                    inst.reload(data);
-                }
-            );
-        }, 15000);
+    
+        (function() {
+            //background draw every 15 seconds
+            setInterval(function() {
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MonitorController.fetchStatistics}',
+                    function(data) {
+                        {!$Setup.NamespaceSetting__c.DotPrefix__c}Stats.reload(data);
+                    }
+                );
+            }, 15000);
+        }());
     </script>
     
 </apex:page>

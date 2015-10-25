@@ -9,6 +9,16 @@ public with sharing class SequenceBuilderExtension {
         this.countRoutedMessages();
     }
     
+    public Integer getDraftVersion() {
+        Decimal draftVersion = (Decimal)[
+            SELECT AVG(Version__c)
+            FROM Step__c
+            WHERE IsDraft__c = true
+        ][0].get('expr0');
+        
+        return Integer.valueOf(draftVersion);
+    }
+    
     public Integer RoutedMessages {get; set;}
     
     /**

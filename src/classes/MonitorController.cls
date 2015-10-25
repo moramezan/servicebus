@@ -1,46 +1,56 @@
 public with sharing class MonitorController {
     
-    public void doPing() {}
-    
-    public Integer Version {get; set;}
-    {
-        Version = Integer.valueOf(BrokerSetting__c.getOrgDefaults().Version__c);
-        if (Version == null) Version = 1;
+    public Integer getLiveVersion() {
+        return Integer.valueOf(BrokerSetting__c.getOrgDefaults().Version__c);
     }
     
-    public List<SelectOption> getSelectOptions() {
+    public Integer getDraftVersion() {
+        Decimal draftVersion = (Decimal)[
+            SELECT AVG(Version__c)
+            FROM Step__c
+            WHERE IsDraft__c = true
+        ][0].get('expr0');
+        
+        return Integer.valueOf(draftVersion);
+    }
+    
+    static public List<Integer> getRunnableVersions() {
         Set<Integer> versions = new Set<Integer>();
-        for (Step__c step : Step__c.getAll().values()) versions.add(step.Version__c.intValue());
+        for (Step__c step : Step__c.getAll().values()) if (!step.IsDraft__c) versions.add(step.Version__c.intValue());
         
-        List<SelectOption> selectOptions = new List<SelectOption>();
-        for (Integer version : versions) selectOptions.add(new SelectOption('' + version, '' + version));
-        
-        selectOptions.sort();
-        return selectOptions;
+        List<Integer> runnableVersions = new List<Integer>(versions);
+        runnableVersions.sort();
+        return runnableVersions;
     }
     
-    public void changeVersion() {
+    @Future static public void ChangeVersion(Integer version) {
+        if (version == null) version = 1;
         BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        setting.Version__c = this.Version;
+        setting.Version__c = version;
         upsert setting;
     }
     
-    public Boolean getIsBrokerRunning() {
-        return Job.isScheduled() || Job.isRunning();
+    @ReadOnly @RemoteAction static public void ChooseVersion(Integer version) {
+        ChangeVersion(version);
     }
     
-    public Boolean getIsJobsWaiting() {
-        //find existing jobs
-        Integer existingQueueableJobs = [
-            SELECT COUNT()
+    @ReadOnly @RemoteAction static public List<Boolean> fetchJobs() {
+        Boolean hasQueueableJobs = [
+            SELECT Id
             FROM AsyncApexJob
             WHERE ApexClass.NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
             AND ApexClass.Name = 'Job'
             AND JobType IN ('Future', 'Queueable') //#890
             AND Status IN ('Queued', 'Processing', 'Preparing')
-        ];
+            LIMIT 1
+        ].isEmpty();
         
-        return existingQueueableJobs != 0;
+        Boolean isBrokerRunning = Job.isScheduled() || Job.isRunning();
+        
+        return new List<Boolean>{
+            isBrokerRunning, //red twirly
+            hasQueueableJobs //grey twirly
+        };
     }
     
     public class Statistic {
@@ -59,7 +69,7 @@ public with sharing class MonitorController {
         public Integer Exceptions {get; set;}
     }
     
-    @RemoteAction static public List<Statistic> getTestStatistics() {
+    @ReadOnly @RemoteAction static public List<Statistic> fetchTestStatistics() {
         return new List<Statistic>{
             new Statistic(null,               1, 32,  0,  0),
             new Statistic('Branch',          1,  0,  0,  0),
@@ -75,7 +85,7 @@ public with sharing class MonitorController {
         };
     }
     
-    @RemoteAction static public List<Statistic> getStatistics() {
+    @ReadOnly @RemoteAction static public List<Statistic> fetchStatistics() {
         Map<String,Statistic> route2statistic = new Map<String,Statistic>();
         
         //initialize empty statistics for each route

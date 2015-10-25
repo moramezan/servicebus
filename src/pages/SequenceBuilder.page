@@ -2,7 +2,7 @@
     
     <apex:pageMessages showDetail="false" />
     
-    <apex:sectionHeader help="{!URLFOR($Page.SequenceHelp)}" title="{!$ObjectType.Sequence__c.Label}" subtitle="{!Sequence__c.Name}" />
+    <apex:sectionHeader help="{!URLFOR($Page.SequenceHelp)}" title="Version {!DraftVersion} (Draft)" subtitle="{!Sequence__c.Name}" />
     
     <!-- make the loading mask a little bit less harsh -->
     <style>div[id="{!$Component.pageBlockId}"] div.z-mask {background-color: rgba(204,204,204,0.6);}</style>
