@@ -1,3 +1,7 @@
+/**
+ * @obfuscation
+ * Formerly known as Heartbeat
+ */
 public class Router extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     

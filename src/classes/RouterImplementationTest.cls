@@ -1,3 +1,7 @@
+/**
+ * @obfuscation
+ * Formerly known as HeartbeatImplementationTest
+ */
 @IsTest private class RouterImplementationTest {
  
     static testMethod void callingGetInitialStampReturnsExpectedStampForIntervalOf60() {

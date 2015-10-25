@@ -1,6 +1,9 @@
 /**
  * DO NOT SCHEDULE THIS CLASS EVER
  * http://salesforce.stackexchange.com/a/24448/320
+ * 
+ * @obfuscation
+ * Formerly known as HeartbeatImplementation
  */
 public class RouterImplementation implements System.Schedulable {
     
