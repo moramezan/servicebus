@@ -1,24 +1,17 @@
 @IsTest public class StepConfigExtensionTest {
     
     static testmethod void coverCode() {
-        //arrange record
-        insert new Step__c(
-            Name = 'Test#1',
-            ApexClassName__c = Jump.class.getName()
-        );
-        
-        //arrange controller and extension
-        Step__c step = Step__c.getValues('Test#1');
+        //arrange
+        Step__c step = new Step__c(Name = '1#Test#1');
+        insert step;
         ApexPages.StandardController controller = new ApexPages.StandardController(step);
-        StepConfigExtension extension = new StepConfigExtension(controller);
         
         //act
-        PageReference redirect = extension.showConfig();
+        Test.setCurrentPage(Page.StepConfig);
+        StepConfigExtension extension = new StepConfigExtension(controller);
         
         //assert
-        Id expectedId = [SELECT Id FROM JumpConfig__c].Id;
-        Id actualId = Step__c.getValues('Test#1').ConfigId__c;
-        System.assertEquals(expectedId, actualId, 'Wrong step config id.');
+        System.assert(ApexPages.hasMessages(), 'Wrong messages.');
     }
     
 }

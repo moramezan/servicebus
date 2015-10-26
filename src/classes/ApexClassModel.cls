@@ -127,20 +127,13 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * Redirects the user to the ListView
-     * URL of the specified Service Setting
+     * Used to determine the list/tab redirect
+     * when showing the ApexClassSetting page
      */
-    public PageReference showSetting() {
+    public DescribeSObjectResult describeServiceSetting() {
         Summary summary = new Summary(this.Reflector);
         DescribeSObjectResult result = Schema.getGlobalDescribe().get(summary.ServiceSetting).getDescribe();
-        
-        if (result.isCustomSetting()) {
-            //suffix only for custom settings
-            return new PageReference('/' + result.getKeyPrefix() + '/o');
-        } else {
-            //console style only for custom objects
-            return new PageReference('/' + result.getKeyPrefix() + '?isdtp=vw');
-        }
+        return result;
     }
     
     /**

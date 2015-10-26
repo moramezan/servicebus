@@ -20,7 +20,7 @@ public with sharing class MessageRebufferExtension {
         }
         
         //success, refreshes the list view
-        return this.controller.cancel();
+        return new ApexPages.Action('{!List}').invoke();
     }
     
     public class DoDml {

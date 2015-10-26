@@ -6,18 +6,39 @@ public with sharing class ApexClassSettingExtension {
     public ApexClassSettingExtension(ApexPages.StandardController controller) {
         this.controller = controller;
         this.model = ApexClassModel.fromId(controller.getId());
-    }
-    
-    public PageReference showSetting() {
+        Map<String,String> parameters = ApexPages.CurrentPage().GetParameters();
+        
         try {
-            PageReference listview = this.model.showSetting();
-            return listview;
+            DescribeSObjectResult result = this.model.describeServiceSetting();
+            this.ServiceSetting = result.getName();
+            this.KeyPrefix = result.getKeyPrefix();
+            this.Action = result.isCustomSetting() ? 'Tab' : 'List';
+            this.Isdtp = result.isCustomSetting() ? parameters.get('isdtp') : 'vw';
             
         } catch (Exception e) {
             ApexPages.addMessages(e);
-            return null;
             
         }
     }
-
+    
+    /**
+     * Redirects the user to the tab/list view
+     * of the setting held on this service.
+     */
+    public String ServiceSetting {get; set;}
+    public String KeyPrefix {get; set;}
+    
+    /**
+     * tab suffix only for custom settings
+     * list suffix for custom objects
+     */ 
+    public String Action;
+    
+    /**
+     * normal style for custom settings
+     * console style only for custom objects
+     */
+    public String Isdtp {get; set;}
+    
+    
 }

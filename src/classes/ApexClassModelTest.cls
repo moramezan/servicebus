@@ -68,17 +68,17 @@
         System.assertEquals(1, summary.Limits, 'Wrong Limits.');
     }
     
-    static testmethod void testShowSetting() {
+    static testmethod void testDescribeServiceSummary() {
         //arrange
         ApexClassModel model = new ApexClassModel(Wiretap.class);
         
         //act
-        PageReference redirect = model.showSetting();
+        DescribeSObjectResult result = model.describeServiceSetting();
         
         //assert
-        String expectedUrl = '/' + SObjectType.WiretapSetting__c.KeyPrefix + '/o';
-        String actualUrl = redirect.getUrl();
-        System.assertEquals(expectedUrl, actualUrl, 'Wrong URL.');
+        String expectedName = WiretapSetting__c.class.getName();
+        String actualName = result.getName();
+        System.assertEquals(expectedName, actualName, 'Wrong Name.');
     }
     
     public class MissingToString {}

@@ -17,7 +17,7 @@ public with sharing class MessageResumeQueueExtension {
         }
         
         //redirect to list view - only works with "Display Checkboxes (for Multi-Record Selection)" on button
-        return this.controller.cancel();
+        return new ApexPages.Action('{!List}').invoke();
     }
     
     public class DoDml {

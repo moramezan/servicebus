@@ -1,3 +1,4 @@
-<apex:page standardController="Step__c" extensions="StepConfigExtension" action="{!showConfig}">
+<apex:page standardController="Step__c" extensions="StepConfigExtension" action="{!URLFOR($Action[StepConfig].View, Step__c.ConfigId__c, ["isdtp"=Isdtp])}">
+    <apex:outputField rendered="false" value="{!Step__c.ConfigId__c}" />
     <apex:pageMessages />
 </apex:page>

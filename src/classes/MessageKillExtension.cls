@@ -20,7 +20,7 @@ public with sharing class MessageKillExtension {
         }
         
         //success, takes them back to list view (cancel does not achieve that)
-        return new ApexPages.PageReference('/' + SObjectType.Message__c.KeyPrefix);
+        return new ApexPages.Action('{!List}').invoke();
     }
     
     public class DoDml {

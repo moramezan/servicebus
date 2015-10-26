@@ -2,15 +2,20 @@
 
     static testmethod void coverCode() {
         //arrange
-        ApexClass apexClass = [SELECT Id FROM ApexClass WHERE Name = 'ApexClassSettingExtensionTest'];
+        ApexClass apexClass = [
+            SELECT Id
+            FROM ApexClass
+            WHERE Name = 'Wiretap'
+            AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
+        ];
         
         //act
+        Test.setCurrentPage(Page.ApexClassSetting);
         ApexPages.StandardController controller = new ApexPages.StandardController(apexClass);
         ApexClassSettingExtension extension = new ApexClassSettingExtension(controller);
-        extension.showSetting();
         
         //assert
-        System.assert(ApexPages.hasMessages(), 'Wrong messages.');
+        System.assert(!ApexPages.hasMessages(), 'Wrong messages.');
     }
 
 }

@@ -174,20 +174,13 @@ public class StepModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * Redirects the user to the detail view
-     * of the config record held on this step.
+     * Used to determine the list/tab redirect
+     * when showing the StepConfig page
      */
-    public PageReference showConfig() {
+    public DescribeSObjectResult describeStepConfig() {
         Id configId = this.Step.ConfigId__c;
-        SObject config = configId.getSObjectType().newSObject(configId);
-        PageReference view = new ApexPages.StandardController(config).view();
-        
-        if (!configId.getSObjectType().getDescribe().isCustomSetting()) {
-            //console style only for custom objects
-            view.getParameters().put('isdtp', 'vw');
-        }
-        
-        return view;
+        DescribeSObjectResult result = configId.getSObjectType().getDescribe();
+        return result;
     }
     
     /**
