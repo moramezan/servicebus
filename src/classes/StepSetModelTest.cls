@@ -11,7 +11,7 @@
             Position__c = 1.0
         );
         
-        step.SequenceName__c = 'Test';
+        step.Sequence__c = 'Test';
         insert step;
         
         //arrange model

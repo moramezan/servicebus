@@ -16,7 +16,7 @@ public with sharing class SequenceBuilderExtension {
             SELECT Id
             FROM Step__c
             WHERE IsDraft__c = true
-            AND SequenceName__c = :(String)this.model.getRecord().get('Name')
+            AND Sequence__c = :(String)this.model.getRecord().get('Name')
             ORDER BY Position__c ASC
         ]) stepIds.add(step.Id);
         
@@ -30,7 +30,7 @@ public with sharing class SequenceBuilderExtension {
             SELECT ApexClassId__c
             FROM Step__c
             WHERE IsDraft__c = true
-            AND SequenceName__c = :(String)this.model.getRecord().get('Name')
+            AND Sequence__c = :(String)this.model.getRecord().get('Name')
             ORDER BY Position__c ASC
         ]) apexClassIds.add(step.ApexClassId__c);
         
@@ -184,7 +184,7 @@ public with sharing class SequenceBuilderExtension {
             List<Step__c> steps = [
                 SELECT Id, Name, ApexClassName__c
                 FROM Step__c
-                WHERE SequenceName__c = :sequence.Name
+                WHERE Sequence__c = :sequence.Name
                 ORDER BY Position__c ASC
             ];
             
@@ -252,7 +252,7 @@ public with sharing class SequenceBuilderExtension {
             List<Step__c> steps = [
                 SELECT Id, Name, ApexClassName__c, ConfigId__c
                 FROM Step__c
-                WHERE SequenceName__c = :sequence.Name
+                WHERE Sequence__c = :sequence.Name
                 ORDER BY Position__c ASC
             ];
             
@@ -269,11 +269,11 @@ public with sharing class SequenceBuilderExtension {
                 Id publishConfigId = (Id) step.ConfigId__c; // cast from string to Id
                 
                 PublishConfig__c publishConfig;
-                Id eventTypeId;
+                String eventType;
                 publishConfig = (PublishConfig__c)publishConfigIdToPublishConfig.get(publishConfigId);
-                eventTypeId = publishConfig.EventType__c;
+                eventType = publishConfig.EventType__c;
                 
-                if (eventTypeId == null) {
+                if (eventType == null) {
                     ApexPages.addMessage(new ApexPages.Message(
                         ApexPages.Severity.WARNING,
                         'No event type has been configured on ' + publishConfigId
@@ -283,7 +283,7 @@ public with sharing class SequenceBuilderExtension {
                 
                 Boolean subscriberFound = false;
                 for (SubscribeConfig__c SubscribeConfig : SubscribeConfigs) {
-                    if (SubscribeConfig.EventType__c == eventTypeId) {
+                    if (SubscribeConfig.EventType__c == eventType) {
                         subscriberFound = true;
                     }
                 }
@@ -325,7 +325,7 @@ public with sharing class SequenceBuilderExtension {
             List<Step__c> steps = [
                 SELECT Id, Name, ApexClassName__c, ConfigId__c
                 FROM Step__c
-                WHERE SequenceName__c = :sequence.Name
+                WHERE Sequence__c = :sequence.Name
                 ORDER BY Position__c ASC
             ];
             

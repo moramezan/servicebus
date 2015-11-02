@@ -20,7 +20,7 @@
         insert target;
         SequenceModel.fromName(target.Name).appendStep(Terminate.class);
         
-        JumpConfig__c config = new JumpConfig__c(Sequence__c = target.Id);
+        JumpConfig__c config = new JumpConfig__c(Name = target.Id, Sequence__c = 'Target');
         insert config;
         
         Sequence__c origin = new Sequence__c(Name = 'Origin');
@@ -64,7 +64,7 @@
         Step__c step = SequenceModel.fromId(origin.Id).appendStep(Jump.class);
         Id stepConfigId = new StepModel(step).upsertConfig();
         
-        JumpConfig__c stepConfig = new JumpConfig__c(Id = stepConfigId, Sequence__c = target.Id);
+        JumpConfig__c stepConfig = new JumpConfig__c(Id = stepConfigId, Sequence__c = 'Target');
         update stepConfig;
         
         //arrange input event

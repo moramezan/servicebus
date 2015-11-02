@@ -23,7 +23,7 @@
         //prepare config in db
         SubsequenceConfig__c config = new SubsequenceConfig__c(
             Id = originStep.ConfigId__c,
-            Sequence__c = target.Id
+            Sequence__c = 'Target'
         );
         update config;
         
@@ -74,8 +74,8 @@
         Id configId1 = new StepModel(step1).upsertConfig();
         Id configId2 = new StepModel(step2).upsertConfig();
         
-        update new SubsequenceConfig__c(Id = configId1, Sequence__c = routine.Id);
-        update new SubsequenceConfig__c(Id = configId2, Sequence__c = routine.Id);
+        update new SubsequenceConfig__c(Id = configId1, Sequence__c = 'Routine');
+        update new SubsequenceConfig__c(Id = configId2, Sequence__c = 'Routine');
         
         //act (enqueue)
         Test.startTest();
@@ -152,7 +152,7 @@
         
         //arrange config
         Id configId = new StepModel(step).upsertConfig();
-        update new SubsequenceConfig__c(Id = configId, Sequence__c = routine.Id);
+        update new SubsequenceConfig__c(Id = configId, Sequence__c = 'Routine');
         
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>{
@@ -209,7 +209,7 @@
         
         //arrange config
         Id configId = new StepModel(step).upsertConfig();
-        update new SubsequenceConfig__c(Id = configId, Sequence__c = routine.Id);
+        update new SubsequenceConfig__c(Id = configId, Sequence__c = 'Routine');
         
         //arrange input
         Map<String,Object> event = new Map<String,Object>{

@@ -72,7 +72,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>SequenceName__c</fullName>
+        <fullName>Sequence__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>What sequence does this step belong to?</inlineHelpText>
         <label>Sequence Name</label>

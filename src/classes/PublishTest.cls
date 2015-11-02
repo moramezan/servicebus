@@ -11,12 +11,9 @@
     }
     
    static testmethod void withinSystemLimits() {
-        //arrange event
-        EventType__c eventType = new EventType__c(Name = 'Test');
-        insert eventType;
         
         //arrange publisher config
-        PublishConfig__c pubConfig = new PublishConfig__c(EventType__c = eventType.Id);
+        PublishConfig__c pubConfig = new PublishConfig__c(Name = UserInfo.getUserId(), EventType__c = 'Test');
         insert pubConfig;
         
         //arrange subscriber 1 sequence, step, config
@@ -26,7 +23,7 @@
         Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(Subscribe.class);
         Id sub1configId = new StepModel(sub1step).upsertConfig();
         
-        SubscribeConfig__c sub1config = new SubscribeConfig__c(Id = sub1configId, EventType__c = eventType.Id);
+        SubscribeConfig__c sub1config = new SubscribeConfig__c(Id = sub1configId, EventType__c = 'Test');
         update sub1config;
         
         //arrange subscriber 2 sequence, step, config
@@ -36,11 +33,12 @@
         Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(Subscribe.class);
         Id sub2configId = new StepModel(sub2step).upsertConfig();
         
-        SubscribeConfig__c sub2config = new SubscribeConfig__c(Id = sub2configId, EventType__c = eventType.Id);
+        SubscribeConfig__c sub2config = new SubscribeConfig__c(Id = sub2configId, EventType__c = 'Test');
         update sub2config;
         
         //arrange input
         Map<String,Object> inputEvent = new Map<String,Object>{
+            'Route' => '1#Route#1',
             'StepConfigId' => pubConfig.Id
         };
         
@@ -82,16 +80,14 @@
     }
     
     static testmethod void testNoSubscribersStillReturnsOneMessage() {
-        //arrange event
-        EventType__c eventType = new EventType__c(Name = 'Test');
-        insert eventType;
         
         //arrange publisher config
-        PublishConfig__c pubConfig = new PublishConfig__c(EventType__c = eventType.Id);
+        PublishConfig__c pubConfig = new PublishConfig__c(Name = UserInfo.getUserId(), EventType__c = 'Test');
         insert pubConfig;
         
         //arrange input
         Map<String,Object> inputEvent = new Map<String,Object>{
+            'Route' => '1#Test#1',
             'StepConfigId' => pubConfig.Id
         };
         
@@ -106,12 +102,9 @@
     }
     
     static testmethod void testSubscribersAffectOutputEventsReturned() {
-        //arrange event
-        EventType__c eventType = new EventType__c(Name = 'Test');
-        insert eventType;
         
         //arrange publish config
-        PublishConfig__c pubConfig = new PublishConfig__c(EventType__c = eventType.Id);
+        PublishConfig__c pubConfig = new PublishConfig__c(Name = UserInfo.getUserId(), EventType__c = 'Test');
         insert pubConfig;
         
         //arrange subscriber 1 sequence, step, config
@@ -121,7 +114,7 @@
         Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(Subscribe.class);
         Id sub1configId = new StepModel(sub1step).upsertConfig();
         
-        SubscribeConfig__c sub1config = new SubscribeConfig__c(Id = sub1configId, EventType__c = eventType.Id);
+        SubscribeConfig__c sub1config = new SubscribeConfig__c(Id = sub1configId, EventType__c = 'Test');
         update sub1config;
         
         //arrange subscriber 2 sequence, step, config
@@ -131,11 +124,12 @@
         Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(Subscribe.class);
         Id sub2configId = new StepModel(sub2step).upsertConfig();
         
-        SubscribeConfig__c sub2config = new SubscribeConfig__c(Id = sub2configId, EventType__c = eventType.Id);
+        SubscribeConfig__c sub2config = new SubscribeConfig__c(Id = sub2configId, EventType__c = 'Test');
         update sub2config;
         
         //arrange input
         Map<String,Object> inputEvent = new Map<String,Object>{
+            'Route' => '1#Test#1',
             'StepConfigId' => pubConfig.Id
         };
         
@@ -152,7 +146,7 @@
         Map<String,Object> outputEvent = outputEvents[0];
         
         //assert
-        String expectedSequence = 'Subscriber1#0';
+        String expectedSequence = '1#Subscriber1#0';
         String actualSequence = (String)outputEvent.get('Route');
         System.assertEquals(expectedSequence, actualSequence, 'Wrong sequence.');
     }

@@ -70,10 +70,8 @@
         <members>RouterImplementation</members>
         <members>RouterImplementationTest</members>
         <members>RouterTest</members>
-        <members>Schedule</members>
-        <members>ScheduleConfigSetModel</members>
-        <members>ScheduleConfigSetModelTest</members>
-        <members>ScheduleTest</members>
+        <members>ScheduleDaily</members>
+        <members>ScheduleDailyTest</members>
         <members>SequenceBuilderExtension</members>
         <members>SequenceBuilderExtensionTest</members>
         <members>SequenceCheckoutExtension</members>
@@ -107,11 +105,8 @@
         <members>ApexClassSplash</members>
         <members>ApexClassSummary</members>
         <members>ApexClassTab</members>
-        <members>BranchConfigHelp</members>
         <members>Configure</members>
         <members>ContextSensitiveHelp</members>
-        <members>EventTypeHelp</members>
-        <members>JumpConfigHelp</members>
         <members>MessageApexClass</members>
         <members>MessageHelp</members>
         <members>MessageKill</members>
@@ -123,9 +118,6 @@
         <members>Monitor</members>
         <members>MonitorSplash</members>
         <members>PostInstallInstructions</members>
-        <members>PublishConfigHelp</members>
-        <members>PublishConfigManageEventTypes</members>
-        <members>ScheduleConfigHelp</members>
         <members>SequenceBuilder</members>
         <members>SequenceCheckout</members>
         <members>SequenceCommit</members>
@@ -133,20 +125,11 @@
         <members>SequenceHelp</members>
         <members>SequenceSplash</members>
         <members>StepConfig</members>
-        <members>SubscribeConfigHelp</members>
-        <members>SubscribeConfigManageEventTypes</members>
-        <members>SubsequenceConfigHelp</members>
         <name>ApexPage</name>
     </types>
     <types>
-        <members>BranchConfigTriggers</members>
-        <members>JumpConfigTriggers</members>
         <members>MessageTriggers</members>
-        <members>PublishConfigTriggers</members>
-        <members>ScheduleConfigTriggers</members>
         <members>SequenceTriggers</members>
-        <members>SubscribeConfigTriggers</members>
-        <members>SubsequenceConfigTriggers</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -178,17 +161,38 @@
         <members>OAuthSetting__c.RunningUserId__c</members>
         <members>OAuthSetting__c.UnprefixedOrgId__c</members>
         <members>PublishConfig__c.EventType__c</members>
-        <members>ScheduleConfig__c.Frequency__c</members>
-        <members>ScheduleConfig__c.FriendlyDates__c</members>
-        <members>ScheduleConfig__c.FriendlyTimes__c</members>
-        <members>ScheduleConfig__c.IsActive__c</members>
+        <members>ScheduleDailyConfig__c.IsActive__c</members>
+        <members>ScheduleDailyConfig__c.T0000__c</members>
+        <members>ScheduleDailyConfig__c.T0100__c</members>
+        <members>ScheduleDailyConfig__c.T0200__c</members>
+        <members>ScheduleDailyConfig__c.T0300__c</members>
+        <members>ScheduleDailyConfig__c.T0400__c</members>
+        <members>ScheduleDailyConfig__c.T0500__c</members>
+        <members>ScheduleDailyConfig__c.T0600__c</members>
+        <members>ScheduleDailyConfig__c.T0700__c</members>
+        <members>ScheduleDailyConfig__c.T0800__c</members>
+        <members>ScheduleDailyConfig__c.T0900__c</members>
+        <members>ScheduleDailyConfig__c.T1000__c</members>
+        <members>ScheduleDailyConfig__c.T1100__c</members>
+        <members>ScheduleDailyConfig__c.T1200__c</members>
+        <members>ScheduleDailyConfig__c.T1300__c</members>
+        <members>ScheduleDailyConfig__c.T1400__c</members>
+        <members>ScheduleDailyConfig__c.T1500__c</members>
+        <members>ScheduleDailyConfig__c.T1600__c</members>
+        <members>ScheduleDailyConfig__c.T1700__c</members>
+        <members>ScheduleDailyConfig__c.T1800__c</members>
+        <members>ScheduleDailyConfig__c.T1900__c</members>
+        <members>ScheduleDailyConfig__c.T2000__c</members>
+        <members>ScheduleDailyConfig__c.T2100__c</members>
+        <members>ScheduleDailyConfig__c.T2200__c</members>
+        <members>ScheduleDailyConfig__c.T2300__c</members>
         <members>Step__c.ApexClassId__c</members>
         <members>Step__c.ApexClassName__c</members>
         <members>Step__c.ConfigId__c</members>
         <members>Step__c.ConfigName__c</members>
         <members>Step__c.IsDraft__c</members>
         <members>Step__c.Position__c</members>
-        <members>Step__c.SequenceName__c</members>
+        <members>Step__c.Sequence__c</members>
         <members>Step__c.Version__c</members>
         <members>SubscribeConfig__c.EventType__c</members>
         <members>SubsequenceConfig__c.Sequence__c</members>
@@ -198,13 +202,12 @@
     <types>
         <members>BranchConfig__c</members>
         <members>BrokerSetting__c</members>
-        <members>EventType__c</members>
         <members>JumpConfig__c</members>
         <members>Message__c</members>
         <members>NamespaceSetting__c</members>
         <members>OAuthSetting__c</members>
         <members>PublishConfig__c</members>
-        <members>ScheduleConfig__c</members>
+        <members>ScheduleDailyConfig__c</members>
         <members>Sequence__c</members>
         <members>Step__c</members>
         <members>SubscribeConfig__c</members>
@@ -233,16 +236,8 @@
         <name>Document</name>
     </types>
     <types>
-        <members>BranchConfig__c-Branch Config Layout</members>
-        <members>EventType__c-Event Type Layout</members>
-        <members>JumpConfig__c-Jump Config Layout</members>
         <members>Message__c-Message Layout</members>
-        <members>PublishConfig__c-Publish Config Layout</members>
-        <members>ScheduleConfig__c-Schedule Config Layout</members>
         <members>Sequence__c-Sequence Layout</members>
-        <members>Step__c-Step Layout</members>
-        <members>SubscribeConfig__c-Subscribe Config Layout</members>
-        <members>SubsequenceConfig__c-Subsequence Config Layout</members>
         <name>Layout</name>
     </types>
     <types>
@@ -263,8 +258,6 @@
         <name>StaticResource</name>
     </types>
     <types>
-        <members>ScheduleConfig__c.RequireFriendlyDates</members>
-        <members>ScheduleConfig__c.RequireFriendlyTimes</members>
         <members>Sequence__c.FixedName</members>
         <members>Sequence__c.UniqueName</members>
         <name>ValidationRule</name>
@@ -277,11 +270,9 @@
         <members>Message__c.RecordData</members>
         <members>Message__c.Restart</members>
         <members>Message__c.ResumeQueue</members>
-        <members>PublishConfig__c.ManageEventTypes</members>
         <members>Sequence__c.Checkout</members>
         <members>Sequence__c.Commit</members>
         <members>Sequence__c.Discard</members>
-        <members>SubscribeConfig__c.ManageEventTypes</members>
         <name>WebLink</name>
     </types>
     <uninstallClass>PostUninstallHandler</uninstallClass>

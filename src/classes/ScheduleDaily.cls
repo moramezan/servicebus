@@ -1,13 +1,13 @@
-public class Schedule extends ApexClassModel.Service {
+public class ScheduleDaily extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
     public class Summary {
         String Tag = 'Service Bus';
-        String Label = 'Schedule';
-        String Description = 'Releases a scheduled heartbeat message'; //Swallows regular un-scheduled heartbeat messages
+        String Label = 'Schedule (Daily)';
+        String Description = 'Emits an event on a configurable hourly basis.'; //Swallows regular un-scheduled heartbeat messages
         String Icon = 'clock';
-        String StepConfig = ScheduleConfig__c.class.getName();
-        String HelpUrl = Page.ScheduleConfigHelp.getUrl();
+        String StepConfig = ScheduleDailyConfig__c.class.getName();
+        //String HelpUrl = Page.ScheduleConfigHelp.getUrl();
         Boolean ConsumesHeartbeat = true;
         Integer Limits = 100; //could be higher but lets be reasonable
         Map<String,String> Inputs = new Map<String,String>{
@@ -21,7 +21,7 @@ public class Schedule extends ApexClassModel.Service {
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
         String recordId = (String)inputEvent.get('RecordId');
-        if (recordId == null) throw new ScheduleException('Null record id.');
+        //if (recordId == null) throw new ScheduleException('Null record id.'); //TODO (schedule does not necessarily contain heartbeat)
         
         Id stepConfigId = (String)inputEvent.get('StepConfigId');
         if (stepConfigId == null) throw new ScheduleException('Null step config id.');
@@ -29,17 +29,19 @@ public class Schedule extends ApexClassModel.Service {
         String stampAsString = (String)inputEvent.get('EntryPointTimestamp');
         if (stampAsString == null) throw new ScheduleException('Null entry point timestamp.');
         
-        Boolean wasHeartbeat = recordId.startsWith('08e'); //#810
+        Boolean wasHeartbeat = false;
+        if (recordId != null) wasHeartbeat = recordId.startsWith('08e'); //#810
 
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
     
         if (wasHeartbeat == true) {
             
-            ScheduleConfig__c config = [
+            ScheduleDailyConfig__c config = (ScheduleDailyConfig__c)ApexDomain.getById(stepConfigId); //TODO
+            /*ScheduleDailyConfig__c config = [
                 SELECT IsActive__c, Frequency__c, FriendlyDates__c, FriendlyTimes__c
-                FROM ScheduleConfig__c
+                FROM ScheduleDailyConfig__c
                 WHERE Id = :stepConfigId
-            ];
+            ];*/
             
             if (config.IsActive__c != true) {
                 //just swallow if not active
@@ -58,7 +60,7 @@ public class Schedule extends ApexClassModel.Service {
         return outputEvents;
     }
 
-    @TestVisible static private Boolean isWithinWindow(String stampAsString, ScheduleConfig__c config) {
+    @TestVisible static private Boolean isWithinWindow(String stampAsString, ScheduleDailyConfig__c config) {
         DateTime stampAsDateTime;
         try {
            stampAsString =  getISO8601(stampAsString);
@@ -71,14 +73,46 @@ public class Schedule extends ApexClassModel.Service {
         Set<String> details;
         Set<String> runTimes;
         try {
-            frequency = config.Frequency__c;
-            details = new Set<String>(config.FriendlyDates__c.split(';'));
-            runTimes = new Set<String>(config.FriendlyTimes__c.split(';'));
+            frequency = 'Daily'; //TODO
+            //frequency = config.Frequency__c;
+            
+            details = new Set<String>(); //TODO
+            //details = new Set<String>(config.FriendlyDates__c.split(';'));
+            
+            runTimes = new Set<String>(); //TODO
+            if (config.T0000__c) runTimes.add('00:00');
+            if (config.T0100__c) runTimes.add('01:00');
+            if (config.T0200__c) runTimes.add('02:00');
+            if (config.T0300__c) runTimes.add('03:00');
+            if (config.T0400__c) runTimes.add('04:00');
+            if (config.T0500__c) runTimes.add('05:00');
+            if (config.T0600__c) runTimes.add('06:00');
+            if (config.T0700__c) runTimes.add('07:00');
+            if (config.T0800__c) runTimes.add('08:00');
+            if (config.T0900__c) runTimes.add('09:00');
+            if (config.T1000__c) runTimes.add('10:00');
+            if (config.T1100__c) runTimes.add('11:00');
+            if (config.T1200__c) runTimes.add('12:00');
+            if (config.T1300__c) runTimes.add('13:00');
+            if (config.T1400__c) runTimes.add('14:00');
+            if (config.T1500__c) runTimes.add('15:00');
+            if (config.T1600__c) runTimes.add('16:00');
+            if (config.T1700__c) runTimes.add('17:00');
+            if (config.T1800__c) runTimes.add('18:00');
+            if (config.T1900__c) runTimes.add('19:00');
+            if (config.T2000__c) runTimes.add('20:00');
+            if (config.T2100__c) runTimes.add('21:00');
+            if (config.T2200__c) runTimes.add('22:00');
+            if (config.T2300__c) runTimes.add('23:00');
+            //runTimes = new Set<String>(config.FriendlyTimes__c.split(';'));
         } catch (Exception e) {
-            throw new ScheduleException('Problem extracting frequency (' + config.Frequency__c + ') / dates (' + config.FriendlyDates__c + ') / times (' + config.FriendlyTimes__c + ')', e);
+            throw new ScheduleException('Problem extracting times (' + config + ')');
+            //throw new ScheduleException('Problem extracting frequency (' + config.Frequency__c + ') / dates (' + config.FriendlyDates__c + ') / times (' + config.FriendlyTimes__c + ')', e);
         }
-
-        if (!isTimeMatch(stampAsString, runTimes)) {
+        
+        return isTimeMatch(stampAsString, runTimes);
+        
+        /*if (!isTimeMatch(stampAsString, runTimes)) {
             return false;
         } else {
             if (frequency == 'Daily') {
@@ -94,9 +128,7 @@ public class Schedule extends ApexClassModel.Service {
                     return true;
                 }
             }
-        }
-
-        return false;
+        }*/
     }
     
     @TestVisible static private Boolean isWithinWeeklyWindow(DateTime stampAsDateTime, Set<String> details) {

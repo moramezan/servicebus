@@ -1,3 +1,0 @@
-<apex:page action="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='ServiceBranchJumpSubsequence'])}">
-    <apex:pageMessages showDetail="false" />
-</apex:page>

@@ -57,16 +57,14 @@
         Step__c step = new Step__c(Name = 'Test#1', ConfigId__c = '015000000000000AAA');
         insert step;
         
-        //arrange
-        StepModel model = StepModel.fromId(step.Id);
-        
         //act
-        DescribeSObjectResult result = model.describeStepConfig();
+        StepModel model = StepModel.fromId(step.Id);
+        PageReference view = model.showConfig();
         
         //assert
-        String expectedName = Document.class.getName();
-        String actualName = result.getName();
-        System.assertEquals(expectedName, actualName, 'Wrong Name.');
+        String expectedUrl = '/015000000000000?isdtp=vw';
+        String actualUrl = view.getUrl();
+        System.assertEquals(expectedUrl, actualUrl, 'Wrong url.');
     }
     
     static testmethod void testPersistConfigNameOnStep() {

@@ -1,3 +1,0 @@
-<apex:page standardController="PublishConfig__c" action="/{!URLFOR($ObjectType.EventType__c)}">
-    <apex:pageMessages showDetail="false" />
-</apex:page>

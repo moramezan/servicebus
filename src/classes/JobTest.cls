@@ -174,7 +174,7 @@
         Document document = new Document(Name = 'Config', FolderId = UserInfo.getUserId());
         insert document;
         
-        Step__c step = new Step__c(Name = 'Test#1', SequenceName__c = 'Test', ConfigId__c = document.Id);
+        Step__c step = new Step__c(Name = 'Test#1', Sequence__c = 'Test', ConfigId__c = document.Id);
         insert step;
         
         //act

@@ -4,7 +4,7 @@ public class Publish extends ApexClassModel.Service {
     public class Summary {
         String Tag = 'Service Bus';
         String Label = 'Publish';
-        String Description = 'Broadcasts the message to other sequences via a named Event Type.';
+        String Description = 'Broadcasts named events to other subscribed sequences.';
         String StepConfig = PublishConfig__c.class.getName();
         String Icon = 'chart_organisation';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServicePublishSubscribe').getUrl();
@@ -19,30 +19,37 @@ public class Publish extends ApexClassModel.Service {
         String stepConfigId = (Id)inputEvent.get('StepConfigId');
         if (stepConfigId == null) throw new PublishException('Null step config id.');
         
+        String route = (String)inputEvent.get('Route');
+        if (route == null) throw new PublishException('Null route.');
+        
         PublishConfig__c publishConfig = [
             SELECT EventType__c
             FROM PublishConfig__c
             WHERE Id = :stepConfigId
         ];
         
-        Id eventTypeId = publishConfig.EventType__c;
-        if (eventTypeId == null) throw new PublishException('No event type.');
+        String eventType = publishConfig.EventType__c;
+        if (eventType == null) throw new PublishException('No event type.');
         
         List<SubscribeConfig__c> subscribeConfigs = [
             SELECT Id
             FROM SubscribeConfig__c
-            WHERE EventType__c = :eventTypeId
+            WHERE EventType__c = :eventType
         ];
         
+        Integer version = Integer.valueOf(route.substringBefore('#'));
+        Integer position = 0;
+        
         List<Step__c> steps = [
-            SELECT SequenceName__c
+            SELECT Sequence__c
             FROM Step__c
             WHERE ConfigId__c IN :new Map<Id,SObject>(subscribeConfigs).keySet()
+            AND Version__c = :version
         ];
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         for (Step__c step : steps) outputEvents.add(new Map<String,Object>{
-            'Route' => step.SequenceName__c + '#0' //#1024 zero not one
+            'Route' => version + '#' + step.Sequence__c + '#0' //#1024 zero not one
         });
         
         //original guy carries on... this does not inadvertently Terminate

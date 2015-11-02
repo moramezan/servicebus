@@ -4,7 +4,7 @@ public class Jump extends ApexClassModel.Service {
     public class Summary {
         String Tag = 'Service Bus';
         String Label = 'Jump';
-        String Description = 'Permanently diverts the message to another sequence, never to return.';
+        String Description = 'Diverts the event to another sequence, never to return.';
         String StepConfig = JumpConfig__c.class.getName();
         String Icon = 'arrow_switch';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceBranchJumpSubsequence').getUrl();
@@ -20,7 +20,7 @@ public class Jump extends ApexClassModel.Service {
         if (stepConfigId == null) throw new JumpException('Null step config id.');
         
         JumpConfig__c config = [
-            SELECT Id, Sequence__r.Name
+            SELECT Id, Sequence__c
             FROM JumpConfig__c
             WHERE Id = :stepConfigId
         ];
@@ -31,7 +31,7 @@ public class Jump extends ApexClassModel.Service {
         Step__c step = Step__c.getValues(route);
         if (step == null) throw new JumpException('Null step.');
         
-        if (step.SequenceName__c == config.Sequence__r.Name) {
+        if (step.Sequence__c == config.Sequence__c) {
             //prevent recursion
             throw new JumpException('Not allowed to jump to own sequence.');
         }
@@ -40,7 +40,7 @@ public class Jump extends ApexClassModel.Service {
         Integer position = 0;
         
         Map<String,Object> outputEvent = new Map<String,Object>{
-            'Route' => version + '#' + config.Sequence__r.Name + '#' + position
+            'Route' => version + '#' + config.Sequence__c + '#' + position
         };
         
         return new List<Map<String,Object>>{outputEvent};

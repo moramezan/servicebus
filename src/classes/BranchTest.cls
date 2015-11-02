@@ -26,7 +26,7 @@
         Step__c step = SequenceModel.fromId(origin.Id).appendStep(Branch.class);
         Id stepConfigId = new StepModel(step).upsertConfig();
         
-        BranchConfig__c stepConfig = new BranchConfig__c(Id = stepConfigId, Sequence__c = target.Id);
+        BranchConfig__c stepConfig = new BranchConfig__c(Id = stepConfigId, Sequence__c = 'Target');
         update stepConfig;
         
         //arrange input event
@@ -63,7 +63,7 @@
         Step__c step = SequenceModel.fromId(origin.Id).appendStep(Branch.class);
         Id stepConfigId = new StepModel(step).upsertConfig();
         
-        BranchConfig__c stepConfig = new BranchConfig__c(Id = stepConfigId, Sequence__c = target.Id);
+        BranchConfig__c stepConfig = new BranchConfig__c(Id = stepConfigId, Sequence__c = 'Target');
         update stepConfig;
         
         //arrange input event
@@ -104,7 +104,7 @@
         insert sequence;
         
         //arrange config
-        BranchConfig__c config = new BranchConfig__c(Sequence__c = sequence.Id);
+        BranchConfig__c config = new BranchConfig__c(Name = sequence.Id, Sequence__c = 'Origin');
         insert config;
         
         //arrange event

@@ -42,7 +42,7 @@
         Step__c actualStep = SequenceModel.fromName(soSequence.Name).appendStep(Subscribe.class);
         
         // assemble
-        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
+        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
         // SObject soStep = actualStep.getRecord();
         String actualServiceName;
@@ -73,7 +73,7 @@
         sequence.terminateIfNeeded();
         
         // assemble
-        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
+        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
         String actualServiceName;
         Integer actualPosition;
@@ -104,7 +104,7 @@
         sequence.terminateIfNeeded(); // and again!
         
         // assemble
-        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE SequenceName__c = :soSequence.Name];
+        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
         String actualServiceName;
         Integer actualPosition;

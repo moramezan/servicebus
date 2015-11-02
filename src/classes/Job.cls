@@ -207,7 +207,7 @@ global class Job implements Process.Plugin, system.Queueable {
         
         //#999 allow third-parties to "enqueue to config"
         Map<String,String> config2sequence = new Map<String,String>();
-        for (Step__c step : Step__c.getAll().values()) config2sequence.put(step.ConfigId__c, step.SequenceName__c);
+        for (Step__c step : Step__c.getAll().values()) config2sequence.put(step.ConfigId__c, step.Sequence__c);
         
         for (Map<String,Object> input : inputEvents) {
             

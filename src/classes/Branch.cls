@@ -7,7 +7,7 @@ public class Branch extends ApexClassModel.Service {
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceBranchJumpSubsequence').getUrl();
         String Tag = 'Service Bus';
         String Label = 'Branch';
-        String Description = 'Copies the message to another sequence.';
+        String Description = 'Copies the event to another sequence.';
         Integer Limits = 50; //max sync limit
         String Cardinality = 'One';
     }
@@ -20,7 +20,7 @@ public class Branch extends ApexClassModel.Service {
         if (stepConfigId == null) throw new BranchException('Null step config id.');
         
         BranchConfig__c config = [
-            SELECT Id, Sequence__r.Name
+            SELECT Id, Sequence__c
             FROM BranchConfig__c
             WHERE Id = :stepConfigId
         ];
@@ -31,7 +31,7 @@ public class Branch extends ApexClassModel.Service {
         Step__c step = Step__c.getValues(route);
         if (step == null) throw new BranchException('Null step.');
         
-        if (step.SequenceName__c == config.Sequence__r.Name) {
+        if (step.Sequence__c == config.Sequence__c) {
             //prevent recursion
             throw new BranchException('Not allowed to branch to own sequence!');
         }
@@ -40,7 +40,7 @@ public class Branch extends ApexClassModel.Service {
         Integer position = 0;
         
         Map<String,Object> outputEvent = new Map<String,Object>{
-            'Route' => version + '#' + config.Sequence__r.Name + '#' + position
+            'Route' => version + '#' + config.Sequence__c + '#' + position
         };
         
         //original guy carries on... this does not inadvertently Terminate

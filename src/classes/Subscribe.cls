@@ -4,7 +4,7 @@ public class Subscribe extends ApexClassModel.Service {
     public class Summary {
         String Tag = 'Service Bus';
         String Label = 'Subscribe';
-        String Description = 'Listens for messages via a named Event Type.';
+        String Description = 'Listens for named events published by other sequences.';
         String StepConfig = SubscribeConfig__c.class.getName();
         String Icon = 'eye';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServicePublishSubscribe').getUrl();

@@ -107,7 +107,7 @@ abstract public without sharing class Broker {
             ];
             
         } catch (Exception e) {
-            throw new PanicException('Locate panic: ' + e.getMessage(), e);
+            throw new PanicException('Locate panic: ' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
         }
     }
     
@@ -123,7 +123,7 @@ abstract public without sharing class Broker {
             //#1038 avoid playing with list by reference, hope to avoid memory leak
             
         } catch (Exception e) {
-            throw new PanicException('Mark panic: ' + e.getMessage(), e);
+            throw new PanicException('Mark panic: ' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
         }
     }
     
@@ -197,7 +197,7 @@ abstract public without sharing class Broker {
             }
             
         } catch (Exception e) {
-            throw new PanicException('Execute panic:' + e.getMessage(), e);
+            throw new PanicException('Execute panic:' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
         }
     }
 
@@ -259,7 +259,7 @@ abstract public without sharing class Broker {
             MessageSetModel.Inhibit = true;
             
         } catch (Exception e) {
-            throw new PanicException('Persist panic: ' + e.getMessage(), e);
+            throw new PanicException('Persist panic: ' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
         }
     }
     

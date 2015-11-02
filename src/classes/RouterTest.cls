@@ -9,7 +9,7 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(Schedule.class);
+        Step__c scheduleStep = SequenceModel.fromName(sequence.Name).appendStep(ScheduleDaily.class);
         
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>{
@@ -60,8 +60,8 @@
         insert interestedSequenceB;
 
         //arrange steps
-        Step__c stepA = SequenceModel.fromName(interestedSequenceA.Name).appendStep(Schedule.class);
-        Step__c stepB = SequenceModel.fromName(interestedSequenceB.Name).appendStep(Schedule.class);
+        Step__c stepA = SequenceModel.fromName(interestedSequenceA.Name).appendStep(ScheduleDaily.class);
+        Step__c stepB = SequenceModel.fromName(interestedSequenceB.Name).appendStep(ScheduleDaily.class);
         
         //arrange events
         String stampAsString = '2014-01-18T12:00:00.000Z';

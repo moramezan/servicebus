@@ -49,7 +49,7 @@ public class StepModel extends ApexDomain.StandardModel {
                 FROM Step__c
                 WHERE IsDraft__c = true
                 AND Version__c = :this.step.Version__c
-                AND SequenceName__c = :this.step.SequenceName__c
+                AND Sequence__c = :this.step.Sequence__c
                 AND Name != :this.step.Name
                 ORDER BY Position__c ASC
             ];
@@ -71,7 +71,7 @@ public class StepModel extends ApexDomain.StandardModel {
             //reposition them all
             Decimal position = 1;
             for (Step__c step : writeSteps) {
-                step.Name = this.step.Version__c.intValue() + '#' + this.step.SequenceName__c + '#' + position.intValue();
+                step.Name = this.step.Version__c.intValue() + '#' + this.step.Sequence__c + '#' + position.intValue();
                 step.Position__c = position.intValue();
                 position++;
             }
@@ -98,7 +98,7 @@ public class StepModel extends ApexDomain.StandardModel {
                 FROM Step__c
                 WHERE IsDraft__c = true
                 AND Version__c = :this.step.Version__c
-                AND SequenceName__c = :this.step.SequenceName__c
+                AND Sequence__c = :this.step.Sequence__c
                 AND Name != :this.step.Name
                 ORDER BY Position__c ASC
             ];
@@ -120,7 +120,7 @@ public class StepModel extends ApexDomain.StandardModel {
             //reposition them all
             Decimal position = 1;
             for (Step__c step : writeSteps) {
-                step.Name = this.step.Version__c.intValue() + '#' + this.step.SequenceName__c + '#' + position.intValue();
+                step.Name = this.step.Version__c.intValue() + '#' + this.step.Sequence__c + '#' + position.intValue();
                 step.Position__c = position.intValue();
                 position++;
             }
@@ -177,10 +177,17 @@ public class StepModel extends ApexDomain.StandardModel {
      * Used to determine the list/tab redirect
      * when showing the StepConfig page
      */
-    public DescribeSObjectResult describeStepConfig() {
+    public PageReference showConfig() {
         Id configId = this.Step.ConfigId__c;
-        DescribeSObjectResult result = configId.getSObjectType().getDescribe();
-        return result;
+        Sobject config = configId.getSobjectType().newSobject(configId);
+        PageReference view = new ApexPages.StandardController(config).view();
+        
+        if (!configId.getSobjectType().getDescribe().isCustomSetting()) {
+            //console style only for custom objects
+            view.getParameters().put('isdtp', 'vw');
+        }
+        
+        return view;
     }
     
     /**

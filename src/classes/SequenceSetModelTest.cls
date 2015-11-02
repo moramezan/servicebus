@@ -30,7 +30,7 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c scheduleStep = SequenceModel.fromId(sequence.Id).appendStep(Schedule.class);
+        Step__c scheduleStep = SequenceModel.fromId(sequence.Id).appendStep(ScheduleDaily.class);
         Id configId = new stepModel(scheduleStep).upsertConfig();
         Step__c terminateStep = SequenceModel.fromId(sequence.Id).appendStep(Terminate.class);
         

@@ -42,7 +42,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
             
             //clone the steps
             List<Step__c> steps = [
-                SELECT Name, ApexClassId__c, ApexClassName__c, ConfigId__c, ConfigName__c, Version__c, SequenceName__c, Position__c, IsDraft__c //TODO apexdomain all fields
+                SELECT Name, ApexClassId__c, ApexClassName__c, ConfigId__c, ConfigName__c, Version__c, Sequence__c, Position__c, IsDraft__c //TODO apexdomain all fields
                 FROM Step__c
                 WHERE Version__c = :version
             ].deepClone(); //TODO explicit args
@@ -50,7 +50,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
             //increment as next draft version
             for (Step__c step : steps) {
                 step.Version__c++;
-                step.Name = step.Version__c + '#' + step.SequenceName__c + '#' + step.Position__c;
+                step.Name = step.Version__c + '#' + step.Sequence__c + '#' + step.Position__c;
                 step.IsDraft__c = true;
             }
             
@@ -59,7 +59,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
             
             //new sequences second (to avoid inhibit)
             Set<Sequence__c> sequences = new Set<Sequence__c>();
-            for (Step__c step : steps) sequences.add(new Sequence__c(Name = step.SequenceName__c));
+            for (Step__c step : steps) sequences.add(new Sequence__c(Name = step.Sequence__c));
             insert new List<Sequence__c>(sequences);
             
         } catch (Exception e) {
@@ -195,7 +195,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
                 SELECT Id, ConfigId__c
                 FROM Step__c
                 WHERE IsDraft__c = true
-                AND SequenceName__c IN :sequenceNames
+                AND Sequence__c IN :sequenceNames
             ];
             
             //prepare config ids

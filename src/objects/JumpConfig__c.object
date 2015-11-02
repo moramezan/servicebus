@@ -1,84 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <actionOverrides>
-        <actionName>Accept</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>CancelEdit</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>Clone</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>Delete</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>Edit</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>Follow</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>List</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>New</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>SaveEdit</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>Tab</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>View</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <allowInChatterGroups>false</allowInChatterGroups>
-    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
-    <customHelpPage>JumpConfigHelp</customHelpPage>
-    <deploymentStatus>Deployed</deploymentStatus>
-    <enableActivities>false</enableActivities>
-    <enableBulkApi>false</enableBulkApi>
+    <customSettingsType>List</customSettingsType>
+    <description>Holds jump configs.</description>
     <enableFeeds>false</enableFeeds>
-    <enableHistory>false</enableHistory>
-    <enableReports>false</enableReports>
-    <enableSearch>false</enableSearch>
-    <enableSharing>false</enableSharing>
-    <enableStreamingApi>false</enableStreamingApi>
     <fields>
         <fullName>Sequence__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Sequence name?</description>
         <externalId>false</externalId>
-        <inlineHelpText>To which sequence should messages be permanently diverted, permanently?</inlineHelpText>
-        <label>Sequence</label>
-        <referenceTo>Sequence__c</referenceTo>
-        <relationshipLabel>Jump Configs</relationshipLabel>
-        <relationshipName>JumpConfigs</relationshipName>
+        <inlineHelpText>What sequence should messages be copied to?</inlineHelpText>
+        <label>Sequence Name</label>
+        <length>18</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>Lookup</type>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <label>Jump Config</label>
-    <nameField>
-        <label>What does this step do?</label>
-        <type>Text</type>
-    </nameField>
-    <pluralLabel>Jump Config</pluralLabel>
-    <searchLayouts>
-        <excludedStandardButtons>Accept</excludedStandardButtons>
-        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
-        <excludedStandardButtons>New</excludedStandardButtons>
-    </searchLayouts>
-    <sharingModel>ReadWrite</sharingModel>
+    <visibility>Protected</visibility>
 </CustomObject>

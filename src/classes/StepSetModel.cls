@@ -16,7 +16,7 @@ public class StepSetModel extends ApexDomain.StandardSetModel {
             SELECT Id
             FROM Step__c
             WHERE IsDraft__c = true
-            AND SequenceName__c = :sequenceName
+            AND Sequence__c = :sequenceName
             ORDER BY Position__c ASC
         ];
         

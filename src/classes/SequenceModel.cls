@@ -119,7 +119,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
                 SELECT MAX(Position__c)
                 FROM Step__c
                 WHERE IsDraft__c = true
-                AND SequenceName__c = :this.sequence.Name
+                AND Sequence__c = :this.sequence.Name
             ][0].get('expr0');
             
             //next position after siblings
@@ -129,7 +129,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
                 IsDraft__c = true,
                 Version__c = version.intValue(),
                 Name = version.intValue() + '#' + this.sequence.Name + '#' + position.intValue(),
-                SequenceName__c = this.sequence.Name,
+                Sequence__c = this.sequence.Name,
                 ApexClassId__c = null, //see upstairs
                 ApexClassName__c = reflector.getName(),
                 Position__c = position.intValue()
@@ -153,7 +153,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
                 SELECT Name
                 FROM Step__c
                 WHERE IsDraft__c = true
-                AND SequenceName__c = :this.sequence.Name
+                AND Sequence__c = :this.sequence.Name
                 AND ApexClassName__c = :Terminate.class.getName()
             ];
         } catch (QueryException e) {
@@ -197,7 +197,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
                 SELECT Name
                 FROM Step__c
                 WHERE IsDraft__c = true
-                AND SequenceName__c = :this.sequence.Name
+                AND Sequence__c = :this.sequence.Name
                 ORDER BY Position__c ASC
             ];
             

@@ -216,18 +216,12 @@
         new StepModel(stepA1).upsertConfig();
         Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
         
-        // Event
-        EventType__c eventTypeNotSubscribed = new EventType__c(
-            Name = 'an-event-not-Subscribed'
-        );
-        insert eventTypeNotSubscribed;
-        
         // Config A1
         Id configIdA1 = ((Step__c)ApexDomain.getById(stepA1.Id)).ConfigId__c;
         
         PublishConfig__c PublishConfigA1 = (PublishConfig__c)ApexDomain.getById(configIdA1);
         
-        PublishConfigA1.EventType__c = eventTypeNotSubscribed.Id;
+        PublishConfigA1.EventType__c = 'an-event-not-published';
         update PublishConfigA1;
         
         // Act :
@@ -286,16 +280,10 @@
         new StepModel(stepA1).upsertConfig();
         Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
 
-        // Event
-        EventType__c eventNotPublished = new EventType__c(
-            Name = 'an-event-not-published'
-        );
-        insert eventNotPublished;
-       
         // Config A1
         Id configIdA1 = ((Step__c)ApexDomain.getById(stepA1.Id)).ConfigId__c;
         SubscribeConfig__c subscribeConfigA1 = (SubscribeConfig__c)ApexDomain.getById(configIdA1);
-        subscribeConfigA1.EventType__c = eventNotPublished.Id;
+        subscribeConfigA1.EventType__c = 'an-event-not-published';
         update subscribeConfigA1;
  
  
@@ -358,22 +346,16 @@
         Step__c stepC2 = SequenceModel.fromName(sequenceC.Name).appendStep(Subscribe.class);
         new StepModel(stepC2).upsertConfig();
             
-        // Event
-        EventType__c eventNotPublished = new EventType__c(
-            Name = 'an-event-not-published'
-        );
-        insert eventNotPublished;
-
         // Config C1
         Id configIdC1 = ((Step__c)ApexDomain.getById(stepC1.Id)).ConfigId__c;
         SubscribeConfig__c subscribeConfigC1 = (SubscribeConfig__c)ApexDomain.getById(configIdC1);
-        subscribeConfigC1.EventType__c = eventNotPublished.Id;
+        subscribeConfigC1.EventType__c = 'an-event-not-published';
         update subscribeConfigC1;
 
         // Config C2
         Id configIdC2 = ((Step__c)ApexDomain.getById(stepC2.Id)).ConfigId__c;
         SubscribeConfig__c subscribeConfigC2 = (SubscribeConfig__c)ApexDomain.getById(configIdC2);
-        subscribeConfigC2.EventType__c = eventNotPublished.Id;
+        subscribeConfigC2.EventType__c = 'an-event-not-published';
         update subscribeConfigC2;
         
         // Act :

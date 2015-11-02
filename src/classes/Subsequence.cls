@@ -6,7 +6,7 @@ public class Subsequence extends ApexClassModel.Service {
     public class Summary {
         String Tag = 'Service Bus';
         String Label = 'Synchronous Subsequence';
-        String Description = 'Synchronously executes another sequence, then resumes the next step afterwards.';
+        String Description = 'Synchronously executes another sequence before emitting the event.';
         String StepConfig = SubsequenceConfig__c.class.getName();
         String Icon = 'arrow_undo';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceBranchJumpSubsequence').getUrl();
@@ -52,7 +52,7 @@ public class Subsequence extends ApexClassModel.Service {
         if (stepConfigId == null) throw new SubsequenceException('Null step config id.');
         
         SubsequenceConfig__c config = [
-            SELECT Id, Sequence__r.Name
+            SELECT Id, Sequence__c
             FROM SubsequenceConfig__c
             WHERE Id = :stepConfigId
         ];
@@ -67,7 +67,7 @@ public class Subsequence extends ApexClassModel.Service {
             
             //he has inputs but no outputs
             Map<String,Object> clone = inputEvent.clone();
-            clone.put('Route', version + '#' + config.Sequence__r.Name + '#' + position);
+            clone.put('Route', version + '#' + config.Sequence__c + '#' + position);
             this.traverse(clone);
             
         } catch (Exception e) {
