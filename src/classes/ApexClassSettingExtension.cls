@@ -31,8 +31,8 @@ public with sharing class ApexClassSettingExtension {
     /**
      * tab suffix only for custom settings
      * list suffix for custom objects
-     */ 
-    public String Action;
+     */
+    public String Action {get; set;}
     
     /**
      * normal style for custom settings

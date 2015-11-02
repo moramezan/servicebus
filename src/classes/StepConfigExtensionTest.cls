@@ -11,7 +11,7 @@
         StepConfigExtension extension = new StepConfigExtension(controller);
         
         //assert
-        System.assert(ApexPages.hasMessages(), 'Wrong messages.');
+        System.assert(!ApexPages.hasMessages(), 'Wrong messages.');
     }
     
 }
