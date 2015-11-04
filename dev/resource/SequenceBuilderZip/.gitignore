@@ -5,3 +5,12 @@
 /bootstrap.css
 /bootstrap.json
 /index.html
+
+/app/controller/*.js
+/app/model/*.js
+/app/store/*.js
+/app/view/*.js
+
+/sass/example/bootstrap.json
+/sass/example/bootstrap.js
+/sass/example/example.css
