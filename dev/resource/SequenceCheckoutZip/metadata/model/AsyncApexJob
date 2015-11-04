@@ -1,0 +1,312 @@
+{
+    "type": "Ext.data.Model",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "AsyncApexJob",
+        "idProperty": "Id"
+    },
+    "name": "MyModel",
+    "designerId": "02c666e6-59d8-47d6-a321-ecaaa058cae0",
+    "cn": [
+        {
+            "type": "Ext.data.field.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Id"
+            },
+            "name": "MyField",
+            "designerId": "3b182279-87ed-42f2-be5f-5cbbd5059039"
+        },
+        {
+            "type": "Ext.data.field.Date",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "CompletedDate"
+            },
+            "name": "MyDate1",
+            "designerId": "b8ab3a3c-2785-45b4-86b2-1e4247c43890",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "v",
+                            "rec"
+                        ],
+                        "fn": "convert",
+                        "implHandler": [
+                            "return v ? new Date(v) : null;"
+                        ]
+                    },
+                    "name": "convert",
+                    "designerId": "81f2d630-aa0a-4c36-b9e9-d1e69557bda2"
+                }
+            ]
+        },
+        {
+            "type": "Ext.data.field.Date",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "CreatedDate"
+            },
+            "name": "MyDate",
+            "designerId": "2a6d2173-f52c-4c7b-a5b1-23e73da0e680",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "v",
+                            "rec"
+                        ],
+                        "fn": "convert",
+                        "implHandler": [
+                            "return v ? new Date(v) : null;"
+                        ]
+                    },
+                    "name": "convert",
+                    "designerId": "68fea6e8-6845-41e6-8c04-491c24b63cef"
+                }
+            ]
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "ExtendedStatus"
+            },
+            "name": "MyString",
+            "designerId": "4d75a7a8-164e-40cf-9867-057f5f2400dc"
+        },
+        {
+            "type": "Ext.data.field.Integer",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "JobItemsProcessed"
+            },
+            "name": "MyInteger",
+            "designerId": "2d59aba1-8507-49db-8573-1b01eb1d7e32"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "JobType"
+            },
+            "name": "MyString1",
+            "designerId": "33bc8fa0-4574-4208-9a39-6341be63897b"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "LastProcessed"
+            },
+            "name": "MyString2",
+            "designerId": "03750f7e-ed9f-4948-a68d-8fc893d13171"
+        },
+        {
+            "type": "Ext.data.field.Integer",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "LastProcessedOffset"
+            },
+            "name": "MyInteger1",
+            "designerId": "768ab91d-f018-49c5-9ee8-920a712b22e8"
+        },
+        {
+            "type": "Ext.data.field.Integer",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "NumberOfErrors"
+            },
+            "name": "MyInteger2",
+            "designerId": "42bf50e9-d939-4c76-9300-ac3b597a1fad"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Status"
+            },
+            "name": "MyString3",
+            "designerId": "10e541a9-66c4-4625-a952-3b9556cf6a3e"
+        },
+        {
+            "type": "Ext.data.field.Integer",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "TotalJobItems"
+            },
+            "name": "MyInteger3",
+            "designerId": "e17778b1-5d93-4cc1-be6a-83cbcdb2016d"
+        },
+        {
+            "type": "Ext.data.proxy.Direct",
+            "reference": {
+                "name": "proxy",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "api": [
+                    "{read: $RemoteAction.SequenceCheckoutExtension.readAsyncApexJobs}"
+                ],
+                "designer|displayName": "AsyncApexJobProxy",
+                "extraParams": [
+                    "{asyncApexJobId: AsyncApexJob.Id}"
+                ]
+            },
+            "name": "MyDirectProxy",
+            "designerId": "e3bf15f5-26a1-49cb-88cf-a6fcf3a847d7"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "progressbar"
+                ],
+                "fn": "draw",
+                "implHandler": [
+                    "var job = this;",
+                    "",
+                    "//part bullshit progress while queueing:",
+                    "//0% at 0 seconds",
+                    "//6% at 1 second",
+                    "//23% at 10 seconds",
+                    "//46% at 100 seconds",
+                    "//69% at 1000 seconds",
+                    "var queuePortion = Math.log(job.countElapsedSeconds() + 1) / 10;",
+                    "Ext.log('[Discover.model.AsyncApexJob] queuePortion ' + queuePortion);",
+                    "",
+                    "//part real progress, eg at 100 seconds in:",
+                    "//46% at 0 of 100",
+                    "//51% at 10 of 100",
+                    "//57% at 20 of 100",
+                    "//73% at 50 of 100",
+                    "//95% at 90 of 100",
+                    "var itemsPortion = (job.get('JobItemsProcessed') / job.get('TotalJobItems') || 0) * (1 - queuePortion); //uses || 0 to prevent NaN on divide by zero (Queued jobs have zero total items)",
+                    "Ext.log('[Discover.model.AsyncApexJob] itemsPortion ' + itemsPortion);",
+                    "",
+                    "//add the bullshit part and the real part together",
+                    "var value = queuePortion + itemsPortion;",
+                    "var text = job.get('Status');",
+                    "var animate = true;",
+                    "",
+                    "if (job.get('JobItemsProcessed')) text += ' ' + job.get('JobItemsProcessed') + ' of ' + job.get('TotalJobItems');",
+                    "",
+                    "progressbar.updateProgress(value, text, animate);"
+                ]
+            },
+            "name": "draw",
+            "designerId": "b4cdac2a-1048-4342-921e-da3a0b88cdf1"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "countElapsedSeconds",
+                "implHandler": [
+                    "var timeCompleted = this.get('CompletedDate') ? this.get('CompletedDate').getTime() : new Date().getTime();",
+                    "var timeCreated = this.get('CreatedDate').getTime();",
+                    "//console.log(this.get('CreatedDate'));",
+                    "//reports run time elapsed OR total time taken if finished",
+                    "return (timeCompleted - timeCreated) / 1000;"
+                ]
+            },
+            "name": "countElapsedSeconds",
+            "designerId": "473a79e7-fe64-4f0c-8144-a9acb686099c"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "grid"
+                ],
+                "fn": "mask",
+                "implHandler": [
+                    "var elapsedSeconds = this.countElapsedSeconds();",
+                    "var msg = 'The best things in life are worth waiting for... ' + Ext.Date.format(new Date(elapsedSeconds * 1000), 'i:s') + ' (<a target=\\\"_blank\\\" href=\\\"' + $Action.Sequence__c.List + '\\\">Help for this Page</a>)';",
+                    "",
+                    "//we mask the grid, not the view, because the store",
+                    "//load() method periodically unmasks the gridView",
+                    "if (this.get('Status') != 'Completed') grid.mask(msg);"
+                ]
+            },
+            "name": "mask",
+            "designerId": "9809f801-dae0-4786-8e11-4716160b7946"
+        }
+    ]
+}

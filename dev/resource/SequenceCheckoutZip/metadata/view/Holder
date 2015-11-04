@@ -1,0 +1,142 @@
+{
+    "type": "Ext.container.Container",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userAlias": "holder",
+        "designer|userClassName": "Holder",
+        "height": null,
+        "layout": "fit",
+        "width": null
+    },
+    "name": "MyContainer",
+    "designerId": "c5737154-d250-48ea-91f0-bd21e3738afb",
+    "viewControllerInstanceId": "301befce-cd72-4f54-986c-82f5071f3c09",
+    "viewModelInstanceId": "c72f8838-c8b0-431c-98c6-f5c842cdc0b8",
+    "cn": [
+        {
+            "type": "Ext.ProgressBar",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|displayName": "ProgressBar",
+                "itemId": "progressbar",
+                "value": 0.4
+            },
+            "name": "MyProgressBar",
+            "designerId": "52804c71-efff-43e0-9050-dd35b19516b3",
+            "cn": [
+                {
+                    "type": "processcfgfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "config"
+                        ],
+                        "fn": "processProgressBar",
+                        "implHandler": [
+                            "//not very DRY, but we can get useful initial values off the bridging component",
+                            "config.value = Number(AsyncApexJob.JobItemsProcessed / AsyncApexJob.TotalJobItems); //cast to Number() prevents divide by zero",
+                            "config.value = isNaN(config.value) ? 0 : config.value;",
+                            "return config;"
+                        ]
+                    },
+                    "name": "processProgressBar",
+                    "designerId": "72bff4da-066f-484a-a573-3a7f5ccde081"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "bodyStyle": [
+                    "{\"border-color\": \"white\"}"
+                ],
+                "border": false,
+                "designer|displayName": "Grid",
+                "designer|uiInterfaceName": "default",
+                "forceFit": true,
+                "header": false,
+                "hideHeaders": true,
+                "itemId": "grid",
+                "scrollable": null,
+                "store": "Processes",
+                "title": "My Grid Panel"
+            },
+            "name": "MyGridPanel",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
+            "designerId": "51eaa12f-739d-42b0-baa8-6f264af0750f",
+            "cn": [
+                {
+                    "type": "Ext.view.Table",
+                    "reference": {
+                        "name": "viewConfig",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "GridView",
+                        "loadMask": false
+                    },
+                    "name": "MyTable",
+                    "configAlternates": {
+                        "loadMask": "boolean"
+                    },
+                    "designerId": "7d092735-5113-4a1b-8e07-6f84f7a7361e"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "Name",
+                        "text": "Name"
+                    },
+                    "name": "MyColumn4",
+                    "designerId": "eae5f141-16e1-4573-afcd-b4a24c887555"
+                },
+                {
+                    "type": "processcfgfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "config"
+                        ],
+                        "fn": "processGrid",
+                        "implHandler": [
+                            "//make the grid occupy such space that the salesforce chrome would fill most of the viewport",
+                            "config.height = Ext.Element.getViewportHeight() - 200;",
+                            "return config;"
+                        ]
+                    },
+                    "name": "processGrid",
+                    "designerId": "37d73b99-1292-4002-a41a-151cbf515706"
+                }
+            ]
+        }
+    ]
+}

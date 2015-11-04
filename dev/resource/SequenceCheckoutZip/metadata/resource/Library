@@ -1,0 +1,15 @@
+{
+    "type": "libraryresource",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "basePath": "ext/",
+        "designer|userClassName": "Library",
+        "theme": "MyClassicTheme"
+    },
+    "name": "Library",
+    "designerId": "bfc70018-9842-4114-a788-462834df694f"
+}

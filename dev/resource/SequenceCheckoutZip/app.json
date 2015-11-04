@@ -1,0 +1,71 @@
+{
+   "name": "Checkout",
+   "version": "1.0.0.0",
+   "indexHtmlPath": "index.html",
+   "classpath": "${app.dir}/app,${app.dir}/app/override/data/proxy/",
+   "overrides": "${app.dir}/overrides",
+   "framework": "ext",
+   "theme": "ext-theme-classic-c295cf15-2672-454e-9c42-cfcecf301de4",
+   "requires": [],
+   "sass": {
+      "namespace": "Checkout"
+   },
+   "js": [
+      {
+         "path": "${framework.dir}/build/ext-all-rtl-debug.js"
+      },
+      {
+         "path": "app/override/data/proxy/Direct.js",
+         "x-compile": true
+      },
+      {
+         "path": "app.js",
+         "bundle": true
+      }
+   ],
+   "css": [
+      {
+         "path": "bootstrap.css",
+         "bootstrap": true
+      },
+      {
+         "path": "ext/packages/ext-theme-classic/build/resources/ext-theme-classic-all-rtl.css",
+         "remote": true
+      }
+   ],
+   "production": {},
+   "testing": {},
+   "development": {},
+   "bootstrap": {
+      "base": "${app.dir}",
+      "manifest": "bootstrap.json",
+      "microloader": "bootstrap.js",
+      "css": "bootstrap.css"
+   },
+   "output": {
+      "base": "${workspace.build.dir}/${build.environment}/${app.name}"
+   },
+   "appCache": {
+      "cache": [
+         "index.html"
+      ],
+      "network": [
+         "*"
+      ],
+      "fallback": []
+   },
+   "resources": [],
+   "ignore": [
+      "(^|/)CVS(/?$|/.*?$)"
+   ],
+   "archivePath": "archive",
+   "slicer": {
+      "js": [
+         {
+            "path": "${app.dir}/sass/example/custom.js",
+            "isWidgetManifest": true
+         }
+      ]
+   },
+   "id": "34566156-524e-4df2-b932-0c3b82eb4d0f"
+}

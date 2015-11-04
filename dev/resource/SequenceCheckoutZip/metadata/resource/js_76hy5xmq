@@ -1,0 +1,16 @@
+{
+    "type": "jsoverrideresource",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "defer": false,
+        "designer|userClassName": "js_76hy5xmq",
+        "url": "app/override/data/proxy/Direct.js",
+        "x-compile": true
+    },
+    "name": "js",
+    "designerId": "80cbb4d6-76c7-4738-a837-da574eb4ff25"
+}
