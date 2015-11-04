@@ -1,10 +1,10 @@
 # cross-origin resource sharing (CORS)
-Header add Access-Control-Allow-Origin "*"
-Header add Access-Control-Allow-Headers "origin, x-requested-with, content-type"
-Header add Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
-Header add Cache-Control "no-cache, must-revalidate"
-Header add Expires "Mon, 26 Jul 1997 05:00:00 GMT"
-Header add Pragma "no-cache"
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Headers "origin, x-requested-with, content-type"
+Header set Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
+Header set Cache-Control "no-cache, must-revalidate"
+Header set Expires "Mon, 26 Jul 1997 05:00:00 GMT"
+Header set Pragma "no-cache"
 
 # drop cachebuster timestamp and package namespace
 RewriteEngine On
