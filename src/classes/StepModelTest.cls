@@ -88,4 +88,72 @@
         System.assertEquals(expectedName, actualName, 'Wrong name.');
     }
     
+    static testmethod void testCheckout() {
+        //arrange
+        Id stepId = Database.insert(new Step__c(
+            Name = '1#Test#1',
+            Version__c = 1,
+            Sequence__c = 'Test',
+            Position__c = 1,
+            IsDraft__c = false
+        )).getId();
+        
+        //act
+        StepModel.fromId(stepId).checkout();
+        
+        //arrange
+        Step__c step = [SELECT Name, Version__c, Sequence__c, Position__c, IsDraft__c FROM Step__c WHERE IsDraft__c = true];
+        
+        //act
+        System.assertEquals('2#Test#1', step.Name, 'Wrong name.');
+        System.assertEquals(2, step.Version__c, 'Wrong version.');
+        System.assertEquals('Test', step.Sequence__c, 'Wrong sequence.');
+        System.assertEquals(1, step.Position__c, 'Wrong position.');
+        System.assertEquals(true, step.IsDraft__c, 'Wrong draft.');
+    }
+    
+    static testmethod void testCommit() {
+        //arrange
+        Id stepId = Database.insert(new Step__c(
+            Name = '1#Test#1',
+            Version__c = 1,
+            Sequence__c = 'Test',
+            Position__c = 1,
+            IsDraft__c = true
+        )).getId();
+        
+        //act
+        StepModel.fromId(stepId).commits();
+        
+        //assemble
+        Step__c step = [SELECT Name, Version__c, Sequence__c, Position__c, IsDraft__c FROM Step__c];
+        
+        //assert
+        System.assertEquals('1#Test#1', step.Name, 'Wrong name.');
+        System.assertEquals(1, step.Version__c, 'Wrong version.');
+        System.assertEquals('Test', step.Sequence__c, 'Wrong sequence.');
+        System.assertEquals(1, step.Position__c, 'Wrong position.');
+        System.assertEquals(false, step.IsDraft__c, 'Wrong draft.');
+    }
+    
+    static testmethod void testDiscard() {
+        //arrange
+        Id documentId = Database.insert(new Document(
+            Name = 'Test',
+            FolderId = UserInfo.getUserId()
+        )).getId();
+        
+        Id stepId = Database.insert(new Step__c(
+            Name = '1#Test#1',
+            ConfigId__c = documentId
+        )).getId();
+        
+        //act
+        StepModel.fromId(stepId).discard();
+        
+        //assert
+        System.assert([SELECT Id FROM Document].isEmpty(), 'Wrong empty.');
+        System.assert([SELECT Id FROM Step__c].isEmpty(), 'Wrong empty.');
+    }
+    
 }

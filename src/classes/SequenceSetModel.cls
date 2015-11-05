@@ -13,7 +13,42 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         super(sequences);
     }
     
-    static public void checkoutDraft() {
+    /**
+     * Cursor for current draft version
+     */
+    static public Database.QueryLocator locateDraftSteps() {
+        return Database.getQueryLocator([
+            SELECT Id, Name
+            FROM Step__c
+            WHERE IsDraft__c = true
+            ORDER BY Sequence__c ASC, Position__c ASC
+        ]);
+    }
+    
+    /**
+     * Cursor for given live version
+     */
+    static public Database.QueryLocator locateLiveSteps() {
+        //find latest runnable version
+        Integer version = Integer.valueOf([
+            SELECT Max(Version__c)
+            FROM Step__c
+            WHERE IsDraft__c = false
+        ][0].get('expr0'));
+        
+        return Database.getQueryLocator([
+            SELECT Id, Name
+            FROM Step__c
+            WHERE Version__c = :version
+            ORDER BY Sequence__c ASC, Position__c ASC
+        ]);
+    }
+    
+    /**
+     * Starts the "checkout draft version" process
+     * which clones the latest version and increments.
+     */
+    static public Id checkoutDraft() {
         
         Boolean hasSequences = ![SELECT Id FROM Sequence__c LIMIT 1].isEmpty();
         Boolean noLiveSteps = [SELECT Id FROM Step__c WHERE IsDraft__c = false LIMIT 1].isEmpty();
@@ -29,51 +64,49 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
             throw new SequenceException('Nothing to checkout.');
         }
         
-        Savepoint savepoint;
-        try {
-            savepoint = Database.setSavepoint();
-            
-            //find latest runnable version
-            Decimal version = (Decimal)[
-                SELECT Max(Version__c)
-                FROM Step__c
-                WHERE IsDraft__c = false
-            ][0].get('expr0');
-            
-            //clone the steps
-            List<Step__c> steps = [
-                SELECT Name, ApexClassId__c, ApexClassName__c, ConfigId__c, ConfigName__c, Version__c, Sequence__c, Position__c, IsDraft__c //TODO apexdomain all fields
-                FROM Step__c
-                WHERE Version__c = :version
-            ].deepClone(); //TODO explicit args
-            
-            //increment as next draft version
-            for (Step__c step : steps) {
-                step.Version__c++;
-                step.Name = step.Version__c + '#' + step.Sequence__c + '#' + step.Position__c;
-                step.IsDraft__c = true;
-            }
-            
-            //new steps first
-            insert steps;
-            
-            //new sequences second (to avoid inhibit)
-            Set<Sequence__c> sequences = new Set<Sequence__c>();
-            for (Step__c step : steps) sequences.add(new Sequence__c(Name = step.Sequence__c));
-            insert new List<Sequence__c>(sequences);
-            
-        } catch (Exception e) {
-            Database.rollback(savepoint);
-            throw e;
-            
-        }
+        //start the job
+        Database.Batchable<Sobject> batch = new SequenceCheckoutExtension();
+        Id asyncApexJobId = Database.executeBatch(batch, 1);
+        return asyncApexJobId;
     }
     
     /**
-     * Locks in the draft version as a runnable version
-     * (removes sequences, updates steps)
+     * To finish the draft checkout process
+     * we expose all the sequences as handles.
      */
-    static public void commitDraft() {
+    static public void showSequences() {
+        
+        Boolean noDraftSteps = [SELECT Id FROM Step__c WHERE IsDraft__c = true LIMIT 1].isEmpty();
+        Boolean hasSequences = ![SELECT Id FROM Sequence__c LIMIT 1].isEmpty();
+        
+        if (hasSequences) {
+            //failure, already showing
+            throw new SequenceException('Already showing sequences.');
+        }
+        
+        if (noDraftSteps) {
+            //failure, nothing draft exists
+            throw new SequenceException('Nothing to show.');
+        }
+        
+        //find draft steps
+        List<Step__c> steps = [
+            SELECT Sequence__c
+            FROM Step__c
+            WHERE IsDraft__c = true
+        ];
+        
+        //new sequences second (to avoid inhibit)
+        Set<Sequence__c> sequences = new Set<Sequence__c>();
+        for (Step__c step : steps) sequences.add(new Sequence__c(Name = step.Sequence__c));
+        insert new List<Sequence__c>(sequences);
+    }
+    
+    /**
+     * Starts the "commit new version" process which
+     * locks in the draft steps as a runnable version.
+     */
+    static public Id commitDraft() {
         
         Boolean noDraftSteps = [SELECT Id FROM Step__c WHERE IsDraft__c = true LIMIT 1].isEmpty();
         Boolean noSequences = [SELECT Id FROM Sequence__c LIMIT 1].isEmpty();
@@ -83,37 +116,35 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
             throw new SequenceException('Nothing to commit.');
         }
         
-        Savepoint savepoint;
-        try {
-            savepoint = Database.setSavepoint();
-            
-            //find current draft
-            List<Step__c> steps = [
-                SELECT Id
-                FROM Step__c
-                WHERE IsDraft__c = true
-            ];
-            
-            //mark steps as live
-            for (Step__c step : steps) step.IsDraft__c = false;
-            update steps;
-            
-            //remove sequences leaving steps intact
-            IsDeleteCascaded = false;
-            delete [SELECT Id FROM Sequence__c];
-            
-        } catch (Exception e) {
-            Database.rollback(savepoint);
-            throw e;
-            
-        }
+        //start the job
+        Database.Batchable<Sobject> batch = new SequenceCommitExtension();
+        Id asyncApexJobId = Database.executeBatch(batch, 1);
+        return asyncApexJobId;
     }
     
     /**
-     * Trashes the draft version
-     * (removes sequences and steps)
+     * To finish the batch commit (or discard) process
+     * we trash the sequences which acted as handles.
      */
-    static public void discardDraft() {
+    static public void hideSequences() {
+        
+        Boolean noSequences = [SELECT Id FROM Sequence__c LIMIT 1].isEmpty();
+        
+        if (noSequences) {
+            //failure, already showing
+            throw new SequenceException('Already hiding sequences.');
+        }
+        
+        //leave steps alone (especially for commit!)
+        IsDeleteCascaded = false;
+        delete [SELECT Id FROM Sequence__c];
+    }
+    
+    /**
+     * Starts the "discard draft version" process
+     * which trashes the draft sequences AND steps.
+     */
+    static public Id discardDraft() {
         
         Boolean noDraftSteps = [SELECT Id FROM Step__c WHERE IsDraft__c = true LIMIT 1].isEmpty();
         Boolean noSequences = [SELECT Id FROM Sequence__c LIMIT 1].isEmpty();
@@ -123,25 +154,21 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
             throw new SequenceException('Nothing to discard.');
         }
         
-        Savepoint savepoint;
-        try {
-            savepoint = Database.setSavepoint();
-            
-            //trash everything
-            IsDeleteCascaded = true;
-            delete [SELECT Id FROM Sequence__c];
-            
-        } catch (Exception e) {
-            Database.rollback(savepoint);
-            throw new SequenceException('Cannot discard: ' + e.getMessage(), e);
-            
-        }
+        //start the job
+        Database.Batchable<Sobject> batch = new SequenceDiscardExtension();
+        Id asyncApexJobId = Database.executeBatch(batch, 1);
+        return asyncApexJobId;
     }
     
     public override void onBeforeInsert() {
         this.inhibitInsertWithoutCheckout();
     }
     
+    /**
+     * New sequences are only createable
+     * when there is a draft version.
+     * (and FIRST ever sequence)
+     */
     @TestVisible void inhibitInsertWithoutCheckout() {
         
         Boolean noLiveSteps = [SELECT Id FROM Step__c WHERE IsDraft__c = false LIMIT 1].isEmpty();
@@ -162,10 +189,18 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         for (Sequence__c sequence : sequences) sequence.Name.addError('Checkout required first.');
     }
     
+    /**
+     * GUI sequence delete will
+     * trash the draft steps too.
+     */
     public override void onBeforeDelete() {
         if (IsDeleteCascaded) this.destroyAllStepsAndConfigs();
     }
     
+    /**
+     * Prevent undelete, that would mess
+     * with the checkout mechanism.
+     */
     public override void onAfterDelete() {
         //#1016 skip recycle bin
         List<Sequence__c> sequences = this.Records;

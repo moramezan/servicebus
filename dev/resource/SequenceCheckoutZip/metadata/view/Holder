@@ -130,6 +130,7 @@
                         "implHandler": [
                             "//make the grid occupy such space that the salesforce chrome would fill most of the viewport",
                             "config.height = Ext.Element.getViewportHeight() - 200;",
+                            "config.height -= 100; //leave room for apex:sectionHeader",
                             "return config;"
                         ]
                     },

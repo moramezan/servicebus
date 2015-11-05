@@ -205,4 +205,56 @@ public class StepModel extends ApexDomain.StandardModel {
         update this.Step;
     }
     
+    /**
+     * Clones an individual step, increments its version,
+     * flags it as draft and copies his configuration.
+     */
+    public void checkout() {
+        //clone the steps
+        Boolean preserveId = false;
+        Boolean isDeepClone = true;
+        Boolean preserveReadonlyTimestamps = false;
+        Boolean preserveAutonumber = false;
+        Step__c step = this.Step.clone(preserveId, isDeepClone, preserveReadonlyTimestamps, preserveAutonumber);
+        
+        //increment as next draft version
+        step.Version__c++;
+        step.Name = step.Version__c + '#' + step.Sequence__c + '#' + step.Position__c;
+        step.IsDraft__c = true;
+        
+        //TODO copy his configuration
+        step.ConfigId__c = null;
+        step.ConfigName__c = null;
+        
+        //new steps first
+        insert step;
+    }
+    
+    /**
+     * Unflags draft steps so
+     * they become live runnable.
+     */
+    public void commits() {
+        //mark step as live
+        this.Step.IsDraft__c = false;
+        update this.Step;
+    }
+    
+    /**
+     * Trashes draft steps.
+     * (They can be checked out again)
+     */
+    public void discard() {
+        
+        //skip recycle bin
+        Database.delete(this.Step.Id);
+        Database.emptyRecycleBin(new List<Id>{this.Step.Id});
+        
+        if (this.Step.ConfigId__c != null) {
+            Database.delete(this.Step.ConfigId__c, false);
+            Database.emptyRecycleBin(new List<Id>{this.Step.ConfigId__c});
+        }
+        
+    }
+    
 }
