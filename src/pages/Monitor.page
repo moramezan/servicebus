@@ -4,7 +4,12 @@
     Change live system:
     <select onchange="Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.MonitorController.ChooseVersion}', this.value, function() {});">
         <apex:repeat value="{!RunnableVersions}" var="runnableVersion">
-            <option selected="{LiveVersion == runnableVersion}" value="{!runnableVersion}">Version {!runnableVersion}</option>
+            <apex:outputPanel layout="none" rendered="{!LiveVersion == runnableVersion}">
+                <option value="{!runnableVersion}" selected="selected">Version {!runnableVersion}</option>
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{!LiveVersion != runnableVersion}">
+                <option value="{!runnableVersion}">Version {!runnableVersion}</option>
+            </apex:outputPanel>
         </apex:repeat>
         <apex:outputPanel layout="none" rendered="{!DraftVersion != null}"><optgroup label="Version {!DraftVersion} (Draft)" /></apex:outputPanel>
     </select>
