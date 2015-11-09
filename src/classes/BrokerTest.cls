@@ -1,4 +1,4 @@
-@IsTest public class BrokerTest {
+@IsTest class BrokerTest {
     
 
     /**
@@ -10,7 +10,7 @@
      * broker method implementations like mark() and execute()
      * without actually starting or running the Broker itself
      */
-    @TestVisible static private Boolean DidSynchronousBrokerRun = false;
+    @TestVisible static Boolean DidSynchronousBrokerRun = false;
     public class SynchronousBroker extends Broker {
         
         override public void runImpl() {

@@ -1,4 +1,4 @@
-@IsTest private class SubscribeTest{
+@IsTest class SubscribeTest{
 
     static testmethod void hasTheCorrectLimits() {
         //arrange

@@ -1,4 +1,4 @@
-@IsTest public class JobTest {
+@IsTest class JobTest {
     
     //TODO needs more tests
     

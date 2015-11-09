@@ -1,4 +1,4 @@
-@IsTest public class StepSetModelTest {
+@IsTest class StepSetModelTest {
 
     static testmethod void testToDtos() {
         //arrange step

@@ -1,4 +1,4 @@
-@IsTest public class AggregateByEntryPointTest {
+@IsTest class AggregateByEntryPointTest {
 
    static testmethod void hasTheCorrectLimits() {
         //arrange

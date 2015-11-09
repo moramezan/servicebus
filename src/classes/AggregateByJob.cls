@@ -1,7 +1,7 @@
 public class AggregateByJob extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
-    private class AggregateByJobException extends Exception {}
+    class AggregateByJobException extends Exception {}
 
     public class Summary {
         String Tag = 'Service Bus';
@@ -89,8 +89,7 @@ public class AggregateByJob extends ApexClassModel.Service {
 
 
 
-    @testVisible
-    private static Map<String,Object> getCommonParameters(List<Message__c> messages) {
+    @TestVisible static Map<String,Object> getCommonParameters(List<Message__c> messages) {
         // iteration 1
         Set<String> allKeys = new Set<String>();
         for(Message__c message :messages) {
@@ -123,8 +122,7 @@ public class AggregateByJob extends ApexClassModel.Service {
 
 
 
-    @testVisible
-    private static Map<String,Object> cleanParameters(Map<String,Object> inputEvent) {
+    @TestVisible static Map<String,Object> cleanParameters(Map<String,Object> inputEvent) {
         for (String input : inputEvent.keySet()) {
             Object value = (Object)inputEvent.get(input);
             value =  (input.startsWith(':') || input.startsWith('servicebus:'))  ? value : null;
@@ -135,8 +133,7 @@ public class AggregateByJob extends ApexClassModel.Service {
     }
     
     
-    @testVisible
-    public static Boolean isRelease(Set<Id> siblingIds, String jobId, Integer chunkTotal, Integer chunk) {
+    @TestVisible public static Boolean isRelease(Set<Id> siblingIds, String jobId, Integer chunkTotal, Integer chunk) {
         // Release trigger:
         //
         //    NR / MB : we assume the Gate will never fail

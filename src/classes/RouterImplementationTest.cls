@@ -1,8 +1,8 @@
 /**
- * @obfuscation
+ * @Obfuscation
  * Formerly known as HeartbeatImplementationTest
  */
-@IsTest private class RouterImplementationTest {
+@IsTest class RouterImplementationTest {
  
     static testMethod void callingGetInitialStampReturnsExpectedStampForIntervalOf60() {
         // arrange
@@ -371,7 +371,7 @@
         system.assertEquals(json.serialize(expectedHeartbeatsAsStringSet) , json.serialize(actualHeartbeatsAsStringSet));
     }
     
-    @TestVisible private class ToolingApiResponse implements HttpCalloutMock {
+    @TestVisible class ToolingApiResponse implements HttpCalloutMock {
         public HttpResponse respond(HttpRequest request) {
             HttpResponse response = new HttpResponse();
             response.setStatusCode(200);
@@ -381,8 +381,8 @@
     }
   
     
-    // @testSetUp
-    // static private void setUpBritishSummerTimeUser() {
+    // @TestSetup
+    // static void setUpBritishSummerTimeUser() {
     //     User user = new User (
     //         Alias = 'Test',
     //         UserName = 'test@14333servicebus47969.com',

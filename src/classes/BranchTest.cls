@@ -1,4 +1,4 @@
-@IsTest private class BranchTest {
+@IsTest class BranchTest {
 
     static testmethod void hasTheCorrectLimits() {
         //arrange

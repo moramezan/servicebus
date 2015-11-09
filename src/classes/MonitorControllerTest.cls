@@ -1,4 +1,4 @@
-@IsTest public class MonitorControllerTest {
+@IsTest class MonitorControllerTest {
     
     static testmethod void testMessagesAggregatedOk() {
         //arrange services, messages and controller

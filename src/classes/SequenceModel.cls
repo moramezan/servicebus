@@ -1,6 +1,6 @@
 public class SequenceModel extends ApexDomain.StandardModel {
 
-    private Sequence__c sequence;
+    Sequence__c sequence;
     
     /**
      * For advertising domain layer errors
@@ -10,7 +10,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
     /**
      * Privatize constructor to force use of fromName() or fromId()
      */
-    private SequenceModel(Sequence__c sequence) {
+    SequenceModel(Sequence__c sequence) {
         super(sequence);
         this.sequence = sequence;
     }
@@ -99,7 +99,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
     /**
      * TEST scenarios can append inner classes.
      */
-    @TestVisible private Step__c appendStep(Type reflector) {
+    @TestVisible Step__c appendStep(Type reflector) {
         if (!SObjectType.Step__c.Createable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Createable');
         Savepoint sp = Database.setSavepoint();
         try {

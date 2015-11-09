@@ -1,4 +1,4 @@
-@IsTest private class JumpTest {
+@IsTest class JumpTest {
      
     static testmethod void hasTheCorrectLimits() {
         //arrange

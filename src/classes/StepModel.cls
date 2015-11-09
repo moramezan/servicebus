@@ -1,6 +1,6 @@
 public class StepModel extends ApexDomain.StandardModel {
 
-    private Step__c step;
+    Step__c step;
     
     /**
      * For advertising domain layer errors
@@ -10,7 +10,7 @@ public class StepModel extends ApexDomain.StandardModel {
     /**
      * Privatize constructor to force use of fromName() or fromId()
      */
-    @TestVisible private StepModel(Step__c step) {
+    @TestVisible StepModel(Step__c step) {
         super(step);
         this.step = step;
     }

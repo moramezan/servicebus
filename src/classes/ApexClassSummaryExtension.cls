@@ -1,7 +1,7 @@
 public with sharing class ApexClassSummaryExtension {
     
-    private ApexPages.StandardController controller;
-    private ApexClassModel model;
+    ApexPages.StandardController controller;
+    ApexClassModel model;
     
     public ApexClassModel.Summary Summary {get; set;}
     public String FullyQualifiedClassName {get; set;}

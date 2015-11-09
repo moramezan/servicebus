@@ -1,4 +1,4 @@
-@IsTest public class MessageModelTest {
+@IsTest class MessageModelTest {
     
     static testmethod void testShowApexClassFindsIt() {
         //arrange sequence and steps

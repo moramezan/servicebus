@@ -1,6 +1,5 @@
-@IsTest //-- no view of org data
-private class TerminateTest
-{
+@IsTest class TerminateTest {
+    
     static testmethod void hasTheCorrectLimits() {
         //arrange
         ApexClassModel.Summary summary = new ApexClassModel.Summary(Terminate.class);

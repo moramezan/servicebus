@@ -1,4 +1,4 @@
-@IsTest public class StepConfigExtensionTest {
+@IsTest class StepConfigExtensionTest {
     
     static testmethod void coverCode() {
         //arrange

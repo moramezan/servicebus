@@ -1,4 +1,4 @@
-@IsTest private class SubsequenceTest {
+@IsTest class SubsequenceTest {
  
     static testmethod void hasTheCorrectLimits() {
         //arrange
@@ -173,7 +173,7 @@
         }
     }
     
-    @TestVisible private class CalloutMock implements HttpCalloutMock {
+    @TestVisible class CalloutMock implements HttpCalloutMock {
         public HttpResponse respond(HttpRequest request) {
             return new HttpResponse();
         }

@@ -1,5 +1,5 @@
-@IsTest private class PostUninstallHandlerTest {
+@IsTest class PostUninstallHandlerTest {
 
-    //
+    //TODO
 
 }

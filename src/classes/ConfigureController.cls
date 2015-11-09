@@ -118,18 +118,18 @@ public with sharing class ConfigureController {
     /**
      * Connected app attributes
      */
-    final static private String CLIENT;
-    final static private String SECRET;
-    final static private String REDIRECT;
-    final static private String APPNAME;
-    final static private String LOGIN;
+    final static String CLIENT;
+    final static String SECRET;
+    final static String REDIRECT;
+    final static String APPNAME;
+    final static String LOGIN;
     
     /**
      * Environment discovery
      */
-    final static private Boolean ISDEV = ConfigureController.class.getName().substringBefore('ConfigureController').substringBefore('.') == '';
-    final static private Boolean ISTEST = [SELECT IsSandbox FROM Organization LIMIT 1].IsSandbox;
-    final static private Boolean ISPROD = !ISDEV && !ISTEST;
+    final static Boolean ISDEV = ConfigureController.class.getName().substringBefore('ConfigureController').substringBefore('.') == '';
+    final static Boolean ISTEST = [SELECT IsSandbox FROM Organization LIMIT 1].IsSandbox;
+    final static Boolean ISPROD = !ISDEV && !ISTEST;
     
     /**
      * Initialize
@@ -188,7 +188,7 @@ public with sharing class ConfigureController {
      * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2FConfigure
      * &response_type=code
      */
-    @TestVisible private System.PageReference buildAuthLink() {
+    @TestVisible System.PageReference buildAuthLink() {
         System.PageReference pr = new System.PageReference(LOGIN + '/services/oauth2/authorize');
         pr.getParameters().put('response_type', 'code');
         pr.getParameters().put('client_id', CLIENT);
@@ -223,7 +223,7 @@ public with sharing class ConfigureController {
      * "access_token":"00Dj0000000I44v!AQYAQLocFFeWV3WywoaS6wjcdnEvm4_FdPrd9MrlB_y1Q.5Xll9mTloey5GIXrIP1fdB2lKlsfmZ7Sqh6UAhFzuD6SzHqtXO"
      * }
      */
-    @TestVisible private System.PageReference buildCodeLink(String code) {
+    @TestVisible System.PageReference buildCodeLink(String code) {
         String instanceUrl = OAuthSetting__c.getOrgDefaults().InstanceUrl__c;
         System.PageReference pr = new System.PageReference(instanceUrl + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'authorization_code');
@@ -255,7 +255,7 @@ public with sharing class ConfigureController {
      * "access_token":"00Dj0000000I44v!AQYAQKgWV8FRAfgKVWJE5BETIjEE0hvNWKojZI57zaxpPcLe1tqWrCXgkjhSvRwXHTiIOTF12Hd7TvKZd7WBg8kUbVIbcHeL"
      * }
      */
-    @TestVisible private System.PageReference buildRefreshLink() {
+    @TestVisible System.PageReference buildRefreshLink() {
         String instanceUrl = OAuthSetting__c.getOrgDefaults().InstanceUrl__c;
         System.PageReference pr = new System.PageReference(instanceUrl + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'refresh_token');
@@ -460,7 +460,7 @@ public with sharing class ConfigureController {
         throw new SetupException('Redirect exception');
     }
     
-    static private OAuthSetting__c setting;
+    static OAuthSetting__c setting;
     
     /**
      * bigassforce/servicebus#781 pass security scanner

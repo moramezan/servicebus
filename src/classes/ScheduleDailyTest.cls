@@ -1,4 +1,4 @@
-@IsTest private class ScheduleDailyTest {
+@IsTest class ScheduleDailyTest {
 
     static testmethod void hasTheCorrectLimits() {
         //arrange

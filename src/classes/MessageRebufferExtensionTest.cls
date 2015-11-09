@@ -1,4 +1,4 @@
-@IsTest public class MessageRebufferExtensionTest {
+@IsTest class MessageRebufferExtensionTest {
     
     static testmethod void coverCode() {
         //arrange

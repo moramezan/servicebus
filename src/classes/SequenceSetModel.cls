@@ -211,7 +211,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
      * When deleting a SEQUENCE, we no longer have master-detail to delete the STEP,
      * so we cascade the delete ourselves manually, and take care of the configs too.
      */
-    @TestVisible private void destroyAllStepsAndConfigs() {
+    @TestVisible void destroyAllStepsAndConfigs() {
         Savepoint savepoint = Database.setSavepoint();
         try {
             //query sequences

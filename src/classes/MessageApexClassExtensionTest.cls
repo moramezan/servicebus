@@ -1,4 +1,4 @@
-@IsTest public class MessageApexClassExtensionTest {
+@IsTest class MessageApexClassExtensionTest {
     
     static testmethod void coverCode() {
         //arrange record

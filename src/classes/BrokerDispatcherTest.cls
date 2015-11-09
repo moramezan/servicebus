@@ -1,4 +1,4 @@
-@IsTest public class BrokerDispatcherTest {
+@IsTest class BrokerDispatcherTest {
     
     @TestSetup static void testSetup() {
         OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();

@@ -1,4 +1,4 @@
-@IsTest private class SequenceSetModelTest {
+@IsTest class SequenceSetModelTest {
 
     //before delete
     static testmethod void testDeleteTriggersAreCascaded() {

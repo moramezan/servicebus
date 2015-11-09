@@ -1,4 +1,4 @@
-@IsTest public class StepModelTest {
+@IsTest class StepModelTest {
     
     static testmethod void testMoveStepBefore() {
         //arrange sequences

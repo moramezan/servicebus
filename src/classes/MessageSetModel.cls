@@ -95,7 +95,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
      * Fields can only be changed if Apex is
      * used to unset the Inhibit static.
      */
-    @TestVisible private void inhibitCreationFromGui() {
+    @TestVisible void inhibitCreationFromGui() {
         for (Message__c message : this.Messages) {
             if (Inhibit) message.addError('Messages cannot be created from the GUI.');
         }
@@ -123,7 +123,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
      * Ensure that Event parameters are always valid JSON #660
      * So that we can trust them in the Broker and keep code simple.
      */
-    @TestVisible private void alphabetizeJsonAndPopulateFields() {
+    @TestVisible void alphabetizeJsonAndPopulateFields() {
         for (Message__c message : this.Messages) try {
             if (message.Event__c == null) message.Event__c = '{}';
             Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
@@ -169,7 +169,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
      * https://github.com/bigassforce/servicebus/issues/581
      * https://github.com/bigassforce/servicebus/commit/2dd94e19c156170b86dc30b50e5e375876f5e758
      */
-    @TestVisible private void swallowToString() {
+    @TestVisible void swallowToString() {
         for (Message__c message : this.Messages) {
             if (message.Cause__c != null) {
                 message.Cause__c = message.Cause__c.replace('\n(esb)', '');

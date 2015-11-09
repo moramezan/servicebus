@@ -1,7 +1,7 @@
 public class AggregateByEntryPoint extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
-    private class AggregateByEntryPointException extends Exception {}
+    class AggregateByEntryPointException extends Exception {}
 
     public class Summary {
         String Tag = 'Service Bus';
@@ -87,8 +87,7 @@ public class AggregateByEntryPoint extends ApexClassModel.Service {
 
 
 
-    @testVisible
-    private static Map<String,Object> getCommonParameters(List<Message__c> messages) {
+    @TestVisible static Map<String,Object> getCommonParameters(List<Message__c> messages) {
         // iteration 1
         Set<String> allKeys = new Set<String>();
         for(Message__c message :messages) {
@@ -121,8 +120,7 @@ public class AggregateByEntryPoint extends ApexClassModel.Service {
 
 
 
-    @testVisible
-    private static Map<String,Object> cleanParameters(Map<String,Object> inputEvent) {
+    @TestVisible static Map<String,Object> cleanParameters(Map<String,Object> inputEvent) {
         for (String input : inputEvent.keySet()) {
             Object value = (Object)inputEvent.get(input);
             value =  (input.startsWith(':') || input.startsWith('servicebus:'))  ? value : null;
@@ -132,8 +130,7 @@ public class AggregateByEntryPoint extends ApexClassModel.Service {
         return inputEvent;
     }
     
-    @testVisible
-    private static Boolean isRelease(Set<Id> siblingIds, String entryPointUuid, Integer chunkTotal, Integer chunk) {
+    @TestVisible static Boolean isRelease(Set<Id> siblingIds, String entryPointUuid, Integer chunkTotal, Integer chunk) {
         // Release trigger:
         //
         //    NR / MB : we assume the Gate will never fail

@@ -1,6 +1,6 @@
-@IsTest public class SequenceBuilderExtensionTest {
+@IsTest class SequenceBuilderExtensionTest {
     
-    static private Id setupSequence() {
+    static Id setupSequence() {
         //arrange sequences
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;

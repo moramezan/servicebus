@@ -1,4 +1,4 @@
-@IsTest public class ApexClassSummaryExtensionTest {
+@IsTest class ApexClassSummaryExtensionTest {
     
     static testmethod void coverCode() {
         //arrange controller and extension

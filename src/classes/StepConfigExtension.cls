@@ -1,7 +1,7 @@
 public with sharing class StepConfigExtension {
     
-    private ApexPages.StandardController controller;
-    private StepModel model;
+    ApexPages.StandardController controller;
+    StepModel model;
     
     public StepConfigExtension(ApexPages.StandardController controller) {
         this.controller = controller;

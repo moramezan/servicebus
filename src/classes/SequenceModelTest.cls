@@ -1,10 +1,10 @@
-@IsTest private class SequenceModelTest {
+@IsTest class SequenceModelTest {
     
     @TestSetup static void testSetup() {
         new PostInstallHandler().upsertNamespaceSetting();
     }
     
-    private static testmethod void  callingFetchStepsReturnsExpectedStepCollection() {
+    static testmethod void  callingFetchStepsReturnsExpectedStepCollection() {
         // arrange
         String sequenceName = 'theSequence';
         Sequence__c soSequence = new Sequence__c(Name = sequenceName);
@@ -31,7 +31,7 @@
         System.assertEquals( expectedStepCount , actualStepCount  );
     }
     
-    private static testmethod void callingAppendStepAddStepWithExpectedServiceInExpectedPosition() {
+    static testmethod void callingAppendStepAddStepWithExpectedServiceInExpectedPosition() {
         // arrange
         String sequenceName = 'theSequence';
         Sequence__c soSequence = new Sequence__c(Name = sequenceName);
@@ -61,7 +61,7 @@
         System.assertEquals( expectedStepCount , actualStepCount  );
     }
 
-    private static testmethod void callingTerminateAddsTerminateStepIfNoTerminateStepExists() {
+    static testmethod void callingTerminateAddsTerminateStepIfNoTerminateStepExists() {
         // arrange
         String sequenceName = 'theSequence';
         Sequence__c soSequence = new Sequence__c(Name = sequenceName);
@@ -91,7 +91,7 @@
         System.assertEquals( expectedStepCount , actualStepCount  );
     }
     
-    private static testmethod void callingTerminateDoesNotAddTerminateStepIfTerminateStepExists() {
+    static testmethod void callingTerminateDoesNotAddTerminateStepIfTerminateStepExists() {
         // arrange
         String sequenceName = 'theSequence';
         Sequence__c soSequence = new Sequence__c(Name = sequenceName);
@@ -122,7 +122,7 @@
         System.assertEquals( expectedStepCount , actualStepCount  );
     }
     
-    private static testmethod void callingDeleteStepWillDeleteStepOnThisSequence() {
+    static testmethod void callingDeleteStepWillDeleteStepOnThisSequence() {
         // arrange
         String sequenceNameA = 'theSequenceA';
         Sequence__c soSequenceA = new Sequence__c(Name = sequenceNameA);

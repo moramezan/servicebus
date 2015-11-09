@@ -33,11 +33,11 @@ public with sharing class SequenceCommitExtension implements Database.Batchable<
         return (AsyncApexJob)ApexDomain.getById(this.asyncApexJobId);
     }
     
-    @remoteaction static public List<Step__c> readSteps(Id asyncApexJobId) {
+    @RemoteAction static public List<Step__c> readSteps(Id asyncApexJobId) {
         return new ApexPages.StandardSetController(SequenceSetModel.locateDraftSteps()).getRecords();
     }
     
-    @remoteaction static public List<AsyncApexJob> readAsyncApexJobs(Id asyncApexJobId) {
+    @RemoteAction static public List<AsyncApexJob> readAsyncApexJobs(Id asyncApexJobId) {
         return ApexDomain.get([SELECT Id FROM AsyncApexJob WHERE Id = :asyncApexJobId]);
     }
     

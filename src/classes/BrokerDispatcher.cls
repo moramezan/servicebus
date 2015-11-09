@@ -3,7 +3,7 @@
  */
 public without sharing class BrokerDispatcher implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
     
-    private Database.Batchable<SObject> batch = (Database.Batchable<SObject>)Type.forName('BrokerImplementation').newInstance();
+    Database.Batchable<SObject> batch = (Database.Batchable<SObject>)Type.forName('BrokerImplementation').newInstance();
     
     public Database.QueryLocator start(Database.BatchableContext context) {
         return (Database.QueryLocator)this.batch.start(context);

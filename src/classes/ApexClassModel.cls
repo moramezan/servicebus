@@ -242,8 +242,8 @@ abstract public class Service {
         }
     }
     
-    private String EventProvider = '{}';
-    private Boolean AllowsCallouts;
+    String EventProvider = '{}';
+    Boolean AllowsCallouts;
 }
     
     /**

@@ -1,4 +1,4 @@
-@IsTest private class MessagePauseQueueExtensionTest {
+@IsTest class MessagePauseQueueExtensionTest {
     
     static testmethod void coverCode() {
         //arrange controller and extension

@@ -1,4 +1,4 @@
-@IsTest public class ApexClassSetModelTest {
+@IsTest class ApexClassSetModelTest {
     
     static testmethod void testDiscoverServices() {
         //act

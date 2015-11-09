@@ -1,4 +1,4 @@
-@IsTest public class MessageRecordDataExtensionTest {
+@IsTest class MessageRecordDataExtensionTest {
     
     static testmethod void coverCode() {
         //arrange message

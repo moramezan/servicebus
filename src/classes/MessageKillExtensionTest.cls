@@ -1,4 +1,4 @@
-@IsTest public class MessageKillExtensionTest {
+@IsTest class MessageKillExtensionTest {
 
     static testmethod void coverCode() {
         //arrange controller and extension

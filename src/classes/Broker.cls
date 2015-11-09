@@ -39,10 +39,10 @@ abstract public without sharing class Broker {
     static public Broker impl() {
         if (Test.isRunningTest()) {
             //unit test broker
-            return new BrokerTest.SynchronousBroker();
+            return (Broker)Type.forName('BrokerTest.SynchronousBroker').newInstance();
         } else {
             //production broker
-            return new BrokerImplementation();
+            return (Broker)Type.forName('BrokerImplementation').newInstance();
         }
     }
     

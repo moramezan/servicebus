@@ -1,4 +1,4 @@
-@IsTest private class PublishTest {
+@IsTest class PublishTest {
 
     static testmethod void hasTheCorrectLimits() {
         //arrange

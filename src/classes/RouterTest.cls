@@ -1,8 +1,8 @@
 /**
- * @obfuscation
+ * @Obfuscation
  * Formerly nown as HeartbeatTest
  */
-@IsTest private class RouterTest {
+@IsTest class RouterTest {
 
     static testmethod void testHeartbeatDispatchesOneIndexedMessages() {
         //arrange services, sequence, step

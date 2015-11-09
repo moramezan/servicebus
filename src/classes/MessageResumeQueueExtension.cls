@@ -1,6 +1,6 @@
 public with sharing class MessageResumeQueueExtension {
     
-    private ApexPages.StandardSetController controller;
+    ApexPages.StandardSetController controller;
     
     public MessageResumeQueueExtension(ApexPages.StandardSetController controller) {
         this.controller = controller;

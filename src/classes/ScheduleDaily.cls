@@ -60,7 +60,7 @@ public class ScheduleDaily extends ApexClassModel.Service {
         return outputEvents;
     }
 
-    @TestVisible static private Boolean isWithinWindow(String stampAsString, ScheduleDailyConfig__c config) {
+    @TestVisible static Boolean isWithinWindow(String stampAsString, ScheduleDailyConfig__c config) {
         DateTime stampAsDateTime;
         try {
            stampAsString =  getISO8601(stampAsString);
@@ -131,12 +131,12 @@ public class ScheduleDaily extends ApexClassModel.Service {
         }*/
     }
     
-    @TestVisible static private Boolean isWithinWeeklyWindow(DateTime stampAsDateTime, Set<String> details) {
+    @TestVisible static Boolean isWithinWeeklyWindow(DateTime stampAsDateTime, Set<String> details) {
         String day = stampAsDateTime.format('EEEE');
         return details.contains(day);
     }
     
-    @TestVisible static private Boolean isWithinDailyWindow(DateTime stampAsDateTime, Set<String> details) {
+    @TestVisible static Boolean isWithinDailyWindow(DateTime stampAsDateTime, Set<String> details) {
         String day = stampAsDateTime.format('EEEE');
         
         Set<String> days = new Set<String>();
@@ -161,7 +161,7 @@ public class ScheduleDaily extends ApexClassModel.Service {
         return days.contains(day);
     }
  
-    @TestVisible static private Boolean isTimeMatch(String stampAsString, Set<String> runTimes) {
+    @TestVisible static Boolean isTimeMatch(String stampAsString, Set<String> runTimes) {
         Pattern myPattern = pattern.compile('.*T(\\d{2}:\\d{2}):\\d{2}.*');  // '2014-01-18T12:00:00.000Z'
         Matcher myMatcher = myPattern.matcher(stampAsString);
         if ( myMatcher.matches() && (myMatcher.groupCount() == 1)) {
@@ -171,7 +171,7 @@ public class ScheduleDaily extends ApexClassModel.Service {
         return false;
     }
     
-    @TestVisible static private Boolean isWithinMonthlyWindow(String stampAsString, Set<String> details) {
+    @TestVisible static Boolean isWithinMonthlyWindow(String stampAsString, Set<String> details) {
         Pattern myPattern = pattern.compile('\\d{4}-\\d{2}-(\\d{2})T\\d{2}:\\d{2}:\\d{2}.*');  // '2014-01-18T12:00:00.000Z'
         Matcher myMatcher = myPattern.matcher(stampAsString);
         if ( myMatcher.matches() && (myMatcher.groupCount() == 1)) {
@@ -181,11 +181,11 @@ public class ScheduleDaily extends ApexClassModel.Service {
         return false;
     }
     
-    static private DateTime getStamp(String value) {
+    static DateTime getStamp(String value) {
         return (DateTime)Json.deserialize('"' + getISO8601(value) + '"', DateTime.class);
     }
     
-    static private String getISO8601(String value) {
+    static String getISO8601(String value) {
         value  = (value.endsWith('Z')) ? value :  value+'Z';
         DateTime localDateTime = (DateTime)Json.deserialize('"' + value + '"', DateTime.class);
         return ((''+localDateTime).replace(' ','T')); // or json.serialize(stamp) but that returns (unwanted) milliseconds)

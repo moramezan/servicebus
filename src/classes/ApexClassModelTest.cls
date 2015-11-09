@@ -1,4 +1,4 @@
-@IsTest public class ApexClassModelTest {
+@IsTest class ApexClassModelTest {
     
     //@TestVisible private preferred, but Type.forName does not support
     public class DescribeService extends ApexClassModel.Service {

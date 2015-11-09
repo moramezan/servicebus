@@ -1,7 +1,7 @@
 public with sharing class MessageRebufferExtension {
     
-    private ApexPages.StandardSetController controller;
-    static private MessageSetModel model;
+    ApexPages.StandardSetController controller;
+    static MessageSetModel model;
     
     public MessageRebufferExtension(ApexPages.StandardSetController controller) {
         this.controller = controller;

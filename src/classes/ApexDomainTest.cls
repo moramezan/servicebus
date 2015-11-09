@@ -1,12 +1,12 @@
-@IsTest public class ApexDomainTest {
+@IsTest class ApexDomainTest {
     
-    @TestVisible private class ContactModel extends ApexDomain.StandardModel {
+    @TestVisible class ContactModel extends ApexDomain.StandardModel {
         public ContactModel(Contact contact) {
             super(contact);
         }
     }
     
-    @TestVisible private class ContactSetModel extends ApexDomain.StandardSetModel {
+    @TestVisible class ContactSetModel extends ApexDomain.StandardSetModel {
         public ContactSetModel(List<Contact> contacts) {
             super(contacts);
         }

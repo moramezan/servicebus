@@ -1,8 +1,8 @@
 /**
- * @obfuscation
+ * @Obfuscation
  * Formerly known as HeartbeatDispatcherTest
  */
-@IsTest private class RouterDispatcherTest {
+@IsTest class RouterDispatcherTest {
     
     //TODO
     

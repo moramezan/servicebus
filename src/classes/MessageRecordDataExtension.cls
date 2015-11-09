@@ -1,7 +1,7 @@
 public with sharing class MessageRecordDataExtension {
     
-    private ApexPages.StandardController controller;
-    private MessageModel model;
+    ApexPages.StandardController controller;
+    MessageModel model;
     
     public MessageRecordDataExtension(ApexPages.StandardController controller) {
         this.controller = controller;

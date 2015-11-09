@@ -28,7 +28,7 @@ public without sharing class PostInstallHandler implements InstallHandler {
      * For namespace neutrality, this helps custom button code
      * to determine fully-qualified object and apex class names.
      */
-    @TestVisible private void upsertNamespaceSetting() {
+    @TestVisible void upsertNamespaceSetting() {
         NamespaceSetting__c setting = NamespaceSetting__c.getOrgDefaults();
         setting.BarPrefix__c = SObjectType.NamespaceSetting__c.Name.substringBefore('NamespaceSetting__c');
         setting.DotPrefix__c = PostInstallHandler.class.getName().substringBefore('PostInstallHandler');
@@ -39,7 +39,7 @@ public without sharing class PostInstallHandler implements InstallHandler {
     /**
      * Notify them (and us) on package install
      */
-    static private void sendNotification(Id userId) {
+    static void sendNotification(Id userId) {
         //notify the installing user
         User user = [
             SELECT Id, FirstName, Email

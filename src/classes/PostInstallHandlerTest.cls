@@ -1,4 +1,4 @@
-@IsTest private class PostInstallHandlerTest {
+@IsTest class PostInstallHandlerTest {
 
     static testmethod void testOnInstallSendsEmail() {
         //assert

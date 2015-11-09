@@ -1,4 +1,4 @@
-@IsTest public class MessageSetModelTest {
+@IsTest class MessageSetModelTest {
     
     static testmethod void inhibitCreationFromGuiInhibitsGui() {
         //arrange

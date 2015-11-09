@@ -1,5 +1,4 @@
-@IsTest //-- no view of org data
-private class WiretapTest {
+@IsTest class WiretapTest {
     
     static testmethod void hasTheCorrectLimits() {
         //arrange

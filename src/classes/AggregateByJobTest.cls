@@ -1,4 +1,4 @@
-@IsTest public class AggregateByJobTest {
+@IsTest class AggregateByJobTest {
 
    static testmethod void hasTheCorrectLimits() {
         //arrange

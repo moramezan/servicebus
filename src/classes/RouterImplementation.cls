@@ -2,7 +2,7 @@
  * DO NOT SCHEDULE THIS CLASS EVER
  * http://salesforce.stackexchange.com/a/24448/320
  *
- * @obfuscation
+ * @Obfuscation
  * Formerly known as HeartbeatImplementation
  */
 public class RouterImplementation implements System.Schedulable {
@@ -90,8 +90,7 @@ public class RouterImplementation implements System.Schedulable {
      * Creates a list of time stamps based on the multiples of the interval in minutes
      * WITH reference to the current time the last event stamp
      */
-    @testVisible
-    private static List<DateTime> getHeartbeats(Integer intervalInMinutes, DateTime lastEventStamp, DateTime currentDateTime)
+    @TestVisible static List<DateTime> getHeartbeats(Integer intervalInMinutes, DateTime lastEventStamp, DateTime currentDateTime)
     {
         List<DateTime> heartbeats = new List<DateTime>();
      
@@ -116,8 +115,7 @@ public class RouterImplementation implements System.Schedulable {
      * The initial time stamp is the earliest multiple of the interval minutes with
      * reference to the current time
      */
-    @testVisible
-    private static DateTime getInitialStamp(Integer intervalInMinutes,  DateTime currentDateTime)
+    @TestVisible static DateTime getInitialStamp(Integer intervalInMinutes,  DateTime currentDateTime)
     {
         List<Integer> intervals = new List<Integer>();
         Integer i = 0;
@@ -149,8 +147,7 @@ public class RouterImplementation implements System.Schedulable {
     /* Updates the lst event stamp. The last event stamp is explicitly saved in ISO8601
      * format
      */
-    @testVisible
-    private static void updateLastEventStamp( List<DateTime> heartbeats ) {
+    @TestVisible static void updateLastEventStamp( List<DateTime> heartbeats ) {
         Integer count = heartbeats.size();
         if (count == 0)
             return;
@@ -164,8 +161,7 @@ public class RouterImplementation implements System.Schedulable {
     }
 
 
-    @testVisible
-    private static void generateHeartbeats(Integer intervalInMinutes, DateTime lastEventStamp, DateTime currentDateTime) {
+    @TestVisible static void generateHeartbeats(Integer intervalInMinutes, DateTime lastEventStamp, DateTime currentDateTime) {
         List<DateTime> timestamps =  getHeartbeats(intervalInMinutes, lastEventStamp, currentDateTime);
         
         updateLastEventStamp(timestamps);

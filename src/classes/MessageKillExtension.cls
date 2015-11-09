@@ -1,7 +1,7 @@
 public with sharing class MessageKillExtension {
 
-    private ApexPages.StandardSetController controller;
-    static private MessageSetModel model;
+    ApexPages.StandardSetController controller;
+    static MessageSetModel model;
     
     public MessageKillExtension(ApexPages.StandardSetController controller) {
         this.controller = controller;

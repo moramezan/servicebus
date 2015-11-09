@@ -1,4 +1,4 @@
-@IsTest public class ConfigureControllerTest {
+@IsTest class ConfigureControllerTest {
     
     //needed in packaging org, or
     //he cant see his own namespace
@@ -246,7 +246,7 @@
         System.assertEquals(expectedUrl, actualUrl, 'Wrong URL.');
     }
     
-    @TestVisible private class UnauthorizedEndpointResponse implements HttpCalloutMock {
+    @TestVisible class UnauthorizedEndpointResponse implements HttpCalloutMock {
         public HttpResponse respond(HttpRequest request) {
             CalloutException e = (CalloutException)CalloutException.class.newInstance();
             e.setMessage('Unauthorized endpoint, please check Setup->Security->Remote site settings.');
@@ -254,7 +254,7 @@
         }
     }
     
-    @TestVisible private class IpRestrictedResponse implements HttpCalloutMock {
+    @TestVisible class IpRestrictedResponse implements HttpCalloutMock {
         public HttpResponse respond(HttpRequest request) {
             HttpResponse response = new HttpResponse();
             response.setBody('{"error_description":"ip restricted","error":"invalid_grant"}');
@@ -262,7 +262,7 @@
         }
     }
     
-    @TestVisible private class TokenResponse implements HttpCalloutMock {
+    @TestVisible class TokenResponse implements HttpCalloutMock {
         public HttpResponse respond(HttpRequest request) {
             ConfigureController.Token token = new ConfigureController.Token();
             token.refresh_token = 'rrrrr';

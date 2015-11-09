@@ -1,6 +1,6 @@
 public with sharing class MessagePauseQueueExtension {
     
-    private ApexPages.StandardSetController controller;
+    ApexPages.StandardSetController controller;
     
     public MessagePauseQueueExtension(ApexPages.StandardSetController controller) {
         this.controller = controller;
