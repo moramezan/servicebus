@@ -11,6 +11,8 @@
         <members>AggregateByEntryPointTest</members>
         <members>AggregateByJob</members>
         <members>AggregateByJobTest</members>
+        <members>ApexClassListExtension</members>
+        <members>ApexClassListExtensionTest</members>
         <members>ApexClassModel</members>
         <members>ApexClassModelTest</members>
         <members>ApexClassSetModel</members>
@@ -19,7 +21,6 @@
         <members>ApexClassSettingExtensionTest</members>
         <members>ApexClassSummaryExtension</members>
         <members>ApexClassSummaryExtensionTest</members>
-        <members>ApexClassTabController</members>
         <members>ApexDomain</members>
         <members>ApexDomainTest</members>
         <members>ApprovalLock</members>
@@ -101,15 +102,16 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>ApexClassList</members>
         <members>ApexClassSetting</members>
         <members>ApexClassSplash</members>
         <members>ApexClassSummary</members>
-        <members>ApexClassTab</members>
         <members>Configure</members>
         <members>ContextSensitiveHelp</members>
         <members>MessageApexClass</members>
         <members>MessageHelp</members>
         <members>MessageKill</members>
+        <members>MessageList</members>
         <members>MessagePauseQueue</members>
         <members>MessageRebuffer</members>
         <members>MessageRecordData</members>
@@ -123,6 +125,7 @@
         <members>SequenceCommit</members>
         <members>SequenceDiscard</members>
         <members>SequenceHelp</members>
+        <members>SequenceList</members>
         <members>SequenceSplash</members>
         <members>StepConfig</members>
         <name>ApexPage</name>

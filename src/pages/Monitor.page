@@ -1,4 +1,17 @@
-<apex:page tabStyle="Monitor__tab" sidebar="false" controller="MonitorController" title="Monitor" readOnly="true">
+<apex:page setup="true" tabStyle="Monitor__tab" sidebar="false" controller="MonitorController" title="Monitor" readOnly="true">
+    
+    <script>
+        (function() {
+            if (!document.getElementsByClassName) return;
+            var lis = document.getElementsByClassName('wt-Monitor');
+            if (!lis.length) return;
+            lis[0].className += ' zen-active primaryPalette';
+            var a = lis[0].children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+    </script>
+    
     <apex:pageMessages showDetail="false" />
     
     Change live system:

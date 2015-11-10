@@ -1,18 +1,18 @@
-<apex:page standardController="ApexClass" setup="true" extensions="ApexClassSummaryExtension" title="Service: {!ApexClass.Name}" action="{!doInit}">
-    
-    <apex:stylesheet value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/Builder-all.css')}" />
+<apex:page setup="true" standardController="ApexClass" extensions="ApexClassSummaryExtension" title="Service: {!ApexClass.Name}" action="{!doInit}">
     
     <script>
         (function() {
-            //colour in the services tab... d'oh
-            var li = document.getElementById('01rj0000000lOoP' + '_Tab');
-            if (!li) return;
-            li.className += ' zen-active primaryPalette';
-            var a = li.children[0];
+            if (!document.getElementsByClassName) return;
+            var lis = document.getElementsByClassName('wt-Services');
+            if (!lis.length) return;
+            lis[0].className += ' zen-active primaryPalette';
+            var a = lis[0].children[0];
             if (!a) return;
             a.className += ' brandPrimaryFgr';
         }());
     </script>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/Builder-all.css')}" />
     
     <apex:pageMessages showDetail="false" />
     

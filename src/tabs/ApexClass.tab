@@ -4,6 +4,6 @@
     <label>Services</label>
     <mobileReady>false</mobileReady>
     <motif>Custom67: Gears</motif>
-    <page>ApexClassTab</page>
+    <page>ApexClassList</page>
     <splashPageLink>ApexClassSplash</splashPageLink>
 </CustomTab>

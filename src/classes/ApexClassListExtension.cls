@@ -1,6 +1,10 @@
-public with sharing class ApexClassTabController {
+public with sharing class ApexClassListExtension {
     
-    public ApexClassTabController() {
+    public ApexClassListExtension(ApexPages.StandardController controller) {
+        this();
+    }
+    
+    public ApexClassListExtension() {
         //List controllers are not supported for ApexClass
         this.id2class = new Map<Id,ApexClass>();
         this.id2summary = new Map<Id,ApexClassModel.Summary>();

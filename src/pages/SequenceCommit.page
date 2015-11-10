@@ -1,5 +1,17 @@
-<apex:page standardController="Sequence__c" recordSetVar="sequences" extensions="SequenceCommitExtension" action="{!doCommit}">
-
+<apex:page setup="true" standardController="Sequence__c" recordSetVar="sequences" extensions="SequenceCommitExtension" action="{!doCommit}">
+    
+    <script>
+        (function() {
+            if (!document.getElementsByClassName) return;
+            var lis = document.getElementsByClassName('wt-Sequence');
+            if (!lis.length) return;
+            lis[0].className += ' zen-active primaryPalette';
+            var a = lis[0].children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+    </script>
+    
     <apex:pageMessages />
     
     <!-- make the loading mask go away -->

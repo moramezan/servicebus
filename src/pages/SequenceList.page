@@ -1,0 +1,16 @@
+<apex:page setup="true" tabStyle="Sequence__c" standardController="Sequence__c" recordSetVar="msgs">
+    
+    <script>
+        (function() {
+            if (!document.getElementsByClassName) return;
+            var lis = document.getElementsByClassName('wt-Sequence');
+            if (!lis.length) return;
+            lis[0].className += ' zen-active primaryPalette';
+            var a = lis[0].children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+    </script>
+    
+    <apex:enhancedList type="Sequence__c" height="600" />
+</apex:page>
