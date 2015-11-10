@@ -12,12 +12,12 @@ public class Branch extends ApexClassModel.Service {
         String Cardinality = 'One';
     }
     
-    public class BranchException extends Exception {}
+    public class ServiceException extends Exception {}
     
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
         String stepConfigId = (Id)inputEvent.get('StepConfigId');
-        if (stepConfigId == null) throw new BranchException('Null step config id.');
+        if (stepConfigId == null) throw new ServiceException('Null step config id.');
         
         BranchConfig__c config = [
             SELECT Id, Sequence__c
@@ -26,14 +26,14 @@ public class Branch extends ApexClassModel.Service {
         ];
         
         String route = (String)inputEvent.get('Route');
-        if (route == null) throw new BranchException('Null route.');
+        if (route == null) throw new ServiceException('Null route.');
         
         Step__c step = Step__c.getValues(route);
-        if (step == null) throw new BranchException('Null step.');
+        if (step == null) throw new ServiceException('Null step.');
         
         if (step.Sequence__c == config.Sequence__c) {
             //prevent recursion
-            throw new BranchException('Not allowed to branch to own sequence!');
+            throw new ServiceException('Not allowed to branch to own sequence!');
         }
         
         Integer version = Integer.valueOf(route.substringBefore('#'));

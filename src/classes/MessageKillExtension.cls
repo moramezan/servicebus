@@ -13,7 +13,7 @@ public with sharing class MessageKillExtension {
             //avoids DML in action method
             Type.forName(DoDml.class.getName()).newInstance();
             
-        } catch (Exception e) {
+        } catch (MessageSetModel.ModelException e) {
             //failure, eg you are not allowed to kill any of those messages
             ApexPages.addMessages(e);
             return null;

@@ -95,7 +95,7 @@
         try {
             //act
             SequenceSetModel.checkoutDraft();
-        } catch (Exception e) {
+        } catch (SequenceSetModel.ModelException e) {
             //assert
             System.assertEquals('Nothing to checkout.', e.getMessage(), 'Wrong message');
         }
@@ -123,7 +123,7 @@
         try {
             //act
             SequenceSetModel.checkoutDraft();
-        } catch (Exception e) {
+        } catch (SequenceSetModel.ModelException e) {
             //assert
             System.assertEquals('Already checked out.', e.getMessage(), 'Wrong message');
         }
@@ -133,7 +133,7 @@
         try {
             //act
             SequenceSetModel.showSequences();
-        } catch (Exception e) {
+        } catch (SequenceSetModel.ModelException e) {
             //assert
             System.assertEquals('Nothing to show.', e.getMessage(), 'Wrong message.');
         }
@@ -158,7 +158,7 @@
         try {
             //act
             SequenceSetModel.showSequences();
-        } catch (Exception e) {
+        } catch (SequenceSetModel.ModelException e) {
             //assert
             System.assertEquals('Already showing sequences.', e.getMessage(), 'Wrong message.');
         }
@@ -168,7 +168,7 @@
         try {
             //act
             SequenceSetModel.commitDraft();
-        } catch (Exception e) {
+        } catch (SequenceSetModel.ModelException e) {
             //assert
             System.assertEquals('Nothing to commit.', e.getMessage(), 'Wrong message.');
         }
@@ -195,7 +195,7 @@
         try {
             //act
             SequenceSetModel.hideSequences();
-        } catch (Exception e) {
+        } catch (SequenceSetModel.ModelException e) {
             //assert
             System.assertEquals('Already hiding sequences.', e.getMessage(), 'Wrong message.');
         }
@@ -212,7 +212,7 @@
         try {
             //act
             SequenceSetModel.hideSequences();
-        } catch (Exception e) {
+        } catch (SequenceSetModel.ModelException e) {
             //assert
             System.assertEquals('Already hiding sequences.', e.getMessage(), 'Wrong message.');
         }
@@ -222,7 +222,7 @@
         try {
             //act
             SequenceSetModel.discardDraft();
-        } catch (Exception e) {
+        } catch (SequenceSetModel.ModelException e) {
             //assert
             System.assertEquals('Nothing to discard.', e.getMessage(), 'Wrong message.');
         }
@@ -243,7 +243,7 @@
         try {
             //act
             SequenceSetModel.discardDraft();
-        } catch (Exception e) {
+        } catch (SequenceSetModel.ModelException e) {
             //assert
             System.assertEquals('Nothing to discard.', e.getMessage(), 'Wrong message.');
         }

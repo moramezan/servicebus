@@ -14,12 +14,8 @@ public class Wiretap extends ApexClassModel.Service {
     
     List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
-        Id userId;
-        try {
-            WiretapSetting__c setting = WiretapSetting__c.getOrgDefaults();
-            userId = setting.UserId__c;
-        } catch (Exception e) {
-        }
+        WiretapSetting__c setting = WiretapSetting__c.getOrgDefaults();
+        Id userId = setting.UserId__c;
         if (userId == null) {
             userId = UserInfo.getUserId();
         }

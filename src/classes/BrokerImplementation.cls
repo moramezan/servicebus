@@ -117,7 +117,7 @@ public without sharing class BrokerImplementation extends Broker implements Data
             } else {
                 
                 //PANIC
-                throw new Broker.PanicException('Unexpected stage: ' + this.NextStage);
+                throw new Broker.ServiceException('Broker Panic. Unexpected stage: ' + this.NextStage);
                 
             }
         } catch (Exception e) {

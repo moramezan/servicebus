@@ -23,13 +23,12 @@
         System.assert(expectedUrl.startsWith(actualUrl), 'Wrong URL.');
     }
     
-    public class MemoryErrorException extends Exception {}
-    
     public class MemoryError extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             inputEvent.put('c:OrganizationId', UserInfo.getOrganizationId());
-            throw new MemoryErrorException('Something catchable.');
+            Integer i = 1 / 0;
+            return null;
         }
     }
     
@@ -70,13 +69,12 @@
         System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
     }
     
-    public class InserterErrorException extends Exception {}
-    
     public class InserterError extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             insert new Document(Name = 'Test.txt', FolderId = UserInfo.getUserId());
-            throw new InserterErrorException('Something catchable.');
+            Integer i = 1 / 0;
+            return null;
         }
     }
     
@@ -274,7 +272,7 @@
         List<Message__c> outputMessages = new List<Message__c>();
         model.invokeExecute(outputMessages);
         
-        String expectedException = Broker.UserException.class.getName() + ': ' + SurpriseNullOutputs.class.getName() + ': Output event cannot be null';
+        String expectedException = Broker.ServiceException.class.getName() + ': ' + SurpriseNullOutputs.class.getName() + ': Output event cannot be null';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }

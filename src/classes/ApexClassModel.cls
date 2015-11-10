@@ -3,8 +3,7 @@
  */
 public class ApexClassModel extends ApexDomain.StandardModel {
     
-    public class InvocationException extends Exception {}
-    public class ServiceDiscoveryException extends Exception {}
+    public class ModelException extends Exception {}
     
     /**
      * This class is a template that must exist in every Service. It describes extra metadata around a service that
@@ -35,7 +34,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             if (inflector == null) inflector = Type.forName(reflector + 'Summary'); //makes testing easier
             if (inflector == null) {
                 //failure, bad inner class
-                throw new ServiceDiscoveryException('Service.Summary class is invalid or not visible: ' + reflector.getName());
+                throw new ModelException('Service.Summary class is invalid or not visible: ' + reflector.getName());
             }
             
             Map<String,Object> summary;
@@ -54,7 +53,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             } catch (Exception e) {}
             
             //failure, probably bad toString method
-            if (summary == null) throw new ServiceDiscoveryException(inflector.getName() + ': Service.Summary class must extend Abstract.Service.Summary');
+            if (summary == null) throw new ModelException(inflector.getName() + ': Service.Summary class must extend Abstract.Service.Summary');
             
             try {
                 //copy properties across
@@ -84,7 +83,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
 
             } catch (Exception e) {
                 //failure, probably bad json format
-                throw new ServiceDiscoveryException(inflector.getName() + ': Could not resolve value binding: ' + e.getMessage());
+                throw new ModelException(inflector.getName() + ': Could not resolve value binding: ' + e.getMessage());
             }
         }
     }
@@ -260,7 +259,7 @@ abstract public class Service {
         
         if (inputEvent == null) {
             //our own fault
-            throw new InvocationException('ApexClassModel.invokeCallout must receive an input event.');
+            throw new ModelException('ApexClassModel.invokeCallout must receive an input event.');
         }
         
         if (this.Service == null) {
@@ -281,24 +280,24 @@ abstract public class Service {
             data = String.valueOf(this.Service);
             
             //measure side effects after
-            if (Limits.getFutureCalls() > futureCalls) throw new Broker.UserException('You have uncommitted work pending. Please commit or rollback before calling out');
-            if (Limits.getQueueableJobs() > queueableJobs) throw new Broker.UserException('You have uncommitted work pending. Please commit or rollback before calling out');
-            if (Limits.getDMLStatements() > dmlStatements) throw new Broker.UserException('You have uncommitted work pending. Please commit or rollback before calling out');
-            if (Limits.getEmailInvocations() > emailInvocations) throw new Broker.UserException('You have uncommitted work pending. Please commit or rollback before calling out');
+            if (Limits.getFutureCalls() > futureCalls) throw new Broker.ServiceException('You have uncommitted work pending. Please commit or rollback before calling out');
+            if (Limits.getQueueableJobs() > queueableJobs) throw new Broker.ServiceException('You have uncommitted work pending. Please commit or rollback before calling out');
+            if (Limits.getDMLStatements() > dmlStatements) throw new Broker.ServiceException('You have uncommitted work pending. Please commit or rollback before calling out');
+            if (Limits.getEmailInvocations() > emailInvocations) throw new Broker.ServiceException('You have uncommitted work pending. Please commit or rollback before calling out');
             
         } catch (Exception e) {
             if (Subsequence.IsRunning) {
                 //#995 help subsequence bail out
                 String message = this.Reflector.getName() + ': Callout from Subsequence not supported. Consider using Jumps instead.';
                 if (!Test.isRunningTest()) System.assert(false, message);
-                else throw new Broker.UserException(message);
+                else throw new Broker.ServiceException(message);
             }
             
             if (e.getMessage() == 'You have uncommitted work pending. Please commit or rollback before calling out') {
                 //#981 put work in proper method please... fucking uncommit using system rollback (no savepoint because callout!)
                 String message = this.Reflector.getName() + ': Side effects from callout() not supported. Please do that in the execute() method.';
                 if (!Test.isRunningTest()) System.assert(false, message);
-                else throw new Broker.UserException(message);
+                else throw new Broker.ServiceException(message);
             }
             
             //https://github.com/bigassforce/servicebus/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843056
@@ -307,7 +306,7 @@ abstract public class Service {
         
         if (data != null) {
             //#886 a la "MyCustomException: Exception class must extend another Exception class"
-            throw new Broker.UserException(this.Reflector.getName() + ': Service must extend Abstract.Service');
+            throw new Broker.ServiceException(this.Reflector.getName() + ': Service must extend Abstract.Service');
         }
     }
     
@@ -315,7 +314,7 @@ abstract public class Service {
         
         if (inputEvent == null) {
             //our own fault
-            throw new InvocationException('ApexClassModel.invokeExecute must receive an input event.');
+            throw new ModelException('ApexClassModel.invokeExecute must receive an input event.');
         }
         
         if (this.Service == null) {
@@ -336,7 +335,7 @@ abstract public class Service {
         } catch (System.CalloutException e) {
             if (e.getMessage() == 'You have uncommitted work pending. Please commit or rollback before calling out') {
                 //#981 put callout in proper method please
-                throw new Broker.UserException(this.Reflector.getName() + ': Callout from execute() not supported. Please do that in the callout() method.');
+                throw new Broker.ServiceException(this.Reflector.getName() + ': Callout from execute() not supported. Please do that in the callout() method.');
             }
             
             //https://github.com/bigassforce/servicebus/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843061
@@ -345,12 +344,12 @@ abstract public class Service {
         
         if (data == null || data == 'null') {
             //#945 a la "System.VisualforceException: Return type of an Apex action method must be a PageReference. Found: java.lang.Integer"
-            throw new Broker.UserException(this.Reflector.getName() + ': Return type of a Service execute method must be a List<Map<String,Object>>');
+            throw new Broker.ServiceException(this.Reflector.getName() + ': Return type of a Service execute method must be a List<Map<String,Object>>');
         }
         
         if (data.startsWith(('.' + this.Reflector.getName()).substringAfterLast('.') + ':[')) {
             //#886 a la "MyCustomException: Exception class must extend another Exception class"
-            throw new Broker.UserException(this.Reflector.getName() + ': Service must extend Abstract.Service');
+            throw new Broker.ServiceException(this.Reflector.getName() + ': Service must extend Abstract.Service');
         }
         
         //wrap up results into events (new guys should have Position = 0)
@@ -360,18 +359,18 @@ abstract public class Service {
         
         if (results.size() > 1000) { //#955 possibly 5000, but headspace
             //#955 blow up too many output events emitted
-            throw new Broker.UserException(this.Reflector.getName() + ': Too many output events: ' + results.size());
+            throw new Broker.ServiceException(this.Reflector.getName() + ': Too many output events: ' + results.size());
         }
         
         for (Object result : results) {
             if (result == null) {
                 //#976 catch "surprise" null events
-                throw new Broker.UserException(this.Reflector.getName() + ': Output event cannot be null'); //a la System.NullPointerException: Argument cannot be null
+                throw new Broker.ServiceException(this.Reflector.getName() + ': Output event cannot be null'); //a la System.NullPointerException: Argument cannot be null
             }
             
             if (!(result instanceof Map<String,Object>)) {
                 //catch non map-string objects (unlikely unless custom nuclear tip)
-                throw new Broker.UserException(this.Reflector.getName() + ': Output event must be a Map<String,Object>'); //a la Return type of an Apex action method must be a PageReference. Found: java.lang.Integer
+                throw new Broker.ServiceException(this.Reflector.getName() + ': Output event must be a Map<String,Object>'); //a la Return type of an Apex action method must be a PageReference. Found: java.lang.Integer
             }
             
             Map<String,Object> outputEvent = (Map<String,Object>)result;

@@ -15,7 +15,7 @@ public with sharing class ApexClassSettingExtension {
             this.Action = result.isCustomSetting() ? 'Tab' : 'List';
             this.Isdtp = result.isCustomSetting() ? parameters.get('isdtp') : 'vw';
             
-        } catch (Exception e) {
+        } catch (ApexClassModel.ModelException e) {
             ApexPages.addMessages(e);
             
         }

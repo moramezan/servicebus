@@ -23,7 +23,7 @@ public with sharing class SequenceCheckoutExtension implements Database.Batchabl
             currentPage.setRedirect(true);
             return currentPage;
             
-        } catch (Exception e) {
+        } catch (SequenceSetModel.ModelException e) {
             ApexPages.addMessages(e);
             return null;
         }

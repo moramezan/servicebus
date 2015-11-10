@@ -150,7 +150,7 @@
             //act (stage should be abort)
             impl.execute(new MockContext(), new List<SObject>());
             System.assert(false, 'Line above should throw exception.');
-        } catch (Exception e) {
+        } catch (StringException e) {
             //assert that JOB IS ABORTED
             String expectedMessage = 'Job does not exist or is already aborted.';
             String actualMessage = e.getMessage();
@@ -283,9 +283,9 @@
             impl.NextStage = null;
             impl.execute(new MockContext(), new List<SObject>());
             System.assert(false, 'Line above should throw exception.');
-        } catch (Exception e) {
+        } catch (Broker.ServiceException e) {
             //assert
-            String expectedMessage = 'Unexpected stage: null';
+            String expectedMessage = 'Broker Panic. Unexpected stage: null';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }
@@ -296,7 +296,7 @@
             //act (stage should be abort)
             impl.execute(new MockContext(), new List<SObject>());
             System.assert(false, 'Line above should throw exception.');
-        } catch (Exception e) {
+        } catch (StringException e) {
             //assert that JOB IS ABORTED
             String expectedMessage = 'Job does not exist or is already aborted.';
             String actualMessage = e.getMessage();

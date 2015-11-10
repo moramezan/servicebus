@@ -1,6 +1,6 @@
 public class MessageSetModel extends ApexDomain.StandardSetModel {
     
-    public class MessageException extends Exception {}
+    public class ModelException extends Exception {}
     
     List<Message__c> Messages;
     
@@ -25,7 +25,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         Set<Id> attemptedIds = this.keySet();
         
         if (attemptedIds.isEmpty()) {
-            throw new MessageException('You must select some messages.');
+            throw new ModelException('You must select some messages.');
         }
         
         //we query on both status and exception to ensure guys
@@ -42,7 +42,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         
         if (killableMessages.isEmpty()) {
             //maybe selected messages were not killable...
-            throw new MessageException('Only messages with an Exception can be killed.');
+            throw new ModelException('Only messages with an Exception can be killed.');
         }
         
         for (Message__c killableMessage : killableMessages) {
@@ -62,7 +62,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         Set<Id> attemptedIds = this.keySet();
         
         if (attemptedIds.isEmpty()) {
-            throw new MessageException('You must select some messages.');
+            throw new ModelException('You must select some messages.');
         }
         
         List<Message__c> rebufferableMessages = [
@@ -75,7 +75,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         
         if (rebufferableMessages.isEmpty()) {
             //maybe selected messages were not killable...
-            throw new MessageException('Only messages with an Exception can be rebuffered.');
+            throw new ModelException('Only messages with an Exception can be rebuffered.');
         }
         
         for (Message__c rebufferableMessage : rebufferableMessages) {
@@ -158,7 +158,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             
             //#972 reserialize in alphabetical order
             message.Event__c = new SortedSerializer(event).toString();
-        } catch (Exception e) {
+        } catch (JsonException e) {
             message.Event__c.addError(e);
         }
     }

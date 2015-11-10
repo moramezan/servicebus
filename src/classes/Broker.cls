@@ -22,6 +22,8 @@
  */
 abstract public without sharing class Broker {
     
+    public class ServiceException extends Exception {}
+    
     /**
      * #985 helps avoid misleading errors
      */
@@ -32,9 +34,6 @@ abstract public without sharing class Broker {
     public String BlameMessage;
     
     static public Integer MaximumHops = 1000;
-    
-    public class UserException extends Exception {}
-    public class PanicException extends Exception {}
     
     static public Broker impl() {
         if (Test.isRunningTest()) {
@@ -107,7 +106,7 @@ abstract public without sharing class Broker {
             ];
             
         } catch (Exception e) {
-            throw new PanicException('Locate panic: ' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
+            throw new ServiceException('Locate panic: ' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
         }
     }
     
@@ -117,13 +116,12 @@ abstract public without sharing class Broker {
      */
     public void mark(List<Message__c> messages) {
         try {
-            if (!SObjectType.Message__c.Fields.Status__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Message__c.Fields.Status__c.Updateable');
             for (Message__c message : messages) message.Status__c = 'Started'; //in-database
             List<Database.SaveResult> results = Database.update(messages);
             //#1038 avoid playing with list by reference, hope to avoid memory leak
             
         } catch (Exception e) {
-            throw new PanicException('Mark panic: ' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
+            throw new ServiceException('Mark panic: ' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
         }
     }
     
@@ -197,7 +195,7 @@ abstract public without sharing class Broker {
             }
             
         } catch (Exception e) {
-            throw new PanicException('Execute panic:' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
+            throw new ServiceException('Execute panic:' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
         }
     }
 
@@ -259,7 +257,7 @@ abstract public without sharing class Broker {
             MessageSetModel.Inhibit = true;
             
         } catch (Exception e) {
-            throw new PanicException('Persist panic: ' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
+            throw new ServiceException('Persist panic: ' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
         }
     }
     

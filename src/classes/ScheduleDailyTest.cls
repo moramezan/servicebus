@@ -352,7 +352,7 @@
             ApexClassModel.Service service = new ScheduleDaily();
             service.handle(inputEvent);
             System.assert(false, 'Line above should throw exception.');
-        } catch (Exception e) {
+        } catch (ScheduleDaily.ServiceException e) {
             //assert
             String expectedMessage = 'Null entry point timestamp.';
             String actualMessage = e.getMessage();

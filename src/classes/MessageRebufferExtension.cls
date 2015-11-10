@@ -13,7 +13,7 @@ public with sharing class MessageRebufferExtension {
             //avoids DML in action method
             Type.forName(DoDml.class.getName()).newInstance();
             
-        } catch (Exception e) {
+        } catch (MessageSetModel.ModelException e) {
             //failure, eg you are not allowed to rebuffer any of those messages
             ApexPages.addMessages(e);
             return null;

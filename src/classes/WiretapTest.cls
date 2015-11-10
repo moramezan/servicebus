@@ -60,13 +60,8 @@
 
         // Act
         Boolean actualFlagException = false;
-        try {
-            ApexClassModel.Service service = new Wiretap();
-            List<Map<String,Object>> results = service.handle(parameters);
-        } catch (Exception e) {
-           actualFlagException = true;
-        }
-        
+        ApexClassModel.Service service = new Wiretap();
+        List<Map<String,Object>> results = service.handle(parameters);
  
         // Assert
         Boolean expectedFlagException = false;

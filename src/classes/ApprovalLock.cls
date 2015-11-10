@@ -2,7 +2,7 @@ public class ApprovalLock extends ApexClassModel.Service {
 
     void callout(Map<String,Object> inputEvent) {}
     
-    class ServiceException extends Exception {}
+    public class ServiceException extends Exception {}
     
     public class Summary {
         String Tag = 'Service Bus';

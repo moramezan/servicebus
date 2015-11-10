@@ -3,13 +3,13 @@
  */
 public class MessageModel extends ApexDomain.StandardModel {
     
+    public class ModelException extends Exception {}
+    
     /**
      * #981 help prevent side effects from restart
      * https://github.com/bigassforce/servicebus/issues/981#issuecomment-131665156
      */
     static public Exception RestartException;
-    
-
     
     /**
      * Event parameters
@@ -43,7 +43,7 @@ public class MessageModel extends ApexDomain.StandardModel {
         String route = (String)this.Event.get('Route');
         
         if (route == null) {
-            throw new Broker.UserException('Message has no route: ' + this.message.Id); //a la "List has no rows for assignment to SObject"
+            throw new Broker.ServiceException('Message has no route: ' + this.message.Id); //a la "List has no rows for assignment to SObject"
         }
         
         if (Broker.Instance != null) Broker.Instance.BlameRoute = route; //#985
@@ -57,7 +57,7 @@ public class MessageModel extends ApexDomain.StandardModel {
         Step__c step = Step__c.getValues(route);
         
         if (step == null) {
-            throw new Broker.UserException('Could not resolve message route: ' + route); //a la "Could not resolve field 'Billing Address' from value binding"
+            throw new Broker.ServiceException('Could not resolve message route: ' + route); //a la "Could not resolve field 'Billing Address' from value binding"
         }
         
         Id configId = step.ConfigId__c; //#856 this will get slurped up by "locate" and "mark" to add the step config id
@@ -73,13 +73,13 @@ public class MessageModel extends ApexDomain.StandardModel {
         String apexClassName = step.ApexClassName__c;
         
         if (apexClassName == null) {
-            throw new Broker.UserException('Apex class name cannot be null: ' + route); //a la "Argument cannot be null"
+            throw new Broker.ServiceException('Apex class name cannot be null: ' + route); //a la "Argument cannot be null"
         }
         
         service = Type.forName(apexClassName);
         
         if (service == null) {
-            throw new Broker.UserException('Class is invalid or not visible: ' + apexClassName); //a la "Variable is not visible" or "Variable does not exist" or "Dependent class is invalid and needs recompilation"
+            throw new Broker.ServiceException('Class is invalid or not visible: ' + apexClassName); //a la "Variable is not visible" or "Variable does not exist" or "Dependent class is invalid and needs recompilation"
         }
         
         if (Broker.Instance != null) Broker.Instance.BlameClass = service.getName(); //#985
@@ -97,7 +97,7 @@ public class MessageModel extends ApexDomain.StandardModel {
             
             Integer hops = (Integer)this.Event.get('Hops');
             if (hops >= Broker.MaximumHops) {
-                throw new Broker.UserException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
+                throw new Broker.ServiceException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
             }
             
             if (this.Model == null) {
@@ -147,7 +147,7 @@ public class MessageModel extends ApexDomain.StandardModel {
             
             Integer hops = (Integer)this.Event.get('Hops');
             if (hops >= Broker.MaximumHops) {
-                throw new Broker.UserException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
+                throw new Broker.ServiceException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
             }
             
             if (this.Model == null) {
@@ -161,7 +161,7 @@ public class MessageModel extends ApexDomain.StandardModel {
             Integer chunkTotal = (Integer)this.Event.get('Range');
             if (chunkTotal != null && chunkTotal + outputEvents.size() + outputMessages.size() > 2000) { //#955 possibly 8000, but headspace
                 //#955 we throttle inputs+outputs
-                throw new Broker.UserException(this.Model.Reflector.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Limits or emit fewer events.'); //#955 possibly 8000, but headspace //a la "System.TypeException: Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking."
+                throw new Broker.ServiceException(this.Model.Reflector.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Limits or emit fewer events.'); //#955 possibly 8000, but headspace //a la "System.TypeException: Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking."
             }
             
             //wrap up results into Messages (new guys should have Position = 0)
@@ -171,7 +171,7 @@ public class MessageModel extends ApexDomain.StandardModel {
                 
                 if (outputMessages == null) {
                     //panic, our own fault
-                    throw new Broker.UserException('MessageModel.invokeExecute must receive REFERENCE to list of output messages.');
+                    throw new Broker.ServiceException('MessageModel.invokeExecute must receive REFERENCE to list of output messages.');
                 }
                 
                 //TODO #972 alphabetize event parameter json
@@ -247,8 +247,9 @@ public class MessageModel extends ApexDomain.StandardModel {
             Id recordId = (Id)this.Event.get('RecordId');
             SObject recordData = ApexDomain.getById(recordId);
             return new ApexPages.StandardController(recordData).view();
-        } catch (Exception e) {
-            return null;
+            
+        } catch (ApexDomain.DomainException e) {
+            throw new ModelException('Could not show record data: ' + e.getMessage());
         }
     }
     
@@ -256,8 +257,13 @@ public class MessageModel extends ApexDomain.StandardModel {
      * Takes us to the standard salesforce page for the apex class
      */
     public PageReference showApexClass() {
-        ApexClassModel model = this.resolveApexClassModel();
-        ApexClass apexClass = (ApexClass)model.getRecord();
-        return new ApexPages.StandardController(apexClass).view();
+        try {
+            ApexClassModel model = this.resolveApexClassModel();
+            ApexClass apexClass = (ApexClass)model.getRecord();
+            return new ApexPages.StandardController(apexClass).view();
+            
+        } catch (Broker.ServiceException e) {
+            throw new ModelException('Could not show apex class: ' + e.getMessage());
+        }
     }
 }

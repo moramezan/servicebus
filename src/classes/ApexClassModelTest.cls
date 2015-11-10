@@ -91,7 +91,7 @@
             //act
             model.invokeCallout(new Map<String,Object>());
             System.assert(false, 'Line above should throw exception');
-        } catch (Exception e) {
+        } catch (Broker.ServiceException e) {
             //assert
             String expectedMessage = MissingToString.class.getName() + ': Service must extend Abstract.Service';
             String actualMessage = e.getMessage();
@@ -107,7 +107,7 @@
             //act
             model.invokeExecute(new Map<String,Object>());
             System.assert(false, 'Line above should throw exception');
-        } catch (Exception e) {
+        } catch (Broker.ServiceException e) {
             //assert
             String expectedMessage = MissingToString.class.getName() + ': Service must extend Abstract.Service';
             String actualMessage = e.getMessage();
@@ -138,7 +138,7 @@
         try {
             //act
             model.invokeExecute(new Map<String,Object>());
-        } catch (Exception e) {
+        } catch (Broker.ServiceException e) {
             //assert
             String expectedMessage = NullReturnValue.class.getName() + ': Return type of a Service execute method must be a List<Map<String,Object>>';
             String actualMessage = e.getMessage();
@@ -251,7 +251,7 @@
             //act
             model.invokeExecute(new Map<String,Object>());
             System.assert(false, 'Line above should throw exception.');
-        } catch (Exception e) {
+        } catch (Broker.ServiceException e) {
             String expectedMessage = TooManyOutputs.class.getName() + ': Too many output events: 5123';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
@@ -314,11 +314,11 @@
         String actualException = inputMessages[8].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
 
-        expectedException = Broker.UserException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Limits or emit fewer events.'; //#955 possibly 8000, but headspace
+        expectedException = Broker.ServiceException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Limits or emit fewer events.'; //#955 possibly 8000, but headspace
         actualException = inputMessages[9].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
 
-        expectedException = Broker.UserException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Limits or emit fewer events.'; //#955 possibly 8000, but headspace
+        expectedException = Broker.ServiceException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Limits or emit fewer events.'; //#955 possibly 8000, but headspace
         actualException = inputMessages[10].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
         
@@ -434,11 +434,11 @@
     public class ThrowerService extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {
             Integer i = 1 / 0; //System.MathException: Divide by 0
-            throw new Broker.UserException('Line above should throw exception.');
+            throw new Broker.ServiceException('Line above should throw exception.');
         }
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             new ApexPages.StandardController(null); //System.NullPointerException: Argument cannot be null
-            throw new Broker.UserException('Line above should throw exception.');
+            throw new Broker.ServiceException('Line above should throw exception.');
         }
     }
     
@@ -451,7 +451,7 @@
             //act
             model.invokeCallout(inputEvent);
             System.assert(false, 'Line above should throw exception.');
-        } catch (Exception e) {
+        } catch (MathException e) {
             //assert
             String expectedMessage = 'Divide by 0';
             String actualMessage = e.getMessage();
@@ -462,7 +462,7 @@
             //act
             model.invokeExecute(inputEvent);
             System.assert(false, 'Line above should throw exception.');
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             //assert
             String expectedMessage = 'Argument cannot be null';
             String actualMessage = e.getMessage();

@@ -14,7 +14,7 @@ public class Subsequence extends ApexClassModel.Service {
         String Cardinality = 'One';
     }
     
-    public class SubsequenceException extends Exception {}
+    public class ServiceException extends Exception {}
     
     public void traverse(Map<String,Object> inputEvent) {
         
@@ -49,7 +49,7 @@ public class Subsequence extends ApexClassModel.Service {
         IsRunning = true;
         
         String stepConfigId = (Id)inputEvent.get('StepConfigId');
-        if (stepConfigId == null) throw new SubsequenceException('Null step config id.');
+        if (stepConfigId == null) throw new ServiceException('Null step config id.');
         
         SubsequenceConfig__c config = [
             SELECT Id, Sequence__c
@@ -70,7 +70,7 @@ public class Subsequence extends ApexClassModel.Service {
             clone.put('Route', version + '#' + config.Sequence__c + '#' + position);
             this.traverse(clone);
             
-        } catch (Exception e) {
+        } catch (MessageModel.ModelException e) {
             //TODO catch "callouts not supported in subsequence, jump out and jump back"
             Database.rollback(savepoint);
             throw e;

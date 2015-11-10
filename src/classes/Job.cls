@@ -4,6 +4,8 @@
  */
 global class Job implements Process.Plugin, system.Queueable {
     
+    public class EnqueueException extends Exception {}
+    
     /**
      * We use this legitimately to "Wakeup" in rebuffer etc
      * But this constructor has to be public for Process.Plugin:
@@ -84,9 +86,6 @@ global class Job implements Process.Plugin, system.Queueable {
         }
         return ids;
     }
-    
-    public class RunException extends Exception {}
-    public class EnqueueException extends Exception {}
     
     public List<Map<String,Object>> Events = new List<Map<String,Object>>();
     
@@ -379,8 +378,6 @@ global class Job implements Process.Plugin, system.Queueable {
      * System.UnexpectedException:
      * common.exception.SqlDupValOnIndexException:
      * ORA-00001: unique constraint (CORE.AKCRON_JOB_DETAIL) violated
-     *
-     * @throws RunException
      */
     @Future(callout=true) static public void engine() { //obfuscation of runAsUser()
         //#653 don't waste TOOLING API CALL unnecessarily
@@ -389,7 +386,7 @@ global class Job implements Process.Plugin, system.Queueable {
         
         String command = Job.class.getName() + '.run(null);';
         ExecAnonResult result = execAnon(command);
-        if (!result.success) throw new RunException(Json.serialize(result)); //#858 don't swallow exceptions
+        if (!result.success) System.assert(false, Json.serialize(result)); //#858 don't swallow exceptions
     }
     
     /**
@@ -501,7 +498,7 @@ global class Job implements Process.Plugin, system.Queueable {
         // #653 throw unhandled exception in our namespace
         HttpResponse response = new Http().send(request);
         Integer status = response.getStatusCode();
-        if (status != 200) throw new RunException(response.getBody());
+        if (status != 200) System.assert(false, response.getBody());
         
         ExecAnonResult result = (ExecAnonResult)Json.deserialize(response.getBody(), ExecAnonResult.class);
         return result;

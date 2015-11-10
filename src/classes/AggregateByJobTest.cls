@@ -82,7 +82,7 @@
         try {
             ApexClassModel.Service service = new AggregateByJob();
             List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
-        } catch (Exception e) {
+        } catch (AggregateByJob.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory JobId');
         }
 
@@ -109,7 +109,7 @@
         try {
             ApexClassModel.Service service = new AggregateByJob();
             List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
-        } catch (Exception e) {
+        } catch (AggregateByJob.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory Route');
         }
 
@@ -135,7 +135,7 @@
         try {
             ApexClassModel.Service service = new AggregateByJob();
             List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
-        } catch (Exception e) {
+        } catch (AggregateByJob.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory Range');
         }
 
@@ -161,7 +161,7 @@
         try {
             ApexClassModel.Service service = new AggregateByJob();
             List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
-        } catch (Exception e) {
+        } catch (AggregateByJob.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory Chunk');
         }
 
@@ -187,7 +187,7 @@
         try {
             ApexClassModel.Service service = new AggregateByJob();
             List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
-        } catch (Exception e) {
+        } catch (AggregateByJob.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory SiblingIds');
         }
 

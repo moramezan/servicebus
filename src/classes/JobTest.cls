@@ -49,7 +49,7 @@
             //act
             new Job(input);
             System.assert(false, 'Line above should throw exception');
-        } catch (Exception e) {
+        } catch (Job.EnqueueException e) {
             //assert
             String expectedMessage = 'Type unsupported in JSON: common.apex.runtime.bytecode.BytecodeApexObjectType';
             String actualMessage = e.getMessage();
@@ -95,7 +95,7 @@
             //act
             new Job(inputEvents);
             System.assert(false, 'Line above should throw exception.');
-        } catch (Exception e) {
+        } catch (Job.EnqueueException e) {
             //assert
             String expectedMessage = 'Too many events: 1001';
             String actualMessage = e.getMessage();
@@ -116,7 +116,7 @@
             new Job(inputEvent);
             System.assert(false, 'Line above should throw exception.');
             
-        } catch (Exception e) {
+        } catch (Job.EnqueueException e) {
             //assert
             String expectedException = 'not supported';
             String actualException = e.getMessage();
@@ -129,7 +129,7 @@
             new Job(inputEvent);
             System.assert(false, 'Line above should throw exception.');
             
-        } catch (Exception e) {
+        } catch (Job.EnqueueException e) {
             //assert
             String expectedException = 'not supported';
             String actualException = e.getMessage();

@@ -1,11 +1,8 @@
 public class SequenceModel extends ApexDomain.StandardModel {
-
-    Sequence__c sequence;
     
-    /**
-     * For advertising domain layer errors
-     */
-    public class SequenceException extends Exception {}
+    public class ModelException extends Exception {}
+    
+    Sequence__c sequence;
     
     /**
      * Privatize constructor to force use of fromName() or fromId()
@@ -100,7 +97,6 @@ public class SequenceModel extends ApexDomain.StandardModel {
      * TEST scenarios can append inner classes.
      */
     @TestVisible Step__c appendStep(Type reflector) {
-        if (!SObjectType.Step__c.Createable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Createable');
         Savepoint sp = Database.setSavepoint();
         try {
             ApexClassModel model = new ApexClassModel(reflector);
@@ -137,9 +133,9 @@ public class SequenceModel extends ApexDomain.StandardModel {
             
             insert step;
             return Step__c.getValues(step.Name);
-        } catch (Exception e) {
+        } catch (DmlException e) {
             Database.rollback(sp);
-            throw new SequenceException('Could not append step "' + reflector + '"', e);
+            throw new ModelException('Could not append step "' + reflector + '"', e);
         }
     }
     
@@ -179,9 +175,6 @@ public class SequenceModel extends ApexDomain.StandardModel {
     public void destroyStep(String stepName) {
         Savepoint sp = Database.setSavepoint();
         try {
-            if (!SObjectType.Step__c.Deletable) throw new ApexDomain.CrudException('!SObjectType.Step__c.Deletable');
-            if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
-            
             Step__c stepToDelete = Step__c.getValues(stepName);
             
             //perform the delete
@@ -216,9 +209,9 @@ public class SequenceModel extends ApexDomain.StandardModel {
             }
             
             update stepsToReorder;
-        } catch (Exception e) {
+        } catch (DmlException e) {
             Database.rollback(sp);
-            throw new SequenceException('Could not destroy step "' + stepName + '"', e);
+            throw new ModelException('Could not destroy step "' + stepName + '"', e);
         }
     }
     

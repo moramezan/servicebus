@@ -110,7 +110,7 @@
             ApexClassModel.Service service = new Subsequence();
             service.handle(new Map<String,Object>());
             System.assert(false, 'Line above should throw exception.');
-        } catch (Exception e) {
+        } catch (Subsequence.ServiceException e) {
             //assert
             String expectedMessage = 'Null step config id.';
             String actualMessage = e.getMessage();
@@ -126,12 +126,11 @@
         }
     }
     
-    public class ErrorException extends Exception {}
-    
     public class Error extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
-            throw new ErrorException('Some Problem Here');
+            Integer i = 1 / 0;
+            return null;
         }
     }
     
@@ -165,9 +164,9 @@
             ApexClassModel.Service service = new Subsequence();
             service.handle(inputEvent);
             System.assert(false, 'Line above should throw exception.');
-        } catch (Exception e) {
+        } catch (MathException e) {
             //assert
-            String expectedMessage = 'Some Problem Here';
+            String expectedMessage = 'Divide by 0';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }
@@ -225,7 +224,7 @@
             service.handle(event);
             System.assert(false, 'Line above should throw exception.');
             
-        } catch (Exception e) {
+        } catch (Broker.ServiceException e) {
             //assert
             String expectedMessage = Callout.class.getName() + ': Callout from Subsequence not supported. Consider using Jumps instead.';
             String actualMessage = e.getMessage();

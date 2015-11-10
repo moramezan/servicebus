@@ -1,5 +1,7 @@
 public class ApexClassSetModel extends ApexDomain.StandardSetModel {
     
+    public class ModelException extends Exception {}
+    
     /**
      * Model not allowed to make assumptions about
      * the fields he is constructed with. Id only.
@@ -36,7 +38,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             
             //we DONT enter each namespace, just assume ok
             if (inflector != null) services.add(apexClass);
-        } catch (Exception e) {}
+        } catch (ApexClassSetModel.ModelException e) {}
         
         return new ApexClassSetModel(services);
     }
@@ -54,7 +56,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
             ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
             summaries.add(summary);
-        } catch (Exception e) {}
+        } catch (ApexClassSetModel.ModelException e) {}
         
         return summaries;
     }
@@ -111,7 +113,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             };
             
             dtos.add(dto);
-        } catch (Exception e) {}
+        } catch (ApexClassModel.ModelException e) {}
         
         return dtos;
     }

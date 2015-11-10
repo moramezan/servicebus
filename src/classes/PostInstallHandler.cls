@@ -69,7 +69,7 @@ public without sharing class PostInstallHandler implements InstallHandler {
         
         try {
             Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{message});
-        } catch (Exception e) {
+        } catch (EmailException e) {
             //eg sandbox with no access to send email
         }
     }

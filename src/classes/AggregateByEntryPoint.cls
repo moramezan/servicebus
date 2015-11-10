@@ -1,7 +1,7 @@
 public class AggregateByEntryPoint extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
-    class AggregateByEntryPointException extends Exception {}
+    public class ServiceException extends Exception {}
 
     public class Summary {
         String Tag = 'Service Bus';
@@ -25,15 +25,15 @@ public class AggregateByEntryPoint extends ApexClassModel.Service {
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
 
         if (!inputEvent.containsKey('EntryPointUuid'))
-            throw new AggregateByEntryPointException('Input event missing mandatory EntryPointUuid parameter');
+            throw new ServiceException('Input event missing mandatory EntryPointUuid parameter');
         if (!inputEvent.containsKey('Range'))
-            throw new AggregateByEntryPointException('Input event missing mandatory Range parameter');
+            throw new ServiceException('Input event missing mandatory Range parameter');
         if (!inputEvent.containsKey('Chunk'))
-            throw new AggregateByEntryPointException('Input event missing mandatory Chunk parameter');
+            throw new ServiceException('Input event missing mandatory Chunk parameter');
         if (!inputEvent.containsKey('Route'))
-            throw new AggregateByEntryPointException('Input event missing mandatory Route parameter');
+            throw new ServiceException('Input event missing mandatory Route parameter');
         if (!inputEvent.containsKey('SiblingIds'))
-            throw new AggregateByEntryPointException('Input event missing mandatory SiblingIds parameter');
+            throw new ServiceException('Input event missing mandatory SiblingIds parameter');
 
         
         String entryPointUuid = (String)inputEvent.get('EntryPointUuid');

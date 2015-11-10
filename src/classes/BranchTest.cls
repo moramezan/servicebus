@@ -120,9 +120,8 @@
         try {
             ApexClassModel.Service service = new Branch();
             List<Map<String,Object>> outputEvents = service.handle(inputEvent);
-        } catch (Exception e) {
+        } catch (Branch.ServiceException e) {
             exceptionThrown = true;
-            System.assert(e instanceof Branch.BranchException);
         }
         
         //assert

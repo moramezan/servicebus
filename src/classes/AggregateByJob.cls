@@ -1,7 +1,7 @@
 public class AggregateByJob extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
-    class AggregateByJobException extends Exception {}
+    public class ServiceException extends Exception {}
 
     public class Summary {
         String Tag = 'Service Bus';
@@ -27,15 +27,15 @@ public class AggregateByJob extends ApexClassModel.Service {
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
 
         if (!inputEvent.containsKey('JobId'))
-            throw new AggregateByJobException('Input event missing mandatory JobId parameter');
+            throw new ServiceException('Input event missing mandatory JobId parameter');
         if (!inputEvent.containsKey('Range'))
-            throw new AggregateByJobException('Input event missing mandatory Range parameter');
+            throw new ServiceException('Input event missing mandatory Range parameter');
         if (!inputEvent.containsKey('Chunk'))
-            throw new AggregateByJobException('Input event missing mandatory Chunk parameter');
+            throw new ServiceException('Input event missing mandatory Chunk parameter');
         if (!inputEvent.containsKey('Route'))
-            throw new AggregateByJobException('Input event missing mandatory Route parameter');
+            throw new ServiceException('Input event missing mandatory Route parameter');
         if (!inputEvent.containsKey('SiblingIds'))
-            throw new AggregateByJobException('Input event missing mandatory SiblingIds parameter');
+            throw new ServiceException('Input event missing mandatory SiblingIds parameter');
 
         String jobId = (String)inputEvent.get('JobId');
         Integer chunkTotal = (Integer)inputEvent.get('Range');

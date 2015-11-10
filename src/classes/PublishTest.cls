@@ -71,7 +71,7 @@
             ApexClassModel.Service service = new Publish();
             service.handle(parameters);
             System.assert(false, 'Line above should throw exception.');
-        } catch (Exception e) {
+        } catch (Publish.ServiceException e) {
             //assert
             String expectedMessage = 'Null step config id.';
             String actualMessage = e.getMessage();

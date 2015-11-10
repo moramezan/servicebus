@@ -10,10 +10,10 @@ public with sharing class MessageRecordDataExtension {
     
     public PageReference showRecordData() {
         try {
-            PageReference detailView = model.showRecordData();
+            PageReference detailView = this.model.showRecordData();
             return detailView;
             
-        } catch (Exception e) {
+        } catch (MessageModel.ModelException e) {
             ApexPages.addMessages(e);
             return null;
         }

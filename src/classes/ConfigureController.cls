@@ -288,7 +288,7 @@ public with sharing class ConfigureController {
         
         HttpResponse response;
         try {response = new Http().send(request);}
-        catch (Exception e) {
+        catch (CalloutException e) {
             //failure, we would like to know about, eg "System.CalloutException: Read timed out"
             if (!e.getMessage().contains('Unauthorized endpoint')) throw new SetupException(e, 'Defer exception');
             
@@ -400,7 +400,7 @@ public with sharing class ConfigureController {
             
             HttpResponse response;
             try {response = new Http().send(request);}
-            catch (Exception e) {
+            catch (CalloutException e) {
                 //failure, we would like to know about
                 throw new SetupException(e, 'Redirect exception');
             }

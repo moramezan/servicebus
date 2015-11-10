@@ -167,7 +167,6 @@ public with sharing class SequenceBuilderExtension {
      * Health check stuff
      */
     public PageReference findTerminateProblems() {
-        try {
         List<Sequence__c> sequences = [
             SELECT Id, Name
             FROM Sequence__c
@@ -229,14 +228,9 @@ public with sharing class SequenceBuilderExtension {
             //redirect to help
             return new PageReference('/apex/ContextSensitiveHelp?topic=ServiceTerminate');
         }
-        } catch (Exception e) {
-            ApexPages.addMessages(e);
-            return null;
-        }
     }
     
     public PageReference findPublishProblems() {
-        try {
         List<Sequence__c> sequences = [
             SELECT Id, Name
             FROM Sequence__c
@@ -304,14 +298,9 @@ public with sharing class SequenceBuilderExtension {
             //redirect to help
             return new PageReference('/apex/ContextSensitiveHelp?topic=ServicePublishSubscribe');
         }
-        } catch (Exception e) {
-            ApexPages.addMessages(e);
-            return null;
-        }
     }
     
     public PageReference findSubscribeProblems() {
-        try {
         List<Sequence__c> sequences = [
             SELECT Id, Name
             FROM Sequence__c
@@ -395,10 +384,6 @@ public with sharing class SequenceBuilderExtension {
         } else {
             //redirect to help
             return new PageReference('/apex/ContextSensitiveHelp?topic=ServicePublishSubscribe');
-        }
-        } catch (Exception e) {
-            ApexPages.addMessages(e);
-            return null;
         }
     }
 }

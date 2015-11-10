@@ -11,7 +11,7 @@ public with sharing class MessageResumeQueueExtension {
             //update IsPaused setting and update Message statuses ("avoids DML in action method")
             Type.forName(DoDml.class.getName()).newInstance();
             
-        } catch (Exception e) {
+        } catch (MessageSetModel.ModelException e) {
             ApexPages.addMessages(e);
             return null;
         }

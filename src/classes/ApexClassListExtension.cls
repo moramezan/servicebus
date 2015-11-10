@@ -36,6 +36,8 @@ public with sharing class ApexClassListExtension {
             Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
             ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
             this.id2summary.put(apexClass.Id, summary);
-        } catch (Exception e) {}
+        } catch (ApexClassModel.ModelException e) {
+            ApexPages.addMessages(e);
+        }
     }
 }

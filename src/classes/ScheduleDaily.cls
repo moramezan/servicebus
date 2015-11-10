@@ -16,18 +16,18 @@ public class ScheduleDaily extends ApexClassModel.Service {
         public String Cardinality = 'One';
     }
     
-    public class ScheduleException  extends Exception {}
+    public class ServiceException extends Exception {}
     
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
         String recordId = (String)inputEvent.get('RecordId');
-        //if (recordId == null) throw new ScheduleException('Null record id.'); //TODO (schedule does not necessarily contain heartbeat)
+        //if (recordId == null) throw new ServiceException('Null record id.'); //TODO (schedule does not necessarily contain heartbeat)
         
         Id stepConfigId = (String)inputEvent.get('StepConfigId');
-        if (stepConfigId == null) throw new ScheduleException('Null step config id.');
+        if (stepConfigId == null) throw new ServiceException('Null step config id.');
         
         String stampAsString = (String)inputEvent.get('EntryPointTimestamp');
-        if (stampAsString == null) throw new ScheduleException('Null entry point timestamp.');
+        if (stampAsString == null) throw new ServiceException('Null entry point timestamp.');
         
         Boolean wasHeartbeat = false;
         if (recordId != null) wasHeartbeat = recordId.startsWith('08e'); //#810
@@ -65,8 +65,8 @@ public class ScheduleDaily extends ApexClassModel.Service {
         try {
            stampAsString =  getISO8601(stampAsString);
            stampAsDateTime = getStamp(stampAsString);
-        } catch (Exception e)  {
-            throw new ScheduleException('Problem with getISO8601 or getStamp("' + stampAsString + '")', e);
+        } catch (NullPointerException e)  {
+            throw new ServiceException('Problem with getISO8601 or getStamp("' + stampAsString + '")', e);
         }
 
         String frequency;
@@ -105,9 +105,9 @@ public class ScheduleDaily extends ApexClassModel.Service {
             if (config.T2200__c) runTimes.add('22:00');
             if (config.T2300__c) runTimes.add('23:00');
             //runTimes = new Set<String>(config.FriendlyTimes__c.split(';'));
-        } catch (Exception e) {
-            throw new ScheduleException('Problem extracting times (' + config + ')');
-            //throw new ScheduleException('Problem extracting frequency (' + config.Frequency__c + ') / dates (' + config.FriendlyDates__c + ') / times (' + config.FriendlyTimes__c + ')', e);
+        } catch (NullPointerException e) {
+            throw new ServiceException('Problem extracting times (' + config + ')');
+            //throw new ServiceException('Problem extracting frequency (' + config.Frequency__c + ') / dates (' + config.FriendlyDates__c + ') / times (' + config.FriendlyTimes__c + ')', e);
         }
         
         return isTimeMatch(stampAsString, runTimes);

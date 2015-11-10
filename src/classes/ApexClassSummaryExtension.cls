@@ -29,7 +29,7 @@ public with sharing class ApexClassSummaryExtension {
             this.FullyQualifiedClassName = model.Reflector.getName();
             return this.model.showHelpUrl();
             
-        } catch (Exception e) {
+        } catch (ApexClassModel.ModelException e) {
             ApexPages.addMessages(e);
             return null;
         }

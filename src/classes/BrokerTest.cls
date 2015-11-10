@@ -119,7 +119,7 @@
         ];
         
         //assert
-        String expectedException = Broker.UserException.class.getName() + ': Maximum hops reached: 2';
+        String expectedException = Broker.ServiceException.class.getName() + ': Maximum hops reached: 2';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
@@ -214,7 +214,7 @@
         Message__c message = [SELECT Id, Exception__c FROM Message__c];
         
         //assert
-        String expectedException = Broker.UserException.class.getName() + ': Maximum hops reached: 1';
+        String expectedException = Broker.ServiceException.class.getName() + ': Maximum hops reached: 1';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
@@ -428,7 +428,7 @@
         actualMessage = messages[0].Exception__c;
         
         //assert
-        String expectedMessage = Broker.UserException.class.getName() + ': Message has no route: ' + messages[0].Id;
+        String expectedMessage = Broker.ServiceException.class.getName() + ': Message has no route: ' + messages[0].Id;
         System.assertEquals(expectedMessage, actualMessage, 'Wrong exception message.');
     }
     
@@ -451,7 +451,7 @@
         Message__c message = [SELECT Id, Exception__c FROM Message__c];
         
         //assert
-        String expectedException = Broker.UserException.class.getName() + ': Could not resolve message route: 1#Test#1';
+        String expectedException = Broker.ServiceException.class.getName() + ': Could not resolve message route: 1#Test#1';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong message.');
     }
@@ -480,7 +480,7 @@
         
         //assert
         String actualMessage = message.Exception__c;
-        String expectedMessage = Broker.UserException.class.getName() + ': Class is invalid or not visible: lalala';
+        String expectedMessage = Broker.ServiceException.class.getName() + ': Class is invalid or not visible: lalala';
         System.assertEquals(expectedMessage, actualMessage, 'Wrong message detail.');
     }
     
@@ -592,7 +592,7 @@
         Integer actualFailureCount = messages.size();
         System.assertEquals(expectedFailureCount, actualFailureCount, 'Wrong failure count.');
         
-        String expectedException = Broker.UserException.class.getName() + ': Could not resolve message route: 1#Test#4';
+        String expectedException = Broker.ServiceException.class.getName() + ': Could not resolve message route: 1#Test#4';
         String actualException = messages[0].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
@@ -665,7 +665,7 @@
         String actualException = messages[0].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception 1.');
         
-        expectedException = Broker.UserException.class.getName() + ': Message has no route: ' + messages[1].Id;
+        expectedException = Broker.ServiceException.class.getName() + ': Message has no route: ' + messages[1].Id;
         actualException = messages[1].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception 1.');
     }
@@ -738,13 +738,11 @@
         System.assertEquals(expectedFlag04, actualFlag04);
     }
     
-    @TestVisible public class ChunkErrorServiceException extends Exception {}
-    
     public class ChunkErrorService extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             Boolean isError = (Boolean)inputEvent.get('c:IsError');
-            if (isError == true) throw new ChunkErrorServiceException('Test error');
+            if (isError == true) Integer i = 1 / 0;
             return new List<Map<String,Object>>{inputEvent.clone()}; //one message
         }
     }

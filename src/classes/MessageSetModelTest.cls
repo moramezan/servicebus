@@ -163,7 +163,7 @@
             //act
             new MessageSetModel(new List<Message__c>()).kill();
             System.assert(false, 'Above should throw exception');
-        } catch (MessageSetModel.MessageException e) {
+        } catch (MessageSetModel.ModelException e) {
             //assert
             String expectedMessage = 'You must select some messages.';
             String actualMessage = e.getMessage();
@@ -183,7 +183,7 @@
             //act
             new MessageSetModel(new List<Message__c>{message}).kill();
             System.assert(false, 'Above should throw exception.');
-        } catch (MessageSetModel.MessageException e) {
+        } catch (MessageSetModel.ModelException e) {
             String expectedMessage = 'Only messages with an Exception can be killed.';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');

@@ -23,7 +23,7 @@ public with sharing class SequenceDiscardExtension implements Database.Batchable
             currentPage.setRedirect(true);
             return currentPage;
             
-        } catch (Exception e) {
+        } catch (SequenceSetModel.ModelException e) {
             ApexPages.addMessages(e);
             return null;
         }

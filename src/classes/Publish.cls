@@ -12,15 +12,15 @@ public class Publish extends ApexClassModel.Service {
         String Cardinality = 'One';
     }
     
-    public class PublishException extends Exception {}
+    public class ServiceException extends Exception {}
 
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
         String stepConfigId = (Id)inputEvent.get('StepConfigId');
-        if (stepConfigId == null) throw new PublishException('Null step config id.');
+        if (stepConfigId == null) throw new ServiceException('Null step config id.');
         
         String route = (String)inputEvent.get('Route');
-        if (route == null) throw new PublishException('Null route.');
+        if (route == null) throw new ServiceException('Null route.');
         
         PublishConfig__c publishConfig = [
             SELECT EventType__c
@@ -29,7 +29,7 @@ public class Publish extends ApexClassModel.Service {
         ];
         
         String eventType = publishConfig.EventType__c;
-        if (eventType == null) throw new PublishException('No event type.');
+        if (eventType == null) throw new ServiceException('No event type.');
         
         List<SubscribeConfig__c> subscribeConfigs = [
             SELECT Id

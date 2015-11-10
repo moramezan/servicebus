@@ -1,6 +1,6 @@
 public class SequenceSetModel extends ApexDomain.StandardSetModel {
     
-    public class SequenceException extends Exception {}
+    public class ModelException extends Exception {}
     
     /**
      * True means a deleted sequence will trash draft steps and configs (discard).
@@ -56,12 +56,12 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         
         if (hasDraftSteps || hasSequences) {
             //failure, draft already exist
-            throw new SequenceException('Already checked out.');
+            throw new ModelException('Already checked out.');
         }
         
         if (noLiveSteps) {
             //failure, nothing live exists
-            throw new SequenceException('Nothing to checkout.');
+            throw new ModelException('Nothing to checkout.');
         }
         
         //start the job
@@ -81,12 +81,12 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         
         if (hasSequences) {
             //failure, already showing
-            throw new SequenceException('Already showing sequences.');
+            throw new ModelException('Already showing sequences.');
         }
         
         if (noDraftSteps) {
             //failure, nothing draft exists
-            throw new SequenceException('Nothing to show.');
+            throw new ModelException('Nothing to show.');
         }
         
         //find draft steps
@@ -113,7 +113,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         
         if (noDraftSteps || noSequences) {
             //failure, no draft to commit
-            throw new SequenceException('Nothing to commit.');
+            throw new ModelException('Nothing to commit.');
         }
         
         //start the job
@@ -132,7 +132,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         
         if (noSequences) {
             //failure, already showing
-            throw new SequenceException('Already hiding sequences.');
+            throw new ModelException('Already hiding sequences.');
         }
         
         //leave steps alone (especially for commit!)
@@ -151,7 +151,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         
         if (noDraftSteps && noSequences) {
             //failure, no draft to discard
-            throw new SequenceException('Nothing to discard.');
+            throw new ModelException('Nothing to discard.');
         }
         
         //start the job
@@ -247,9 +247,9 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
             if (!stepsToDelete.isEmpty()) Database.emptyRecycleBin(stepsToDelete);
             if (!configsToDelete.isEmpty()) Database.emptyRecycleBin(configsToDelete);
             
-        } catch (Exception e) {
+        } catch (DmlException e) {
             Database.rollback(savepoint);
-            throw new SequenceException('Cannot destroy all steps and configs: ' + e.getMessage(), e);
+            throw new ModelException('Cannot destroy all steps and configs: ' + e.getMessage(), e);
         }
     }
 }

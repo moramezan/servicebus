@@ -1,11 +1,8 @@
 public class StepModel extends ApexDomain.StandardModel {
-
-    Step__c step;
     
-    /**
-     * For advertising domain layer errors
-     */
-    public class StepException extends Exception {}
+    public class ModelException extends Exception {}
+    
+    Step__c step;
     
     /**
      * Privatize constructor to force use of fromName() or fromId()
@@ -19,13 +16,13 @@ public class StepModel extends ApexDomain.StandardModel {
      * Given a step name aka Route, attempts to locate
      * the step custom setting instance with all fields.
      *
-     * @throws StepException
+     * @throws ModelException
      * @param step name or route
      * @return domain model of step
      */
     static public StepModel fromName(String stepName) {
         Step__c step = Step__c.getValues(stepName);
-        if (step == null) throw new StepException('Could not locate step from name "' + stepName + '"');
+        if (step == null) throw new ModelException('Could not locate step from name "' + stepName + '"');
         return new StepModel(step);
     }
     
@@ -41,8 +38,6 @@ public class StepModel extends ApexDomain.StandardModel {
     public void moveBefore(String beforeStepName) {
         Savepoint sp = Database.setSavepoint();
         try {
-            if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
-            
             //find all steps EXCEPT the guy we are moving
             List<Step__c> readSteps = [
                 SELECT Name
@@ -77,9 +72,9 @@ public class StepModel extends ApexDomain.StandardModel {
             }
             
             update writeSteps;
-        } catch (Exception e) {
+        } catch (DmlException e) {
             Database.rollback(sp);
-            throw new StepException('Could not move step "' + this.step.Name + '" before "' + beforeStepName + '"', e);
+            throw new ModelException('Could not move step "' + this.step.Name + '" before "' + beforeStepName + '"', e);
         }
     }
     
@@ -90,8 +85,6 @@ public class StepModel extends ApexDomain.StandardModel {
     public void moveAfter(String afterStepName) {
         Savepoint sp = Database.setSavepoint();
         try {
-            if (!SObjectType.Step__c.Fields.Position__c.Updateable) throw new ApexDomain.FlsException('!SObjectType.Step__c.Fields.Position__c.Updateable');
-            
             //find all steps EXCEPT the guy we are moving
             List<Step__c> readSteps = [
                 SELECT Name
@@ -126,9 +119,9 @@ public class StepModel extends ApexDomain.StandardModel {
             }
             
             update writeSteps;
-        } catch (Exception e) {
+        } catch (DmlException e) {
             Database.rollback(sp);
-            throw new StepException('Could not move step "' + this.step.Name + '" after "' + afterStepName + '"', e);
+            throw new ModelException('Could not move step "' + this.step.Name + '" after "' + afterStepName + '"', e);
         }
     }
     
@@ -154,7 +147,7 @@ public class StepModel extends ApexDomain.StandardModel {
         
         if (result.isCustomSetting() && field.getLength() == 80) {
             //HIERARCHY SETTING
-            throw new StepException('Hierarchy Custom Settings are not supported for Step Config.');
+            throw new ModelException('Hierarchy Custom Settings are not supported for Step Config.');
         }
         
         SObject config = objectType.newSObject(null, true);
