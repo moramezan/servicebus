@@ -9,6 +9,78 @@ public with sharing class SequenceBuilderExtension {
         this.countRoutedMessages();
     }
     
+    /**
+     * This is basically a server-side confidence that the Apex Classes in the
+     * org have changed. Additional or Modified classes will cause the DATE to
+     * waver. Deleted classes will cause the COUNT to waver. Any change detected.
+     */
+    public String getServerCacheKey() {
+        ApexClass apexClass = [
+            SELECT LastModifiedDate
+            FROM ApexClass
+            ORDER BY LastModifiedDate DESC
+            LIMIT 1
+        ];
+        
+        Integer count = [
+            SELECT COUNT()
+            FROM ApexClass
+        ];
+        
+        return Json.serializePretty(apexClass.LastModifiedDate.getTime() + '|' + count);
+    }
+    
+    /**
+     * As a convenience, we parrot this method back to the client,
+     * which makes it easy (ServerCacheKey != ClientCacheKey) to
+     * detect if the cache is stale. Ext JS sets the cookie in launch()
+     */
+    public String getClientCacheKey() {
+        Cookie cookie = ApexPages.CurrentPage().getCookies().get('ClientCacheKey');
+        if (cookie == null) return null;
+        return Json.serializePretty(cookie.getValue());
+    }
+    
+    /**
+     * This finds candidate namespaces with a few exceptions:
+     * for example FinancialForce (thousands of classes)
+     * for example BmcServiceDesk (thousands of classes)
+     */
+    public String getNamespaces() {
+        List<AggregateResult> results = [
+            SELECT NamespacePrefix
+            FROM ApexClass
+            WHERE NamespacePrefix != 'abstract'
+            GROUP BY NamespacePrefix
+            HAVING COUNT(Id) < 1000
+        ];
+        
+        List<String> namespaces = new List<String>();
+        for (AggregateResult result : results) {
+            String namespacePrefix = (String)result.get('NamespacePrefix');
+            if (namespacePrefix == null) namespacePrefix = ''; //Unable to serialize a map with a null key.
+            namespaces.add(namespacePrefix);
+        }
+        
+        return Json.serializePretty(namespaces);
+    }
+    
+    /**
+     * #946 by discovering the namespaces one-by-one with Visualforce Remoting
+     * we won't hit the 10 namespace limit, and they run in parallel (fast)
+     */
+    @RemoteAction static public List<Map<String,Object>> Discover(String namespace) {
+        Set<Id> apexClassIds = new Map<Id,SObject>([
+            SELECT Id
+            FROM ApexClass
+            WHERE NamespacePrefix = :namespace
+            LIMIT 10000
+        ]).keySet();
+        ApexClassSetModel model = ApexClassSetModel.discoverServices(apexClassIds);
+        List<Map<String,Object>> services = model.toDtos();
+        return services;
+    }
+    
     public List<Id> getStepIds() {
         Set<Id> stepIds = new Set<Id>();
         
@@ -104,19 +176,6 @@ public with sharing class SequenceBuilderExtension {
     
     public String getTerminateApexClassName() {
         return Terminate.class.getName();
-    }
-    
-    public String getServices() {
-        Set<Id> apexClassIds = new Map<Id,SObject>([
-            SELECT Id
-            FROM ApexClass
-            WHERE NamespacePrefix != 'abstract'
-            LIMIT 10000
-        ]).keySet();
-        ApexClassSetModel model = ApexClassSetModel.discoverServices(apexClassIds);
-        
-        List<Map<String,Object>> services = model.toDtos();
-        return Json.serializePretty(services);
     }
     
     /**

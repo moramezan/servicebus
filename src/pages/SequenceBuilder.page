@@ -55,14 +55,19 @@
         $RemoteAction.SequenceBuilderExtension.moveStepBefore = '{!$RemoteAction.SequenceBuilderExtension.moveStepBefore}';
         $RemoteAction.SequenceBuilderExtension.moveStepAfter = '{!$RemoteAction.SequenceBuilderExtension.moveStepAfter}';
         $RemoteAction.SequenceBuilderExtension.persistConfigNameOnStep = '{!$RemoteAction.SequenceBuilderExtension.persistConfigNameOnStep}';
+        $RemoteAction.SequenceBuilderExtension.Discover = '{!$RemoteAction.SequenceBuilderExtension.Discover}';
         
         window.$Page = window.$Page || {};
         $Page.ApexClassSetting = '{!$Page.ApexClassSetting}';
         $Page.ApexClassSummary = '{!$Page.ApexClassSummary}';
         $Page.StepConfig = '{!$Page.StepConfig}';
         
+        Namespaces = {!Namespaces};
+        ServerCacheKey = String({!ServerCacheKey});
+        ClientCacheKey = String({!ClientCacheKey});
+        
         TerminateApexClassName = '{!TerminateApexClassName}';
-        Services = {!Services};
+        Services = []; //TODO safari private doesnt work
         Steps = {!Steps};
         Id = '{!Id}';
         
@@ -88,12 +93,12 @@
     <!--
      ! DEVELOPMENT
      !-->
-    <!-- uncomment ->
+    <!-- uncomment -->
     <apex:outputPanel rendered="{!LEN(path) != 0}" layout="none">
         <base href="{!path}{!resource}/" />
         <script src="{!path}{!resource}/bootstrap.js"></script>
     </apex:outputPanel>
-    <!- uncomment -->
+    <!-- uncomment -->
     
     <!--
      ! PRODUCTION

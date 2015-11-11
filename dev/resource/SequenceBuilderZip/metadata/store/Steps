@@ -11,31 +11,5 @@
         "storeId": "Steps"
     },
     "name": "MyStore",
-    "designerId": "c3b6ba4e-5f77-4a60-9b73-0bd9f90467a0",
-    "cn": [
-        {
-            "type": "processcfgfunction",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "designer|params": [
-                    "config"
-                ],
-                "fn": "processSteps",
-                "implHandler": [
-                    "//use a temporary MemoryProxy (implicit JSON reader) to handle mapping of the static data",
-                    "var tempStore = Ext.create('Ext.data.Store', {model: 'Builder.model.Step', proxy: {type: 'memory'}});",
-                    "var mappedSteps = tempStore.getProxy().getReader().readRecords(Steps).records;",
-                    "",
-                    "config.data = mappedSteps;",
-                    "return config;"
-                ]
-            },
-            "name": "processSteps",
-            "designerId": "b92d5e42-08b2-4b13-9e30-48910aa266be"
-        }
-    ]
+    "designerId": "c3b6ba4e-5f77-4a60-9b73-0bd9f90467a0"
 }

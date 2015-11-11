@@ -14,30 +14,6 @@
     "designerId": "3ced4af9-f789-4610-85a9-4cc6fb7f7684",
     "cn": [
         {
-            "type": "processcfgfunction",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "designer|params": [
-                    "config"
-                ],
-                "fn": "processServices",
-                "implHandler": [
-                    "//use a temporary MemoryProxy (implicit JSON reader) to handle mapping of the static data",
-                    "var tempStore = Ext.create('Ext.data.Store', {model: 'Builder.model.Service', proxy: {type: 'memory'}});",
-                    "var mappedServices = tempStore.getProxy().getReader().readRecords(Services).records;",
-                    "",
-                    "config.data = mappedServices;",
-                    "return config;"
-                ]
-            },
-            "name": "processServices",
-            "designerId": "1cc8cbbb-425f-4cbf-b962-37d8181b9d05"
-        },
-        {
             "type": "Ext.util.Sorter",
             "reference": {
                 "name": "sorters",
