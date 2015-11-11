@@ -186,7 +186,7 @@ public with sharing class SequenceBuilderExtension {
      * sequence.terminate(), the Terminate Step should exist before the page is rendered.
      */
     public String getSteps() {
-        List<Map<String,Object>> stepDtos = this.model.stepSetModel().toDtos();
+        List<Map<String,Object>> stepDtos = this.model.stepDtos();
         return Json.serializePretty(stepDtos);
     }
     
@@ -196,7 +196,7 @@ public with sharing class SequenceBuilderExtension {
     
     @RemoteAction static public List<Map<String,Object>> fetchSteps(Id sequenceId) {
         SequenceModel model = SequenceModel.fromId(sequenceId);
-        return model.stepSetModel().toDtos();
+        return model.stepDtos();
     }
     
     @RemoteAction static public Step__c appendStep(Id sequenceId, String apexClassId) {

@@ -22,7 +22,7 @@
         SequenceModel sequence = SequenceModel.fromName(soSequence.Name);
         
         // assemble
-        List<Map<String,Object>> soSteps = sequence.stepSetModel().toDtos();
+        List<Map<String,Object>> soSteps = sequence.stepDtos();
         Integer actualStepCount = soSteps.size();
 
         // assert
@@ -154,5 +154,63 @@
         System.assertEquals( expectedServiceName , actualServiceName  );
         Integer expectedStepCount = 1;
         System.assertEquals( expectedStepCount , actualStepsCount  );
+    }
+    
+    static testmethod void testStepDtos() {
+        
+        //arrange sequence
+        Sequence__c sequence = new Sequence__c(
+            Name = 'Test'
+        );
+        insert sequence;
+        
+        //arrange step
+        Step__c step = new Step__c(
+            IsDraft__c = true,
+            Name = 'Wiretaps#1',
+            ConfigId__c = '015000000000000AAA',
+            ConfigName__c = 'This step must be configured. Seriously.',
+            ApexClassId__c = '01p000000000000AAA',
+            ApexClassName__c = 'servicebus.Wiretap',
+            Position__c = 1.0
+        );
+        
+        step.Sequence__c = 'Test';
+        insert step;
+        
+        //arrange model
+        SequenceModel model = SequenceModel.fromName('Test');
+        
+        //act
+        List<Map<String,Object>> dtos = model.stepDtos();
+        
+        //assert
+        Integer expectedSize = 1;
+        Integer actualSize = dtos.size();
+        System.assertEquals(expectedSize, actualSize);
+        
+        String expectedName = step.Name;
+        String actualName = (String)dtos[0].get('Name');
+        System.assertEquals(expectedName, actualName, 'Wrong Name.');
+        
+        String expectedConfigId = step.ConfigId__c;
+        String actualConfigId = (String)dtos[0].get('ConfigId');
+        System.assertEquals(expectedConfigId, actualConfigId, 'Wrong ConfigId.');
+        
+        String expectedConfigName = step.ConfigName__c;
+        String actualConfigName = (String)dtos[0].get('ConfigName');
+        System.assertEquals(expectedConfigName, actualConfigName, 'Wrong ConfigName.');
+        
+        String expectedApexClassId = step.ApexClassId__c;
+        String actualApexClassId = (String)dtos[0].get('ApexClassId');
+        System.assertEquals(expectedName, actualName, 'Wrong ApexClassId.');
+        
+        String expectedApexClassName = step.ApexClassName__c;
+        String actualApexClassName = (String)dtos[0].get('ApexClassName');
+        System.assertEquals(expectedApexClassName, actualApexClassName, 'Wrong ApexClassName.');
+        
+        Integer expectedPosition = step.Position__c.intValue();
+        Integer actualPosition = (Integer)dtos[0].get('Position');
+        System.assertEquals(expectedPosition, actualPosition, 'Wrong Position.');
     }
 }

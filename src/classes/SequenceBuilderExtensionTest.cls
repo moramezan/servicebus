@@ -13,24 +13,6 @@
         return sequence.Id;
     }
     
-    static testmethod void testGetServices() {
-        //arrange sequence, controller and extension
-        Id sequenceId = setupSequence();
-        ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c(Id = sequenceId, Name = 'SequenceBuilderExtensionTest'));
-        SequenceBuilderExtension extension = new SequenceBuilderExtension(controller);
-        
-        //act
-        String data = extension.getServices();
-        
-        //assemble
-        List<Object> services = (List<Object>)Json.deserializeUntyped(data);
-        
-        //assert
-        Integer expectedCount = 5; //about 9
-        Integer actualCount = services.size();
-        System.assert(actualCount > expectedCount, 'Wrong count.');
-    }
-    
     static testmethod void testGetSteps() {
         //arrange sequence, controller and extension
         Id sequenceId = setupSequence();
@@ -86,21 +68,17 @@
         SequenceBuilderExtension.moveStepBefore('1#Test#2', '1#Test#1');
         
         //assemble
-        List<Step__c> steps = SequenceModel.fromId(sequenceId).stepSetModel().getRecords();
-        Step__c terminateStep = steps[0];
-        Step__c wiretapStep = steps[1];
-        
-        //assemble
-        terminateStep = [SELECT Id, ApexClassName__c FROM Step__c WHERE Id = :terminateStep.Id];
-        wiretapStep = [SELECT Id, ApexClassName__c FROM Step__c WHERE Id = :wiretapStep.Id];
+        List<Map<String,Object>> steps = SequenceModel.fromId(sequenceId).stepDtos();
+        Map<String,Object> terminateStep = steps[0];
+        Map<String,Object> wiretapStep = steps[1];
         
         //assert
         String terminateExpectedClassName = Terminate.class.getName();
-        String terminateActualClassName = terminateStep.ApexClassName__c;
+        String terminateActualClassName = (String)terminateStep.get('ApexClassName');
         System.assertEquals(terminateExpectedClassName, terminateActualClassName);
         
         String wiretapExpectedClassName = Wiretap.class.getName();
-        String wiretapActualClassName = wiretapStep.ApexClassName__c;
+        String wiretapActualClassName = (String)wiretapStep.get('ApexClassName');
         System.assertEquals(wiretapExpectedClassName, wiretapActualClassName);
     }
     
@@ -112,21 +90,17 @@
         SequenceBuilderExtension.moveStepAfter('1#Test#1', '1#Test#2');
         
         //assemble
-        List<Step__c> steps = SequenceModel.fromId(sequenceId).stepSetModel().getRecords();
-        Step__c terminateStep = steps[0];
-        Step__c wiretapStep = steps[1];
-        
-        //assemble
-        terminateStep = [SELECT Id, ApexClassName__c FROM Step__c WHERE Id = :terminateStep.Id];
-        wiretapStep = [SELECT Id, ApexClassName__c FROM Step__c WHERE Id = :wiretapStep.Id];
+        List<Map<String,Object>> steps = SequenceModel.fromId(sequenceId).stepDtos();
+        Map<String,Object> terminateStep = steps[0];
+        Map<String,Object> wiretapStep = steps[1];
         
         //assert
         String terminateExpectedClassName = Terminate.class.getName();
-        String terminateActualClassName = terminateStep.ApexClassName__c;
+        String terminateActualClassName = (String)terminateStep.get('ApexClassName');
         System.assertEquals(terminateExpectedClassName, terminateActualClassName);
         
         String wiretapExpectedClassName = Wiretap.class.getName();
-        String wiretapActualClassName = wiretapStep.ApexClassName__c;
+        String wiretapActualClassName = (String)wiretapStep.get('ApexClassName');
         System.assertEquals(wiretapExpectedClassName, wiretapActualClassName);
     }
     
@@ -139,7 +113,7 @@
         
         //assert
         Integer expectedSize = 1;
-        Integer actualSize = SequenceModel.fromId(sequenceId).stepSetModel().getRecords().size();
+        Integer actualSize = SequenceModel.fromId(sequenceId).stepDtos().size();
         System.assertEquals(expectedSize, actualSize);
     }
     
