@@ -35,9 +35,13 @@ public with sharing class ApexClassSummaryExtension {
         }
     }
     
-    @RemoteAction static public Id enqueue(Id apexClassId) {
-        ApexClassModel model = ApexClassModel.fromId(apexClassId);
-        return model.enqueueTestMessage();
+    /**
+     * #1096
+     */
+    public Id JobId {get; set;}
+    
+    public void doEnqueue() {
+        this.JobId = this.model.enqueueTestMessage();
     }
     
 }

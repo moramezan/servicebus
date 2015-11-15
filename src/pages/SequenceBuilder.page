@@ -83,29 +83,24 @@
         <apex:repeat value="{!StepIds}" var="stepId">
         URLFOR[$Page.StepConfig + '{!stepId}'] = '{!URLFOR($Page.StepConfig, null, ["id"= stepId])}';
         </apex:repeat>
+        
+        window.Launch = function(callback) {
+            //#1096
+            callback();
+        };
     </script>
     
-    <!--
-     ! DEVELOPMENT
-     !-->
-    <!-- uncomment -->
+    <!-- DEVELOPMENT -->
     <apex:outputPanel rendered="{!LEN(path) != 0}" layout="none">
         <base href="{!path}{!resource}/" />
         <script src="{!path}{!resource}/bootstrap.js"></script>
     </apex:outputPanel>
-    <!-- uncomment -->
     
-    <!--
-     ! PRODUCTION
-     ! see SequenceBuilderZip/build.xml and ext-baseurl.js
-     ! http://www.sencha.com/forum/showthread.php?290269-CMD-5.0.1.231-production-build-error-Cannot-read-property-baseUrl-of-undefined&p=1064889&viewfull=1#post1064889
-     !-->
-    <!-- comment -->
+    <!-- PRODUCTION -->
     <apex:outputPanel rendered="{!LEN(path) == 0}" layout="none">
         <script>Ext = window.Ext || {}; Ext.Boot={};</script>
         <script src="{!URLFOR(resource, '/app.js')}"></script>
         <link href="{!URLFOR(resource, '/resources/' + application + '-all.css')}" rel="stylesheet" type="text/css" />
     </apex:outputPanel>
-    <!-- comment -->
     
 </apex:page>

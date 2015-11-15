@@ -259,7 +259,6 @@
         <name>PermissionSet</name>
     </types>
     <types>
-        <members>ApexClassViewZip</members>
         <members>AsyncApexJobProgressZip</members>
         <members>ContextSensitiveHelpZip</members>
         <members>SequenceBuilderZip</members>

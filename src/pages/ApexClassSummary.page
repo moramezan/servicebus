@@ -23,6 +23,19 @@
         
         <apex:pageBlockButtons location="top" id="pageBlockButtonsId">
             
+            <apex:form id="form">
+                <apex:actionStatus id="busy">
+                    <apex:facet name="stop">
+                        <apex:commandButton value="Enqueue Test Event" onclick="enqueue(); return false;">
+                            <apex:actionFunction name="enqueue" reRender="form" action="{!doEnqueue}" status="busy" oncomplete="Ext.Msg.alert('Success', 'Test message has been enqueued. <br />Submitted Job Id: {!JobId}').setIcon(Ext.Msg.QUESTION);" />
+                        </apex:commandButton>
+                    </apex:facet>
+                    <apex:facet name="start">
+                        <apex:commandButton value="Enqueue Test Event" disabled="true" />
+                    </apex:facet>
+                </apex:actionStatus>
+            </apex:form>
+            
             <!-- #768 indicate messages flowing through sequence -->
             <apex:form style="display:inline;float:right;" id="busy">
                 <apex:actionPoller action="{!countRoutedMessages}" interval="5" reRender="busy" />
@@ -94,8 +107,8 @@
         </apex:pageBlockSection>
     </apex:pageBlock>
     
-    <apex:variable var="application" value="Viewer" /><!-- Application namespace such as MyApp -->
-    <apex:variable var="resource" value="{!$Resource.ApexClassViewZip}" /><!-- The $Resource containing app.js -->
+    <apex:variable var="application" value="Builder" /><!-- Application namespace such as MyApp -->
+    <apex:variable var="resource" value="{!$Resource.SequenceBuilderZip}" /><!-- The $Resource containing app.js -->
     <apex:variable var="path" value="" /><!-- Development mode prefixes all resources, production mode loads the Sencha Cmd output -->
     <apex:variable var="baseCSSPrefix" value="z-" /><!-- Ext.buildSettings.baseCSSPrefix which will be applied before the framework loads -->
     
@@ -104,38 +117,28 @@
     
     <!-- BRIDGING COMPONENTS -->
     <script>
-        window.$Component = window.$Component || {};
-        $Component.pageBlockId = '{!$Component.pageBlockId}';
-        $Component.pageBlockButtonsId = '{!$Component.pageBlockId.pageBlockButtonsId}';
-        
-        Id = '{!Id}';
-        
+        //#1096 piggy back sequence builder
         window.$RemoteAction = window.$RemoteAction || {};
-        $RemoteAction.ApexClassSummaryExtension = $RemoteAction.ApexClassSummaryExtension || {};
-        $RemoteAction.ApexClassSummaryExtension.enqueue = '{!$RemoteAction.ApexClassSummaryExtension.enqueue}';
+        $RemoteAction.SequenceBuilderExtension = $RemoteAction.SequenceBuilderExtension || {};
+        
+        window.Id = '{!Id}';
+        
+        window.Launch = function(callback) {
+            //dont launch
+        };
     </script>
     
-    <!--
-     ! DEVELOPMENT
-     !-->
-    <!-- uncomment ->
+    <!-- DEVELOPMENT -->
     <apex:outputPanel rendered="{!LEN(path) != 0}" layout="none">
         <base href="{!path}{!resource}/" />
         <script src="{!path}{!resource}/bootstrap.js"></script>
     </apex:outputPanel>
-    <!- uncomment -->
     
-    <!--
-     ! PRODUCTION
-     ! see SequenceBuilderZip/build.xml and ext-baseurl.js
-     ! http://www.sencha.com/forum/showthread.php?290269-CMD-5.0.1.231-production-build-error-Cannot-read-property-baseUrl-of-undefined&p=1064889&viewfull=1#post1064889
-     !-->
-    <!-- comment -->
+    <!-- PRODUCTION -->
     <apex:outputPanel rendered="{!LEN(path) == 0}" layout="none">
         <script>Ext = window.Ext || {}; Ext.Boot={};</script>
         <script src="{!URLFOR(resource, '/app.js')}"></script>
         <link href="{!URLFOR(resource, '/resources/' + application + '-all.css')}" rel="stylesheet" type="text/css" />
     </apex:outputPanel>
-    <!-- comment -->
     
 </apex:page>
