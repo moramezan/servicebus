@@ -49,7 +49,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        SequenceBuilderExtension.appendStep(sequenceId, [SELECT Id FROM ApexClass WHERE Name = 'Publish'].Id);
+        SequenceBuilderExtension.appendStep(sequenceId, [SELECT Id FROM ApexClass WHERE Name = 'Publish' AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c].Id);
         
         //assemble
         Step__c step = Step__c.getValues('1#Test#3');

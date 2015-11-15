@@ -150,8 +150,8 @@ public class SequenceModel extends ApexDomain.StandardModel {
             ApexClass apexClass = [
                 SELECT Id, NamespacePrefix, Name
                 FROM ApexClass
-                WHERE NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
-                AND Name = 'Terminate'
+                WHERE Name = 'Terminate'
+                AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
             ];
             
             //TODO add namespace prefix safety

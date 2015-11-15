@@ -106,6 +106,8 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             SELECT Id, NamespacePrefix, Name
             FROM ApexClass
             WHERE NamespacePrefix = :namespace
+            AND Name != 'ApexClassModel'
+            ORDER BY Name ASC
         ]);
     }
     

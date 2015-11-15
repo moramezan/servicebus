@@ -313,6 +313,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>SequenceListExtensionTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>SequenceModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>

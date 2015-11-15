@@ -23,6 +23,7 @@
             SELECT Id
             FROM ApexClass
             WHERE Name IN ('Wiretap', 'Terminate')
+            AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
             LIMIT 10000
         ]).keySet();
         

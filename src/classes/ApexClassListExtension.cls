@@ -19,6 +19,8 @@ public with sharing class ApexClassListExtension {
         this.id2class = new Map<Id,ApexClass>([
             SELECT Id, Name, NamespacePrefix, ApiVersion, Status, IsValid, LastModifiedById, LastModifiedDate
             FROM ApexClass
+            WHERE Name != 'ApexClassModel'
+            ORDER BY NamespacePrefix ASC, Name ASC
         ]);
         
         //for displaying summaries

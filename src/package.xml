@@ -84,6 +84,7 @@
         <members>SequenceDiscardExtension</members>
         <members>SequenceDiscardExtensionTest</members>
         <members>SequenceListExtension</members>
+        <members>SequenceListExtensionTest</members>
         <members>SequenceModel</members>
         <members>SequenceModelTest</members>
         <members>SequenceSetModel</members>

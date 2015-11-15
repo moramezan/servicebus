@@ -4,7 +4,7 @@
         //arrange sequence and steps
         insert new Sequence__c(Name = 'Test');
         Step__c step = SequenceModel.fromName('Test').appendStep(Terminate.class);
-        step.ApexClassId__c = [SELECT Id FROM ApexClass WHERE Name = 'Wiretap'].Id;
+        step.ApexClassId__c = [SELECT Id FROM ApexClass WHERE Name = 'Wiretap' AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c].Id;
         update step;
         
         //arrange message
@@ -18,7 +18,7 @@
         PageReference view = model.showApexClass();
         
         //assert
-        String expectedUrl = '/' + [SELECT Id FROM ApexClass WHERE Name = 'Wiretap'].Id;
+        String expectedUrl = '/' + [SELECT Id FROM ApexClass WHERE Name = 'Wiretap' AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c].Id;
         String actualUrl = view.getUrl();
         System.assert(expectedUrl.startsWith(actualUrl), 'Wrong URL.');
     }
