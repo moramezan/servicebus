@@ -14,6 +14,17 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
     }
     
     /**
+     * Finds integral draft version number
+     */
+    static public Integer draftVersion() {
+        return Integer.valueOf([
+            SELECT AVG(Version__c)
+            FROM Step__c
+            WHERE IsDraft__c = true
+        ][0].get('expr0'));
+    }
+    
+    /**
      * Cursor for current draft version
      */
     static public Database.QueryLocator locateDraftSteps() {

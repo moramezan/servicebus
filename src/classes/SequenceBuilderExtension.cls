@@ -109,14 +109,8 @@ public with sharing class SequenceBuilderExtension {
         return new List<Id>(apexClassIds);
     }
     
-    public Integer getDraftVersion() {
-        Decimal draftVersion = (Decimal)[
-            SELECT AVG(Version__c)
-            FROM Step__c
-            WHERE IsDraft__c = true
-        ][0].get('expr0');
-        
-        return Integer.valueOf(draftVersion);
+    static public Integer getDraftVersion() {
+        return SequenceSetModel.draftVersion();
     }
     
     public Integer RoutedMessages {get; set;}

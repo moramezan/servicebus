@@ -4,14 +4,8 @@ public with sharing class MonitorController {
         return Integer.valueOf(BrokerSetting__c.getOrgDefaults().Version__c);
     }
     
-    public Integer getDraftVersion() {
-        Decimal draftVersion = (Decimal)[
-            SELECT AVG(Version__c)
-            FROM Step__c
-            WHERE IsDraft__c = true
-        ][0].get('expr0');
-        
-        return Integer.valueOf(draftVersion);
+    static public Integer getDraftVersion() {
+        return SequenceSetModel.draftVersion();
     }
     
     static public List<Integer> getRunnableVersions() {

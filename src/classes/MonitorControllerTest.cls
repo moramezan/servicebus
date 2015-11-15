@@ -25,7 +25,6 @@
             WHERE Name IN ('Wiretap', 'Terminate')
             LIMIT 10000
         ]).keySet();
-        ApexClassSetModel model = ApexClassSetModel.discoverServices(apexClassIds);
         
         //assert 1 null, 1 wiretap, 1 terminate,
         Integer expectedCount = 3; //the graph is [' ', 'Test#1', 'Test#2']
