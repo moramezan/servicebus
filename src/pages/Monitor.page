@@ -27,7 +27,7 @@
         <apex:outputPanel layout="none" rendered="{!DraftVersion != null}"><optgroup label="Version {!DraftVersion} (Draft)" /></apex:outputPanel>
     </select>
     
-    <apex:sectionHeader title="Message Queue Monitoring" help="{!URLFOR($Page.MonitorSplash)}" />
+    <apex:sectionHeader title="Monitor" description="The message queue monitor shows system activity at a glance. Green areas are buffered events, red areas are events with exceptions." help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashMonitor'])}" />
     
     <!-- #769 -->
     <input checked="checked" type="checkbox" id="realtime" onclick="if(this.checked){var that=this;this.disabled = true;setTimeout(function() {that.checked=false;that.disabled=false;}, 60000);}" />

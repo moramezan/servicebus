@@ -1,4 +1,4 @@
-<apex:page setup="true" tabStyle="Message__c" standardController="Message__c" recordSetVar="msgs">
+<apex:page setup="true" standardController="Message__c">
     
     <script>
         (function() {
@@ -12,7 +12,6 @@
         }());
     </script>
     
-    <apex:sectionHeader title="Messages" description="A message is a container for holding a real world event. Wrapping each event in a message gives a handle to identify it." help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashMessage'])}" />
+    <apex:detail />
     
-    <apex:enhancedList type="Message__c" height="600" />
 </apex:page>

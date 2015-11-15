@@ -497,6 +497,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>MessageView</apexPage>
+        <enabled>false</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>Monitor</apexPage>
         <enabled>true</enabled>
     </pageAccesses>

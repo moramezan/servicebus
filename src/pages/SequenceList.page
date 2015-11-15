@@ -12,5 +12,7 @@
         }());
     </script>
     
+    <apex:sectionHeader title="Sequences" description="A Sequence is an arrangement of processing tasks called steps." help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashSequence'])}" />
+    
     <apex:enhancedList type="Sequence__c" height="600" />
 </apex:page>

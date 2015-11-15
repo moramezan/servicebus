@@ -118,6 +118,7 @@
         <members>MessageRecordData</members>
         <members>MessageResumeQueue</members>
         <members>MessageSplash</members>
+        <members>MessageView</members>
         <members>Monitor</members>
         <members>MonitorSplash</members>
         <members>PostInstallInstructions</members>
