@@ -11,34 +11,6 @@ public with sharing class SequenceBuilderExtension {
         this.countRoutedMessages();
     }
     
-    public List<Id> getStepIds() {
-        Set<Id> stepIds = new Set<Id>();
-        
-        for (Step__c step : [
-            SELECT Id
-            FROM Step__c
-            WHERE IsDraft__c = true
-            AND Sequence__c = :this.sequence.Name
-            ORDER BY Position__c ASC
-        ]) stepIds.add(step.Id);
-        
-        return new List<Id>(stepIds);
-    }
-    
-    public List<Id> getApexClassIds() {
-        Set<Id> apexClassIds = new Set<Id>();
-        
-        for (Step__c step : [
-            SELECT ApexClassId__c
-            FROM Step__c
-            WHERE IsDraft__c = true
-            AND Sequence__c = :this.sequence.Name
-            ORDER BY Position__c ASC
-        ]) apexClassIds.add(step.ApexClassId__c);
-        
-        return new List<Id>(apexClassIds);
-    }
-    
     static public Integer getDraftVersion() {
         return SequenceSetModel.draftVersion();
     }

@@ -71,18 +71,9 @@
         
         window.URLFOR = window.URLFOR || {};
         URLFOR['/'] = '{!URLFOR("/")}';
-        
-        <apex:repeat value="{!ApexClassIds}" var="apexClassId">
-        URLFOR[$Page.ApexClassSetting + '{!apexClassId}'] = '{!URLFOR($Page.ApexClassSetting, null, ["id"=apexClassId])}';
-        </apex:repeat>
-        
-        <apex:repeat value="{!ApexClassIds}" var="apexClassId">
-        URLFOR[$Page.ApexClassSummary + '{!apexClassId}'] = '{!URLFOR($Page.ApexClassSummary, null, ["id"=apexClassId])}';
-        </apex:repeat>
-        
-        <apex:repeat value="{!StepIds}" var="stepId">
-        URLFOR[$Page.StepConfig + '{!stepId}'] = '{!URLFOR($Page.StepConfig, null, ["id"= stepId])}';
-        </apex:repeat>
+        URLFOR[$Page.ApexClassSetting] = '{!URLFOR($Page.ApexClassSetting, null, ["id"="000000000000000AAA"])}';
+        URLFOR[$Page.ApexClassSummary] = '{!URLFOR($Page.ApexClassSummary, null, ["id"="000000000000000AAA"])}';
+        URLFOR[$Page.StepConfig] = '{!URLFOR($Page.StepConfig, null, ["id"="000000000000000AAA"])}';
         
         window.Launch = function(callback) {
             //#1096
