@@ -63,7 +63,7 @@
                     "        Ext.log('[Discover.controller.Application] found isAsyncApexJobFinished, stop polling AsyncApexJob store');",
                     "        if (!jobAlreadyFinished && job.get('Status') == 'Completed') {",
                     "            //job was busy, then job became Completed, so redirect to retURL (or Processes list view)",
-                    "            Ext.Function.defer(function() {window.location = $Action.Sequence__c.List;}, 1000);",
+                    "            Ext.Function.defer(function() {window.location.href = retURL;}, 1000);",
                     "        }",
                     "    }",
                     "});"

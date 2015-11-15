@@ -23,8 +23,8 @@
     
         <div id="pageBlockId"></div>
         
-        <apex:variable var="application" value="Checkout" /><!-- Application namespace such as MyApp -->
-        <apex:variable var="resource" value="{!$Resource.SequenceCheckoutZip}" /><!-- The $Resource containing app.js -->
+        <apex:variable var="application" value="Progress" /><!-- Application namespace such as MyApp -->
+        <apex:variable var="resource" value="{!$Resource.AsyncApexJobProgressZip}" /><!-- The $Resource containing app.js -->
         <apex:variable var="path" value="" /><!-- Development mode prefixes all resources, production mode loads the Sencha Cmd output -->
         <apex:variable var="baseCSSPrefix" value="z-" /><!-- Ext.buildSettings.baseCSSPrefix which will be applied before the framework loads -->
         
@@ -36,13 +36,11 @@
         <!-- BRIDGING COMPONENTS -->
         <script>
             window.$RemoteAction = window.$RemoteAction || {};
-            $RemoteAction.SequenceCheckoutExtension = $RemoteAction.SequenceCheckoutExtension || {};
-            $RemoteAction.SequenceCheckoutExtension.readSteps = '{!$RemoteAction.SequenceDiscardExtension.readSteps}';
-            $RemoteAction.SequenceCheckoutExtension.readAsyncApexJobs = '{!$RemoteAction.SequenceDiscardExtension.readAsyncApexJobs}';
-            
-            window.$Action = window.$Action || {};
-            $Action.Sequence__c = $Action.Sequence__c || {};
-            $Action.Sequence__c.List = '{!URLFOR($Action.Sequence__c.List, $ObjectType.Sequence__c.KeyPrefix, ["now"=NOW()])}'; //timestamp busts cache hopefully
+            $RemoteAction.AsyncApexJobProgressExtension = $RemoteAction.AsyncApexJobProgressExtension || {};
+            $RemoteAction.AsyncApexJobProgressExtension.ReadRecords = '{!$RemoteAction.SequenceDiscardExtension.ReadRecords}';
+            $RemoteAction.AsyncApexJobProgressExtension.ReadAsyncApexJobs = '{!$RemoteAction.SequenceDiscardExtension.ReadAsyncApexJobs}';
+
+            window.retURL = '{!$CurrentPage.Parameters.retURL}' || '{!URLFOR($Action.Sequence__c.List, $ObjectType.Sequence__c.KeyPrefix, ["now"=NOW()])}'; //timestamp busts cache hopefully
             
             window.AsyncApexJob = window.AsyncApexJob || {};
             AsyncApexJob.Id = '{!AsyncApexJob.Id}';
@@ -56,6 +54,10 @@
             AsyncApexJob.NumberOfErrors = Number({!AsyncApexJob.NumberOfErrors});
             AsyncApexJob.Status = '{!AsyncApexJob.Status}';
             AsyncApexJob.TotalJobItems = Number({!AsyncApexJob.TotalJobItems});
+            
+            window.Launch = function(callback) {
+                callback();
+            }
         </script>
         
         <!--

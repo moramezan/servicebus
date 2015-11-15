@@ -1,5 +1,5 @@
 {
-   "name": "Checkout",
+   "name": "Progress",
    "version": "1.0.0.0",
    "indexHtmlPath": "index.html",
    "classpath": "${app.dir}/app,${app.dir}/app/override/data/proxy/",

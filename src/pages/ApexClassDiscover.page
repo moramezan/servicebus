@@ -21,8 +21,8 @@
     
     <div id="pageBlockId"></div>
     
-    <apex:variable var="application" value="Checkout" /><!-- Application namespace such as MyApp -->
-    <apex:variable var="resource" value="{!$Resource.SequenceCheckoutZip}" /><!-- The $Resource containing app.js -->
+    <apex:variable var="application" value="Progress" /><!-- Application namespace such as MyApp -->
+    <apex:variable var="resource" value="{!$Resource.AsyncApexJobProgressZip}" /><!-- The $Resource containing app.js -->
     <apex:variable var="path" value="" /><!-- Development mode prefixes all resources, production mode loads the Sencha Cmd output -->
     <apex:variable var="baseCSSPrefix" value="z-" /><!-- Ext.buildSettings.baseCSSPrefix which will be applied before the framework loads -->
     
@@ -63,13 +63,11 @@
         
         //fakery for checkout client repurposing
         window.$RemoteAction = window.$RemoteAction || {};
-        $RemoteAction.SequenceCheckoutExtension = $RemoteAction.SequenceCheckoutExtension || {};
-        $RemoteAction.SequenceCheckoutExtension.readSteps = 'ReadSteps';
-        $RemoteAction.SequenceCheckoutExtension.readAsyncApexJobs = 'ReadAsyncApexJobs';
+        $RemoteAction.AsyncApexJobProgressExtension = $RemoteAction.AsyncApexJobProgressExtension || {};
+        $RemoteAction.AsyncApexJobProgressExtension.ReadRecords = 'ReadSteps';
+        $RemoteAction.AsyncApexJobProgressExtension.ReadAsyncApexJobs = 'ReadAsyncApexJobs';
         
-        window.$Action = window.$Action || {};
-        $Action.Sequence__c = $Action.Sequence__c || {};
-        $Action.Sequence__c.List = retURL;
+        window.retURL = '{!$CurrentPage.Parameters.retURL}' || '{!URLFOR($Action.Sequence__c.List, $ObjectType.Sequence__c.KeyPrefix, ["now"=NOW()])}'; //timestamp busts cache hopefully
         
         window.AsyncApexJob = window.AsyncApexJob || {};
         AsyncApexJob.Id = '000000000000000AAA';
@@ -83,6 +81,10 @@
         AsyncApexJob.NumberOfErrors = 0;
         AsyncApexJob.Status = 'Processing';
         AsyncApexJob.TotalJobItems = Namespaces.length;
+        
+        window.Launch = function(callback) {
+            callback();
+        }
     </script>
     
     <!--

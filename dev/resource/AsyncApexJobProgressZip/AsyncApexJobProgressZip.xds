@@ -1,5 +1,5 @@
 {
-    "name": "SequenceCheckoutZip",
+    "name": "AsyncApexJobProgressZip",
     "settings": {
         "cmd": {
             "license": "commercial",
@@ -16,7 +16,7 @@
         },
         "urlPrefix": "http://localhost:1841",
         "exportPath": "",
-        "projectHasEnabledWebServer": true,
+        "projectHasEnabledWebServer": false,
         "lockUrlPrefix": false,
         "buildShouldOverwriteIndex": true,
         "generateArchitectVersion": true,

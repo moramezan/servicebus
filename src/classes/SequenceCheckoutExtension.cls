@@ -33,11 +33,11 @@ public with sharing class SequenceCheckoutExtension implements Database.Batchabl
         return (AsyncApexJob)ApexDomain.getById(this.asyncApexJobId);
     }
     
-    @RemoteAction static public List<Step__c> readSteps(Id asyncApexJobId) {
+    @RemoteAction static public List<Step__c> ReadRecords(Id asyncApexJobId) {
         return new ApexPages.StandardSetController(SequenceSetModel.locateDraftSteps()).getRecords();
     }
     
-    @RemoteAction static public List<AsyncApexJob> readAsyncApexJobs(Id asyncApexJobId) {
+    @RemoteAction static public List<AsyncApexJob> ReadAsyncApexJobs(Id asyncApexJobId) {
         return ApexDomain.get([SELECT Id FROM AsyncApexJob WHERE Id = :asyncApexJobId]);
     }
     

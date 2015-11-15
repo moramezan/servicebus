@@ -208,7 +208,7 @@
             "codeClass": null,
             "userConfig": {
                 "api": [
-                    "{read: $RemoteAction.SequenceCheckoutExtension.readAsyncApexJobs}"
+                    "{read: $RemoteAction.AsyncApexJobProgressExtension.ReadAsyncApexJobs}"
                 ],
                 "designer|displayName": "AsyncApexJobProxy",
                 "extraParams": [
@@ -298,7 +298,7 @@
                 "fn": "mask",
                 "implHandler": [
                     "var elapsedSeconds = this.countElapsedSeconds();",
-                    "var msg = 'The best things in life are worth waiting for... ' + Ext.Date.format(new Date(elapsedSeconds * 1000), 'i:s') + ' (<a target=\\\"_blank\\\" href=\\\"' + $Action.Sequence__c.List + '\\\">Help for this Page</a>)';",
+                    "var msg = 'The best things in life are worth waiting for... ' + Ext.Date.format(new Date(elapsedSeconds * 1000), 'i:s');",
                     "",
                     "//we mask the grid, not the view, because the store",
                     "//load() method periodically unmasks the gridView",

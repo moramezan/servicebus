@@ -13,9 +13,9 @@
             "AsyncApexJob",
             "Process"
         ],
-        "name": "Checkout",
+        "name": "Progress",
         "requires": [
-            "Checkout.override.data.proxy.Direct"
+            "Progress.override.data.proxy.Direct"
         ],
         "stores": [
             "Processes",
@@ -38,8 +38,10 @@
             "userConfig": {
                 "fn": "launch",
                 "implHandler": [
-                    "Ext.create('Checkout.view.Holder', {",
-                    "    renderTo: 'pageBlockId'",
+                    "Launch(function() {",
+                    "    Ext.create('Progress.view.Holder', {",
+                    "        renderTo: 'pageBlockId'",
+                    "    });",
                     "});"
                 ]
             },

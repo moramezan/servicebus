@@ -1,4 +1,4 @@
-Ext.define('Checkout.override.data.proxy.Direct', {
+Ext.define('Progress.override.data.proxy.Direct', {
     override: 'Ext.data.proxy.Direct',
 
     /**

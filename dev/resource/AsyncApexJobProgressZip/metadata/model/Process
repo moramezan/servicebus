@@ -47,7 +47,7 @@
             "codeClass": null,
             "userConfig": {
                 "api": [
-                    "{read: $RemoteAction.SequenceCheckoutExtension.readSteps}"
+                    "{read: $RemoteAction.AsyncApexJobProgressExtension.ReadRecords}"
                 ],
                 "designer|displayName": "ProcessProxy",
                 "extraParams": [
