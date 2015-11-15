@@ -21,6 +21,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ApexClassDiscoverExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ApexClassDiscoverExtensionTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ApexClassListExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -424,6 +432,10 @@
         <object>Sequence__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
+    <pageAccesses>
+        <apexPage>ApexClassDiscover</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
     <pageAccesses>
         <apexPage>ApexClassList</apexPage>
         <enabled>true</enabled>

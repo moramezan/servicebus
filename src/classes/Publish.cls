@@ -1,7 +1,7 @@
 public class Publish extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
-    public class Summary {
+    public class Summary extends ApexClassModel.Summary {
         String Tag = 'Service Bus';
         String Label = 'Publish';
         String Description = 'Broadcasts named events to other subscribed sequences.';

@@ -12,7 +12,10 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      *
      * @docs ApiMarkerClass.html
      */
-    public class Summary {
+    virtual public class Summary {
+        public Summary() {}
+        override public String toString() {return Json.serialize(this);}
+        public Id Id {get; set;} //#946
         public String Tag {get; set;}
         public String Label {get; set;}
         public String Description {get; set;}
@@ -37,20 +40,10 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 throw new ModelException('Service.Summary class is invalid or not visible: ' + reflector.getName());
             }
             
-            Map<String,Object> summary;
-            if (summary == null) try {
-                //their managed summary class using TOSTRING
-                Object impl = inflector.newInstance();
-                String toString = String.valueOf(impl);
-                summary = (Map<String,Object>)Json.deserializeUntyped(toString);
-            } catch (Exception e) {}
-            
-            if (summary == null) try {
-                //their unmanaged summary class using JSON
-                Object impl = inflector.newInstance();
-                String toString = Json.serialize(impl);
-                summary = (Map<String,Object>)Json.deserializeUntyped(toString);
-            } catch (Exception e) {}
+            //all summary classes have toString()
+            Object impl = inflector.newInstance();
+            String toString = String.valueOf(impl);
+            Map<String,Object> summary = (Map<String,Object>)Json.deserializeUntyped(toString);
             
             //failure, probably bad toString method
             if (summary == null) throw new ModelException(inflector.getName() + ': Service.Summary class must extend Abstract.Service.Summary');

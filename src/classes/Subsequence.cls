@@ -3,7 +3,7 @@ public class Subsequence extends ApexClassModel.Service {
     
     static public Boolean IsRunning = false;
     
-    public class Summary {
+    public class Summary extends ApexClassModel.Summary {
         String Tag = 'Service Bus';
         String Label = 'Synchronous Subsequence';
         String Description = 'Synchronously executes another sequence before emitting the event.';

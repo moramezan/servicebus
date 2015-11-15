@@ -3,7 +3,7 @@ public class AggregateByEntryPoint extends ApexClassModel.Service {
 
     public class ServiceException extends Exception {}
 
-    public class Summary {
+    public class Summary extends ApexClassModel.Summary {
         String Tag = 'Service Bus';
         String Label = 'Aggregate By Entry Point';
         String Description = 'Aggregates a collection of messages having the same Entry Point Id.';

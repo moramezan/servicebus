@@ -309,7 +309,7 @@
         List<Map<String,Object>> execute(Map<String,Object> event) {return null;}
     }
     
-    public class FinishDoesPersistSummary {
+    public class FinishDoesPersistSummary extends ApexClassModel.Summary {
         Integer Limits = 1;
     }
     

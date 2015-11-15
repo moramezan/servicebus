@@ -9,7 +9,7 @@
     }
     
     //@TestVisible private preferred, but Type.forName does not support
-    public class DescribeServiceSummary {
+    public class DescribeServiceSummary extends ApexClassModel.Summary {
         String Tag = 'Tag';
         String Label = 'Name';
         String Description = 'Description';
@@ -53,7 +53,7 @@
     }
     
     //@TestVisible private preferred, but Type.forName does not support
-    public class DefaultServiceSummary {}
+    public class DefaultServiceSummary extends ApexClassModel.Summary {}
     
     static testmethod void testDefaultValues() {
         //act
@@ -239,7 +239,7 @@
         }
     }
     
-    public class TooManyOutputsSummary {
+    public class TooManyOutputsSummary extends ApexClassModel.Summary {
         Integer Limits = 1;
     }
     
@@ -265,7 +265,7 @@
         }
     }
     
-    public class TooManyInputsSummary {
+    public class TooManyInputsSummary extends ApexClassModel.Summary {
         Integer Limits = 2345;
     }
     
@@ -294,7 +294,7 @@
         }
     }
     
-    public class TooManyEventsSummary {
+    public class TooManyEventsSummary extends ApexClassModel.Summary {
         Integer Limits = 50; //50 * 200 = 10000
     }
     

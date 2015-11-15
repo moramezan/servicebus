@@ -2,120 +2,165 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
     
     public class ModelException extends Exception {}
     
+    @TestVisible List<ApexClass> ApexClasses;
+    
     /**
-     * Model not allowed to make assumptions about
-     * the fields he is constructed with. Id only.
+     * Private constructor enforces
+     * use of static factory method.
      */
-    public ApexClassSetModel(List<ApexClass> apexClasses) {
+    @TestVisible ApexClassSetModel(List<ApexClass> apexClasses) {
         super(apexClasses);
+        this.ApexClasses = apexClasses;
     }
     
     /**
-     * Attempts to instantiate Service.Summary classes and
-     * reduces the working record set to valid ones.
+     * This is basically a server-side confidence that the Apex Classes in the
+     * org have changed. Additional or Modified classes will cause the DATE to
+     * waver. Deleted classes will cause the COUNT to waver. Any change detected.
      */
-    static public ApexClassSetModel discoverServices(Set<Id> apexClassIds) {
-        List<ApexClass> apexClasses = [
-            SELECT Id, NamespacePrefix, Name, ApiVersion, Status
+    static public String classKey() {
+        
+        ApexClass apexClass = [
+            SELECT LastModifiedDate
             FROM ApexClass
-            WHERE Id IN :apexClassIds
+            ORDER BY LastModifiedDate DESC
+            LIMIT 1
         ];
         
-        //prepare list of SERVICE apex classes
-        List<ApexClass> services = new List<ApexClass>();
+        Integer count = [
+            SELECT COUNT()
+            FROM ApexClass
+        ];
         
-        //bulletproof reflection on each Service.Summary class
-        for (ApexClass apexClass : apexClasses) try {
-            //uses two arguments per #910 to reach out of managed package namespace!
-            Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
-            
-            //fails if compile problem with the class, eg LeadShare when OWD set to public
-            if (reflector == null) continue; //failure, class has private visibility
-            String apexClassName = reflector.getName();
-            
-            //fails if there is no Service.Summary class
-            Type inflector = Type.forName(apexClassName + '.Summary');
-            
-            //we DONT enter each namespace, just assume ok
-            if (inflector != null) services.add(apexClass);
-        } catch (ApexClassSetModel.ModelException e) {}
-        
-        return new ApexClassSetModel(services);
+        //eg 1447306203000_93
+        return apexClass.LastModifiedDate.getTime() + '_' + count;
     }
     
-    public List<ApexClassModel.Summary> toSummaries() {
-        List<ApexClass> apexClasses = [
+    /**
+     * We store the classKey from above in a custom setting
+     * which makes it easy (ServerCacheKey != ClientCacheKey) to
+     * detect if cache is stale in Sequence Builder and Service Discovery
+     */
+    static public String cacheKey() {
+        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
+        return setting.CacheKey__c;
+    }
+    
+    /**
+     * Usually after Service Discovery,
+     * we persist everything to a Document.
+     */
+    static public Id saveCache(List<ApexClassModel.Summary> summaries) {
+        
+        String classKey = classKey();
+        
+        Folder folder = [
+            SELECT Id
+            FROM Folder
+            WHERE DeveloperName='ServiceBus'
+        ];
+        
+        String data = Json.serializePretty(summaries);
+        
+        Id documentId = Database.upsert(new Document(
+            Name = 'ApexClassCache.bin',
+            FolderId = Test.isRunningTest() ? UserInfo.getUserId() : OAuthSetting__c.getOrgDefaults().RunningUserId__c,
+            Body = Blob.valueOf(data)
+        )).getId();
+        
+        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
+        setting.CacheKey__c = classKey;
+        upsert setting;
+        
+        return documentId;
+    }
+    
+    /**
+     * The Sequence Builder and Services Tab
+     * rely on reading data from this cache.
+     */
+    static public List<ApexClassModel.Summary> loadCache() {
+        
+        try {
+            Document document = [
+                SELECT Body
+                FROM Document
+                WHERE Name = 'ApexClassCache.bin'
+            ];
+            
+            //hydrate cache
+            return (List<ApexClassModel.Summary>)Json.deserialize(
+                document.Body.toString(),
+                List<ApexClassModel.Summary>.class
+            );
+            
+        } catch (QueryException e) {
+            //nothing cached
+            return new List<ApexClassModel.Summary>();
+        }
+        
+    }
+    
+    static public ApexClassSetModel fromNamespace(String namespace) {
+        return new ApexClassSetModel([
             SELECT Id, NamespacePrefix, Name
             FROM ApexClass
-            WHERE Id IN :this.keySet()
-        ];
-        
-        //bulletproof list of summaries
-        List<ApexClassModel.Summary> summaries = new List<ApexClassModel.Summary>();
-        for (ApexClass apexClass : apexClasses) try {
-            Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
-            ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
-            summaries.add(summary);
-        } catch (ApexClassSetModel.ModelException e) {}
-        
-        return summaries;
+            WHERE NamespacePrefix = :namespace
+        ]);
     }
     
     /**
-     * This returns a list of Apex Class DTOs with the minimum information seen by the user.
-     * If a key is needed, we can use the Id, as the name is friendly, not fully qualified.
-     * These DTOs would be consumed by the Sequence Builder interface, hiding our secret sauce.
-     *
-     * [
-     *     {
-     *         "Id": "01p000000000000AAA";
-     *         "Name": "Aggregate By Entry Point";
-     *         "Description": "Aggregates a collection of messages having the same Entry Point Id.",
-     *         "Tag": "Service Bus",
-     *         "Icon": "arrow_join",
-     *         "Cardinality": "Fewer",
-     *         "ServiceSetting": null
-     *     },
-     *     {
-     *         "Id": "01p000000000000AAA";
-     *         "Name": "Aggregate By Job";
-     *         "Description": "Aggregates a collection of messages having the same Job Id.",
-     *         "Tag": "Service Bus",
-     *         "Icon": "arrow_join",
-     *         "Cardinality": "Fewer",
-     *         "ServiceSetting": null
-     *     }
-     * ]
+     * #946 by discovering the namespaces one-by-one with Visualforce Remoting
+     * we won't hit the 10 namespace limit, and they run in parallel (fast)
      */
-    public List<Map<String,Object>> toDtos() {
-        //prepare list of DTO
-        List<Map<String,Object>> dtos = new List<Map<String,Object>>();
+    public List<ApexClassModel.Summary> discoverSummaries() {
         
-        //bulletproof assembly of each one
-        List<ApexClass> apexClasses = this.Records;
-        for (ApexClass apexClass : apexClasses) try {
+        List<ApexClassModel.Summary> summaries = new List<ApexClassModel.Summary>();
+        
+        for (ApexClass apexClass : this.ApexClasses) try {
+            
             //uses two arguments per #910 to reach out of managed package namespace!
+            Type inflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name + '.Summary');
+            
+            if (inflector == null) {
+                //no summary class
+                continue;
+            }
+            
             Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
-            Type inflector = Type.forName(reflector.getName() + '.Summary');
-            if (inflector == null) continue;
-            
             ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
+            summary.Id = apexClass.Id; //gotta provide the id from outside
+            summaries.add(summary);
             
-            Map<String,Object> dto = new Map<String,Object>{
-                'Id' => apexClass.Id,
-                'Label' => summary.Label,
-                'Description' => summary.Description,
-                'Tag' => summary.Tag,
-                'Icon' => summary.Icon,
-                'Cardinality' => summary.Cardinality,
-                'StepConfig' => summary.StepConfig,
-                'ServiceSetting' => summary.ServiceSetting
-            };
-            
-            dtos.add(dto);
-        } catch (ApexClassModel.ModelException e) {}
+        } catch (JsonException e) {
+            //fails if compile problem with the class, eg LeadShare when OWD set to public
+        }
         
-        return dtos;
+        return summaries;
+        
+    }
+    
+    /**
+     * This finds candidate namespaces with a few exceptions:
+     * for example FinancialForce (thousands of classes)
+     * for example BmcServiceDesk (thousands of classes)
+     * for example Abstract (thats our base class!)
+     */
+    static public Set<String> discoverNamespaces() {
+        
+        List<AggregateResult> results = [
+            SELECT NamespacePrefix
+            FROM ApexClass
+            WHERE NamespacePrefix != 'abstract'
+            GROUP BY NamespacePrefix
+            HAVING COUNT(Id) < 1000
+        ];
+        
+        Set<String> namespaces = new Set<String>();
+        for (AggregateResult result : results)
+        namespaces.add((String)result.get('NamespacePrefix'));
+        
+        return namespaces;
     }
     
 }

@@ -13,31 +13,19 @@ public with sharing class ApexClassListExtension {
     public Map<Id,ApexClass> id2class {get; set;}
     public Map<Id,ApexClassModel.Summary> id2summary {get; set;}
     
-    public void doInit() {
-        Set<Id> apexClassIds = new Map<Id,SObject>([
-            SELECT Id
-            FROM ApexClass
-            WHERE NamespacePrefix != 'abstract'
-            LIMIT 10000
-        ]).keySet();
+    public PageReference doRedirect() {
         
-        ApexClassSetModel setModel = ApexClassSetModel.discoverServices(apexClassIds);
-        
-        List<ApexClass> apexClasses = [
+        //for displaying classes
+        this.id2class = new Map<Id,ApexClass>([
             SELECT Id, Name, NamespacePrefix, ApiVersion, Status, IsValid, LastModifiedById, LastModifiedDate
             FROM ApexClass
-            WHERE Id IN :setModel.keySet()
-        ];
+        ]);
         
-        this.id2class = new Map<Id,ApexClass>(apexClasses);
+        //for displaying summaries
+        List<ApexClassModel.Summary> summaries = ApexClassSetModel.loadCache();
+        for (ApexClassModel.Summary summary : summaries) this.id2summary.put(summary.Id, summary);
         
-        //we DO enter each namespace here
-        for (ApexClass apexClass : apexClasses) try {
-            Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
-            ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
-            this.id2summary.put(apexClass.Id, summary);
-        } catch (ApexClassModel.ModelException e) {
-            ApexPages.addMessages(e);
-        }
+        //discover if needed
+        return ApexClassDiscoverExtension.DiscoverIfNeeded();
     }
 }

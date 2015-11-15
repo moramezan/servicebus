@@ -4,6 +4,18 @@
     <description>Controls which broker implementation to use and whether it should run at all.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>CacheKey__c</fullName>
+        <description>A hash representing the changed or unchanged payload of all apex classes in the org.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When was the last apex class modified and how many classes are there?</inlineHelpText>
+        <label>Cache Key</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>EventTimestamp__c</fullName>
         <description>A timestamp representing the last time that a heartbeat message was successfully enqueued to the broker</description>
         <externalId>false</externalId>

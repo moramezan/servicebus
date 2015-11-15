@@ -1,7 +1,7 @@
 public class Branch extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
-    public class Summary {
+    public class Summary extends ApexClassModel.Summary {
         String StepConfig = BranchConfig__c.class.getName();
         String Icon = 'arrow_branch';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceBranchJumpSubsequence').getUrl();

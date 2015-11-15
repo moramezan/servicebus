@@ -1,84 +1,14 @@
 public with sharing class SequenceBuilderExtension {
     
     ApexPages.StandardController controller;
+    Sequence__c sequence;
     SequenceModel model;
     
     public SequenceBuilderExtension(ApexPages.StandardController controller) {
         this.controller = controller;
+        this.sequence = (Sequence__c)controller.getRecord();
         this.model = SequenceModel.fromId(controller.getId());
         this.countRoutedMessages();
-    }
-    
-    /**
-     * This is basically a server-side confidence that the Apex Classes in the
-     * org have changed. Additional or Modified classes will cause the DATE to
-     * waver. Deleted classes will cause the COUNT to waver. Any change detected.
-     */
-    public String getServerCacheKey() {
-        ApexClass apexClass = [
-            SELECT LastModifiedDate
-            FROM ApexClass
-            ORDER BY LastModifiedDate DESC
-            LIMIT 1
-        ];
-        
-        Integer count = [
-            SELECT COUNT()
-            FROM ApexClass
-        ];
-        
-        return Json.serializePretty(apexClass.LastModifiedDate.getTime() + '|' + count);
-    }
-    
-    /**
-     * As a convenience, we parrot this method back to the client,
-     * which makes it easy (ServerCacheKey != ClientCacheKey) to
-     * detect if the cache is stale. Ext JS sets the cookie in launch()
-     */
-    public String getClientCacheKey() {
-        Cookie cookie = ApexPages.CurrentPage().getCookies().get('ClientCacheKey');
-        if (cookie == null) return null;
-        return Json.serializePretty(cookie.getValue());
-    }
-    
-    /**
-     * This finds candidate namespaces with a few exceptions:
-     * for example FinancialForce (thousands of classes)
-     * for example BmcServiceDesk (thousands of classes)
-     */
-    public String getNamespaces() {
-        List<AggregateResult> results = [
-            SELECT NamespacePrefix
-            FROM ApexClass
-            WHERE NamespacePrefix != 'abstract'
-            GROUP BY NamespacePrefix
-            HAVING COUNT(Id) < 1000
-        ];
-        
-        List<String> namespaces = new List<String>();
-        for (AggregateResult result : results) {
-            String namespacePrefix = (String)result.get('NamespacePrefix');
-            if (namespacePrefix == null) namespacePrefix = ''; //Unable to serialize a map with a null key.
-            namespaces.add(namespacePrefix);
-        }
-        
-        return Json.serializePretty(namespaces);
-    }
-    
-    /**
-     * #946 by discovering the namespaces one-by-one with Visualforce Remoting
-     * we won't hit the 10 namespace limit, and they run in parallel (fast)
-     */
-    @RemoteAction static public List<Map<String,Object>> Discover(String namespace) {
-        Set<Id> apexClassIds = new Map<Id,SObject>([
-            SELECT Id
-            FROM ApexClass
-            WHERE NamespacePrefix = :namespace
-            LIMIT 10000
-        ]).keySet();
-        ApexClassSetModel model = ApexClassSetModel.discoverServices(apexClassIds);
-        List<Map<String,Object>> services = model.toDtos();
-        return services;
     }
     
     public List<Id> getStepIds() {
@@ -88,7 +18,7 @@ public with sharing class SequenceBuilderExtension {
             SELECT Id
             FROM Step__c
             WHERE IsDraft__c = true
-            AND Sequence__c = :(String)this.model.getRecord().get('Name')
+            AND Sequence__c = :this.sequence.Name
             ORDER BY Position__c ASC
         ]) stepIds.add(step.Id);
         
@@ -102,7 +32,7 @@ public with sharing class SequenceBuilderExtension {
             SELECT ApexClassId__c
             FROM Step__c
             WHERE IsDraft__c = true
-            AND Sequence__c = :(String)this.model.getRecord().get('Name')
+            AND Sequence__c = :this.sequence.Name
             ORDER BY Position__c ASC
         ]) apexClassIds.add(step.ApexClassId__c);
         
@@ -162,10 +92,10 @@ public with sharing class SequenceBuilderExtension {
         if (OAuthSetting__c.getOrgDefaults().RunningUserId__c == null) {
             //failure, someone better configure the package
             return Page.Configure;
-        } else {
-            //success, just display the sequence builder
-            return null;
         }
+        
+        //discover if needed
+        return ApexClassDiscoverExtension.DiscoverIfNeeded();
     }
     
     public String getTerminateApexClassName() {
@@ -180,8 +110,11 @@ public with sharing class SequenceBuilderExtension {
      * sequence.terminate(), the Terminate Step should exist before the page is rendered.
      */
     public String getSteps() {
-        List<Map<String,Object>> stepDtos = this.model.stepDtos();
-        return Json.serializePretty(stepDtos);
+        return Json.serialize(this.model.stepDtos());
+    }
+    
+    public String getServices() {
+        return Json.serialize(ApexClassSetModel.loadCache());
     }
     
     @RemoteAction static public void persistConfigNameOnStep(Id stepId) {

@@ -1,6 +1,6 @@
 <!-- this is called "list" cuz a tab would show "recently viewed" etc -->
 <!-- no recordSetVar  as "List controllers are not supported for ApexClass" -->
-<apex:page setup="true" standardController="ApexClass" extensions="ApexClassListExtension" action="{!doInit}" title="Services">
+<apex:page setup="true" standardController="ApexClass" extensions="ApexClassListExtension" action="{!doRedirect}" title="Services">
     
     <script>
         (function() {

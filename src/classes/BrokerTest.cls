@@ -747,7 +747,7 @@
         }
     }
     
-    public class ChunkErrorServiceSummary {
+    public class ChunkErrorServiceSummary extends ApexClassModel.Summary {
         String Description = 'Does stuff in memory without side effects.';
         Integer Limits = 2;
     }
@@ -798,7 +798,7 @@
         }
     }
     
-    public class FakeGateSummary {
+    public class FakeGateSummary extends ApexClassModel.Summary {
         String Description = 'fake gate';
         Integer Limits = 999;
     }

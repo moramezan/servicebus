@@ -1,66 +1,105 @@
 @IsTest class ApexClassSetModelTest {
     
-    static testmethod void testDiscoverServices() {
+    static testmethod void testClassKey() {
         //act
-        Id apexClassId = [SELECT Id FROM ApexClass WHERE Name = 'Terminate'].Id;
-        ApexClassSetModel model = ApexClassSetModel.discoverServices(new Set<Id>{apexClassId});
+        String classKey = ApexClassSetModel.classKey();
         
-        //assemble
-        List<ApexClass> apexClasses = model.getRecords();
+        //arrange
+        List<ApexClass> apexClasses = [SELECT Id FROM ApexClass];
         
         //assert
-        Integer expectedSize = 1;
-        Integer actualSize = apexClasses.size();
-        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
-        
-        String expectedName = 'Terminate';
-        String actualName = apexClasses[0].Name;
-        System.assertEquals(expectedName, actualName, 'Wrong name.');
+        String expectedClassKey = '_' + apexClasses.size();
+        String actualClassKey = '_' + classKey.substringAfter('_');
+        System.assertEquals(expectedClassKey, actualClassKey, 'Wrong class key.');
     }
     
-    static testmethod void testToDtos() {
+    static testmethod void testCacheKey() {
         //arrange
-        Id apexClassId = [SELECT Id FROM ApexClass WHERE Name = 'Wiretap'].Id;
-        ApexClassSetModel model = ApexClassSetModel.discoverServices(new Set<Id>{apexClassId});
+        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
+        setting.CacheKey__c = '1447306203000_93';
+        upsert setting;
         
         //act
-        List<Map<String,Object>> dtos = model.toDtos();
+        String cacheKey = ApexClassSetModel.cacheKey();
         
-        //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Wiretap.class);
+        //assert
+        String expectedCacheKey = '1447306203000_93';
+        String actualCacheKey = cacheKey;
+        System.assertEquals(expectedCacheKey, actualCacheKey, 'Wrong cache key.');
+    }
+    
+    static testmethod void testSaveCache() {
+        //arrange
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(Terminate.class);
+        
+        //act
+        Id documentId = ApexClassSetModel.saveCache(new List<ApexClassModel.Summary>{summary});
+        
+        //arrange
+        Document document = [SELECT Body FROM Document WHERE Id = :documentId];
+        
+        //assert
+        String expectedBody = '"Label" : "Terminate"';
+        String actualBody = document.Body.toString();
+        System.assert(actualBody.contains(expectedBody), 'Wrong contains.');
+    }
+    
+    static testmethod void testLoadCache() {
+        //arrange
+        Document document = new Document(
+            Name = 'ApexClassCache.bin',
+            FolderId = UserInfo.getUserId(),
+            Body = Blob.valueOf('[{"Description":"Test"}]')
+        );
+        
+        upsert document Name;
+        document.DeveloperName = 'ApexClassDiscover';
+        update document; //cant upsert on DeveloperName
+        
+        //act
+        List<ApexClassModel.Summary> summaries = ApexClassSetModel.loadCache();
+        
+        //assert
+        String expectedDescription = 'Test';
+        String actualDescription = summaries[0].Description;
+        System.assertEquals(expectedDescription, actualDescription, 'Wrong id.');
+    }
+    
+    static testmethod void testFromNamespace() {
+        //arrange
+        String namespace = 'test';
+        
+        //act
+        ApexClassSetModel model = ApexClassSetModel.fromNamespace(namespace);
+        
+        //assert
+        System.assert(model.ApexClasses.isEmpty());
+    }
+    
+    static testmethod void testDiscoverSummaries() {
+        //arrange
+        ApexClassSetModel model = new ApexClassSetModel([
+            SELECT Id, NamespacePrefix, Name
+            FROM ApexClass
+            WHERE Name = 'Terminate'
+            AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
+        ]);
+        
+        //act
+        List<ApexClassModel.Summary> summaries = model.discoverSummaries();
         
         //assert
         Integer expectedSize = 1;
-        Integer actualSize = dtos.size();
+        Integer actualSize = summaries.size();
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
+    }
+    
+    static testmethod void testDiscoverNamespaces() {
+        //act
+        Set<String> namespaces = ApexClassSetModel.discoverNamespaces();
         
-        String expectedId = apexClassId;
-        String actualId = (String)dtos[0].get('Id');
-        System.assertEquals(expectedId, actualId, 'Wrong Id.');
-        
-        String expectedName = summary.Label;
-        String actualName = (String)dtos[0].get('Label');
-        System.assertEquals(expectedName, actualName, 'Wrong Name.');
-        
-        String expectedDescription = summary.Description;
-        String actualDescription = (String)dtos[0].get('Description');
-        System.assertEquals(expectedDescription, actualDescription, 'Wrong Description.');
-        
-        String expectedTag = summary.Tag;
-        String actualTag = (String)dtos[0].get('Tag');
-        System.assertEquals(expectedTag, actualTag, 'Wrong Tag.');
-        
-        String expectedIcon = summary.Icon;
-        String actualIcon = (String)dtos[0].get('Icon');
-        System.assertEquals(expectedIcon, actualIcon, 'Wrong Icon.');
-        
-        String expectedCardinality = summary.Cardinality;
-        String actualCardinality = (String)dtos[0].get('Cardinality');
-        System.assertEquals(expectedCardinality, actualCardinality, 'Wrong Cardinality.');
-        
-        String expectedServiceSetting = summary.ServiceSetting;
-        String actualServiceSetting = (String)dtos[0].get('ServiceSetting');
-        System.assertEquals(expectedServiceSetting, actualServiceSetting, 'Wrong ServiceSetting.');
+        //assert
+        System.assert(namespaces.contains(null));
     }
     
 }

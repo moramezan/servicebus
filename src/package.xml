@@ -11,6 +11,8 @@
         <members>AggregateByEntryPointTest</members>
         <members>AggregateByJob</members>
         <members>AggregateByJobTest</members>
+        <members>ApexClassDiscoverExtension</members>
+        <members>ApexClassDiscoverExtensionTest</members>
         <members>ApexClassListExtension</members>
         <members>ApexClassListExtensionTest</members>
         <members>ApexClassModel</members>
@@ -100,6 +102,7 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>ApexClassDiscover</members>
         <members>ApexClassList</members>
         <members>ApexClassSetting</members>
         <members>ApexClassSplash</members>
@@ -139,6 +142,7 @@
     </types>
     <types>
         <members>BranchConfig__c.Sequence__c</members>
+        <members>BrokerSetting__c.CacheKey__c</members>
         <members>BrokerSetting__c.EventTimestamp__c</members>
         <members>BrokerSetting__c.Inhibit__c</members>
         <members>BrokerSetting__c.IsPaused__c</members>

@@ -4,7 +4,7 @@ public class ApprovalUnlock extends ApexClassModel.Service {
     
     public class ServiceException extends Exception {}
     
-    public class Summary {
+    public class Summary extends ApexClassModel.Summary {
         String Tag = 'Service Bus';
         String Label = 'Unlock Record';
         String Description = 'Unlocks record from an approval process.';

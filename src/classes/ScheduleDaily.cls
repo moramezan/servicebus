@@ -1,7 +1,7 @@
 public class ScheduleDaily extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
-    public class Summary {
+    public class Summary extends ApexClassModel.Summary {
         String Tag = 'Service Bus';
         String Label = 'Schedule (Daily)';
         String Description = 'Emits an event on a configurable hourly basis.'; //Swallows regular un-scheduled heartbeat messages

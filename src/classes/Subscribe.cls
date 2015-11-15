@@ -1,7 +1,7 @@
 public class Subscribe extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
-    public class Summary {
+    public class Summary extends ApexClassModel.Summary {
         String Tag = 'Service Bus';
         String Label = 'Subscribe';
         String Description = 'Listens for named events published by other sequences.';

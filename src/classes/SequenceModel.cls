@@ -35,13 +35,6 @@ public class SequenceModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * Find the steps from this sequence
-     */
-    public StepSetModel stepSetModel() {
-        return StepSetModel.forSequence(this.Sequence.Name);
-    }
-    
-    /**
      * Appends one step to the end of a sequence,
      * normally it will appear after the Terminate.
      * PROD scenarios append both class name and id.

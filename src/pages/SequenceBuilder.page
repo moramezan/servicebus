@@ -55,20 +55,15 @@
         $RemoteAction.SequenceBuilderExtension.moveStepBefore = '{!$RemoteAction.SequenceBuilderExtension.moveStepBefore}';
         $RemoteAction.SequenceBuilderExtension.moveStepAfter = '{!$RemoteAction.SequenceBuilderExtension.moveStepAfter}';
         $RemoteAction.SequenceBuilderExtension.persistConfigNameOnStep = '{!$RemoteAction.SequenceBuilderExtension.persistConfigNameOnStep}';
-        $RemoteAction.SequenceBuilderExtension.Discover = '{!$RemoteAction.SequenceBuilderExtension.Discover}';
         
         window.$Page = window.$Page || {};
         $Page.ApexClassSetting = '{!$Page.ApexClassSetting}';
         $Page.ApexClassSummary = '{!$Page.ApexClassSummary}';
         $Page.StepConfig = '{!$Page.StepConfig}';
         
-        Namespaces = {!Namespaces};
-        ServerCacheKey = String({!ServerCacheKey});
-        ClientCacheKey = String({!ClientCacheKey});
-        
         TerminateApexClassName = '{!TerminateApexClassName}';
-        Services = []; //TODO safari private doesnt work
-        Steps = {!Steps};
+        Services = JSON.parse('{!Services}');
+        Steps = JSON.parse('{!Steps}');
         Id = '{!Id}';
         
         window.$CurrentPage = window.$CurrentPage || {};

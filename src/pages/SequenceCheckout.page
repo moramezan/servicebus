@@ -40,8 +40,6 @@
             $RemoteAction.SequenceCheckoutExtension.readSteps = '{!$RemoteAction.SequenceCheckoutExtension.readSteps}';
             $RemoteAction.SequenceCheckoutExtension.readAsyncApexJobs = '{!$RemoteAction.SequenceCheckoutExtension.readAsyncApexJobs}';
             
-            window.AsyncApexJob = window.AsyncApexJob || {"Id": "a01000000000000AAA"};
-            
             window.$Action = window.$Action || {};
             $Action.Sequence__c = $Action.Sequence__c || {};
             $Action.Sequence__c.List = '{!URLFOR($Action.Sequence__c.List, $ObjectType.Sequence__c.KeyPrefix, ["now"=NOW()])}'; //timestamp busts cache hopefully

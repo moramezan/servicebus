@@ -675,7 +675,7 @@
         }
     }
     
-    public class SplitSummary {
+    public class SplitSummary extends ApexClassModel.Summary {
         String Description = 'the big split';
     }
 

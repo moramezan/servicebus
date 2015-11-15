@@ -4,7 +4,7 @@ public class ApprovalLock extends ApexClassModel.Service {
     
     public class ServiceException extends Exception {}
     
-    public class Summary {
+    public class Summary extends ApexClassModel.Summary {
         String Tag = 'Service Bus';
         String Label = 'Lock Record';
         String Description = 'Locks the record, if a qualifying approval process exists.';

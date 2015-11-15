@@ -32,7 +32,7 @@
         }
     }
     
-    public class MemoryErrorSummary {
+    public class MemoryErrorSummary extends ApexClassModel.Summary {
         String Description = 'Does stuff in memory, throws an exception not needing rollback.';
         Integer Limits = 1000;
     }
@@ -78,7 +78,7 @@
         }
     }
     
-    public class InserterErrorSummary {
+    public class InserterErrorSummary extends ApexClassModel.Summary {
         String Description = 'Inserts 1 document, throws an exception needing rollback.';
         Integer Limits = 50;
     }
@@ -123,7 +123,7 @@
         }
     }
     
-    public class MemorySummary {
+    public class MemorySummary extends ApexClassModel.Summary {
         String Description = 'Does stuff in memory without side effects.';
         Integer Limits = 1000;
     }
@@ -169,7 +169,7 @@
         }
     }
     
-    public class InserterSummary {
+    public class InserterSummary extends ApexClassModel.Summary {
         String Description = 'Inserts 1 document, runs 75 times';
         Integer Limits = 75;
     }
