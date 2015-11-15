@@ -3,7 +3,7 @@ public class ScheduleDaily extends ApexClassModel.Service {
     
     public class Summary extends ApexClassModel.Summary {
         String Tag = 'Service Bus';
-        String Label = 'Schedule (Daily)';
+        String Label = 'Schedule';
         String Description = 'Emits an event on a configurable hourly basis.'; //Swallows regular un-scheduled heartbeat messages
         String Icon = 'clock';
         String StepConfig = ScheduleDailyConfig__c.class.getName();
