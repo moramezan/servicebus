@@ -83,6 +83,7 @@
         <members>SequenceCommitExtensionTest</members>
         <members>SequenceDiscardExtension</members>
         <members>SequenceDiscardExtensionTest</members>
+        <members>SequenceListExtension</members>
         <members>SequenceModel</members>
         <members>SequenceModelTest</members>
         <members>SequenceSetModel</members>

@@ -1,4 +1,4 @@
-<apex:page setup="true" tabStyle="Sequence__c" standardController="Sequence__c" recordSetVar="msgs">
+<apex:page setup="true" tabStyle="Sequence__c" standardController="Sequence__c" recordSetVar="msgs" extensions="SequenceListExtension">
     
     <script>
         (function() {
@@ -13,6 +13,32 @@
     </script>
     
     <apex:sectionHeader title="Sequences" description="A Sequence is an arrangement of processing tasks called steps." help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashSequence'])}" />
+    
+    <apex:pageMessage severity="Info" title="Current system version: {!LiveVersion}" summary="You can checkout, discard, or commit the draft system version when preparing changes to your sequences." detail="Existing messages will respect the existing version. You should select the live system version after a commit." strength="2">
+    <!--<apex:pageBlock mode="maindetail">-->
+        <!--<apex:pageBlockSection columns="2">-->
+            
+            <!--<apex:pageBlockSectionItem dataStyle="vertical-align: middle;" labelStyle="vertical-align: middle;">-->
+                <apex:outputLabel value="Change live system" />
+                <apex:outputPanel layout="none">
+                    <select onchange="Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.SequenceListExtension.ChooseVersion}', this.value, function() {});">
+                        <apex:repeat value="{!RunnableVersions}" var="runnableVersion">
+                            <apex:outputPanel layout="none" rendered="{!LiveVersion == runnableVersion}">
+                                <option value="{!runnableVersion}" selected="selected">Version {!runnableVersion}</option>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="none" rendered="{!LiveVersion != runnableVersion}">
+                                <option value="{!runnableVersion}">Version {!runnableVersion}</option>
+                            </apex:outputPanel>
+                        </apex:repeat>
+                        <apex:outputPanel layout="none" rendered="{!DraftVersion != null}"><optgroup label="Version {!DraftVersion} (Draft)" /></apex:outputPanel>
+                    </select>
+                </apex:outputPanel>
+            <!--</apex:pageBlockSectionItem>-->
+            
+        <!--</apex:pageBlockSection>-->
+        
+    <!--</apex:pageBlock>-->
+    </apex:pageMessage>
     
     <apex:enhancedList type="Sequence__c" height="600" />
 </apex:page>

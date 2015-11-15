@@ -66,7 +66,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             Name = 'ApexClassCache.bin',
             FolderId = Test.isRunningTest() ? UserInfo.getUserId() : OAuthSetting__c.getOrgDefaults().RunningUserId__c,
             Body = Blob.valueOf(data)
-        )).getId();
+        ), Document.Name).getId();
         
         BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
         setting.CacheKey__c = classKey;

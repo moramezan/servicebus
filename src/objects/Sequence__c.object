@@ -72,7 +72,7 @@
         <label>All</label>
     </listViews>
     <nameField>
-        <label>Sequence Name</label>
+        <label>Draft Sequence Name</label>
         <type>Text</type>
     </nameField>
     <pluralLabel>Sequences</pluralLabel>
