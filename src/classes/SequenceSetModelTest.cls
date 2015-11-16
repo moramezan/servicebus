@@ -43,6 +43,42 @@
         System.assertEquals(expectedCount, actualCount, 'Wrong step count.');
     }
     
+    static testmethod void testEnforceUniqueName() {
+        //arrange
+        insert new Sequence__c(Name = 'Test');
+        
+        try {
+            //act
+            insert new Sequence__c(Name = 'Test');
+            System.assert(false, 'Line above should throw exception.');
+            
+        } catch (DmlException e) {
+            //assert
+            String expectedMessage = 'Name must be unique.';
+            String actualMessage = e.getDmlMessage(0);
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+    }
+    
+    static testmethod void testEnforceFixedName() {
+        //arrange
+        Sequence__c sequence = new Sequence__c(Name = 'Test');
+        insert sequence;
+        
+        try {
+            //act
+            sequence.Name = 'TestTest';
+            update sequence;
+            System.assert(false, 'Line above should throw exception.');
+            
+        } catch (DmlException e) {
+            //assert
+            String expectedMessage = 'Name cannot be changed.';
+            String actualMessage = e.getDmlMessage(0);
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+    }
+    
     static testmethod void testLocateDraftSteps() {
         //arrange
         insert new Step__c(Name = '1#Test#1', IsDraft__c = false);

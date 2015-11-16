@@ -84,32 +84,6 @@
         <listViewButtons>Discard</listViewButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
-    <validationRules>
-        <fullName>FixedName</fullName>
-        <active>true</active>
-        <description>Name cannot be changed</description>
-        <errorConditionFormula>Name != PRIORVALUE(Name)</errorConditionFormula>
-        <errorDisplayField>Name</errorDisplayField>
-        <errorMessage>Name must be fixed</errorMessage>
-    </validationRules>
-    <validationRules>
-        <fullName>UniqueName</fullName>
-        <active>true</active>
-        <description>Name must be unique</description>
-        <errorConditionFormula>Name = VLOOKUP(
-  $ObjectType.Sequence__c.Fields.Name,
-  $ObjectType.Sequence__c.Fields.Name,
-  Name
-)
-&amp;&amp;
-Id &lt;&gt; VLOOKUP(
-  $ObjectType.Sequence__c.Fields.Id,
-  $ObjectType.Sequence__c.Fields.Name,
-  Name
-)</errorConditionFormula>
-        <errorDisplayField>Name</errorDisplayField>
-        <errorMessage>Name must be unique</errorMessage>
-    </validationRules>
     <webLinks>
         <fullName>Checkout</fullName>
         <availability>online</availability>

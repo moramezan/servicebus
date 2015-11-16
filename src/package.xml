@@ -266,11 +266,6 @@
         <name>StaticResource</name>
     </types>
     <types>
-        <members>Sequence__c.FixedName</members>
-        <members>Sequence__c.UniqueName</members>
-        <name>ValidationRule</name>
-    </types>
-    <types>
         <members>Message__c.ApexClass</members>
         <members>Message__c.Kill</members>
         <members>Message__c.PauseQueue</members>

@@ -9,8 +9,60 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
      */
     static public Boolean IsDeleteCascaded = true;
     
+    @TestVisible List<Sequence__c> sequences;
+    
     public SequenceSetModel(List<Sequence__c> sequences) {
         super(sequences);
+        this.sequences = sequences;
+    }
+    
+    override public void onAfterInsert() {
+        this.enforceUniqueName();
+    }
+
+    override public void onAfterUpdate(List<Sobject> oldRecords) {
+        this.enforceFixedName(oldRecords);
+    }
+    
+    /**
+     * Per #997 we do this in a trigger, because
+     * admins could just disable validation rules.
+     */
+    public void enforceUniqueName() {
+        
+        //list of interesting names
+        Map<String,Sequence__c> name2sequence = new Map<String,Sequence__c>();
+        for (Sequence__c sequence : this.sequences) name2sequence.put(sequence.Name, sequence);
+        
+        //count sequences with same name
+        List<AggregateResult> results = [
+            SELECT Name, COUNT(Id) total
+            FROM Sequence__c
+            WHERE Name IN :name2sequence.keySet()
+            GROUP BY Name
+        ];
+        
+        //add errors against each one
+        for (AggregateResult result : results) {
+            Integer total = (Integer)result.get('total');
+            if (total == 1) continue;
+            
+            String name = (String)result.get('Name');
+            name2sequence.get(name).Name.addError('Name must be unique.');
+        }
+    }
+    
+    /**
+     * Per #997 we do this in a trigger, because
+     * admins could just disable validation rules.
+     */
+    public void enforceFixedName(List<Sequence__c> oldSequences) {
+        for (Integer i = 0; i < oldSequences.size(); i++) {
+            Sequence__c oldSequence = oldSequences[i];
+            Sequence__c newSequence = this.sequences[i];
+            if (oldSequence.Name == newSequence.Name) continue;
+            newSequence.Name.addError('Name cannot be changed.');
+        }
     }
     
     /**
