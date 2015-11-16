@@ -407,7 +407,7 @@ public with sharing class ConfigureController {
             
             if (response.getBody().contains('ip restricted')) {
                 //failure, definitely ip restrictions
-                return new System.PageReference('/packaging/installPackage.apexp?p0=04tj0000001Z2IU'); //1.1 (Released)
+                return new System.PageReference('/packaging/installPackage.apexp?p0=04t240000005gtb'); //35.0 (Beta 1)
             }
             
             if (response.getStatusCode() != 200) {
