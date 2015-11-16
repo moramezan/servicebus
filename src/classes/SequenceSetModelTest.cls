@@ -79,6 +79,32 @@
         }
     }
     
+    static testmethod void testEnforceValidName() {
+        try {
+            //act
+            insert new Sequence__c(Name = '1234567890' + '1234567890' + '1234567890' + 'x');
+            System.assert(false, 'Line above should throw exception.');
+            
+        } catch (DmlException e) {
+            //assert
+            String expectedMessage = 'Name must not exceed 30 characters.';
+            String actualMessage = e.getDmlMessage(0);
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+        
+        try {
+            //act
+            insert new Sequence__c(Name = 'Test#Test');
+            System.assert(false, 'Line above should throw exception.');
+            
+        } catch (DmlException e) {
+            //assert
+            String expectedMessage = 'Name must not contain # character.';
+            String actualMessage = e.getDmlMessage(0);
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+    }
+    
     static testmethod void testLocateDraftSteps() {
         //arrange
         insert new Step__c(Name = '1#Test#1', IsDraft__c = false);

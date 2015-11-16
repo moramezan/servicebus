@@ -18,6 +18,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
     
     override public void onAfterInsert() {
         this.enforceUniqueName();
+        this.enforceValidName();
     }
 
     override public void onAfterUpdate(List<Sobject> oldRecords) {
@@ -30,11 +31,11 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
      */
     public void enforceUniqueName() {
         
-        //list of interesting names
+        //list of
         Map<String,Sequence__c> name2sequence = new Map<String,Sequence__c>();
         for (Sequence__c sequence : this.sequences) name2sequence.put(sequence.Name, sequence);
         
-        //count sequences with same name
+        //count existing sequences
         List<AggregateResult> results = [
             SELECT Name, COUNT(Id) total
             FROM Sequence__c
@@ -42,7 +43,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
             GROUP BY Name
         ];
         
-        //add errors against each one
+        //check against each one
         for (AggregateResult result : results) {
             Integer total = (Integer)result.get('total');
             if (total == 1) continue;
@@ -50,6 +51,18 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
             String name = (String)result.get('Name');
             name2sequence.get(name).Name.addError('Name must be unique.');
         }
+    }
+    
+    /**
+     * Per #1099 we dont want long/# names to break
+     */
+    public void enforceValidName() {
+        
+        for (Sequence__c sequence : this.sequences) {
+            if (sequence.Name.length() > 30) sequence.Name.addError('Name must not exceed 30 characters.');
+            if (sequence.Name.contains('#')) sequence.Name.addError('Name must not contain # character.');
+        }
+        
     }
     
     /**
