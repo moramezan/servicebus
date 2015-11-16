@@ -493,6 +493,15 @@
         <delete file="purge/layouts/SOSSession-SOS Session Layout.layout" />
         <delete file="purge/layouts/Metric-Metric Layout.layout" />
         <delete file="purge/layouts/MetricDataLink-Metric Data Link Layout.layout" />
+        
+        <!-- Partner Enterprise Edition trial contains these objects -->
+        <delete file="purge/layouts/SignupRequest-Signup Request Layout.layout" />
+        <delete file="purge/layouts/WorkReward-Reward Layout.layout" />
+        <delete file="purge/layouts/WorkThanks-Thanks Layout.layout" />
+        <delete file="purge/layouts/WorkRewardFund-Reward Fund Layout 2%2E0.layout" />
+        <delete file="purge/layouts/WorkRewardFundType-Reward Fund Type Layout.layout" />
+        <delete file="purge/layouts/WorkBadgeDefinition-Badge Definition Layout.layout" />
+        <delete file="purge/layouts/WorkBadge-Badge Received Layout 192.layout" />
 
         <!-- name the wildcard package definition -->
         <replace file="purge/package.xml">
