@@ -2,10 +2,10 @@
     
     static testmethod void testUnlockInvoked() {
         //arrange
-        Campaign campaign = new Campaign(Name = 'test');
-        insert campaign;
-        Approval.Lock(campaign);
-        Map<String,Object> inputEvent = new Map<String,Object>{'RecordId' => campaign.Id};
+        Account account = new Account(Name = 'test');
+        insert account;
+        Approval.Lock(account);
+        Map<String,Object> inputEvent = new Map<String,Object>{'RecordId' => account.Id};
         Test.startTest();
 
         //assert

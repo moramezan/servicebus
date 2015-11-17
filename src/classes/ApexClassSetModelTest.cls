@@ -1,4 +1,8 @@
 @IsTest class ApexClassSetModelTest {
+
+    @TestSetup static void testSetup() {
+        new PostInstallHandler().upsertNamespaceSetting();
+    }
     
     static testmethod void testClassKey() {
         //act
@@ -99,7 +103,7 @@
         Set<String> namespaces = ApexClassSetModel.discoverNamespaces();
         
         //assert
-        System.assert(namespaces.contains(null));
+        System.assert(namespaces.contains(NamespaceSetting__c.getOrgDefaults().Prefix__c));
     }
     
 }

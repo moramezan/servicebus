@@ -2,9 +2,9 @@
     
     static testmethod void testLockInvoked() {
         //arrange
-        Campaign campaign = new Campaign(Name = 'test');
-        insert campaign;
-        Map<String,Object> inputEvent = new Map<String,Object>{'RecordId' => campaign.Id};
+        Account account = new Account(Name = 'test');
+        insert account;
+        Map<String,Object> inputEvent = new Map<String,Object>{'RecordId' => account.Id};
         Test.startTest();
 
         //assert

@@ -1,4 +1,8 @@
 @IsTest class SequenceBuilderExtensionTest {
+
+    @TestSetup static void testSetup() {
+        new PostInstallHandler().upsertNamespaceSetting();
+    }
     
     static Id setupSequence() {
         //arrange sequences

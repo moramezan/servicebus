@@ -1,5 +1,9 @@
 @IsTest class ApexClassSettingExtensionTest {
 
+    @TestSetup static void testSetup() {
+        new PostInstallHandler().upsertNamespaceSetting();
+    }
+    
     static testmethod void coverCode() {
         //arrange
         ApexClass apexClass = [

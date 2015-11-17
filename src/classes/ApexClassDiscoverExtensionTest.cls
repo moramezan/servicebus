@@ -1,4 +1,8 @@
 @IsTest class ApexClassDiscoverExtensionTest {
+
+    @TestSetup static void testSetup() {
+        new PostInstallHandler().upsertNamespaceSetting();
+    }
     
     static testmethod void coverCode() {
         //act
@@ -27,7 +31,7 @@
         namespaces = ApexClassDiscoverExtension.getNamespaces();
         
         //assert
-        System.assert(namespaces.contains('null'), 'Wrong namespace.');
+        System.assert(namespaces.contains('' + NamespaceSetting__c.getOrgDefaults().Prefix__c + ''), 'Wrong namespace.');
     }
     
     static testmethod void testSaveCache() {

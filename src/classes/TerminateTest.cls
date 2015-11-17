@@ -12,11 +12,11 @@
 
     static testmethod void withinSystemLimits() {
         //arrange
-        Sequence__c sequence = new Sequence__c(Name = 'Terminate#1');
+        Sequence__c sequence = new Sequence__c(Name = 'Terminate');
         insert sequence;
         
         Map<String,Object> inputEvent = new Map<String,Object>();
-        inputEvent.put('Route', 'Terminate#1');
+        inputEvent.put('Route', '1#Terminate#1');
         
         //assemble
         ApexClassModel.Summary summary = new ApexClassModel.Summary(Terminate.class);

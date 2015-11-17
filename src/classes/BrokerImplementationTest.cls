@@ -6,7 +6,8 @@
         upsert setting;
     }
     
-    static testmethod void testChunkedMarkContextsCount() {
+    //MASSIVE TODO #1103
+    /*static testmethod void testChunkedMarkContextsCount() {
         //arrange services and sequence and steps
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
@@ -93,7 +94,7 @@
         expectedPersistable = 9; //9 inputs 0 outputs
         actualPersistable = impl.Messages.size();
         System.assertEquals(expectedPersistable, actualPersistable, 'Wrong persistable.');
-    }
+    }*/
 
     static testmethod void testMarkAndExecuteAndDoneConditionAbortsJobAtEnd() {
         //arrange sequence

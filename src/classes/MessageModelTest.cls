@@ -1,4 +1,8 @@
 @IsTest class MessageModelTest {
+
+    @TestSetup static void testSetup() {
+        new PostInstallHandler().upsertNamespaceSetting();
+    }
     
     static testmethod void testShowApexClassFindsIt() {
         //arrange sequence and steps

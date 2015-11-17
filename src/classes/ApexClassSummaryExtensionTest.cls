@@ -1,4 +1,8 @@
 @IsTest class ApexClassSummaryExtensionTest {
+
+    @TestSetup static void testSetup() {
+        new PostInstallHandler().upsertNamespaceSetting();
+    }
     
     static testmethod void coverCode() {
         //arrange controller and extension
