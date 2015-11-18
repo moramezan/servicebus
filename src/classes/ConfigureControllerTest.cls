@@ -241,7 +241,7 @@
         Test.stopTest();
         
         //assert
-        String expectedUrl = new System.PageReference('/packaging/installPackage.apexp?p0=04t240000005gtb').getUrl();
+        String expectedUrl = new System.PageReference('/packaging/installPackage.apexp?p0=04t24000000EkE2').getUrl();
         String actualUrl = redirect.getUrl();
         System.assertEquals(expectedUrl, actualUrl, 'Wrong URL.');
     }
