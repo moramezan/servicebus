@@ -515,6 +515,11 @@ public with sharing class ConfigureController {
      */
     @Future(callout=true) static public void defaults(String sessionId) { //#969 obfuscation of 'installNuclearTip()'
         
+        if (Type.forName('abstract.Service') != null) {
+            //abstract service is already installed
+            return;
+        }
+        
         if (UserInfo.getOrganizationId() == '00D24000000fer4EAA') {
             //we do not install abstract service into packaging org
             return;
