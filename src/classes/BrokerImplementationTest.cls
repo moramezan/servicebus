@@ -1,9 +1,13 @@
 @IsTest class BrokerImplementationTest {
     
     @TestSetup static void testSetup() {
+        //act
         OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
         setting.RunningUserId__c = UserInfo.getUserId();
         upsert setting;
+        
+        //assert
+        System.assertNotEquals(null, setting.Id, 'Wrong id.');
     }
     
     //MASSIVE TODO #1103

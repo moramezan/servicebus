@@ -40,7 +40,7 @@
             $RemoteAction.AsyncApexJobProgressExtension.ReadRecords = '{!$RemoteAction.SequenceCheckoutExtension.ReadRecords}';
             $RemoteAction.AsyncApexJobProgressExtension.ReadAsyncApexJobs = '{!$RemoteAction.SequenceCheckoutExtension.ReadAsyncApexJobs}';
 
-            window.retURL = '{!$CurrentPage.Parameters.retURL}' || '{!URLFOR($Action.Sequence__c.List, $ObjectType.Sequence__c.KeyPrefix, ["now"=NOW()])}'; //timestamp busts cache hopefully
+            window.retURL = '{!JSENCODE($CurrentPage.Parameters.retURL)}' || '{!URLFOR($Action.Sequence__c.List, $ObjectType.Sequence__c.KeyPrefix)}'; //#782 reflected xss
             
             window.AsyncApexJob = window.AsyncApexJob || {};
             AsyncApexJob.Id = '{!AsyncApexJob.Id}';

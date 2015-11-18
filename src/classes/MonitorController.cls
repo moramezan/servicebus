@@ -59,6 +59,7 @@ public with sharing class MonitorController {
             SELECT Route__c route
             FROM Message__c
             GROUP BY Route__c
+            LIMIT 1000000 //checkmarx readonly
         ]) {
             Statistic statistic = new Statistic((String)result.get('route'), 0, 0, 0, 0);
             route2statistic.put((String)result.get('route'), statistic);

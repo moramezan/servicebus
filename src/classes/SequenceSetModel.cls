@@ -213,7 +213,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         
         //leave steps alone (especially for commit!)
         IsDeleteCascaded = false;
-        delete [SELECT Id FROM Sequence__c];
+        delete [SELECT Id FROM Sequence__c LIMIT 10000]; //checkmarx
     }
     
     /**

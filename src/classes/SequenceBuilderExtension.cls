@@ -180,8 +180,8 @@ public with sharing class SequenceBuilderExtension {
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
         ];
         
-        Map<Id,SObject> publishConfigIdToPublishConfig = new Map<Id,SObject>([SELECT Id, EventType__c FROM PublishConfig__c]);
-        List<SubscribeConfig__c> SubscribeConfigs = [SELECT Id, EventType__c FROM SubscribeConfig__c];
+        Map<Id,SObject> publishConfigIdToPublishConfig = new Map<Id,SObject>([SELECT Id, EventType__c FROM PublishConfig__c LIMIT 10000]); //checkmarx
+        List<SubscribeConfig__c> SubscribeConfigs = [SELECT Id, EventType__c FROM SubscribeConfig__c LIMIT 10000]; //checkmarx
         
         for (Sequence__c sequence : sequences) {
             Boolean containsPublish = false;
@@ -250,8 +250,8 @@ public with sharing class SequenceBuilderExtension {
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
         ];
         
-        Map<Id,SObject> subscribeConfigIdToSubscribeConfig = new Map<Id,SObject>([SELECT Id, EventType__c FROM SubscribeConfig__c]);
-        List<PublishConfig__c> publishConfigs = [SELECT Id, EventType__c FROM PublishConfig__c];
+        Map<Id,SObject> subscribeConfigIdToSubscribeConfig = new Map<Id,SObject>([SELECT Id, EventType__c FROM SubscribeConfig__c LIMIT 10000]); //checkmarx
+        List<PublishConfig__c> publishConfigs = [SELECT Id, EventType__c FROM PublishConfig__c LIMIT 10000]; //checkmarx
         
         for (Sequence__c sequence : sequences) {
             List<Step__c> steps = [

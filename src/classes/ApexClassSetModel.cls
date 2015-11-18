@@ -30,6 +30,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
         Integer count = [
             SELECT COUNT()
             FROM ApexClass
+            LIMIT 10000 //checkmarx
         ];
         
         //eg 1447306203000_93

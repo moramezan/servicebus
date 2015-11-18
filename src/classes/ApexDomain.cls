@@ -99,11 +99,6 @@ public class ApexDomain {
         return orderedResults;
     }
     
-    static public SObject getOne(SObject record) {
-        if (record == null) throw new DomainException('ApexDomain.getOne received null record.');
-        return getById(record.Id);
-    }
-    
     static public Boolean exists(Id recordId) {
         if (recordId == null) return false;
         String name = recordId.getSobjectType().getDescribe().getName();

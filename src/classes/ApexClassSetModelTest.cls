@@ -1,7 +1,11 @@
 @IsTest class ApexClassSetModelTest {
 
     @TestSetup static void testSetup() {
+        //act
         new PostInstallHandler().upsertNamespaceSetting();
+        
+        //assert
+        System.assertNotEquals(null, NamespaceSetting__c.getOrgDefaults().Id, 'Wrong id.');
     }
     
     static testmethod void testClassKey() {

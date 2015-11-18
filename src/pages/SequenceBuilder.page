@@ -62,12 +62,9 @@
         $Page.StepConfig = '{!$Page.StepConfig}';
         
         TerminateApexClassName = '{!TerminateApexClassName}';
-        Services = JSON.parse('{!Services}');
-        Steps = JSON.parse('{!Steps}');
+        Services = JSON.parse('{!JSENCODE(Services)}'); //#782 stored xss
+        Steps = JSON.parse('{!JSENCODE(Steps)}'); //#782 stored xss
         Id = '{!Id}';
-        
-        window.$CurrentPage = window.$CurrentPage || {};
-        $CurrentPage.Url = '{!$CurrentPage.Url}';
         
         window.URLFOR = window.URLFOR || {};
         URLFOR['/'] = '{!URLFOR("/")}';

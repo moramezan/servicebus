@@ -75,7 +75,7 @@
             Visualforce.remoting.Manager.invokeAction(
                 '{!$RemoteAction.MonitorController.fetchStatistics}', //fetchTestStatistics
                 function(data) {
-                    {!$Setup.NamespaceSetting__c.DotPrefix__c}Stats.reload(data);
+                    {!JSENCODE($Setup.NamespaceSetting__c.DotPrefix__c)}Stats.reload(data); //#782 stored xss
                     setTimeout(redrawStatistics, 1000);
                 }
             );
@@ -87,7 +87,7 @@
                 Visualforce.remoting.Manager.invokeAction(
                     '{!$RemoteAction.MonitorController.fetchStatistics}',
                     function(data) {
-                        {!$Setup.NamespaceSetting__c.DotPrefix__c}Stats.reload(data);
+                        {!JSENCODE($Setup.NamespaceSetting__c.DotPrefix__c)}Stats.reload(data); //#782 stored xss
                     }
                 );
             }, 15000);
