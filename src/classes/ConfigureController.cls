@@ -560,4 +560,31 @@ public with sharing class ConfigureController {
         ).replaceAll('    ', '');
     }
     
+    /**
+     * Determins if package configuration is required.
+     * If so, the Configure page is returned.
+     */
+    static public PageReference ConfigureIfNeeded(PageReference retURL) {
+        
+        String sessionId = OAuthSetting__c.getOrgDefaults().AccessToken__c;
+        String configuredOrgId = OAuthSetting__c.getOrgDefaults().UnprefixedOrgId__c;
+        String unprefixedOrgId = UserInfo.getOrganizationId().substring(3, 15);
+        
+        if (null == sessionId) {
+            //failure, user never clicked configure button
+            PageReference configure = Page.Configure;
+            configure.getParameters().put('retURL', retURL.getUrl());
+            return configure;
+        }
+        
+        if (configuredOrgId != unprefixedOrgId) {
+            //failure, new environment probably due to sandbox refresh
+            PageReference configure = Page.Configure;
+            configure.getParameters().put('retURL', retURL.getUrl());
+            return configure;
+        }
+        
+        //services up to date
+        return null;
+    }
 }

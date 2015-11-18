@@ -35,16 +35,21 @@ public with sharing class ApexClassDiscoverExtension {
         return ApexClassSetModel.saveCache(summaries);
     }
     
-    static public PageReference DiscoverIfNeeded() {
-        if (ApexClassSetModel.cacheKey() == ApexClassSetModel.classKey()) {
-            //cache is up to date
-            return null;
+    /**
+     * Determins if service discovery is required.
+     * If so, this ApexClassDiscover page is returned.
+     */
+    static public PageReference DiscoverIfNeeded(PageReference retURL) {
+        
+        if (ApexClassSetModel.cacheKey() != ApexClassSetModel.classKey()) {
+            //service discovery required
+            PageReference discover = Page.ApexClassDiscover;
+            discover.getParameters().put('retURL', retURL.getUrl());
+            return discover;
         }
         
-        //service discovery required
-        PageReference redirect = Page.ApexClassDiscover;
-        redirect.getParameters().put('retURL', ApexPages.currentPage().getUrl());
-        return redirect;
+        //cache is up to date
+        return null;
     }
     
 }

@@ -286,4 +286,30 @@
         //assert
         System.assert(!ApexPages.hasMessages(), 'Wrong messages.');
     }
+    
+    static testmethod void testConfigureIfNeeded() {
+        //arrange
+        PageReference retURL = new PageReference('/home/home.jsp');
+        
+        //act
+        PageReference redirect = ConfigureController.ConfigureIfNeeded(retURL);
+        
+        //assert
+        String expectedUrl = Page.Configure.getUrl();
+        String actualUrl = redirect.getUrl();
+        System.assert(actualUrl.containsIgnoreCase(expectedUrl), 'Wrong url.');
+        System.assert(actualUrl.containsIgnoreCase('home.jsp'), 'Wrong retURL.');
+        
+        //act (pretend to configure)
+        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
+        setting.AccessToken__c = '00D000000000000AAA';
+        setting.UnprefixedOrgId__c = UserInfo.getOrganizationId().substring(3, 15);
+        upsert setting;
+        
+        //act
+        redirect = ConfigureController.ConfigureIfNeeded(retURL);
+        
+        //assert
+        System.assertEquals(null, redirect, 'Wrong url.');
+    }
 }

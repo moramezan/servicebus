@@ -383,4 +383,34 @@
         System.assert(messages[0].getSummary().contains(expectedDescription));
         System.assert(messages[0].getSummary().contains(actualDescription));
     }
+    
+    static testmethod void testDoRedirect() {
+        //arrange
+        Id sequenceId = Database.insert(new Sequence__c(Name = 'Test')).getId();
+        ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c(Id = sequenceId));
+        SequenceBuilderExtension extension = new SequenceBuilderExtension(controller);
+        
+        //act
+        PageReference redirect = extension.doRedirect();
+        
+        //assert
+        System.assertNotEquals(null, redirect, 'Wrong redirect.');
+        
+        //act (pretend to configure)
+        OAuthSetting__c oauthSetting = OAuthSetting__c.getOrgDefaults();
+        oauthSetting.AccessToken__c = '00D000000000000AAA';
+        oauthSetting.UnprefixedOrgId__c = UserInfo.getOrganizationId().substring(3, 15);
+        upsert oauthSetting;
+        
+        //act (pretend to discover)
+        BrokerSetting__c brokerSetting = BrokerSetting__c.getOrgDefaults();
+        brokerSetting.CacheKey__c = ApexClassSetModel.classKey();
+        upsert brokerSetting;
+        
+        //act
+        redirect = extension.doRedirect();
+        
+        //assert
+        System.assertEquals(null, redirect, 'Wrong redirect.');
+    }
 }

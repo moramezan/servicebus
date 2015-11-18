@@ -45,6 +45,29 @@
         System.assert(documentId.startsWith('015'), 'Wrong id.');
     }
     
-    
+    static testmethod void testDiscoverIfNeeded() {
+        //arrange
+        PageReference retURL = new PageReference('/home/home.jsp');
+        
+        //act
+        PageReference redirect = ApexClassDiscoverExtension.DiscoverIfNeeded(retURL);
+        
+        //assert
+        String expectedUrl = Page.ApexClassDiscover.getUrl();
+        String actualUrl = redirect.getUrl();
+        System.assert(actualUrl.containsIgnoreCase(expectedUrl), 'Wrong url.');
+        System.assert(actualUrl.containsIgnoreCase('home.jsp'), 'Wrong retURL.');
+        
+        //act (pretend to discover)
+        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
+        setting.CacheKey__c = ApexClassSetModel.classKey();
+        upsert setting;
+        
+        //act
+        redirect = ApexClassDiscoverExtension.DiscoverIfNeeded(retURL);
+        
+        //assert
+        System.assertEquals(null, redirect, 'Wrong url.');
+    }
     
 }

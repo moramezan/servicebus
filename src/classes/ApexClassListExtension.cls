@@ -14,6 +14,15 @@ public with sharing class ApexClassListExtension {
     public Map<Id,ApexClassModel.Summary> id2summary {get; set;}
     
     public PageReference doRedirect() {
+        PageReference redirect;
+        
+        //configure if needed
+        redirect = ConfigureController.ConfigureIfNeeded(ApexPages.currentPage());
+        if (redirect != null) return redirect;
+        
+        //discover if needed
+        redirect = ApexClassDiscoverExtension.DiscoverIfNeeded(ApexPages.currentPage());
+        if (redirect != null) return redirect;
         
         //for displaying classes
         this.id2class = new Map<Id,ApexClass>([
@@ -27,7 +36,7 @@ public with sharing class ApexClassListExtension {
         List<ApexClassModel.Summary> summaries = ApexClassSetModel.loadCache();
         for (ApexClassModel.Summary summary : summaries) this.id2summary.put(summary.Id, summary);
         
-        //discover if needed
-        return ApexClassDiscoverExtension.DiscoverIfNeeded();
+        //all ok
+        return null;
     }
 }
