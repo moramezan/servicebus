@@ -2,7 +2,7 @@
  * @Obfuscation
  * Formerly known as HeartbeatDispatcherTest
  */
-@IsTest class RouterDispatcherTest {
+@IsTest class RouterScheduleTest {
     
     //TODO
     

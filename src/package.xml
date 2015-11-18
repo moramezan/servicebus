@@ -68,10 +68,8 @@
         <members>Publish</members>
         <members>PublishTest</members>
         <members>Router</members>
-        <members>RouterDispatcher</members>
-        <members>RouterDispatcherTest</members>
-        <members>RouterImplementation</members>
-        <members>RouterImplementationTest</members>
+        <members>RouterSchedule</members>
+        <members>RouterScheduleTest</members>
         <members>RouterTest</members>
         <members>ScheduleDaily</members>
         <members>ScheduleDailyTest</members>

@@ -117,7 +117,7 @@
         <subant failonerror="false" target="subdeploy" buildpath="." />
         <executeAnonymous username="${de.username}" password="${de.password}" serverurl="${de.serverurl}">
             new PostInstallHandler().onInstall(null);
-            RouterImplementation.optimize();
+            Router.optimize();
             ConfigureController.settings(UserInfo.getUserId());
             ConfigureController.permissions(UserInfo.getUserId());
             ConfigureController.defaults(UserInfo.getSessionId());
@@ -148,7 +148,7 @@
         />
         <executeAnonymous username="${servicebus.username}" password="${servicebus.password}" serverurl="${servicebus.serverurl}">
             new PostInstallHandler().onInstall(null);
-            RouterImplementation.optimize();
+            Router.optimize();
             ConfigureController.settings(UserInfo.getUserId());
             ConfigureController.permissions(UserInfo.getUserId());
             ConfigureController.defaults(UserInfo.getSessionId());

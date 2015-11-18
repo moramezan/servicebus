@@ -333,7 +333,7 @@ public with sharing class ConfigureController {
     static public Id reinstallSchedule() {
         //now attempt to install it again
         String cronExpr = '0 0 * * * ?';
-        RouterDispatcher schedulable = new RouterDispatcher();
+        RouterSchedule schedulable = new RouterSchedule();
         return System.schedule(JobName, cronExpr, schedulable);
     }
     
@@ -444,7 +444,7 @@ public with sharing class ConfigureController {
             if (!Test.isRunningTest()) defaults(UserInfo.getSessionId());
             
             //bigassforce/servicebus#812 don't wait an hour to refresh access token
-            if (!Test.isRunningTest()) RouterImplementation.optimize();
+            if (!Test.isRunningTest()) Router.optimize();
             
             //6. finally send them to the context sensitive help page
             String returnUrl;

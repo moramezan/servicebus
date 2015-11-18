@@ -249,19 +249,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>RouterDispatcher</apexClass>
+        <apexClass>RouterSchedule</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>RouterDispatcherTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>RouterImplementation</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>RouterImplementationTest</apexClass>
+        <apexClass>RouterScheduleTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
