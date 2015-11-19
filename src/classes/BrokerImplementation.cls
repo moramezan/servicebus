@@ -37,7 +37,6 @@ public without sharing class BrokerImplementation extends Broker implements Data
      * #671 first query locator spends less time in 'Preparing'
      */
     static Boolean IsRestart = false;
-    Integer Contexts = IsRestart ? 1000 : 50;
     
     public BrokerImplementation() {
         if (!Job.isRunningUser()) {
@@ -52,14 +51,15 @@ public without sharing class BrokerImplementation extends Broker implements Data
     @TestVisible Stage NextStage = Stage.PersistMark;
     
     /**
-     * Some integer below a hard limit of 4000 (min expected rows in FieldPermissions)
+     * Some integer below a hard limit of 1000 (number of rows in Slot__c)
      */
     public Database.QueryLocator start(Database.BatchableContext context) {
         //funnily enough "SLOTS" is almost exactly what this is
         return Database.getQueryLocator([
-            SELECT Id
-            FROM FieldPermissions
-            LIMIT :this.Contexts
+            SELECT Id, Name
+            FROM Slot__c
+            ORDER BY Name ASC
+            LIMIT :IsRestart ? 1000 : 50
         ]);
     }
     

@@ -22,6 +22,9 @@ public without sharing class PostInstallHandler implements InstallHandler {
         
         //fetch custom setting or create it for the first time
         this.upsertNamespaceSetting();
+        
+        //create slots for the first time
+        if (!isUpgrade) this.upsertSlots();
     }
     
     /**
@@ -34,6 +37,16 @@ public without sharing class PostInstallHandler implements InstallHandler {
         setting.DotPrefix__c = PostInstallHandler.class.getName().substringBefore('PostInstallHandler');
         setting.Prefix__c = PostInstallHandler.class.getName().substringBefore('PostInstallHandler').substringBefore('.');
         upsert setting;
+    }
+    
+    /**
+     * Creates "slots" per #1103
+     * 0001, 0002 ... 0999, 1000
+     */
+    @TestVisible void upsertSlots() {
+        List<Slot__c> slots = new List<Slot__c>();
+        for (Integer i = 1; i <= 1000; i++) slots.add(new Slot__c(Name = String.valueOf(i).leftPad(4).replace(' ', '0')));
+        upsert slots Name;
     }
     
     /**

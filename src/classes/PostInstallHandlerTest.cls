@@ -52,5 +52,27 @@
         Integer actualCountAfter = [SELECT COUNT() FROM NamespaceSetting__c];
         System.assertEquals(expectedCountAfter, actualCountAfter);
     }
+    
+    static testmethod void testUpsertSlots() {
+        //assert
+        Integer expectedCount = 0;
+        Integer actualCount = [SELECT COUNT() FROM Slot__c];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count before.');
+        
+        //act
+        new PostInstallHandler().upsertSlots();
+        
+        //assert
+        expectedCount = 1000;
+        actualCount = [SELECT COUNT() FROM Slot__c];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count after.');
+        
+        //assemble
+        List<Slot__c> slots = [SELECT Id, Name FROM Slot__c ORDER BY Name ASC];
+        
+        //assert
+        System.assertEquals('0001', slots[0].Name, 'Wrong first name.');
+        System.assertEquals('1000', slots[999].Name, 'Wrong last name.');
+    }
 
 }

@@ -215,6 +215,7 @@
         <members>PublishConfig__c</members>
         <members>ScheduleDailyConfig__c</members>
         <members>Sequence__c</members>
+        <members>Slot__c</members>
         <members>Step__c</members>
         <members>SubscribeConfig__c</members>
         <members>SubsequenceConfig__c</members>
