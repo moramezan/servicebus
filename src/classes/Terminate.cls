@@ -7,7 +7,7 @@ public class Terminate extends ApexClassModel.Service {
         String Description = 'Swallows messages at the end of this sequence.';
         String Icon = 'stop';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceTerminate').getUrl();
-        Integer Limits = 200; //max sync limit
+        Integer Chunks = 200; //max sync limit
         String Cardinality = 'Zero';
     }
     

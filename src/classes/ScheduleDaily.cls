@@ -9,7 +9,7 @@ public class ScheduleDaily extends ApexClassModel.Service {
         String StepConfig = ScheduleDailyConfig__c.class.getName();
         //String HelpUrl = Page.ScheduleConfigHelp.getUrl();
         Boolean ConsumesHeartbeat = true;
-        Integer Limits = 100; //could be higher but lets be reasonable
+        Integer Chunks = 100; //could be higher but lets be reasonable
         Map<String,String> Inputs = new Map<String,String>{
             'EntryPointTimestamp' => 'DATETIME of the point in time this schedule was intended to run.'
         };

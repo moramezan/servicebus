@@ -1,13 +1,13 @@
 @IsTest class WiretapTest {
     
-    static testmethod void hasTheCorrectLimits() {
+    static testmethod void hasTheCorrectChunks() {
         //arrange
         ApexClassModel.Summary summary = new ApexClassModel.Summary(Wiretap.class);
         
         //assert
-        Integer expectedLimits = 5;
-        Integer actualLimits = summary.Limits;
-        System.assertEquals(expectedLimits, actualLimits);
+        Integer expectedChunks = 5;
+        Integer actualChunks = summary.Chunks;
+        System.assertEquals(expectedChunks, actualChunks);
     }
 
 
@@ -25,9 +25,9 @@
 
         //act
         Test.startTest();
-        Integer limits = summary.Limits;
+        Integer chunks = summary.Chunks;
         Integer counter = 0;
-        for (Integer i = 0; i < limits; i++) {
+        for (Integer i = 0; i < chunks; i++) {
             ApexClassModel.Service service = new Wiretap();
             List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
@@ -35,7 +35,7 @@
         Test.stopTest();
 
         //assert
-        System.assertEquals(limits, counter, 'Limit not reached.');
+        System.assertEquals(chunks, counter, 'Chunks not reached.');
    }
 
 

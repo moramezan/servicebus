@@ -9,7 +9,7 @@ public class AggregateByJob extends ApexClassModel.Service {
         String Description = 'Aggregates a collection of messages having the same Job Id.';
         String Icon = 'arrow_join';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceAggregateByJob').getUrl();
-        Integer Limits =  200; //max sync limit
+        Integer Chunks =  200; //max sync limit
         String Cardinality = 'Fewer';
         
         Map<String,String> Inputs = new Map<String,String>{

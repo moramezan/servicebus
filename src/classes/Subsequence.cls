@@ -10,7 +10,7 @@ public class Subsequence extends ApexClassModel.Service {
         String StepConfig = SubsequenceConfig__c.class.getName();
         String Icon = 'arrow_undo';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceBranchJumpSubsequence').getUrl();
-        Integer Limits = 1; //we dont know what they will do
+        Integer Chunks = 1; //we dont know what they will do
         String Cardinality = 'One';
     }
     

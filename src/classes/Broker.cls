@@ -88,11 +88,11 @@ abstract public without sharing class Broker {
                 ApexClassModel model = new MessageModel(specimen[0]).resolveApexClassModel();
                 summary = new ApexClassModel.Summary(model.Reflector);
             } catch (Exception e) {
-                //could not resolve, limits 1
+                //could not resolve, chunks 1
                 return specimen;
             }
             
-            Integer limits = summary.Limits;
+            Integer chunks = summary.Chunks;
             
             //TODO what if this guy returns a list of 0, would cause a panic condition, lets check
             
@@ -101,7 +101,7 @@ abstract public without sharing class Broker {
                 FROM Message__c
                 WHERE Status__c = 'Buffered'
                 AND Route__c = :specimen[0].Route__c //#1004 Route__c field only ever used here to LOCATE, and for GATE and MONITOR
-                LIMIT :limits
+                LIMIT :chunks
                 FOR UPDATE //#695 investigate broker race condition
             ];
             

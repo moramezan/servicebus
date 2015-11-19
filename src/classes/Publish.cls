@@ -8,7 +8,7 @@ public class Publish extends ApexClassModel.Service {
         String StepConfig = PublishConfig__c.class.getName();
         String Icon = 'chart_organisation';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServicePublishSubscribe').getUrl();
-        Integer Limits = 33; //max sync limit
+        Integer Chunks = 33; //max sync limit
         String Cardinality = 'One';
     }
     

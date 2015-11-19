@@ -14,7 +14,7 @@
         String Label = 'Name';
         String Description = 'Description';
         String Icon = 'Icon';
-        Integer Limits = 99;
+        Integer Chunks = 99;
         String HelpUrl = 'HelpUrl';
         String StepConfig = 'StepConfig';
         String ServiceSetting = 'ServiceSetting';
@@ -35,7 +35,7 @@
         System.assertEquals(expected.Label, actual.Label, 'Wrong Name.');
         System.assertEquals(expected.Description, actual.Description, 'Wrong Description.');
         System.assertEquals(expected.Icon, actual.Icon, 'Wrong Icon.');
-        System.assertEquals(expected.Limits, actual.Limits, 'Wrong Limits.');
+        System.assertEquals(expected.Chunks, actual.Chunks, 'Wrong Chunks.');
         System.assertEquals(expected.HelpUrl, actual.HelpUrl, 'Wrong HelpUrl.');
         System.assertEquals(expected.StepConfig, actual.StepConfig, 'Wrong StepConfig.');
         System.assertEquals(expected.ServiceSetting, actual.ServiceSetting, 'Wrong ServiceSetting.');
@@ -65,7 +65,7 @@
         System.assertEquals(DefaultService.class.getName(), summary.Label, 'Wrong Name.');
         System.assertEquals('cog', summary.Icon, 'Wrong Icon.');
         System.assertEquals('Any', summary.Cardinality, 'Wrong Cardinality.');
-        System.assertEquals(1, summary.Limits, 'Wrong Limits.');
+        System.assertEquals(1, summary.Chunks, 'Wrong Chunks.');
     }
     
     static testmethod void testDescribeServiceSummary() {
@@ -242,7 +242,7 @@
     }
     
     public class TooManyOutputsSummary extends ApexClassModel.Summary {
-        Integer Limits = 1;
+        Integer Chunks = 1;
     }
     
     static testmethod void testTooManyOutputsBlowsUp() {
@@ -268,7 +268,7 @@
     }
     
     public class TooManyInputsSummary extends ApexClassModel.Summary {
-        Integer Limits = 2345;
+        Integer Chunks = 2345;
     }
     
     static testmethod void testTooManyInputsCapped() {
@@ -279,9 +279,9 @@
         ApexClassModel.Summary summary = new ApexClassModel.Summary(TooManyInputs.class);
         
         //assert
-        Integer expectedLimits = 200; //#955 possibly 2000, but headspace
-        Integer actualLimits = summary.Limits;
-        System.assertEquals(expectedLimits, actualLimits, 'Wrong limits.');
+        Integer expectedChunks = 200; //#955 possibly 2000, but headspace
+        Integer actualChunks = summary.Chunks;
+        System.assertEquals(expectedChunks, actualChunks, 'Wrong chunks.');
     }
     
     public class TooManyEvents extends ApexClassModel.Service {
@@ -297,7 +297,7 @@
     }
     
     public class TooManyEventsSummary extends ApexClassModel.Summary {
-        Integer Limits = 50; //50 * 200 = 10000
+        Integer Chunks = 50; //50 * 200 = 10000
     }
     
     static testmethod void testTooManyEventsBlowsUp() {
@@ -316,11 +316,11 @@
         String actualException = inputMessages[8].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
 
-        expectedException = Broker.ServiceException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Limits or emit fewer events.'; //#955 possibly 8000, but headspace
+        expectedException = Broker.ServiceException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Chunks or emit fewer events.'; //#955 possibly 8000, but headspace
         actualException = inputMessages[9].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
 
-        expectedException = Broker.ServiceException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Limits or emit fewer events.'; //#955 possibly 8000, but headspace
+        expectedException = Broker.ServiceException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Chunks or emit fewer events.'; //#955 possibly 8000, but headspace
         actualException = inputMessages[10].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
         

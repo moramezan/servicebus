@@ -161,7 +161,7 @@ public class MessageModel extends ApexDomain.StandardModel {
             Integer chunkTotal = (Integer)this.Event.get('Range');
             if (chunkTotal != null && chunkTotal + outputEvents.size() + outputMessages.size() > 2000) { //#955 possibly 8000, but headspace
                 //#955 we throttle inputs+outputs
-                throw new Broker.ServiceException(this.Model.Reflector.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Limits or emit fewer events.'); //#955 possibly 8000, but headspace //a la "System.TypeException: Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking."
+                throw new Broker.ServiceException(this.Model.Reflector.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Chunks or emit fewer events.'); //#955 possibly 8000, but headspace //a la "System.TypeException: Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking."
             }
             
             //wrap up results into Messages (new guys should have Position = 0)

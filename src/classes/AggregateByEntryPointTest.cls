@@ -1,23 +1,23 @@
 @IsTest class AggregateByEntryPointTest {
 
-   static testmethod void hasTheCorrectLimits() {
+   static testmethod void hasTheCorrectChunks() {
         //arrange
         ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByEntryPoint.class);
 
         //assert
-        Integer expectedLimits = 200; //max sync limit
-        Integer actualLimits = summary.Limits;
-        System.assertEquals(expectedLimits, actualLimits);
+        Integer expectedChunks = 200; //max sync limit
+        Integer actualChunks = summary.Chunks;
+        System.assertEquals(expectedChunks, actualChunks);
     }
 
 
    static testmethod void withinSystemLimits() {
         //assemble
         ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByEntryPoint.class);
-        Integer limits = summary.Limits;
+        Integer chunks = summary.Chunks;
 
         // Arrange
-        Integer rangeCount =  limits;
+        Integer rangeCount =  chunks;
         Integer otherCount  = 4;
         Integer totalCount = rangeCount + otherCount;
         String entryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
@@ -51,7 +51,7 @@
         //act
         Test.startTest();
         Integer counter = 0;
-        for (Integer i = 0; i < limits; i++) {
+        for (Integer i = 0; i < chunks; i++) {
             Map<String,Object> inputEvent = templateEvent.clone();
             inputEvent.put('SiblingIds' , siblingIds);
             inputEvent.put('Chunk' , i+1);
@@ -63,7 +63,7 @@
         Test.stopTest();
 
         //assert
-        System.assertEquals(limits, counter, 'Limit not reached.');
+        System.assertEquals(chunks, counter, 'Chunks not reached.');
 
    }
 

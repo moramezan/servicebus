@@ -10,7 +10,7 @@ public class ApprovalUnlock extends ApexClassModel.Service {
         String Description = 'Unlocks record from an approval process.';
         String Icon = 'lock_go';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceApprovalUnlock').getUrl();
-        Integer Limits = 150; //number of DML allowed
+        Integer Chunks = 150; //number of DML allowed
         String Cardinality = 'One';
     }
 

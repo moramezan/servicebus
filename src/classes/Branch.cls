@@ -8,7 +8,7 @@ public class Branch extends ApexClassModel.Service {
         String Tag = 'Service Bus';
         String Label = 'Branch';
         String Description = 'Copies the event to another sequence.';
-        Integer Limits = 50; //max sync limit
+        Integer Chunks = 50; //max sync limit
         String Cardinality = 'One';
     }
     

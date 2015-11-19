@@ -86,9 +86,9 @@
         ApexClassModel.Summary summary = new ApexClassModel.Summary(Wiretap.class);
         
         //assert
-        Integer expectedLimits = 5;
-        Integer actualLimits = summary.Limits;
-        System.assertEquals(expectedLimits, actualLimits, 'Wiretap should have meta limits of five.');
+        Integer expectedChunks = 5;
+        Integer actualChunks = summary.Chunks;
+        System.assertEquals(expectedChunks, actualChunks, 'Wiretap should have summary chunks of five.');
         
         Integer expectedSize = 5;
         Integer actualSize = records.size();
@@ -764,7 +764,7 @@
     
     public class ChunkErrorServiceSummary extends ApexClassModel.Summary {
         String Description = 'Does stuff in memory without side effects.';
-        Integer Limits = 2;
+        Integer Chunks = 2;
     }
     
     static testmethod void testKamikazeChunkingDoesntTakeOutHisMates() {
@@ -815,7 +815,7 @@
     
     public class FakeGateSummary extends ApexClassModel.Summary {
         String Description = 'fake gate';
-        Integer Limits = 999;
+        Integer Chunks = 999;
     }
     
     static Boolean DidRun = false;
@@ -1162,7 +1162,7 @@
     }
     
     public class FinishDoesPersistSummary extends ApexClassModel.Summary {
-        Integer Limits = 1;
+        Integer Chunks = 1;
     }
     
     //for #991 very last Execute should get Persisted

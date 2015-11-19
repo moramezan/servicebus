@@ -1,13 +1,13 @@
 @IsTest class SubsequenceTest {
  
-    static testmethod void hasTheCorrectLimits() {
+    static testmethod void hasTheCorrectChunks() {
         //arrange
         ApexClassModel.Summary summary = new ApexClassModel.Summary(Subsequence.class);
         
         //assert
-        Integer expectedLimits = 1; //max sync limit
-        Integer actualLimits = summary.Limits;
-        System.assertEquals(expectedLimits, actualLimits);
+        Integer expectedChunks = 1; //max sync limit
+        Integer actualChunks = summary.Chunks;
+        System.assertEquals(expectedChunks, actualChunks);
     }
 
     static testmethod void withinSystemLimits() {
@@ -32,9 +32,9 @@
         
         //act
         Test.startTest();
-        Integer limits = summary.Limits;
+        Integer chunks = summary.Chunks;
         Integer counter = 0;
-        for (Integer i = 0; i < limits; i++) {
+        for (Integer i = 0; i < chunks; i++) {
             //by reference side effects on inputEvent
             //inside subsequence logic, so new input event for each iteration!
             Map<String,Object> inputEvent = new Map<String,Object>{
@@ -49,7 +49,7 @@
         Test.stopTest();
 
         //assert
-        System.assertEquals(limits, counter, 'Limit not reached.');
+        System.assertEquals(chunks, counter, 'Chunks not reached.');
     }
     
     static testmethod void testRoutineExecutesSynchronously() {

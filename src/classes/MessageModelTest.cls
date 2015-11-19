@@ -42,7 +42,7 @@
     
     public class MemoryErrorSummary extends ApexClassModel.Summary {
         String Description = 'Does stuff in memory, throws an exception not needing rollback.';
-        Integer Limits = 1000;
+        Integer Chunks = 1000;
     }
     
     static testmethod void testRollbackTaxRelievedOnMemoryService() {
@@ -88,7 +88,7 @@
     
     public class InserterErrorSummary extends ApexClassModel.Summary {
         String Description = 'Inserts 1 document, throws an exception needing rollback.';
-        Integer Limits = 50;
+        Integer Chunks = 50;
     }
     
     static testmethod void testRollbackTaxImposedOnDmlService() {
@@ -133,7 +133,7 @@
     
     public class MemorySummary extends ApexClassModel.Summary {
         String Description = 'Does stuff in memory without side effects.';
-        Integer Limits = 1000;
+        Integer Chunks = 1000;
     }
     
     static testmethod void testSavepointTaxRelievedOnMemoryService() {
@@ -179,7 +179,7 @@
     
     public class InserterSummary extends ApexClassModel.Summary {
         String Description = 'Inserts 1 document, runs 75 times';
-        Integer Limits = 75;
+        Integer Chunks = 75;
     }
     
     static testmethod void testSavepointTaxImposedOnDmlService() {

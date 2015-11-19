@@ -8,7 +8,7 @@ public class Jump extends ApexClassModel.Service {
         String StepConfig = JumpConfig__c.class.getName();
         String Icon = 'arrow_switch';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceBranchJumpSubsequence').getUrl();
-        Integer Limits = 50; //max sync limit
+        Integer Chunks = 50; //max sync limit
         String Cardinality = 'Zero';
     }
     

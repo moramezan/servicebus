@@ -8,7 +8,7 @@ public class Subscribe extends ApexClassModel.Service {
         String StepConfig = SubscribeConfig__c.class.getName();
         String Icon = 'eye';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServicePublishSubscribe').getUrl();
-        Integer Limits = 100; //could be higher but lets be reasonable
+        Integer Chunks = 100; //could be higher but lets be reasonable
         String Cardinality = 'One';
     }
     

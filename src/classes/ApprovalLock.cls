@@ -11,7 +11,7 @@ public class ApprovalLock extends ApexClassModel.Service {
         String Icon = 'lock_delete';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceApprovalLock').getUrl();
         String Cardinality = 'One';
-        @TestVisible Integer Limits = 150; //number of DML allowed
+        @TestVisible Integer Chunks = 150; //number of DML allowed
     }
 
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {

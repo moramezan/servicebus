@@ -8,25 +8,25 @@
         Test.startTest();
 
         //assert
-        Integer expectedLimits = 0;
-        Integer actualLimits = Limits.getDmlStatements();
-        System.assertEquals(expectedLimits, actualLimits, 'Wrong limits before.');
+        Integer expectedChunks = 0;
+        Integer actualChunks = Limits.getDmlStatements();
+        System.assertEquals(expectedChunks, actualChunks, 'Wrong chunks before.');
         
         //act
         ApexClassModel.Service service = new ApprovalLock();
         service.handle(inputEvent);
         
         //assert
-        expectedLimits = 1;
-        actualLimits = Limits.getDmlStatements();
-        System.assertEquals(expectedLimits, actualLimits, 'Wrong limits after.');
+        expectedChunks = 1;
+        actualChunks = Limits.getDmlStatements();
+        System.assertEquals(expectedChunks, actualChunks, 'Wrong chunks after.');
     }
     
-    static testmethod void testLimits() {
+    static testmethod void testChunks() {
         //assert
-        Integer expectedLimits = Limits.getLimitDmlStatements();
-        Integer actualLimits = new ApprovalLock.Summary().Limits;
-        System.assertEquals(expectedLimits, actualLimits, 'Wrong limits.');
+        Integer expectedChunks = Limits.getLimitDmlStatements();
+        Integer actualChunks = new ApprovalLock.Summary().Chunks;
+        System.assertEquals(expectedChunks, actualChunks, 'Wrong chunks.');
     }
 
 }

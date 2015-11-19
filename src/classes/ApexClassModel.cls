@@ -23,7 +23,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         public String StepConfig {get; set;}
         public String Icon {get; set;}
         public String HelpUrl {get; set;}
-        public Integer Limits {get; set;}
+        public Integer Chunks {get; set;}
         public String Cardinality {get; set;}
         public Map<String,String> Inputs {get; set;}
         public Map<String,String> Outputs {get; set;}
@@ -57,7 +57,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 this.StepConfig = (String)summary.get('StepConfig');
                 this.Icon = (String)summary.get('Icon');
                 this.HelpUrl = (String)summary.get('HelpUrl');
-                this.Limits = (Integer)summary.get('Limits');
+                this.Chunks = (Integer)summary.get('Chunks');
                 this.Cardinality = (String)summary.get('Cardinality');
                 this.Inputs = (Map<String,String>)Json.deserialize(Json.serialize(summary.get('Inputs')), Map<String,String>.class);
                 this.Outputs = (Map<String,String>)Json.deserialize(Json.serialize(summary.get('Outputs')), Map<String,String>.class);
@@ -67,12 +67,12 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 if (this.Label == null) this.Label = reflector.getName(); //inflector.getName().replaceAll('\\.?Summary$', ''); //strips any '.Summary' or 'Summary'
                 if (this.Description == null) this.Description = 'Undescribed';
                 if (this.Icon == null) this.Icon = 'cog';
-                if (this.Limits == null) this.Limits = 1;
+                if (this.Chunks == null) this.Chunks = 1;
                 if (this.Cardinality == null) this.Cardinality = 'Any';
                 
-                //#955 cap Limits ceiling
-                if (this.Limits > 200) this.Limits = 200; //#1038 even more breathing room //#955 possibly 2000, but headspace
-                if (this.Limits < 1) this.Limits = 1; //be sensible
+                //#955 cap Chunks ceiling
+                if (this.Chunks > 200) this.Chunks = 200; //#1038 even more breathing room //#955 possibly 2000, but headspace
+                if (this.Chunks < 1) this.Chunks = 1; //be sensible
 
             } catch (Exception e) {
                 //failure, probably bad json format
