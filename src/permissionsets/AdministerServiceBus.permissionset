@@ -105,19 +105,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>BrokerDispatcher</apexClass>
+        <apexClass>BrokerBatch</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>BrokerDispatcherTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>BrokerImplementation</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>BrokerImplementationTest</apexClass>
+        <apexClass>BrokerBatchTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

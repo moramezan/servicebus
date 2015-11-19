@@ -200,7 +200,7 @@ public class Router extends ApexClassModel.Service {
         System.enqueueJob(j);
     }
     
-    public class Schedule implements System.Schedulable {
+    public class Schedule implements RouterSchedule.Schedulable {
     
         public void execute(System.SchedulableContext context) {
             if (!Test.isRunningTest() && OAuthSetting__c.getOrgDefaults().RefreshToken__c != null) {

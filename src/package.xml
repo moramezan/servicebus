@@ -32,10 +32,8 @@
         <members>Branch</members>
         <members>BranchTest</members>
         <members>Broker</members>
-        <members>BrokerDispatcher</members>
-        <members>BrokerDispatcherTest</members>
-        <members>BrokerImplementation</members>
-        <members>BrokerImplementationTest</members>
+        <members>BrokerBatch</members>
+        <members>BrokerBatchTest</members>
         <members>BrokerTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>

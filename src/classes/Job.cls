@@ -360,7 +360,7 @@ global class Job implements Process.Plugin, system.Queueable {
             SELECT Id
             FROM AsyncApexJob
             WHERE JobType = 'BatchApex'
-            AND ApexClass.Name = 'BrokerDispatcher'
+            AND ApexClass.Name = 'BrokerBatch'
             AND ApexClass.NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
             AND Status IN ('Holding', 'Queued', 'Processing', 'Preparing')
             LIMIT 1

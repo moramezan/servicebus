@@ -1,4 +1,4 @@
-@IsTest class BrokerDispatcherTest {
+@IsTest class BrokerBatchTest {
     
     @TestSetup static void testSetup() {
         //act
@@ -12,7 +12,7 @@
     
     static testmethod void coverStart() {
         //arrange
-        BrokerDispatcher dispatcher = new BrokerDispatcher();
+        BrokerBatch dispatcher = new BrokerBatch();
         
         //act
         Object iterator = dispatcher.start(null);
@@ -24,7 +24,7 @@
     static testmethod void coverExecute() {
         //arrange
         List<SObject> scopes = new List<SObject>();
-        BrokerDispatcher dispatcher = new BrokerDispatcher();
+        BrokerBatch dispatcher = new BrokerBatch();
         
         //act
         dispatcher.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
@@ -35,7 +35,7 @@
     
     static testmethod void coverFinish() {
         //arrange
-        BrokerDispatcher dispatcher = new BrokerDispatcher();
+        BrokerBatch dispatcher = new BrokerBatch();
         
         //act
         dispatcher.finish(null);
