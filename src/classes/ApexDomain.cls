@@ -68,13 +68,22 @@ public class ApexDomain {
      * Select all fields on record by id.
      */
     static public SObject getById(Id recordId) {
-        if (recordId == null) throw new DomainException('ApexDomain.getById received null recordId.');
+        if (recordId == null) {
+            //failure, cant find null id
+            throw new DomainException('Id argument is null.');
+        }
         
-        SObjectType type = recordId.getSObjectType();
-        DescribeSObjectResult description = type.getDescribe();
-        String name = description.getName();
-        String fields = String.join(new List<String>(description.fields.getMap().keySet()), ',');
-        return Database.query('SELECT ' + fields + ' FROM ' + name + ' WHERE Id = :recordId');
+        try {
+            SObjectType type = recordId.getSObjectType();
+            DescribeSObjectResult description = type.getDescribe();
+            String name = description.getName();
+            String fields = String.join(new List<String>(description.fields.getMap().keySet()), ',');
+            return Database.query('SELECT ' + fields + ' FROM ' + name + ' WHERE Id = :recordId');
+            
+        } catch (Exception e) {
+            //failure, bad describe, non existent etc
+            throw new DomainException('Cannot query "' + recordId + '" ' + e.getMessage());
+        }
     }
     
     static public List<SObject> get(List<SObject> records) {

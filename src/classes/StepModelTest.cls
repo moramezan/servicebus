@@ -156,4 +156,116 @@
         System.assert([SELECT Id FROM Step__c].isEmpty(), 'Wrong empty.');
     }
     
+    static testmethod void testCommitWithNormalObjectConfig() {
+        //arrange config
+        Id configId = Database.insert(new Account(
+            Name = 'Config Test'
+        )).getId();
+        
+        //arrange step
+        Id stepId = Database.insert(new Step__c(
+            Name = '1#Test#1',
+            ConfigId__c = configId,
+            ConfigName__c = 'Config Test',
+            Version__c = 1,
+            Sequence__c = 'Test',
+            Position__c = 1,
+            IsDraft__c = false
+        )).getId();
+        
+        //act
+        StepModel.fromId(stepId).checkout();
+        
+        //arrange
+        Account oldConfig = [SELECT Id, Name FROM Account WHERE Id = :configId];
+        Account newConfig = [SELECT Id, Name FROM Account WHERE Id != :configId];
+        
+        //assert
+        Integer expectedCount = 2;
+        Integer actualCount = [SELECT COUNT() FROM Step__c];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
+        
+        String expectedOldName = 'Config Test';
+        String actualOldName = oldConfig.Name;
+        System.assertEquals(expectedOldName, actualOldName, 'Wrong old name.');
+        
+        String expectedNewName = 'Config Test';
+        String actualNewName = newConfig.Name;
+        System.assertEquals(expectedNewName, actualNewName, 'Wrong new name.');
+    }
+    
+    static testmethod void testCommitWithCustomSettingConfig() {
+        //arrange config
+        Id configId = Database.insert(new PublishConfig__c(
+            Name = 'Config Test',
+            EventType__c = 'Test'
+        )).getId();
+        
+        //arrange step
+        Id stepId = Database.insert(new Step__c(
+            Name = '1#Test#1',
+            ConfigId__c = configId,
+            ConfigName__c = 'Config Test',
+            Version__c = 1,
+            Position__c = 1,
+            IsDraft__c = false
+        )).getId();
+        
+        //act
+        StepModel.fromId(stepId).checkout();
+        
+        //arrange
+        PublishConfig__c oldConfig = [SELECT Id, Name FROM PublishConfig__c WHERE Id = :configId];
+        PublishConfig__c newConfig = [SELECT Id, Name FROM PublishConfig__c WHERE Id != :configId];
+        
+        //assert
+        Integer expectedCount = 2;
+        Integer actualCount = [SELECT COUNT() FROM Step__c];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
+        
+        String expectedOldName = configId;
+        String actualOldName = oldConfig.Name;
+        System.assertEquals(expectedOldName, actualOldName, 'Wrong old name.');
+        
+        String expectedNewName = 'Config Test';
+        String actualNewName = newConfig.Name;
+        System.assertEquals(expectedNewName, actualNewName, 'Wrong new name.');
+    }
+    
+    //untestable, no built in objects with Auto-Number Name
+    /*static testmethod void testCommitWithAutoNumberConfig() {
+        //arrange config
+        Id configId = Database.insert(new Auto__c()).getId();
+        
+        //arrange step
+        Id stepId = Database.insert(new Step__c(
+            Name = '1#Test#1',
+            ConfigId__c = configId,
+            ConfigName__c = 'Config Test',
+            Version__c = 1,
+            Position__c = 1,
+            IsDraft__c = false
+        )).getId();
+        
+        //act
+        StepModel.fromId(stepId).checkout();
+        
+        //arrange
+        Auto__c oldConfig = [SELECT Id, Name FROM Auto__c WHERE Id = :configId];
+        Auto__c newConfig = [SELECT Id, Name FROM Auto__c WHERE Id != :configId];
+        
+        //assert
+        Integer expectedCount = 2;
+        Integer actualCount = [SELECT COUNT() FROM Step__c];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
+        
+        String expectedOldName = 'A-';
+        String actualOldName = oldConfig.Name;
+        System.assert(actualOldName.contains(expectedOldName), 'Wrong old name.');
+        
+        String expectedNewName = 'A-';
+        String actualNewName = newConfig.Name;
+        System.assert(actualNewName.contains(expectedNewName), 'Wrong new name.');
+    }*/
+    
 }

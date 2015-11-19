@@ -215,9 +215,28 @@ public class StepModel extends ApexDomain.StandardModel {
         step.Name = step.Version__c + '#' + step.Sequence__c + '#' + step.Position__c;
         step.IsDraft__c = true;
         
-        //TODO copy his configuration
-        step.ConfigId__c = null;
-        step.ConfigName__c = null;
+        //#732 clone the configuration
+        Savepoint savepoint = Database.setSavepoint();
+        if (step.ConfigId__c != null) try {
+            
+            SObject config = ApexDomain.getById(step.ConfigId__c);
+            SObject clone = config.clone(preserveId, isDeepClone, preserveReadonlyTimestamps, preserveAutonumber);
+            
+            if (config.getSobjectType().getDescribe().isCustomSetting()) {
+                //its a custom setting, de-dupe the name
+                clone.put('Name', step.ConfigName__c);
+                config.put('Name', step.ConfigId__c);
+                Database.update(config); //THEIR FUCKUPS
+            }
+            
+            Database.insert(clone); //THEIR FUCKUPS
+            step.ConfigId__c = clone.Id;
+            
+        } catch (Exception e) {
+            //quietly fail but show why
+            Database.rollback(savepoint);
+            step.ConfigName__c = e.getMessage().abbreviate(SObjectType.Step__c.Fields.ConfigName__c.Length);
+        }
         
         //new steps first
         insert step;
