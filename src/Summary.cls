@@ -17,9 +17,9 @@ public class Summary extends Abstract.Service.Summary {
     
     /**
      * Optional number of times this service can run in one execution context, while remaining
-     * within governor limits. For example, 50 for a service that issues an HTTP callout.
+     * within governor limits. For example, 100 for a service that issues one HTTP callout.
      */
-    Integer Limits;
+    Integer Chunks;
     
     /**
      * Optional URL to help for this service.
