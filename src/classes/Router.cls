@@ -182,7 +182,7 @@ public class Router extends ApexClassModel.Service {
         
         updateLastEventStamp(timestamps);
         
-        Job.AllowRoute = true; //#999#issuecomment-133751700
+        Enqueue.AllowRoute = true; //#999#issuecomment-133751700
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         for (DateTime timestamp : timestamps) outputEvents.add(new Map<String,Object>{
             'RecordId' => RecordId, //#971 used in lieu of :WasHeartbeat

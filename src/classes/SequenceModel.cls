@@ -77,7 +77,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
         //initial position
         Decimal position = 0;
         
-        Job.AllowRoute = true; //#999#issuecomment-133751700
+        Enqueue.AllowRoute = true; //#999#issuecomment-133751700
         Map<String,Object> event = new Map<String,Object>{
             'Route' => version.intValue() + '#' + this.Sequence.Name + '#' + position.intValue()
         };

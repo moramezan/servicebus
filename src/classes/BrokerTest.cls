@@ -365,7 +365,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testmethod void callingEnqueueSuccessfullyCallEnqueueImpAndCreatesDocument() {
+    /*static testmethod void callingEnqueueSuccessfullyCallEnqueueImpAndCreatesDocument() {
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
@@ -388,7 +388,7 @@
         Integer expectedCountAfter = 1;
         Integer actualCountAfter = [SELECT COUNT() FROM Document];
         System.assertEquals(expectedCountAfter, actualCountAfter, 'Wrong count after.');
-    }
+    }*/
     
     static testmethod void callingRestartSuccessfullyCallsrunImpl() {
         //arrange
@@ -508,7 +508,7 @@
         Set<String> uniqueIds =  new Set<String>();
         Integer count = 1;
         while (count <= uniqueTotal) {
-            uniqueIds.add(Job.uuidVersionFour());
+            uniqueIds.add(Enqueue.uuidVersionFour());
             count++;
         }
 

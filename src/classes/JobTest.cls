@@ -10,9 +10,9 @@
         //act
         Test.startTest();
         Job job = new Job(sequenceName, recordId);
-        
-        System.assert(job.Events[0].containsKey('servicebus:ToSequence'), 'Wrong sequence key.');
-        System.assert(job.Events[0].containsKey('Route'), 'Wrong route key.');
+        Enqueue.Queue queue = (Enqueue.Queue)job.queue;
+        System.assert(queue.Events[0].containsKey('servicebus:ToSequence'), 'Wrong sequence key.');
+        System.assert(queue.Events[0].containsKey('Route'), 'Wrong route key.');
         
         System.enqueueJob(job);
         Test.stopTest();
@@ -49,7 +49,7 @@
             //act
             new Job(input);
             System.assert(false, 'Line above should throw exception');
-        } catch (Job.EnqueueException e) {
+        } catch (Enqueue.EnqueueException e) {
             //assert
             String expectedMessage = 'Type unsupported in JSON: common.apex.runtime.bytecode.BytecodeApexObjectType';
             String actualMessage = e.getMessage();
@@ -95,7 +95,7 @@
             //act
             new Job(inputEvents);
             System.assert(false, 'Line above should throw exception.');
-        } catch (Job.EnqueueException e) {
+        } catch (Enqueue.EnqueueException e) {
             //assert
             String expectedMessage = 'Too many events: 1001';
             String actualMessage = e.getMessage();
@@ -116,7 +116,7 @@
             new Job(inputEvent);
             System.assert(false, 'Line above should throw exception.');
             
-        } catch (Job.EnqueueException e) {
+        } catch (Enqueue.EnqueueException e) {
             //assert
             String expectedException = 'not supported';
             String actualException = e.getMessage();
@@ -129,7 +129,7 @@
             new Job(inputEvent);
             System.assert(false, 'Line above should throw exception.');
             
-        } catch (Job.EnqueueException e) {
+        } catch (Enqueue.EnqueueException e) {
             //assert
             String expectedException = 'not supported';
             String actualException = e.getMessage();
@@ -143,10 +143,14 @@
         List<Map<String,Object>> inputEvents;
         Object expectedParam;
         Object actualParam;
+        Enqueue.Queue queue;
+        Job job;
         
         //act
         inputEvent = new Map<String,Object>{'ToSequence' => 'Test'};
-        inputEvents = new Job(inputEvent).Events;
+        job = new Job(inputEvent);
+        queue = (Enqueue.Queue)job.queue;
+        inputEvents = queue.Events;
         
         //assert
         expectedParam = '1#Test#0';
@@ -159,7 +163,9 @@
         
         //act
         inputEvent = new Map<String,Object>{'ToService' => 'Wiretap'};
-        inputEvents = new Job(inputEvent).Events;
+        job = new Job(inputEvent);
+        queue = (Enqueue.Queue)job.queue;
+        inputEvents = queue.Events;
         
         //assert
         expectedParam = 'Wiretap';
@@ -179,7 +185,9 @@
         
         //act
         inputEvent = new Map<String,Object>{'ToConfig' => document.Id};
-        inputEvents = new Job(inputEvent).Events;
+        job = new Job(inputEvent);
+        queue = (Enqueue.Queue)job.queue;
+        inputEvents = queue.Events;
         
         //assert
         expectedParam = '1#Test#0';

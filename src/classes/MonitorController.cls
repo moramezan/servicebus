@@ -11,7 +11,7 @@ public with sharing class MonitorController {
             LIMIT 1
         ].isEmpty();
         
-        Boolean isBrokerRunning = Job.isScheduled() || Job.isRunning();
+        Boolean isBrokerRunning = Enqueue.isScheduled() || Enqueue.isRunning();
         
         return new List<Boolean>{
             isBrokerRunning, //red twirly

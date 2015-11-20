@@ -37,6 +37,8 @@
         <members>BrokerTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
+        <members>Enqueue</members>
+        <members>EnqueueTest</members>
         <members>Job</members>
         <members>JobTest</members>
         <members>Jump</members>

@@ -109,7 +109,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      * @return the queueable job id
      */
     public Id enqueueTestMessage() {
-        Job.AllowRoute = true; //#999#issuecomment-133751700
+        Enqueue.AllowRoute = true; //#999#issuecomment-133751700
         Map<String,Object> event = new Map<String,Object>{
             'Route' => this.Reflector.getName()
         };

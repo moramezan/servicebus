@@ -361,7 +361,7 @@ abstract public without sharing class Broker {
         @TestVisible List<Message__c> Messages = new List<Message__c>();
         
         public Batch() {
-            if (!Job.isRunningUser()) {
+            if (!Enqueue.isRunningUser()) {
                 //#847 broker panic, wrong user context
                 System.assert(false, 'The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
             }
@@ -526,7 +526,7 @@ abstract public without sharing class Broker {
          * The VerticalBroker executes another Batch Apex job to run itself again.
          */
         override public void runImpl() {
-            if (!Job.isRunningUser()) {
+            if (!Enqueue.isRunningUser()) {
                 //#847 broker panic, wrong user context
                 System.assert(false, 'The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
             }

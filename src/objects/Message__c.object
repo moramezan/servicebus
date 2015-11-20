@@ -335,7 +335,7 @@ if ({!Message__c.Exception__c == null}) {
     var dot = &apos;{!$Setup.NamespaceSetting__c.DotPrefix__c}&apos;;
     var sid = &apos;{!$Setup.OAuthSetting__c.AccessToken__c}&apos;;
     var mark = new Date().getTime();
-    var command = dot + &quot;Job.run(&apos;{!Message__c.Id}&apos;);&quot;;
+    var command = &quot;new &quot; + dot + &quot;Job().run(&apos;{!Message__c.Id}&apos;);&quot;;
 
     sforce.connection.init(sid, &apos;/services/Soap/u/35.0&apos;);
     var response = sforce.apex.executeAnonymous(command);

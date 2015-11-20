@@ -1,5 +1,8 @@
 /**
- * This class is WITHOUT SHARING to ensure the service can execute regardless of running user context.
+ * Dan Appleman decoupler pattern
+ * Don't upgrade API version!
+ * Don't modify class body!
+ * It'll never reinstall!
  */
 public without sharing class BrokerBatch implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
     

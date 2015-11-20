@@ -1,8 +1,10 @@
 /**
- * @Obfuscation
- * Formerly known as HeartbeatDispatcher
+ * Dan Appleman decoupler pattern
+ * Don't upgrade API version!
+ * Don't modify class body!
+ * It'll never reinstall!
  */
-public class RouterSchedule implements System.Schedulable {
+public without sharing class RouterSchedule implements System.Schedulable { //@obfuscation HeartbeatDispatcher
     
     /**
      * We might prefer the system interface, but
