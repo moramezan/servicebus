@@ -3,7 +3,15 @@
  * Formerly nown as HeartbeatTest
  */
 @IsTest class RouterTest {
-
+    
+    @TestSetup static void testSetup() {
+        //act
+        upsert BrokerSetting__c.getOrgDefaults();
+        
+        //assert
+        System.assertNotEquals(null, BrokerSetting__c.getOrgDefaults().Id, 'Wrong id.');
+    }
+    
     static testmethod void testHeartbeatDispatchesOneIndexedMessages() {
         //arrange services, sequence, step
         Sequence__c sequence = new Sequence__c(Name = 'Test');

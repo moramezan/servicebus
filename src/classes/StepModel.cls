@@ -64,10 +64,11 @@ public class StepModel extends ApexDomain.StandardModel {
             update writeSteps;
             
             //reposition them all
-            Decimal position = 1;
+            Integer version = this.step.Version__c.intValue();
+            Integer position = 1;
             for (Step__c step : writeSteps) {
-                step.Name = this.step.Version__c.intValue() + '#' + this.step.Sequence__c + '#' + position.intValue();
-                step.Position__c = position.intValue();
+                step.Name = version + '#' + this.step.Sequence__c + '#' + position;
+                step.Position__c = position;
                 position++;
             }
             
@@ -111,10 +112,11 @@ public class StepModel extends ApexDomain.StandardModel {
             update writeSteps;
             
             //reposition them all
-            Decimal position = 1;
+            Integer version = this.step.Version__c.intValue();
+            Integer position = 1;
             for (Step__c step : writeSteps) {
-                step.Name = this.step.Version__c.intValue() + '#' + this.step.Sequence__c + '#' + position.intValue();
-                step.Position__c = position.intValue();
+                step.Name = version + '#' + this.step.Sequence__c + '#' + position;
+                step.Position__c = position;
                 position++;
             }
             
@@ -210,9 +212,13 @@ public class StepModel extends ApexDomain.StandardModel {
         Boolean preserveAutonumber = false;
         Step__c step = this.Step.clone(preserveId, isDeepClone, preserveReadonlyTimestamps, preserveAutonumber);
         
+        Integer version = SequenceSetModel.latestVersion() + 1;
+        Integer position = step.Position__c.intValue();
+        
         //increment as next draft version
-        step.Version__c++;
-        step.Name = step.Version__c + '#' + step.Sequence__c + '#' + step.Position__c;
+        step.Version__c = version;
+        step.Position__c = position;
+        step.Name = version + '#' + step.Sequence__c + '#' + position;
         step.IsDraft__c = true;
         
         //#732 clone the configuration

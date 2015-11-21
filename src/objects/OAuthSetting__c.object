@@ -47,6 +47,7 @@
     </fields>
     <fields>
         <fullName>RunningUserId__c</fullName>
+        <defaultValue>$User.Id</defaultValue>
         <description>Which User with a System Administrator profile performed the post install configuration ?</description>
         <externalId>false</externalId>
         <inlineHelpText>Which User with a System Administrator profile performed the post install configuration ?</inlineHelpText>

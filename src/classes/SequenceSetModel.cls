@@ -80,12 +80,25 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
     
     /**
      * Finds integral draft version number
+     * May be NULL if there is no draft!
      */
     static public Integer draftVersion() {
         return Integer.valueOf([
             SELECT AVG(Version__c)
             FROM Step__c
             WHERE IsDraft__c = true
+        ][0].get('expr0'));
+    }
+    
+    /**
+     * Finds integral max version number
+     * May be NULL if there is no max!
+     */
+    static public Integer latestVersion() {
+        return Integer.valueOf([
+            SELECT MAX(Version__c)
+            FROM Step__c
+            WHERE IsDraft__c = false
         ][0].get('expr0'));
     }
     
@@ -105,17 +118,11 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
      * Cursor for given live version
      */
     static public Database.QueryLocator locateLiveSteps() {
-        //find latest runnable version
-        Integer version = Integer.valueOf([
-            SELECT Max(Version__c)
-            FROM Step__c
-            WHERE IsDraft__c = false
-        ][0].get('expr0'));
-        
+        //find current running version
         return Database.getQueryLocator([
             SELECT Id, Name
             FROM Step__c
-            WHERE Version__c = :version
+            WHERE Version__c = :BrokerSetting__c.getOrgDefaults().Version__c.intValue()
             ORDER BY Sequence__c ASC, Position__c ASC
         ]);
     }

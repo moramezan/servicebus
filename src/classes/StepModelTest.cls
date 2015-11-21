@@ -10,8 +10,8 @@
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //assert before state
-        System.assertEquals(1, wiretapStep.Position__c.intValue());
-        System.assertEquals(2, terminateStep.Position__c.intValue());
+        System.assertEquals(1, wiretapStep.Position__c);
+        System.assertEquals(2, terminateStep.Position__c);
             
         //act
         StepModel step = StepModel.fromName(terminateStep.Name);
@@ -22,8 +22,8 @@
         terminateStep = (Step__c)ApexDomain.getById(terminateStep.Id);
         
         //assert after state
-        System.assertEquals(1, terminateStep.Position__c.intValue());
-        System.assertEquals(2, wiretapStep.Position__c.intValue());
+        System.assertEquals(1, terminateStep.Position__c);
+        System.assertEquals(2, wiretapStep.Position__c);
     }
     
     static testmethod void testMoveStepAfter() {
@@ -36,8 +36,8 @@
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
         
         //assert before state
-        System.assertEquals(1, wiretapStep.Position__c.intValue());
-        System.assertEquals(2, terminateStep.Position__c.intValue());
+        System.assertEquals(1, wiretapStep.Position__c);
+        System.assertEquals(2, terminateStep.Position__c);
             
         //act
         StepModel step = StepModel.fromName(wiretapStep.Name);
@@ -48,8 +48,8 @@
         terminateStep = (Step__c)ApexDomain.getById(terminateStep.Id);
         
         //assert after state
-        System.assertEquals(1, terminateStep.Position__c.intValue());
-        System.assertEquals(2, wiretapStep.Position__c.intValue());
+        System.assertEquals(1, terminateStep.Position__c);
+        System.assertEquals(2, wiretapStep.Position__c);
     }
     
     static testmethod void testDescribeStepConfig() {

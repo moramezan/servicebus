@@ -25,6 +25,9 @@ public without sharing class PostInstallHandler implements InstallHandler {
         
         //create slots for the first time
         if (!isUpgrade) this.upsertSlots();
+        
+        //create broker setting (version)
+        if (!isUpgrade) this.upsertBrokerSetting();
     }
     
     /**
@@ -47,6 +50,11 @@ public without sharing class PostInstallHandler implements InstallHandler {
         List<Slot__c> slots = new List<Slot__c>();
         for (Integer i = 1; i <= 1000; i++) slots.add(new Slot__c(Name = String.valueOf(i).leftPad(4).replace(' ', '0')));
         upsert slots Name;
+    }
+    
+    @TestVisible void upsertBrokerSetting() {
+        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
+        upsert setting;
     }
     
     /**

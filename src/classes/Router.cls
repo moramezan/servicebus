@@ -22,8 +22,7 @@ public class Router extends ApexClassModel.Service {
         ];
         
         //stamp with version
-        Integer version = Integer.valueOf(BrokerSetting__c.getOrgDefaults().Version__c);
-        if (version == null) version = 1;
+        Integer version = BrokerSetting__c.getOrgDefaults().Version__c.intValue();
         integer position = 0;
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();

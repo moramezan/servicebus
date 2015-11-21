@@ -4,10 +4,6 @@ public with sharing class SequenceListExtension {
         //
     }
 
-    public Integer getLiveVersion() {
-        return Integer.valueOf(BrokerSetting__c.getOrgDefaults().Version__c);
-    }
-    
     static public Integer getDraftVersion() {
         return SequenceSetModel.draftVersion();
     }
@@ -21,14 +17,10 @@ public with sharing class SequenceListExtension {
         return runnableVersions;
     }
     
-    @Future static public void ChangeVersion(Integer version) {
-        if (version == null) version = 1;
+    @RemoteAction static public void ChangeVersion(Integer version) {
+        if (version == null) System.assert(false, 'Null version!');
         BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
         setting.Version__c = version;
         upsert setting;
-    }
-    
-    @ReadOnly @RemoteAction static public void ChooseVersion(Integer version) {
-        ChangeVersion(version);
     }
 }

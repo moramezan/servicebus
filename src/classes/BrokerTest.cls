@@ -2,17 +2,13 @@
     
     @TestSetup static void testSetup() {
         //act
-        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
-        setting.RunningUserId__c = UserInfo.getUserId();
-        upsert setting;
-        
-        //assert
-        System.assertNotEquals(null, setting.Id, 'Wrong id.');
-        
-        //act
+        upsert OAuthSetting__c.getOrgDefaults();
+        upsert BrokerSetting__c.getOrgDefaults();
         new PostInstallHandler().upsertSlots();
         
         //assert
+        System.assertNotEquals(null, OAuthSetting__c.getOrgDefaults().Id, 'Wrong id.');
+        System.assertNotEquals(null, BrokerSetting__c.getOrgDefaults().Id, 'Wrong id.');
         System.assertEquals(1000, [SELECT COUNT() FROM Slot__c], 'Wrong count.');
     }
     

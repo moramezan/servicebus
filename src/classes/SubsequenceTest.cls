@@ -1,5 +1,10 @@
 @IsTest class SubsequenceTest {
- 
+    
+    @TestSetup static void testSetup() {
+        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
+        upsert setting;
+    }
+    
     static testmethod void hasTheCorrectChunks() {
         //arrange
         ApexClassModel.Summary summary = new ApexClassModel.Summary(Subsequence.class);

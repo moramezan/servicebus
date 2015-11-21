@@ -1,5 +1,13 @@
 @IsTest class SequenceSetModelTest {
 
+    @TestSetup static void testSetup() {
+        //act
+        upsert BrokerSetting__c.getOrgDefaults();
+        
+        //arrange
+        System.assertNotEquals(null, BrokerSetting__c.getOrgDefaults().Id, 'Wrong id.');
+    }
+
     //before delete
     static testmethod void testDeleteTriggersAreCascaded() {
         //arrange sequence

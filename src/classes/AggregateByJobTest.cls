@@ -1,6 +1,14 @@
 @IsTest class AggregateByJobTest {
 
-   static testmethod void hasTheCorrectChunks() {
+    @TestSetup static void testSetup() {
+        //act
+        upsert BrokerSetting__c.getOrgDefaults();
+        
+        //assert
+        System.assertNotEquals(null, BrokerSetting__c.getOrgDefaults().Id);
+    }
+
+    static testmethod void hasTheCorrectChunks() {
         //arrange
         ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByJob.class);
 

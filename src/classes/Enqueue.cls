@@ -138,8 +138,7 @@ public class Enqueue {
                 }
                 
                 //stamp with version
-                Integer version = Integer.valueOf(BrokerSetting__c.getOrgDefaults().Version__c);
-                if (version == null) version = 1;
+                Integer version = BrokerSetting__c.getOrgDefaults().Version__c.intValue();
                 integer position = 0;
                 
                 //#999 enqueue routing helpers

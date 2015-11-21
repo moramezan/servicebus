@@ -2,6 +2,14 @@
     
     //TODO needs more tests
     
+    @TestSetup static void testSetup() {
+        //act
+        upsert BrokerSetting__c.getOrgDefaults();
+        
+        //assert
+        System.assertNotEquals(null, BrokerSetting__c.getOrgDefaults().Id, 'Wrong id.');
+    }
+    
     static testmethod void testSimpleEventConstructor() {
         //arrange
         String sequenceName = 'Test';
@@ -63,12 +71,12 @@
         for (Integer i = 0; i < 1000; i++) inputEvents.add(new Map<String,Object>()); //#955 possibly 10000, but headspace
         
         //assert
+        Test.startTest(); //avoid System.LimitException: Apex CPU time limit exceeded
         Integer expectedBefore = 0;
         Integer actualBefore = Limits.getDmlRows();
         System.assertEquals(expectedBefore, actualBefore, 'Wrong size.');
 
         //act
-        Test.startTest(); //avoid System.LimitException: Apex CPU time limit exceeded
         Job job = new Job(inputEvents);
         job.execute(null);
         Integer limitDmlRows = Limits.getLimitDmlRows();

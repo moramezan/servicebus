@@ -66,20 +66,14 @@ public class SequenceModel extends ApexDomain.StandardModel {
     public Id enqueueTestMessage() {
         
         //find draft version
-        Decimal version = (Decimal)[
-            SELECT AVG(Version__c)
-            FROM Step__c
-            WHERE IsDraft__c = true
-        ][0].get('expr0');
-        
-        if (version == null) version = 1;
+        Integer version = SequenceSetModel.draftVersion();
         
         //initial position
-        Decimal position = 0;
+        Integer position = 0;
         
         Enqueue.AllowRoute = true; //#999#issuecomment-133751700
         Map<String,Object> event = new Map<String,Object>{
-            'Route' => version.intValue() + '#' + this.Sequence.Name + '#' + position.intValue()
+            'Route' => version + '#' + this.Sequence.Name + '#' + position
         };
         Job j = new Job(event);
         Id jobId = System.enqueueJob(j);
@@ -95,33 +89,28 @@ public class SequenceModel extends ApexDomain.StandardModel {
             ApexClassModel model = new ApexClassModel(reflector);
             
             //find draft version
-            Decimal version = (Decimal)[
-                SELECT AVG(Version__c)
-                FROM Step__c
-                WHERE IsDraft__c = true
-            ][0].get('expr0');
-            
-            if (version == null) version = 1;
+            Integer version = SequenceSetModel.draftVersion();
+            if (version == null) version = 1; //first ever
             
             //last sibling position
-            Decimal position = (Decimal)[
+            Integer position = Integer.valueOf([
                 SELECT MAX(Position__c)
                 FROM Step__c
                 WHERE IsDraft__c = true
                 AND Sequence__c = :this.sequence.Name
-            ][0].get('expr0');
+            ][0].get('expr0'));
             
-            //next position after siblings
+            //null means first step, else next position after siblings
             if (position == null) position = 1; else position++;
             
             Step__c step = new Step__c(
                 IsDraft__c = true,
-                Version__c = version.intValue(),
-                Name = version.intValue() + '#' + this.sequence.Name + '#' + position.intValue(),
+                Version__c = version,
+                Name = version + '#' + this.sequence.Name + '#' + position,
                 Sequence__c = this.sequence.Name,
                 ApexClassId__c = null, //see upstairs
                 ApexClassName__c = reflector.getName(),
-                Position__c = position.intValue()
+                Position__c = position
             );
             
             insert step;
@@ -194,10 +183,11 @@ public class SequenceModel extends ApexDomain.StandardModel {
             update stepsToReorder;
             
             //reposition them all
-            Decimal position = 1;
+            Integer version = stepToDelete.Version__c.intValue();
+            Integer position = 1;
             for (Step__c stepToReorder : stepsToReorder) {
-                stepToReorder.Name = stepToDelete.Version__c.intValue() + '#' + this.sequence.Name + '#' + position.intValue();
-                stepToReorder.Position__c = position.intValue();
+                stepToReorder.Name = version + '#' + this.sequence.Name + '#' + position;
+                stepToReorder.Position__c = position;
                 position++;
             }
             
