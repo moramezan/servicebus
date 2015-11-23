@@ -317,6 +317,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>SequenceNewExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SequenceNewExtensionTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>SequenceSetModel</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -535,6 +543,10 @@
     <pageAccesses>
         <apexPage>SequenceList</apexPage>
         <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>SequenceNew</apexPage>
+        <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>SequenceSplash</apexPage>

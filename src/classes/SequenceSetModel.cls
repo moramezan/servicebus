@@ -252,7 +252,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
      * when there is a draft version.
      * (and FIRST ever sequence)
      */
-    @TestVisible void inhibitInsertWithoutCheckout() {
+    public void inhibitInsertWithoutCheckout() {
         
         Boolean noLiveSteps = [SELECT Id FROM Step__c WHERE IsDraft__c = false LIMIT 1].isEmpty();
         Boolean hasDraftSteps = ![SELECT Id FROM Step__c WHERE IsDraft__c = true LIMIT 1].isEmpty();
@@ -269,7 +269,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         
         //failure, checkout first
         List<Sequence__c> sequences = this.Records;
-        for (Sequence__c sequence : sequences) sequence.Name.addError('Checkout required first.');
+        for (Sequence__c sequence : sequences) sequence.addError('Checkout required first.');
     }
     
     /**

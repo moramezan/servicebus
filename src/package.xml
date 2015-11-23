@@ -85,6 +85,8 @@
         <members>SequenceListExtensionTest</members>
         <members>SequenceModel</members>
         <members>SequenceModelTest</members>
+        <members>SequenceNewExtension</members>
+        <members>SequenceNewExtensionTest</members>
         <members>SequenceSetModel</members>
         <members>SequenceSetModelTest</members>
         <members>StepConfigExtension</members>
@@ -128,6 +130,7 @@
         <members>SequenceDiscard</members>
         <members>SequenceHelp</members>
         <members>SequenceList</members>
+        <members>SequenceNew</members>
         <members>SequenceSplash</members>
         <members>StepConfig</members>
         <name>ApexPage</name>
