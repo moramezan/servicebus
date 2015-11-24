@@ -77,7 +77,7 @@
                             "//button.mask(); //too dark since #818",
                             "",
                             "Visualforce.remoting.Manager.invokeAction(",
-                            "    $RemoteAction.SequenceBuilderExtension.enqueue,",
+                            "    $RemoteAction.SequenceEditExtension.enqueue,",
                             "    Id,",
                             "    handler",
                             ");"

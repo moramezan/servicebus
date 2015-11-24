@@ -4,5 +4,5 @@
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <description>Container for presenting Sencha Sequence Builder</description>
-    <label>SequenceBuilder</label>
+    <label>SequenceEdit</label>
 </ApexPage>

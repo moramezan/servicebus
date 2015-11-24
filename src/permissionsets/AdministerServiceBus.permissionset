@@ -269,14 +269,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SequenceBuilderExtension</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>SequenceBuilderExtensionTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>SequenceCheckoutExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -298,6 +290,14 @@
     </classAccesses>
     <classAccesses>
         <apexClass>SequenceDiscardExtensionTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SequenceEditExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SequenceEditExtensionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -521,10 +521,6 @@
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SequenceBuilder</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>SequenceCheckout</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -534,6 +530,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>SequenceDiscard</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>SequenceEdit</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

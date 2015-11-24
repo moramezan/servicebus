@@ -73,14 +73,14 @@
         <members>RouterTest</members>
         <members>ScheduleDaily</members>
         <members>ScheduleDailyTest</members>
-        <members>SequenceBuilderExtension</members>
-        <members>SequenceBuilderExtensionTest</members>
         <members>SequenceCheckoutExtension</members>
         <members>SequenceCheckoutExtensionTest</members>
         <members>SequenceCommitExtension</members>
         <members>SequenceCommitExtensionTest</members>
         <members>SequenceDiscardExtension</members>
         <members>SequenceDiscardExtensionTest</members>
+        <members>SequenceEditExtension</members>
+        <members>SequenceEditExtensionTest</members>
         <members>SequenceListExtension</members>
         <members>SequenceListExtensionTest</members>
         <members>SequenceModel</members>
@@ -124,10 +124,10 @@
         <members>Monitor</members>
         <members>MonitorSplash</members>
         <members>PostInstallInstructions</members>
-        <members>SequenceBuilder</members>
         <members>SequenceCheckout</members>
         <members>SequenceCommit</members>
         <members>SequenceDiscard</members>
+        <members>SequenceEdit</members>
         <members>SequenceHelp</members>
         <members>SequenceList</members>
         <members>SequenceNew</members>
@@ -264,7 +264,7 @@
     <types>
         <members>AsyncApexJobProgressZip</members>
         <members>ContextSensitiveHelpZip</members>
-        <members>SequenceBuilderZip</members>
+        <members>SequenceEditZip</members>
         <name>StaticResource</name>
     </types>
     <types>

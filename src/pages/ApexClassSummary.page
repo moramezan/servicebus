@@ -12,7 +12,7 @@
         }());
     </script>
     
-    <apex:stylesheet value="{!URLFOR($Resource.SequenceBuilderZip, '/resources/Builder-all.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.SequenceEditZip, '/resources/Builder-all.css')}" />
     
     <apex:pageMessages showDetail="false" />
     
@@ -108,7 +108,7 @@
     </apex:pageBlock>
     
     <apex:variable var="application" value="Builder" /><!-- Application namespace such as MyApp -->
-    <apex:variable var="resource" value="{!$Resource.SequenceBuilderZip}" /><!-- The $Resource containing app.js -->
+    <apex:variable var="resource" value="{!$Resource.SequenceEditZip}" /><!-- The $Resource containing app.js -->
     <apex:variable var="path" value="" /><!-- Development mode prefixes all resources, production mode loads the Sencha Cmd output -->
     <apex:variable var="baseCSSPrefix" value="z-" /><!-- Ext.buildSettings.baseCSSPrefix which will be applied before the framework loads -->
     
@@ -119,7 +119,7 @@
     <script>
         //#1096 piggy back sequence builder
         window.$RemoteAction = window.$RemoteAction || {};
-        $RemoteAction.SequenceBuilderExtension = $RemoteAction.SequenceBuilderExtension || {};
+        $RemoteAction.SequenceEditExtension = $RemoteAction.SequenceEditExtension || {};
         
         window.Id = '{!Id}';
         

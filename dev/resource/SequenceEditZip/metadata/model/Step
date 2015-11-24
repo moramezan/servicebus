@@ -117,7 +117,7 @@
             "codeClass": null,
             "userConfig": {
                 "api": [
-                    "{read: $RemoteAction.SequenceBuilderExtension.fetchSteps}"
+                    "{read: $RemoteAction.SequenceEditExtension.fetchSteps}"
                 ],
                 "designer|displayName": "StepProxy",
                 "extraParams": [

@@ -1,4 +1,4 @@
-<apex:page setup="true" standardController="Sequence__c" extensions="SequenceBuilderExtension" action="{!doRedirect}" title="{!$ObjectType.Sequence__c.Label}: {!Sequence__c.Name}">
+<apex:page setup="true" standardController="Sequence__c" extensions="SequenceEditExtension" action="{!doRedirect}" title="{!$ObjectType.Sequence__c.Label}: {!Sequence__c.Name}">
     
     <script>
         (function() {
@@ -33,7 +33,7 @@
     </apex:pageBlock>
     
     <apex:variable var="application" value="Builder" /><!-- Application namespace such as MyApp -->
-    <apex:variable var="resource" value="{!$Resource.SequenceBuilderZip}" /><!-- The $Resource containing app.js -->
+    <apex:variable var="resource" value="{!$Resource.SequenceEditZip}" /><!-- The $Resource containing app.js -->
     <apex:variable var="path" value="" /><!-- Development mode prefixes all resources, production mode loads the Sencha Cmd output -->
     <apex:variable var="baseCSSPrefix" value="z-" /><!-- Ext.buildSettings.baseCSSPrefix which will be applied before the framework loads -->
     
@@ -47,14 +47,14 @@
         $Component.pageBlockButtonsId = '{!$Component.pageBlockId.pageBlockButtonsId}';
         
         window.$RemoteAction = window.$RemoteAction || {};
-        $RemoteAction.SequenceBuilderExtension = $RemoteAction.SequenceBuilderExtension || {};
-        $RemoteAction.SequenceBuilderExtension.fetchSteps = '{!$RemoteAction.SequenceBuilderExtension.fetchSteps}';
-        $RemoteAction.SequenceBuilderExtension.destroyStep = '{!$RemoteAction.SequenceBuilderExtension.destroyStep}';
-        $RemoteAction.SequenceBuilderExtension.enqueue = '{!$RemoteAction.SequenceBuilderExtension.enqueue}';
-        $RemoteAction.SequenceBuilderExtension.appendStep = '{!$RemoteAction.SequenceBuilderExtension.appendStep}';
-        $RemoteAction.SequenceBuilderExtension.moveStepBefore = '{!$RemoteAction.SequenceBuilderExtension.moveStepBefore}';
-        $RemoteAction.SequenceBuilderExtension.moveStepAfter = '{!$RemoteAction.SequenceBuilderExtension.moveStepAfter}';
-        $RemoteAction.SequenceBuilderExtension.persistConfigNameOnStep = '{!$RemoteAction.SequenceBuilderExtension.persistConfigNameOnStep}';
+        $RemoteAction.SequenceEditExtension = $RemoteAction.SequenceEditExtension || {};
+        $RemoteAction.SequenceEditExtension.fetchSteps = '{!$RemoteAction.SequenceEditExtension.fetchSteps}';
+        $RemoteAction.SequenceEditExtension.destroyStep = '{!$RemoteAction.SequenceEditExtension.destroyStep}';
+        $RemoteAction.SequenceEditExtension.enqueue = '{!$RemoteAction.SequenceEditExtension.enqueue}';
+        $RemoteAction.SequenceEditExtension.appendStep = '{!$RemoteAction.SequenceEditExtension.appendStep}';
+        $RemoteAction.SequenceEditExtension.moveStepBefore = '{!$RemoteAction.SequenceEditExtension.moveStepBefore}';
+        $RemoteAction.SequenceEditExtension.moveStepAfter = '{!$RemoteAction.SequenceEditExtension.moveStepAfter}';
+        $RemoteAction.SequenceEditExtension.persistConfigNameOnStep = '{!$RemoteAction.SequenceEditExtension.persistConfigNameOnStep}';
         
         window.$Page = window.$Page || {};
         $Page.ApexClassSetting = '{!$Page.ApexClassSetting}';

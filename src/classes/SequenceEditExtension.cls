@@ -1,10 +1,10 @@
-public with sharing class SequenceBuilderExtension {
+public with sharing class SequenceEditExtension {
     
     ApexPages.StandardController controller;
     Sequence__c sequence;
     SequenceModel model;
     
-    public SequenceBuilderExtension(ApexPages.StandardController controller) {
+    public SequenceEditExtension(ApexPages.StandardController controller) {
         this.controller = controller;
         this.sequence = (Sequence__c)controller.getRecord();
         this.model = SequenceModel.fromId(controller.getId());

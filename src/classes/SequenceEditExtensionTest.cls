@@ -1,4 +1,4 @@
-@IsTest class SequenceBuilderExtensionTest {
+@IsTest class SequenceEditExtensionTest {
 
     @TestSetup static void testSetup() {
         //act
@@ -24,8 +24,8 @@
     static testmethod void testGetSteps() {
         //arrange sequence, controller and extension
         Id sequenceId = setupSequence();
-        ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c(Id = sequenceId, Name = 'SequenceBuilderExtensionTest'));
-        SequenceBuilderExtension extension = new SequenceBuilderExtension(controller);
+        ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c(Id = sequenceId, Name = 'SequenceEditExtensionTest'));
+        SequenceEditExtension extension = new SequenceEditExtension(controller);
         
         //act
         String data = extension.getSteps();
@@ -44,7 +44,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        List<Map<String,Object>> sequenceSteps = SequenceBuilderExtension.fetchSteps(sequenceId);
+        List<Map<String,Object>> sequenceSteps = SequenceEditExtension.fetchSteps(sequenceId);
         
         //assert
         Integer expectedCount = 2;
@@ -57,7 +57,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        SequenceBuilderExtension.appendStep(sequenceId, [SELECT Id FROM ApexClass WHERE Name = 'Publish' AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c].Id);
+        SequenceEditExtension.appendStep(sequenceId, [SELECT Id FROM ApexClass WHERE Name = 'Publish' AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c].Id);
         
         //assemble
         Step__c step = Step__c.getValues('1#Test#3');
@@ -73,7 +73,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        SequenceBuilderExtension.moveStepBefore('1#Test#2', '1#Test#1');
+        SequenceEditExtension.moveStepBefore('1#Test#2', '1#Test#1');
         
         //assemble
         List<Map<String,Object>> steps = SequenceModel.fromId(sequenceId).stepDtos();
@@ -95,7 +95,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        SequenceBuilderExtension.moveStepAfter('1#Test#1', '1#Test#2');
+        SequenceEditExtension.moveStepAfter('1#Test#1', '1#Test#2');
         
         //assemble
         List<Map<String,Object>> steps = SequenceModel.fromId(sequenceId).stepDtos();
@@ -117,7 +117,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        SequenceBuilderExtension.destroyStep(sequenceId, '1#Test#1');
+        SequenceEditExtension.destroyStep(sequenceId, '1#Test#1');
         
         //assert
         Integer expectedSize = 1;
@@ -162,7 +162,7 @@
 
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceA);
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
+        SequenceEditExtension controller = new SequenceEditExtension(standardController);
         controller.findTerminateProblems();
         
         List<ApexPages.Message> messages = ApexPages.getMessages();
@@ -208,7 +208,7 @@
         
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceA);
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
+        SequenceEditExtension controller = new SequenceEditExtension(standardController);
         controller.findPublishProblems();
         
         // Assemble :
@@ -236,7 +236,7 @@
         
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceB);
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
+        SequenceEditExtension controller = new SequenceEditExtension(standardController);
         controller.findPublishProblems();
         
         // Assemble :
@@ -271,7 +271,7 @@
  
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceA);
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
+        SequenceEditExtension controller = new SequenceEditExtension(standardController);
         controller.findSubscribeProblems();
         
         // Assemble :
@@ -300,7 +300,7 @@
         
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceB);
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
+        SequenceEditExtension controller = new SequenceEditExtension(standardController);
         controller.findSubscribeProblems();
         
         // Assemble :
@@ -342,7 +342,7 @@
         
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceC);
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
+        SequenceEditExtension controller = new SequenceEditExtension(standardController);
         controller.findSubscribeProblems();
         
         // Assemble :
@@ -371,7 +371,7 @@
 
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceB);
-        SequenceBuilderExtension controller = new SequenceBuilderExtension(standardController);
+        SequenceEditExtension controller = new SequenceEditExtension(standardController);
         controller.findSubscribeProblems();
         
         // Assemble :
@@ -392,7 +392,7 @@
         //arrange
         Id sequenceId = Database.insert(new Sequence__c(Name = 'Test')).getId();
         ApexPages.StandardController controller = new ApexPages.StandardController(new Sequence__c(Id = sequenceId));
-        SequenceBuilderExtension extension = new SequenceBuilderExtension(controller);
+        SequenceEditExtension extension = new SequenceEditExtension(controller);
         
         //act
         PageReference redirect = extension.doRedirect();

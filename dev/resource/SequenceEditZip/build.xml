@@ -51,7 +51,7 @@
         <!-- <echo file="${basedir}/build/production/Discover/ext-baseurl.js" /> -->
         <!-- all too fucking hard in my humble opinion -->
         
-        <delete file="../../../src/staticresources/SequenceBuilderZip.resource" />
-        <zip destfile="../../../src/staticresources/SequenceBuilderZip.resource" basedir="build/production/Builder" includes="**"/>
+        <delete file="../../../src/staticresources/SequenceEditZip.resource" />
+        <zip destfile="../../../src/staticresources/SequenceEditZip.resource" basedir="build/production/Builder" includes="**"/>
     </target>
 </project>
