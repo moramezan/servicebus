@@ -151,6 +151,18 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Slot__c</fullName>
+        <description>JobId#Slot</description>
+        <externalId>true</externalId>
+        <inlineHelpText>Which slot iteration of the broker marked this message?</inlineHelpText>
+        <label>Slot</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Status__c</fullName>
         <description>Refer #808 for a full sequence diagram describing the methods that change the value in this field.</description>
         <externalId>false</externalId>
@@ -185,6 +197,7 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         <columns>CREATED_DATE</columns>
         <columns>Status__c</columns>
         <columns>Route__c</columns>
+        <columns>Slot__c</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
@@ -335,7 +348,7 @@ if ({!Message__c.Exception__c == null}) {
     var dot = &apos;{!$Setup.NamespaceSetting__c.DotPrefix__c}&apos;;
     var sid = &apos;{!$Setup.OAuthSetting__c.AccessToken__c}&apos;;
     var mark = new Date().getTime();
-    var command = &quot;new &quot; + dot + &quot;Job().run(&apos;{!Message__c.Id}&apos;);&quot;;
+    var command = &quot;new &quot; + dot + &quot;Job().execute((System.QueueableContext)Json.deserialize(&apos;{\&quot;jobId\&quot;:\&quot;{!Message__c.Id}\&quot;}&apos;, System.QueueableContextImpl.class));&quot;;
 
     sforce.connection.init(sid, &apos;/services/Soap/u/35.0&apos;);
     var response = sforce.apex.executeAnonymous(command);

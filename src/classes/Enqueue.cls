@@ -1,56 +1,64 @@
-public class Enqueue {
+global class Enqueue implements Process.Plugin {
     
     public class EnqueueException extends Exception {}
     
     static public Boolean AllowRoute = false; //#999#issuecomment-133751700
     
+    //Process.Plugin enqueue = new ServiceBus.Enqueue();
+    //enqueue.invoke(event)
+    
+    /**
+     * But this constructor has to be public for Process.Plugin:
+     * "System.TypeException: Job does not have a no-arg constructor"
+     */
+    
+    /**
+     * Per #702 we may as well describe this as a "real" Flow plugin
+     * although we're intending to just piggy back the system interface.
+     *
+     * If someone put this into a real flow, they MUST provide Sequence
+     * and we can at least hand back the JobId as some kind of output.
+     */
+    global Process.PluginDescribeResult describe() {
+        Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
+        plugin.Name = 'Enqueue Service Bus Job';
+        plugin.Tag = 'Service Bus';
+        plugin.Description = 'Enqueue a Job into the Service Bus';
+        
+        plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
+            new Process.PluginDescribeResult.InputParameter('RecordId', Process.PluginDescribeResult.ParameterType.ID, false),
+            new Process.PluginDescribeResult.InputParameter('ToSequence', Process.PluginDescribeResult.ParameterType.STRING, false),
+            new Process.PluginDescribeResult.InputParameter('ToService', Process.PluginDescribeResult.ParameterType.STRING, false),
+            new Process.PluginDescribeResult.InputParameter('ToConfig', Process.PluginDescribeResult.ParameterType.ID, false)
+        };
+        
+        plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
+            new Process.PluginDescribeResult.OutputParameter('JobId', Process.PluginDescribeResult.ParameterType.STRING)
+        };
+        
+        return plugin;
+    }
+    
+    /**
+     * Per #702 this enables developers to Enqueue into Service Bus without a compile-time
+     * dependency, by leveraging the Process.Plugin system interface.
+     *
+     * @docs ApiJobClass.html
+     * Secondarily it also DOUBLES as a REAL Process.Plugin that people can use
+     * in Visual Flow to get stuff into Service Bus. (Though they would create a dependency.)
+     */
+    global Process.PluginResult invoke(Process.PluginRequest request) {
+        Map<String,Object> inputEvent = request.InputParameters;
+        System.Queueable job = new Job(inputEvent);
+        Id jobId = System.enqueueJob(job);
+        
+        inputEvent.put('JobId', jobId);
+        return new Process.PluginResult(inputEvent);
+    }
+    
     public class Queue implements Job.Queueable {
     
         public List<Map<String,Object>> Events = new List<Map<String,Object>>();
-        
-        /**
-         * Per #702 we may as well describe this as a "real" Flow plugin
-         * although we're intending to just piggy back the system interface.
-         *
-         * If someone put this into a real flow, they MUST provide Sequence
-         * and we can at least hand back the JobId as some kind of output.
-         */
-        public Process.PluginDescribeResult describe() {
-            Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-            plugin.Name = 'Enqueue Service Bus Job';
-            plugin.Tag = 'Service Bus';
-            plugin.Description = 'Enqueue a Job into the Service Bus';
-            
-            plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
-                new Process.PluginDescribeResult.InputParameter('RecordId', Process.PluginDescribeResult.ParameterType.ID, false),
-                new Process.PluginDescribeResult.InputParameter('ToSequence', Process.PluginDescribeResult.ParameterType.STRING, false),
-                new Process.PluginDescribeResult.InputParameter('ToService', Process.PluginDescribeResult.ParameterType.STRING, false),
-                new Process.PluginDescribeResult.InputParameter('ToConfig', Process.PluginDescribeResult.ParameterType.ID, false)
-            };
-            
-            plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
-                new Process.PluginDescribeResult.OutputParameter('JobId', Process.PluginDescribeResult.ParameterType.STRING)
-            };
-            
-            return plugin;
-        }
-        
-        /**
-         * Per #702 this enables developers to Enqueue into Service Bus without a compile-time
-         * dependency, by leveraging the Process.Plugin system interface.
-         *
-         * @docs ApiJobClass.html
-         * Secondarily it also DOUBLES as a REAL Process.Plugin that people can use
-         * in Visual Flow to get stuff into Service Bus. (Though they would create a dependency.)
-         */
-        public Process.PluginResult invoke(Process.PluginRequest request) {
-            Map<String,Object> inputEvent = request.InputParameters;
-            System.Queueable job = new Job(inputEvent);
-            Id jobId = System.enqueueJob(job);
-            
-            inputEvent.put('JobId', jobId);
-            return new Process.PluginResult(inputEvent);
-        }
         
         /**
          * Prepares data (represented an input event) for work.
@@ -75,7 +83,7 @@ public class Enqueue {
          * @docs ApiJobConstructors.html
          * @param  injectedParameters a parametrised description of the event.
          */
-        public void job(List<Map<String,Object>> inputEvents) {
+        public void setEvents(List<Map<String,Object>> inputEvents) {
             
             if (inputEvents == null) {
                 //failure, bad input collection
@@ -188,6 +196,48 @@ public class Enqueue {
         }
         
         /**
+         * Was formerly Broker.run() but needs to be global now
+         * for the sake of running from Execute Anonymous context.
+         * The "runAsUser()" method needs to be able to call this.
+         *
+         * I think we had 8 global things in Job and 1 in Broker
+         * Lets just have 9 global things in Job, and this proxies?
+         *
+         * We MUST ALWAYS prevent more than 1 running broker worker
+         * otherwise they will fight over the work to be marked etc.
+         */
+        
+        /**
+         * This is indeed another variation on the Broker. Unlike the Vertical Broker,
+         * we dictate a single message to handle. (he does not decide what to consume)
+         *
+         * And unlike the synchronous broker (mostly used for unit tests), we make no
+         * attempt to handle errors, catchable or otherwise. ExecAnonResult has them :)
+         *
+         * No marking here because we would kill any callouts that follow. We
+         * already know that this guy is acting on a started message anyway.
+         */
+        void restart(Id messageId) {
+            //VALIDATE
+            Message__c message = (Message__c)ApexDomain.getById(messageId);
+            if (message.Exception__c == null) return; //Only messages with an Exception can be restarted
+            
+            //EXECUTE
+            List<Message__c> outputMessages = new MessageSetModel(new List<Message__c>{message}).execute(null);
+            
+            //PERSIST
+            new MessageSetModel(new List<Message__c>{message}).persist(outputMessages);
+            
+            //#981#issuecomment-131670372 prevent side effects (like batch jobs) escaping
+            if (MessageModel.RestartException != null) throw MessageModel.RestartException;
+            
+            //success, restart the REAL broker to carry on with the outputs
+            if (isScheduled()) return;
+            if (isRunning()) return;
+            Broker.impl().run();
+        }
+        
+        /**
          * Usually handled within a second or so.
          * NOT TO BE CONFUSED WITH BROKER.EXECUTE
          *
@@ -200,23 +250,26 @@ public class Enqueue {
          * #816 https://cloud.githubusercontent.com/assets/1878631/6813469/15c4d956-d27e-11e4-9d3d-e7026e95eade.jpg
          */
         public void execute(QueueableContext context) {
-            List<Message__c> messages = new List<Message__c>();
-        
+            
+            //RESTART
+            if (context != null && context.getJobId().getSObjectType() == Message__c.SObjectType) {
+                this.restart(context.getJobId());
+                return;
+            }
+            
+            //#694 puts QueueableContext Job Id on messages. Because when people
+            //use System.enqueueJob to enqueue a message into the system, they will
+            //never get a Message Id. But at least we have a possibility of using
+            //the Queueable AsyncApexJob Id as a correlation later for Capture etc.
+            for (Integer i = 0; i < this.Events.size(); i++) {
+                Id jobId = context.getJobId();
+                this.Events[i].put('JobId', jobId);
+            }
+            
             //one strategy to reduce heap size during runtime is to
             //remove items from the collection as you iterate over it
+            List<Message__c> messages = new List<Message__c>();
             for (Integer i = 0; i < this.Events.size(); i++) {
-                
-                /**
-                 * #694 puts QueueableContext Job Id on messages. Because when people
-                 * use System.enqueueJob to enqueue a message into the system, they will
-                 * never get a Message Id. But at least we have a possibility of using
-                 * the Queueable AsyncApexJob Id as a correlation later for Capture etc.
-                 */
-                if (context != null) {
-                    Id jobId = context.getJobId();
-                    this.Events[i].put('JobId', jobId);
-                }
-                
                 messages.add(new Message__c(
                     Event__c = Json.serializePretty(this.Events[i]),
                     Status__c = BrokerSetting__c.getOrgDefaults().IsPaused__c ? 'Paused' : 'Buffered'
@@ -227,20 +280,63 @@ public class Enqueue {
                 this.Events[i] = null;
             }
             
-            //just in time DML
-            Broker.persist(messages); //#836
+            //#989 optimize already correct running user context
+            if (!Test.isRunningTest()) if (isRunningUser()) this.run(); else this.runAsUser();
             
-            //#653 don't waste FUTURE ASYNC CALL unnecessarily
-            if (Test.isRunningTest()) return;
+            //race condition DML (we just hope the batch is slightly delayed)
+            new MessageSetModel(messages).persist(new List<Message__c>()); //#836
+        }
+        
+        void run() {
+            if (isScheduled()) return;
+            if (isRunning()) return;
+            Broker.impl().run();
+        }
+        
+        /**
+         * When this blows up we throw an unhandled exception in our namespace,
+         * we should receive an email and reach out to the customer to debug this!
+         *
+         * This guy will sometimes throw exceptions from bad ExecAnon result. It
+         * is due to the callout failing to schedule the batch because of #929
+         * System.UnexpectedException:
+         * common.exception.SqlDupValOnIndexException:
+         * ORA-00001: unique constraint (CORE.AKCRON_JOB_DETAIL) violated
+         *
+         * {
+         *     "line": 534,
+         *     "column": 1,
+         *     "compiled": true,
+         *     "success": false,
+         *     "compileProblem": null,
+         *     "exceptionStackTrace": "Class.Broker: line 534, column 1\nClass.Job.RunOneBroker.runImpl: line 282, column 1\nClass.Job.runOne: line 296, column 1\nAnonymousBlock: line 1, column 1\nCaused by\nClass.Fuckup.toString: line 10, column 1\nClass.Broker.Wrapper.invokeMain: line 340, column 1\nClass.Broker: line 529, column 1\nClass.Job.RunOneBroker.runImpl: line 282, column 1\nClass.Job.runOne: line 296, column 1\nAnonymousBlock: line 1, column 1",
+         *     "exceptionMessage": "System.AssertException: Kablam again"
+         * }
+         */
+        void runAsUser() {
+            //#653 don't waste TOOLING API CALL unnecessarily
             if (isScheduled()) return;
             if (isRunning()) return;
             
-            //#989 optimize already correct running user context
-            if (isRunningUser()) this.run(null); else engine(); //obfuscation of runAsUser()
+            //command
+            PageReference endpoint = new PageReference(Url.getSalesforceBaseUrl().toExternalForm() + '/services/data/v35.0/tooling/executeAnonymous');
+            endpoint.getParameters().put('anonymousBody', 'new ' + Job.class.getName() + '().execute(null);');
+            
+            //execute anonymous
+            HttpRequest request = new HttpRequest();
+            request.setTimeout(120000);
+            request.setMethod('GET');
+            request.setEndpoint(endpoint.getUrl());
+            request.setHeader('Authorization', 'Bearer ' + OAuthSetting__c.getOrgDefaults().AccessToken__c);
+            
+            //#653 throw unhandled exception in our namespace
+            HttpResponse response = new Http().send(request);
+            if (response.getStatusCode() != 200) System.assert(false, response.getBody());
+            if (response.getBody().contains('"success":false')) System.assert(false, response.getBody());
         }
         
-        //TODO Job(reflector, inputEvent)
-        //TODO Job(reflector, inputEvents)
+        //TODO? Job(reflector, recordId)
+        //TODO? Job(configIds, recordId)
         
         /**
          * Prepares Blob data for work at the start of a nominated sequence
@@ -261,43 +357,6 @@ public class Enqueue {
                 Type = 'txt'
             )).getId());
         }*/
-        
-        public void run(Id messageId) {
-            
-            if (messageId != null) {
-                /**
-                 * This is indeed another variation on the Broker. Unlike the Vertical Broker,
-                 * we dictate a single message to handle. (he does not decide what to consume)
-                 *
-                 * And unlike the synchronous broker (mostly used for unit tests), we make no
-                 * attempt to handle errors, catchable or otherwise. ExecAnonResult has them :)
-                 *
-                 * No marking here because we would kill any callouts that follow. We
-                 * already know that this guy is acting on a started message anyway.
-                 */
-                //VALIDATE
-                Message__c message = (Message__c)ApexDomain.getById(messageId);
-                if (message.Exception__c == null) return; //Only messages with an Exception can be restarted
-                
-                //EXECUTE
-                List<Message__c> outputMessages = new List<Message__c>();
-                Broker.impl().execute(new List<Message__c>{message}, outputMessages);
-                
-                //PERSIST
-                List<Message__c> inputAndOutputMessages = new List<Message__c>();
-                inputAndOutputMessages.add(message);
-                inputAndOutputMessages.addAll(outputMessages);
-                Broker.persist(inputAndOutputMessages);
-                
-                //#981#issuecomment-131670372 prevent side effects (like batch jobs) escaping
-                if (MessageModel.RestartException != null) throw MessageModel.RestartException;
-            }
-            
-            //success, restart the REAL broker to carry on with the outputs
-            if (isScheduled()) return;
-            if (isRunning()) return;
-            Broker.impl().run();
-        }
         
     }
     
@@ -357,66 +416,4 @@ public class Enqueue {
         
         return !asyncApexJobs.isEmpty();
     }
-    
-    /**
-     * When this blows up we throw an unhandled exception in our namespace,
-     * we should receive an email and reach out to the customer to debug this!
-     *
-     * This guy will sometimes throw exceptions from bad ExecAnon result. It
-     * is due to the callout failing to schedule the batch because of #929
-     * System.UnexpectedException:
-     * common.exception.SqlDupValOnIndexException:
-     * ORA-00001: unique constraint (CORE.AKCRON_JOB_DETAIL) violated
-     */
-    @Future(callout=true) static public void engine() { //obfuscation of runAsUser()
-        //#653 don't waste TOOLING API CALL unnecessarily
-        if (isScheduled()) return;
-        if (isRunning()) return;
-        
-        String command = 'new ' + Job.class.getName() + '().run(null);';
-        ExecAnonResult result = execAnon(command);
-        if (!result.success) System.assert(false, Json.serialize(result)); //#858 don't swallow exceptions
-    }
-    
-    /**
-     * {
-     *     "line": 534,
-     *     "column": 1,
-     *     "compiled": true,
-     *     "success": false,
-     *     "compileProblem": null,
-     *     "exceptionStackTrace": "Class.Broker: line 534, column 1\nClass.Job.RunOneBroker.runImpl: line 282, column 1\nClass.Job.runOne: line 296, column 1\nAnonymousBlock: line 1, column 1\nCaused by\nClass.Fuckup.toString: line 10, column 1\nClass.Broker.Wrapper.invokeMain: line 340, column 1\nClass.Broker: line 529, column 1\nClass.Job.RunOneBroker.runImpl: line 282, column 1\nClass.Job.runOne: line 296, column 1\nAnonymousBlock: line 1, column 1",
-     *     "exceptionMessage": "System.AssertException: Kablam again"
-     * }
-     */
-    public class ExecAnonResult {
-        public Integer line;
-        public Integer column;
-        public Boolean compiled;
-        public Boolean success;
-        public String compileProblem;
-        public String exceptionStackTrace;
-        public String exceptionMessage;
-    }
-    
-    static public ExecAnonResult execAnon(String command) {
-        PageReference pr = new PageReference(OAuthSetting__c.getOrgDefaults().InstanceUrl__c + '/services/data/v35.0/tooling/executeAnonymous');
-        pr.getParameters().put('anonymousBody', command);
-        String endpoint = pr.getUrl();
-        
-        HttpRequest request = new HttpRequest();
-        request.setTimeout(120000);
-        request.setMethod('GET');
-        request.setEndpoint(endpoint);
-        request.setHeader('Authorization', 'Bearer ' + OAuthSetting__c.getOrgDefaults().AccessToken__c);
-        
-        // #653 throw unhandled exception in our namespace
-        HttpResponse response = new Http().send(request);
-        Integer status = response.getStatusCode();
-        if (status != 200) System.assert(false, response.getBody());
-        
-        ExecAnonResult result = (ExecAnonResult)Json.deserialize(response.getBody(), ExecAnonResult.class);
-        return result;
-    }
-    
 }

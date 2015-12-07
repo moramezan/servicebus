@@ -1,5 +1,16 @@
 @IsTest class BrokerBatchTest {
     
+    class MockJob implements System.Schedulable {
+        public void execute(System.SchedulableContext context) {}
+    }
+    
+    class BatchableContext implements Database.BatchableContext {
+        Id jobId;
+        public BatchableContext() {this.jobId = System.schedule('test', '0 0 * * * ?', new MockJob());}
+        public Id getJobId() {return this.jobId;}
+        public Id getChildJobId() {return this.jobId;}
+    }
+    
     @TestSetup static void testSetup() {
         //act
         OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
@@ -15,7 +26,7 @@
         BrokerBatch dispatcher = new BrokerBatch();
         
         //act
-        Object iterator = dispatcher.start(null);
+        Object iterator = dispatcher.start(new BatchableContext());
         
         //assert
         System.assert(iterator instanceof Iterable<SObject>);
@@ -23,22 +34,30 @@
     
     static testmethod void coverExecute() {
         //arrange
-        List<SObject> scopes = new List<SObject>();
-        BrokerBatch dispatcher = new BrokerBatch();
+        List<Slot__c> slots = new List<Slot__c>{new Slot__c(Name = '0000')};
+        
+        //arrange mock
+        AsyncApexJob mock = (AsyncApexJob)Json.deserialize('{"TotalJobItems":0}', AsyncApexJob.class);
+        BatchableContext context = new BatchableContext();
+        ApexDomain.setById(context.getJobId(), mock);
         
         //act
-        dispatcher.execute((Database.BatchableContext)Json.deserialize('{}', Database.BatchableContextImpl.class), scopes);
+        BrokerBatch dispatcher = new BrokerBatch();
+        dispatcher.execute(context, slots);
         
         //assert
-        System.assert(scopes.isEmpty());
+        System.assert(!slots.isEmpty());
     }
     
     static testmethod void coverFinish() {
-        //arrange
-        BrokerBatch dispatcher = new BrokerBatch();
+        //arrange mock
+        AsyncApexJob mock = (AsyncApexJob)Json.deserialize('{"TotalJobItems":0}', AsyncApexJob.class);
+        BatchableContext context = new BatchableContext();
+        ApexDomain.setById(context.getJobId(), mock);
         
         //act
-        dispatcher.finish(null);
+        BrokerBatch batch = new BrokerBatch();
+        batch.finish(context);
         
         //assert
         Integer expectedCount = 0;

@@ -2,6 +2,16 @@
     
     //TODO needs more tests
     
+    class MockJob implements System.Schedulable {
+        public void execute(System.SchedulableContext context) {}
+    }
+    
+    class QueueableContext implements System.QueueableContext {
+        Id jobId;
+        public QueueableContext() {this.jobId = System.schedule('test', '0 0 * * * ?', new MockJob());}
+        public Id getJobId() {return this.jobId;}
+    }
+    
     @TestSetup static void testSetup() {
         //act
         upsert BrokerSetting__c.getOrgDefaults();
@@ -78,7 +88,7 @@
 
         //act
         Job job = new Job(inputEvents);
-        job.execute(null);
+        job.execute(new QueueableContext());
         Integer limitDmlRows = Limits.getLimitDmlRows();
         Integer dmlRows = Limits.getDmlRows();
         Test.stopTest();

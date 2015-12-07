@@ -42,7 +42,7 @@
     
     public class MemoryErrorSummary extends ApexClassModel.Summary {
         String Description = 'Does stuff in memory, throws an exception not needing rollback.';
-        Integer Chunks = 1000;
+        Integer Chunks = 200;
     }
     
     static testmethod void testRollbackTaxRelievedOnMemoryService() {
@@ -58,16 +58,20 @@
         List<Message__c> inputMessages = new List<Message__c>();
         List<Message__c> outputMessages = new List<Message__c>();
         
-        for (Integer i = 0; i < 1000; i++) {
+        for (Integer i = 0; i < 200; i++) {
             Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
             Message__c inputMessage = new Message__c();
             inputMessage.Event__c = Json.serialize(event);
             inputMessages.add(inputMessage);
         }
         
+        //persist
+        insert inputMessages;
+        new MessageSetModel(inputMessages).mark('0000');
+        
         //act and assemble
         Test.startTest();
-        Broker.impl().execute(inputMessages, outputMessages);
+        outputMessages = new MessageSetModel(inputMessages).execute(null);
         Integer dmlStatements = Limits.getDmlStatements();
         Test.stopTest();
         
@@ -111,9 +115,13 @@
             inputMessages.add(inputMessage);
         }
         
+        //persist
+        insert inputMessages;
+        new MessageSetModel(inputMessages).mark('0000');
+        
         //act
         Test.startTest();
-        Broker.impl().execute(inputMessages, outputMessages);
+        outputMessages = new MessageSetModel(inputMessages).execute(null);
         Integer dmlStatements = Limits.getDMLStatements();
         Test.stopTest();
         
@@ -133,7 +141,7 @@
     
     public class MemorySummary extends ApexClassModel.Summary {
         String Description = 'Does stuff in memory without side effects.';
-        Integer Chunks = 1000;
+        Integer Chunks = 200;
     }
     
     static testmethod void testSavepointTaxRelievedOnMemoryService() {
@@ -149,16 +157,20 @@
         List<Message__c> inputMessages = new List<Message__c>();
         List<Message__c> outputMessages = new List<Message__c>();
         
-        for (Integer i = 0; i < 1000; i++) {
+        for (Integer i = 0; i < 200; i++) {
             Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
             Message__c inputMessage = new Message__c();
             inputMessage.Event__c = Json.serialize(event);
             inputMessages.add(inputMessage);
         }
         
+        //persist
+        insert inputMessages;
+        new MessageSetModel(inputMessages).mark('0000');
+        
         //act
         Test.startTest();
-        Broker.impl().execute(inputMessages, outputMessages);
+        outputMessages = new MessageSetModel(inputMessages).execute(null);
         Integer dmlStatements = Limits.getDMLStatements();
         Test.stopTest();
         
@@ -202,9 +214,13 @@
             inputMessages.add(inputMessage);
         }
         
+        //persist
+        insert inputMessages;
+        new MessageSetModel(inputMessages).mark('0000');
+        
         //act
         Test.startTest();
-        Broker.impl().execute(inputMessages, outputMessages);
+        outputMessages = new MessageSetModel(inputMessages).execute(null);
         Integer dmlStatements = Limits.getDMLStatements();
         Test.stopTest();
         

@@ -43,7 +43,7 @@
         );
         
         //act
-        Broker.persist(new List<Message__c>{message});
+        new MessageSetModel(new List<Message__c>{message}).persist(new List<Message__c>());
         new MessageSetModel(new List<Message__c>{message}).alphabetizeJsonAndPopulateFields();
         
         //assert
@@ -282,7 +282,7 @@
         insert message;
         
         //act
-        Broker.impl().mark(new List<Message__c>{message});
+        new MessageSetModel(new List<Message__c>{message}).mark('0000');
         
         //assemble
         message = [SELECT Event__c FROM Message__c];

@@ -308,8 +308,9 @@
         ));
         
         //act (9/10 guy hits 1810, 10/10 guy hits 2010, 11/11 would hit 2211) //#955 formerly (39/40 guy hits 7840, 40/40 guy hits 8040, 41/411 would hits 8241) sum of inputs + outputs
-        List<Message__c> outputMessages = new List<Message__c>();
-        Broker.impl().execute(inputMessages, outputMessages);
+        insert inputMessages;
+        new MessageSetModel(inputMessages).mark('0000'); //populates 'Range' event parameter
+        List<Message__c> outputMessages = new MessageSetModel(inputMessages).execute(null);
         
         //assert
         String expectedException = null;

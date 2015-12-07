@@ -39,18 +39,15 @@ public class MessageModel extends ApexDomain.StandardModel {
      */
     public ApexClassModel resolveApexClassModel() {
         
-        if (Broker.Instance != null) Broker.Instance.BlameMessage = this.getId(); //#985
         String route = (String)this.Event.get('Route');
         
         if (route == null) {
             throw new Broker.ServiceException('Message has no route: ' + this.message.Id); //a la "List has no rows for assignment to SObject"
         }
         
-        if (Broker.Instance != null) Broker.Instance.BlameRoute = route; //#985
         Type service = Type.forName(route);
         
         if (service != null) {
-            if (Broker.Instance != null) Broker.Instance.BlameClass = service.getName(); //#985
             return new ApexClassModel(service); //#956 "fire and forget" service without sequences or steps
         }
         
@@ -82,7 +79,6 @@ public class MessageModel extends ApexDomain.StandardModel {
             throw new Broker.ServiceException('Class is invalid or not visible: ' + apexClassName); //a la "Variable is not visible" or "Variable does not exist" or "Dependent class is invalid and needs recompilation"
         }
         
-        if (Broker.Instance != null) Broker.Instance.BlameClass = service.getName(); //#985
         ApexClassModel model = new ApexClassModel(service);
         model.getRecord().Id = step.ApexClassId__c;
         return model;

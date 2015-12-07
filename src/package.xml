@@ -159,6 +159,7 @@
         <members>Message__c.ExecuteDuration__c</members>
         <members>Message__c.JobId__c</members>
         <members>Message__c.Route__c</members>
+        <members>Message__c.Slot__c</members>
         <members>Message__c.Status__c</members>
         <members>NamespaceSetting__c.BarPrefix__c</members>
         <members>NamespaceSetting__c.DotPrefix__c</members>

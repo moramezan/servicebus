@@ -1,5 +1,22 @@
 @IsTest class BrokerTest {
     
+    class MockJob implements System.Schedulable {
+        public void execute(System.SchedulableContext context) {}
+    }
+    
+    class BatchableContext implements Database.BatchableContext {
+        Id jobId;
+        public BatchableContext() {this.jobId = System.schedule('test', '0 0 * * * ?', new MockJob());}
+        public Id getJobId() {return this.jobId;}
+        public Id getChildJobId() {return this.jobId;}
+    }
+    
+    class QueueableContext implements System.QueueableContext {
+        Id jobId;
+        public QueueableContext() {this.jobId = System.schedule('test', '0 0 * * * ?', new MockJob());}
+        public Id getJobId() {return this.jobId;}
+    }
+    
     @TestSetup static void testSetup() {
         //act
         upsert OAuthSetting__c.getOrgDefaults();
@@ -24,25 +41,26 @@
     @TestVisible static Boolean DidSynchronousBrokerRun = false;
     public class SynchronousBroker extends Broker {
         
-        override public void runImpl() {
-            //LOCATE
-            List<Message__c> inputMessages = this.locateMarkableWork();
+        @TestVisible List<Message__c> InputMessages = new List<Message__c>();
+        @TestVisible List<Message__c> OutputMessages = new List<Message__c>();
+        
+        override public void run() {
             
             //MARK
-            this.mark(inputMessages);
+            this.InputMessages = MessageSetModel.locateMarkableWork(); //LOCATE
+            if (this.InputMessages.isEmpty()) return; //DONE
+            new MessageSetModel(this.InputMessages).mark('0000'); //MARK
             
             //EXECUTE
-            List<Message__c> outputMessages = new List<Message__c>();
-            this.execute(inputMessages, outputMessages);
+            this.OutputMessages = new MessageSetModel(this.InputMessages).execute(null); //EXECUTE
             DidSynchronousBrokerRun = true;
             
             //PERSIST
-            List<Message__c> inputAndOutputMessages = new List<Message__c>();
-            inputAndOutputMessages.addAll(inputMessages);
-            inputAndOutputMessages.addAll(outputMessages);
-            Broker.persist(inputAndOutputMessages); //#782
+            if (this.OutputMessages != null) new MessageSetModel(this.InputMessages).persist(this.OutputMessages); //PERSIST
             
-            super.run();
+            //MORE
+            if (![SELECT Id FROM Message__c WHERE Status__c = 'Buffered' LIMIT 1].isEmpty()) this.run();
+            
         }
         
     }
@@ -76,7 +94,7 @@
         Test.stopTest();
         
         //act
-        List<Message__c> records = Broker.impl().locateMarkableWork();
+        List<Message__c> records = MessageSetModel.locateMarkableWork();
         
         //assemble
         ApexClassModel.Summary summary = new ApexClassModel.Summary(Wiretap.class);
@@ -191,8 +209,7 @@
         insert inputMessage;
         
         //act
-        List<Message__c> outputMessages = new List<Message__c>();
-        Broker.impl().execute(new List<Message__c>{inputMessage}, outputMessages);
+        List<Message__c> outputMessages = new MessageSetModel(new List<Message__c>{inputMessage}).execute(null);
         
         //assert
         Integer expectedSize = 1;
@@ -250,15 +267,12 @@
         };
         
         //arranges messages
-        Broker impl = Broker.impl();
-        List<Message__c> outputMessages = new List<Message__c>();
-        impl.execute(inputMessages, outputMessages);
+        insert inputMessages;
+        new MessageSetModel(inputMessages).mark('0000');
+        List<Message__c> outputMessages = new MessageSetModel(inputMessages).execute(null);
         
         //act (performs increment)
-        List<Message__c> inputAndOutputMessages = new List<Message__c>();
-        inputAndOutputMessages.addAll(inputMessages);
-        inputAndOutputMessages.addAll(outputMessages);
-        Broker.persist(inputAndOutputMessages);
+        new MessageSetModel(inputMessages).persist(outputMessages);
         
         //assert
         Integer expectedSize = 2;
@@ -302,10 +316,7 @@
         Test.stopTest();
         
         //act
-        Broker impl = Broker.impl();
-        
-        //MARK
-        List<Message__c> messages = impl.locateMarkableWork();
+        List<Message__c> messages = MessageSetModel.locateMarkableWork();
         
         //assert
         Integer actualCount = messages.size();
@@ -321,7 +332,7 @@
         };
     
         //act
-        List<Message__c> messages = Broker.impl().locateMarkableWork();
+        List<Message__c> messages = MessageSetModel.locateMarkableWork();
         
         //assert
         Integer expectedCount = 0;
@@ -350,10 +361,7 @@
         };
         
         //act
-        Broker impl = Broker.impl();
-        
-        //MARK
-        List<Message__c> messages = impl.locateMarkableWork();
+        List<Message__c> messages = MessageSetModel.locateMarkableWork();
         
         // assert
         Integer expectedCount = 2;
@@ -427,19 +435,14 @@
         //arrange
         List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
         
-        //arrange broker
-        Broker impl = Broker.impl();
-        
-        String actualMessage;
-        
         //act
-        impl.execute(messages, new List<Message__c>());
+        new MessageSetModel(messages).execute(null);
         
         //assemble
-        actualMessage = messages[0].Exception__c;
         
         //assert
         String expectedMessage = Broker.ServiceException.class.getName() + ': Message has no route: ' + messages[0].Id;
+        String actualMessage = messages[0].Exception__c;
         System.assertEquals(expectedMessage, actualMessage, 'Wrong exception message.');
     }
     
@@ -626,7 +629,7 @@
         };
              
         //act
-        new Job(inputEvent).execute(null);
+        new Job(inputEvent).execute(new QueueableContext());
         
         //assemble
         List<Message__c> messages = [
@@ -669,7 +672,7 @@
         
         //act
         List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
-        Broker.impl().execute(messages, new List<Message__c>());
+        new MessageSetModel(messages).execute(null);
         
         //assert
         String expectedException = null;
@@ -691,7 +694,7 @@
         model.appendStep(Terminate.class);
         
         //act
-        new Job(sequence.Name, '00D000000000000AAA').execute(null);
+        new Job(sequence.Name, '00D000000000000AAA').execute(new QueueableContext());
         
         //assemble
         List<Message__c> messages = [
@@ -783,12 +786,10 @@
         Test.stopTest();
         
         List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
-        Broker impl = Broker.impl();
-        messages = impl.locateMarkableWork();
+        messages = MessageSetModel.locateMarkableWork();
         
         //act
-        List<Message__c> outputMessages = new List<Message__c>();
-        impl.execute(messages, outputMessages);
+        List<Message__c> outputMessages = new MessageSetModel(messages).execute(null);
         
         //assert #798 should only have one message
         Integer expectedCount = 1;
@@ -831,9 +832,8 @@
         insert inputMessages;
         
         //act
-        Broker impl = Broker.impl();
-        impl.mark(inputMessages);
-        impl.execute(inputMessages, new List<Message__c>());
+        new MessageSetModel(inputMessages).mark('0000');
+        new MessageSetModel(inputMessages).execute(null);
         if (!DidRun) System.assert(false, 'Service probably did not run.');
         System.assertEquals(null, inputMessages[0].Exception__c, 'Wrong exception.');
         
@@ -865,6 +865,7 @@
         //arrange messages
         Map<String,Object> inputEvent = new Map<String,Object>{'ToSequence' => 'Test'};
         List<Map<String,Object>> inputEvents = new List<Map<String,Object>>{
+            //NINE wiretaps
             inputEvent,
             inputEvent,
             inputEvent,
@@ -884,63 +885,64 @@
         List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
         Broker.Batch impl = new Broker.Batch();
         
-        //act (start up big query locator)
-        Database.QueryLocatorIterator iterator = impl.start(null).iterator();
-        List<SObject> records = new List<Sobject>();
-        while (iterator.hasNext()) records.add(iterator.next());
+        //assert
+        System.assertEquals(9, [SELECT COUNT() FROM Message__c], 'Wrong initial count.');
+        
+        //arrange context
+        BatchableContext context = new BatchableContext();
+        Id jobId = context.getJobId();
+        
+        //MARK
+        impl.start(context);
         
         //assert
-        Integer expectedSize = 50;
-        Integer actualSize = records.size();
-        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
+        System.assertEquals(5, impl.InputMessages.size(), 'Wrong count of input wiretaps.');
+        System.assertEquals(9, [SELECT COUNT() FROM Message__c], 'Wrong total message count.');
+        System.assertEquals(5, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong marked message count.');
         
-        //act (persist none and mark as many as he can fit within remaining contexts)
-        impl.execute(null, new List<SObject>());
-        
-        //assert
-        Integer expectedMarked = 5;
-        Integer actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
-        System.assertEquals(expectedMarked, actualMarked, 'Wrong marked.');
-        
-        //act (execute the marked guys and move them out of property)
-        impl.execute(null, new List<SObject>());
+        //EXECUTE some wiretaps
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0001')});
         
         //assert
-        Integer expectedPersistable = 10; //5 inputs 5 outputs (unless there were exceptions!)
-        Integer actualPersistable = impl.Messages.size();
-        System.assertEquals(expectedPersistable, actualPersistable, 'Wrong persistable.');
+        System.assertEquals(5, impl.OutputMessages.size(), 'Wrong output property count.');
         
-        //act (persist previous and mark as many as he can fit within remaining contexts)
-        impl.execute(null, new List<SObject>());
+        //PERSIST / MARK
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0002')});
         
         //assert
-        expectedMarked = 4;
-        actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
-        System.assertEquals(expectedMarked, actualMarked, 'Wrong marked.');
+        System.assertEquals(4, impl.InputMessages.size(), 'Wrong count of input wiretaps.');
+        System.assertEquals(14, [SELECT COUNT() FROM Message__c], 'Wrong total message count.');
+        System.assertEquals(4, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong marked message count.');
         
-        //act (execute the marked guys and move them out of property)
-        impl.execute(null, new List<SObject>());
-        
-        //assert
-        expectedPersistable = 8; //4 inputs 4 outputs (unless there were exceptions!)
-        actualPersistable = impl.Messages.size();
-        System.assertEquals(expectedPersistable, actualPersistable, 'Wrong persistable.');
-        
-        //act (persist previous and mark as many as he can fit within remaining contexts)
-        impl.execute(null, new List<SObject>());
+        //EXECUTE some wiretaps
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0003')});
         
         //assert
-        expectedMarked = 9;
-        actualMarked = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
-        System.assertEquals(expectedMarked, actualMarked, 'Wrong marked.');
+        System.assertEquals(4, impl.OutputMessages.size(), 'Wrong output property count.');
         
-        //act (execute the marked guys and move them out of property)
-        impl.execute(null, new List<SObject>());
+        //PERSIST / MARK
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0004')});
         
         //assert
-        expectedPersistable = 9; //9 inputs 0 outputs
-        actualPersistable = impl.Messages.size();
-        System.assertEquals(expectedPersistable, actualPersistable, 'Wrong persistable.');
+        System.assertEquals(9, impl.InputMessages.size(), 'Wrong count of input terminates.');
+        System.assertEquals(18, [SELECT COUNT() FROM Message__c], 'Wrong total message count.');
+        System.assertEquals(9, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong marked message count.');
+        
+        //EXECUTE all terminates
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0005')});
+        
+        //assert
+        System.assertEquals(0, impl.OutputMessages.size(), 'Wrong output property count.');
+        
+        //PERSIST / ABORT
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0006')});
+        
+        //assert
+        System.assertEquals(0, impl.InputMessages.size(), 'Wrong count of input messages.');
+        System.assertEquals(18, [SELECT COUNT() FROM Message__c], 'Wrong total message count.');
+        System.assertEquals(0, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong marked message count.');
+        
+        System.assert([SELECT Id FROM CronTrigger WHERE Id = :jobId].isEmpty(), 'Job not aborted.');
     }
 
     static testmethod void testMarkAndExecuteAndDoneConditionAbortsJobAtEnd() {
@@ -962,48 +964,35 @@
         System.enqueueJob(job);
         Test.stopTest();
         
+        //arrange context
+        BatchableContext context = new BatchableContext();
+        Id jobId = context.getJobId();
+        
         //act (enqueue)
         Broker.Batch impl = new Broker.Batch();
         
         //assert
-        Integer expectedCount = 1;
-        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
-        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
+        System.assertEquals(1, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'], 'Wrong count.');
         
-        //act (persist any and mark as many as he can fit within remaining contexts)
-        impl.execute(null, new List<SObject>());
+        //MARK
+        impl.start(context);
         
         //assert
-        expectedCount = 1;
-        actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
-        System.assertEquals(expectedCount, actualCount, 'Message should be marked.');
+        System.assertEquals(1, impl.InputMessages.size(), 'Wrong input messages.');
+        System.assertEquals(1, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong count.');
         
-        //act (execute the marked guys and move them out of property)
-        impl.execute(null, new List<SObject>());
-        
-        //assert
-        Integer expectedPersistable = 1; //1 input 0 outputs (terminate)
-        Integer actualPersistable = impl.Messages.size();
-        System.assertEquals(expectedCount, actualCount, 'Wrong persistable.');
-        
-        //act (handing ANY context causes abort NEXT via isLastContext)
-        impl.execute(new MockContext(), new List<SObject>());
+        //EXECUTE
+        impl.execute(context, new List<Sobject>{new Slot__c(Name = '0001')});
         
         //assert
-        expectedPersistable = 0; //nothing to mark
-        actualPersistable = impl.Messages.size();
-        System.assertEquals(expectedCount, actualCount, 'Wrong persistable.');
+        System.assertEquals(0, impl.OutputMessages.size(), 'Wrong output messages.');
         
-        try {
-            //act (stage should be abort)
-            impl.execute(new MockContext(), new List<SObject>());
-            System.assert(false, 'Line above should throw exception.');
-        } catch (StringException e) {
-            //assert that JOB IS ABORTED
-            String expectedMessage = 'Job does not exist or is already aborted.';
-            String actualMessage = e.getMessage();
-            System.assertEquals(expectedMessage, actualMessage, 'Wrong message');
-        }
+        //PERSIST AND ABORT
+        impl.execute(context, new List<Sobject>{new Slot__c(Name = '0002')});
+        
+        //assert
+        System.assertEquals(1, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'], 'Wrong count.');
+        System.assert([SELECT Id FROM CronTrigger WHERE Id = :jobId].isEmpty(), 'Job not aborted.');
     }
 
     static testmethod void testMarkLimitedToTotalPotentialMarksWhenBufferedMessagesGtTotalPotentialMarks() {
@@ -1044,14 +1033,15 @@
         //arrange
         Integer totalPotentialMarks = 3; // Less than Buffered Messages Count
         
+        //arrange context
+        BatchableContext context = new BatchableContext();
         
         //arrange resolution
         Broker.Batch impl = new Broker.Batch();
         Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
         
-        //act
-        List<SObject> scopes = new List<SObject>();
-        impl.execute(null, scopes);
+        //act MARK
+        impl.start(context);
         
         //assemble
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
@@ -1097,6 +1087,9 @@
         
         Test.stopTest();
         
+        //arrange context
+        BatchableContext context = new BatchableContext();
+        
         //arrange
         Integer totalPotentialMarks = 4;  // Greater than Buffered Messages Count
 
@@ -1104,9 +1097,8 @@
         Broker.Batch impl = new Broker.Batch();
         Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
         
-        //act
-        List<SObject> scopes = new List<SObject>();
-        impl.execute(null, scopes);
+        //act MARK
+        impl.start(context);
         
         //assemble
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
@@ -1117,39 +1109,42 @@
         System.assertEquals(expectedCount, actualCount, 'Message should be started.');
     }
     
-    public class MockContext implements Database.BatchableContext {
-        public Id getJobId() {return '707000000000000AAA';}
-        public Id getChildJobId() {return '707000000000000AAA';}
-    }
-    
     static testmethod void testPanicConditionAbortsJob() {
         //arrange
         Broker.Batch impl = new Broker.Batch();
         
+        //arrange context
+        BatchableContext context = new BatchableContext();
+        Id jobId = context.getJobId();
+        
         try {
             //act, null should cause panic
-            impl.NextStage = null;
-            impl.execute(new MockContext(), new List<SObject>());
+            impl.start(null);
             System.assert(false, 'Line above should throw exception.');
-        } catch (Broker.ServiceException e) {
-            //assert
-            String expectedMessage = 'Broker Panic. Unexpected stage: null';
+        } catch (Exception e) {
+            //assert that panic was thrown
+            String expectedMessage = 'PANIC';
             String actualMessage = e.getMessage();
-            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+            System.assert(actualMessage.contains(expectedMessage), 'Wrong message.');
         }
-        
-        //stage property should still be null
         
         try {
-            //act (stage should be abort)
-            impl.execute(new MockContext(), new List<SObject>());
+            //act, null list should cause panic again
+            impl.execute(context, null);
             System.assert(false, 'Line above should throw exception.');
-        } catch (StringException e) {
-            //assert that JOB IS ABORTED
-            String expectedMessage = 'Job does not exist or is already aborted.';
+        } catch (Exception e) {
+            //assert that panic was thrown
+            String expectedMessage = 'PANIC';
             String actualMessage = e.getMessage();
-            System.assertEquals(expectedMessage, actualMessage, 'Wrong message');
+            System.assert(actualMessage.contains(expectedMessage), 'Wrong message');
         }
+        
+        //act (should abort from previous panic)
+        impl.execute(context, null);
+        
+        //assert that job was aborted
+        System.assert([SELECT Id FROM CronTrigger WHERE Id = :jobId].isEmpty(), 'Job not aborted.');
+        
     }
     
     public class FinishDoesPersist {
@@ -1166,9 +1161,9 @@
         //arrange broker
         Broker.Batch impl = new Broker.Batch();
         
-        //arrange inputs (25 messages, 1 mark and 1 execute for each, aligns with 50 contexts)
+        //arrange inputs (5 messages, 1 mark and 1 execute for each, should make 10 contexts)
         List<Map<String,Object>> events = new List<Map<String,Object>>();
-        for (Integer i = 0; i < 25; i++) events.add(new Map<String,Object>{'ToService' => FinishDoesPersist.class.getName()});
+        for (Integer i = 0; i < 5; i++) events.add(new Map<String,Object>{'ToService' => FinishDoesPersist.class.getName()});
         
         //arrange messages
         Test.startTest();
@@ -1176,68 +1171,26 @@
         System.enqueueJob(job);
         Test.stopTest();
         
+        //arrange context
+        Database.BatchableContext context = new BatchableContext();
+        
         //act
-        impl.start(null);
         
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        impl.execute(null, new List<SObject>());
-        
-        impl.finish(null);
+        Broker.Contexts = 9;
+        impl.start(context);                                                  //M1
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0001')}); //E1
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0002')}); //P1 M2
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0003')}); //E2
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0004')}); //P2 M3
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0005')}); //E3
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0006')}); //P3 M4
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0007')}); //E4
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0008')}); //P4 M5
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0009')}); //E5
+        impl.finish(context);                                                 //P5
         
         //assert
-        Integer expectedCount = 25;
+        Integer expectedCount = 5;
         Integer actualCount = [SELECT COUNT() FROM Message__c];
         System.assertEquals(expectedCount, actualCount, 'Wrong count.');
     }

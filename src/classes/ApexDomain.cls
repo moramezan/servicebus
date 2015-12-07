@@ -64,13 +64,25 @@ public class ApexDomain {
         virtual public void onAfterDelete() {}
     }
     
+    @TestVisible static Map<Id,SObject> id2mock = new Map<Id,SObject>();
+    
+    @TestVisible static void setById(Id recordId, SObject mock) {
+        id2mock.put(recordId, mock);
+    }
+    
     /**
      * Select all fields on record by id.
      */
     static public SObject getById(Id recordId) {
+        
         if (recordId == null) {
             //failure, cant find null id
             throw new DomainException('Id argument is null.');
+        }
+        
+        if (Test.isRunningTest() && id2mock.containsKey(recordId)) {
+            //mockable records in tests
+            return id2mock.get(recordId);
         }
         
         try {

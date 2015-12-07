@@ -86,9 +86,220 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         
         update rebufferableMessages;
         
-        //#952 restart REAL broker
+        //#952 restart REAL broker asynchronously
         System.Queueable job = new Job();
         System.enqueueJob(job);
+    }
+    
+    /**
+     * Determines which messages are eligible to be moved into the Started status (by finding Messages
+     * with 'Buffered' status).
+     *
+     * Messages that should be worked on have their status marked as Started in the database before being
+     * submitted the query locator. That way, if any given execution fails, those messages will remain in the
+     * easily identifiable 'Started' state.
+     *
+     * CONTEXT A:
+     * - Persist (from previous)
+     * - Locate (lock for update)
+     * - Mark (performs update and puts into stateful, safe from clutches of other jobs)
+     *
+     * CONTEXT B:
+     * - Execute (reads guys off stateful property, does work and performs update)
+     *
+     * @return collection of soon-to-be-marked-as-Started Messages.
+     */
+    static public List<Message__c> locateMarkableWork() {
+        
+        //TODO throw new ServiceException('Locate panic: ' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
+        
+        List<Message__c> specimen = [
+            SELECT Id, Route__c, Event__c //TODO lose event? //#1026
+            FROM Message__c
+            WHERE Status__c = 'Buffered'
+            ORDER BY CreatedDate ASC //reattempts will naturally lead
+            LIMIT 1
+            //TODO: this guy should be FOR UPDATE or risk race condition
+        ];
+        
+        //TODO fucked limits COULD be high if we want performance vs risk
+        
+        if (specimen.isEmpty()) {
+            //no work found, return empty
+            return specimen;
+        }
+        
+        ApexClassModel.Summary summary;
+        
+        try {
+            //we have to 'peek' at the service
+            ApexClassModel model = new MessageModel(specimen[0]).resolveApexClassModel();
+            summary = new ApexClassModel.Summary(model.Reflector);
+        } catch (Exception e) {
+            //could not resolve, chunks 1
+            return specimen;
+        }
+        
+        Integer chunks = summary.Chunks;
+        
+        //TODO what if this guy returns a list of 0, would cause a panic condition, lets check
+        
+        return [
+            SELECT Id, Route__c, Event__c //TODO lose event? //#1026
+            FROM Message__c
+            WHERE Status__c = 'Buffered'
+            AND Route__c = :specimen[0].Route__c //#1004 Route__c field only ever used here to LOCATE, and for GATE and MONITOR
+            LIMIT :chunks
+            FOR UPDATE //#695 investigate broker race condition
+        ];
+    }
+    
+    /**
+     * Sets many Messages statuses to 'Started' and writes them away.
+     * TODO we should be REALLY careful here because it modifies BY REFERENCE
+     */
+    public void mark(String slot) {
+        
+        for (Message__c message : this.Messages) {
+            //message fields
+            message.Slot__c = slot; //store
+            message.Status__c = 'Started';
+        }
+        
+        update this.Messages;
+    }
+    
+    /**
+     * Resolves and invokes the toStringable Object for one input, updating an in-memory collection of outputs
+     *
+     * @param  inputMessages pass-by-reference Messages whose status should be Started
+     * @param  outputMessages pass-by-reference Messages whose status should be Started
+     */
+    public List<Message__c> execute(Broker.Batch impl) {
+        
+        //empty inputs, empty outputs
+        if (this.Messages.isEmpty()) return new List<Message__c>();
+        
+        //TODO throw new ServiceException('Execute panic:' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
+        List<Message__c> inputMessages = this.Messages;
+        List<Message__c> outputMessages = new List<Message__c>();
+        
+        for (Integer i = 0; i < inputMessages.size(); i++) {
+            //event params
+            Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(inputMessages[i].Event__c);
+            event.put('Range', inputMessages.size());
+            event.put('Chunk', i + 1); //chunks are 1-indexed
+            event.put('SiblingIds', this.keySet());
+            inputMessages[i].Event__c = Json.serializePretty(event);
+        }
+        
+        //OUR FUCKUPS (prepare)
+        List<MessageModel> models = new List<MessageModel>();
+        for (Message__c message : this.Messages) {
+            MessageModel model = new MessageModel(message);
+            models.add(model);
+        }
+        
+        //THEIR FUCKUPS (callout)
+        for (MessageModel model : models) {
+            //do invocation
+            if (impl != null) impl.FatalMessageId = model.getId(); //#985
+            if (impl != null) impl.FatalCpuTime = Datetime.now().getTime(); //#985
+            model.invokeCallout();
+        }
+        
+        //for isolating chunks from each other
+        Savepoint sp = Database.setSavepoint();
+        Boolean isolate = false;
+        
+        //THEIR FUCKUPS (execute)
+        for (MessageModel model : models) {
+            
+            if (isolate) {
+                //consume savepoint only if necessary (side effects)
+                sp = Database.setSavepoint();
+                isolate = false;
+            }
+            
+            //do invocation
+            if (impl != null) impl.FatalMessageId = model.getId(); //#985
+            if (impl != null) impl.FatalCpuTime = Datetime.now().getTime(); //#985
+            isolate = model.invokeExecute(outputMessages);
+            
+            if (model.Message.Exception__c != null && isolate) {
+                //consume rollback only if necessary (error AND side effects)
+                Database.rollback(sp);
+            }
+        }
+        
+        return outputMessages;
+    }
+    
+    /**
+     * #782
+     *
+     * Maybe we can entertain this :( because this method is now PUBLIC and not GLOBAL.
+     *
+     * We used to have two arguments for inputMessages and outputMessages. The idea being:
+     * that inputMessages were all gonna be written away as "Completed"
+     * and outputMessages were all gonna be written away as "Buffered"
+     * (ka-chunk)
+     *
+     * But the checkmarx scanner chokes "Bulkify_Apex_Methods_Using_Collections_In_Methods"
+     * which Salesforce have confirmed to be a bug... however it requires a human to do that.
+     *
+     * To keep the amount of back and forth and delay to a minimum, we can get away with merging
+     * the two collections into one, and doing all the status changes in memory:
+     * the inputMessages get "Completed" by mark()
+     * and outputMessages get "Buffered" by execute()
+     *
+     *
+     */
+    public void persist(List<Message__c> outputMessages) {
+        
+        //TODO throw new ServiceException('Persist panic: ' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
+        
+        for (Message__c message : this.Messages) {
+            message.Slot__c = null; //clear
+        }
+        
+        List<Message__c> messages = new List<Message__c>();
+        messages.addAll(this.Messages); //input messages
+        messages.addAll(outputMessages); //output messages
+        
+        /**
+         * In #658 we hoped to expose Sequence API in Broker.persist() since
+         * that is the central entry point for any enqueued AND output messages.
+         *
+         * Since #677 there is history around which operations belong where:
+         * - Service does bare metal input cycling, output aggregation,
+         * - ApexClassModel can enforce validation at the event level,
+         * - MessageModel takes grabs exceptions for the database,
+         * - Broker deals with executing message collections,
+         *
+         * Since we want any "resolve" to happen in ONE place, this appears to
+         * be the only place left to put it. Here in the persist works OK because
+         * messages "without ids" are NEW ONES. Existing ones won't get re incremented.
+         */
+        for (Message__c message : messages) if (message.Id == null) {
+            Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
+            
+            //increments route position
+            if (event.containsKey('Route')) {
+                String route = (String)event.get('Route');
+                String version = route.substringBefore('#');
+                String sequence = route.substringAfter('#').substringBefore('#');
+                String position = route.substringAfterLast('#');
+                if (route.contains('#')) event.put('Route', (Integer.valueOf(version)) + '#' + sequence + '#' + (Integer.valueOf(position) + 1));
+            }
+            
+            message.Event__c = Json.serialize(event);
+        }
+        
+        //transact both inputs and outputs in one fell swoop
+        MessageSetModel.Inhibit = false;
+        Database.upsert(messages);
+        MessageSetModel.Inhibit = true;
     }
     
     /**

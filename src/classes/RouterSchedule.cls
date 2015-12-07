@@ -14,7 +14,7 @@ public without sharing class RouterSchedule implements System.Schedulable { //@o
         void execute(System.SchedulableContext context);
     }
     
-    Schedulable schedule = (Schedulable)Type.forName('Router.Schedule').newInstance();
+    @TestVisible Schedulable schedule = (Schedulable)Type.forName('Router.Schedule').newInstance();
     
     public void execute(System.SchedulableContext context) {
         this.schedule.execute(context);
