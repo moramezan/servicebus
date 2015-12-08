@@ -54,7 +54,7 @@
         System.assert(event.containsKey('RecordId'));
         System.assert(event.containsKey('Route'));
         System.assert(event.containsKey('EnqueuedById'));
-        System.assert(event.containsKey('EntryPointUuid'));
+        System.assert(event.containsKey('CorrelationUuid'));
     }
     
     static testmethod void testUnpersistableTypesDetectedInConstructor() {

@@ -711,9 +711,9 @@
         //assemble
         Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(messages[0].Event__c);
         
-        String unexpectedEntryPointUuid = null;
-        String actualEntryPointUuid = (String)inputEvent.get('EntryPointUuid');
-        System.assertNotEquals(unexpectedEntryPointUuid, actualEntryPointUuid, 'Wrong entry point uuid.');
+        String unexpectedCorrelationUuid = null;
+        String actualCorrelationUuid = (String)inputEvent.get('CorrelationUuid');
+        System.assertNotEquals(unexpectedCorrelationUuid, actualCorrelationUuid, 'Wrong correlation uuid.');
         
         String expectedPosition = '1';
         String actualPosition = ((String)inputEvent.get('Route')).substringAfterLast('#');

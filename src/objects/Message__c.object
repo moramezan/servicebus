@@ -75,13 +75,13 @@
         <visibleLines>20</visibleLines>
     </fields>
     <fields>
-        <fullName>EntryPointUuid__c</fullName>
-        <description>Refer #752, &quot;user entry point uuid&quot; (EntryPointUuid)
+        <fullName>CorrelationUuid__c</fullName>
+        <description>Refer #752, &quot;user entry point uuid&quot; (CorrelationUuid)
 This Id  represents the unique handle of the genesis event injected into the Service Bus.
 Gets set by Job() injecting to the top of a sequence and given a hypothetical message store, this value would not change if the message was replayed.</description>
         <externalId>true</externalId>
         <inlineHelpText>What is the unique Id of the event at the point of entry into the Service Bus?</inlineHelpText>
-        <label>Entry Point Uuid</label>
+        <label>Correlation Uuid</label>
         <length>40</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

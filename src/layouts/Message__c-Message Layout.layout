@@ -48,10 +48,6 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>EntryPointUuid__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Readonly</behavior>
                 <field>Parent__c</field>
             </layoutItems>
         </layoutColumns>

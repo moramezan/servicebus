@@ -352,12 +352,12 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             if (event.containsKey('Route')) message.Route__c = (String)event.get('Route'); else message.Route__c = null;
             
             /**
-             * Populates the Unique Entry Point Id
+             * Populates the Unique Correlation Uuid
              * This parameter surfaced onto the message to support the
-             * functionality in the Aggregate By Entry Point service
+             * functionality in the Aggregate By Correlation Uuid service
              */
-            String entryPointUuid = (String)event.get('EntryPointUuid'); //this field only ever used to AGGREGATE BY ENTRY POINT
-            if (entryPointUuid != null) message.EntryPointUuid__c = entryPointUuid;
+            String correlationUuid = (String)event.get('CorrelationUuid'); //this field only ever used to AGGREGATE BY CORRELATION UUID
+            if (correlationUuid != null) message.CorrelationUuid__c = correlationUuid;
             
             /**
              * Populates the Queueable Id

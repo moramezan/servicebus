@@ -103,7 +103,7 @@ global class Enqueue implements Process.Plugin {
             Set<String> legalKeys = new Set<String>{
                 'EnqueuedById',
                 'EntryPointTimestamp',
-                'EntryPointUuid',
+                'CorrelationUuid',
                 'JobId',
                 'MessageId',
                 'RecordId',
@@ -181,9 +181,9 @@ global class Enqueue implements Process.Plugin {
                     'EnqueuedById' => UserInfo.getUserId()
                 });
                 
-                if (inputEvent.get('EntryPointUuid') == null) {
+                if (inputEvent.get('CorrelationUuid') == null) {
                     //#751 'they' are allowed to mess with this, eg for replay
-                    inputEvent.put('EntryPointUuid', Enqueue.uuidVersionFour());
+                    inputEvent.put('CorrelationUuid', Enqueue.uuidVersionFour());
                 }
                 
                 if (inputEvent.get('EntryPointTimestamp') == null) {

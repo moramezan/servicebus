@@ -141,11 +141,11 @@
          System.assertEquals(expectedJobId, actualJobId, 'Failed to populate JobId');
      }
     
-     static testmethod void callingPopulateJsonFieldsCorrectlyPopulatesEntryPointUuid() {
+     static testmethod void callingPopulateJsonFieldsCorrectlyPopulatesCorrelationUuid() {
          //arrange message
-         String EntryPointUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+         String CorrelationUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
          Message__c message = new Message__c(
-             Event__c = '{"EntryPointUuid":"' + entryPointUuid + '"}'
+             Event__c = '{"CorrelationUuid":"' + correlationUuid + '"}'
          );
 
          //act
@@ -153,9 +153,9 @@
 
          //assert
 
-         String actualEntryPointUuid = message.EntryPointUuid__c;
-         String expectedEntryPointUuid = EntryPointUuid;
-         System.assertEquals(expectedEntryPointUuid, actualEntryPointUuid, 'Failed to populate EntryPointUuid');
+         String actualCorrelationUuid = message.CorrelationUuid__c;
+         String expectedCorrelationUuid = CorrelationUuid;
+         System.assertEquals(expectedCorrelationUuid, actualCorrelationUuid, 'Failed to populate CorrelationUuid');
      }
      
     static testmethod void testKillRequiresSelectedMessages() {
