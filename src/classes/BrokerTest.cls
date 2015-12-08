@@ -1176,7 +1176,7 @@
         
         //act
         
-        Broker.Contexts = 9;
+        impl.Contexts = 9;
         impl.start(context);                                                  //M1
         impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0001')}); //E1
         impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0002')}); //P1 M2

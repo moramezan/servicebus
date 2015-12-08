@@ -85,7 +85,7 @@ abstract public without sharing class Broker {
     /**
      * #671 first query locator spends less time in 'Preparing'
      */
-    @TestVisible static Integer Contexts = 999;
+    @TestVisible static Boolean IsRestart = false;
     
     /*
      * DO NOT ENQUEUE THIS JOB EVER
@@ -106,6 +106,7 @@ abstract public without sharing class Broker {
          * mark-to-execute and also execute-to-persist
          */
         @TestVisible Exception Panic;
+        @TestVisible Integer Contexts = IsRestart ? 999 : 99;
         @TestVisible List<Message__c> InputMessages = new List<Message__c>();
         @TestVisible List<Message__c> OutputMessages = new List<Message__c>();
         
@@ -144,7 +145,7 @@ abstract public without sharing class Broker {
                 SELECT Id, Name
                 FROM Slot__c
                 ORDER BY Name ASC
-                LIMIT :Contexts
+                LIMIT :this.Contexts
             ]);
         }
         
@@ -209,6 +210,7 @@ abstract public without sharing class Broker {
                 if (this.OutputMessages == null) this.handleFatalExceptions(context);
                 
                 //MORE
+                IsRestart = true;
                 if (![SELECT Id FROM Message__c WHERE Status__c = 'Buffered' LIMIT 1].isEmpty()) this.run();
                 
             } catch (Exception e) {
