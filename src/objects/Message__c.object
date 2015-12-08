@@ -211,7 +211,6 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         <columns>CREATED_DATE</columns>
         <columns>Status__c</columns>
         <columns>Route__c</columns>
-        <columns>Slot__c</columns>
         <columns>ExecuteDuration__c</columns>
         <columns>Exception__c</columns>
         <filterScope>Everything</filterScope>
