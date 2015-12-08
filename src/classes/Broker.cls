@@ -178,7 +178,7 @@ abstract public without sharing class Broker {
                     
                     //PERSIST (or handle fatal errors)
                     if (this.OutputMessages != null) new MessageSetModel(this.InputMessages).persist(this.OutputMessages);
-                    if (this.OutputMessages == null) this.handleFatalExceptions(context);
+                    if (this.OutputMessages == null) this.handleFatalExceptions(this.InputMessages, context);
                     
                     //MARK (or abort if nothing located)
                     this.InputMessages = MessageSetModel.locateMarkableWork();
@@ -207,7 +207,7 @@ abstract public without sharing class Broker {
                 
                 //PERSIST (or handle fatal errors)
                 if (this.OutputMessages != null) new MessageSetModel(this.InputMessages).persist(this.OutputMessages);
-                if (this.OutputMessages == null) this.handleFatalExceptions(context);
+                if (this.OutputMessages == null) this.handleFatalExceptions(this.InputMessages, context);
                 
                 //MORE
                 IsRestart = true;
@@ -247,13 +247,17 @@ abstract public without sharing class Broker {
          *
          * There is always ONE place to go for the information: Message__c.Exception__c
          */
-        public void handleFatalExceptions(Database.BatchableContext context) {
+        public void handleFatalExceptions(List<Message__c> inputMessages, Database.BatchableContext context) {
+            
+            //#1123 ensures we don't write erroneous exceptions to irrelevant messages
+            Set<Id> inputMessageIds = new Map<Id,SObject>(inputMessages).keySet();
             
             List<Message__c> fatalities = [
                 SELECT Id, Route__c
                 FROM Message__c
                 WHERE Status__c = 'Started'
                 AND Slot__c != null
+                AND Id IN :inputMessageIds
             ];
             
             //nothing to do (should never happen!)
@@ -265,7 +269,7 @@ abstract public without sharing class Broker {
             //get causing class name
             String cause = 'Class.';
             Step__c step = Step__c.getValues(fatalities[0].Route__c);
-            if (step != null) cause += step.ApexClassName__c;
+            if (step == null) cause += fatalities[0].Route__c; else cause += step.ApexClassName__c;
             
             //#985 first fatal error (use extended status)
             String extendedStatus = asyncApexJob.ExtendedStatus;
