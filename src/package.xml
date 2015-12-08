@@ -158,6 +158,7 @@
         <members>Message__c.Exception__c</members>
         <members>Message__c.ExecuteDuration__c</members>
         <members>Message__c.JobId__c</members>
+        <members>Message__c.Parent__c</members>
         <members>Message__c.Route__c</members>
         <members>Message__c.Slot__c</members>
         <members>Message__c.Status__c</members>

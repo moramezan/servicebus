@@ -173,7 +173,8 @@ public class MessageModel extends ApexDomain.StandardModel {
                 //TODO #972 alphabetize event parameter json
                 outputMessages.add(new Message__c(
                     Event__c = Json.serializePretty(outputEvent),
-                    Status__c = 'Buffered'
+                    Status__c = 'Buffered',
+                    Parent__c = this.getId()
                 ));
             }
             

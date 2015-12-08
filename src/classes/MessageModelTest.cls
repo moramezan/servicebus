@@ -300,4 +300,33 @@
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
+    
+    static testmethod void testParentIdPopulated() {
+        //arrange sequence
+        insert new Sequence__c(Name = 'Test');
+        
+        //arrange step
+        SequenceModel.fromName('Test').appendStep(Wiretap.class);
+        
+        //arrange event
+        Map<String,Object> inputEvent = new Map<String,Object>{
+            'Route' => '1#Test#1'
+        };
+        
+        //arrange message
+        Message__c message = new Message__c(
+            Event__c = Json.serialize(inputEvent)
+        );
+        
+        //act
+        insert message;
+        List<Message__c> outputMessages = new List<Message__c>();
+        new MessageModel(message).invokeExecute(outputMessages);
+        
+        //assert
+        Id expectedParentId = message.Id;
+        Id actualParentId = outputMessages[0].Parent__c;
+        System.assertEquals(expectedParentId, actualParentId, 'Wrong parent id.');
+    }
+    
 }
