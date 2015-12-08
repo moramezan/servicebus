@@ -707,7 +707,7 @@
         
         //assert
         Integer expectedCount = 7;
-        Integer actualCount = [SELECT COUNT() FROM Message__c];
+        Integer actualCount = [SELECT COUNT() FROM Message__c ALL ROWS]; //#1114 in the recycle bin
         System.assertEquals(expectedCount, actualCount, 'Wrong count. Gate probably did not release.');
     }
     

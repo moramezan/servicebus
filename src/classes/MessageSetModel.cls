@@ -300,6 +300,11 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         MessageSetModel.Inhibit = false;
         Database.upsert(messages);
         MessageSetModel.Inhibit = true;
+        
+        //#1114 poor mans message cleanup strategy
+        List<Id> deleteMessageIds = new List<Id>();
+        for (Message__c inputMessage : this.Messages) if (inputMessage.Status__c == 'Completed') deleteMessageIds.add(inputMessage.Id);
+        Database.delete(deleteMessageIds); //hang around in recycle bin
     }
     
     /**

@@ -132,12 +132,12 @@
         System.assertEquals(expectedBuffered, actualBuffered, 'Wrong count.');
         
         //act
-        Broker.MaximumHops = 2;
+        Broker.MaximumHops = 1;
         Broker.impl().run();
         
         //assert
         Integer expectedStarted = 1;
-        Integer actualStarted = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
+        Integer actualStarted = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started' ALL ROWS]; //#1114
         System.assertEquals(expectedStarted, actualStarted, 'Wrong count.');
         
         //assemble
@@ -148,7 +148,7 @@
         ];
         
         //assert
-        String expectedException = Broker.ServiceException.class.getName() + ': Maximum hops reached: 2';
+        String expectedException = Broker.ServiceException.class.getName() + ': Maximum hops reached: 1';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
@@ -167,7 +167,7 @@
         Broker.impl().run();
         
         //assemble
-        Message__c message = [SELECT Id, Exception__c FROM Message__c];
+        Message__c message = [SELECT Id, Exception__c FROM Message__c ALL ROWS]; //#1114
         
         //assert
         String unexpectedException = 'Maximum hops reached: 2';
@@ -239,7 +239,7 @@
         Broker.impl().run();
         
         //assemble
-        Message__c message = [SELECT Id, Exception__c FROM Message__c];
+        Message__c message = [SELECT Id, Exception__c FROM Message__c ALL ROWS]; //#1114
         
         //assert
         String expectedException = Broker.ServiceException.class.getName() + ': Maximum hops reached: 1';
@@ -293,7 +293,7 @@
         
         //assert
         Integer expectedCount = 4;
-        Integer actualCount = [SELECT COUNT() FROM Message__c];
+        Integer actualCount = [SELECT COUNT() FROM Message__c ALL ROWS]; //#1114
         System.assertEquals(expectedCount, actualCount, 'Wrong count.');
     }
     
@@ -462,7 +462,7 @@
         Broker.impl().run();
         
         //assemble
-        Message__c message = [SELECT Id, Exception__c FROM Message__c];
+        Message__c message = [SELECT Id, Exception__c FROM Message__c ALL ROWS]; //#1114
         
         //assert
         String expectedException = Broker.ServiceException.class.getName() + ': Could not resolve message route: 1#Test#1';
@@ -490,7 +490,7 @@
         Broker.impl().run();
         
         //assemble
-        Message__c message = [SELECT Id, Cause__c, Exception__c FROM Message__c];
+        Message__c message = [SELECT Id, Cause__c, Exception__c FROM Message__c ALL ROWS]; //#1114
         
         //assert
         String actualMessage = message.Exception__c;
@@ -591,7 +591,7 @@
         
         //assert
         Integer expectedSuccessCount = 3;
-        Integer actualSuccessCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'];
+        Integer actualSuccessCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed' ALL ROWS]; //#1114
         System.assertEquals(expectedSuccessCount, actualSuccessCount, 'Wrong success count.');
         
         //assemble
@@ -911,7 +911,7 @@
         
         //assert
         System.assertEquals(4, impl.InputMessages.size(), 'Wrong count of input wiretaps.');
-        System.assertEquals(14, [SELECT COUNT() FROM Message__c], 'Wrong total message count.');
+        System.assertEquals(14, [SELECT COUNT() FROM Message__c ALL ROWS], 'Wrong total message count.'); //#1114
         System.assertEquals(4, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong marked message count.');
         
         //EXECUTE some wiretaps
@@ -925,7 +925,7 @@
         
         //assert
         System.assertEquals(9, impl.InputMessages.size(), 'Wrong count of input terminates.');
-        System.assertEquals(18, [SELECT COUNT() FROM Message__c], 'Wrong total message count.');
+        System.assertEquals(18, [SELECT COUNT() FROM Message__c ALL ROWS], 'Wrong total message count.'); //#1114
         System.assertEquals(9, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong marked message count.');
         
         //EXECUTE all terminates
@@ -939,7 +939,7 @@
         
         //assert
         System.assertEquals(0, impl.InputMessages.size(), 'Wrong count of input messages.');
-        System.assertEquals(18, [SELECT COUNT() FROM Message__c], 'Wrong total message count.');
+        System.assertEquals(18, [SELECT COUNT() FROM Message__c ALL ROWS], 'Wrong total message count.'); //#1114
         System.assertEquals(0, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong marked message count.');
         
         System.assert([SELECT Id FROM CronTrigger WHERE Id = :jobId].isEmpty(), 'Job not aborted.');
@@ -991,7 +991,7 @@
         impl.execute(context, new List<Sobject>{new Slot__c(Name = '0002')});
         
         //assert
-        System.assertEquals(1, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed'], 'Wrong count.');
+        System.assertEquals(1, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed' ALL ROWS], 'Wrong count.'); //#1114
         System.assert([SELECT Id FROM CronTrigger WHERE Id = :jobId].isEmpty(), 'Job not aborted.');
     }
 
@@ -1191,7 +1191,7 @@
         
         //assert
         Integer expectedCount = 5;
-        Integer actualCount = [SELECT COUNT() FROM Message__c];
+        Integer actualCount = [SELECT COUNT() FROM Message__c ALL ROWS]; //#1114
         System.assertEquals(expectedCount, actualCount, 'Wrong count.');
     }
 }

@@ -284,7 +284,7 @@ global class Enqueue implements Process.Plugin {
             if (!Test.isRunningTest()) if (isRunningUser()) this.run(); else this.runAsUser();
             
             //race condition DML (we just hope the batch is slightly delayed)
-            new MessageSetModel(messages).persist(new List<Message__c>()); //#836
+            new MessageSetModel(new List<Message__c>()).persist(messages) ; //#836 //#1114 notice empty input list
         }
         
         void run() {

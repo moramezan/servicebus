@@ -26,17 +26,8 @@
         //act
         List<MonitorController.Statistic> statistics = MonitorController.fetchStatistics();
         
-        //assemble
-        Set<Id> apexClassIds = new Map<Id,SObject>([
-            SELECT Id
-            FROM ApexClass
-            WHERE Name IN ('Wiretap', 'Terminate')
-            AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
-            LIMIT 10000
-        ]).keySet();
-        
-        //assert 1 null, 1 wiretap, 1 terminate,
-        Integer expectedCount = 3; //the graph is [' ', 'Test#1', 'Test#2']
+        //assert 1 null, //#1114 no ALL ROWS in fetchStatistics means they disappear again
+        Integer expectedCount = 1; //the graph is [' ']
         Integer actualCount = statistics.size();
         System.assertEquals(expectedCount, actualCount);
     }
