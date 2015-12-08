@@ -23,10 +23,6 @@
         <members>ApexClassSummaryExtensionTest</members>
         <members>ApexDomain</members>
         <members>ApexDomainTest</members>
-        <members>ApprovalLock</members>
-        <members>ApprovalLockTest</members>
-        <members>ApprovalUnlock</members>
-        <members>ApprovalUnlockTest</members>
         <members>Branch</members>
         <members>BranchTest</members>
         <members>Broker</members>
