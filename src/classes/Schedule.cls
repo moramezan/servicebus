@@ -1,4 +1,4 @@
-public class ScheduleDaily extends ApexClassModel.Service {
+public class Schedule extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
     public class Summary extends ApexClassModel.Summary {
@@ -6,7 +6,7 @@ public class ScheduleDaily extends ApexClassModel.Service {
         String Label = 'Schedule';
         String Description = 'Emits an event on a configurable hourly basis.'; //Swallows regular un-scheduled heartbeat messages
         String Icon = 'clock';
-        String StepConfig = ScheduleDailyConfig__c.class.getName();
+        String StepConfig = ScheduleConfig__c.class.getName();
         //String HelpUrl = Page.ScheduleConfigHelp.getUrl();
         Boolean ConsumesHeartbeat = true;
         Integer Chunks = 100; //could be higher but lets be reasonable
@@ -36,10 +36,10 @@ public class ScheduleDaily extends ApexClassModel.Service {
     
         if (wasHeartbeat == true) {
             
-            ScheduleDailyConfig__c config = (ScheduleDailyConfig__c)ApexDomain.getById(stepConfigId); //TODO
-            /*ScheduleDailyConfig__c config = [
+            ScheduleConfig__c config = (ScheduleConfig__c)ApexDomain.getById(stepConfigId); //TODO
+            /*ScheduleConfig__c config = [
                 SELECT IsActive__c, Frequency__c, FriendlyDates__c, FriendlyTimes__c
-                FROM ScheduleDailyConfig__c
+                FROM ScheduleConfig__c
                 WHERE Id = :stepConfigId
             ];*/
             
@@ -60,7 +60,7 @@ public class ScheduleDaily extends ApexClassModel.Service {
         return outputEvents;
     }
 
-    @TestVisible static Boolean isWithinWindow(String stampAsString, ScheduleDailyConfig__c config) {
+    @TestVisible static Boolean isWithinWindow(String stampAsString, ScheduleConfig__c config) {
         DateTime stampAsDateTime;
         try {
            stampAsString =  getISO8601(stampAsString);

@@ -237,11 +237,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ScheduleDaily</apexClass>
+        <apexClass>Schedule</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ScheduleDailyTest</apexClass>
+        <apexClass>ScheduleTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

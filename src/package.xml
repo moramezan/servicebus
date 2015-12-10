@@ -65,8 +65,8 @@
         <members>RouterSchedule</members>
         <members>RouterScheduleTest</members>
         <members>RouterTest</members>
-        <members>ScheduleDaily</members>
-        <members>ScheduleDailyTest</members>
+        <members>Schedule</members>
+        <members>ScheduleTest</members>
         <members>SequenceCheckoutExtension</members>
         <members>SequenceCheckoutExtensionTest</members>
         <members>SequenceCommitExtension</members>
@@ -168,31 +168,31 @@
         <members>OAuthSetting__c.RunningUserId__c</members>
         <members>OAuthSetting__c.UnprefixedOrgId__c</members>
         <members>PublishConfig__c.EventType__c</members>
-        <members>ScheduleDailyConfig__c.IsActive__c</members>
-        <members>ScheduleDailyConfig__c.T0000__c</members>
-        <members>ScheduleDailyConfig__c.T0100__c</members>
-        <members>ScheduleDailyConfig__c.T0200__c</members>
-        <members>ScheduleDailyConfig__c.T0300__c</members>
-        <members>ScheduleDailyConfig__c.T0400__c</members>
-        <members>ScheduleDailyConfig__c.T0500__c</members>
-        <members>ScheduleDailyConfig__c.T0600__c</members>
-        <members>ScheduleDailyConfig__c.T0700__c</members>
-        <members>ScheduleDailyConfig__c.T0800__c</members>
-        <members>ScheduleDailyConfig__c.T0900__c</members>
-        <members>ScheduleDailyConfig__c.T1000__c</members>
-        <members>ScheduleDailyConfig__c.T1100__c</members>
-        <members>ScheduleDailyConfig__c.T1200__c</members>
-        <members>ScheduleDailyConfig__c.T1300__c</members>
-        <members>ScheduleDailyConfig__c.T1400__c</members>
-        <members>ScheduleDailyConfig__c.T1500__c</members>
-        <members>ScheduleDailyConfig__c.T1600__c</members>
-        <members>ScheduleDailyConfig__c.T1700__c</members>
-        <members>ScheduleDailyConfig__c.T1800__c</members>
-        <members>ScheduleDailyConfig__c.T1900__c</members>
-        <members>ScheduleDailyConfig__c.T2000__c</members>
-        <members>ScheduleDailyConfig__c.T2100__c</members>
-        <members>ScheduleDailyConfig__c.T2200__c</members>
-        <members>ScheduleDailyConfig__c.T2300__c</members>
+        <members>ScheduleConfig__c.IsActive__c</members>
+        <members>ScheduleConfig__c.T0000__c</members>
+        <members>ScheduleConfig__c.T0100__c</members>
+        <members>ScheduleConfig__c.T0200__c</members>
+        <members>ScheduleConfig__c.T0300__c</members>
+        <members>ScheduleConfig__c.T0400__c</members>
+        <members>ScheduleConfig__c.T0500__c</members>
+        <members>ScheduleConfig__c.T0600__c</members>
+        <members>ScheduleConfig__c.T0700__c</members>
+        <members>ScheduleConfig__c.T0800__c</members>
+        <members>ScheduleConfig__c.T0900__c</members>
+        <members>ScheduleConfig__c.T1000__c</members>
+        <members>ScheduleConfig__c.T1100__c</members>
+        <members>ScheduleConfig__c.T1200__c</members>
+        <members>ScheduleConfig__c.T1300__c</members>
+        <members>ScheduleConfig__c.T1400__c</members>
+        <members>ScheduleConfig__c.T1500__c</members>
+        <members>ScheduleConfig__c.T1600__c</members>
+        <members>ScheduleConfig__c.T1700__c</members>
+        <members>ScheduleConfig__c.T1800__c</members>
+        <members>ScheduleConfig__c.T1900__c</members>
+        <members>ScheduleConfig__c.T2000__c</members>
+        <members>ScheduleConfig__c.T2100__c</members>
+        <members>ScheduleConfig__c.T2200__c</members>
+        <members>ScheduleConfig__c.T2300__c</members>
         <members>Step__c.ApexClassId__c</members>
         <members>Step__c.ApexClassName__c</members>
         <members>Step__c.ConfigId__c</members>
@@ -214,7 +214,7 @@
         <members>NamespaceSetting__c</members>
         <members>OAuthSetting__c</members>
         <members>PublishConfig__c</members>
-        <members>ScheduleDailyConfig__c</members>
+        <members>ScheduleConfig__c</members>
         <members>Sequence__c</members>
         <members>Slot__c</members>
         <members>Step__c</members>
