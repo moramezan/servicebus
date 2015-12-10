@@ -13,16 +13,12 @@ public class Router extends ApexClassModel.Service {
         //#1124
         this.retryStartedMessages();
         
-        //TODO do this dynamically
-        Set<String> interestedSubscriberNames = new Set<String>{
-            ScheduleDaily.class.getName()
-        };
-        
-        List<Step__c> steps = [
+        //current versions only
+        List<Step__c> schedules = [
             SELECT Id, Sequence__c, Position__c
             FROM Step__c
-            WHERE ApexClassName__c IN :interestedSubscriberNames
-            //TODO THIS NEEDS VERSIONING AND CONFIGIDS
+            WHERE ApexClassName__c = :ScheduleDaily.class.getName()
+            AND Version__c = :BrokerSetting__c.getOrgDefaults().Version__c
         ];
         
         //stamp with version
@@ -30,8 +26,8 @@ public class Router extends ApexClassModel.Service {
         integer position = 0;
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
-        for (Step__c step : steps) outputEvents.add(new Map<String,Object>{
-            'Route' => version + '#' + step.Sequence__c + '#' + position,
+        for (Step__c schedule : schedules) outputEvents.add(new Map<String,Object>{
+            'Route' => version + '#' + schedule.Sequence__c + '#' + position,
             'RecordId' => inputEvent.get('RecordId') //#971 this carries difference between heartbeat and test message
         });
         

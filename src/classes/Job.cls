@@ -36,14 +36,6 @@ global without sharing class Job implements System.Queueable, Database.AllowsCal
         });
     }
     
-    global Job(Id ToConfig, Id RecordId) {
-        //TODO Set<Id> ConfigIds
-        this(new Map<String,Object>{
-            'ToConfig' => ToConfig,
-            'RecordId' => RecordId
-        });
-    }
-    
     global Job(Type ToService, Id RecordId) {
         this(new Map<String,Object>{
             'ToService' => ToService.getName(),

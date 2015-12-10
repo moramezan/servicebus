@@ -95,7 +95,7 @@ Gets set by Job() injecting to the top of a sequence and given a hypothetical me
         <externalId>true</externalId>
         <inlineHelpText>What is the unique Id of the event at the point of entry into the Service Bus?</inlineHelpText>
         <label>Correlation Uuid</label>
-        <length>40</length>
+        <length>36</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>

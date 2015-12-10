@@ -202,7 +202,7 @@
         insert step;
         
         //act
-        inputEvent = new Map<String,Object>{'ToConfig' => document.Id};
+        inputEvent = new Map<String,Object>{'ToConfigIds' => new List<Id>{document.Id}};
         job = new Job(inputEvent);
         queue = (Enqueue.Queue)job.queue;
         inputEvents = queue.Events;
@@ -213,7 +213,7 @@
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         expectedParam = document.Id;
-        actualParam = inputEvents[0].get('servicebus:ToConfig');
+        actualParam = inputEvents[0].get('servicebus:ToConfigIds');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
     }
     

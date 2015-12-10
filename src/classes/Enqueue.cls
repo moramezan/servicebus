@@ -28,8 +28,7 @@ global class Enqueue implements Process.Plugin {
         plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
             new Process.PluginDescribeResult.InputParameter('RecordId', Process.PluginDescribeResult.ParameterType.ID, false),
             new Process.PluginDescribeResult.InputParameter('ToSequence', Process.PluginDescribeResult.ParameterType.STRING, false),
-            new Process.PluginDescribeResult.InputParameter('ToService', Process.PluginDescribeResult.ParameterType.STRING, false),
-            new Process.PluginDescribeResult.InputParameter('ToConfig', Process.PluginDescribeResult.ParameterType.ID, false)
+            new Process.PluginDescribeResult.InputParameter('ToService', Process.PluginDescribeResult.ParameterType.STRING, false)
         };
         
         plugin.OutputParameters = new List<Process.PluginDescribeResult.OutputParameter>{
@@ -75,7 +74,7 @@ global class Enqueue implements Process.Plugin {
          *
          * The input event collection should at minimum contain
          *  - an object Id ("Id")
-         *  - a sequence ("ToSequence") or a service ("ToService") or a config ("ToConfig")
+         *  - a sequence ("ToSequence") or a service ("ToService") or a list of possible configs ("ToConfigIds")
          *
          * The input event collection is converted to a Message object. This Message instance is saved
          * to the database and the Broker is immeadiately invoked if it is not already running.
@@ -107,16 +106,23 @@ global class Enqueue implements Process.Plugin {
                 'JobId',
                 'MessageId',
                 'RecordId',
+                'ToConfigIds',
                 'ToSequence',
                 'ToService',
-                'ToConfig',
                 'Hops',
                 AllowRoute ? 'Route' : 'Hops' //TODO confirm if this disallowed
             };
             
             //#999 allow third-parties to "enqueue to config"
-            Map<String,String> config2sequence = new Map<String,String>();
-            for (Step__c step : Step__c.getAll().values()) config2sequence.put(step.ConfigId__c, step.Sequence__c);
+            Map<Id,String> config2sequence = new Map<Id,String>();
+            for (Step__c step : Step__c.getAll().values()) {
+                
+                //only current version
+                if (step.Version__c != BrokerSetting__c.getOrgDefaults().Version__c) continue;
+                
+                //maps config to sequence
+                config2sequence.put(step.ConfigId__c, step.Sequence__c);
+            }
             
             for (Map<String,Object> input : inputEvents) {
                 
@@ -150,9 +156,9 @@ global class Enqueue implements Process.Plugin {
                 integer position = 0;
                 
                 //#999 enqueue routing helpers
+                Set<Id> toConfigIds = (Set<Id>)inputEvent.get('ToConfigIds');
                 String toSequence = (String)inputEvent.get('ToSequence');
                 String toService = (String)inputEvent.get('ToService');
-                String toConfig = (String)inputEvent.get('ToConfig');
                 
                 if (toSequence != null) {
                     //converts sequence to route
@@ -169,11 +175,11 @@ global class Enqueue implements Process.Plugin {
                     
                 }
                 
-                if (toConfig != null) {
+                if (toConfigIds != null) for (Id toConfigId : toConfigIds) if (config2sequence.get(toConfigId) != null) {
                     //converts config to route
-                    inputEvent.remove('ToConfig');
-                    inputEvent.put('servicebus:ToConfig', toConfig);
-                    inputEvent.put('Route', version + '#' + config2sequence.get(toConfig) + '#' + position);
+                    inputEvent.remove('ToConfigIds');
+                    inputEvent.put('servicebus:ToConfigIds', toConfigIds);
+                    inputEvent.put('Route', version + '#' + config2sequence.get(toConfigId) + '#' + position);
                 }
                 
                 inputEvent.putAll(new Map<String,Object>{
@@ -221,6 +227,8 @@ global class Enqueue implements Process.Plugin {
             //VALIDATE
             Message__c message = (Message__c)ApexDomain.getById(messageId);
             if (message.Exception__c == null) return; //Only messages with an Exception can be restarted
+            
+            //TODO mark without DML? is it even possible for attempts to increment?
             
             //EXECUTE
             List<Message__c> outputMessages = new MessageSetModel(new List<Message__c>{message}).execute(null);
