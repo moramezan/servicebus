@@ -10,6 +10,9 @@ public class Router extends ApexClassModel.Service {
     
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
+        //#1124
+        this.retryStartedMessages();
+        
         //TODO do this dynamically
         Set<String> interestedSubscriberNames = new Set<String>{
             ScheduleDaily.class.getName()
@@ -19,6 +22,7 @@ public class Router extends ApexClassModel.Service {
             SELECT Id, Sequence__c, Position__c
             FROM Step__c
             WHERE ApexClassName__c IN :interestedSubscriberNames
+            //TODO THIS NEEDS VERSIONING AND CONFIGIDS
         ];
         
         //stamp with version
@@ -35,8 +39,32 @@ public class Router extends ApexClassModel.Service {
         return outputEvents;
     }
     
-    
-    
+    /**
+     * For #1124 we make one re-attempt within one hour. This
+     * is in the interest of a very bare minimum viable retry.
+     * If users want a more comprehensive retry, they might be
+     * able to interrogate the message table by attempts etc.
+     */
+    @TestVisible void retryStartedMessages() {
+        
+        List<Message__c> messages = [
+            SELECT Id
+            FROM Message__c
+            WHERE Status__c = 'Started'
+            AND Exception__c != null
+            AND IsRetryable__c = true
+            AND Attempts__c = 1
+            LIMIT 5000
+        ];
+        
+        for (Message__c message : messages) {
+            message.Status__c = 'Buffered';
+            message.Exception__c = null;
+        }
+        
+        update messages;
+        
+    }
     
     static Id RecordId;
     

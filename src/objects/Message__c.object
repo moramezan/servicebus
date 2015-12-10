@@ -64,6 +64,19 @@
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
     <fields>
+        <fullName>Attempts__c</fullName>
+        <description>Used for #1124 manual retry.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>How many times has a service attempted to handle this message?</inlineHelpText>
+        <label>Attempts</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Cause__c</fullName>
         <description>The stack trace surfaced to the end user is actually the complete stack trace minus the stack trace related to the abstract service and broker.</description>
         <externalId>false</externalId>
@@ -126,6 +139,16 @@ Gets set by Job() injecting to the top of a sequence and given a hypothetical me
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>IsRetryable__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Used for #1124 poor mans retry.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Should this message be retried once within one hour?</inlineHelpText>
+        <label>Is Retryable</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>JobId__c</fullName>
         <description>Refer #752, &quot;capture id&quot;
 This id the Id of the job that enqueued the message representing the &quot;business event&quot; or &quot;business job&quot; or &quot;business occurrence&quot;</description>
@@ -155,7 +178,7 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     <fields>
         <fullName>Route__c</fullName>
         <description>Composite key that can be runtime-resolved to a Step as late as possible.</description>
-        <externalId>true</externalId>
+        <externalId>false</externalId>
         <inlineHelpText>What step should this message take for execution?</inlineHelpText>
         <label>Route</label>
         <length>255</length>
@@ -167,7 +190,7 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     <fields>
         <fullName>Slot__c</fullName>
         <description>JobId#Slot</description>
-        <externalId>true</externalId>
+        <externalId>false</externalId>
         <inlineHelpText>Which slot iteration of the broker marked this message?</inlineHelpText>
         <label>Slot</label>
         <length>255</length>

@@ -359,6 +359,11 @@
     <description>Administer Sequences, Steps and Services as part of Service Bus.</description>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Message__c.Attempts__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Message__c.Cause__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -380,6 +385,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Message__c.ExecuteDuration__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Message__c.IsRetryable__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

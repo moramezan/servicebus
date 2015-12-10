@@ -23,6 +23,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         public String StepConfig {get; set;}
         public String Icon {get; set;}
         public String HelpUrl {get; set;}
+        public Boolean Retry {get; set;}
         public Integer Chunks {get; set;}
         public String Cardinality {get; set;}
         public Map<String,String> Inputs {get; set;}
@@ -57,6 +58,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 this.StepConfig = (String)summary.get('StepConfig');
                 this.Icon = (String)summary.get('Icon');
                 this.HelpUrl = (String)summary.get('HelpUrl');
+                this.Retry = (Boolean)summary.get('Retry');
                 this.Chunks = (Integer)summary.get('Chunks');
                 this.Cardinality = (String)summary.get('Cardinality');
                 this.Inputs = (Map<String,String>)Json.deserialize(Json.serialize(summary.get('Inputs')), Map<String,String>.class);
@@ -69,6 +71,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 if (this.Icon == null) this.Icon = 'cog';
                 if (this.Chunks == null) this.Chunks = 1;
                 if (this.Cardinality == null) this.Cardinality = 'Any';
+                if (this.Retry == null) this.Retry = false;
                 
                 //#955 cap Chunks ceiling
                 if (this.Chunks > 200) this.Chunks = 200; //#1038 even more breathing room //#955 possibly 2000, but headspace

@@ -111,41 +111,31 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
      */
     static public List<Message__c> locateMarkableWork() {
         
-        //TODO throw new ServiceException('Locate panic: ' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
-        
         List<Message__c> specimen = [
-            SELECT Id, Route__c, Event__c //TODO lose event? //#1026
+            SELECT Id, Route__c, Event__c
             FROM Message__c
             WHERE Status__c = 'Buffered'
             ORDER BY CreatedDate ASC //reattempts will naturally lead
             LIMIT 1
-            //TODO: this guy should be FOR UPDATE or risk race condition
         ];
-        
-        //TODO fucked limits COULD be high if we want performance vs risk
         
         if (specimen.isEmpty()) {
             //no work found, return empty
-            return specimen;
+            return new List<Message__c>();
         }
         
+        Integer chunks = 1;
         ApexClassModel.Summary summary;
         
         try {
             //we have to 'peek' at the service
             ApexClassModel model = new MessageModel(specimen[0]).resolveApexClassModel();
             summary = new ApexClassModel.Summary(model.Reflector);
-        } catch (Exception e) {
-            //could not resolve, chunks 1
-            return specimen;
-        }
-        
-        Integer chunks = summary.Chunks;
-        
-        //TODO what if this guy returns a list of 0, would cause a panic condition, lets check
+            chunks = summary.Chunks;
+        } catch (Exception e) {}
         
         return [
-            SELECT Id, Route__c, Event__c //TODO lose event? //#1026
+            SELECT Id, Route__c, Event__c
             FROM Message__c
             WHERE Status__c = 'Buffered'
             AND Route__c = :specimen[0].Route__c //#1004 Route__c field only ever used here to LOCATE, and for GATE and MONITOR
@@ -164,6 +154,17 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             //message fields
             message.Slot__c = slot; //store
             message.Status__c = 'Started';
+            
+            try {
+                //#1124 poor mans retry strategy
+                ApexClassModel model = new MessageModel(message).resolveApexClassModel();
+                ApexClassModel.Summary summary = new ApexClassModel.Summary(model.Reflector);
+                message.IsRetryable__c = summary.Retry;
+            } catch (Exception e) {}
+            
+            //increment attempts
+            if (message.Attempts__c == null) message.Attempts__c = 0;
+            message.Attempts__c++;
         }
         
         update this.Messages;

@@ -163,14 +163,11 @@ public class MessageModel extends ApexDomain.StandardModel {
             //wrap up results into Messages (new guys should have Position = 0)
             for (Map<String,Object> outputEvent : outputEvents) {
                 
-                //TODO #425 enforce overwrite of __ params?
-                
                 if (outputMessages == null) {
                     //panic, our own fault
                     throw new Broker.ServiceException('MessageModel.invokeExecute must receive REFERENCE to list of output messages.');
                 }
                 
-                //TODO #972 alphabetize event parameter json
                 outputMessages.add(new Message__c(
                     Event__c = Json.serializePretty(outputEvent),
                     Status__c = 'Buffered',

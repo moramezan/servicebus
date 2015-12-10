@@ -484,4 +484,30 @@
             return response;
         }
     }
+    
+    static testmethod void testRetryStartedMessages() {
+        //arrange with retry
+        insert new Message__c(
+            Status__c = 'Started',
+            Exception__c = 'With retry',
+            Attempts__c = 1,
+            IsRetryable__c = true
+        );
+        
+        //arrange sans retry
+        insert new Message__c(
+            Status__c = 'Started',
+            Exception__c = 'Sans retry',
+            Attempts__c = 1,
+            IsRetryable__c = false
+        );
+        
+        //act
+        new Router().retryStartedMessages();
+        
+        //assert
+        Integer expectedCount = 1;
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
+    }
 }
