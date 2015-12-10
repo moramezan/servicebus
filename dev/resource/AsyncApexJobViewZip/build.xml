@@ -51,7 +51,7 @@
         <!-- <echo file="${basedir}/build/production/Discover/ext-baseurl.js" /> -->
         <!-- all too fucking hard in my humble opinion -->
         
-        <delete file="../../../src/staticresources/AsyncApexJobProgressZip.resource" />
-        <zip destfile="../../../src/staticresources/AsyncApexJobProgressZip.resource" basedir="build/production/Progress" includes="**"/>
+        <delete file="../../../src/staticresources/AsyncApexJobViewZip.resource" />
+        <zip destfile="../../../src/staticresources/AsyncApexJobViewZip.resource" basedir="build/production/Progress" includes="**"/>
     </target>
 </project>

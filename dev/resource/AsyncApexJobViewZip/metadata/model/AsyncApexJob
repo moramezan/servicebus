@@ -208,7 +208,7 @@
             "codeClass": null,
             "userConfig": {
                 "api": [
-                    "{read: $RemoteAction.AsyncApexJobProgressExtension.ReadAsyncApexJobs}"
+                    "{read: $RemoteAction.AsyncApexJobViewExtension.ReadAsyncApexJobs}"
                 ],
                 "designer|displayName": "AsyncApexJobProxy",
                 "extraParams": [

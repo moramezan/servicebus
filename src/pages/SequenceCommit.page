@@ -24,7 +24,7 @@
         <div id="pageBlockId"></div>
         
         <apex:variable var="application" value="Progress" /><!-- Application namespace such as MyApp -->
-        <apex:variable var="resource" value="{!$Resource.AsyncApexJobProgressZip}" /><!-- The $Resource containing app.js -->
+        <apex:variable var="resource" value="{!$Resource.AsyncApexJobViewZip}" /><!-- The $Resource containing app.js -->
         <apex:variable var="path" value="" /><!-- Development mode prefixes all resources, production mode loads the Sencha Cmd output -->
         <apex:variable var="baseCSSPrefix" value="z-" /><!-- Ext.buildSettings.baseCSSPrefix which will be applied before the framework loads -->
         
@@ -36,9 +36,9 @@
         <!-- BRIDGING COMPONENTS -->
         <script>
             window.$RemoteAction = window.$RemoteAction || {};
-            $RemoteAction.AsyncApexJobProgressExtension = $RemoteAction.AsyncApexJobProgressExtension || {};
-            $RemoteAction.AsyncApexJobProgressExtension.ReadRecords = '{!$RemoteAction.SequenceCommitExtension.ReadRecords}';
-            $RemoteAction.AsyncApexJobProgressExtension.ReadAsyncApexJobs = '{!$RemoteAction.SequenceCommitExtension.ReadAsyncApexJobs}';
+            $RemoteAction.AsyncApexJobViewExtension = $RemoteAction.AsyncApexJobViewExtension || {};
+            $RemoteAction.AsyncApexJobViewExtension.ReadRecords = '{!$RemoteAction.SequenceCommitExtension.ReadRecords}';
+            $RemoteAction.AsyncApexJobViewExtension.ReadAsyncApexJobs = '{!$RemoteAction.SequenceCommitExtension.ReadAsyncApexJobs}';
 
             window.retURL = '{!JSENCODE($CurrentPage.Parameters.retURL)}' || '{!URLFOR($Action.Sequence__c.List, $ObjectType.Sequence__c.KeyPrefix)}'; //#782 reflected xss
             

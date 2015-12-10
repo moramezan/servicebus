@@ -260,7 +260,7 @@
         <name>PermissionSet</name>
     </types>
     <types>
-        <members>AsyncApexJobProgressZip</members>
+        <members>AsyncApexJobViewZip</members>
         <members>ContextSensitiveHelpZip</members>
         <members>SequenceEditZip</members>
         <name>StaticResource</name>

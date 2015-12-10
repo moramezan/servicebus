@@ -47,7 +47,7 @@
             "codeClass": null,
             "userConfig": {
                 "api": [
-                    "{read: $RemoteAction.AsyncApexJobProgressExtension.ReadRecords}"
+                    "{read: $RemoteAction.AsyncApexJobViewExtension.ReadRecords}"
                 ],
                 "designer|displayName": "ProcessProxy",
                 "extraParams": [
