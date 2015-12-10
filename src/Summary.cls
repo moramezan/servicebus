@@ -16,6 +16,12 @@ public class Summary extends Abstract.Service.Summary {
     String Cardinality;
     
     /**
+     * Optional automatic retry capability. If a service throws an exception while
+     * handling an event, one more execution will be attempted within one hour.
+     */
+    Boolean Retry;
+    
+    /**
      * Optional number of times this service can run in one execution context, while remaining
      * within governor limits. For example, 100 for a service that issues one HTTP callout.
      */
