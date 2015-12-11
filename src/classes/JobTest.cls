@@ -202,7 +202,7 @@
         insert step;
         
         //act
-        inputEvent = new Map<String,Object>{'ToConfigIds' => new List<Id>{document.Id}};
+        inputEvent = new Map<String,Object>{'ToConfigIds' => new Set<Id>{document.Id}};
         job = new Job(inputEvent);
         queue = (Enqueue.Queue)job.queue;
         inputEvents = queue.Events;

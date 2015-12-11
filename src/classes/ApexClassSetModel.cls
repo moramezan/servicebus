@@ -58,16 +58,18 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
         Folder folder = [
             SELECT Id
             FROM Folder
-            WHERE DeveloperName='ServiceBus'
+            WHERE DeveloperName = 'ServiceBus'
         ];
         
         String data = Json.serializePretty(summaries);
         
-        Id documentId = Database.upsert(new Document(
+        Document document = new Document(
             Name = 'ApexClassCache.bin',
-            FolderId = Test.isRunningTest() ? UserInfo.getUserId() : OAuthSetting__c.getOrgDefaults().RunningUserId__c,
+            FolderId = folder.Id,
             Body = Blob.valueOf(data)
-        ), Document.Name).getId();
+        );
+        
+        Id documentId = Database.upsert(document, Schema.Document.Name).getId();
         
         BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
         setting.CacheKey__c = classKey;
