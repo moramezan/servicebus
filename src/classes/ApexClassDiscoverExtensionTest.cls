@@ -63,6 +63,7 @@
         System.assert(actualUrl.containsIgnoreCase('home.jsp'), 'Wrong retURL.');
         
         //act (pretend to discover)
+        ApexClassSetModel.saveCache(ApexClassSetModel.fromNamespace(NamespaceSetting__c.getOrgDefaults().Prefix__c).discoverSummaries());
         BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
         setting.CacheKey__c = ApexClassSetModel.classKey();
         upsert setting;

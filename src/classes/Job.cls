@@ -18,7 +18,7 @@ global without sharing class Job implements System.Queueable, Database.AllowsCal
         void execute(QueueableContext context);
     }
     
-    @TestVisible Queueable queue = (Queueable)Type.forName('Enqueue.Queue').newInstance();
+    @TestVisible Queueable queue = (Queueable)Type.forName('Enqueue.QueueImpl').newInstance();
     
     global void execute(QueueableContext context) {
         this.queue.execute(context);

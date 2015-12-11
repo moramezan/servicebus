@@ -17,7 +17,7 @@
         insert sequence;
 
         Map<String,Object> inputEvent = new Map<String,Object> {
-            'Route' => 'Test#1'
+            'Route' => '1#Test#1'
         };
         
         //arrange
@@ -50,7 +50,7 @@
        //--NOT-DEFINED insert new WiretapSetting__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
-            'Route' => 'Test#1',
+            'Route' => '1#Test#1',
             'step' => step,
             'data' => data
         };
@@ -77,7 +77,7 @@
         insert new WiretapSetting__c ( UserId__c = UserInfo.getUserId());
 
         Map<String,Object> inputEvent = new Map<String,Object> {
-            'Route' => 'Test#1',
+            'Route' => '1#Test#1',
             'step' => step,
             'data' => data
         };

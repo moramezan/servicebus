@@ -176,7 +176,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
      * @param  inputMessages pass-by-reference Messages whose status should be Started
      * @param  outputMessages pass-by-reference Messages whose status should be Started
      */
-    public List<Message__c> execute(Broker.Batch impl) {
+    public List<Message__c> execute(Broker.BatchImpl impl) {
         
         //empty inputs, empty outputs
         if (this.Messages.isEmpty()) return new List<Message__c>();

@@ -54,7 +54,7 @@
     
     static testmethod void testDescribeStepConfig() {
         //arrange step
-        Step__c step = new Step__c(Name = 'Test#1', ConfigId__c = '015000000000000AAA');
+        Step__c step = new Step__c(Name = '1#Test#1', ConfigId__c = '015000000000000AAA');
         insert step;
         
         //act
@@ -73,7 +73,7 @@
         insert document;
         
         //arrange step
-        Step__c step = new Step__c(Name = 'Test#1', ConfigId__c = document.Id);
+        Step__c step = new Step__c(Name = '1#Test#1', ConfigId__c = document.Id);
         insert step;
         
         //act

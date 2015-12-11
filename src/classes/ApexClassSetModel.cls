@@ -65,6 +65,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
         
         Document document = new Document(
             Name = 'ApexClassCache.bin',
+            //WTF DeveloperName = 'ApexClassCacheBin', //Cannot save cache: Upsert failed. First exception on row 0; first error: DUPLICATE_DEVELOPER_NAME, This Document Unique Name already exists or has been previously used.  Please choose a different name.: [DeveloperName]
             FolderId = folder.Id,
             Body = Blob.valueOf(data)
         );

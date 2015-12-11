@@ -55,7 +55,7 @@ global class Enqueue implements Process.Plugin {
         return new Process.PluginResult(inputEvent);
     }
     
-    public class Queue implements Job.Queueable {
+    public class QueueImpl implements Job.Queueable {
     
         public List<Map<String,Object>> Events = new List<Map<String,Object>>();
         

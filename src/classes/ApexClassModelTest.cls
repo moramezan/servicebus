@@ -290,7 +290,7 @@
             insert new Document(Name = 'Test', FolderId = UserInfo.getUserId());
             List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
             for (Integer i = 0; i < 200; i++) outputEvents.add(new Map<String,Object>{
-                'Route' => 'Test#1' //dont swallow one shot
+                'Route' => '1#Test#1' //dont swallow one shot
             });
             return outputEvents;
         }
@@ -336,7 +336,7 @@
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
-                    'Route' => 'Test#1'
+                    'Route' => '1#Test#1'
                 }
             };
         }

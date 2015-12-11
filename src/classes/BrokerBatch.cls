@@ -16,7 +16,7 @@ public without sharing class BrokerBatch implements Database.Batchable<SObject>,
         void finish(Database.BatchableContext context);
     }
     
-    @TestVisible Batchable batch = (Batchable)Type.forName('Broker.Batch').newInstance();
+    @TestVisible Batchable batch = (Batchable)Type.forName('Broker.BatchImpl').newInstance();
     
     public Database.QueryLocator start(Database.BatchableContext context) {
         return this.batch.start(context);

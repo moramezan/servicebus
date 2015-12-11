@@ -54,7 +54,7 @@
     
     static testmethod void testPopulateJsonFields() {
         //arrange message
-        Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
+        Map<String,Object> event = new Map<String,Object>{'Route' => '1#Test#1'};
         Message__c message = new Message__c(
             Event__c = Json.serialize(event)
         );
@@ -63,14 +63,14 @@
         new MessageSetModel(new List<Message__c>{message}).alphabetizeJsonAndPopulateFields();
         
         //assert
-        String expectedRoute = 'Test#1';
+        String expectedRoute = '1#Test#1';
         String actualRoute = message.Route__c;
         System.assertEquals(expectedRoute, actualRoute, 'Route incorrectly populated.');
     }
     
     static testmethod void testValidMessageParameters() {
         //arrange message
-        Map<String,Object> event = new Map<String,Object>{'Route' => 'Test#1'};
+        Map<String,Object> event = new Map<String,Object>{'Route' => '1#Test#1'};
         Message__c validMessage = new Message__c(
             Event__c = Json.serialize(event)
         );

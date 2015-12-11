@@ -883,7 +883,7 @@
         Test.stopTest();
         
         List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
-        Broker.Batch impl = new Broker.Batch();
+        Broker.BatchImpl impl = new Broker.BatchImpl();
         
         //assert
         System.assertEquals(9, [SELECT COUNT() FROM Message__c], 'Wrong initial count.');
@@ -969,7 +969,7 @@
         Id jobId = context.getJobId();
         
         //act (enqueue)
-        Broker.Batch impl = new Broker.Batch();
+        Broker.BatchImpl impl = new Broker.BatchImpl();
         
         //assert
         System.assertEquals(1, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'], 'Wrong count.');
@@ -1037,7 +1037,7 @@
         BatchableContext context = new BatchableContext();
         
         //arrange resolution
-        Broker.Batch impl = new Broker.Batch();
+        Broker.BatchImpl impl = new Broker.BatchImpl();
         Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
         
         //act MARK
@@ -1094,7 +1094,7 @@
         Integer totalPotentialMarks = 4;  // Greater than Buffered Messages Count
 
         //arrange resolution
-        Broker.Batch impl = new Broker.Batch();
+        Broker.BatchImpl impl = new Broker.BatchImpl();
         Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
         
         //act MARK
@@ -1111,7 +1111,7 @@
     
     static testmethod void testPanicConditionAbortsJob() {
         //arrange
-        Broker.Batch impl = new Broker.Batch();
+        Broker.BatchImpl impl = new Broker.BatchImpl();
         
         //arrange context
         BatchableContext context = new BatchableContext();
@@ -1159,7 +1159,7 @@
     //for #991 very last Execute should get Persisted
     static testmethod void testAllContextsDoneOk() {
         //arrange broker
-        Broker.Batch impl = new Broker.Batch();
+        Broker.BatchImpl impl = new Broker.BatchImpl();
         
         //arrange inputs (5 messages, 1 mark and 1 execute for each, should make 10 contexts)
         List<Map<String,Object>> events = new List<Map<String,Object>>();

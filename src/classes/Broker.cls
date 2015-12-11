@@ -32,7 +32,7 @@ abstract public without sharing class Broker {
             return (Broker)Type.forName('BrokerTest.SynchronousBroker').newInstance();
         } else {
             //production broker
-            return (Broker)Type.forName('Broker.Batch').newInstance();
+            return (Broker)Type.forName('Broker.BatchImpl').newInstance();
         }
     }
     
@@ -93,7 +93,7 @@ abstract public without sharing class Broker {
      *
      * This class is WITHOUT SHARING to ensure the service can execute regardless of running user context.
      */
-    public without sharing class Batch extends Broker implements BrokerBatch.Batchable {
+    public without sharing class BatchImpl extends Broker implements BrokerBatch.Batchable {
         
         /**
          * #985 helps avoid misleading errors

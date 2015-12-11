@@ -16,7 +16,7 @@
         insert sequence;
 
         Map<String,Object> inputEvent = new Map<String,Object> {
-            'Route' => 'Test#1'
+            'Route' => '1#Test#1'
         };
 
         //assemble

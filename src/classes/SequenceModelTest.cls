@@ -171,7 +171,7 @@
         //arrange step
         Step__c step = new Step__c(
             IsDraft__c = true,
-            Name = 'Wiretaps#1',
+            Name = '1#Wiretaps#1',
             ConfigId__c = '015000000000000AAA',
             ConfigName__c = 'This step must be configured. Seriously.',
             ApexClassId__c = '01p000000000000AAA',

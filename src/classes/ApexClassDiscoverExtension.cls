@@ -41,8 +41,8 @@ public with sharing class ApexClassDiscoverExtension {
      */
     static public PageReference DiscoverIfNeeded(PageReference retURL) {
         
-        if (ApexClassSetModel.cacheKey() != ApexClassSetModel.classKey()) {
-            //service discovery required
+        if (ApexClassSetModel.loadCache().isEmpty() || ApexClassSetModel.cacheKey() != ApexClassSetModel.classKey()) {
+            //cache empty or cache outdated, service discovery required
             PageReference discover = Page.ApexClassDiscover;
             discover.getParameters().put('retURL', retURL.getUrl());
             return discover;
