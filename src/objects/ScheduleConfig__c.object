@@ -203,5 +203,5 @@
         <type>Checkbox</type>
     </fields>
     <label>Schedule Config</label>
-    <visibility>Protected</visibility>
+    <visibility>Public</visibility>
 </CustomObject>

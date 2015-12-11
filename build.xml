@@ -502,7 +502,11 @@
         <delete file="purge/layouts/WorkRewardFundType-Reward Fund Type Layout.layout" />
         <delete file="purge/layouts/WorkBadgeDefinition-Badge Definition Layout.layout" />
         <delete file="purge/layouts/WorkBadge-Badge Received Layout 192.layout" />
-
+        
+        <!-- Allow survival of SiteTemplate.page so we can still purge orgs that have a Site -->
+        <delete file="purge/pages/SiteTemplate.page" />
+        <delete file="purge/pages/SiteTemplate.page-meta.xml" />
+        
         <!-- name the wildcard package definition -->
         <replace file="purge/package.xml">
             <replacetoken><![CDATA[</version>]]></replacetoken>

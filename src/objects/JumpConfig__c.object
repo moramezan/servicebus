@@ -16,5 +16,5 @@
         <unique>false</unique>
     </fields>
     <label>Jump Config</label>
-    <visibility>Protected</visibility>
+    <visibility>Public</visibility>
 </CustomObject>

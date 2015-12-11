@@ -16,5 +16,5 @@
         <unique>false</unique>
     </fields>
     <label>Subscribe Config</label>
-    <visibility>Protected</visibility>
+    <visibility>Public</visibility>
 </CustomObject>

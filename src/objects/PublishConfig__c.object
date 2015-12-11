@@ -16,5 +16,5 @@
         <unique>false</unique>
     </fields>
     <label>Publish Config</label>
-    <visibility>Protected</visibility>
+    <visibility>Public</visibility>
 </CustomObject>
