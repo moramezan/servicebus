@@ -1,4 +1,4 @@
-public with sharing class ApexClassSummaryExtension {
+public with sharing class ApexClassViewExtension {
     
     ApexPages.StandardController controller;
     ApexClassModel model;
@@ -6,7 +6,7 @@ public with sharing class ApexClassSummaryExtension {
     public ApexClassModel.Summary Summary {get; set;}
     public String FullyQualifiedClassName {get; set;}
     
-    public ApexClassSummaryExtension(ApexPages.StandardController controller) {
+    public ApexClassViewExtension(ApexPages.StandardController controller) {
         this.controller = controller;
         this.countRoutedMessages();
     }

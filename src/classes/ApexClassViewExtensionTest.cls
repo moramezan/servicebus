@@ -1,4 +1,4 @@
-@IsTest class ApexClassSummaryExtensionTest {
+@IsTest class ApexClassViewExtensionTest {
 
     @TestSetup static void testSetup() {
         //act
@@ -12,7 +12,7 @@
         //arrange controller and extension
         ApexClass apexClass = [SELECT Id FROM ApexClass WHERE Name = 'Terminate' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c];
         ApexPages.StandardController controller = new ApexPages.StandardController(apexClass);
-        ApexClassSummaryExtension extension = new ApexClassSummaryExtension(controller);
+        ApexClassViewExtension extension = new ApexClassViewExtension(controller);
         
         //act
         extension.doInit();

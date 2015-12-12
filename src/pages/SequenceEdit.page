@@ -58,7 +58,7 @@
         
         window.$Page = window.$Page || {};
         $Page.ApexClassSetting = '{!$Page.ApexClassSetting}';
-        $Page.ApexClassSummary = '{!$Page.ApexClassSummary}';
+        $Page.ApexClassView = '{!$Page.ApexClassView}';
         $Page.StepConfig = '{!$Page.StepConfig}';
         
         TerminateApexClassName = '{!TerminateApexClassName}';
@@ -69,7 +69,7 @@
         window.URLFOR = window.URLFOR || {};
         URLFOR['/'] = '{!URLFOR("/")}';
         URLFOR[$Page.ApexClassSetting] = '{!URLFOR($Page.ApexClassSetting, null, ["id"="000000000000000AAA"])}';
-        URLFOR[$Page.ApexClassSummary] = '{!URLFOR($Page.ApexClassSummary, null, ["id"="000000000000000AAA"])}';
+        URLFOR[$Page.ApexClassView] = '{!URLFOR($Page.ApexClassView, null, ["id"="000000000000000AAA"])}';
         URLFOR[$Page.StepConfig] = '{!URLFOR($Page.StepConfig, null, ["id"="000000000000000AAA"])}';
         
         window.Launch = function(callback) {

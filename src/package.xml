@@ -19,8 +19,8 @@
         <members>ApexClassSetModelTest</members>
         <members>ApexClassSettingExtension</members>
         <members>ApexClassSettingExtensionTest</members>
-        <members>ApexClassSummaryExtension</members>
-        <members>ApexClassSummaryExtensionTest</members>
+        <members>ApexClassViewExtension</members>
+        <members>ApexClassViewExtensionTest</members>
         <members>ApexDomain</members>
         <members>ApexDomainTest</members>
         <members>Branch</members>
@@ -102,7 +102,7 @@
         <members>ApexClassList</members>
         <members>ApexClassSetting</members>
         <members>ApexClassSplash</members>
-        <members>ApexClassSummary</members>
+        <members>ApexClassView</members>
         <members>Configure</members>
         <members>ContextSensitiveHelp</members>
         <members>MessageApexClass</members>

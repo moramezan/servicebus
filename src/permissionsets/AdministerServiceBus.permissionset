@@ -53,11 +53,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ApexClassSummaryExtension</apexClass>
+        <apexClass>ApexClassViewExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ApexClassSummaryExtensionTest</apexClass>
+        <apexClass>ApexClassViewExtensionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -453,7 +453,7 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>ApexClassSummary</apexPage>
+        <apexPage>ApexClassView</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

@@ -4,5 +4,5 @@
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <description>Page showing apex class summary (namespace, etc) as well as Service.Summary (Tag, etc)</description>
-    <label>ApexClassSummary</label>
+    <label>ApexClassView</label>
 </ApexPage>
