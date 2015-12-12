@@ -7,7 +7,6 @@ public class WiretapService extends ApexClassModel.Service {
         String Description = 'Emails the message parameters to the user.';
         String ServiceConfig = WiretapServiceConfig__c.class.getName();
         String Icon = 'email';
-        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceWiretap').getUrl();
         Integer Chunks = 5; //leave half of 10 (Total number of sendEmail methods allowed)
         String Cardinality = 'One';
     }

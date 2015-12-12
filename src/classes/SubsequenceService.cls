@@ -9,7 +9,6 @@ public class SubsequenceService extends ApexClassModel.Service {
         String Description = 'Synchronously executes another sequence before emitting the event.';
         String StepConfig = SubsequenceStepConfig__c.class.getName();
         String Icon = 'arrow_undo';
-        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceJumpSubsequence').getUrl();
         Integer Chunks = 1; //we dont know what they will do
         String Cardinality = 'One';
     }

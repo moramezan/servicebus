@@ -7,7 +7,6 @@ public class JumpService extends ApexClassModel.Service {
         String Description = 'Diverts the event to another sequence, never to return.';
         String StepConfig = JumpStepConfig__c.class.getName();
         String Icon = 'arrow_switch';
-        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceJumpSubsequence').getUrl();
         Integer Chunks = 50; //max sync limit
         String Cardinality = 'Zero';
     }

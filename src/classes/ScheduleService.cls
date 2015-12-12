@@ -7,7 +7,6 @@ public class ScheduleService extends ApexClassModel.Service {
         String Description = 'Emits an event on a configurable hourly basis.'; //Swallows regular un-scheduled heartbeat messages
         String Icon = 'clock';
         String StepConfig = ScheduleStepConfig__c.class.getName();
-        //String HelpUrl = Page.ScheduleConfigHelp.getUrl();
         Boolean ConsumesHeartbeat = true;
         Integer Chunks = 100; //could be higher but lets be reasonable
         Map<String,String> Inputs = new Map<String,String>{

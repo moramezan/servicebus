@@ -7,7 +7,6 @@ public class PublishService extends ApexClassModel.Service {
         String Description = 'Broadcasts named events to other subscribed sequences.';
         String StepConfig = PublishStepConfig__c.class.getName();
         String Icon = 'chart_organisation';
-        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServicePublishSubscribe').getUrl();
         Integer Chunks = 33; //max sync limit
         String Cardinality = 'One';
     }
