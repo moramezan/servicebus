@@ -15,18 +15,18 @@
         insert sequence;
         
         //arrange steps
-        Step__c branchStep = SequenceModel.fromName(sequence.Name).appendStep(BranchService.class);
-        new StepModel(branchStep).upsertConfig();
+        Step__c jumpStep = SequenceModel.fromName(sequence.Name).appendStep(JumpService.class);
+        new StepModel(jumpStep).upsertConfig();
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         
         Integer expectedConfigsBefore = 1;
-        Integer actualConfigsBefore = [SELECT COUNT() FROM BranchStepConfig__c];
+        Integer actualConfigsBefore = [SELECT COUNT() FROM JumpStepConfig__c];
         
         //act
         delete sequence;
         
         Integer expectedConfigsAfter = 0;
-        Integer actualConfigsAfter = [SELECT COUNT() FROM BranchStepConfig__c];
+        Integer actualConfigsAfter = [SELECT COUNT() FROM JumpStepConfig__c];
         
         //assert
         System.assertEquals(expectedConfigsBefore, actualConfigsBefore);

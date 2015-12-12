@@ -23,8 +23,6 @@
         <members>ApexClassViewExtensionTest</members>
         <members>ApexDomain</members>
         <members>ApexDomainTest</members>
-        <members>BranchService</members>
-        <members>BranchServiceTest</members>
         <members>Broker</members>
         <members>BrokerBatch</members>
         <members>BrokerBatchTest</members>
@@ -152,7 +150,6 @@
         <members>Application__c.RunAsAccessToken__c</members>
         <members>Application__c.RunAsRefreshToken__c</members>
         <members>Application__c.RunAsUserId__c</members>
-        <members>BranchStepConfig__c.Sequence__c</members>
         <members>JumpStepConfig__c.Sequence__c</members>
         <members>Message__c.Attempts__c</members>
         <members>Message__c.Cause__c</members>
@@ -207,7 +204,6 @@
     </types>
     <types>
         <members>Application__c</members>
-        <members>BranchStepConfig__c</members>
         <members>JumpStepConfig__c</members>
         <members>Message__c</members>
         <members>PublishStepConfig__c</members>
