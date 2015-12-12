@@ -17,7 +17,7 @@
         Integer Chunks = 99;
         String HelpUrl = 'HelpUrl';
         String StepConfig = 'StepConfig';
-        String ServiceSetting = 'ServiceSetting';
+        String ServiceConfig = 'ServiceConfig';
         String Cardinality = 'Any';
         Map<String,String> Inputs = new Map<String,String>{'herp' => 'derp'};
         Map<String,String> Outputs = new Map<String,String>{'foo' => 'bar'};
@@ -38,7 +38,7 @@
         System.assertEquals(expected.Chunks, actual.Chunks, 'Wrong Chunks.');
         System.assertEquals(expected.HelpUrl, actual.HelpUrl, 'Wrong HelpUrl.');
         System.assertEquals(expected.StepConfig, actual.StepConfig, 'Wrong StepConfig.');
-        System.assertEquals(expected.ServiceSetting, actual.ServiceSetting, 'Wrong ServiceSetting.');
+        System.assertEquals(expected.ServiceConfig, actual.ServiceConfig, 'Wrong ServiceConfig.');
         System.assertEquals(expected.Cardinality, actual.Cardinality, 'Wrong Cardinality.');
         System.assertEquals(expected.Inputs, actual.Inputs, 'Wrong Inputs.');
         System.assertEquals(expected.Outputs, actual.Outputs, 'Wrong Outputs.');
@@ -73,10 +73,10 @@
         ApexClassModel model = new ApexClassModel(Wiretap.class);
         
         //act
-        DescribeSObjectResult result = model.describeServiceSetting();
+        DescribeSObjectResult result = model.describeServiceConfig();
         
         //assert
-        String expectedName = WiretapSetting__c.class.getName();
+        String expectedName = WiretapServiceConfig__c.class.getName();
         String actualName = result.getName();
         System.assertEquals(expectedName, actualName, 'Wrong Name.');
     }

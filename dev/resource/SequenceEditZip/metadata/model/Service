@@ -102,19 +102,6 @@
             },
             "name": "MyString6",
             "designerId": "f60d391d-cc3d-420e-8a5a-f5d0688fedf5"
-        },
-        {
-            "type": "Ext.data.field.String",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "name": "ServiceSetting"
-            },
-            "name": "MyString5",
-            "designerId": "b0aad3ad-b08c-498c-b3da-b784850f0973"
         }
     ]
 }

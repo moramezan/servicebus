@@ -9,6 +9,8 @@
     <types>
         <members>AggregateByJob</members>
         <members>AggregateByJobTest</members>
+        <members>ApexClassConfigExtension</members>
+        <members>ApexClassConfigExtensionTest</members>
         <members>ApexClassDiscoverExtension</members>
         <members>ApexClassDiscoverExtensionTest</members>
         <members>ApexClassListExtension</members>
@@ -17,8 +19,6 @@
         <members>ApexClassModelTest</members>
         <members>ApexClassSetModel</members>
         <members>ApexClassSetModelTest</members>
-        <members>ApexClassSettingExtension</members>
-        <members>ApexClassSettingExtensionTest</members>
         <members>ApexClassViewExtension</members>
         <members>ApexClassViewExtensionTest</members>
         <members>ApexDomain</members>
@@ -98,9 +98,9 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>ApexClassConfig</members>
         <members>ApexClassDiscover</members>
         <members>ApexClassList</members>
-        <members>ApexClassSetting</members>
         <members>ApexClassSplash</members>
         <members>ApexClassView</members>
         <members>Configure</members>
@@ -202,7 +202,7 @@
         <members>Step__c.Version__c</members>
         <members>SubscribeConfig__c.EventType__c</members>
         <members>SubsequenceConfig__c.Sequence__c</members>
-        <members>WiretapSetting__c.UserId__c</members>
+        <members>WiretapServiceConfig__c.UserId__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -217,7 +217,7 @@
         <members>Step__c</members>
         <members>SubscribeConfig__c</members>
         <members>SubsequenceConfig__c</members>
-        <members>WiretapSetting__c</members>
+        <members>WiretapServiceConfig__c</members>
         <name>CustomObject</name>
     </types>
     <types>

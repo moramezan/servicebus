@@ -1,16 +1,16 @@
-public with sharing class ApexClassSettingExtension {
+public with sharing class ApexClassConfigExtension {
 
     ApexPages.StandardController controller;
     ApexClassModel model;
 
-    public ApexClassSettingExtension(ApexPages.StandardController controller) {
+    public ApexClassConfigExtension(ApexPages.StandardController controller) {
         this.controller = controller;
         this.model = ApexClassModel.fromId(controller.getId());
         Map<String,String> parameters = ApexPages.CurrentPage().GetParameters();
         
         try {
-            DescribeSObjectResult result = this.model.describeServiceSetting();
-            this.ServiceSetting = result.getName();
+            DescribeSObjectResult result = this.model.describeServiceConfig();
+            this.ServiceConfig = result.getName();
             this.KeyPrefix = result.getKeyPrefix();
             this.Action = result.isCustomSetting() ? 'Tab' : 'List';
             this.Isdtp = result.isCustomSetting() ? parameters.get('isdtp') : 'vw';
@@ -25,7 +25,7 @@ public with sharing class ApexClassSettingExtension {
      * Redirects the user to the tab/list view
      * of the setting held on this service.
      */
-    public String ServiceSetting {get; set;}
+    public String ServiceConfig {get; set;}
     public String KeyPrefix {get; set;}
     
     /**

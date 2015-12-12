@@ -1,4 +1,4 @@
-@IsTest class ApexClassSettingExtensionTest {
+@IsTest class ApexClassConfigExtensionTest {
 
     @TestSetup static void testSetup() {
         //act
@@ -18,9 +18,9 @@
         ];
         
         //act
-        Test.setCurrentPage(Page.ApexClassSetting);
+        Test.setCurrentPage(Page.ApexClassConfig);
         ApexPages.StandardController controller = new ApexPages.StandardController(apexClass);
-        ApexClassSettingExtension extension = new ApexClassSettingExtension(controller);
+        ApexClassConfigExtension extension = new ApexClassConfigExtension(controller);
         
         //assert
         System.assert(!ApexPages.hasMessages(), 'Wrong messages.');

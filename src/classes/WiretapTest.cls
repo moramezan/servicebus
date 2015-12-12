@@ -41,13 +41,13 @@
 
 
 
-    static testmethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnServiceSettingNOTSet() {
+    static testmethod void callingInvokeWillNOTThrowExpectedWhenUserIdOnServiceConfigNOTSet() {
         // Arrange :
         String sequenceName = 'Test';
         Integer step = 1;
         String data = 'data';
 
-       //--NOT-DEFINED insert new WiretapSetting__c ( UserId__c = UserInfo.getUserId());
+       //--NOT-DEFINED insert new WiretapServiceConfig__c(UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
             'Route' => '1#Test#1',
@@ -68,13 +68,13 @@
         System.assertEquals(expectedFlagException , actualFlagException );
     }
    
-    static testmethod void callingExecuteReturnsExpectedOutputEventsWhenDefinedServiceSettingSet() {
+    static testmethod void callingExecuteReturnsExpectedOutputEventsWhenDefinedServiceConfigSet() {
         // Arrange :
         String sequenceName = 'Test';
         Integer step = 1;
         String data = 'data';
 
-        insert new WiretapSetting__c ( UserId__c = UserInfo.getUserId());
+        insert new WiretapServiceConfig__c(UserId__c = UserInfo.getUserId());
 
         Map<String,Object> inputEvent = new Map<String,Object> {
             'Route' => '1#Test#1',

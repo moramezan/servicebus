@@ -4,5 +4,5 @@
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <description>Page that documents service apex logic attributes (eg namespace) and service summary (eg tag)</description>
-    <label>ApexClassSetting</label>
+    <label>ApexClassConfig</label>
 </ApexPage>

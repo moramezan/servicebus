@@ -227,7 +227,7 @@
         
         //assert
         Id expectedWiretap = UserInfo.getUserId();
-        Id actualWiretap = WiretapSetting__c.getOrgDefaults().UserId__c;
+        Id actualWiretap = WiretapServiceConfig__c.getOrgDefaults().UserId__c;
         System.assertEquals(expectedWiretap, actualWiretap, 'Wrong wiretap user id.');
     }
     

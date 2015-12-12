@@ -1,0 +1,3 @@
+<apex:page setup="true" standardController="ApexClass" extensions="ApexClassConfigExtension" action="{!URLFOR($Action[ServiceConfig][Action], KeyPrefix, ["isdtp"=Isdtp])}">
+    <apex:pageMessages showDetail="false" />
+</apex:page>

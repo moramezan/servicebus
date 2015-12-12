@@ -478,9 +478,9 @@ public with sharing class ConfigureController {
      */
     @Future static public void settings(Id userId) { //#969 obfuscation of 'createWiretapSettings()'
         //fetch custom setting and write the values
-        WiretapSetting__c wiretapSetting = WiretapSetting__c.getOrgDefaults();
-        wiretapSetting.UserId__c = userId;
-        upsert wiretapSetting;
+        WiretapServiceConfig__c wiretapServiceConfig = WiretapServiceConfig__c.getOrgDefaults();
+        wiretapServiceConfig.UserId__c = userId;
+        upsert wiretapServiceConfig;
     }
     
     /**

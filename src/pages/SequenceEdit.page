@@ -57,7 +57,6 @@
         $RemoteAction.SequenceEditExtension.persistConfigNameOnStep = '{!$RemoteAction.SequenceEditExtension.persistConfigNameOnStep}';
         
         window.$Page = window.$Page || {};
-        $Page.ApexClassSetting = '{!$Page.ApexClassSetting}';
         $Page.ApexClassView = '{!$Page.ApexClassView}';
         $Page.StepConfig = '{!$Page.StepConfig}';
         
@@ -68,7 +67,6 @@
         
         window.URLFOR = window.URLFOR || {};
         URLFOR['/'] = '{!URLFOR("/")}';
-        URLFOR[$Page.ApexClassSetting] = '{!URLFOR($Page.ApexClassSetting, null, ["id"="000000000000000AAA"])}';
         URLFOR[$Page.ApexClassView] = '{!URLFOR($Page.ApexClassView, null, ["id"="000000000000000AAA"])}';
         URLFOR[$Page.StepConfig] = '{!URLFOR($Page.StepConfig, null, ["id"="000000000000000AAA"])}';
         

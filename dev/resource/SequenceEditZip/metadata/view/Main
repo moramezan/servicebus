@@ -293,64 +293,6 @@
             ]
         },
         {
-            "type": "Ext.grid.column.Column",
-            "reference": {
-                "name": "columns",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "dataIndex": "ApexClassId",
-                "tdCls": "link",
-                "text": "Settings",
-                "width": 60
-            },
-            "name": "MyColumn2",
-            "configAlternates": {
-                "scrollable": "boolean"
-            },
-            "designerId": "4a7871a4-5a72-476d-9cc9-cb72faf5928d",
-            "cn": [
-                {
-                    "type": "fixedfunction",
-                    "reference": {
-                        "name": "items",
-                        "type": "array"
-                    },
-                    "codeClass": null,
-                    "userConfig": {
-                        "designer|params": [
-                            "value",
-                            "metaData",
-                            "record",
-                            "rowIndex",
-                            "colIndex",
-                            "store",
-                            "view"
-                        ],
-                        "fn": "renderer",
-                        "implHandler": [
-                            "var apexClassId = record.get('ApexClassId');",
-                            "var service = Ext.getStore('Services').getById(apexClassId);",
-                            "var setting = service && service.get('ServiceSetting'); //#875 invalid service",
-                            "",
-                            "//some services have no settings",
-                            "if (setting) return '| ' + Ext.DomHelper.createHtml({",
-                            "    'tag': 'a',",
-                            "    'html': 'Settings',",
-                            "    'class': 'settingslink',",
-                            "    'onclick': 'return false;',",
-                            "    'title': 'Service Settings',",
-                            "    'href': '#'",
-                            "});"
-                        ]
-                    },
-                    "name": "renderer",
-                    "designerId": "0cdc512c-ec36-4e1c-a318-406ea72dc4b1"
-                }
-            ]
-        },
-        {
             "type": "Ext.grid.column.Action",
             "reference": {
                 "name": "columns",
@@ -601,7 +543,7 @@
                             "    'html': 'Help for this Service',",
                             "    'class': 'documentationlink',",
                             "    'title': 'Configure Step',",
-                            "    'href': URLFOR[$Page.ApexClassSummary].replace('000000000000000AAA', apexClassId),",
+                            "    'href': URLFOR[$Page.ApexClassView].replace('000000000000000AAA', apexClassId),",
                             "    'target': '_blank'",
                             "});"
                         ]

@@ -19,7 +19,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         public String Tag {get; set;}
         public String Label {get; set;}
         public String Description {get; set;}
-        public String ServiceSetting {get; set;}
+        public String ServiceConfig {get; set;}
         public String StepConfig {get; set;}
         public String Icon {get; set;}
         public String HelpUrl {get; set;}
@@ -54,7 +54,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 this.Tag = (String)summary.get('Tag');
                 this.Label = (String)summary.get('Label');
                 this.Description = (String)summary.get('Description');
-                this.ServiceSetting = (String)summary.get('ServiceSetting');
+                this.ServiceConfig = (String)summary.get('ServiceConfig');
                 this.StepConfig = (String)summary.get('StepConfig');
                 this.Icon = (String)summary.get('Icon');
                 this.HelpUrl = (String)summary.get('HelpUrl');
@@ -123,11 +123,11 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     
     /**
      * Used to determine the list/tab redirect
-     * when showing the ApexClassSetting page
+     * when showing the ApexClassConfig page
      */
-    public DescribeSObjectResult describeServiceSetting() {
+    public DescribeSObjectResult describeServiceConfig() {
         Summary summary = new Summary(this.Reflector);
-        DescribeSObjectResult result = Schema.getGlobalDescribe().get(summary.ServiceSetting).getDescribe();
+        DescribeSObjectResult result = Schema.getGlobalDescribe().get(summary.ServiceConfig).getDescribe();
         return result;
     }
     

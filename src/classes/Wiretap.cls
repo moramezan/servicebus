@@ -5,7 +5,7 @@ public class Wiretap extends ApexClassModel.Service {
         String Tag = 'Service Bus';
         String Label = 'Wiretap';
         String Description = 'Emails the message parameters to the user.';
-        String ServiceSetting = WiretapSetting__c.class.getName();
+        String ServiceConfig = WiretapServiceConfig__c.class.getName();
         String Icon = 'email';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceWiretap').getUrl();
         Integer Chunks = 5; //leave half of 10 (Total number of sendEmail methods allowed)
@@ -14,8 +14,8 @@ public class Wiretap extends ApexClassModel.Service {
     
     List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
-        WiretapSetting__c setting = WiretapSetting__c.getOrgDefaults();
-        Id userId = setting.UserId__c;
+        WiretapServiceConfig__c wiretapServiceConfig = WiretapServiceConfig__c.getOrgDefaults();
+        Id userId = wiretapServiceConfig.UserId__c;
         if (userId == null) {
             userId = UserInfo.getUserId();
         }
