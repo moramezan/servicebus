@@ -1,10 +1,10 @@
-# Apex Microservice Open Specification
+# Open Apex Service Specification
 
-The Apex Microservice Open Specification evolved in a crazy way. It started two years ago by writing down some services we wanted to be able to run on Salesforce, regardless of whether they were implementable. Then we started to reverse-engineer a container for them.
+The Open Apex Service Specification evolved in a crazy way. It started two years ago by writing down some services we wanted to be able to run on Salesforce, regardless of whether they were implementable. Then we started to reverse-engineer a container for them.
 
 That process showed us how we needed to change the services to make them behave more consistently, and also to make them orchestratable. How to better define their boundaries whether they are consumed synchronously or with a message-driven API. Iterating like this, the definition advanced to the stage where it extends effortlessly to meet new requirements.
 
-AMOS is used every day in AppExchange products and by Salesforce consultants. If you like the results, please comment and contribute.
+OASIS is used every day in AppExchange products and by Salesforce consultants. If you like the results, please comment and contribute.
 
 # Example implementations
 
@@ -41,19 +41,19 @@ The service inputs and outputs take the form of events. An event is a loosely st
 
 # Reflection
 
-The use of a '[service summary](https://github.com/bigassforce/amos/blob/master/src/Summary.cls)' inner class behaves as a discovery mechanism. Given just the class name string, the presence or absence of the marker class inside can be readily detected:
+The use of a '[service definition](https://github.com/bigassforce/oasis/blob/master/src/Definition.cls)' inner class behaves as a discovery mechanism. Given just the class name string, the presence or absence of the marker class inside can be readily detected:
 
 ```
 Boolean isService(String className) {
-    Type reflector = className + '.' + 'Summary';
+    Type reflector = className + '.' + 'Definition';
     return reflector != null;
 }
 ```
 
-Further, this service summary class is capable of providing information about the behaviour of a service. Such as its event parameters and its cardinality. Properties such as the setting object expose configuration mechanisms.
+Further, this service definition class is capable of providing information about the behaviour of a service. Such as its event parameters and its cardinality. Properties such as the setting object expose configuration mechanisms.
 
 ```
-public class Summary extends Abstract.Service.Summary {
+public class Definition {
     String Tag = 'Order Management';
     String Label = 'Order Extract Items';
     String Icon = 'arrow_divide';
@@ -72,7 +72,7 @@ public class Summary extends Abstract.Service.Summary {
 
 Services are consumed in a variety of contexts, both synchronous and asynchronous. These differing runtime environments of batches, triggers, schedules, and interactive contexts all have impacts on the capabilities of any service. As an example, consider the situation of DML before a callout.
 
-Detective mechanisms like `isBatch()` and `isScheduled()` and `isRunningTest()` are available. These can be used to work around those differing capabilities. But the multiple resulting code paths are secondary to the business concerns of the code being authored. With AMOS, the goal is [consistency and developer ease](https://en.wikipedia.org/wiki/Principle_of_least_astonishment).
+Detective mechanisms like `isBatch()` and `isScheduled()` and `isRunningTest()` are available. These can be used to work around those differing capabilities. But the multiple resulting code paths are secondary to the business concerns of the code being authored. With OASIS, the goal is [consistency and developer ease](https://en.wikipedia.org/wiki/Principle_of_least_astonishment).
 
 Salesforce explicitly encourages the use of asynchronous runtime contexts, evidenced by the higher limits provided, and guaranteed enqueue / persistence / dequeue behaviours of platform worker threads.
 
@@ -84,9 +84,6 @@ event = new Map<String,Object>{
     'RecordId' => '00D300000000iTzEAI'
 };
 
-//salesforce asynchronous interface
-Queueable job = new Queueable(events);
-
 //used for aggregation and sagas
-Id correlationId = System.enqueueJob(job);
+Id jobId = Services.Enqueue.invoke(event);
 ```

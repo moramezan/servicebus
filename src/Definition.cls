@@ -1,9 +1,9 @@
 /**
- * This is an inner class template within every microservice. It describes special metadata around
+ * This is an inner class template within every service. It describes special metadata around
  * a service, such as its event parameters and cardinality. Some of these properties such as the
  * icon and the config object can be used to present a user interface for configuring the service.
  */
-public class Summary extends Abstract.Service.Summary {
+public class Definition {
     
     /**
      * Optional indicator of the ratio of
@@ -40,10 +40,10 @@ public class Summary extends Abstract.Service.Summary {
     String StepConfig;
     
     /**
-     * Optional fully-qualified API name of a Custom Setting to be used for service-specific
+     * Optional fully-qualified API name of an SObject to be used for service-specific
      * configuration. Records of this type are manageable wherever the service is displayed.
      */
-    String ServiceSetting;
+    String ServiceConfig;
     
     /**
      * Optional friendly descriptions of the input
