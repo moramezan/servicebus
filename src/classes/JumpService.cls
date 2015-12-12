@@ -1,11 +1,11 @@
-public class Jump extends ApexClassModel.Service {
+public class JumpService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
     public class Summary extends ApexClassModel.Summary {
         String Tag = 'Service Bus';
         String Label = 'Jump';
         String Description = 'Diverts the event to another sequence, never to return.';
-        String StepConfig = JumpConfig__c.class.getName();
+        String StepConfig = JumpStepConfig__c.class.getName();
         String Icon = 'arrow_switch';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceBranchJumpSubsequence').getUrl();
         Integer Chunks = 50; //max sync limit
@@ -19,9 +19,9 @@ public class Jump extends ApexClassModel.Service {
         Id stepConfigId = (Id)inputEvent.get('StepConfigId');
         if (stepConfigId == null) throw new ServiceException('Null step config id.');
         
-        JumpConfig__c config = [
+        JumpStepConfig__c config = [
             SELECT Id, Sequence__c
-            FROM JumpConfig__c
+            FROM JumpStepConfig__c
             WHERE Id = :stepConfigId
         ];
         

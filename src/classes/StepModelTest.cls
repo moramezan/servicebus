@@ -6,8 +6,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(WiretapService.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         
         //assert before state
         System.assertEquals(1, wiretapStep.Position__c);
@@ -32,8 +32,8 @@
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(WiretapService.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         
         //assert before state
         System.assertEquals(1, wiretapStep.Position__c);
@@ -196,7 +196,7 @@
     
     static testmethod void testCommitWithCustomSettingConfig() {
         //arrange config
-        Id configId = Database.insert(new PublishConfig__c(
+        Id configId = Database.insert(new PublishStepConfig__c(
             Name = 'Config Test',
             EventType__c = 'Test'
         )).getId();
@@ -215,8 +215,8 @@
         StepModel.fromId(stepId).checkout();
         
         //arrange
-        PublishConfig__c oldConfig = [SELECT Id, Name FROM PublishConfig__c WHERE Id = :configId];
-        PublishConfig__c newConfig = [SELECT Id, Name FROM PublishConfig__c WHERE Id != :configId];
+        PublishStepConfig__c oldConfig = [SELECT Id, Name FROM PublishStepConfig__c WHERE Id = :configId];
+        PublishStepConfig__c newConfig = [SELECT Id, Name FROM PublishStepConfig__c WHERE Id != :configId];
         
         //assert
         Integer expectedCount = 2;

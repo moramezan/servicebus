@@ -1,4 +1,4 @@
-public class Wiretap extends ApexClassModel.Service {
+public class WiretapService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
     public class Summary extends ApexClassModel.Summary {

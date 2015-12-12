@@ -132,14 +132,14 @@ public class SequenceModel extends ApexDomain.StandardModel {
                 FROM Step__c
                 WHERE IsDraft__c = true
                 AND Sequence__c = :this.sequence.Name
-                AND ApexClassName__c = :Terminate.class.getName()
+                AND ApexClassName__c = :TerminateService.class.getName()
             ];
         } catch (QueryException e) {
             //sequence contains no terminate step
             ApexClass apexClass = [
                 SELECT Id, NamespacePrefix, Name
                 FROM ApexClass
-                WHERE Name = 'Terminate'
+                WHERE Name = 'TerminateService'
                 AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
             ];
             

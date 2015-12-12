@@ -38,15 +38,15 @@ public with sharing class MonitorController {
     @ReadOnly @RemoteAction static public List<Statistic> fetchTestStatistics() {
         return new List<Statistic>{
             new Statistic(null,               1, 32,  0,  0),
-            new Statistic('Branch',          1,  0,  0,  0),
-            new Statistic('AggregateByJob',         2,  0,  0,  0),
-            new Statistic('Jump',         2,  0,  0,  0),
-            new Statistic('Publish',         1,  0,  4,  0),
-            new Statistic('Schedule',            2,  0,  0,  0),
-            new Statistic('Subscribe',1,  0,  0,  0),
-            new Statistic('Subsequence',     2,  0,  2,  0),
-            new Statistic('Terminate',       2,  0,  9,  0),
-            new Statistic('Wiretap',       2,  0,  9,  0)
+            new Statistic('BranchService',          1,  0,  0,  0),
+            new Statistic('AggregateByJobService',         2,  0,  0,  0),
+            new Statistic('JumpService',         2,  0,  0,  0),
+            new Statistic('PublishService',         1,  0,  4,  0),
+            new Statistic('ScheduleService',            2,  0,  0,  0),
+            new Statistic('SubscribeService',1,  0,  0,  0),
+            new Statistic('SubsequenceService',     2,  0,  2,  0),
+            new Statistic('TerminateService',       2,  0,  9,  0),
+            new Statistic('WiretapService',       2,  0,  9,  0)
         };
     }
     

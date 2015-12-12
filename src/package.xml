@@ -7,8 +7,8 @@
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>
-        <members>AggregateByJob</members>
-        <members>AggregateByJobTest</members>
+        <members>AggregateByJobService</members>
+        <members>AggregateByJobServiceTest</members>
         <members>ApexClassConfigExtension</members>
         <members>ApexClassConfigExtensionTest</members>
         <members>ApexClassDiscoverExtension</members>
@@ -23,8 +23,8 @@
         <members>ApexClassViewExtensionTest</members>
         <members>ApexDomain</members>
         <members>ApexDomainTest</members>
-        <members>Branch</members>
-        <members>BranchTest</members>
+        <members>BranchService</members>
+        <members>BranchServiceTest</members>
         <members>Broker</members>
         <members>BrokerBatch</members>
         <members>BrokerBatchTest</members>
@@ -35,8 +35,8 @@
         <members>EnqueueTest</members>
         <members>Job</members>
         <members>JobTest</members>
-        <members>Jump</members>
-        <members>JumpTest</members>
+        <members>JumpService</members>
+        <members>JumpServiceTest</members>
         <members>MessageApexClassExtension</members>
         <members>MessageApexClassExtensionTest</members>
         <members>MessageKillExtension</members>
@@ -59,14 +59,14 @@
         <members>PostInstallHandlerTest</members>
         <members>PostUninstallHandler</members>
         <members>PostUninstallHandlerTest</members>
-        <members>Publish</members>
-        <members>PublishTest</members>
+        <members>PublishService</members>
+        <members>PublishServiceTest</members>
         <members>Router</members>
         <members>RouterSchedule</members>
         <members>RouterScheduleTest</members>
         <members>RouterTest</members>
-        <members>Schedule</members>
-        <members>ScheduleTest</members>
+        <members>ScheduleService</members>
+        <members>ScheduleServiceTest</members>
         <members>SequenceCheckoutExtension</members>
         <members>SequenceCheckoutExtensionTest</members>
         <members>SequenceCommitExtension</members>
@@ -87,14 +87,14 @@
         <members>StepConfigExtensionTest</members>
         <members>StepModel</members>
         <members>StepModelTest</members>
-        <members>Subscribe</members>
-        <members>SubscribeTest</members>
-        <members>Subsequence</members>
-        <members>SubsequenceTest</members>
-        <members>Terminate</members>
-        <members>TerminateTest</members>
-        <members>Wiretap</members>
-        <members>WiretapTest</members>
+        <members>SubscribeService</members>
+        <members>SubscribeServiceTest</members>
+        <members>SubsequenceService</members>
+        <members>SubsequenceServiceTest</members>
+        <members>TerminateService</members>
+        <members>TerminateServiceTest</members>
+        <members>WiretapService</members>
+        <members>WiretapServiceTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -152,8 +152,8 @@
         <members>Application__c.RunAsAccessToken__c</members>
         <members>Application__c.RunAsRefreshToken__c</members>
         <members>Application__c.RunAsUserId__c</members>
-        <members>BranchConfig__c.Sequence__c</members>
-        <members>JumpConfig__c.Sequence__c</members>
+        <members>BranchStepConfig__c.Sequence__c</members>
+        <members>JumpStepConfig__c.Sequence__c</members>
         <members>Message__c.Attempts__c</members>
         <members>Message__c.Cause__c</members>
         <members>Message__c.CorrelationUuid__c</members>
@@ -166,32 +166,32 @@
         <members>Message__c.Route__c</members>
         <members>Message__c.Slot__c</members>
         <members>Message__c.Status__c</members>
-        <members>PublishConfig__c.EventType__c</members>
-        <members>ScheduleConfig__c.IsActive__c</members>
-        <members>ScheduleConfig__c.T0000__c</members>
-        <members>ScheduleConfig__c.T0100__c</members>
-        <members>ScheduleConfig__c.T0200__c</members>
-        <members>ScheduleConfig__c.T0300__c</members>
-        <members>ScheduleConfig__c.T0400__c</members>
-        <members>ScheduleConfig__c.T0500__c</members>
-        <members>ScheduleConfig__c.T0600__c</members>
-        <members>ScheduleConfig__c.T0700__c</members>
-        <members>ScheduleConfig__c.T0800__c</members>
-        <members>ScheduleConfig__c.T0900__c</members>
-        <members>ScheduleConfig__c.T1000__c</members>
-        <members>ScheduleConfig__c.T1100__c</members>
-        <members>ScheduleConfig__c.T1200__c</members>
-        <members>ScheduleConfig__c.T1300__c</members>
-        <members>ScheduleConfig__c.T1400__c</members>
-        <members>ScheduleConfig__c.T1500__c</members>
-        <members>ScheduleConfig__c.T1600__c</members>
-        <members>ScheduleConfig__c.T1700__c</members>
-        <members>ScheduleConfig__c.T1800__c</members>
-        <members>ScheduleConfig__c.T1900__c</members>
-        <members>ScheduleConfig__c.T2000__c</members>
-        <members>ScheduleConfig__c.T2100__c</members>
-        <members>ScheduleConfig__c.T2200__c</members>
-        <members>ScheduleConfig__c.T2300__c</members>
+        <members>PublishStepConfig__c.EventType__c</members>
+        <members>ScheduleStepConfig__c.IsActive__c</members>
+        <members>ScheduleStepConfig__c.T0000__c</members>
+        <members>ScheduleStepConfig__c.T0100__c</members>
+        <members>ScheduleStepConfig__c.T0200__c</members>
+        <members>ScheduleStepConfig__c.T0300__c</members>
+        <members>ScheduleStepConfig__c.T0400__c</members>
+        <members>ScheduleStepConfig__c.T0500__c</members>
+        <members>ScheduleStepConfig__c.T0600__c</members>
+        <members>ScheduleStepConfig__c.T0700__c</members>
+        <members>ScheduleStepConfig__c.T0800__c</members>
+        <members>ScheduleStepConfig__c.T0900__c</members>
+        <members>ScheduleStepConfig__c.T1000__c</members>
+        <members>ScheduleStepConfig__c.T1100__c</members>
+        <members>ScheduleStepConfig__c.T1200__c</members>
+        <members>ScheduleStepConfig__c.T1300__c</members>
+        <members>ScheduleStepConfig__c.T1400__c</members>
+        <members>ScheduleStepConfig__c.T1500__c</members>
+        <members>ScheduleStepConfig__c.T1600__c</members>
+        <members>ScheduleStepConfig__c.T1700__c</members>
+        <members>ScheduleStepConfig__c.T1800__c</members>
+        <members>ScheduleStepConfig__c.T1900__c</members>
+        <members>ScheduleStepConfig__c.T2000__c</members>
+        <members>ScheduleStepConfig__c.T2100__c</members>
+        <members>ScheduleStepConfig__c.T2200__c</members>
+        <members>ScheduleStepConfig__c.T2300__c</members>
         <members>Step__c.ApexClassId__c</members>
         <members>Step__c.ApexClassName__c</members>
         <members>Step__c.ConfigId__c</members>
@@ -200,23 +200,23 @@
         <members>Step__c.Position__c</members>
         <members>Step__c.Sequence__c</members>
         <members>Step__c.Version__c</members>
-        <members>SubscribeConfig__c.EventType__c</members>
-        <members>SubsequenceConfig__c.Sequence__c</members>
+        <members>SubscribeStepConfig__c.EventType__c</members>
+        <members>SubsequenceStepConfig__c.Sequence__c</members>
         <members>WiretapServiceConfig__c.UserId__c</members>
         <name>CustomField</name>
     </types>
     <types>
         <members>Application__c</members>
-        <members>BranchConfig__c</members>
-        <members>JumpConfig__c</members>
+        <members>BranchStepConfig__c</members>
+        <members>JumpStepConfig__c</members>
         <members>Message__c</members>
-        <members>PublishConfig__c</members>
-        <members>ScheduleConfig__c</members>
+        <members>PublishStepConfig__c</members>
+        <members>ScheduleStepConfig__c</members>
         <members>Sequence__c</members>
         <members>Slot__c</members>
         <members>Step__c</members>
-        <members>SubscribeConfig__c</members>
-        <members>SubsequenceConfig__c</members>
+        <members>SubscribeStepConfig__c</members>
+        <members>SubsequenceStepConfig__c</members>
         <members>WiretapServiceConfig__c</members>
         <name>CustomObject</name>
     </types>

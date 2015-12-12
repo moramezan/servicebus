@@ -1,11 +1,11 @@
-public class Publish extends ApexClassModel.Service {
+public class PublishService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
     public class Summary extends ApexClassModel.Summary {
         String Tag = 'Service Bus';
         String Label = 'Publish';
         String Description = 'Broadcasts named events to other subscribed sequences.';
-        String StepConfig = PublishConfig__c.class.getName();
+        String StepConfig = PublishStepConfig__c.class.getName();
         String Icon = 'chart_organisation';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServicePublishSubscribe').getUrl();
         Integer Chunks = 33; //max sync limit
@@ -22,18 +22,18 @@ public class Publish extends ApexClassModel.Service {
         String route = (String)inputEvent.get('Route');
         if (route == null) throw new ServiceException('Null route.');
         
-        PublishConfig__c publishConfig = [
+        PublishStepConfig__c publishConfig = [
             SELECT EventType__c
-            FROM PublishConfig__c
+            FROM PublishStepConfig__c
             WHERE Id = :stepConfigId
         ];
         
         String eventType = publishConfig.EventType__c;
         if (eventType == null) throw new ServiceException('No event type.');
         
-        List<SubscribeConfig__c> subscribeConfigs = [
+        List<SubscribeStepConfig__c> subscribeConfigs = [
             SELECT Id
-            FROM SubscribeConfig__c
+            FROM SubscribeStepConfig__c
             WHERE EventType__c = :eventType
         ];
         
@@ -52,7 +52,7 @@ public class Publish extends ApexClassModel.Service {
             'Route' => version + '#' + step.Sequence__c + '#0' //#1024 zero not one
         });
         
-        //original guy carries on... this does not inadvertently Terminate
+        //original guy carries on... this does not inadvertently terminate
         outputEvents.add(inputEvent);
         
         return outputEvents;

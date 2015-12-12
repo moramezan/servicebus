@@ -70,7 +70,7 @@
     
     static testmethod void testDescribeServiceSummary() {
         //arrange
-        ApexClassModel model = new ApexClassModel(Wiretap.class);
+        ApexClassModel model = new ApexClassModel(WiretapService.class);
         
         //act
         DescribeSObjectResult result = model.describeServiceConfig();
@@ -361,7 +361,7 @@
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
-                    'Route' => Wiretap.class.getName()
+                    'Route' => WiretapService.class.getName()
                 }
             };
         }
@@ -411,10 +411,10 @@
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
-                    'Route' => Wiretap.class.getName()
+                    'Route' => WiretapService.class.getName()
                 },
                 new Map<String,Object>{
-                    'Route' => Terminate.class.getName()
+                    'Route' => TerminateService.class.getName()
                 }
             };
         }

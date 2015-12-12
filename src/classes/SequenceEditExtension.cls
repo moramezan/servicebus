@@ -56,14 +56,14 @@ public with sharing class SequenceEditExtension {
     }
     
     public String getTerminateApexClassName() {
-        return Terminate.class.getName();
+        return TerminateService.class.getName();
     }
     
     /**
      * The application is snappier when all Sequence Steps are already loaded when the page
      * displays, instead of fetching them for the first time with a RemoteAction call.
      *
-     * A freshly created Sequence lacks a Terminate! But since the Page Action invokes
+     * A freshly created Sequence lacks a terminate! But since the Page Action invokes
      * sequence.terminate(), the Terminate Step should exist before the page is rendered.
      */
     public String getSteps() {
@@ -131,7 +131,7 @@ public with sharing class SequenceEditExtension {
             ];
             
             for (Step__c step : steps) {
-                if (step.ApexClassName__c == Terminate.class.getName()) {
+                if (step.ApexClassName__c == TerminateService.class.getName()) {
                     terminateCount++;
                 }
             }
@@ -146,7 +146,7 @@ public with sharing class SequenceEditExtension {
             }
             
             //terminate not at end error
-            if ((steps.size() > 0) ? (steps[steps.size() - 1].ApexClassName__c != Terminate.class.getName()) : false) {
+            if ((steps.size() > 0) ? (steps[steps.size() - 1].ApexClassName__c != TerminateService.class.getName()) : false) {
                 ApexPages.addMessage(new ApexPages.Message(
                     ApexPages.Severity.WARNING,
                     'Terminate not present at end of sequence ' + sequence.Id
@@ -180,8 +180,8 @@ public with sharing class SequenceEditExtension {
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
         ];
         
-        Map<Id,SObject> publishConfigIdToPublishConfig = new Map<Id,SObject>([SELECT Id, EventType__c FROM PublishConfig__c LIMIT 10000]); //checkmarx
-        List<SubscribeConfig__c> SubscribeConfigs = [SELECT Id, EventType__c FROM SubscribeConfig__c LIMIT 10000]; //checkmarx
+        Map<Id,SObject> publishConfigIdToPublishConfig = new Map<Id,SObject>([SELECT Id, EventType__c FROM PublishStepConfig__c LIMIT 10000]); //checkmarx
+        List<SubscribeStepConfig__c> SubscribeConfigs = [SELECT Id, EventType__c FROM SubscribeStepConfig__c LIMIT 10000]; //checkmarx
         
         for (Sequence__c sequence : sequences) {
             Boolean containsPublish = false;
@@ -193,21 +193,21 @@ public with sharing class SequenceEditExtension {
                 ORDER BY Position__c ASC
             ];
             
-            for (Step__c step : steps) if (step.ApexClassName__c == Publish.class.getName()) containsPublish = true;
+            for (Step__c step : steps) if (step.ApexClassName__c == PublishService.class.getName()) containsPublish = true;
             
             //no publish steps to check
             if (!containsPublish) continue;
             
             for (Step__c step : steps) {
                 //skip non-publish steps
-                if (step.ApexClassName__c != Publish.class.getName()) continue;
+                if (step.ApexClassName__c != PublishService.class.getName()) continue;
                 
                 Id stepId = step.Id;
                 Id publishConfigId = (Id) step.ConfigId__c; // cast from string to Id
                 
-                PublishConfig__c publishConfig;
+                PublishStepConfig__c publishConfig;
                 String eventType;
-                publishConfig = (PublishConfig__c)publishConfigIdToPublishConfig.get(publishConfigId);
+                publishConfig = (PublishStepConfig__c)publishConfigIdToPublishConfig.get(publishConfigId);
                 eventType = publishConfig.EventType__c;
                 
                 if (eventType == null) {
@@ -219,7 +219,7 @@ public with sharing class SequenceEditExtension {
                 }
                 
                 Boolean subscriberFound = false;
-                for (SubscribeConfig__c SubscribeConfig : SubscribeConfigs) {
+                for (SubscribeStepConfig__c SubscribeConfig : SubscribeConfigs) {
                     if (SubscribeConfig.EventType__c == eventType) {
                         subscriberFound = true;
                     }
@@ -250,8 +250,8 @@ public with sharing class SequenceEditExtension {
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
         ];
         
-        Map<Id,SObject> subscribeConfigIdToSubscribeConfig = new Map<Id,SObject>([SELECT Id, EventType__c FROM SubscribeConfig__c LIMIT 10000]); //checkmarx
-        List<PublishConfig__c> publishConfigs = [SELECT Id, EventType__c FROM PublishConfig__c LIMIT 10000]; //checkmarx
+        Map<Id,SObject> subscribeConfigIdToSubscribeConfig = new Map<Id,SObject>([SELECT Id, EventType__c FROM SubscribeStepConfig__c LIMIT 10000]); //checkmarx
+        List<PublishStepConfig__c> publishConfigs = [SELECT Id, EventType__c FROM PublishStepConfig__c LIMIT 10000]; //checkmarx
         
         for (Sequence__c sequence : sequences) {
             List<Step__c> steps = [
@@ -268,7 +268,7 @@ public with sharing class SequenceEditExtension {
             Id subscribeConfigId = null;
             
             for (Step__c step : steps) {
-                if (step.ApexClassName__c == Subscribe.class.getName()) {
+                if (step.ApexClassName__c == SubscribeService.class.getName()) {
                     subscribeOccurs++;
                     subscribeConfigId = (Id) step.ConfigId__c; // cast from string to Id
                     if (count == 1) {
@@ -298,7 +298,7 @@ public with sharing class SequenceEditExtension {
                 continue;
             }
             
-            SubscribeConfig__c subscribeConfig = (SubscribeConfig__c)subscribeConfigIdToSubscribeConfig.get(subscribeConfigId);
+            SubscribeStepConfig__c subscribeConfig = (SubscribeStepConfig__c)subscribeConfigIdToSubscribeConfig.get(subscribeConfigId);
             if (subscribeConfig.EventType__c == null) {
                 ApexPages.addMessage(new ApexPages.Message(
                     ApexPages.Severity.WARNING,
@@ -308,7 +308,7 @@ public with sharing class SequenceEditExtension {
             }
             
             Boolean publisherFound = false;
-            for (PublishConfig__c  publishConfig : publishConfigs) {
+            for (PublishStepConfig__c  publishConfig : publishConfigs) {
                 if (subscribeConfig.EventType__c != null && publishConfig.EventType__c == subscribeConfig.EventType__c) publisherFound = true;
             }
             

@@ -1,13 +1,13 @@
-public class Subsequence extends ApexClassModel.Service {
+public class SubsequenceService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
     static public Boolean IsRunning = false;
     
     public class Summary extends ApexClassModel.Summary {
         String Tag = 'Service Bus';
-        String Label = 'Synchronous Subsequence';
+        String Label = 'Subsequence';
         String Description = 'Synchronously executes another sequence before emitting the event.';
-        String StepConfig = SubsequenceConfig__c.class.getName();
+        String StepConfig = SubsequenceStepConfig__c.class.getName();
         String Icon = 'arrow_undo';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceBranchJumpSubsequence').getUrl();
         Integer Chunks = 1; //we dont know what they will do
@@ -51,9 +51,9 @@ public class Subsequence extends ApexClassModel.Service {
         String stepConfigId = (Id)inputEvent.get('StepConfigId');
         if (stepConfigId == null) throw new ServiceException('Null step config id.');
         
-        SubsequenceConfig__c config = [
+        SubsequenceStepConfig__c config = [
             SELECT Id, Sequence__c
-            FROM SubsequenceConfig__c
+            FROM SubsequenceStepConfig__c
             WHERE Id = :stepConfigId
         ];
         

@@ -17,7 +17,7 @@ public class Router extends ApexClassModel.Service {
         List<Step__c> schedules = [
             SELECT Id, Sequence__c, Position__c
             FROM Step__c
-            WHERE ApexClassName__c = :Schedule.class.getName()
+            WHERE ApexClassName__c = :ScheduleService.class.getName()
             AND Version__c = :Application__c.getOrgDefaults().BrokerVersion__c
         ];
         

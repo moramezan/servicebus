@@ -5,11 +5,11 @@
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
-        <apexClass>AggregateByJob</apexClass>
+        <apexClass>AggregateByJobService</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>AggregateByJobTest</apexClass>
+        <apexClass>AggregateByJobServiceTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -69,11 +69,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Branch</apexClass>
+        <apexClass>BranchService</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>BranchTest</apexClass>
+        <apexClass>BranchServiceTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -117,11 +117,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Jump</apexClass>
+        <apexClass>JumpService</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>JumpTest</apexClass>
+        <apexClass>JumpServiceTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -213,11 +213,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Publish</apexClass>
+        <apexClass>PublishService</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>PublishTest</apexClass>
+        <apexClass>PublishServiceTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -237,11 +237,11 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Schedule</apexClass>
+        <apexClass>ScheduleService</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>ScheduleTest</apexClass>
+        <apexClass>ScheduleServiceTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -325,35 +325,35 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Subscribe</apexClass>
+        <apexClass>SubscribeService</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SubscribeTest</apexClass>
+        <apexClass>SubscribeServiceTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Subsequence</apexClass>
+        <apexClass>SubsequenceService</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SubsequenceTest</apexClass>
+        <apexClass>SubsequenceServiceTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Terminate</apexClass>
+        <apexClass>TerminateService</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>TerminateTest</apexClass>
+        <apexClass>TerminateServiceTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Wiretap</apexClass>
+        <apexClass>WiretapService</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>WiretapTest</apexClass>
+        <apexClass>WiretapServiceTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <description>Administer Sequences, Steps and Services as part of Service Bus.</description>

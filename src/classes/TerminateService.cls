@@ -1,4 +1,4 @@
-public class Terminate extends ApexClassModel.Service {
+public class TerminateService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
     public class Summary extends ApexClassModel.Summary {

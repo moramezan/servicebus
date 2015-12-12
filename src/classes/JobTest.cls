@@ -60,7 +60,7 @@
     static testmethod void testUnpersistableTypesDetectedInConstructor() {
         //arrange
         Map<String,Object> input = new Map<String,Object>{
-            'naughty' => Terminate.class
+            'naughty' => TerminateService.class
         };
         
         try {
@@ -180,17 +180,17 @@
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         //act
-        inputEvent = new Map<String,Object>{'ToService' => 'Wiretap'};
+        inputEvent = new Map<String,Object>{'ToService' => 'WiretapService'};
         job = new Job(inputEvent);
         queue = (Enqueue.QueueImpl)job.queue;
         inputEvents = queue.Events;
         
         //assert
-        expectedParam = 'Wiretap';
+        expectedParam = 'WiretapService';
         actualParam = inputEvents[0].get('Route');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
-        expectedParam = 'Wiretap';
+        expectedParam = 'WiretapService';
         actualParam = inputEvents[0].get('servicebus:ToService');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         

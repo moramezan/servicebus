@@ -1,8 +1,8 @@
-public class Branch extends ApexClassModel.Service {
+public class BranchService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
     public class Summary extends ApexClassModel.Summary {
-        String StepConfig = BranchConfig__c.class.getName();
+        String StepConfig = BranchStepConfig__c.class.getName();
         String Icon = 'arrow_branch';
         String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceBranchJumpSubsequence').getUrl();
         String Tag = 'Service Bus';
@@ -19,9 +19,9 @@ public class Branch extends ApexClassModel.Service {
         String stepConfigId = (Id)inputEvent.get('StepConfigId');
         if (stepConfigId == null) throw new ServiceException('Null step config id.');
         
-        BranchConfig__c config = [
+        BranchStepConfig__c config = [
             SELECT Id, Sequence__c
-            FROM BranchConfig__c
+            FROM BranchStepConfig__c
             WHERE Id = :stepConfigId
         ];
         

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <customSettingsType>List</customSettingsType>
-    <description>Holds subscribe configs.</description>
+    <description>Holds publish configs.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>EventType__c</fullName>
         <description>Event Type?</description>
         <externalId>false</externalId>
-        <inlineHelpText>What event type should this step listen to messages from?</inlineHelpText>
+        <inlineHelpText>What event type should this step broadcast messages to?</inlineHelpText>
         <label>Event Type</label>
         <length>30</length>
         <required>false</required>
@@ -15,6 +15,6 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <label>Subscribe Config</label>
+    <label>Publish Step Config</label>
     <visibility>Public</visibility>
 </CustomObject>

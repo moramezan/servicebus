@@ -1,8 +1,8 @@
-@IsTest class PublishTest {
+@IsTest class PublishServiceTest {
 
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Publish.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(PublishService.class);
         
         //assert
         Integer expectedChunks = 33; //max sync limit
@@ -13,27 +13,27 @@
    static testmethod void withinSystemLimits() {
         
         //arrange publisher config
-        PublishConfig__c pubConfig = new PublishConfig__c(Name = UserInfo.getUserId(), EventType__c = 'Test');
+        PublishStepConfig__c pubConfig = new PublishStepConfig__c(Name = UserInfo.getUserId(), EventType__c = 'Test');
         insert pubConfig;
         
         //arrange subscriber 1 sequence, step, config
         Sequence__c sub1 = new Sequence__c(Name = 'Subscriber1');
         insert sub1;
         
-        Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(Subscribe.class);
+        Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(SubscribeService.class);
         Id sub1configId = new StepModel(sub1step).upsertConfig();
         
-        SubscribeConfig__c sub1config = new SubscribeConfig__c(Id = sub1configId, EventType__c = 'Test');
+        SubscribeStepConfig__c sub1config = new SubscribeStepConfig__c(Id = sub1configId, EventType__c = 'Test');
         update sub1config;
         
         //arrange subscriber 2 sequence, step, config
         Sequence__c sub2 = new Sequence__c(Name = 'Subscriber2');
         insert sub2;
         
-        Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(Subscribe.class);
+        Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(SubscribeService.class);
         Id sub2configId = new StepModel(sub2step).upsertConfig();
         
-        SubscribeConfig__c sub2config = new SubscribeConfig__c(Id = sub2configId, EventType__c = 'Test');
+        SubscribeStepConfig__c sub2config = new SubscribeStepConfig__c(Id = sub2configId, EventType__c = 'Test');
         update sub2config;
         
         //arrange input
@@ -43,14 +43,14 @@
         };
         
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Publish.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(PublishService.class);
         
         //act
         Test.startTest();
         Integer chunks = summary.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
-            ApexClassModel.Service service = new Publish();
+            ApexClassModel.Service service = new PublishService();
             List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
@@ -68,10 +68,10 @@
         
         try {
             //act
-            ApexClassModel.Service service = new Publish();
+            ApexClassModel.Service service = new PublishService();
             service.handle(parameters);
             System.assert(false, 'Line above should throw exception.');
-        } catch (Publish.ServiceException e) {
+        } catch (PublishService.ServiceException e) {
             //assert
             String expectedMessage = 'Null step config id.';
             String actualMessage = e.getMessage();
@@ -82,7 +82,7 @@
     static testmethod void testNoSubscribersStillReturnsOneMessage() {
         
         //arrange publisher config
-        PublishConfig__c pubConfig = new PublishConfig__c(Name = UserInfo.getUserId(), EventType__c = 'Test');
+        PublishStepConfig__c pubConfig = new PublishStepConfig__c(Name = UserInfo.getUserId(), EventType__c = 'Test');
         insert pubConfig;
         
         //arrange input
@@ -92,7 +92,7 @@
         };
         
         //act
-        ApexClassModel.Service service = new Publish();
+        ApexClassModel.Service service = new PublishService();
         List<Map<String,Object>> outputEvents = service.handle(inputEvent);
         
         //assert
@@ -104,27 +104,27 @@
     static testmethod void testSubscribersAffectOutputEventsReturned() {
         
         //arrange publish config
-        PublishConfig__c pubConfig = new PublishConfig__c(Name = UserInfo.getUserId(), EventType__c = 'Test');
+        PublishStepConfig__c pubConfig = new PublishStepConfig__c(Name = UserInfo.getUserId(), EventType__c = 'Test');
         insert pubConfig;
         
         //arrange subscriber 1 sequence, step, config
         Sequence__c sub1 = new Sequence__c(Name = 'Subscriber1');
         insert sub1;
         
-        Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(Subscribe.class);
+        Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(SubscribeService.class);
         Id sub1configId = new StepModel(sub1step).upsertConfig();
         
-        SubscribeConfig__c sub1config = new SubscribeConfig__c(Id = sub1configId, EventType__c = 'Test');
+        SubscribeStepConfig__c sub1config = new SubscribeStepConfig__c(Id = sub1configId, EventType__c = 'Test');
         update sub1config;
         
         //arrange subscriber 2 sequence, step, config
         Sequence__c sub2 = new Sequence__c(Name = 'Subscriber2');
         insert sub2;
         
-        Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(Subscribe.class);
+        Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(SubscribeService.class);
         Id sub2configId = new StepModel(sub2step).upsertConfig();
         
-        SubscribeConfig__c sub2config = new SubscribeConfig__c(Id = sub2configId, EventType__c = 'Test');
+        SubscribeStepConfig__c sub2config = new SubscribeStepConfig__c(Id = sub2configId, EventType__c = 'Test');
         update sub2config;
         
         //arrange input
@@ -134,7 +134,7 @@
         };
         
         //act
-        ApexClassModel.Service service = new Publish();
+        ApexClassModel.Service service = new PublishService();
         List<Map<String,Object>> outputEvents = service.handle(inputEvent);
         
         //assert

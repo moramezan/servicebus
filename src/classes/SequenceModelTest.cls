@@ -15,9 +15,9 @@
         insert soSequence;
         Id soSequenceId = soSequence.Id;
 
-        Step__c stepA1 = SequenceModel.fromName(soSequence.Name).appendStep(Subscribe.class);
-        Step__c stepA2 = SequenceModel.fromName(soSequence.Name).appendStep(Publish.class);
-        Step__c stepA3 = SequenceModel.fromName(soSequence.Name).appendStep(Terminate.class);
+        Step__c stepA1 = SequenceModel.fromName(soSequence.Name).appendStep(SubscribeService.class);
+        Step__c stepA2 = SequenceModel.fromName(soSequence.Name).appendStep(PublishService.class);
+        Step__c stepA3 = SequenceModel.fromName(soSequence.Name).appendStep(TerminateService.class);
         Integer positionA1 = stepA1.Position__c.intValue();
         Integer positionA2 = stepA2.Position__c.intValue();
         Integer positionA3 = stepA3.Position__c.intValue();
@@ -43,7 +43,7 @@
         Id soSequenceId = soSequence.Id;
 
         // act
-        Step__c actualStep = SequenceModel.fromName(soSequence.Name).appendStep(Subscribe.class);
+        Step__c actualStep = SequenceModel.fromName(soSequence.Name).appendStep(SubscribeService.class);
         
         // assemble
         List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequence.Name];
@@ -59,7 +59,7 @@
         // assert
         Integer expectedPosition = 1;
         System.assertEquals( expectedPosition , actualPosition  );
-        String expectedServiceName = Subscribe.class.getName();
+        String expectedServiceName = SubscribeService.class.getName();
         System.assertEquals( expectedServiceName , actualServiceName  );
         Integer expectedStepCount = 1;
         System.assertEquals( expectedStepCount , actualStepCount  );
@@ -89,7 +89,7 @@
         // assert
         Integer expectedPosition = 1;
         System.assertEquals( expectedPosition , actualPosition  );
-        String expectedServiceName = Terminate.class.getName();
+        String expectedServiceName = TerminateService.class.getName();
         System.assertEquals( expectedServiceName , actualServiceName  );
         Integer expectedStepCount = 1;
         System.assertEquals( expectedStepCount , actualStepCount  );
@@ -120,7 +120,7 @@
         // assert
         Integer expectedPosition = 1;
         System.assertEquals( expectedPosition , actualPosition  );
-        String expectedServiceName = Terminate.class.getName();
+        String expectedServiceName = TerminateService.class.getName();
         System.assertEquals( expectedServiceName , actualServiceName  );
         Integer expectedStepCount = 1;
         System.assertEquals( expectedStepCount , actualStepCount  );
@@ -132,8 +132,8 @@
         Sequence__c soSequenceA = new Sequence__c(Name = sequenceNameA);
         insert soSequenceA;
         Id soSequenceAId = soSequenceA.Id;
-        Step__c stepA1 = SequenceModel.fromName(soSequenceA.Name).appendStep(Subscribe.class);
-        Step__c stepA2 = SequenceModel.fromName(soSequenceA.Name).appendStep(Terminate.class);
+        Step__c stepA1 = SequenceModel.fromName(soSequenceA.Name).appendStep(SubscribeService.class);
+        Step__c stepA2 = SequenceModel.fromName(soSequenceA.Name).appendStep(TerminateService.class);
  
 
         // act
@@ -154,7 +154,7 @@
         // assert
         Integer expectedPosition = 1;
         System.assertEquals( expectedPosition , actualPosition  );
-        String expectedServiceName = Terminate.class.getName();
+        String expectedServiceName = TerminateService.class.getName();
         System.assertEquals( expectedServiceName , actualServiceName  );
         Integer expectedStepCount = 1;
         System.assertEquals( expectedStepCount , actualStepsCount  );
@@ -175,7 +175,7 @@
             ConfigId__c = '015000000000000AAA',
             ConfigName__c = 'This step must be configured. Seriously.',
             ApexClassId__c = '01p000000000000AAA',
-            ApexClassName__c = 'servicebus.Wiretap',
+            ApexClassName__c = 'servicebus.WiretapService',
             Position__c = 1.0
         );
         

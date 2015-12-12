@@ -1,4 +1,4 @@
-@IsTest class SubsequenceTest {
+@IsTest class SubsequenceServiceTest {
     
     @TestSetup static void testSetup() {
         //act
@@ -10,7 +10,7 @@
     
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Subsequence.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(SubsequenceService.class);
         
         //assert
         Integer expectedChunks = 1; //max sync limit
@@ -21,22 +21,22 @@
     static testmethod void withinSystemLimits() {
         Sequence__c origin = new Sequence__c(Name = 'Origin');
         insert origin;
-        Step__c originStep = SequenceModel.fromName(origin.Name).appendStep(Subsequence.class);
+        Step__c originStep = SequenceModel.fromName(origin.Name).appendStep(SubsequenceService.class);
         new StepModel(originStep).upsertConfig();
         
         Sequence__c target = new Sequence__c(Name = 'Target');
         insert target;
-        Step__c targetStep = SequenceModel.fromName(target.Name).appendStep(Terminate.class);
+        Step__c targetStep = SequenceModel.fromName(target.Name).appendStep(TerminateService.class);
         
         //prepare config in db
-        SubsequenceConfig__c config = new SubsequenceConfig__c(
+        SubsequenceStepConfig__c config = new SubsequenceStepConfig__c(
             Id = originStep.ConfigId__c,
             Sequence__c = 'Target'
         );
         update config;
         
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Subsequence.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(SubsequenceService.class);
         
         //act
         Test.startTest();
@@ -50,7 +50,7 @@
                 'Route' => '1#Origin#1'
             };
                 
-            ApexClassModel.Service service = new Subsequence();
+            ApexClassModel.Service service = new SubsequenceService();
             List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
@@ -65,25 +65,25 @@
         Sequence__c routine = new Sequence__c(Name = 'Routine');
         insert routine;
         
-        SequenceModel.fromId(routine.Id).appendStep(Wiretap.class);
-        SequenceModel.fromId(routine.Id).appendStep(Wiretap.class);
-        SequenceModel.fromId(routine.Id).appendStep(Wiretap.class);
-        SequenceModel.fromId(routine.Id).appendStep(Terminate.class);
+        SequenceModel.fromId(routine.Id).appendStep(WiretapService.class);
+        SequenceModel.fromId(routine.Id).appendStep(WiretapService.class);
+        SequenceModel.fromId(routine.Id).appendStep(WiretapService.class);
+        SequenceModel.fromId(routine.Id).appendStep(TerminateService.class);
         
         //arrange caller
         Sequence__c caller = new Sequence__c(Name = 'Caller');
         insert caller;
         
-        Step__c step1 = SequenceModel.fromId(caller.Id).appendStep(Subsequence.class);
-        Step__c step2 = SequenceModel.fromId(caller.Id).appendStep(Subsequence.class);
-        SequenceModel.fromId(caller.Id).appendStep(Terminate.class);
+        Step__c step1 = SequenceModel.fromId(caller.Id).appendStep(SubsequenceService.class);
+        Step__c step2 = SequenceModel.fromId(caller.Id).appendStep(SubsequenceService.class);
+        SequenceModel.fromId(caller.Id).appendStep(TerminateService.class);
         
         //arrange config
         Id configId1 = new StepModel(step1).upsertConfig();
         Id configId2 = new StepModel(step2).upsertConfig();
         
-        update new SubsequenceConfig__c(Id = configId1, Sequence__c = 'Routine');
-        update new SubsequenceConfig__c(Id = configId2, Sequence__c = 'Routine');
+        update new SubsequenceStepConfig__c(Id = configId1, Sequence__c = 'Routine');
+        update new SubsequenceStepConfig__c(Id = configId2, Sequence__c = 'Routine');
         
         //act (enqueue)
         Test.startTest();
@@ -110,15 +110,15 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        SequenceModel.fromId(sequence.Id).appendStep(Subsequence.class);
-        SequenceModel.fromId(sequence.Id).appendStep(Terminate.class);
+        SequenceModel.fromId(sequence.Id).appendStep(SubsequenceService.class);
+        SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class);
         
         try {
             //act (no config!)
-            ApexClassModel.Service service = new Subsequence();
+            ApexClassModel.Service service = new SubsequenceService();
             service.handle(new Map<String,Object>());
             System.assert(false, 'Line above should throw exception.');
-        } catch (Subsequence.ServiceException e) {
+        } catch (SubsequenceService.ServiceException e) {
             //assert
             String expectedMessage = 'Null step config id.';
             String actualMessage = e.getMessage();
@@ -154,12 +154,12 @@
         Sequence__c caller = new Sequence__c(Name = 'Caller');
         insert caller;
         
-        Step__c step = SequenceModel.fromId(caller.Id).appendStep(Subsequence.class);
-        SequenceModel.fromId(caller.Id).appendStep(Terminate.class);
+        Step__c step = SequenceModel.fromId(caller.Id).appendStep(SubsequenceService.class);
+        SequenceModel.fromId(caller.Id).appendStep(TerminateService.class);
         
         //arrange config
         Id configId = new StepModel(step).upsertConfig();
-        update new SubsequenceConfig__c(Id = configId, Sequence__c = 'Routine');
+        update new SubsequenceStepConfig__c(Id = configId, Sequence__c = 'Routine');
         
         //arrange input event
         Map<String,Object> inputEvent = new Map<String,Object>{
@@ -169,7 +169,7 @@
         
         try {
             //act
-            ApexClassModel.Service service = new Subsequence();
+            ApexClassModel.Service service = new SubsequenceService();
             service.handle(inputEvent);
             System.assert(false, 'Line above should throw exception.');
         } catch (MathException e) {
@@ -205,18 +205,18 @@
         insert routine;
         
         SequenceModel.fromId(routine.Id).appendStep(Callout.class);
-        SequenceModel.fromId(routine.Id).appendStep(Terminate.class);
+        SequenceModel.fromId(routine.Id).appendStep(TerminateService.class);
         
         //arrange caller
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c step = SequenceModel.fromId(sequence.Id).appendStep(Subsequence.class);
-        SequenceModel.fromId(sequence.Id).appendStep(Terminate.class);
+        Step__c step = SequenceModel.fromId(sequence.Id).appendStep(SubsequenceService.class);
+        SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class);
         
         //arrange config
         Id configId = new StepModel(step).upsertConfig();
-        update new SubsequenceConfig__c(Id = configId, Sequence__c = 'Routine');
+        update new SubsequenceStepConfig__c(Id = configId, Sequence__c = 'Routine');
         
         //arrange input
         Map<String,Object> event = new Map<String,Object>{
@@ -228,13 +228,13 @@
         try {
             //act
             Test.setMock(HttpCalloutMock.class, new CalloutMock());
-            ApexClassModel.Service service = new Subsequence();
+            ApexClassModel.Service service = new SubsequenceService();
             service.handle(event);
             System.assert(false, 'Line above should throw exception.');
             
         } catch (Broker.ServiceException e) {
             //assert
-            String expectedMessage = Callout.class.getName() + ': Callout from Subsequence not supported. Consider using Jumps instead.';
+            String expectedMessage = Callout.class.getName() + ': Callout from subsequence not supported. Consider using jumps instead.';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }

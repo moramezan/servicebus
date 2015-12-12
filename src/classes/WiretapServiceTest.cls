@@ -1,8 +1,8 @@
-@IsTest class WiretapTest {
+@IsTest class WiretapServiceTest {
     
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Wiretap.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(WiretapService.class);
         
         //assert
         Integer expectedChunks = 5;
@@ -21,14 +21,14 @@
         };
         
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Wiretap.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(WiretapService.class);
 
         //act
         Test.startTest();
         Integer chunks = summary.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
-            ApexClassModel.Service service = new Wiretap();
+            ApexClassModel.Service service = new WiretapService();
             List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
@@ -60,7 +60,7 @@
 
         // Act
         Boolean actualFlagException = false;
-        ApexClassModel.Service service = new Wiretap();
+        ApexClassModel.Service service = new WiretapService();
         List<Map<String,Object>> results = service.handle(parameters);
  
         // Assert
@@ -86,7 +86,7 @@
         Integer expectedSize = 1;
 
         // Act
-        ApexClassModel.Service service = new Wiretap();
+        ApexClassModel.Service service = new WiretapService();
         List<Map<String,Object>> actualParametersList = service.handle(inputEvent);
 
         // prepare

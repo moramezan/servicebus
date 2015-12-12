@@ -2,8 +2,8 @@
  * Very fundamental order:
  *
  * Example sequence:
- * Test#1 [Wiretap]
- * Test#2 [Terminate]
+ * Test#1 [wiretap]
+ * Test#2 [terminate]
  *
  * [interactive] System.enqueueJob(job)
  * [queueable] execute job

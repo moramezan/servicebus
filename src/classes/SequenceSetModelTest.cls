@@ -15,18 +15,18 @@
         insert sequence;
         
         //arrange steps
-        Step__c branchStep = SequenceModel.fromName(sequence.Name).appendStep(Branch.class);
+        Step__c branchStep = SequenceModel.fromName(sequence.Name).appendStep(BranchService.class);
         new StepModel(branchStep).upsertConfig();
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         
         Integer expectedConfigsBefore = 1;
-        Integer actualConfigsBefore = [SELECT COUNT() FROM BranchConfig__c];
+        Integer actualConfigsBefore = [SELECT COUNT() FROM BranchStepConfig__c];
         
         //act
         delete sequence;
         
         Integer expectedConfigsAfter = 0;
-        Integer actualConfigsAfter = [SELECT COUNT() FROM BranchConfig__c];
+        Integer actualConfigsAfter = [SELECT COUNT() FROM BranchStepConfig__c];
         
         //assert
         System.assertEquals(expectedConfigsBefore, actualConfigsBefore);
@@ -38,9 +38,9 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c scheduleStep = SequenceModel.fromId(sequence.Id).appendStep(Schedule.class);
+        Step__c scheduleStep = SequenceModel.fromId(sequence.Id).appendStep(ScheduleService.class);
         Id configId = new stepModel(scheduleStep).upsertConfig();
-        Step__c terminateStep = SequenceModel.fromId(sequence.Id).appendStep(Terminate.class);
+        Step__c terminateStep = SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class);
         
         //act
         Database.delete(configId);

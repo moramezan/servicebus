@@ -13,7 +13,7 @@
         ApexClass apexClass = [
             SELECT Id
             FROM ApexClass
-            WHERE Name = 'Wiretap'
+            WHERE Name = 'WiretapService'
             AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
         ];
         

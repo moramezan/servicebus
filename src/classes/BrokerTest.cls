@@ -68,8 +68,8 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(WiretapService.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         
         //arrange messages
         Map<String,Object> inputEvent = new Map<String,Object>{'ToSequence' => 'Test'};
@@ -95,7 +95,7 @@
         List<Message__c> records = MessageSetModel.locateMarkableWork();
         
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Wiretap.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(WiretapService.class);
         
         //assert
         Integer expectedChunks = 5;
@@ -115,8 +115,8 @@
         
         //arrange steps
         SequenceModel model = SequenceModel.fromId(sequence.Id);
-        model.appendStep(Wiretap.class);
-        model.appendStep(Terminate.class);
+        model.appendStep(WiretapService.class);
+        model.appendStep(TerminateService.class);
         
         //arrange inputs
         Test.startTest();
@@ -196,8 +196,8 @@
         insert sequence;
         
         //arrange steps
-        SequenceModel.fromId(sequence.Id).appendStep(Wiretap.class);
-        SequenceModel.fromId(sequence.Id).appendStep(Terminate.class);
+        SequenceModel.fromId(sequence.Id).appendStep(WiretapService.class);
+        SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class);
         
         //arrange message
         Map<String,Object> event = new Map<String,Object>{'Route' => '1#Test#1'};
@@ -253,9 +253,9 @@
         
         //arrange steps
         SequenceModel model = SequenceModel.fromId(sequence.Id);
-        model.appendStep(Wiretap.class);
-        model.appendStep(Wiretap.class);
-        model.appendStep(Terminate.class);
+        model.appendStep(WiretapService.class);
+        model.appendStep(WiretapService.class);
+        model.appendStep(TerminateService.class);
         
         Map<String,Object> event1 = new Map<String,Object>{'Route' => '1#Test#1'};
         Map<String,Object> event2 = new Map<String,Object>{'Route' => '1#Test#2'};
@@ -300,7 +300,7 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         
         List<Map<String,Object>> inputEvents = new List<Map<String,Object>>{
             new Map<String,Object>{'ToSequence' => 'Test'},
@@ -342,7 +342,7 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         
         Map<String,Object> event = new Map<String,Object>{'Route' => '1#Test#1'};
         
@@ -373,7 +373,7 @@
         insert sequence;
         
         //arrange steps
-        SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         
         //assert
         Integer expectedCountBefore = 0;
@@ -474,7 +474,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         step.ApexClassName__c = 'lalala';
         update step;
         
@@ -572,12 +572,12 @@
         Integer positionA5 = 5;
         Integer positionA6 = 6;
 
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c issue =  SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class); // deleted - implying a resolution issue
-        Step__c stepA5 = SequenceModel.fromName(sequenceA.Name).appendStep(Wiretap.class);
-        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(Terminate.class);
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(WiretapService.class);
+        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(WiretapService.class);
+        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(WiretapService.class);
+        Step__c issue =  SequenceModel.fromName(sequenceA.Name).appendStep(WiretapService.class); // deleted - implying a resolution issue
+        Step__c stepA5 = SequenceModel.fromName(sequenceA.Name).appendStep(WiretapService.class);
+        Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(TerminateService.class);
         
         delete issue;
         
@@ -619,7 +619,7 @@
         
         //arrange steps
         SequenceModel model = SequenceModel.fromId(sequence.Id);
-        model.appendStep(Terminate.class);
+        model.appendStep(TerminateService.class);
         
         //arrange input event
         DateTime timestamp = DateTime.newInstance(2014,12,15,13,11,07);
@@ -657,7 +657,7 @@
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
         insert sequence;
         
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
   
         //arrange inputs
         Map<String,Object> input1 = new Map<String,Object>{'ToSequence' => 'Test'};
@@ -692,7 +692,7 @@
         
         //arrange steps
         SequenceModel model = SequenceModel.fromId(sequence.Id);
-        model.appendStep(Terminate.class);
+        model.appendStep(TerminateService.class);
         
         //act
         new Job(sequence.Name, '00D000000000000AAA').execute(new QueueableContext());
@@ -773,7 +773,7 @@
         insert sequence;
         
         Step__c errorStep = SequenceModel.fromName(sequence.Name).appendStep(ChunkErrorService.class);
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         
         //arrange broker implementation and params
         Map<String,Object> failureEvent = new Map<String,Object>{'c:IsError' => true, 'ToSequence' => 'Test'};
@@ -860,8 +860,8 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(Wiretap.class);
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(WiretapService.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         
         //arrange messages
         Map<String,Object> inputEvent = new Map<String,Object>{'ToSequence' => 'Test'};
@@ -952,7 +952,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         
         //arrange input
         Map<String,Object> inputEvent = new Map<String,Object> {
@@ -1002,7 +1002,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         
         //arrange input
         Map<String,Object> inputEvent1 = new Map<String,Object> {
@@ -1059,7 +1059,7 @@
         insert sequence;
         
         //arrange steps
-        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(Terminate.class);
+        Step__c step = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
         
         //arrange input
         Map<String,Object> inputEvent1 = new Map<String,Object> {

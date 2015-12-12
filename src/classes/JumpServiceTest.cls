@@ -1,8 +1,8 @@
-@IsTest class JumpTest {
+@IsTest class JumpServiceTest {
      
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Jump.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(JumpService.class);
         
         //assert
         Integer expectedChunks = 50; //max sync limit
@@ -13,20 +13,20 @@
 
    static testmethod void withinSystemLimits() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Jump.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(JumpService.class);
         
         //arrange
         Sequence__c target = new Sequence__c(Name = 'Target');
         insert target;
-        SequenceModel.fromName(target.Name).appendStep(Terminate.class);
+        SequenceModel.fromName(target.Name).appendStep(TerminateService.class);
         
-        JumpConfig__c config = new JumpConfig__c(Name = target.Id, Sequence__c = 'Target');
+        JumpStepConfig__c config = new JumpStepConfig__c(Name = target.Id, Sequence__c = 'Target');
         insert config;
         
         Sequence__c origin = new Sequence__c(Name = 'Origin');
         insert origin;
-        SequenceModel.fromName(origin.Name).appendStep(Jump.class);
-        SequenceModel.fromName(origin.Name).appendStep(Terminate.class);
+        SequenceModel.fromName(origin.Name).appendStep(JumpService.class);
+        SequenceModel.fromName(origin.Name).appendStep(TerminateService.class);
         
         
         Map<String,Object> inputEvent = new Map<String,Object>{
@@ -41,7 +41,7 @@
         Integer chunks = summary.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
-            ApexClassModel.Service service = new Jump();
+            ApexClassModel.Service service = new JumpService();
             List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
@@ -52,7 +52,7 @@
    }
 
     
-    static testmethod void testJumpPervertsExecution() {
+    static testmethod void testJumpServicePervertsExecution() {
         //arrange sequences
         Sequence__c origin = new Sequence__c(Name = 'Origin');
         insert origin;
@@ -61,10 +61,10 @@
         insert target;
         
         //arrange steps
-        Step__c step = SequenceModel.fromId(origin.Id).appendStep(Jump.class);
+        Step__c step = SequenceModel.fromId(origin.Id).appendStep(JumpService.class);
         Id stepConfigId = new StepModel(step).upsertConfig();
         
-        JumpConfig__c stepConfig = new JumpConfig__c(Id = stepConfigId, Sequence__c = 'Target');
+        JumpStepConfig__c stepConfig = new JumpStepConfig__c(Id = stepConfigId, Sequence__c = 'Target');
         update stepConfig;
         
         //arrange input event
@@ -75,7 +75,7 @@
         };
         
         //act
-        ApexClassModel.Service service = new Jump();
+        ApexClassModel.Service service = new JumpService();
         List<Map<String,Object>> outputEvents = service.handle(inputEvent);
         
         //assert

@@ -1,8 +1,8 @@
-@IsTest class BranchTest {
+@IsTest class BranchServiceTest {
 
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Branch.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(BranchService.class);
         
         //assert
         Integer expectedChunks = 50; //max sync limit
@@ -13,7 +13,7 @@
 
    static testmethod void withinSystemLimits() {
         //arrange chunks
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Branch.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(BranchService.class);
         
         //arrange sequences
         Sequence__c origin = new Sequence__c(Name = 'Origin');
@@ -23,10 +23,10 @@
         insert target;
         
         //arrange steps
-        Step__c step = SequenceModel.fromId(origin.Id).appendStep(Branch.class);
+        Step__c step = SequenceModel.fromId(origin.Id).appendStep(BranchService.class);
         Id stepConfigId = new StepModel(step).upsertConfig();
         
-        BranchConfig__c stepConfig = new BranchConfig__c(Id = stepConfigId, Sequence__c = 'Target');
+        BranchStepConfig__c stepConfig = new BranchStepConfig__c(Id = stepConfigId, Sequence__c = 'Target');
         update stepConfig;
         
         //arrange input event
@@ -41,7 +41,7 @@
         Integer chunks = summary.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
-            ApexClassModel.Service service = new Branch();
+            ApexClassModel.Service service = new BranchService();
             List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
@@ -60,10 +60,10 @@
         insert target;
         
         //arrange steps
-        Step__c step = SequenceModel.fromId(origin.Id).appendStep(Branch.class);
+        Step__c step = SequenceModel.fromId(origin.Id).appendStep(BranchService.class);
         Id stepConfigId = new StepModel(step).upsertConfig();
         
-        BranchConfig__c stepConfig = new BranchConfig__c(Id = stepConfigId, Sequence__c = 'Target');
+        BranchStepConfig__c stepConfig = new BranchStepConfig__c(Id = stepConfigId, Sequence__c = 'Target');
         update stepConfig;
         
         //arrange input event
@@ -73,7 +73,7 @@
         };
         
         //act
-        ApexClassModel.Service service = new Branch();
+        ApexClassModel.Service service = new BranchService();
         List<Map<String,Object>> outputEvents = service.handle(inputEvent);
 
         //assert
@@ -104,7 +104,7 @@
         insert sequence;
         
         //arrange config
-        BranchConfig__c config = new BranchConfig__c(Name = sequence.Id, Sequence__c = 'Origin');
+        BranchStepConfig__c config = new BranchStepConfig__c(Name = sequence.Id, Sequence__c = 'Origin');
         insert config;
         
         //arrange event
@@ -118,9 +118,9 @@
         
         //act
         try {
-            ApexClassModel.Service service = new Branch();
+            ApexClassModel.Service service = new BranchService();
             List<Map<String,Object>> outputEvents = service.handle(inputEvent);
-        } catch (Branch.ServiceException e) {
+        } catch (BranchService.ServiceException e) {
             exceptionThrown = true;
         }
         

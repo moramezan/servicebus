@@ -1,4 +1,4 @@
-public class AggregateByJob extends ApexClassModel.Service {
+public class AggregateByJobService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
     public class ServiceException extends Exception {}
@@ -8,7 +8,7 @@ public class AggregateByJob extends ApexClassModel.Service {
         String Label = 'Aggregate By Job';
         String Description = 'Aggregates a collection of messages having the same Job Id.';
         String Icon = 'arrow_join';
-        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceAggregateByJob').getUrl();
+        String HelpUrl = new PageReference('/apex/ContextSensitiveHelp?topic=ServiceAggregateByJobService').getUrl();
         Integer Chunks =  200; //max sync limit
         String Cardinality = 'Fewer';
         

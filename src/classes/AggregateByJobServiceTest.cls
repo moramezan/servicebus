@@ -1,4 +1,4 @@
-@IsTest class AggregateByJobTest {
+@IsTest class AggregateByJobServiceTest {
 
     @TestSetup static void testSetup() {
         //act
@@ -10,7 +10,7 @@
 
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByJob.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByJobService.class);
 
         //assert
         Integer expectedChunks = 200; //max sync limit
@@ -21,7 +21,7 @@
 
    static testmethod void withinSystemLimits() {
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByJob.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByJobService.class);
         Integer chunks = summary.Chunks;
 
         // Arrange
@@ -64,7 +64,7 @@
             inputEvent.put('SiblingIds' , siblingIds);
             inputEvent.put('Chunk' , i+1);
 
-            ApexClassModel.Service service = new AggregateByJob();
+            ApexClassModel.Service service = new AggregateByJobService();
             List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
@@ -88,9 +88,9 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Service service = new AggregateByJob();
+            ApexClassModel.Service service = new AggregateByJobService();
             List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
-        } catch (AggregateByJob.ServiceException e) {
+        } catch (AggregateByJobService.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory JobId');
         }
 
@@ -115,9 +115,9 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Service service = new AggregateByJob();
+            ApexClassModel.Service service = new AggregateByJobService();
             List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
-        } catch (AggregateByJob.ServiceException e) {
+        } catch (AggregateByJobService.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory Route');
         }
 
@@ -141,9 +141,9 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Service service = new AggregateByJob();
+            ApexClassModel.Service service = new AggregateByJobService();
             List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
-        } catch (AggregateByJob.ServiceException e) {
+        } catch (AggregateByJobService.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory Range');
         }
 
@@ -167,9 +167,9 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Service service = new AggregateByJob();
+            ApexClassModel.Service service = new AggregateByJobService();
             List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
-        } catch (AggregateByJob.ServiceException e) {
+        } catch (AggregateByJobService.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory Chunk');
         }
 
@@ -193,9 +193,9 @@
 
         Boolean actualFlag = false;
         try {
-            ApexClassModel.Service service = new AggregateByJob();
+            ApexClassModel.Service service = new AggregateByJobService();
             List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
-        } catch (AggregateByJob.ServiceException e) {
+        } catch (AggregateByJobService.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory SiblingIds');
         }
 
@@ -259,7 +259,7 @@
         Map<String,Object> inputEvent = chunkToEvent.get(rangeCount);
 
         // Act
-        ApexClassModel.Service service = new AggregateByJob();
+        ApexClassModel.Service service = new AggregateByJobService();
         List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
 
         // Assemble
@@ -322,7 +322,7 @@
         Map<String,Object> inputEvent = chunkToEvent.get(notLastOffset);
 
         // Act
-        ApexClassModel.Service service = new AggregateByJob();
+        ApexClassModel.Service service = new AggregateByJobService();
         List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
 
         // Assemble
@@ -384,7 +384,7 @@
         Map<String,Object> inputEvent = chunkToEvent.get(lastOffset);
 
         // Act
-        ApexClassModel.Service service = new AggregateByJob();
+        ApexClassModel.Service service = new AggregateByJobService();
         List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
 
         // Assemble
@@ -420,7 +420,7 @@
         };
 
         // Act
-        Map<String,Object> actualCommonParameters = AggregateByJob.getCommonParameters(gateItems);
+        Map<String,Object> actualCommonParameters = AggregateByJobService.getCommonParameters(gateItems);
 
         // prepare
         Integer actualSize = actualCommonParameters.keySet().size();
@@ -455,7 +455,7 @@
         };
 
         // Act
-        Map<String,Object> actualCommonParameters = AggregateByJob.getCommonParameters(gateItems);
+        Map<String,Object> actualCommonParameters = AggregateByJobService.getCommonParameters(gateItems);
 
         // prepare
         Integer actualSize = actualCommonParameters.keySet().size();
@@ -499,7 +499,7 @@
         };
 
         // Act
-        Map<String,Object> actualCommonParameters = AggregateByJob.getCommonParameters(gateItems);
+        Map<String,Object> actualCommonParameters = AggregateByJobService.getCommonParameters(gateItems);
 
         // prepare
         Integer actualSize = actualCommonParameters.keySet().size();
@@ -529,7 +529,7 @@
         };
 
         // Act
-        Map<String,Object> actualParameters =  AggregateByJob.cleanParameters(parameters);
+        Map<String,Object> actualParameters =  AggregateByJobService.cleanParameters(parameters);
 
         // prepare
         Boolean actual01 = (actualParameters.get(':x') != null);
@@ -558,7 +558,7 @@
         Set<Id> siblingIds =  new Set<Id>{ message.Id };
 
         // Act :
-        Boolean actualIsRelease = AggregateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = AggregateByJobService.isRelease(siblingIds, jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a
@@ -582,7 +582,7 @@
 
 
         // Act :
-        Boolean actualIsRelease = AggregateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = AggregateByJobService.isRelease(siblingIds, jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a
@@ -606,7 +606,7 @@
 
 
         // Act :
-        Boolean actualIsRelease = AggregateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = AggregateByJobService.isRelease(siblingIds, jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a
@@ -633,7 +633,7 @@
 
 
         // Act :
-        Boolean actualIsRelease = AggregateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = AggregateByJobService.isRelease(siblingIds, jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a
@@ -660,7 +660,7 @@
 
 
         // Act :
-        Boolean actualIsRelease = AggregateByJob.isRelease(siblingIds, jobId, chunkTotal, chunk);
+        Boolean actualIsRelease = AggregateByJobService.isRelease(siblingIds, jobId, chunkTotal, chunk);
 
         // Assemble :
         // n/a
@@ -694,8 +694,8 @@
         
         //arrange steps
         SequenceModel.fromId(sequence.Id).appendStep(Split.class);
-        SequenceModel.fromId(sequence.Id).appendStep(AggregateByJob.class);
-        SequenceModel.fromId(sequence.Id).appendStep(Terminate.class);
+        SequenceModel.fromId(sequence.Id).appendStep(AggregateByJobService.class);
+        SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class);
         
         //act (enqueue)
         Test.startTest();

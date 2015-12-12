@@ -11,8 +11,8 @@
     static testmethod void testShowApexClassFindsIt() {
         //arrange sequence and steps
         insert new Sequence__c(Name = 'Test');
-        Step__c step = SequenceModel.fromName('Test').appendStep(Terminate.class);
-        step.ApexClassId__c = [SELECT Id FROM ApexClass WHERE Name = 'Wiretap' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c].Id;
+        Step__c step = SequenceModel.fromName('Test').appendStep(TerminateService.class);
+        step.ApexClassId__c = [SELECT Id FROM ApexClass WHERE Name = 'WiretapService' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c].Id;
         update step;
         
         //arrange message
@@ -26,7 +26,7 @@
         PageReference view = model.showApexClass();
         
         //assert
-        String expectedUrl = '/' + [SELECT Id FROM ApexClass WHERE Name = 'Wiretap' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c].Id;
+        String expectedUrl = '/' + [SELECT Id FROM ApexClass WHERE Name = 'WiretapService' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c].Id;
         String actualUrl = view.getUrl();
         System.assert(expectedUrl.startsWith(actualUrl), 'Wrong URL.');
     }
@@ -306,7 +306,7 @@
         insert new Sequence__c(Name = 'Test');
         
         //arrange step
-        SequenceModel.fromName('Test').appendStep(Wiretap.class);
+        SequenceModel.fromName('Test').appendStep(WiretapService.class);
         
         //arrange event
         Map<String,Object> inputEvent = new Map<String,Object>{

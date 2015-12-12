@@ -40,7 +40,7 @@
     
     static testmethod void testSaveCache() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Terminate.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(TerminateService.class);
         
         //act
         Id documentId = ApexClassSetModel.saveCache(new List<ApexClassModel.Summary>{summary});
@@ -91,7 +91,7 @@
         ApexClassSetModel model = new ApexClassSetModel([
             SELECT Id, NamespacePrefix, Name
             FROM ApexClass
-            WHERE Name = 'Terminate'
+            WHERE Name = 'TerminateService'
             AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
         ]);
         

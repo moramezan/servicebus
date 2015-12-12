@@ -10,7 +10,7 @@
     
     static testmethod void coverCode() {
         //arrange controller and extension
-        ApexClass apexClass = [SELECT Id FROM ApexClass WHERE Name = 'Terminate' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c];
+        ApexClass apexClass = [SELECT Id FROM ApexClass WHERE Name = 'TerminateService' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c];
         ApexPages.StandardController controller = new ApexPages.StandardController(apexClass);
         ApexClassViewExtension extension = new ApexClassViewExtension(controller);
         

@@ -1,8 +1,8 @@
-@IsTest class SubscribeTest{
+@IsTest class SubscribeServiceTest{
 
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Subscribe.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(SubscribeService.class);
         
         //assert
         Integer expectedChunks = 100;
@@ -20,14 +20,14 @@
         };
 
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Subscribe.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(SubscribeService.class);
 
         //act
         Test.startTest();
         Integer chunks = summary.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
-            ApexClassModel.Service service = new Subscribe();
+            ApexClassModel.Service service = new SubscribeService();
             List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
@@ -43,7 +43,7 @@
         Map<String,Object> parameters = new Map<String,Object>{'herp' => 'derp'};
             
         //act
-        ApexClassModel.Service service = new Subscribe();
+        ApexClassModel.Service service = new SubscribeService();
         List<Map<String,Object>> parametersList = service.handle(parameters);
         
         //assert

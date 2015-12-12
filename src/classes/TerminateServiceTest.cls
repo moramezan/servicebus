@@ -1,8 +1,8 @@
-@IsTest class TerminateTest {
+@IsTest class TerminateServiceTest {
     
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Terminate.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(TerminateService.class);
         
         //assert
         Integer expectedChunks = 200; //max sync limit
@@ -19,14 +19,14 @@
         inputEvent.put('Route', '1#Terminate#1');
         
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(Terminate.class);
+        ApexClassModel.Summary summary = new ApexClassModel.Summary(TerminateService.class);
         
         //act
         Test.startTest();
         Integer chunks = summary.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
-            ApexClassModel.Service service = new Terminate();
+            ApexClassModel.Service service = new TerminateService();
             List<Map<String,Object>> outputs = service.handle(inputEvent);
             counter++;
         }
