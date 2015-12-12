@@ -23,16 +23,16 @@
                 <apex:outputPanel layout="none">
                     <select onchange="Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.SequenceListExtension.ChangeVersion}', this.value, function() {window.location.reload();}); document.getElementById('busy').style.display = 'inline';">
                         <apex:repeat value="{!RunnableVersions}" var="runnableVersion">
-                            <apex:outputPanel layout="none" rendered="{!$Setup.BrokerSetting__c.Version__c == runnableVersion}">
+                            <apex:outputPanel layout="none" rendered="{!$Setup.Application__c.BrokerVersion__c == runnableVersion}">
                                 <option value="{!runnableVersion}" selected="selected">Version {!runnableVersion}</option>
                             </apex:outputPanel>
-                            <apex:outputPanel layout="none" rendered="{!$Setup.BrokerSetting__c.Version__c != runnableVersion}">
+                            <apex:outputPanel layout="none" rendered="{!$Setup.Application__c.BrokerVersion__c != runnableVersion}">
                                 <option value="{!runnableVersion}">Version {!runnableVersion}</option>
                             </apex:outputPanel>
                         </apex:repeat>
                         <apex:outputPanel layout="none" rendered="{!DraftVersion != null}"><optgroup label="Version {!DraftVersion} (Draft)" /></apex:outputPanel>
                     </select>
-                    <apex:outputText rendered="{!LatestVersion != $Setup.BrokerSetting__c.Version__c}"><b> (newer version available)</b></apex:outputText>
+                    <apex:outputText rendered="{!LatestVersion != $Setup.Application__c.BrokerVersion__c}"><b> (newer version available)</b></apex:outputText>
                     <img id="busy" style="display: none; vertical-align: middle;" src="{!URLFOR('/img/loading.gif')}" />
                 </apex:outputPanel>
             <!--</apex:pageBlockSectionItem>-->

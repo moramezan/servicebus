@@ -2,15 +2,15 @@
 
     @TestSetup static void testSetup() {
         //act
-        new PostInstallHandler().upsertNamespaceSetting();
+        new PostInstallHandler().upsertApplication();
         
         //assert
-        System.assertNotEquals(null, NamespaceSetting__c.getOrgDefaults().Id, 'Wrong id.');
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
     }
     
     static testmethod void coverCode() {
         //arrange controller and extension
-        ApexClass apexClass = [SELECT Id FROM ApexClass WHERE Name = 'Terminate' AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c];
+        ApexClass apexClass = [SELECT Id FROM ApexClass WHERE Name = 'Terminate' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c];
         ApexPages.StandardController controller = new ApexPages.StandardController(apexClass);
         ApexClassSummaryExtension extension = new ApexClassSummaryExtension(controller);
         

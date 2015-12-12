@@ -2,10 +2,10 @@
 
     @TestSetup static void testSetup() {
         //act
-        upsert BrokerSetting__c.getOrgDefaults();
+        new PostInstallHandler().upsertApplication();
         
         //assert
-        System.assertNotEquals(null, BrokerSetting__c.getOrgDefaults().Id);
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id);
     }
 
     static testmethod void hasTheCorrectChunks() {

@@ -400,16 +400,16 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     
     static public void pauseQueue() {
         //fetch custom setting and set the flag
-        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        setting.IsPaused__c = true;
-        upsert setting;
+        Application__c application = Application__c.getOrgDefaults();
+        application.BrokerPaused__c = true;
+        upsert application;
     }
     
     static public void resumeQueue() {
         //fetch custom setting and unset the flag
-        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        setting.IsPaused__c = false;
-        upsert setting;
+        Application__c application = Application__c.getOrgDefaults();
+        application.BrokerPaused__c = false;
+        upsert application;
         
         //get all the paused guys
         List<Message__c> messages = [

@@ -119,7 +119,7 @@ abstract public without sharing class Broker {
          */
         public Database.QueryLocator start(Database.BatchableContext context) {
             
-            if (BrokerSetting__c.getOrgDefaults().Inhibit__c) {
+            if (Application__c.getOrgDefaults().BrokerInhibit__c) {
                 //INHIBIT
                 System.assert(false, 'Inhibit');
             }
@@ -227,7 +227,7 @@ abstract public without sharing class Broker {
          */
         override public void run() {
             
-            if (!Enqueue.isRunningUser()) {
+            if (!Enqueue.isRunAsUser()) {
                 //#847 broker panic, wrong user context
                 System.assert(false, 'The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
             }

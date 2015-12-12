@@ -2,10 +2,10 @@
 
     @TestSetup static void testSetup() {
         //act
-        new PostInstallHandler().upsertNamespaceSetting();
+        new PostInstallHandler().upsertApplication();
         
         //assert
-        System.assertNotEquals(null, NamespaceSetting__c.getOrgDefaults().Id, 'Wrong id.');
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
     }
     
     static testmethod void coverCode() {
@@ -14,7 +14,7 @@
             SELECT Id
             FROM ApexClass
             WHERE Name = 'Wiretap'
-            AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
+            AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
         ];
         
         //act

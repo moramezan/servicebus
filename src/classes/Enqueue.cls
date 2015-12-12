@@ -118,7 +118,7 @@ global class Enqueue implements Process.Plugin {
             for (Step__c step : Step__c.getAll().values()) {
                 
                 //only current version
-                if (step.Version__c != BrokerSetting__c.getOrgDefaults().Version__c) continue;
+                if (step.Version__c != Application__c.getOrgDefaults().BrokerVersion__c) continue;
                 
                 //maps config to sequence
                 config2sequence.put(step.ConfigId__c, step.Sequence__c);
@@ -152,7 +152,7 @@ global class Enqueue implements Process.Plugin {
                 }
                 
                 //stamp with version
-                Integer version = BrokerSetting__c.getOrgDefaults().Version__c.intValue();
+                Integer version = Application__c.getOrgDefaults().BrokerVersion__c.intValue();
                 integer position = 0;
                 
                 //#999 enqueue routing helpers
@@ -280,7 +280,7 @@ global class Enqueue implements Process.Plugin {
             for (Integer i = 0; i < this.Events.size(); i++) {
                 messages.add(new Message__c(
                     Event__c = Json.serializePretty(this.Events[i]),
-                    Status__c = BrokerSetting__c.getOrgDefaults().IsPaused__c ? 'Paused' : 'Buffered'
+                    Status__c = Application__c.getOrgDefaults().BrokerPaused__c ? 'Paused' : 'Buffered'
                 ));
                 
                 //salesforce does not have iterator.remove() method like java
@@ -289,7 +289,7 @@ global class Enqueue implements Process.Plugin {
             }
             
             //#989 optimize already correct running user context
-            if (!Test.isRunningTest()) if (isRunningUser()) this.run(); else this.runAsUser();
+            if (!Test.isRunningTest()) if (isRunAsUser()) this.run(); else this.runAsUser();
             
             //race condition DML (we just hope the batch is slightly delayed)
             new MessageSetModel(new List<Message__c>()).persist(messages) ; //#836 //#1114 notice empty input list
@@ -335,7 +335,7 @@ global class Enqueue implements Process.Plugin {
             request.setTimeout(120000);
             request.setMethod('GET');
             request.setEndpoint(endpoint.getUrl());
-            request.setHeader('Authorization', 'Bearer ' + OAuthSetting__c.getOrgDefaults().AccessToken__c);
+            request.setHeader('Authorization', 'Bearer ' + Application__c.getOrgDefaults().RunAsAccessToken__c);
             
             //#653 throw unhandled exception in our namespace
             HttpResponse response = new Http().send(request);
@@ -394,9 +394,9 @@ global class Enqueue implements Process.Plugin {
         return output;
     }
     
-    static public Boolean isRunningUser() {
+    static public Boolean isRunAsUser() {
         Id userId = UserInfo.getUserId();
-        Id runningId = OAuthSetting__c.getOrgDefaults().RunningUserId__c;
+        Id runningId = Application__c.getOrgDefaults().RunAsUserId__c;
         return userId == runningId;
     }
     
@@ -417,7 +417,7 @@ global class Enqueue implements Process.Plugin {
             FROM AsyncApexJob
             WHERE JobType = 'BatchApex'
             AND ApexClass.Name = 'BrokerBatch'
-            AND ApexClass.NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
+            AND ApexClass.NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
             AND Status IN ('Holding', 'Queued', 'Processing', 'Preparing')
             LIMIT 1
         ];

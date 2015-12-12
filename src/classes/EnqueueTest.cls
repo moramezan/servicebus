@@ -26,9 +26,9 @@
         );
         
         //arrange running version
-        insert new BrokerSetting__c(
-            Version__c = 2
-        );
+        Application__c application = Application__c.getOrgDefaults();
+        application.BrokerVersion__c = 2;
+        upsert application;
         
         //act
         Test.startTest();
@@ -72,9 +72,9 @@
         );
         
         //arrange running version
-        insert new BrokerSetting__c(
-            Version__c = 1
-        );
+        Application__c application = Application__c.getOrgDefaults();
+        application.BrokerVersion__c = 1;
+        upsert application;
         
         //act
         Test.startTest();

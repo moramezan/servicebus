@@ -33,8 +33,8 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             LIMIT 10000 //checkmarx
         ];
         
-        //eg 1447306203000_93
-        return apexClass.LastModifiedDate.getTime() + '_' + count;
+        //eg ApexClassCache_1447306203000_93
+        return 'ApexClassCache' + '_' + apexClass.LastModifiedDate.getTime() + '_' + count;
     }
     
     /**
@@ -43,8 +43,22 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
      * detect if cache is stale in Sequence Builder and Service Discovery
      */
     static public String cacheKey() {
-        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        return setting.CacheKey__c;
+        
+        try {
+            Document document = [
+                SELECT Description
+                FROM Document
+                WHERE Name = 'ApexClassCache.bin'
+            ];
+            
+            //class cache key
+            return document.Description;
+            
+        } catch (QueryException e) {
+            //nothing cached
+            return null;
+        }
+        
     }
     
     /**
@@ -52,8 +66,6 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
      * we persist everything to a Document.
      */
     static public Id saveCache(List<ApexClassModel.Summary> summaries) {
-        
-        String classKey = classKey();
         
         Folder folder = [
             SELECT Id
@@ -65,16 +77,15 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
         
         Document document = new Document(
             Name = 'ApexClassCache.bin',
-            //WTF DeveloperName = 'ApexClassCacheBin', //Cannot save cache: Upsert failed. First exception on row 0; first error: DUPLICATE_DEVELOPER_NAME, This Document Unique Name already exists or has been previously used.  Please choose a different name.: [DeveloperName]
+            Description = classKey(),
             FolderId = folder.Id,
             Body = Blob.valueOf(data)
         );
         
-        Id documentId = Database.upsert(document, Schema.Document.Name).getId();
+        //WTF DeveloperName = 'ApexClassCacheBin',
+        //Cannot save cache: Upsert failed. First exception on row 0; first error: DUPLICATE_DEVELOPER_NAME, This Document Unique Name already exists or has been previously used.  Please choose a different name.: [DeveloperName]
         
-        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        setting.CacheKey__c = classKey;
-        upsert setting;
+        Id documentId = Database.upsert(document, Schema.Document.Name).getId();
         
         return documentId;
     }

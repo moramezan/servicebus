@@ -380,9 +380,9 @@ if ({!Message__c.Exception__c == null}) {
     //only messages with an exception can be restarted
     window.location.href = &apos;/{!$ObjectType.Message__c}&apos;;
 } else {
-    var bar = &apos;{!$Setup.NamespaceSetting__c.BarPrefix__c}&apos;;
-    var dot = &apos;{!$Setup.NamespaceSetting__c.DotPrefix__c}&apos;;
-    var sid = &apos;{!$Setup.OAuthSetting__c.AccessToken__c}&apos;;
+    var bar = &apos;{!$Setup.Application__c.PrefixBar__c}&apos;;
+    var dot = &apos;{!$Setup.Application__c.PrefixDot__c}&apos;;
+    var sid = &apos;{!$Setup.Application__c.RunAsAccessToken__c}&apos;;
     var mark = new Date().getTime();
     var command = &quot;new &quot; + dot + &quot;Job().execute((System.QueueableContext)Json.deserialize(&apos;{\&quot;jobId\&quot;:\&quot;{!Message__c.Id}\&quot;}&apos;, System.QueueableContextImpl.class));&quot;;
 

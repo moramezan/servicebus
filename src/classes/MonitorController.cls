@@ -4,7 +4,7 @@ public with sharing class MonitorController {
         Boolean hasQueueableJobs = [
             SELECT Id
             FROM AsyncApexJob
-            WHERE ApexClass.NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
+            WHERE ApexClass.NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
             AND ApexClass.Name = 'Job'
             AND JobType IN ('Future', 'Queueable') //#890
             AND Status IN ('Queued', 'Processing', 'Preparing')

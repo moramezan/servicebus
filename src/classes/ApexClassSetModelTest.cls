@@ -2,10 +2,10 @@
 
     @TestSetup static void testSetup() {
         //act
-        new PostInstallHandler().upsertNamespaceSetting();
+        new PostInstallHandler().upsertApplication();
         
         //assert
-        System.assertNotEquals(null, NamespaceSetting__c.getOrgDefaults().Id, 'Wrong id.');
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
     }
     
     static testmethod void testClassKey() {
@@ -17,21 +17,23 @@
         
         //assert
         String expectedClassKey = '_' + apexClasses.size();
-        String actualClassKey = '_' + classKey.substringAfter('_');
+        String actualClassKey = '_' + classKey.substringAfterLast('_');
         System.assertEquals(expectedClassKey, actualClassKey, 'Wrong class key.');
     }
     
     static testmethod void testCacheKey() {
         //arrange
-        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        setting.CacheKey__c = '1447306203000_93';
-        upsert setting;
+        insert new Document(
+            Name = 'ApexClassCache.bin',
+            Description = 'ApexClassCache_1447306203000_93',
+            FolderId = [SELECT Id FROM Folder WHERE DeveloperName = 'ServiceBus'].Id
+        );
         
         //act
         String cacheKey = ApexClassSetModel.cacheKey();
         
         //assert
-        String expectedCacheKey = '1447306203000_93';
+        String expectedCacheKey = 'ApexClassCache_1447306203000_93';
         String actualCacheKey = cacheKey;
         System.assertEquals(expectedCacheKey, actualCacheKey, 'Wrong cache key.');
     }
@@ -90,7 +92,7 @@
             SELECT Id, NamespacePrefix, Name
             FROM ApexClass
             WHERE Name = 'Terminate'
-            AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
+            AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
         ]);
         
         //act
@@ -107,7 +109,7 @@
         Set<String> namespaces = ApexClassSetModel.discoverNamespaces();
         
         //assert
-        System.assert(namespaces.contains(NamespaceSetting__c.getOrgDefaults().Prefix__c));
+        System.assert(namespaces.contains(Application__c.getOrgDefaults().Prefix__c));
     }
     
 }

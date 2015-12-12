@@ -321,7 +321,7 @@ abstract public class Service {
         
         //#877 surface SessionId to select few orgs and packages
         //Boolean allowSessionId = Broker.isAllowedSessionId(step.ApexClassName__c, UserInfo.getOrganizationId());
-        //if (allowSessionId) Job.Event.put('SessionId', OAuthSetting__c.getOrgDefaults().AccessToken__c);
+        //if (allowSessionId) Job.Event.put('SessionId', Application__c.getOrgDefaults().RunAsAccessToken__c);
         //TODO for #886
         
         //do invocation

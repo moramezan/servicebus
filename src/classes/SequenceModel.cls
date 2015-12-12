@@ -140,7 +140,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
                 SELECT Id, NamespacePrefix, Name
                 FROM ApexClass
                 WHERE Name = 'Terminate'
-                AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
+                AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
             ];
             
             //TODO add namespace prefix safety

@@ -19,16 +19,16 @@
     static testMethod void testOnInstallSetsCustomSetting() {
         //assert
         Integer expectedCountBefore = 0;
-        Integer actualCountBefore = [SELECT COUNT() FROM NamespaceSetting__c];
+        Integer actualCountBefore = [SELECT COUNT() FROM Application__c];
         System.assertEquals(expectedCountBefore, actualCountBefore);
         
         //act
         PostInstallHandler handler = new PostInstallHandler();
-        handler.upsertNamespaceSetting();
+        handler.upsertApplication();
         
         //assert
         Integer expectedCountAfter = 1;
-        Integer actualCountAfter = [SELECT COUNT() FROM NamespaceSetting__c];
+        Integer actualCountAfter = [SELECT COUNT() FROM Application__c];
         System.assertEquals(expectedCountAfter, actualCountAfter);
     }
     
@@ -36,20 +36,20 @@
      * test case for Winter '13 Known Issue:
      * https://success.salesforce.com/issues_releases_view?release=180008002
      */
-    static testMethod void testOnUpgradeSetsCustomSetting() {
+    static testMethod void testOnUpgradeCouldUpsertWithoutExceptions() {
         //assert
         Integer expectedCountBefore = 0;
-        Integer actualCountBefore = [SELECT COUNT() FROM NamespaceSetting__c];
+        Integer actualCountBefore = [SELECT COUNT() FROM Application__c];
         System.assertEquals(expectedCountBefore, actualCountBefore);
         
         //act
         PostInstallHandler handler = new PostInstallHandler();
-        handler.upsertNamespaceSetting();
-        handler.upsertNamespaceSetting();
+        handler.upsertApplication();
+        handler.upsertApplication();
         
         //assert
         Integer expectedCountAfter = 1;
-        Integer actualCountAfter = [SELECT COUNT() FROM NamespaceSetting__c];
+        Integer actualCountAfter = [SELECT COUNT() FROM Application__c];
         System.assertEquals(expectedCountAfter, actualCountAfter);
     }
     

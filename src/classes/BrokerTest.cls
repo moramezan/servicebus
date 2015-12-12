@@ -19,13 +19,11 @@
     
     @TestSetup static void testSetup() {
         //act
-        upsert OAuthSetting__c.getOrgDefaults();
-        upsert BrokerSetting__c.getOrgDefaults();
+        new PostInstallHandler().upsertApplication();
         new PostInstallHandler().upsertSlots();
         
         //assert
-        System.assertNotEquals(null, OAuthSetting__c.getOrgDefaults().Id, 'Wrong id.');
-        System.assertNotEquals(null, BrokerSetting__c.getOrgDefaults().Id, 'Wrong id.');
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
         System.assertEquals(1000, [SELECT COUNT() FROM Slot__c], 'Wrong count.');
     }
     
@@ -519,8 +517,9 @@
     
     static testmethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusPaused() {
         //arrange broker
-        insert new BrokerSetting__c(IsPaused__c = true);
-        Boolean isPaused =  true;
+        Application__c application = Application__c.getOrgDefaults();
+        application.BrokerPaused__c = true;
+        upsert application;
         
         //act
         Test.startTest();
@@ -536,7 +535,9 @@
 
     static testmethod void callingEnqueueWhenBrokerIsNotPausedWorksOnMessages() {
         //arrange broker
-        insert new BrokerSetting__c(IsPaused__c = false);
+        Application__c application = Application__c.getOrgDefaults();
+        application.BrokerPaused__c = false;
+        upsert application;
         
         //act
         Test.startTest();

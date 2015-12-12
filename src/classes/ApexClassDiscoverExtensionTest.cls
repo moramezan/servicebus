@@ -2,10 +2,10 @@
 
     @TestSetup static void testSetup() {
         //act
-        new PostInstallHandler().upsertNamespaceSetting();
+        new PostInstallHandler().upsertApplication();
         
         //assert
-        System.assertNotEquals(null, NamespaceSetting__c.getOrgDefaults().Id, 'Wrong id.');
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
     }
     
     static testmethod void coverCode() {
@@ -35,7 +35,7 @@
         namespaces = ApexClassDiscoverExtension.getNamespaces();
         
         //assert
-        System.assert(namespaces.contains('' + NamespaceSetting__c.getOrgDefaults().Prefix__c + ''), 'Wrong namespace.');
+        System.assert(namespaces.contains('' + Application__c.getOrgDefaults().Prefix__c + ''), 'Wrong namespace.');
     }
     
     static testmethod void testSaveCache() {
@@ -63,10 +63,7 @@
         System.assert(actualUrl.containsIgnoreCase('home.jsp'), 'Wrong retURL.');
         
         //act (pretend to discover)
-        ApexClassSetModel.saveCache(ApexClassSetModel.fromNamespace(NamespaceSetting__c.getOrgDefaults().Prefix__c).discoverSummaries());
-        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        setting.CacheKey__c = ApexClassSetModel.classKey();
-        upsert setting;
+        ApexClassSetModel.saveCache(ApexClassSetModel.fromNamespace(Application__c.getOrgDefaults().Prefix__c).discoverSummaries());
         
         //act
         redirect = ApexClassDiscoverExtension.DiscoverIfNeeded(retURL);

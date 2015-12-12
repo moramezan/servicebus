@@ -6,10 +6,10 @@
     
     @TestSetup static void testSetup() {
         //act
-        upsert BrokerSetting__c.getOrgDefaults();
+        new PostInstallHandler().upsertApplication();
         
         //assert
-        System.assertNotEquals(null, BrokerSetting__c.getOrgDefaults().Id, 'Wrong id.');
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
     }
     
     static testmethod void testHeartbeatDispatchesOneIndexedMessages() {
@@ -298,8 +298,8 @@
         Router.updateLastEventStamp( heartbeats );
 
         // assemble
-        BrokerSetting__c settings = BrokerSetting__c.getOrgDefaults();
-        DateTime actualEventStamp =  settings.EventTimestamp__c;
+        Application__c application = Application__c.getOrgDefaults();
+        DateTime actualEventStamp =  application.EventTimestamp__c;
         
         // assert
         DateTime expectedEventStamp = null;
@@ -327,8 +327,8 @@
         Router.updateLastEventStamp( heartbeats );
 
         // assemble
-        BrokerSetting__c settings = BrokerSetting__c.getOrgDefaults();
-        DateTime actualEventStamp = settings.EventTimestamp__c;
+        Application__c application = Application__c.getOrgDefaults();
+        DateTime actualEventStamp = application.EventTimestamp__c;
         
         // assert
         DateTime expectedEventStamp =  stampC;

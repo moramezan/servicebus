@@ -139,12 +139,20 @@
         <name>CustomApplication</name>
     </types>
     <types>
+        <members>Application__c.BrokerInhibit__c</members>
+        <members>Application__c.BrokerPaused__c</members>
+        <members>Application__c.BrokerVersion__c</members>
+        <members>Application__c.EventTimestamp__c</members>
+        <members>Application__c.OrgIdConfigured__c</members>
+        <members>Application__c.OrgInstanceUrl__c</members>
+        <members>Application__c.OrgReturnUrl__c</members>
+        <members>Application__c.PrefixBar__c</members>
+        <members>Application__c.PrefixDot__c</members>
+        <members>Application__c.Prefix__c</members>
+        <members>Application__c.RunAsAccessToken__c</members>
+        <members>Application__c.RunAsRefreshToken__c</members>
+        <members>Application__c.RunAsUserId__c</members>
         <members>BranchConfig__c.Sequence__c</members>
-        <members>BrokerSetting__c.CacheKey__c</members>
-        <members>BrokerSetting__c.EventTimestamp__c</members>
-        <members>BrokerSetting__c.Inhibit__c</members>
-        <members>BrokerSetting__c.IsPaused__c</members>
-        <members>BrokerSetting__c.Version__c</members>
         <members>JumpConfig__c.Sequence__c</members>
         <members>Message__c.Attempts__c</members>
         <members>Message__c.Cause__c</members>
@@ -158,15 +166,6 @@
         <members>Message__c.Route__c</members>
         <members>Message__c.Slot__c</members>
         <members>Message__c.Status__c</members>
-        <members>NamespaceSetting__c.BarPrefix__c</members>
-        <members>NamespaceSetting__c.DotPrefix__c</members>
-        <members>NamespaceSetting__c.Prefix__c</members>
-        <members>OAuthSetting__c.AccessToken__c</members>
-        <members>OAuthSetting__c.InstanceUrl__c</members>
-        <members>OAuthSetting__c.RefreshToken__c</members>
-        <members>OAuthSetting__c.ReturnUrl__c</members>
-        <members>OAuthSetting__c.RunningUserId__c</members>
-        <members>OAuthSetting__c.UnprefixedOrgId__c</members>
         <members>PublishConfig__c.EventType__c</members>
         <members>ScheduleConfig__c.IsActive__c</members>
         <members>ScheduleConfig__c.T0000__c</members>
@@ -207,12 +206,10 @@
         <name>CustomField</name>
     </types>
     <types>
+        <members>Application__c</members>
         <members>BranchConfig__c</members>
-        <members>BrokerSetting__c</members>
         <members>JumpConfig__c</members>
         <members>Message__c</members>
-        <members>NamespaceSetting__c</members>
-        <members>OAuthSetting__c</members>
         <members>PublishConfig__c</members>
         <members>ScheduleConfig__c</members>
         <members>Sequence__c</members>

@@ -20,26 +20,11 @@ public without sharing class PostInstallHandler implements InstallHandler {
         //only nag about the remote site setting on first install
         if (!isUpgrade && !isCli) sendNotification(installerId);
         
-        //fetch custom setting or create it for the first time
-        this.upsertNamespaceSetting();
-        
         //create slots for the first time
         if (!isUpgrade) this.upsertSlots();
         
         //create broker setting (version)
-        if (!isUpgrade) this.upsertBrokerSetting();
-    }
-    
-    /**
-     * For namespace neutrality, this helps custom button code
-     * to determine fully-qualified object and apex class names.
-     */
-    @TestVisible void upsertNamespaceSetting() {
-        NamespaceSetting__c setting = NamespaceSetting__c.getOrgDefaults();
-        setting.BarPrefix__c = SObjectType.NamespaceSetting__c.Name.substringBefore('NamespaceSetting__c');
-        setting.DotPrefix__c = PostInstallHandler.class.getName().substringBefore('PostInstallHandler');
-        setting.Prefix__c = PostInstallHandler.class.getName().substringBefore('PostInstallHandler').substringBefore('.');
-        upsert setting;
+        if (!isUpgrade) this.upsertApplication();
     }
     
     /**
@@ -52,9 +37,16 @@ public without sharing class PostInstallHandler implements InstallHandler {
         upsert slots Name;
     }
     
-    @TestVisible void upsertBrokerSetting() {
-        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        upsert setting;
+    /**
+     * For namespace neutrality, this helps custom button code
+     * to determine fully-qualified object and apex class names.
+     */
+    @TestVisible void upsertApplication() {
+        Application__c application = Application__c.getOrgDefaults();
+        application.PrefixBar__c = SObjectType.Application__c.Name.substringBefore('Application__c');
+        application.PrefixDot__c = PostInstallHandler.class.getName().substringBefore('PostInstallHandler');
+        application.Prefix__c = PostInstallHandler.class.getName().substringBefore('PostInstallHandler').substringBefore('.');
+        upsert application;
     }
     
     /**

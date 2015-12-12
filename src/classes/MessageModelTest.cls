@@ -2,17 +2,17 @@
 
     @TestSetup static void testSetup() {
         //act
-        new PostInstallHandler().upsertNamespaceSetting();
+        new PostInstallHandler().upsertApplication();
         
         //assert
-        System.assertNotEquals(null, NamespaceSetting__c.getOrgDefaults().Id, 'Wrong id.');
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
     }
     
     static testmethod void testShowApexClassFindsIt() {
         //arrange sequence and steps
         insert new Sequence__c(Name = 'Test');
         Step__c step = SequenceModel.fromName('Test').appendStep(Terminate.class);
-        step.ApexClassId__c = [SELECT Id FROM ApexClass WHERE Name = 'Wiretap' AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c].Id;
+        step.ApexClassId__c = [SELECT Id FROM ApexClass WHERE Name = 'Wiretap' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c].Id;
         update step;
         
         //arrange message
@@ -26,7 +26,7 @@
         PageReference view = model.showApexClass();
         
         //assert
-        String expectedUrl = '/' + [SELECT Id FROM ApexClass WHERE Name = 'Wiretap' AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c].Id;
+        String expectedUrl = '/' + [SELECT Id FROM ApexClass WHERE Name = 'Wiretap' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c].Id;
         String actualUrl = view.getUrl();
         System.assert(expectedUrl.startsWith(actualUrl), 'Wrong URL.');
     }

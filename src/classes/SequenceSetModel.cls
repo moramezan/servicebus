@@ -122,7 +122,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         return Database.getQueryLocator([
             SELECT Id, Name
             FROM Step__c
-            WHERE Version__c = :BrokerSetting__c.getOrgDefaults().Version__c.intValue()
+            WHERE Version__c = :Application__c.getOrgDefaults().BrokerVersion__c
             ORDER BY Sequence__c ASC, Position__c ASC
         ]);
     }

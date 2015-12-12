@@ -2,10 +2,10 @@
 
     @TestSetup static void testSetup() {
         //act
-        upsert BrokerSetting__c.getOrgDefaults();
+        new PostInstallHandler().upsertApplication();
         
-        //arrange
-        System.assertNotEquals(null, BrokerSetting__c.getOrgDefaults().Id, 'Wrong id.');
+        //assert
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
     }
 
     //before delete

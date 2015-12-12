@@ -23,8 +23,8 @@ public with sharing class SequenceListExtension {
     
     @RemoteAction static public void ChangeVersion(Integer version) {
         if (version == null) System.assert(false, 'Null version!');
-        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        setting.Version__c = version;
-        upsert setting;
+        Application__c application = Application__c.getOrgDefaults();
+        application.BrokerVersion__c = version;
+        upsert application;
     }
 }

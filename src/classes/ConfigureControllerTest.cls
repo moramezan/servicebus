@@ -7,14 +7,14 @@
         new PostInstallHandler().onInstall(null);
         
         //assert
-        System.assertNotEquals(null, NamespaceSetting__c.getOrgDefaults().Id, 'Wrong id.');
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
     }
     
     static testmethod void testRefreshAccessTokenMissingRemoteSiteSetting() {
         //arrange custom setting
-        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
-        setting.InstanceUrl__c = 'https://herp.derp'; //not allowed
-        insert setting;
+        Application__c application = Application__c.getOrgDefaults();
+        application.OrgInstanceUrl__c = 'https://herp.derp'; //not allowed
+        upsert application;
         
         //arrange schedule
         ConfigureController.reinstallSchedule();
@@ -26,7 +26,7 @@
         
         //assert setting is present
         expectedCount = 1;
-        actualCount = [SELECT COUNT() FROM OAuthSetting__c];
+        actualCount = [SELECT COUNT() FROM Application__c];
         System.assertEquals(expectedCount, actualCount, 'Wrong setting count before.');
         
         //act
@@ -42,7 +42,7 @@
         
         //assert setting is absent
         expectedCount = 0;
-        actualCount = [SELECT COUNT() FROM OAuthSetting__c];
+        actualCount = [SELECT COUNT() FROM Application__c WHERE RunAsAccessToken__c != null];
         System.assertEquals(expectedCount, actualCount, 'Wrong setting count after.');
     }
     
@@ -125,7 +125,7 @@
         
         //assert
         Integer expectedCount = 1;
-        Integer actualCount = [SELECT COUNT() FROM OAuthSetting__c];
+        Integer actualCount = [SELECT COUNT() FROM Application__c];
         System.assertEquals(expectedCount, actualCount, 'Wrong custom setting count.');
         
         String expectedUrl = Page.Configure.getUrl() + '?stage=js';
@@ -133,15 +133,15 @@
         System.assertEquals(expectedUrl, actualUrl, 'Wrong redirect.');
         
         String expectedBase = Url.getSalesforceBaseUrl().toExternalForm();
-        String actualBase = OAuthSetting__c.getOrgDefaults().InstanceUrl__c;
+        String actualBase = Application__c.getOrgDefaults().OrgInstanceUrl__c;
         System.assertEquals(expectedBase, actualBase, 'Wrong base.');
         
         String expectedUnprefixedOrgId = UserInfo.getOrganizationId().substring(3, 15);
-        String actualUnprefixedOrgId = OAuthSetting__c.getOrgDefaults().UnprefixedOrgId__c;
+        String actualUnprefixedOrgId = Application__c.getOrgDefaults().OrgIdConfigured__c;
         System.assertEquals(expectedUnprefixedOrgId, actualUnprefixedOrgId, 'Wrong id.');
         
         String expectedReturnUrl = '/herp/derp';
-        String actualReturnUrl = OAuthSetting__c.getOrgDefaults().ReturnUrl__c;
+        String actualReturnUrl = Application__c.getOrgDefaults().OrgReturnUrl__c;
         System.assertEquals(expectedReturnUrl, actualReturnUrl, 'Wrong return URL.');
     }
     
@@ -185,9 +185,9 @@
         Test.setCurrentPage(configure);
         
         //arrange custom setting
-        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
-        setting.ReturnUrl__c = '/apex/test';
-        upsert setting;
+        Application__c application = Application__c.getOrgDefaults();
+        application.OrgReturnUrl__c = '/apex/test';
+        upsert application;
         
         //act
         Test.startTest();
@@ -201,15 +201,15 @@
         System.assert(actualUrl.startsWith(expectedUrl), 'Wrong URL.');
         
         Id expectedUserId = UserInfo.getUserId();
-        Id actualUserId = OAuthSetting__c.getOrgDefaults().RunningUserId__c;
+        Id actualUserId = Application__c.getOrgDefaults().RunAsUserId__c;
         System.assertEquals(expectedUserId, actualUserId, 'Wrong running user id.');
         
         String expectedRefreshToken = 'rrrrr';
-        String actualRefreshToken = OAuthSetting__c.getOrgDefaults().RefreshToken__c;
+        String actualRefreshToken = Application__c.getOrgDefaults().RunAsRefreshToken__c;
         System.assertEquals(expectedRefreshToken, actualRefreshToken, 'Wrong refresh token.');
         
         String expectedAccessToken = 'aaaaa';
-        String actualAccessToken = OAuthSetting__c.getOrgDefaults().AccessToken__c;
+        String actualAccessToken = Application__c.getOrgDefaults().RunAsAccessToken__c;
         System.assertEquals(expectedAccessToken, actualAccessToken, 'Wrong access token.');
     }
     
@@ -305,10 +305,10 @@
         System.assert(actualUrl.containsIgnoreCase('home.jsp'), 'Wrong retURL.');
         
         //act (pretend to configure)
-        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
-        setting.AccessToken__c = '00D000000000000AAA';
-        setting.UnprefixedOrgId__c = UserInfo.getOrganizationId().substring(3, 15);
-        upsert setting;
+        Application__c application = Application__c.getOrgDefaults();
+        application.RunAsAccessToken__c = '00D000000000000AAA';
+        application.OrgIdConfigured__c = UserInfo.getOrganizationId().substring(3, 15);
+        upsert application;
         
         //act
         redirect = ConfigureController.ConfigureIfNeeded(retURL);

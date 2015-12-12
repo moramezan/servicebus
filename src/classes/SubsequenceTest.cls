@@ -1,8 +1,11 @@
 @IsTest class SubsequenceTest {
     
     @TestSetup static void testSetup() {
-        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults();
-        upsert setting;
+        //act
+        new PostInstallHandler().upsertApplication();
+        
+        //assert
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
     }
     
     static testmethod void hasTheCorrectChunks() {

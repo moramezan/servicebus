@@ -59,7 +59,7 @@ public with sharing class ConfigureController {
             + '                <description>' + this.InstanceName + '_Salesforce</description>'
             + '                <disableProtocolSecurity>false</disableProtocolSecurity>'
             + '                <isActive>true</isActive>'
-            + '                <url>' + OAuthSetting__c.getOrgDefaults().InstanceUrl__c + '</url>'
+            + '                <url>' + Application__c.getOrgDefaults().OrgInstanceUrl__c + '</url>'
             + '            </metadata>'
             + '            <metadata xsi:type="RemoteSiteSetting">'
             + '                <fullName>' + this.InstanceName + '_Visualforce</fullName>'
@@ -224,7 +224,7 @@ public with sharing class ConfigureController {
      * }
      */
     @TestVisible System.PageReference buildCodeLink(String code) {
-        String instanceUrl = OAuthSetting__c.getOrgDefaults().InstanceUrl__c;
+        String instanceUrl = Application__c.getOrgDefaults().OrgInstanceUrl__c;
         System.PageReference pr = new System.PageReference(instanceUrl + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'authorization_code');
         pr.getParameters().put('client_id', CLIENT);
@@ -256,12 +256,12 @@ public with sharing class ConfigureController {
      * }
      */
     @TestVisible System.PageReference buildRefreshLink() {
-        String instanceUrl = OAuthSetting__c.getOrgDefaults().InstanceUrl__c;
+        String instanceUrl = Application__c.getOrgDefaults().OrgInstanceUrl__c;
         System.PageReference pr = new System.PageReference(instanceUrl + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'refresh_token');
         pr.getParameters().put('client_id', CLIENT);
         pr.getParameters().put('client_secret', SECRET);
-        pr.getParameters().put('refresh_token', OAuthSetting__c.getOrgDefaults().RefreshToken__c);
+        pr.getParameters().put('refresh_token', Application__c.getOrgDefaults().RunAsRefreshToken__c);
         return pr;
     }
     
@@ -270,9 +270,10 @@ public with sharing class ConfigureController {
      * Sequence Builder detects its absence and signals configuration is needed.
      */
     static public void deleteAccessToken() {
-        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
-        if (setting.Id != null) delete setting;
-        if (setting.Id != null) Database.emptyRecycleBin(setting);
+        Application__c application = Application__c.getOrgDefaults();
+        application.RunAsAccessToken__c = null;
+        application.RunAsRefreshToken__c = null;
+        upsert application;
     }
     
     /**
@@ -280,7 +281,7 @@ public with sharing class ConfigureController {
      * to get a ready-and-roaring access token, and saves the new one away.
      */
     static public void refreshAccessToken() {
-        setting = OAuthSetting__c.getOrgDefaults();
+        application = Application__c.getOrgDefaults();
         HttpRequest request = new HttpRequest();
         request.setTimeout(120000);
         request.setMethod('POST');
@@ -305,7 +306,7 @@ public with sharing class ConfigureController {
         
         String data = response.getBody();
         Token t = (Token)Json.deserialize(data, Token.class);
-        setting.AccessToken__c = t.access_token;
+        application.RunAsAccessToken__c = t.access_token;
         Type.forName(DoDml.class.getName()).newInstance();
     }
     
@@ -367,10 +368,10 @@ public with sharing class ConfigureController {
         if (stage == 'cs') {
             //1. "cs" we upsert custom setting to save away the base url
             String url = parameters.get('url').substringBefore('/services/');
-            setting = OAuthSetting__c.getOrgDefaults();
-            setting.InstanceUrl__c = url;
-            setting.UnprefixedOrgId__c = UserInfo.getOrganizationId().substring(3, 15);
-            setting.ReturnUrl__c = ApexPages.currentPage().getParameters().get('retURL');
+            application = Application__c.getOrgDefaults();
+            application.OrgInstanceUrl__c = url;
+            application.OrgIdConfigured__c = UserInfo.getOrganizationId().substring(3, 15);
+            application.OrgReturnUrl__c = ApexPages.currentPage().getParameters().get('retURL');
             Type.forName(DoDml.class.getName()).newInstance();
             
             System.PageReference pr = Page.Configure;
@@ -417,10 +418,10 @@ public with sharing class ConfigureController {
             
             //recreate custom setting when package is configured
             Token t = (Token)Json.deserialize(response.getBody(), Token.class);
-            setting = OAuthSetting__c.getOrgDefaults();
-            setting.RunningUserId__c = UserInfo.getUserId();
-            setting.AccessToken__c = t.access_token;
-            setting.RefreshToken__c = t.refresh_token;
+            application = Application__c.getOrgDefaults();
+            application.RunAsUserId__c = UserInfo.getUserId();
+            application.RunAsAccessToken__c = t.access_token;
+            application.RunAsRefreshToken__c = t.refresh_token;
             Type.forName(DoDml.class.getName()).newInstance();
             
             System.PageReference pr = Page.Configure;
@@ -448,9 +449,9 @@ public with sharing class ConfigureController {
             
             //6. finally send them to the context sensitive help page
             String returnUrl;
-            setting = OAuthSetting__c.getOrgDefaults();
+            application = Application__c.getOrgDefaults();
             List<AppMenuItem> appMenuItems = [SELECT StartUrl FROM AppMenuItem WHERE Name = 'ServiceBus' LIMIT 1];
-            if (returnUrl == null) returnUrl = setting.ReturnUrl__c;
+            if (returnUrl == null) returnUrl = application.OrgReturnUrl__c;
             if (returnUrl == null && !appMenuItems.isEmpty()) returnUrl = appMenuItems[0].StartUrl;
             if (returnUrl == null) returnUrl = '/apex/ContextSensitiveHelp?topic=ServiceBus';
             return new PageReference(returnUrl);
@@ -460,14 +461,14 @@ public with sharing class ConfigureController {
         throw new SetupException('Redirect exception');
     }
     
-    static OAuthSetting__c setting;
+    static Application__c application;
     
     /**
      * bigassforce/servicebus#781 pass security scanner
      */
     public class DoDml {
         public DoDml() {
-            upsert setting;
+            upsert application;
         }
     }
     
@@ -491,7 +492,7 @@ public with sharing class ConfigureController {
         PermissionSet ps = [
             SELECT Id
             FROM PermissionSet
-            WHERE NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c
+            WHERE NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
             AND Name = 'AdministerServiceBus'
         ];
         
@@ -525,7 +526,7 @@ public with sharing class ConfigureController {
             return;
         }
         
-        String instanceUrl = OAuthSetting__c.getOrgDefaults().InstanceUrl__c;
+        String instanceUrl = Application__c.getOrgDefaults().OrgInstanceUrl__c;
         HttpRequest request = new HttpRequest();
         request.setTimeout(120000);
         request.setMethod('POST');
@@ -571,8 +572,8 @@ public with sharing class ConfigureController {
      */
     static public PageReference ConfigureIfNeeded(PageReference retURL) {
         
-        String sessionId = OAuthSetting__c.getOrgDefaults().AccessToken__c;
-        String configuredOrgId = OAuthSetting__c.getOrgDefaults().UnprefixedOrgId__c;
+        String sessionId = Application__c.getOrgDefaults().RunAsAccessToken__c;
+        String configuredOrgId = Application__c.getOrgDefaults().OrgIdConfigured__c;
         String unprefixedOrgId = UserInfo.getOrganizationId().substring(3, 15);
         
         if (null == sessionId) {

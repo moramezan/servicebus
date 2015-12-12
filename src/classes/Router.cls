@@ -18,11 +18,11 @@ public class Router extends ApexClassModel.Service {
             SELECT Id, Sequence__c, Position__c
             FROM Step__c
             WHERE ApexClassName__c = :Schedule.class.getName()
-            AND Version__c = :BrokerSetting__c.getOrgDefaults().Version__c
+            AND Version__c = :Application__c.getOrgDefaults().BrokerVersion__c
         ];
         
         //stamp with version
-        Integer version = BrokerSetting__c.getOrgDefaults().Version__c.intValue();
+        Integer version = Application__c.getOrgDefaults().BrokerVersion__c.intValue();
         integer position = 0;
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
@@ -88,7 +88,7 @@ public class Router extends ApexClassModel.Service {
         public DateTime CurrentDateTime    {get; private set;}
  
         public  HeartbeatGeneratorImpl() {
-            DateTime  eventStampAsDateTime = BrokerSetting__c.getOrgDefaults().EventTimestamp__c;
+            Datetime eventStampAsDateTime = Application__c.getOrgDefaults().EventTimestamp__c;
             
             // no suicide chaining : set to 60
             // suicide schedule : set as low as 5
@@ -193,10 +193,10 @@ public class Router extends ApexClassModel.Service {
     
         DateTime lastEventStamp =  heartbeats[count-1];
  
-        BrokerSetting__c setting = BrokerSetting__c.getOrgDefaults(); //#782
-        setting.EventTimestamp__c = lastEventStamp;
+        Application__c application = Application__c.getOrgDefaults(); //#782
+        application.EventTimestamp__c = lastEventStamp;
       //////  setting.EventStampInfo__c = json.serialize(lastEventStamp).replaceAll('"','').left(19)+'Z';  // Info purposes only
-        upsert setting;
+        upsert application;
     }
 
 
@@ -226,7 +226,7 @@ public class Router extends ApexClassModel.Service {
     public class ScheduleImpl implements RouterSchedule.Schedulable {
     
         public void execute(System.SchedulableContext context) {
-            if (!Test.isRunningTest() && OAuthSetting__c.getOrgDefaults().RefreshToken__c != null) {
+            if (!Test.isRunningTest() && Application__c.getOrgDefaults().RunAsRefreshToken__c != null) {
                 //#728 keep access token roaring and ready every hour IF configured ok
                 optimize(); //#969 obfuscation of deferRefreshAccessToken
             }

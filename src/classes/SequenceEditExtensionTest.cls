@@ -2,11 +2,11 @@
 
     @TestSetup static void testSetup() {
         //act
-        new PostInstallHandler().upsertNamespaceSetting();
-        ApexClassSetModel.saveCache(ApexClassSetModel.fromNamespace(NamespaceSetting__c.getOrgDefaults().Prefix__c).discoverSummaries());
+        new PostInstallHandler().upsertApplication();
+        ApexClassSetModel.saveCache(ApexClassSetModel.fromNamespace(Application__c.getOrgDefaults().Prefix__c).discoverSummaries());
         
         //assert
-        System.assertNotEquals(null, NamespaceSetting__c.getOrgDefaults().Id, 'Wrong id.');
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
         System.assert(!ApexClassSetModel.loadCache().isEmpty(), 'Wrong id.');
     }
     
@@ -59,7 +59,7 @@
         Id sequenceId = setupSequence();
         
         //act
-        SequenceEditExtension.appendStep(sequenceId, [SELECT Id FROM ApexClass WHERE Name = 'Publish' AND NamespacePrefix = :NamespaceSetting__c.getOrgDefaults().Prefix__c].Id);
+        SequenceEditExtension.appendStep(sequenceId, [SELECT Id FROM ApexClass WHERE Name = 'Publish' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c].Id);
         
         //assemble
         Step__c step = Step__c.getValues('1#Test#3');
@@ -403,15 +403,13 @@
         System.assertNotEquals(null, redirect, 'Wrong redirect.');
         
         //act (pretend to configure)
-        OAuthSetting__c oauthSetting = OAuthSetting__c.getOrgDefaults();
-        oauthSetting.AccessToken__c = '00D000000000000AAA';
-        oauthSetting.UnprefixedOrgId__c = UserInfo.getOrganizationId().substring(3, 15);
-        upsert oauthSetting;
+        Application__c application = Application__c.getOrgDefaults();
+        application.RunAsAccessToken__c = '00D000000000000AAA';
+        application.OrgIdConfigured__c = UserInfo.getOrganizationId().substring(3, 15);
+        upsert application;
         
         //act (pretend to discover)
-        BrokerSetting__c brokerSetting = BrokerSetting__c.getOrgDefaults();
-        brokerSetting.CacheKey__c = ApexClassSetModel.classKey();
-        upsert brokerSetting;
+        ApexClassSetModel.saveCache(ApexClassSetModel.fromNamespace(Application__c.getOrgDefaults().Prefix__c).discoverSummaries());
         
         //act
         redirect = extension.doRedirect();

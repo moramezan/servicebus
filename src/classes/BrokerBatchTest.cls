@@ -13,12 +13,12 @@
     
     @TestSetup static void testSetup() {
         //act
-        OAuthSetting__c setting = OAuthSetting__c.getOrgDefaults();
-        setting.RunningUserId__c = UserInfo.getUserId();
-        upsert setting;
+        Application__c application = Application__c.getOrgDefaults();
+        application.RunAsUserId__c = UserInfo.getUserId();
+        upsert application;
         
         //assert
-        System.assertNotEquals(null, setting.Id, 'Wrong id.');
+        System.assertNotEquals(null, application.Id, 'Wrong id.');
     }
     
     static testmethod void coverStart() {
