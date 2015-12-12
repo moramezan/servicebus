@@ -297,15 +297,21 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             message.Event__c = Json.serialize(event);
         }
         
+        //#1114 poor mans message cleanup strategy
+        List<Id> completedMessageIds = new List<Id>();
+        for (Message__c inputMessage : this.Messages) {
+            if (inputMessage.Status__c == 'Completed') {
+                completedMessageIds.add(inputMessage.Id);
+            }
+        }
+        
         //transact both inputs and outputs in one fell swoop
         MessageSetModel.Inhibit = false;
         Database.upsert(messages);
         MessageSetModel.Inhibit = true;
         
-        //#1114 poor mans message cleanup strategy
-        List<Id> deleteMessageIds = new List<Id>();
-        for (Message__c inputMessage : this.Messages) if (inputMessage.Status__c == 'Completed') deleteMessageIds.add(inputMessage.Id);
-        Database.delete(deleteMessageIds); //hang around in recycle bin
+        //#1136, hang around in recycle bin, partial delete allowed
+        Database.delete(completedMessageIds, false);
     }
     
     /**
