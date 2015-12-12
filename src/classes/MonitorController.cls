@@ -58,6 +58,7 @@ public with sharing class MonitorController {
             FROM Message__c
             GROUP BY Route__c
             LIMIT 1000000 //checkmarx readonly
+            ALL ROWS //#1134 shows some history
         ]) {
             Statistic statistic = new Statistic((String)result.get('route'), 0, 0, 0, 0);
             route2statistic.put((String)result.get('route'), statistic);

@@ -27,7 +27,7 @@
         List<MonitorController.Statistic> statistics = MonitorController.fetchStatistics();
         
         //assert 1 null, //#1114 no ALL ROWS in fetchStatistics means they disappear again
-        Integer expectedCount = 1; //the graph is [' ']
+        Integer expectedCount = 3; //the graph is [' ', '1#Test#1', '1#Test#2']
         Integer actualCount = statistics.size();
         System.assertEquals(expectedCount, actualCount);
     }
