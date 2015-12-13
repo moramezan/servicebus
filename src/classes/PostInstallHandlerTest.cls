@@ -30,6 +30,16 @@
         Integer expectedCountAfter = 1;
         Integer actualCountAfter = [SELECT COUNT() FROM Application__c];
         System.assertEquals(expectedCountAfter, actualCountAfter);
+        
+        //assert
+        Decimal expectedVersion = 1.0;
+        Decimal actualVersion = Application__c.getOrgDefaults().BrokerVersion__c;
+        System.assertEquals(expectedVersion, actualVersion, 'Wrong version.');
+        
+        //assert
+        Id expectedId = UserInfo.getUserId();
+        Id actualId = Application__c.getOrgDefaults().RunAsUserId__c;
+        System.assertEquals(expectedId, actualId, 'Wrong Id.');
     }
     
     /**
