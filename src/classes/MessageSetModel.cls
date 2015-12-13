@@ -258,32 +258,22 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
      */
     public void persist(List<Message__c> outputMessages) {
         
-        //TODO throw new ServiceException('Persist panic: ' + e.getMessage() + ' - ' + e.getStackTraceString(), e);
-        
+        /**
+         * The input messages get 'slot' put on them in the mark. We clear it out
+         * here in the persist. Leftover 'slot' is a good indicator of fatalities.
+         */
         for (Message__c message : this.Messages) {
             message.Slot__c = null; //clear
         }
         
-        List<Message__c> messages = new List<Message__c>();
-        messages.addAll(this.Messages); //input messages
-        messages.addAll(outputMessages); //output messages
-        
         /**
-         * In #658 we hoped to expose Sequence API in Broker.persist() since
-         * that is the central entry point for any enqueued AND output messages.
-         *
-         * Since #677 there is history around which operations belong where:
-         * - Service does bare metal input cycling, output aggregation,
-         * - ApexClassModel can enforce validation at the event level,
-         * - MessageModel takes grabs exceptions for the database,
-         * - Broker deals with executing message collections,
-         *
          * Since we want any "resolve" to happen in ONE place, this appears to
          * be the only place left to put it. Here in the persist works OK because
-         * messages "without ids" are NEW ONES. Existing ones won't get re incremented.
+         * output messages are NEW ONES. Existing ones won't get re incremented.
+         * Notice how our Enqueue method persists the outputs, not the inputs!
          */
-        for (Message__c message : messages) if (message.Id == null) {
-            Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
+        for (Message__c outputMessage : outputMessages) try {
+            Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(outputMessage.Event__c);
             
             //increments route position
             if (event.containsKey('Route')) {
@@ -294,24 +284,23 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
                 if (route.contains('#')) event.put('Route', (Integer.valueOf(version)) + '#' + sequence + '#' + (Integer.valueOf(position) + 1));
             }
             
-            message.Event__c = Json.serialize(event);
+            outputMessage.Event__c = Json.serialize(event);
+        } catch (Exception e) {
+            if (Application__c.getOrgDefaults().Prefix__c == null) throw e;
         }
         
-        //#1114 poor mans message cleanup strategy
-        List<Id> completedMessageIds = new List<Id>();
-        for (Message__c inputMessage : this.Messages) {
-            if (inputMessage.Status__c == 'Completed') {
-                completedMessageIds.add(inputMessage.Id);
-            }
-        }
-        
-        //transact both inputs and outputs in one fell swoop
+        //transact combined inputs and outputs in one fell swoop
+        List<Message__c> messages = new List<Message__c>();
+        messages.addAll(this.Messages);
+        messages.addAll(outputMessages);
         MessageSetModel.Inhibit = false;
         Database.upsert(messages);
         MessageSetModel.Inhibit = true;
         
-        //#1136, hang around in recycle bin, partial delete allowed
-        Database.delete(completedMessageIds, false);
+        //#1114 poor mans message cleanup strategy
+        List<Id> completedMessageIds = new List<Id>();
+        for (Message__c inputMessage : this.Messages) if (inputMessage.Status__c == 'Completed') completedMessageIds.add(inputMessage.Id);
+        Database.delete(completedMessageIds, false); //#1136 partial delete allowed
     }
     
     /**
