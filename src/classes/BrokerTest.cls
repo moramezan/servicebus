@@ -44,10 +44,12 @@
         
         override public void run() {
             
-            //MARK
-            this.InputMessages = MessageSetModel.locateMarkableWork(); //LOCATE
-            if (this.InputMessages.isEmpty()) return; //DONE
-            new MessageSetModel(this.InputMessages).mark('0000'); //MARK
+            String slot = '0000';
+            
+            //MARK (or abort if nothing located)
+            MessageSetModel model = MessageSetModel.locateMarkableWork();
+            if (model.getRecords().isEmpty()) return;
+            this.InputMessages = model.mark(slot);
             
             //EXECUTE
             this.OutputMessages = new MessageSetModel(this.InputMessages).execute(null); //EXECUTE
@@ -92,7 +94,7 @@
         Test.stopTest();
         
         //act
-        List<Message__c> records = MessageSetModel.locateMarkableWork();
+        List<Message__c> records = MessageSetModel.locateMarkableWork().getRecords();
         
         //assemble
         ApexClassModel.Summary summary = new ApexClassModel.Summary(WiretapService.class);
@@ -314,7 +316,7 @@
         Test.stopTest();
         
         //act
-        List<Message__c> messages = MessageSetModel.locateMarkableWork();
+        List<Message__c> messages = MessageSetModel.locateMarkableWork().getRecords();
         
         //assert
         Integer actualCount = messages.size();
@@ -330,7 +332,7 @@
         };
     
         //act
-        List<Message__c> messages = MessageSetModel.locateMarkableWork();
+        List<Message__c> messages = MessageSetModel.locateMarkableWork().getRecords();
         
         //assert
         Integer expectedCount = 0;
@@ -359,7 +361,7 @@
         };
         
         //act
-        List<Message__c> messages = MessageSetModel.locateMarkableWork();
+        List<Message__c> messages = MessageSetModel.locateMarkableWork().getRecords();
         
         // assert
         Integer expectedCount = 2;
@@ -786,8 +788,7 @@
         System.enqueueJob(job);
         Test.stopTest();
         
-        List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
-        messages = MessageSetModel.locateMarkableWork();
+        List<Message__c> messages = MessageSetModel.locateMarkableWork().getRecords();
         
         //act
         List<Message__c> outputMessages = new MessageSetModel(messages).execute(null);

@@ -129,9 +129,9 @@ abstract public without sharing class Broker {
             try {
                 
                 //MARK (or abort if nothing located)
-                this.InputMessages = MessageSetModel.locateMarkableWork();
-                new MessageSetModel(this.InputMessages).mark(slot);
-                if (this.InputMessages.isEmpty()) System.abortJob(context.getJobId());
+                MessageSetModel model = MessageSetModel.locateMarkableWork();
+                if (model.getRecords().isEmpty()) System.abortJob(context.getJobId());
+                this.InputMessages = model.mark(slot);
             
             } catch (Exception e) {
                 
@@ -181,9 +181,9 @@ abstract public without sharing class Broker {
                     if (this.OutputMessages == null) this.handleFatalExceptions(this.InputMessages, context);
                     
                     //MARK (or abort if nothing located)
-                    this.InputMessages = MessageSetModel.locateMarkableWork();
-                    new MessageSetModel(this.InputMessages).mark(slot);
-                    if (this.InputMessages.isEmpty()) System.abortJob(context.getJobId());
+                    MessageSetModel model = MessageSetModel.locateMarkableWork();
+                    if (model.getRecords().isEmpty()) System.abortJob(context.getJobId());
+                    this.InputMessages = model.mark(slot);
                     
                 }
                 

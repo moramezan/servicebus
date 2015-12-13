@@ -109,7 +109,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
      *
      * @return collection of soon-to-be-marked-as-Started Messages.
      */
-    static public List<Message__c> locateMarkableWork() {
+    static public MessageSetModel locateMarkableWork() {
         
         List<Message__c> specimen = [
             SELECT Id, Route__c, Event__c
@@ -121,7 +121,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         
         if (specimen.isEmpty()) {
             //no work found, return empty
-            return new List<Message__c>();
+            return new MessageSetModel(new List<Message__c>());
         }
         
         Integer chunks = 1;
@@ -134,21 +134,21 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             chunks = summary.Chunks;
         } catch (Exception e) {}
         
-        return [
+        return new MessageSetModel([
             SELECT Id, Route__c, Event__c
             FROM Message__c
             WHERE Status__c = 'Buffered'
             AND Route__c = :specimen[0].Route__c //#1004 Route__c field only ever used here to LOCATE, and for GATE and MONITOR
             LIMIT :chunks
             FOR UPDATE //#695 investigate broker race condition
-        ];
+        ]);
     }
     
     /**
      * Sets many Messages statuses to 'Started' and writes them away.
      * TODO we should be REALLY careful here because it modifies BY REFERENCE
      */
-    public void mark(String slot) {
+    public List<Message__c> mark(String slot) {
         
         for (Message__c message : this.Messages) {
             //message fields
@@ -168,6 +168,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         }
         
         update this.Messages;
+        return this.Messages;
     }
     
     /**
