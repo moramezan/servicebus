@@ -2,12 +2,10 @@
 
     @TestSetup static void testSetup() {
         //act
-        new PostInstallHandler().upsertApplication();
-        ApexClassSetModel.saveCache(ApexClassSetModel.fromNamespace(Application__c.getOrgDefaults().Prefix__c).discoverSummaries());
+        new PostInstallHandler().onInstall(null);
         
         //assert
         System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
-        System.assert(!ApexClassSetModel.loadCache().isEmpty(), 'Wrong id.');
     }
     
     static Id setupSequence() {

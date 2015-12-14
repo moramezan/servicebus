@@ -65,7 +65,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
      * Usually after Service Discovery,
      * we persist everything to a Document.
      */
-    static public Id saveCache(List<ApexClassModel.Summary> summaries) {
+    static public Id saveCache(Map<String,ApexClassModel.Summary> name2summary) {
         
         Folder folder = [
             SELECT Id
@@ -73,7 +73,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             WHERE DeveloperName = 'ServiceBus'
         ];
         
-        String data = Json.serializePretty(summaries);
+        String data = Json.serializePretty(name2summary);
         
         Document document = new Document(
             Name = 'ApexClassCache.bin',
@@ -85,35 +85,42 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
         //WTF DeveloperName = 'ApexClassCacheBin',
         //Cannot save cache: Upsert failed. First exception on row 0; first error: DUPLICATE_DEVELOPER_NAME, This Document Unique Name already exists or has been previously used.  Please choose a different name.: [DeveloperName]
         
-        Id documentId = Database.upsert(document, Schema.Document.Name).getId();
+        upsert document Schema.Document.Name;
         
-        return documentId;
+        return document.Id;
     }
+    
+    static Map<String,ApexClassModel.Summary> ClassCache;
     
     /**
      * The Sequence Builder and Services Tab
      * rely on reading data from this cache.
      */
-    static public List<ApexClassModel.Summary> loadCache() {
+    static public Map<String,ApexClassModel.Summary> loadCache() {
         
-        try {
-            Document document = [
-                SELECT Body
-                FROM Document
-                WHERE Name = 'ApexClassCache.bin'
-            ];
-            
-            //hydrate cache
-            return (List<ApexClassModel.Summary>)Json.deserialize(
-                document.Body.toString(),
-                List<ApexClassModel.Summary>.class
-            );
-            
-        } catch (QueryException e) {
-            //nothing cached
-            return new List<ApexClassModel.Summary>();
+        if (ClassCache == null) {
+            try {
+                Document document = [
+                    SELECT Body
+                    FROM Document
+                    WHERE Name = 'ApexClassCache.bin'
+                ];
+                
+                //hydrate cache
+                ClassCache = (Map<String,ApexClassModel.Summary>)Json.deserialize(
+                    document.Body.toString(),
+                    Map<String,ApexClassModel.Summary>.class
+                );
+                
+            } catch (QueryException e) {
+                //nothing cached, discovery required!!
+                //ClassCache = new Map<String,ApexClassModel.Summary>();
+                throw new ModelException('Cache not found, discovery is required.');
+            }
         }
         
+        //memoize
+        return ClassCache;
     }
     
     static public ApexClassSetModel fromNamespace(String namespace) {
@@ -130,9 +137,9 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
      * #946 by discovering the namespaces one-by-one with Visualforce Remoting
      * we won't hit the 10 namespace limit, and they run in parallel (fast)
      */
-    public List<ApexClassModel.Summary> discoverSummaries() {
+    public Map<String,ApexClassModel.Summary> discoverSummaries() {
         
-        List<ApexClassModel.Summary> summaries = new List<ApexClassModel.Summary>();
+        Map<String,ApexClassModel.Summary> name2summary = new Map<String,ApexClassModel.Summary>();
         
         for (ApexClass apexClass : this.ApexClasses) try {
             
@@ -147,13 +154,13 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
             ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
             summary.Id = apexClass.Id; //gotta provide the id from outside
-            summaries.add(summary);
+            name2summary.put(reflector.getName(), summary);
             
         } catch (JsonException e) {
             //fails if compile problem with the class, eg LeadShare when OWD set to public
         }
         
-        return summaries;
+        return name2summary;
         
     }
     

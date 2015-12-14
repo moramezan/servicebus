@@ -28,7 +28,7 @@ public class SubsequenceService extends ApexClassModel.Service {
             Event__c = Json.serialize(inputEvent)
         );
         
-        ApexClassModel model = new MessageModel(message).resolveApexClassModel();
+        ApexClassModel model = ApexClassModel.fromRoute((String)inputEvent.get('Route'));
         
         //invoke callouts (this WILL explode, by design)
         model.invokeCallout(inputEvent);

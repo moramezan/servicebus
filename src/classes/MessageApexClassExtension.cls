@@ -13,7 +13,7 @@ public with sharing class MessageApexClassExtension {
             PageReference detailView = this.model.showApexClass();
             return detailView;
             
-        } catch (MessageModel.ModelException e) {
+        } catch (ApexClassModel.ModelException e) {
             ApexPages.addMessages(e);
             return null;
         }

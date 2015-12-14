@@ -129,8 +129,14 @@ public class StepModel extends ApexDomain.StandardModel {
     
     public Id upsertConfig() {
         //use apex class name instead of id, for easier testing
-        Type reflector = Type.forName(this.Step.ApexClassName__c);
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
+        ApexClassModel.Summary summary; //unit tests skip cache
+        if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(this.Step.ApexClassName__c));
+        else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(this.Step.ApexClassName__c);
+        
+        if (summary == null) {
+            //summary not cached
+            throw new ModelException('Could not load summary: ' + this.Step.ApexClassName__c);
+        }
         
         if (summary.StepConfig == null) {
             //service has no config

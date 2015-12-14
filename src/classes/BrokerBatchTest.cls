@@ -1,5 +1,13 @@
 @IsTest class BrokerBatchTest {
     
+    @TestSetup static void testSetup() {
+        //act
+        new PostInstallHandler().onInstall(null);
+        
+        //assert
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
+    }
+    
     class MockJob implements System.Schedulable {
         public void execute(System.SchedulableContext context) {}
     }
@@ -9,16 +17,6 @@
         public BatchableContext() {this.jobId = System.schedule('test', '0 0 * * * ?', new MockJob());}
         public Id getJobId() {return this.jobId;}
         public Id getChildJobId() {return this.jobId;}
-    }
-    
-    @TestSetup static void testSetup() {
-        //act
-        Application__c application = Application__c.getOrgDefaults();
-        application.RunAsUserId__c = UserInfo.getUserId();
-        upsert application;
-        
-        //assert
-        System.assertNotEquals(null, application.Id, 'Wrong id.');
     }
     
     static testmethod void coverStart() {

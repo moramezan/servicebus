@@ -2,7 +2,7 @@
 
     @TestSetup static void testSetup() {
         //act
-        new PostInstallHandler().upsertApplication();
+        new PostInstallHandler().onInstall(null);
         
         //assert
         System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
@@ -247,13 +247,12 @@
         insert step;
         
         //arrange message
-        Map<String,Object> event = new Map<String,Object>{'Route' => '1#Test#1'};
+        Map<String,Object> event = new Map<String,Object>{'Route' => '1#Test#0'}; //incremented in persist
         Message__c message = new Message__c(Event__c = Json.serialize(event));
-        MessageModel model = new MessageModel(message);
         
         //act
-        List<Message__c> outputMessages = new List<Message__c>();
-        model.invokeExecute(outputMessages);
+        List<Message__c> outputMessages = new List<Message__c>{message};
+        new MessageSetModel(new List<Message__c>()).persist(outputMessages);
         
         //assert
         Integer expectedSize = 1;

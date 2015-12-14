@@ -6,7 +6,7 @@
     
     @TestSetup static void testSetup() {
         //act
-        new PostInstallHandler().upsertApplication();
+        new PostInstallHandler().onInstall(null);
         
         //assert
         System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');

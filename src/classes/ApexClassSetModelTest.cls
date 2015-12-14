@@ -2,7 +2,7 @@
 
     @TestSetup static void testSetup() {
         //act
-        new PostInstallHandler().upsertApplication();
+        new PostInstallHandler().onInstall(null);
         
         //assert
         System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
@@ -43,7 +43,9 @@
         ApexClassModel.Summary summary = new ApexClassModel.Summary(TerminateService.class);
         
         //act
-        Id documentId = ApexClassSetModel.saveCache(new List<ApexClassModel.Summary>{summary});
+        Id documentId = ApexClassSetModel.saveCache(new Map<String,ApexClassModel.Summary>{
+            TerminateService.class.getName() => summary
+        });
         
         //arrange
         Document document = [SELECT Body FROM Document WHERE Id = :documentId];
@@ -59,20 +61,18 @@
         Document document = new Document(
             Name = 'ApexClassCache.bin',
             FolderId = UserInfo.getUserId(),
-            Body = Blob.valueOf('[{"Description":"Test"}]')
+            Body = Blob.valueOf('{"Test":{"Description":"Example"}}')
         );
         
-        upsert document Name;
-        document.DeveloperName = 'ApexClassDiscover';
-        update document; //cant upsert on DeveloperName
+        upsert document Schema.Document.Name;
         
         //act
-        List<ApexClassModel.Summary> summaries = ApexClassSetModel.loadCache();
+        Map<String,ApexClassModel.Summary> name2summary = ApexClassSetModel.loadCache();
         
         //assert
-        String expectedDescription = 'Test';
-        String actualDescription = summaries[0].Description;
-        System.assertEquals(expectedDescription, actualDescription, 'Wrong id.');
+        String expectedDescription = 'Example';
+        String actualDescription = name2summary.get('Test').Description;
+        System.assertEquals(expectedDescription, actualDescription, 'Wrong description.');
     }
     
     static testmethod void testFromNamespace() {
@@ -96,11 +96,11 @@
         ]);
         
         //act
-        List<ApexClassModel.Summary> summaries = model.discoverSummaries();
+        Map<String,ApexClassModel.Summary> name2summary = model.discoverSummaries();
         
         //assert
         Integer expectedSize = 1;
-        Integer actualSize = summaries.size();
+        Integer actualSize = name2summary.size();
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
     }
     

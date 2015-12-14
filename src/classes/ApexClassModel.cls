@@ -90,6 +90,49 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     }
     
     /**
+     * This performs actual resolution inside the callout and/or execute method.
+     */
+    static public ApexClassModel fromRoute(String route) {
+        
+        if (route == null) {
+            //failure, a la "List has no rows for assignment to SObject"
+            throw new ModelException('Route was null.');
+        }
+        
+        //resolve class name
+        String apexClassName = route;
+        Step__c step = Step__c.getValues(apexClassName);
+        if (step != null) apexClassName = step.ApexClassName__c;
+        
+        if (route.contains('#') && step == null) {
+            //failure, a la "Could not resolve field 'Billing Address' from value binding"
+            throw new ModelException('Could not resolve route: ' + route);
+        }
+        
+        if (apexClassName == null) {
+            //failure, a la "Argument cannot be null"
+            throw new Broker.ServiceException('Apex class name cannot be null: ' + route);
+        }
+        
+        Type reflector;
+        
+        try {reflector = Type.forName(apexClassName);} catch (Exception e) {
+            //failure, a la "Could not resolve field 'Billing Address' from value binding"
+            throw new ModelException('Could not reflect ' + apexClassName + ': ' + e.getMessage());
+        }
+        
+        if (reflector == null) {
+            //a la "Variable is not visible" or "Variable does not exist" or "Dependent class is invalid and needs recompilation"
+            throw new ModelException('Class is invalid or not visible: ' + apexClassName);
+        }
+        
+        //also works with #956 "fire and forget" service without sequences or steps
+        ApexClassModel model = new ApexClassModel(reflector);
+        if (step != null) model.getRecord().Id = step.ApexClassId__c;
+        return model;
+    }
+    
+    /**
      * This guy used in production
      */
     public ApexClassModel(ApexClass apexClass) {

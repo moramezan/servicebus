@@ -42,7 +42,7 @@
         $RemoteAction.ApexClassDiscoverExtension.DiscoverSummaries = '{!$RemoteAction.ApexClassDiscoverExtension.DiscoverSummaries}';
         $RemoteAction.ApexClassDiscoverExtension.SaveCache = '{!$RemoteAction.ApexClassDiscoverExtension.SaveCache}';
         
-        window.Services = [];
+        window.Services = {};
         window.Namespaces = JSON.parse('{!JSENCODE(Namespaces)}'); //stored xss
         window.Steps = Namespaces.map(function(item, index, array) {return {Id: index, Name: item};});
         
@@ -125,7 +125,7 @@
                         }
                         
                         //success, accumulate
-                        Services.push.apply(Services, services);
+                        for (var index in services) Services[index] = services[index];
                         AsyncApexJob.JobItemsProcessed++;
                         namespaces.pop();
                         Steps.pop();

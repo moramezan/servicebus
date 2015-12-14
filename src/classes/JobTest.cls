@@ -1,5 +1,13 @@
 @IsTest class JobTest {
     
+    @TestSetup static void testSetup() {
+        //act
+        new PostInstallHandler().onInstall(null);
+        
+        //assert
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
+    }
+    
     //TODO needs more tests
     
     class MockJob implements System.Schedulable {
@@ -10,14 +18,6 @@
         Id jobId;
         public QueueableContext() {this.jobId = System.schedule('test', '0 0 * * * ?', new MockJob());}
         public Id getJobId() {return this.jobId;}
-    }
-    
-    @TestSetup static void testSetup() {
-        //act
-        new PostInstallHandler().upsertApplication();
-        
-        //assert
-        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
     }
     
     static testmethod void testSimpleEventConstructor() {

@@ -125,13 +125,19 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         }
         
         Integer chunks = 1;
-        ApexClassModel.Summary summary;
         
         try {
-            //we have to 'peek' at the service
-            ApexClassModel model = new MessageModel(specimen[0]).resolveApexClassModel();
-            summary = new ApexClassModel.Summary(model.Reflector);
+            //resolve class name
+            String apexClassName = specimen[0].Route__c;
+            Step__c step = Step__c.getValues(specimen[0].Route__c);
+            if (step != null) apexClassName = step.ApexClassName__c;
+            
+            //peek at summary
+            ApexClassModel.Summary summary; //unit tests skip cache
+            if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(apexClassName));
+            else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(apexClassName);
             chunks = summary.Chunks;
+            
         } catch (Exception e) {}
         
         return new MessageSetModel([
@@ -156,10 +162,17 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             message.Status__c = 'Started';
             
             try {
-                //#1124 poor mans retry strategy
-                ApexClassModel model = new MessageModel(message).resolveApexClassModel();
-                ApexClassModel.Summary summary = new ApexClassModel.Summary(model.Reflector);
+                //resolve class name
+                String apexClassName = message.Route__c;
+                Step__c step = Step__c.getValues(message.Route__c);
+                if (step != null) apexClassName = step.ApexClassName__c;
+                
+                //peek at summary
+                ApexClassModel.Summary summary; //unit tests skip cache
+                if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(apexClassName));
+                else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(apexClassName);
                 message.IsRetryable__c = summary.Retry;
+                
             } catch (Exception e) {}
             
             //increment attempts
@@ -188,11 +201,10 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         
         for (Integer i = 0; i < inputMessages.size(); i++) {
             //event params
-            Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(inputMessages[i].Event__c);
-            event.put('Range', inputMessages.size());
-            event.put('Chunk', i + 1); //chunks are 1-indexed
-            event.put('SiblingIds', this.keySet());
-            inputMessages[i].Event__c = Json.serializePretty(event);
+            MessageModel model = new MessageModel(inputMessages[i]);
+            model.setParam('Range', inputMessages.size());
+            model.setParam('Chunk', i + 1); //chunks are 1-indexed
+            model.setParam('SiblingIds', this.keySet());
         }
         
         //OUR FUCKUPS (prepare)
@@ -263,8 +275,8 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
          * The input messages get 'slot' put on them in the mark. We clear it out
          * here in the persist. Leftover 'slot' is a good indicator of fatalities.
          */
-        for (Message__c message : this.Messages) {
-            message.Slot__c = null; //clear
+        for (Message__c inputMessage : this.Messages) {
+            inputMessage.Slot__c = null; //clear
         }
         
         /**
@@ -274,18 +286,25 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
          * Notice how our Enqueue method persists the outputs, not the inputs!
          */
         for (Message__c outputMessage : outputMessages) try {
-            Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(outputMessage.Event__c);
+            MessageModel model = new MessageModel(outputMessage);
             
-            //increments route position
-            if (event.containsKey('Route')) {
-                String route = (String)event.get('Route');
+            //increments route position (they arrive eg 1#Route#0)
+            if (model.getParam('Route') != null) {
+                String route = (String)model.getParam('Route');
                 String version = route.substringBefore('#');
                 String sequence = route.substringAfter('#').substringBefore('#');
                 String position = route.substringAfterLast('#');
-                if (route.contains('#')) event.put('Route', (Integer.valueOf(version)) + '#' + sequence + '#' + (Integer.valueOf(position) + 1));
+                if (route.contains('#')) model.setParam('Route', (Integer.valueOf(version)) + '#' + sequence + '#' + (Integer.valueOf(position) + 1));
             }
             
-            outputMessage.Event__c = Json.serialize(event);
+            //resolve config id (OF INCREMENTED ROUTE!) //TODO test this
+            Id configId = null;
+            Step__c step = Step__c.getValues((String)model.getParam('Route'));
+            if (step != null) configId = step.ConfigId__c;
+            
+            //#856 this will add the step config id
+            model.setParam('StepConfigId', configId);
+            
         } catch (Exception e) {
             if (Application__c.getOrgDefaults().Prefix__c == null) throw e;
         }
@@ -338,7 +357,9 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
      */
     @TestVisible void alphabetizeJsonAndPopulateFields() {
         for (Message__c message : this.Messages) try {
-            if (message.Event__c == null) message.Event__c = '{}';
+            if (message.Event__c == null) System.assert(false, 'Event was null!'); //TODO message.Event__c = '{}';
+            
+            //#1125 not using message model here... because want to completely blat keys!
             Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
             
             //strip out our little secrets

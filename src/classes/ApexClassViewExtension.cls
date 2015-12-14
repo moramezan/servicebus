@@ -25,8 +25,9 @@ public with sharing class ApexClassViewExtension {
     public PageReference doInit() {
         try {
             this.model = ApexClassModel.fromId(controller.getId());
-            this.Summary = new ApexClassModel.Summary(model.Reflector);
             this.FullyQualifiedClassName = model.Reflector.getName();
+            if (Test.isRunningTest()) this.Summary = new ApexClassModel.Summary(model.Reflector); //unit tests skip cache
+            else if (!Test.isRunningTest()) this.Summary = ApexClassSetModel.loadCache().get(this.FullyQualifiedClassName);
             return this.model.showHelpUrl();
             
         } catch (ApexClassModel.ModelException e) {

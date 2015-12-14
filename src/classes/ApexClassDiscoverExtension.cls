@@ -4,7 +4,7 @@ public with sharing class ApexClassDiscoverExtension {
         //
     }
     
-    @RemoteAction static public List<ApexClassModel.Summary> DiscoverSummaries(String namespace) {
+    @RemoteAction static public Map<String,ApexClassModel.Summary> DiscoverSummaries(String namespace) {
         return ApexClassSetModel.fromNamespace(namespace).discoverSummaries();
     }
     
@@ -24,15 +24,16 @@ public with sharing class ApexClassDiscoverExtension {
      * - we perform serialization on the client side, then iterate over
      */
     @RemoteAction static public Id SaveCache(String data) {
-        List<ApexClassModel.Summary> summaries = new List<ApexClassModel.Summary>();
+        Map<String,Object> name2data = (Map<String,Object>)Json.deserializeUntyped(data);
+        Map<String,ApexClassModel.Summary> name2summary = new Map<String,ApexClassModel.Summary>();
         
-        for (Object dto : (List<Object>)Json.deserializeUntyped(data)) try {
-            summaries.add((ApexClassModel.Summary)Json.deserialize(Json.serialize(dto), ApexClassModel.Summary.class));
+        for (String name : name2data.keySet()) try {
+            name2summary.put(name, (ApexClassModel.Summary)Json.deserialize(Json.serialize(name2data.get(name)), ApexClassModel.Summary.class));
         } catch (JsonException e) {
             //any error just continue to next summary
         }
         
-        return ApexClassSetModel.saveCache(summaries);
+        return ApexClassSetModel.saveCache(name2summary);
     }
     
     /**
@@ -41,7 +42,7 @@ public with sharing class ApexClassDiscoverExtension {
      */
     static public PageReference DiscoverIfNeeded(PageReference retURL) {
         
-        if (ApexClassSetModel.loadCache().isEmpty() || ApexClassSetModel.cacheKey() != ApexClassSetModel.classKey()) {
+        if (ApexClassSetModel.cacheKey() != ApexClassSetModel.classKey()) {
             //cache empty or cache outdated, service discovery required
             PageReference discover = Page.ApexClassDiscover;
             discover.getParameters().put('retURL', retURL.getUrl());

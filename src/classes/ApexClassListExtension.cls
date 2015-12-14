@@ -33,8 +33,8 @@ public with sharing class ApexClassListExtension {
         ]);
         
         //for displaying summaries
-        List<ApexClassModel.Summary> summaries = ApexClassSetModel.loadCache();
-        for (ApexClassModel.Summary summary : summaries) this.id2summary.put(summary.Id, summary);
+        Map<String,ApexClassModel.Summary> name2summary = ApexClassSetModel.loadCache();
+        for (ApexClassModel.Summary summary : name2summary.values()) this.id2summary.put(summary.Id, summary);
         
         //all ok
         return null;

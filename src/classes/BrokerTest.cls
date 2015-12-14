@@ -1,5 +1,13 @@
 @IsTest class BrokerTest {
     
+    @TestSetup static void testSetup() {
+        //act
+        new PostInstallHandler().onInstall(null);
+        
+        //assert
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
+    }
+    
     class MockJob implements System.Schedulable {
         public void execute(System.SchedulableContext context) {}
     }
@@ -15,16 +23,6 @@
         Id jobId;
         public QueueableContext() {this.jobId = System.schedule('test', '0 0 * * * ?', new MockJob());}
         public Id getJobId() {return this.jobId;}
-    }
-    
-    @TestSetup static void testSetup() {
-        //act
-        new PostInstallHandler().upsertApplication();
-        new PostInstallHandler().upsertSlots();
-        
-        //assert
-        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
-        System.assertEquals(1000, [SELECT COUNT() FROM Slot__c], 'Wrong count.');
     }
     
     /**
@@ -441,7 +439,7 @@
         //assemble
         
         //assert
-        String expectedMessage = Broker.ServiceException.class.getName() + ': Message has no route: ' + messages[0].Id;
+        String expectedMessage = ApexClassModel.ModelException.class.getName() + ': Route was null.';
         String actualMessage = messages[0].Exception__c;
         System.assertEquals(expectedMessage, actualMessage, 'Wrong exception message.');
     }
@@ -465,7 +463,7 @@
         Message__c message = [SELECT Id, Exception__c FROM Message__c ALL ROWS]; //#1114
         
         //assert
-        String expectedException = Broker.ServiceException.class.getName() + ': Could not resolve message route: 1#Test#1';
+        String expectedException = ApexClassModel.ModelException.class.getName() + ': Could not resolve route: 1#Test#1';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong message.');
     }
@@ -494,7 +492,7 @@
         
         //assert
         String actualMessage = message.Exception__c;
-        String expectedMessage = Broker.ServiceException.class.getName() + ': Class is invalid or not visible: lalala';
+        String expectedMessage = ApexClassModel.ModelException.class.getName() + ': Class is invalid or not visible: lalala';
         System.assertEquals(expectedMessage, actualMessage, 'Wrong message detail.');
     }
     
@@ -609,7 +607,7 @@
         Integer actualFailureCount = messages.size();
         System.assertEquals(expectedFailureCount, actualFailureCount, 'Wrong failure count.');
         
-        String expectedException = Broker.ServiceException.class.getName() + ': Could not resolve message route: 1#Test#4';
+        String expectedException = ApexClassModel.ModelException.class.getName() + ': Could not resolve route: 1#Test#4';
         String actualException = messages[0].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
@@ -682,7 +680,7 @@
         String actualException = messages[0].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception 1.');
         
-        expectedException = Broker.ServiceException.class.getName() + ': Message has no route: ' + messages[1].Id;
+        expectedException = ApexClassModel.ModelException.class.getName() + ': Route was null.';
         actualException = messages[1].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception 1.');
     }
@@ -770,6 +768,12 @@
     }
     
     static testmethod void testKamikazeChunkingDoesntTakeOutHisMates() {
+        //arrange cache
+        ApexClassSetModel.saveCache(new Map<String,ApexClassModel.Summary>{
+            ChunkErrorService.class.getName() => new ApexClassModel.Summary(ChunkErrorService.class),
+            ChunkErrorService.class.getName() => new ApexClassModel.Summary(TerminateService.class)
+        });
+        
         //arrange services, sequence and steps
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;

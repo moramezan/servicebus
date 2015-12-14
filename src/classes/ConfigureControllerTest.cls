@@ -1,7 +1,5 @@
 @IsTest class ConfigureControllerTest {
     
-    //needed in packaging org, or
-    //he cant see his own namespace
     @TestSetup static void testSetup() {
         //act
         new PostInstallHandler().onInstall(null);

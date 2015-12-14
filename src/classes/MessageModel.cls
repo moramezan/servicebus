@@ -14,12 +14,24 @@ public class MessageModel extends ApexDomain.StandardModel {
     /**
      * Event parameters
      */
-    public Map<String,Object> Event;
+    public Map<String,Object> getEvent() {
+        return (Map<String,Object>)Json.deserializeUntyped(this.Message.Event__c);
+    }
+    
+    public void setParam(String key, Object param) {
+        Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(this.Message.Event__c);
+        event.put(key, param);
+        this.Message.Event__c = Json.serialize(event);
+    }
+    
+    public Object getParam(String key) {
+        Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(this.Message.Event__c);
+        return event.get(key);
+    }
     
     public MessageModel(Message__c message) {
         super(message);
         this.Message = message;
-        this.Event = (Map<String,Object>)Json.deserializeUntyped(message.Event__c);
     }
     
     static public MessageModel fromId(Id messageId) {
@@ -32,57 +44,7 @@ public class MessageModel extends ApexDomain.StandardModel {
      */
     public Message__c Message;
     
-    ApexClassModel Model;
-    
-    /**
-     * This performs actual resolution inside the callout and/or execute method.
-     */
-    public ApexClassModel resolveApexClassModel() {
-        
-        String route = (String)this.Event.get('Route');
-        
-        if (route == null) {
-            throw new Broker.ServiceException('Message has no route: ' + this.message.Id); //a la "List has no rows for assignment to SObject"
-        }
-        
-        Type service = Type.forName(route);
-        
-        if (service != null) {
-            return new ApexClassModel(service); //#956 "fire and forget" service without sequences or steps
-        }
-        
-        Step__c step = Step__c.getValues(route);
-        
-        if (step == null) {
-            throw new Broker.ServiceException('Could not resolve message route: ' + route); //a la "Could not resolve field 'Billing Address' from value binding"
-        }
-        
-        Id configId = step.ConfigId__c; //#856 this will get slurped up by "locate" and "mark" to add the step config id
-        
-        if (configId == null) {
-            this.Event.remove('StepConfigId'); //TODO better
-            this.Message.Event__c = Json.serializePretty(this.Event);
-        } else {
-            this.Event.put('StepConfigId', configId); //TODO better
-            this.Message.Event__c = Json.serializePretty(this.Event);
-        }
-        
-        String apexClassName = step.ApexClassName__c;
-        
-        if (apexClassName == null) {
-            throw new Broker.ServiceException('Apex class name cannot be null: ' + route); //a la "Argument cannot be null"
-        }
-        
-        service = Type.forName(apexClassName);
-        
-        if (service == null) {
-            throw new Broker.ServiceException('Class is invalid or not visible: ' + apexClassName); //a la "Variable is not visible" or "Variable does not exist" or "Dependent class is invalid and needs recompilation"
-        }
-        
-        ApexClassModel model = new ApexClassModel(service);
-        model.getRecord().Id = step.ApexClassId__c;
-        return model;
-    }
+    ApexClassModel ServiceModel;
     
     public void invokeCallout() {
         
@@ -91,18 +53,19 @@ public class MessageModel extends ApexDomain.StandardModel {
         
         try {
             
-            Integer hops = (Integer)this.Event.get('Hops');
+            Integer hops = (Integer)this.getParam('Hops');
             if (hops >= Broker.MaximumHops) {
                 throw new Broker.ServiceException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
             }
             
-            if (this.Model == null) {
+            if (this.ServiceModel == null) {
                 //doing this later than earlier
-                this.Model = this.resolveApexClassModel();
+                String route = (String)this.getParam('Route');
+                this.ServiceModel = ApexClassModel.fromRoute(route);
             }
             
             //do invocation
-            this.Model.invokeCallout(this.Event);
+            this.ServiceModel.invokeCallout(this.getEvent());
             
             //clear any errors off the input message as the LAST thing
             this.Message.Exception__c = null;
@@ -141,23 +104,24 @@ public class MessageModel extends ApexDomain.StandardModel {
         
         try {
             
-            Integer hops = (Integer)this.Event.get('Hops');
+            Integer hops = (Integer)this.getParam('Hops');
             if (hops >= Broker.MaximumHops) {
                 throw new Broker.ServiceException('Maximum hops reached: ' + Broker.MaximumHops); //a la "System.LimitException: Maximum stack depth reached: 1001"
             }
             
-            if (this.Model == null) {
+            if (this.ServiceModel == null) {
                 //doing this later than earlier
-                this.Model = this.resolveApexClassModel();
+                String route = (String)this.getParam('Route');
+                this.ServiceModel = ApexClassModel.fromRoute(route);
             }
             
             //do invocation
-            List<Map<String,Object>> outputEvents = this.Model.invokeExecute(this.Event);
+            List<Map<String,Object>> outputEvents = this.ServiceModel.invokeExecute(this.getEvent());
             
-            Integer chunkTotal = (Integer)this.Event.get('Range');
+            Integer chunkTotal = (Integer)this.getParam('Range');
             if (chunkTotal != null && chunkTotal + outputEvents.size() + outputMessages.size() > 2000) { //#955 possibly 8000, but headspace
                 //#955 we throttle inputs+outputs
-                throw new Broker.ServiceException(this.Model.Reflector.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Chunks or emit fewer events.'); //#955 possibly 8000, but headspace //a la "System.TypeException: Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking."
+                throw new Broker.ServiceException(this.ServiceModel.Reflector.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Chunks or emit fewer events.'); //#955 possibly 8000, but headspace //a la "System.TypeException: Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking."
             }
             
             //wrap up results into Messages (new guys should have Position = 0)
@@ -238,7 +202,7 @@ public class MessageModel extends ApexDomain.StandardModel {
     
     public PageReference showRecordData() {
         try {
-            Id recordId = (Id)this.Event.get('RecordId');
+            Id recordId = (Id)this.getParam('RecordId');
             SObject recordData = ApexDomain.getById(recordId);
             return new ApexPages.StandardController(recordData).view();
             
@@ -252,7 +216,8 @@ public class MessageModel extends ApexDomain.StandardModel {
      */
     public PageReference showApexClass() {
         try {
-            ApexClassModel model = this.resolveApexClassModel();
+            String route = (String)this.getParam('Route');
+            ApexClassModel model = ApexClassModel.fromRoute(route);
             ApexClass apexClass = (ApexClass)model.getRecord();
             return new ApexPages.StandardController(apexClass).view();
             

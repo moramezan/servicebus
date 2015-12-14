@@ -2,7 +2,7 @@
 
     @TestSetup static void testSetup() {
         //act
-        new PostInstallHandler().upsertApplication();
+        new PostInstallHandler().onInstall(null);
         
         //assert
         System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
@@ -21,10 +21,10 @@
         String namespace = 'test';
         
         //act
-        List<ApexClassModel.Summary> summaries = ApexClassDiscoverExtension.DiscoverSummaries(namespace);
+        Map<String,ApexClassModel.Summary> name2summary = ApexClassDiscoverExtension.DiscoverSummaries(namespace);
         
         //assert
-        System.assert(summaries.isEmpty(), 'Wrong discovery.');
+        System.assert(name2summary.isEmpty(), 'Wrong discovery.');
     }
     
     static testmethod void testGetNamespaces() {
@@ -40,7 +40,7 @@
     
     static testmethod void testSaveCache() {
         //arrange
-        String cache = '[]';
+        String cache = '{}';
         
         //act
         String documentId = ApexClassDiscoverExtension.SaveCache(cache);
@@ -52,6 +52,9 @@
     static testmethod void testDiscoverIfNeeded() {
         //arrange
         PageReference retURL = new PageReference('/home/home.jsp');
+        
+        //undiscover
+        delete [SELECT Id FROM Document WHERE Name = 'ApexClassCache.bin'];
         
         //act
         PageReference redirect = ApexClassDiscoverExtension.DiscoverIfNeeded(retURL);

@@ -71,7 +71,7 @@ public with sharing class SequenceEditExtension {
     }
     
     public String getServices() {
-        return Json.serialize(ApexClassSetModel.loadCache());
+        return Json.serialize(ApexClassSetModel.loadCache().values());
     }
     
     @RemoteAction static public void persistConfigNameOnStep(Id stepId) {
