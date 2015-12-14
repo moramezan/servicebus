@@ -16,6 +16,6 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <label>Wiretap Settings</label>
+    <label>Wiretap Service Config</label>
     <visibility>Public</visibility>
 </CustomObject>
