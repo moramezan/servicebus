@@ -177,65 +177,6 @@
             },
             "codeClass": null,
             "userConfig": {
-                "align": "right",
-                "dataIndex": "ConfigId",
-                "tdCls": "link",
-                "text": "Configure",
-                "width": 70
-            },
-            "name": "MyColumn",
-            "configAlternates": {
-                "scrollable": "boolean"
-            },
-            "designerId": "5756960b-c7e9-4a88-9e53-477e63b3367c",
-            "cn": [
-                {
-                    "type": "fixedfunction",
-                    "reference": {
-                        "name": "items",
-                        "type": "array"
-                    },
-                    "codeClass": null,
-                    "userConfig": {
-                        "designer|params": [
-                            "value",
-                            "metaData",
-                            "record",
-                            "rowIndex",
-                            "colIndex",
-                            "store",
-                            "view"
-                        ],
-                        "fn": "renderer",
-                        "implHandler": [
-                            "var apexClassId = record.get('ApexClassId');",
-                            "var service = Ext.getStore('Services').getById(apexClassId);",
-                            "var config = service && service.get('StepConfig'); //#875 invalid service",
-                            "",
-                            "//some services have no configuration",
-                            "if (config) return Ext.DomHelper.createHtml({",
-                            "    'tag': 'a',",
-                            "    'html': 'Configure',",
-                            "    'class': 'configurelink',",
-                            "    'onclick': 'return false;',",
-                            "    'title': 'Configure Step',",
-                            "    'href': '#'",
-                            "}) + ' |';"
-                        ]
-                    },
-                    "name": "renderer",
-                    "designerId": "dedacd01-80aa-4f76-b8db-8f0bd8d10165"
-                }
-            ]
-        },
-        {
-            "type": "Ext.grid.column.Column",
-            "reference": {
-                "name": "columns",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
                 "align": "center",
                 "dataIndex": "ConfigId",
                 "tdCls": "link",
@@ -289,6 +230,64 @@
                     },
                     "name": "renderer",
                     "designerId": "953df7e9-d3f4-414f-8ff5-9422cb948267"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "dataIndex": "ConfigId",
+                "tdCls": "link",
+                "text": "Configure",
+                "width": 60
+            },
+            "name": "MyColumn",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
+            "designerId": "5756960b-c7e9-4a88-9e53-477e63b3367c",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "var apexClassId = record.get('ApexClassId');",
+                            "var service = Ext.getStore('Services').getById(apexClassId);",
+                            "var config = service && service.get('StepConfig'); //#875 invalid service",
+                            "",
+                            "//some services have no configuration",
+                            "if (config) return '| ' + Ext.DomHelper.createHtml({",
+                            "    'tag': 'a',",
+                            "    'html': 'Config',",
+                            "    'class': 'configurelink',",
+                            "    'onclick': 'return false;',",
+                            "    'title': 'Configure Step',",
+                            "    'href': '#'",
+                            "});"
+                        ]
+                    },
+                    "name": "renderer",
+                    "designerId": "dedacd01-80aa-4f76-b8db-8f0bd8d10165"
                 }
             ]
         },
