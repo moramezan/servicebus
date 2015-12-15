@@ -113,17 +113,6 @@ global class Enqueue implements Process.Plugin {
                 AllowRoute ? 'Route' : 'Hops' //TODO confirm if this disallowed
             };
             
-            //#999 allow third-parties to "enqueue to config"
-            Map<Id,String> config2sequence = new Map<Id,String>();
-            for (Step__c step : Step__c.getAll().values()) {
-                
-                //only current version
-                if (step.Version__c != Application__c.getOrgDefaults().BrokerVersion__c) continue;
-                
-                //maps config to sequence
-                config2sequence.put(step.ConfigId__c, step.Sequence__c);
-            }
-            
             for (Map<String,Object> input : inputEvents) {
                 
                 if (input == null) {
@@ -151,36 +140,7 @@ global class Enqueue implements Process.Plugin {
                     }
                 }
                 
-                //stamp with version
-                Integer version = Application__c.getOrgDefaults().BrokerVersion__c.intValue();
-                integer position = 0;
-                
-                //#999 enqueue routing helpers
-                Set<Id> toConfigIds = (Set<Id>)inputEvent.get('ToConfigIds');
-                String toSequence = (String)inputEvent.get('ToSequence');
-                String toService = (String)inputEvent.get('ToService');
-                
-                if (toSequence != null) {
-                    //converts sequence to route
-                    inputEvent.remove('ToSequence');
-                    inputEvent.put('servicebus:ToSequence', toSequence);
-                    inputEvent.put('Route', version + '#' + toSequence + '#' + position);
-                }
-                
-                if (toService != null) {
-                    //converts service to route
-                    inputEvent.remove('ToService');
-                    inputEvent.put('servicebus:ToService', toService);
-                    inputEvent.put('Route', toService);
-                    
-                }
-                
-                if (toConfigIds != null) for (Id toConfigId : toConfigIds) if (config2sequence.get(toConfigId) != null) {
-                    //converts config to route
-                    inputEvent.remove('ToConfigIds');
-                    inputEvent.put('servicebus:ToConfigIds', toConfigIds);
-                    inputEvent.put('Route', version + '#' + config2sequence.get(toConfigId) + '#' + position);
-                }
+                //...........................
                 
                 inputEvent.putAll(new Map<String,Object>{
                     'Hops' => 1,

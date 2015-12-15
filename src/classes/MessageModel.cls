@@ -46,6 +46,75 @@ public class MessageModel extends ApexDomain.StandardModel {
     
     ApexClassModel ServiceModel;
     
+    /**
+     * #1147 merges the Enqueue-Helper / Persist-Increment
+     * into a common routing method used throughout package.
+     *
+     * A few examples:
+     * - Route:1#Handler#3 becomes 1#Handler#4
+     * - ToService:Wiretap becomes Route:Wiretap
+     * - ToSequence:Handle becomes Route:V#Handle#1
+     * - ToConfigIds:[new] becomes Route:V#Sequence#1
+     * - ToConfigIds:[old] becomes Route:TerminateService
+     */
+    public void route() {
+        Map<String,Object> event = (Map<String,Object>)Json.deserializeUntyped(this.Message.Event__c);
+        String route = (String)event.get('Route');
+        
+        //stamp with version
+        Integer version = Application__c.getOrgDefaults().BrokerVersion__c.intValue();
+        if (route != null && route.contains('#')) version = Integer.valueOf(route.substringBefore('#'));
+        
+        //increment position
+        Integer position = 1;
+        if (route != null && route.contains('#')) position = Integer.valueOf(route.substringAfterLast('#')) + 1;
+        
+        //#999 routing helpers (controls route without knowledge of routing)
+        Set<Id> toConfigIds = (Set<Id>)event.get('ToConfigIds');
+        String toSequence = (String)event.get('ToSequence');
+        String toService = (String)event.get('ToService');
+        
+        //converts sequence to route
+        if (toSequence != null) {
+            event.remove('ToSequence');
+            event.put('servicebus:ToSequence', toSequence);
+            event.put('Route', version + '#' + toSequence + '#' + position);
+        }
+        
+        //converts service to route
+        if (toService != null) {
+            event.remove('ToService');
+            event.put('servicebus:ToService', toService);
+            event.put('Route', toService);
+        }
+        
+        //converts config to route
+        if (toConfigIds != null) {
+            event.remove('ToConfigIds');
+            event.put('servicebus:ToConfigIds', toConfigIds);
+            
+            for (Step__c step : Step__c.getAll().values()) {
+                if (step.Version__c == version && toConfigIds.contains(step.ConfigId__c)) {
+                    //correct version with correct config
+                    event.put('Route', version + '#' + step.Sequence__c + '#' + position);
+                    break;
+                } else {
+                    //old step or absent config
+                    event.put('Route', TerminateService.class.getName());
+                    continue;
+                }
+            }
+        }
+        
+        //increments route position (they arrive eg 1#Route#0)
+        if (route != null && route.contains('#')) {
+            String sequence = route.substringAfter('#').substringBefore('#');
+            event.put('Route', version + '#' + sequence + '#' + position);
+        }
+        
+        this.Message.Event__c = Json.serialize(event);
+    }
+    
     public void invokeCallout() {
         
         //execution time profiler

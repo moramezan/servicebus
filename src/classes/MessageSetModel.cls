@@ -288,13 +288,11 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         for (Message__c outputMessage : outputMessages) try {
             MessageModel model = new MessageModel(outputMessage);
             
-            //increments route position (they arrive eg 1#Route#0)
-            if (model.getParam('Route') != null) {
-                String route = (String)model.getParam('Route');
-                String version = route.substringBefore('#');
-                String sequence = route.substringAfter('#').substringBefore('#');
-                String position = route.substringAfterLast('#');
-                if (route.contains('#')) model.setParam('Route', (Integer.valueOf(version)) + '#' + sequence + '#' + (Integer.valueOf(position) + 1));
+            //#1147 routing
+            try {
+                model.route();
+            } catch (Exception e) {
+                //model.setParam('Route', e.getMessage());
             }
             
             //resolve config id (OF INCREMENTED ROUTE!) //TODO test this

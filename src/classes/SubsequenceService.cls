@@ -17,17 +17,12 @@ public class SubsequenceService extends ApexClassModel.Service {
     
     public void traverse(Map<String,Object> inputEvent) {
         
-        //route any outputs to next step
+        //#1147 no Message__c or persist() here! manually route any outputs to next step
         String route = (String)inputEvent.get('Route');
         String sequence = route.substringAfter('#').substringBefore('#');
         Integer version = Integer.valueOf(route.substringBefore('#'));
         Integer position = Integer.valueOf(route.substringAfterLast('#'));
         inputEvent.put('Route', version + '#' + sequence + '#' + (position + 1));
-        
-        Message__c message = new Message__c(
-            Event__c = Json.serialize(inputEvent)
-        );
-        
         ApexClassModel model = ApexClassModel.fromRoute((String)inputEvent.get('Route'));
         
         //invoke callouts (this WILL explode, by design)
@@ -60,6 +55,7 @@ public class SubsequenceService extends ApexClassModel.Service {
         Savepoint savepoint = Database.setSavepoint();
         
         try {
+            //#1147 no persist happening here, gotta do our own routing!
             String route = (String)inputEvent.get('Route');
             Integer version = Integer.valueOf(route.substringBefore('#'));
             Integer position = 0;

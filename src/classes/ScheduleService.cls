@@ -35,12 +35,7 @@ public class ScheduleService extends ApexClassModel.Service {
     
         if (wasHeartbeat == true) {
             
-            ScheduleStepConfig__c config = (ScheduleStepConfig__c)ApexDomain.getById(stepConfigId); //TODO
-            /*ScheduleStepConfig__c config = [
-                SELECT IsActive__c, Frequency__c, FriendlyDates__c, FriendlyTimes__c
-                FROM ScheduleStepConfig__c
-                WHERE Id = :stepConfigId
-            ];*/
+            ScheduleStepConfig__c config = (ScheduleStepConfig__c)ApexDomain.getById(stepConfigId);
             
             if (config.IsActive__c != true) {
                 //just swallow if not active
