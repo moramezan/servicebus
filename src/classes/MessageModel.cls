@@ -70,7 +70,7 @@ public class MessageModel extends ApexDomain.StandardModel {
         if (route != null && route.contains('#')) position = Integer.valueOf(route.substringAfterLast('#')) + 1;
         
         //#999 routing helpers (controls route without knowledge of routing)
-        Set<Id> toConfigIds = (Set<Id>)event.get('ToConfigIds');
+        Set<Id> toConfigIds = (Set<Id>)Json.deserialize(Json.serialize(event.get('ToConfigIds')), Set<Id>.class);
         String toSequence = (String)event.get('ToSequence');
         String toService = (String)event.get('ToService');
         

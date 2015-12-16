@@ -292,7 +292,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             try {
                 model.route();
             } catch (Exception e) {
-                //model.setParam('Route', e.getMessage());
+                if (Test.isRunningTest()) throw e;
             }
             
             //resolve config id (OF INCREMENTED ROUTE!) //TODO test this

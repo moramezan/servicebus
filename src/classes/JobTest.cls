@@ -28,10 +28,6 @@
         //act
         Test.startTest();
         Job job = new Job(sequenceName, recordId);
-        Enqueue.QueueImpl queue = (Enqueue.QueueImpl)job.queue;
-        System.assert(queue.Events[0].containsKey('servicebus:ToSequence'), 'Wrong sequence key.');
-        System.assert(queue.Events[0].containsKey('Route'), 'Wrong route key.');
-        
         System.enqueueJob(job);
         Test.stopTest();
         
@@ -153,68 +149,6 @@
             String actualException = e.getMessage();
             System.assert(actualException.contains(expectedException), 'Wrong exception.');
         }
-    }
-    
-    static testmethod void testEnqueueNormalizesSequenceAndServiceAndConfigToRoute() {
-        //arrange
-        Map<String,Object> inputEvent;
-        List<Map<String,Object>> inputEvents;
-        Object expectedParam;
-        Object actualParam;
-        Enqueue.QueueImpl queue;
-        Job job;
-        
-        //act
-        inputEvent = new Map<String,Object>{'ToSequence' => 'Test'};
-        job = new Job(inputEvent);
-        queue = (Enqueue.QueueImpl)job.queue;
-        inputEvents = queue.Events;
-        
-        //assert
-        expectedParam = '1#Test#0';
-        actualParam = inputEvents[0].get('Route');
-        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
-        
-        expectedParam = 'Test';
-        actualParam = inputEvents[0].get('servicebus:ToSequence');
-        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
-        
-        //act
-        inputEvent = new Map<String,Object>{'ToService' => 'WiretapService'};
-        job = new Job(inputEvent);
-        queue = (Enqueue.QueueImpl)job.queue;
-        inputEvents = queue.Events;
-        
-        //assert
-        expectedParam = 'WiretapService';
-        actualParam = inputEvents[0].get('Route');
-        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
-        
-        expectedParam = 'WiretapService';
-        actualParam = inputEvents[0].get('servicebus:ToService');
-        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
-        
-        //arrange
-        Document document = new Document(Name = 'Config', FolderId = UserInfo.getUserId());
-        insert document;
-        
-        Step__c step = new Step__c(Name = '1#Test#1', Version__c = 1, Sequence__c = 'Test', Position__c = 1, ConfigId__c = document.Id);
-        insert step;
-        
-        //act
-        inputEvent = new Map<String,Object>{'ToConfigIds' => new Set<Id>{document.Id}};
-        job = new Job(inputEvent);
-        queue = (Enqueue.QueueImpl)job.queue;
-        inputEvents = queue.Events;
-        
-        //assert
-        expectedParam = '1#Test#0';
-        actualParam = inputEvents[0].get('Route');
-        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
-        
-        expectedParam = new Set<Id>{document.Id};
-        actualParam = inputEvents[0].get('servicebus:ToConfigIds');
-        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
     }
     
 }

@@ -328,4 +328,65 @@
         System.assertEquals(expectedParentId, actualParentId, 'Wrong parent id.');
     }
     
+    static testmethod void testRoute() {
+        //arrange
+        Map<String,Object> inputEvent;
+        MessageModel model;
+        Message__c message;
+        Object expectedParam;
+        Object actualParam;
+        
+        //act
+        inputEvent = new Map<String,Object>{'ToSequence' => 'Test'};
+        message = new Message__c(Event__c = Json.serialize(inputEvent));
+        model = new MessageModel(message);
+        model.route();
+        
+        //assert
+        expectedParam = '1#Test#1';
+        actualParam = model.getParam('Route');
+        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
+        
+        expectedParam = 'Test';
+        actualParam = model.getParam('servicebus:ToSequence');
+        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
+        
+        //act
+        inputEvent = new Map<String,Object>{'ToService' => 'WiretapService'};
+        message = new Message__c(Event__c = Json.serialize(inputEvent));
+        model = new MessageModel(message);
+        model.route();
+        
+        //assert
+        expectedParam = 'WiretapService';
+        actualParam = model.getParam('Route');
+        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
+        
+        expectedParam = 'WiretapService';
+        actualParam = model.getParam('servicebus:ToService');
+        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
+        
+        //arrange
+        Document document = new Document(Name = 'Config', FolderId = UserInfo.getUserId());
+        insert document;
+        
+        Step__c step = new Step__c(Name = '1#Test#1', Version__c = 1, Sequence__c = 'Test', Position__c = 1, ConfigId__c = document.Id);
+        insert step;
+        
+        //act
+        inputEvent = new Map<String,Object>{'ToConfigIds' => new Set<Id>{document.Id}};
+        message = new Message__c(Event__c = Json.serialize(inputEvent));
+        model = new MessageModel(message);
+        model.route();
+        
+        //assert
+        expectedParam = '1#Test#1';
+        actualParam = model.getParam('Route');
+        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
+        
+        expectedParam = new List<Object>{document.Id};
+        actualParam = model.getParam('servicebus:ToConfigIds');
+        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
+    }
+    
 }
