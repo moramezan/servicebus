@@ -217,4 +217,21 @@
         Integer actualPosition = (Integer)dtos[0].get('Position');
         System.assertEquals(expectedPosition, actualPosition, 'Wrong Position.');
     }
+    
+    static testmethod void testCountRoutedMessages() {
+        //arrange sequence
+        insert new Sequence__c(Name = 'Test');
+        
+        //arrange step
+        SequenceModel.fromName('Test').appendStep(TerminateService.class);
+        
+        //arrange message
+        insert new Message__c(Event__c = '{"Route":"1#Test#1"}');
+        
+        //act
+        Integer expectedCount = 1;
+        Integer actualCount = SequenceModel.fromName('Test').countRoutedMessages();
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
+        
+    }
 }

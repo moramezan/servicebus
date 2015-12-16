@@ -227,12 +227,13 @@ public class SequenceModel extends ApexDomain.StandardModel {
      */
     public Integer countRoutedMessages() {
         Integer total = 0;
+        Integer version = SequenceSetModel.draftVersion();
         
         //#954 looped aggregate query to count > 50000 safely
         for (AggregateResult result : [
             SELECT COUNT(Id) total
             FROM Message__c
-            WHERE Route__c LIKE :this.Sequence.Name + '#%'
+            WHERE Route__c LIKE :version + '#' + this.Sequence.Name + '#%'
             AND Status__c != 'Completed'
             AND Exception__c = null
             GROUP BY Route__c
