@@ -117,14 +117,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageApexClassExtension</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>MessageApexClassExtensionTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>MessageKillExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -157,14 +149,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MessageRecordDataExtension</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>MessageRecordDataExtensionTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>MessageResumeQueueExtension</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -178,6 +162,14 @@
     </classAccesses>
     <classAccesses>
         <apexClass>MessageSetModelTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>MessageViewExtension</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>MessageViewExtensionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
@@ -457,10 +449,6 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>MessageApexClass</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
         <apexPage>MessageHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
@@ -478,10 +466,6 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>MessageRebuffer</apexPage>
-        <enabled>true</enabled>
-    </pageAccesses>
-    <pageAccesses>
-        <apexPage>MessageRecordData</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

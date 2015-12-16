@@ -229,17 +229,6 @@ This id the Id of the job that enqueued the message representing the &quot;busin
     </fields>
     <label>Message</label>
     <listViews>
-        <fullName>All</fullName>
-        <columns>NAME</columns>
-        <columns>CREATED_DATE</columns>
-        <columns>Status__c</columns>
-        <columns>Route__c</columns>
-        <columns>ExecuteDuration__c</columns>
-        <columns>Exception__c</columns>
-        <filterScope>Everything</filterScope>
-        <label>All</label>
-    </listViews>
-    <listViews>
         <fullName>Exception</fullName>
         <columns>NAME</columns>
         <columns>CREATED_DATE</columns>
@@ -279,6 +268,22 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         </filters>
         <label>Killed</label>
     </listViews>
+    <listViews>
+        <fullName>Paused</fullName>
+        <columns>NAME</columns>
+        <columns>CREATED_DATE</columns>
+        <columns>Status__c</columns>
+        <columns>Route__c</columns>
+        <columns>ExecuteDuration__c</columns>
+        <columns>Exception__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Paused</value>
+        </filters>
+        <label>Paused</label>
+    </listViews>
     <nameField>
         <label>Message Name</label>
         <type>Text</type>
@@ -299,16 +304,6 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         <listViewButtons>Kill</listViewButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
-    <webLinks>
-        <fullName>ApexClass</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <linkType>page</linkType>
-        <masterLabel>Show Apex Service</masterLabel>
-        <openType>replace</openType>
-        <page>MessageApexClass</page>
-        <protected>false</protected>
-    </webLinks>
     <webLinks>
         <fullName>Kill</fullName>
         <availability>online</availability>
@@ -351,61 +346,6 @@ Sets the status of message(s) to Buffered and start the Broker</description>
         <page>MessageRebuffer</page>
         <protected>false</protected>
         <requireRowSelection>true</requireRowSelection>
-    </webLinks>
-    <webLinks>
-        <fullName>RecordData</fullName>
-        <availability>online</availability>
-        <description>Redirects to the object represented by the Id contained in RecordId</description>
-        <displayType>button</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>Show Record Data</masterLabel>
-        <openType>sidebar</openType>
-        <page>MessageRecordData</page>
-        <protected>false</protected>
-    </webLinks>
-    <webLinks>
-        <fullName>Restart</fullName>
-        <availability>online</availability>
-        <description>Refer #808 :
-Synchronously execute a message with an exception. 
-Sucessfull execution initiates work by the Broker</description>
-        <displayType>button</displayType>
-        <linkType>javascript</linkType>
-        <masterLabel>Restart Message</masterLabel>
-        <openType>onClickJavaScript</openType>
-        <protected>false</protected>
-        <url>//TODO obfuscate this
-if ({!Message__c.Exception__c == null}) {
-    //only messages with an exception can be restarted
-    window.location.href = &apos;/{!$ObjectType.Message__c}&apos;;
-} else {
-    var bar = &apos;{!$Setup.Application__c.PrefixBar__c}&apos;;
-    var dot = &apos;{!$Setup.Application__c.PrefixDot__c}&apos;;
-    var sid = &apos;{!$Setup.Application__c.RunAsAccessToken__c}&apos;;
-    var mark = new Date().getTime();
-    var command = &quot;new &quot; + dot + &quot;Job().execute((System.QueueableContext)Json.deserialize(&apos;{\&quot;jobId\&quot;:\&quot;{!Message__c.Id}\&quot;}&apos;, System.QueueableContextImpl.class));&quot;;
-
-    sforce.connection.init(sid, &apos;/services/Soap/u/35.0&apos;);
-    var response = sforce.apex.executeAnonymous(command);
-    if (response.success == &quot;false&quot;) {
-        //started, persist any fatal error and refresh
-        var msg = new sforce.SObject(bar + &apos;Message__c&apos;);
-        msg.Id = &apos;{!Message__c.Id}&apos;;
-        msg[bar + &apos;ExecuteDuration__c&apos;] = new Date().getTime() - mark;
-        msg[bar + &apos;Exception__c&apos;] = response.exceptionMessage.substring(0, 255);
-        msg[bar + &apos;Cause__c&apos;] = response.exceptionStackTrace.substring(0, 32768);
-        sforce.connection.update([msg]);
-        window.location.reload();
-        
-    } else {
-        //completed, redirect back to list view
-        window.location.href = &apos;/{!$ObjectType.Message__c}&apos;;
-        
-    }
-}
-{!REQUIRESCRIPT(&quot;/soap/ajax/35.0/connection.js&quot;)}
-{!REQUIRESCRIPT(&quot;/soap/ajax/35.0/apex.js&quot;)}</url>
     </webLinks>
     <webLinks>
         <fullName>ResumeQueue</fullName>

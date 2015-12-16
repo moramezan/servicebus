@@ -35,8 +35,6 @@
         <members>JobTest</members>
         <members>JumpService</members>
         <members>JumpServiceTest</members>
-        <members>MessageApexClassExtension</members>
-        <members>MessageApexClassExtensionTest</members>
         <members>MessageKillExtension</members>
         <members>MessageKillExtensionTest</members>
         <members>MessageModel</members>
@@ -45,12 +43,12 @@
         <members>MessagePauseQueueExtensionTest</members>
         <members>MessageRebufferExtension</members>
         <members>MessageRebufferExtensionTest</members>
-        <members>MessageRecordDataExtension</members>
-        <members>MessageRecordDataExtensionTest</members>
         <members>MessageResumeQueueExtension</members>
         <members>MessageResumeQueueExtensionTest</members>
         <members>MessageSetModel</members>
         <members>MessageSetModelTest</members>
+        <members>MessageViewExtension</members>
+        <members>MessageViewExtensionTest</members>
         <members>MonitorController</members>
         <members>MonitorControllerTest</members>
         <members>PostInstallHandler</members>
@@ -103,13 +101,11 @@
         <members>ApexClassView</members>
         <members>Configure</members>
         <members>ContextSensitiveHelp</members>
-        <members>MessageApexClass</members>
         <members>MessageHelp</members>
         <members>MessageKill</members>
         <members>MessageList</members>
         <members>MessagePauseQueue</members>
         <members>MessageRebuffer</members>
-        <members>MessageRecordData</members>
         <members>MessageResumeQueue</members>
         <members>MessageSplash</members>
         <members>MessageView</members>
@@ -242,9 +238,9 @@
         <name>Layout</name>
     </types>
     <types>
-        <members>Message__c.All</members>
         <members>Message__c.Exception</members>
         <members>Message__c.Killed</members>
+        <members>Message__c.Paused</members>
         <members>Sequence__c.All</members>
         <name>ListView</name>
     </types>
@@ -259,12 +255,9 @@
         <name>StaticResource</name>
     </types>
     <types>
-        <members>Message__c.ApexClass</members>
         <members>Message__c.Kill</members>
         <members>Message__c.PauseQueue</members>
         <members>Message__c.Rebuffer</members>
-        <members>Message__c.RecordData</members>
-        <members>Message__c.Restart</members>
         <members>Message__c.ResumeQueue</members>
         <members>Sequence__c.Checkout</members>
         <members>Sequence__c.Commit</members>

@@ -1,3 +1,0 @@
-<apex:page setup="true" standardController="Message__c" extensions="MessageApexClassExtension" action="{!showApexClass}">
-    <apex:pageMessages />
-</apex:page>
