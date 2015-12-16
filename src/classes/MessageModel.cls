@@ -265,6 +265,19 @@ public class MessageModel extends ApexDomain.StandardModel {
      * |                                                      |
      * '------------------------------------------------------'
      *
+     * Considering #1139 and #1148 paused messages are restartable.
+     * 
+     * .-------------------- Paused Messages -----------------.
+     * |                                                      |
+     * |                 .-- Fucked messages --.              |
+     * |                 |                     |              |
+     * |                 | Status = Paused     |              |
+     * |                 | Exception = null    |              |
+     * |                 |                     |              |
+     * |                 '---------------------'              |
+     * |                                                      |
+     * '------------------------------------------------------'
+     *
      * I like to think of "Fucked" and "Killed" messages as both
      * being subsets of the common "Exception" messages.
      *
