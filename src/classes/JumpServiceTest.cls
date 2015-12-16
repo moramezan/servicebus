@@ -1,5 +1,13 @@
 @IsTest class JumpServiceTest {
-     
+    
+    @TestSetup static void testSetup() {
+        //act
+        new PostInstallHandler().onInstall(null);
+        
+        //assert
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
+    }
+    
     static testmethod void hasTheCorrectChunks() {
         //arrange
         ApexClassModel.Summary summary = new ApexClassModel.Summary(JumpService.class);
@@ -90,6 +98,40 @@
         String expectedPassThruData = 'herpderp';
         String actualPassThruData = (String)outputEvents[0].get('data');
         System.assertEquals(expectedPassThruData, actualPassThruData);
+    }
+    
+    static testmethod void testJumpServiceFollowsThrough() {
+        //arrange sequences
+        insert new Sequence__c(Name = 'Origin');
+        insert new Sequence__c(Name = 'Target');
+        
+        //arrange steps
+        Step__c originJump = SequenceModel.fromName('Origin').appendStep(JumpService.class);
+        Step__c originTerminate = SequenceModel.fromName('Origin').appendStep(TerminateService.class);
+        
+        Step__c targetWiretap = SequenceModel.fromName('Target').appendStep(WiretapService.class);
+        Step__c targetTerminate = SequenceModel.fromName('Target').appendStep(TerminateService.class);
+        
+        //arrange config
+        Id stepConfigId = new StepModel(originJump).upsertConfig();
+        update new JumpStepConfig__c(Id = stepConfigId, Sequence__c = 'Target');
+        
+        //act
+        Test.startTest();
+        Job job = new Job('Origin', '00D000000000000AAA');
+        System.enqueueJob(job);
+        Test.stopTest();
+        
+        //act
+        Broker.impl().run();
+        
+        //assemble
+        List<Message__c> messages = [SELECT Id, Name FROM Message__c WHERE Status__c = 'Completed' ALL ROWS];
+        
+        //assert
+        Integer expectedSize = 3;
+        Integer actualSize = messages.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
     }
     
 }

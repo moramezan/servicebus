@@ -389,4 +389,77 @@
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
     }
     
+    static testmethod void testNormalRouteIncrements() {
+        //arrange
+        Message__c message = new Message__c(Event__c = '{}');
+        MessageModel model = new MessageModel(message);
+        
+        //act
+        model.setParam('Route', '1#Test#2');
+        model.route();
+        
+        //assert
+        String expectedRoute = '1#Test#3';
+        String actualRoute = (String)model.getParam('Route');
+        System.assertEquals(expectedRoute, actualRoute, 'Wrong route.');
+        
+    }
+    
+    static testmethod void testHelperRouteOverwrites() {
+        //arrange
+        Message__c message = new Message__c(Event__c = '{}');
+        MessageModel model = new MessageModel(message);
+        
+        //act (for sequence)
+        model.setParam('Route', 'Incorrect');
+        model.setParam('ToSequence', 'Test');
+        model.route();
+        
+        //assert
+        String expectedRoute = '1#Test#1';
+        String actualRoute = (String)model.getParam('Route');
+        System.assertEquals(expectedRoute, actualRoute, 'Wrong route.');
+        
+        //act (for service)
+        model.setParam('Route', 'Incorrect');
+        model.setParam('ToService', 'TerminateService');
+        model.route();
+        
+        expectedRoute = 'TerminateService';
+        actualRoute = (String)model.getParam('Route');
+        System.assertEquals(expectedRoute, actualRoute, 'Wrong route.');
+        
+        //act (for config);
+        Application__c application = Application__c.getOrgDefaults();
+        application.BrokerVersion__c = 2;
+        upsert application;
+        insert new Step__c(Name = '2#Test#1', Version__c = 2, Sequence__c = 'Test', Position__c = 1, ConfigId__c = '00D000000000000');
+        model.setParam('Route', 'Incorrect');
+        model.setParam('ToConfigIds', new Set<Id>{'00D000000000000'});
+        model.route();
+        
+        expectedRoute = '2#Test#1';
+        actualRoute = (String)model.getParam('Route');
+        System.assertEquals(expectedRoute, actualRoute, 'Wrong route.');
+    }
+    
+    static testmethod void testIncomingMessageStampedWithCorrectVersion() {
+        //arrange
+        Application__c application = Application__c.getOrgDefaults();
+        application.BrokerVersion__c = 9;
+        upsert application;
+        
+        //arrange
+        Message__c message = new Message__c(Event__c = '{}');
+        MessageModel model = new MessageModel(message);
+        
+        //act
+        model.setParam('ToSequence', 'Test');
+        model.route();
+        
+        //assert
+        String expectedRoute = '9#Test#1';
+        String actualRoute = (String)model.getParam('Route');
+        System.assertEquals(expectedRoute, actualRoute, 'Wrong route.');
+    }
 }

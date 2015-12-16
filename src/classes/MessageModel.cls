@@ -65,9 +65,12 @@ public class MessageModel extends ApexDomain.StandardModel {
         Integer version = Application__c.getOrgDefaults().BrokerVersion__c.intValue();
         if (route != null && route.contains('#')) version = Integer.valueOf(route.substringBefore('#'));
         
-        //increment position
-        Integer position = 1;
-        if (route != null && route.contains('#')) position = Integer.valueOf(route.substringAfterLast('#')) + 1;
+        //increments route position (arrives 1#MySeq#3 leaves 1#MySeq#4)
+        if (route != null && route.contains('#')) {
+            Integer position = Integer.valueOf(route.substringAfterLast('#')) + 1;
+            String sequence = route.substringAfter('#').substringBefore('#');
+            event.put('Route', version + '#' + sequence + '#' + position);
+        }
         
         //#999 routing helpers (controls route without knowledge of routing)
         Set<Id> toConfigIds = (Set<Id>)Json.deserialize(Json.serialize(event.get('ToConfigIds')), Set<Id>.class);
@@ -76,6 +79,7 @@ public class MessageModel extends ApexDomain.StandardModel {
         
         //converts sequence to route
         if (toSequence != null) {
+            Integer position = 1;
             event.remove('ToSequence');
             event.put('servicebus:ToSequence', toSequence);
             event.put('Route', version + '#' + toSequence + '#' + position);
@@ -90,6 +94,7 @@ public class MessageModel extends ApexDomain.StandardModel {
         
         //converts config to route
         if (toConfigIds != null) {
+            Integer position = 1;
             event.remove('ToConfigIds');
             event.put('servicebus:ToConfigIds', toConfigIds);
             
@@ -104,12 +109,6 @@ public class MessageModel extends ApexDomain.StandardModel {
                     continue;
                 }
             }
-        }
-        
-        //increments route position (they arrive eg 1#Route#0)
-        if (route != null && route.contains('#')) {
-            String sequence = route.substringAfter('#').substringBefore('#');
-            event.put('Route', version + '#' + sequence + '#' + position);
         }
         
         this.Message.Event__c = Json.serialize(event);
