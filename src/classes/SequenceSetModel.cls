@@ -316,23 +316,50 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
                 AND Sequence__c IN :sequenceNames
             ];
             
-            //prepare config ids
-            List<Id> configsToDelete = new List<Id>();
+            //prepare config ids (strings per #1145)
+            List<String> configsToDelete = new List<String>();
             for (Step__c step : stepsToDelete) {
                 if (step.ConfigId__c == null) continue;
                 configsToDelete.add(step.ConfigId__c);
             }
             
+            //perform the delete, #1016 OUR steps skip recycle bin
             Database.delete(stepsToDelete, false);
-            Database.delete(configsToDelete, false);
-            
-            //#1016 skip recycle bin
             if (!stepsToDelete.isEmpty()) Database.emptyRecycleBin(stepsToDelete);
-            if (!configsToDelete.isEmpty()) Database.emptyRecycleBin(configsToDelete);
             
-        } catch (DmlException e) {
+            //#1145 be safe, when deleting THEIR configs
+            if (!configsToDelete.isEmpty()) destroyStepConfigs(configsToDelete);
+            
+        } catch (Exception e) {
             Database.rollback(savepoint);
             throw new ModelException('Cannot destroy all steps and configs: ' + e.getMessage(), e);
         }
     }
+    
+    /**
+     * Per #1145 we need to afford ourselves this safety.
+     * The async method decouples OUR steps from THEIR configs.
+     * List<String> avoids call-time exception for any kind of bad id.
+     */
+    @Future static void destroyStepConfigs(List<String> stepConfigs) {
+        List<Id> stepConfigIds = new List<Id>();
+        for (String stepConfig : stepConfigs) stepConfigIds.add(stepConfig);
+        
+        try {
+            //all-or-none false per #1060
+            Database.delete(stepConfigIds, false);
+        } catch (Exception e) {
+            //show errors in dev orgs only
+            if (Application__c.getOrgDefaults().Prefix__c == null) throw e;
+        }
+        
+        try {
+            //#1016 THEIR steps skip recycle bin
+            Database.emptyRecycleBin(stepConfigIds);
+        } catch (Exception e) {
+            //show errors in dev orgs only
+            if (Application__c.getOrgDefaults().Prefix__c == null) throw e;
+        }
+    }
+    
 }

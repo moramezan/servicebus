@@ -22,8 +22,10 @@
         Integer expectedConfigsBefore = 1;
         Integer actualConfigsBefore = [SELECT COUNT() FROM JumpStepConfig__c];
         
-        //act
+        //act (#1145 asyncs)
+        Test.startTest();
         delete sequence;
+        Test.stopTest();
         
         Integer expectedConfigsAfter = 0;
         Integer actualConfigsAfter = [SELECT COUNT() FROM JumpStepConfig__c];

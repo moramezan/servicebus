@@ -73,7 +73,7 @@ public class StepModel extends ApexDomain.StandardModel {
             }
             
             update writeSteps;
-        } catch (DmlException e) {
+        } catch (Exception e) {
             Database.rollback(sp);
             throw new ModelException('Could not move step "' + this.step.Name + '" before "' + beforeStepName + '"', e);
         }
@@ -121,7 +121,7 @@ public class StepModel extends ApexDomain.StandardModel {
             }
             
             update writeSteps;
-        } catch (DmlException e) {
+        } catch (Exception e) {
             Database.rollback(sp);
             throw new ModelException('Could not move step "' + this.step.Name + '" after "' + afterStepName + '"', e);
         }

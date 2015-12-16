@@ -65,7 +65,7 @@ public class SubsequenceService extends ApexClassModel.Service {
             clone.put('Route', version + '#' + config.Sequence__c + '#' + position);
             this.traverse(clone);
             
-        } catch (MessageModel.ModelException e) {
+        } catch (Exception e) {
             //TODO catch "callouts not supported in subsequence, jump out and jump back"
             Database.rollback(savepoint);
             throw e;

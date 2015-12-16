@@ -115,7 +115,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
             
             insert step;
             return Step__c.getValues(step.Name);
-        } catch (DmlException e) {
+        } catch (Exception e) {
             Database.rollback(sp);
             throw new ModelException('Could not append step "' + reflector + '"', e);
         }
@@ -155,17 +155,16 @@ public class SequenceModel extends ApexDomain.StandardModel {
      * @param stepName or route
      */
     public void destroyStep(String stepName) {
-        Savepoint sp = Database.setSavepoint();
+        Savepoint savepoint = Database.setSavepoint();
         try {
             Step__c stepToDelete = Step__c.getValues(stepName);
             
-            //perform the delete
+            //perform the delete, #1016 OUR steps skip recycle bin
             delete stepToDelete;
-            Database.emptyRecycleBin(stepToDelete); //#1016
+            Database.emptyRecycleBin(stepToDelete);
             
-            //any config to delete, all-or-none false per #1060
-            if (stepToDelete.ConfigId__c != null) Database.delete(stepToDelete.ConfigId__c, false);
-            if (stepToDelete.ConfigId__c != null) Database.emptyRecycleBin(new List<Id>{stepToDelete.ConfigId__c}); //#1016
+            //#1145 be safe, when deleting THEIR configs
+            if (stepToDelete.ConfigId__c != null) destroyStepConfig(stepToDelete.ConfigId__c);
             
             //find the remaining steps
             List<Step__c> stepsToReorder = [
@@ -192,9 +191,32 @@ public class SequenceModel extends ApexDomain.StandardModel {
             }
             
             update stepsToReorder;
-        } catch (DmlException e) {
-            Database.rollback(sp);
+        } catch (Exception e) {
+            Database.rollback(savepoint);
             throw new ModelException('Could not destroy step "' + stepName + '"', e);
+        }
+    }
+    
+    /**
+     * Per #1145 we need to afford ourselves this safety.
+     * The async method decouples OUR steps from THEIR configs.
+     * String avoids call-time exception for any kind of bad id.
+     */
+    @Future static void destroyStepConfig(String stepConfigId) {
+        try {
+            //all-or-none false per #1060
+            Database.delete(stepConfigId, false);
+        } catch (Exception e) {
+            //show errors in dev orgs only
+            if (Application__c.getOrgDefaults().Prefix__c == null) throw e;
+        }
+        
+        try {
+            //#1016 THEIR steps skip recycle bin
+            Database.emptyRecycleBin(new List<Id>{stepConfigId}); 
+        } catch (Exception e) {
+            //show errors in dev orgs only
+            if (Application__c.getOrgDefaults().Prefix__c == null) throw e;
         }
     }
     
