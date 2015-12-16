@@ -101,7 +101,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         
         //resolve class name
         String apexClassName = route;
-        Step__c step = Step__c.getValues(apexClassName);
+        Step__c step = Step__c.getValues(route);
         if (step != null) apexClassName = step.ApexClassName__c;
         
         if (route.contains('#') && step == null) {
@@ -291,6 +291,13 @@ abstract public class Service {
     
     /**
      * User service instance (transient prevents inadvertent toString() / serialization)
+     *
+     * NB we see the side effects code in two places. Both the
+     * MessageModel and the ApexClassModel. It's for different
+     * reasons.
+     * 
+     * This checks side effects to prevent DML in callout etc.
+     * The MessageModel needs to know side effects for the "savepoint tax".
      */
     transient Object Service;
     

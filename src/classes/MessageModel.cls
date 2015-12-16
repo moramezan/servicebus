@@ -152,6 +152,13 @@ public class MessageModel extends ApexDomain.StandardModel {
     }
     
     /**
+     * NB we see the side effects code in two places. Both the
+     * MessageModel and the ApexClassModel. It's for different
+     * reasons.
+     * 
+     * This needs to know side effects for the "savepoint tax".
+     * The Service checks side effects to prevent DML in callout etc.
+     * 
      * @return HAD SIDE EFFECTS
      */
     public Boolean invokeExecute(List<Message__c> outputMessages) {
