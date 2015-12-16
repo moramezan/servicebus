@@ -213,7 +213,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
         
         try {
             //#1016 THEIR steps skip recycle bin
-            Database.emptyRecycleBin(new List<Id>{stepConfigId}); 
+            Database.emptyRecycleBin(new List<Id>{stepConfigId});
         } catch (Exception e) {
             //show errors in dev orgs only
             if (Application__c.getOrgDefaults().Prefix__c == null) throw e;

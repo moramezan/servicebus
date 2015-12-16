@@ -128,50 +128,61 @@ public class StepModel extends ApexDomain.StandardModel {
     }
     
     public Id upsertConfig() {
-        //use apex class name instead of id, for easier testing
-        ApexClassModel.Summary summary; //unit tests skip cache
-        if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(this.Step.ApexClassName__c));
-        else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(this.Step.ApexClassName__c);
-        
-        if (summary == null) {
-            //summary not cached
-            throw new ModelException('Could not load summary: ' + this.Step.ApexClassName__c);
+        Savepoint savepoint = Database.setSavepoint();
+        try {
+            //use apex class name instead of id, for easier testing
+            ApexClassModel.Summary summary; //unit tests skip cache
+            if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(this.Step.ApexClassName__c));
+            else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(this.Step.ApexClassName__c);
+            
+            if (summary == null) {
+                //summary not cached
+                throw new ModelException('Could not load summary: ' + this.Step.ApexClassName__c);
+            }
+            
+            if (summary.StepConfig == null) {
+                //service has no config
+                return null;
+            }
+            
+            if (ApexDomain.exists(this.Step.ConfigId__c)) {
+                //config already exists
+                return this.Step.ConfigId__c;
+            }
+            
+            //describe object and name field dynamically
+            SObjectType objectType = Schema.getGlobalDescribe().get(summary.StepConfig);
+            DescribeSObjectResult result = objectType.getDescribe();
+            DescribeFieldResult field = result.Fields.getMap().get('Name').getDescribe();
+            
+            if (result.isCustomSetting() && field.getLength() == 80) {
+                //HIERARCHY SETTING
+                throw new ModelException('Hierarchy Custom Settings are not supported for Step Config.');
+            }
+            
+            SObject config = objectType.newSObject(null, true);
+            
+            if (result.isCustomSetting() && field.getLength() == 38) {
+                //LIST SETTING
+                config.put('Name', this.Step.Id); //unique
+            }
+            
+            insert config; //with default field values
+            
+            if (!field.isAutoNumber()) {
+                //#1154 dont break auto numbers
+                config.put('Name', config.Id);
+                update config;
+            }
+            
+            this.Step.ConfigId__c = config.Id;
+            update this.Step;
+            return config.Id;
+            
+        } catch (Exception e) {
+            Database.rollback(savepoint);
+            throw new ModelException('Could not create StepConfig: ' + e.getMessage());
         }
-        
-        if (summary.StepConfig == null) {
-            //service has no config
-            return null;
-        }
-        
-        if (ApexDomain.exists(this.Step.ConfigId__c)) {
-            //config already exists
-            return this.Step.ConfigId__c;
-        }
-        
-        //describe object and name field dynamically
-        SObjectType objectType = Schema.getGlobalDescribe().get(summary.StepConfig);
-        DescribeSObjectResult result = objectType.getDescribe();
-        DescribeFieldResult field = result.Fields.getMap().get('Name').getDescribe();
-        
-        if (result.isCustomSetting() && field.getLength() == 80) {
-            //HIERARCHY SETTING
-            throw new ModelException('Hierarchy Custom Settings are not supported for Step Config.');
-        }
-        
-        SObject config = objectType.newSObject(null, true);
-        
-        if (result.isCustomSetting() && field.getLength() == 38) {
-            //LIST SETTING
-            config.put('Name', this.Step.Id); //unique
-        }
-        
-        insert config; //with default field values
-        config.put('Name', config.Id);
-        update config;
-        
-        this.Step.ConfigId__c = config.Id;
-        update this.Step;
-        return config.Id;
     }
     
     /**
@@ -197,12 +208,20 @@ public class StepModel extends ApexDomain.StandardModel {
      */
     public void persistConfigNameOnStep() {
         Id configId = this.Step.ConfigId__c;
-        String objectType = configId.getSObjectType().getDescribe().getName();
+        SObjectType objectType = configId.getSObjectType();
         SObject config = Database.query('SELECT Id, Name FROM ' + objectType + ' WHERE Id = :configId');
+        
+        //describe object and name field dynamically
+        DescribeSObjectResult result = objectType.getDescribe();
+        DescribeFieldResult field = result.Fields.getMap().get('Name').getDescribe();
         
         //write THEIR config name onto OUR step
         String configName = (String)config.get('Name');
         this.Step.ConfigName__c = configName.abbreviate(SObjectType.Step__c.Fields.ConfigName__c.Length);
+        
+        //#1154 UNLESS its an autonumber, then the Id signals to show the description
+        if (field.isAutoNumber()) this.Step.ConfigName__c = config.Id;
+        
         update this.Step;
     }
     

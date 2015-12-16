@@ -16,8 +16,14 @@ public with sharing class StepConfigExtension {
      * console style only for custom objects
      */
     public PageReference doRedirect() {
-        this.model.upsertConfig();
-        return this.model.showConfig();
+        try {
+            this.model.upsertConfig();
+            return this.model.showConfig();
+            
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+            return null;
+        }
     }
     
 }
