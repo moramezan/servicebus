@@ -1,4 +1,4 @@
-trigger MessageTriggers on Message__c (before insert, after insert, before update, after update, before delete, after delete, after undelete) {
+trigger Message on Message__c (before insert, after insert, before update, after update, before delete, after delete, after undelete) {
     
     if (Trigger.isBefore && Trigger.isInsert) {
        
@@ -23,6 +23,11 @@ trigger MessageTriggers on Message__c (before insert, after insert, before updat
     } else if (Trigger.isAfter && Trigger.isDelete) {
         
         new MessageSetModel(Trigger.old).onAfterDelete();
+        
+    } else if (Trigger.isAfter && Trigger.isUndelete) {
+        
+        new MessageSetModel(Trigger.new).onAfterUndelete();
+        
     }
     
 }

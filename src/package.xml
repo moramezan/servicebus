@@ -124,8 +124,8 @@
         <name>ApexPage</name>
     </types>
     <types>
-        <members>MessageTriggers</members>
-        <members>SequenceTriggers</members>
+        <members>Message</members>
+        <members>Sequence</members>
         <name>ApexTrigger</name>
     </types>
     <types>

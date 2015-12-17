@@ -62,6 +62,7 @@ public class ApexDomain {
         virtual public void onAfterUpdate(List<SObject> oldRecords) {}
         virtual public void onBeforeDelete() {}
         virtual public void onAfterDelete() {}
+        virtual public void onAfterUndelete() {}
     }
     
     @TestVisible static Map<Id,SObject> id2mock = new Map<Id,SObject>();

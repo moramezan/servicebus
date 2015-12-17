@@ -1,4 +1,4 @@
-trigger SequenceTriggers on Sequence__c (before insert, after insert, before update, after update, before delete, after delete) {
+trigger Sequence on Sequence__c (before insert, after insert, before update, after update, before delete, after delete) {
     
     if (Trigger.isBefore && Trigger.isInsert) {
        
@@ -23,5 +23,10 @@ trigger SequenceTriggers on Sequence__c (before insert, after insert, before upd
     } else if (Trigger.isAfter && Trigger.isDelete) {
         
         new SequenceSetModel(Trigger.old).onAfterDelete();
+        
+    } else if (Trigger.isAfter && Trigger.isUndelete) {
+        
+        new SequenceSetModel(Trigger.new).onAfterUndelete();
+        
     }
 }
