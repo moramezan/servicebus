@@ -295,7 +295,7 @@ abstract public class Service {
      * NB we see the side effects code in two places. Both the
      * MessageModel and the ApexClassModel. It's for different
      * reasons.
-     * 
+     *
      * This checks side effects to prevent DML in callout etc.
      * The MessageModel needs to know side effects for the "savepoint tax".
      */
