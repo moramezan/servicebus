@@ -49,22 +49,23 @@ public with sharing class SequenceDiscardExtension implements Database.Batchable
      * We can always move it, but he almost belongs here :)
      * All his logic stays in the model, this just iterates.
      */
-    public SequenceDiscardExtension() {
-        //
-    }
+    public SequenceDiscardExtension() {}
     
     public Database.QueryLocator start(Database.BatchableContext context) {
-        //find current draft version
+        //each draft step gets its own execution context
         return SequenceSetModel.locateDraftSteps();
     }
     
     public void execute(Database.BatchableContext context, List<Step__c> steps) {
-        //trashes each step
-        StepModel.fromId(steps[0].Id).discard();
+        //#1147 trash THEIR draft configs in own execution context
+        StepModel.fromId(steps[0].Id).destroyConfig();
     }
     
     public void finish(Database.BatchableContext context) {
-        //trashes sequence handles
+        //#1147 trash OUR draft steps
+        SequenceSetModel.destroyDraftSteps();
+        
+        //#1147 trash OUR draft sequences
         SequenceSetModel.hideSequences();
     }
     

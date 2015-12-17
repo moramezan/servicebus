@@ -136,7 +136,7 @@
         System.assertEquals(false, step.IsDraft__c, 'Wrong draft.');
     }
     
-    static testmethod void testDiscard() {
+    static testmethod void testDestroyConfig() {
         //arrange
         Id documentId = Database.insert(new Document(
             Name = 'Test',
@@ -149,11 +149,11 @@
         )).getId();
         
         //act
-        StepModel.fromId(stepId).discard();
+        StepModel.fromId(stepId).destroyConfig();
         
         //assert
         System.assert([SELECT Id FROM Document].isEmpty(), 'Wrong empty.');
-        System.assert([SELECT Id FROM Step__c].isEmpty(), 'Wrong empty.');
+        System.assert(![SELECT Id FROM Step__c].isEmpty(), 'Wrong empty.');
     }
     
     static testmethod void testCommitWithNormalObjectConfig() {

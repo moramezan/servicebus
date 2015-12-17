@@ -284,20 +284,16 @@ public class StepModel extends ApexDomain.StandardModel {
     }
     
     /**
-     * Trashes draft steps.
+     * #1174 isolate OUR steps from THEIR configs
      * (They can be checked out again)
+     * Trashes draft step configs.
      */
-    public void discard() {
-        
+    public void destroyConfig() {
         //skip recycle bin
-        Database.delete(this.Step.Id);
-        Database.emptyRecycleBin(new List<Id>{this.Step.Id});
-        
         if (this.Step.ConfigId__c != null) {
             Database.delete(this.Step.ConfigId__c, false);
             Database.emptyRecycleBin(new List<Id>{this.Step.ConfigId__c});
         }
-        
     }
     
 }
