@@ -4,7 +4,7 @@ public with sharing class ConfigureController {
     String InstanceName;
     
     public ConfigureController() {
-        this.BaseUrl = Url.getSalesforceBaseUrl().toExternalForm();
+        this.BaseUrl = Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:'); //#1188
         this.InstanceName = [SELECT InstanceName FROM Organization LIMIT 1].InstanceName;
     }
     

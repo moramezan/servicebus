@@ -114,7 +114,7 @@
         //arrange controller and page
         ConfigureController controller = new ConfigureController();
         System.PageReference configure = Page.Configure;
-        configure.getParameters().put('url', Url.getSalesforceBaseUrl().toExternalForm() + '/services/Soap/c/35.0'); //this implies stage=cs
+        configure.getParameters().put('url', Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:') + '/services/Soap/c/35.0'); //this implies stage=cs //#1188
         configure.getParameters().put('retURL', '/herp/derp');
         Test.setCurrentPage(configure);
         
@@ -130,7 +130,7 @@
         String actualUrl = redirect.getUrl();
         System.assertEquals(expectedUrl, actualUrl, 'Wrong redirect.');
         
-        String expectedBase = Url.getSalesforceBaseUrl().toExternalForm();
+        String expectedBase = Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:'); //#1188
         String actualBase = Application__c.getOrgDefaults().OrgInstanceUrl__c;
         System.assertEquals(expectedBase, actualBase, 'Wrong base.');
         

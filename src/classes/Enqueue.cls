@@ -248,11 +248,19 @@ global class Enqueue implements Process.Plugin {
                 this.Events[i] = null;
             }
             
-            //#989 optimize already correct running user context
-            if (!Test.isRunningTest()) if (isRunAsUser()) this.run(); else this.runAsUser();
-            
-            //#1149 race condition DML (we just hope the batch is slightly delayed)
-            new MessageSetModel(new List<Message__c>()).persist(messages) ; //#836 //#1114 notice empty input list
+            try {
+                //#989 optimize already correct running user context
+                if (!Test.isRunningTest()) if (isRunAsUser()) this.run(); else this.runAsUser();
+                
+            } catch (Exception e) {
+                //#1188 messages must be inserted even if the tooling callout fails!
+                if (Application__c.getOrgDefaults().Prefix__c == null) throw e;
+                
+            } finally {
+                //#1149 race condition DML (we just hope the batch is slightly delayed)
+                new MessageSetModel(new List<Message__c>()).persist(messages) ; //#836 //#1114 notice empty input list
+                
+            }
         }
         
         void run() {
@@ -286,8 +294,8 @@ global class Enqueue implements Process.Plugin {
             if (isScheduled()) return;
             if (isRunning()) return;
             
-            //command
-            PageReference endpoint = new PageReference(Url.getSalesforceBaseUrl().toExternalForm() + '/services/data/v35.0/tooling/executeAnonymous');
+            //command (#1188 crazy HTTP vs HTTPS behaviour manifests intermittently)
+            PageReference endpoint = new PageReference(Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:') + '/services/data/v35.0/tooling/executeAnonymous');
             endpoint.getParameters().put('anonymousBody', 'new ' + Job.class.getName() + '().execute(null);');
             
             //execute anonymous
@@ -297,10 +305,10 @@ global class Enqueue implements Process.Plugin {
             request.setEndpoint(endpoint.getUrl());
             request.setHeader('Authorization', 'Bearer ' + Application__c.getOrgDefaults().RunAsAccessToken__c);
             
-            //#653 throw unhandled exception in our namespace
+            //#653 throw exception in our namespace
             HttpResponse response = new Http().send(request);
-            if (response.getStatusCode() != 200) System.assert(false, response.getBody());
-            if (response.getBody().contains('"success":false')) System.assert(false, response.getBody());
+            if (response.getStatusCode() != 200) throw new EnqueueException(response.getBody());
+            if (response.getBody().contains('"success":false')) throw new EnqueueException(response.getBody());
         }
         
         //TODO? Job(reflector, recordId)
