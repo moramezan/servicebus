@@ -283,9 +283,39 @@ public class MessageModel extends ApexDomain.StandardModel {
      *
      * Analogous to how "execute" and "callouts" are both
      * sub-parts of the bigger concept of "invocation"
+     *
+     * #1187
+     * This is indeed another variation on the Broker. Unlike the Vertical Broker,
+     * we dictate a single message to handle. (he does not decide what to consume)
+     *
+     * And unlike the synchronous broker (mostly used for unit tests), we make no
+     * attempt to handle errors, catchable or otherwise. ExecAnonResult has them :)
+     *
+     * No marking here because we would kill any callouts that follow. We
+     * already know that this guy is acting on a started message anyway.
      */
     public void restart() {
-        System.assert(false, 'This is JavaScript now.');
+        
+        //TODO mark without DML? is it even possible for attempts to increment?
+        MessageSetModel model = new MessageSetModel(new List<Message__c>{this.Message});
+        
+        //VALIDATE
+        if (!Enqueue.isRunAsUser()) throw new ModelException('The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
+        if (!(this.Message.Status__c == 'Paused' || this.Message.Exception__c != null)) throw new ModelException('Only Paused or Exception messages can be restarted.');
+        
+        //EXECUTE
+        List<Message__c> outputMessages = model.execute(null);
+        
+        //PERSIST
+        model.persist(outputMessages);
+        
+        //#981#issuecomment-131670372 prevent side effects (like batch jobs) escaping
+        if (RestartException != null) throw RestartException;
+        
+        //success, restart the REAL broker to carry on with the outputs
+        if (Enqueue.isScheduled()) return;
+        if (Enqueue.isRunning()) return;
+        Broker.impl().run();
     }
     
     public PageReference showRecordData() {

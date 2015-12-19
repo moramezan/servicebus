@@ -462,4 +462,69 @@
         String actualRoute = (String)model.getParam('Route');
         System.assertEquals(expectedRoute, actualRoute, 'Wrong route.');
     }
+    
+    static testmethod void testCantRestartBuffered() {
+        Id messageId;
+        
+        //arrange
+        messageId = Database.insert(new Message__c(Status__c = 'Buffered')).getId();
+        
+        try {
+            //act
+            MessageModel.fromId(messageId).restart();
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Exception e) {
+            //assert
+            String expectedMessage = 'Only Paused or Exception messages can be restarted.';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+        
+        //arrange
+        messageId = Database.insert(new Message__c(Status__c = 'Completed')).getId();
+        
+        try {
+            //act
+            MessageModel.fromId(messageId).restart();
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Exception e) {
+            //assert
+            String expectedMessage = 'Only Paused or Exception messages can be restarted.';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+        
+        //arrange
+        messageId = Database.insert(new Message__c(Status__c = 'Started')).getId();
+        
+        try {
+            //act
+            MessageModel.fromId(messageId).restart();
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Exception e) {
+            //assert
+            String expectedMessage = 'Only Paused or Exception messages can be restarted.';
+            String actualMessage = e.getMessage();
+            System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+        }
+    }
+    
+    static testmethod void testRestartExecutesAndPersists() {
+        //arrange
+        Message__c message = new Message__c(
+            Status__c = 'Started',
+            Exception__c = 'Exception',
+            Event__c = '{"Route":"' + WiretapService.class.getName() + '"}'
+        );
+        insert message;
+        
+        //act
+        MessageModel.fromId(message.Id).restart();
+        
+        //assert
+        Integer expectedCount = 1;
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed' ALL ROWS];
+        System.assertEquals(expectedCount, actualCount, 'Wrong message');
+    }
+    
 }

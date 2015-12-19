@@ -174,38 +174,6 @@ global class Enqueue implements Process.Plugin {
          */
         
         /**
-         * This is indeed another variation on the Broker. Unlike the Vertical Broker,
-         * we dictate a single message to handle. (he does not decide what to consume)
-         *
-         * And unlike the synchronous broker (mostly used for unit tests), we make no
-         * attempt to handle errors, catchable or otherwise. ExecAnonResult has them :)
-         *
-         * No marking here because we would kill any callouts that follow. We
-         * already know that this guy is acting on a started message anyway.
-         */
-        void restart(Id messageId) {
-            //VALIDATE
-            Message__c message = (Message__c)ApexDomain.getById(messageId);
-            if (message.Exception__c == null) return; //Only messages with an Exception can be restarted
-            
-            //TODO mark without DML? is it even possible for attempts to increment?
-            
-            //EXECUTE
-            List<Message__c> outputMessages = new MessageSetModel(new List<Message__c>{message}).execute(null);
-            
-            //PERSIST
-            new MessageSetModel(new List<Message__c>{message}).persist(outputMessages);
-            
-            //#981#issuecomment-131670372 prevent side effects (like batch jobs) escaping
-            if (MessageModel.RestartException != null) throw MessageModel.RestartException;
-            
-            //success, restart the REAL broker to carry on with the outputs
-            if (isScheduled()) return;
-            if (isRunning()) return;
-            Broker.impl().run();
-        }
-        
-        /**
          * Usually handled within a second or so.
          * NOT TO BE CONFUSED WITH BROKER.EXECUTE
          *
@@ -221,7 +189,7 @@ global class Enqueue implements Process.Plugin {
             
             //RESTART
             if (context != null && context.getJobId().getSObjectType() == Message__c.SObjectType) {
-                this.restart(context.getJobId());
+                MessageModel.fromId(context.getJobId()).restart();
                 return;
             }
             

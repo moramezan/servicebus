@@ -69,13 +69,12 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             SELECT Id
             FROM Message__c
             WHERE Id IN :attemptedIds
-            AND Status__c IN ('Started', 'Completed')
-            AND Exception__c != null
+            AND (Status__c = 'Paused' OR Exception__c != null)
         ];
         
         if (rebufferableMessages.isEmpty()) {
             //maybe selected messages were not killable...
-            throw new ModelException('Only messages with an Exception can be rebuffered.');
+            throw new ModelException('Only Paused or Exception messages can be rebuffered.');
         }
         
         for (Message__c rebufferableMessage : rebufferableMessages) {

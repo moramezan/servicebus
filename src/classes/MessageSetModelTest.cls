@@ -292,4 +292,32 @@
         String actualEvent = message.Event__c;
         System.assert(actualEvent.contains(expectedId), 'Event should contain message id.');
     }
+    
+    static testmethod void testPausedMessagesCanBeRebuffered() {
+        //arrange messages
+        insert new Message__c(Status__c = 'Paused');
+        insert new Message__c(Status__c = 'Started');
+        
+        //act
+        new MessageSetModel([SELECT Id FROM Message__c]).rebuffer();
+        
+        //assert
+        Integer expectedCount = 1;
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
+    }
+    
+    static testmethod void testExceptionMessagesCanBeRebuffered() {
+        //arrange messages
+        insert new Message__c(Status__c = 'Started', Exception__c = 'Exception');
+        insert new Message__c(Status__c = 'Started', Exception__c = null);
+        
+        //act
+        new MessageSetModel([SELECT Id FROM Message__c]).rebuffer();
+        
+        //assert
+        Integer expectedCount = 1;
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
+    }
 }
