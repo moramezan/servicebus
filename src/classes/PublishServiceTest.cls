@@ -13,7 +13,7 @@
    static testmethod void withinSystemLimits() {
         
         //arrange publisher config
-        PublishStepConfig__c pubConfig = new PublishStepConfig__c(Name = UserInfo.getUserId(), EventType__c = 'Test');
+        PublishStepConfig__c pubConfig = new PublishStepConfig__c(Name = UserInfo.getUserId(), Topic__c = 'Test');
         insert pubConfig;
         
         //arrange subscriber 1 sequence, step, config
@@ -23,7 +23,7 @@
         Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(SubscribeService.class);
         Id sub1configId = new StepModel(sub1step).upsertConfig();
         
-        SubscribeStepConfig__c sub1config = new SubscribeStepConfig__c(Id = sub1configId, EventType__c = 'Test');
+        SubscribeStepConfig__c sub1config = new SubscribeStepConfig__c(Id = sub1configId, Topic__c = 'Test');
         update sub1config;
         
         //arrange subscriber 2 sequence, step, config
@@ -33,7 +33,7 @@
         Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(SubscribeService.class);
         Id sub2configId = new StepModel(sub2step).upsertConfig();
         
-        SubscribeStepConfig__c sub2config = new SubscribeStepConfig__c(Id = sub2configId, EventType__c = 'Test');
+        SubscribeStepConfig__c sub2config = new SubscribeStepConfig__c(Id = sub2configId, Topic__c = 'Test');
         update sub2config;
         
         //arrange input
@@ -82,7 +82,7 @@
     static testmethod void testNoSubscribersStillReturnsOneMessage() {
         
         //arrange publisher config
-        PublishStepConfig__c pubConfig = new PublishStepConfig__c(Name = UserInfo.getUserId(), EventType__c = 'Test');
+        PublishStepConfig__c pubConfig = new PublishStepConfig__c(Name = UserInfo.getUserId(), Topic__c = 'Test');
         insert pubConfig;
         
         //arrange input
@@ -104,7 +104,7 @@
     static testmethod void testSubscribersAffectOutputEventsReturned() {
         
         //arrange publish config
-        PublishStepConfig__c pubConfig = new PublishStepConfig__c(Name = UserInfo.getUserId(), EventType__c = 'Test');
+        PublishStepConfig__c pubConfig = new PublishStepConfig__c(Name = UserInfo.getUserId(), Topic__c = 'Test');
         insert pubConfig;
         
         //arrange subscriber 1 sequence, step, config
@@ -114,7 +114,7 @@
         Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(SubscribeService.class);
         Id sub1configId = new StepModel(sub1step).upsertConfig();
         
-        SubscribeStepConfig__c sub1config = new SubscribeStepConfig__c(Id = sub1configId, EventType__c = 'Test');
+        SubscribeStepConfig__c sub1config = new SubscribeStepConfig__c(Id = sub1configId, Topic__c = 'Test');
         update sub1config;
         
         //arrange subscriber 2 sequence, step, config
@@ -124,7 +124,7 @@
         Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(SubscribeService.class);
         Id sub2configId = new StepModel(sub2step).upsertConfig();
         
-        SubscribeStepConfig__c sub2config = new SubscribeStepConfig__c(Id = sub2configId, EventType__c = 'Test');
+        SubscribeStepConfig__c sub2config = new SubscribeStepConfig__c(Id = sub2configId, Topic__c = 'Test');
         update sub2config;
         
         //arrange input

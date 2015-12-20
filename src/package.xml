@@ -159,7 +159,7 @@
         <members>Message__c.Route__c</members>
         <members>Message__c.Slot__c</members>
         <members>Message__c.Status__c</members>
-        <members>PublishStepConfig__c.EventType__c</members>
+        <members>PublishStepConfig__c.Topic__c</members>
         <members>ScheduleStepConfig__c.Is0000__c</members>
         <members>ScheduleStepConfig__c.Is0100__c</members>
         <members>ScheduleStepConfig__c.Is0200__c</members>
@@ -193,7 +193,7 @@
         <members>Step__c.Position__c</members>
         <members>Step__c.Sequence__c</members>
         <members>Step__c.Version__c</members>
-        <members>SubscribeStepConfig__c.EventType__c</members>
+        <members>SubscribeStepConfig__c.Topic__c</members>
         <members>SubsequenceStepConfig__c.Sequence__c</members>
         <members>WiretapServiceConfig__c.UserId__c</members>
         <name>CustomField</name>

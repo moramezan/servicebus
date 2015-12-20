@@ -198,7 +198,7 @@
         //arrange config
         Id configId = Database.insert(new PublishStepConfig__c(
             Name = 'Config Test',
-            EventType__c = 'Test'
+            Topic__c = 'Test'
         )).getId();
         
         //arrange step

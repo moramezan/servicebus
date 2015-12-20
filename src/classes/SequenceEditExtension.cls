@@ -180,8 +180,8 @@ public with sharing class SequenceEditExtension {
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
         ];
         
-        Map<Id,SObject> publishConfigIdToPublishConfig = new Map<Id,SObject>([SELECT Id, EventType__c FROM PublishStepConfig__c LIMIT 10000]); //checkmarx
-        List<SubscribeStepConfig__c> SubscribeConfigs = [SELECT Id, EventType__c FROM SubscribeStepConfig__c LIMIT 10000]; //checkmarx
+        Map<Id,SObject> publishConfigIdToPublishConfig = new Map<Id,SObject>([SELECT Id, Topic__c FROM PublishStepConfig__c LIMIT 10000]); //checkmarx
+        List<SubscribeStepConfig__c> SubscribeConfigs = [SELECT Id, Topic__c FROM SubscribeStepConfig__c LIMIT 10000]; //checkmarx
         
         for (Sequence__c sequence : sequences) {
             Boolean containsPublish = false;
@@ -206,21 +206,21 @@ public with sharing class SequenceEditExtension {
                 Id publishConfigId = (Id) step.ConfigId__c; // cast from string to Id
                 
                 PublishStepConfig__c publishConfig;
-                String eventType;
+                String topic;
                 publishConfig = (PublishStepConfig__c)publishConfigIdToPublishConfig.get(publishConfigId);
-                eventType = publishConfig.EventType__c;
+                topic = publishConfig.Topic__c;
                 
-                if (eventType == null) {
+                if (topic == null) {
                     ApexPages.addMessage(new ApexPages.Message(
                         ApexPages.Severity.WARNING,
-                        'No event type has been configured on ' + publishConfigId
+                        'No topic has been configured on ' + publishConfigId
                     ));
                     continue;
                 }
                 
                 Boolean subscriberFound = false;
                 for (SubscribeStepConfig__c SubscribeConfig : SubscribeConfigs) {
-                    if (SubscribeConfig.EventType__c == eventType) {
+                    if (SubscribeConfig.Topic__c == topic) {
                         subscriberFound = true;
                     }
                 }
@@ -250,8 +250,8 @@ public with sharing class SequenceEditExtension {
             LIMIT 10000 //resolves checkmarx Queries_With_No_Where_Or_Limit_Clause
         ];
         
-        Map<Id,SObject> subscribeConfigIdToSubscribeConfig = new Map<Id,SObject>([SELECT Id, EventType__c FROM SubscribeStepConfig__c LIMIT 10000]); //checkmarx
-        List<PublishStepConfig__c> publishConfigs = [SELECT Id, EventType__c FROM PublishStepConfig__c LIMIT 10000]; //checkmarx
+        Map<Id,SObject> subscribeConfigIdToSubscribeConfig = new Map<Id,SObject>([SELECT Id, Topic__c FROM SubscribeStepConfig__c LIMIT 10000]); //checkmarx
+        List<PublishStepConfig__c> publishConfigs = [SELECT Id, Topic__c FROM PublishStepConfig__c LIMIT 10000]; //checkmarx
         
         for (Sequence__c sequence : sequences) {
             List<Step__c> steps = [
@@ -299,17 +299,17 @@ public with sharing class SequenceEditExtension {
             }
             
             SubscribeStepConfig__c subscribeConfig = (SubscribeStepConfig__c)subscribeConfigIdToSubscribeConfig.get(subscribeConfigId);
-            if (subscribeConfig.EventType__c == null) {
+            if (subscribeConfig.Topic__c == null) {
                 ApexPages.addMessage(new ApexPages.Message(
                     ApexPages.Severity.WARNING,
-                    'No event type defined on Subscribe Config ' + sequence.Id
+                    'No topic defined on Subscribe Config ' + sequence.Id
                 ));
                 continue;
             }
             
             Boolean publisherFound = false;
             for (PublishStepConfig__c  publishConfig : publishConfigs) {
-                if (subscribeConfig.EventType__c != null && publishConfig.EventType__c == subscribeConfig.EventType__c) publisherFound = true;
+                if (subscribeConfig.Topic__c != null && publishConfig.Topic__c == subscribeConfig.Topic__c) publisherFound = true;
             }
             
             if (!publisherFound) {

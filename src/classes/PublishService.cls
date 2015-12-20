@@ -22,18 +22,18 @@ public class PublishService extends ApexClassModel.Service {
         if (route == null) throw new ServiceException('Null route.');
         
         PublishStepConfig__c publishConfig = [
-            SELECT EventType__c
+            SELECT Topic__c
             FROM PublishStepConfig__c
             WHERE Id = :stepConfigId
         ];
         
-        String eventType = publishConfig.EventType__c;
-        if (eventType == null) throw new ServiceException('No event type.');
+        String topic = publishConfig.Topic__c;
+        if (topic == null) throw new ServiceException('No topic.');
         
         List<SubscribeStepConfig__c> subscribeConfigs = [
             SELECT Id
             FROM SubscribeStepConfig__c
-            WHERE EventType__c = :eventType
+            WHERE Topic__c = :topic
         ];
         
         Integer version = Integer.valueOf(route.substringBefore('#'));

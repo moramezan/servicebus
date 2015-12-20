@@ -203,7 +203,7 @@
         
         PublishStepConfig__c PublishConfigA1 = (PublishStepConfig__c)ApexDomain.getById(configIdA1);
         
-        PublishConfigA1.EventType__c = 'an-event-not-published';
+        PublishConfigA1.Topic__c = 'an-event-not-published';
         update PublishConfigA1;
         
         // Act :
@@ -247,7 +247,7 @@
         Integer actualErrorCount = messages.size();
         System.assertEquals(expectedErrorCount, actualErrorCount);
         
-        String expectedDescription = 'No event type has been configured';
+        String expectedDescription = 'No topic has been configured';
         String actualDescription = messages[0].getSummary();
         System.assert(actualDescription.contains(expectedDescription), messages[0]);
     }
@@ -265,7 +265,7 @@
         // Config A1
         Id configIdA1 = ((Step__c)ApexDomain.getById(stepA1.Id)).ConfigId__c;
         SubscribeStepConfig__c subscribeConfigA1 = (SubscribeStepConfig__c)ApexDomain.getById(configIdA1);
-        subscribeConfigA1.EventType__c = 'an-event-not-published';
+        subscribeConfigA1.Topic__c = 'an-event-not-published';
         update subscribeConfigA1;
  
  
@@ -331,13 +331,13 @@
         // Config C1
         Id configIdC1 = ((Step__c)ApexDomain.getById(stepC1.Id)).ConfigId__c;
         SubscribeStepConfig__c subscribeConfigC1 = (SubscribeStepConfig__c)ApexDomain.getById(configIdC1);
-        subscribeConfigC1.EventType__c = 'an-event-not-published';
+        subscribeConfigC1.Topic__c = 'an-event-not-published';
         update subscribeConfigC1;
 
         // Config C2
         Id configIdC2 = ((Step__c)ApexDomain.getById(stepC2.Id)).ConfigId__c;
         SubscribeStepConfig__c subscribeConfigC2 = (SubscribeStepConfig__c)ApexDomain.getById(configIdC2);
-        subscribeConfigC2.EventType__c = 'an-event-not-published';
+        subscribeConfigC2.Topic__c = 'an-event-not-published';
         update subscribeConfigC2;
         
         // Act :
@@ -383,7 +383,7 @@
         System.assertEquals(expectedErrorCount, actualErrorCount);
         
         String actualDescription = sequenceB.Id;
-        String expectedDescription = 'No event type defined on Subscribe Config';
+        String expectedDescription = 'No topic defined on Subscribe Config';
         System.assert(messages[0].getSummary().contains(expectedDescription));
         System.assert(messages[0].getSummary().contains(actualDescription));
     }

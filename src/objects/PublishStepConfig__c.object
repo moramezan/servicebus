@@ -4,11 +4,11 @@
     <description>Holds publish configs.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
-        <fullName>EventType__c</fullName>
-        <description>Event Type?</description>
+        <fullName>Topic__c</fullName>
+        <description>Topic</description>
         <externalId>false</externalId>
-        <inlineHelpText>What event type should this step broadcast messages to?</inlineHelpText>
-        <label>Event Type</label>
+        <inlineHelpText>What topic should this step broadcast messages to?</inlineHelpText>
+        <label>Topic</label>
         <length>30</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
