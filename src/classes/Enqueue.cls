@@ -208,7 +208,7 @@ global class Enqueue implements Process.Plugin {
             for (Integer i = 0; i < this.Events.size(); i++) {
                 messages.add(new Message__c(
                     Event__c = Json.serializePretty(this.Events[i]),
-                    Status__c = Application__c.getOrgDefaults().BrokerPaused__c ? 'Paused' : 'Buffered'
+                    Status__c = Application__c.getOrgDefaults().BrokerIsPaused__c ? 'Paused' : 'Buffered'
                 ));
                 
                 //salesforce does not have iterator.remove() method like java

@@ -518,7 +518,7 @@
     static testmethod void callingEnqueueWhenBrokerIsPausedQueuesMessageWithStatusPaused() {
         //arrange broker
         Application__c application = Application__c.getOrgDefaults();
-        application.BrokerPaused__c = true;
+        application.BrokerIsPaused__c = true;
         upsert application;
         
         //act
@@ -536,7 +536,7 @@
     static testmethod void callingEnqueueWhenBrokerIsNotPausedWorksOnMessages() {
         //arrange broker
         Application__c application = Application__c.getOrgDefaults();
-        application.BrokerPaused__c = false;
+        application.BrokerIsPaused__c = false;
         upsert application;
         
         //act

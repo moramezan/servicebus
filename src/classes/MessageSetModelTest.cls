@@ -213,26 +213,26 @@
     
     static testmethod void  callingDoPauseOnPausedMessagesPausesQueue() {
         //assert
-        System.assert(!Application__c.getOrgDefaults().BrokerPaused__c, 'Wrong flag before.');
+        System.assert(!Application__c.getOrgDefaults().BrokerIsPaused__c, 'Wrong flag before.');
         
         //act
         MessageSetModel.pauseQueue();
         
         //assert
-        System.assert(Application__c.getOrgDefaults().BrokerPaused__c, 'Wrong flag after.');
+        System.assert(Application__c.getOrgDefaults().BrokerIsPaused__c, 'Wrong flag after.');
     }
     
     static testmethod void  callingDoResumeOnQueuedMessagesEnqueuesWakeup() {
         //arrange broker
         Application__c application = Application__c.getOrgDefaults();
-        application.BrokerPaused__c = true;
+        application.BrokerIsPaused__c = true;
         upsert application;
         
         //arrange message
         insert new Message__c(Status__c = 'Paused', Event__c = '{}');
         
         //assert
-        System.assert(Application__c.getOrgDefaults().BrokerPaused__c, 'Wrong flag before.');
+        System.assert(Application__c.getOrgDefaults().BrokerIsPaused__c, 'Wrong flag before.');
         
         Integer expectedBefore = 1;
         Integer actualBefore = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Paused'];
@@ -242,7 +242,7 @@
         MessageSetModel.resumeQueue();
         
         //assert
-        System.assert(!Application__c.getOrgDefaults().BrokerPaused__c, 'Wrong flag after.');
+        System.assert(!Application__c.getOrgDefaults().BrokerIsPaused__c, 'Wrong flag after.');
         
         Integer expectedAfter = 1;
         Integer actualAfter = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];

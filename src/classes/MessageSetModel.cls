@@ -170,7 +170,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
                 ApexClassModel.Summary summary; //unit tests skip cache
                 if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(apexClassName));
                 else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(apexClassName);
-                message.IsRetryable__c = summary.Retry;
+                message.IsAutoRetryable__c = summary.Retry;
                 
             } catch (Exception e) {}
             
@@ -415,14 +415,14 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     static public void pauseQueue() {
         //fetch custom setting and set the flag
         Application__c application = Application__c.getOrgDefaults();
-        application.BrokerPaused__c = true;
+        application.BrokerIsPaused__c = true;
         upsert application;
     }
     
     static public void resumeQueue() {
         //fetch custom setting and unset the flag
         Application__c application = Application__c.getOrgDefaults();
-        application.BrokerPaused__c = false;
+        application.BrokerIsPaused__c = false;
         upsert application;
         
         //get all the paused guys

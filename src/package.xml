@@ -133,8 +133,8 @@
         <name>CustomApplication</name>
     </types>
     <types>
-        <members>Application__c.BrokerInhibit__c</members>
-        <members>Application__c.BrokerPaused__c</members>
+        <members>Application__c.BrokerIsInhibited__c</members>
+        <members>Application__c.BrokerIsPaused__c</members>
         <members>Application__c.BrokerVersion__c</members>
         <members>Application__c.EventTimestamp__c</members>
         <members>Application__c.OrgIdConfigured__c</members>
@@ -153,7 +153,7 @@
         <members>Message__c.Event__c</members>
         <members>Message__c.Exception__c</members>
         <members>Message__c.ExecuteDuration__c</members>
-        <members>Message__c.IsRetryable__c</members>
+        <members>Message__c.IsAutoRetryable__c</members>
         <members>Message__c.JobId__c</members>
         <members>Message__c.Parent__c</members>
         <members>Message__c.Route__c</members>

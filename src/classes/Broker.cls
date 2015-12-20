@@ -119,7 +119,7 @@ abstract public without sharing class Broker {
          */
         public Database.QueryLocator start(Database.BatchableContext context) {
             
-            if (Application__c.getOrgDefaults().BrokerInhibit__c) {
+            if (Application__c.getOrgDefaults().BrokerIsInhibited__c) {
                 //INHIBIT
                 System.assert(false, 'Inhibit');
             }

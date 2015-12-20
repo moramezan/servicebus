@@ -491,7 +491,7 @@
             Status__c = 'Started',
             Exception__c = 'With retry',
             Attempts__c = 1,
-            IsRetryable__c = true
+            IsAutoRetryable__c = true
         );
         
         //arrange sans retry
@@ -499,7 +499,7 @@
             Status__c = 'Started',
             Exception__c = 'Sans retry',
             Attempts__c = 1,
-            IsRetryable__c = false
+            IsAutoRetryable__c = false
         );
         
         //act

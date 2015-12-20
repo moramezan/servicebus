@@ -4,7 +4,7 @@
     <description>Holds the running or paused mode. Holds the namespace prefix needed to normalize custom buttons URLs and javascript. Holds the credentials needed to manage the Broker running user context. #774 formerly OAuth Setting.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
-        <fullName>BrokerInhibit__c</fullName>
+        <fullName>BrokerIsInhibited__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Set this TRUE to interrupt a haywire Broker during development.</description>
         <externalId>false</externalId>
@@ -13,7 +13,7 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>BrokerPaused__c</fullName>
+        <fullName>BrokerIsPaused__c</fullName>
         <defaultValue>false</defaultValue>
         <description>When checked, this setting prevents new Messages from being worked on. They will still enter the queue, but unresolved in a &apos;Paused&apos; status.</description>
         <externalId>false</externalId>

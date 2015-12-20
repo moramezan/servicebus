@@ -139,7 +139,7 @@ Gets set by Job() injecting to the top of a sequence and given a hypothetical me
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>IsRetryable__c</fullName>
+        <fullName>IsAutoRetryable__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Used for #1124 poor mans retry.</description>
         <externalId>false</externalId>

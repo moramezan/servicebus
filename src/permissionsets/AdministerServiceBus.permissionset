@@ -373,7 +373,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Message__c.IsRetryable__c</field>
+        <field>Message__c.IsAutoRetryable__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
