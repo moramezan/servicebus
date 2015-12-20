@@ -160,31 +160,31 @@
         <members>Message__c.Slot__c</members>
         <members>Message__c.Status__c</members>
         <members>PublishStepConfig__c.EventType__c</members>
+        <members>ScheduleStepConfig__c.Is0000__c</members>
+        <members>ScheduleStepConfig__c.Is0100__c</members>
+        <members>ScheduleStepConfig__c.Is0200__c</members>
+        <members>ScheduleStepConfig__c.Is0300__c</members>
+        <members>ScheduleStepConfig__c.Is0400__c</members>
+        <members>ScheduleStepConfig__c.Is0500__c</members>
+        <members>ScheduleStepConfig__c.Is0600__c</members>
+        <members>ScheduleStepConfig__c.Is0700__c</members>
+        <members>ScheduleStepConfig__c.Is0800__c</members>
+        <members>ScheduleStepConfig__c.Is0900__c</members>
+        <members>ScheduleStepConfig__c.Is1000__c</members>
+        <members>ScheduleStepConfig__c.Is1100__c</members>
+        <members>ScheduleStepConfig__c.Is1200__c</members>
+        <members>ScheduleStepConfig__c.Is1300__c</members>
+        <members>ScheduleStepConfig__c.Is1400__c</members>
+        <members>ScheduleStepConfig__c.Is1500__c</members>
+        <members>ScheduleStepConfig__c.Is1600__c</members>
+        <members>ScheduleStepConfig__c.Is1700__c</members>
+        <members>ScheduleStepConfig__c.Is1800__c</members>
+        <members>ScheduleStepConfig__c.Is1900__c</members>
+        <members>ScheduleStepConfig__c.Is2000__c</members>
+        <members>ScheduleStepConfig__c.Is2100__c</members>
+        <members>ScheduleStepConfig__c.Is2200__c</members>
+        <members>ScheduleStepConfig__c.Is2300__c</members>
         <members>ScheduleStepConfig__c.IsActive__c</members>
-        <members>ScheduleStepConfig__c.T0000__c</members>
-        <members>ScheduleStepConfig__c.T0100__c</members>
-        <members>ScheduleStepConfig__c.T0200__c</members>
-        <members>ScheduleStepConfig__c.T0300__c</members>
-        <members>ScheduleStepConfig__c.T0400__c</members>
-        <members>ScheduleStepConfig__c.T0500__c</members>
-        <members>ScheduleStepConfig__c.T0600__c</members>
-        <members>ScheduleStepConfig__c.T0700__c</members>
-        <members>ScheduleStepConfig__c.T0800__c</members>
-        <members>ScheduleStepConfig__c.T0900__c</members>
-        <members>ScheduleStepConfig__c.T1000__c</members>
-        <members>ScheduleStepConfig__c.T1100__c</members>
-        <members>ScheduleStepConfig__c.T1200__c</members>
-        <members>ScheduleStepConfig__c.T1300__c</members>
-        <members>ScheduleStepConfig__c.T1400__c</members>
-        <members>ScheduleStepConfig__c.T1500__c</members>
-        <members>ScheduleStepConfig__c.T1600__c</members>
-        <members>ScheduleStepConfig__c.T1700__c</members>
-        <members>ScheduleStepConfig__c.T1800__c</members>
-        <members>ScheduleStepConfig__c.T1900__c</members>
-        <members>ScheduleStepConfig__c.T2000__c</members>
-        <members>ScheduleStepConfig__c.T2100__c</members>
-        <members>ScheduleStepConfig__c.T2200__c</members>
-        <members>ScheduleStepConfig__c.T2300__c</members>
         <members>Step__c.ApexClassId__c</members>
         <members>Step__c.ApexClassName__c</members>
         <members>Step__c.ConfigId__c</members>

@@ -17,7 +17,7 @@
         ScheduleStepConfig__c config = new ScheduleStepConfig__c(
             Name = '1#Test#1',
             IsActive__c = true,
-            T1200__c = true
+            Is1200__c = true
         );
         insert config;
         
@@ -101,7 +101,7 @@
         insert new ScheduleStepConfig__c(
             Name = '1#Test#1',
             IsActive__c = true,
-            T1200__c = true
+            Is1200__c = true
         );
 
         //arrange input
@@ -162,7 +162,7 @@
         insert new ScheduleStepConfig__c(
             Name = '1#Test#1',
             IsActive__c = true,
-            T1200__c = true
+            Is1200__c = true
         );
         
         //arrange input
@@ -223,7 +223,7 @@
         insert new ScheduleStepConfig__c(
             Name = '1#Test#1',
             IsActive__c = true,
-            T1200__c = true
+            Is1200__c = true
         );
         
         //arrange input
@@ -285,7 +285,7 @@
             Name = '1#Test#1',
             IsActive__c = true,
             //Frequency__c = 'Weekly',
-            T1300__c = true
+            Is1300__c = true
         );
         
         //arrange input event parameters
