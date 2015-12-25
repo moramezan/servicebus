@@ -243,7 +243,7 @@
         insert document;
         
         //arrange step
-        Step__c step = new Step__c(Name = '1#Test#1', ApexClassName__c = PassThroughService.class.getName(), ConfigId__c = document.Id);
+        Step__c step = new Step__c(Name = '1#Test#1', ApexTypeName__c = PassThroughService.class.getName(), ConfigId__c = document.Id);
         insert step;
         
         //arrange message

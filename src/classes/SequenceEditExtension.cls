@@ -55,7 +55,7 @@ public with sharing class SequenceEditExtension {
         return null;
     }
     
-    public String getTerminateApexClassName() {
+    public String getTerminateApexTypeName() {
         return TerminateService.class.getName();
     }
     
@@ -124,14 +124,14 @@ public with sharing class SequenceEditExtension {
             Integer terminateCount = 0;
             
             List<Step__c> steps = [
-                SELECT Id, Name, ApexClassName__c
+                SELECT Id, Name, ApexTypeName__c
                 FROM Step__c
                 WHERE Sequence__c = :sequence.Name
                 ORDER BY Position__c ASC
             ];
             
             for (Step__c step : steps) {
-                if (step.ApexClassName__c == TerminateService.class.getName()) {
+                if (step.ApexTypeName__c == TerminateService.class.getName()) {
                     terminateCount++;
                 }
             }
@@ -146,7 +146,7 @@ public with sharing class SequenceEditExtension {
             }
             
             //terminate not at end error
-            if ((steps.size() > 0) ? (steps[steps.size() - 1].ApexClassName__c != TerminateService.class.getName()) : false) {
+            if ((steps.size() > 0) ? (steps[steps.size() - 1].ApexTypeName__c != TerminateService.class.getName()) : false) {
                 ApexPages.addMessage(new ApexPages.Message(
                     ApexPages.Severity.WARNING,
                     'Terminate not present at end of sequence ' + sequence.Id
@@ -187,20 +187,20 @@ public with sharing class SequenceEditExtension {
             Boolean containsPublish = false;
             
             List<Step__c> steps = [
-                SELECT Id, Name, ApexClassName__c, ConfigId__c
+                SELECT Id, Name, ApexTypeName__c, ConfigId__c
                 FROM Step__c
                 WHERE Sequence__c = :sequence.Name
                 ORDER BY Position__c ASC
             ];
             
-            for (Step__c step : steps) if (step.ApexClassName__c == PublishService.class.getName()) containsPublish = true;
+            for (Step__c step : steps) if (step.ApexTypeName__c == PublishService.class.getName()) containsPublish = true;
             
             //no publish steps to check
             if (!containsPublish) continue;
             
             for (Step__c step : steps) {
                 //skip non-publish steps
-                if (step.ApexClassName__c != PublishService.class.getName()) continue;
+                if (step.ApexTypeName__c != PublishService.class.getName()) continue;
                 
                 Id stepId = step.Id;
                 Id publishConfigId = (Id) step.ConfigId__c; // cast from string to Id
@@ -255,7 +255,7 @@ public with sharing class SequenceEditExtension {
         
         for (Sequence__c sequence : sequences) {
             List<Step__c> steps = [
-                SELECT Id, Name, ApexClassName__c, ConfigId__c
+                SELECT Id, Name, ApexTypeName__c, ConfigId__c
                 FROM Step__c
                 WHERE Sequence__c = :sequence.Name
                 ORDER BY Position__c ASC
@@ -268,7 +268,7 @@ public with sharing class SequenceEditExtension {
             Id subscribeConfigId = null;
             
             for (Step__c step : steps) {
-                if (step.ApexClassName__c == SubscribeService.class.getName()) {
+                if (step.ApexTypeName__c == SubscribeService.class.getName()) {
                     subscribeOccurs++;
                     subscribeConfigId = (Id) step.ConfigId__c; // cast from string to Id
                     if (count == 1) {

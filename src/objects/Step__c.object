@@ -16,10 +16,10 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>ApexClassName__c</fullName>
+        <fullName>ApexTypeName__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>What service will handle the messages reaching this step?</inlineHelpText>
-        <label>Fully Qualified Class Name</label>
+        <label>Apex Type Name</label>
         <length>80</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

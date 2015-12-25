@@ -60,7 +60,7 @@
         $Page.ApexClassView = '{!$Page.ApexClassView}';
         $Page.StepConfig = '{!$Page.StepConfig}';
         
-        TerminateApexClassName = '{!TerminateApexClassName}';
+        TerminateApexClassName = '{!TerminateApexTypeName}';
         Services = JSON.parse('{!JSENCODE(Services)}'); //#782 stored xss
         Steps = JSON.parse('{!JSENCODE(Steps)}'); //#782 stored xss
         Id = '{!Id}';

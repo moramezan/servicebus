@@ -109,7 +109,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
                 Name = version + '#' + this.sequence.Name + '#' + position,
                 Sequence__c = this.sequence.Name,
                 ApexClassId__c = null, //see upstairs
-                ApexClassName__c = reflector.getName(),
+                ApexTypeName__c = reflector.getName(),
                 Position__c = position
             );
             
@@ -132,7 +132,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
                 FROM Step__c
                 WHERE IsDraft__c = true
                 AND Sequence__c = :this.sequence.Name
-                AND ApexClassName__c = :TerminateService.class.getName()
+                AND ApexTypeName__c = :TerminateService.class.getName()
             ];
         } catch (QueryException e) {
             //sequence contains no terminate step
@@ -253,7 +253,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
      *         "ConfigId": null,
      *         "ConfigName": null,
      *         "ApexClassId": "01p000000000000AAA",
-     *         "ApexClassName": "Wiretap"
+     *         "ApexTypeName": "Wiretap"
      *         "Position": 1.0,
      *     },
      *     {
@@ -261,7 +261,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
      *         "ConfigId": null,
      *         "ConfigName": null,
      *         "ApexClassId": "01p000000000000AAA",
-     *         "ApexClassName": "Terminate"
+     *         "ApexTypeName": "Terminate"
      *         "Position": 2.0,
      *     }
      * ]
@@ -270,7 +270,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
         
         //query fields
         List<Step__c> steps = [
-            SELECT Id, Name, ConfigId__c, ConfigName__c, ApexClassId__c, ApexClassName__c, Position__c
+            SELECT Id, Name, ConfigId__c, ConfigName__c, ApexClassId__c, ApexTypeName__c, Position__c
             FROM Step__c
             WHERE IsDraft__c = true
             AND Sequence__c = :this.sequence.Name
@@ -287,7 +287,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
                 'ConfigId' => step.ConfigId__c,
                 'ConfigName' => step.ConfigName__c,
                 'ApexClassId' => step.ApexClassId__c,
-                'ApexClassName' => step.ApexClassName__c,
+                'ApexTypeName' => step.ApexTypeName__c,
                 'Position' => step.Position__c.intValue()
             };
             

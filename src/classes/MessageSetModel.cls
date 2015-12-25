@@ -127,14 +127,14 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         
         try {
             //resolve class name
-            String apexClassName = specimen[0].Route__c;
+            String apexTypeName = specimen[0].Route__c;
             Step__c step = Step__c.getValues(specimen[0].Route__c);
-            if (step != null) apexClassName = step.ApexClassName__c;
+            if (step != null) apexTypeName = step.ApexTypeName__c;
             
             //peek at summary
             ApexClassModel.Summary summary; //unit tests skip cache
-            if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(apexClassName));
-            else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(apexClassName);
+            if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(apexTypeName));
+            else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(apexTypeName);
             chunks = summary.Chunks;
             
         } catch (Exception e) {}
@@ -162,14 +162,14 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             
             try {
                 //resolve class name
-                String apexClassName = message.Route__c;
+                String apexTypeName = message.Route__c;
                 Step__c step = Step__c.getValues(message.Route__c);
-                if (step != null) apexClassName = step.ApexClassName__c;
+                if (step != null) apexTypeName = step.ApexTypeName__c;
                 
                 //peek at summary
                 ApexClassModel.Summary summary; //unit tests skip cache
-                if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(apexClassName));
-                else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(apexClassName);
+                if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(apexTypeName));
+                else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(apexTypeName);
                 message.IsAutoRetryable__c = summary.Retry;
                 
             } catch (Exception e) {}

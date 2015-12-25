@@ -186,7 +186,7 @@
         <members>ScheduleStepConfig__c.Is2300__c</members>
         <members>ScheduleStepConfig__c.IsActive__c</members>
         <members>Step__c.ApexClassId__c</members>
-        <members>Step__c.ApexClassName__c</members>
+        <members>Step__c.ApexTypeName__c</members>
         <members>Step__c.ConfigId__c</members>
         <members>Step__c.ConfigName__c</members>
         <members>Step__c.IsDraft__c</members>

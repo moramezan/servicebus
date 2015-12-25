@@ -132,12 +132,12 @@ public class StepModel extends ApexDomain.StandardModel {
         try {
             //use apex class name instead of id, for easier testing
             ApexClassModel.Summary summary; //unit tests skip cache
-            if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(this.Step.ApexClassName__c));
-            else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(this.Step.ApexClassName__c);
+            if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(this.Step.ApexTypeName__c));
+            else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(this.Step.ApexTypeName__c);
             
             if (summary == null) {
                 //summary not cached
-                throw new ModelException('Could not load summary: ' + this.Step.ApexClassName__c);
+                throw new ModelException('Could not load summary: ' + this.Step.ApexTypeName__c);
             }
             
             if (summary.StepConfig == null) {

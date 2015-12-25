@@ -20,15 +20,15 @@ public with sharing class MonitorController {
     }
     
     public class Statistic {
-        public Statistic(String apexClassName, Integer paused, Integer buffered, Integer started, Integer exceptions) {
-            this.ApexClassName = apexClassName;
+        public Statistic(String route, Integer paused, Integer buffered, Integer started, Integer exceptions) {
+            this.Route = route;
             this.Paused = paused;
             this.Buffered = buffered;
             this.Started = started;
             this.Exceptions = exceptions;
         }
         
-        public String ApexClassName {get; set;}
+        public String Route {get; set;}
         public Integer Paused {get; set;}
         public Integer Buffered {get; set;}
         public Integer Started {get; set;}

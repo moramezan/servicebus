@@ -107,7 +107,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
      */
     static public Database.QueryLocator locateDraftSteps() {
         return Database.getQueryLocator([
-            SELECT Id, Name, ApexClassId__c, ApexClassName__c, ConfigId__c, ConfigName__c, IsDraft__c, Version__c, Sequence__c, Position__c
+            SELECT Id, Name, ApexClassId__c, ApexTypeName__c, ConfigId__c, ConfigName__c, IsDraft__c, Version__c, Sequence__c, Position__c
             FROM Step__c
             WHERE IsDraft__c = true
             ORDER BY Sequence__c ASC, Position__c ASC

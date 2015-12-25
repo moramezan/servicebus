@@ -64,7 +64,7 @@
         
         //assert
         String expectedClassName = PublishService.class.getName();
-        String actualClassName = step.ApexClassName__c;
+        String actualClassName = step.ApexTypeName__c;
         System.assertEquals(expectedClassName, actualClassName);
     }
     
@@ -81,13 +81,13 @@
         Map<String,Object> wiretapStep = steps[1];
         
         //assert
-        String terminateExpectedClassName = TerminateService.class.getName();
-        String terminateActualClassName = (String)terminateStep.get('ApexClassName');
-        System.assertEquals(terminateExpectedClassName, terminateActualClassName);
+        String terminateExpectedApexTypeName = TerminateService.class.getName();
+        String terminateActualApexTypeName = (String)terminateStep.get('ApexTypeName');
+        System.assertEquals(terminateExpectedApexTypeName, terminateActualApexTypeName);
         
-        String wiretapExpectedClassName = WiretapService.class.getName();
-        String wiretapActualClassName = (String)wiretapStep.get('ApexClassName');
-        System.assertEquals(wiretapExpectedClassName, wiretapActualClassName);
+        String wiretapExpectedApexTypeName = WiretapService.class.getName();
+        String wiretapActualApexTypeName = (String)wiretapStep.get('ApexTypeName');
+        System.assertEquals(wiretapExpectedApexTypeName, wiretapActualApexTypeName);
     }
     
     static testmethod void testMoveStepAfter() {
@@ -103,13 +103,13 @@
         Map<String,Object> wiretapStep = steps[1];
         
         //assert
-        String terminateExpectedClassName = TerminateService.class.getName();
-        String terminateActualClassName = (String)terminateStep.get('ApexClassName');
-        System.assertEquals(terminateExpectedClassName, terminateActualClassName);
+        String terminateExpectedApexTypeName = TerminateService.class.getName();
+        String terminateActualApexTypeName = (String)terminateStep.get('ApexTypeName');
+        System.assertEquals(terminateExpectedApexTypeName, terminateActualApexTypeName);
         
-        String wiretapExpectedClassName = WiretapService.class.getName();
-        String wiretapActualClassName = (String)wiretapStep.get('ApexClassName');
-        System.assertEquals(wiretapExpectedClassName, wiretapActualClassName);
+        String wiretapExpectedApexTypeName = WiretapService.class.getName();
+        String wiretapActualApexTypeName = (String)wiretapStep.get('ApexTypeName');
+        System.assertEquals(wiretapExpectedApexTypeName, wiretapActualApexTypeName);
     }
     
     static testmethod void testDestroyStep() {

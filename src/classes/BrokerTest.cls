@@ -475,7 +475,7 @@
         
         //arrange steps
         Step__c step = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
-        step.ApexClassName__c = 'lalala';
+        step.ApexTypeName__c = 'lalala';
         update step;
         
         //arrange message

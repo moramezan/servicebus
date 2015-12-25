@@ -100,30 +100,30 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         }
         
         //resolve class name
-        String apexClassName = route;
+        String apexTypeName = route;
         Step__c step = Step__c.getValues(route);
-        if (step != null) apexClassName = step.ApexClassName__c;
+        if (step != null) apexTypeName = step.ApexTypeName__c;
         
         if (route.contains('#') && step == null) {
             //failure, a la "Could not resolve field 'Billing Address' from value binding"
             throw new ModelException('Could not resolve route: ' + route);
         }
         
-        if (apexClassName == null) {
+        if (apexTypeName == null) {
             //failure, a la "Argument cannot be null"
             throw new Broker.ServiceException('Apex class name cannot be null: ' + route);
         }
         
         Type reflector;
         
-        try {reflector = Type.forName(apexClassName);} catch (Exception e) {
+        try {reflector = Type.forName(apexTypeName);} catch (Exception e) {
             //failure, a la "Could not resolve field 'Billing Address' from value binding"
-            throw new ModelException('Could not reflect ' + apexClassName + ': ' + e.getMessage());
+            throw new ModelException('Could not reflect ' + apexTypeName + ': ' + e.getMessage());
         }
         
         if (reflector == null) {
             //a la "Variable is not visible" or "Variable does not exist" or "Dependent class is invalid and needs recompilation"
-            throw new ModelException('Class is invalid or not visible: ' + apexClassName);
+            throw new ModelException('Class is invalid or not visible: ' + apexTypeName);
         }
         
         //also works with #956 "fire and forget" service without sequences or steps
@@ -370,7 +370,7 @@ abstract public class Service {
         }
         
         //#877 surface SessionId to select few orgs and packages
-        //Boolean allowSessionId = Broker.isAllowedSessionId(step.ApexClassName__c, UserInfo.getOrganizationId());
+        //Boolean allowSessionId = Broker.isAllowedSessionId(step.ApexTypeName__c, UserInfo.getOrganizationId());
         //if (allowSessionId) Job.Event.put('SessionId', Application__c.getOrgDefaults().RunAsAccessToken__c);
         //TODO for #886
         

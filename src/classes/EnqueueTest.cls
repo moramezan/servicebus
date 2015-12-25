@@ -10,7 +10,7 @@
             Version__c = 1,
             Sequence__c = 'Test',
             Position__c = 1,
-            ApexClassName__c = TerminateService.class.getName(),
+            ApexTypeName__c = TerminateService.class.getName(),
             ConfigId__c = 'a01000000000001'
         );
         
@@ -21,7 +21,7 @@
             Version__c = 2,
             Sequence__c = 'Test',
             Position__c = 1,
-            ApexClassName__c = TerminateService.class.getName(),
+            ApexTypeName__c = TerminateService.class.getName(),
             ConfigId__c = 'a01000000000002'
         );
         
@@ -56,7 +56,7 @@
             Version__c = 1,
             Sequence__c = 'Test',
             Position__c = 1,
-            ApexClassName__c = TerminateService.class.getName(),
+            ApexTypeName__c = TerminateService.class.getName(),
             ConfigId__c = 'a01000000000001'
         );
         
@@ -67,7 +67,7 @@
             Version__c = 2,
             Sequence__c = 'Test',
             Position__c = 1,
-            ApexClassName__c = TerminateService.class.getName(),
+            ApexTypeName__c = TerminateService.class.getName(),
             ConfigId__c = 'a01000000000002'
         );
         

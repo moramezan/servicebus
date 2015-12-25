@@ -46,13 +46,13 @@
         Step__c actualStep = SequenceModel.fromName(soSequence.Name).appendStep(SubscribeService.class);
         
         // assemble
-        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequence.Name];
+        List<Step__c> soSteps = [SELECT Name, ApexTypeName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
         // SObject soStep = actualStep.getRecord();
         String actualServiceName;
         Integer actualPosition;
         if (soSteps.size() > 0) {
-            actualServiceName = soSteps[0].ApexClassName__c;
+            actualServiceName = soSteps[0].ApexTypeName__c;
             actualPosition = soSteps[0].Position__c.intValue();
         }
         
@@ -77,12 +77,12 @@
         sequence.terminateIfNeeded();
         
         // assemble
-        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequence.Name];
+        List<Step__c> soSteps = [SELECT Name, ApexTypeName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
         String actualServiceName;
         Integer actualPosition;
         if (soSteps.size() > 0) {
-            actualServiceName = soSteps[0].ApexClassName__c;
+            actualServiceName = soSteps[0].ApexTypeName__c;
             actualPosition = soSteps[0].Position__c.intValue();
         }
         
@@ -108,12 +108,12 @@
         sequence.terminateIfNeeded(); // and again!
         
         // assemble
-        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequence.Name];
+        List<Step__c> soSteps = [SELECT Name, ApexTypeName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequence.Name];
         Integer actualStepCount  = soSteps.size();
         String actualServiceName;
         Integer actualPosition;
         if (soSteps.size() > 0) {
-            actualServiceName = soSteps[0].ApexClassName__c;
+            actualServiceName = soSteps[0].ApexTypeName__c;
             actualPosition = soSteps[0].Position__c.intValue();
         }
         
@@ -142,12 +142,12 @@
  
         
         // assemble
-        List<Step__c> soSteps = [SELECT Name, ApexClassName__c, Position__c FROM Step__c];
+        List<Step__c> soSteps = [SELECT Name, ApexTypeName__c, Position__c FROM Step__c];
         Integer actualStepsCount  = soSteps.size();
         String actualServiceName;
         Integer actualPosition;
         if (soSteps.size() > 0) {
-            actualServiceName = soSteps[0].ApexClassName__c;
+            actualServiceName = soSteps[0].ApexTypeName__c;
             actualPosition = soSteps[0].Position__c.intValue();
         }
    
@@ -175,7 +175,7 @@
             ConfigId__c = '015000000000000AAA',
             ConfigName__c = 'This step must be configured. Seriously.',
             ApexClassId__c = '01p000000000000AAA',
-            ApexClassName__c = 'servicebus.WiretapService',
+            ApexTypeName__c = 'servicebus.WiretapService',
             Position__c = 1.0
         );
         
@@ -209,9 +209,9 @@
         String actualApexClassId = (String)dtos[0].get('ApexClassId');
         System.assertEquals(expectedName, actualName, 'Wrong ApexClassId.');
         
-        String expectedApexClassName = step.ApexClassName__c;
-        String actualApexClassName = (String)dtos[0].get('ApexClassName');
-        System.assertEquals(expectedApexClassName, actualApexClassName, 'Wrong ApexClassName.');
+        String expectedApexTypeName = step.ApexTypeName__c;
+        String actualApexTypeName = (String)dtos[0].get('ApexTypeName');
+        System.assertEquals(expectedApexTypeName, actualApexTypeName, 'Wrong TypeName.');
         
         Integer expectedPosition = step.Position__c.intValue();
         Integer actualPosition = (Integer)dtos[0].get('Position');

@@ -267,12 +267,12 @@ abstract public without sharing class Broker {
             AsyncApexJob asyncApexJob = (AsyncApexJob)ApexDomain.getById(context.getJobId());
             
             //resolve class name
-            String apexClassName = fatalities[0].Route__c;
+            String apexTypeName = fatalities[0].Route__c;
             Step__c step = Step__c.getValues(fatalities[0].Route__c);
-            if (step == null) apexClassName = step.ApexClassName__c;
+            if (step == null) apexTypeName = step.ApexTypeName__c;
             
             //get causing class name
-            String cause = 'Class.' + apexClassName;
+            String cause = 'Class.' + apexTypeName;
             
             //#985 first fatal error (use extended status)
             String extendedStatus = asyncApexJob.ExtendedStatus;
