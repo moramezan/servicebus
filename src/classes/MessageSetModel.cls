@@ -175,8 +175,8 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             } catch (Exception e) {}
             
             //increment attempts
-            if (message.Attempts__c == null) message.Attempts__c = 0;
-            message.Attempts__c++;
+            if (message.NumberOfAttempts__c == null) message.NumberOfAttempts__c = 0;
+            message.NumberOfAttempts__c++;
         }
         
         update this.Messages;

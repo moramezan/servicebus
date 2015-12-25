@@ -490,7 +490,7 @@
         insert new Message__c(
             Status__c = 'Started',
             Exception__c = 'With retry',
-            Attempts__c = 1,
+            NumberOfAttempts__c = 1,
             IsAutoRetryable__c = true
         );
         
@@ -498,7 +498,7 @@
         insert new Message__c(
             Status__c = 'Started',
             Exception__c = 'Sans retry',
-            Attempts__c = 1,
+            NumberOfAttempts__c = 1,
             IsAutoRetryable__c = false
         );
         

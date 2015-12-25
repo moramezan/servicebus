@@ -147,7 +147,7 @@
         <members>Application__c.RunAsRefreshToken__c</members>
         <members>Application__c.RunAsUserId__c</members>
         <members>JumpStepConfig__c.Sequence__c</members>
-        <members>Message__c.Attempts__c</members>
+        <members>Message__c.NumberOfAttempts__c</members>
         <members>Message__c.Cause__c</members>
         <members>Message__c.CorrelationUuid__c</members>
         <members>Message__c.Event__c</members>

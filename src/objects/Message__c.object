@@ -64,7 +64,7 @@
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
     <fields>
-        <fullName>Attempts__c</fullName>
+        <fullName>NumberOfAttempts__c</fullName>
         <description>Used for #1124 manual retry.</description>
         <externalId>false</externalId>
         <inlineHelpText>How many times has a service attempted to handle this message?</inlineHelpText>

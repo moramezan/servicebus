@@ -49,7 +49,7 @@ public class Router extends ApexClassModel.Service {
             WHERE Status__c = 'Started'
             AND Exception__c != null
             AND IsAutoRetryable__c = true
-            AND Attempts__c = 1
+            AND NumberOfAttempts__c = 1
             LIMIT 5000
         ];
         
