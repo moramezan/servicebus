@@ -136,7 +136,7 @@
         <members>Application__c.BrokerIsInhibited__c</members>
         <members>Application__c.BrokerIsPaused__c</members>
         <members>Application__c.BrokerVersion__c</members>
-        <members>Application__c.EventTimestamp__c</members>
+        <members>Application__c.BrokerLastTimestamp__c</members>
         <members>Application__c.OrgIdConfigured__c</members>
         <members>Application__c.OrgInstanceUrl__c</members>
         <members>Application__c.OrgReturnUrl__c</members>

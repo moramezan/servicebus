@@ -299,7 +299,7 @@
 
         // assemble
         Application__c application = Application__c.getOrgDefaults();
-        DateTime actualEventStamp =  application.EventTimestamp__c;
+        DateTime actualEventStamp =  application.BrokerLastTimestamp__c;
         
         // assert
         DateTime expectedEventStamp = null;
@@ -328,7 +328,7 @@
 
         // assemble
         Application__c application = Application__c.getOrgDefaults();
-        DateTime actualEventStamp = application.EventTimestamp__c;
+        DateTime actualEventStamp = application.BrokerLastTimestamp__c;
         
         // assert
         DateTime expectedEventStamp =  stampC;

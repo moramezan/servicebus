@@ -88,7 +88,7 @@ public class Router extends ApexClassModel.Service {
         public DateTime CurrentDateTime    {get; private set;}
  
         public  HeartbeatGeneratorImpl() {
-            Datetime eventStampAsDateTime = Application__c.getOrgDefaults().EventTimestamp__c;
+            Datetime eventStampAsDateTime = Application__c.getOrgDefaults().BrokerLastTimestamp__c;
             
             // no suicide chaining : set to 60
             // suicide schedule : set as low as 5
@@ -194,7 +194,7 @@ public class Router extends ApexClassModel.Service {
         DateTime lastEventStamp =  heartbeats[count-1];
  
         Application__c application = Application__c.getOrgDefaults(); //#782
-        application.EventTimestamp__c = lastEventStamp;
+        application.BrokerLastTimestamp__c = lastEventStamp;
       //////  setting.EventStampInfo__c = json.serialize(lastEventStamp).replaceAll('"','').left(19)+'Z';  // Info purposes only
         upsert application;
     }
