@@ -285,7 +285,7 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         <label>Paused</label>
     </listViews>
     <nameField>
-        <label>Message Name</label>
+        <label>Name</label>
         <type>Text</type>
     </nameField>
     <pluralLabel>Messages</pluralLabel>
