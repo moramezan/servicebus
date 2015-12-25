@@ -138,7 +138,7 @@
         <members>Application__c.BrokerVersion__c</members>
         <members>Application__c.BrokerLastTimestamp__c</members>
         <members>Application__c.OrgIdConfigured__c</members>
-        <members>Application__c.OrgInstanceUrl__c</members>
+        <members>Application__c.OrgBaseUrl__c</members>
         <members>Application__c.OrgReturnUrl__c</members>
         <members>Application__c.PrefixBar__c</members>
         <members>Application__c.PrefixDot__c</members>

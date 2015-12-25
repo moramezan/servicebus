@@ -59,7 +59,7 @@ public with sharing class ConfigureController {
             + '                <description>' + this.InstanceName + '_Salesforce</description>'
             + '                <disableProtocolSecurity>false</disableProtocolSecurity>'
             + '                <isActive>true</isActive>'
-            + '                <url>' + Application__c.getOrgDefaults().OrgInstanceUrl__c + '</url>'
+            + '                <url>' + Application__c.getOrgDefaults().OrgBaseUrl__c + '</url>'
             + '            </metadata>'
             + '            <metadata xsi:type="RemoteSiteSetting">'
             + '                <fullName>' + this.InstanceName + '_Visualforce</fullName>'
@@ -224,8 +224,8 @@ public with sharing class ConfigureController {
      * }
      */
     @TestVisible System.PageReference buildCodeLink(String code) {
-        String instanceUrl = Application__c.getOrgDefaults().OrgInstanceUrl__c;
-        System.PageReference pr = new System.PageReference(instanceUrl + '/services/oauth2/token');
+        String baseUrl = Application__c.getOrgDefaults().OrgBaseUrl__c;
+        System.PageReference pr = new System.PageReference(baseUrl + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'authorization_code');
         pr.getParameters().put('client_id', CLIENT);
         pr.getParameters().put('client_secret', SECRET);
@@ -256,8 +256,8 @@ public with sharing class ConfigureController {
      * }
      */
     @TestVisible System.PageReference buildRefreshLink() {
-        String instanceUrl = Application__c.getOrgDefaults().OrgInstanceUrl__c;
-        System.PageReference pr = new System.PageReference(instanceUrl + '/services/oauth2/token');
+        String baseUrl = Application__c.getOrgDefaults().OrgBaseUrl__c;
+        System.PageReference pr = new System.PageReference(baseUrl + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'refresh_token');
         pr.getParameters().put('client_id', CLIENT);
         pr.getParameters().put('client_secret', SECRET);
@@ -369,7 +369,7 @@ public with sharing class ConfigureController {
             //1. "cs" we upsert custom setting to save away the base url
             String url = parameters.get('url').substringBefore('/services/');
             application = Application__c.getOrgDefaults();
-            application.OrgInstanceUrl__c = url;
+            application.OrgBaseUrl__c = url;
             application.OrgIdConfigured__c = UserInfo.getOrganizationId().substring(3, 15);
             application.OrgReturnUrl__c = ApexPages.currentPage().getParameters().get('retURL');
             Type.forName(DoDml.class.getName()).newInstance();
@@ -526,11 +526,11 @@ public with sharing class ConfigureController {
             return;
         }
         
-        String instanceUrl = Application__c.getOrgDefaults().OrgInstanceUrl__c;
+        String baseUrl = Application__c.getOrgDefaults().OrgBaseUrl__c;
         HttpRequest request = new HttpRequest();
         request.setTimeout(120000);
         request.setMethod('POST');
-        request.setEndpoint(instanceUrl + '/services/Soap/m/35.0');
+        request.setEndpoint(baseUrl + '/services/Soap/m/35.0');
         request.setHeader('SOAPAction', '""');
         request.setHeader('Content-Type', 'text/xml');
         request.setBody(metadata(sessionId));

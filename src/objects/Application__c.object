@@ -56,7 +56,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>OrgInstanceUrl__c</fullName>
+        <fullName>OrgBaseUrl__c</fullName>
         <description>The protocol and host (https://eu2.salesforce.com) of the actual instance. We need to hang onto this because it cannot be part of the callback URL. While the OAuth response indeed contains this, we don&apos;t know it at the time of making the OAuth request.</description>
         <externalId>false</externalId>
         <inlineHelpText>What is the API protocol and host for this instance?</inlineHelpText>

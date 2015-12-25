@@ -11,7 +11,7 @@
     static testmethod void testRefreshAccessTokenMissingRemoteSiteSetting() {
         //arrange custom setting
         Application__c application = Application__c.getOrgDefaults();
-        application.OrgInstanceUrl__c = 'https://herp.derp'; //not allowed
+        application.OrgBaseUrl__c = 'https://herp.derp'; //not allowed
         upsert application;
         
         //arrange schedule
@@ -131,7 +131,7 @@
         System.assertEquals(expectedUrl, actualUrl, 'Wrong redirect.');
         
         String expectedBase = Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:'); //#1188
-        String actualBase = Application__c.getOrgDefaults().OrgInstanceUrl__c;
+        String actualBase = Application__c.getOrgDefaults().OrgBaseUrl__c;
         System.assertEquals(expectedBase, actualBase, 'Wrong base.');
         
         String expectedUnprefixedOrgId = UserInfo.getOrganizationId().substring(3, 15);
