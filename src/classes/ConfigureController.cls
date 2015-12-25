@@ -370,7 +370,7 @@ public with sharing class ConfigureController {
             String url = parameters.get('url').substringBefore('/services/');
             application = Application__c.getOrgDefaults();
             application.OrgBaseUrl__c = url;
-            application.OrgIdConfigured__c = UserInfo.getOrganizationId().substring(3, 15);
+            application.OrgConfigured__c = UserInfo.getOrganizationId().substring(3, 15);
             application.OrgReturnUrl__c = ApexPages.currentPage().getParameters().get('retURL');
             Type.forName(DoDml.class.getName()).newInstance();
             
@@ -573,7 +573,7 @@ public with sharing class ConfigureController {
     static public PageReference ConfigureIfNeeded(PageReference retURL) {
         
         String sessionId = Application__c.getOrgDefaults().RunAsAccessToken__c;
-        String configuredOrgId = Application__c.getOrgDefaults().OrgIdConfigured__c;
+        String configuredOrgId = Application__c.getOrgDefaults().OrgConfigured__c;
         String unprefixedOrgId = UserInfo.getOrganizationId().substring(3, 15);
         
         if (null == sessionId) {

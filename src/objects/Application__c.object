@@ -44,7 +44,7 @@
         <type>DateTime</type>
     </fields>
     <fields>
-        <fullName>OrgIdConfigured__c</fullName>
+        <fullName>OrgConfigured__c</fullName>
         <description>Without the 00D Key Prefix, so that the value does not get magically replaced when refreshing sandboxes etc.</description>
         <externalId>false</externalId>
         <inlineHelpText>What was the unprefixed Organization Id at configuration time?</inlineHelpText>

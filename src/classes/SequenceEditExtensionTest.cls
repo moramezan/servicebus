@@ -403,7 +403,7 @@
         //act (pretend to configure)
         Application__c application = Application__c.getOrgDefaults();
         application.RunAsAccessToken__c = '00D000000000000AAA';
-        application.OrgIdConfigured__c = UserInfo.getOrganizationId().substring(3, 15);
+        application.OrgConfigured__c = UserInfo.getOrganizationId().substring(3, 15);
         upsert application;
         
         //act (pretend to discover)

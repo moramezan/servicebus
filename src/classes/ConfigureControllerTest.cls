@@ -135,7 +135,7 @@
         System.assertEquals(expectedBase, actualBase, 'Wrong base.');
         
         String expectedUnprefixedOrgId = UserInfo.getOrganizationId().substring(3, 15);
-        String actualUnprefixedOrgId = Application__c.getOrgDefaults().OrgIdConfigured__c;
+        String actualUnprefixedOrgId = Application__c.getOrgDefaults().OrgConfigured__c;
         System.assertEquals(expectedUnprefixedOrgId, actualUnprefixedOrgId, 'Wrong id.');
         
         String expectedReturnUrl = '/herp/derp';
@@ -305,7 +305,7 @@
         //act (pretend to configure)
         Application__c application = Application__c.getOrgDefaults();
         application.RunAsAccessToken__c = '00D000000000000AAA';
-        application.OrgIdConfigured__c = UserInfo.getOrganizationId().substring(3, 15);
+        application.OrgConfigured__c = UserInfo.getOrganizationId().substring(3, 15);
         upsert application;
         
         //act
