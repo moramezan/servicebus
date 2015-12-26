@@ -51,7 +51,7 @@
     <actionOverrides>
         <actionName>View</actionName>
         <comment>Container for Sencha drag and drop steps</comment>
-        <content>SequenceEdit</content>
+        <content>SequenceView</content>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Visualforce</type>
     </actionOverrides>

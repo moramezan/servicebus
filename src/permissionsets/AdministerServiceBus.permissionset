@@ -525,6 +525,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>SequenceView</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>StepConfig</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
