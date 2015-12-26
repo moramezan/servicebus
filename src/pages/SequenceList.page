@@ -14,7 +14,7 @@
     
     <apex:sectionHeader title="Sequences" description="A Sequence is an arrangement of processing tasks called steps." help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashSequence'])}" />
     
-    <apex:pageMessage severity="Info" summary="You can checkout, discard, or commit the draft system version when preparing changes to your sequences." detail="Existing messages will respect the existing version. New messages will flow through the live system version." strength="2">
+    <apex:pageMessage severity="Info" summary="Versioning allows you to snapshot all sequences." detail="After committing a new version, choose it below." strength="2">
     <!--<apex:pageBlock mode="maindetail">-->
         <!--<apex:pageBlockSection columns="2">-->
             
