@@ -64,19 +64,6 @@
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
     <fields>
-        <fullName>NumberOfAttempts__c</fullName>
-        <description>Used for #1124 manual retry.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>How many times has a service attempted to handle this message?</inlineHelpText>
-        <label>Attempts</label>
-        <precision>5</precision>
-        <required>false</required>
-        <scale>0</scale>
-        <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Cause__c</fullName>
         <description>The stack trace surfaced to the end user is actually the complete stack trace minus the stack trace related to the abstract service and broker.</description>
         <externalId>false</externalId>
@@ -159,6 +146,19 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>NumberOfAttempts__c</fullName>
+        <description>Used for #1124 manual retry.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>How many times has a service attempted to handle this message?</inlineHelpText>
+        <label>Attempts</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
         <unique>false</unique>
     </fields>
     <fields>

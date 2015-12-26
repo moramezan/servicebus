@@ -22,6 +22,16 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>BrokerLastTimestamp__c</fullName>
+        <description>A timestamp representing the last time that a heartbeat message was successfully enqueued to the broker</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What was the last heartbeat timestamp generated?</inlineHelpText>
+        <label>Broker Last Heartbeat Timestamp</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
         <fullName>BrokerVersion__c</fullName>
         <defaultValue>1</defaultValue>
         <externalId>false</externalId>
@@ -34,14 +44,14 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>BrokerLastTimestamp__c</fullName>
-        <description>A timestamp representing the last time that a heartbeat message was successfully enqueued to the broker</description>
+        <fullName>OrgBaseUrl__c</fullName>
+        <description>The protocol and host (https://eu2.salesforce.com) of the actual instance. We need to hang onto this because it cannot be part of the callback URL. While the OAuth response indeed contains this, we don&apos;t know it at the time of making the OAuth request.</description>
         <externalId>false</externalId>
-        <inlineHelpText>What was the last heartbeat timestamp generated?</inlineHelpText>
-        <label>Broker Last Heartbeat Timestamp</label>
+        <inlineHelpText>What is the API protocol and host for this instance?</inlineHelpText>
+        <label>Org Instance URL</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>DateTime</type>
+        <type>Url</type>
     </fields>
     <fields>
         <fullName>OrgConfigured__c</fullName>
@@ -56,7 +66,19 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>OrgBaseUrl__c</fullName>
+        <fullName>OrgIdConfigured__c</fullName>
+        <description>Without the 00D Key Prefix, so that the value does not get magically replaced when refreshing sandboxes etc.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What was the unprefixed Organization Id at configuration time?</inlineHelpText>
+        <label>Org Id Configured</label>
+        <length>12</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>OrgInstanceUrl__c</fullName>
         <description>The protocol and host (https://eu2.salesforce.com) of the actual instance. We need to hang onto this because it cannot be part of the callback URL. While the OAuth response indeed contains this, we don&apos;t know it at the time of making the OAuth request.</description>
         <externalId>false</externalId>
         <inlineHelpText>What is the API protocol and host for this instance?</inlineHelpText>
