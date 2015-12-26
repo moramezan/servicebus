@@ -16,7 +16,7 @@
     
     <apex:form rendered="{!ISNULL(Messages)}">
 
-        <apex:sectionHeader help="{!URLFOR($Page.SequenceHelp)}" title="Version {!DraftVersion} (Draft)" subtitle="New Sequence" />
+        <apex:sectionHeader title="Version {!DraftVersion} (Draft)" subtitle="New Sequence" description="Consider the name carefully. Sequences cannot be renamed." help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashSequence'])}" />
     
         <apex:pageBlock title="Sequence Edit" mode="edit">
             <apex:pageBlockSection title="Information" columns="1">
