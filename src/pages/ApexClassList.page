@@ -16,7 +16,7 @@
     
     <apex:stylesheet value="{!URLFOR($Resource.SequenceEditZip, '/resources/Builder-all.css')}" />
     
-    <apex:sectionHeader title="Services" description="A Service is a single, logical program with inputs and outputs in the form of events. Services are implemented as Apex classes." help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashApexClass'])}" />
+    <apex:sectionHeader title="Services" description="A Service is a single, logical apex class with inputs and outputs in the form of events. Services are configured to run as: {!LINKTO(RunAsUser.Name, '/' + RunAsUser.Id, null, ["noredirect"="1"])}" help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashApexClass'])}" />
     
     <apex:pageBlock mode="detail">
         <apex:pageBlockTable value="{!id2summary}" var="id">
