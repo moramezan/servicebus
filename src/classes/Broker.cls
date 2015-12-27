@@ -212,6 +212,7 @@ abstract public without sharing class Broker {
                 //MORE
                 IsRestart = true;
                 if (![SELECT Id FROM Message__c WHERE Status__c = 'Buffered' LIMIT 1].isEmpty()) this.run();
+                System.abortJob(context.getJobId()); //jobs always in aborted status
                 
             } catch (Exception e) {
                 

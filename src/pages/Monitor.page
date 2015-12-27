@@ -22,30 +22,7 @@
     <label for="realtime" title="Redraw every second for 60 seconds">Realtime</label>
     
     <!-- #803 -->
-    <img id="isBrokerRunning" src="{!URLFOR('/img/loading.gif')}" style="display:none;position:relative;top:4px;left:8px;" title="Broker is running" />
-    <img id="hasQueueableJobs" src="{!URLFOR('/img/apex/processing.gif')}" style="display:none;position:relative;top:4px;left:16px;" title="Jobs are pending" />
-    
-    <script>
-        (function() {
-            function drawJobs() {
-                Visualforce.remoting.Manager.invokeAction(
-                    '{!$RemoteAction.MonitorController.fetchJobs}',
-                    function(data) {
-                        var isBrokerRunning = data[0];
-                        var hasQueueableJobs = data[1];
-                        document.getElementById('isBrokerRunning').style.display = isBrokerRunning ? 'inline' : 'none';
-                        document.getElementById('hasQueueableJobs').style.display = isBrokerRunning ? 'inline' : 'none';
-                    }
-                );
-            }
-            
-            //background count every 5 seconds
-            setInterval(drawJobs, 5000);
-            
-            //start off once
-            drawJobs();
-        }());
-    </script>
+    <img id="JobStatus" src="{!URLFOR('/s.gif')}" style="position:relative;top:4px;left:8px;" title="Broker is running" />
     
     <apex:chart data="{!null}" width="100%" height="500" name="Stats">
         <apex:legend position="right" />
@@ -56,12 +33,12 @@
             <apex:chartLabel />
         </apex:axis>
         <apex:barSeries colorSet="#C00" orientation="vertical" axis="left" xField="Route" yField="Exceptions" title="Exception" />
-        <apex:areaSeries colorSet="#999,#3C3,#CC3,#33C"
+        <apex:areaSeries colorSet="#00F,#999,#3C3,#CC3,#33C"
             opacity="0.6"
             axis="left"
             xField="Route"
-            yField="Paused,Buffered,Started"
-            title="Paused,Buffered,Started"
+            yField="Queued,Paused,Buffered,Started"
+            title="Queued,Paused,Buffered,Started"
         />
     </apex:chart>
     
@@ -77,6 +54,28 @@
                 function(data) {
                     {!JSENCODE($Setup.Application__c.PrefixDot__c)}Stats.reload(data); //#782 stored xss
                     setTimeout(redrawStatistics, 1000);
+                    
+                    var jobs = data[0].Jobs;
+                    var jobStatus = document.getElementById('JobStatus');
+                    if (!jobs.length) {
+                        jobStatus.src = "{!URLFOR('/img/newStar.png')}";
+                        jobStatus.title = '';
+                    } else if (jobs[0].Status == 'Holding') {
+                        jobStatus.src = "{!URLFOR('/img/loading.gif')}";
+                        jobStatus.title = 'Holding';
+                    } else if (jobs[0].Status == 'Queued') {
+                        jobStatus.src = "{!URLFOR('/img/loading.gif')}";
+                        jobStatus.title = 'Queued';
+                    } else if (jobs[0].Status == 'Preparing') {
+                        jobStatus.src = "{!URLFOR('/img/loading.gif')}";
+                        jobStatus.title = 'Preparing';
+                    } else if (jobs[0].Status == 'Processing') {
+                        jobStatus.src = "{!URLFOR('/img/loading.gif')}";
+                        jobStatus.title = 'Processing';
+                    } else if (jobs[0].Status == 'Aborted') {
+                        jobStatus.src = "{!URLFOR('/s.gif')}";
+                        jobStatus.title = 'All messages processed';
+                    }
                 }
             );
         }());

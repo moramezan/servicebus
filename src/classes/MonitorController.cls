@@ -1,24 +1,5 @@
 public with sharing class MonitorController {
     
-    @ReadOnly @RemoteAction static public List<Boolean> fetchJobs() {
-        Boolean hasQueueableJobs = [
-            SELECT Id
-            FROM AsyncApexJob
-            WHERE ApexClass.NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
-            AND ApexClass.Name = 'Job'
-            AND JobType IN ('Future', 'Queueable') //#890
-            AND Status IN ('Queued', 'Processing', 'Preparing')
-            LIMIT 1
-        ].isEmpty();
-        
-        Boolean isBrokerRunning = Enqueue.isScheduled() || Enqueue.isRunning();
-        
-        return new List<Boolean>{
-            isBrokerRunning, //red twirly
-            hasQueueableJobs //grey twirly
-        };
-    }
-    
     public class Statistic {
         public Statistic(String route, Integer paused, Integer buffered, Integer started, Integer exceptions) {
             this.Route = route;
@@ -26,6 +7,9 @@ public with sharing class MonitorController {
             this.Buffered = buffered;
             this.Started = started;
             this.Exceptions = exceptions;
+            
+            this.Queued = 0;
+            this.Jobs = null;
         }
         
         public String Route {get; set;}
@@ -33,6 +17,9 @@ public with sharing class MonitorController {
         public Integer Buffered {get; set;}
         public Integer Started {get; set;}
         public Integer Exceptions {get; set;}
+        
+        public Integer Queued {get; set;}
+        public List<AsyncApexJob> Jobs {get; set;}
     }
     
     @ReadOnly @RemoteAction static public List<Statistic> fetchTestStatistics() {
@@ -111,6 +98,29 @@ public with sharing class MonitorController {
             if (statistic == null) statistic = route2statistic.get(null);
             statistic.Exceptions += (Integer)result.get('total');
         }
+        
+        //fake blue messages representing queueable jobs
+        for (AggregateResult result : [
+            SELECT COUNT(Id) total
+            FROM AsyncApexJob
+            WHERE ApexClass.NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
+            AND ApexClass.Name = 'Job'
+            AND JobType = 'Queueable' //#890
+            AND Status IN ('Queued', 'Processing', 'Preparing')
+        ]) {
+            Statistic statistic = route2statistic.get(null);
+            statistic.Queued += (Integer)result.get('total');
+        }
+        
+        //glorified twirly representing broker batch
+        Statistic statistic = route2statistic.get(null);
+        statistic.Jobs = ApexDomain.get([
+            SELECT Id
+            FROM AsyncApexJob
+            WHERE ApexClass.NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c AND ApexClass.Name = 'BrokerBatch'
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ]);
         
         //pluck out the buffered guys (null per #697)
         Statistic none = route2statistic.remove(null);
