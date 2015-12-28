@@ -348,6 +348,13 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         update messages; //touch
     }
     
+    override public void onAfterUndelete() {
+        for (Message__c message : this.Messages) {
+            //#1185 inhibit undelete
+            message.addError('Messages cannot be undeleted. Inhibit the delete instead.');
+        }
+    }
+    
     override public void onBeforeUpdate(List<SObject> oldObjects) {
         this.alphabetizeJsonAndPopulateFields();
         this.swallowToString();
