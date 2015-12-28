@@ -32,20 +32,25 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         //held up in database.stateful can't be killed. if
         //someone aborts the batch job, yep they stuck forever
         List<Message__c> killableMessages = [
-            SELECT Id
+            SELECT Id, Status__c
             FROM Message__c
             WHERE Id IN :attemptedIds
-            AND Status__c = 'Started'
-            AND Exception__c != null
+            AND (Status__c = 'Paused' OR Exception__c != null)
             FOR UPDATE
         ];
         
         if (killableMessages.isEmpty()) {
             //maybe selected messages were not killable...
-            throw new ModelException('Only messages with an Exception can be killed.');
+            throw new ModelException('Only Paused or Exception messages can be killed.');
         }
         
         for (Message__c killableMessage : killableMessages) {
+            
+            if (killableMessage.Status__c == 'Paused') {
+                //#1191 paused messages are killable
+                killableMessage.Exception__c = 'Killed by ' + UserInfo.getName();
+            }
+            
             //per #825 and #827 we do NOT clear cause/exception
             killableMessage.Status__c = 'Completed';
         }

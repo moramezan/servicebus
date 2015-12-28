@@ -174,7 +174,7 @@
     static testmethod void testKillComplainsAboutUnkillableMessages() {
         //arrange messages
         Message__c message = new Message__c(
-            Status__c = 'Paused',
+            Status__c = 'Started',
             Event__c = '{}'
         );
         insert message;
@@ -184,7 +184,7 @@
             new MessageSetModel(new List<Message__c>{message}).kill();
             System.assert(false, 'Above should throw exception.');
         } catch (MessageSetModel.ModelException e) {
-            String expectedMessage = 'Only messages with an Exception can be killed.';
+            String expectedMessage = 'Only Paused or Exception messages can be killed.';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }
@@ -318,6 +318,19 @@
         //assert
         Integer expectedCount = 1;
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        System.assertEquals(expectedCount, actualCount, 'Wrong count.');
+    }
+    
+    static testmethod void testPausedMessagesCanBeKilled() {
+        //arrange messages
+        insert new Message__c(Status__c = 'Paused', Exception__c = null);
+        
+        //act
+        new MessageSetModel([SELECT Id FROM Message__c]).kill();
+        
+        //assert
+        Integer expectedCount = 1;
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed' AND Exception__c LIKE 'Killed by%'];
         System.assertEquals(expectedCount, actualCount, 'Wrong count.');
     }
 }
