@@ -217,8 +217,8 @@ global class Enqueue implements Process.Plugin {
             }
             
             try {
-                //#989 optimize already correct running user context
-                if (!Test.isRunningTest()) if (isRunAsUser()) this.run(); else this.runAsUser();
+                //#989 optimize already correct running user context (per #1215 only start if not paused)
+                if (!Test.isRunningTest() && !Application__c.getOrgDefaults().BrokerIsPaused__c) if (isRunAsUser()) this.run(); else this.runAsUser();
                 
             } catch (Exception e) {
                 //#1188 messages must be inserted even if the tooling callout fails!

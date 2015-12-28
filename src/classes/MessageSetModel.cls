@@ -92,7 +92,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         
         //#952 restart REAL broker asynchronously
         System.Queueable job = new Job();
-        System.enqueueJob(job);
+        if (!Application__c.getOrgDefaults().BrokerIsPaused__c) System.enqueueJob(job); //#1215 only start if not paused
     }
     
     /**
