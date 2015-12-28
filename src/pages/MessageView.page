@@ -69,7 +69,7 @@
                 </apex:pageBlockSectionItem>
                 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$ObjectType.Message__c.Fields.ParentId__c.Label}" />
+                    <apex:outputLabel value="Previous Step" />
                     <apex:outputLink value="{!URLFOR($Page.MessageView, null, ['mid'=Message.ParentId__c])}">{!Message.ParentId__c}</apex:outputLink>
                 </apex:pageBlockSectionItem>
                 
@@ -77,7 +77,7 @@
             
         </apex:pageBlock>
 
-        <apex:pageBlock mode="detail" title="Children">
+        <apex:pageBlock mode="detail" title="Next Step">
             <apex:pageBlockTable rendered="{!Children.Empty}" value="{!Children}" var="child" captionClass="left">
                 <apex:facet name="caption">
                     No records to display
