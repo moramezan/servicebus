@@ -1,4 +1,4 @@
-<apex:page setup="true" tabStyle="Message__c" standardController="Message__c" recordSetVar="msgs">
+<apex:page setup="true" tabStyle="Message__c" standardController="Message__c" recordSetVar="msgs" extensions="MessageListExtension">
     
     <script>
         (function() {
@@ -16,5 +16,55 @@
     
     <apex:pageMessage rendered="{!$Setup.Application__c.BrokerIsPaused__c}" severity="Warning" summary="The Service Bus is paused. New messages will be stored but not processed." detail="Click Resume to unpause the Service Bus and process the stored messages." strength="2" />
     
-    <apex:enhancedList type="Message__c" height="600" />
+    <apex:enhancedList oncomplete="vp = this;if (this.filter.name == 'Completed') {vp.subNav.style.display = 'none'; vp.listBody.style.display = 'none'; vp.bottomNav.style.display = 'none'; document.getElementById('{!$Component.completed}').style.display = 'block';} else {vp.subNav.style.display = 'block'; vp.listBody.style.display = 'block'; vp.bottomNav.style.display = 'block'; document.getElementById('{!$Component.completed}').style.display = 'none';}" id="enhancedList" reRender="thePanel" type="Message__c" height="600" />
+    
+    <style>
+        td.pbTitle {display: none;}
+    </style>
+    
+    <apex:form id="completed" style="display:none;">
+        <apex:pageBlock mode="detail">
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="Pause Queue" action="{!URLFOR($Page.MessagePauseQueue)}" />
+                <apex:commandButton value="Resume Queue" action="{!URLFOR($Page.MessageResumeQueue)}" />
+            </apex:pageBlockButtons>
+            
+            <apex:pageBlockTable value="{!MessageSetController.Records}" var="message" id="pageBlockTable">
+                
+                <apex:column headerValue="{!$ObjectType.Message__c.Fields.Name.Label}">
+                    <apex:outputLink value="{!URLFOR($Page.MessageView, null, ['mid'=message.Id])}">{!message['Name']}</apex:outputLink>
+                </apex:column>
+
+                <apex:column headerValue="{!$ObjectType.Message__c.Fields.CreatedDate.Label}">
+                    <apex:outputField value="{!message['CreatedDate']}" />
+                </apex:column>
+
+                <apex:column headerValue="{!$ObjectType.Message__c.Fields.Status__c.Label}">
+                    <apex:outputField value="{!message['Status__c']}" />
+                </apex:column>
+
+                <apex:column headerValue="{!$ObjectType.Message__c.Fields.Route__c.Label}">
+                    <apex:outputField value="{!message['Route__c']}" />
+                </apex:column>
+
+                <apex:column headerValue="{!$ObjectType.Message__c.Fields.ExecuteDuration__c.Label}">
+                    <apex:outputField value="{!message['ExecuteDuration__c']}" />
+                </apex:column>
+
+                <apex:column headerValue="{!$ObjectType.Message__c.Fields.Exception__c.Label}">
+                    <apex:outputField value="{!message['Exception__c']}" />
+                </apex:column>
+
+            </apex:pageBlockTable>
+            
+            <center>
+                <span class="prevNextLinks">
+                    &nbsp;<apex:commandLink reRender="pageBlockTable" action="{!MessageSetController.First}"><span class="prevNext"><img src="/s.gif" class="firstoff" alt="First Page" style="width: 9px; height: 10px; background: url({!URLFOR('/img/paginationArrows.gif')}) 0 0;" /></span></apex:commandLink>
+                    &nbsp;<apex:commandLink reRender="pageBlockTable" action="{!MessageSetController.Previous}" style="text-decoration: none;"><span class="prevNext"><img src="/s.gif" class="prevoff" alt="Previous" style="width: 9px; height: 10px; background: url({!URLFOR('/img/paginationArrows.gif')}) -10px 0;" />Previous</span></apex:commandLink>
+                    &nbsp;<apex:commandLink reRender="pageBlockTable" action="{!MessageSetController.Next}" style="text-decoration: none;"><span class="prevNext">Next<img src="/s.gif" class="nextoff" alt="Next" style="width: 9px; height: 10px; background: url({!URLFOR('/img/paginationArrows.gif')}) -17px 0;" /></span></apex:commandLink>
+                    &nbsp;<apex:commandLink reRender="pageBlockTable" action="{!MessageSetController.Last}"><span class="prevNext"><img src="/s.gif" class="lastoff" alt="Last Page" style="width: 9px; height: 10px; background: url({!URLFOR('/img/paginationArrows.gif')}) -27px 0" /></span></apex:commandLink>
+                </span>
+            </center>
+        </apex:pageBlock>
+    </apex:form>
 </apex:page>
