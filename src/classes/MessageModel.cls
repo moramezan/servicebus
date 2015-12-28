@@ -210,7 +210,7 @@ public class MessageModel extends ApexDomain.StandardModel {
                 outputMessages.add(new Message__c(
                     Event__c = Json.serializePretty(outputEvent),
                     Status__c = 'Buffered',
-                    Parent__c = this.getId()
+                    ParentId__c = this.getId()
                 ));
             }
             

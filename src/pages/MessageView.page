@@ -69,8 +69,8 @@
                 </apex:pageBlockSectionItem>
                 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$ObjectType.Message__c.Fields.Parent__c.Label}" />
-                    <apex:outputLink value="{!URLFOR($Page.MessageView, null, ['mid'=Message.Parent__c])}">{!Message.Parent__r.Name}</apex:outputLink>
+                    <apex:outputLabel value="{!$ObjectType.Message__c.Fields.ParentId__c.Label}" />
+                    <apex:outputLink value="{!URLFOR($Page.MessageView, null, ['mid'=Message.ParentId__c])}">{!Message.ParentId__c}</apex:outputLink>
                 </apex:pageBlockSectionItem>
                 
             </apex:pageBlockSection>
@@ -80,7 +80,7 @@
         <apex:pageBlock mode="detail" title="Children">
             <apex:pageBlockTable rendered="{!Children.Empty}" value="{!Children}" var="child" captionClass="left">
                 <apex:facet name="caption">
-                	No records to display
+                    No records to display
                 </apex:facet>
             </apex:pageBlockTable>
             
@@ -120,7 +120,7 @@
     <style>
         .pre {white-space: pre-wrap; font-family: monospace;}
         .left {text-align: left;}
-    	.right {text-align: right;}
+        .right {text-align: right;}
     </style>
     
 </apex:page>

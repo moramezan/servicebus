@@ -162,18 +162,16 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Parent__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
-        <description>Points to the parent message that spawned this one. Genesis messages have no parents. Terminates have no children.</description>
-        <externalId>false</externalId>
+        <fullName>ParentId__c</fullName>
+        <description>Points to the parent message that spawned this one. Genesis messages have no parents. Terminates have no children. Is text field because lookups are cleared on delete.</description>
+        <externalId>true</externalId>
         <inlineHelpText>From which message was this one spawned?</inlineHelpText>
         <label>Parent</label>
-        <referenceTo>Message__c</referenceTo>
-        <relationshipLabel>Children</relationshipLabel>
-        <relationshipName>Children</relationshipName>
+        <length>18</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>Lookup</type>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Route__c</fullName>

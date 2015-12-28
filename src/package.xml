@@ -160,7 +160,7 @@
         <members>Message__c.IsAutoRetryable__c</members>
         <members>Message__c.JobId__c</members>
         <members>Message__c.NumberOfAttempts__c</members>
-        <members>Message__c.Parent__c</members>
+        <members>Message__c.ParentId__c</members>
         <members>Message__c.Route__c</members>
         <members>Message__c.Slot__c</members>
         <members>Message__c.Status__c</members>

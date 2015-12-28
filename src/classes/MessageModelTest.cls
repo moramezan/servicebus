@@ -324,7 +324,7 @@
         
         //assert
         Id expectedParentId = message.Id;
-        Id actualParentId = outputMessages[0].Parent__c;
+        Id actualParentId = outputMessages[0].ParentId__c;
         System.assertEquals(expectedParentId, actualParentId, 'Wrong parent id.');
     }
     

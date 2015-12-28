@@ -21,7 +21,7 @@ public with sharing class MessageViewExtension {
         String mid = ApexPages.currentPage().getParameters().get('mid');
         
         this.Message = [
-            SELECT Id, Name, CreatedDate, Status__c, Route__c, ExecuteDuration__c, Exception__c, Cause__c, Event__c, JobId__c, Parent__c, Parent__r.Name
+            SELECT Id, Name, CreatedDate, Status__c, Route__c, ExecuteDuration__c, Exception__c, Cause__c, Event__c, JobId__c, ParentId__c
             FROM Message__c
             WHERE Id = :mid
             ALL ROWS
@@ -30,7 +30,7 @@ public with sharing class MessageViewExtension {
         this.Children = [
             SELECT Id, Name, CreatedDate, Status__c, Route__c, ExecuteDuration__c, Exception__c
             FROM Message__c
-            WHERE Parent__c = :mid
+            WHERE ParentId__c = :mid
             ALL ROWS
         ];
         
