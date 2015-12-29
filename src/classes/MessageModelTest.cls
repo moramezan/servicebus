@@ -330,40 +330,34 @@
     
     static testmethod void testRoute() {
         //arrange
-        Map<String,Object> inputEvent;
-        MessageModel model;
-        Message__c message;
+        Map<String,Object> outputEvent;
         Object expectedParam;
         Object actualParam;
         
         //act
-        inputEvent = new Map<String,Object>{'ToSequence' => 'Test'};
-        message = new Message__c(Event__c = Json.serialize(inputEvent));
-        model = new MessageModel(message);
-        model.route();
+        outputEvent = new Map<String,Object>{'ToSequence' => 'Test'};
+        ApexClassModel.route(outputEvent);
         
         //assert
         expectedParam = '1#Test#1';
-        actualParam = model.getParam('Route');
+        actualParam = outputEvent.get('Route');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         expectedParam = 'Test';
-        actualParam = model.getParam('servicebus:ToSequence');
+        actualParam = outputEvent.get('servicebus:ToSequence');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         //act
-        inputEvent = new Map<String,Object>{'ToService' => 'WiretapService'};
-        message = new Message__c(Event__c = Json.serialize(inputEvent));
-        model = new MessageModel(message);
-        model.route();
+        outputEvent = new Map<String,Object>{'ToService' => 'WiretapService'};
+        ApexClassModel.route(outputEvent);
         
         //assert
         expectedParam = 'WiretapService';
-        actualParam = model.getParam('Route');
+        actualParam = outputEvent.get('Route');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         expectedParam = 'WiretapService';
-        actualParam = model.getParam('servicebus:ToService');
+        actualParam = outputEvent.get('servicebus:ToService');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         //arrange
@@ -374,59 +368,55 @@
         insert step;
         
         //act
-        inputEvent = new Map<String,Object>{'ToConfigIds' => new Set<Id>{document.Id}};
-        message = new Message__c(Event__c = Json.serialize(inputEvent));
-        model = new MessageModel(message);
-        model.route();
+        outputEvent = new Map<String,Object>{'ToConfigIds' => new Set<Id>{document.Id}};
+        ApexClassModel.route(outputEvent);
         
         //assert
         expectedParam = '1#Test#1';
-        actualParam = model.getParam('Route');
+        actualParam = outputEvent.get('Route');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         expectedParam = new List<Object>{document.Id};
-        actualParam = model.getParam('servicebus:ToConfigIds');
+        actualParam = outputEvent.get('servicebus:ToConfigIds');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
     }
     
     static testmethod void testNormalRouteIncrements() {
         //arrange
-        Message__c message = new Message__c(Event__c = '{}');
-        MessageModel model = new MessageModel(message);
+        Map<String,Object> outputEvent = new Map<String,Object>();
         
         //act
-        model.setParam('Route', '1#Test#2');
-        model.route();
+        outputEvent.put('Route', '1#Test#2');
+        ApexClassModel.route(outputEvent);
         
         //assert
         String expectedRoute = '1#Test#3';
-        String actualRoute = (String)model.getParam('Route');
+        String actualRoute = (String)outputEvent.get('Route');
         System.assertEquals(expectedRoute, actualRoute, 'Wrong route.');
         
     }
     
     static testmethod void testHelperRouteOverwrites() {
         //arrange
-        Message__c message = new Message__c(Event__c = '{}');
-        MessageModel model = new MessageModel(message);
+        Map<String,Object> outputEvent = new Map<String,Object>();
         
         //act (for sequence)
-        model.setParam('Route', 'Incorrect');
-        model.setParam('ToSequence', 'Test');
-        model.route();
+        outputEvent.put('Route', 'Incorrect');
+        outputEvent.put('ToSequence', 'Test');
+        ApexClassModel.route(outputEvent);
         
         //assert
         String expectedRoute = '1#Test#1';
-        String actualRoute = (String)model.getParam('Route');
+        String actualRoute = (String)outputEvent.get('Route');
         System.assertEquals(expectedRoute, actualRoute, 'Wrong route.');
         
         //act (for service)
-        model.setParam('Route', 'Incorrect');
-        model.setParam('ToService', 'TerminateService');
-        model.route();
+        outputEvent.put('Route', 'Incorrect');
+        outputEvent.put('ToService', 'TerminateService');
+        ApexClassModel.route(outputEvent);
         
         expectedRoute = 'TerminateService';
-        actualRoute = (String)model.getParam('Route');
+        actualRoute = (String)outputEvent.get('Route');
         System.assertEquals(expectedRoute, actualRoute, 'Wrong route.');
         
         //act (for config);
@@ -434,12 +424,12 @@
         application.BrokerVersion__c = 2;
         upsert application;
         insert new Step__c(Name = '2#Test#1', Version__c = 2, Sequence__c = 'Test', Position__c = 1, ConfigId__c = '00D000000000000');
-        model.setParam('Route', 'Incorrect');
-        model.setParam('ToConfigIds', new Set<Id>{'00D000000000000'});
-        model.route();
+        outputEvent.put('Route', 'Incorrect');
+        outputEvent.put('ToConfigIds', new Set<Id>{'00D000000000000'});
+        ApexClassModel.route(outputEvent);
         
         expectedRoute = '2#Test#1';
-        actualRoute = (String)model.getParam('Route');
+        actualRoute = (String)outputEvent.get('Route');
         System.assertEquals(expectedRoute, actualRoute, 'Wrong route.');
     }
     
@@ -450,16 +440,15 @@
         upsert application;
         
         //arrange
-        Message__c message = new Message__c(Event__c = '{}');
-        MessageModel model = new MessageModel(message);
+        Map<String,Object> outputEvent = new Map<String,Object>();
         
         //act
-        model.setParam('ToSequence', 'Test');
-        model.route();
+        outputEvent.put('ToSequence', 'Test');
+        ApexClassModel.route(outputEvent);
         
         //assert
         String expectedRoute = '9#Test#1';
-        String actualRoute = (String)model.getParam('Route');
+        String actualRoute = (String)outputEvent.get('Route');
         System.assertEquals(expectedRoute, actualRoute, 'Wrong route.');
     }
     

@@ -294,7 +294,9 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             
             //#1147 routing
             try {
-                model.route();
+                Map<String,Object> outputEvent = model.getEvent();
+                ApexClassModel.route(outputEvent);
+                model.setEvent(outputEvent);
             } catch (Exception e) {
                 if (Test.isRunningTest()) throw e;
             }

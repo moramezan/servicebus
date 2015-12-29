@@ -18,11 +18,7 @@ public class SubsequenceService extends ApexClassModel.Service {
     public void traverse(Map<String,Object> inputEvent) {
         
         //#1147 no Message__c or persist() here! manually route any outputs to next step
-        String route = (String)inputEvent.get('Route');
-        String sequence = route.substringAfter('#').substringBefore('#');
-        Integer version = Integer.valueOf(route.substringBefore('#'));
-        Integer position = Integer.valueOf(route.substringAfterLast('#'));
-        inputEvent.put('Route', version + '#' + sequence + '#' + (position + 1));
+        ApexClassModel.route(inputEvent);
         ApexClassModel model = ApexClassModel.fromRoute((String)inputEvent.get('Route'));
         
         //invoke callouts (this WILL explode, by design)
