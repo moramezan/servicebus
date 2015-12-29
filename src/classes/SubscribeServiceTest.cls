@@ -5,7 +5,7 @@
         ApexClassModel.Summary summary = new ApexClassModel.Summary(SubscribeService.class);
         
         //assert
-        Integer expectedChunks = 200;
+        Integer expectedChunks = 100;
         Integer actualChunks = summary.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }

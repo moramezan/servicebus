@@ -167,16 +167,29 @@
             'StepConfigId' => configId
         };
         
+        Savepoint savepoint;
+        
         try {
+            
+            savepoint = Database.setSavepoint();
+            
             //act
             ApexClassModel.Service service = new SubsequenceService();
             service.handle(inputEvent);
             System.assert(false, 'Line above should throw exception.');
+            
         } catch (MathException e) {
+            
+            Database.rollback(savepoint);
+            
             //assert
             String expectedMessage = 'Divide by 0';
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
+            
+            Integer expectedSize = 0;
+            Integer actualSize = [SELECT COUNT() FROM Document WHERE Name = 'Test'];
+            System.assertEquals(expectedSize, actualSize, 'Wrong size.');
         }
     }
     

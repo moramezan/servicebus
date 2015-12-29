@@ -45,25 +45,15 @@ public class SubsequenceService extends ApexClassModel.Service {
         List<SubsequenceStepConfig__c> subsequenceStepConfigs = SubsequenceStepConfig__c.getAll().values(); //fetch without using soql
         for (SubsequenceStepConfig__c subsequenceStepConfig : subsequenceStepConfigs) if (subsequenceStepConfig.Id == stepConfigId) config = subsequenceStepConfig;
         
-        //sorry, no callouts in subsequences
-        Savepoint savepoint = Database.setSavepoint();
+        //#1147 no persist happening here, gotta do our own routing!
+        String route = (String)inputEvent.get('Route');
+        Integer version = Integer.valueOf(route.substringBefore('#'));
+        Integer position = 0;
         
-        try {
-            //#1147 no persist happening here, gotta do our own routing!
-            String route = (String)inputEvent.get('Route');
-            Integer version = Integer.valueOf(route.substringBefore('#'));
-            Integer position = 0;
-            
-            //he has inputs but no outputs
-            Map<String,Object> clone = inputEvent.clone();
-            clone.put('Route', version + '#' + config.Sequence__c + '#' + position);
-            this.traverse(clone);
-            
-        } catch (Exception e) {
-            //TODO catch "callouts not supported in subsequence, jump out and jump back"
-            Database.rollback(savepoint);
-            throw e;
-        }
+        //he has inputs but no outputs
+        Map<String,Object> clone = inputEvent.clone();
+        clone.put('Route', version + '#' + config.Sequence__c + '#' + position);
+        this.traverse(clone);
         
         return new List<Map<String,Object>>{inputEvent};
     }
