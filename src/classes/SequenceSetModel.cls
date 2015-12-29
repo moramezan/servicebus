@@ -298,6 +298,13 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         Database.emptyRecycleBin(sequences);
     }
     
+    override public void onAfterUndelete() {
+        for (Sequence__c sequence : this.Sequences) {
+            //#1185 inhibit undelete
+            sequence.addError('Sequence cannot be undeleted.');
+        }
+    }
+    
     /**
      * When deleting a SEQUENCE, we no longer have master-detail to delete the STEP,
      * so we cascade the delete ourselves manually, and take care of the configs too.
