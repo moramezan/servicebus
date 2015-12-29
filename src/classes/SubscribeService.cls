@@ -7,7 +7,7 @@ public class SubscribeService extends ApexClassModel.Service {
         String Description = 'Listens for named events published by other sequences.';
         String StepConfig = SubscribeStepConfig__c.class.getName();
         String Icon = 'eye';
-        Integer Chunks = 100; //could be higher but lets be reasonable
+        Integer Chunks = 200; //no soqls, no dmls
         String Cardinality = 'One';
     }
     

@@ -7,7 +7,7 @@ public class JumpService extends ApexClassModel.Service {
         String Description = 'Diverts the event to another sequence, never to return.';
         String StepConfig = JumpStepConfig__c.class.getName();
         String Icon = 'arrow_switch';
-        Integer Chunks = 50; //max sync limit
+        Integer Chunks = 200; //no soqls, no dmls
         String Cardinality = 'Zero';
     }
     
@@ -18,11 +18,9 @@ public class JumpService extends ApexClassModel.Service {
         Id stepConfigId = (Id)inputEvent.get('StepConfigId');
         if (stepConfigId == null) throw new ServiceException('Null step config id.');
         
-        JumpStepConfig__c config = [
-            SELECT Id, Sequence__c
-            FROM JumpStepConfig__c
-            WHERE Id = :stepConfigId
-        ];
+        JumpStepConfig__c config;
+        List<JumpStepConfig__c> jumpStepConfigs = JumpStepConfig__c.getAll().values(); //fetch without using soql
+        for (JumpStepConfig__c jumpStepConfig : jumpStepConfigs) if (jumpStepConfig.Id == stepConfigId) config = jumpStepConfig;
         
         String route = (String)inputEvent.get('Route');
         if (route == null) throw new ServiceException('Null route.');

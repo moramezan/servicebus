@@ -9,7 +9,7 @@ public class SubsequenceService extends ApexClassModel.Service {
         String Description = 'Synchronously executes another sequence before emitting the event.';
         String StepConfig = SubsequenceStepConfig__c.class.getName();
         String Icon = 'arrow_undo';
-        Integer Chunks = 1; //we dont know what they will do
+        Integer Chunks = 1; //we dont know what their subsequence contains
         String Cardinality = 'One';
     }
     
@@ -45,11 +45,9 @@ public class SubsequenceService extends ApexClassModel.Service {
         String stepConfigId = (Id)inputEvent.get('StepConfigId');
         if (stepConfigId == null) throw new ServiceException('Null step config id.');
         
-        SubsequenceStepConfig__c config = [
-            SELECT Id, Sequence__c
-            FROM SubsequenceStepConfig__c
-            WHERE Id = :stepConfigId
-        ];
+        SubsequenceStepConfig__c config;
+        List<SubsequenceStepConfig__c> subsequenceStepConfigs = SubsequenceStepConfig__c.getAll().values(); //fetch without using soql
+        for (SubsequenceStepConfig__c subsequenceStepConfig : subsequenceStepConfigs) if (subsequenceStepConfig.Id == stepConfigId) config = subsequenceStepConfig;
         
         //sorry, no callouts in subsequences
         Savepoint savepoint = Database.setSavepoint();

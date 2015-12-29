@@ -8,7 +8,7 @@ public class ScheduleService extends ApexClassModel.Service {
         String Icon = 'clock';
         String StepConfig = ScheduleStepConfig__c.class.getName();
         Boolean ConsumesHeartbeat = true;
-        Integer Chunks = 100; //could be higher but lets be reasonable
+        Integer Chunks = 200; //no soqls, no dmls
         Map<String,String> Inputs = new Map<String,String>{
             'EntryPointTimestamp' => 'DATETIME of the point in time this schedule was intended to run.'
         };
@@ -35,7 +35,9 @@ public class ScheduleService extends ApexClassModel.Service {
     
         if (wasHeartbeat == true) {
             
-            ScheduleStepConfig__c config = (ScheduleStepConfig__c)ApexDomain.getById(stepConfigId);
+            ScheduleStepConfig__c config;
+            List<ScheduleStepConfig__c> scheduleStepConfigs = ScheduleStepConfig__c.getAll().values(); //fetch without using soql
+            for (ScheduleStepConfig__c scheduleStepConfig : scheduleStepConfigs) if (scheduleStepConfig.Id == stepConfigId) config = scheduleStepConfig;
             
             if (config.IsActive__c != true) {
                 //just swallow if not active
@@ -63,96 +65,33 @@ public class ScheduleService extends ApexClassModel.Service {
             throw new ServiceException('Problem with getISO8601 or getStamp("' + stampAsString + '")', e);
         }
 
-        String frequency;
-        Set<String> details;
-        Set<String> runTimes;
-        try {
-            frequency = 'Daily'; //TODO
-            //frequency = config.Frequency__c;
-            
-            details = new Set<String>(); //TODO
-            //details = new Set<String>(config.FriendlyDates__c.split(';'));
-            
-            runTimes = new Set<String>(); //TODO
-            if (config.Is0000__c) runTimes.add('00:00');
-            if (config.Is0100__c) runTimes.add('01:00');
-            if (config.Is0200__c) runTimes.add('02:00');
-            if (config.Is0300__c) runTimes.add('03:00');
-            if (config.Is0400__c) runTimes.add('04:00');
-            if (config.Is0500__c) runTimes.add('05:00');
-            if (config.Is0600__c) runTimes.add('06:00');
-            if (config.Is0700__c) runTimes.add('07:00');
-            if (config.Is0800__c) runTimes.add('08:00');
-            if (config.Is0900__c) runTimes.add('09:00');
-            if (config.Is1000__c) runTimes.add('10:00');
-            if (config.Is1100__c) runTimes.add('11:00');
-            if (config.Is1200__c) runTimes.add('12:00');
-            if (config.Is1300__c) runTimes.add('13:00');
-            if (config.Is1400__c) runTimes.add('14:00');
-            if (config.Is1500__c) runTimes.add('15:00');
-            if (config.Is1600__c) runTimes.add('16:00');
-            if (config.Is1700__c) runTimes.add('17:00');
-            if (config.Is1800__c) runTimes.add('18:00');
-            if (config.Is1900__c) runTimes.add('19:00');
-            if (config.Is2000__c) runTimes.add('20:00');
-            if (config.Is2100__c) runTimes.add('21:00');
-            if (config.Is2200__c) runTimes.add('22:00');
-            if (config.Is2300__c) runTimes.add('23:00');
-            //runTimes = new Set<String>(config.FriendlyTimes__c.split(';'));
-        } catch (NullPointerException e) {
-            throw new ServiceException('Problem extracting times (' + config + ')');
-            //throw new ServiceException('Problem extracting frequency (' + config.Frequency__c + ') / dates (' + config.FriendlyDates__c + ') / times (' + config.FriendlyTimes__c + ')', e);
-        }
+        Set<String> runTimes = new Set<String>();
+        if (config.Is0000__c) runTimes.add('00:00');
+        if (config.Is0100__c) runTimes.add('01:00');
+        if (config.Is0200__c) runTimes.add('02:00');
+        if (config.Is0300__c) runTimes.add('03:00');
+        if (config.Is0400__c) runTimes.add('04:00');
+        if (config.Is0500__c) runTimes.add('05:00');
+        if (config.Is0600__c) runTimes.add('06:00');
+        if (config.Is0700__c) runTimes.add('07:00');
+        if (config.Is0800__c) runTimes.add('08:00');
+        if (config.Is0900__c) runTimes.add('09:00');
+        if (config.Is1000__c) runTimes.add('10:00');
+        if (config.Is1100__c) runTimes.add('11:00');
+        if (config.Is1200__c) runTimes.add('12:00');
+        if (config.Is1300__c) runTimes.add('13:00');
+        if (config.Is1400__c) runTimes.add('14:00');
+        if (config.Is1500__c) runTimes.add('15:00');
+        if (config.Is1600__c) runTimes.add('16:00');
+        if (config.Is1700__c) runTimes.add('17:00');
+        if (config.Is1800__c) runTimes.add('18:00');
+        if (config.Is1900__c) runTimes.add('19:00');
+        if (config.Is2000__c) runTimes.add('20:00');
+        if (config.Is2100__c) runTimes.add('21:00');
+        if (config.Is2200__c) runTimes.add('22:00');
+        if (config.Is2300__c) runTimes.add('23:00');
         
         return isTimeMatch(stampAsString, runTimes);
-        
-        /*if (!isTimeMatch(stampAsString, runTimes)) {
-            return false;
-        } else {
-            if (frequency == 'Daily') {
-               if (isWithinDailyWindow(stampAsDateTime, details)) {
-                    return true;
-                }
-            } else if (frequency == 'Weekly') {
-                if (isWithinWeeklyWindow(stampAsDateTime, details)) {
-                    return true;
-                }
-            } else if (frequency == 'Monthly') {
-                if (isWithinMonthlyWindow(stampAsString, details)) {
-                    return true;
-                }
-            }
-        }*/
-    }
-    
-    @TestVisible static Boolean isWithinWeeklyWindow(DateTime stampAsDateTime, Set<String> details) {
-        String day = stampAsDateTime.format('EEEE');
-        return details.contains(day);
-    }
-    
-    @TestVisible static Boolean isWithinDailyWindow(DateTime stampAsDateTime, Set<String> details) {
-        String day = stampAsDateTime.format('EEEE');
-        
-        Set<String> days = new Set<String>();
-        
-        if (details.contains('Working days only')) {
-            days.addAll(new Set<String>{
-                'Monday',
-                'Tuesday',
-                'Wednesday',
-                'Thursday',
-                'Friday'
-            });
-        }
-        
-        if (details.contains('Weekends and holidays')) {
-            days.addAll(new Set<String>{
-                'Saturday',
-                'Sunday'
-            });
-        }
-        
-        return days.contains(day);
     }
  
     @TestVisible static Boolean isTimeMatch(String stampAsString, Set<String> runTimes) {
@@ -160,16 +99,6 @@ public class ScheduleService extends ApexClassModel.Service {
         Matcher myMatcher = myPattern.matcher(stampAsString);
         if ( myMatcher.matches() && (myMatcher.groupCount() == 1)) {
             return runTimes.contains(myMatcher.group(1));
-        }
-        
-        return false;
-    }
-    
-    @TestVisible static Boolean isWithinMonthlyWindow(String stampAsString, Set<String> details) {
-        Pattern myPattern = pattern.compile('\\d{4}-\\d{2}-(\\d{2})T\\d{2}:\\d{2}:\\d{2}.*');  // '2014-01-18T12:00:00.000Z'
-        Matcher myMatcher = myPattern.matcher(stampAsString);
-        if ( myMatcher.matches() && (myMatcher.groupCount() == 1)) {
-            return details.contains(myMatcher.group(1));
         }
         
         return false;

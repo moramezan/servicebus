@@ -8,7 +8,7 @@ public class AggregateByJobService extends ApexClassModel.Service {
         String Label = 'Aggregate By Job';
         String Description = 'Aggregates a collection of messages having the same Job Id.';
         String Icon = 'arrow_join';
-        Integer Chunks =  200; //max sync limit
+        Integer Chunks = 100; //release needs 1 soql
         String Cardinality = 'Fewer';
         
         Map<String,String> Inputs = new Map<String,String>{

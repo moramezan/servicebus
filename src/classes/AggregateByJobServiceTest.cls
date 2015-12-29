@@ -13,7 +13,7 @@
         ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByJobService.class);
 
         //assert
-        Integer expectedChunks = 200; //max sync limit
+        Integer expectedChunks = 100; //max sync limit
         Integer actualChunks = summary.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }
@@ -28,10 +28,8 @@
         Integer rangeCount =  chunks;
         Integer otherCount  = 4;
         Integer totalCount = rangeCount + otherCount;
-        String jobId = '707000000000000AAA';
 
         Map<String,Object> templateEvent = new Map<String,Object> {
-            'JobId' => jobId,
             'Route' => '1#Test#1',
             'Range' => rangeCount,
             'Chunk' => null,
@@ -41,6 +39,7 @@
         List<Message__c> rangeMessages = new List<Message__c> ();
         Integer z = 1;
         while (z <= rangeCount) {
+            Id jobId = 'a01000000000' + (100 + z);
             rangeMessages.add( new Message__c(Status__c = 'Started', JobId__c = jobId ) );
             z++;
         }
@@ -51,6 +50,7 @@
         List<Message__c> otherMessages = new List<Message__c> ();
         z = 1;
         while (z <= otherCount) {
+            Id jobId = 'a01000000000' + (100 + z);
             otherMessages.add(new Message__c(Status__c = 'Completed', JobId__c = jobId) );  //Completed
             z++;
         }
@@ -61,6 +61,7 @@
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
             Map<String,Object> inputEvent = templateEvent.clone();
+            inputEvent.put('JobId', 'a01000000000' + (100 + i));
             inputEvent.put('SiblingIds' , siblingIds);
             inputEvent.put('Chunk' , i+1);
 

@@ -7,7 +7,7 @@ public class PublishService extends ApexClassModel.Service {
         String Description = 'Broadcasts named events to other subscribed sequences.';
         String StepConfig = PublishStepConfig__c.class.getName();
         String Icon = 'chart_organisation';
-        Integer Chunks = 33; //max sync limit
+        Integer Chunks = 100; //performs 1 soql
         String Cardinality = 'One';
     }
     
@@ -21,34 +21,30 @@ public class PublishService extends ApexClassModel.Service {
         String route = (String)inputEvent.get('Route');
         if (route == null) throw new ServiceException('Null route.');
         
-        PublishStepConfig__c publishConfig = [
-            SELECT Topic__c
-            FROM PublishStepConfig__c
-            WHERE Id = :stepConfigId
-        ];
+        PublishStepConfig__c config; //fetch without using soql
+        List<PublishStepConfig__c> publishStepConfigs = PublishStepConfig__c.getAll().values();
+        for (PublishStepConfig__c publishStepConfig : publishStepConfigs) if (publishStepConfig.Id == stepConfigId) config = publishStepConfig;
         
-        String topic = publishConfig.Topic__c;
+        String topic = config.Topic__c;
         if (topic == null) throw new ServiceException('No topic.');
         
-        List<SubscribeStepConfig__c> subscribeConfigs = [
-            SELECT Id
-            FROM SubscribeStepConfig__c
-            WHERE Topic__c = :topic
-        ];
+        List<Id> configIds = new List<Id>(); //fetch without using soql
+        List<SubscribeStepConfig__c> subscribeStepConfigs = SubscribeStepConfig__c.getAll().values();
+        for (SubscribeStepConfig__c subscribeStepConfig : subscribeStepConfigs) if (subscribeStepConfig.Topic__c == config.Topic__c) configIds.add(subscribeStepConfig.Id);
         
         Integer version = Integer.valueOf(route.substringBefore('#'));
-        Integer position = 0;
+        Integer position = 0; //#1024 zero not one
         
         List<Step__c> steps = [
             SELECT Sequence__c
             FROM Step__c
-            WHERE ConfigId__c IN :new Map<Id,SObject>(subscribeConfigs).keySet()
+            WHERE ConfigId__c IN :configIds
             AND Version__c = :version
         ];
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         for (Step__c step : steps) outputEvents.add(new Map<String,Object>{
-            'Route' => version + '#' + step.Sequence__c + '#0' //#1024 zero not one
+            'Route' => version + '#' + step.Sequence__c + '#' + position
         });
         
         //original guy carries on... this does not inadvertently terminate

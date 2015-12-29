@@ -13,7 +13,7 @@
         ApexClassModel.Summary summary = new ApexClassModel.Summary(JumpService.class);
         
         //assert
-        Integer expectedChunks = 50; //max sync limit
+        Integer expectedChunks = 200; //max sync limit
         Integer actualChunks = summary.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }

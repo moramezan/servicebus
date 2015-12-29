@@ -5,7 +5,7 @@
         ApexClassModel.Summary summary = new ApexClassModel.Summary(ScheduleService.class);
         
         //assert
-        Integer expectedChunks = 100;
+        Integer expectedChunks = 200;
         Integer actualChunks = summary.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }
@@ -377,45 +377,4 @@
         System.assert(ScheduleService.isTimeMatch(stampAsString1, runTimesB));
     }
     
-    static testmethod void testDailyWindow() {
-        //arrange
-        DateTime sundayNight = DateTime.newInstance(2014, 1, 19, 23, 59, 59); //19th Jan 2014 is a Sunday
-        DateTime wednesday = DateTime.newInstance(2014, 1, 15, 0, 0, 0); //15th Jan 2014 is a Wednesday
-        
-        //act and assert
-        System.assert(!ScheduleService.isWithinDailyWindow(sundayNight, new Set<String>{'Working days only'}));
-        System.assert(ScheduleService.isWithinDailyWindow(sundayNight, new Set<String>{'Weekends and holidays'}));
-        System.assert(ScheduleService.isWithinDailyWindow(sundayNight, new Set<String>{'Working days only','Weekends and holidays'}));
-        System.assert(ScheduleService.isWithinDailyWindow(wednesday, new Set<String>{'Working days only','Weekends and holidays'}));
-    }
-    
-    static testmethod void testWeeklyWindow() {
-        //arrange
-        DateTime wednesday = DateTime.newInstance(2014, 1, 15, 9, 0, 0); //15th Jan 2014 is a Wednesday
-        DateTime saturdayMorning = DateTime.newInstance(2014, 1, 18, 0, 0, 1); //18th Jan 2014 is a Satuday
-        DateTime saturdayNight = DateTime.newInstance(2014, 1, 18, 23, 59, 59); //18th Jan 2014 is a Saturday
-        
-        //act and assert
-        System.assert(ScheduleService.isWithinWeeklyWindow(wednesday, new Set<String>{'Tuesday', 'Wednesday', 'Thursday'}));
-        System.assert(!ScheduleService.isWithinWeeklyWindow(wednesday, new Set<String>{'Thursday', 'Saturday'}));
-        System.assert(!ScheduleService.isWithinWeeklyWindow(saturdayMorning, new Set<String>{'Friday'}));
-        System.assert(ScheduleService.isWithinWeeklyWindow(saturdayMorning, new Set<String>{'Saturday'}));
-        System.assert(!ScheduleService.isWithinWeeklyWindow(saturdayMorning, new Set<String>{'Sunday'}));
-        System.assert(!ScheduleService.isWithinWeeklyWindow(saturdayNight, new Set<String>{'Friday'}));
-        System.assert(ScheduleService.isWithinWeeklyWindow(saturdayNight, new Set<String>{'Saturday'}));
-        System.assert(!ScheduleService.isWithinWeeklyWindow(saturdayNight, new Set<String>{'Sunday'}));
-    }
-    
-    static testmethod void testMonthlyWindow() {
-        //arrange
-        String christmasMorning = '2014-12-25T12:09:00.000Z';
-        String newYearsDay = '2014-01-01T12:09:00.000Z';
-        String independenceDay = '2014-07-04T12:09:00';
-
-        //act and assert
-        System.assert(ScheduleService.isWithinMonthlyWindow(christmasMorning, new Set<String>{'24', '25', '26'}));
-        System.assert(!ScheduleService.isWithinMonthlyWindow(newYearsDay, new Set<String>{'06', '02', '03'}));
-        System.assert(ScheduleService.isWithinMonthlyWindow(independenceDay, new Set<String>{'04'}));
-    }
-     
 }
