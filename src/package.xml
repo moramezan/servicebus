@@ -2,7 +2,6 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Service Bus</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
-    <description>Message queue for bulk data transformations and error recovery without data loss.</description>
     <namespacePrefix>servicebus</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
