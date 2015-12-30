@@ -268,7 +268,8 @@
         System.assertEquals(expectedStepConfigId, actualStepConfigId, 'Wrong step config id.');
     }
     
-    public class SurpriseNullOutputs extends ApexClassModel.Service {
+    //SurpriseNullOutputs
+    public class SNO extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
@@ -282,7 +283,7 @@
     static testmethod void testNullEventsReturned() {
         //arrange input
         Map<String,Object> inputEvent = new Map<String,Object>{
-            'Route' => SurpriseNullOutputs.class.getName()
+            'Route' => SNO.class.getName()
         };
         
         //arrange message
@@ -295,7 +296,7 @@
         List<Message__c> outputMessages = new List<Message__c>();
         model.invokeExecute(outputMessages);
         
-        String expectedException = Broker.ServiceException.class.getName() + ': ' + SurpriseNullOutputs.class.getName() + ': Output event cannot be null';
+        String expectedException = Broker.ServiceException.class.getName() + ': ' + SNO.class.getName() + ': Output event cannot be null';
         String actualException = message.Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
     }
@@ -376,7 +377,7 @@
         actualParam = outputEvent.get('Route');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
-        expectedParam = new List<Object>{document.Id};
+        expectedParam = new Set<Id>{document.Id};
         actualParam = outputEvent.get('servicebus:ToConfigIds');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
     }

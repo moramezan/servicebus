@@ -284,7 +284,8 @@
         System.assertEquals(expectedChunks, actualChunks, 'Wrong chunks.');
     }
     
-    public class TooManyEvents extends ApexClassModel.Service {
+    //TooManyEvents
+    public class TME extends ApexClassModel.Service {
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             insert new Document(Name = 'Test', FolderId = UserInfo.getUserId());
@@ -296,7 +297,7 @@
         }
     }
     
-    public class TooManyEventsSummary extends ApexClassModel.Summary {
+    public class TMESummary extends ApexClassModel.Summary {
         Integer Chunks = 50; //50 * 200 = 10000
     }
     
@@ -304,7 +305,7 @@
         //arrange messages (9 would be ok, 10 is bad, 11 is bad) //#955 formerly (39 would be ok, 40 is bad, 41 is bad)
         List<Message__c> inputMessages = new List<Message__c>();
         for (Integer i = 0; i < 11; i++) inputMessages.add(new Message__c(
-            Event__c = Json.serialize(new Map<String,Object>{'Route' => TooManyEvents.class.getName()})
+            Event__c = Json.serialize(new Map<String,Object>{'Route' => TME.class.getName()})
         ));
         
         //act (9/10 guy hits 1810, 10/10 guy hits 2010, 11/11 would hit 2211) //#955 formerly (39/40 guy hits 7840, 40/40 guy hits 8040, 41/411 would hits 8241) sum of inputs + outputs
@@ -317,11 +318,11 @@
         String actualException = inputMessages[8].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
 
-        expectedException = Broker.ServiceException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Chunks or emit fewer events.'; //#955 possibly 8000, but headspace
+        expectedException = Broker.ServiceException.class.getName() + ': ' + TME.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Chunks or emit fewer events.'; //#955 possibly 8000, but headspace
         actualException = inputMessages[9].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
 
-        expectedException = Broker.ServiceException.class.getName() + ': ' + TooManyEvents.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Chunks or emit fewer events.'; //#955 possibly 8000, but headspace
+        expectedException = Broker.ServiceException.class.getName() + ': ' + TME.class.getName() + ': Cannot have more than 2000 events in a single operation. Reduce service Chunks or emit fewer events.'; //#955 possibly 8000, but headspace
         actualException = inputMessages[10].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception.');
         
