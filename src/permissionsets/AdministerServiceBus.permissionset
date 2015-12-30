@@ -486,7 +486,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>MessageView</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>Monitor</apexPage>
@@ -526,7 +526,7 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>SequenceNew</apexPage>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
         <apexPage>SequenceSplash</apexPage>
