@@ -98,7 +98,7 @@
         
         //act (execute)
         Broker.impl().run();
-
+        
         //assert
         Integer expectedAfter = 6;
         Integer actualAfter = Limits.getEmailInvocations();
@@ -252,5 +252,47 @@
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }
         
+    }
+    
+    public class Split extends ApexClassModel.Service {
+        void callout(Map<String,Object> inputEvent) {}
+        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+            return new List<Map<String,Object>>{inputEvent.clone(), inputEvent.clone(), inputEvent.clone()};
+        }
+    }
+    
+    //per #1182
+    static testmethod void testTerminateEventsTranscendSubsequence() {
+        
+        //arrange main sequence
+        insert new Sequence__c(Name = 'Test');
+        SequenceModel.fromName('Test').appendStep(SubsequenceService.class);
+        SequenceModel.fromName('Test').appendStep(TerminateService.class);
+        
+        //arrange config
+        Id stepConfigId = StepModel.fromName('1#Test#1').upsertConfig();
+        update new SubsequenceStepConfig__c(Id = stepConfigId, Sequence__c = 'Sub');
+        
+        //arrange sub sequence
+        insert new Sequence__c(Name = 'Sub');
+        SequenceModel.fromName('Sub').appendStep(Split.class);
+        SequenceModel.fromName('Sub').appendStep(TerminateService.class);
+        
+        //act
+        Map<String,Object> inputEvent = new Map<String,Object>{'Route' => '1#Test#1', 'StepConfigId' => stepConfigId};
+        List<Map<String,Object>> outputEvents = new SubsequenceService().handle(inputEvent);
+        
+        //assert
+        Integer expectedSize = 1;
+        Integer actualSize = outputEvents.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
+        
+        //assemble
+        List<Object> terminateEvents = (List<Object>)outputEvents[0].get('TerminateEvents');
+        
+        //assert
+        expectedSize = 3;
+        actualSize = terminateEvents.size();
+        System.assertEquals(expectedSize, actualSize, 'Wrong size.');
     }
 }
