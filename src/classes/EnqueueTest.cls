@@ -27,7 +27,7 @@
         
         //arrange running version
         Application__c application = Application__c.getOrgDefaults();
-        application.BrokerVersion__c = 2;
+        application.RouterVersion__c = 2;
         upsert application;
         
         //act
@@ -73,7 +73,7 @@
         
         //arrange running version
         Application__c application = Application__c.getOrgDefaults();
-        application.BrokerVersion__c = 1;
+        application.RouterVersion__c = 1;
         upsert application;
         
         //act

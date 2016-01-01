@@ -32,18 +32,6 @@
         <type>DateTime</type>
     </fields>
     <fields>
-        <fullName>BrokerVersion__c</fullName>
-        <defaultValue>1</defaultValue>
-        <externalId>false</externalId>
-        <label>Broker Version</label>
-        <precision>5</precision>
-        <required>true</required>
-        <scale>0</scale>
-        <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>OrgBaseUrl__c</fullName>
         <description>The protocol and host (https://eu2.salesforce.com) of the actual instance. We need to hang onto this because it cannot be part of the callback URL. While the OAuth response indeed contains this, we don&apos;t know it at the time of making the OAuth request.</description>
         <externalId>false</externalId>
@@ -131,6 +119,28 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RouterIsBusy__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Checked during commit, discard, checkout batch jobs.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Is the router in a busy state due to checkout, discard, commit?</inlineHelpText>
+        <label>Router Is Busy</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>RouterVersion__c</fullName>
+        <defaultValue>1</defaultValue>
+        <externalId>false</externalId>
+        <label>Router Version</label>
+        <precision>5</precision>
+        <required>true</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
         <unique>false</unique>
     </fields>
     <fields>

@@ -18,11 +18,11 @@ public class Router extends ApexClassModel.Service {
             SELECT Id, Sequence__c, Position__c
             FROM Step__c
             WHERE ApexTypeName__c = :ScheduleService.class.getName()
-            AND Version__c = :Application__c.getOrgDefaults().BrokerVersion__c
+            AND Version__c = :Application__c.getOrgDefaults().RouterVersion__c
         ];
         
         //stamp with version
-        Integer version = Application__c.getOrgDefaults().BrokerVersion__c.intValue();
+        Integer version = Application__c.getOrgDefaults().RouterVersion__c.intValue();
         integer position = 0;
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();

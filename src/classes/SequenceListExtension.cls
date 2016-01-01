@@ -24,7 +24,7 @@ public with sharing class SequenceListExtension {
     @RemoteAction static public void ChangeVersion(Integer version) {
         if (version == null) System.assert(false, 'Null version!');
         Application__c application = Application__c.getOrgDefaults();
-        application.BrokerVersion__c = version;
+        application.RouterVersion__c = version;
         upsert application;
     }
 }

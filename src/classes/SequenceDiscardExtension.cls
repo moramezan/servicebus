@@ -67,6 +67,9 @@ public with sharing class SequenceDiscardExtension implements Database.Batchable
         
         //#1147 trash OUR draft sequences
         SequenceSetModel.hideSequences();
+        
+        //unflag mutex per #1178
+        SequenceSetModel.routerNotBusy();
     }
     
 }

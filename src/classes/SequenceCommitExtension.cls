@@ -66,6 +66,9 @@ public with sharing class SequenceCommitExtension implements Database.Batchable<
     public void finish(Database.BatchableContext context) {
         //trashes sequence handles
         SequenceSetModel.hideSequences();
+        
+        //unflag mutex per #1178
+        SequenceSetModel.routerNotBusy();
     }
     
 }

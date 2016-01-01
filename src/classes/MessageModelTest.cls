@@ -422,7 +422,7 @@
         
         //act (for config);
         Application__c application = Application__c.getOrgDefaults();
-        application.BrokerVersion__c = 2;
+        application.RouterVersion__c = 2;
         upsert application;
         insert new Step__c(Name = '2#Test#1', Version__c = 2, Sequence__c = 'Test', Position__c = 1, ConfigId__c = '00D000000000000');
         outputEvent.put('Route', 'Incorrect');
@@ -437,7 +437,7 @@
     static testmethod void testIncomingMessageStampedWithCorrectVersion() {
         //arrange
         Application__c application = Application__c.getOrgDefaults();
-        application.BrokerVersion__c = 9;
+        application.RouterVersion__c = 9;
         upsert application;
         
         //arrange

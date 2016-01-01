@@ -33,7 +33,7 @@
         
         //assert
         Decimal expectedVersion = 1.0;
-        Decimal actualVersion = Application__c.getOrgDefaults().BrokerVersion__c;
+        Decimal actualVersion = Application__c.getOrgDefaults().RouterVersion__c;
         System.assertEquals(expectedVersion, actualVersion, 'Wrong version.');
         
         //assert

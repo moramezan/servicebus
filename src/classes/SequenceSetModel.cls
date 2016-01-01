@@ -130,7 +130,7 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         return Database.getQueryLocator([
             SELECT Id, Name
             FROM Step__c
-            WHERE Version__c = :Application__c.getOrgDefaults().BrokerVersion__c
+            WHERE Version__c = :Application__c.getOrgDefaults().RouterVersion__c
             ORDER BY Sequence__c ASC, Position__c ASC
         ]);
     }
@@ -153,6 +153,14 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         if (noLiveSteps) {
             //failure, nothing live exists
             throw new ModelException('Nothing to checkout.');
+        }
+        
+        if (Application__c.getOrgDefaults().RouterIsBusy__c) {
+            //failure, mutex per #1178
+            throw new ModelException('Cannot checkout. Another versioning operation is currently in progress.');
+        } else {
+            //success, mutex
+            routerIsBusy();
         }
         
         //start the job
@@ -207,6 +215,14 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
             throw new ModelException('Nothing to commit.');
         }
         
+        if (Application__c.getOrgDefaults().RouterIsBusy__c) {
+            //failure, mutex per #1178
+            throw new ModelException('Cannot commit. Another versioning operation is currently in progress.');
+        } else {
+            //success, mutex
+            routerIsBusy();
+        }
+        
         //start the job
         Database.Batchable<Sobject> batch = new SequenceCommitExtension();
         Id asyncApexJobId = Database.executeBatch(batch, 1);
@@ -243,6 +259,14 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
         if (noDraftSteps && noSequences) {
             //failure, no draft to discard
             throw new ModelException('Nothing to discard.');
+        }
+        
+        if (Application__c.getOrgDefaults().RouterIsBusy__c) {
+            //failure, mutex per #1178
+            throw new ModelException('Cannot discard. Another versioning operation is currently in progress.');
+        } else {
+            //success, mutex
+            routerIsBusy();
         }
         
         //start the job
@@ -375,6 +399,24 @@ public class SequenceSetModel extends ApexDomain.StandardSetModel {
             //show errors in dev orgs only
             if (Application__c.getOrgDefaults().Prefix__c == null) throw e;
         }
+    }
+    
+    /**
+     * Per #1178 flag as busy
+     */
+    static public void routerIsBusy() {
+        Application__c application = Application__c.getOrgDefaults();
+        application.RouterIsBusy__c = true;
+        upsert application;
+    }
+    
+    /**
+     * Per #1178 flag not busy
+     */
+    static public void routerNotBusy() {
+        Application__c application = Application__c.getOrgDefaults();
+        application.RouterIsBusy__c = false;
+        upsert application;
     }
     
 }

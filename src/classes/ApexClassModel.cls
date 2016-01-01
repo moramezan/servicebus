@@ -316,7 +316,7 @@ abstract public class Service {
         String route = (String)event.get('Route');
         
         //stamp with version
-        Integer version = Application__c.getOrgDefaults().BrokerVersion__c.intValue();
+        Integer version = Application__c.getOrgDefaults().RouterVersion__c.intValue();
         if (route != null && route.contains('#')) version = Integer.valueOf(route.substringBefore('#'));
         
         //increments route position (arrives 1#MySeq#3 leaves 1#MySeq#4)

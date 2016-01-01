@@ -32,10 +32,10 @@
                 <apex:outputPanel layout="none" rendered="{!LatestVersion != null}">
                     <select onchange="Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.SequenceListExtension.ChangeVersion}', this.value, function() {window.location.reload();}); document.getElementById('busy').style.display = 'inline';">
                         <apex:repeat value="{!RunnableVersions}" var="runnableVersion" rendered="{!LatestVersion != DraftVersion}">
-                            <apex:outputPanel layout="none" rendered="{!$Setup.Application__c.BrokerVersion__c == runnableVersion}">
+                            <apex:outputPanel layout="none" rendered="{!$Setup.Application__c.RouterVersion__c == runnableVersion}">
                                 <option value="{!runnableVersion}" selected="selected">Version {!runnableVersion}</option>
                             </apex:outputPanel>
-                            <apex:outputPanel layout="none" rendered="{!$Setup.Application__c.BrokerVersion__c != runnableVersion}">
+                            <apex:outputPanel layout="none" rendered="{!$Setup.Application__c.RouterVersion__c != runnableVersion}">
                                 <option value="{!runnableVersion}">Version {!runnableVersion}</option>
                             </apex:outputPanel>
                         </apex:repeat>
@@ -43,7 +43,7 @@
                             <optgroup label="Version {!DraftVersion} (Draft)" />
                         </apex:outputPanel>
                     </select>
-                        <apex:outputText rendered="{!LatestVersion != $Setup.Application__c.BrokerVersion__c}"><b style="color: red;"> (newer version available)</b></apex:outputText>
+                        <apex:outputText rendered="{!LatestVersion != $Setup.Application__c.RouterVersion__c}"><b style="color: red;"> (newer version available)</b></apex:outputText>
                     <img id="busy" style="display: none; vertical-align: middle;" src="{!URLFOR('/img/loading.gif')}" />
                 </apex:outputPanel>
             <!--</apex:pageBlockSectionItem>-->

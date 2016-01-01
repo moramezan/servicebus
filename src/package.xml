@@ -138,7 +138,6 @@
         <members>Application__c.BrokerIsInhibited__c</members>
         <members>Application__c.BrokerIsPaused__c</members>
         <members>Application__c.BrokerLastTimestamp__c</members>
-        <members>Application__c.BrokerVersion__c</members>
         <members>Application__c.OrgBaseUrl__c</members>
         <members>Application__c.OrgConfigured__c</members>
         <members>Application__c.OrgIdConfigured__c</members>
@@ -147,6 +146,8 @@
         <members>Application__c.PrefixBar__c</members>
         <members>Application__c.PrefixDot__c</members>
         <members>Application__c.Prefix__c</members>
+        <members>Application__c.RouterIsBusy__c</members>
+        <members>Application__c.RouterVersion__c</members>
         <members>Application__c.RunAsAccessToken__c</members>
         <members>Application__c.RunAsRefreshToken__c</members>
         <members>Application__c.RunAsUserId__c</members>

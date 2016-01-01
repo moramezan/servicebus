@@ -66,6 +66,9 @@ public with sharing class SequenceCheckoutExtension implements Database.Batchabl
     public void finish(Database.BatchableContext context) {
         //recreates sequence handles
         SequenceSetModel.showSequences();
+        
+        //unflag mutex per #1178
+        SequenceSetModel.routerNotBusy();
     }
     
 }
