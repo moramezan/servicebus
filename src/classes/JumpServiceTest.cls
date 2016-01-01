@@ -26,15 +26,15 @@
         //arrange
         Sequence__c target = new Sequence__c(Name = 'Target');
         insert target;
-        SequenceModel.fromName(target.Name).appendStep(TerminateService.class);
+        SequenceModel.fromName(target.Name).appendStep(TerminateService.class.getName());
         
         JumpStepConfig__c config = new JumpStepConfig__c(Name = target.Id, Sequence__c = 'Target');
         insert config;
         
         Sequence__c origin = new Sequence__c(Name = 'Origin');
         insert origin;
-        SequenceModel.fromName(origin.Name).appendStep(JumpService.class);
-        SequenceModel.fromName(origin.Name).appendStep(TerminateService.class);
+        SequenceModel.fromName(origin.Name).appendStep(JumpService.class.getName());
+        SequenceModel.fromName(origin.Name).appendStep(TerminateService.class.getName());
         
         
         Map<String,Object> inputEvent = new Map<String,Object>{
@@ -69,7 +69,7 @@
         insert target;
         
         //arrange steps
-        Step__c step = SequenceModel.fromId(origin.Id).appendStep(JumpService.class);
+        Step__c step = SequenceModel.fromId(origin.Id).appendStep(JumpService.class.getName());
         Id stepConfigId = new StepModel(step).upsertConfig();
         
         JumpStepConfig__c stepConfig = new JumpStepConfig__c(Id = stepConfigId, Sequence__c = 'Target');
@@ -106,11 +106,11 @@
         insert new Sequence__c(Name = 'Target');
         
         //arrange steps
-        Step__c originJump = SequenceModel.fromName('Origin').appendStep(JumpService.class);
-        Step__c originTerminate = SequenceModel.fromName('Origin').appendStep(TerminateService.class);
+        Step__c originJump = SequenceModel.fromName('Origin').appendStep(JumpService.class.getName());
+        Step__c originTerminate = SequenceModel.fromName('Origin').appendStep(TerminateService.class.getName());
         
-        Step__c targetWiretap = SequenceModel.fromName('Target').appendStep(WiretapService.class);
-        Step__c targetTerminate = SequenceModel.fromName('Target').appendStep(TerminateService.class);
+        Step__c targetWiretap = SequenceModel.fromName('Target').appendStep(WiretapService.class.getName());
+        Step__c targetTerminate = SequenceModel.fromName('Target').appendStep(TerminateService.class.getName());
         
         //arrange config
         Id stepConfigId = new StepModel(originJump).upsertConfig();

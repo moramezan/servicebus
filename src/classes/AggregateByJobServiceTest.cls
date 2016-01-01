@@ -694,9 +694,9 @@
         insert sequence;
         
         //arrange steps
-        SequenceModel.fromId(sequence.Id).appendStep(Split.class);
-        SequenceModel.fromId(sequence.Id).appendStep(AggregateByJobService.class);
-        SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class);
+        SequenceModel.fromId(sequence.Id).appendStep(Split.class.getName());
+        SequenceModel.fromId(sequence.Id).appendStep(AggregateByJobService.class.getName());
+        SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class.getName());
         
         //act (enqueue)
         Test.startTest();

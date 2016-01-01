@@ -15,9 +15,9 @@
         insert sequence;
         
         //arrange steps
-        Step__c jumpStep = SequenceModel.fromName(sequence.Name).appendStep(JumpService.class);
+        Step__c jumpStep = SequenceModel.fromName(sequence.Name).appendStep(JumpService.class.getName());
         new StepModel(jumpStep).upsertConfig();
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class.getName());
         
         Integer expectedConfigsBefore = 1;
         Integer actualConfigsBefore = [SELECT COUNT() FROM JumpStepConfig__c];
@@ -40,9 +40,9 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c scheduleStep = SequenceModel.fromId(sequence.Id).appendStep(ScheduleService.class);
+        Step__c scheduleStep = SequenceModel.fromId(sequence.Id).appendStep(ScheduleService.class.getName());
         Id configId = new stepModel(scheduleStep).upsertConfig();
-        Step__c terminateStep = SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class);
+        Step__c terminateStep = SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class.getName());
         
         //act
         Database.delete(configId);

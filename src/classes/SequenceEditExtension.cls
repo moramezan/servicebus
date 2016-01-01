@@ -83,7 +83,7 @@ public with sharing class SequenceEditExtension {
         return model.stepDtos();
     }
     
-    @RemoteAction static public Step__c appendStep(Id sequenceId, String apexClassId) {
+    @RemoteAction static public Step__c appendStep(Id sequenceId, Id apexClassId) {
         SequenceModel model = SequenceModel.fromId(sequenceId);
         return model.appendStep(apexClassId);
     }

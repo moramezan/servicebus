@@ -49,8 +49,10 @@ public class SequenceModel extends ApexDomain.StandardModel {
             WHERE Id = :apexClassId
         ];
         
-        Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
-        Step__c step = this.appendStep(reflector);
+        String apexTypeName = '';
+        if (apexClass.NamespacePrefix != null) apexTypeName = apexClass.NamespacePrefix + '.';
+        apexTypeName += apexClass.Name;
+        Step__c step = this.appendStep(apexTypeName);
         step.ApexClassId__c = apexClassId;
         update step;
         
@@ -83,11 +85,9 @@ public class SequenceModel extends ApexDomain.StandardModel {
     /**
      * TEST scenarios can append inner classes.
      */
-    @TestVisible Step__c appendStep(Type reflector) {
+    @TestVisible Step__c appendStep(String apexTypeName) {
         Savepoint sp = Database.setSavepoint();
         try {
-            ApexClassModel model = new ApexClassModel(reflector);
-            
             //find draft version
             Integer version = SequenceSetModel.draftVersion();
             if (version == null) version = 1; //first ever
@@ -109,7 +109,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
                 Name = version + '#' + this.sequence.Name + '#' + position,
                 Sequence__c = this.sequence.Name,
                 ApexClassId__c = null, //see upstairs
-                ApexTypeName__c = reflector.getName(),
+                ApexTypeName__c = apexTypeName,
                 Position__c = position
             );
             
@@ -117,7 +117,7 @@ public class SequenceModel extends ApexDomain.StandardModel {
             return Step__c.getValues(step.Name);
         } catch (Exception e) {
             Database.rollback(sp);
-            throw new ModelException('Could not append step "' + reflector + '"', e);
+            throw new ModelException('Could not append step "' + apexTypeName + '"', e);
         }
     }
     

@@ -20,7 +20,7 @@
         Sequence__c sub1 = new Sequence__c(Name = 'Subscriber1');
         insert sub1;
         
-        Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(SubscribeService.class);
+        Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(SubscribeService.class.getName());
         Id sub1configId = new StepModel(sub1step).upsertConfig();
         
         SubscribeStepConfig__c sub1config = new SubscribeStepConfig__c(Id = sub1configId, Topic__c = 'Test');
@@ -30,7 +30,7 @@
         Sequence__c sub2 = new Sequence__c(Name = 'Subscriber2');
         insert sub2;
         
-        Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(SubscribeService.class);
+        Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(SubscribeService.class.getName());
         Id sub2configId = new StepModel(sub2step).upsertConfig();
         
         SubscribeStepConfig__c sub2config = new SubscribeStepConfig__c(Id = sub2configId, Topic__c = 'Test');
@@ -111,7 +111,7 @@
         Sequence__c sub1 = new Sequence__c(Name = 'Subscriber1');
         insert sub1;
         
-        Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(SubscribeService.class);
+        Step__c sub1step = SequenceModel.fromName(sub1.Name).appendStep(SubscribeService.class.getName());
         Id sub1configId = new StepModel(sub1step).upsertConfig();
         
         SubscribeStepConfig__c sub1config = new SubscribeStepConfig__c(Id = sub1configId, Topic__c = 'Test');
@@ -121,7 +121,7 @@
         Sequence__c sub2 = new Sequence__c(Name = 'Subscriber2');
         insert sub2;
         
-        Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(SubscribeService.class);
+        Step__c sub2step = SequenceModel.fromName(sub2.Name).appendStep(SubscribeService.class.getName());
         Id sub2configId = new StepModel(sub2step).upsertConfig();
         
         SubscribeStepConfig__c sub2config = new SubscribeStepConfig__c(Id = sub2configId, Topic__c = 'Test');

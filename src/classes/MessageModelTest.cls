@@ -11,7 +11,7 @@
     static testmethod void testShowApexClassFindsIt() {
         //arrange sequence and steps
         insert new Sequence__c(Name = 'Test');
-        Step__c step = SequenceModel.fromName('Test').appendStep(TerminateService.class);
+        Step__c step = SequenceModel.fromName('Test').appendStep(TerminateService.class.getName());
         step.ApexClassId__c = [SELECT Id FROM ApexClass WHERE Name = 'WiretapService' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c].Id;
         update step;
         
@@ -52,7 +52,7 @@
         
         //arrange step
         SequenceModel model = SequenceModel.fromId(sequence.Id);
-        model.appendStep(MemoryError.class);
+        model.appendStep(MemoryError.class.getName());
         
         //arrange messages
         List<Message__c> inputMessages = new List<Message__c>();
@@ -102,7 +102,7 @@
         
         //arrange steps
         SequenceModel model = SequenceModel.fromId(sequence.Id);
-        model.appendStep(InserterError.class);
+        model.appendStep(InserterError.class.getName());
         
         //arrange messages
         List<Message__c> inputMessages = new List<Message__c>();
@@ -151,7 +151,7 @@
         
         //arrange steps
         SequenceModel model = SequenceModel.fromId(sequence.Id);
-        model.appendStep(Memory.class);
+        model.appendStep(Memory.class.getName());
         
         //arrange messages
         List<Message__c> inputMessages = new List<Message__c>();
@@ -201,7 +201,7 @@
         
         //arrange step
         SequenceModel model = SequenceModel.fromId(sequence.Id);
-        model.appendStep(Inserter.class);
+        model.appendStep(Inserter.class.getName());
         
         //arrange messages
         List<Message__c> inputMessages = new List<Message__c>();
@@ -306,7 +306,7 @@
         insert new Sequence__c(Name = 'Test');
         
         //arrange step
-        SequenceModel.fromName('Test').appendStep(WiretapService.class);
+        SequenceModel.fromName('Test').appendStep(WiretapService.class.getName());
         
         //arrange event
         Map<String,Object> inputEvent = new Map<String,Object>{

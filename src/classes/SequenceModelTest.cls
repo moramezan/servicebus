@@ -15,9 +15,9 @@
         insert soSequence;
         Id soSequenceId = soSequence.Id;
 
-        Step__c stepA1 = SequenceModel.fromName(soSequence.Name).appendStep(SubscribeService.class);
-        Step__c stepA2 = SequenceModel.fromName(soSequence.Name).appendStep(PublishService.class);
-        Step__c stepA3 = SequenceModel.fromName(soSequence.Name).appendStep(TerminateService.class);
+        Step__c stepA1 = SequenceModel.fromName(soSequence.Name).appendStep(SubscribeService.class.getName());
+        Step__c stepA2 = SequenceModel.fromName(soSequence.Name).appendStep(PublishService.class.getName());
+        Step__c stepA3 = SequenceModel.fromName(soSequence.Name).appendStep(TerminateService.class.getName());
         Integer positionA1 = stepA1.Position__c.intValue();
         Integer positionA2 = stepA2.Position__c.intValue();
         Integer positionA3 = stepA3.Position__c.intValue();
@@ -43,7 +43,7 @@
         Id soSequenceId = soSequence.Id;
 
         // act
-        Step__c actualStep = SequenceModel.fromName(soSequence.Name).appendStep(SubscribeService.class);
+        Step__c actualStep = SequenceModel.fromName(soSequence.Name).appendStep(SubscribeService.class.getName());
         
         // assemble
         List<Step__c> soSteps = [SELECT Name, ApexTypeName__c, Position__c FROM Step__c WHERE Sequence__c = :soSequence.Name];
@@ -132,8 +132,8 @@
         Sequence__c soSequenceA = new Sequence__c(Name = sequenceNameA);
         insert soSequenceA;
         Id soSequenceAId = soSequenceA.Id;
-        Step__c stepA1 = SequenceModel.fromName(soSequenceA.Name).appendStep(SubscribeService.class);
-        Step__c stepA2 = SequenceModel.fromName(soSequenceA.Name).appendStep(TerminateService.class);
+        Step__c stepA1 = SequenceModel.fromName(soSequenceA.Name).appendStep(SubscribeService.class.getName());
+        Step__c stepA2 = SequenceModel.fromName(soSequenceA.Name).appendStep(TerminateService.class.getName());
  
 
         // act
@@ -223,7 +223,7 @@
         insert new Sequence__c(Name = 'Test');
         
         //arrange step
-        SequenceModel.fromName('Test').appendStep(TerminateService.class);
+        SequenceModel.fromName('Test').appendStep(TerminateService.class.getName());
         
         //arrange message
         insert new Message__c(Event__c = '{"Route":"1#Test#1"}');

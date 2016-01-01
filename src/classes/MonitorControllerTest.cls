@@ -13,8 +13,8 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(WiretapService.class);
-        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class);
+        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(WiretapService.class.getName());
+        Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class.getName());
         
         Test.startTest();
         Job job = new Job('Test', '00D000000000000AAA');

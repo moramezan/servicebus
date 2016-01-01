@@ -21,12 +21,12 @@
     static testmethod void withinSystemLimits() {
         Sequence__c origin = new Sequence__c(Name = 'Origin');
         insert origin;
-        Step__c originStep = SequenceModel.fromName(origin.Name).appendStep(SubsequenceService.class);
+        Step__c originStep = SequenceModel.fromName(origin.Name).appendStep(SubsequenceService.class.getName());
         new StepModel(originStep).upsertConfig();
         
         Sequence__c target = new Sequence__c(Name = 'Target');
         insert target;
-        Step__c targetStep = SequenceModel.fromName(target.Name).appendStep(TerminateService.class);
+        Step__c targetStep = SequenceModel.fromName(target.Name).appendStep(TerminateService.class.getName());
         
         //prepare config in db
         SubsequenceStepConfig__c config = new SubsequenceStepConfig__c(
@@ -65,18 +65,18 @@
         Sequence__c routine = new Sequence__c(Name = 'Routine');
         insert routine;
         
-        SequenceModel.fromId(routine.Id).appendStep(WiretapService.class);
-        SequenceModel.fromId(routine.Id).appendStep(WiretapService.class);
-        SequenceModel.fromId(routine.Id).appendStep(WiretapService.class);
-        SequenceModel.fromId(routine.Id).appendStep(TerminateService.class);
+        SequenceModel.fromId(routine.Id).appendStep(WiretapService.class.getName());
+        SequenceModel.fromId(routine.Id).appendStep(WiretapService.class.getName());
+        SequenceModel.fromId(routine.Id).appendStep(WiretapService.class.getName());
+        SequenceModel.fromId(routine.Id).appendStep(TerminateService.class.getName());
         
         //arrange caller
         Sequence__c caller = new Sequence__c(Name = 'Caller');
         insert caller;
         
-        Step__c step1 = SequenceModel.fromId(caller.Id).appendStep(SubsequenceService.class);
-        Step__c step2 = SequenceModel.fromId(caller.Id).appendStep(SubsequenceService.class);
-        SequenceModel.fromId(caller.Id).appendStep(TerminateService.class);
+        Step__c step1 = SequenceModel.fromId(caller.Id).appendStep(SubsequenceService.class.getName());
+        Step__c step2 = SequenceModel.fromId(caller.Id).appendStep(SubsequenceService.class.getName());
+        SequenceModel.fromId(caller.Id).appendStep(TerminateService.class.getName());
         
         //arrange config
         Id configId1 = new StepModel(step1).upsertConfig();
@@ -110,8 +110,8 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        SequenceModel.fromId(sequence.Id).appendStep(SubsequenceService.class);
-        SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class);
+        SequenceModel.fromId(sequence.Id).appendStep(SubsequenceService.class.getName());
+        SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class.getName());
         
         try {
             //act (no config!)
@@ -147,15 +147,15 @@
         Sequence__c routine = new Sequence__c(Name = 'Routine');
         insert routine;
         
-        SequenceModel.fromId(routine.Id).appendStep(Inserter.class);
-        SequenceModel.fromId(routine.Id).appendStep(Error.class);
+        SequenceModel.fromId(routine.Id).appendStep(Inserter.class.getName());
+        SequenceModel.fromId(routine.Id).appendStep(Error.class.getName());
         
         //arrange caller
         Sequence__c caller = new Sequence__c(Name = 'Caller');
         insert caller;
         
-        Step__c step = SequenceModel.fromId(caller.Id).appendStep(SubsequenceService.class);
-        SequenceModel.fromId(caller.Id).appendStep(TerminateService.class);
+        Step__c step = SequenceModel.fromId(caller.Id).appendStep(SubsequenceService.class.getName());
+        SequenceModel.fromId(caller.Id).appendStep(TerminateService.class.getName());
         
         //arrange config
         Id configId = new StepModel(step).upsertConfig();
@@ -217,15 +217,15 @@
         Sequence__c routine = new Sequence__c(Name = 'Routine');
         insert routine;
         
-        SequenceModel.fromId(routine.Id).appendStep(Callout.class);
-        SequenceModel.fromId(routine.Id).appendStep(TerminateService.class);
+        SequenceModel.fromId(routine.Id).appendStep(Callout.class.getName());
+        SequenceModel.fromId(routine.Id).appendStep(TerminateService.class.getName());
         
         //arrange caller
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c step = SequenceModel.fromId(sequence.Id).appendStep(SubsequenceService.class);
-        SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class);
+        Step__c step = SequenceModel.fromId(sequence.Id).appendStep(SubsequenceService.class.getName());
+        SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class.getName());
         
         //arrange config
         Id configId = new StepModel(step).upsertConfig();
@@ -266,8 +266,8 @@
         
         //arrange main sequence
         insert new Sequence__c(Name = 'Test');
-        SequenceModel.fromName('Test').appendStep(SubsequenceService.class);
-        SequenceModel.fromName('Test').appendStep(TerminateService.class);
+        SequenceModel.fromName('Test').appendStep(SubsequenceService.class.getName());
+        SequenceModel.fromName('Test').appendStep(TerminateService.class.getName());
         
         //arrange config
         Id stepConfigId = StepModel.fromName('1#Test#1').upsertConfig();
@@ -275,8 +275,8 @@
         
         //arrange sub sequence
         insert new Sequence__c(Name = 'Sub');
-        SequenceModel.fromName('Sub').appendStep(Split.class);
-        SequenceModel.fromName('Sub').appendStep(TerminateService.class);
+        SequenceModel.fromName('Sub').appendStep(Split.class.getName());
+        SequenceModel.fromName('Sub').appendStep(TerminateService.class.getName());
         
         //act
         Map<String,Object> inputEvent = new Map<String,Object>{'Route' => '1#Test#1', 'StepConfigId' => stepConfigId};
