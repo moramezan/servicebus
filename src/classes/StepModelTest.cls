@@ -99,7 +99,9 @@
         )).getId();
         
         //act
-        StepModel.fromId(stepId).checkout();
+        List<Step__c> newSteps = new List<Step__c>();
+        StepModel.fromId(stepId).checkout(newSteps);
+        insert newSteps;
         
         //arrange
         Step__c step = [SELECT Name, Version__c, Sequence__c, Position__c, IsDraft__c FROM Step__c WHERE IsDraft__c = true];
@@ -174,7 +176,9 @@
         )).getId();
         
         //act
-        StepModel.fromId(stepId).checkout();
+        List<Step__c> newSteps = new List<Step__c>();
+        StepModel.fromId(stepId).checkout(newSteps);
+        insert newSteps;
         
         //arrange
         Account oldConfig = [SELECT Id, Name FROM Account WHERE Id = :configId];
@@ -212,7 +216,9 @@
         )).getId();
         
         //act
-        StepModel.fromId(stepId).checkout();
+        List<Step__c> newSteps = new List<Step__c>();
+        StepModel.fromId(stepId).checkout(newSteps);
+        insert newSteps;
         
         //arrange
         PublishStepConfig__c oldConfig = [SELECT Id, Name FROM PublishStepConfig__c WHERE Id = :configId];

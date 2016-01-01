@@ -1,4 +1,4 @@
-public with sharing class SequenceCheckoutExtension implements Database.Batchable<Sobject> {
+public with sharing class SequenceCheckoutExtension implements Database.Batchable<Sobject>, Database.Stateful {
     
     SequenceSetModel model;
     ApexPages.StandardSetController controller;
@@ -53,17 +53,22 @@ public with sharing class SequenceCheckoutExtension implements Database.Batchabl
         //
     }
     
+    public List<Step__c> newSteps = new List<Step__c>();
+    
     public Database.QueryLocator start(Database.BatchableContext context) {
         //find latest live version
         return SequenceSetModel.locateLiveSteps();
     }
     
-    public void execute(Database.BatchableContext context, List<Step__c> steps) {
-        //copies each step
-        StepModel.fromId(steps[0].Id).checkout();
+    public void execute(Database.BatchableContext context, List<Step__c> scopes) {
+        //copies each config to database, copies each step to memory
+        StepModel.fromId(scopes[0].Id).checkout(this.newSteps);
     }
     
     public void finish(Database.BatchableContext context) {
+        //#1171 isolate checkout
+        insert this.newSteps;
+        
         //recreates sequence handles
         SequenceSetModel.showSequences();
         

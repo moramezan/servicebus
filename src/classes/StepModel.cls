@@ -229,7 +229,7 @@ public class StepModel extends ApexDomain.StandardModel {
      * Clones an individual step, increments its version,
      * flags it as draft and copies his configuration.
      */
-    public void checkout() {
+    public void checkout(List<Step__c> steps) {
         //clone the steps
         Boolean preserveId = false;
         Boolean isDeepClone = true;
@@ -269,8 +269,8 @@ public class StepModel extends ApexDomain.StandardModel {
             step.ConfigName__c = e.getMessage().abbreviate(SObjectType.Step__c.Fields.ConfigName__c.Length);
         }
         
-        //new steps first
-        insert step;
+        //#1171 isolate checkout
+        steps.add(step);
     }
     
     /**
