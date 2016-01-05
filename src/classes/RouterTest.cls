@@ -337,6 +337,39 @@
 
  
     static testMethod void callingGenerateHeartbeatsInsertsExpectedMessages() {
+        //per #1163 arrange schedule
+        insert new Sequence__c(Name = 'Test');
+        Step__c step = SequenceModel.fromName('Test').appendStep(ScheduleService.class.getName());
+        Id stepConfigId = new StepModel(step).upsertConfig();
+        update new ScheduleStepConfig__c(
+            Id = stepConfigId,
+            IsActive__c = true,
+            Is0000__c = true,
+            Is0100__c = true,
+            Is0200__c = true,
+            Is0300__c = true,
+            Is0400__c = true,
+            Is0500__c = true,
+            Is0600__c = true,
+            Is0700__c = true,
+            Is0800__c = true,
+            Is0900__c = true,
+            Is1000__c = true,
+            Is1100__c = true,
+            Is1200__c = true,
+            Is1300__c = true,
+            Is1400__c = true,
+            Is1500__c = true,
+            Is1600__c = true,
+            Is1700__c = true,
+            Is1800__c = true,
+            Is1900__c = true,
+            Is2000__c = true,
+            Is2100__c = true,
+            Is2200__c = true,
+            Is2300__c = true
+        );
+        
         // arrange
         Integer intervalInMinutes = 05;
         
@@ -404,6 +437,39 @@
  
  
     static testMethod void callingGenerateHeartbeatsViaInterfaceInsertsExpectedMessages() {
+        //per #1163 arrange schedule
+        insert new Sequence__c(Name = 'Test');
+        Step__c step = SequenceModel.fromName('Test').appendStep(ScheduleService.class.getName());
+        Id stepConfigId = new StepModel(step).upsertConfig();
+        update new ScheduleStepConfig__c(
+            Id = stepConfigId,
+            IsActive__c = true,
+            Is0000__c = true,
+            Is0100__c = true,
+            Is0200__c = true,
+            Is0300__c = true,
+            Is0400__c = true,
+            Is0500__c = true,
+            Is0600__c = true,
+            Is0700__c = true,
+            Is0800__c = true,
+            Is0900__c = true,
+            Is1000__c = true,
+            Is1100__c = true,
+            Is1200__c = true,
+            Is1300__c = true,
+            Is1400__c = true,
+            Is1500__c = true,
+            Is1600__c = true,
+            Is1700__c = true,
+            Is1800__c = true,
+            Is1900__c = true,
+            Is2000__c = true,
+            Is2100__c = true,
+            Is2200__c = true,
+            Is2300__c = true
+        );
+        
         // arrange
         Integer intervalInMinutes = 05;
 

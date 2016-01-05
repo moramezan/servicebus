@@ -31,11 +31,11 @@ public class WiretapService extends ApexClassModel.Service {
         String body = '';
         
         //#1022 show RecordId list from gated messages
-        if (parameters.containsKey('GateItemQuery') && parameters.containsKey('GateItemField')) {
+        if (parameters.containsKey('AggregateQuery') && parameters.containsKey('AggregateField')) {
             List<String> recordIds = new List<String>();
             
-            String query = (String)parameters.get('GateItemQuery');
-            String field = (String)parameters.get('GateItemField');
+            String query = (String)parameters.get('AggregateQuery');
+            String field = (String)parameters.get('AggregateField');
             List<SObject> items = Database.query(query);
             
             for (SObject item : items) {

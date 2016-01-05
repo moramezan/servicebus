@@ -206,12 +206,21 @@ public class Router extends ApexClassModel.Service {
         updateLastEventStamp(timestamps);
         
         Enqueue.AllowRoute = true; //#999#issuecomment-133751700
-        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
-        for (DateTime timestamp : timestamps) outputEvents.add(new Map<String,Object>{
+        List<Map<String,Object>> inputEvents = new List<Map<String,Object>>();
+        for (DateTime timestamp : timestamps) inputEvents.add(new Map<String,Object>{
             'RecordId' => RecordId, //#971 used in lieu of :WasHeartbeat
             'EntryPointTimestamp' => timestamp,
             'Route' => Router.class.getName() //#956 and #575 so that resolve and execute can crow look //#999#issuecomment-133751700
         });
+        
+        if (inputEvents.isEmpty()) {
+            //nothing to do
+            return;
+        }
+        
+        //heartbeats are processed immediately
+        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
+        for (Map<String,Object> inputEvent : inputEvents) outputEvents.addAll(new Router().handle(inputEvent));
         
         if (outputEvents.isEmpty()) {
             //nothing to do
