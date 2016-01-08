@@ -178,6 +178,6 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <label>Application</label>
+    <label>Setting</label>
     <visibility>Protected</visibility>
 </CustomObject>

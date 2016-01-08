@@ -94,6 +94,6 @@
         <type>Number</type>
         <unique>false</unique>
     </fields>
-    <label>Step</label>
+    <label>Setting</label>
     <visibility>Protected</visibility>
 </CustomObject>

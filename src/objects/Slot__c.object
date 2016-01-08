@@ -3,6 +3,6 @@
     <customSettingsType>List</customSettingsType>
     <description>High performance iteration without FieldPermissions</description>
     <enableFeeds>false</enableFeeds>
-    <label>Slot</label>
+    <label>Setting</label>
     <visibility>Protected</visibility>
 </CustomObject>
