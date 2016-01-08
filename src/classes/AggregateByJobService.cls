@@ -16,8 +16,8 @@ public class AggregateByJobService extends ApexClassModel.Service {
         };
 
         Map<String,String> Outputs = new Map<String,String>{
-            'GateItemQuery' => 'STRING of the query that locates the items that hold events correlated by Job Id.',
-            'GateItemField' => 'STRING of the item field name that contains the serialized event data.'
+            'AggregateQuery' => 'STRING of the query that locates the items that hold events correlated by Job Id.',
+            'AggregateField' => 'STRING of the item field name that contains the serialized event data.'
         };
     }
 
@@ -80,8 +80,8 @@ public class AggregateByJobService extends ApexClassModel.Service {
 
         inputEvent = cleanParameters(inputEvent); // start with a clean parameters collection
         inputEvent.putAll(commonParameters);   // add the common parameters ...
-        inputEvent.put('GateItemQuery', queryString);
-        inputEvent.put('GateItemField', fieldName);
+        inputEvent.put('AggregateQuery', queryString);
+        inputEvent.put('AggregateField', fieldName);
 
         return new List<Map<String,Object>>{inputEvent};
     }
