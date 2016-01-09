@@ -126,4 +126,11 @@ public class ApexDomain {
         String name = recordId.getSobjectType().getDescribe().getName();
         return !Database.query('SELECT Id FROM ' + name + ' WHERE Id = :recordId').isEmpty();
     }
+    
+    static public void crudFls(Boolean able) {
+        //TODO should this behave differently in unit tests?
+        DomainException e = new DomainException('CRUD/FLS check failed.');
+        e.setMessage(e.getMessage() + ': ' + e.getStackTraceString());
+        if (!able) throw e;
+    }
 }
