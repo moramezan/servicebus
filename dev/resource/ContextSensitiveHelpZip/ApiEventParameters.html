@@ -3,10 +3,10 @@
 </h1>
 
 <p>
-    Services communicate with each other using events, and all events carry parameters. Events
-    are always communicated as a <code>Map&lt;String,Object&gt;</code> and developers use string
+    Services communicate with each other using events, and all events carry parameters.
+    An event is a <code>Map&lt;String,Object&gt;</code> and developers use string
     names to get parameter values. All parameter names must be prepended by a namespace prefix or
-    the custom code prefix, then two underscores. For example:
+    the 'c' prefix, then a colon. For example:
 </p>
 
 <table>
@@ -16,21 +16,21 @@
         <th>Usage</th>
     </tr>
     <tr>
-        <td><code>{"c:PayrollPeriod":"December 2015"}</code></td>
+        <td><code>{"c:PayrollPeriod":2015}</code></td>
         <td><code>c:</code></td>
-        <td>(Custom)</td>
-        <td>Parameters set by custom code outside a package must use the special <code>c</code> prefix.</td>
+        <td>(custom)</td>
+        <td>Parameters set by custom code outside a package must use the <code>c</code> prefix.</td>
     </tr>
-    <tr>
-        <td><code>{"servicebus:SequenceName":"Payroll_Calculation"}</code></td>
+    <!--<tr>
+        <td><code>{"servicebus:ToSequence":"Payroll_Calculation"}</code></td>
         <td><code>servicebus:</code></td>
         <td>(Service Bus API)</td>
         <td>The Service Bus package uses the <code>servicebus</code> namespace for its parameters.</td>
-    </tr>
+    </tr>-->
     <tr>
-        <td><code>{"acme:AnvilNames":["INV-1","INV-2","INV-3"]}</code></td>
+        <td><code>{"acme:AnvilNames":["A","B"]}</code></td>
         <td><code>acme:</code></td>
-        <td>(Third-party)</td>
+        <td>(third-party)</td>
         <td>Services in managed packages must namespace prefix their event parameters.</td>
     </tr>
 </table>
@@ -42,13 +42,31 @@
 <ul>
     <li>cumulative: event parameters carry through a sequence and are available to subsequent steps,</li>
     <li>case sensitive: the namespace prefix is lowercase, and upper camel case for the parameter names,</li>
-    <li>namespace agnostic: any event can carry any number of parameters from any number of namespaces,</li>
+    <li>namespace agnostic: any event may carry any number of parameters from any number of namespaces,</li>
 </ul>
 
 <fieldset>
     <legend>Note</legend>
-    Only read or write to documented parameters with a namespace prefix.
+    Only read or write to documented parameters.
 </fieldset>
+
+<h1>
+    Routing Event Parameters
+</h1>
+
+<dl>
+    <dt>ToService</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Routes an event directly to a Service using its fully qualified class name.</dd>
+    
+    <dt>ToSequence</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Routes an event to the sequence named here. This value is case-sensitive.</dd>
+    
+    <dt>ToConfigIds</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_set.htm" target="_blank">Set&lt;Id&gt;</a></dd>
+    <dd>Routes an event to the sequence containing the step with this config. The set correct live version will be selected from the configs in the set.</dd>
+</dl>
 
 <h1>
     Service Bus Event Parameters
@@ -57,33 +75,21 @@
 <dl>
     <dt>RecordId</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
-    <dd>Entity Id of an SObject handed into a Sequence by a Job. Commonly seen on Jobs constructed using a <a href="?topic=ApiJobClass">Simple Event</a>.</dd>
+    <dd>Id of an SObject on which a service will operate.
 
-    <dt>SequenceName</dt>
+    <dt>CorrelationUuid</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Routes a message to the first step of the sequence named here. This value is case-sensitive.</dd>
-
-    <dt>EntryPointUuid</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Universally unique identifier (36 characters) of the entry point event that spawned this event. The first step in a sequence receives the entry point event when a Job is enqueued.</dd>
+    <dd>Universally unique identifier (v4) which can be used to group everything spawned from any entry point event.</dd>
 
     <dt>EntryPointDatetime</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Exact date and time of the entry point event that spawned this event. All events have an entry point event. Use this in the steps that follow <em>Schedule</em> steps to identify the intended run time.</dd>
+    <dd>Exact date and time of the entry point event that spawned this event. For example this carries the intended run time of Schedule service events.</dd>
 
     <dt>EnqueueUserId</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
-    <dd>Read-only Id of the user that spawned the message (usually by enqueueing an <code>ServiceBus.Job</code>).</dd>
-    
-    <dt>GateItemsQueryString</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Query string for locating the items that hold events correlated by <em>Mark</em> and <em>Gate</em> steps. Use <code>Database.query</code> to retrieve the items. Cast to <code>List&lt;sObject&gt;</code> only.</dd>
-    
-    <dt>GateItemsFieldName</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_list.htm" target="_blank">List&lt;Map&lt;String,Object&gt;&gt;</a></dd>
-    <dd>Field name on the stored items that contains the serialized event data. Use <code>sobject.get()</code> to dereference it, then cast to <code>Map&lt;String,Object&gt;</code> when deserializing the value.</dd>
+    <dd>Read-only Id of the user that spawned events (by enqueueing a <code>ServiceBus.Job</code>).</dd>
     
     <dt>JobId</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
-    <dd>Id of the Queueable AsyncApexJob that injected this event's entry point event. (Not to be confused with ServiceBus.Job)</dd>
+    <dd>Id of the Queueable AsyncApexJob that injected the entry point event. (Not to be confused with the Job class)</dd>
 </dl>

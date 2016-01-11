@@ -1,5 +1,5 @@
 <h1>
-    Service Summary
+    Service Definition
 </h1>
 
 <!--
@@ -13,37 +13,27 @@
  !-->
 
 <p>
-    In Service Bus, a process defines a single piece logic with inputs, outputs, and documentation. The logic
-    is contained in an Apex Class. Markers in the Apex Class surface special traits.
+    Inside each Apex Service is a Service Definition class.
+    This inner class controls how the service is displayed and how it behaves.
+    The Service Bus discovers service definitions automatically.
 </p>
 
 <p>
-    Any Apex Class that contains Process Markers can be discovered in order to become a
-    process. The description of the process must be provided in a Marker Inner Class.
-</p>
-
-<p>
-    Additional markers indicate which Service traits a process has adopted. This example class extends
-    the <a href="?topic=ApiBaseProcess">base process</a> to show a bare minimum process:
+    This example shows the bare minimum service definition:
 </p>
 
 <pre>
-global with sharing class ExampleProcess extends BaseProcess {
+global class ExampleService extends Abstract.Service {
     
-    //Service Marker Inner Class
-    global class Summary {
+    global class Definition extends Abstract.Service.Definition {
         String Description = 'Outputs one event identical to the input event.';
     }
     
-    //add logic here and emit output events
-    override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
-        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
-    }
 }
 </pre>
 
 <h1>
-    Marker Inner Class
+    Attributes
 </h1>
 
 <!--
@@ -53,47 +43,46 @@ global with sharing class ExampleProcess extends BaseProcess {
  !-->
 
 <p>
-    The presence of a Marker Inner Class in any top-level Apex Class will make that class
-    discoverable as a process. The Marker Inner Class affects how the process is executed and
-    is used to generate user interfaces for step configuration.
+    The service definition affects how the service is executed and
+    is used to generate user interfaces.
 </p>
 
 <dl>
     <dt>Description</dt>
     <dd><strong>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></strong></dd>
-    <dd><strong>Required description that explains what this process does in simple terms.</strong></dd>
+    <dd><strong>Required description that explains what this service does in simple terms.</strong></dd>
     
     <dt>Tag</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Optional grouping tag that can be used to categorize related processes together.</dd>
+    <dd>Optional grouping tag that can be used to categorize related services together.</dd>
     
-    <dt>Name</dt>
+    <dt>Label</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Optional friendly name to be used instead of the fully-qualified Apex Class name.</dd>
+    <dd>Optional friendly label to be displayed instead of the apex class name.</dd>
     
     <dt>Icon</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Optional icon name from the <a href="resources/Api/index_abc.png" target="_blank">Silk library</a> that will display alongside steps of this process type.</dd>
+    <dd>Optional icon name from the <a href="resources/Api/index_abc.png" target="_blank">Silk library</a> that will display alongside steps of this type.</dd>
     
     <dt>Cardinality</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Optional indicator of the ratio of output events to input events: eg <code>Fewer</code> outputs (Gate), <code>Zero</code> for no outputs (Terminate), <code>One</code> for a single output (Wiretap), <code>Many</code> for a split.</dd>
+    <dd>Optional indicator of the ratio of output events to input events: eg <code>Fewer</code> outputs (Aggregate), <code>Zero</code> for no outputs (Terminate), <code>One</code> for a single output (Wiretap), <code>Many</code> for a split.</dd>
 
     <dt>HelpUrl</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Optional link to process help. This will be displayed alongside steps of this process type.</dd>
+    <dd>Optional link to service documentation. This will be displayed alongside steps of this type.</dd>
     
     <dt>Limits</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">Integer</a></dd>
-    <dd>Optional number of times this process can run in one execution context, while leaving at least half of all governors. For example, <code>100</code> for a process that only issues a SOQL query.</dd>
+    <dd>Optional number of times this service can run in one execution context. For example, <code>100</code> for a service that only issues a SOQL query.</dd>
 
     <dt>Inputs</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map</a>&lt;String,String&gt;</dd>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,String&gt;</a></dd>
     <dd>Optional friendly descriptions of the input event parameters required by this process.</dd>
     
     <dt>Outputs</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map</a>&lt;String,String&gt;</dd>
-    <dd>Optional friendly descriptions of the output event parameters emitted by this process. (Not to be confused with events themselves, of which a process may emit zero, one or many.)</dd>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,String&gt;</a></dd>
+    <dd>Optional friendly descriptions of the output event parameters emitted by this process. Not to be confused with events themselves.</dd>
     
     <dt>ServiceSetting</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_custom_settings.htm" target="_blank">SObject</a></dd>
@@ -231,7 +220,7 @@ override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Ob
 
 <pre>
 //Service Marker Interface
-global with sharing class TwitterProcess extends BaseProcess implements Database.AllowsCallouts {
+global class TwitterProcess extends BaseProcess implements Database.AllowsCallouts {
     
     //Service Marker Inner Class
     global class Summary {

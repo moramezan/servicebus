@@ -10,6 +10,18 @@
     Gate By Job process
 </h1>
 
+<dl>
+    <dt>AggregateQuery</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Query string for locating the records correlated by the Aggregate service. Use <code>Database.query</code> and cast the result to <code>List&lt;sObject&gt;</code>.</dd>
+    
+    <dt><!-- TODO --></dt>
+    
+    <dt>AggregateField</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_list.htm" target="_blank">List&lt;Map&lt;String,Object&gt;&gt;</a></dd>
+    <dd>Field name on the stored items that contains the serialized event data. Use <code>sobject.get()</code> to dereference it, then cast to <code>Map&lt;String,Object&gt;</code> when deserializing the value.</dd>
+</dl>
+
 <p>
 <ul>
     <li>A related collection of messages may proceed down the same sequence

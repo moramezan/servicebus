@@ -1,0 +1,45 @@
+<h1>
+    Apex Services
+</h1>
+
+<!--
+ ! Trying not to say "Service" unless we refer to "ApexClass"
+ ! I like also "Service Definition" ... do we change the label?
+ !-->
+
+<p>
+    A service is a single, logical program with inputs and outputs in the form of events.
+    Services are implemented as Apex classes.
+    Each service handles one event, and may output zero, one, or many new events.
+    All the traits available to service authors can be availed using a
+    <a href="?topic=ApiServiceDefinition">Service Definition</a>.
+</p>
+
+<p>
+    This example shows the use of the service definition class, which you will see throughout tutorials and documentation:
+</p>
+
+<pre>
+global class ExampleService extends Abstract.Service {
+    
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Example Service';
+    }
+    
+    override public void callouts(Map&lt;String,Object&gt; event) {
+        //perform service callouts
+    }
+    
+    override public List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
+        //implement service logic
+    }
+    
+}
+</pre>
+
+<fieldset>
+    <legend>Note</legend>
+    All output event parameters must be JSON serializable, to ensure they can be persisted between execution contexts.
+    <br /><br />
+    The service bus writes state to the database before and after service execution. This allows you to recovery from errors.
+</fieldset>

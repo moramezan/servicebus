@@ -7,7 +7,7 @@
  !-->
 
 <p>
-    A Job is used to inject entry point events into the Enterprise Service Bus. Jobs can be started
+    A Job is used to inject entry point events into the Service Bus. Jobs can be started
     in any context including triggers, batch apex, future methods, and before or after callouts.
 </p>
 
@@ -22,7 +22,11 @@
         </tr>
         <tr>
             <td>Simple event</td>
-            <td><code>Job(String sequenceName, Id recordId)</code></td>
+            <td><code>Job(String sequence, Id recordId)</code></td>
+        </tr>
+        <tr>
+            <td>Simple event</td>
+            <td><code>Job(Type service, Id recordId)</code></td>
         </tr>
         <tr>
             <td>Single event</td>
@@ -55,11 +59,11 @@
 </p>
 
 <pre>
-String sequenceName = 'Payroll_Calculation';
+String sequence = 'Payroll_Calculation';
 Id companyId = UserInfo.getOrganizationId();
 
 //submit a simple event to Enterprise Service Bus
-Queueable job = new ServiceBus.Job(sequenceName, companyId);
+Queueable job = new ServiceBus.Job(sequence, companyId);
 Id jobId = System.enqueueJob(job);
 </pre>
 
@@ -77,13 +81,13 @@ Id jobId = System.enqueueJob(job);
 </p>
 
 <p>
-    <code>global ServiceBus.Job(String sequenceName, Id recordId)</code>
+    <code>global ServiceBus.Job(String sequence, Id recordId)</code>
 </p>
 
 <dl>
-    <dt>sequenceName</dt>
+    <dt>sequence</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Name of the sequence the data is destined for. This is set on the <code>SequenceName</code> event parameter for your convenience.</dd>
+    <dd>Name of the sequence the data is destined for. This is set on the <code>Sequence</code> event parameter for your convenience.</dd>
     
     <dt>recordId</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
@@ -106,7 +110,7 @@ Id jobId = System.enqueueJob(job);
 <dl>
     <dt>event</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,Object&gt;</a></dd>
-    <dd>An event, which must carry a <code>SequenceName</code> parameter with a string value.</dd>
+    <dd>An event, which must carry a <code>ToSequence</code> parameter with a string value.</dd>
 </dl>
 
 <h2>
@@ -125,7 +129,7 @@ Id jobId = System.enqueueJob(job);
 <dl>
     <dt>events</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_list.htm" target="_blank">List&lt;Map&lt;String,Object&gt;&gt;</a></dd>
-    <dd>A collection of multiple events, each of which must carry an <code>SequenceName</code> parameter with a string value.</dd>
+    <dd>A collection of multiple events, each of which must carry an <code>ToSequence</code> parameter with a string value.</dd>
 </dl>
 
 <!--
@@ -170,7 +174,7 @@ Id jobId = System.enqueueJob(job);
 </p>
 
 <dl>
-    <dt>sequenceName</dt>
+    <dt>toSequence</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
     <dd>Indicates which sequence the event is destined for.</dd>
     
@@ -181,7 +185,7 @@ Id jobId = System.enqueueJob(job);
 
 <fieldset>
     <legend>Note</legend>
-    The Invocable Action signature is a Simple Event with variables for Id and SequenceName.
+    The Invocable Action signature is a Simple Event with variables for ToSequence and RecordId.
     Lightning Process Builder requires that all Invocable Variables be known at design time.
 </fieldset>
 
