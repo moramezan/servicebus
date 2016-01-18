@@ -118,8 +118,7 @@
         
         //act
         Test.startTest();
-        Job job = new Job('Origin', '00D000000000000AAA');
-        System.enqueueJob(job);
+        Enqueue.invoke(new Map<String,Object>{'ToSequence' => 'Origin'});
         Test.stopTest();
         
         //act

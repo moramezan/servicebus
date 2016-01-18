@@ -1,5 +1,6 @@
 public with sharing class MessageViewExtension {
     
+    static MessageModel dmlModel;
     ApexPages.StandardController controller;
     public Message__c Message {get; set;}
     public List<Message__c> Children {get; set;}
@@ -33,6 +34,14 @@ public with sharing class MessageViewExtension {
             WHERE ParentId__c = :mid
             ALL ROWS
         ];
+        
+        try {
+            //avoids dml in action method
+            dmlModel = MessageModel.fromId(mid);
+            Type.forName(DoDml.class.getName()).newInstance();
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+        }
         
         return null;
     }
@@ -100,6 +109,12 @@ public with sharing class MessageViewExtension {
             + '    window.location.reload();'
             + '}'
         ).replaceAll('    ', ' ');
+    }
+    
+    public class DoDml {
+        public DoDml() {
+            dmlModel.appendJobStatus();
+        }
     }
     
 }

@@ -256,7 +256,7 @@ public with sharing class ConfigureController {
      * }
      */
     @TestVisible System.PageReference buildRefreshLink() {
-        String baseUrl = Application__c.getOrgDefaults().OrgBaseUrl__c;
+        String baseUrl = Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:');
         System.PageReference pr = new System.PageReference(baseUrl + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'refresh_token');
         pr.getParameters().put('client_id', CLIENT);

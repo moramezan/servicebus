@@ -87,8 +87,7 @@
         
         //act (enqueue)
         Test.startTest();
-        Job job = new Job('Caller', '00D000000000000AAA');
-        System.enqueueJob(job);
+        Enqueue.invoke(new Map<String,Object>{'ToSequence' => 'Caller'});
         Test.stopTest();
         
         //assert

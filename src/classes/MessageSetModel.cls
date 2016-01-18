@@ -2,7 +2,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     
     public class ModelException extends Exception {}
     
-    List<Message__c> Messages;
+    public List<Message__c> Messages;
     
     /**
      * Prevent message inserts per #677
@@ -90,9 +90,38 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         
         update rebufferableMessages;
         
+        //#1215 only start if not paused
+        if (Application__c.getOrgDefaults().BrokerIsPaused__c) return;
+        
+        //already running
+        if (Enqueue.isRunning()) return;
+        
+        //about to run
+        if (Enqueue.isScheduled()) return;
+
+        //tests need to run own broker
+        if (Test.isRunningTest()) return;
+
         //#952 restart REAL broker asynchronously
-        System.Queueable job = new Job();
-        if (!Application__c.getOrgDefaults().BrokerIsPaused__c) System.enqueueJob(job); //#1215 only start if not paused
+        if (Enqueue.isIntegrationUser()) {
+            //integration user startup
+            Broker.impl().run();
+        } else {
+            //arbitrary user startup
+            Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus', 'RecordId' => null});
+        }
+    }
+    
+    static public MessageSetModel fromJobId(Id jobId) {
+        
+        List<Message__c> inputMessages = [
+            SELECT Id, Route__c, Event__c
+            FROM Message__c
+            WHERE JobId__c = :jobId
+        ];
+        
+        return new MessageSetModel(inputMessages);
+        
     }
     
     /**
@@ -456,9 +485,23 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         for (Message__c message : messages) message.Status__c = 'Buffered';
         update messages;
         
+        //already running
+        if (Enqueue.isRunning()) return;
+        
+        //about to run
+        if (Enqueue.isScheduled()) return;
+
+        //tests need to run own broker
+        if (Test.isRunningTest()) return;
+
         //#952 restart REAL broker
-        System.Queueable job = new Job();
-        System.enqueueJob(job);
+        if (Enqueue.isIntegrationUser()) {
+            //integration user startup
+            Broker.impl().run();
+        } else {
+            //arbitrary user startup
+            Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus', 'RecordId' => null});
+        }
     }
     
     /**

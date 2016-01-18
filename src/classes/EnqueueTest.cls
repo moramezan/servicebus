@@ -32,11 +32,9 @@
         
         //act
         Test.startTest();
-        System.enqueueJob(new Job(
-            new Map<String,Object>{
-                'ToConfigIds' => new Set<Id>{'a01000000000001', 'a01000000000002'}
-            }
-        ));
+        Enqueue.invoke(new Map<String,Object>{
+            'ToConfigIds' => new Set<Id>{'a01000000000001', 'a01000000000002'}
+        });
         Test.stopTest();
         
         //assemble
@@ -78,11 +76,9 @@
         
         //act
         Test.startTest();
-        System.enqueueJob(new Job(
-            new Map<String,Object>{
-                'ToConfigIds' => new Set<Id>{'a01000000000001', 'a01000000000002'}
-            }
-        ));
+        Enqueue.invoke(new Map<String,Object>{
+            'ToConfigIds' => new Set<Id>{'a01000000000001', 'a01000000000002'}
+        });
         Test.stopTest();
         
         //assemble

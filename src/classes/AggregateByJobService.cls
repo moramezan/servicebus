@@ -36,7 +36,7 @@ public class AggregateByJobService extends ApexClassModel.Service {
         if (!inputEvent.containsKey('SiblingIds'))
             throw new ServiceException('Input event missing mandatory SiblingIds parameter');
 
-        String jobId = (String)inputEvent.get('JobId');
+        Id jobId = (Id)inputEvent.get('JobId');
         Integer chunkTotal = (Integer)inputEvent.get('Range');
         Integer chunk = (Integer)inputEvent.get('Chunk');
         String route = (String)inputEvent.get('Route');

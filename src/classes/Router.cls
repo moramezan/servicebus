@@ -27,7 +27,8 @@ public class Router extends ApexClassModel.Service {
         
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         for (Step__c schedule : schedules) outputEvents.add(new Map<String,Object>{
-            'Route' => version + '#' + schedule.Sequence__c + '#' + position,
+            'ToSequence' => schedule.Sequence__c,
+            'ToService' => null, //null out accumulated parameter
             'RecordId' => inputEvent.get('RecordId') //#971 this carries difference between heartbeat and test message
         });
         
@@ -205,12 +206,11 @@ public class Router extends ApexClassModel.Service {
         
         updateLastEventStamp(timestamps);
         
-        Enqueue.AllowRoute = true; //#999#issuecomment-133751700
         List<Map<String,Object>> inputEvents = new List<Map<String,Object>>();
         for (DateTime timestamp : timestamps) inputEvents.add(new Map<String,Object>{
             'RecordId' => RecordId, //#971 used in lieu of :WasHeartbeat
             'EntryPointTimestamp' => timestamp,
-            'Route' => Router.class.getName() //#956 and #575 so that resolve and execute can crow look //#999#issuecomment-133751700
+            'ToService' => Router.class.getName() //#956 and #575 so that resolve and execute can crow look //#999#issuecomment-133751700
         });
         
         if (inputEvents.isEmpty()) {
@@ -221,15 +221,14 @@ public class Router extends ApexClassModel.Service {
         //heartbeats are processed immediately
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
         for (Map<String,Object> inputEvent : inputEvents) outputEvents.addAll(new Router().handle(inputEvent));
-        
+
         if (outputEvents.isEmpty()) {
             //nothing to do
             return;
         }
         
         //#952 wake up broker
-        Job j = new Job(outputEvents);
-        System.enqueueJob(j);
+        Enqueue.invoke(outputEvents);
     }
     
     public class ScheduleImpl implements RouterSchedule.Schedulable {

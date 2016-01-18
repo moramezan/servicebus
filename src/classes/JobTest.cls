@@ -27,8 +27,7 @@
         
         //act
         Test.startTest();
-        Job job = new Job(sequenceName, recordId);
-        System.enqueueJob(job);
+        Enqueue.invoke(new Map<String,Object>{'ToSequence' => sequenceName, 'RecordId' => recordId});
         Test.stopTest();
         
         //assert
@@ -61,7 +60,7 @@
         
         try {
             //act
-            new Job(input);
+            Enqueue.invoke(input);
             System.assert(false, 'Line above should throw exception');
         } catch (Enqueue.EnqueueException e) {
             //assert
@@ -74,7 +73,7 @@
     static testmethod void testEnoughDmlRowsToEnqueueManyEvents() {
         //arrange input events
         List<Map<String,Object>> inputEvents = new List<Map<String,Object>>();
-        for (Integer i = 0; i < 1000; i++) inputEvents.add(new Map<String,Object>()); //#955 possibly 10000, but headspace
+        for (Integer i = 0; i < 1000; i++) inputEvents.add(new Map<String,Object>{'ToSequence' => 'Test'}); //#955 possibly 10000, but headspace
         
         //assert
         Test.startTest(); //avoid System.LimitException: Apex CPU time limit exceeded
@@ -83,8 +82,7 @@
         System.assertEquals(expectedBefore, actualBefore, 'Wrong size.');
 
         //act
-        Job job = new Job(inputEvents);
-        job.execute(new QueueableContext());
+        Enqueue.invoke(inputEvents);
         Integer limitDmlRows = Limits.getLimitDmlRows();
         Integer dmlRows = Limits.getDmlRows();
         Test.stopTest();
@@ -107,7 +105,7 @@
         
         try {
             //act
-            new Job(inputEvents);
+            Enqueue.invoke(inputEvents);
             System.assert(false, 'Line above should throw exception.');
         } catch (Enqueue.EnqueueException e) {
             //assert
@@ -120,14 +118,14 @@
     
     static testmethod void testNaughtyKeys() {
         //act (good one)
-        Map<String,Object> inputEvent = new Map<String,Object>{'ns:param' => ''};
-        new Job(inputEvent);
+        Map<String,Object> inputEvent = new Map<String,Object>{'ToSequence' => 'Test', 'ns:param' => ''};
+        Enqueue.invoke(inputEvent);
         System.assert(inputEvent.containsKey('ns:param'));
         
         try {
             //act (ours)
-            inputEvent = new Map<String,Object>{'test' => ''};
-            new Job(inputEvent);
+            inputEvent = new Map<String,Object>{'ToSequence' => 'Test', 'test' => ''};
+            Enqueue.invoke(inputEvent);
             System.assert(false, 'Line above should throw exception.');
             
         } catch (Enqueue.EnqueueException e) {
@@ -139,8 +137,8 @@
         
         try {
             //act (reserved)
-            inputEvent = new Map<String,Object>{':test' => ''};
-            new Job(inputEvent);
+            inputEvent = new Map<String,Object>{'ToService' => '', ':test' => ''};
+            Enqueue.invoke(inputEvent);
             System.assert(false, 'Line above should throw exception.');
             
         } catch (Enqueue.EnqueueException e) {

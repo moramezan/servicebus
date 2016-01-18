@@ -11,7 +11,7 @@
         MessageViewExtension extension = new MessageViewExtension(controller);
         PageReference redirect = extension.doInit();
         extension.showService();
-        
+
         //assert
         System.assertEquals(null, redirect, 'Wrong redirect.');
         System.assert(!ApexPages.hasMessages());
