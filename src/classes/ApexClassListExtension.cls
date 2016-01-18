@@ -14,8 +14,11 @@ public with sharing class ApexClassListExtension {
     public Map<Id,ApexClassModel.Summary> id2summary {get; set;}
     
     public User getRunAsUser() {
-        Id userId = Application__c.getOrgDefaults().RunAsUserId__c;
-        return (User)ApexDomain.getById(userId);
+        return [
+            SELECT Id, Name
+            FROM User
+            WHERE Id = :Application__c.getOrgDefaults().RunAsUserId__c
+        ];
     }
     
     public PageReference doRedirect() {
