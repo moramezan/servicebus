@@ -71,10 +71,7 @@ public class Router extends ApexClassModel.Service {
      * class: common.apex.async.AsyncApexJobModel,
      * reason: Callout from scheduled Apex not supported.
      */
-    @Future(callout=true) static public void optimize() { //#969 obfuscation of deferRefreshAccessToken
-        ConfigureController.refreshAccessToken();
-    }
-    
+
     public interface IHeartbeatGenerator {
         void generateHeartbeats();
     }
@@ -234,14 +231,8 @@ public class Router extends ApexClassModel.Service {
     public class ScheduleImpl implements RouterSchedule.Schedulable {
     
         public void execute(System.SchedulableContext context) {
-            if (!Test.isRunningTest() && Application__c.getOrgDefaults().RunAsRefreshToken__c != null) {
-                //#728 keep access token roaring and ready every hour IF configured ok
-                optimize(); //#969 obfuscation of deferRefreshAccessToken
-            }
-            
             //#971 used in lieu of :WasHeartbeat
             RecordId = context.getTriggerId(); //eg 08e24000007paG1AAI
-            
             IHeartbeatGenerator heartbeatGenerator = new HeartbeatGeneratorImpl();
             heartbeatGenerator.generateHeartbeats();
         }

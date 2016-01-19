@@ -27,21 +27,19 @@
         actualCount = [SELECT COUNT() FROM Application__c];
         System.assertEquals(expectedCount, actualCount, 'Wrong setting count before.');
         
-        //act
-        Test.startTest();
-        Test.setMock(HttpCalloutMock.class, new UnauthorizedEndpointResponse());
-        ConfigureController.refreshAccessToken();
-        Test.stopTest();
-        
-        //assert that schedule is stopped
-        expectedCount = 0;
-        actualCount = [SELECT COUNT() FROM CronJobDetail WHERE Name = :ConfigureController.JobName];
-        System.assertEquals(expectedCount, actualCount, 'Wrong count after.');
-        
-        //assert setting is absent
-        expectedCount = 0;
-        actualCount = [SELECT COUNT() FROM Application__c WHERE RunAsAccessToken__c != null];
-        System.assertEquals(expectedCount, actualCount, 'Wrong setting count after.');
+        try {
+            //act
+            Test.startTest();
+            Test.setMock(HttpCalloutMock.class, new UnauthorizedEndpointResponse());
+            String accessToken = ConfigureController.refreshAccessToken();
+            Test.stopTest();
+            System.assert(false, 'Line above should throw exception.');
+        } catch (Exception e) {
+            //assert
+            String expectedMessage = 'Unauthorized endpoint';
+            String actualMessage = e.getMessage();
+            System.assert(actualMessage.contains(expectedMessage), 'Wrong message.');
+        }
     }
     
     static testmethod void testBuildAuthLink() {

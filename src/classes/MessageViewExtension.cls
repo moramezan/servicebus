@@ -36,7 +36,6 @@ public with sharing class MessageViewExtension {
         ];
         
         try {
-            //avoids dml in action method
             dmlModel = MessageModel.fromId(mid);
             Type.forName(DoDml.class.getName()).newInstance();
         } catch (Exception e) {
@@ -113,6 +112,12 @@ public with sharing class MessageViewExtension {
     
     public class DoDml {
         public DoDml() {
+            //roaring and ready access token
+            Application__c setting = Application__c.getOrgDefaults();
+            setting.RunAsAccessToken__c = ConfigureController.refreshAccessToken();
+            upsert setting;
+            
+            //avoids dml in action method
             dmlModel.appendJobStatus();
         }
     }

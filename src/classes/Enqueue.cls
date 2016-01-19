@@ -11,14 +11,16 @@ global class Enqueue implements Process.Plugin {
         PageReference endpoint = new PageReference(Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:') + '/services/data/v35.0/tooling/executeAnonymous');
         endpoint.getParameters().put('anonymousBody', command);
         
-        //TODO refresh token
+        //refresh access token
+        Application__c setting = Application__c.getOrgDefaults();
+        setting.RunAsAccessToken__c = ConfigureController.refreshAccessToken();
         
         //execute anonymous
         HttpRequest request = new HttpRequest();
         request.setTimeout(120000);
         request.setMethod('GET');
         request.setEndpoint(endpoint.getUrl());
-        request.setHeader('Authorization', 'Bearer ' + Application__c.getOrgDefaults().RunAsAccessToken__c);
+        request.setHeader('Authorization', 'Bearer ' + setting.RunAsAccessToken__c);
         
         //#653 throw exception in our namespace
         HttpResponse response = new Http().send(request);
