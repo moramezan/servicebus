@@ -36,7 +36,30 @@ abstract public without sharing class Broker {
         }
     }
     
+    static public Boolean isScheduled() {
+        List<CronJobDetail> cronJobDetails = [
+            SELECT Id
+            FROM CronJobDetail
+            WHERE Name = 'Service Bus Broker'
+            LIMIT 1
+        ];
+        
+        return !cronJobDetails.isEmpty();
+    }
     
+    static public Boolean isRunning() {
+        List<AsyncApexJob> asyncApexJobs = [
+            SELECT Id
+            FROM AsyncApexJob
+            WHERE JobType = 'BatchApex'
+            AND ApexClass.Name = 'BrokerBatch'
+            AND ApexClass.NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
+            AND Status IN ('Holding', 'Queued', 'Processing', 'Preparing')
+            LIMIT 1
+        ];
+        
+        return !asyncApexJobs.isEmpty();
+    }
     
     /**
      * Formerly restartIfWorkPending
@@ -215,12 +238,12 @@ abstract public without sharing class Broker {
          */
         override public void run() {
             
-            if (Enqueue.isRunning() || Enqueue.isScheduled()) {
+            if (isRunning() || isScheduled()) {
                 //already running - one is enough
                 return;
             }
             
-            if (!Enqueue.isIntegrationUser()) {
+            if (!Test.isRunningTest() || Application__c.getOrgDefaults().RunAsUserId__c != UserInfo.getUserId()) {
                 //#847 broker panic, wrong user context
                 System.assert(false, 'The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
             }

@@ -2,30 +2,94 @@ global class Enqueue implements Process.Plugin {
     
     public class EnqueueException extends Exception {}
     
+    /**
+     * <?xml version=1.0 encoding=UTF-8?>
+     * <env:Envelope xmlns:env=http://schemas.xmlsoap.org/soap/envelope/ xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance xmlns:xsd=http://www.w3.org/2001/XMLSchema>
+     *     <env:Header>
+     *         <SessionHeader xmlns=urn:tooling.soap.sforce.com>
+     *             <sessionId>00D24000000rJpZ_____AQ4AQGpDqiI3VYXwWf4DRnokaGOrD0HjPa1XTy.lGX1SnKvZ_7ikRiDIOX_xHHuoS2JY_5XXPem.iymvbf6Zxc4yj6cwQmxE</sessionId>
+     *         </SessionHeader>
+     *     </env:Header>
+     *     <env:Body>
+     *         <executeAnonymous xmlns=urn:tooling.soap.sforce.com>
+     *             <String>System.assert(false, 12345);</String>
+     *         </executeAnonymous>
+     *     </env:Body>
+     * </env:Envelope>
+     *
+     * <?xml version=1.0 encoding=UTF-8?>
+     * <soapenv:Envelope xmlns:soapenv=http://schemas.xmlsoap.org/soap/envelope/ xmlns=urn:tooling.soap.sforce.com xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance>
+     *     <soapenv:Body>
+     *         <executeAnonymousResponse>
+     *             <result>
+     *                 <column>1</column>
+     *                 <compileProblem xsi:nil=true/>
+     *                 <compiled>true</compiled>
+     *                 <exceptionMessage>System.AssertException: Assertion Failed: 12345</exceptionMessage>
+     *                 <exceptionStackTrace>AnonymousBlock: line 1, column 1</exceptionStackTrace>
+     *                 <line>1</line>
+     *                 <success>false</success>
+     *             </result>
+     *         </executeAnonymousResponse>
+     *     </soapenv:Body>
+     * </soapenv:Envelope>
+     */
     static public void integrationCommand(Map<String,Object> parameters) {
-        //execute anonymous
-        String plugin = Json.serialize(parameters);
-        String command = 'new ' + Enqueue.class.getName() + '().invoke(new Process.PluginRequest((Map<String,Object>)Json.deserializeUntyped(\'' + plugin + '\')));';
         
-        //tooling api endpoint
-        PageReference endpoint = new PageReference(Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:') + '/services/data/v35.0/tooling/executeAnonymous');
-        endpoint.getParameters().put('anonymousBody', command);
+        if (Test.isRunningTest() || Application__c.getOrgDefaults().RunAsUserId__c == UserInfo.getUserId()) {
+            //already integration user
+            new Enqueue().invoke(new Process.PluginRequest(parameters));
+            return;
+        }
         
-        //refresh access token
+        //prepare session
         Application__c setting = Application__c.getOrgDefaults();
         setting.RunAsAccessToken__c = ConfigureController.refreshAccessToken();
         
-        //execute anonymous
+        //prepare command
+        String command = ''
+            + 'new ' + Enqueue.class.getName() + '().invoke(new Process.PluginRequest('
+            + '    (Map<String,Object>)Json.deserializeUntyped(\'' + Json.serialize(parameters) + '\')'
+            + '));'
+        ;
+        
+        //soap namespace
+        Dom.Document dom = new Dom.Document();
+        String env = 'http://schemas.xmlsoap.org/soap/envelope/';
+        String xsd = 'http://www.w3.org/2001/XMLSchema';
+        String xsi = 'http://www.w3.org/2001/XMLSchema-instance';
+        String xmlns = 'urn:tooling.soap.sforce.com';
+        
+        //soap envelope
+        Dom.XmlNode envelope = dom.createRootElement('Envelope', env, 'env');
+        envelope.setNamespace('xsi', xsi);
+        envelope.setNamespace('xsd', xsd);
+        
+        //soap header
+        Dom.XmlNode header = envelope.addChildElement('Header', env, 'env');
+        Dom.XmlNode sessionHeader = header.addChildElement('SessionHeader', xmlns, '');
+        Dom.XmlNode sessionId = sessionHeader.addChildElement('sessionId', null, null);
+        sessionId.addTextNode(setting.RunAsAccessToken__c);
+        
+        //soap body
+        Dom.XmlNode body = envelope.addChildElement('Body', env, 'env');
+        Dom.XmlNode executeAnonymous = body.addChildElement('executeAnonymous', xmlns, '');
+        Dom.XmlNode strinq = executeAnonymous.addChildElement('String', null, null);
+        strinq.addTextNode(command);
+        
+        //post request
         HttpRequest request = new HttpRequest();
         request.setTimeout(120000);
-        request.setMethod('GET');
-        request.setEndpoint(endpoint.getUrl());
-        request.setHeader('Authorization', 'Bearer ' + setting.RunAsAccessToken__c);
+        request.setMethod('POST');
+        request.setHeader('SOAPAction', '""');
+        request.setHeader('Content-Type', 'text/xml');
+        request.setEndpoint(Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:') + '/services/Soap/T/35.0');
+        request.setBody(dom.toXmlString());
+        HttpResponse response = new Http().send(request);
         
         //#653 throw exception in our namespace
-        HttpResponse response = new Http().send(request);
         if (response.getStatusCode() != 200) throw new EnqueueException(response.getBody());
-        if (response.getBody().contains('"success":false')) throw new EnqueueException(response.getBody());
+        if (response.getBody().contains('<success>false</success>')) throw new EnqueueException(response.getBody());
     }
     
     /**
@@ -73,28 +137,27 @@ global class Enqueue implements Process.Plugin {
         Map<String,Object> inputEvent = request.InputParameters;
         
         //INTEGRATION COMMANDS
-        if (inputEvent.get('ToService') == 'ServiceBus') {
-            
-            String recordId = (String)inputEvent.get('RecordId');
-            
-            if (recordId == null) {
-                //start the broker
-                Broker.impl().run();
-            }
-            
-            if (recordId.startsWith(SObjectType.Message__c.KeyPrefix)) {
-                //restart by message id
-                MessageModel.fromId(recordId).restart();
-                return null;
-            }
-            
-            if (recordId.startsWith(SObjectType.AsyncApexJob.KeyPrefix)) {
-                //execute/persist by job id
-                MessageSetModel model = MessageSetModel.fromJobId(recordId);
-                List<Message__c> outputMessages = model.execute(null);
-                model.persist(outputMessages);
-                return null;
-            }
+        if (inputEvent.get('ToService') == 'ServiceBus.ExecuteJobId') {
+            //execute by message id
+            Id jobId = (Id)inputEvent.get('RecordId');
+            MessageSetModel model = MessageSetModel.fromJobId(jobId);
+            model.persist(model.execute(null));
+            return null;
+        }
+        
+        if (inputEvent.get('ToService') == 'ServiceBus.RestartMessageId') {
+            //restart by message id
+            Id messageId = (Id)inputEvent.get('RecordId');
+            MessageModel model = MessageModel.fromId(messageId);
+            model.restart();
+            return null;
+        }
+        
+        if (inputEvent.get('ToService') == 'ServiceBus.RunBrokerBatch') {
+            //run batch broker
+            if (Test.isRunningTest()) System.assert(false, 'TODO wat');
+            Broker.impl().run();
+            return null;
         }
         
         //DYNAMIC ENQUEUE
@@ -173,7 +236,6 @@ global class Enqueue implements Process.Plugin {
         Object toService = inputEvents[0].get('ToService');
         Object toSequence = inputEvents[0].get('ToSequence');
         Object toConfigIds = inputEvents[0].get('ToConfigIds');
-        Object integrationUser = inputEvents[0].get('IntegrationUser');
         
         for (Integer i = 0; i < inputEvents.size(); i++) {
             
@@ -197,11 +259,6 @@ global class Enqueue implements Process.Plugin {
             if (toService != null && inputEvent.get('ToService') != toService) {
                 //failure, mixed one-shots with different services
                 throw new EnqueueException('Enqueueing groups of events to different services is not permitted. List the events together by service and enqueue the different services in separate jobs.');
-            }
-            
-            if (toService != null && inputEvent.get('IntegrationUser') != integrationUser) {
-                //failure, mixed integration users
-                throw new EnqueueException('Enqueueing groups of events to different users is not permitted. List the IntegrationUser events together and enqueue those in a separate job.');
             }
             
             if (toService == null && toSequence == null && toConfigIds == null) {
@@ -255,18 +312,12 @@ global class Enqueue implements Process.Plugin {
             String slot = '0000';
             Decimal numberOfAttempts = 1;
             String status = 'Started';
-            Id ownerId = UserInfo.getUserId();
             
             //sequence fields
             if (toService == null) {
                 slot = null;
                 numberOfAttempts = 0;
                 status = Application__c.getOrgDefaults().BrokerIsPaused__c ? 'Paused' : 'Buffered';
-            }
-            
-            //integration user fields
-            if (integrationUser == true) {
-                ownerId = Application__c.getOrgDefaults().RunAsUserId__c;
             }
             
             //populate job id inside event
@@ -276,6 +327,7 @@ global class Enqueue implements Process.Plugin {
                 Slot__c = slot,
                 JobId__c = jobId,
                 Status__c = status,
+                OwnerId = UserInfo.getUserId(),
                 NumberOfAttempts__c = numberOfAttempts,
                 Event__c = Json.serializePretty(inputEvents[i])
             ));
@@ -299,38 +351,20 @@ global class Enqueue implements Process.Plugin {
             if (Test.isRunningTest()) jobId = '707000123456789';
             MessageSetModel model = MessageSetModel.fromJobId(jobId);
             
-            //empty job, just start broker
-            if (model.Messages.isEmpty()) {
-                if (isRunning()) return;
-                if (isScheduled()) return;
-                integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus', 'RecordId' => null});
-                return;
-            }
-            
             //#1220 HANDLE ONE SHOT
             if (!model.Messages[0].Route__c.contains('#')) {
                 
-                if (new MessageModel((Message__c)model.getRecords()[0]).getParam('IntegrationUser') == true) {
-                    
-                    //integration user execute/persist
-                    integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus', 'RecordId' => jobId});
-                    
-                } else {
-                    
-                    //arbitrary user execute/persist
-                    model.persist(model.execute(null));
-                    
-                }
-                
+                //integration user execute/persist
+                integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus.ExecuteJobId', 'RecordId' => jobId});
                 return;
                 
             }
             
             //already running
-            if (isRunning()) return;
+            if (Broker.isRunning()) return;
             
             //about to run
-            if (isScheduled()) return;
+            if (Broker.isScheduled()) return;
             
             //tests need to run own broker
             if (Test.isRunningTest()) return;
@@ -341,18 +375,8 @@ global class Enqueue implements Process.Plugin {
             //#1220 HANDLE SEQUENCE
             if (model.Messages[0].Route__c.contains('#')) {
                 
-                if (isIntegrationUser()) {
-                    
-                    //integration user broker start #989
-                    Broker.impl().run();
-                    
-                } else {
-                    
-                    //arbitrary user broker start
-                    integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus', 'RecordId' => null});
-                    
-                }
-                
+                //integration user broker start #989
+                integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus.RunBrokerBatch'});
                 return;
                 
             }
@@ -452,34 +476,4 @@ global class Enqueue implements Process.Plugin {
         return output;
     }
     
-    static public Boolean isIntegrationUser() {
-        Id userId = UserInfo.getUserId();
-        Id runningId = Application__c.getOrgDefaults().RunAsUserId__c;
-        return userId == runningId;
-    }
-    
-    static public Boolean isScheduled() {
-        List<CronJobDetail> cronJobDetails = [
-            SELECT Id
-            FROM CronJobDetail
-            WHERE Name = 'Service Bus Broker'
-            LIMIT 1
-        ];
-        
-        return !cronJobDetails.isEmpty();
-    }
-    
-    static public Boolean isRunning() {
-        List<AsyncApexJob> asyncApexJobs = [
-            SELECT Id
-            FROM AsyncApexJob
-            WHERE JobType = 'BatchApex'
-            AND ApexClass.Name = 'BrokerBatch'
-            AND ApexClass.NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
-            AND Status IN ('Holding', 'Queued', 'Processing', 'Preparing')
-            LIMIT 1
-        ];
-        
-        return !asyncApexJobs.isEmpty();
-    }
 }

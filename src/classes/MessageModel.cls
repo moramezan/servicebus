@@ -236,7 +236,7 @@ public class MessageModel extends ApexDomain.StandardModel {
         MessageSetModel model = new MessageSetModel(new List<Message__c>{this.Message});
         
         //VALIDATE
-        if (!Enqueue.isIntegrationUser()) throw new ModelException('The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
+        if (!Test.isRunningTest() && Application__c.getOrgDefaults().RunAsUserId__c != UserInfo.getUserId()) throw new ModelException('The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
         if (!(this.Message.Status__c == 'Paused' || this.Message.Exception__c != null)) throw new ModelException('Only Paused or Exception messages can be restarted.');
         
         //EXECUTE
@@ -249,8 +249,6 @@ public class MessageModel extends ApexDomain.StandardModel {
         if (RestartException != null) throw RestartException;
         
         //success, restart the REAL broker to carry on with the outputs
-        if (Enqueue.isScheduled()) return;
-        if (Enqueue.isRunning()) return;
         Broker.impl().run();
     }
     

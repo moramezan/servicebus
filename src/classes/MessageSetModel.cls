@@ -94,22 +94,16 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         if (Application__c.getOrgDefaults().BrokerIsPaused__c) return;
         
         //already running
-        if (Enqueue.isRunning()) return;
+        if (Broker.isRunning()) return;
         
         //about to run
-        if (Enqueue.isScheduled()) return;
+        if (Broker.isScheduled()) return;
 
         //tests need to run own broker
         if (Test.isRunningTest()) return;
 
         //#952 restart REAL broker asynchronously
-        if (Enqueue.isIntegrationUser()) {
-            //integration user startup
-            Broker.impl().run();
-        } else {
-            //arbitrary user startup
-            Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus', 'RecordId' => null});
-        }
+        Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus.RunBrokerBatch'});
     }
     
     static public MessageSetModel fromJobId(Id jobId) {
@@ -486,22 +480,16 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         update messages;
         
         //already running
-        if (Enqueue.isRunning()) return;
+        if (Broker.isRunning()) return;
         
         //about to run
-        if (Enqueue.isScheduled()) return;
+        if (Broker.isScheduled()) return;
 
         //tests need to run own broker
         if (Test.isRunningTest()) return;
 
         //#952 restart REAL broker
-        if (Enqueue.isIntegrationUser()) {
-            //integration user startup
-            Broker.impl().run();
-        } else {
-            //arbitrary user startup
-            Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus', 'RecordId' => null});
-        }
+        Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus.RunBrokerBatch'});
     }
     
     /**

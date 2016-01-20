@@ -256,7 +256,7 @@ public with sharing class ConfigureController {
      * }
      */
     @TestVisible System.PageReference buildRefreshLink() {
-        String baseUrl = Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:');
+        String baseUrl = Application__c.getOrgDefaults().OrgBaseUrl__c;
         System.PageReference pr = new System.PageReference(baseUrl + '/services/oauth2/token');
         pr.getParameters().put('grant_type', 'refresh_token');
         pr.getParameters().put('client_id', CLIENT);
@@ -270,6 +270,12 @@ public with sharing class ConfigureController {
      * to get a ready-and-roaring access token, and saves the new one away.
      */
     static public String refreshAccessToken() {
+        
+        if (ConfigureIfNeeded(null) != null) {
+            //failure, there is a risk of posting to wrong endpoint!
+            System.assert(false, 'Please configure the Service Bus package.');
+        }
+        
         HttpRequest request = new HttpRequest();
         request.setTimeout(120000);
         request.setMethod('POST');
