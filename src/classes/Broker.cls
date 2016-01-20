@@ -243,7 +243,7 @@ abstract public without sharing class Broker {
                 return;
             }
             
-            if (!Test.isRunningTest() || Application__c.getOrgDefaults().RunAsUserId__c != UserInfo.getUserId()) {
+            if (!Test.isRunningTest()) if (Application__c.getOrgDefaults().RunAsUserId__c != UserInfo.getUserId()) {
                 //#847 broker panic, wrong user context
                 System.assert(false, 'The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
             }

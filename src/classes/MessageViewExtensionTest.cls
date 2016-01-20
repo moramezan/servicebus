@@ -1,5 +1,13 @@
 @IsTest class MessageViewExtensionTest {
     
+    @TestSetup static void testSetup() {
+        //act
+        new PostInstallHandler().onInstall(null);
+        
+        //assert
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
+    }
+    
     static testmethod void coverShowService() {
         //arrange record
         Message__c message = new Message__c(Event__c = '{"Route":"TerminateService"}');
@@ -58,7 +66,7 @@
         
         //assert
         System.assertEquals(null, redirect, 'Wrong redirect.');
-        System.assert(!ApexPages.hasMessages());
+        System.assert(!ApexPages.hasMessages(), ApexPages.getMessages());
     }
     
     @TestVisible class TokenResponse implements HttpCalloutMock {

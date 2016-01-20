@@ -271,7 +271,7 @@ public with sharing class ConfigureController {
      */
     static public String refreshAccessToken() {
         
-        if (ConfigureIfNeeded(null) != null) {
+        if (!Test.isRunningTest()) if (ConfigureIfNeeded(null) != null) {
             //failure, there is a risk of posting to wrong endpoint!
             System.assert(false, 'Please configure the Service Bus package.');
         }
@@ -567,14 +567,14 @@ public with sharing class ConfigureController {
         if (null == sessionId) {
             //failure, user never clicked configure button
             PageReference configure = Page.Configure;
-            configure.getParameters().put('retURL', retURL.getUrl());
+            if (retURL != null) configure.getParameters().put('retURL', retURL.getUrl());
             return configure;
         }
         
         if (configuredOrgId != unprefixedOrgId) {
             //failure, new environment probably due to sandbox refresh
             PageReference configure = Page.Configure;
-            configure.getParameters().put('retURL', retURL.getUrl());
+            if (retURL != null) configure.getParameters().put('retURL', retURL.getUrl());
             return configure;
         }
         

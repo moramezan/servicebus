@@ -367,13 +367,6 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         this.swallowToString();
     }
     
-    override public void onAfterInsert() {
-        //#1038 update immediately to populate message ids, avoid memory leak in mark
-        List<Message__c> messages = new List<Message__c>();
-        for (Message__c message : this.Messages) messages.add(new Message__c(Id = message.Id));
-        update messages; //touch
-    }
-    
     override public void onAfterUndelete() {
         for (Message__c message : this.Messages) {
             //#1185 inhibit undelete
@@ -402,9 +395,6 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             event.remove('Chunk');
             event.remove('Range');
             event.remove('SiblingIds'); //#1026
-            
-            //#1026 this guy wont be visible unless requeried after update
-            if (message.Id != null) event.put('MessageId', message.Id);
             
             //#1004 Route__c field only ever used to LOCATE, and for GATE and MONITOR (we can clear it as well as setting in)
             if (event.containsKey('Route')) message.Route__c = (String)event.get('Route'); else message.Route__c = null;
