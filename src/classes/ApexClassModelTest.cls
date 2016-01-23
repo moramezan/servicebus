@@ -9,7 +9,7 @@
     }
     
     //@TestVisible private preferred, but Type.forName does not support
-    public class DescribeServiceSummary extends ApexClassModel.Summary {
+    public class DescribeServiceDefinition extends ApexClassModel.Definition {
         String Tag = 'Tag';
         String Label = 'Name';
         String Description = 'Description';
@@ -23,12 +23,12 @@
         Map<String,String> Outputs = new Map<String,String>{'foo' => 'bar'};
     }
 
-    static testmethod void testSummary() {
+    static testmethod void testDefinition() {
         //arrange
-        ApexClassModel.Summary actual = new ApexClassModel.Summary(DescribeService.class);
+        ApexClassModel.Definition actual = new ApexClassModel.Definition(DescribeService.class);
         
         //act
-        DescribeServiceSummary expected = new DescribeServiceSummary();
+        DescribeServiceDefinition expected = new DescribeServiceDefinition();
         
         //assert
         System.assertEquals(expected.Tag, actual.Tag, 'Wrong Tag.');
@@ -53,22 +53,22 @@
     }
     
     //@TestVisible private preferred, but Type.forName does not support
-    public class DefaultServiceSummary extends ApexClassModel.Summary {}
+    public class DefaultServiceDefinition extends ApexClassModel.Definition {}
     
     static testmethod void testDefaultValues() {
         //act
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(DefaultService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(DefaultService.class);
         
         //assert
-        System.assertEquals('Undescribed', summary.Description, 'Wrong Description.');
-        System.assertEquals('Untagged', summary.Tag, 'Wrong Tag.');
-        System.assertEquals(DefaultService.class.getName(), summary.Label, 'Wrong Name.');
-        System.assertEquals('cog', summary.Icon, 'Wrong Icon.');
-        System.assertEquals('Any', summary.Cardinality, 'Wrong Cardinality.');
-        System.assertEquals(1, summary.Chunks, 'Wrong Chunks.');
+        System.assertEquals('Undescribed', definition.Description, 'Wrong Description.');
+        System.assertEquals('Untagged', definition.Tag, 'Wrong Tag.');
+        System.assertEquals(DefaultService.class.getName(), definition.Label, 'Wrong Name.');
+        System.assertEquals('cog', definition.Icon, 'Wrong Icon.');
+        System.assertEquals('Any', definition.Cardinality, 'Wrong Cardinality.');
+        System.assertEquals(1, definition.Chunks, 'Wrong Chunks.');
     }
     
-    static testmethod void testDescribeServiceSummary() {
+    static testmethod void testDescribeServiceDefinition() {
         //arrange
         ApexClassModel model = new ApexClassModel(WiretapService.class);
         
@@ -241,7 +241,7 @@
         }
     }
     
-    public class TooManyOutputsSummary extends ApexClassModel.Summary {
+    public class TooManyOutputsDefinition extends ApexClassModel.Definition {
         Integer Chunks = 1;
     }
     
@@ -267,7 +267,7 @@
         }
     }
     
-    public class TooManyInputsSummary extends ApexClassModel.Summary {
+    public class TooManyInputsDefinition extends ApexClassModel.Definition {
         Integer Chunks = 2345;
     }
     
@@ -276,11 +276,11 @@
         ApexClassModel model = new ApexClassModel(TooManyInputs.class);
         
         //act
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(TooManyInputs.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(TooManyInputs.class);
         
         //assert
         Integer expectedChunks = 200; //#955 possibly 2000, but headspace
-        Integer actualChunks = summary.Chunks;
+        Integer actualChunks = definition.Chunks;
         System.assertEquals(expectedChunks, actualChunks, 'Wrong chunks.');
     }
     
@@ -297,7 +297,7 @@
         }
     }
     
-    public class TMESummary extends ApexClassModel.Summary {
+    public class TMEDefinition extends ApexClassModel.Definition {
         Integer Chunks = 50; //50 * 200 = 10000
     }
     

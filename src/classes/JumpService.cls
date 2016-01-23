@@ -1,7 +1,7 @@
 public class JumpService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
-    public class Summary extends ApexClassModel.Summary {
+    public class Definition extends ApexClassModel.Definition {
         String Tag = 'Service Bus';
         String Label = 'Jump';
         String Description = 'Diverts the event to another sequence, never to return.';

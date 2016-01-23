@@ -94,12 +94,12 @@
         List<Message__c> records = MessageSetModel.locateMarkableWork().getRecords();
         
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(WiretapService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(WiretapService.class);
         
         //assert
         Integer expectedChunks = 5;
-        Integer actualChunks = summary.Chunks;
-        System.assertEquals(expectedChunks, actualChunks, 'Wiretap should have summary chunks of five.');
+        Integer actualChunks = definition.Chunks;
+        System.assertEquals(expectedChunks, actualChunks, 'Wiretap should have definition chunks of five.');
         
         Integer expectedSize = 5;
         Integer actualSize = records.size();
@@ -748,16 +748,16 @@
         }
     }
     
-    public class ChunkErrorServiceSummary extends ApexClassModel.Summary {
+    public class ChunkErrorServiceDefinition extends ApexClassModel.Definition {
         String Description = 'Does stuff in memory without side effects.';
         Integer Chunks = 2;
     }
     
     static testmethod void testKamikazeChunkingDoesntTakeOutHisMates() {
         //arrange cache
-        ApexClassSetModel.saveCache(new Map<String,ApexClassModel.Summary>{
-            ChunkErrorService.class.getName() => new ApexClassModel.Summary(ChunkErrorService.class),
-            ChunkErrorService.class.getName() => new ApexClassModel.Summary(TerminateService.class)
+        ApexClassSetModel.saveCache(new Map<String,ApexClassModel.Definition>{
+            ChunkErrorService.class.getName() => new ApexClassModel.Definition(ChunkErrorService.class),
+            ChunkErrorService.class.getName() => new ApexClassModel.Definition(TerminateService.class)
         });
         
         //arrange services, sequence and steps
@@ -801,7 +801,7 @@
         }
     }
     
-    public class FakeGateSummary extends ApexClassModel.Summary {
+    public class FakeGateDefinition extends ApexClassModel.Definition {
         String Description = 'fake gate';
         Integer Chunks = 999;
     }
@@ -1123,7 +1123,7 @@
         List<Map<String,Object>> execute(Map<String,Object> event) {return new List<Map<String,Object>>{new Map<String,Object>()};}
     }
     
-    public class FinishDoesPersistSummary extends ApexClassModel.Summary {
+    public class FinishDoesPersistDefinition extends ApexClassModel.Definition {
         Integer Chunks = 1;
     }
     

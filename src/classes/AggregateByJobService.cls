@@ -3,7 +3,7 @@ public class AggregateByJobService extends ApexClassModel.Service {
 
     public class ServiceException extends Exception {}
 
-    public class Summary extends ApexClassModel.Summary {
+    public class Definition extends ApexClassModel.Definition {
         String Tag = 'Service Bus';
         String Label = 'Aggregate By Job';
         String Description = 'Aggregates a collection of messages having the same Job Id.';

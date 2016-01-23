@@ -16,8 +16,8 @@
     
     <apex:pageMessages showDetail="false" />
     
-    <apex:sectionHeader rendered="{!FullyQualifiedClassName != Summary.Label}" title="Service" subtitle="{!Summary.Label}" />
-    <apex:sectionHeader rendered="{!FullyQualifiedClassName == Summary.Label}" title="Service" subtitle="{!FullyQualifiedClassName}" />
+    <apex:sectionHeader rendered="{!FullyQualifiedClassName != Definition.Label}" title="Service" subtitle="{!Definition.Label}" />
+    <apex:sectionHeader rendered="{!FullyQualifiedClassName == Definition.Label}" title="Service" subtitle="{!FullyQualifiedClassName}" />
 
     <apex:pageBlock mode="maindetail" title="Service Detail" id="pageBlockId">
         
@@ -26,7 +26,7 @@
             <apex:form id="form">
                 <apex:actionStatus id="busy">
                     <apex:facet name="stop">
-                        <apex:commandButton rendered="{!Summary.StepConfig == null}" value="Enqueue Test Event" onclick="enqueue(); return false;">
+                        <apex:commandButton rendered="{!Definition.StepConfig == null}" value="Enqueue Test Event" onclick="enqueue(); return false;">
                             <apex:actionFunction name="enqueue" reRender="form" action="{!doEnqueue}" status="busy" oncomplete="Ext.Msg.alert('Success', 'Test message has been enqueued. <br />Submitted Job Id: {!JobId}').setIcon(Ext.Msg.QUESTION);" />
                         </apex:commandButton>
                     </apex:facet>
@@ -47,19 +47,19 @@
         
         
         <apex:pageBlockSection showHeader="false" collapsible="false" columns="1">
-            <apex:pageBlockSectionItem rendered="{!Summary.Tag != 'Untagged'}">
+            <apex:pageBlockSectionItem rendered="{!Definition.Tag != 'Untagged'}">
                 <apex:outputLabel >Tag</apex:outputLabel>
-                <apex:outputText value="{!Summary.Tag}" />
+                <apex:outputText value="{!Definition.Tag}" />
             </apex:pageBlockSectionItem>
 
-            <apex:pageBlockSectionItem rendered="{!Summary.Label != FullyQualifiedClassName}">
+            <apex:pageBlockSectionItem rendered="{!Definition.Label != FullyQualifiedClassName}">
                 <apex:outputLabel >Label</apex:outputLabel>
-                <apex:outputText value="{!Summary.Label}" />
+                <apex:outputText value="{!Definition.Label}" />
             </apex:pageBlockSectionItem>
             
-            <apex:pageBlockSectionItem rendered="{!Summary.Description != 'Undescribed'}">
+            <apex:pageBlockSectionItem rendered="{!Definition.Description != 'Undescribed'}">
                 <apex:outputLabel >Description</apex:outputLabel>
-                <apex:outputText value="{!Summary.Description}" />
+                <apex:outputText value="{!Definition.Description}" />
             </apex:pageBlockSectionItem>
 
             <apex:pageBlockSectionItem >
@@ -67,41 +67,41 @@
                 <apex:outputLink value="/{!Id}">{!FullyQualifiedClassName}</apex:outputLink>
             </apex:pageBlockSectionItem>
             
-            <apex:pageBlockSectionItem rendered="{!Summary.Chunks != 1}">
+            <apex:pageBlockSectionItem rendered="{!Definition.Chunks != 1}">
                 <apex:outputLabel style="font-weight: bold;">Chunks</apex:outputLabel>
-                <apex:outputText value="{!Summary.Chunks}" />
+                <apex:outputText value="{!Definition.Chunks}" />
             </apex:pageBlockSectionItem>
 
-            <apex:pageBlockSectionItem rendered="{!Summary.HelpUrl != null}">
+            <apex:pageBlockSectionItem rendered="{!Definition.HelpUrl != null}">
                 <apex:outputLabel style="font-weight: bold;">Help</apex:outputLabel>
-                <apex:outputLink value="{!URLFOR(Summary.HelpUrl)}" target="_blank">{!Summary.HelpUrl}</apex:outputLink>
+                <apex:outputLink value="{!URLFOR(Definition.HelpUrl)}" target="_blank">{!Definition.HelpUrl}</apex:outputLink>
             </apex:pageBlockSectionItem>
 
-            <apex:pageBlockSectionItem rendered="{!Summary.Icon != 'cog'}">
+            <apex:pageBlockSectionItem rendered="{!Definition.Icon != 'cog'}">
                 <apex:outputLabel style="font-weight: bold;">Icon</apex:outputLabel>
-                <apex:image value="{!URLFOR('/s.gif')}" styleClass="z-action-col-icon {!Summary.Icon}" />
+                <apex:image value="{!URLFOR('/s.gif')}" styleClass="z-action-col-icon {!Definition.Icon}" />
             </apex:pageBlockSectionItem>
 
         </apex:pageBlockSection>
     </apex:pageBlock>
         
-    <apex:pageBlock mode="maindetail" title="Input Event Parameters" rendered="{!Summary.Inputs != null}">
-        <apex:pageBlockSection showHeader="false" collapsible="false" columns="1" title="Input Event Parameters" rendered="{!Summary.Inputs != null}">
-            <apex:repeat value="{!Summary.Inputs}" var="key">
+    <apex:pageBlock mode="maindetail" title="Input Event Parameters" rendered="{!Definition.Inputs != null}">
+        <apex:pageBlockSection showHeader="false" collapsible="false" columns="1" title="Input Event Parameters" rendered="{!Definition.Inputs != null}">
+            <apex:repeat value="{!Definition.Inputs}" var="key">
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel >{!key}</apex:outputLabel>
-                    <apex:outputText >{!Summary.Inputs[key]}</apex:outputText>
+                    <apex:outputText >{!Definition.Inputs[key]}</apex:outputText>
                 </apex:pageBlockSectionItem>
             </apex:repeat>
         </apex:pageBlockSection>
     </apex:pageBlock>
     
-    <apex:pageBlock mode="maindetail" title="Output Event Parameters" rendered="{!Summary.Outputs != null}">
-        <apex:pageBlockSection showHeader="false" collapsible="false" columns="1" title="Output Event Parameters" rendered="{!Summary.Outputs != null}">
-            <apex:repeat value="{!Summary.Outputs}" var="key">
+    <apex:pageBlock mode="maindetail" title="Output Event Parameters" rendered="{!Definition.Outputs != null}">
+        <apex:pageBlockSection showHeader="false" collapsible="false" columns="1" title="Output Event Parameters" rendered="{!Definition.Outputs != null}">
+            <apex:repeat value="{!Definition.Outputs}" var="key">
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel >{!key}</apex:outputLabel>
-                    <apex:outputText >{!Summary.Outputs[key]}</apex:outputText>
+                    <apex:outputText >{!Definition.Outputs[key]}</apex:outputText>
                 </apex:pageBlockSectionItem>
             </apex:repeat>
         </apex:pageBlockSection>

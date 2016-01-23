@@ -2,11 +2,11 @@
 
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(SubscribeService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(SubscribeService.class);
         
         //assert
         Integer expectedChunks = 200;
-        Integer actualChunks = summary.Chunks;
+        Integer actualChunks = definition.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }
 
@@ -20,11 +20,11 @@
         };
 
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(SubscribeService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(SubscribeService.class);
 
         //act
         Test.startTest();
-        Integer chunks = summary.Chunks;
+        Integer chunks = definition.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
             ApexClassModel.Service service = new SubscribeService();

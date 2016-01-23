@@ -6,7 +6,7 @@ public class Router extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
     //#575 heartbeat evades discovery
-    //public class Summary {}
+    //public class Definition {}
     
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         

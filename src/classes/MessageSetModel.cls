@@ -159,11 +159,11 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             Step__c step = Step__c.getValues(specimen[0].Route__c);
             if (step != null) apexTypeName = step.ApexTypeName__c;
             
-            //peek at summary
-            ApexClassModel.Summary summary; //unit tests skip cache
-            if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(apexTypeName));
-            else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(apexTypeName);
-            chunks = summary.Chunks;
+            //peek at definition
+            ApexClassModel.Definition definition; //unit tests skip cache
+            if (Test.isRunningTest()) definition = new ApexClassModel.Definition(Type.forName(apexTypeName));
+            else if (!Test.isRunningTest()) definition = ApexClassSetModel.loadCache().get(apexTypeName);
+            chunks = definition.Chunks;
             
         } catch (Exception e) {}
         
@@ -194,11 +194,11 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
                 Step__c step = Step__c.getValues(message.Route__c);
                 if (step != null) apexTypeName = step.ApexTypeName__c;
                 
-                //peek at summary
-                ApexClassModel.Summary summary; //unit tests skip cache
-                if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(apexTypeName));
-                else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(apexTypeName);
-                message.IsAutoRetryable__c = summary.Retry;
+                //peek at definition
+                ApexClassModel.Definition definition; //unit tests skip cache
+                if (Test.isRunningTest()) definition = new ApexClassModel.Definition(Type.forName(apexTypeName));
+                else if (!Test.isRunningTest()) definition = ApexClassSetModel.loadCache().get(apexTypeName);
+                message.IsAutoRetryable__c = definition.Retry;
                 
             } catch (Exception e) {}
             

@@ -3,7 +3,7 @@ public with sharing class ApexClassViewExtension {
     ApexPages.StandardController controller;
     ApexClassModel model;
     
-    public ApexClassModel.Summary Summary {get; set;}
+    public ApexClassModel.Definition Definition {get; set;}
     public String FullyQualifiedClassName {get; set;}
     
     public ApexClassViewExtension(ApexPages.StandardController controller) {
@@ -26,8 +26,8 @@ public with sharing class ApexClassViewExtension {
         try {
             this.model = ApexClassModel.fromId(controller.getId());
             this.FullyQualifiedClassName = model.Reflector.getName();
-            if (Test.isRunningTest()) this.Summary = new ApexClassModel.Summary(model.Reflector); //unit tests skip cache
-            else if (!Test.isRunningTest()) this.Summary = ApexClassSetModel.loadCache().get(this.FullyQualifiedClassName);
+            if (Test.isRunningTest()) this.Definition = new ApexClassModel.Definition(model.Reflector); //unit tests skip cache
+            else if (!Test.isRunningTest()) this.Definition = ApexClassSetModel.loadCache().get(this.FullyQualifiedClassName);
             return this.model.showHelpUrl();
             
         } catch (ApexClassModel.ModelException e) {

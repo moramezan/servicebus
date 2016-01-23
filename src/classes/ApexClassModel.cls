@@ -12,8 +12,8 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      *
      * @docs ApiMarkerClass.html
      */
-    virtual public class Summary {
-        public Summary() {}
+    virtual public class Definition {
+        public Definition() {}
         override public String toString() {return Json.serialize(this);}
         public Id Id {get; set;} //#946
         public String Tag {get; set;}
@@ -30,43 +30,43 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         public Map<String,String> Outputs {get; set;}
         
         /**
-         * Attempts to parse all Service.Summary class properties.
+         * Attempts to parse all Service.Definition class properties.
          */
-        public Summary(Type reflector) {
+        public Definition(Type reflector) {
             Type inflector;
-            if (inflector == null) inflector = Type.forName(reflector + '.Summary');
-            if (inflector == null) inflector = Type.forName(reflector + 'Summary'); //makes testing easier
+            if (inflector == null) inflector = Type.forName(reflector + '.Definition');
+            if (inflector == null) inflector = Type.forName(reflector + 'Definition'); //makes testing easier
             if (inflector == null) {
                 //failure, bad inner class
-                throw new ModelException('Service.Summary class is invalid or not visible: ' + reflector.getName());
+                throw new ModelException('Service.Definition class is invalid or not visible: ' + reflector.getName());
             }
             
-            //all summary classes have toString()
+            //all definition classes have toString()
             Object impl = inflector.newInstance();
             String toString = String.valueOf(impl);
-            Map<String,Object> summary = (Map<String,Object>)Json.deserializeUntyped(toString);
+            Map<String,Object> definition = (Map<String,Object>)Json.deserializeUntyped(toString);
             
             //failure, probably bad toString method
-            if (summary == null) throw new ModelException(inflector.getName() + ': Service.Summary class must extend Abstract.Service.Summary');
+            if (definition == null) throw new ModelException(inflector.getName() + ': Service.Definition class must extend Abstract.Service.Definition');
             
             try {
                 //copy properties across
-                this.Tag = (String)summary.get('Tag');
-                this.Label = (String)summary.get('Label');
-                this.Description = (String)summary.get('Description');
-                this.ServiceConfig = (String)summary.get('ServiceConfig');
-                this.StepConfig = (String)summary.get('StepConfig');
-                this.Icon = (String)summary.get('Icon');
-                this.HelpUrl = (String)summary.get('HelpUrl');
-                this.Retry = (Boolean)summary.get('Retry');
-                this.Chunks = (Integer)summary.get('Chunks');
-                this.Cardinality = (String)summary.get('Cardinality');
-                this.Inputs = (Map<String,String>)Json.deserialize(Json.serialize(summary.get('Inputs')), Map<String,String>.class);
-                this.Outputs = (Map<String,String>)Json.deserialize(Json.serialize(summary.get('Outputs')), Map<String,String>.class);
+                this.Tag = (String)definition.get('Tag');
+                this.Label = (String)definition.get('Label');
+                this.Description = (String)definition.get('Description');
+                this.ServiceConfig = (String)definition.get('ServiceConfig');
+                this.StepConfig = (String)definition.get('StepConfig');
+                this.Icon = (String)definition.get('Icon');
+                this.HelpUrl = (String)definition.get('HelpUrl');
+                this.Retry = (Boolean)definition.get('Retry');
+                this.Chunks = (Integer)definition.get('Chunks');
+                this.Cardinality = (String)definition.get('Cardinality');
+                this.Inputs = (Map<String,String>)Json.deserialize(Json.serialize(definition.get('Inputs')), Map<String,String>.class);
+                this.Outputs = (Map<String,String>)Json.deserialize(Json.serialize(definition.get('Outputs')), Map<String,String>.class);
                 
                 //set sensible defaults
                 if (this.Tag == null) this.Tag = 'Untagged';
-                if (this.Label == null) this.Label = reflector.getName(); //inflector.getName().replaceAll('\\.?Summary$', ''); //strips any '.Summary' or 'Summary'
+                if (this.Label == null) this.Label = reflector.getName(); //inflector.getName().replaceAll('\\.?Definition$', ''); //strips any '.Definition' or 'Definition'
                 if (this.Description == null) this.Description = 'Undescribed';
                 if (this.Icon == null) this.Icon = 'cog';
                 if (this.Chunks == null) this.Chunks = 1;
@@ -168,19 +168,19 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      * when showing the ApexClassConfig page
      */
     public DescribeSObjectResult describeServiceConfig() {
-        Summary summary = new Summary(this.Reflector);
-        DescribeSObjectResult result = Schema.getGlobalDescribe().get(summary.ServiceConfig).getDescribe();
+        Definition definition = new Definition(this.Reflector);
+        DescribeSObjectResult result = Schema.getGlobalDescribe().get(definition.ServiceConfig).getDescribe();
         return result;
     }
     
     /**
      * Redirects user to the HelpURL
-     * specified on the Service Summary
+     * specified on the Service Definition
      */
     public PageReference showHelpUrl() {
-        Summary summary = new Summary(this.Reflector);
-        if (summary.HelpUrl == null) return null;
-        return new PageReference(summary.HelpUrl);
+        Definition definition = new Definition(this.Reflector);
+        if (definition.HelpUrl == null) return null;
+        return new PageReference(definition.HelpUrl);
     }
     
 //THERE IS A BINDING BETWEEN: abstract/classes/Service.cls and src/classes/ApexClassModel.cls
@@ -193,7 +193,7 @@ abstract public class Service {
     /**
      * MUST BE PRESENT IN ABSTRACT PACKAGE
      */
-    //abstract global class Summary {override public String toString() {return Json.serialize(this);}}
+    //abstract global class Definition {override public String toString() {return Json.serialize(this);}}
     
     /**
      * MUST BE VIRTUAL GLOBAL IN ABSTRACT PACKAGE

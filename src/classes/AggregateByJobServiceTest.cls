@@ -10,19 +10,19 @@
 
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByJobService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(AggregateByJobService.class);
 
         //assert
         Integer expectedChunks = 100; //max sync limit
-        Integer actualChunks = summary.Chunks;
+        Integer actualChunks = definition.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }
 
 
    static testmethod void withinSystemLimits() {
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByJobService.class);
-        Integer chunks = summary.Chunks;
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(AggregateByJobService.class);
+        Integer chunks = definition.Chunks;
 
         // Arrange
         Integer rangeCount =  chunks;
@@ -683,7 +683,7 @@
         }
     }
     
-    public class SplitSummary extends ApexClassModel.Summary {
+    public class SplitDefinition extends ApexClassModel.Definition {
         String Description = 'the big split';
     }
 

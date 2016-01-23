@@ -10,18 +10,18 @@
     
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(JumpService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(JumpService.class);
         
         //assert
         Integer expectedChunks = 200; //max sync limit
-        Integer actualChunks = summary.Chunks;
+        Integer actualChunks = definition.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }
 
 
    static testmethod void withinSystemLimits() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(JumpService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(JumpService.class);
         
         //arrange
         Sequence__c target = new Sequence__c(Name = 'Target');
@@ -46,7 +46,7 @@
 
         //act
         Test.startTest();
-        Integer chunks = summary.Chunks;
+        Integer chunks = definition.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
             ApexClassModel.Service service = new JumpService();

@@ -2,11 +2,11 @@
     
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(WiretapService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(WiretapService.class);
         
         //assert
         Integer expectedChunks = 5;
-        Integer actualChunks = summary.Chunks;
+        Integer actualChunks = definition.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }
 
@@ -21,11 +21,11 @@
         };
         
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(WiretapService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(WiretapService.class);
 
         //act
         Test.startTest();
-        Integer chunks = summary.Chunks;
+        Integer chunks = definition.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
             ApexClassModel.Service service = new WiretapService();

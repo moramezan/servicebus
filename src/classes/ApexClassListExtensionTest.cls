@@ -22,7 +22,7 @@
         upsert application;
         
         //act (pretend to discover)
-        ApexClassSetModel.saveCache(ApexClassSetModel.fromNamespace(Application__c.getOrgDefaults().Prefix__c).discoverSummaries());
+        ApexClassSetModel.saveCache(ApexClassSetModel.fromNamespace(Application__c.getOrgDefaults().Prefix__c).discoverDefinitions());
         
         //act
         redirect = new ApexClassListExtension().doRedirect();

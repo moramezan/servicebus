@@ -2,11 +2,11 @@
     
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(TerminateService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(TerminateService.class);
         
         //assert
         Integer expectedChunks = 200; //max sync limit
-        Integer actualChunks = summary.Chunks;
+        Integer actualChunks = definition.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }
 
@@ -19,11 +19,11 @@
         inputEvent.put('Route', '1#Terminate#1');
         
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(TerminateService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(TerminateService.class);
         
         //act
         Test.startTest();
-        Integer chunks = summary.Chunks;
+        Integer chunks = definition.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
             ApexClassModel.Service service = new TerminateService();

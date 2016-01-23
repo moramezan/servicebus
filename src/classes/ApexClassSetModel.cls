@@ -65,7 +65,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
      * Usually after Service Discovery,
      * we persist everything to a Document.
      */
-    static public Id saveCache(Map<String,ApexClassModel.Summary> name2summary) {
+    static public Id saveCache(Map<String,ApexClassModel.Definition> name2definition) {
         
         Folder folder = [
             SELECT Id
@@ -73,7 +73,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             WHERE DeveloperName = 'ServiceBus'
         ];
         
-        String data = Json.serializePretty(name2summary);
+        String data = Json.serializePretty(name2definition);
         
         Document document = new Document(
             Name = 'ApexClassCache.bin',
@@ -90,13 +90,13 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
         return document.Id;
     }
     
-    static Map<String,ApexClassModel.Summary> ClassCache;
+    static Map<String,ApexClassModel.Definition> ClassCache;
     
     /**
      * The Sequence Builder and Services Tab
      * rely on reading data from this cache.
      */
-    static public Map<String,ApexClassModel.Summary> loadCache() {
+    static public Map<String,ApexClassModel.Definition> loadCache() {
         
         if (ClassCache == null) {
             try {
@@ -107,14 +107,14 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
                 ];
                 
                 //hydrate cache
-                ClassCache = (Map<String,ApexClassModel.Summary>)Json.deserialize(
+                ClassCache = (Map<String,ApexClassModel.Definition>)Json.deserialize(
                     document.Body.toString(),
-                    Map<String,ApexClassModel.Summary>.class
+                    Map<String,ApexClassModel.Definition>.class
                 );
                 
             } catch (QueryException e) {
                 //nothing cached, discovery required!!
-                //ClassCache = new Map<String,ApexClassModel.Summary>();
+                //ClassCache = new Map<String,ApexClassModel.Definition>();
                 throw new ModelException('Cache not found, discovery is required.');
             }
         }
@@ -137,30 +137,30 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
      * #946 by discovering the namespaces one-by-one with Visualforce Remoting
      * we won't hit the 10 namespace limit, and they run in parallel (fast)
      */
-    public Map<String,ApexClassModel.Summary> discoverSummaries() {
+    public Map<String,ApexClassModel.Definition> discoverDefinitions() {
         
-        Map<String,ApexClassModel.Summary> name2summary = new Map<String,ApexClassModel.Summary>();
+        Map<String,ApexClassModel.Definition> name2definition = new Map<String,ApexClassModel.Definition>();
         
         for (ApexClass apexClass : this.ApexClasses) try {
             
             //uses two arguments per #910 to reach out of managed package namespace!
-            Type inflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name + '.Summary');
+            Type inflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name + '.Definition');
             
             if (inflector == null) {
-                //no summary class
+                //no definition class
                 continue;
             }
             
             Type reflector = Type.forName(apexClass.NamespacePrefix, apexClass.Name);
-            ApexClassModel.Summary summary = new ApexClassModel.Summary(reflector);
-            summary.Id = apexClass.Id; //gotta provide the id from outside
-            name2summary.put(reflector.getName(), summary);
+            ApexClassModel.Definition definition = new ApexClassModel.Definition(reflector);
+            definition.Id = apexClass.Id; //gotta provide the id from outside
+            name2definition.put(reflector.getName(), definition);
             
         } catch (JsonException e) {
             //fails if compile problem with the class, eg LeadShare when OWD set to public
         }
         
-        return name2summary;
+        return name2definition;
         
     }
     

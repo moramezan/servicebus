@@ -10,11 +10,11 @@
     
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(SubsequenceService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(SubsequenceService.class);
         
         //assert
         Integer expectedChunks = 1; //max sync limit
-        Integer actualChunks = summary.Chunks;
+        Integer actualChunks = definition.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }
 
@@ -36,11 +36,11 @@
         update config;
         
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(SubsequenceService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(SubsequenceService.class);
         
         //act
         Test.startTest();
-        Integer chunks = summary.Chunks;
+        Integer chunks = definition.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
             //by reference side effects on inputEvent

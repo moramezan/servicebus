@@ -131,16 +131,16 @@ public class StepModel extends ApexDomain.StandardModel {
         Savepoint savepoint = Database.setSavepoint();
         try {
             //use apex class name instead of id, for easier testing
-            ApexClassModel.Summary summary; //unit tests skip cache
-            if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(this.Step.ApexTypeName__c));
-            else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(this.Step.ApexTypeName__c);
+            ApexClassModel.Definition definition; //unit tests skip cache
+            if (Test.isRunningTest()) definition = new ApexClassModel.Definition(Type.forName(this.Step.ApexTypeName__c));
+            else if (!Test.isRunningTest()) definition = ApexClassSetModel.loadCache().get(this.Step.ApexTypeName__c);
             
-            if (summary == null) {
-                //summary not cached
-                throw new ModelException('Could not load summary: ' + this.Step.ApexTypeName__c);
+            if (definition == null) {
+                //definition not cached
+                throw new ModelException('Could not load definition: ' + this.Step.ApexTypeName__c);
             }
             
-            if (summary.StepConfig == null) {
+            if (definition.StepConfig == null) {
                 //service has no config
                 return null;
             }
@@ -151,7 +151,7 @@ public class StepModel extends ApexDomain.StandardModel {
             }
             
             //describe object and name field dynamically
-            SObjectType objectType = Schema.getGlobalDescribe().get(summary.StepConfig);
+            SObjectType objectType = Schema.getGlobalDescribe().get(definition.StepConfig);
             DescribeSObjectResult result = objectType.getDescribe();
             DescribeFieldResult field = result.Fields.getMap().get('Name').getDescribe();
             

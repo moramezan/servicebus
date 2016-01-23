@@ -522,7 +522,7 @@ public with sharing class ConfigureController {
         request.setHeader('SOAPAction', '""');
         request.setHeader('Content-Type', 'text/xml');
         request.setBody(metadata(sessionId));
-        new Http().send(request);
+        //new Http().send(request);
     }
     
     /**
