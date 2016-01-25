@@ -10,7 +10,7 @@
     Events occur all the time. (For example: the clock strikes twelve, the fuel tank reaches empty).
     To represent details about an event in a computer system, we use a special object called a
     message. The primary purpose of a message is to provide a useful mechanism to communicate to a
-    processes that a particular event has occurred.
+    services that a particular event has occurred.
 </p>
 
 <h3>
@@ -18,17 +18,17 @@
 </h3>
 
 <p>
-    Specific events are only relevant to specific processes. For this reason a <em>Broker</em>
-    routes event messages (representing specific events) to specific processes within the system.
+    Specific events are only relevant to specific services. For this reason a <em>Broker</em>
+    routes event messages (representing specific events) to specific services within the system.
 </p>
 
 <p>
-    Combinations of specific event messages to specific processes can be reduced to a routing table
+    Combinations of specific event messages to specific services can be reduced to a routing table
     called a <code>Sequence</code>.
 </p>
 
 <p>
-    Breaking up work into specific processes that respond to specific event messages is known as
+    Breaking up work into specific services that respond to specific event messages is known as
     Event Driven Architecture. The Service Bus is a specific implementation of
     Event Driven Architecture.
 </p>
@@ -54,8 +54,8 @@
 
 <p>
     As previously mentioned, events in a Service Bus are represented as messages. A message
-    received by a process that has previously registered it's interest in that message type will
-    cause the logic of that process to fire.
+    received by a service that has previously registered it's interest in that message type will
+    cause the logic of that service to fire.
 </p>
 
 <h3>
@@ -63,14 +63,14 @@
 </h3>
 
 <p>
-    An Service Bus facilitates useful work on the Salesforce platform via processes that have
+    An Service Bus facilitates useful work on the Salesforce platform via services that have
     previously registered their interest the occurrence of a specific event types. (In practise this
-    means that a process registers it's interest in events emitted from the process that immediately
+    means that a service registers it's interest in events emitted from the service that immediately
     precedes it.)
 </p>
 
 <p>
-    A register of interest containing sufficient number of processes will naturally resemble a
+    A register of interest containing sufficient number of services will naturally resemble a
     sequence of chained processing steps. This register is called a <em>Sequence</em> and the
     sequential processing steps within it are called (sequence) <em>Steps</em>.
 </p>
@@ -91,7 +91,7 @@
 
 <p>
     The Service Bus provides a clean model that limits complexity in the system to just the
-    testable apex implementation details of any given process. In contrast, the Command-Response
+    testable apex implementation details of any given service. In contrast, the Command-Response
     paradigm attempts to attach all possible logical code paths and associated exception handling to
     a single specific command. This creates code complexity that is not easily tested or modified.
 </p>

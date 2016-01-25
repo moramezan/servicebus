@@ -1,49 +1,85 @@
+/// TODO - REVIEW COMPLETE
+
+
+
 <h1>
-    Process Discovery Tutorial
+    Service Discovery Tutorial
 </h1>
 
+<h2>Objective</h2>
 <p>
-    The objective of this tutorial is to discover new processes so they can be referenced by a step
-    in a sequence.
+    This tutorial demonstrates the discovery of new business logic.
+    We will create a new service conforming to a standard shape so that it can be
+    referenced by the Service Bus framework.
 </p>
 
+
 <p>
-    Expected duration: 5 minutes.
+    Expected duration: 10 minutes.
 </p>
 
+<br/>
+
+<h2>Background Context</h2>
+<p>
+    Before a Service can be referenced as a step in a sequence, it must first be discovered and
+    registered by the Service Bus.
+    The framework detects all Apex logic in the organization  that conforms to a service specification.
+    All valid services are registered and
+    made available for potential selection by the system orchestrator when building sequences under the tab.
+</p>
+
+<br/>
 <h2>
     Instructions
 </h2>
 
-<p>
-    Before a Process can be referenced as a step in a sequence, it must first be discovered and
-    registered by the Service Bus. The framework can analyse all Apex logic in the organization to
-    discover classes that conform to a process specification. All valid services are registered and made available for potential selection by the system orchestrator when building sequences under the tab.
-</p>
 
 <ol>
-    <li>
-        Open the App menu on the top right of Salesforce and choose Event Driven Architecture.
-    </li>
-    <li>
-        Navigate to the Processes tab, choose the <em>All Processes</em> and click <em>Go</em>.
-        This will take you to a list view where you can see the Discover button.
-    </li>
+
     <li>
         <p>
-            Click the <em>Discover</em> button. This initiates the automated mechanism that finds
-            new processes and refreshes existing ones.
+            Open the developer console. Create a new Apex class and name it MyService.
+            Paste  in the following code and press Save.
         </p>
+        <p>
+            <code>
+             global class MyService extends Abstract.Service { <br/>
+                <br/>
+                &nbsp; global class Definition extends Abstract.Service.Definition {  <br/>
+                &nbsp; &nbsp;    String Tag = 'Services';  <br/>
+                &nbsp; &nbsp;    String Label = 'My Service';  <br/>
+                &nbsp; &nbsp;    String Description = 'My description.';  <br/>
+                &nbsp;}  <br/>
+                <br/>
+                &nbsp;global override List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {<br/>
+                &nbsp; &nbsp;return new List&lt;Map&lt;String,Object&gt;&gt;();  <br/>
+                &nbsp;} <br/>
+            }
+            </code>
+        </p>
+    </li>
+
+    <li>
+        Open the App menu on the top right of Salesforce and choose Service Bus.
+    </li>
+    <li>
+        Navigate to the Services tab.
+        This initiates the automated mechanism that finds new services and refreshes existing ones.
+    </li>
+    <li>
         <fieldset>
             <legend>Note</legend>
             Discovery can range in duration from a few seconds to a few minutes depending
             on the availability of Salesforce servers. Progress is shown at the top of the page.
         </fieldset>
         <p>
-            <img src="resources/TutorialProcessDiscovery/Processes.png" />
+            <img src="resources/TutorialProcessDiscovery/services2.png" />
         </p>
     </li>
     <li>
         Once discovery is complete, you will be taken back to the list view.
     </li>
 </ol>
+
+

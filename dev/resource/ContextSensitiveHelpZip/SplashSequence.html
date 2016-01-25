@@ -1,3 +1,5 @@
+/// TODO - REVIEW COMPLETE
+
 <h1>
     Sequences
 </h1>
@@ -8,19 +10,21 @@
 </h3>
 
 <p>
-    A Sequence is an arrangement of processing tasks called steps. Each Sequence is known by a friendly name, for example 'HandleRefund', which indicates the nature of the work that its steps will perform.
+    A Sequence is an arrangement of processing tasks called steps. Each Sequence is known by a friendly name,
+    for example 'HandleRefund', which indicates the nature of the work that it's steps will perform.
 </p>
 
 <p>
-    You specify the order of the different steps using drag and drop. The Service Bus advances your events through the steps of the sequence. A typical sequence contains many steps.
+    Specify the order of the different steps using drag and drop.
+    The Service Bus advances your events through the steps of the sequence. A typical sequence contains many steps.
 </p>
 
 <p>
-    The last of every sequence is a 'Terminate' step. This step swallows events that reach the end of the sequence.
+    The last step of every sequence is a 'Terminate' service. This step swallows events that reach the end of the sequence.
 </p>
 
 <h3>
-    How do I enqueue events to a sequence?
+    How do I enqueue an Event into a Sequence?
 </h3>
 
 <p>
@@ -34,13 +38,27 @@
 </p>
 
 <h3>
-    When do I use a sequence instead of just a process?
+    How do I enqueue an Event into a Service?
+</h3>
+
+<p>
+    <code>
+        event = {'ToService' => 'MyServiceName'};
+        <br />
+        job = new ServiceBus.Job(event);
+        <br />
+        System.enqueueJob(job);
+    </code>
+</p>
+
+<h3>
+    When would I enqueue to a Sequence instead of a Service?
 </h3>
 
 <ul>
-    <li>To break down work into individual steps.</li>
-    <li>If you need to split and then aggregate multiple events.</li>
-    <li>When processes need to communicate with each other through events.</li>
+    <li>Whenever your business logic consists of more than one service.</li>
+    <li>Whenever you need to split and then aggregate multiple events.</li>
+    <li>Whenever there is a requirement for services to communicate with each other.</li>
 </ul>
 
 <!--
@@ -64,14 +82,14 @@
 
 <ul>
     <li>
-        Every Step in a Sequence has an associated Process, a numbered Position, and potentially a
+        Every Step in a Sequence has an associated Service, a numbered Position, and potentially a
         Config.
     </li>
     <li>
     </li>
     <li>
-        It is the orchestrator's responsibility to ensure the Terminate Process is the final Step in
-        every Sequence as any Steps after the Terminate Process will not be executed.
+        It is the orchestrator's responsibility to ensure the Terminate Service is the final Step in
+        every Sequence as any Steps after the Terminate Service will not be executed.
     </li>
 </ul>
 
@@ -82,7 +100,7 @@
 <ul>
     <li>
         <strong>New Step</strong> will append a new Sequence step (containing your selected
-        process). Once appended, you can drag and drop the step to reposition.
+        service). Once appended, you can drag and drop the step to reposition.
     </li>
     <li>
         <strong>Enqueue Test Message</strong> enqueues a message into the sequence

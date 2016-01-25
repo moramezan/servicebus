@@ -1,18 +1,50 @@
+/// TODO - REVIEW COMPLETE
+
+
 <h1>
     Introducing the Service Bus Monitor
 </h1>
 
 <p>
-    A monitoring page is provided so you can see system activity at a glance.
-    <br />
-    The <span style="color:#090;">green</span> areas show processes buffering many events.
-    <br />
-    The <span style="color:#900;">red</span> area indicates messages with exceptions.
+    A monitoring page facilitates system activity at a glance.
+    The horizontal axis
+    shows the route names touched by the framework in some way while
+    the vertical axis indicates the  message count for a given combination of status and route.
+    <ul>
+        <li>
+        The <span style="color:#8E66FF;">blue</span> area on the left indicates the presence of system level queueing.
+        </li>
+        <li>
+        The <span style="color:#090;">green</span> areas indicate buffered messages.
+        The framework will not attempt process these messages.
+        </li>
+        <li>
+        The <span style="color:#C2C2C2;">grey</span> areas indicate paused messages.
+        The framework will not attempt process these messages.
+        </li>
+        <li>
+        The <span style="color:#900;">red</span> areas indicate exception messages.
+        The framework will not attempt process these messages.
+        </li>
+        <li>
+        The <span style="color:#DDE578;">yellow</span> areas indicate messages currently being worked on.
+        </li>
+    </ul>
 </p>
 
 <p>
+    <br/>
     <img width="800" src="resources/Splashes/monitor.png" />
 </p>
+
+<p>
+    A spinner at the top of the vertical axis indicates that the Service Bus framework is actively processing messages.
+    If the Service Bus framework has yet to execute for the first time the spinner icon is
+    rendered as a sparkler. The lack of an icon at the top of the vertical axis indicates
+    that the Service Bus is not currently running.
+</p>
+
+
 
 <!--
 <h2>
@@ -26,11 +58,11 @@
 <ul> 
     <li>
         Business Analysts may wish to consult the <a href="?topic=GuideOrchestrators">Orchestrators
-        Guide</a> and <a href="?topic=Processes">Core Processes Guide</a>.
+        Guide</a> and <a href="?topic=Processes">Core Services Guide</a>.
     </li>
     <li>
-        Force.com custom process authors may wish to consult the <a href="?topic=GuideDevelopers">
-        Process Developers Guide</a>
+        Force.com custom service authors may wish to consult the <a href="?topic=GuideDevelopers">
+        Service Developers Guide</a>
     </li>
 </ul>
 
@@ -48,7 +80,7 @@
 </p>
 
 <h3>
-    TUTORIAL 2: Discover Enterprise Service Bus Processes
+    TUTORIAL 2: Discover Enterprise Service Bus Services
 </h3>
 
 <p>

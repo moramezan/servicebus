@@ -1,23 +1,32 @@
+
+/// TODO - REVIEW COMPLETE
+
+
+
 <h1>
     Services
 </h1>
 
 <h3>
-    <img class="right" src="resources/Splashes/processes.png" />
-    What is a service?
+    <img class="right" src="resources/Splashes/services.png" />
+    What is a Service?
 </h3>
 
 <p>
-    A service is a single, logical program with inputs and outputs in the form of events. Services are implemented as Apex classes. Each service handles one event, and may output zero, one, or many new events.
+    A service is a single, logical program  implemented as an Apex class.
+    Every service handles one event and emits a collection containing zero, one or many new events.
+    In addition, each service encapsulates a Summary that describes it
 </p>
 
+<!--
 <ul>
     <li>Each service has a Summary that describes it.</li>
     <li>An event is represented in Apex code as <code>Map&lt;String,Object&gt;</code></li>
 </ul>
+-->
 
 <h3>
-    How do I enqueue events to a service?
+    How do I enqueue an event to a service?
 </h3>
 
 <p>
@@ -33,7 +42,7 @@
 <hr />
 
 <h3>
-    How do I write my own service?
+    How do I author my own service?
 </h3>
 
 <pre>
@@ -54,8 +63,8 @@ global class SendPayment extends Abstract.Service {
 
 <!--
 <p>
-    Processes are implemented as Apex classes. The Service Bus contains
-    by default a number of ready-made processes, including:
+    Services are implemented as Apex classes. The Service Bus contains
+    by default a number of ready-made services, including:
 </p>
 
 <ul>
@@ -75,8 +84,8 @@ global class SendPayment extends Abstract.Service {
 </h3>
 
 <p>
-    <strong>Discover Processes</strong> can be used to find new Processes. Click this button after
-    authoring or installing Processes to make them available.
+    <strong>Discover Services</strong> can be used to find new Services. Click this button after
+    authoring or installing Services to make them available.
 </p>
 
 <h3>
@@ -85,25 +94,25 @@ global class SendPayment extends Abstract.Service {
 
 <p>
     <strong>View Apex Class</strong> will show you the Apex Class that contains the underlying logic
-    for any given Process.
+    for any given Service.
 </p>
 
 <p>
-    <strong>View Settings</strong> takes you to the available Settings for a Process. (Note: Not all
-    process have Settings)
+    <strong>View Settings</strong> takes you to the available Settings for a Service. (Note: Not all
+    service have Settings)
 </p>
 
 <p>
     <strong>View Documentation</strong> shows the supporting documentation provided by the author of
-    a given Process.
+    a given Service.
 </p>
 
 <h3>
-    Discovering Processes
+    Discovering Services
 </h3>
 
 <p>
-    Before a process written in Apex can be referenced as a step in a sequence, it must first be
+    Before a service written in Apex can be referenced as a step in a sequence, it must first be
     discovered and registered in the Enterprise Service Bus framework.
 </p>
 
@@ -113,11 +122,11 @@ global class SendPayment extends Abstract.Service {
 </p>
 
 <p>
-    There is also a mechanism for discovering processes manually and is initiated by clicking the
-    [Discover] button from the Processes list view.
+    There is also a mechanism for discovering services manually and is initiated by clicking the
+    [Discover] button from the Services list view.
 </p>
 
 <p>
-    Learn more about <a href="?topic=TutorialProcessDiscovery">Process Discovery</a> within the Service Bus.
+    Learn more about <a href="?topic=TutorialProcessDiscovery">Service Discovery</a> within the Service Bus.
 </p>
 -->

@@ -1562,7 +1562,7 @@ jQuery.event = {
 		}
 
 		// For whatever reason, IE has trouble passing the window object
-		// around, causing it to be cloned in the process
+		// around, causing it to be cloned in the service
 		if ( elem.setInterval && ( elem !== window && !elem.frameElement ) ) {
 			elem = window;
 		}
@@ -5192,7 +5192,7 @@ jQuery.extend({
 				if ( status === "success" ) {
 					// Watch for, and catch, XML document parse errors
 					try {
-						// process the data (runs the xml through httpData regardless of callback)
+						// service the data (runs the xml through httpData regardless of callback)
 						data = jQuery.httpData( xhr, s.dataType, s );
 					} catch(err) {
 						status = "parsererror";

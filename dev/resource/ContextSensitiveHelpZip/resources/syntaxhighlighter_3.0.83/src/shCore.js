@@ -246,7 +246,7 @@ var sh = {
 	},
 
 	/**
-	 * Finds all elements on the page which should be processes by SyntaxHighlighter.
+	 * Finds all elements on the page which should be services by SyntaxHighlighter.
 	 *
 	 * @param {Object} globalParams		Optional parameters which override element's 
 	 * 									parameters. Only used if element is specified.
@@ -1220,7 +1220,7 @@ sh.HtmlScript = function(scriptBrushName)
 	}
 	
 	xmlBrush.regexList.push(
-		{ regex: scriptBrush.htmlScript.code, func: process }
+		{ regex: scriptBrush.htmlScript.code, func: service }
 	);
 	
 	function offsetMatches(matches, offset)
@@ -1229,7 +1229,7 @@ sh.HtmlScript = function(scriptBrushName)
 			matches[j].index += offset;
 	}
 	
-	function process(match, info)
+	function service(match, info)
 	{
 		var code = match.code,
 			matches = [],
@@ -1325,7 +1325,7 @@ sh.Highlighter.prototype = {
 	
 	/**
 	 * Checks to see if any of the matches are inside of other matches. 
-	 * This process would get rid of highligted strings inside comments, 
+	 * This service would get rid of highligted strings inside comments,
 	 * keywords inside strings and so on.
 	 */
 	removeNestedMatches: function(matches)
@@ -1501,7 +1501,7 @@ sh.Highlighter.prototype = {
 	
 	/**
 	 * Finds all matches in the source code.
-	 * @param {String} code		Source code to process matches in.
+	 * @param {String} code		Source code to service matches in.
 	 * @param {Array} matches	Discovered regex matches.
 	 * @return {String} Returns formatted HTML with processed mathes.
 	 */
@@ -1558,7 +1558,7 @@ sh.Highlighter.prototype = {
 			lineNumbers
 			;
 		
-		// process light mode
+		// service light mode
 		if (this.getParam('light') == true)
 			this.params.toolbar = this.params.gutter = false;
 
@@ -1596,12 +1596,12 @@ sh.Highlighter.prototype = {
 		
 		// find matches in the code using brushes regex list
 		matches = this.findMatches(this.regexList, code);
-		// processes found matches into the html
+		// services found matches into the html
 		html = this.getMatchesHtml(code, matches);
 		// finally, split all lines so that they wrap well
 		html = this.getCodeLinesHtml(html, lineNumbers);
 
-		// finally, process the links
+		// finally, service the links
 		if (this.getParam('auto-links'))
 			html = processUrls(html);
 		
@@ -1675,7 +1675,7 @@ sh.Highlighter.prototype = {
 		// local params take precedence over defaults
 		this.params = merge(sh.defaults, params || {})
 		
-		// process light mode
+		// service light mode
 		if (this.getParam('light') == true)
 			this.params.toolbar = this.params.gutter = false;
 	},

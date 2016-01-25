@@ -1,11 +1,11 @@
 <h1>
-    Publish and Subscribe processes
+    Publish and Subscribe services
 </h1>
 
 <p>
-    The <em>Publish</em> and <em>Subscribe</em> processes work together to bind two or more
+    The <em>Publish</em> and <em>Subscribe</em> services work together to bind two or more
     sequences. This binding is achieved by specifying a common Event Type that is shared between
-    both the <em>Publish</em> and <em>Subscribe</em> processes.
+    both the <em>Publish</em> and <em>Subscribe</em> services.
 </p>
 
 <p>
@@ -13,13 +13,13 @@
 </p>
 
 <p>
-    The <em>Publish</em> process directs the message to the common event type and the
-    <em>Subscribe</em> process retrieves from the common event type. This indirection facilitates
-    the retrieval of the same event type by more than one <code>Subscribe</code> process.
+    The <em>Publish</em> service directs the message to the common event type and the
+    <em>Subscribe</em> service retrieves from the common event type. This indirection facilitates
+    the retrieval of the same event type by more than one <code>Subscribe</code> service.
 </p>
 
 <p>
-    A <em>Subscribe</em> process must always be the first process in a Sequence
+    A <em>Subscribe</em> service must always be the first service in a Sequence
 </p>
 
 <h2>
@@ -27,9 +27,9 @@
 </h2>
 
 <p>
-    An event type must be specified for both the <em>Subscribe</em> and <em>Publish</em> processes.
+    An event type must be specified for both the <em>Subscribe</em> and <em>Publish</em> services.
     An event type is created from the configuration screen of either the <em>Publish</em> or
-    <em>Subscribe</em> processes. To specify the event type:
+    <em>Subscribe</em> services. To specify the event type:
 </p>
 
 <ol>
@@ -60,28 +60,28 @@
 
 <!--
  ! TODO merge these?
- ! <h3>About the Publish Process</h3>
- ! <p>The Publish and Subscribe processes work together to loosely couple two or more Sequences.</p>
- ! <p>To facilitate the coupling, both the Subscribe and Publish processes must share a common Named Event.</p>
- ! <p>At runtime, the Publish process directs a message to it's configured Named Event and  in turn, one or more appropriately configured Subscribe process(es) retrieve the published message from the same Named Event.</p>
+ ! <h3>About the Publish Service</h3>
+ ! <p>The Publish and Subscribe services work together to loosely couple two or more Sequences.</p>
+ ! <p>To facilitate the coupling, both the Subscribe and Publish services must share a common Named Event.</p>
+ ! <p>At runtime, the Publish service directs a message to it's configured Named Event and  in turn, one or more appropriately configured Subscribe service(es) retrieve the published message from the same Named Event.</p>
  ! <p><img width="480" src="{!URLFOR($Resource.HelpZip, '/PublishConfig/PubSubConfig.png')}" /></p>
  ! 
  ! <h3>Configure Buttons</h3>
  ! <p>To Publish to a specific Named Event,  select that specific Named Event from the Event Type lookup field from the Publish config page.</p>
  ! <p>From the Publish config page, <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/PublishConfig/ManageEventTypes.png')}" />  takes you to a native list of all previously defined event types. To add a new event type , press the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/PublishConfig/NewEventType.png')}" /> button.</p>
- ! <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/PublishConfig/ShowStep.png')}" />   takes you to the native view of the underlying Sequence Step hosting the Publish process.</p>
+ ! <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/PublishConfig/ShowStep.png')}" />   takes you to the native view of the underlying Sequence Step hosting the Publish service.</p>
  !-->
 
 <!--
  ! TODO merge these?
  ! <h3>About Subscribe Config</h3>
- ! <p>The Publish and Subscribe processes work together to loosely couple two or more Sequences.</p>
- ! <p>To facilitate the coupling, both the Subscribe and Publish processes must share a common Named Event.</p>
- ! <p>At runtime, the Publish process directs a message to it's configured Named Event and  in turn, one or more appropriately configured Subscribe process(es) retrieve the published message from the same Named Event.</p>
+ ! <p>The Publish and Subscribe services work together to loosely couple two or more Sequences.</p>
+ ! <p>To facilitate the coupling, both the Subscribe and Publish services must share a common Named Event.</p>
+ ! <p>At runtime, the Publish service directs a message to it's configured Named Event and  in turn, one or more appropriately configured Subscribe service(es) retrieve the published message from the same Named Event.</p>
  ! <p><img width="480" src="{!URLFOR($Resource.HelpZip, '/SubscribeConfig/PubSubConfig.png')}" /></p>
  ! 
  ! <h3>Configure Buttons</h3>
  ! <p>To subscribe to a specific Named Event,  select that Named Event from the Event Type lookup field from the Subscribe config page..</p>
  ! <p>From the Subscribe config page, <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/SubscribeConfig/ManageEventTypes.png')}" />  takes you to a native list of all previously defined event types. To add a new event type , press the <img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/SubscribeConfig/NewEventType.png')}" /> button.</p>
- ! <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/SubscribeConfig/ShowStep.png')}" />  takes you to the native view of the underlying Sequence Step hosting the Subscribe process.</p>
+ ! <p><img style="vertical-align:middle;" src="{!URLFOR($Resource.HelpZip, '/SubscribeConfig/ShowStep.png')}" />  takes you to the native view of the underlying Sequence Step hosting the Subscribe service.</p>
  !-->

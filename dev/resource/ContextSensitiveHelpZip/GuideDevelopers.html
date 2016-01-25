@@ -1,5 +1,5 @@
 <h1>
-    Process Developers Guide
+    Service Developers Guide
 </h1>
 
 <p>
@@ -17,10 +17,10 @@
 
 <ol>
     <li>
-        explain basic process concepts as they pertain to the Service Bus.
+        explain basic service concepts as they pertain to the Service Bus.
     </li>
     <li>
-        describe how to create a process that enables processing functionality not directly provided
+        describe how to create a service that enables processing functionality not directly provided
         for in the Service Bus.
     </li>
 </ol>
@@ -45,32 +45,32 @@
  !-->
 
 <pre>
-List&lt;Event&gt; messages = process.handle(Event message);
+List&lt;Event&gt; messages = service.handle(Event message);
 </pre>
 
 <p>
-    The Service Bus is designed so that the output(s) from a given process can be directly
-    re-purposed as input(s) into immediately downstream processes.
+    The Service Bus is designed so that the output(s) from a given service can be directly
+    re-purposed as input(s) into immediately downstream services.
 </p>
 
 <p>
-    The Service Bus has by default a number of pre-packaged native processes that can be
+    The Service Bus has by default a number of pre-packaged native services that can be
     sequenced together to accomplish useful work.
 </p>
 
 <p>
-    These pre-packaged processes include <em>Branch</em>, <em>Gate</em>, <em>Jump</em>,
+    These pre-packaged services include <em>Branch</em>, <em>Gate</em>, <em>Jump</em>,
     <em>LogInitializer</em>, <em>LogWriter</em>, <em>Mark</em>, <em>Publish</em>, <em>Schedule</em>,
     <em>Subscribe</em>, <em>Subsequence</em>, <em>Terminate</em> and <em>WireTap</em>.
 </li>
 
 <p>
-    Additional processes are easily created to implement tasks specific to a particular business
+    Additional services are easily created to implement tasks specific to a particular business
     requirement.
 </p>
 
 <p>
-    The focus of this guide is to provide detailed guidance for the creation of these processes.
+    The focus of this guide is to provide detailed guidance for the creation of these services.
 </p>
 
 <h2>
@@ -90,7 +90,7 @@ List&lt;Event&gt; messages = process.handle(Event message);
     </li>
     <li>
         <p>
-            Define the process activity in the form of a process specification.
+            Define the service activity in the form of a service specification.
         </p>
         <fieldset>
             <legend>Note</legend>
@@ -100,8 +100,8 @@ List&lt;Event&gt; messages = process.handle(Event message);
     </li>
     <li>
         <p>
-            Convert the specification into a process with accompanying unit tests - 
-            see <a href="?topic=GuideBuildingTesting">building and testing the process</a>
+            Convert the specification into a service with accompanying unit tests -
+            see <a href="?topic=GuideBuildingTesting">building and testing the service</a>
         </p>
         <fieldset>
             <legend>Note</legend>
@@ -109,7 +109,7 @@ List&lt;Event&gt; messages = process.handle(Event message);
         </fieldset>
     </li>
     <li>
-        Visually test the process - see <a href="#CHAPTER06">post-build steps</a>
+        Visually test the service - see <a href="#CHAPTER06">post-build steps</a>
     </li>
     <li>
         Create a package containing your service and install in the runtime enviroment
@@ -118,7 +118,7 @@ List&lt;Event&gt; messages = process.handle(Event message);
 </ol>
 
 <h2>
-    Define the Process
+    Define the Service
 </h2>
 
 <p>
@@ -137,7 +137,7 @@ List&lt;Event&gt; messages = process.handle(Event message);
         The <code>RecordId</code> parameter points at the underlying data associated with the message.
     </li>
     <li>
-        The process author should be familiar with the structure of the data (SObject) pointed at by
+        The service author should be familiar with the structure of the data (SObject) pointed at by
         the event so that he/she can adequately retrieve and write to this object.
     </li>
 </ul>
@@ -153,7 +153,7 @@ List&lt;Event&gt; messages = process.handle(Event message);
     </li>
     <li>
         <p>
-            A process returns an output collection containing zero, one or more messages in the form
+            A service returns an output collection containing zero, one or more messages in the form
             <code>List&lt;Map&lt;String,Object&gt;&gt;</code>
         </p>
         <fieldset>
@@ -165,17 +165,17 @@ List&lt;Event&gt; messages = process.handle(Event message);
 </ul>
 
 <h2>
-    Defining the process activity
+    Defining the service activity
 </h2>
 
 <ul>
     <li>
-        The process activity represents specific logic that is unavailable under the Service Bus,
-        either because such logic is is not represented by one of the native framework processes, or
+        The service activity represents specific logic that is unavailable under the Service Bus,
+        either because such logic is is not represented by one of the native framework services, or
         such logic has not been previously created and/or registered.
     </li>
     <li>
-        The process activity should be <em>specific</em>. An example of specific activity might be
+        The service activity should be <em>specific</em>. An example of specific activity might be
         converting Unix line terminators to Windows line terminators. An example of
         <em>un-specific</em> activity might be the counting of word occurrences in a file,
         alphabetising the summary counts by word and finally reporting the results.
@@ -184,25 +184,25 @@ List&lt;Event&gt; messages = process.handle(Event message);
         Generally defined activities should be re-specified into separate specific activites. Using
         the example above, one could envisage three separate activities, namely: count, sort and
         report. The more focused an activity, the easier it becomes to write comprehensive, reliable
-        unit tests. And the easier it becomes to re-purpose the process in other sequences cutting
+        unit tests. And the easier it becomes to re-purpose the service in other sequences cutting
         down on programmer effort and the potential for bugs (less code).
     </li>
 </ul>
 
 <p>
     The Service Bus surfaces the notion of attributes via <strong>Step Config</strong>
-    and <strong>Process Settings</strong> to accommodate variations in data applied to the same
-    process behavior
+    and <strong>Service Settings</strong> to accommodate variations in data applied to the same
+    service behavior
 </p>
 
 <ul>
     <li>
-        <strong>Step Config</strong> allows a process to make use of attributes having values
-        configured that are specific to the context of each <em>step</em> the process belongs to.
+        <strong>Step Config</strong> allows a service to make use of attributes having values
+        configured that are specific to the context of each <em>step</em> the service belongs to.
     </li>
     <li>
-        <strong>Process Settings</strong> allow a process to make use of a single set of parameters
-        without reference to the context of the sequence step containing the process. These
-        parameters are defined in a Custom Setting specific to that process class.
+        <strong>Service Settings</strong> allow a service to make use of a single set of parameters
+        without reference to the context of the sequence step containing the service. These
+        parameters are defined in a Custom Setting specific to that service class.
     </li>
 </ul>

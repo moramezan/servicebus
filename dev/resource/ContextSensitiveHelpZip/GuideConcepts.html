@@ -23,7 +23,7 @@
 </p>
 
 <p>
-    Logically related processes are assembled by the System Configurator (or Business Analyst) into
+    Logically related services are assembled by the System Configurator (or Business Analyst) into
     sequential processing steps called a <em>Sequence</em>
 </p>
 
@@ -33,13 +33,13 @@
 
 <p>
     Every service responds to an input message by emitting a list of zero, one or more output
-    messages. The Service Bus is designed so that output messages from a process automatically
-    feed the input stream of the very next process in a <em>Sequence</em>.
+    messages. The Service Bus is designed so that output messages from a service automatically
+    feed the input stream of the very next service in a <em>Sequence</em>.
 </p>
 
 <p>
-    The Service Bus has by default a number of ready made processes that can be sequenced together
-    so that useful work can be completed. These ready made processes include:
+    The Service Bus has by default a number of ready made services that can be sequenced together
+    so that useful work can be completed. These ready made services include:
 </p>
 
 <ul>
@@ -52,13 +52,13 @@
 </ul>
 
 <p>
-    Additional processes can be easily created to implement tasks specific to
+    Additional services can be easily created to implement tasks specific to
     your particular requirement(s).
 </p>
 
 <p>
-    Detailed instructions for building processes can be found in the
-    <a href="?topic=GuideDevelopers">Process Developers Guide</a>
+    Detailed instructions for building services can be found in the
+    <a href="?topic=GuideDevelopers">Service Developers Guide</a>
 </p>
 
 <h3>
@@ -75,13 +75,13 @@
         steps in a sequence), versus
     </li>
     <li>
-        <em>how</em> it is performed (via imperative apex code defining each process - see
-        <a href="?topic=GuideDevelopers">Process Developers Guide</a> for further details.)
+        <em>how</em> it is performed (via imperative apex code defining each service - see
+        <a href="?topic=GuideDevelopers">Service Developers Guide</a> for further details.)
     </li>
 </ul>
 
 <p>
-    Assembling processes in a useful sequence and thereby fulfilling the intent of the underlying
+    Assembling services in a useful sequence and thereby fulfilling the intent of the underlying
     business requirement is the domain of the business analyst and not necessarily the Apex
     Developer.
 </p>
@@ -98,7 +98,7 @@
     </li>
     <li>
         by identifying tasks in a Sequence that have no corresponding service (otherwise defined
-        as "missing processes")
+        as "missing services")
     </li>
     <li>
         by specifying and provisioning missing services, often by securing the development
@@ -117,13 +117,13 @@
 
 <ul>
     <li>
-        <em>Wiretap</em> which acts a no-operation process and has no side effects. A Wiretap
-        process will send an email containing the current event message to a nominated user.
+        <em>Wiretap</em> which acts a no-operation service and has no side effects. A Wiretap
+        service will send an email containing the current event message to a nominated user.
     </li>
     <li>
-        <em>Audit Writer</em> which acts a no-operation pass through process and has no side
+        <em>Audit Writer</em> which acts a no-operation pass through service and has no side
         effects. An Audit Writer will however store the event message under a useful business
-        identifier. Many Audit Writer processes placed at strategic steps in a Sequence can usefully
+        identifier. Many Audit Writer services placed at strategic steps in a Sequence can usefully
         track and relate the progress of event messages using a common business identifier.
     </li>
 </ul>

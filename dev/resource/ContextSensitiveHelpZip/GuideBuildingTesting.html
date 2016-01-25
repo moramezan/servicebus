@@ -1,5 +1,5 @@
 <h1>
-    Building and testing a process
+    Building and testing a service
 </h1>
 
 <p>
@@ -23,7 +23,7 @@
 </p>
 
 <h2>
-    Anatomy of a Process
+    Anatomy of a Service
 </h2>
 
 <p>
@@ -37,7 +37,7 @@
 </ul>
 
 <p>
-    Below is an annotated non-callout Service called <em>ChatterTap</em>. This process adheres
+    Below is an annotated non-callout Service called <em>ChatterTap</em>. This service adheres
     to the required template.
 </p>
 
@@ -46,7 +46,7 @@
 </h3>
 
 <p>
-    The Service Bus framework has a built-in <em>WireTap</em> process that surfaces the parameters of the
+    The Service Bus framework has a built-in <em>WireTap</em> service that surfaces the parameters of the
     input event via an email. The email is sent to either:
 </p>
 
@@ -56,12 +56,12 @@
     </li>
     <li>
         the inbox of a nominated user as defined by a custom setting associated with the
-        <em>WireTap</em> process
+        <em>WireTap</em> service
     </li>
 </ul>
 
 <p>
-    This process will replicate the <em>WireTap</em> functionality. But as an alternative to
+    This service will replicate the <em>WireTap</em> functionality. But as an alternative to
     surfacing the event parameters in the form of an email, <em>ChatterTap</em> will instead post
     these event parameters on a user's Chatter Feed.
 </p>
@@ -116,8 +116,8 @@ global class ChatterTap {
     <br /><strong>003 - 011</strong> the <code>Summary</code> Marker Class exposes important properties about the Service Bus thereby facilitating correct integration into the Service Bus framework.
     <br /><strong>004</strong> the <code>Tag</code> is a string that that groups similar Services. We recommend that you create your own categories for custom services.
     <br /><strong>005</strong> the <code>Label</code> is a string that describes the friendly <code>Label</code> of the Service
-    <br /><strong>006</strong> the <code>Description</code> is a string that describes the functionality of the process and is surfaced on the list view of all Services by the discovery process.
-    <br /><strong>007</strong> the <code>Icon</code> is a unique string that defines the icon that will appear next to the process when viewed on the list view of Services.
+    <br /><strong>006</strong> the <code>Description</code> is a string that describes the functionality of the service and is surfaced on the list view of all Services by the discovery service.
+    <br /><strong>007</strong> the <code>Icon</code> is a unique string that defines the icon that will appear next to the service when viewed on the list view of Services.
 </p>
 
 <fieldset>
@@ -126,7 +126,7 @@ global class ChatterTap {
 </fieldset>
 
 <p>
-    <strong>008</strong> <code>Limits</code> constrains the number of times a process may be executed in a single context.
+    <strong>008</strong> <code>Limits</code> constrains the number of times a service may be executed in a single context.
 </p>
 
 <fieldset>
@@ -138,12 +138,12 @@ global class ChatterTap {
     <ul>
         <li>The default is implicitly and conservatively set to one.</li>
         <li>
-            A simple process that avoids Salesforce governed operations such as SOQL or callouts is
+            A simple service that avoids Salesforce governed operations such as SOQL or callouts is
             a good candidate for a large <code>Limits</code> setting. (100 or greater)
         </li>
         <li>
-            If however, the process makes use of a governed operation, ascertain 50% of that
-            particular Salesforce limit and divide by the number of times the process uses the
+            If however, the service makes use of a governed operation, ascertain 50% of that
+            particular Salesforce limit and divide by the number of times the service uses the
             governed operation. The <code>Limits</code> property must not exceed this calculated
             value.
         </li>
@@ -152,7 +152,7 @@ global class ChatterTap {
 
 <p>
     <strong>009</strong> the <code>HelpUrl</code> is a string that describes the help page for the
-    process.
+    service.
 </p>
 
 <fieldset>
@@ -162,7 +162,7 @@ global class ChatterTap {
 </fieldset>
 
 <p>
-    <strong>010</strong> Surfacing a link to the process-specific custom settings on the processes list view is possible. Simply assign an instance of the custom setting to the <code>CustomSetting</code> member of the process's <code>Summary</code> Marker Class.
+    <strong>010</strong> Surfacing a link to the service-specific custom settings on the services list view is possible. Simply assign an instance of the custom setting to the <code>CustomSetting</code> member of the service's <code>Summary</code> Marker Class.
     <br /><strong>014 - 036</strong> the <code>toString()</code> method contains the Apex logic that implements the business specification.
     <br /><strong>014</strong> an input message is injected into the <code>toString()</code> method in the form of key-value  collection.
     <br /><strong>035</strong> the <code>toString()</code> method returns a serialized list of zero, one or more output messages. Each output message consists of a key-value parameter collection.
@@ -173,17 +173,17 @@ global class ChatterTap {
  !-->
 
 <h2>
-    Example process
+    Example service
 </h2>
 
 <p>
-    The <em>WireTap</em> process is a built-in NOOP framework process that sends an email to an
+    The <em>WireTap</em> service is a built-in NOOP framework service that sends an email to an
     interested user whenever it receives an event message. The email contains details about the
-    sequence step hosting the <em>WireTap</em> process as well as the injected event parameters
+    sequence step hosting the <em>WireTap</em> service as well as the injected event parameters
 </a>
 
 <p>
-    As an alternative to the the <em>WireTap</em> process, we will construct a new process called
+    As an alternative to the the <em>WireTap</em> service, we will construct a new service called
     <em>ChatterTap</em>. Instead of emailing an interested user, the same detail will instead be
     surfaced on that user's chatter feed.
 </p>
@@ -248,7 +248,7 @@ global class ChatterTap {
 </h2>
 
 <p>
-    Create an Apex class that supports the  minimum required process layout.
+    Create an Apex class that supports the  minimum required service layout.
 </p>
 
 <pre>
@@ -289,7 +289,7 @@ global  class ChatterTap {
 </h2>
 
 <p>
-    Annotate the process.
+    Annotate the service.
 </p>
 
 <pre>
@@ -324,12 +324,12 @@ global  class ChatterTap {
 
 
 <p>
-    <strong>004</strong> The <code>Description</code> is a string that describes the functionality of the process. This value is surfaced on the processes list view by the Service Bus. The <code>Description</code> is required in order for the class to be recognised as a valid service.
-    <br /><strong>005</strong> The <code>Tag</code> is a string that that groups the services amongst similar others. It is best practise to use categories. Failure to include a <code>Tag</code> property will group your process under the default 'Untagged' group.
-    <br /><strong>006</strong> The <code>Name</code> is a string that describes the friendly name of the service on the list view of the services. The Service Bus will use the Apex class name of your process as the friendly name if you fail to include ths property in your <code>Summary</code> Marker Class.
-    <br /><strong>007</strong> the <code>Icon</code> is a string that identifies the specific icon to display next to the process on the list view of the services. Select an icon from the <a href="http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png">famfamfam</a> icon collection that most closely represents the functionality of your service. Then note the name of the icon and assign it to the <code>Icon</code> property. The Service Bus will use a 'cog' icon to represent your process if you fail to include ths property in your <code>Summary</code> Marker Class.
-    <br /><strong>008</strong> the <code>Limits</code> constrains the number of times an service may be executed in a single context. This property  enables more work to be performed than would otherwise be possible within prevailing daily Salesforce execution limits. The default is implicitly and conservatively set to one. A simple process that avoids Salesforce governed operations such as SOQL or callouts is a good candidate for a large <code>Limits</code> setting (100 or greater). If however, the process makes use of a governed operation, ascertain 50% of that particular Salesforce limit and divide by the number of times the process uses the governed operation. The <code>Limits</code> property should not exceed this calculated value.
-    <br /><strong>009</strong> the <code>HelpUrl</code> is a string that defines the help page for the process. The help page is surfaced as a link  on the list view of the services. Either a VisualForce page reference or an external web page reference can be assigned to this property. If this property is not defined, the Service Bus will surface a user friendly representation of your process by making use of the attributes contained within the process's <code>Summary</code> Marker Class.
+    <strong>004</strong> The <code>Description</code> is a string that describes the functionality of the service. This value is surfaced on the services list view by the Service Bus. The <code>Description</code> is required in order for the class to be recognised as a valid service.
+    <br /><strong>005</strong> The <code>Tag</code> is a string that that groups the services amongst similar others. It is best practise to use categories. Failure to include a <code>Tag</code> property will group your service under the default 'Untagged' group.
+    <br /><strong>006</strong> The <code>Name</code> is a string that describes the friendly name of the service on the list view of the services. The Service Bus will use the Apex class name of your service as the friendly name if you fail to include ths property in your <code>Summary</code> Marker Class.
+    <br /><strong>007</strong> the <code>Icon</code> is a string that identifies the specific icon to display next to the service on the list view of the services. Select an icon from the <a href="http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png">famfamfam</a> icon collection that most closely represents the functionality of your service. Then note the name of the icon and assign it to the <code>Icon</code> property. The Service Bus will use a 'cog' icon to represent your service if you fail to include ths property in your <code>Summary</code> Marker Class.
+    <br /><strong>008</strong> the <code>Limits</code> constrains the number of times an service may be executed in a single context. This property  enables more work to be performed than would otherwise be possible within prevailing daily Salesforce execution limits. The default is implicitly and conservatively set to one. A simple service that avoids Salesforce governed operations such as SOQL or callouts is a good candidate for a large <code>Limits</code> setting (100 or greater). If however, the service makes use of a governed operation, ascertain 50% of that particular Salesforce limit and divide by the number of times the service uses the governed operation. The <code>Limits</code> property should not exceed this calculated value.
+    <br /><strong>009</strong> the <code>HelpUrl</code> is a string that defines the help page for the service. The help page is surfaced as a link  on the list view of the services. Either a VisualForce page reference or an external web page reference can be assigned to this property. If this property is not defined, the Service Bus will surface a user friendly representation of your service by making use of the attributes contained within the service's <code>Summary</code> Marker Class.
 </p>
 
 <h2>
@@ -387,7 +387,7 @@ global class ChatterTap {
 </h2>
 
 <p>
-    Wire up the process settings and initiate the business logic implementation.
+    Wire up the service settings and initiate the business logic implementation.
 </p>
 
 <pre>
@@ -428,8 +428,8 @@ global class ChatterTap {
 </h3>
 
 <p>
-    <strong>016 - 023</strong> Under the main code block, initiate the business logic implementation. The specification defines the preferred chatter feed owner as being the User Id defined the custom settings of the process. For this reason, the code references <code>ChatterTapSetting__c</code> to determine if the default chatter (User) Id should been overwritten.
-    <br /><strong>010</strong> To surface a link to the custom settings page of your process directly on the services list view: assign an instance of your custom setting SObject to the CustomSetting parameter of the process's <code>Summary</code> Marker Class.
+    <strong>016 - 023</strong> Under the main code block, initiate the business logic implementation. The specification defines the preferred chatter feed owner as being the User Id defined the custom settings of the service. For this reason, the code references <code>ChatterTapSetting__c</code> to determine if the default chatter (User) Id should been overwritten.
+    <br /><strong>010</strong> To surface a link to the custom settings page of your service directly on the services list view: assign an instance of your custom setting SObject to the CustomSetting parameter of the service's <code>Summary</code> Marker Class.
 </p>
 
 <h2>
@@ -493,19 +493,19 @@ global class ChatterTap {
 </h2>
 
 <p>
-    Test the process. Tests will normally cover:
+    Test the service. Tests will normally cover:
 </p>
 
 <ul>
     <li>the expected <code>Summary</code> (for example, the <code>Description</code>)</li>
-    <li>the expected initial state (for example, the Custom settings supporting the process)</li>
+    <li>the expected initial state (for example, the Custom settings supporting the service)</li>
     <li>that expected exceptions are thrown for invalid 1initial state</li>
     <li>the expected outputs (for example, the count of the messages in the output collecton)</li>
     <li>the expected side effects (for example, the insertion of certain records such as a <code>FeedItem</code>)</li>
 </ul>
 
 <p>
-    Most processes will exhibit a set of tests similar to those shown below.
+    Most services will exhibit a set of tests similar to those shown below.
 </p>
 
 <pre>
@@ -523,12 +523,12 @@ private class ChatterTapTest {
         //arrange 
         insert new ChatterTapSetting__c ();  // default
         
-        ChatterTap process = new ChatterTap();
+        ChatterTap service = new ChatterTap();
         Map&lt;String,Object&gt; inputEvent = new Map&lt;String,Object&gt;();
  
         //act
-        process.Event = Json.serialize(inputEvent);
-        String outputs = process.toString(); 
+        service.Event = Json.serialize(inputEvent);
+        String outputs = service.toString();
             
         //assert
         System.assert(true, 'ChatterTap ran OK.');
@@ -544,9 +544,9 @@ private class ChatterTapTest {
         };  
  
         // Act
-        ChatterTap process = new ChatterTap();
-        process.Event = Json.serialize(inputEvent);
-        String results = process.toString();
+        ChatterTap service = new ChatterTap();
+        service.Event = Json.serialize(inputEvent);
+        String results = service.toString();
   
         // Assemble  
         Integer actualSize = results.size();
@@ -567,9 +567,9 @@ private class ChatterTapTest {
         Integer actualFeedItemsBeforeSize = [SELECT Id, Body FROM FeedItem].Size();
   
         // Act  
-        ChatterTap process = new ChatterTap();  
-        process.Event = Json.serialize(inputEvent);
-        String results = process.toString();  
+        ChatterTap service = new ChatterTap();
+        service.Event = Json.serialize(inputEvent);
+        String results = service.toString();
   
         // Assemble  
         Integer actualFeedItemsAfterSize = [SELECT Id, Body FROM FeedItem].Size();  
@@ -587,8 +587,8 @@ private class ChatterTapTest {
 </h3>
 
 <p>
-    <strong>004 - 007</strong> Test the process correctly implements the <code>Summary</code> Marker Class.
-    <br /><strong>011 - 023</strong> The process relies on a custom setting instance and should not throw an error if this custom setting exists
-    <br /><strong>026 - 044</strong> The process should return exactly one message in the output collection. As this is a no-operation process, the test could be further expanded to ensure that the input event parameters exactly match the output event parameters.
-    <br /><strong>046 - 067</strong> The business intent of the process is to insert exactly one entry containing details about the sequence and sequence position in a given Chatter Feed. The persistence of state outside the process is termed a side effect. The test verifies the correctness of the side effect by ensuring that process adds exactly one post to a given Chatter feed
+    <strong>004 - 007</strong> Test the service correctly implements the <code>Summary</code> Marker Class.
+    <br /><strong>011 - 023</strong> The service relies on a custom setting instance and should not throw an error if this custom setting exists
+    <br /><strong>026 - 044</strong> The service should return exactly one message in the output collection. As this is a no-operation service, the test could be further expanded to ensure that the input event parameters exactly match the output event parameters.
+    <br /><strong>046 - 067</strong> The business intent of the service is to insert exactly one entry containing details about the sequence and sequence position in a given Chatter Feed. The persistence of state outside the service is termed a side effect. The test verifies the correctness of the side effect by ensuring that service adds exactly one post to a given Chatter feed
 </p>

@@ -1,17 +1,17 @@
 <h1>
-    Audit Initializer and Audit Writer processes
+    Audit Initializer and Audit Writer services
 </h1>
 
 <p>
-    The <em>Audit Writer</em> and <em>Audit Initializer</em> processes work together. This allows
+    The <em>Audit Writer</em> and <em>Audit Initializer</em> services work together. This allows
     the relationship between data at various steps in one or more sequence(s) to be presented under
     a meaningful and common business identifier.
 </p>
 
 <p>
-    The <em>Audit Initializer</em> process defines a new business identifier. A message passing
-    through a <em>Audit Initializer</em> process will have its state persisted downstream whenever
-    that same message passes through a subsequent <em>AuditWriter</em> process.
+    The <em>Audit Initializer</em> service defines a new business identifier. A message passing
+    through a <em>Audit Initializer</em> service will have its state persisted downstream whenever
+    that same message passes through a subsequent <em>AuditWriter</em> service.
 </p>
 
 <p>
@@ -21,13 +21,13 @@
 <fieldset>
     <legend>Note</legend>
     <p>
-        A message passing through a <em>Audit Initializer</em> process results in the creation of a
-        business identifier. Downstream <em>Audit Writer</em> processes will persist the input
+        A message passing through a <em>Audit Initializer</em> service results in the creation of a
+        business identifier. Downstream <em>Audit Writer</em> services will persist the input
         event under that business identifier.
     </p>
     <p>
         A message can carry more than one business identifier. In such cases, the <em>Audit
-        Writer</em> process will persist an entry under each of the business grouping keys.
+        Writer</em> service will persist an entry under each of the business grouping keys.
     </p>
 </fieldset>
 
@@ -56,7 +56,7 @@
 
 <p>
     This is the default mechanism for defining the business identifier and is used when no explicit
-    definition has been configured on the <em>Audit Initializer</em> process.
+    definition has been configured on the <em>Audit Initializer</em> service.
 </p>
 
 <p>
@@ -72,8 +72,8 @@
 
 <p>
     To specify the a static business identifier, click the configure link next to an <em>Audit
-    Initializer</em> process. Clicking the configure link will surface the configuration screen for
-    the <em>Audit Initializer</em> process.
+    Initializer</em> service. Clicking the configure link will surface the configuration screen for
+    the <em>Audit Initializer</em> service.
 </p>
 
 <ol>
@@ -100,8 +100,8 @@
 
 <p>
     To specify a dynamic business identifier, click the configure link next to an <em>Audit
-    Initializer</em> process. Clicking the configure link will surface the configuration screen
-    for the <em>Audit Initializer</em> process.
+    Initializer</em> service. Clicking the configure link will surface the configuration screen
+    for the <em>Audit Initializer</em> service.
 </p>
 
 <ol>
@@ -116,11 +116,11 @@
         </p>
         <p>
             For example, selecting <code>Account</code> and then <code>NaicsCode</code> configures
-            the <em>Audit Initializer</em> process to perform the following steps at runtime:
+            the <em>Audit Initializer</em> service to perform the following steps at runtime:
         </p>
         <ul>
             <li>
-                inspect the contents of underlying data passing through the process
+                inspect the contents of underlying data passing through the service
             </li>
             <li>
                 extract the value of the <code>NaicsCode</code> from the contents of underlying
@@ -139,7 +139,7 @@
         </fieldset>
     </li>
     <li>
-        A message passing through a dynamically configured <em>Audit Initializer</em> process will
+        A message passing through a dynamically configured <em>Audit Initializer</em> service will
         have its underlying data inspected and the value of this dynamic field extracted.
     </li>
 </ol>
@@ -154,10 +154,10 @@
 
 <!--
  ! TODO merge these?
- ! <h3>About the Audit Processes</h3>
- ! <p>By making use of a meaningful grouping key, the AuditWriter process and AuditInitializer process work together to surface the status of a message at various points in one or more Sequence(s) </p>
- ! <p>The AuditInitializer process defines the grouping key.</p>
- ! <p>The AuditWriter process surfaces the status of a message using the grouping key(s) defined under one or more prior AuditInitializer process(es).</p>
+ ! <h3>About the Audit Services</h3>
+ ! <p>By making use of a meaningful grouping key, the AuditWriter service and AuditInitializer service work together to surface the status of a message at various points in one or more Sequence(s) </p>
+ ! <p>The AuditInitializer service defines the grouping key.</p>
+ ! <p>The AuditWriter service surfaces the status of a message using the grouping key(s) defined under one or more prior AuditInitializer service(es).</p>
  ! <p>The  grouping key is a composite of "a Time Stamp" and "A Business Identifier"</p>
  ! <p>The business identifier (the non-time stamp portion of the  grouping key) can be configured in one of the three ways:
  !     <ul>
@@ -168,19 +168,19 @@
  ! </p>
  ! 
  ! <h3>Implicit Key</h3>
- ! <p>When no explicit definition of the business identifier has been configured on the AuditInitializer process, the business identifier will be a a composite of the AuditInitializer's Sequence name and Sequence Position.
- !    Whenever a message passes through a AuditInitializer process with an Implicit Key, an audit grouping record will be created  using this default composite Group Identifier.
+ ! <p>When no explicit definition of the business identifier has been configured on the AuditInitializer service, the business identifier will be a a composite of the AuditInitializer's Sequence name and Sequence Position.
+ !    Whenever a message passes through a AuditInitializer service with an Implicit Key, an audit grouping record will be created  using this default composite Group Identifier.
  ! </p>   
  ! 
  ! <h3>Explicit Static Key</h3>
  ! <p>Under this configuration, the business identifier is statically defined in the form of a meaningful constant (for example "INVOICE" or "WEB-DATA-FROM-YAHOO") 
- !    Whenever a message passes through a AuditInitializer process with an Explicit Static Key, an audit grouping record will be created  using the value defined by the Static Group Identifier.
+ !    Whenever a message passes through a AuditInitializer service with an Explicit Static Key, an audit grouping record will be created  using the value defined by the Static Group Identifier.
  ! </p>   
  ! <p>To define a dynamic Static Group Identifier, enter a value in the editable Static Group Identifier text field.</p>
  ! 
  ! <h3>Explicit Dynamic Key</h3>
  ! <p>Under this configuration, the business identifier is dynamically extracted from a message's underlying data using the field name as defined in the Dynamic Group Identifier.
- !    Whenever a message passes through a AuditInitializer process with an Explicit Dynamic Key, an audit grouping record will be created  using a value pulled from the underlying SObject data related to that specific message. The SObject data value field is defined by the Dynamic Group Identifier.
+ !    Whenever a message passes through a AuditInitializer service with an Explicit Dynamic Key, an audit grouping record will be created  using a value pulled from the underlying SObject data related to that specific message. The SObject data value field is defined by the Dynamic Group Identifier.
  ! </p>   
  ! <p>To define a dynamic Group Identifier, click the [Change Dynamic Group Identifier] button on the AuditInitializer config page to reveal a Sobject field selection page.</p>
  ! <p>From the [Choose Object Name], select the required field's parent SOBject from the dropdown list (for example Account). 

@@ -315,11 +315,11 @@ var QUnit = {
 				}
 
 				config.blocking = false;
-				process();
+				service();
 			}, 13);
 		} else {
 			config.blocking = false;
-			process();
+			service();
 		}
 	},
 	
@@ -586,11 +586,11 @@ function synchronize( callback ) {
 	config.queue.push( callback );
 
 	if ( config.autorun && !config.blocking ) {
-		process();
+		service();
 	}
 }
 
-function process() {
+function service() {
 	var start = (new Date()).getTime();
 
 	while ( config.queue.length && !config.blocking ) {
@@ -598,7 +598,7 @@ function process() {
 			config.queue.shift()();
 
 		} else {
-			setTimeout( process, 13 );
+			setTimeout( service, 13 );
 			break;
 		}
 	}

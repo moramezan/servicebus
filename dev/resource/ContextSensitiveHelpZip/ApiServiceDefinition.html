@@ -78,15 +78,15 @@ global class ExampleService extends Abstract.Service {
 
     <dt>Inputs</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,String&gt;</a></dd>
-    <dd>Optional friendly descriptions of the input event parameters required by this process.</dd>
+    <dd>Optional friendly descriptions of the input event parameters required by this service.</dd>
     
     <dt>Outputs</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,String&gt;</a></dd>
-    <dd>Optional friendly descriptions of the output event parameters emitted by this process. Not to be confused with events themselves.</dd>
+    <dd>Optional friendly descriptions of the output event parameters emitted by this service. Not to be confused with events themselves.</dd>
     
     <dt>ServiceSetting</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_custom_settings.htm" target="_blank">SObject</a></dd>
-    <dd>Optional <em>prototype object</em> of a Custom Setting to be used for Process-specifics settings. Data of this type are manageable on each process, and are surfaced inside the Sequence Builder.</dd>
+    <dd>Optional <em>prototype object</em> of a Custom Setting to be used for Service-specifics settings. Data of this type are manageable on each service, and are surfaced inside the Sequence Builder.</dd>
     
     <dt>StepConfig</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_sobject.htm" target="_blank">SObject</a></dd>
@@ -100,7 +100,7 @@ global class ExampleService extends Abstract.Service {
 <pre>
 //Service Summary Inner Class
 global class Summary {
-    String Description = 'This process tweets from a Twitter account.';
+    String Description = 'This service tweets from a Twitter account.';
     String Tag = 'Social';
     String Name = 'Twitter';
     String Icon = 'comment';
@@ -129,11 +129,11 @@ global class Summary {
     
     <dt>StepConfig</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">Custom Object</a></dd>
-    <dd>Concrete custom object whose fields are populated with any Step-specific configuration, if that trait is adopted by this process.</dd>
+    <dd>Concrete custom object whose fields are populated with any Step-specific configuration, if that trait is adopted by this service.</dd>
     
     <dt>AllowsCallouts</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_boolean.htm" target="_blank">Boolean</a></dd>
-    <dd>False when handling execution logic and true when handling callout logic, if that trait is adopted by this process.</dd>
+    <dd>False when handling execution logic and true when handling callout logic, if that trait is adopted by this service.</dd>
 </dl>
 
 <p>
@@ -157,7 +157,7 @@ global Boolean AllowsCallouts;
 </h2>
 
 <p>
-    Optional method, implemented for processes that perform callouts.
+    Optional method, implemented for services that perform callouts.
 </p>
 
 <p>
@@ -211,7 +211,7 @@ override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Ob
 </h2>
 
 <p>
-    Indicates this process will attempt to make HTTP callouts.
+    Indicates this service will attempt to make HTTP callouts.
 </p>
 
 <p>

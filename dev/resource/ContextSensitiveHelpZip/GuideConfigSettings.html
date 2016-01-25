@@ -1,30 +1,30 @@
 <h1>
-    Step Config and Process Settings
+    Step Config and Service Settings
 </h1>
 
-<h3>Configuring process behaviour</h3>
+<h3>Configuring service behaviour</h3>
 
 <p>
-    Instead of replicating a large portions of custom logic in a second or third process, a
-    process developer may instead choose to expose variation in execution logic through the use of
-    process attributes.
+    Instead of replicating a large portions of custom logic in a second or third service, a
+    service developer may instead choose to expose variation in execution logic through the use of
+    service attributes.
 </p>
 
 <p>
-    Process attributes can apply to:
+    Service attributes can apply to:
 </p>
 
 <ul>
-    <li>the process class as a whole via a global process custom setting, or</li>
-    <li>process logic at a specific step by making use of a step config object.</li>
+    <li>the service class as a whole via a global service custom setting, or</li>
+    <li>service logic at a specific step by making use of a step config object.</li>
 </ul>
 
 <h2>
-    Process Settings (settings specific to each process)
+    Service Settings (settings specific to each service)
 </h2>
 
 <p>
-    The snippet below illustrates how to make use of class wide custom settings for your process.
+    The snippet below illustrates how to make use of class wide custom settings for your service.
 </p>
 
 <pre>
@@ -49,8 +49,8 @@ override global String toString() {
 </h3>
 
 <p>
-    <strong>003</strong> if you wish to surface a link to the Custom Setting of your process on the Processes list view, simply assign an instance of your custom setting SObject to the CustomSetting parameter of the process's <code>Summary</code> Marker Class.
-    <br /><strong>011 - 012</strong> to reference generic process configuration settings inside the process execution, simply call <code>getInstance()</code> on your custom setting object and access the relevent fields.
+    <strong>003</strong> if you wish to surface a link to the Custom Setting of your service on the Services list view, simply assign an instance of your custom setting SObject to the CustomSetting parameter of the service's <code>Summary</code> Marker Class.
+    <br /><strong>011 - 012</strong> to reference generic service configuration settings inside the service execution, simply call <code>getInstance()</code> on your custom setting object and access the relevent fields.
 </p>
 
 <h2>
@@ -58,7 +58,7 @@ override global String toString() {
 </h2>
 
 <p>
-    The snippet below illustrates how to make use of a step specific configuration for your process.
+    The snippet below illustrates how to make use of a step specific configuration for your service.
 </p>
 
 <pre>
@@ -86,8 +86,8 @@ override global String toString() {
 </h3>
 
 <p>
-    <strong>005 - 009</strong> if you wish to surface a link to step specific settings of your process, simply assign an instance of your step config SObject to the StepConfig parameter of the process's <code>Summary</code> Marker Class.
-    <br /><strong>012 - 017, 002</strong> To access step specific configuration from code inside the process execution, simply declare a class instance global <code>YourConfiguration__c</code> with the name <code>StepConfig</code>.
+    <strong>005 - 009</strong> if you wish to surface a link to step specific settings of your service, simply assign an instance of your step config SObject to the StepConfig parameter of the service's <code>Summary</code> Marker Class.
+    <br /><strong>012 - 017, 002</strong> To access step specific configuration from code inside the service execution, simply declare a class instance global <code>YourConfiguration__c</code> with the name <code>StepConfig</code>.
 </p>
 
 <fieldset>

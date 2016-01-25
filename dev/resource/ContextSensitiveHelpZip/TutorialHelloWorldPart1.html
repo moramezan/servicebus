@@ -1,0 +1,80 @@
+/// TODO - REVIEW COMPLETE
+
+
+<h1>
+    Hello World Tutorial - Part 1
+</h1>
+
+
+<h2>Objective</h2>
+<p>
+    This tutorial demonstrates the invocation of business logic
+    packaged in a service that makes use of the support infrastructure afforded by the Service Bus container.
+    In this demonstration, we will enqueue an event to Wiretap service which will in turn forward
+    the contents of the event to our email inbox.
+</p>
+
+<p>
+    Expected Duration: 5 minutes.
+</p>
+
+<h2>Instructions</h2>
+
+<ol>
+    <li>
+        Open the App menu on the top right of Salesforce and choose Service Bus.
+    </li>
+    <li>
+        <p>
+            Navigate to the Services tab. If you are presented with the splash page, simply click the Continue button
+            towards the bottom right of the page.
+            You may need to wait a few moments while the  Service Discovery housekeeping task completes.
+        </p>
+        <fieldset>
+            <legend>Note</legend>
+            The Services tab alphabetically lists all services available for execution under the support
+            infrastructure of the Service Bus container.
+        </fieldset>
+    </li>
+    <li>
+        <p>
+            At the bottom of the services list, locate and click on the <code>Wiretap</code> service.
+        </p>
+        <p>
+            <img src="resources/TutorialSetupConfirmation/services.png" />
+        </p>
+    </li>
+<p>
+    You are now ready to test the service.
+</p>
+
+<h2>Testing</h2>
+
+<ol>
+    <li>
+        Click <em>Enqueue Test Event</em> button towards the top of the page.
+    </li>
+    <li>
+        <p>
+        A dialogue will appear to indicate test event has been enqueued to the <code>Wiretap</code> service.
+        </p>
+        <p>
+            <img src="resources/TutorialSetupConfirmation/test-enqueued-message.png" />
+        </p>
+
+    </li>
+    <li>
+        <p>
+            Check your email inbox and wait for the receipt of an email from the Service Bus framework.
+        </p>
+        <p>
+            <img src="resources/TutorialSetupConfirmation/single-email.png" />
+        </p>
+        <p>
+            This email contains details of applicable to the context of the  <em>Enqueue Test Event</em> button
+            press action. Some of the context attributes (such as the recipient of the email) while other attributes
+            are determined by the framework and are not available for modification
+            (such as the identity of the user generating the enqueue event)
+        </p>
+    </li>
+</ol>

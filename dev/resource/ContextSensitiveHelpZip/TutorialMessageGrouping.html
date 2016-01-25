@@ -16,7 +16,7 @@
             Consider a <em>Supplier Invoice</em> that must be paid via a <em>Funds Transfer
             Instruction.</em> The Supplier Invoice and the Funds Transfer Instruction are two
             separate source documents generated on different systems. Both documents are however
-            related by the payment process and therefore require grouping under a common business
+            related by the payment service and therefore require grouping under a common business
             identifier.
         </p>
     </li>
@@ -64,7 +64,7 @@
     <li>create two custom objects: <code>PurchaseInvoice__c</code> and <code>Payment__c</code>,</li>
     <li>create a custom <em>Pay Invoice</em> service that simulates the payment of supplier
         invoices,</li>
-    <li>use the <em>Audit Initializer</em> and <em>Audit Writer</em> processes to
+    <li>use the <em>Audit Initializer</em> and <em>Audit Writer</em> services to
         relate the Purchase Invoice Reference (<code>PurchaseInvoice__c.PurchaseRef__c</code>) and
         the Payment Reference (<code>Payment__c.PaymentRef__c</code>).</li>
 </ul>
@@ -74,14 +74,14 @@
 </h2>
 
 <p>
-    The creation of custom objects and processes will normally be carried out by the developer(s) in
+    The creation of custom objects and services will normally be carried out by the developer(s) in
     your organisation.
 </p>
 
 <fieldset>
     <legend>Note</legend>
-    For more detailed instructions on creating processes, see the <a href="?topic=GuideDevelopers">
-    Process Developer's Guide</a>.
+    For more detailed instructions on creating services, see the <a href="?topic=GuideDevelopers">
+    Service Developer's Guide</a>.
 </fieldset>
 
 <ol>
@@ -193,7 +193,7 @@
     </li>
     <li>
         <p>
-            Create the <em>Pay Invoice</em> process that simulates the payment of a
+            Create the <em>Pay Invoice</em> service that simulates the payment of a
             hypothetical inbound Purchase Invoice.
         </p>
         <p>
@@ -238,9 +238,9 @@ global class PayInvoice {
 </h2>
 
 <p>
-    First, re-discover the catalogue of processes. This will avail the <em>Pay Invoice</em>
-    process in the Sequence Builder. For specific details, see the
-    <a href="?topic=TutorialProcessDiscovery">Process Discovery Tutorial</a>.
+    First, re-discover the catalogue of services. This will avail the <em>Pay Invoice</em>
+    service in the Sequence Builder. For specific details, see the
+    <a href="?topic=TutorialProcessDiscovery">Service Discovery Tutorial</a>.
 </p>
 
 <ol>
@@ -296,7 +296,7 @@ global class PayInvoice {
     <li>
         <p>
             On the <code>Purchase</code> Sequence, click <strong>Configure</strong> next to the
-            <em>Audit Initializer</em> process.
+            <em>Audit Initializer</em> service.
         </p>
         <p>
             To display the dynamic field picker, click
@@ -319,7 +319,7 @@ global class PayInvoice {
     <li>
         <p>
             On the <code>Purchase</code> sequence, click <strong>Configure</strong> next to the
-            <em>Branch</em> process.
+            <em>Branch</em> service.
         </p>
         <p>
             In the Sequence field, select the <code>Pay</code> sequence
@@ -334,7 +334,7 @@ global class PayInvoice {
     <li>
         <p>
             On the <code>Pay</code> Sequence, click <strong>Configure</strong> next to the <em>Audit
-            Initializer</em> process.
+            Initializer</em> service.
         </p>
         <p>
             To display the dynamic field picker, click <strong>Change Dynamic Group
@@ -430,18 +430,18 @@ global class PayInvoice {
 </h2>
 
 <p>
-    You will receive an email from the <em>Wiretap</em> process that exists near the end of the Pay Sequence.
+    You will receive an email from the <em>Wiretap</em> service that exists near the end of the Pay Sequence.
 </p>
 
 <ol>
     <li>
-        On the <code>Purchase</code> sequence, click <strong>Configure</strong> next to the <em>Audit Initializer</em> process.
+        On the <code>Purchase</code> sequence, click <strong>Configure</strong> next to the <em>Audit Initializer</em> service.
     </li>
     <li>
         Then on the configuration pop-up, click <strong>List Log Groups</strong>.
     </li>
     <li>
-        Observe how this view reconciles the progress of the message, and surfacing a log entry wherever a <em>Log Writer</em> process is encountered.
+        Observe how this view reconciles the progress of the message, and surfacing a log entry wherever a <em>Log Writer</em> service is encountered.
     </li>
     <li>
         <p>

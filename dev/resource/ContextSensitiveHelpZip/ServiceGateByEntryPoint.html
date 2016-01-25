@@ -1,5 +1,5 @@
 <h1>
-    Gate By Entry Point process
+    Gate By Entry Point service
 </h1>
 
 <p>
@@ -7,12 +7,12 @@
     <li>A related collection of messages may proceed down the same sequence
         in separate execution contexts.
         <br/>For most requirements, this is acceptable and desired behaviour but
-        a need may  arise for a downstream process <em>to act on these related messages in a single
+        a need may  arise for a downstream service <em>to act on these related messages in a single
             transaction context</em>.
     </li>
-    <li>An <code>GateByEntryPoint</code> process enables the above scenario by utilising
+    <li>An <code>GateByEntryPoint</code> service enables the above scenario by utilising
         the <code>Entry Point Uuid</code> field as a grouping key on all messages
-        that have previously passed through the same prior processes .
+        that have previously passed through the same prior services .
 
     </li>
 </ul>

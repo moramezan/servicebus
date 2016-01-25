@@ -1,0 +1,123 @@
+/// TODO - REVIEW COMPLETE
+
+<h1>
+    Hello World Tutorial - Part 2
+</h1>
+
+
+<h2>Objective</h2>
+<p>
+    This tutorial demonstrates the invocation of business steps
+    in a logical sequence by making use of the support infrastructure afforded by the Service Bus container.
+    In this demonstration, we will create a simple sequence containing three Wiretap steps.
+</p>
+
+<p>
+    Expected Duration: 10 minutes.
+</p>
+
+<h2>Instructions</h2>
+
+<ol>
+    <li>
+        Open the App menu on the top right of Salesforce and choose Service Bus.
+    </li>
+    <li>
+        <p>
+            Navigate to the Sequences tab. If you are presented with the splash page, simply click the Continue button
+            located towards the bottom right of the page.
+            You may need to wait a few moments while the  housekeeping Service Discovery  task completes.
+        </p>
+        <fieldset>
+            <legend>Note</legend>
+            Sequences facilitate the execution of services in the correct order
+            under the support infrastructure of the Service Bus container.
+            The Sequences tab lists these previously configured groups of sequential processing steps.
+        </fieldset>
+    </li>
+    <li>
+        <p>
+            Click the <em>New Sequence</em> button. Name the sequence
+            <code>SendTestEmails</code>, then click Save. This will take you to the drag-and-drop
+            Sequence Builder where you can add and delete Steps.
+        </p>
+        <fieldset>
+            <legend>Note</legend>
+            The special Terminate step is automatically added to all sequences. Sequences must
+            always end with the Terminate step.
+        </fieldset>
+    </li>
+    <li>
+        <p>
+            Repeat the following three times:
+        </p>
+        <ul>
+            <li>
+                <p>
+                Click the <em>New Step</em> button and highlight the Service Bus tag.
+                </p>
+                <p>
+                    <img src="resources/TutorialSetupConfirmation/group.png" />
+                </p>
+            </li>
+            <li>
+                From the <em>Service Bus</em> tag choose <em>Wiretap</em>. This will
+                create a Wiretap step at the end of the sequence.
+            </li>
+        </ul>
+        <fieldset>
+            <legend>Note</legend>
+            A Tag is simply a category used to display related Services. see /// TODO - building a service/// for further details.
+        </fieldset>
+    </li>
+
+    <li>
+        Using drag and drop, reorder the three Wiretap steps so that the Terminate service occupies
+        the last position in the Sequence.
+    </li>
+    <li>
+        <p>
+            Your <code>SendTestEmails</code> Sequence should now look like this:
+        </p>
+        <p>
+            <img src="resources/TutorialSetupConfirmation/sequence.png" />
+        </p>
+    </li>
+</ol>
+
+<p>
+    You are now ready to execute the steps in the <code>SendTestEmails</code> sequence.
+</p>
+
+<h2>Testing</h2>
+
+<ol>
+    <li>
+        Click the <em>Inject Test Event</em> button located towards the top of the page.
+    </li>
+    <li>
+        A dialogue will appear to indicate an event has been enqueued.
+        <p>
+            <img src="resources/TutorialSetupConfirmation/test-enqueued-message.png" />
+        </p>
+    </li>
+    <li>
+        <p>
+            Check your email inbox which will eventually reflect three emails:
+        </p>
+        <p>
+            <img src="resources/TutorialSetupConfirmation/many-emails.png" />
+        </p>
+        <p>
+            Each email represents an event entering and exiting a Wiretap step in the sequence.
+        </p>
+        <p>
+            In addition, every email contains details  applicable to the context of the  <em>Enqueue Test Event</em> button
+            press action and step specific aspects such as the sequence position of the <code>Wiretap</code>  service.
+            Note that some of the context attributes (such as the recipient of the email) are configurable
+            while other attributes  (such as the identity of the user generating the enqueue event)
+            are solely determined and provided by the framework and are not available for modification.
+
+        </p>
+    </li>
+</ol>

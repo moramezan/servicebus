@@ -4,23 +4,23 @@
 
 <p>
     The contents of a web page may need to be scraped and the content sent to one or more downstream
-    processes. In this example, a callout process scrapes a web page and stores the content in a
+    services. In this example, a callout service scrapes a web page and stores the content in a
     standard Salesforce document SObject.
 </p>
 
 <p>
     Salesforce requires that callouts execute before DML in any given execution context. For this
     reason, the Service Bus differentiates between <em>callout enabled</em> and <em>non-callout
-    enabled</em> processes.
+    enabled</em> services.
 </p>
 
 <p>
-    The Service Bus assumes a process is non-callout enabled unless the Apex code that supports the
-    process explicitly declares its intention to make callouts.
+    The Service Bus assumes a service is non-callout enabled unless the Apex code that supports the
+    service explicitly declares its intention to make callouts.
 </p>
 
 <p>
-    The example below demonstrates how to write a callout enabled process.
+    The example below demonstrates how to write a callout enabled service.
 </p>
 
 <h3>
@@ -28,7 +28,7 @@
 </h3>
 
 <p>
-    Retrieve web content that will be used by other downstream processes, specifically:
+    Retrieve web content that will be used by other downstream services, specifically:
 </p>
 
 <ol>
@@ -71,7 +71,7 @@
 </h2>
 
 <p>
-    Create an Apex class that supports the minimum required process layout.
+    Create an Apex class that supports the minimum required service layout.
 </p>
 
 <pre>
@@ -111,7 +111,7 @@ global class Callout {
 </h2>
 
 <p>
-    Annotate the process with Callout functionality.
+    Annotate the service with Callout functionality.
 </p>
 
 <pre>
@@ -148,7 +148,7 @@ global class Callout implements Database.AllowsCallouts {
 
 <p>
     <strong>001</strong> The intent of this service is to make a callout. Deliberately declare this intent by annotating the class signature with the <code>Database.AllowsCallouts</code> interface.
-    <br /><strong>003</strong> Any process annotated with the <code> Database.AllowsCallouts</code> interface must simultaneously declare a global boolean member called <code>AllowsCallouts</code>.
+    <br /><strong>003</strong> Any service annotated with the <code> Database.AllowsCallouts</code> interface must simultaneously declare a global boolean member called <code>AllowsCallouts</code>.
     <br /><strong>014 - 017</strong> All callout logic must be contained within an <code>AllowsCallouts block</code>. Furthermore, no DML should execute within this block. (By explicitly separating the callout logic from  DML execution via the <code>AllowsCallouts block</code>, the Service Bus is able to contractually support the Salesforce requirement that callouts must precede DML.)
 </p>
 
@@ -157,7 +157,7 @@ global class Callout implements Database.AllowsCallouts {
 </h2>
 
 <p>
-    Annotate the process with the full Summary Marker Class.
+    Annotate the service with the full Summary Marker Class.
 </p>
 
 <pre>
@@ -197,12 +197,12 @@ global class Callout implements Database.AllowsCallouts {
 </h3>
 
 <p>
-    <strong>006</strong> The <code>Description</code> is a string that describes the functionality of the process. This value is surfaced on the processes list view by the discovery process. The <code>Description</code> is the minimum required property on the <code>Summary</code> Marker Class in order for the class to be recognised as a valid service.
-    <br /><strong>007</strong> The <code>Tag</code> is a string that that groups the service amongst similar processes. It is best practise to create your own category and use that for all your custom processes. Failure to include a <code>Tag</code> property will group your process under the default 'Untagged' group.
-    <br /><strong>008</strong> The <code>Name</code> is a string that describes the friendly name of the service on the list view of the services. The Service Bus will use the Apex class name of your process as the friendly name if you fail to include ths property in your <code>Summary</code> Marker Class.
-    <br /><strong>009</strong> the <code>Icon</code> is a string that identifies the specific icon to display next to the process on the list view of the services. Select an icon from the <a href="http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png>famfamfam">icon collection</a> that most closely represents the functionality of your process. Then note the name of the icon and assign it to the <code>Icon</code> property. The Service Bus will use a 'cog' icon to represent your process if you fail to include this property in your <code>Summary</code> Marker Class.
-    <br /><strong>010</strong> the <code>Limits</code> constrains the  number of times a process may be executed in a single context. This property  enables  more  work to be performed than would otherwise be possible within prevailing daily Salesforce execution limits. The default is implicitly and conservatively set to <code>1</code>. A simple process that avoids Salesforce governed operations such as SOQL or callouts is a good candidate for a large <code>Limits</code> setting (100 or greater). If however, the process makes use of a  governed operation, ascertain 50% of that particular Salesforce limit and divide by the number of times the process uses the governed operation. The <code>Limits</code> property should not exceed this calculated value.
-    <br /><strong>011</strong> the <code>HelpUrl</code> is a string that defines the help page for the process. The help page is surfaced as a link on the list view of the services. Either a VisualForce page reference or an external web page reference can be assigned to this property. If this property is not defined, the Service Bus will surface a user friendly representation of your process by making use of the attributes contained within the process's <code>Summary</code> Marker Class.
+    <strong>006</strong> The <code>Description</code> is a string that describes the functionality of the service. This value is surfaced on the services list view by the discovery service. The <code>Description</code> is the minimum required property on the <code>Summary</code> Marker Class in order for the class to be recognised as a valid service.
+    <br /><strong>007</strong> The <code>Tag</code> is a string that that groups the service amongst similar services. It is best practise to create your own category and use that for all your custom services. Failure to include a <code>Tag</code> property will group your service under the default 'Untagged' group.
+    <br /><strong>008</strong> The <code>Name</code> is a string that describes the friendly name of the service on the list view of the services. The Service Bus will use the Apex class name of your service as the friendly name if you fail to include ths property in your <code>Summary</code> Marker Class.
+    <br /><strong>009</strong> the <code>Icon</code> is a string that identifies the specific icon to display next to the service on the list view of the services. Select an icon from the <a href="http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png>famfamfam">icon collection</a> that most closely represents the functionality of your service. Then note the name of the icon and assign it to the <code>Icon</code> property. The Service Bus will use a 'cog' icon to represent your service if you fail to include this property in your <code>Summary</code> Marker Class.
+    <br /><strong>010</strong> the <code>Limits</code> constrains the  number of times a service may be executed in a single context. This property  enables  more  work to be performed than would otherwise be possible within prevailing daily Salesforce execution limits. The default is implicitly and conservatively set to <code>1</code>. A simple service that avoids Salesforce governed operations such as SOQL or callouts is a good candidate for a large <code>Limits</code> setting (100 or greater). If however, the service makes use of a  governed operation, ascertain 50% of that particular Salesforce limit and divide by the number of times the service uses the governed operation. The <code>Limits</code> property should not exceed this calculated value.
+    <br /><strong>011</strong> the <code>HelpUrl</code> is a string that defines the help page for the service. The help page is surfaced as a link on the list view of the services. Either a VisualForce page reference or an external web page reference can be assigned to this property. If this property is not defined, the Service Bus will surface a user friendly representation of your service by making use of the attributes contained within the service's <code>Summary</code> Marker Class.
 </p>
 
 <h2>
@@ -380,12 +380,12 @@ global  class Callout implements Database.AllowsCallouts {
 <p>
     <strong>034 - 041</strong> The <code>main block</code> completes the implementation of the business specification by the persisting the callout content in a standard <code>Document</code> SObject.
     <br /><strong>018, 038</strong> The content of the callout response is retrieved from the global  member <code>Body</code> and assigned to the body of the <code>document</code> SObject.
-    <br /><strong>041</strong> <code>RecordId</code> is a standard parameter of any message and it normally points to the underlying data (SObject) of the message. Any process is free to update this <code>RecordId</code> parameter to conform with the requirements of the process business specification. In this example, the response content is persisted as a Salesforce <code>Document</code> and for that reason the <code>RecordId</code> parameter of the outbound message is updated with the <code>Id</code> of the inserted document.
-    <br /><strong>041, 013 - 015</strong> If a process modifies or adds a parameter on any outbound message, the modification should be formally described by detailing the parameter name and a comment describing the modification.
+    <br /><strong>041</strong> <code>RecordId</code> is a standard parameter of any message and it normally points to the underlying data (SObject) of the message. Any service is free to update this <code>RecordId</code> parameter to conform with the requirements of the service business specification. In this example, the response content is persisted as a Salesforce <code>Document</code> and for that reason the <code>RecordId</code> parameter of the outbound message is updated with the <code>Id</code> of the inserted document.
+    <br /><strong>041, 013 - 015</strong> If a service modifies or adds a parameter on any outbound message, the modification should be formally described by detailing the parameter name and a comment describing the modification.
 </p>
 
 <p>
-    Below is an annotated callout process called <code>Callout</code>. This process adheres to the
+    Below is an annotated callout service called <code>Callout</code>. This service adheres to the
     required Service Bus callout template.
 </p>
 
@@ -394,10 +394,10 @@ global  class Callout implements Database.AllowsCallouts {
 </h3>
 
 <p>
-    The process inspects the parameters of the input event and retrieves the url of a specific
+    The service inspects the parameters of the input event and retrieves the url of a specific
     web page to be scraped. The content of the scraped page is stored as a Salesforce document. Most
     importantly, the <code>RecordId</code> parameter of the outbound message is updated with the Id
-    of this Salesforce document so that any downstream processes will have access to that scraped
+    of this Salesforce document so that any downstream services will have access to that scraped
     data.
 </p>
 
@@ -464,10 +464,10 @@ global class Callout implements Database.AllowsCallouts {
     <strong>001</strong> an service is a standard Apex class. Services do not take any dependency on the Service Bus.
     <br /><strong>001 - 051</strong> a valid service has two key elements, namely a <code>Summary</code> Marker Class and a <code>toString()</code>method.
     <br /><strong>005 - 019</strong> the <code>Summary</code> Marker Class exposes important properties about the service thereby facilitating correct integration into the Service Bus.
-    <br /><strong>006</strong> the <code>Description</code> is a string that describes the functionality of the process and is surfaced on the list view of the services by the discovery process.
-    <br /><strong>007</strong> the <code>Tag</code> is a string that that groups the service with similar processes. We recommend that you create your own categories for custom processes.
+    <br /><strong>006</strong> the <code>Description</code> is a string that describes the functionality of the service and is surfaced on the list view of the services by the discovery service.
+    <br /><strong>007</strong> the <code>Tag</code> is a string that that groups the service with similar services. We recommend that you create your own categories for custom services.
     <br /><strong>008</strong> the <code>Name</code> is a string that describes the friendly <code>Name</code> of the service.
-    <br /><strong>009</strong> the <code>Icon</code> is a unique string that defines the icon that will appear next to the process when viewed on the list view of services.
+    <br /><strong>009</strong> the <code>Icon</code> is a unique string that defines the icon that will appear next to the service when viewed on the list view of services.
 </p>
 
 <fieldset>
@@ -476,7 +476,7 @@ global class Callout implements Database.AllowsCallouts {
 </fieldset>
 
 <p>
-    <strong>010</strong> <code>Limits</code> constrains the number of times a process may be executed in a single context.
+    <strong>010</strong> <code>Limits</code> constrains the number of times a service may be executed in a single context.
 </p>
 
 <fieldset>
@@ -488,12 +488,12 @@ global class Callout implements Database.AllowsCallouts {
     <ul>
         <li>The default is implicitly and conservatively set to one.</li>
         <li>
-            A simple process that avoids Salesforce governed operations such as SOQL or callouts is
+            A simple service that avoids Salesforce governed operations such as SOQL or callouts is
             a good candidate for a large <code>Limits</code> setting. (100 or greater)
         </li>
         <li>
-            If however, the process makes use of a governed operation, ascertain 50% of that
-            particular Salesforce limit and divide by the number of times the process uses the
+            If however, the service makes use of a governed operation, ascertain 50% of that
+            particular Salesforce limit and divide by the number of times the service uses the
             governed operation. The <code>Limits</code> property must not exceed this calculated
             value.
         </li>
@@ -502,7 +502,7 @@ global class Callout implements Database.AllowsCallouts {
 
 <p>
     <strong>011</strong> the <code>HelpUrl</code> is a string that describes the help page for the
-    process.
+    service.
 </p>
 
 <fieldset>
@@ -517,7 +517,7 @@ global class Callout implements Database.AllowsCallouts {
 
 <fieldset>
     <legend>Note</legend>
-    This documentation supports auto generated help for the process.
+    This documentation supports auto generated help for the service.
 </fieldset>
 
 <p>
@@ -527,14 +527,14 @@ global class Callout implements Database.AllowsCallouts {
 
 <fieldset>
     <legend>Note</legend>
-    This documentation supports auto generated help for the process.
+    This documentation supports auto generated help for the service.
 </fieldset>
 
 <p>
     <strong>023 - 050</strong> the <code>toString()</code> method contains the Apex logic. The method takes a single event message and returns zero, one or more output messages as a collection.
-    <br /><strong>001 - 051</strong> services making callouts must be annotated in a manner that declares the process's intent to make one or more callouts.
+    <br /><strong>001 - 051</strong> services making callouts must be annotated in a manner that declares the service's intent to make one or more callouts.
     <br /><strong>001</strong> the class must implement the the <code>Database.AllowsCallouts</code> interface.
     <br /><strong>003</strong> the class must expose a global Boolean member called <code>AllowsCallouts</code>
     <br /><strong>025 - 035</strong> all <em>callout logic</em> must be implemented within a callout code block. The <em>callout logic</em>  must return null, not the body of the callout response.
-    <br /><strong>021, 042</strong> the <em>main block</em> accesses callout content through class instance properties. Every callout should have a corresponding String class property. It is left to the developer of the process to appropriately name the properties.
+    <br /><strong>021, 042</strong> the <em>main block</em> accesses callout content through class instance properties. Every callout should have a corresponding String class property. It is left to the developer of the service to appropriately name the properties.
 </p>
