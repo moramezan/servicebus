@@ -36,7 +36,7 @@ public with sharing class MessageViewExtension {
         ];
         
         try {
-            dmlModel = MessageModel.fromId(mid);
+            dmlModel = new MessageModel(this.Message);
             Type.forName(DoDml.class.getName()).newInstance();
         } catch (Exception e) {
             ApexPages.addMessages(e);
