@@ -73,13 +73,11 @@ public class SequenceModel extends ApexDomain.StandardModel {
         //initial position
         Integer position = 0;
         
-        Enqueue.AllowRoute = true; //#999#issuecomment-133751700
         Map<String,Object> event = new Map<String,Object>{
-            'Route' => version + '#' + this.Sequence.Name + '#' + position
+            'ToSequence' => this.Sequence.Name
         };
-        Job j = new Job(event);
-        Id jobId = System.enqueueJob(j);
-        return jobId;
+        
+        return Enqueue.invoke(event);
     }
     
     /**

@@ -36,7 +36,30 @@ abstract public without sharing class Broker {
         }
     }
     
+    static public Boolean isScheduled() {
+        List<CronJobDetail> cronJobDetails = [
+            SELECT Id
+            FROM CronJobDetail
+            WHERE Name = 'Service Bus Broker'
+            LIMIT 1
+        ];
+        
+        return !cronJobDetails.isEmpty();
+    }
     
+    static public Boolean isRunning() {
+        List<AsyncApexJob> asyncApexJobs = [
+            SELECT Id
+            FROM AsyncApexJob
+            WHERE JobType = 'BatchApex'
+            AND ApexClass.Name = 'BrokerBatch'
+            AND ApexClass.NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
+            AND Status IN ('Holding', 'Queued', 'Processing', 'Preparing')
+            LIMIT 1
+        ];
+        
+        return !asyncApexJobs.isEmpty();
+    }
     
     /**
      * Formerly restartIfWorkPending
@@ -106,7 +129,7 @@ abstract public without sharing class Broker {
          * mark-to-execute and also execute-to-persist
          */
         @TestVisible Exception Panic;
-        @TestVisible Integer Contexts = IsRestart ? 999 : 99;
+        @TestVisible Integer Contexts = IsRestart ? 1000 : 100;
         @TestVisible List<Message__c> InputMessages = new List<Message__c>();
         @TestVisible List<Message__c> OutputMessages = new List<Message__c>();
         
@@ -124,21 +147,8 @@ abstract public without sharing class Broker {
                 System.assert(false, 'Inhibit');
             }
             
-            String slot = '0000';
-            
-            try {
-                
-                //MARK (or abort if nothing located)
-                MessageSetModel model = MessageSetModel.locateMarkableWork();
-                if (model.getRecords().isEmpty()) System.abortJob(context.getJobId());
-                this.InputMessages = model.mark(slot);
-            
-            } catch (Exception e) {
-                
-                e.setMessage('START PANIC' + '[' + e.getLineNumber() + ']' + '|' + e.getTypeName() + ': ' + e.getMessage() + '\n' + e.getStackTraceString());
-                throw e;
-                
-            }
+            Long now = Datetime.now().getTime(); //#1220 sleep for one second
+            while (Datetime.now().getTime() - now < 1000) Crypto.generateAesKey(256);
             
             //funnily enough "SLOTS" is almost exactly what this is
             return Database.getQueryLocator([
@@ -170,12 +180,6 @@ abstract public without sharing class Broker {
                 
                 if (isOdd) {
                     
-                    //EXECUTE
-                    this.OutputMessages = null; //for fatal error detection
-                    this.OutputMessages = new MessageSetModel(this.InputMessages).execute(this);
-                    
-                } else {
-                    
                     //PERSIST (or handle fatal errors)
                     if (this.OutputMessages != null) new MessageSetModel(this.InputMessages).persist(this.OutputMessages);
                     if (this.OutputMessages == null) this.handleFatalExceptions(this.InputMessages, context);
@@ -184,6 +188,12 @@ abstract public without sharing class Broker {
                     MessageSetModel model = MessageSetModel.locateMarkableWork();
                     if (model.getRecords().isEmpty()) System.abortJob(context.getJobId());
                     this.InputMessages = model.mark(slot);
+                    
+                } else {
+                    
+                    //EXECUTE
+                    this.OutputMessages = null; //for fatal error detection
+                    this.OutputMessages = new MessageSetModel(this.InputMessages).execute(this);
                     
                 }
                 
@@ -212,7 +222,7 @@ abstract public without sharing class Broker {
                 //MORE
                 IsRestart = true;
                 if (![SELECT Id FROM Message__c WHERE Status__c = 'Buffered' LIMIT 1].isEmpty()) this.run();
-                System.abortJob(context.getJobId()); //jobs always in aborted status
+                System.abortJob(context.getJobId()); //always abort broker jobs
                 
             } catch (Exception e) {
                 
@@ -228,7 +238,12 @@ abstract public without sharing class Broker {
          */
         override public void run() {
             
-            if (!Enqueue.isRunAsUser()) {
+            if (isRunning() || isScheduled()) {
+                //already running - one is enough
+                return;
+            }
+            
+            if (!Test.isRunningTest()) if (Application__c.getOrgDefaults().RunAsUserId__c != UserInfo.getUserId()) {
                 //#847 broker panic, wrong user context
                 System.assert(false, 'The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
             }

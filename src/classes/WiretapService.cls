@@ -1,7 +1,7 @@
 public class WiretapService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
-    public class Summary extends ApexClassModel.Summary {
+    public class Definition extends ApexClassModel.Definition {
         String Tag = 'Service Bus';
         String Label = 'Wiretap';
         String Description = 'Emails the message parameters to the user.';

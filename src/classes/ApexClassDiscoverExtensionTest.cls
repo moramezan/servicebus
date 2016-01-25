@@ -16,15 +16,15 @@
         System.assert(!ApexPages.hasMessages(), 'Wrong messages.');
     }
     
-    static testmethod void testDiscoverSummaries() {
+    static testmethod void testDiscoverDefinitions() {
         //arrange
         String namespace = 'test';
         
         //act
-        Map<String,ApexClassModel.Summary> name2summary = ApexClassDiscoverExtension.DiscoverSummaries(namespace);
+        Map<String,ApexClassModel.Definition> name2definition = ApexClassDiscoverExtension.DiscoverDefinitions(namespace);
         
         //assert
-        System.assert(name2summary.isEmpty(), 'Wrong discovery.');
+        System.assert(name2definition.isEmpty(), 'Wrong discovery.');
     }
     
     static testmethod void testGetNamespaces() {
@@ -66,7 +66,7 @@
         System.assert(actualUrl.containsIgnoreCase('home.jsp'), 'Wrong retURL.');
         
         //act (pretend to discover)
-        ApexClassSetModel.saveCache(ApexClassSetModel.fromNamespace(Application__c.getOrgDefaults().Prefix__c).discoverSummaries());
+        ApexClassSetModel.saveCache(ApexClassSetModel.fromNamespace(Application__c.getOrgDefaults().Prefix__c).discoverDefinitions());
         
         //act
         redirect = ApexClassDiscoverExtension.DiscoverIfNeeded(retURL);

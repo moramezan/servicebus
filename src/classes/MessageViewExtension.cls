@@ -1,5 +1,6 @@
 public with sharing class MessageViewExtension {
     
+    static MessageModel dmlModel;
     ApexPages.StandardController controller;
     public Message__c Message {get; set;}
     public List<Message__c> Children {get; set;}
@@ -33,6 +34,13 @@ public with sharing class MessageViewExtension {
             WHERE ParentId__c = :mid
             ALL ROWS
         ];
+        
+        try {
+            dmlModel = new MessageModel(this.Message);
+            Type.forName(DoDml.class.getName()).newInstance();
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+        }
         
         return null;
     }
@@ -79,12 +87,12 @@ public with sharing class MessageViewExtension {
         if (sid == null) sid = '';
         
         String mid = ApexPages.CurrentPage().getParameters().get('mid');
+        Map<String,Object> parameters = new Map<String,Object>{'ToService' => 'ServiceBus.RestartMessageId', 'RecordId' => mid};
         return (''
             + 'var bar = "' + bar + '";'
-            + 'var dot = "' + dot + '";'
             + 'var sid = "' + sid + '";'
             + 'var mark = new Date().getTime();'
-            + 'var command = "new " + dot + "Job().execute((System.QueueableContext)Json.deserialize(\'{\\"jobId\\":\\"' + mid + '\\"}\', System.QueueableContextImpl.class));";'
+            + 'var command = \'new ' + Enqueue.class.getName() + '().invoke(new Process.PluginRequest((Map<String,Object>)Json.deserializeUntyped(\\\'' + Json.serialize(parameters) + '\\\')));\';'
             + 'sforce.connection.init(sid, "/services/Soap/u/35.0");'
             + 'var response = sforce.apex.executeAnonymous(command);'
             + 'if (response.success == "false") {' //started, persist any fatal error and refresh
@@ -100,6 +108,18 @@ public with sharing class MessageViewExtension {
             + '    window.location.reload();'
             + '}'
         ).replaceAll('    ', ' ');
+    }
+    
+    public class DoDml {
+        public DoDml() {
+            //roaring and ready access token
+            Application__c setting = Application__c.getOrgDefaults();
+            setting.RunAsAccessToken__c = ConfigureController.refreshAccessToken();
+            upsert setting;
+            
+            //avoids dml in action method
+            dmlModel.appendJobStatus();
+        }
     }
     
 }

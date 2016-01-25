@@ -87,20 +87,19 @@
         };
         
         Test.startTest();
-        Job job = new Job(inputEvents);
-        System.enqueueJob(job);
+        Enqueue.invoke(inputEvents);
         Test.stopTest();
         
         //act
         List<Message__c> records = MessageSetModel.locateMarkableWork().getRecords();
         
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(WiretapService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(WiretapService.class);
         
         //assert
         Integer expectedChunks = 5;
-        Integer actualChunks = summary.Chunks;
-        System.assertEquals(expectedChunks, actualChunks, 'Wiretap should have summary chunks of five.');
+        Integer actualChunks = definition.Chunks;
+        System.assertEquals(expectedChunks, actualChunks, 'Wiretap should have definition chunks of five.');
         
         Integer expectedSize = 5;
         Integer actualSize = records.size();
@@ -120,8 +119,7 @@
         
         //arrange inputs
         Test.startTest();
-        Job job = new Job(sequence.Name, '00D000000000000AAA');
-        System.enqueueJob(job);
+        Enqueue.invoke(new Map<String,Object>{'ToSequence' => '00D000000000000AAA'});
         Test.stopTest();
         
         //assert
@@ -157,8 +155,7 @@
         
         //arrange message
         Test.startTest();
-        Job job = new Job(new Map<String,Object>());
-        System.enqueueJob(job);
+        Enqueue.invoke(new Map<String,Object>{'ToService' => 'Test'});
         Test.stopTest();
         
         //act
@@ -176,8 +173,7 @@
     static testmethod void callingEnqueueSetsHops() {
         //arrange message
         Test.startTest();
-        Job job = new Job(new Map<String,Object>()); //enqueue sets hops
-        System.enqueueJob(job);
+        Enqueue.invoke(new Map<String,Object>{'ToService' => 'Test'}); //enqueue sets hops
         Test.stopTest();
         
         //assemble
@@ -229,8 +225,7 @@
         
         //arrange message
         Test.startTest();
-        Job job = new Job(new Map<String,Object>());
-        System.enqueueJob(job);
+        Enqueue.invoke(new Map<String,Object>{'ToService' => 'Test'}); //enqueue sets hops
         Test.stopTest();
         
         //act
@@ -309,8 +304,7 @@
         };
         
         Test.startTest();
-        Job job = new Job(inputEvents);
-        System.enqueueJob(job);
+        Enqueue.invoke(inputEvents);
         Test.stopTest();
         
         //act
@@ -395,8 +389,7 @@
     static testmethod void callingRestartSuccessfullyCallsrunImpl() {
         //arrange
         Test.startTest();
-        Job job = new Job('Test', '00D000000000000AAA');
-        System.enqueueJob(job);
+        Enqueue.invoke(new Map<String,Object>{'ToSequence' => 'Test'});
         Test.stopTest();
         
         //assert
@@ -422,12 +415,11 @@
     // Stack Trace      Class.BrokerTest.testMissingPositionThrowsExpectedException: line 680, column 1
     static testmethod void testMissingPositionThrowsExpectedException() {
         //arrange input
-        Map<String,Object> inputEvent = new Map<String,Object>{'c:Not_Sequence_Or_Service' => 1};
+        Map<String,Object> inputEvent = new Map<String,Object>{'ToSequence' => '', 'c:Not_Sequence_Or_Service' => 1};
         
         //arrange message
         Test.startTest();
-        Job job = new Job(inputEvent);
-        System.enqueueJob(job);
+        Enqueue.invoke(inputEvent);
         Test.stopTest();
         
         //arrange
@@ -439,7 +431,7 @@
         //assemble
         
         //assert
-        String expectedMessage = ApexClassModel.ModelException.class.getName() + ': Route was null.';
+        String expectedMessage = ApexClassModel.ModelException.class.getName() + ': Could not resolve route: 1##1';
         String actualMessage = messages[0].Exception__c;
         System.assertEquals(expectedMessage, actualMessage, 'Wrong exception message.');
     }
@@ -452,8 +444,7 @@
         
         //arrange message
         Test.startTest();
-        Job job = new Job(inputEvent);
-        System.enqueueJob(job);
+        Enqueue.invoke(inputEvent);
         Test.stopTest();
         
         //act
@@ -480,8 +471,7 @@
         
         //arrange message
         Test.startTest();
-        Job job = new Job(sequence.Name, '00D000000000000AAA');
-        System.enqueueJob(job);
+        Enqueue.invoke(new Map<String,Object>{'ToSequence' => sequence.Name});
         Test.stopTest();
         
         //act
@@ -523,8 +513,7 @@
         
         //act
         Test.startTest();
-        Job job = new Job('Test', '00D000000000000AAA');
-        System.enqueueJob(job);
+        Enqueue.invoke(new Map<String,Object>{'ToSequence' => 'Test'});
         Test.stopTest();
         
         //assemble
@@ -541,8 +530,7 @@
         
         //act
         Test.startTest();
-        Job job = new Job('Test', '00D000000000000AAA');
-        System.enqueueJob(job);
+        Enqueue.invoke(new Map<String,Object>{'ToSequence' => 'Test'});
         Test.stopTest();
         
         Integer expectedCount = 1;
@@ -583,8 +571,7 @@
         
         //act
         Test.startTest();
-        Job job = new Job(sequenceNameA, '00D000000000000AAA');
-        System.enqueueJob(job);
+        Enqueue.invoke(new Map<String,Object>{'ToSequence' => sequenceNameA});
         Test.stopTest();
         
         //act
@@ -628,9 +615,9 @@
             'ToSequence' => 'Test',
             'EntryPointTimestamp' => timestamp
         };
-             
+        
         //act
-        new Job(inputEvent).execute(new QueueableContext());
+        Enqueue.invoke(inputEvent);
         
         //assemble
         List<Message__c> messages = [
@@ -651,7 +638,8 @@
         System.assertEquals(expectedTimestamp, actualTimestamp);
     }
 
-    static testMethod void callingExecuteWithoutMandatoryEventParametersInEventParametersCollectionThrowsException() {
+    //#1220 no unroutable messages
+    /*static testMethod void callingExecuteWithoutMandatoryEventParametersInEventParametersCollectionThrowsException() {
         // arrange service, sequence, step
         String sequenceName = 'Test';
         Sequence__c sequence = new Sequence__c(Name = sequenceName);
@@ -661,14 +649,12 @@
   
         //arrange inputs
         Map<String,Object> input1 = new Map<String,Object>{'ToSequence' => 'Test'};
-        Map<String,Object> input2 = new Map<String,Object>{'RecordId' => null};
+        Map<String,Object> input2 = new Map<String,Object>{'ToSequence' => 'Test', 'RecordId' => null};
   
         //arrange messages
         Test.startTest();
-        Job job1 = new Job(input1);
-        System.enqueueJob(job1);
-        Job job2 = new Job(input2);
-        System.enqueueJob(job2);
+        Enqueue.invoke(input1);
+        Enqueue.invoke(input2);
         Test.stopTest();
         
         //act
@@ -683,7 +669,7 @@
         expectedException = ApexClassModel.ModelException.class.getName() + ': Route was null.';
         actualException = messages[1].Exception__c;
         System.assertEquals(expectedException, actualException, 'Wrong exception 1.');
-    }
+    }*/
     
     static testMethod void callingEnqueueAlwaysSetsInitiatingEventParameters() {
         //arrange sequence
@@ -695,7 +681,7 @@
         model.appendStep(TerminateService.class.getName());
         
         //act
-        new Job(sequence.Name, '00D000000000000AAA').execute(new QueueableContext());
+        Enqueue.invoke(new Map<String,Object>{'ToSequence' => sequence.Name});
         
         //assemble
         List<Message__c> messages = [
@@ -762,16 +748,16 @@
         }
     }
     
-    public class ChunkErrorServiceSummary extends ApexClassModel.Summary {
+    public class ChunkErrorServiceDefinition extends ApexClassModel.Definition {
         String Description = 'Does stuff in memory without side effects.';
         Integer Chunks = 2;
     }
     
     static testmethod void testKamikazeChunkingDoesntTakeOutHisMates() {
         //arrange cache
-        ApexClassSetModel.saveCache(new Map<String,ApexClassModel.Summary>{
-            ChunkErrorService.class.getName() => new ApexClassModel.Summary(ChunkErrorService.class),
-            ChunkErrorService.class.getName() => new ApexClassModel.Summary(TerminateService.class)
+        ApexClassSetModel.saveCache(new Map<String,ApexClassModel.Definition>{
+            ChunkErrorService.class.getName() => new ApexClassModel.Definition(ChunkErrorService.class),
+            ChunkErrorService.class.getName() => new ApexClassModel.Definition(TerminateService.class)
         });
         
         //arrange services, sequence and steps
@@ -788,8 +774,7 @@
         
         //arrange messages and broker
         Test.startTest();
-        Job job = new Job(events);
-        System.enqueueJob(job);
+        Enqueue.invoke(events);
         Test.stopTest();
         
         List<Message__c> messages = MessageSetModel.locateMarkableWork().getRecords();
@@ -816,7 +801,7 @@
         }
     }
     
-    public class FakeGateSummary extends ApexClassModel.Summary {
+    public class FakeGateDefinition extends ApexClassModel.Definition {
         String Description = 'fake gate';
         Integer Chunks = 999;
     }
@@ -884,8 +869,7 @@
         };
         
         Test.startTest();
-        Job job = new Job(inputEvents);
-        System.enqueueJob(job);
+        Enqueue.invoke(inputEvents);
         Test.stopTest();
         
         List<Message__c> messages = [SELECT Id, Event__c FROM Message__c];
@@ -898,8 +882,10 @@
         BatchableContext context = new BatchableContext();
         Id jobId = context.getJobId();
         
-        //MARK
         impl.start(context);
+        
+        //MARK some wiretaps
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0001')});
         
         //assert
         System.assertEquals(5, impl.InputMessages.size(), 'Wrong count of input wiretaps.');
@@ -907,13 +893,13 @@
         System.assertEquals(5, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong marked message count.');
         
         //EXECUTE some wiretaps
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0001')});
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0002')});
         
         //assert
         System.assertEquals(5, impl.OutputMessages.size(), 'Wrong output property count.');
         
         //PERSIST / MARK
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0002')});
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0003')});
         
         //assert
         System.assertEquals(4, impl.InputMessages.size(), 'Wrong count of input wiretaps.');
@@ -921,13 +907,13 @@
         System.assertEquals(4, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong marked message count.');
         
         //EXECUTE some wiretaps
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0003')});
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0004')});
         
         //assert
         System.assertEquals(4, impl.OutputMessages.size(), 'Wrong output property count.');
         
         //PERSIST / MARK
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0004')});
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0005')});
         
         //assert
         System.assertEquals(9, impl.InputMessages.size(), 'Wrong count of input terminates.');
@@ -935,13 +921,13 @@
         System.assertEquals(9, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong marked message count.');
         
         //EXECUTE all terminates
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0005')});
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0006')});
         
         //assert
         System.assertEquals(0, impl.OutputMessages.size(), 'Wrong output property count.');
         
         //PERSIST / ABORT
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0006')});
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0007')});
         
         //assert
         System.assertEquals(0, impl.InputMessages.size(), 'Wrong count of input messages.');
@@ -966,8 +952,7 @@
         
         //arrange message
         Test.startTest();
-        Job job = new Job(inputEvent);
-        System.enqueueJob(job);
+        Enqueue.invoke(inputEvent);
         Test.stopTest();
         
         //arrange context
@@ -980,21 +965,23 @@
         //assert
         System.assertEquals(1, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'], 'Wrong count.');
         
-        //MARK
         impl.start(context);
+        
+        //MARK
+        impl.execute(context, new List<SObject>{new Slot__c(Name = '0001')});
         
         //assert
         System.assertEquals(1, impl.InputMessages.size(), 'Wrong input messages.');
         System.assertEquals(1, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong count.');
         
         //EXECUTE
-        impl.execute(context, new List<Sobject>{new Slot__c(Name = '0001')});
+        impl.execute(context, new List<Sobject>{new Slot__c(Name = '0002')});
         
         //assert
         System.assertEquals(0, impl.OutputMessages.size(), 'Wrong output messages.');
         
         //PERSIST AND ABORT
-        impl.execute(context, new List<Sobject>{new Slot__c(Name = '0002')});
+        impl.execute(context, new List<Sobject>{new Slot__c(Name = '0003')});
         
         //assert
         System.assertEquals(1, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed' ALL ROWS], 'Wrong count.'); //#1114
@@ -1024,16 +1011,9 @@
         
         //arrange messages
         Test.startTest();
-        
-        Job job1 = new Job(inputEvent1);
-        System.enqueueJob(job1);
-        
-        Job job2 = new Job(inputEvent2);
-        System.enqueueJob(job2);
-        
-        Job job3 = new Job(inputEvent3);
-        System.enqueueJob(job3);
-        
+        Enqueue.invoke(inputEvent1);
+        Enqueue.invoke(inputEvent2);
+        Enqueue.invoke(inputEvent3);
         Test.stopTest();
         
         //arrange
@@ -1046,8 +1026,10 @@
         Broker.BatchImpl impl = new Broker.BatchImpl();
         Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
         
-        //act MARK
         impl.start(context);
+        
+        //act MARK
+        impl.execute(context, new List<SObject>{new Slot__c(Name = '0001')});
         
         //assemble
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
@@ -1081,16 +1063,9 @@
         
         //arrange messages
         Test.startTest();
-        
-        Job job1 = new Job(inputEvent1);
-        System.enqueueJob(job1);
-        
-        Job job2 = new Job(inputEvent2);
-        System.enqueueJob(job2);
-        
-        Job job3 = new Job(inputEvent3);
-        System.enqueueJob(job3);
-        
+        Enqueue.invoke(inputEvent1);
+        Enqueue.invoke(inputEvent2);
+        Enqueue.invoke(inputEvent3);
         Test.stopTest();
         
         //arrange context
@@ -1102,9 +1077,10 @@
         //arrange resolution
         Broker.BatchImpl impl = new Broker.BatchImpl();
         Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        impl.start(context);
         
         //act MARK
-        impl.start(context);
+        impl.execute(context, new List<SObject>{new Slot__c(Name = '0001')});
         
         //assemble
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
@@ -1122,17 +1098,6 @@
         //arrange context
         BatchableContext context = new BatchableContext();
         Id jobId = context.getJobId();
-        
-        try {
-            //act, null should cause panic
-            impl.start(null);
-            System.assert(false, 'Line above should throw exception.');
-        } catch (Exception e) {
-            //assert that panic was thrown
-            String expectedMessage = 'PANIC';
-            String actualMessage = e.getMessage();
-            System.assert(actualMessage.contains(expectedMessage), 'Wrong message.');
-        }
         
         try {
             //act, null list should cause panic again
@@ -1155,26 +1120,33 @@
     
     public class FinishDoesPersist {
         void callout(Map<String,Object> event) {}
-        List<Map<String,Object>> execute(Map<String,Object> event) {return null;}
+        List<Map<String,Object>> execute(Map<String,Object> event) {return new List<Map<String,Object>>{new Map<String,Object>()};}
     }
     
-    public class FinishDoesPersistSummary extends ApexClassModel.Summary {
+    public class FinishDoesPersistDefinition extends ApexClassModel.Definition {
         Integer Chunks = 1;
     }
     
     //for #991 very last Execute should get Persisted
     static testmethod void testAllContextsDoneOk() {
+        //arrange services and sequence and steps
+        insert new Sequence__c(Name = 'Test');
+        SequenceModel.fromName('Test').appendStep(FinishDoesPersist.class.getName());
+        SequenceModel.fromName('Test').appendStep(FinishDoesPersist.class.getName());
+        SequenceModel.fromName('Test').appendStep(FinishDoesPersist.class.getName());
+        SequenceModel.fromName('Test').appendStep(FinishDoesPersist.class.getName());
+        SequenceModel.fromName('Test').appendStep(TerminateService.class.getName());
+        
         //arrange broker
         Broker.BatchImpl impl = new Broker.BatchImpl();
         
         //arrange inputs (5 messages, 1 mark and 1 execute for each, should make 10 contexts)
         List<Map<String,Object>> events = new List<Map<String,Object>>();
-        for (Integer i = 0; i < 5; i++) events.add(new Map<String,Object>{'ToService' => FinishDoesPersist.class.getName()});
+        for (Integer i = 0; i < 5; i++) events.add(new Map<String,Object>{'ToSequence' => 'Test'});
         
         //arrange messages
         Test.startTest();
-        Job job = new Job(events);
-        System.enqueueJob(job);
+        Enqueue.invoke(events);
         Test.stopTest();
         
         //arrange context
@@ -1183,16 +1155,17 @@
         //act
         
         impl.Contexts = 9;
-        impl.start(context);                                                  //M1
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0001')}); //E1
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0002')}); //P1 M2
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0003')}); //E2
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0004')}); //P2 M3
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0005')}); //E3
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0006')}); //P3 M4
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0007')}); //E4
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0008')}); //P4 M5
-        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0009')}); //E5
+        impl.start(context);
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0001')}); //M1
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0002')}); //E1
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0003')}); //P1 M2
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0004')}); //E2
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0005')}); //P2 M3
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0006')}); //E3
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0007')}); //P3 M4
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0008')}); //E4
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0009')}); //P4 M5
+        impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0010')}); //E5
         impl.finish(context);                                                 //P5
         
         //assert

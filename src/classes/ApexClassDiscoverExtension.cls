@@ -4,8 +4,8 @@ public with sharing class ApexClassDiscoverExtension {
         //
     }
     
-    @RemoteAction static public Map<String,ApexClassModel.Summary> DiscoverSummaries(String namespace) {
-        return ApexClassSetModel.fromNamespace(namespace).discoverSummaries();
+    @RemoteAction static public Map<String,ApexClassModel.Definition> DiscoverDefinitions(String namespace) {
+        return ApexClassSetModel.fromNamespace(namespace).discoverDefinitions();
     }
     
     static public String getNamespaces() {
@@ -19,21 +19,21 @@ public with sharing class ApexClassDiscoverExtension {
      * But the implicit de/serializer used in JavaScript Remoting runs
      * in strict mode and doesnt support Object/ANY. So we use String:
      *
-     * - cant do ApexClass.Summary (chokes on extra properties)
      * - cant do Map<String,Object> (chokes on non-primitive Object)
+     * - cant do ApexClassModel.Definition (chokes on extra properties)
      * - we perform serialization on the client side, then iterate over
      */
     @RemoteAction static public Id SaveCache(String data) {
         Map<String,Object> name2data = (Map<String,Object>)Json.deserializeUntyped(data);
-        Map<String,ApexClassModel.Summary> name2summary = new Map<String,ApexClassModel.Summary>();
+        Map<String,ApexClassModel.Definition> name2definition = new Map<String,ApexClassModel.Definition>();
         
         for (String name : name2data.keySet()) try {
-            name2summary.put(name, (ApexClassModel.Summary)Json.deserialize(Json.serialize(name2data.get(name)), ApexClassModel.Summary.class));
+            name2definition.put(name, (ApexClassModel.Definition)Json.deserialize(Json.serialize(name2data.get(name)), ApexClassModel.Definition.class));
         } catch (JsonException e) {
-            //any error just continue to next summary
+            //any error just continue to next definition
         }
         
-        return ApexClassSetModel.saveCache(name2summary);
+        return ApexClassSetModel.saveCache(name2definition);
     }
     
     /**

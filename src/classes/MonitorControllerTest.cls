@@ -17,8 +17,7 @@
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class.getName());
         
         Test.startTest();
-        Job job = new Job('Test', '00D000000000000AAA');
-        System.enqueueJob(job);
+        Enqueue.invoke(new Map<String,Object>{'ToSequence' => 'Test'});
         Test.stopTest();
         
         Broker.impl().run();

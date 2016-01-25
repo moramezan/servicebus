@@ -2,17 +2,17 @@
 
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(ScheduleService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(ScheduleService.class);
         
         //assert
         Integer expectedChunks = 200;
-        Integer actualChunks = summary.Chunks;
+        Integer actualChunks = definition.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }
     
     static testmethod void withinSystemLimits() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(ScheduleService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(ScheduleService.class);
         
         ScheduleStepConfig__c config = new ScheduleStepConfig__c(
             Name = '1#Test#1',
@@ -30,7 +30,7 @@
         
         //act
         Test.startTest();
-        Integer chunks = summary.Chunks;
+        Integer chunks = definition.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
             ApexClassModel.Service service = new ScheduleService();
@@ -45,7 +45,7 @@
     
    /*static testmethod void withinSystemLimits() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(ScheduleService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(ScheduleService.class);
         
         ScheduleStepConfig__c config = new ScheduleStepConfig__c(
             IsActive__c = true,
@@ -64,7 +64,7 @@
         
         //act
         Test.startTest();
-        Integer chunks = summary.Chunks;
+        Integer chunks = definition.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
             ApexClassModel.Service service = new ScheduleService();

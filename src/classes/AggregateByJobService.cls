@@ -3,7 +3,7 @@ public class AggregateByJobService extends ApexClassModel.Service {
 
     public class ServiceException extends Exception {}
 
-    public class Summary extends ApexClassModel.Summary {
+    public class Definition extends ApexClassModel.Definition {
         String Tag = 'Service Bus';
         String Label = 'Aggregate By Job';
         String Description = 'Aggregates a collection of messages having the same Job Id.';
@@ -36,7 +36,7 @@ public class AggregateByJobService extends ApexClassModel.Service {
         if (!inputEvent.containsKey('SiblingIds'))
             throw new ServiceException('Input event missing mandatory SiblingIds parameter');
 
-        String jobId = (String)inputEvent.get('JobId');
+        Id jobId = (Id)inputEvent.get('JobId');
         Integer chunkTotal = (Integer)inputEvent.get('Range');
         Integer chunk = (Integer)inputEvent.get('Chunk');
         String route = (String)inputEvent.get('Route');

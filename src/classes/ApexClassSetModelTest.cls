@@ -40,11 +40,11 @@
     
     static testmethod void testSaveCache() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(TerminateService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(TerminateService.class);
         
         //act
-        Id documentId = ApexClassSetModel.saveCache(new Map<String,ApexClassModel.Summary>{
-            TerminateService.class.getName() => summary
+        Id documentId = ApexClassSetModel.saveCache(new Map<String,ApexClassModel.Definition>{
+            TerminateService.class.getName() => definition
         });
         
         //arrange
@@ -67,11 +67,11 @@
         upsert document Schema.Document.Name;
         
         //act
-        Map<String,ApexClassModel.Summary> name2summary = ApexClassSetModel.loadCache();
+        Map<String,ApexClassModel.Definition> name2definition = ApexClassSetModel.loadCache();
         
         //assert
         String expectedDescription = 'Example';
-        String actualDescription = name2summary.get('Test').Description;
+        String actualDescription = name2definition.get('Test').Description;
         System.assertEquals(expectedDescription, actualDescription, 'Wrong description.');
     }
     
@@ -86,7 +86,7 @@
         System.assert(model.ApexClasses.isEmpty());
     }
     
-    static testmethod void testDiscoverSummaries() {
+    static testmethod void testDiscoverDefinitions() {
         //arrange
         ApexClassSetModel model = new ApexClassSetModel([
             SELECT Id, NamespacePrefix, Name
@@ -96,11 +96,11 @@
         ]);
         
         //act
-        Map<String,ApexClassModel.Summary> name2summary = model.discoverSummaries();
+        Map<String,ApexClassModel.Definition> name2definition = model.discoverDefinitions();
         
         //assert
         Integer expectedSize = 1;
-        Integer actualSize = name2summary.size();
+        Integer actualSize = name2definition.size();
         System.assertEquals(expectedSize, actualSize, 'Wrong size.');
     }
     

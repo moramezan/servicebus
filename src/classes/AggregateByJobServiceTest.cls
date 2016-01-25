@@ -10,19 +10,19 @@
 
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByJobService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(AggregateByJobService.class);
 
         //assert
         Integer expectedChunks = 100; //max sync limit
-        Integer actualChunks = summary.Chunks;
+        Integer actualChunks = definition.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }
 
 
    static testmethod void withinSystemLimits() {
         //assemble
-        ApexClassModel.Summary summary = new ApexClassModel.Summary(AggregateByJobService.class);
-        Integer chunks = summary.Chunks;
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(AggregateByJobService.class);
+        Integer chunks = definition.Chunks;
 
         // Arrange
         Integer rangeCount =  chunks;
@@ -80,7 +80,6 @@
     static testmethod void callingIsReleaseThrowsExpectedException01() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            //'JobId' => '707000000000000AAA',
             'Route' => '1#Test#1',
             'Range' => 1,
             'Chunk' => 1,
@@ -107,7 +106,7 @@
     static testmethod void callingIsReleaseThrowsExpectedException02() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            'JobId' => '707000000000000AAA',
+            'JobId' => '707000123456789',
             //'Route' => 'test',
             'Range' => 1,
             'Chunk' => 1,
@@ -133,7 +132,7 @@
     static testmethod void callingIsReleaseThrowsExpectedException04() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            'JobId' => '707000000000000AAA',
+            'JobId' => '707000123456789',
             'Route' => '1#Test#1',
             //'Range' => 1,
             'Chunk' => 1,
@@ -159,7 +158,7 @@
     static testmethod void callingIsReleaseThrowsExpectedException05() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            'JobId' => '707000000000000AAA',
+            'JobId' => '707000123456789',
             'Route' => '1#Test#1',
             'Range' => 1,
             //'Chunk' => 1
@@ -185,7 +184,7 @@
     static testmethod void callingIsReleaseThrowsExpectedException06() {
         // Arrange :
         Map<String,Object> inputEvent = new Map<String,Object> {
-            'JobId' => '707000000000000AAA',
+            'JobId' => '707000123456789',
             'Route' => '1#Test#1',
             'Range' => 1,
             'Chunk' => 1
@@ -216,7 +215,7 @@
         Integer totalCount = 5;
         Integer rangeCount =  3 ;
         Integer otherCount  = totalCount - rangeCount;
-        String jobId = '707000000000000AAA';
+        Id jobId = '707000123456789';
 
         Map<String,Object> templateEvent = new Map<String,Object> {
             'JobId' => jobId,
@@ -277,7 +276,7 @@
         Integer totalCount = 5;
         Integer rangeCount =  3 ;
         Integer otherCount  = totalCount - rangeCount;
-        String jobId = '707000000000000AAA';
+        Id jobId = '707000123456789';
 
         Map<String,Object> templateEvent = new Map<String,Object> {
             'JobId' => jobId,
@@ -341,7 +340,7 @@
         Integer totalCount = 5;
         Integer rangeCount =  3 ;
         Integer otherCount  = totalCount - rangeCount;
-        String jobId = '707000000000000AAA';
+        Id jobId = '707000123456789';
 
         Map<String,Object> templateEvent = new Map<String,Object> {
             'JobId' => jobId,
@@ -550,7 +549,7 @@
 
     static testmethod void callingIsReleaseReturnsExpectedExpected01() {
         // Arrange :
-        String jobId = '707000000000000AAA';
+        Id jobId = '707000123456789';
         Integer chunkTotal = 1;
         Integer chunk = 1;
 
@@ -571,7 +570,7 @@
 
     static testmethod void callingIsReleaseReturnsExpectedExpected02() {
         // Arrange :
-        String jobId = '707000000000000AAA';
+        Id jobId = '707000123456789';
         Integer chunkTotal = 2;
         Integer chunk = 1;
 
@@ -595,7 +594,7 @@
 
     static testmethod void callingIsReleaseReturnsExpectedExpected03() {
         // Arrange :
-        String jobId = '707000000000000AAA';
+        Id jobId = '707000123456789';
         Integer chunkTotal = 2;
         Integer chunk = 2;
 
@@ -619,7 +618,7 @@
 
     static testmethod void callingIsReleaseReturnsExpectedExpected04() {
         // Arrange :
-        String jobId = '707000000000000AAA';
+        Id jobId = '707000123456789';
         Integer chunkTotal = 2;
         Integer chunk = 2;
 
@@ -646,7 +645,7 @@
 
     static testmethod void callingIsReleaseReturnsExpectedExpected05() {
         // Arrange :
-        String jobId = '707000000000000AAA';
+        Id jobId = '707000123456789';
         Integer chunkTotal = 2;
         Integer chunk = 2;
 
@@ -684,7 +683,7 @@
         }
     }
     
-    public class SplitSummary extends ApexClassModel.Summary {
+    public class SplitDefinition extends ApexClassModel.Definition {
         String Description = 'the big split';
     }
 

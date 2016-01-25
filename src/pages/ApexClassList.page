@@ -19,20 +19,20 @@
     <apex:sectionHeader title="Services" description="A Service is a single, logical apex class with inputs and outputs in the form of events. Services are configured to run as: {!LINKTO(RunAsUser.Name, '/' + RunAsUser.Id, null, ["noredirect"="1"])}" help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashApexClass'])}" />
     
     <apex:pageBlock mode="detail">
-        <apex:pageBlockTable value="{!id2summary}" var="id">
+        <apex:pageBlockTable value="{!id2definition}" var="id">
 
             <apex:column headerValue="Action" width="90" style="color: #999;">
                 <apex:outputLink value="/{!id}" style="color: #015ba7; text-decoration: none;">Apex</apex:outputLink>
-                <apex:outputText rendered="{!id2summary[id].ServiceConfig != null}">&nbsp;|&nbsp;</apex:outputText>
-                <apex:outputLink rendered="{!id2summary[id].ServiceConfig != null}" value="{!URLFOR($Page.ApexClassConfig, null, ['id'=id])}" style="color: #015ba7; text-decoration: none;" title="Configure Service">Config</apex:outputLink>
+                <apex:outputText rendered="{!id2definition[id].ServiceConfig != null}">&nbsp;|&nbsp;</apex:outputText>
+                <apex:outputLink rendered="{!id2definition[id].ServiceConfig != null}" value="{!URLFOR($Page.ApexClassConfig, null, ['id'=id])}" style="color: #015ba7; text-decoration: none;" title="Configure Service">Config</apex:outputLink>
             </apex:column>
             
             <apex:column headerValue="Icon" width="30">
-                <apex:image value="{!URLFOR('/s.gif')}" styleClass="z-action-col-icon {!id2summary[id].Icon}" />
+                <apex:image value="{!URLFOR('/s.gif')}" styleClass="z-action-col-icon {!id2definition[id].Icon}" />
             </apex:column>
             
             <apex:column headerValue="Label">
-                <apex:outputLink value="{!URLFOR($Page.ApexClassView, null, ['id'=id])}">{!id2summary[id].Label}</apex:outputLink>
+                <apex:outputLink value="{!URLFOR($Page.ApexClassView, null, ['id'=id])}">{!id2definition[id].Label}</apex:outputLink>
             </apex:column>
             
             <apex:column headerValue="Namespace Prefix" value="{!id2class[id].NamespacePrefix}" />

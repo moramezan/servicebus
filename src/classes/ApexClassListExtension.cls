@@ -7,15 +7,18 @@ public with sharing class ApexClassListExtension {
     public ApexClassListExtension() {
         //List controllers are not supported for ApexClass
         this.id2class = new Map<Id,ApexClass>();
-        this.id2summary = new Map<Id,ApexClassModel.Summary>();
+        this.id2definition = new Map<Id,ApexClassModel.Definition>();
     }
     
     public Map<Id,ApexClass> id2class {get; set;}
-    public Map<Id,ApexClassModel.Summary> id2summary {get; set;}
+    public Map<Id,ApexClassModel.Definition> id2definition {get; set;}
     
     public User getRunAsUser() {
-        Id userId = Application__c.getOrgDefaults().RunAsUserId__c;
-        return (User)ApexDomain.getById(userId);
+        return [
+            SELECT Id, Name
+            FROM User
+            WHERE Id = :Application__c.getOrgDefaults().RunAsUserId__c
+        ];
     }
     
     public PageReference doRedirect() {
@@ -37,9 +40,9 @@ public with sharing class ApexClassListExtension {
             ORDER BY NamespacePrefix ASC, Name ASC
         ]);
         
-        //for displaying summaries
-        Map<String,ApexClassModel.Summary> name2summary = ApexClassSetModel.loadCache();
-        for (ApexClassModel.Summary summary : name2summary.values()) this.id2summary.put(summary.Id, summary);
+        //for displaying definitions
+        Map<String,ApexClassModel.Definition> name2definition = ApexClassSetModel.loadCache();
+        for (ApexClassModel.Definition definition : name2definition.values()) this.id2definition.put(definition.Id, definition);
         
         //all ok
         return null;

@@ -1,5 +1,7 @@
 <apex:page setup="true" standardController="Message__c" extensions="MessageViewExtension" action="{!doInit}">
     
+    <apex:pageMessages />
+    
     <script>
         (function() {
             if (!document.getElementsByClassName) return;

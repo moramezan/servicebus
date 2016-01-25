@@ -236,7 +236,7 @@ public class MessageModel extends ApexDomain.StandardModel {
         MessageSetModel model = new MessageSetModel(new List<Message__c>{this.Message});
         
         //VALIDATE
-        if (!Enqueue.isRunAsUser()) throw new ModelException('The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
+        if (!Test.isRunningTest()) if (Application__c.getOrgDefaults().RunAsUserId__c != UserInfo.getUserId()) throw new ModelException('The configured running user Id=[' + UserInfo.getUserId() + '] is null or invalid');
         if (!(this.Message.Status__c == 'Paused' || this.Message.Exception__c != null)) throw new ModelException('Only Paused or Exception messages can be restarted.');
         
         //EXECUTE
@@ -249,8 +249,6 @@ public class MessageModel extends ApexDomain.StandardModel {
         if (RestartException != null) throw RestartException;
         
         //success, restart the REAL broker to carry on with the outputs
-        if (Enqueue.isScheduled()) return;
-        if (Enqueue.isRunning()) return;
         Broker.impl().run();
     }
     
@@ -278,5 +276,38 @@ public class MessageModel extends ApexDomain.StandardModel {
         } catch (Broker.ServiceException e) {
             throw new ModelException('Could not show apex class: ' + e.getMessage());
         }
+    }
+    
+    /**
+     * One shots avoid the overhead of starting the broker
+     * (callout, start, execute, execute, execute)
+     * but fatal exceptions have to be grabbed.
+     */
+    public void appendJobStatus() {
+        
+        if (this.Message.Status__c != 'Started') {
+            //not in bad state
+            return;
+        }
+        
+        if (this.Message.Exception__c != null) {
+            //already has exception message
+            return;
+        }
+        
+        List<AsyncApexJob> asyncApexJobs = [
+            SELECT Id, ExtendedStatus
+            FROM AsyncApexJob
+            WHERE Id = :this.Message.JobId__c
+        ];
+        
+        if (asyncApexJobs.isEmpty()) {
+            //no job information
+            return;
+        }
+        
+        this.Message.Exception__c = asyncApexJobs[0].ExtendedStatus;
+        
+        update this.Message;
     }
 }

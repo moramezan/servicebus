@@ -266,22 +266,16 @@ public with sharing class ConfigureController {
     }
     
     /**
-     * We can delete the access token when there is a problem with the refresh.
-     * Sequence Builder detects its absence and signals configuration is needed.
-     */
-    static public void deleteAccessToken() {
-        Application__c application = Application__c.getOrgDefaults();
-        application.RunAsAccessToken__c = null;
-        application.RunAsRefreshToken__c = null;
-        upsert application;
-    }
-    
-    /**
      * Performs the third part of the OAuth dance using the refresh token
      * to get a ready-and-roaring access token, and saves the new one away.
      */
-    static public void refreshAccessToken() {
-        application = Application__c.getOrgDefaults();
+    static public String refreshAccessToken() {
+        
+        if (!Test.isRunningTest()) if (ConfigureIfNeeded(null) != null) {
+            //failure, there is a risk of posting to wrong endpoint!
+            System.assert(false, 'Please configure the Service Bus package.');
+        }
+        
         HttpRequest request = new HttpRequest();
         request.setTimeout(120000);
         request.setMethod('POST');
@@ -291,12 +285,7 @@ public with sharing class ConfigureController {
         try {response = new Http().send(request);}
         catch (CalloutException e) {
             //failure, we would like to know about, eg "System.CalloutException: Read timed out"
-            if (!e.getMessage().contains('Unauthorized endpoint')) throw new SetupException(e, 'Defer exception');
-            
-            //failure, missing remote site setting
-            deleteAccessToken();
-            uninstallSchedule();
-            return;
+            throw new SetupException(e, 'Defer exception');
         }
         
         if (response.getStatusCode() != 200) {
@@ -306,8 +295,7 @@ public with sharing class ConfigureController {
         
         String data = response.getBody();
         Token t = (Token)Json.deserialize(data, Token.class);
-        application.RunAsAccessToken__c = t.access_token;
-        Type.forName(DoDml.class.getName()).newInstance();
+        return t.access_token;
     }
     
     /**
@@ -445,7 +433,7 @@ public with sharing class ConfigureController {
             if (!Test.isRunningTest()) defaults(UserInfo.getSessionId());
             
             //bigassforce/servicebus#812 don't wait an hour to refresh access token
-            if (!Test.isRunningTest()) Router.optimize();
+            //if (!Test.isRunningTest()) Router.optimize; //#1229 dont spam
             
             //6. finally send them to the context sensitive help page
             String returnUrl;
@@ -534,7 +522,7 @@ public with sharing class ConfigureController {
         request.setHeader('SOAPAction', '""');
         request.setHeader('Content-Type', 'text/xml');
         request.setBody(metadata(sessionId));
-        new Http().send(request);
+        //new Http().send(request);
     }
     
     /**
@@ -579,14 +567,14 @@ public with sharing class ConfigureController {
         if (null == sessionId) {
             //failure, user never clicked configure button
             PageReference configure = Page.Configure;
-            configure.getParameters().put('retURL', retURL.getUrl());
+            if (retURL != null) configure.getParameters().put('retURL', retURL.getUrl());
             return configure;
         }
         
         if (configuredOrgId != unprefixedOrgId) {
             //failure, new environment probably due to sandbox refresh
             PageReference configure = Page.Configure;
-            configure.getParameters().put('retURL', retURL.getUrl());
+            if (retURL != null) configure.getParameters().put('retURL', retURL.getUrl());
             return configure;
         }
         

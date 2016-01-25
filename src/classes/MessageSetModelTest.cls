@@ -276,23 +276,6 @@
         
     }
     
-    static testmethod void testMessageIdUpdatedOnEvent() {
-        //arrange message
-        Message__c message = new Message__c(Event__c = '{}');
-        insert message;
-        
-        //act
-        new MessageSetModel(new List<Message__c>{message}).mark('0000');
-        
-        //assemble
-        message = [SELECT Event__c FROM Message__c];
-        
-        //assert
-        Id expectedId = message.Id;
-        String actualEvent = message.Event__c;
-        System.assert(actualEvent.contains(expectedId), 'Event should contain message id.');
-    }
-    
     static testmethod void testPausedMessagesCanBeRebuffered() {
         //arrange messages
         insert new Message__c(Status__c = 'Paused');

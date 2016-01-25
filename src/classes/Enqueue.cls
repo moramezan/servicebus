@@ -2,15 +2,101 @@ global class Enqueue implements Process.Plugin {
     
     public class EnqueueException extends Exception {}
     
-    static public Boolean AllowRoute = false; //#999#issuecomment-133751700
-    
-    //Process.Plugin enqueue = new ServiceBus.Enqueue();
-    //enqueue.invoke(event)
+    /**
+     * <?xml version=1.0 encoding=UTF-8?>
+     * <env:Envelope xmlns:env=http://schemas.xmlsoap.org/soap/envelope/ xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance xmlns:xsd=http://www.w3.org/2001/XMLSchema>
+     *     <env:Header>
+     *         <SessionHeader xmlns=urn:tooling.soap.sforce.com>
+     *             <sessionId>00D24000000rJpZ_____AQ4AQGpDqiI3VYXwWf4DRnokaGOrD0HjPa1XTy.lGX1SnKvZ_7ikRiDIOX_xHHuoS2JY_5XXPem.iymvbf6Zxc4yj6cwQmxE</sessionId>
+     *         </SessionHeader>
+     *     </env:Header>
+     *     <env:Body>
+     *         <executeAnonymous xmlns=urn:tooling.soap.sforce.com>
+     *             <String>System.assert(false, 12345);</String>
+     *         </executeAnonymous>
+     *     </env:Body>
+     * </env:Envelope>
+     *
+     * <?xml version=1.0 encoding=UTF-8?>
+     * <soapenv:Envelope xmlns:soapenv=http://schemas.xmlsoap.org/soap/envelope/ xmlns=urn:tooling.soap.sforce.com xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance>
+     *     <soapenv:Body>
+     *         <executeAnonymousResponse>
+     *             <result>
+     *                 <column>1</column>
+     *                 <compileProblem xsi:nil=true/>
+     *                 <compiled>true</compiled>
+     *                 <exceptionMessage>System.AssertException: Assertion Failed: 12345</exceptionMessage>
+     *                 <exceptionStackTrace>AnonymousBlock: line 1, column 1</exceptionStackTrace>
+     *                 <line>1</line>
+     *                 <success>false</success>
+     *             </result>
+     *         </executeAnonymousResponse>
+     *     </soapenv:Body>
+     * </soapenv:Envelope>
+     */
+    static public void integrationCommand(Map<String,Object> parameters) {
+        
+        if (Test.isRunningTest() || Application__c.getOrgDefaults().RunAsUserId__c == UserInfo.getUserId()) {
+            //already integration user
+            new Enqueue().invoke(new Process.PluginRequest(parameters));
+            return;
+        }
+        
+        //prepare session
+        Application__c setting = Application__c.getOrgDefaults();
+        setting.RunAsAccessToken__c = ConfigureController.refreshAccessToken();
+        
+        //prepare command
+        String command = ''
+            + 'new ' + Enqueue.class.getName() + '().invoke(new Process.PluginRequest('
+            + '    (Map<String,Object>)Json.deserializeUntyped(\'' + Json.serialize(parameters) + '\')'
+            + '));'
+        ;
+        
+        //soap namespace
+        Dom.Document dom = new Dom.Document();
+        String env = 'http://schemas.xmlsoap.org/soap/envelope/';
+        String xsd = 'http://www.w3.org/2001/XMLSchema';
+        String xsi = 'http://www.w3.org/2001/XMLSchema-instance';
+        String xmlns = 'urn:tooling.soap.sforce.com';
+        
+        //soap envelope
+        Dom.XmlNode envelope = dom.createRootElement('Envelope', env, 'env');
+        envelope.setNamespace('xsi', xsi);
+        envelope.setNamespace('xsd', xsd);
+        
+        //soap header
+        Dom.XmlNode header = envelope.addChildElement('Header', env, 'env');
+        Dom.XmlNode sessionHeader = header.addChildElement('SessionHeader', xmlns, '');
+        Dom.XmlNode sessionId = sessionHeader.addChildElement('sessionId', null, null);
+        sessionId.addTextNode(setting.RunAsAccessToken__c);
+        
+        //soap body
+        Dom.XmlNode body = envelope.addChildElement('Body', env, 'env');
+        Dom.XmlNode executeAnonymous = body.addChildElement('executeAnonymous', xmlns, '');
+        Dom.XmlNode strinq = executeAnonymous.addChildElement('String', null, null);
+        strinq.addTextNode(command);
+        
+        //post request
+        HttpRequest request = new HttpRequest();
+        request.setTimeout(120000);
+        request.setMethod('POST');
+        request.setHeader('SOAPAction', '""');
+        request.setHeader('Content-Type', 'text/xml');
+        request.setEndpoint(Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:') + '/services/Soap/T/35.0');
+        request.setBody(dom.toXmlString());
+        HttpResponse response = new Http().send(request);
+        
+        //#653 throw exception in our namespace
+        if (response.getStatusCode() != 200) throw new EnqueueException(response.getBody());
+        if (response.getBody().contains('<success>false</success>')) throw new EnqueueException(response.getBody());
+    }
     
     /**
      * But this constructor has to be public for Process.Plugin:
      * "System.TypeException: Job does not have a no-arg constructor"
      */
+    
     
     /**
      * Per #702 we may as well describe this as a "real" Flow plugin
@@ -47,117 +133,251 @@ global class Enqueue implements Process.Plugin {
      * in Visual Flow to get stuff into Service Bus. (Though they would create a dependency.)
      */
     global Process.PluginResult invoke(Process.PluginRequest request) {
-        Map<String,Object> inputEvent = request.InputParameters;
-        System.Queueable job = new Job(inputEvent);
-        Id jobId = System.enqueueJob(job);
         
-        inputEvent.put('JobId', jobId);
-        return new Process.PluginResult(inputEvent);
+        Map<String,Object> inputEvent = request.InputParameters;
+        
+        //INTEGRATION COMMANDS
+        if (inputEvent.get('ToService') == 'ServiceBus.ExecuteJobId') {
+            //execute by message id
+            Id jobId = (Id)inputEvent.get('RecordId');
+            MessageSetModel model = MessageSetModel.fromJobId(jobId);
+            model.persist(model.execute(null));
+            return null;
+        }
+        
+        if (inputEvent.get('ToService') == 'ServiceBus.RestartMessageId') {
+            //restart by message id
+            Id messageId = (Id)inputEvent.get('RecordId');
+            MessageModel model = MessageModel.fromId(messageId);
+            model.restart();
+            return null;
+        }
+        
+        if (inputEvent.get('ToService') == 'ServiceBus.RunBrokerBatch') {
+            //run batch broker
+            if (Test.isRunningTest()) System.assert(false, 'TODO wat');
+            Broker.impl().run();
+            return null;
+        }
+        
+        //DYNAMIC ENQUEUE
+        Id jobId = Enqueue.invoke(inputEvent);
+        Map<String,Object> result = inputEvent.clone();
+        result.put('JobId', jobId);
+        return new Process.PluginResult(result);
+    }
+    
+    static global Id invoke(Map<String,Object> event) {
+        return invoke(new List<Map<String,Object>>{event});
+    }
+    
+    /**
+     * Prepares data (represented an input event) for work.
+     * A collection of multiple parameterized message descriptions.
+     * Each of which must at minimum a Sequence or a Process or a Config or a Route.
+     *
+     * Prepares data for work at the start of a nominated sequence by wrapping the pointer to the data (an id) in a
+     * Message object. This Message instance is saved to the database and the Broker is immeadiately
+     * invoked if it is not already running.
+     *
+     * @docs ApiJobConstructors.html
+     * @param sequenceName Name of the sequence the data is destined for.
+     * @param dataId    Id of some record that the sequence will operate on.
+     *
+     * The input event collection should at minimum contain
+     *  - an object Id ("Id")
+     *  - a sequence ("ToSequence") or a service ("ToService") or a list of possible configs ("ToConfigIds")
+     *
+     * The input event collection is converted to a Message object. This Message instance is saved
+     * to the database and the Broker is immeadiately invoked if it is not already running.
+     *
+     * @docs ApiJobConstructors.html
+     * @param  injectedParameters a parametrised description of the event.
+     */
+    static global Id invoke(List<Map<String,Object>> events) {
+        
+        List<Message__c> messages = new List<Message__c>();
+        List<Map<String,Object>> inputEvents = (List<Map<String,Object>>)events;
+        
+        if (inputEvents == null) {
+            //failure, bad input collection
+            throw new EnqueueException('Enqueued events cannot be null');
+        }
+        
+        if (inputEvents.isEmpty()) {
+            //nothing to do
+            throw new EnqueueException('No events to enqueue.');
+        }
+        
+        if (inputEvents.size() > 1000) { //#955 possibly 10000, but headspace
+            //#955 blow up too many input events enqueued
+            throw new EnqueueException('Too many events: ' + inputEvents.size());
+        }
+        
+        try {Json.serialize(inputEvents);} catch (JsonException e) {
+            //#977 detect unpersistable types
+            throw new EnqueueException(e.getMessage());
+        }
+        
+        Set<String> legalKeys = new Set<String>{
+            'EnqueuedById',
+            'EntryPointTimestamp',
+            'CorrelationUuid',
+            'JobId',
+            'RecordId',
+            'ToConfigIds',
+            'ToSequence',
+            'ToService',
+            'Hops'
+        };
+        
+        Datetime timestamp = System.now();
+        Object toService = inputEvents[0].get('ToService');
+        Object toSequence = inputEvents[0].get('ToSequence');
+        Object toConfigIds = inputEvents[0].get('ToConfigIds');
+        
+        for (Integer i = 0; i < inputEvents.size(); i++) {
+            
+            Map<String,Object> inputEvent = inputEvents[i];
+            
+            if (inputEvent == null) {
+                //failure, one bad input event
+                throw new EnqueueException('Enqueued event cannot be null'); //a la System.NullPointerException: Argument cannot be null
+            }
+            
+            if (toService != null && toSequence != null) {
+                //failure, mixed one-shot / sequence routing
+                throw new EnqueueException('Enqueueing groups of events to a mix of sequences and services is not permitted. List the ToSequence events together and enqueue those in a separate job.');
+            }
+            
+            if (toService != null && toConfigIds != null) {
+                //failure, mixed one-shot / config routing
+                throw new EnqueueException('Enqueueing groups of events to a mix of configs and services is not permitted. List the ToConfigIds events together and enqueue those in a separate job.');
+            }
+            
+            if (toService != null && inputEvent.get('ToService') != toService) {
+                //failure, mixed one-shots with different services
+                throw new EnqueueException('Enqueueing groups of events to different services is not permitted. List the events together by service and enqueue the different services in separate jobs.');
+            }
+            
+            if (toService == null && toSequence == null && toConfigIds == null) {
+                //failure, completely unroutable
+                throw new EnqueueException('Enqueueing events without a route is not permitted. Populate one of the event parameters: ToService, ToSequence, ToConfigIds.');
+            }
+            
+            for (String key : inputEvent.keySet()) {
+                
+                if (legalKeys.contains(key)) {
+                    //success, basically our api
+                    continue; //ok
+                }
+                
+                if (key.startsWith(':')) {
+                    //failure, reserved for us
+                    throw new EnqueueException('Namespace \':\' is not supported. If you are attempting to use a custom event parameter, be sure to prepend the \'c:\' before the parameter name.'); //a la //sObject type 'Messsss' is not supported. If you are attempting to use a custom object, be sure to append the '__c' after the entity name. Please reference your WSDL or the describe call for the appropriate names.
+                }
+                
+                if (!key.contains(':')) {
+                    //failure, namespace is required
+                    throw new EnqueueException('Namespace \'' + key + '\' is not supported. If you are attempting to use a custom event parameter, be sure to prepend the \'c:\' before the parameter name.'); //a la //sObject type 'Messsss' is not supported. If you are attempting to use a custom object, be sure to append the '__c' after the entity name. Please reference your WSDL or the describe call for the appropriate names.
+                }
+            }
+            
+            inputEvent.putAll(new Map<String,Object>{
+                'Hops' => 1,
+                'EnqueuedById' => UserInfo.getUserId()
+            });
+            
+            if (inputEvent.get('CorrelationUuid') == null) {
+                //#751 'they' are allowed to mess with this, eg for replay
+                inputEvent.put('CorrelationUuid', uuidVersionFour());
+            }
+            
+            if (inputEvent.get('EntryPointTimestamp') == null) {
+                //#753 services like Heartbeat are allowed to mess with this}
+                inputEvent.put('EntryPointTimestamp', timestamp);
+            }
+        }
+        
+        //#1220 COMMON ENQUEUE
+        Job job = new Job();
+        Id jobId = System.enqueueJob(job);
+        if (Test.isRunningTest()) jobId = '707000123456789';
+        
+        //convert events to messages
+        for (Integer i = 0; i < inputEvents.size(); i++) {
+            
+            //one-shot fields
+            String slot = '0000';
+            Decimal numberOfAttempts = 1;
+            String status = 'Started';
+            
+            //sequence fields
+            if (toService == null) {
+                slot = null;
+                numberOfAttempts = 0;
+                status = Application__c.getOrgDefaults().BrokerIsPaused__c ? 'Paused' : 'Buffered';
+            }
+            
+            //populate job id inside event
+            inputEvents[i].put('JobId', jobId);
+            
+            messages.add(new Message__c(
+                Slot__c = slot,
+                JobId__c = jobId,
+                Status__c = status,
+                OwnerId = UserInfo.getUserId(),
+                NumberOfAttempts__c = numberOfAttempts,
+                Event__c = Json.serializePretty(inputEvents[i])
+            ));
+            
+            //one strategy to reduce heap size during runtime is to
+            //remove items from the collection as you iterate over it
+            inputEvents[i] = null; //avoid list.remove - it corrupts
+        }
+        
+        //#1220 COMMON PERSIST
+        new MessageSetModel(new List<Message__c>()).persist(messages);
+        
+        return jobId;
     }
     
     public class QueueImpl implements Job.Queueable {
-    
-        public List<Map<String,Object>> Events = new List<Map<String,Object>>();
         
-        /**
-         * Prepares data (represented an input event) for work.
-         * A collection of multiple parameterized message descriptions.
-         * Each of which must at minimum a Sequence or a Process or a Config or a Route.
-         *
-         * Prepares data for work at the start of a nominated sequence by wrapping the pointer to the data (an id) in a
-         * Message object. This Message instance is saved to the database and the Broker is immeadiately
-         * invoked if it is not already running.
-         *
-         * @docs ApiJobConstructors.html
-         * @param sequenceName Name of the sequence the data is destined for.
-         * @param dataId    Id of some record that the sequence will operate on.
-         *
-         * The input event collection should at minimum contain
-         *  - an object Id ("Id")
-         *  - a sequence ("ToSequence") or a service ("ToService") or a list of possible configs ("ToConfigIds")
-         *
-         * The input event collection is converted to a Message object. This Message instance is saved
-         * to the database and the Broker is immeadiately invoked if it is not already running.
-         *
-         * @docs ApiJobConstructors.html
-         * @param  injectedParameters a parametrised description of the event.
-         */
-        public void setEvents(List<Map<String,Object>> inputEvents) {
+        public void execute(QueueableContext context) {
             
-            if (inputEvents == null) {
-                //failure, bad input collection
-                throw new EnqueueException('Enqueued events cannot be null');
+            Id jobId = context.getJobId();
+            if (Test.isRunningTest()) jobId = '707000123456789';
+            MessageSetModel model = MessageSetModel.fromJobId(jobId);
+            
+            //#1220 HANDLE ONE SHOT
+            if (!model.Messages[0].Route__c.contains('#')) {
+                
+                //integration user execute/persist
+                integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus.ExecuteJobId', 'RecordId' => jobId});
+                return;
+                
             }
             
-            if (inputEvents.size() > 1000) { //#955 possibly 10000, but headspace
-                //#955 blow up too many input events enqueued
-                throw new EnqueueException('Too many events: ' + inputEvents.size());
-            }
+            //already running
+            if (Broker.isRunning()) return;
             
-            try {Json.serialize(inputEvents);} catch (JsonException e) {
-                //#977 detect unpersistable types
-                throw new EnqueueException(e.getMessage());
-            }
+            //about to run
+            if (Broker.isScheduled()) return;
             
-            Set<String> legalKeys = new Set<String>{
-                'EnqueuedById',
-                'EntryPointTimestamp',
-                'CorrelationUuid',
-                'JobId',
-                'MessageId',
-                'RecordId',
-                'ToConfigIds',
-                'ToSequence',
-                'ToService',
-                'Hops',
-                AllowRoute ? 'Route' : 'Hops' //TODO confirm if this disallowed
-            };
+            //tests need to run own broker
+            if (Test.isRunningTest()) return;
             
-            for (Map<String,Object> input : inputEvents) {
+            //per #1215 only start if not paused
+            if (Application__c.getOrgDefaults().BrokerIsPaused__c) return;
+            
+            //#1220 HANDLE SEQUENCE
+            if (model.Messages[0].Route__c.contains('#')) {
                 
-                if (input == null) {
-                    //failure, one bad input event
-                    throw new EnqueueException('Enqueued event cannot be null'); //a la System.NullPointerException: Argument cannot be null
-                }
+                //integration user broker start #989
+                integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus.RunBrokerBatch'});
+                return;
                 
-                Map<String,Object> inputEvent = input.clone();
-                
-                for (String key : inputEvent.keySet()) {
-                    
-                    if (legalKeys.contains(key)) {
-                        //success, basically our api
-                        continue; //ok
-                    }
-                    
-                    if (key.startsWith(':')) {
-                        //failure, reserved for us
-                        throw new EnqueueException('Namespace \':\' is not supported. If you are attempting to use a custom event parameter, be sure to prepend the \'c:\' before the parameter name.'); //a la //sObject type 'Messsss' is not supported. If you are attempting to use a custom object, be sure to append the '__c' after the entity name. Please reference your WSDL or the describe call for the appropriate names.
-                    }
-                    
-                    if (!key.contains(':')) {
-                        //failure, namespace is required
-                        throw new EnqueueException('Namespace \'' + key + '\' is not supported. If you are attempting to use a custom event parameter, be sure to prepend the \'c:\' before the parameter name.'); //a la //sObject type 'Messsss' is not supported. If you are attempting to use a custom object, be sure to append the '__c' after the entity name. Please reference your WSDL or the describe call for the appropriate names.
-                    }
-                }
-                
-                //...........................
-                
-                inputEvent.putAll(new Map<String,Object>{
-                    'Hops' => 1,
-                    'EnqueuedById' => UserInfo.getUserId()
-                });
-                
-                if (inputEvent.get('CorrelationUuid') == null) {
-                    //#751 'they' are allowed to mess with this, eg for replay
-                    inputEvent.put('CorrelationUuid', Enqueue.uuidVersionFour());
-                }
-                
-                if (inputEvent.get('EntryPointTimestamp') == null) {
-                    //#753 services like Heartbeat are allowed to mess with this}
-                    inputEvent.put('EntryPointTimestamp', System.now());
-                }
-                
-                this.Events.add(inputEvent);
             }
         }
         
@@ -177,65 +397,11 @@ global class Enqueue implements Process.Plugin {
          * Usually handled within a second or so.
          * NOT TO BE CONFUSED WITH BROKER.EXECUTE
          *
-         * We can't really test System.enqueueJob() because of known issue:
-         * https://success.salesforce.com/issues_view?id=a1p300000008XM1AAM
-         *
          * But since we aren't actually doing anything with the QueueableContext
          * this works without startTest/stopTest: new Job(inputEvent).execute(null)
          *
          * #816 https://cloud.githubusercontent.com/assets/1878631/6813469/15c4d956-d27e-11e4-9d3d-e7026e95eade.jpg
          */
-        public void execute(QueueableContext context) {
-            
-            //RESTART
-            if (context != null && context.getJobId().getSObjectType() == Message__c.SObjectType) {
-                MessageModel.fromId(context.getJobId()).restart();
-                return;
-            }
-            
-            //#694 puts QueueableContext Job Id on messages. Because when people
-            //use System.enqueueJob to enqueue a message into the system, they will
-            //never get a Message Id. But at least we have a possibility of using
-            //the Queueable AsyncApexJob Id as a correlation later for Capture etc.
-            for (Integer i = 0; i < this.Events.size(); i++) {
-                Id jobId = context.getJobId();
-                this.Events[i].put('JobId', jobId);
-            }
-            
-            //one strategy to reduce heap size during runtime is to
-            //remove items from the collection as you iterate over it
-            List<Message__c> messages = new List<Message__c>();
-            for (Integer i = 0; i < this.Events.size(); i++) {
-                messages.add(new Message__c(
-                    Event__c = Json.serializePretty(this.Events[i]),
-                    Status__c = Application__c.getOrgDefaults().BrokerIsPaused__c ? 'Paused' : 'Buffered'
-                ));
-                
-                //salesforce does not have iterator.remove() method like java
-                //but don't use list.remove(i) that just fucks every odd one!
-                this.Events[i] = null;
-            }
-            
-            try {
-                //#989 optimize already correct running user context (per #1215 only start if not paused)
-                if (!Test.isRunningTest() && !Application__c.getOrgDefaults().BrokerIsPaused__c) if (isRunAsUser()) this.run(); else this.runAsUser();
-                
-            } catch (Exception e) {
-                //#1188 messages must be inserted even if the tooling callout fails!
-                if (Application__c.getOrgDefaults().Prefix__c == null) throw e;
-                
-            } finally {
-                //#1149 race condition DML (we just hope the batch is slightly delayed)
-                new MessageSetModel(new List<Message__c>()).persist(messages) ; //#836 //#1114 notice empty input list
-                
-            }
-        }
-        
-        void run() {
-            if (isScheduled()) return;
-            if (isRunning()) return;
-            Broker.impl().run();
-        }
         
         /**
          * When this blows up we throw an unhandled exception in our namespace,
@@ -257,27 +423,6 @@ global class Enqueue implements Process.Plugin {
          *     "exceptionMessage": "System.AssertException: Kablam again"
          * }
          */
-        void runAsUser() {
-            //#653 don't waste TOOLING API CALL unnecessarily
-            if (isScheduled()) return;
-            if (isRunning()) return;
-            
-            //command (#1188 crazy HTTP vs HTTPS behaviour manifests intermittently)
-            PageReference endpoint = new PageReference(Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:') + '/services/data/v35.0/tooling/executeAnonymous');
-            endpoint.getParameters().put('anonymousBody', 'new ' + Job.class.getName() + '().execute(null);');
-            
-            //execute anonymous
-            HttpRequest request = new HttpRequest();
-            request.setTimeout(120000);
-            request.setMethod('GET');
-            request.setEndpoint(endpoint.getUrl());
-            request.setHeader('Authorization', 'Bearer ' + Application__c.getOrgDefaults().RunAsAccessToken__c);
-            
-            //#653 throw exception in our namespace
-            HttpResponse response = new Http().send(request);
-            if (response.getStatusCode() != 200) throw new EnqueueException(response.getBody());
-            if (response.getBody().contains('"success":false')) throw new EnqueueException(response.getBody());
-        }
         
         //TODO? Job(reflector, recordId)
         //TODO? Job(configIds, recordId)
@@ -330,34 +475,4 @@ global class Enqueue implements Process.Plugin {
         return output;
     }
     
-    static public Boolean isRunAsUser() {
-        Id userId = UserInfo.getUserId();
-        Id runningId = Application__c.getOrgDefaults().RunAsUserId__c;
-        return userId == runningId;
-    }
-    
-    static public Boolean isScheduled() {
-        List<CronJobDetail> cronJobDetails = [
-            SELECT Id
-            FROM CronJobDetail
-            WHERE Name = 'Service Bus Broker'
-            LIMIT 1
-        ];
-        
-        return !cronJobDetails.isEmpty();
-    }
-    
-    static public Boolean isRunning() {
-        List<AsyncApexJob> asyncApexJobs = [
-            SELECT Id
-            FROM AsyncApexJob
-            WHERE JobType = 'BatchApex'
-            AND ApexClass.Name = 'BrokerBatch'
-            AND ApexClass.NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
-            AND Status IN ('Holding', 'Queued', 'Processing', 'Preparing')
-            LIMIT 1
-        ];
-        
-        return !asyncApexJobs.isEmpty();
-    }
 }

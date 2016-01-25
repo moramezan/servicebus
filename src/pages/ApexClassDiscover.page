@@ -39,7 +39,7 @@
         
         window.$RemoteAction = window.$RemoteAction || {};
         $RemoteAction.ApexClassDiscoverExtension = $RemoteAction.ApexClassDiscoverExtension || {};
-        $RemoteAction.ApexClassDiscoverExtension.DiscoverSummaries = '{!$RemoteAction.ApexClassDiscoverExtension.DiscoverSummaries}';
+        $RemoteAction.ApexClassDiscoverExtension.DiscoverDefinitions = '{!$RemoteAction.ApexClassDiscoverExtension.DiscoverDefinitions}';
         $RemoteAction.ApexClassDiscoverExtension.SaveCache = '{!$RemoteAction.ApexClassDiscoverExtension.SaveCache}';
         
         window.Services = {};
@@ -115,7 +115,7 @@
             for (var index in namespaces) if (namespaces.hasOwnProperty(index)) {
                 var namespace = namespaces[index];
                 Visualforce.remoting.Manager.invokeAction(
-                    $RemoteAction.ApexClassDiscoverExtension.DiscoverSummaries,
+                    $RemoteAction.ApexClassDiscoverExtension.DiscoverDefinitions,
                     namespace,
                     function (services, event) {
                         

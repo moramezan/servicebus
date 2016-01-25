@@ -2,7 +2,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     
     public class ModelException extends Exception {}
     
-    List<Message__c> Messages;
+    public List<Message__c> Messages;
     
     /**
      * Prevent message inserts per #677
@@ -90,9 +90,32 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         
         update rebufferableMessages;
         
+        //#1215 only start if not paused
+        if (Application__c.getOrgDefaults().BrokerIsPaused__c) return;
+        
+        //already running
+        if (Broker.isRunning()) return;
+        
+        //about to run
+        if (Broker.isScheduled()) return;
+
+        //tests need to run own broker
+        if (Test.isRunningTest()) return;
+
         //#952 restart REAL broker asynchronously
-        System.Queueable job = new Job();
-        if (!Application__c.getOrgDefaults().BrokerIsPaused__c) System.enqueueJob(job); //#1215 only start if not paused
+        Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus.RunBrokerBatch'});
+    }
+    
+    static public MessageSetModel fromJobId(Id jobId) {
+        
+        List<Message__c> inputMessages = [
+            SELECT Id, Route__c, Event__c
+            FROM Message__c
+            WHERE JobId__c = :jobId
+        ];
+        
+        return new MessageSetModel(inputMessages);
+        
     }
     
     /**
@@ -136,11 +159,11 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             Step__c step = Step__c.getValues(specimen[0].Route__c);
             if (step != null) apexTypeName = step.ApexTypeName__c;
             
-            //peek at summary
-            ApexClassModel.Summary summary; //unit tests skip cache
-            if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(apexTypeName));
-            else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(apexTypeName);
-            chunks = summary.Chunks;
+            //peek at definition
+            ApexClassModel.Definition definition; //unit tests skip cache
+            if (Test.isRunningTest()) definition = new ApexClassModel.Definition(Type.forName(apexTypeName));
+            else if (!Test.isRunningTest()) definition = ApexClassSetModel.loadCache().get(apexTypeName);
+            chunks = definition.Chunks;
             
         } catch (Exception e) {}
         
@@ -171,11 +194,11 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
                 Step__c step = Step__c.getValues(message.Route__c);
                 if (step != null) apexTypeName = step.ApexTypeName__c;
                 
-                //peek at summary
-                ApexClassModel.Summary summary; //unit tests skip cache
-                if (Test.isRunningTest()) summary = new ApexClassModel.Summary(Type.forName(apexTypeName));
-                else if (!Test.isRunningTest()) summary = ApexClassSetModel.loadCache().get(apexTypeName);
-                message.IsAutoRetryable__c = summary.Retry;
+                //peek at definition
+                ApexClassModel.Definition definition; //unit tests skip cache
+                if (Test.isRunningTest()) definition = new ApexClassModel.Definition(Type.forName(apexTypeName));
+                else if (!Test.isRunningTest()) definition = ApexClassSetModel.loadCache().get(apexTypeName);
+                message.IsAutoRetryable__c = definition.Retry;
                 
             } catch (Exception e) {}
             
@@ -344,13 +367,6 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         this.swallowToString();
     }
     
-    override public void onAfterInsert() {
-        //#1038 update immediately to populate message ids, avoid memory leak in mark
-        List<Message__c> messages = new List<Message__c>();
-        for (Message__c message : this.Messages) messages.add(new Message__c(Id = message.Id));
-        update messages; //touch
-    }
-    
     override public void onAfterUndelete() {
         for (Message__c message : this.Messages) {
             //#1185 inhibit undelete
@@ -379,9 +395,6 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             event.remove('Chunk');
             event.remove('Range');
             event.remove('SiblingIds'); //#1026
-            
-            //#1026 this guy wont be visible unless requeried after update
-            if (message.Id != null) event.put('MessageId', message.Id);
             
             //#1004 Route__c field only ever used to LOCATE, and for GATE and MONITOR (we can clear it as well as setting in)
             if (event.containsKey('Route')) message.Route__c = (String)event.get('Route'); else message.Route__c = null;
@@ -456,9 +469,17 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         for (Message__c message : messages) message.Status__c = 'Buffered';
         update messages;
         
+        //already running
+        if (Broker.isRunning()) return;
+        
+        //about to run
+        if (Broker.isScheduled()) return;
+
+        //tests need to run own broker
+        if (Test.isRunningTest()) return;
+
         //#952 restart REAL broker
-        System.Queueable job = new Job();
-        System.enqueueJob(job);
+        Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus.RunBrokerBatch'});
     }
     
     /**
