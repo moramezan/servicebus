@@ -55,14 +55,17 @@ public class AggregateByJobService extends ApexClassModel.Service {
         // RELEASE :
 
         
-        //would have been nice to use a QueryLocator to give us compile-time
-        //validation of the query string, but it reads out the binds as :tmpVar1
         String fieldName = SObjectType.Message__c.Fields.Event__c.Name;
-        String queryString = ''
-                + 'SELECT ' + fieldName + ' '
-                + 'FROM Message__c '
-                + 'WHERE JobId__c = \'' + jobId + '\'  AND Route__c  = \'' + route + '\'' //JobId__c field only ever used to AGGREGATE BY JOB
-                ;
+        String queryString = Database.getQueryLocator([
+            SELECT Event__c
+            FROM Message__c
+            WHERE JobId__c = :jobId //JobId__c field only ever used to AGGREGATE BY JOB
+            AND Route__c = :route
+            ALL ROWS
+        ]).getQuery();
+        
+        queryString = queryString.replace(':tmpVar1', '\'' + String.escapeSingleQuotes(jobId) + '\'');
+        queryString = queryString.replace(':tmpVar2', '\'' + String.escapeSingleQuotes(route) + '\'');
 
         //this is the last item, let's release
         //conceptual note:
