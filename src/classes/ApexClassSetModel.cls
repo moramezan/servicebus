@@ -129,6 +129,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             FROM ApexClass
             WHERE NamespacePrefix = :namespace
             AND Name != 'ApexClassModel'
+            AND Name != 'Service'
             ORDER BY Name ASC
         ]);
     }
