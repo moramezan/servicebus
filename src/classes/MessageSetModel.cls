@@ -341,7 +341,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         messages.addAll(this.Messages);
         messages.addAll(outputMessages);
         MessageSetModel.Inhibit = false;
-        ApexDomain.crudFls(SObjectType.Message__c.Createable);
+        //ApexDomain.crudFls(SObjectType.Message__c.Createable); //TODO #1237
         Database.upsert(messages);
         MessageSetModel.Inhibit = true;
         
