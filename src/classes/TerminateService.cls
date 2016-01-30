@@ -2,7 +2,7 @@ public class TerminateService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
     public class Definition extends ApexClassModel.Definition {
-        String Tag = 'Service Bus';
+        String Tag = 'Services';
         String Label = 'Terminate';
         String Description = 'Swallows messages at the end of this sequence.';
         String Icon = 'stop';

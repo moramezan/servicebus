@@ -2,7 +2,7 @@
     
     static testmethod void testCacheIsNotPackaged() {
         //arrange
-        Folder folder = [SELECT Id FROM Folder WHERE DeveloperName = 'ServiceBus'];
+        Folder folder = [SELECT Id FROM Folder WHERE DeveloperName = 'Services'];
         
         //act
         List<Document> documents = [SELECT Id FROM Document WHERE FolderId = :folder.Id];

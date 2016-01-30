@@ -334,14 +334,14 @@ abstract public class Service {
         if (toSequence != null) {
             Integer position = 1;
             event.remove('ToSequence');
-            event.put('servicebus:ToSequence', toSequence);
+            event.put('services:ToSequence', toSequence);
             event.put('Route', version + '#' + toSequence + '#' + position);
         }
         
         //converts service to route
         if (toService != null) {
             event.remove('ToService');
-            event.put('servicebus:ToService', toService);
+            event.put('services:ToService', toService);
             event.put('Route', toService);
         }
         
@@ -349,7 +349,7 @@ abstract public class Service {
         if (toConfigIds != null) {
             Integer position = 1;
             event.remove('ToConfigIds');
-            event.put('servicebus:ToConfigIds', toConfigIds);
+            event.put('services:ToConfigIds', toConfigIds);
             
             for (Step__c step : Step__c.getAll().values()) {
                 if (step.Version__c == version && toConfigIds.contains(step.ConfigId__c)) {
@@ -410,7 +410,7 @@ abstract public class Service {
                 else throw new Broker.ServiceException(message);
             }
             
-            //https://github.com/bigassforce/servicebus/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843056
+            //https://github.com/bigassforce/services/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843056
             throw e;
         }
         
@@ -448,7 +448,7 @@ abstract public class Service {
                 throw new Broker.ServiceException(this.Reflector.getName() + ': Callout from execute() not supported. Please do that in the callout() method.');
             }
             
-            //https://github.com/bigassforce/servicebus/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843061
+            //https://github.com/bigassforce/services/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843061
             throw e;
         }
         

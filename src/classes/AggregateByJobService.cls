@@ -4,7 +4,7 @@ public class AggregateByJobService extends ApexClassModel.Service {
     public class ServiceException extends Exception {}
 
     public class Definition extends ApexClassModel.Definition {
-        String Tag = 'Service Bus';
+        String Tag = 'Services';
         String Label = 'Aggregate By Job';
         String Description = 'Aggregates a collection of messages having the same Job Id.';
         String Icon = 'arrow_join';
@@ -127,7 +127,7 @@ public class AggregateByJobService extends ApexClassModel.Service {
     @TestVisible static Map<String,Object> cleanParameters(Map<String,Object> inputEvent) {
         for (String input : inputEvent.keySet()) {
             Object value = (Object)inputEvent.get(input);
-            value =  (input.startsWith(':') || input.startsWith('servicebus:'))  ? value : null;
+            value =  (input.startsWith(':') || input.startsWith('services:'))  ? value : null;
             inputEvent.put(input, value);
         }
 

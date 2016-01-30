@@ -63,17 +63,17 @@ public without sharing class PostInstallHandler implements InstallHandler {
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
         message.setSenderDisplayName('Eeyore');
         message.setReplyTo('webmaster@bigassforce.com');
-        message.setSubject('Did you configure Service Bus?');
+        message.setSubject('Did you configure Services?');
         message.setCcAddresses(new List<String>{'webmaster@bigassforce.com'});
         message.setTargetObjectId(user.Id);
         message.setSaveAsActivity(false);
         message.setPlainTextBody(''
             + 'hey ' + user.FirstName + ','
             + '\n\n'
-            + '    your Service Bus package has installed alright.'
+            + '    your Services package has installed alright.'
             + '\n\n'
             + 'Please feel free to reach out if you have any difficulties'
-            + '\nwith Service Bus, and we can better learn how people apply it.'
+            + '\nwith Services, and we can better learn how people apply it.'
             + '\n\n'
             + 'best regards,'
             + '\nEeyore'

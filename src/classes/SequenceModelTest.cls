@@ -175,7 +175,7 @@
             ConfigId__c = '015000000000000AAA',
             ConfigName__c = 'This step must be configured. Seriously.',
             ApexClassId__c = '01p000000000000AAA',
-            ApexTypeName__c = 'servicebus.WiretapService',
+            ApexTypeName__c = 'Services.WiretapService',
             Position__c = 1.0
         );
         

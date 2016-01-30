@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Service Bus</fullName>
+    <fullName>Services</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
-    <namespacePrefix>servicebus</namespacePrefix>
+    <namespacePrefix>Services</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>
@@ -131,7 +131,7 @@
         <name>ApexTrigger</name>
     </types>
     <types>
-        <members>ServiceBus</members>
+        <members>Services</members>
         <name>CustomApplication</name>
     </types>
     <types>
@@ -233,8 +233,8 @@
         <name>CustomTab</name>
     </types>
     <types>
-        <members>ServiceBus</members>
-        <members>ServiceBus/Logo.png</members>
+        <members>Services</members>
+        <members>Services/Logo.png</members>
         <name>Document</name>
     </types>
     <types>
@@ -251,7 +251,7 @@
         <name>ListView</name>
     </types>
     <types>
-        <members>AdministerServiceBus</members>
+        <members>AdministerServices</members>
         <name>PermissionSet</name>
     </types>
     <types>

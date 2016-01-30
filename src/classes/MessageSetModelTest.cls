@@ -104,7 +104,7 @@
     static testmethod void callingSwallowToStringCorrectlySwallowsToStringOnTrace() {
         //arrange message
         String cause = 'Class.DoCallout.callout: line 12, column 1'
-            + '\n(servicebus)'
+            + '\n(services)'
             + '\n(abstract)'
             + '\n(esb)'
         ;

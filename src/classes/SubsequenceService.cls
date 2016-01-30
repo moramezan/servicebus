@@ -4,7 +4,7 @@ public class SubsequenceService extends ApexClassModel.Service {
     static public Boolean IsRunning = false;
     
     public class Definition extends ApexClassModel.Definition {
-        String Tag = 'Service Bus';
+        String Tag = 'Services';
         String Label = 'Subsequence';
         String Description = 'Synchronously executes another sequence before emitting the event.';
         String StepConfig = SubsequenceStepConfig__c.class.getName();

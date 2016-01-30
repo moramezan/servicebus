@@ -107,9 +107,9 @@ global class Enqueue implements Process.Plugin {
      */
     global Process.PluginDescribeResult describe() {
         Process.PluginDescribeResult plugin = new Process.PluginDescribeResult();
-        plugin.Name = 'Enqueue Service Bus Job';
-        plugin.Tag = 'Service Bus';
-        plugin.Description = 'Enqueue a Job into the Service Bus';
+        plugin.Name = 'Enqueue Services Job';
+        plugin.Tag = 'Services';
+        plugin.Description = 'Enqueue a Job into the Services';
         
         plugin.InputParameters = new List<Process.PluginDescribeResult.InputParameter>{
             new Process.PluginDescribeResult.InputParameter('RecordId', Process.PluginDescribeResult.ParameterType.ID, false),
@@ -125,19 +125,19 @@ global class Enqueue implements Process.Plugin {
     }
     
     /**
-     * Per #702 this enables developers to Enqueue into Service Bus without a compile-time
+     * Per #702 this enables developers to Enqueue into Services without a compile-time
      * dependency, by leveraging the Process.Plugin system interface.
      *
      * @docs ApiJobClass.html
      * Secondarily it also DOUBLES as a REAL Process.Plugin that people can use
-     * in Visual Flow to get stuff into Service Bus. (Though they would create a dependency.)
+     * in Visual Flow to get stuff into Services. (Though they would create a dependency.)
      */
     global Process.PluginResult invoke(Process.PluginRequest request) {
         
         Map<String,Object> inputEvent = request.InputParameters;
         
         //INTEGRATION COMMANDS
-        if (inputEvent.get('ToService') == 'ServiceBus.ExecuteJobId') {
+        if (inputEvent.get('ToService') == 'Services.ExecuteJobId') {
             //execute by message id
             Id jobId = (Id)inputEvent.get('RecordId');
             MessageSetModel model = MessageSetModel.fromJobId(jobId);
@@ -145,7 +145,7 @@ global class Enqueue implements Process.Plugin {
             return null;
         }
         
-        if (inputEvent.get('ToService') == 'ServiceBus.RestartMessageId') {
+        if (inputEvent.get('ToService') == 'Services.RestartMessageId') {
             //restart by message id
             Id messageId = (Id)inputEvent.get('RecordId');
             MessageModel model = MessageModel.fromId(messageId);
@@ -153,7 +153,7 @@ global class Enqueue implements Process.Plugin {
             return null;
         }
         
-        if (inputEvent.get('ToService') == 'ServiceBus.RunBrokerBatch') {
+        if (inputEvent.get('ToService') == 'Services.RunBrokerBatch') {
             //run batch broker
             if (Test.isRunningTest()) System.assert(false, 'TODO wat');
             Broker.impl().run();
@@ -354,7 +354,7 @@ global class Enqueue implements Process.Plugin {
             if (!model.Messages[0].Route__c.contains('#')) {
                 
                 //integration user execute/persist
-                integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus.ExecuteJobId', 'RecordId' => jobId});
+                integrationCommand(new Map<String,Object>{'ToService' => 'Services.ExecuteJobId', 'RecordId' => jobId});
                 return;
                 
             }
@@ -375,7 +375,7 @@ global class Enqueue implements Process.Plugin {
             if (model.Messages[0].Route__c.contains('#')) {
                 
                 //integration user broker start #989
-                integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus.RunBrokerBatch'});
+                integrationCommand(new Map<String,Object>{'ToService' => 'Services.RunBrokerBatch'});
                 return;
                 
             }

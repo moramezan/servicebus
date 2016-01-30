@@ -91,10 +91,10 @@
     // static void setUpBritishSummerTimeUser() {
     //     User user = new User (
     //         Alias = 'Test',
-    //         UserName = 'test@14333servicebus47969.com',
+    //         UserName = 'test@14333services47969.com',
     //         FirstName = 'Test',
     //         LastName = 'Test',
-    //         Email = 'test@14333servicebus47969.com',
+    //         Email = 'test@14333services47969.com',
     //         ProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator'].Id,
     //         EmailEncodingKey = 'UTF-8',
     //         LanguageLocaleKey = 'en_US',
@@ -105,7 +105,7 @@
     //
     //     insert user;
     //
-    //     PermissionSet ps = [SELECT Id FROM PermissionSet WHERE Name = 'AdministerServiceBus'];
+    //     PermissionSet ps = [SELECT Id FROM PermissionSet WHERE Name = 'AdministerServices'];
     //     insert new PermissionSetAssignment(AssigneeId = user.Id, PermissionSetId = ps.Id);
     // }
 

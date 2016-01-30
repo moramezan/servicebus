@@ -87,7 +87,7 @@ public with sharing class MessageViewExtension {
         if (sid == null) sid = '';
         
         String mid = ApexPages.CurrentPage().getParameters().get('mid');
-        Map<String,Object> parameters = new Map<String,Object>{'ToService' => 'ServiceBus.RestartMessageId', 'RecordId' => mid};
+        Map<String,Object> parameters = new Map<String,Object>{'ToService' => 'Services.RestartMessageId', 'RecordId' => mid};
         return (''
             + 'var bar = "' + bar + '";'
             + 'var sid = "' + sid + '";'

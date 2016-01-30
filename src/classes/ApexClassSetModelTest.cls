@@ -26,7 +26,7 @@
         insert new Document(
             Name = 'ApexClassCache.bin',
             Description = 'ApexClassCache_1447306203000_93',
-            FolderId = [SELECT Id FROM Folder WHERE DeveloperName = 'ServiceBus'].Id
+            FolderId = [SELECT Id FROM Folder WHERE DeveloperName = 'Services'].Id
         );
         
         //act

@@ -14,7 +14,7 @@
     
     <apex:sectionHeader title="Messages" description="A message is a container for holding a real world event. Wrapping each event in a message gives a handle to identify it." help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashMessage'])}" />
     
-    <apex:pageMessage rendered="{!$Setup.Application__c.BrokerIsPaused__c}" severity="Warning" summary="The Service Bus is paused. New messages will be stored but not processed." detail="Click Resume to unpause the Service Bus and process the stored messages." strength="2" />
+    <apex:pageMessage rendered="{!$Setup.Application__c.BrokerIsPaused__c}" severity="Warning" summary="The Services is paused. New messages will be stored but not processed." detail="Click Resume to unpause the Services and process the stored messages." strength="2" />
     
     <apex:enhancedList oncomplete="vp = this;if (this.filter.name == 'Completed') {vp.subNav.style.display = 'none'; vp.listBody.style.display = 'none'; vp.bottomNav.style.display = 'none'; document.getElementById('{!$Component.completed}').style.display = 'block';} else {vp.subNav.style.display = 'block'; vp.listBody.style.display = 'block'; vp.bottomNav.style.display = 'block'; document.getElementById('{!$Component.completed}').style.display = 'none';}" id="enhancedList" reRender="thePanel" type="Message__c" height="600" />
     

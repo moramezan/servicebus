@@ -345,7 +345,7 @@
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         expectedParam = 'Test';
-        actualParam = outputEvent.get('servicebus:ToSequence');
+        actualParam = outputEvent.get('services:ToSequence');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         //act
@@ -358,7 +358,7 @@
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         expectedParam = 'WiretapService';
-        actualParam = outputEvent.get('servicebus:ToService');
+        actualParam = outputEvent.get('services:ToService');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         //arrange
@@ -378,7 +378,7 @@
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         expectedParam = new Set<Id>{document.Id};
-        actualParam = outputEvent.get('servicebus:ToConfigIds');
+        actualParam = outputEvent.get('services:ToConfigIds');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
     }
     

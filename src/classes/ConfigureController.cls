@@ -66,7 +66,7 @@ public with sharing class ConfigureController {
             + '                <description>' + this.InstanceName + '_Visualforce</description>'
             + '                <disableProtocolSecurity>false</disableProtocolSecurity>'
             + '                <isActive>true</isActive>'
-            + '                <url>' + this.BaseUrl.replace('servicebus', 'c') + '</url>'
+            + '                <url>' + this.BaseUrl.replace('services', 'c') + '</url>'
             + '            </metadata>'
             + '        </upsertMetadata>'
             + '    </env:Body>'
@@ -88,7 +88,7 @@ public with sharing class ConfigureController {
             outputPanel.childComponents.add(includeScript);
             
             Component.Apex.OutputText outputText = new Component.Apex.OutputText();
-            outputText.escape = false; //https://github.com/bigassforce/servicebus/issues/1013#issuecomment-134331035
+            outputText.escape = false; //https://github.com/bigassforce/services/issues/1013#issuecomment-134331035
             outputText.value = '<script>var requestData = \'' + requestData() + '\';' + javascript() + '</script>';
             outputPanel.childComponents.add(outputText);
         
@@ -134,36 +134,36 @@ public with sharing class ConfigureController {
     /**
      * Initialize
      *
-     * bigassforce/servicebus#730 Commentary about the fragility of the Connected App Name
+     * bigassforce/services#730 Commentary about the fragility of the Connected App Name
      * Note there is a BINDING between all connected app names and ConfigureController.cls
      * The friendly names (and developer names!) are synchronized by Salesforce to all pods.
      * Renaming these will cause catastrophic failure of OAuth in all existing package installations.
      */
     static {
         if (ISDEV) {
-            //for servicebus unmanaged development
+            //for services unmanaged development
             CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZH2ObWGVCMzchtRYMSGmA_VyIAXNcBrUQ569cLTCDaEeIagOYTjpk0kGL05M';
             SECRET = '1234901574505073561';
             REDIRECT = 'https://login.salesforce.com/apex/Configure';
-            APPNAME = 'Service Bus (Dev)';
+            APPNAME = 'Services (Dev)';
             LOGIN = 'https://login.salesforce.com';
         }
         
         if (ISTEST) {
-            //for servicebus sandbox org installs
+            //for services sandbox org installs
             CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZM6N.zPbMF26H_MROM5B06LVVBqaYbQy5HGJqu.nl.0uIJOFznnB8_nyyEC_';
             SECRET = '8880236383124022841';
-            REDIRECT = 'https://test.salesforce.com/apex/servicebus__Configure';
-            APPNAME = 'Service Bus (Sandbox)';
+            REDIRECT = 'https://test.salesforce.com/apex/Services__Configure';
+            APPNAME = 'Services (Sandbox)';
             LOGIN = 'https://test.salesforce.com';
         }
         
         if (ISPROD) {
-            //for servicebus production org installs
+            //for services production org installs
             CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZIwedhrpiB2qIyLft2CxyJx.DzHvTLvZhrXOF1PjeMtO2HcWPYxX1gnhWOn4';
             SECRET = '4773069420004741227';
-            REDIRECT = 'https://login.salesforce.com/apex/servicebus__Configure';
-            APPNAME = 'Service Bus (Production)';
+            REDIRECT = 'https://login.salesforce.com/apex/Services__Configure';
+            APPNAME = 'Services (Production)';
             LOGIN = 'https://login.salesforce.com';
         }
     }
@@ -210,7 +210,7 @@ public with sharing class ConfigureController {
      * &code=aPrxHLAg3XMmPXtX1cG.hBCXhkPQ89rfuQTvHhmuu16Jm.DL5lYIjdeGFLdNIh0OGO17V2QD3A%3D%3D
      * &format=json
      * &grant_type=authorization_code
-     * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2Fservicebus__Configure
+     * &redirect_uri=https%3A%2F%2Flogin.salesforce.com%2Fapex%2FServices__Configure
      *
      * The Salesforce OAuth service responds with both and access token and a refresh token like this:
      * {
@@ -273,7 +273,7 @@ public with sharing class ConfigureController {
         
         if (!Test.isRunningTest()) if (ConfigureIfNeeded(null) != null) {
             //failure, there is a risk of posting to wrong endpoint!
-            System.assert(false, 'Please configure the Service Bus package.');
+            System.assert(false, 'Please configure the Services package.');
         }
         
         HttpRequest request = new HttpRequest();
@@ -299,7 +299,7 @@ public with sharing class ConfigureController {
     }
     
     /**
-     * Per bigassforce/servicebus#709 if someone trashes the scheduled job, they
+     * Per bigassforce/services#709 if someone trashes the scheduled job, they
      * can recreate it by running the configuration service again.
      */
     static public void uninstallSchedule() {
@@ -313,8 +313,8 @@ public with sharing class ConfigureController {
         }
     }
     
-    //#969 obfuscation of 'Service Bus Heartbeat'
-    @TestVisible static String JobName = Test.isRunningTest() ? 'Test Router' : 'Service Bus Router';
+    //#969 obfuscation of 'Services Heartbeat'
+    @TestVisible static String JobName = Test.isRunningTest() ? 'Test Router' : 'Services Router';
     
     /**
      * Creates the hourly cron job used to refresh the token.
@@ -346,7 +346,7 @@ public with sharing class ConfigureController {
         if (stage == null) {
             //0. page was viewed without using the proper link
             System.PageReference pr = new System.PageReference('/servlet/servlet.Integration');
-            pr.getParameters().put('lid', [SELECT Id FROM WebLink WHERE Description = 'Service Bus configuration link.'].Id);
+            pr.getParameters().put('lid', [SELECT Id FROM WebLink WHERE Description = 'Services configuration link.'].Id);
             pr.getParameters().put('eid', UserInfo.getUserId());
             pr.getParameters().put('ic', '1');
             pr.getParameters().put('retURL', ApexPages.currentPage().getParameters().get('retURL'));
@@ -432,16 +432,16 @@ public with sharing class ConfigureController {
             //metadata api installs the nuclear tip
             if (!Test.isRunningTest()) defaults(UserInfo.getSessionId());
             
-            //bigassforce/servicebus#812 don't wait an hour to refresh access token
+            //bigassforce/services#812 don't wait an hour to refresh access token
             //if (!Test.isRunningTest()) Router.optimize; //#1229 dont spam
             
             //6. finally send them to the context sensitive help page
             String returnUrl;
             application = Application__c.getOrgDefaults();
-            List<AppMenuItem> appMenuItems = [SELECT StartUrl FROM AppMenuItem WHERE Name = 'ServiceBus' LIMIT 1];
+            List<AppMenuItem> appMenuItems = [SELECT StartUrl FROM AppMenuItem WHERE Name = 'Services' LIMIT 1];
             if (returnUrl == null) returnUrl = application.OrgReturnUrl__c;
             if (returnUrl == null && !appMenuItems.isEmpty()) returnUrl = appMenuItems[0].StartUrl;
-            if (returnUrl == null) returnUrl = '/apex/ContextSensitiveHelp?topic=ServiceBus';
+            if (returnUrl == null) returnUrl = '/apex/ContextSensitiveHelp?topic=Services';
             return new PageReference(returnUrl);
         }
         
@@ -452,7 +452,7 @@ public with sharing class ConfigureController {
     static Application__c application;
     
     /**
-     * bigassforce/servicebus#781 pass security scanner
+     * bigassforce/services#781 pass security scanner
      */
     public class DoDml {
         public DoDml() {
@@ -481,7 +481,7 @@ public with sharing class ConfigureController {
             SELECT Id
             FROM PermissionSet
             WHERE NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
-            AND Name = 'AdministerServiceBus'
+            AND Name = 'AdministerServices'
         ];
         
         //determine if it has been assigned already

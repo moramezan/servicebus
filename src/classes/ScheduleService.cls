@@ -2,7 +2,7 @@ public class ScheduleService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
     public class Definition extends ApexClassModel.Definition {
-        String Tag = 'Service Bus';
+        String Tag = 'Services';
         String Label = 'Schedule';
         String Description = 'Emits an event on a configurable hourly basis.'; //Swallows regular un-scheduled heartbeat messages
         String Icon = 'clock';

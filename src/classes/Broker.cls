@@ -40,7 +40,7 @@ abstract public without sharing class Broker {
         List<CronJobDetail> cronJobDetails = [
             SELECT Id
             FROM CronJobDetail
-            WHERE Name = 'Service Bus Broker'
+            WHERE Name = 'Services Broker'
             LIMIT 1
         ];
         
@@ -94,10 +94,10 @@ abstract public without sharing class Broker {
             '00Dj0000001uJgw'  // dev org - tom
         };
         Set<String> sessionIdNamespaces = new Set<String>{
-            'servicebus',
-            'servicebus_batchpdf',
-            'servicebus_tooling',
-            'servicebus_metadata'
+            'Services',
+            'Services_batchpdf',
+            'Services_tooling',
+            'Services_metadata'
         };
         String namespacePrefix  = reflectorName.subStringBefore('.');
         String orgId15 = String.valueOf(orgId).left(15);
@@ -250,7 +250,7 @@ abstract public without sharing class Broker {
             
             Database.executeBatch(new BrokerBatch(), 1);
             //TODO be aware schedule is about 5 - 10 seconds slower to start
-            //System.scheduleBatch(new BrokerBatch(), 'Service Bus Broker', 0, 1);
+            //System.scheduleBatch(new BrokerBatch(), 'Services Broker', 0, 1);
         }
         
         /**

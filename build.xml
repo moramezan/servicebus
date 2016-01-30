@@ -33,7 +33,7 @@
         </exec>
     </target>
     
-    <target name="retrieve-busconnectedapp" description="Retrieves the SERVICEBUS connected app definitions from their separate packaging org.">
+    <target name="retrieve-busconnectedapp" description="Retrieves the SERVICES connected app definitions from their separate packaging org.">
         <sf:retrieve
             username="${busconnectedapp.username}"
             password="${busconnectedapp.password}"
@@ -104,7 +104,7 @@
             password="${de.password}"
             serverurl="${de.serverurl}"
             retrieveTarget="src"
-            packageNames="Service Bus"
+            packageNames="Services"
         />
         <antcall target="alphabetize-searchlayouts" />
         <antcall target="optimize-for-release" />
@@ -138,14 +138,14 @@
         <input message="ARE YOU SURE TO DEPLOY TO THE PACKAGING ORG?" addproperty="tag.confirm" validargs="ok" />
         
         <antcall target="optimize-for-release" />
-        <executeAnonymous username="${servicebus.username}" password="${servicebus.password}" serverurl="${servicebus.serverurl}">for (SObject j : [SELECT Id FROM CronTrigger]) System.abortJob(j.Id);</executeAnonymous>
+        <executeAnonymous username="${services.username}" password="${services.password}" serverurl="${services.serverurl}">for (SObject j : [SELECT Id FROM CronTrigger]) System.abortJob(j.Id);</executeAnonymous>
         <sf:deploy
-            username="${servicebus.username}"
-            password="${servicebus.password}"
-            serverurl="${servicebus.serverurl}"
+            username="${services.username}"
+            password="${services.password}"
+            serverurl="${services.serverurl}"
             deployRoot="src"
         />
-        <executeAnonymous username="${servicebus.username}" password="${servicebus.password}" serverurl="${servicebus.serverurl}">
+        <executeAnonymous username="${services.username}" password="${services.password}" serverurl="${services.serverurl}">
             new PostInstallHandler().onInstall(null);
             ConfigureController.settings(UserInfo.getUserId());
             ConfigureController.permissions(UserInfo.getUserId());
@@ -160,14 +160,14 @@
     <target name="optimize-for-devorg" description="Removes namespace and management artifacts prior to unmanaged deploy.">
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
-    <fullName>Service Bus</fullName>
+    <fullName>Services</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
-    <namespacePrefix>servicebus</namespacePrefix>
+    <namespacePrefix>Services</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
-    <fullName>Service Bus</fullName>
+    <fullName>Services</fullName>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacevalue>
         </replace>
@@ -185,13 +185,13 @@
     <target name="optimize-for-release" description="Restores namespace and management artifacts following unmanaged deploy.">
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
-    <fullName>Service Bus</fullName>
+    <fullName>Services</fullName>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
-    <fullName>Service Bus</fullName>
+    <fullName>Services</fullName>
     <apiAccessLevel>Unrestricted</apiAccessLevel>
-    <namespacePrefix>servicebus</namespacePrefix>
+    <namespacePrefix>Services</namespacePrefix>
     <postInstallClass>PostInstallHandler</postInstallClass>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacevalue>
@@ -385,8 +385,8 @@
         <!-- Documents lack wildcard support -->
         <echo file="purge/package.xml" append="true"><![CDATA[<types><name>Document</name>]]></echo>
         <touch file="purge/Document.txt" />
-        <sf:listMetadata metadataType="Document" folder="EnterpriseServiceBus" resultFilePath="purge/Document.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="35.0" />
-        <replaceregexp file="purge/Document.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: (ServiceBus/[^/]+)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
+        <sf:listMetadata metadataType="Document" folder="Services" resultFilePath="purge/Document.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="35.0" />
+        <replaceregexp file="purge/Document.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: (Services/[^/]+)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
         <loadfile property="Document" srcFile="purge/Document.txt" />
         <echo file="purge/package.xml" append="true" message="${Document}" />
         <echo file="purge/package.xml" append="true"><![CDATA[</types>]]></echo>

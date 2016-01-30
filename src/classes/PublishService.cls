@@ -2,7 +2,7 @@ public class PublishService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
     public class Definition extends ApexClassModel.Definition {
-        String Tag = 'Service Bus';
+        String Tag = 'Services';
         String Label = 'Publish';
         String Description = 'Broadcasts named events to other subscribed sequences.';
         String StepConfig = PublishStepConfig__c.class.getName();

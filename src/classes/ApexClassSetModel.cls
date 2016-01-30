@@ -70,7 +70,7 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
         Folder folder = [
             SELECT Id
             FROM Folder
-            WHERE DeveloperName = 'ServiceBus'
+            WHERE DeveloperName = 'Services'
         ];
         
         String data = Json.serializePretty(name2definition);

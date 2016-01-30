@@ -2,7 +2,7 @@ public class SubscribeService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
 
     public class Definition extends ApexClassModel.Definition {
-        String Tag = 'Service Bus';
+        String Tag = 'Services';
         String Label = 'Subscribe';
         String Description = 'Listens for named events published by other sequences.';
         String StepConfig = SubscribeStepConfig__c.class.getName();

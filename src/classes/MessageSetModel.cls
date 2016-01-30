@@ -103,7 +103,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         if (Test.isRunningTest()) return;
 
         //#952 restart REAL broker asynchronously
-        Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus.RunBrokerBatch'});
+        Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'Services.RunBrokerBatch'});
     }
     
     static public MessageSetModel fromJobId(Id jobId) {
@@ -425,15 +425,15 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     /**
      * Swallow toString() in trace
      * The intent is to NOT confuse or misdirect the end user and to .. (cough) .. reveal our secret sauce
-     * https://github.com/bigassforce/servicebus/issues/581
-     * https://github.com/bigassforce/servicebus/commit/2dd94e19c156170b86dc30b50e5e375876f5e758
+     * https://github.com/bigassforce/services/issues/581
+     * https://github.com/bigassforce/services/commit/2dd94e19c156170b86dc30b50e5e375876f5e758
      */
     @TestVisible void swallowToString() {
         for (Message__c message : this.Messages) {
             if (message.Cause__c != null) {
                 message.Cause__c = message.Cause__c.replace('\n(esb)', '');
                 message.Cause__c = message.Cause__c.replace('\n(abstract)', '');
-                message.Cause__c = message.Cause__c.replace('\n(servicebus)', '');
+                message.Cause__c = message.Cause__c.replace('\n(services)', '');
                 message.Cause__c = message.Cause__c.replace('\nExternal entry point', '');
                 message.Cause__c = message.Cause__c.replace('\nAnonymousBlock: line 1, column 1', '');
             }
@@ -479,7 +479,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         if (Test.isRunningTest()) return;
 
         //#952 restart REAL broker
-        Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'ServiceBus.RunBrokerBatch'});
+        Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'Services.RunBrokerBatch'});
     }
     
     /**
