@@ -340,15 +340,23 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         List<Message__c> messages = new List<Message__c>();
         messages.addAll(this.Messages);
         messages.addAll(outputMessages);
-        MessageSetModel.Inhibit = false;
-        //ApexDomain.crudFls(SObjectType.Message__c.Createable); //TODO #1237
-        Database.upsert(messages);
-        MessageSetModel.Inhibit = true;
+        
+        //#1237 unenforced CRUD
+        if (SObjectType.Message__c.Createable != null) {
+            MessageSetModel.Inhibit = false;
+            Database.upsert(messages);
+            MessageSetModel.Inhibit = true;
+        }
         
         //#1114 poor mans message cleanup strategy
         List<Id> completedMessageIds = new List<Id>();
         for (Message__c inputMessage : this.Messages) if (inputMessage.Status__c == 'Completed') completedMessageIds.add(inputMessage.Id);
-        Database.delete(completedMessageIds, false); //#1136 partial delete allowed
+        
+        //#1237 unenforced CRUD
+        if (SObjectType.Message__c.Createable != null) {
+            //partial delete #1136 TODO
+            Database.delete(completedMessageIds);
+        }
     }
     
     /**
