@@ -141,29 +141,29 @@ public with sharing class ConfigureController {
      */
     static {
         if (ISDEV) {
-            //for services unmanaged development
-            CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZH2ObWGVCMzchtRYMSGmA_VyIAXNcBrUQ569cLTCDaEeIagOYTjpk0kGL05M';
-            SECRET = '1234901574505073561';
+            //TODO for services unmanaged development
+            CLIENT = '3MVG98_Psg5cppybikftoUFR9gr3RBcqzMkD2PNnc7L2LKUp0aDeKIh0oYarQxJ4mSC1EbcnENiJnxi6DLPbg';
+            SECRET = '649692728193931055';
             REDIRECT = 'https://login.salesforce.com/apex/Configure';
             APPNAME = 'Services (Dev)';
             LOGIN = 'https://login.salesforce.com';
         }
         
         if (ISTEST) {
-            //for services sandbox org installs
-            CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZM6N.zPbMF26H_MROM5B06LVVBqaYbQy5HGJqu.nl.0uIJOFznnB8_nyyEC_';
-            SECRET = '8880236383124022841';
+            //TODO for services sandbox org installs
+            CLIENT = '3MVG98_Psg5cppybikftoUFR9giPVj21lrc77yTvA.LydX4.s7DAuJl0pOXyJJVeYq3i8owdY2grtnJZbpLfz';
+            SECRET = '1557834583025401060';
             REDIRECT = 'https://test.salesforce.com/apex/Services__Configure';
-            APPNAME = 'Services (Sandbox)';
+            APPNAME = 'Services (Test)';
             LOGIN = 'https://test.salesforce.com';
         }
         
         if (ISPROD) {
-            //for services production org installs
-            CLIENT = '3MVG9Rd3qC6oMalU1NEPdQ7ylZIwedhrpiB2qIyLft2CxyJx.DzHvTLvZhrXOF1PjeMtO2HcWPYxX1gnhWOn4';
-            SECRET = '4773069420004741227';
+            //TODO for services production org installs
+            CLIENT = '3MVG98_Psg5cppybikftoUFR9gi1uzsC72iJ.JnJsJreUxyNPzokwctRG.iJOv3juOGkCvddJ9Ph_Uw_VRK3A';
+            SECRET = '8674288713951508210';
             REDIRECT = 'https://login.salesforce.com/apex/Services__Configure';
-            APPNAME = 'Services (Production)';
+            APPNAME = 'Services (Live)';
             LOGIN = 'https://login.salesforce.com';
         }
     }
