@@ -32,7 +32,7 @@
         }
     },
     "xdsVersion": "3.2.0",
-    "xdsBuild": 339,
+    "xdsBuild": 279,
     "schemaVersion": 1,
     "upgradeVersion": 310000000001,
     "framework": "ext51",

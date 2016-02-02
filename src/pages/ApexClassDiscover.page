@@ -42,7 +42,7 @@
         $RemoteAction.ApexClassDiscoverExtension.DiscoverDefinitions = '{!$RemoteAction.ApexClassDiscoverExtension.DiscoverDefinitions}';
         $RemoteAction.ApexClassDiscoverExtension.SaveCache = '{!$RemoteAction.ApexClassDiscoverExtension.SaveCache}';
         
-        window.Services = {};
+        window.ApexClasses = {};
         window.Namespaces = JSON.parse('{!JSENCODE(Namespaces)}'); //stored xss
         window.Steps = Namespaces.map(function(item, index, array) {return {Id: index, Name: item};});
         
@@ -125,7 +125,7 @@
                         }
                         
                         //success, accumulate
-                        for (var index in services) Services[index] = services[index];
+                        for (var index in services) ApexClasses[index] = services[index];
                         AsyncApexJob.JobItemsProcessed++;
                         namespaces.pop();
                         Steps.pop();
@@ -136,7 +136,7 @@
                             //write all services into cache
                             Visualforce.remoting.Manager.invokeAction(
                                 $RemoteAction.ApexClassDiscoverExtension.SaveCache,
-                                JSON.stringify(Services),
+                                JSON.stringify(ApexClasses),
                                 function (documentId, event) {
                                     if (!event.status) {
                                         //failure

@@ -70,7 +70,7 @@ public with sharing class SequenceEditExtension {
         return Json.serialize(this.model.stepDtos());
     }
     
-    public String getServices() {
+    public String getApexClasses() {
         return Json.serialize(ApexClassSetModel.loadCache().values());
     }
     

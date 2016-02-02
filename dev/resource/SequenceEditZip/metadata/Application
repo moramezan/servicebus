@@ -41,7 +41,7 @@
                     "    Ext.dom.Element.prototype.validIdRe = /^[a-z_][:a-z0-9\\-_]*$/i;",
                     "",
                     "    //initialize stores",
-                    "    Ext.getStore('Services').loadRawData(Services);",
+                    "    Ext.getStore('Services').loadRawData(ApexClasses);",
                     "    Ext.getStore('Steps').loadRawData(Steps);",
                     "",
                     "    //display the client",
