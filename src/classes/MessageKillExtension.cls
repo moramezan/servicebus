@@ -20,7 +20,7 @@ public with sharing class MessageKillExtension {
         }
         
         //success, takes them back to list view (cancel does not achieve that)
-        return new ApexPages.Action('{!List}').invoke();
+        return Page.MessageList;
     }
     
     public class DoDml {

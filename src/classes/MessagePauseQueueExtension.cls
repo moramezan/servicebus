@@ -17,7 +17,7 @@ public with sharing class MessagePauseQueueExtension {
         }
         
         //redirect to list view - only works with "Display Checkboxes (for Multi-Record Selection)" on button
-        return new ApexPages.Action('{!List}').invoke();
+        return Page.MessageList;
     }
     
     public class DoDml {
