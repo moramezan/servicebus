@@ -44,10 +44,6 @@ public with sharing class SequenceEditExtension {
         Type.forName(DoDml.class.getName()).newInstance();
         PageReference redirect;
         
-        //configure if needed
-        redirect = ConfigureController.ConfigureIfNeeded(ApexPages.currentPage());
-        if (redirect != null) return redirect;
-        
         //discover if needed
         redirect = ApexClassDiscoverExtension.DiscoverIfNeeded(ApexPages.currentPage());
         if (redirect != null) return redirect;

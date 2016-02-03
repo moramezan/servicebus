@@ -24,10 +24,6 @@ public with sharing class ApexClassListExtension {
     public PageReference doRedirect() {
         PageReference redirect;
         
-        //configure if needed
-        redirect = ConfigureController.ConfigureIfNeeded(ApexPages.currentPage());
-        if (redirect != null) return redirect;
-        
         //discover if needed
         redirect = ApexClassDiscoverExtension.DiscoverIfNeeded(ApexPages.currentPage());
         if (redirect != null) return redirect;
