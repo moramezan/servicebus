@@ -1,4 +1,4 @@
-<apex:page setup="true" tabStyle="Message__c" standardController="Message__c" recordSetVar="msgs" extensions="MessageListExtension">
+<apex:page title="Messages" setup="true" tabStyle="Message__c" standardController="Message__c" recordSetVar="msgs" extensions="MessageListExtension" action="{!doInit}">
     
     <script>
         (function() {

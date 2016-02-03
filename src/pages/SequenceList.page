@@ -1,4 +1,4 @@
-<apex:page setup="true" tabStyle="Sequence__c" standardController="Sequence__c" recordSetVar="msgs" extensions="SequenceListExtension">
+<apex:page title="Sequences" setup="true" tabStyle="Sequence__c" standardController="Sequence__c" recordSetVar="msgs" extensions="SequenceListExtension">
     
     <script>
         (function() {

@@ -1,4 +1,4 @@
-<apex:page setup="true" standardController="ApexClass" extensions="ApexClassDiscoverExtension" readOnly="true">
+<apex:page title="Discover" setup="true" standardController="ApexClass" extensions="ApexClassDiscoverExtension" readOnly="true">
     
     <script>
         (function() {
