@@ -14,10 +14,9 @@ public without sharing class Job implements System.Queueable, Database.AllowsCal
         void execute(QueueableContext context);
     }
     
-    public Queueable queue = (Queueable)Type.forName('Enqueue.QueueImpl').newInstance();
-    
     public void execute(QueueableContext context) {
-        this.queue.execute(context);
+        Queueable queue = (Queueable)Type.forName('Enqueue.QueueImpl').newInstance();
+        queue.execute(context);
     }
     
 }
