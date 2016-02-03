@@ -40,12 +40,8 @@
         <members>MessageListExtensionTest</members>
         <members>MessageModel</members>
         <members>MessageModelTest</members>
-        <members>MessagePauseQueueExtension</members>
-        <members>MessagePauseQueueExtensionTest</members>
         <members>MessageRebufferExtension</members>
         <members>MessageRebufferExtensionTest</members>
-        <members>MessageResumeQueueExtension</members>
-        <members>MessageResumeQueueExtensionTest</members>
         <members>MessageSetModel</members>
         <members>MessageSetModelTest</members>
         <members>MessageViewExtension</members>
@@ -105,9 +101,7 @@
         <members>MessageHelp</members>
         <members>MessageKill</members>
         <members>MessageList</members>
-        <members>MessagePauseQueue</members>
         <members>MessageRebuffer</members>
-        <members>MessageResumeQueue</members>
         <members>MessageSplash</members>
         <members>MessageView</members>
         <members>Monitor</members>
@@ -262,9 +256,7 @@
     </types>
     <types>
         <members>Message__c.Kill</members>
-        <members>Message__c.PauseQueue</members>
         <members>Message__c.Rebuffer</members>
-        <members>Message__c.ResumeQueue</members>
         <members>Sequence__c.Checkout</members>
         <members>Sequence__c.Commit</members>
         <members>Sequence__c.Discard</members>

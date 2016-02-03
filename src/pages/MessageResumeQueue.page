@@ -1,3 +1,0 @@
-<apex:page setup="true" standardController="Message__c" recordSetVar="msgs" extensions="MessageResumeQueueExtension" action="{!doResume}">
-    <apex:pageMessages showDetail="false" />
-</apex:page>

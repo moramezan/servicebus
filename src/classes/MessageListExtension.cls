@@ -11,6 +11,14 @@ public with sharing class MessageListExtension {
         this.MessageSetController.setPageSize(100);
     }
     
+    public void doPause() {
+        MessageSetModel.pauseQueue();
+    }
+    
+    public void doResume() {
+        MessageSetModel.resumeQueue();
+    }
+    
     static private Database.QueryLocator buildQueryLocator() {
         String query = ''
             + ' SELECT Id, Name, CreatedDate, Status__c, Route__c, ExecuteDuration__c, Exception__c'

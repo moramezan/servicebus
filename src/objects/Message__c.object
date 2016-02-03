@@ -317,8 +317,6 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <excludedStandardButtons>New</excludedStandardButtons>
         <listViewButtons>Rebuffer</listViewButtons>
-        <listViewButtons>PauseQueue</listViewButtons>
-        <listViewButtons>ResumeQueue</listViewButtons>
         <listViewButtons>Kill</listViewButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
@@ -337,21 +335,6 @@ Set the status of message(s) with Exception to a Complete status</description>
         <requireRowSelection>true</requireRowSelection>
     </webLinks>
     <webLinks>
-        <fullName>PauseQueue</fullName>
-        <availability>online</availability>
-        <description>Refer #808 :
-Broker.enqueue() persists new messages with Paused status. 
-The Broker continues to act on Messages with a Buffered or Started status but ignores Paused status messages</description>
-        <displayType>massActionButton</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>Pause Queue</masterLabel>
-        <openType>sidebar</openType>
-        <page>MessagePauseQueue</page>
-        <protected>false</protected>
-        <requireRowSelection>true</requireRowSelection>
-    </webLinks>
-    <webLinks>
         <fullName>Rebuffer</fullName>
         <availability>online</availability>
         <description>Refer #808 :
@@ -362,21 +345,6 @@ Sets the status of message(s) to Buffered and start the Broker</description>
         <masterLabel>Rebuffer Messages</masterLabel>
         <openType>sidebar</openType>
         <page>MessageRebuffer</page>
-        <protected>false</protected>
-        <requireRowSelection>true</requireRowSelection>
-    </webLinks>
-    <webLinks>
-        <fullName>ResumeQueue</fullName>
-        <availability>online</availability>
-        <description>Refer #808 :
-All messages with Paused status are set to Buffered status.
-The Broker will then have zero messages with a Paused status to ignore</description>
-        <displayType>massActionButton</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>Resume Queue</masterLabel>
-        <openType>sidebar</openType>
-        <page>MessageResumeQueue</page>
         <protected>false</protected>
         <requireRowSelection>true</requireRowSelection>
     </webLinks>

@@ -485,6 +485,9 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
 
         //tests need to run own broker
         if (Test.isRunningTest()) return;
+        
+        //nothing to do
+        if ([SELECT Id FROM Message__c WHERE Status__c = 'Buffered' LIMIT 1].isEmpty()) return;
 
         //#952 restart REAL broker
         Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'Services.RunBrokerBatch'});

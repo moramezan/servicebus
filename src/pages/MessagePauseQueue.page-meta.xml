@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>35.0</apiVersion>
-    <availableInTouch>false</availableInTouch>
-    <confirmationTokenRequired>false</confirmationTokenRequired>
-    <description>Page with action to set paused configuration Application__c.BrokerIsPaused__c to &apos;true&apos; thereby placing  broker in paused mode</description>
-    <label>MessagePauseQueue</label>
-</ApexPage>
