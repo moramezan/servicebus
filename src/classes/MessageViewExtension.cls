@@ -4,6 +4,7 @@ public with sharing class MessageViewExtension {
     ApexPages.StandardController controller;
     public Message__c Message {get; set;}
     public List<Message__c> Children {get; set;}
+    public ApexClassModel.Definition Definition {get; set;}
     
     public MessageViewExtension(ApexPages.StandardController controller) {
         this.controller = controller;
@@ -36,6 +37,20 @@ public with sharing class MessageViewExtension {
         ];
         
         try {
+            //resolve class name
+            String apexTypeName = this.Message.Route__c;
+            Step__c step = Step__c.getValues(this.Message.Route__c);
+            if (step != null) apexTypeName = step.ApexTypeName__c;
+            
+            //unit tests skip cache
+            if (Test.isRunningTest()) this.Definition = new ApexClassModel.Definition(Type.forName(apexTypeName));
+            else if (!Test.isRunningTest()) this.Definition = ApexClassSetModel.loadCache().get(apexTypeName);
+            
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+        }
+        
+        try {
             dmlModel = new MessageModel(this.Message);
             Type.forName(DoDml.class.getName()).newInstance();
         } catch (Exception e) {
@@ -49,7 +64,7 @@ public with sharing class MessageViewExtension {
         MessageModel model = new MessageModel(this.Message);
         
         try {
-            PageReference detailView = model.showApexClass();
+            PageReference detailView = model.showService();
             return detailView;
             
         } catch (MessageModel.ModelException e) {

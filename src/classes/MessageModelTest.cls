@@ -8,7 +8,7 @@
         System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
     }
     
-    static testmethod void testShowApexClassFindsIt() {
+    static testmethod void testShowServiceFindsIt() {
         //arrange sequence and steps
         insert new Sequence__c(Name = 'Test');
         Step__c step = SequenceModel.fromName('Test').appendStep(TerminateService.class.getName());
@@ -23,7 +23,7 @@
         
         //act
         MessageModel model = new MessageModel(message);
-        PageReference view = model.showApexClass();
+        PageReference view = model.showService();
         
         //assert
         String expectedUrl = '/' + [SELECT Id FROM ApexClass WHERE Name = 'WiretapService' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c].Id;

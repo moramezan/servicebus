@@ -25,7 +25,7 @@
             <apex:pageBlockButtons location="top">
                 <apex:dynamicComponent componentValue="{!Restart}" rendered="{!Message.Exception__c != null || Message.Status__c == 'Paused'}" />
                 <apex:commandButton value="Show Record Data" action="{!showData}" />
-                <apex:commandButton value="Show Apex Service" action="{!showService}" />
+                <apex:commandButton rendered="{!Definition != null}" value="Show Apex Service" action="{!showService}" />
             </apex:pageBlockButtons>
             
             <apex:pageBlockSection columns="1" collapsible="false" showHeader="false">
@@ -42,7 +42,12 @@
                 
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel value="{!$ObjectType.Message__c.Fields.Route__c.Label}" />
-                    <apex:outputField value="{!Message.Route__c}" />
+                    <apex:outputPanel >
+                        {!Message.Route__c}
+                        <apex:outputText rendered="{!Definition != null}">
+                            (<a href="{!URLFOR($Page.ApexClassView, null, ['id'=Definition.Id])}">{!Definition.Label}</a>)
+                        </apex:outputText>
+                    </apex:outputPanel>
                 </apex:pageBlockSectionItem>
                 
                 <apex:pageBlockSectionItem >

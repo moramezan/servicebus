@@ -266,12 +266,13 @@ public class MessageModel extends ApexDomain.StandardModel {
     /**
      * Takes us to the standard salesforce page for the apex class
      */
-    public PageReference showApexClass() {
+    public PageReference showService() {
         try {
             String route = (String)this.getParam('Route');
             ApexClassModel model = ApexClassModel.fromRoute(route);
-            ApexClass apexClass = (ApexClass)model.getRecord();
-            return new ApexPages.StandardController(apexClass).view();
+            PageReference apexClassView = Page.ApexClassView;
+            apexClassView.getParameters().put('id', model.getId());
+            return apexClassView;
             
         } catch (Broker.ServiceException e) {
             throw new ModelException('Could not show apex class: ' + e.getMessage());
