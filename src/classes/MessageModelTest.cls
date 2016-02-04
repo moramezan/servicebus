@@ -12,7 +12,7 @@
         //arrange sequence and steps
         insert new Sequence__c(Name = 'Test');
         Step__c step = SequenceModel.fromName('Test').appendStep(TerminateService.class.getName());
-        step.ApexClassId__c = [SELECT Id FROM ApexClass WHERE Name = 'WiretapService' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c].Id;
+        step.ApexClassId__c = [SELECT Id FROM ApexClass WHERE Name = 'TerminateService' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c].Id;
         update step;
         
         //arrange message
@@ -26,9 +26,9 @@
         PageReference view = model.showService();
         
         //assert
-        String expectedUrl = '/' + [SELECT Id FROM ApexClass WHERE Name = 'WiretapService' AND NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c].Id;
+        String expectedUrl = Page.ApexClassView.getUrl();
         String actualUrl = view.getUrl();
-        System.assert(expectedUrl.startsWith(actualUrl), 'Wrong URL.');
+        System.assert(actualUrl.containsIgnoreCase(expectedUrl), 'Wrong URL: ' + actualUrl);
     }
     
     public class MemoryError extends ApexClassModel.Service {

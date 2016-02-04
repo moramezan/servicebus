@@ -268,10 +268,18 @@ public class MessageModel extends ApexDomain.StandardModel {
      */
     public PageReference showService() {
         try {
-            String route = (String)this.getParam('Route');
-            ApexClassModel model = ApexClassModel.fromRoute(route);
+            //resolve class name
+            String apexTypeName = (String)this.getParam('Route');
+            Step__c step = Step__c.getValues((String)this.getParam('Route'));
+            if (step != null) apexTypeName = step.ApexTypeName__c;
+            
+            //unit tests skip cache
+            ApexClassModel.Definition definition;
+            if (Test.isRunningTest()) definition = new ApexClassModel.Definition(Type.forName(apexTypeName));
+            else if (!Test.isRunningTest()) definition = ApexClassSetModel.loadCache().get(apexTypeName);
+            
             PageReference apexClassView = Page.ApexClassView;
-            apexClassView.getParameters().put('id', model.getId());
+            apexClassView.getParameters().put('id', definition.Id);
             return apexClassView;
             
         } catch (Broker.ServiceException e) {
@@ -284,7 +292,17 @@ public class MessageModel extends ApexDomain.StandardModel {
      * (callout, start, execute, execute, execute)
      * but fatal exceptions have to be grabbed.
      */
-    public void appendJobStatus() {
+    public void healExtendedStatus() {
+        
+        if (this.Message.Slot__c == null) {
+            //already healed
+            return;
+        }
+        
+        if (this.Message.Slot__c != '0000') {
+            //one shots only
+            return;
+        }
         
         if (this.Message.Status__c != 'Started') {
             //not in bad state
@@ -307,7 +325,18 @@ public class MessageModel extends ApexDomain.StandardModel {
             return;
         }
         
+        //resolve class name
+        String apexTypeName = this.Message.Route__c;
+        Step__c step = Step__c.getValues(this.Message.Route__c);
+        if (step != null) apexTypeName = step.ApexTypeName__c;
+        
+        //get causing class name
+        String cause = 'Class.' + apexTypeName;
+        
+        this.Message.Slot__c = null; //avoid multiple heals
+        this.Message.ExecuteDuration__c = 0; //job lacks completed date
         this.Message.Exception__c = asyncApexJobs[0].ExtendedStatus;
+        this.Message.Cause__c = cause;
         
         update this.Message;
     }

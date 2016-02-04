@@ -307,16 +307,22 @@ global class Enqueue implements Process.Plugin {
         //convert events to messages
         for (Integer i = 0; i < inputEvents.size(); i++) {
             
-            //one-shot fields
-            String slot = '0000';
-            Decimal numberOfAttempts = 1;
-            String status = 'Started';
-            
             //sequence fields
-            if (toService == null) {
+            String slot = null;
+            Decimal numberOfAttempts = 0;
+            String status = 'Buffered';
+            
+            //one-shot fields
+            if (toService != null) {
+                slot = '0000';
+                numberOfAttempts = 1;
+                status = 'Started';
+            }
+            
+            //paused fields
+            if (Application__c.getOrgDefaults().BrokerIsPaused__c) {
                 slot = null;
-                numberOfAttempts = 0;
-                status = Application__c.getOrgDefaults().BrokerIsPaused__c ? 'Paused' : 'Buffered';
+                status = 'Paused';
             }
             
             //populate job id inside event
@@ -326,9 +332,9 @@ global class Enqueue implements Process.Plugin {
                 Slot__c = slot,
                 JobId__c = jobId,
                 Status__c = status,
-                OwnerId = UserInfo.getUserId(),
                 NumberOfAttempts__c = numberOfAttempts,
-                Event__c = Json.serializePretty(inputEvents[i])
+                Event__c = Json.serializePretty(inputEvents[i]),
+                OwnerId = Application__c.getOrgDefaults().RunAsUserId__c
             ));
             
             //one strategy to reduce heap size during runtime is to
@@ -345,6 +351,14 @@ global class Enqueue implements Process.Plugin {
     public class QueueImpl implements Job.Queueable {
         
         public void execute(QueueableContext context) {
+            
+            if (Application__c.getOrgDefaults().BrokerIsPaused__c) {
+                //TODO paused, do nothing
+                //TODO (savepoint and rollback costs 2 DML)
+                //TODO (system abort job costs 1 DML)
+                //TODO consider using fake id generator
+                return;
+            }
             
             Id jobId = context.getJobId();
             if (Test.isRunningTest()) jobId = '707000123456789';

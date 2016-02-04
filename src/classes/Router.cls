@@ -48,6 +48,7 @@ public class Router extends ApexClassModel.Service {
             SELECT Id
             FROM Message__c
             WHERE Status__c = 'Started'
+            AND Slot__c = null
             AND Exception__c != null
             AND IsAutoRetryable__c = true
             AND NumberOfAttempts__c = 1

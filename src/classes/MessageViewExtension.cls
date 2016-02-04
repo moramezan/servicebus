@@ -23,7 +23,7 @@ public with sharing class MessageViewExtension {
         String mid = ApexPages.currentPage().getParameters().get('mid');
         
         this.Message = [
-            SELECT Id, Name, CreatedDate, Status__c, Route__c, ExecuteDuration__c, Exception__c, Cause__c, Event__c, JobId__c, ParentId__c
+            SELECT Id, Name, CreatedDate, Status__c, Route__c, ExecuteDuration__c, Exception__c, Cause__c, Event__c, JobId__c, ParentId__c, Slot__c
             FROM Message__c
             WHERE Id = :mid
             ALL ROWS
@@ -115,6 +115,7 @@ public with sharing class MessageViewExtension {
             + '    msg.Id = "' + mid + '";'
             + '    msg[bar + "ExecuteDuration__c"] = new Date().getTime() - mark;'
             + '    msg[bar + "Exception__c"] = response.exceptionMessage.substring(0, 255);'
+            + '    msg[bar + "Status__c"] = "Started";'
             + '    msg[bar + "Cause__c"] = response.exceptionStackTrace.substring(0, 32768);'
             + '    sforce.connection.update([msg]);'
             + '    window.location.reload();'
@@ -133,7 +134,7 @@ public with sharing class MessageViewExtension {
             upsert setting;
             
             //avoids dml in action method
-            dmlModel.appendJobStatus();
+            dmlModel.healExtendedStatus();
         }
     }
     

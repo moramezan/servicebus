@@ -66,7 +66,7 @@
         
         //assert
         System.assertEquals(null, redirect, 'Wrong redirect.');
-        System.assert(!ApexPages.hasMessages(), ApexPages.getMessages());
+        System.assert(ApexPages.hasMessages(), ApexPages.getMessages());
     }
     
     @TestVisible class TokenResponse implements HttpCalloutMock {

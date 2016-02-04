@@ -11,12 +11,26 @@ public with sharing class MessageListExtension {
         this.MessageSetController.setPageSize(100);
     }
     
-    public void doPause() {
-        MessageSetModel.pauseQueue();
+    public void doInit() {
+        try {
+            Type.forName(DoDml.class.getName()).newInstance();
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+        }
     }
     
-    public void doResume() {
+    public PageReference doPause() {
+        MessageSetModel.pauseQueue();
+        PageReference messageList = Page.MessageList;
+        messageList.setRedirect(true);
+        return messageList;
+    }
+    
+    public PageReference doResume() {
         MessageSetModel.resumeQueue();
+        PageReference messageList = Page.MessageList;
+        messageList.setRedirect(true);
+        return messageList;
     }
     
     static private Database.QueryLocator buildQueryLocator() {
@@ -31,5 +45,12 @@ public with sharing class MessageListExtension {
         ;
         
         return Database.getQueryLocator(query);
+    }
+    
+    public class DoDml {
+        public DoDml() {
+            //avoids dml in action method
+            MessageSetModel.locateFailedOneShots().healExtendedStatus();
+        }
     }
 }

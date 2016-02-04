@@ -272,7 +272,8 @@ abstract public without sharing class Broker {
                 SELECT Id, Route__c
                 FROM Message__c
                 WHERE Status__c = 'Started'
-                AND Slot__c != null
+                AND Exception__c = null
+                AND Slot__c != null AND Slot__c != '0000' //per #1231
                 AND Id IN :inputMessageIds
             ];
             
@@ -285,7 +286,7 @@ abstract public without sharing class Broker {
             //resolve class name
             String apexTypeName = fatalities[0].Route__c;
             Step__c step = Step__c.getValues(fatalities[0].Route__c);
-            if (step == null) apexTypeName = step.ApexTypeName__c;
+            if (step != null) apexTypeName = step.ApexTypeName__c;
             
             //get causing class name
             String cause = 'Class.' + apexTypeName;

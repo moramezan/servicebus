@@ -16,6 +16,68 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     }
     
     /**
+     * //TODO needs unit testing, bit tricky though!
+     * per #1231 we capture fatal errors right here
+     */
+    static public MessageSetModel locateFailedOneShots() {
+        return new MessageSetModel([
+            SELECT Id, JobId__c, Route__c, Slot__c
+            FROM Message__c
+            WHERE Status__c = 'Started'
+            AND Exception__c = null
+            AND JobId__c != null
+            AND Slot__c = '0000'
+            ORDER BY CreatedDate DESC
+            LIMIT 1000
+        ]);
+    }
+    
+    public void healExtendedStatus() {
+        //prepare all job ids
+        Set<Id> jobIds = new Set<Id>();
+        for (Message__c message : this.Messages) jobIds.add(message.JobId__c);
+        
+        //query explicitly failed jobs
+        Map<Id,AsyncApexJob> id2job = new Map<Id,AsyncApexJob>([
+            SELECT Id, ExtendedStatus
+            FROM AsyncApexJob
+            WHERE Id IN :jobIds
+            AND Status = 'Failed'
+        ]);
+        
+        //prepare updates
+        List<Message__c> fatalMessages = new List<Message__c>();
+        for (Message__c message : this.Messages) {
+            
+            if (!id2job.containsKey(message.JobId__c)) {
+                //nothing to do
+                continue;
+            }
+            
+            //resolve class name
+            String apexTypeName = message.Route__c;
+            Step__c step = Step__c.getValues(message.Route__c);
+            if (step != null) apexTypeName = step.ApexTypeName__c;
+            
+            //get causing class name
+            String cause = 'Class.' + apexTypeName;
+            
+            //heal the extended status
+            AsyncApexJob asyncApexJob = id2job.get(message.JobId__c);
+            fatalMessages.add(new Message__c(
+                Id = message.Id,
+                Slot__c = null, //avoid multiple heals
+                ExecuteDuration__c = 0, //job lacks completed date
+                Exception__c = asyncApexJob.ExtendedStatus,
+                Cause__c = cause
+            ));
+        }
+        
+        //update failed ones
+        update fatalMessages;
+    }
+    
+    /**
      * Killed messages are really just started exceptions that have been "moved on" to Completed.
      * We allow users to "kill" them so they don't appear as big ugly red bars in the monitor.
      *
@@ -86,12 +148,10 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             rebufferableMessage.Status__c = 'Buffered';
             rebufferableMessage.Exception__c = null; //#827
             rebufferableMessage.Cause__c = null; //#827
+            rebufferableMessage.Slot__c = null; //per #1231
         }
         
         update rebufferableMessages;
-        
-        //#1215 only start if not paused
-        if (Application__c.getOrgDefaults().BrokerIsPaused__c) return;
         
         //already running
         if (Broker.isRunning()) return;
