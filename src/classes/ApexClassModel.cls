@@ -42,12 +42,25 @@ public class ApexClassModel extends ApexDomain.StandardModel {
             }
             
             //all definition classes have toString()
+            String toString;
             Object impl = inflector.newInstance();
-            String toString = String.valueOf(impl);
-            Map<String,Object> definition = (Map<String,Object>)Json.deserializeUntyped(toString);
+            Map<String,Object> definition;
             
-            //failure, probably bad toString method
-            if (definition == null) throw new ModelException(inflector.getName() + ': Service.Definition class must extend Abstract.Service.Definition');
+            try {
+                //TODO remove this
+                toString = Json.serialize(impl);
+            } catch (Exception e) {
+                //failure, unmanaged non extending
+                toString = String.valueOf(impl);
+            }
+            
+            try {
+                //checks format
+                definition = (Map<String,Object>)Json.deserializeUntyped(toString);
+            } catch (Exception e) {
+                //failure, probably bad toString method
+                throw new ModelException(inflector.getName() + ': Service.Definition class must extend Abstract.Service.Definition'); 
+            }
             
             try {
                 //copy properties across

@@ -501,9 +501,10 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             if (message.Cause__c != null) {
                 message.Cause__c = message.Cause__c.replace('\n(esb)', '');
                 message.Cause__c = message.Cause__c.replace('\n(abstract)', '');
-                message.Cause__c = message.Cause__c.replace('\n(services)', '');
+                message.Cause__c = message.Cause__c.replace('\n(Services)', '');
                 message.Cause__c = message.Cause__c.replace('\nExternal entry point', '');
                 message.Cause__c = message.Cause__c.replace('\nAnonymousBlock: line 1, column 1', '');
+                message.Cause__c = message.Cause__c.replaceAll('\nClass\\.\\w*Service\\.toString\\: line \\d+, column \\d+', ''); //TODO test this
             }
         }
     }
