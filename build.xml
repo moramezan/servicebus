@@ -15,6 +15,9 @@
     <!-- 182.50.76.0/22 -->
     <!-- 202.129.242.0/23 -->
     
+    <!-- github ip range -->
+    <!-- 192.30.252.0/22 -->
+    
     <property file="build.properties"/>
     <property environment="env"/>
     
