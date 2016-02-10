@@ -30,7 +30,7 @@ public with sharing class MonitorController {
             new Statistic('PublishService',         1,  0,  4,  0),
             new Statistic('ScheduleService',            2,  0,  0,  0),
             new Statistic('SubscribeService',1,  0,  0,  0),
-            new Statistic('SubsequenceService',     2,  0,  2,  0),
+            new Statistic('TransactionService',     2,  0,  2,  0),
             new Statistic('TerminateService',       2,  0,  9,  0),
             new Statistic('WiretapService',       2,  0,  9,  0)
         };

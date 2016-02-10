@@ -82,10 +82,10 @@
         <members>StepModelTest</members>
         <members>SubscribeService</members>
         <members>SubscribeServiceTest</members>
-        <members>SubsequenceService</members>
-        <members>SubsequenceServiceTest</members>
         <members>TerminateService</members>
         <members>TerminateServiceTest</members>
+        <members>TransactionService</members>
+        <members>TransactionServiceTest</members>
         <members>WiretapService</members>
         <members>WiretapServiceTest</members>
         <name>ApexClass</name>
@@ -193,7 +193,7 @@
         <members>Step__c.Sequence__c</members>
         <members>Step__c.Version__c</members>
         <members>SubscribeStepConfig__c.Topic__c</members>
-        <members>SubsequenceStepConfig__c.Sequence__c</members>
+        <members>TransactionStepConfig__c.Sequence__c</members>
         <members>WiretapServiceConfig__c.UserId__c</members>
         <name>CustomField</name>
     </types>
@@ -207,7 +207,7 @@
         <members>Slot__c</members>
         <members>Step__c</members>
         <members>SubscribeStepConfig__c</members>
-        <members>SubsequenceStepConfig__c</members>
+        <members>TransactionStepConfig__c</members>
         <members>WiretapServiceConfig__c</members>
         <name>CustomObject</name>
     </types>

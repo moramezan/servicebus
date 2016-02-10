@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <customSettingsType>List</customSettingsType>
-    <description>Holds subsequence configs.</description>
+    <description>Holds transaction configs.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>Sequence__c</fullName>
@@ -15,6 +15,6 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <label>Subsequence Step Config</label>
+    <label>Transaction Step Config</label>
     <visibility>Public</visibility>
 </CustomObject>

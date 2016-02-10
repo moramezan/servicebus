@@ -59,7 +59,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 definition = (Map<String,Object>)Json.deserializeUntyped(toString);
             } catch (Exception e) {
                 //failure, probably bad toString method
-                throw new ModelException(inflector.getName() + ': Service.Definition class must extend Abstract.Service.Definition'); 
+                throw new ModelException(inflector.getName() + ': Service.Definition class must extend Abstract.Service.Definition');
             }
             
             try {
@@ -409,9 +409,9 @@ abstract public class Service {
             if (Limits.getEmailInvocations() > emailInvocations) throw new Broker.ServiceException('You have uncommitted work pending. Please commit or rollback before calling out');
             
         } catch (Exception e) {
-            if (SubsequenceService.IsRunning) {
-                //#995 help subsequence bail out
-                String message = this.Reflector.getName() + ': Callout from subsequence not supported. Consider using jumps instead.';
+            if (TransactionService.IsRunning) {
+                //#995 help transaction bail out
+                String message = this.Reflector.getName() + ': Callout from transaction not supported. Consider using jumps instead.';
                 if (!Test.isRunningTest()) System.assert(false, message);
                 else throw new Broker.ServiceException(message);
             }

@@ -1,19 +1,19 @@
-public class SubsequenceService extends ApexClassModel.Service {
+public class TransactionService extends ApexClassModel.Service {
     void callout(Map<String,Object> inputEvent) {}
     
     static public Boolean IsRunning = false;
     
     public class Definition extends ApexClassModel.Definition {
         String Tag = 'Services';
-        String Label = 'Subsequence';
+        String Label = 'Transaction';
         String Description = 'Synchronously executes another sequence before emitting the event.';
-        String StepConfig = SubsequenceStepConfig__c.class.getName();
+        String StepConfig = TransactionStepConfig__c.class.getName();
         String Icon = 'arrow_undo';
-        Integer Chunks = 1; //we dont know what their subsequence contains
+        Integer Chunks = 1; //we dont know what their transaction contains
         String Cardinality = 'One';
         
         Map<String,String> Outputs = new Map<String,String>{
-            'TerminateEvents' => 'LIST<MAP<STRING,OBJECT>> of any terminated events handled during the subsequence.'
+            'TerminateEvents' => 'LIST<MAP<STRING,OBJECT>> of any terminated events handled during the transaction.'
         };
     }
     
@@ -47,15 +47,15 @@ public class SubsequenceService extends ApexClassModel.Service {
     
     List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
-        //#995 help subsequence bail out
+        //#995 help transaction bail out
         IsRunning = true;
         
         String stepConfigId = (Id)inputEvent.get('StepConfigId');
         if (stepConfigId == null) throw new ServiceException('Null step config id.');
         
-        SubsequenceStepConfig__c config;
-        List<SubsequenceStepConfig__c> subsequenceStepConfigs = SubsequenceStepConfig__c.getAll().values(); //fetch without using soql
-        for (SubsequenceStepConfig__c subsequenceStepConfig : subsequenceStepConfigs) if (subsequenceStepConfig.Id == stepConfigId) config = subsequenceStepConfig;
+        TransactionStepConfig__c config;
+        List<TransactionStepConfig__c> transactionStepConfigs = TransactionStepConfig__c.getAll().values(); //fetch without using soql
+        for (TransactionStepConfig__c transactionStepConfig : transactionStepConfigs) if (transactionStepConfig.Id == stepConfigId) config = transactionStepConfig;
         
         //#1147 no persist happening here, gotta do our own routing!
         String route = (String)inputEvent.get('Route');
