@@ -305,7 +305,7 @@ abstract public without sharing class Broker {
                 
                 fatality.ExecuteDuration__c = System.now().getTime() - this.FatalCpuTime; //#985 near enough
                 fatality.Exception__c = message.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-                fatality.Cause__c = cause;
+                fatality.Cause__c = cause.replaceAll('[\r]?\n', '\r\n').abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
                 fatality.Slot__c = null;
             }
             

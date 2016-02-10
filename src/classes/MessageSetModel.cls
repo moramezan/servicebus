@@ -68,8 +68,8 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
                 Id = message.Id,
                 Slot__c = null, //avoid multiple heals
                 ExecuteDuration__c = 0, //job lacks completed date
-                Exception__c = asyncApexJob.ExtendedStatus,
-                Cause__c = cause
+                Exception__c = asyncApexJob.ExtendedStatus.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length),
+                Cause__c = cause.replaceAll('[\r]?\n', '\r\n').abbreviate(SObjectType.Message__c.Fields.Cause__c.Length)
             ));
         }
         
@@ -110,7 +110,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             
             if (killableMessage.Status__c == 'Paused') {
                 //#1191 paused messages are killable
-                killableMessage.Exception__c = 'Killed by ' + UserInfo.getName();
+                killableMessage.Exception__c = ('Killed by ' + UserInfo.getName()).abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
             }
             
             //per #825 and #827 we do NOT clear cause/exception

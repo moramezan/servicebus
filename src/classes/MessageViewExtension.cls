@@ -10,6 +10,17 @@ public with sharing class MessageViewExtension {
         this.controller = controller;
     }
     
+    @RemoteAction static public void handleRestart(Id messageId, Long duration, String exceptions, String cause) {
+        //execanon results
+        update new Message__c(
+            Id = messageId,
+            Status__c = 'Started',
+            ExecuteDuration__c = duration,
+            Exception__c = exceptions.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length),
+            Cause__c = cause.replaceAll('[\r]?\n', '\r\n').abbreviate(SObjectType.Message__c.Fields.Cause__c.Length)
+        );
+    }
+    
     public PageReference doInit() {
         
         if (this.controller.getId() != null) {
@@ -104,6 +115,7 @@ public with sharing class MessageViewExtension {
         String mid = ApexPages.CurrentPage().getParameters().get('mid');
         Map<String,Object> parameters = new Map<String,Object>{'ToService' => 'Services.RestartMessageId', 'RecordId' => mid};
         return (''
+            + 'var mid = "' + mid + '";'
             + 'var bar = "' + bar + '";'
             + 'var sid = "' + sid + '";'
             + 'var mark = new Date().getTime();'
@@ -111,15 +123,15 @@ public with sharing class MessageViewExtension {
             + 'sforce.connection.init(sid, "/services/Soap/u/35.0");'
             + 'var response = sforce.apex.executeAnonymous(command);'
             + 'if (response.success == "false") {' //started, persist any fatal error and refresh
-            + '    var msg = new sforce.SObject(bar + "Message__c");'
-            + '    msg.Id = "' + mid + '";'
-            + '    msg[bar + "ExecuteDuration__c"] = new Date().getTime() - mark;'
-            + '    msg[bar + "Exception__c"] = response.exceptionMessage.substring(0, 255);'
-            + '    msg[bar + "Status__c"] = "Started";'
-            + '    msg[bar + "Cause__c"] = response.exceptionStackTrace.substring(0, 32768);'
-            + '    sforce.connection.update([msg]);'
-            + '    window.location.reload();'
-            + '    '
+            + '    Visualforce.remoting.Manager.invokeAction('
+            + '        $RemoteAction.MessageViewExtension.handleRestart,'
+            + '        mid,'
+            + '        new Date().getTime() - mark,'
+            + '        response.exceptionMessage,'
+            + '        response.exceptionStackTrace,'
+            + '        function() {window.location.reload();},'
+            + '        {}'
+            + '    );'
             + '} else {' //completed, redirect back to list view, or just refresh
             + '    window.location.reload();'
             + '}'

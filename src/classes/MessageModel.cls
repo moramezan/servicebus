@@ -79,7 +79,7 @@ public class MessageModel extends ApexDomain.StandardModel {
             //#581 smoking gun should point at the user, NOT at our broker
             RestartException = e;
             this.Message.Exception__c = (e.getTypeName() + ': ' + e.getMessage()).abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-            this.Message.Cause__c = e.getStackTraceString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            this.Message.Cause__c = e.getStackTraceString().replaceAll('[\r]?\n', '\r\n').abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
         }
         
         //execution time profiler
@@ -159,7 +159,7 @@ public class MessageModel extends ApexDomain.StandardModel {
             //#581 smoking gun should point at the user, NOT at our broker
             RestartException = e;
             this.Message.Exception__c = (e.getTypeName() + ': ' + e.getMessage()).abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-            this.Message.Cause__c = e.getStackTraceString().abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            this.Message.Cause__c = e.getStackTraceString().replaceAll('[\r]?\n', '\r\n').abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
         }
         
         //execution time profiler
@@ -335,8 +335,8 @@ public class MessageModel extends ApexDomain.StandardModel {
         
         this.Message.Slot__c = null; //avoid multiple heals
         this.Message.ExecuteDuration__c = 0; //job lacks completed date
-        this.Message.Exception__c = asyncApexJobs[0].ExtendedStatus;
-        this.Message.Cause__c = cause;
+        this.Message.Exception__c = asyncApexJobs[0].ExtendedStatus.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+        this.Message.Cause__c = cause.replaceAll('[\r]?\n', '\r\n').abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
         
         update this.Message;
     }

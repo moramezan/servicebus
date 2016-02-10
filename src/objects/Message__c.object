@@ -69,10 +69,9 @@
         <externalId>false</externalId>
         <inlineHelpText>If the service threw an exception, what was the stack trace that caused it?</inlineHelpText>
         <label>Cause</label>
-        <length>32768</length>
+        <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>LongTextArea</type>
-        <visibleLines>20</visibleLines>
+        <type>TextArea</type>
     </fields>
     <fields>
         <fullName>CorrelationUuid__c</fullName>
