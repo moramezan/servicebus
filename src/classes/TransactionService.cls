@@ -13,7 +13,7 @@ public class TransactionService extends ApexClassModel.Service {
         String Cardinality = 'One';
         
         Map<String,String> Outputs = new Map<String,String>{
-            'TerminateEvents' => 'LIST<MAP<STRING,OBJECT>> of any terminated events handled during the transaction.'
+            'TerminateEvents' => 'EVENT[] list of any terminated events handled during the transaction.'
         };
     }
     
