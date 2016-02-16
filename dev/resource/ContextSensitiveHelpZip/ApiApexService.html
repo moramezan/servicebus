@@ -11,12 +11,12 @@
     A service is a single, logical program with inputs and outputs in the form of events.
     Services are implemented as Apex classes.
     Each service handles one event, and may output zero, one, or many new events.
-    All the traits available to service authors can be availed using a
+    All the behaviors available to service authors can be availed using a
     <a href="?topic=ApiServiceDefinition">Service Definition</a>.
 </p>
 
 <p>
-    This example shows the use of the service definition class, which you will see throughout tutorials and documentation:
+    This example shows a typical service class which you will see throughout tutorials and documentation:
 </p>
 
 <pre>
@@ -26,7 +26,7 @@ global class ExampleService extends Abstract.Service {
         String Description = 'Example Service';
     }
     
-    override public void callouts(Map&lt;String,Object&gt; event) {
+    override public void callout(Map&lt;String,Object&gt; event) {
         //perform service callouts
     }
     
@@ -41,5 +41,5 @@ global class ExampleService extends Abstract.Service {
     <legend>Note</legend>
     All output event parameters must be JSON serializable, to ensure they can be persisted between execution contexts.
     <br /><br />
-    The service bus writes state to the database before and after service execution. This allows you to recovery from errors.
+    The service container writes state to the database before and after service execution. This allows you to recover from errors.
 </fieldset>

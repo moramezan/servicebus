@@ -1,0 +1,69 @@
+<h1>
+    <code>Services.Enqueue</code> Class
+</h1>
+
+<!--
+ ! Gonna try here not to say "Message" unless it refers to "Message__c"
+ !-->
+
+<p>
+    Enqueue is used to inject events into services. Services can be started
+    in any context including triggers, batch apex, future methods etc.
+</p>
+
+<p>
+    You can enqueue events in one of the following ways:
+</p>
+
+<table>
+        <tr>
+            <th>Usage</th>
+            <th>Method Signature</th>
+        </tr>
+        <!--<tr>-->
+            <!--<td>Simple event</td>-->
+            <!--<td><code>Job(String sequence, Id recordId)</code></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+            <!--<td>Simple event</td>-->
+            <!--<td><code>Job(Type service, Id recordId)</code></td>-->
+        <!--</tr>-->
+        <tr>
+            <td>Single event</td>
+            <td><code>Services.Enqueue.invoke(Map&lt;String,Object&gt; event)</code></td>
+        </tr>
+        <tr>
+            <td>Multiple events</td>
+            <td><code>Services.Enqueue.invoke(List&lt;Map&lt;String,Object&gt;&gt; events)</code></td>
+        </tr>
+        <!--
+        <tr>
+            <td>Lightning Process Builder</td>
+            <td><code>enqueue(String sequenceName, Id recordId)</code></td>
+        </tr>
+        <tr>
+            <td>Salesforce Cloud Flows</td>
+            <td><code>invoke(Process.PluginRequest request)</code></td>
+        </tr>
+        -->
+</table>
+
+<!--
+ ! Stolen from here:
+ ! https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_class_System_Queueable.htm
+ !-->
+
+<p>
+    Your event will be handled asynchronously. For example:
+</p>
+
+<pre>
+
+Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{
+    'ToService' => 'PayrollService',
+    'RecordId' => UserInfo.getOrganizationId()
+};
+
+//submits an event to service
+Id jobId = Services.Enqueue.invoke(event);
+</pre>

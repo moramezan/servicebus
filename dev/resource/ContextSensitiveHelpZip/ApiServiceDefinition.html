@@ -15,10 +15,8 @@
 <p>
     Inside each Apex Service is a Service Definition class.
     This inner class controls how the service is displayed and how it behaves.
-    The Service Bus discovers service definitions automatically.
-</p>
-
-<p>
+    <br />
+    The Services Package discovers service definitions automatically.
     This example shows the bare minimum service definition:
 </p>
 
@@ -26,7 +24,7 @@
 global class ExampleService extends Abstract.Service {
     
     global class Definition extends Abstract.Service.Definition {
-        String Description = 'Outputs one event identical to the input event.';
+        String Description = 'Outputs the input event.';
     }
     
 }
@@ -42,47 +40,50 @@ global class ExampleService extends Abstract.Service {
  ! - link to Callouts
  !-->
 
-<p>
-    The service definition affects how the service is executed and
-    is used to generate user interfaces.
-</p>
-
 <dl>
     <dt>Description</dt>
     <dd><strong>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></strong></dd>
-    <dd><strong>Required description that explains what this service does in simple terms.</strong></dd>
+    <dd><strong>Required description that explains what the service does.</strong></dd>
     
     <dt>Tag</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Optional grouping tag that can be used to categorize related services together.</dd>
-    
-    <dt>Label</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Optional friendly label to be displayed instead of the apex class name.</dd>
+    <dd>Optional grouping tag that can be used to display related services together.</dd>
     
     <dt>Icon</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
     <dd>Optional icon name from the <a href="resources/Api/index_abc.png" target="_blank">Silk library</a> that will display alongside steps of this type.</dd>
     
+    <dt>Label</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Optional label to be displayed instead of the apex class name.</dd>
+    
     <dt>Cardinality</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Optional indicator of the ratio of output events to input events: eg <code>Fewer</code> outputs (Aggregate), <code>Zero</code> for no outputs (Terminate), <code>One</code> for a single output (Wiretap), <code>Many</code> for a split.</dd>
+    <dd>
+        Optional indicator of the ratio of output events to input events:
+        <br /><code>Fewer</code> outputs (eg Aggregate)
+        <br /><code>Zero</code> for no outputs (eg Terminate)
+        <br /><code>One</code> for a single output (eg Wiretap)
+        <br /><code>Many</code> for a split (eg Publish)
+    </dd>
 
     <dt>HelpUrl</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Optional link to service documentation. This will be displayed alongside steps of this type.</dd>
+    <dd>Optional link to service documentation. This will be displayed alongside services listed.</dd>
     
     <dt>Limits</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">Integer</a></dd>
-    <dd>Optional number of times this service can run in one execution context. For example, <code>100</code> for a service that only issues a SOQL query.</dd>
+    <dd>
+        Optional number of times this service can run in one execution context.
+        <br />For example a service issuing 2 SOQL queries could run only <code>100</code> times.</dd>
 
     <dt>Inputs</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,String&gt;</a></dd>
-    <dd>Optional friendly descriptions of the input event parameters required by this service.</dd>
+    <dd>Optional descriptions of the input event parameters required by this service.</dd>
     
     <dt>Outputs</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,String&gt;</a></dd>
-    <dd>Optional friendly descriptions of the output event parameters emitted by this service. Not to be confused with events themselves.</dd>
+    <dd>Optional descriptions of the output event parameters emitted by this service. Not to be confused with events themselves.</dd>
     
     <dt>ServiceSetting</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_custom_settings.htm" target="_blank">SObject</a></dd>
@@ -98,19 +99,24 @@ global class ExampleService extends Abstract.Service {
 </p>
 
 <pre>
-//Service Summary Inner Class
-global class Summary {
-    String Description = 'This service tweets from a Twitter account.';
-    String Tag = 'Social';
-    String Name = 'Twitter';
-    String Icon = 'comment';
-    Integer Cardinality = 1; //one input event always emits exactly one output event
-    String HelpUrl = Page.TwitterHelp.getUrl();
-    String Limits = 25; //leave half of 50 (Total number of HTTP callouts permitted)
-    Map&lt;String,Object&gt; Inputs = new Map&lt;String,Object&gt;{'acme:Body' => 'String of the tweet body.'};
-    Map&lt;String,Object&gt; Outputs = new Map&lt;String,Object&gt;{'acme:TweetId' => 'String of tweet Id.'}
-    SObject ServiceSetting = TwitterSetting__c.SObjectType.newSObject();
-    SObject StepConfig = TwitterConfig__c.SObjectType.newSObject();
+global class Definition extends Abstract.Service.Definition {
+    String Description = 'Distributes leads to different owners.';
+    String Tag = 'Distribution Service';
+    String Icon = 'chart_organisation';
+    String Label = 'Twitter';
+    String HelpUrl = Page.DistributionHelp.getUrl();
+    String Limits = 75; //(constrained by DML)
+    String StepConfig = LeadAssignment.class.getName();
+    String ServiceConfig = DistributionServiceConfig__c.class.getName();
+    Integer Cardinality = 'One';
+    
+    Map&lt;String,Object&gt; Inputs = new Map&lt;String,Object&gt;{
+        'acme:Body' => 'String of the tweet body.'
+    };
+    
+    Map&lt;String,Object&gt; Outputs = new Map&lt;String,Object&gt;{
+        'acme:TweetId' => 'String of tweet Id.'
+    }
 }
 </pre>
 
@@ -161,7 +167,7 @@ global Boolean AllowsCallouts;
 </p>
 
 <p>
-    <code>override protected void callouts(Map&lt;String,Object&gt; inputEvent)</code>
+    <code>override protected void callout(Map&lt;String,Object&gt; inputEvent)</code>
 </p>
 
 <p>
@@ -170,7 +176,7 @@ global Boolean AllowsCallouts;
 </p>
 
 <pre>
-override protected void callouts(Map&lt;String,Object&gt; inputEvent) {
+override protected void callout(Map&lt;String,Object&gt; inputEvent) {
     HttpRequest request = new HttpRequest();
     request.setEndpoint('http://headers.jsontest.com/');
     request.setMethod('GET');
@@ -227,7 +233,7 @@ global class TwitterProcess extends BaseProcess implements Database.AllowsCallou
         String Description = 'Makes an HTTP callout then performs some DML.';
     }
      
-    override protected void callouts(Map&lt;String,Object&gt; inputEvent) {
+    override protected void callout(Map&lt;String,Object&gt; inputEvent) {
         //http callouts here (called first)
     }
     

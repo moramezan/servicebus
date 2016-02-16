@@ -218,8 +218,8 @@
         div#content h2 {
             box-sizing: border-box;
             color: #51638A;
-            border-top: 1px solid #51638A;
-            border-bottom: 1px solid #51638A;
+            /*border-top: 1px solid #51638A;*/
+            /*border-bottom: 1px solid #51638A;*/
             font-size: 14px;
             font-weight: bold;
             padding: 4px 0;
@@ -354,7 +354,7 @@
         (function importTopics() {
             var binding = new XMLHttpRequest();
             //to get the file: insert the topics listing
-            var topic = new Array().concat(window.location.search.match(/topic=([^&]+)/))[1] || 'ServiceBus';
+            var topic = new Array().concat(window.location.search.match(/topic=([^&]+)/))[1] || 'Services';
             binding.open('GET', window.location.pathname + '/../Topics.html');
             binding.onreadystatechange = function(event) {
                 if(this.readyState == 4) {
@@ -387,7 +387,7 @@
             
                 var binding = new XMLHttpRequest();
                 //to get the file: drop the query string to get 'Topic.html' plus '/../' plus 'ApiProcessMarkers' dot html
-                var topic = new Array().concat(window.location.search.match(/topic=([^&]+)/))[1] || 'ServiceBus';
+                var topic = new Array().concat(window.location.search.match(/topic=([^&]+)/))[1] || 'Services';
                 binding.open('GET', window.location.pathname + '/../' + topic + '.html');
                 binding.onreadystatechange = function(event) {
                     if(this.readyState == 4) {
