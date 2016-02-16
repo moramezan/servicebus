@@ -185,7 +185,15 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         DescribeSObjectResult result = Schema.getGlobalDescribe().get(definition.ServiceConfig).getDescribe();
         return result;
     }
-    
+
+    public ApexClassModel.Definition getDefinition() {
+        if (Test.isRunningTest()) {
+            return new ApexClassModel.Definition(Type.forName(this.Reflector.getName()));
+        } else {
+            return ApexClassSetModel.loadCache().get(this.Reflector.getName());
+        }
+    }
+
     /**
      * Redirects user to the HelpURL
      * specified on the Service Definition
