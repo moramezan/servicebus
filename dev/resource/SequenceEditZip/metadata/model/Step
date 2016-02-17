@@ -73,7 +73,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "ApexClassName",
+                "name": "ApexTypeName",
                 "persist": null,
                 "reference": null
             },

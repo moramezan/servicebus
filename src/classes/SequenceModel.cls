@@ -124,15 +124,15 @@ public class SequenceModel extends ApexDomain.StandardModel {
      * (Invoked by the user interface when viewing a Sequence for the first time)
      */
     public void terminateIfNeeded() {
-        try {
-            Step__c terminateStep = [
-                SELECT Name
-                FROM Step__c
-                WHERE IsDraft__c = true
-                AND Sequence__c = :this.sequence.Name
-                AND ApexTypeName__c = :TerminateService.class.getName()
-            ];
-        } catch (QueryException e) {
+        List<Step__c> terminateStep = [
+            SELECT Name
+            FROM Step__c
+            WHERE IsDraft__c = true
+            AND Sequence__c = :this.sequence.Name
+            AND ApexTypeName__c = :TerminateService.class.getName()
+        ];
+        
+        if (terminateStep.isEmpty()) {
             //sequence contains no terminate step
             ApexClass apexClass = [
                 SELECT Id, NamespacePrefix, Name
@@ -238,6 +238,88 @@ public class SequenceModel extends ApexDomain.StandardModel {
         ]) total += (Integer)result.get('total');
         
         return total;
+    }
+    
+    /**
+     * What if we find a class whose ID is consistent
+     * but whose NAME cannot be found in the org? This
+     * possibly results from in-situ modification where
+     * the class was renamed in a dev org or sandbox.
+     */
+    public void healApexTypeNames() {
+        
+        //query steps
+        List<Step__c> steps = [
+            SELECT Id, ApexClassId__c
+            FROM Step__c
+            WHERE IsDraft__c = true
+            AND Sequence__c = :this.sequence.Name
+            ORDER BY Position__c ASC
+        ];
+        
+        Set<Id> apexClassIds = new Set<Id>();
+        for (Step__c step : steps) apexClassIds.add(step.ApexClassId__c);
+        
+        //query classes
+        Map<Id,ApexClass> id2class = new Map<Id,ApexClass>([
+            SELECT Id, NamespacePrefix, Name
+            FROM ApexClass
+            WHERE Id IN :apexClassIds
+        ]);
+        
+        //where ids match
+        for (Step__c step : steps) {
+            
+            //cant do anything for missing ids
+            ApexClass apexClass = id2class.get(step.ApexClassId__c);
+            if (apexClass == null) continue;
+            
+            String apexTypeName = '';
+            if (apexClass.NamespacePrefix != null) apexTypeName = apexClass.NamespacePrefix + '.';
+            apexTypeName += apexClass.Name;
+            
+            //heal names
+            step.ApexTypeName__c = apexTypeName;
+        }
+        
+        update steps;
+    }
+    
+    /**
+     * Suppose we find that a class with consistent NAME
+     * but its ID is not consistent across some step.
+     * Probably an intentional change caused by classes
+     * being recreated, or packages being reinstalled.
+     */
+    public void healApexClassIds() {
+        
+        //query steps
+        List<Step__c> steps = [
+            SELECT Id, ApexTypeName__c
+            FROM Step__c
+            WHERE IsDraft__c = true
+            AND Sequence__c = :this.sequence.Name
+            ORDER BY Position__c ASC
+        ];
+        
+        Set<String> apexTypeNames = new Set<String>();
+        for (Step__c step : steps) apexTypeNames.add(step.ApexTypeName__c);
+        
+        //query cache
+        Map<String,ApexClassModel.Definition> name2definition = ApexClassSetModel.loadCache();
+        
+        //where ids match
+        for (Step__c step : steps) {
+            
+            //cant do anything for missing ids
+            ApexClassModel.Definition definition = name2definition.get(step.ApexTypeName__c);
+            if (definition == null) continue;
+            
+            //heal ids
+            step.ApexClassId__c = definition.Id;
+        }
+        
+        update steps;
     }
     
     /**
