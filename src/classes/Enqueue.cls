@@ -83,7 +83,7 @@ global class Enqueue implements Process.Plugin {
         request.setMethod('POST');
         request.setHeader('SOAPAction', '""');
         request.setHeader('Content-Type', 'text/xml');
-        request.setEndpoint(Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:') + '/services/Soap/T/35.0');
+        request.setEndpoint(Url.getSalesforceBaseUrl().toExternalForm().replace('http:', 'https:') + '/services/Soap/T/36.0');
         request.setBody(dom.toXmlString());
         HttpResponse response = new Http().send(request);
         

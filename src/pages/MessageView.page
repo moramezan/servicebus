@@ -22,8 +22,8 @@
     
     <apex:sectionHeader title="{!$ObjectType.Message__c.Label}" subtitle="{!message.Name}" />
     
-    <apex:includeScript value="{!URLFOR('/soap/ajax/35.0/connection.js')}" />
-    <apex:includeScript value="{!URLFOR('/soap/ajax/35.0/apex.js')}" />
+    <apex:includeScript value="{!URLFOR('/soap/ajax/36.0/connection.js')}" />
+    <apex:includeScript value="{!URLFOR('/soap/ajax/36.0/apex.js')}" />
     
     <apex:form rendered="{!$CurrentPage.Parameters.mid != null}" id="form">
         <apex:pageBlock mode="maindetail" title="Message Detail">

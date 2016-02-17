@@ -112,7 +112,7 @@ public with sharing class MessageViewExtension {
             + 'var sid = "' + sid + '";'
             + 'var mark = new Date().getTime();'
             + 'var command = \'new ' + Enqueue.class.getName() + '().invoke(new Process.PluginRequest((Map<String,Object>)Json.deserializeUntyped(\\\'' + Json.serialize(parameters) + '\\\')));\';'
-            + 'sforce.connection.init(sid, "/services/Soap/u/35.0");'
+            + 'sforce.connection.init(sid, "/services/Soap/u/36.0");'
             + 'var response = sforce.apex.executeAnonymous(command);'
             + 'if (response.success == "false") {' //started, persist any fatal error and refresh
             + '    Visualforce.remoting.Manager.invokeAction('
