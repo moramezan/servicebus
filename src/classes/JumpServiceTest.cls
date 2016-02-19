@@ -13,7 +13,7 @@
         ApexClassModel.Definition definition = new ApexClassModel.Definition(JumpService.class);
         
         //assert
-        Integer expectedChunks = 200; //max sync limit
+        Integer expectedChunks = 100; //max sync limit
         Integer actualChunks = definition.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }

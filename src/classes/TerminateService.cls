@@ -6,7 +6,7 @@ public class TerminateService extends ApexClassModel.Service {
         String Label = 'Terminate';
         String Description = 'Swallows messages at the end of this sequence.';
         String Icon = 'stop';
-        Integer Chunks = 200; //no soqls, no dmls
+        Integer Chunks = 100; //no soqls, no dmls
         String Cardinality = 'Zero';
     }
     

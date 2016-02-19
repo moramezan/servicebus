@@ -7,7 +7,7 @@ public class JumpService extends ApexClassModel.Service {
         String Description = 'Diverts the event to another sequence, never to return.';
         String StepConfig = JumpStepConfig__c.class.getName();
         String Icon = 'arrow_switch';
-        Integer Chunks = 200; //no soqls, no dmls
+        Integer Chunks = 100; //no soqls, no dmls
         String Cardinality = 'Zero';
     }
     

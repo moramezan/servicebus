@@ -94,24 +94,16 @@ public class MessageModel extends ApexDomain.StandardModel {
      *
      * This needs to know side effects for the "savepoint tax".
      * The Service checks side effects to prevent DML in callout etc.
-     *
-     * @return HAD SIDE EFFECTS
      */
-    public Boolean invokeExecute(List<Message__c> outputMessages) {
+    public void invokeExecute(List<Message__c> outputMessages) {
         
         if (this.Message.Exception__c != null) {
             //#864 skip bad guys
-            return false;
+            return;
         }
         
         //execution time profiler
         Long timer = System.now().getTime();
-        
-        //measure side effects before
-        Integer futureCalls = Limits.getFutureCalls();
-        Integer queueableJobs = Limits.getQueueableJobs();
-        Integer dmlStatements = Limits.getDMLStatements();
-        Integer emailInvocations = Limits.getEmailInvocations();
         
         try {
             
@@ -165,15 +157,6 @@ public class MessageModel extends ApexDomain.StandardModel {
         //execution time profiler
         if (this.Message.ExecuteDuration__c == null) this.Message.ExecuteDuration__c = 0;
         this.Message.ExecuteDuration__c += System.now().getTime() - timer;
-        
-        //measure side effects after, whether or not there was an exception
-        if (Limits.getFutureCalls() > futureCalls) return true;
-        if (Limits.getQueueableJobs() > queueableJobs) return true;
-        if (Limits.getDMLStatements() > dmlStatements) return true;
-        if (Limits.getEmailInvocations() > emailInvocations) return true;
-        
-        //no side effects
-        return false;
     }
     
     /**

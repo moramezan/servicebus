@@ -42,10 +42,10 @@
     
     public class MemoryErrorDefinition extends ApexClassModel.Definition {
         String Description = 'Does stuff in memory, throws an exception not needing rollback.';
-        Integer Chunks = 200;
+        Integer Chunks = 100;
     }
     
-    static testmethod void testRollbackTaxRelievedOnMemoryService() {
+    static testmethod void testRollbackTaxNotRelievedOnMemoryService() {
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
@@ -58,7 +58,7 @@
         List<Message__c> inputMessages = new List<Message__c>();
         List<Message__c> outputMessages = new List<Message__c>();
         
-        for (Integer i = 0; i < 200; i++) {
+        for (Integer i = 0; i < 50; i++) {
             Map<String,Object> event = new Map<String,Object>{'Route' => '1#Test#1'};
             Message__c inputMessage = new Message__c();
             inputMessage.Event__c = Json.serialize(event);
@@ -76,7 +76,7 @@
         Test.stopTest();
         
         //assert
-        Integer expectedStatements = 1; //exactly 1 savepoint
+        Integer expectedStatements = 100; //50 savepoints and 50 rollbacks
         Integer actualStatements = dmlStatements;
         System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
     }
@@ -141,7 +141,7 @@
     
     public class MemoryDefinition extends ApexClassModel.Definition {
         String Description = 'Does stuff in memory without side effects.';
-        Integer Chunks = 200;
+        Integer Chunks = 100;
     }
     
     static testmethod void testSavepointTaxRelievedOnMemoryService() {
@@ -157,7 +157,7 @@
         List<Message__c> inputMessages = new List<Message__c>();
         List<Message__c> outputMessages = new List<Message__c>();
         
-        for (Integer i = 0; i < 200; i++) {
+        for (Integer i = 0; i < 100; i++) {
             Map<String,Object> event = new Map<String,Object>{'Route' => '1#Test#1'};
             Message__c inputMessage = new Message__c();
             inputMessage.Event__c = Json.serialize(event);
@@ -175,7 +175,7 @@
         Test.stopTest();
         
         //assert
-        Integer expectedStatements = 1; //exactly 1 savepoint
+        Integer expectedStatements = 100; //exactly 1 savepoint
         Integer actualStatements = dmlStatements;
         System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
     }
@@ -184,7 +184,7 @@
         void callout(Map<String,Object> inputEvent) {}
         List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             Map<String,Object> outputEvent = inputEvent.clone();
-            insert new Document(Name = 'Test.txt', FolderId = UserInfo.getUserId());
+            Integer i = 1 / 0;
             return new List<Map<String,Object>>();
         }
     }
@@ -225,7 +225,7 @@
         Test.stopTest();
         
         //assert
-        Integer expectedStatements = 150; //75 savepoints, 75 documents
+        Integer expectedStatements = 150; //75 savepoints, 75 rollbacks
         Integer actualStatements = dmlStatements;
         System.assertEquals(expectedStatements, actualStatements, 'Wrong DML count.');
     }

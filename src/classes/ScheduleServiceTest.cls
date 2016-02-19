@@ -5,7 +5,7 @@
         ApexClassModel.Definition definition = new ApexClassModel.Definition(ScheduleService.class);
         
         //assert
-        Integer expectedChunks = 200;
+        Integer expectedChunks = 100;
         Integer actualChunks = definition.Chunks;
         System.assertEquals(expectedChunks, actualChunks);
     }
