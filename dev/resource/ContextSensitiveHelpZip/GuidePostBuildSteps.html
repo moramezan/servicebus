@@ -1,27 +1,44 @@
 <h1>
-    Post-build steps
+    Post-Build steps
 </h1>
 
 <h3>
-    Visually test the service
+    Visually Test the Service
 </h3>
 
 <p>
-    Once the Apex class has successfully compiled, it can be registered in the Service Bus. To
-    register an Apex class in the Service Bus, select the list view on Services tab to reveal the
-    <strong>Discover</strong> button.
+    A service conforming to the  OASIS specification is automatically detected and registered
+    by the Services framework.
+
 </p>
 
 <ul>
     <li>
-        Click <strong>Discover</strong> and your new Apex class will present itself after a few
-        minutes in the list of available services. (For further details on the generation service,
-        see the <a href="?topic=TutorialProcessDiscovery">Service Discovery Tutorial</a>.
+        If your service requires no injected context or step level configuration,
+        simply navigate to the services tab, click on your services link and press the
+        Enqueue Test Event button. Then navigate to the Messages tab to review the emitted
+        event(s) from your service to confirm your service executed in an expected manner.
     </li>
+
     <li>
-        Create a suitable sequence to test your services by visiting the <strong>Sequences</strong>
-        tab. (For further details on  creating and testing sequences, see the
-        <a href="?topic=TutorialSetupConfirmation">Setup Confirmation Tutorial</a>.
+        If your service requires step level configuration,
+        simply navigate to the Sequences tab and create a simple sequence to host your service
+        From the Sequence builder,
+        click the Enqueue Test Event button. Then navigate to the Messages tab to review the emitted
+        event(s) from your service to confirm your service executed in an expected manner.
+    </li>
+
+    <li>
+        If your service requires specific input parameter values,
+        create a mock service that emits a single event containing the parameter events
+        and values required by your service.
+        Next, navigate to the Sequences tab and create a simple sequence to host your service
+        and your mock sequence supply the initial input event state for your service. Arrange\
+        the services on your test sequence so that the mock service immeadiately precedes
+        your service.
+        Finally, from the Sequence builder,
+        click the Enqueue Test Event button. Then navigate to the Messages tab to review the emitted
+        event(s) from your service to confirm your service executed in an expected manner.
     </li>
 </ul>
 
@@ -30,14 +47,11 @@
 </h3>
 
 <p>
-    You can create a managed package <a href="https://www.salesforce.com/us/developer/docs/packagingGuide/index_Left.htm#StartTopic=Content/packaging_testing.htm" target="_blank">managed package</a> by following standard Salesforce recommendations.
-</p>
-
-<p>
-    Add your Apex class to the package along with unit tests and associated dependencies and upload.
-</p>
-
-<p>
+    You can host your services in a
+    <a href="https://www.salesforce.com/us/developer/docs/packagingGuide/index_Left.htm#StartTopic=Content/packaging_testing.htm" target="_blank">
+        managed package
+    </a>  by following standard Salesforce recommendations.
+    Add your service class to the package along with unit tests and associated dependencies and then upload.
     This compiled service logic can now be installed in any Developer, Sandbox or Production org
     using the the package link.
 </p>

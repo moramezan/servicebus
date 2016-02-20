@@ -1,0 +1,337 @@
+<!--/// TODO - REVIEW COMPLETE-->
+
+
+
+<h1>
+    Valid Salesforce Ids Tutorial
+</h1>
+
+<h2>Objective</h2>
+<p>
+    This tutorial demonstrates the introduction of new business logic cy making use of
+    custom components  in a Sequence.
+    <!--
+    <br/><br/>
+    We will create a new  Sequence that evaluates all possible three digit arrangements
+    of  the numerals '0' to '5'. (eg '001' - Account).
+    <br/>
+    Any combinatination  reprepresenting a valid Salesforce
+    Prefix Id will be added to a list and
+    that list will be emailed to the user of the Sequence
+    -->
+</p>
+
+
+<p>
+    Expected duration: 30 minutes.
+</p>
+
+<br/>
+
+<h2>Background Context</h2>
+<p>
+    Every Salesforce Id starts with three characters. This Id prefix defines the type of object the Id represents.
+    (eg <code>001</code> - an <b>Account</b> Id).
+    <br/>
+    There is no
+    official publication from Salesforce mapping every Salesforce Id prefix to it's underlying object type.
+    Also, not every three character combination has a corresponding Salesforce type.
+</p>
+
+<p>
+    In this exercise, we will compose a Sequence that
+    extracts the valid Salesforce types over a small sample of characters, namely the digits '0' through '5'.
+    This range could easily be extended but '0' to '5' should be sufficient for our purposes.
+    Any three digit combination from our range that is not a valid Salesforce Id will not be placed on our final list
+    of valid Salesforce Prefix Ids.
+</p>
+<p>
+    The Services framework has a number of pre-built service components to assist us. We will make use of the following
+    pre-built services :
+    <ul>
+        <li>a Wiretap component to email the list of valid results</li>
+        <li>an Aggregation component to correlate the the valid results into a single list</li>
+        <li>a Terminate component to indicate to the framework that the Sequence has ended.</li>
+    </ul>
+</p>
+<p>
+    We will also create two custom components for use in our Sequence:
+    <ul>
+        <li>a Prefix Splitter (<code>PrefixSplit</code>) component that builds up a potentially valid Salesforce Id
+            prefix from our range of digits, '0' though '5'
+        <li>a Prefix Filter (<code>PrefixFilter</code>) component that evaluates a potentially valid Salesforce Id prefix for validity</li>
+    </ul>
+</p>
+<p>
+    By arranging  these components in a logical sequence, we can easily  filter
+    all possible arrangements for our range of three digits
+    into a list containing valid Salesforce Prefix Ids and then email that list to an interested user
+</p>
+
+<br/>
+<h2>
+    Instructions
+</h2>
+
+
+<ol>
+
+
+    <li>
+        <p>
+            Open the developer console. Create two new  Apex classes and name them <code>PrefixSplit</code> and <code>PrefixFilter</code>.
+        </p>
+    </li>
+
+
+
+
+
+    <li>
+        <p>
+            Paste  in the following code into the <code>PrefixFilter</code> class and press Save.
+        </p>
+        <p>
+    <pre>
+    global class PrefixFilter extends Abstract.Service {
+
+        global class Definition extends Abstract.Service.Definition {
+            String Tag = 'Tutorial';
+            String Label = 'Swallows Invalid Prefix';
+            String Description = 'Tests if the prefix on the event is valid';
+            String Icon = 'filter';
+            Integer Limits = 2000;
+            String Cardinality = 'Fewer';
+        }
+
+        global Map&lt;String, String&gt; Inputs = new Map&lt;String, String&gt;{
+            'RecordId' => 'STRING : a POTENTIALLY VALID Salesforce prefix.'
+        };
+
+        global Map&lt;String, String&gt; Outputs = new Map&lt;String, String&gt;{
+            'RecordId' => 'STRING : a  VALID 3 character Salesforce prefix.'
+        };
+
+
+        global override List&lt;Map&lt;String, Object&gt;&gt; execute(Map&lt;String, Object&gt; inputEvent){
+            // input
+            String prefix =  (String) inputEvent.get('RecordId');
+
+            // filter ..
+            List&lt;Map&lt;String, Object&gt;&gt; outputEvents = new List&lt;Map&lt;String, Object&gt;&gt;();
+            try {
+                 Id instanceId = + prefix + '0'.repeat(15);
+                 String name = instanceId.getSobjectType().getDescribe().getName();
+                 inputEvent.put('RecordId',  prefix + ' - ' + name);
+                 outputEvents.add(inputEvent);
+            } catch (Exception e) {
+                // swallow
+            }
+
+            return outputEvents;
+        }
+    }
+    </pre>
+    </p>
+    </li>
+
+
+
+    <li>
+        <p>
+            Paste  in the following code into the <code>PrefixSplit</code> class and press Save.
+        </p>
+    <p>
+    <pre>
+    global class PrefixSplit extends Abstract.Service {
+
+        global class Definition extends Abstract.Service.Definition {
+            String Tag = 'Tutorial';
+            String Label = 'Splits Prefixes';
+            String Description = 'Creates an event for every possible character';
+            String Icon = 'text_columns';
+            Integer Limits = 2000;
+            String Cardinality = 'Many';
+        }
+
+        global Map&lt;String, String&gt; Inputs = new Map&lt;String, String&gt; {
+            'RecordId' => 'STRING : full (or portion) the Salesforce prefix.'
+        };
+
+        global Map&lt;String, String&gt; Outputs = new Map&lt;String, String&gt; {
+            'RecordId' => 'STRING : full (or portion) the Salesforce prefix..'
+        };
+
+
+        global override List&lt;Map&lt;String, Object&gt;&gt; execute(Map&lt;String, Object&gt; inputEvent){
+            // input
+            String prefix = (inputEvent.get('RecordId') == null) ?
+                '' : (String) inputEvent.get('RecordId');
+
+            // full implementation should cover 0-9, a-z, A-Z
+            List&lt;String&gt; prefixes = new List&lt;String&gt;{
+                prefix + '0' ,
+                prefix + '1' ,
+                prefix + '2' ,
+                prefix + '3' ,
+                prefix + '4' ,
+                prefix + '5'
+            };
+
+            // output
+            List&lt;Map&lt;String, Object&gt;&gt; outputEvents = new List&lt;Map&lt;String, Object&gt;&gt;();
+            for (String prefix :  prefixes) {
+                outputEvents.add( inputEvent.clone().put('RecordId', prefix) );
+            }
+
+            return outputEvents;
+        }
+     }
+    </pre>
+    </p>
+    </li>
+
+
+
+
+
+    <li>
+        Open the App menu on the top right of Salesforce and choose Service Bus.
+    </li>
+    <li>
+        Navigate to the Services tab.
+        This initiates the automated mechanism that finds new services and refreshes existing ones.
+        <br/><br/>
+        <fieldset>
+            <legend>Note:</legend>
+            Discovery can range in duration from a few seconds to a few minutes depending
+            on the availability of Salesforce servers. Progress is shown at the top of the page.
+        </fieldset>
+    </li>
+    <li>
+        <p>
+            Once discovery is complete, you will be taken back to the list view.
+            The PrefixSplit and PrefixFilter services should now be listed.
+        </p>
+
+        <p>
+            <img src="resources/TutorialValidSalesforceIds/services2.png" />
+        </p>
+    </li>
+
+    <li>
+        <p>
+            Navigate to the Sequences tab. Create a new sequence called 'Valid Ids' and hit the 'Save' button.
+        </p>
+        <p>
+            <img src="resources/TutorialValidSalesforceIds/new-sequence.png" />
+        </p>
+        <p>
+            You will be presented with a default sequence containing the Terminate step.
+            Add additional steps to the sequence by tapping the 'New Step' button.
+            From the 'Services' collection, select the following pre-built service components
+            <ul>
+                <li>WireTap</li>
+                <li>Aggregate By Job</li>
+            </ul>
+            From the 'Tutorial' collection select the the following custom service components
+            registered in the previous section
+            <br/><br/>
+            <ul>
+                <li>PrefixSplit
+                    <br/>
+                    <fieldset>
+                        <legend>Important:</legend>
+                        select this component three times (ie one component per character of the three character Salesforce Id prefix)
+                    </fieldset>
+                </li>
+                <li>PrefixFilter</li>
+            </ul>
+        </p>
+        <p>
+            <img src="resources/TutorialValidSalesforceIds/valid-ids-select-aggregate-by-job.png" />
+        </p>
+    </li>
+
+
+    <li>
+        <p>
+            Using the drag and drop functionality of the Sequence builder, arrange the service
+            components in the sequence so that they form a logical business flow approximating the arrangement in the diagram below
+        </p>
+        <p>
+            <img src="resources/TutorialValidSalesforceIds/valid-ids-complete.png" />
+        </p>
+
+
+
+
+
+        <p>
+            In the next part of the tutorial, we will fire an initiating event into our sequence.
+            <ul>
+                <li>The  first three steps of the sequence build up all potential combinations of
+                    a Salesforce 3-character prefix.
+                    <br/><br/>
+                    <ul>
+                        <li>The 1st step contributes the first character to the prefix (eg '<code>0</code>'),</li>
+                        <li>the 2nd step contributes the second character (eg '<code>00</code>') and</li>
+                        <li>the 3rd step contributes the final character. (eg ('<code>001</code>')</li>
+                    </ul>
+                </li>
+                <li>The 4th step in the sequence filters out all invalid combinations produced by the previous
+                    three steps effectively forwarding on only valid Salesforce 3-digit prefixes to step five in the sequence.</li>
+                <li>The 5th step in the sequence aggregates all valid prefixes into a single list.</li>
+                <li>This list is forwarded to the 6th step in the sequence (Wiretap) which emails the
+                    list of valid Salesforce Id prefixes to the email account defined on the the Wiretap service.</li>
+            </ul>
+        </p>
+
+        <p> &nbsp;<br/> </p>
+        <p> &nbsp;<br/> </p>
+
+    </li>
+
+
+
+    <li>
+        <p>
+            To execute the sequence, simple press the 'Enqueue Test Event' button.
+            which enqueues a test event into our sequence.
+            You will be presented with a confirmation message approximate which will the following
+        </p>
+        <p>
+            <img src="resources/TutorialValidSalesforceIds/enqueue-message.png" />
+        </p>
+    </li>
+
+
+    <li>
+        <p>
+            The top right of the sequence provides a visual indication
+            that the sequence is executing.
+        </p>
+        <p>
+            <img src="resources/TutorialValidSalesforceIds/executing.png" />
+        </p>
+    </li>
+
+
+    <li>
+        <p>
+            Once the sequence has executed in full,
+            browse to your Salesforce email inbox and
+            open the email sent from the Wiretap process. You will be
+            presented with a list of all valid Salesforce Id prefixes
+            that contain  the numerals '0' through '5'.
+        </p>
+        <p>
+            <img src="resources/TutorialValidSalesforceIds/email.png" />
+        </p>
+    </li>
+
+
+</ol>
+
+
+

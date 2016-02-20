@@ -1,9 +1,9 @@
 <h1>
-    Enterprise Service Bus Concepts
+    Enterprise Service Concepts
 </h1>
 
 <p>
-    Service Bus concepts described in this chapter are:
+    Service  concepts described in this chapter are:
 </p>
 
 <ul>
@@ -18,13 +18,13 @@
 </h3>
 
 <p>
-    Work under the Service Bus is broken up into many specific tasks. Each task is implemented as
+    All work under the Services framework is deconstructed into specific tasks. Each task is implemented as
     an Apex class and is called a Service.
 </p>
 
 <p>
     Logically related services are assembled by the System Configurator (or Business Analyst) into
-    sequential processing steps called a <em>Sequence</em>
+    an ordered arrangement of sequential processing steps collectively called a <em>Sequence</em>
 </p>
 
 <h3>
@@ -32,32 +32,29 @@
 </h3>
 
 <p>
-    Every service responds to an input message by emitting a list of zero, one or more output
-    messages. The Service Bus is designed so that output messages from a service automatically
+    Every service responds to an input event by emitting a list of zero, one or more output
+    events. The Services framework is designed so that output events from any given service automatically
     feed the input stream of the very next service in a <em>Sequence</em>.
 </p>
 
 <p>
-    The Service Bus has by default a number of ready made services that can be sequenced together
+    The Services framework has by default a number of ready made services that can be composed sequentially
     so that useful work can be completed. These ready made services include:
 </p>
 
 <ul>
     <li><em>Wiretap</em></li>
     <li><em>Jump</em></li>
-    <li><em>Branch</em></li>
-    <li><em>Subsequence</em></li>
+    <li><em>Transaction</em></li>
     <li><em>Publish</em></li>
     <li><em>Subscribe</em></li>
 </ul>
 
 <p>
-    Additional services can be easily created to implement tasks specific to
-    your particular requirement(s).
-</p>
+    Additional services implementing tasks specific to
+    your particular requirements are easily created.
 
-<p>
-    Detailed instructions for building services can be found in the
+    Detailed instructions for building such services can be found in the
     <a href="?topic=GuideDevelopers">Service Developers Guide</a>
 </p>
 
@@ -66,12 +63,12 @@
 </h3>
 
 <p>
-    The Service Bus makes a clear distinction between:
+    The Services framework makes a clear distinction between:
 </p>
 
 <ul>
     <li>
-        <em>what</em> is to be performed (via declarative point and click assembling of processing
+        <em>what</em> is to be performed (via declarative  assembling of processing
         steps in a sequence), versus
     </li>
     <li>
@@ -83,21 +80,19 @@
 <p>
     Assembling services in a useful sequence and thereby fulfilling the intent of the underlying
     business requirement is the domain of the business analyst and not necessarily the Apex
-    Developer.
-</p>
+    developer.
 
-<p>
-    It therefore the role of the System Orchestrator / Business Analyst to configure the Service Bus:
+    It therefore the role of the System Orchestrator / Business Analyst to configure the Services framework:
 </p>
 
 <ul>
     <li>
-        by arranging services together in a processing Sequence using friendly names that
-        adequately describe the collective nature of the work being preformed (for example
+        by arranging services in a processing Sequence using a friendly name that
+        adequately describes the collective nature of the work being preformed (for example
         <code>ProcessInvoices</code>)
     </li>
     <li>
-        by identifying tasks in a Sequence that have no corresponding service (otherwise defined
+        by identifying tasks in a Sequence that as yet, have no apex service implementation (otherwise defined
         as "missing services")
     </li>
     <li>
@@ -112,18 +107,17 @@
 
 <p>
     Salesforce prevents writing to the system log in a Production environment. As a useful
-    substitute, the EDA framework provides two logging mechanisms:
+    substitute, the Services framework provides two logging mechanisms:
 </p>
 
 <ul>
     <li>
-        <em>Wiretap</em> which acts a no-operation service and has no side effects. A Wiretap
-        service will send an email containing the current event message to a nominated user.
+        a <code>WiretapService</code> which acts a no-operation service with  no side effects. A Wiretap
+        service will send an email containing the current event to a nominated user.
     </li>
     <li>
-        <em>Audit Writer</em> which acts a no-operation pass through service and has no side
-        effects. An Audit Writer will however store the event message under a useful business
-        identifier. Many Audit Writer services placed at strategic steps in a Sequence can usefully
-        track and relate the progress of event messages using a common business identifier.
+        the <em>Messages</em> tab  detailing the progression of any event from genesis to completion.
+        The detailed view on any selected message displays the parent message and a related list of all
+        child messages .
     </li>
 </ul>

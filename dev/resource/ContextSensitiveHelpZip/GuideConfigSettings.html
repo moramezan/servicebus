@@ -2,7 +2,7 @@
     Step Config and Service Settings
 </h1>
 
-<h3>Configuring service behaviour</h3>
+<h3>Configuring Service Behaviour</h3>
 
 <p>
     Instead of replicating a large portions of custom logic in a second or third service, a
@@ -15,82 +15,83 @@
 </p>
 
 <ul>
-    <li>the service class as a whole via a global service custom setting, or</li>
-    <li>service logic at a specific step by making use of a step config object.</li>
+    <li>the service class as a whole via a global service configuration, or</li>
+    <li>service logic at a specific step by making use of  step configuration.</li>
 </ul>
 
 <h2>
-    Service Settings (settings specific to each service)
+    Service Configuration (configuration applicable to the service as a whole)
 </h2>
 
 <p>
-    The snippet below illustrates how to make use of class wide custom settings for your service.
+    The obvious use case for global service configuration is credential storage by org. So for example,
+    imagine a tweet service that must be configured with one set of credentials for production and another
+    set of credentials for development or the sandbox.
+    The snippet below illustrates how to configure your service globally using a custom setting.
 </p>
 
 <pre>
-global class Summary {
     //..
-    global SObject ServiceSetting = YourCustomSettings__c.SObjectType.newSObject();
-    //..
-}
+    global class Definition extends Abstract.Service.Definition {
+        //..
+        String ServiceConfig = YourServiceConfig__c.class.getName();
+        //..
+    }
 
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        //..
+        YourServiceConfig__c yourServiceConfig = YourServiceConfig__c.getOrgDefaults();
+        //..
+    }
+    //..
 
-override global String toString() {
-    //..
-    //main code block
-    YourCustomSettings__c settings = YourCustomSettings__c.getInstance();
-    String yourField = settings.YourCustomField__c;
-    //..
-}
 </pre>
 
-<h3>
-    Notes
-</h3>
 
-<p>
-    <strong>003</strong> if you wish to surface a link to the Custom Setting of your service on the Services list view, simply assign an instance of your custom setting SObject to the CustomSetting parameter of the service's <code>Summary</code> Marker Class.
-    <br /><strong>011 - 012</strong> to reference generic service configuration settings inside the service execution, simply call <code>getInstance()</code> on your custom setting object and access the relevent fields.
-</p>
+
+
 
 <h2>
-    Step Config (config specific to each step)
+    Step Config (configuration of the service specific to each step)
 </h2>
 
 <p>
-    The snippet below illustrates how to make use of a step specific configuration for your service.
+    The obvious use case for step specific service configuration is variation in logic dempending on where that
+    service is plugged into any given sequence. Imagine a tweet service that  is inserted in
+    a sales sequence. One can imagine a tweet that broadcasts 'Another great just completed'. That same
+    service could also be plugged into a marketing sequence and it would insted be configured
+    to broadcast  'Great deals available' - the same service with step level config variation
+</p>
+
+<p>
+    The snippet below illustrates how to make use of a step specific configuration for your service
+    using a Custom Object.
 </p>
 
 <pre>
-//..
-global YourConfiguration__c StepConfig;
-//..
+    //..
+    global class Definition extends Abstract.Service.Definition {
+        //..
+        String StepConfig = YourStepConfig__c.class.getName();
+        //..
+    }
 
-global class Summary {
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        //..
+        Id stepConfigId = (Id) event.get('StepConfigId');
+        YourStepConfig__c yourStepConfig__c = [
+            SELECT Name, YourField__c FROM YourStepConfig__c WHERE Id = :stepConfigId
+        ];
+        //..
+    }
     //..
-    global SObject ConfigObject = YourConfiguration__c.SObjectType.newSObject();
-    //..
-}
-
-
-override global String toString() {
-    //..
-    //main code block
-    YourConfiguration__c configuration = this.StepConfig;
-    //..
-}
 </pre>
 
-<h3>
-    Notes
-</h3>
-
 <p>
-    <strong>005 - 009</strong> if you wish to surface a link to step specific settings of your service, simply assign an instance of your step config SObject to the StepConfig parameter of the service's <code>Summary</code> Marker Class.
-    <br /><strong>012 - 017, 002</strong> To access step specific configuration from code inside the service execution, simply declare a class instance global <code>YourConfiguration__c</code> with the name <code>StepConfig</code>.
+    The snippet below illustrates how to make use of a step specific configuration for your service
+    using a <!-- // TODO List / Hierarchy --> Custom Setting.
 </p>
 
-<fieldset>
-    <legend>Note</legend>
-    The Service Bus will correctly hydrate the instance for you.
-</fieldset>
+<pre>
+    // TODO
+</pre>

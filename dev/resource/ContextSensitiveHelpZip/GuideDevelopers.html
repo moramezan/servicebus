@@ -12,21 +12,20 @@
 
 <p>
     This guide is intended for Salesforce Apex Developers who are tasked with providing
-    functionality not provided in the out-of-the-box Service Bus. The purpose of this guide is to:
+    functionality not directly available in the Services package. The purpose of this guide is to:
 </p>
 
 <ol>
     <li>
-        explain basic service concepts as they pertain to the Service Bus.
+        explain basic service concepts as they pertain to the Services framework.
     </li>
     <li>
-        describe how to create a service that enables processing functionality not directly provided
-        for in the Service Bus.
+        describe in detail the creation of a service that is compatible with the Services framework
     </li>
 </ol>
 
 <p>
-    This guide excludes Service Bus configuration and monitoring. These topics are covered in the
+    This guide excludes Services framework configuration and monitoring. These topics are covered in the
     separate <a href="?topic=GuideOrchestrators">Orchestrators Guide</a>.
 </p>
 
@@ -34,48 +33,63 @@
     Getting Started
 </h2>
 
-<p>
-    All services contain a standard <code>toString()</code> method. The <code>toString()</code>
-    method takes a single input message and returns a list containing zero, one or many message(s).
-    The concept can be illustrated as follows:
-</p>
-
-<!--
- ! TODO confuser?
- !-->
-
-<pre>
-List&lt;Event&gt; messages = service.handle(Event message);
-</pre>
 
 <p>
-    The Service Bus is designed so that the output(s) from a given service can be directly
-    re-purposed as input(s) into immediately downstream services.
-</p>
-
-<p>
-    The Service Bus has by default a number of pre-packaged native services that can be
+    The Services framework has  a number of pre-packaged  services that can be
     sequenced together to accomplish useful work.
-</p>
-
-<p>
     These pre-packaged services include <em>Branch</em>, <em>Gate</em>, <em>Jump</em>,
-    <em>LogInitializer</em>, <em>LogWriter</em>, <em>Mark</em>, <em>Publish</em>, <em>Schedule</em>,
-    <em>Subscribe</em>, <em>Subsequence</em>, <em>Terminate</em> and <em>WireTap</em>.
-</li>
+    <em>Publish</em>, <em>Schedule</em>, <em>Aggregate By Job</em>,
+    <em>Subscribe</em>, <em>Transaction</em>, <em>Terminate</em> and <em>WireTap</em>.
+</p>
 
 <p>
     Additional services are easily created to implement tasks specific to a particular business
     requirement.
+    The focus of this guide is to provide detailed guidance for the creation of these additional services.
+</p>
+
+
+<h2>
+    Service Specification and Service Concepts
+</h2>
+<p>
+    The Services framework supports the Open Apex Service
+    (<a href="https://github.com/bigassforce/OASIS">OASIS</a> ) specification hosted on Github.
+    The OASIS specification defines  meta attributes  that should be present in the implemented service
+    so that the service framework can  host and execute the service logic in
+    a consistent and accessable manner.
+</p>
+
+
+<p>
+    The OASIS specification also defines the execution construct that should be present in any given service
+    and this construct takes the following form:
+</p>
+
+
+<p>
+
+        <blockquote style="margin-left:2em;">
+        <code>Event[] execute(Event);</code>
+        </blockquote>
+
+</p>
+
+
+<p>
+    The above signature illustrates how a service adhering to the OASIS standard
+    takes exactly one input event, performs it's defined business logic and then emits zero, one or many
+    events. The Services framework is designed so that the output(s) from a given service can be directly
+    re-purposed as input(s) into subsequent downstream services.
 </p>
 
 <p>
-    The focus of this guide is to provide detailed guidance for the creation of these services.
+&nbsp;
 </p>
 
-<h2>
+<h1>
     Overview of development lifecycle
-</h2>
+</h1>
 
 <p>
     The list below describes the order of activities for creating, testing and deploying your service:
@@ -127,17 +141,18 @@ List&lt;Event&gt; messages = service.handle(Event message);
 
 <ul>
     <li>
-        Every input event message is a loosely typed key-value map of the form
+        Every input event  is a loosely typed key-value map of the form
         <code>Map&lt;String,Object&gt;</code>
     </li>
     <li>
         Of particular importance is the <code>RecordId</code> parameter.
     </li>
     <li>
-        The <code>RecordId</code> parameter points at the underlying data associated with the message.
+        The <code>RecordId</code> parameter points at the underlying data associated with the event and
+        is normally (but not necessarily) a reference to an underlying SObject instance.
     </li>
     <li>
-        The service author should be familiar with the structure of the data (SObject) pointed at by
+        The service author should be familiar with the structure of the data (normally an SObject) pointed at by
         the event so that he/she can adequately retrieve and write to this object.
     </li>
 </ul>
@@ -148,18 +163,18 @@ List&lt;Event&gt; messages = service.handle(Event message);
 
 <ul>
     <li>
-        An output event message is takes the same shape as an input event message - that is, a
+        An output event  is takes the same shape as an input event - that is, a
         loosely typed key-value map of the form <code>Map&lt;String,Object&gt;</code>
     </li>
     <li>
         <p>
-            A service returns an output collection containing zero, one or more messages in the form
+            A service returns an output collection containing zero, one or more events in the form
             <code>List&lt;Map&lt;String,Object&gt;&gt;</code>
         </p>
         <fieldset>
             <legend>Note</legend>
-            Normally the output collection will simply contain a single output message, namely the
-            re-purposed input message.
+            Normally the output collection will simply contain a single output event, namely the
+            re-purposed input event.
         </fieldset>
     </li>
 </ul>
@@ -170,39 +185,45 @@ List&lt;Event&gt; messages = service.handle(Event message);
 
 <ul>
     <li>
-        The service activity represents specific logic that is unavailable under the Service Bus,
+        The service activity represents custom logic that is not currently available under the Services framework,
         either because such logic is is not represented by one of the native framework services, or
-        such logic has not been previously created and/or registered.
+        because such logic has not been previously created and/or registered.
     </li>
     <li>
-        The service activity should be <em>specific</em>. An example of specific activity might be
+        To encourage reuse,
+        the service activity should be <em>specific</em> and should not overreach. An example of specific activity might be
         converting Unix line terminators to Windows line terminators. An example of
         <em>un-specific</em> activity might be the counting of word occurrences in a file,
         alphabetising the summary counts by word and finally reporting the results.
     </li>
     <li>
-        Generally defined activities should be re-specified into separate specific activites. Using
+        Overly general activities should be re-specified into separate specific activites. Using
         the example above, one could envisage three separate activities, namely: count, sort and
         report. The more focused an activity, the easier it becomes to write comprehensive, reliable
-        unit tests. And the easier it becomes to re-purpose the service in other sequences cutting
-        down on programmer effort and the potential for bugs (less code).
+        unit tests. As services become easier to repurpose in other sequences
+        the lower the required coding effort becomes for the organisation as a  whole.
+        This results in lower programming effort, lower  potential for bugs  and lower development cost
+        overall.
     </li>
 </ul>
 
 <p>
-    The Service Bus surfaces the notion of attributes via <strong>Step Config</strong>
-    and <strong>Service Settings</strong> to accommodate variations in data applied to the same
-    service behavior
+    The Services framework implements the OASIS <strong>Step Config</strong>
+    and <strong>Service Config</strong> attributes to accommodate variations in
+    service behavior.
 </p>
 
 <ul>
     <li>
-        <strong>Step Config</strong> allows a service to make use of attributes having values
-        configured that are specific to the context of each <em>step</em> the service belongs to.
+        <strong>Step Config</strong> allows a service to vary behaviour
+        specific to the context of the  <em>step</em> in the Sequence that
+        the Service belongs to.
     </li>
     <li>
-        <strong>Service Settings</strong> allow a service to make use of a single set of parameters
-        without reference to the context of the sequence step containing the service. These
-        parameters are defined in a Custom Setting specific to that service class.
+        <strong>Service Config</strong> allows a service to vary behaviour
+        without reference to the context of the sequence step containing the service.
+        Service Config normally applies to credentials paramaeters
+        specific to the org the service is used in - for example, the recipient of a
+        eamil for the WireTap service, Twitter oauth credentials, etc
     </li>
 </ul>

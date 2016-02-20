@@ -1,17 +1,17 @@
 <h1>
-    Documenting event parameters
+    Documenting Event Parameters
 </h1>
 
 <p>
-    It is important to advertise both:
+    It is important to advertise:
 </p>
 
 <ul>
     <li>
-        the parameters your service expects to be available on the input event and
+        the expected parameters on the input event and
     </li>
     <li>
-        the parameters your service either adds to or modifies on the output events collection.
+        the  parameters your service  will either adds or modify on the output events collection.
     </li>
 </ul>
 
@@ -29,18 +29,16 @@
 </p>
 
 <pre>
-global Map&lt;String,String&gt; Inputs = new Map&lt;String,String&gt;{
-    'c:Url' => 'STRING representing url to scrape.'
-};
+    global class Definition extends Abstract.Service.Definition {
+        //...
+
+        global Map&lt;String,String&gt; Inputs = new Map&lt;String,String&gt;{
+            'c:Url' => 'STRING representing url to scrape.'
+        };
+    }
 </pre>
 
-<h3>
-    Notes
-</h3>
 
-<p>
-    <strong>001- 003</strong> succinctly describe each parameter that the service depends on
-</p>
 
 <h2>
     Output event parameters
@@ -52,16 +50,50 @@ global Map&lt;String,String&gt; Inputs = new Map&lt;String,String&gt;{
 </p>
 
 <pre>
-global Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
-    'RecordId' =>'ID referencing a document containing the contents of the scraped input url'
-}
+    global class Definition extends Abstract.Service.Definition {
+        //...
+
+        global Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
+            'c:Data' => 'STRING representing data at url endpoint.'
+        };
+    }
 </pre>
 
+
+<h2>
+    Viewing Service Inputs and Outputs
+</h2>
+
+<p>
+    Documenting the expected inputs and outputs to a service has no effect on the service behaviour.
+    It does however provide a useful window into your service for other developers. By clicking on
+    your service from the the services tab, a developer can immeadiately see
+    the asserted expectations of the service as shown below. This is especially useful when access to the source of
+    the service is unavailable (eg compiled third party package)
+
+</p>
+<p><img src="resources/GuideProcessDocumentation/Service-Detail.png" /></p>
+
+
+
+<!--
 <h3>
     Notes
 </h3>
 
 <p>
+    <strong>001- 003</strong> succinctly describe each parameter that the service depends on
+</p>
+
+<h3>
+    Notes
+</h3>
+
+
+<p>
     <strong>001- 003</strong> succinctly describe each parameter that the service either adds or
     modifies.
 </p>
+-->
+
+

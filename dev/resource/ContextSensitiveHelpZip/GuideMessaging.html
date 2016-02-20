@@ -18,19 +18,21 @@
 </h3>
 
 <p>
-    Specific events are only relevant to specific services. For this reason a <em>Broker</em>
-    routes event messages (representing specific events) to specific services within the system.
+    Specific events are only relevant to specific services. For this reason the Services framework
+    routes messages (representing specific events) to specific services within the system.
 </p>
 
 <p>
-    Combinations of specific event messages to specific services can be reduced to a routing table
-    called a <code>Sequence</code>.
+    An ordered list of  event type to specific service can be represented  in a
+    table called a (Routing) <code>Sequence</code>.
+
 </p>
 
 <p>
-    Breaking up work into specific services that respond to specific event messages is known as
-    Event Driven Architecture. The Service Bus is a specific implementation of
-    Event Driven Architecture.
+    Breaking up work into specific services that respond to specific event types is known as
+    Event Driven Architecture (EDA). The Services framework is based on the
+    <a href="https://en.wikipedia.org/wiki/Staged_event-driven_architecture" target="_blank">SEDA</a>
+    implementation of this event based architecture.
 </p>
 
 <h3>
@@ -44,8 +46,9 @@
 </p>
 
 <p>
-    Complexity grows in an geometric manner as possible execution paths and exception handling paths
-    are added to the logic directly attached to the command.
+    An obvious drawback of of command-response architecture is that possible execution paths
+    as well as exception handling  and testing requirements grow
+    in an geometric manner as lines of code are added to system.
 </p>
 
 <h3>
@@ -53,9 +56,18 @@
 </h3>
 
 <p>
-    As previously mentioned, events in a Service Bus are represented as messages. A message
-    received by a service that has previously registered it's interest in that message type will
-    cause the logic of that service to fire.
+    A service is an apex class designed to execute specific business rules.
+    All services conform to the
+    <a href="https://github.com/bigassforce/OASIS" target="_blank">OASIS</a>
+    specification.
+</p>
+
+<p>
+    An event received by a service that has
+    previously registered it's interest in an event of that  particular type will
+    execute.  Developers are responsible for creating services and
+    the responsibility of routing  any given event to the appropriate
+    service is delegated to the services framework.
 </p>
 
 <h3>
@@ -63,16 +75,16 @@
 </h3>
 
 <p>
-    An Service Bus facilitates useful work on the Salesforce platform via services that have
-    previously registered their interest the occurrence of a specific event types. (In practise this
+    The Services framework facilitates useful work on the Salesforce platform via services that have
+    previously registered their interest the occurrence of a specific event types. (In practise, this
     means that a service registers it's interest in events emitted from the service that immediately
     precedes it.)
 </p>
 
 <p>
-    A register of interest containing sufficient number of services will naturally resemble a
+    A register of interest containing a sufficient number of services will naturally resemble a
     sequence of chained processing steps. This register is called a <em>Sequence</em> and the
-    sequential processing steps within it are called (sequence) <em>Steps</em>.
+    sequential processing steps within it are called <em>Steps</em>.
 </p>
 
 <h3>
@@ -80,17 +92,17 @@
 </h3>
 
 <p>
-    The Service Bus is implemented using Event Driven Architecture. The Service Bus logically
+    The Services framework is implemented using Event Driven Architecture. The Services framework logically
     maps processing steps to an underlying business requirement.
 </p>
 
 <p>
-    Emphasis is placed on narrowly defined, composable units of work. Each unit of work responds to
+    Emphasis is placed on narrowly defined, composable units of work called a Service. Each unit of work responds to
     the occurrence of a specific event type.
 </p>
 
 <p>
-    The Service Bus provides a clean model that limits complexity in the system to just the
+    The Services framework provides a clean model that limits complexity in the system to just the
     testable apex implementation details of any given service. In contrast, the Command-Response
     paradigm attempts to attach all possible logical code paths and associated exception handling to
     a single specific command. This creates code complexity that is not easily tested or modified.
