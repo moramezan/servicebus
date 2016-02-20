@@ -91,7 +91,7 @@ public class ApexDomain {
             DescribeSObjectResult description = type.getDescribe();
             String name = description.getName();
             String fields = String.join(new List<String>(description.fields.getMap().keySet()), ',');
-            return Database.query('SELECT ' + fields + ' FROM ' + name + ' WHERE Id = :recordId');
+            return Database.query('SELECT ' + fields + ' FROM ' + name + ' WHERE Id = :recordId ALL ROWS');
             
         } catch (Exception e) {
             //failure, bad describe, non existent etc

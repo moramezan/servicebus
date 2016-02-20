@@ -26,11 +26,16 @@ public with sharing class SequenceEditExtension {
         this.RoutedMessages = this.model.countRoutedMessages();
     }
     
-    //#173 terminate sequence on read
+    /**
+     * #173 terminate sequence on read
+     * We also heal class IDs and NAMEs
+     */
     static SequenceModel TerminateModel;
     public class DoDml {
         public DoDml() {
             TerminateModel.terminateIfNeeded();
+            TerminateModel.healApexClassIds();
+            TerminateModel.healApexTypeNames();
         }
     }
     
@@ -39,14 +44,14 @@ public with sharing class SequenceEditExtension {
      * situation and sends user to configure page.
      */
     public PageReference doRedirect() {
+        
+        //discover if needed
+        PageReference redirect = ApexClassDiscoverExtension.DiscoverIfNeeded(ApexPages.currentPage());
+        if (redirect != null) return redirect;
+        
         //#173 terminate sequence on read
         TerminateModel = SequenceModel.fromId(this.controller.getId());
         Type.forName(DoDml.class.getName()).newInstance();
-        PageReference redirect;
-        
-        //discover if needed
-        redirect = ApexClassDiscoverExtension.DiscoverIfNeeded(ApexPages.currentPage());
-        if (redirect != null) return redirect;
         
         return null;
     }

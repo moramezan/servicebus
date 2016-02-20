@@ -16,7 +16,7 @@ public with sharing class ConfigureController {
         return (''
             + 'sforce.connection.init("' + UserInfo.getSessionId() + '");'
             + 'sforce.connection.remoteFunction({'
-            + '    url: "' + this.BaseUrl + '/services/Soap/m/35.0",'
+            + '    url: "' + this.BaseUrl + '/services/Soap/m/36.0",'
             + '    onSuccess: function(response, xhr) {'
             + '        var oa = window.location.href.replace("stage=js", "stage=oa");' //force redirect with no history
             + '        window.location.replace ? window.location.replace(oa) : window.location.href = oa;'
@@ -43,7 +43,7 @@ public with sharing class ConfigureController {
      * keep the new sauce "secret".
      */
     public String requestData() {
-        //#112 pass security scanner for 35.0 release
+        //#112 pass security scanner for 36.0 release
         return (''
             + '<?xml version="1.0" encoding="utf-8"?>'
             + '<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
@@ -84,7 +84,7 @@ public with sharing class ConfigureController {
         outputPanel.expressions.rendered = '{!$CurrentPage.parameters.stage == "js"}';
             
             Component.Apex.IncludeScript includeScript = new Component.Apex.IncludeScript();
-            includeScript.value = '/soap/ajax/35.0/connection.js';
+            includeScript.value = '/soap/ajax/36.0/connection.js';
             outputPanel.childComponents.add(includeScript);
             
             Component.Apex.OutputText outputText = new Component.Apex.OutputText();
@@ -396,7 +396,7 @@ public with sharing class ConfigureController {
             
             if (response.getBody().contains('ip restricted')) {
                 //failure, definitely ip restrictions
-                return new System.PageReference('/packaging/installPackage.apexp?p0=04t24000000EkE2'); //35.0 (Released)
+                return new System.PageReference('/packaging/installPackage.apexp?p0=04t24000000EkE2'); //36.0 (Released)
             }
             
             if (response.getStatusCode() != 200) {
@@ -518,7 +518,7 @@ public with sharing class ConfigureController {
         HttpRequest request = new HttpRequest();
         request.setTimeout(120000);
         request.setMethod('POST');
-        request.setEndpoint(baseUrl + '/services/Soap/m/35.0');
+        request.setEndpoint(baseUrl + '/services/Soap/m/36.0');
         request.setHeader('SOAPAction', '""');
         request.setHeader('Content-Type', 'text/xml');
         request.setBody(metadata(sessionId));
@@ -530,7 +530,7 @@ public with sharing class ConfigureController {
      * Package 03324000000Q59r
      * Version 04t24000000QtN7
      * /packaging/installPackage.apexp?p0=04t24000000QuGy
-     * 34.0 (Released)
+     * 36.0 (Released)
      */
     static public String metadata(String sessionId) {
         return (''
@@ -546,7 +546,7 @@ public with sharing class ConfigureController {
             + '            <metadata xsi:type="InstalledPackage">'
             + '                <fullName>' + 'abstract' + '</fullName>'
             + '                <password></password>'
-            + '                <versionNumber>' + '34.0.0' + '</versionNumber>'
+            + '                <versionNumber>' + '36.0.0' + '</versionNumber>'
             + '            </metadata>'
             + '        </upsertMetadata>'
             + '    </env:Body>'

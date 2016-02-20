@@ -309,27 +309,20 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             model.invokeCallout();
         }
         
-        //for isolating chunks from each other
-        Savepoint sp = Database.setSavepoint();
-        Boolean isolate = false;
-        
         //THEIR FUCKUPS (execute)
         for (MessageModel model : models) {
             
-            if (isolate) {
-                //consume savepoint only if necessary (side effects)
-                sp = Database.setSavepoint();
-                isolate = false;
-            }
+            //always necessary #1251
+            Savepoint savepoint = Database.setSavepoint();
             
             //do invocation
             if (impl != null) impl.FatalMessageId = model.getId(); //#985
             if (impl != null) impl.FatalCpuTime = Datetime.now().getTime(); //#985
-            isolate = model.invokeExecute(outputMessages);
+            model.invokeExecute(outputMessages);
             
-            if (model.Message.Exception__c != null && isolate) {
-                //consume rollback only if necessary (error AND side effects)
-                Database.rollback(sp);
+            if (model.Message.Exception__c != null) {
+                //consume rollback if necessary #1251
+                Database.rollback(savepoint);
             }
         }
         
@@ -499,12 +492,11 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     @TestVisible void swallowToString() {
         for (Message__c message : this.Messages) {
             if (message.Cause__c != null) {
-                message.Cause__c = message.Cause__c.replace('\n(esb)', '');
-                message.Cause__c = message.Cause__c.replace('\n(abstract)', '');
-                message.Cause__c = message.Cause__c.replace('\n(Services)', '');
-                message.Cause__c = message.Cause__c.replace('\nExternal entry point', '');
-                message.Cause__c = message.Cause__c.replace('\nAnonymousBlock: line 1, column 1', '');
-                message.Cause__c = message.Cause__c.replaceAll('\nClass\\.\\w*Service\\.toString\\: line \\d+, column \\d+', ''); //TODO test this
+                message.Cause__c = message.Cause__c.replaceAll('\r?\n?\\(abstract\\)', '');
+                message.Cause__c = message.Cause__c.replaceAll('\r?\n?\\(Services\\)', '');
+                message.Cause__c = message.Cause__c.replaceAll('\r?\n?External entry point', '');
+                message.Cause__c = message.Cause__c.replaceAll('\r?\n?AnonymousBlock: line 1, column 1', '');
+                message.Cause__c = message.Cause__c.replaceAll('\r?\n?Class\\.\\w*Service\\.toString\\: line \\d+, column \\d+', ''); //TODO test this
             }
         }
     }

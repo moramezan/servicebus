@@ -87,7 +87,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
                 if (this.Retry == null) this.Retry = false;
                 
                 //#955 cap Chunks ceiling
-                if (this.Chunks > 200) this.Chunks = 200; //#1038 even more breathing room //#955 possibly 2000, but headspace
+                if (this.Chunks > 100) this.Chunks = 100; //#1038 even more breathing room //#955 possibly 2000, but headspace
                 if (this.Chunks < 1) this.Chunks = 1; //be sensible
 
             } catch (Exception e) {
@@ -185,7 +185,15 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         DescribeSObjectResult result = Schema.getGlobalDescribe().get(definition.ServiceConfig).getDescribe();
         return result;
     }
-    
+
+    public ApexClassModel.Definition getDefinition() {
+        if (Test.isRunningTest()) {
+            return new ApexClassModel.Definition(Type.forName(this.Reflector.getName()));
+        } else {
+            return ApexClassSetModel.loadCache().get(this.Reflector.getName());
+        }
+    }
+
     /**
      * Redirects user to the HelpURL
      * specified on the Service Definition
@@ -394,19 +402,7 @@ abstract public class Service {
         //do invocation
         String data;
         try {
-            //measure side effects before
-            Integer futureCalls = Limits.getFutureCalls();
-            Integer queueableJobs = Limits.getQueueableJobs();
-            Integer dmlStatements = Limits.getDMLStatements();
-            Integer emailInvocations = Limits.getEmailInvocations();
-            
             data = String.valueOf(this.Service);
-            
-            //measure side effects after
-            if (Limits.getFutureCalls() > futureCalls) throw new Broker.ServiceException('You have uncommitted work pending. Please commit or rollback before calling out');
-            if (Limits.getQueueableJobs() > queueableJobs) throw new Broker.ServiceException('You have uncommitted work pending. Please commit or rollback before calling out');
-            if (Limits.getDMLStatements() > dmlStatements) throw new Broker.ServiceException('You have uncommitted work pending. Please commit or rollback before calling out');
-            if (Limits.getEmailInvocations() > emailInvocations) throw new Broker.ServiceException('You have uncommitted work pending. Please commit or rollback before calling out');
             
         } catch (Exception e) {
             if (TransactionService.IsRunning) {

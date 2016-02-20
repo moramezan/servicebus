@@ -1,15 +1,9 @@
 public with sharing class MessageViewExtension {
     
-    static MessageModel dmlModel;
+    String mid;
     ApexPages.StandardController controller;
-    public Message__c Message {get; set;}
-    public List<Message__c> Children {get; set;}
-    public ApexClassModel.Definition Definition {get; set;}
-    
-    public MessageViewExtension(ApexPages.StandardController controller) {
-        this.controller = controller;
-    }
-    
+    static Application__c application = Application__c.getOrgDefaults();
+
     @RemoteAction static public void handleRestart(Id messageId, Long duration, String exceptions, String cause) {
         //execanon results
         update new Message__c(
@@ -21,48 +15,50 @@ public with sharing class MessageViewExtension {
         );
     }
     
+    public MessageViewExtension(ApexPages.StandardController controller) {
+        //need to redirect, nothing to do
+        this.controller = controller;
+        if (this.controller.getId() != null) return;
+        
+        //grab latest access token
+        this.mid = ApexPages.currentPage().getParameters().get('mid');
+        if (!Test.isRunningTest()) application.RunAsAccessToken__c = ConfigureController.refreshAccessToken();
+    }
+    
+    public ApexClassModel.Definition getDefinition() {
+        try {
+            Message__c message = (Message__c)ApexDomain.getById(this.mid);
+            return ApexClassModel.fromRoute(message.Route__c).getDefinition();
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+            return null;
+        }
+    }
+    
+    public Message__c getMessage() {
+        return (Message__c)ApexDomain.getById(this.mid);
+    }
+    
+    public List<Message__c> getChildren() {
+        return [
+            SELECT Id, Name, CreatedDate, Status__c, Route__c, ExecuteDuration__c, Exception__c
+            FROM Message__c
+            WHERE ParentId__c = :this.mid
+            ALL ROWS
+        ];
+    }
+    
     public PageReference doInit() {
         
         if (this.controller.getId() != null) {
-            //get away from standard controller
+            //redirect to mid
             PageReference redirect = Page.MessageView;
             redirect.getParameters().put('mid', this.controller.getId());
             redirect.setredirect(true); //prevents internal error
             return redirect;
         }
         
-        String mid = ApexPages.currentPage().getParameters().get('mid');
-        
-        this.Message = [
-            SELECT Id, Name, CreatedDate, Status__c, Route__c, ExecuteDuration__c, Exception__c, Cause__c, Event__c, JobId__c, ParentId__c, Slot__c
-            FROM Message__c
-            WHERE Id = :mid
-            ALL ROWS
-        ];
-        
-        this.Children = [
-            SELECT Id, Name, CreatedDate, Status__c, Route__c, ExecuteDuration__c, Exception__c
-            FROM Message__c
-            WHERE ParentId__c = :mid
-            ALL ROWS
-        ];
-        
         try {
-            //resolve class name
-            String apexTypeName = this.Message.Route__c;
-            Step__c step = Step__c.getValues(this.Message.Route__c);
-            if (step != null) apexTypeName = step.ApexTypeName__c;
-            
-            //unit tests skip cache
-            if (Test.isRunningTest()) this.Definition = new ApexClassModel.Definition(Type.forName(apexTypeName));
-            else if (!Test.isRunningTest()) this.Definition = ApexClassSetModel.loadCache().get(apexTypeName);
-            
-        } catch (Exception e) {
-            ApexPages.addMessages(e);
-        }
-        
-        try {
-            dmlModel = new MessageModel(this.Message);
             Type.forName(DoDml.class.getName()).newInstance();
         } catch (Exception e) {
             ApexPages.addMessages(e);
@@ -72,12 +68,8 @@ public with sharing class MessageViewExtension {
     }
     
     public PageReference showService() {
-        MessageModel model = new MessageModel(this.Message);
-        
         try {
-            PageReference detailView = model.showService();
-            return detailView;
-            
+            return MessageModel.fromId(this.mid).showService();
         } catch (MessageModel.ModelException e) {
             ApexPages.addMessages(e);
             return null;
@@ -85,12 +77,8 @@ public with sharing class MessageViewExtension {
     }
     
     public PageReference showData() {
-        MessageModel model = new MessageModel(this.Message);
-        
         try {
-            PageReference detailView = model.showRecordData();
-            return detailView;
-            
+            return MessageModel.fromId(this.mid).showRecordData();
         } catch (MessageModel.ModelException e) {
             ApexPages.addMessages(e);
             return null;
@@ -104,23 +92,27 @@ public with sharing class MessageViewExtension {
         return commandButton;
     }
     
+    /**
+     * we cannot just GET the access token, because the CACHED custom
+     * setting is obviously STALE in the same execution context, so we
+     * must pull it straight off the refresh happening in constructor
+     */
     public String javascript() {
+        String sid = application.RunAsAccessToken__c;
         String bar = Application__c.getOrgDefaults().PrefixBar__c;
         String dot = Application__c.getOrgDefaults().PrefixDot__c;
-        String sid = Application__c.getOrgDefaults().RunAsAccessToken__c;
+        if (sid == null) sid = '';
         if (bar == null) bar = '';
         if (dot == null) dot = '';
-        if (sid == null) sid = '';
         
-        String mid = ApexPages.CurrentPage().getParameters().get('mid');
-        Map<String,Object> parameters = new Map<String,Object>{'ToService' => 'Services.RestartMessageId', 'RecordId' => mid};
+        Map<String,Object> parameters = new Map<String,Object>{'ToService' => 'Services.RestartMessageId', 'RecordId' => this.mid};
         return (''
             + 'var mid = "' + mid + '";'
             + 'var bar = "' + bar + '";'
             + 'var sid = "' + sid + '";'
             + 'var mark = new Date().getTime();'
             + 'var command = \'new ' + Enqueue.class.getName() + '().invoke(new Process.PluginRequest((Map<String,Object>)Json.deserializeUntyped(\\\'' + Json.serialize(parameters) + '\\\')));\';'
-            + 'sforce.connection.init(sid, "/services/Soap/u/35.0");'
+            + 'sforce.connection.init(sid, "/services/Soap/u/36.0");'
             + 'var response = sforce.apex.executeAnonymous(command);'
             + 'if (response.success == "false") {' //started, persist any fatal error and refresh
             + '    Visualforce.remoting.Manager.invokeAction('
@@ -135,18 +127,14 @@ public with sharing class MessageViewExtension {
             + '} else {' //completed, redirect back to list view, or just refresh
             + '    window.location.reload();'
             + '}'
-        ).replaceAll('    ', ' ');
+        ).replaceAll('    ', '');
     }
     
     public class DoDml {
         public DoDml() {
-            //roaring and ready access token
-            Application__c setting = Application__c.getOrgDefaults();
-            setting.RunAsAccessToken__c = ConfigureController.refreshAccessToken();
-            upsert setting;
-            
-            //avoids dml in action method
-            dmlModel.healExtendedStatus();
+            upsert application;
+            String mid = ApexPages.currentPage().getParameters().get('mid');
+            MessageModel.fromId(mid).healExtendedStatus();
         }
     }
     

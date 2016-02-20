@@ -106,7 +106,6 @@
         String cause = 'Class.DoCallout.callout: line 12, column 1'
             + '\n(Services)'
             + '\n(abstract)'
-            + '\n(esb)'
         ;
         
         Message__c message = new Message__c(

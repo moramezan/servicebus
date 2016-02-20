@@ -8,7 +8,7 @@ public class ScheduleService extends ApexClassModel.Service {
         String Icon = 'clock';
         String StepConfig = ScheduleStepConfig__c.class.getName();
         Boolean ConsumesHeartbeat = true;
-        Integer Chunks = 200; //no soqls, no dmls
+        Integer Chunks = 100; //no soqls, no dmls
         Map<String,String> Inputs = new Map<String,String>{
             'EntryPointTimestamp' => 'DATETIME of the point in time this schedule was intended to run.'
         };

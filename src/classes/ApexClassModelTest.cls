@@ -279,7 +279,7 @@
         ApexClassModel.Definition definition = new ApexClassModel.Definition(TooManyInputs.class);
         
         //assert
-        Integer expectedChunks = 200; //#955 possibly 2000, but headspace
+        Integer expectedChunks = 100; //#955 possibly 2000, but headspace
         Integer actualChunks = definition.Chunks;
         System.assertEquals(expectedChunks, actualChunks, 'Wrong chunks.');
     }

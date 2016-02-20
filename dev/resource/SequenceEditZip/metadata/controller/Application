@@ -364,9 +364,9 @@
                 "implHandler": [
                     "var view = tableview,",
                     "    plugin = view.getPlugin('dragdrop'),",
-                    "    apexClassName = record.get('ApexClassName');",
+                    "    apexTypeName = record.get('ApexTypeName');",
                     "",
-                    "plugin.dragZone.dragText = 'Move ' + apexClassName + ' step here';"
+                    "plugin.dragZone.dragText = 'Move ' + apexTypeName + ' step here';"
                 ],
                 "name": "beforecellmousedown",
                 "scope": "me"

@@ -234,4 +234,69 @@
         System.assertEquals(expectedCount, actualCount, 'Wrong count.');
         
     }
+    
+    static testmethod void healApexTypeNames() {
+        
+        //arrange sequence
+        insert new Sequence__c(Name = 'Test');
+        
+        //arrange steps
+        insert new Step__c(
+            Name = '1#Test#1',
+            Version__c = 1,
+            Sequence__c = 'Test',
+            Position__c = 1,
+            IsDraft__c = true,
+            ApexClassId__c = [SELECT Id FROM ApexClass WHERE Name = 'TerminateService'].Id,
+            ApexTypeName__c = 'WrongService'
+        );
+        
+        //act
+        SequenceModel.fromName('Test').healApexTypeNames();
+        
+        //assemble
+        Step__c step = [SELECT Id, ApexTypeName__c FROM Step__c];
+        
+        //assert
+        String expectedName = TerminateService.class.getName();
+        String actualName = step.ApexTypeName__c;
+        System.assertEquals(expectedName, actualName, 'Wrong name');
+    }
+    
+    static testmethod void healApexClassIds() {
+        
+        //arrange cache
+        Map<String,ApexClassModel.Definition> name2definition = new ApexClassSetModel([
+            SELECT Id, NamespacePrefix, Name
+            FROM ApexClass
+            WHERE Name = 'TerminateService'
+        ]).discoverDefinitions();
+        
+        ApexClassSetModel.saveCache(name2definition);
+        
+        //arrange sequence
+        insert new Sequence__c(Name = 'Test');
+        
+        //arrange sequence
+        insert new Step__c(
+            Name = '1#Test#1',
+            Version__c = 1,
+            Sequence__c = 'Test',
+            Position__c = 1,
+            IsDraft__c = true,
+            ApexClassId__c = '01p000000000000AAA',
+            ApexTypeName__c = TerminateService.class.getName()
+        );
+        
+        //act
+        SequenceModel.fromName('Test').healApexClassIds();
+        
+        //assemble
+        Step__c step = [SELECT Id, ApexClassId__c FROM Step__c];
+        
+        //assert
+        Id expectedId = [SELECT Id FROM ApexClass WHERE Name = 'TerminateService'].Id;
+        Id actualId = step.ApexClassId__c;
+        System.assertEquals(expectedId, actualId, 'Wrong id');
+    }
 }
