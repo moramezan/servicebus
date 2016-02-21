@@ -212,7 +212,10 @@ global class ChattertapService extends Abstract.Service {
     -->
 
     <li>
-        <p>Next, update the  service definition from Listing 1 with appropriate meta attributes in accordance with the OASIS specofication</p>
+        <p>Next, update the  service definition from Listing 1 with appropriate meta attributes
+            in accordance with the
+            <a href="https://github.com/bigassforce/OASIS" target="_blank">OASIS</a>
+            specification</p>
 
         <p  align="right">
             <strong>Listing 2</strong>
@@ -495,6 +498,19 @@ private class ChatterTapServiceTest {
     }
 }
 </pre>
+
+  <p>
+    <fieldset>
+<legend>Note: </legend>
+    Refer to lines <strong>017</strong> and <strong>046</strong>.
+    <br/>
+    During unit tests, do not call the  <code>execute()</code> or <code>callout() </code> methods
+    of the service directly.
+    Instead, call the <code>handle()</code> method - for further details, contact the services package authors.
+
+    </fieldset>
+
+  </p>
     <p>  <br/> </p>
 </blockquote>
 
