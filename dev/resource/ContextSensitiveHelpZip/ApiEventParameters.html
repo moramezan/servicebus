@@ -21,15 +21,9 @@
         <td>(custom)</td>
         <td>Parameters set by custom code outside a package must use the <code>c</code> prefix.</td>
     </tr>
-    <!--<tr>
-        <td><code>{"servicebus:ToSequence":"Payroll_Calculation"}</code></td>
-        <td><code>servicebus:</code></td>
-        <td>(Service Bus API)</td>
-        <td>The Service Bus package uses the <code>servicebus</code> namespace for its parameters.</td>
-    </tr>-->
     <tr>
-        <td><code>{"acme:AnvilNames":["A","B"]}</code></td>
-        <td><code>acme:</code></td>
+        <td><code>{"AcmeCo:Anvils":["A","B"]}</code></td>
+        <td><code>AcmeCo:</code></td>
         <td>(third-party)</td>
         <td>Services in managed packages must namespace prefix their event parameters.</td>
     </tr>
@@ -41,7 +35,7 @@
 
 <ul>
     <li>cumulative: event parameters carry through a sequence and are available to subsequent steps,</li>
-    <li>case sensitive: the namespace prefix is lowercase, and upper camel case for the parameter names,</li>
+    <li>case sensitive: use the verbatim namespace prefix and upper camel case for parameter names,</li>
     <li>namespace agnostic: any event may carry any number of parameters from any number of namespaces,</li>
 </ul>
 
@@ -62,14 +56,10 @@
     <dt>ToSequence</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
     <dd>Routes an event to the sequence named here. This value is case-sensitive.</dd>
-    
-    <dt>ToConfigIds</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_set.htm" target="_blank">Set&lt;Id&gt;</a></dd>
-    <dd>Routes an event to the sequence containing the step with this config. The set correct live version will be selected from the configs in the set.</dd>
 </dl>
 
 <h1>
-    Service Event Parameters
+    Standard Event Parameters
 </h1>
 
 <dl>
@@ -81,15 +71,15 @@
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
     <dd>Universally unique identifier (v4) which can be used to group everything spawned from any entry point event.</dd>
 
-    <dt>EntryPointDatetime</dt>
+    <dt>EntryPointTimestamp</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Exact date and time of the entry point event that spawned this event. For example this carries the intended run time of Schedule service events.</dd>
+    <dd>Exact date and time of the entry point event that spawned this event. For example this carries the run time of Schedule events.</dd>
 
     <dt>EnqueueUserId</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
-    <dd>Read-only Id of the user that spawned events (by enqueueing a <code>ServiceBus.Job</code>).</dd>
+    <dd>Read-only Id of the user that enqueued any chain of events.</dd>
     
     <dt>JobId</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
-    <dd>Id of the Queueable AsyncApexJob that injected the entry point event. (Not to be confused with the Job class)</dd>
+    <dd>Id of the Queueable AsyncApexJob that injected the entry point event.</dd>
 </dl>

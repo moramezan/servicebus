@@ -26,11 +26,11 @@
 <fieldset>
     <legend>Note</legend>
     <p>
-        Advanced usage can exploit the Process.Plugin implementation to enqueue events without any package dependency.
+        The Process.Plugin implementation can be leveraged to enqueue events without creating any package dependency.
     </p>
     
     <p>
-        Use this when authoring and distributing AppExchange packages that need to submit events into to services, for example:
+        Use this when authoring and distributing AppExchange packages that need to submit events to services, for example:
     </p>
     
     <pre>
@@ -39,8 +39,8 @@
         event.put('ToSequence', 'Generate_PDF_Statements');
         
         //immediately submit event to service
-        Process.Plugin job = (Process.Plugin)Type.forName('Services.Enqueue').newInstance();
-        Process.PluginResult result = job.invoke(new Process.PluginRequest(event));
+        Process.Plugin enqueue = (Process.Plugin)Type.forName('Services.Enqueue').newInstance();
+        Process.PluginResult result = enqueue.invoke(new Process.PluginRequest(event));
         
         //access job id
         Id jobId = result.OutputParameters.get('JobId');

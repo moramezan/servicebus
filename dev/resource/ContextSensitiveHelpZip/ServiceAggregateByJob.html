@@ -1,0 +1,63 @@
+<h1>
+    Aggregate By Job Service
+</h1>
+
+<p>
+    The aggregate service notifies you when all events from a Job have been handled successfully.
+</p>
+
+<h2>
+    Scenario
+</h2>
+
+<p>
+    Imagine a turbine inspection service that handles events to check the strength each of 30 fan blades.
+    You have now a collection of 30 downstream events, but these related events are processed asynchronously.
+    Naturally all 30 fan blades must pass, in order for the turbine to be certified as worthy.
+    How do you wait until the strength checks for all fan blades are completed?
+</p>
+
+<h2>
+    Using the aggregate service
+</h2>
+
+<ol>
+    <li>The Services Package enqueues related events with the same <code>JobId</code></li>
+    <li>Each of the 30 fan blade inspections is processed individually with a pass or fail result</li>
+    <li>After the fan blade inspections, all the events are persisted by the Aggregate service</li>
+    <li>When the last fan blade inspection completes, the Aggregate service releases a single event</li>
+</ol>
+
+<p>
+    <img src="resources/Services/Aggregate.png" />
+</p>
+
+<h2>
+    Retrieving aggregated events
+</h2>
+
+<p>
+    The aggregation output event, when emitted, will carry two parameters.
+    <br />
+    Related events can be retrieved by querying the messages with dynamic SOQL.
+</p>
+
+<dl>
+    <dt>AggregateQuery</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>
+        Query string for locating the records correlated by the Aggregate service.
+        <br />
+        Use <code>Database.query</code> and cast the result to <code>List&lt;sObject&gt;</code>.
+    </dd>
+    
+    <dt><!-- TODO --></dt>
+    
+    <dt>AggregateField</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_list.htm" target="_blank">List&lt;Map&lt;String,Object&gt;&gt;</a></dd>
+    <dd>
+        Field name on the stored items that contains the serialized event data.
+        <br />
+        Use <code>sobject.get()</code> to dereference it, then cast to <code>Map&lt;String,Object&gt;</code> when deserializing the value.
+    </dd>
+</dl>

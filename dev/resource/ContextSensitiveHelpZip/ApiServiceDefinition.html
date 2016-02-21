@@ -71,12 +71,20 @@ global class ExampleService extends Abstract.Service {
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
     <dd>Optional link to service documentation. This will be displayed alongside services listed.</dd>
     
-    <dt>Limits</dt>
+    <dt>Chunks</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">Integer</a></dd>
     <dd>
         Optional number of times this service can run in one execution context.
         <br />For example a service issuing 2 SOQL queries could run only <code>100</code> times.</dd>
 
+    <dt>StepConfig</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Optional API name of a Custom Setting to be used for Step-specific configuration.</dd>
+    
+    <dt>ServiceConfig</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Optional API name of a Custom Setting to be used for Service-specific configuration.</dd>
+    
     <dt>Inputs</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,String&gt;</a></dd>
     <dd>Optional descriptions of the input event parameters required by this service.</dd>
@@ -84,31 +92,23 @@ global class ExampleService extends Abstract.Service {
     <dt>Outputs</dt>
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,String&gt;</a></dd>
     <dd>Optional descriptions of the output event parameters emitted by this service. Not to be confused with events themselves.</dd>
-    
-    <dt>ServiceSetting</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_custom_settings.htm" target="_blank">SObject</a></dd>
-    <dd>Optional <em>prototype object</em> of a Custom Setting to be used for Service-specifics settings. Data of this type are manageable on each service, and are surfaced inside the Sequence Builder.</dd>
-    
-    <dt>StepConfig</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_sobject.htm" target="_blank">SObject</a></dd>
-    <dd>Optional <em>prototype object</em> of a Custom Object to be used for Step-specific config. Records of this type are editable on each step, and are surfaced inside the Sequence Builder.</dd>
 </dl>
 
 <p>
-    This example Marker Inner Class uses all of the above:
+    An example Service Definition showing all attributes:
 </p>
 
 <pre>
 global class Definition extends Abstract.Service.Definition {
     String Description = 'Distributes leads to different owners.';
-    String Tag = 'Distribution Service';
+    String Tag = 'Sales Services';
     String Icon = 'chart_organisation';
-    String Label = 'Twitter';
-    String HelpUrl = Page.DistributionHelp.getUrl();
-    String Limits = 75; //(constrained by DML)
-    String StepConfig = LeadAssignment.class.getName();
-    String ServiceConfig = DistributionServiceConfig__c.class.getName();
-    Integer Cardinality = 'One';
+    String Label = 'Lead Distribute';
+    String Cardinality = 'One';
+    String HelpUrl = Page.LeadDistributeHelp.getUrl();
+    String Chunks = 75; //constrained by DML
+    String StepConfig = LeadDistributeStepConfig__c.class.getName();
+    String ServiceConfig = LeadDistributeServiceConfig__c.class.getName();
     
     Map&lt;String,Object&gt; Inputs = new Map&lt;String,Object&gt;{
         'acme:Body' => 'String of the tweet body.'
@@ -116,130 +116,6 @@ global class Definition extends Abstract.Service.Definition {
     
     Map&lt;String,Object&gt; Outputs = new Map&lt;String,Object&gt;{
         'acme:TweetId' => 'String of tweet Id.'
-    }
-}
-</pre>
-
-<h1>
-    Marker Properties
-</h1>
-
-<p>
-    These properties on an Apex Class may be populated by a Service. They can be read during execution.
-</p>
-
-<dl>
-    <dt>Event</dt>
-    <dd><strong>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></strong></dd>
-    <dd><strong>Required property containing the map of input event parameters, in JSON serialized form.</strong></dd>
-    
-    <dt>StepConfig</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">Custom Object</a></dd>
-    <dd>Concrete custom object whose fields are populated with any Step-specific configuration, if that trait is adopted by this service.</dd>
-    
-    <dt>AllowsCallouts</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_boolean.htm" target="_blank">Boolean</a></dd>
-    <dd>False when handling execution logic and true when handling callout logic, if that trait is adopted by this service.</dd>
-</dl>
-
-<p>
-    Example
-</p>
-
-<pre>
-//Service Marker Properties
-global String Event;
-global TwitterConfig__c StepConfig;
-global Boolean AllowsCallouts;
-</pre>
-
-
-<h1>
-    Marker Methods
-</h1>
-
-<h2>
-    callouts
-</h2>
-
-<p>
-    Optional method, implemented for services that perform callouts.
-</p>
-
-<p>
-    <code>override protected void callout(Map&lt;String,Object&gt; inputEvent)</code>
-</p>
-
-<p>
-    Any web services or HTTP callouts must be performed via this method. The response body
-    can be shared with the <code>execute</code> method by using class properties. For example:
-</p>
-
-<pre>
-override protected void callout(Map&lt;String,Object&gt; inputEvent) {
-    HttpRequest request = new HttpRequest();
-    request.setEndpoint('http://headers.jsontest.com/');
-    request.setMethod('GET');
-    this.Content = new Http().send(request).getBody();
-}
-</pre>
-
-<h2>
-    execute
-</h2>
-
-<p>
-    Required method that contains the executable logic of a Service.
-</p>
-
-<p>
-    <code>override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent)</code>
-</p>
-
-<p>
-    Any DML operations must be performed via this method. Returns a list of zero, one or many output events.
-</p>
-
-<pre>
-override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
-    Map&lt;String,Object&gt; outputEvent = inputEvent.clone();
-    outputEvent.put('c:Debug', 'Hello world!');
-    return new List&lt;Map&lt;String,Object&gt;&gt;{outputEvent};
-}
-</pre>
-
-<h1>
-    Marker Interfaces
-</h1>
-
-<h2>
-    Database.AllowsCallouts
-</h2>
-
-<p>
-    Indicates this service will attempt to make HTTP callouts.
-</p>
-
-<p>
-    This marker interface has no methods. See example:
-</p>
-
-<pre>
-//Service Marker Interface
-global class TwitterProcess extends BaseProcess implements Database.AllowsCallouts {
-    
-    //Service Marker Inner Class
-    global class Summary {
-        String Description = 'Makes an HTTP callout then performs some DML.';
-    }
-     
-    override protected void callout(Map&lt;String,Object&gt; inputEvent) {
-        //http callouts here (called first)
-    }
-    
-    override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
-        //dml operations here (called second)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
     }
 }
 </pre>

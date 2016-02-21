@@ -1,61 +1,54 @@
 <h1>
-    Publish and Subscribe services
+    Publish and Subscribe Services
 </h1>
 
 <p>
-    The <em>Publish</em> and <em>Subscribe</em> services work together to bind two or more
-    sequences. This binding is achieved by specifying a common Event Type that is shared between
-    both the <em>Publish</em> and <em>Subscribe</em> services.
+    The Publish and Subscribe services are used to bind two or more sequences.
+    This binding is achieved by choosing a common Topic on the step configs.
+    The publish step emits events to the Topic and the subscribe steps consumes them.
+    Any number of subscribers can use this indirection to listen to a given topic..
 </p>
 
-<p>
-    <img width="480" src="resources/Processes/PubSubConfig.png" />
-</p>
+<fieldset>
+    <legend>Note</legend>
+    Subscribe steps must be the first step in a sequence.
+</fieldset>
 
-<p>
-    The <em>Publish</em> service directs the message to the common event type and the
-    <em>Subscribe</em> service retrieves from the common event type. This indirection facilitates
-    the retrieval of the same event type by more than one <code>Subscribe</code> service.
-</p>
-
-<p>
-    A <em>Subscribe</em> service must always be the first service in a Sequence
-</p>
 
 <h2>
-    Config
+    Publish Step Config
 </h2>
 
 <p>
-    An event type must be specified for both the <em>Subscribe</em> and <em>Publish</em> services.
-    An event type is created from the configuration screen of either the <em>Publish</em> or
-    <em>Subscribe</em> services. To specify the event type:
+    The topic must be specified for each Publish step. To specify the topic:
 </p>
 
 <ol>
     <li>
-        Click <strong>Configure</strong> next to either a <em>Publish</em> or <em>Subscribe</em>
-        step in the sequence builder. This will open the config screen.
+        Click <strong>Configure</strong> next to a Publish step.
     </li>
     <li>
-        On the config screen, click <strong>Manage Event Types</strong>
-        then click <strong>New Event Type</strong> to create a new event type.
+        <strong>Edit</strong> the step config and nominate the topic.
+    </li>
+</ol>
+
+<h2>Subscribe Step Config</h2>
+
+<p> 
+    Similarly, the topic must be specified for any Subscribe step:
+</p>
+
+<ol>
+    <li>
+        Click <strong>Configure</strong> next to a Subscribe step.
+    </li>
+    <li>
+        <strong>Edit</strong> the step config and nominate the topic.
     </li>
 </ol>
 
 <p>
-    To publish to an event type, click <strong>Configure</strong> next to a <em>Publish</em>
-    step in the sequence builder. Select an event type to publish to by clicking the Event Type
-    lookup field.
-</p>
-
-<p>
-    To subscribe to an event type, click the configure link next to a <em>Subscribe</em> step (if
-    not already on the <em>Subscribe</em> configuration view)
-</p>
-
-<p>
-    Select a named event to subscribe to by clicking the Event Type lookup field.
+    <img width="800" src="resources/Services/PublishSubscribe.png" />
 </p>
 
 <!--
