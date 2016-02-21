@@ -3,7 +3,7 @@
 </h1>
 
 <p>
-    Service  concepts described in this chapter are:
+    Concepts described in this chapter include:
 </p>
 
 <ul>
@@ -18,7 +18,7 @@
 </h3>
 
 <p>
-    All work under the Services framework is deconstructed into specific tasks. Each task is implemented as
+    All work under the Services framework is de-constructed into specific tasks. Each task is implemented as
     an Apex class and is called a Service.
 </p>
 
@@ -32,7 +32,7 @@
 </h3>
 
 <p>
-    Every service responds to an input event by emitting a list of zero, one or more output
+    Every service responds to an input event and emits  a list of zero, one or more output
     events. The Services framework is designed so that output events from any given service automatically
     feed the input stream of the very next service in a <em>Sequence</em>.
 </p>
@@ -52,7 +52,7 @@
 
 <p>
     Additional services implementing tasks specific to
-    your particular requirements are easily created.
+    your particular business requirements are easily created.
 
     Detailed instructions for building such services can be found in the
     <a href="?topic=GuideDevelopers">Service Developers Guide</a>
@@ -68,8 +68,8 @@
 
 <ul>
     <li>
-        <em>what</em> is to be performed (via declarative  assembling of processing
-        steps in a sequence), versus
+        <em>what</em> is to be performed (via declarative  assembling of sequential processing
+        steps), versus
     </li>
     <li>
         <em>how</em> it is performed (via imperative apex code defining each service - see
@@ -87,12 +87,12 @@
 
 <ul>
     <li>
-        by arranging services in a processing Sequence using a friendly name that
-        adequately describes the collective nature of the work being preformed (for example
+        by arranging services in a ] Sequence using a friendly name that
+        adequately describes the collective nature of the work to be preformed (for example
         <code>ProcessInvoices</code>)
     </li>
     <li>
-        by identifying tasks in a Sequence that as yet, have no apex service implementation (otherwise defined
+        by identifying tasks that as yet, have no Apex service implementation (otherwise defined
         as "missing services")
     </li>
     <li>
@@ -118,6 +118,8 @@
     <li>
         the <em>Messages</em> tab  detailing the progression of any event from genesis to completion.
         The detailed view on any selected message displays the parent message and a related list of all
-        child messages .
+        child messages. In addition, the exception trace is attached to the message containing any
+        event that fails to
+        process correctly.
     </li>
 </ul>

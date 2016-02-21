@@ -26,6 +26,9 @@
     method of the service.
 </p>
 
+<p>
+    <br/>
+</p>
 
 <h1>
     Http Callout Tutorial
@@ -50,14 +53,15 @@
 
 <ol>
     <li>
-        Retrieve the content of from the page located at
-        <a href="http://www.salesforce.com/">www.salesforce.com</a>
+        Retrieve the Salesforce stock details of from the Yahoo finance page located at
+        <a href="https://finance.yahoo.com/q?s=crm/">CRM</a>
     </li>
     <li>
         Store the page content.</li>
     </li>
     <li>
         Facilitate downstream access to the content.
+        <p><br/></p>
     </li>
 </ol>
 
@@ -73,485 +77,254 @@
     <li>
         Click Setup &gt; Security Controls &gt; Remote Site Settings &gt; New Remote Site
     </li>
+
     <li>
-        Enter the following details:
-        <br />
-        <img src="resources/Developer/RemoteSiteSettings.png" />
+        <p>Enter the following details:</p>
+        <p><img src="resources/GuideCallouts/remote-site-details.png" /></p>
     </li>
+
     <li>
         Click <strong>Save</strong>
+        <p><br/></p>
     </li>
 </ol>
 
-<h2>
-    Step 1
-</h2>
+<h3>
+    Create the Callout Service
+</h3>
 
-<p>
-    Create an Apex class that supports the minimum required service layout.
-</p>
+<ol>
+
+<li>
+        <p>
+           Create a class called  <code>ScrapeService</code> that implements the minimum service specification and press Save.
+        </p>
 
 <pre>
-global class Callout {
+global class ScrapeService extends Abstract.Service {
 
-    global class Summary {
-        String Description = 'Does an HTTP CallOut and saves it as a Document.';
-        //..
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Scrapes the Salesforce stock (CRM) details.';
     }
 
-    override global String toString() {
-        //input message
-        //..
-
-        //main code block
-        //..
-
-        //output message(s)
-        //..
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // output
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
     }
 }
 </pre>
-
-<h3>
-    Notes
-</h3>
-
-<p>
-    <strong>001</strong> The class does not take a dependency on the Services framework. All methods, classes and properties must be described with the <code>global</code> keyword.
-    <br /><strong>003 - 018</strong> a valid service has two key elements, namely an <code>Summary</code> Marker Class and a <code>toString()</code> method.
-    <br /><strong>003 - 006</strong> the <code>Summary</code> Marker Class exposes important properties about the service thereby facilitating correct integration into the Services framework. The <code>Description</code> is required in order for the class to be recognised as a valid service.
-    <br /><strong>009 - 018</strong> the <code>toString()</code> method contains the Apex logic. The method takes a single event message, and returns a collection of zero, one or more output messages.
-</p>
-
-<h2>
-    <b>Step 2</b>
-</h2>
-
-<p>
-    Annotate the service with Callout functionality.
-</p>
-
-<pre>
-global class Callout implements Database.AllowsCallouts {
-
-    global Boolean AllowsCallouts;
-
-    global class Summary {
-        String Description = 'Does an HTTP CallOut and saves it as a Document.';
-        //..
-    }
-
-    override global String toString() {
-        //input message
-        //..
-
-        //callouts block
-        if (this.AllowsCallouts) {
-            //..
-        }
-
-        //main code block
-        //..
-
-        //output message(s)
-        //..
-    }
-}
-</pre>
-
-<h3>
-    Notes
-</h3>
-
-<p>
-    <strong>001</strong> The intent of this service is to make a callout. Deliberately declare this intent by annotating the class signature with the <code>Database.AllowsCallouts</code> interface.
-    <br /><strong>003</strong> Any service annotated with the <code> Database.AllowsCallouts</code> interface must simultaneously declare a global boolean member called <code>AllowsCallouts</code>.
-    <br /><strong>014 - 017</strong> All callout logic must be contained within an <code>AllowsCallouts block</code>. Furthermore, no DML should execute within this block. (By explicitly separating the callout logic from  DML execution via the <code>AllowsCallouts block</code>, the Services framework is able to contractually support the Salesforce requirement that callouts must precede DML.)
-</p>
-
-<h2>
-    Step 3
-</h2>
-
-<p>
-    Annotate the service with the full Summary Marker Class.
-</p>
-
-<pre>
-global class Callout implements Database.AllowsCallouts {
-
-    global Boolean AllowsCallouts;
-
-    global class Summary {
-        String Description = 'Does an HTTP CallOut and saves it as a Document.';
-        String Tag = 'Example';
-        String Name = 'CallOut';
-        String Icon = 'connect';
-        Integer Limits = 1;
-        String HelpUrl = Page.CallOutHelp.getUrl();
-    }
-
-    override global String toString() {
-        //input message
-        //..
-
-        //callouts block
-        if (this.AllowsCallouts) {
-            //..
-        }
-
-        //main code block
-        //..
-
-        //output message(s)
-        //..
-    }
-}
-</pre>
-
-<h3>
-    Notes
-</h3>
-
-<p>
-    <strong>006</strong> The <code>Description</code> is a string that describes the functionality of the service. This value is surfaced on the services list view by the discovery service. The <code>Description</code> is the minimum required property on the <code>Summary</code> Marker Class in order for the class to be recognised as a valid service.
-    <br /><strong>007</strong> The <code>Tag</code> is a string that that groups the service amongst similar services. It is best practise to create your own category and use that for all your custom services. Failure to include a <code>Tag</code> property will group your service under the default 'Untagged' group.
-    <br /><strong>008</strong> The <code>Name</code> is a string that describes the friendly name of the service on the list view of the services. The Services framework will use the Apex class name of your service as the friendly name if you fail to include ths property in your <code>Summary</code> Marker Class.
-    <br /><strong>009</strong> the <code>Icon</code> is a string that identifies the specific icon to display next to the service on the list view of the services. Select an icon from the <a href="http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png>famfamfam">icon collection</a> that most closely represents the functionality of your service. Then note the name of the icon and assign it to the <code>Icon</code> property. The Services framework will use a 'cog' icon to represent your service if you fail to include this property in your <code>Summary</code> Marker Class.
-    <br /><strong>010</strong> the <code>Limits</code> constrains the  number of times a service may be executed in a single context. This property  enables  more  work to be performed than would otherwise be possible within prevailing daily Salesforce execution limits. The default is implicitly and conservatively set to <code>1</code>. A simple service that avoids Salesforce governed operations such as SOQL or callouts is a good candidate for a large <code>Limits</code> setting (100 or greater). If however, the service makes use of a  governed operation, ascertain 50% of that particular Salesforce limit and divide by the number of times the service uses the governed operation. The <code>Limits</code> property should not exceed this calculated value.
-    <br /><strong>011</strong> the <code>HelpUrl</code> is a string that defines the help page for the service. The help page is surfaced as a link on the list view of the services. Either a VisualForce page reference or an external web page reference can be assigned to this property. If this property is not defined, the Services framework will surface a user friendly representation of your service by making use of the attributes contained within the service's <code>Summary</code> Marker Class.
-</p>
-
-<h2>
-    Step 4
-</h2>
-
-<p>
-    Formalise the toString() method signature by:
-</p>
-
-<ul>
-    <li>
-        taking an input message of type <code>Map&lt;String,Object&gt;</code> and
     </li>
+
+
     <li>
-        returning a collection of zero, one or more output messages of type <code>Map&lt;String,Object&gt;</code>.
-    </li>
-</ul>
+        <p>
+            Next, add appropriate attributes to the service description to properly describe your service
+            to the Services package and press Save.
+        </p>
 
 <pre>
-global class Callout implements Database.AllowsCallouts {
+global class ScrapeService extends Abstract.Service {
 
-    global Boolean AllowsCallouts;
-
-    global class Summary {
-        String Description = 'Does an HTTP CallOut and saves it as a Document.';
-        String Tag = 'Example';
-        String Name = 'CallOut';
-        String Icon = 'connect';
-        Integer Limits = 1;
-        String HelpUrl = Page.CallOutHelp.getUrl();
-    }
-
-    override global String toString() {
-        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event);
-        //callouts block
-        if (this.AllowsCallouts) {
-            //..
-        }
-
-        //main code block
-        //..
-
-        //output message(s)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
-    }
-}
-</pre>
-
-<h3>
-    Notes
-</h3>
-
-<p>
-    <strong>014</strong> the input message is injected into the <code>toString()</code> method in the form of a key-value collection.
-    <br /><strong>025</strong> the <code>toString()</code> method returns an output collection of zero, one or more messages.
-</p>
-
-<h2>
-    Step 05
-</h2>
-
-<p>
-    Wire-up the callout logic
-</p>
-
-<pre>
-global  class Callout implements Database.AllowsCallouts {
-
-    global Boolean AllowsCallouts;
-
-    global class Summary {
-        String Description = 'Does an HTTP CallOut and saves it as a Document.';
-        String Tag = 'Example';
-        String Name = 'CallOut';
-        String Icon = 'connect';
-        Integer Limits = 1;
-        String HelpUrl = Page.CallOutHelp.getUrl();
-    }
-
-    global String Body;
-
-    override global String toString() {
-        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event); //input message
-        //callouts block
-        if (this.AllowsCallouts) {
-            HttpRequest request = new HttpRequest();
-            request.setMethod('GET');
-            request.setEndpoint('http://bigass.force.com/eda');
-
-            HttpResponse response = new Http().send(request);
-            this.Body = response.getBody();
-
-            return null;
-        }
-
-        //main code block
-        //..
-
-        //output message(s)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
-    }
-}
-</pre>
-
-<h3>Notes</h3>
-
-<p>
-    <strong>018 - 028</strong> Implement the callout logic. The callout block must return <code>null</code>. The callout block must never return the body of the callout response.The mechanism to communicate the callout body to the <code>main block</code> is detailed immediately below.
-    <br /><strong>014, 025</strong> All callout responses are communicated from the <code>callout block</code> to the  <code>main block</code>  via a user defined global <code>String</code> member. In this example, the <code>String</code> member is (arbitrarily) named <code>Body</code> and is assigned the content of the callout response. In this way, the content of <code>Body</code> is now accessible to methods and variables inside the <code>main block</code>.
-</p>
-
-<h2>
-    Step 6
-</h2>
-
-<p>
-    Complete the implementation of the business logic.
-</p>
-
-<pre>
-global  class Callout implements Database.AllowsCallouts {
-
-    global Boolean AllowsCallouts;
-
-    global class Summary {
-        String Description = 'Does an HTTP CallOut and saves it as a Document.';
-        String Tag = 'Example';
-        String Name = 'CallOut';
-        String Icon = 'connect';
-        Integer Limits = 1;
-        String HelpUrl = Page.CallOutHelp.getUrl();
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Scrapes the Salesforce stock (CRM) details.';
+        String Tag = 'Connectors';
+        String Label = 'Salesforce (CRM) stock quote';
+        String Icon = 'feed_go';
+        Integer Chunks = 1;
+        String Cardinality = 'One';
 
         Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
-            'RecordId' =&gt;'ID modified to reference a document containing the contents of the scraped input url (c:Url))'
+            'c:Data' =&gt; 'STRING representing data at www.salesforce.com endpoint.'
         };
     }
 
-    global String Body;
-
-    override global String toString() {
-        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event); //inputs
-        if (this.AllowsCallouts) {
-            HttpRequest request = new HttpRequest();
-            request.setMethod('GET');
-            request.setEndpoint('http://bigass.force.com/eda');
-
-            HttpResponse response = new Http().send(request);
-            this.Body = response.getBody();
-
-            return null;
-        }
-
-
-        //main code block
-        Document document = new Document(
-            Name = 'Mydoc' + system.now() + '.html',
-            FolderId = UserInfo.getUserId(),
-            Body = Blob.valueOf(this.Body)
-        );
-        insert document;
-        inputEvent.put('RecordId', document.Id);
-
-
-        //output message(s)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // output
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
     }
 }
 </pre>
+    </li>
 
-<h3>
-    Notes
-</h3>
 
-<p>
-    <strong>034 - 041</strong> The <code>main block</code> completes the implementation of the business specification by the persisting the callout content in a standard <code>Document</code> SObject.
-    <br /><strong>018, 038</strong> The content of the callout response is retrieved from the global  member <code>Body</code> and assigned to the body of the <code>document</code> SObject.
-    <br /><strong>041</strong> <code>RecordId</code> is a standard parameter of any message and it normally points to the underlying data (SObject) of the message. Any service is free to update this <code>RecordId</code> parameter to conform with the requirements of the service business specification. In this example, the response content is persisted as a Salesforce <code>Document</code> and for that reason the <code>RecordId</code> parameter of the outbound message is updated with the <code>Id</code> of the inserted document.
-    <br /><strong>041, 013 - 015</strong> If a service modifies or adds a parameter on any outbound message, the modification should be formally described by detailing the parameter name and a comment describing the modification.
-</p>
 
-<p>
-    Below is an annotated callout service called <code>Callout</code>. This service adheres to the
-    required Service  callout template.
-</p>
-
-<h3>
-    Specification
-</h3>
-
-<p>
-    The service inspects the parameters of the input event and retrieves the url of a specific
-    web page to be scraped. The content of the scraped page is stored as a Salesforce document. Most
-    importantly, the <code>RecordId</code> parameter of the outbound message is updated with the Id
-    of this Salesforce document so that any downstream services will have access to that scraped
-    data.
-</p>
+    <li>
+        <p>
+            Next, introduce the <code>callout()</code> method. This method should contain no DML statements.
+            Simerally, the <code>execute()</code> method should remain free of callouts.
+        </p>
 
 <pre>
-global class Callout implements Database.AllowsCallouts {
+global class ScrapeService extends Abstract.Service {
 
-    global Boolean AllowsCallouts;
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Scrapes the Salesforce stock (CRM) details.';
+        String Tag = 'Connectors';
+        String Label = 'Salesforce (CRM) stock quote';
+        String Icon = 'feed_go';
+        Integer Chunks = 1;
+        String Cardinality = 'One';
 
-    global class Summary {
-        String Description = 'Does an HTTP CallOut and saves it as a Document.';
-        String Tag = 'Example';
-        String Name = 'CallOut';
-        String Icon = 'connect';
-        Integer Limits = 1;
-        String HelpUrl = Page.CallOutHelp.getUrl();
-
-        Map&lt;String,String&gt; Inputs = new Map&lt;String,String&gt;{
-            'c:Url' => 'STRING representing Url to scrape.'
-        };
         Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
-            'RecordId' =>'ID of a document containing the contents of the scraped input URL.'
+            'c:Data' =&gt; 'STRING representing data at www.salesforce.com endpoint.'
         };
     }
 
-    global String Body;
+    global override  void  callout(Map&lt;String,Object&gt; event) {
+        // ...
+    }
 
-    override global String toString() {
-        Map&lt;String,Object&gt; inputEvent = (Map&lt;String,Object&gt;)Json.deserializeUntyped(this.Event);
-        if (this.AllowsCallouts) {
-            String url = (String)inputEvent.get('c:Url');
-            HttpRequest request = new HttpRequest();
-            request.setMethod('GET');
-            request.setEndpoint(url);
-
-            HttpResponse response = new Http().send(request);
-            this.Body = response.getBody();
-
-            return null;
-        }
-
-
-        //main code block
-        Document document = new Document(
-            Name = 'Mydoc'+system.now()+'.html',
-            FolderId = UserInfo.getUserId(),
-            Body = Blob.valueOf(this.Body)
-        );
-        insert document;
-        inputEvent.put('RecordId', document.Id);
-
-
-        //output message(s)
-        return new List&lt;Map&lt;String,Object&gt;&gt;{inputEvent};
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // output
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
     }
 }
 </pre>
+    </li>
+
+
+    <li>
+        <p>
+            Next, implement the callout to www.salesforce.com inside
+            the <code>callout()</code> method.
+        </p>
+
+<pre>
+global class ScrapeService extends Abstract.Service {
+
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Scrapes the Salesforce stock (CRM) details.';
+        String Tag = 'Connectors';
+        String Label = 'Salesforce (CRM) stock quote';
+        String Icon = 'feed_go';
+        Integer Chunks = 1;
+        String Cardinality = 'One';
+
+        Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
+            'c:Data' =&gt; 'STRING representing data at www.salesforce.com endpoint.'
+        };
+    }
+
+    global override  void  callout(Map&lt;String,Object&gt; event) {
+        Http http = new Http();
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('https://finance.yahoo.com/q?s=crm');
+        req.setMethod('GET');
+        HttpResponse res = http.send(req);
+    }
+
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // output
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
+    }
+}
+</pre>
+    </li>
+
+
+    <li>
+        <p>
+            Finally, implement a mechanism to surface the response data in
+            the <code>execute()</code> method. Simply create an internal field
+            of type String called  <code>Data</code>  to achieve this.
+        </p>
+
+<pre>
+global class ScrapeService extends Abstract.Service {
+
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Scrapes the Salesforce stock (CRM) details.';
+        String Tag = 'Connectors';
+        String Label = 'Salesforce (CRM) stock quote';
+        String Icon = 'feed_go';
+        Integer Chunks = 1;
+        String Cardinality = 'One';
+
+        Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
+            'c:Data' =&gt; 'STRING representing data at www.salesforce.com endpoint.'
+        };
+    }
+
+    private String  Data;
+
+    global override  void  callout(Map&lt;String,Object&gt; event) {
+        Http http = new Http();
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('https://finance.yahoo.com/q?s=crm');
+        req.setMethod('GET');
+        HttpResponse res = http.send(req);
+
+        this.Data = res.getBody();
+    }
+
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // output
+        event.put('c:Data', this.Data);
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
+    }
+}
+</pre>
+    <p><br/></p>
+    </li>
+
+</ol>
+
 
 
 <h3>
-    Notes
+    Visually test the  Callout Service
 </h3>
 
-<p>
-    <strong>001</strong> an service is a standard Apex class. Services do not take any dependency on the Services framework.
-    <br /><strong>001 - 051</strong> a valid service has two key elements, namely a <code>Summary</code> Marker Class and a <code>toString()</code>method.
-    <br /><strong>005 - 019</strong> the <code>Summary</code> Marker Class exposes important properties about the service thereby facilitating correct integration into the Services framework.
-    <br /><strong>006</strong> the <code>Description</code> is a string that describes the functionality of the service and is surfaced on the list view of the services by the discovery service.
-    <br /><strong>007</strong> the <code>Tag</code> is a string that that groups the service with similar services. We recommend that you create your own categories for custom services.
-    <br /><strong>008</strong> the <code>Name</code> is a string that describes the friendly <code>Name</code> of the service.
-    <br /><strong>009</strong> the <code>Icon</code> is a unique string that defines the icon that will appear next to the service when viewed on the list view of services.
-</p>
+<ol>
+    <li>
+        <p>
+            Navigate to the Sequences tab and create a new sequence called <em>Test Callout</em>.
+            Drag the newly created <code>CalloutService</code>  onto the sequence and arrange
+            the steps so that the Terminate service is the last step in the sequence
+        </p>
 
-<fieldset>
-    <legend>Note</legend>
-    The full collection of  possible icons can be found <a href=http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png>here</a>.
-</fieldset>
+        <p><img src="resources/GuideCallouts/sequence-test-callout.png" /></p>
+    </li>
 
-<p>
-    <strong>010</strong> <code>Limits</code> constrains the number of times a service may be executed in a single context.
-</p>
 
-<fieldset>
-    <legend>Note</legend>
-    <p>
-        This property enables more work to be performed than would otherwise be possible within
-        prevailing daily Salesforce execution limits.
-    </p>
-    <ul>
-        <li>The default is implicitly and conservatively set to one.</li>
-        <li>
-            A simple service that avoids Salesforce governed operations such as SOQL or callouts is
-            a good candidate for a large <code>Limits</code> setting. (100 or greater)
-        </li>
-        <li>
-            If however, the service makes use of a governed operation, ascertain 50% of that
-            particular Salesforce limit and divide by the number of times the service uses the
-            governed operation. The <code>Limits</code> property must not exceed this calculated
-            value.
-        </li>
-    </ul>
-</fieldset>
+    <li>
+        <p>
+           Click the <em>Enqueue Test Event</em>  button to start the sequence.
+        </p>
+        <p><img src="resources/GuideCallouts/Enqueue-Test-JobId-Message.png" /></p>
+    </li>
 
-<p>
-    <strong>011</strong> the <code>HelpUrl</code> is a string that describes the help page for the
-    service.
-</p>
 
-<fieldset>
-    <legend>Note</legend>
-    The help page does not have to be in the form of a VisualForce page. External help page
-    references are also valid.
-</fieldset>
+    <li>
+        <p>
+            Navigate to  the <em>Messages</em>  tab and set the list filter to <em>Completed</em>.
+        </p>
+        <p>
+            Your service executed as step #1 in the Test Callout sequence.
+            Assuming it executed correctly, it emitted a single <strong>output</strong> event.
+            This  output event will appear
+            as an <strong>input</strong> event for step #2 on the messages listing as shown below.
+            Go ahead and
+            click the message with a route called <code>1#Test Callout#2</code>
+            <fieldset>
+                <legend>
+                Note:
+                </legend>
+                Routes are defined by a composite key comprising </em>version, sequence and step</em>
+            </fieldset>
+        </p>
 
-<p>
-    <strong>013 - 015</strong> the <code>Inputs</code> property documents all expected inputs.
-</p>
+        <p><img src="resources/GuideCallouts/messages-list.png" /></p>
+    </li>
 
-<fieldset>
-    <legend>Note</legend>
-    This documentation supports auto generated help for the service.
-</fieldset>
 
-<p>
-    <strong>016 - 018</strong> the <code>Outputs</code>  property documents all outputs added,
-    deleted or modified
-</p>
+    <li>
+        <p>
+            The mark-up
+            representing the stock quote for CRM will be reflected on the <code>c:Data</code>  attribute
+            of the event as shown below.
+        </p>
 
-<fieldset>
-    <legend>Note</legend>
-    This documentation supports auto generated help for the service.
-</fieldset>
-
-<p>
-    <strong>023 - 050</strong> the <code>toString()</code> method contains the Apex logic. The method takes a single event message and returns zero, one or more output messages as a collection.
-    <br /><strong>001 - 051</strong> services making callouts must be annotated in a manner that declares the service's intent to make one or more callouts.
-    <br /><strong>001</strong> the class must implement the the <code>Database.AllowsCallouts</code> interface.
-    <br /><strong>003</strong> the class must expose a global Boolean member called <code>AllowsCallouts</code>
-    <br /><strong>025 - 035</strong> all <em>callout logic</em> must be implemented within a callout code block. The <em>callout logic</em>  must return null, not the body of the callout response.
-    <br /><strong>021, 042</strong> the <em>main block</em> accesses callout content through class instance properties. Every callout should have a corresponding String class property. It is left to the developer of the service to appropriately name the properties.
-</p>
+        <p><img src="resources/GuideCallouts/message-detail.png" /></p>
+    </li>
+</ol>

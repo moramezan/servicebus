@@ -30,13 +30,17 @@
 </h3>
 
 <p>
+<blockquote style="margin-left:2em;">
     <code>
-        event = {'ToService' => 'SendPayment'};
+        Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{
         <br />
-        job = new ServiceBus.Job(event);
+        &nbsp;  &nbsp; 'ToService' => 'MyService'
         <br />
-        System.enqueueJob(job);
+        };
+        <br />
+        Id jobId = services.enqueue.invoke(event);
     </code>
+</blockquote>
 </p>
 
 <hr />
@@ -46,17 +50,17 @@
 </h3>
 
 <pre>
-global class SendPayment extends Abstract.Service {
+global class MyService extends Abstract.Service {
     
-    global class Summary {
+    global class Definition extends Abstract.Service.Definition {
         String Description = 'Short explanation of the service.';
     }
     
     //http requests go here
-    //void callout(Map&lt;String,Object&gt; input) {}
+    //global override void callout(Map&lt;String,Object&gt; input) {}
     
     //side effects go here
-    //List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; input) {}
+    //global override List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; input) {}
     
 }
 </pre>

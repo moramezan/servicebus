@@ -9,18 +9,27 @@
 <p>
     External events (for example <em>"Time is 12:01"</em> or <em>"Stock price changed"</em>) are
     not directly consumable by the Services framework. Instead, Service configurators make use of the
-    <code>ServiceBus.Job</code> object to transform an external events into event messages that are
+    <code>Services.Enqueue.invoke()</code> method to transform an external events into event messages that are
     consumable by the Services framework.
 </p>
 
 <p>
-    The <code>ServiceBus.Job</code> object supports several signatures, namely:
+    The <code>Services.Enqueue.invoke()</code> method supports several enqueue approaches, namely:
 </p>
 
 <ul>
     <li>
-        <code>ServiceBus.Job(String sequenceName, Id recordId)</code>
+        <code>Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{ 'ToSequence' => 'MySequence'};</code>
     </li>
+
+    <li>
+        <code>Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{ 'ToService' => 'MyService'};</code>
+    </li>
+
+    <li>
+        <code>Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{ 'ToConfig' => 'MyConfig'};</code>
+    </li>
+
     <!--
      ! TODO
      ! <li>
@@ -30,22 +39,44 @@
 </ul>
 
 <p>
-    Usage:
+    Example Usage:
 </p>
 
+
+<blockquote style="margin-left:2em;">
+    <code>
+        Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{
+        <br/>
+        &nbsp;&nbsp; 'ToSequence' => 'MySequence',
+        <br/>
+        &nbsp;&nbsp; 'RecordId' => '001000000000000aaa'
+        <br/>
+        };
+        <br/>
+        Id jobId = services.enqueue.invoke(event);
+    </code>
+</blockquote>
+
+
+
 <dl>
-    <dt><code>sequenceName</code></dt>
-    <dd>defines which sequence will respond to the injected message event.</dd>
+    <dt>ToSequence</dt>
+    <dd>defines which sequence will respond to the injected event,in this case <em>MySequence</em></dd>
     
-    <dt><code>recordId</code></dt>
-    <dd>defines the SObject that will be subject to the processing steps</dd>
+    <dt><code>RecordId</code></dt>
+    <dd>defines the SObject that will be subject to the processing steps, in this case <em>Account</em> instance</dd>
 </dl>
 
 <p>
-    Use the <code>ServiceBus.Job(String sequenceName, Id recordId)</code> constructor whenever the data
+    Use the <code>Services.Enqueue.invoke()</code> method  whenever the data
     related to the external event is retrievable as a Salesforce object using the object's
     <code>Id</code>.
 </p>
+
+<p>
+    (see <a href="?topic=ApiNamespace">Api Guide</a> for further details.)
+</p>
+
 
 <!--<p>
  !    Use the <code>Enqueue(String SequenceName, Blob data )</code> method
@@ -94,6 +125,3 @@
     <li><em>Subscribe</em></li>
 </ul>
 
-<p>
-    (see <a href="?topic=Processes">Core services Guide</a> for further details.)
-</p>

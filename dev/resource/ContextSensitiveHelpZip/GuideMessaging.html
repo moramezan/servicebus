@@ -8,7 +8,7 @@
 
 <p>
     Events occur all the time. (For example: the clock strikes twelve, the fuel tank reaches empty).
-    To represent details about an event in a computer system, we use a special object called a
+    To represent details about an event in an electronic system, we use a special object called a
     message. The primary purpose of a message is to provide a useful mechanism to communicate to a
     services that a particular event has occurred.
 </p>
@@ -19,20 +19,18 @@
 
 <p>
     Specific events are only relevant to specific services. For this reason the Services framework
-    routes messages (representing specific events) to specific services within the system.
-</p>
+    routes events to specific services within the system.
 
-<p>
-    An ordered list of  event type to specific service can be represented  in a
-    table called a (Routing) <code>Sequence</code>.
+    An ordered list of  event types to specific services can be reduced to a
+    table of steps called a (Routing) <code>Sequence</code>.
 
 </p>
 
 <p>
     Breaking up work into specific services that respond to specific event types is known as
-    Event Driven Architecture (EDA). The Services framework is based on the
+    Event Driven Architecture (EDA). The Services framework is a
     <a href="https://en.wikipedia.org/wiki/Staged_event-driven_architecture" target="_blank">SEDA</a>
-    implementation of this event based architecture.
+    implementation of this evented architecture.
 </p>
 
 <h3>
@@ -56,8 +54,8 @@
 </h3>
 
 <p>
-    A service is an apex class designed to execute specific business rules.
-    All services conform to the
+    A service is an apex class designed to execute specific business rules
+    written in a manner that conforms to the
     <a href="https://github.com/bigassforce/OASIS" target="_blank">OASIS</a>
     specification.
 </p>
@@ -65,7 +63,8 @@
 <p>
     An event received by a service that has
     previously registered it's interest in an event of that  particular type will
-    execute.  Developers are responsible for creating services and
+    cause the service to execute.
+    Developers are responsible for creating services while
     the responsibility of routing  any given event to the appropriate
     service is delegated to the services framework.
 </p>
@@ -76,15 +75,26 @@
 
 <p>
     The Services framework facilitates useful work on the Salesforce platform via services that have
-    previously registered their interest the occurrence of a specific event types. (In practise, this
-    means that a service registers it's interest in events emitted from the service that immediately
-    precedes it.)
+    previously registered their collective interest the occurrence of  specific event types.
+    In practise and under SEDA architecture, this normally
+    means that a service registers an interest in events emitted from the service that immediately
+    precedes it.
+
+
 </p>
+
+
 
 <p>
     A register of interest containing a sufficient number of services will naturally resemble a
     sequence of chained processing steps. This register is called a <em>Sequence</em> and the
     sequential processing steps within it are called <em>Steps</em>.
+
+    <fieldset>
+        <legend>Note</legend>
+        In addition to <em>sequential registration </em>,
+        registration of interest in an event via Pub/Sub and topics is also supported.
+    </fieldset>
 </p>
 
 <h3>
@@ -92,18 +102,21 @@
 </h3>
 
 <p>
-    The Services framework is implemented using Event Driven Architecture. The Services framework logically
-    maps processing steps to an underlying business requirement.
+    The Services framework is built using a SEDA implementation of Event Driven Architecture.
 </p>
 
 <p>
-    Emphasis is placed on narrowly defined, composable units of work called a Service. Each unit of work responds to
-    the occurrence of a specific event type.
+    The Services framework logically
+    maps processing steps to an underlying business requirements.
+    Emphasis is placed on narrowly defined, composable units of work called Services.
+    Each unit of work responds to
+    the occurrence of a specific event type and is implemented in a Single apex class
+    that conforms to the OASIS standard.
 </p>
 
 <p>
-    The Services framework provides a clean model that limits complexity in the system to just the
-    testable apex implementation details of any given service. In contrast, the Command-Response
+    The Services framework provides a clean model that limits complexity in the system.
+    In contrast, the Command-Response
     paradigm attempts to attach all possible logical code paths and associated exception handling to
     a single specific command. This creates code complexity that is not easily tested or modified.
 </p>
