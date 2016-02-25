@@ -1,106 +1,23 @@
-<!--/// TODO - REVIEW COMPLETE-->
-
-
 <h1>
-    Introducing the Services framework Monitor
+    Introducing the Monitor
 </h1>
 
 <p>
-    A monitoring page facilitates system activity at a glance.
-    The horizontal axis
-    shows the route names touched by the framework in some way while
-    the vertical axis indicates the  message count for a given combination of status and route.
-    <ul>
-        <li>
-        The <span style="color:#8E66FF;">blue</span> area on the left indicates the presence of system level queueing.
-        </li>
-        <li>
-        The <span style="color:#090;">green</span> areas indicate buffered messages.
-        The framework will not attempt process these messages.
-        </li>
-        <li>
-        The <span style="color:#C2C2C2;">grey</span> areas indicate paused messages.
-        The framework will not attempt process these messages.
-        </li>
-        <li>
-        The <span style="color:#900;">red</span> areas indicate exception messages.
-        The framework will not attempt process these messages.
-        </li>
-        <li>
-        The <span style="color:#DDE578;">yellow</span> areas indicate messages currently being worked on.
-        </li>
-    </ul>
+    The monitoring tab shows all service activity.
+    On the horizontal axis you will see sequences and services in use.
+    The vertical axis indicates how many messages are being processed.
+    A spinner at the top of the chart shows when the Services Package is actively processing messages.
 </p>
 
-<p>
-    <br/>
-    <img width="800" src="resources/Splashes/monitor.png" />
-</p>
-
-<p>
-    A spinner at the top of the vertical axis indicates that the Services framework is actively processing messages.
-    If the Services framework has yet to execute for the first time the spinner icon is
-    rendered as a sparkler. The lack of an icon at the top of the vertical axis indicates
-    that the Services framework is not currently running.
-</p>
-
-
-
-<!--
-<h2>
-    After Installing Enterprise Service Bus
-</h2>
-
-<p>
-    For more in depth analysis and insight:
-</p>
-
-<ul> 
-    <li>
-        Business Analysts may wish to consult the <a href="?topic=GuideOrchestrators">Orchestrators
-        Guide</a> and <a href="?topic=Processes">Core Services Guide</a>.
-    </li>
-    <li>
-        Force.com custom service authors may wish to consult the <a href="?topic=GuideDevelopers">
-        Service Developers Guide</a>
+<ul>
+    <li><span style="color:#900;">Red</span> areas indicate exceptions</li>
+    <li><span style="color:#090;">Green</span> areas indicate messages buffered for processing</li>
+    <li><span style="color:#DDE578;">Yellow</span> areas indicate messages that have started to be processed
+    <li>Successfully processed messages can be found in the Messages tab under 'Completed'
     </li>
 </ul>
 
 <p>
-    To get started, you can follow the three tutorials:
+    <br/>
+    <img width="800" src="resources/Splashes/Monitor.png" />
 </p>
-
-<h3>
-    TUTORIAL 1: Confirm Enterprise Service Bus is Correctly Setup
-</h3>
-
-<p>
-    To verify that the Event Driven Package has been correctly installed and configured, click
-    <a href="?topic=TutorialSetupConfirmation" target="_blank">here</a>.
-</p>
-
-<h3>
-    TUTORIAL 2: Discover Enterprise Service Bus Services
-</h3>
-
-<p>
-    Click <a href="?topic=TutorialProcessDiscovery" target="_blank">here</a> to see how custom event driven logic
-    (written in Apex) can be discovered by the Enterprise Service Bus.
-</p>
-
-<h3>
-    TUTORIAL 3: Audit Message Events Under a Common Identifier
-</h3>
-
-<p>
-    Click <a href="?topic=TutorialMessageGrouping" target="_blank">here</a> to see how the Enterprise Service Bus
-    enables the common requirement of grouping related messages under a common tag.
-</p>
-
-<h3>General comments and support</h3>
-<p>
-    Please contact <a href="mailto:webmaster@bigass.io">
-    webmaster@bigassforce.com</a> or visit <a href="http://bigass.force.com/" target="_blank">
-    bigass.force.com</a>
-</p>
--->

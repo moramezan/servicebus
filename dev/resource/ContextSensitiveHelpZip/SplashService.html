@@ -1,52 +1,34 @@
-
-<!--/// TODO - REVIEW COMPLETE-->
-
-
-
 <h1>
     Services
 </h1>
 
 <h3>
     <img class="right" src="resources/Splashes/services.png" />
-    What is a Service?
+    What is a service?
 </h3>
 
 <p>
-    A service is a single, logical program  implemented as an Apex class.
+    A service is a single piece of business logic implemented as an Apex class.
     Every service handles one event and emits a collection containing zero, one or many new events.
-    In addition, each service encapsulates a Summary that describes it
+    Each service class contains a Service Definition that describes its behavior.
 </p>
 
-<!--
-<ul>
-    <li>Each service has a Summary that describes it.</li>
-    <li>An event is represented in Apex code as <code>Map&lt;String,Object&gt;</code></li>
-</ul>
--->
-
-<h3>
-    How do I enqueue an event to a service?
-</h3>
+<h2>
+    How to enqueue events to a service?
+</h2>
 
 <p>
-<blockquote style="margin-left:2em;">
     <code>
-        Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{
+        event = new Map&lt;String,Object&gt;();
         <br />
-        &nbsp;  &nbsp; 'ToService' => 'MyService'
+        event.put('ToService', 'MyServiceName');
         <br />
-        };
-        <br />
-        Id jobId = services.enqueue.invoke(event);
+        Services.Enqueue.invoke(event);
     </code>
-</blockquote>
 </p>
 
-<hr />
-
 <h3>
-    How do I author my own service?
+    How to author custom services?
 </h3>
 
 <pre>
@@ -56,11 +38,13 @@ global class MyService extends Abstract.Service {
         String Description = 'Short explanation of the service.';
     }
     
-    //http requests go here
-    //global override void callout(Map&lt;String,Object&gt; input) {}
+    override public void callout(Map&lt;String,Object&gt; event) {
+        //perform service callouts
+    }
     
-    //side effects go here
-    //global override List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; input) {}
+    override public List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
+        //implement service logic
+    }
     
 }
 </pre>

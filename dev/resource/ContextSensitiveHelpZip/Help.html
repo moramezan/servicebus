@@ -362,7 +362,7 @@
                     document.getElementById('sidebar').innerHTML = binding.responseText;
                     
                     //highlight currently selected topic
-                    var rule = 'a[href="/apex/ContextSensitiveHelp?topic=' + topic + '"] {background-color: #ccc;}';
+                    var rule = 'a[href="?topic=' + topic + '"] {background-color: #ccc;}';
                     var style = document.createElement('style');
                     style.appendChild(document.createTextNode(rule));
                     document.head.appendChild(style);

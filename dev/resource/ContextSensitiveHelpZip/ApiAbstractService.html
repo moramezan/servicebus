@@ -2,11 +2,6 @@
     <code>Abstract.Service</code>
 </h1>
 
-<!--
- ! Trying not to say "Service" unless we refer to "ApexClass"
- ! I like also "Service Definition" ... do we change the label?
- !-->
-
 <p>
     A service is a single, logical program with inputs and outputs in the form of events.
     Services are implemented as Apex classes.
@@ -66,7 +61,7 @@ global class ExampleService extends Abstract.Service {
 </p>
 
 <pre>
-override protected void callout(Map&lt;String,Object&gt; inputEvent) {
+override public void callout(Map&lt;String,Object&gt; inputEvent) {
     HttpRequest request = new HttpRequest();
     request.setEndpoint('https://httpbin.org/headers');
     request.setMethod('GET');
@@ -91,7 +86,7 @@ override protected void callout(Map&lt;String,Object&gt; inputEvent) {
 </p>
 
 <pre>
-override protected List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; event) {
+override public List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; event) {
     return new List&lt;Map&lt;String,Object&gt;&gt;{event};
 }
 </pre>

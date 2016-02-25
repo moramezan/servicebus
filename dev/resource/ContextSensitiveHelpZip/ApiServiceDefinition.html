@@ -100,8 +100,9 @@ global class ExampleService extends Abstract.Service {
 
 <pre>
 global class Definition extends Abstract.Service.Definition {
+    
     String Description = 'Distributes leads to different owners.';
-    String Tag = 'Sales Services';
+    String Tag = 'Acme';
     String Icon = 'chart_organisation';
     String Label = 'Lead Distribute';
     String Cardinality = 'One';
@@ -111,11 +112,11 @@ global class Definition extends Abstract.Service.Definition {
     String ServiceConfig = LeadDistributeServiceConfig__c.class.getName();
     
     Map&lt;String,Object&gt; Inputs = new Map&lt;String,Object&gt;{
-        'acme:Body' => 'String of the tweet body.'
+        'RecordId' => 'ID of the lead to distribute.'
     };
     
     Map&lt;String,Object&gt; Outputs = new Map&lt;String,Object&gt;{
-        'acme:TweetId' => 'String of tweet Id.'
+        'acme:Strategy' => 'STRING of the distribution strategy.'
     }
 }
 </pre>

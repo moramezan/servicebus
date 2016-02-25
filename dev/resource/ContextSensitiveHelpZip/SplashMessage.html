@@ -1,122 +1,44 @@
-<!--/// TODO - REVIEW COMPLETE-->
-
-
-
 <h1>
     Messages
 </h1>
 
-
-<h3>
-    What is an Event?
-</h3>
-
 <p>
-    <img class="right" src="resources/Splashes/messages.png" />
-    An event is a real world occurrence with real world business significance. Events occur all the time, for example a clock strikes
-    midnight or a payment is requested. The Services framework represents the attributes of the  real world event as a JSON
-    serialization of  <code>Map&lt;String,Object&gt;</code>.
+    <img class="right" src="resources/Splashes/Message.png" />
+    An event is any real world occurrence with business significance, for example a request for payment.
+    <br />
+    Event parameters are represented by <code>Map&lt;String,Object&gt;</code>
 </p>
 
-
-<h3>
-    What is a Message?
-</h3>
+<h2>
+    What is a message?
+</h2>
 
 <p>
-    A message is a container for holding an Event.
+    A message is a container for recording an event.
     Wrapping each event in a message gives a handle to identify it.
+    Because the event parameters are persisted inside the message,
+    you can re-attempt unprocessable events after an exception occurs.
 </p>
 
-<ol>
-    <li>The event JSON can be viewed inside each message.</li>
-    <li>If a service  fails, the message remains visible for retry.</li>
-</ol>
-
-<h3>
-    How do I expedite failed messages?
-</h3>
-
 <p>
-    All messages are stored in a queue for review. You can perform the following actions:
+    If an exception happens, modify the service or the event, then take action:
 </p>
 
 <dl>
-
-    <!--
-    <dt>Restart</dt>
+    <dt>Restart the message</dt>
     <dd>
-        to reprocess it again synchronously, after fixing the Apex code or the event;
-        <br />
-        this is immediate and highly responsive, used to the benefit of developers.
-    </dd>
-    
-    <dt>Rebuffer</dt>
-    <dd>
-        to requeue it again asynchronously, after fixing the apex code or the event;
-        <br />
-        this is asynchronous, and can be performed on large groups of messages.
-    </dd>
-    
-    <dt>Kill</dt>
-    <dd>
-        to dismiss it, if the failure was expected and acceptable;
-        <br />
-        this should only be used when the situation is unrecoverable.
-    </dd>
-    -->
-
-    <dt>Restart</dt>
-    <dd>
-        After modifying the Apex code or the event, click Restart to reprocess the message synchronously.
-        <br />
-        This action is immediate, extremely responsive and mainly used by developers.
+        This action is synchronous and responds immediately.
     </dd>
 
-    <dt>Rebuffer</dt>
+    <dt>Rebuffer messages</dt>
     <dd>
-        After fixing the Apex code or the event, click Rebuffer  to requeue the message  asynchronously.
-        <br />
-        This action can be performed on large groups of messages.
+        This action is asynchronously, for larger groups of messages.
     </dd>
 
-    <dt>Kill</dt>
+    <dt>Kill messages</dt>
     <dd>
-        If the failure was expected and acceptable, click Kill to dismiss the message.
+        This action asserts that the event should be dismissed.
         <br />
-        This action should only be used when the situation is unrecoverable.
+        For example if the failure was expected or recovered manually.
     </dd>
 </dl>
-
-
-<!--
-<h3>
-    List View buttons
-</h3>
-
-<p>
-    <strong>Pause Queue</strong> halts the processing of new Messages. New Messages will be queued
-    up outside their destined Sequence. Old Messages already in a Sequence will filter through to
-    completion.
-</p>
-
-<p>
-    <strong>Resume Queue</strong> resumes the processing of all Messages.
-</p>
-
-<h3>
-    Detail Page buttons
-</h3>
-
-<p>
-    <strong>Service Message</strong> forces this Message to be processed immediately. You can use
-    this button to service individual Messages when the system is paused, or to reprocess any
-    Message that could not be processed.
-</p>
-
-<p>
-    <strong>Show Data</strong> takes you to the native view of the underlying data pointed at by the
-    Message. This button can be used to edit or audit the data of any specific Message handed into a
-    given Service.
-</p>
--->

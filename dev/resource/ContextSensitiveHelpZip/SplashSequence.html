@@ -1,73 +1,47 @@
-<!--/// TODO - REVIEW COMPLETE-->
-
 <h1>
     Sequences
 </h1>
 
-<h3>
-    <img class="right" src="resources/Splashes/sequences.png" />
+<h2>
+    <img class="right" src="resources/Splashes/Sequence.png" />
     What is a sequence?
-</h3>
+</h2>
 
 <p>
-    A Sequence is an arrangement of processing tasks called steps. Each Sequence is known by a friendly name,
-    for example 'HandleRefund', which indicates the nature of the work that it's steps will perform.
+    A sequence is an arrangement of processing tasks called steps.
+    Events enter the top of the sequence and flow through the steps in order.
+    The sequence has a name (eg 'Generate Calls') which indicates the kind of work its steps perform.
 </p>
 
 <p>
-    Specify the order of the different steps using drag and drop.
-    The Services framework advances your events through the steps of the sequence. A typical sequence contains many steps.
+    Steps are arranged using the drag and drop builder.
+    The last step of every sequence is a terminate service.
+    This swallows events that reach the end of the sequence.
 </p>
+
+<h2>
+    How to enqueue events to a sequence?
+</h2>
 
 <p>
-    The last step of every sequence is a 'Terminate' service. This step swallows events that reach the end of the sequence.
+    <code>
+        event = new Map&lt;String,Object&gt;();
+        <br />
+        event.put('ToSequence', 'MySequenceName');
+        <br />
+        Services.Enqueue.invoke(event);
+    </code>
 </p>
 
-<h3>
-    How do I enqueue an Event into a Sequence?
-</h3>
-
-<p>
-    <blockquote style="margin-left:2em;">
-        <code>
-            Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{
-            <br />
-            &nbsp;  &nbsp;   'ToSequence' => 'MySequence'
-            <br />
-            };
-            <br />
-            Id jobId = services.enqueue.invoke(event);
-        </code>
-    </blockquote>
-</p>
-
-<h3>
-    How do I enqueue an Event into a Service?
-</h3>
-
-<p>
-    <blockquote style="margin-left:2em;">
-        <code>
-            Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{
-            <br />
-            &nbsp;  &nbsp; 'ToService' => 'MyService'
-            <br />
-            };
-            <br />
-            Id jobId = services.enqueue.invoke(event);
-        </code>
-    </blockquote>
-
-</p>
-
-<h3>
-    When would I enqueue to a Sequence instead of a Service?
-</h3>
+<h2>
+    When to use sequences?
+</h2>
 
 <ul>
-    <li>Whenever your business logic consists of more than one service.</li>
-    <li>Whenever you need to split and then aggregate multiple events.</li>
-    <li>Whenever there is a requirement for services to communicate with each other.</li>
+    <li>To arrange services in order declaratively.</li>
+    <li>When business logic consists of multiple services.</li>
+    <li>For splitting and then aggregating collections of events.</li>
+    <li>When services need to communicate between each other.</li>
 </ul>
 
 <!--
