@@ -18,7 +18,7 @@
 </h2>
 
 <p>
-    All work under the Services framework is de-constructed into specific tasks. Each task is implemented as
+    All work under the Services Package is de-constructed into specific tasks. Each task is implemented as
     an Apex class and is called a Service.
 </p>
 
@@ -33,12 +33,12 @@
 
 <p>
     Every service responds to an input event and emits  a list of zero, one or more output
-    events. The Services framework is designed so that output events from any given service automatically
+    events. The Services Package is designed so that output events from any given service automatically
     feed the input stream of the very next service in a <em>Sequence</em>.
 </p>
 
 <p>
-    The Services framework has by default a number of ready made services that can be composed sequentially
+    The Services Package has by default a number of ready made services that can be composed sequentially
     so that useful work can be completed. These ready made services include:
 </p>
 
@@ -63,7 +63,7 @@
 </h2>
 
 <p>
-    The Services framework makes a clear distinction between:
+    The Services Package makes a clear distinction between:
 </p>
 
 <ul>
@@ -82,7 +82,7 @@
     business requirement is the domain of the business analyst and not necessarily the Apex
     developer.
 
-    It therefore the role of the System Orchestrator / Business Analyst to configure the Services framework:
+    It therefore the role of the System Orchestrator / Business Analyst to configure the Services Package:
 </p>
 
 <ul>
@@ -107,7 +107,7 @@
 
 <p>
     Salesforce prevents writing to the system log in a Production environment. As a useful
-    substitute, the Services framework provides two logging mechanisms:
+    substitute, the Services Package provides two logging mechanisms:
 </p>
 
 <ul>

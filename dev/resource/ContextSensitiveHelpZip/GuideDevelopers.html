@@ -2,91 +2,49 @@
     Service Developers Guide
 </h1>
 
-<p>
-    Intended audience: Salesforce Apex Developer.
-</p>
-
 <h2>
     About This Guide
 </h2>
 
 <p>
-    This guide is intended for Salesforce Apex Developers who are tasked with providing
-    functionality not directly available in the Services package. The purpose of this guide is to:
+    This guide is intended for developers who are tasked with building new services.
+    The purpose of this guide is to:
 </p>
 
 <ol>
     <li>
-        explain basic service concepts as they pertain to the Services framework.
+        explain event driven concepts
     </li>
     <li>
-        describe in detail the creation of a service that is compatible with the Services framework
+        describe the creation of a custom service in Apex
     </li>
 </ol>
-
-<p>
-    This guide excludes Services framework configuration and monitoring. These topics are covered in the
-    separate <a href="?topic=GuideOrchestrators">Orchestrators Guide</a>.
-</p>
 
 <h2>
     Getting Started
 </h2>
 
-
 <p>
-    The Services framework has  a number of pre-packaged  services that can be
-    sequenced together to accomplish useful work.
-    These pre-packaged services include <em>Branch</em>, <em>Gate</em>, <em>Jump</em>,
-    <em>Publish</em>, <em>Schedule</em>, <em>Aggregate By Job</em>,
-    <em>Subscribe</em>, <em>Transaction</em>, <em>Terminate</em> and <em>WireTap</em>.
+    The Services Package has a number of pre-packaged services that can be sequenced together to perform work.
+    These include Aggregate, Jump, Publish, Subscribe, Schedule, Transaction, Wiretap, and Terminate.
 </p>
 
 <p>
-    Additional services are easily created to implement tasks specific to a particular business
-    requirement.
-    The focus of this guide is to provide detailed guidance for the creation of these additional services.
+    Custom services must be created to perform tasks specific to new business requirements.
+    The Services Package conforms to the <a href="https://github.com/bigassforce/OASIS">Open Apex Service Specification</a> or OASIS.
+    This specification defines attributes of the service so that the container can host and execute the service logic in a consistent manner.
+    All services contain an execute method in the following form:
 </p>
 
-
-<h2>
-    Service Specification and Service Concepts
-</h2>
 <p>
-    The Services framework supports the Open Apex Service
-    (<a href="https://github.com/bigassforce/OASIS">OASIS</a> ) specification hosted on Github.
-    The
-    <a href="https://github.com/bigassforce/OASIS" target="_blank">OASIS</a>
-    specification defines  meta attributes  that should be present in the implemented service
-    so that the service framework can  host and execute the service logic in
-    a consistent and accessable manner.
+    <code>&nbsp;&nbsp;&nbsp;&nbsp;Event[] execute(Event);</code>
 </p>
 
-
 <p>
-    The
-    <a href="https://github.com/bigassforce/OASIS" target="_blank">OASIS</a>
-    specification also defines the execution construct that should be present in any given service
-    and this construct takes the following form:
-</p>
-
-
-<p>
-
-        <blockquote style="margin-left:2em;">
-        <code>Event[] execute(Event);</code>
-        </blockquote>
-
-</p>
-
-
-<p>
-    The above signature illustrates how a service adhering to the
-    <a href="https://github.com/bigassforce/OASIS" target="_blank">OASIS</a>
-    specification
-    takes exactly one input event, performs it's defined business logic and then emits zero, one or many
-    events. The Services framework is designed so that the output(s) from a given service can be directly
-    re-purposed as input(s) into subsequent downstream services.
+    This illustrates how all services take exactly one input event.
+    They perform the business logic and then emit zero, one or many output events.
+    This is so that the output from any upstream service can be directly
+    re-purposed as inputs to subsequent downstream services.
 </p>
 
 <p>
@@ -94,11 +52,11 @@
 </p>
 
 <h1>
-    Overview of development lifecycle
+    Development Lifecycle
 </h1>
 
 <p>
-    The list below describes the order of activities for creating, testing and deploying your service:
+    The list below describes the order of activities for creating, testing and deploying services:
 </p>
 
 <ol>
@@ -110,30 +68,28 @@
     </li>
     <li>
         <p>
-            Define the service activity in the form of a service specification.
+            Define the service activity in the form of a specification.
         </p>
         <fieldset>
             <legend>Note</legend>
-            This step would normally be performed by the System Architect, System Orchestrator or a
-            Business Analyst.
+            This step would normally be performed by an architect or business analyst.
         </fieldset>
     </li>
     <li>
         <p>
-            Convert the specification into a service with accompanying unit tests -
-            see <a href="?topic=GuideBuildingTesting">building and testing the service</a>
+            Author the service according to specification with accompanying unit tests.
         </p>
         <fieldset>
             <legend>Note</legend>
-            A Force.com developer would normally perform this step
+            This step would normally be performed by a salesforce developer.
         </fieldset>
     </li>
     <li>
-        Visually test the service - see <a href="#CHAPTER06">post-build steps</a>
+        Visually test the service - see <a href="?topic=GuidePostBuildSteps">Post Build Steps</a>
     </li>
     <li>
-        Create a package containing your service and install in the runtime enviroment
-        (Sandbox, Production, etc). - see <a href="#CHAPTER06">post-build steps</a>
+        Create a changeset or package containing your service and install in the runtime enviroment
+        (Sandbox, Production, etc). - see <a href="?topic=GuidePostBuildSteps">Post Build Steps</a>
     </li>
 </ol>
 
@@ -191,8 +147,8 @@
 
 <ul>
     <li>
-        The service activity represents custom logic that is not currently available under the Services framework,
-        either because such logic is is not represented by one of the native framework services, or
+        The service activity represents custom logic that is not currently available under the Services Package,
+        either because such logic is is not represented by one of the native services, or
         because such logic has not been previously created and/or registered.
     </li>
     <li>
@@ -214,7 +170,7 @@
 </ul>
 
 <p>
-    The Services framework implements the <strong>Step Config</strong>
+    The Services Package implements the <strong>Step Config</strong>
     and <strong>Service Config</strong> attributes to accommodate variations in
     service behavior. More details can be found
     <a href="https://github.com/bigassforce/OASIS" target="_blank">here</a>.

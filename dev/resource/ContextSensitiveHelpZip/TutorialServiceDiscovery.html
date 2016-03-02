@@ -1,0 +1,65 @@
+<h1>
+    Service Discovery Tutorial
+</h1>
+
+<h2>Objective</h2>
+<p>
+    This tutorial demonstrates the discovery of new business logic.
+    We will create a new service conforming to a standard definition so that it can be
+    referenced by the Services Package.
+</p>
+
+
+<p>
+    Expected duration: 10 minutes.
+</p>
+
+<br/>
+
+<h2>Background Context</h2>
+<p>
+    Before a Service can be referenced as a step in a sequence, it must first be discovered by the Services Package.
+    It detects all Apex Classes in the organization that conform to a service definition.
+    All valid services are made available for potential selection by the system orchestrator when building sequences under the tab.
+</p>
+
+<br/>
+<h2>
+    Instructions
+</h2>
+
+
+<ol>
+
+    <li>
+        Open the developer console. Create a new Apex class and name it MyService.
+        Paste in the following code and press Save.
+        <pre>
+            global class MyService extends Abstract.Service {
+
+                global class Definition extends Abstract.Service.Definition {
+                    String Label = 'My Service';
+                    String Description = 'My description.';
+                }
+
+                override public List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
+                    return new List&lt;Map&lt;String,Object&gt;&gt;();
+                }
+
+            }
+        </pre>
+    </li>
+
+    <li>
+        Open the App menu on the top right of Salesforce and choose Services.
+    </li>
+    <li>
+        Navigate to the Services tab. Progress is shown at the top of the page.
+    <li>
+        Once discovery is complete, you will be taken back to the list view.
+        <br />
+        <img src="resources/TutorialProcessDiscovery/services2.png" />
+    </li>
+</ol>
+
+

@@ -1,24 +1,11 @@
-<!--/// TODO - REVIEW COMPLETE-->
-
-
-
 <h1>
-    Valid Salesforce Ids Tutorial
+    Aggregating Salesforce Id Key Prefixes
 </h1>
 
 <h2>Objective</h2>
+
 <p>
-    This tutorial demonstrates the introduction of new business logic cy making use of
-    custom components  in a Sequence.
-    <!--
-    <br/><br/>
-    We will create a new  Sequence that evaluates all possible three digit arrangements
-    of  the numerals '0' to '5'. (eg '001' - Account).
-    <br/>
-    Any combinatination  reprepresenting a valid Salesforce
-    Prefix Id will be added to a list and
-    that list will be emailed to the user of the Sequence
-    -->
+    This tutorial demonstrates the combination of business logic by making use of custom services in a Sequence.
 </p>
 
 
@@ -46,12 +33,12 @@
     of valid Salesforce Prefix Ids.
 </p>
 <p>
-    The Services framework has a number of pre-built service components to assist us. We will make use of the following
+    The Services Package has a number of pre-built service components to assist us. We will make use of the following
     pre-built services :
     <ul>
         <li>a Wiretap component to email the list of valid results</li>
         <li>an Aggregation component to correlate the the valid results into a single list</li>
-        <li>a Terminate component to indicate to the framework that the Sequence has ended.</li>
+        <li>a Terminate component to indicate that the Sequence has ended.</li>
     </ul>
 </p>
 <p>

@@ -3,44 +3,23 @@
 </h1>
 
 <p>
-    The Services Package is the only high performance messaging platform native to Salesforce.
-    It allows systems to react to real world events.
-    You can model sagas, complex asynchronous sequences, and recover from errors without data loss.
+    The Services Package is the only enterprise grade service container native to Salesforce.
+    It provides automatic bulkification, automatic exception handling, and automatic transaction management.
+    Any apex code executed inside the container becomes context agnostic.
 </p>
 
+
 <p>
-    Service oriented architecture encourages:
+    You can:
 </p>
 
 <ul>
-    <li>reactive, extensible and event-driven models,</li>
-    <li>testable components which have no knowledge of each other, and</li>
-    <li>coding to an interface that responds to events.</li>
+    <li>react to real world events</li>
+    <li>recover from errors without data loss</li>
+    <li>build services that exchange messages to perform tasks</li>
+    <li>design systems for easy module inspection and module replacement</li>
 </ul>
 
-<h2>Services</h2>
-
 <p>
-    A Service is a single piece of encapsulated business logic with inputs and outputs.
-    Each service is implemented as an Apex class, has a single event as an input,
-    and emits zero, one, or many events as outputs.
-</p>
-
-<h2>Messages</h2>
-
-<p>
-    A message is a container for holding an Event. Wrapping each event in a message gives a handle to identify it.
-    The purpose of the message is to perist the communication between services.
-    The terms Event and Message can be used interchangeably for most purposes.
-</p>
-
-
-
-<h2>Sequences</h2>
-
-<p>
-    A Sequence is an arrangement of multiple processing tasks called Steps.
-    Each Sequence has a name which indicates the kind of work its processing steps will perform.
-    The Services Package will advance events through the steps of a sequence in the order you specify
-    using the drag and drop builder.
+    <img src="resources/Splashes/ServicesIntroduction.png" />
 </p>

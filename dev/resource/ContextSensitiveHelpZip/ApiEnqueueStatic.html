@@ -2,29 +2,6 @@
     Static Enqueue
 </h1>
 
-<!--<h2>-->
-    <!--Simple event constructor-->
-<!--</h2>-->
-
-<!--<p>-->
-    <!--Sends a known Id to a sequence. This short-hand method sets two event parameters for you.-->
-    <!--Use this constructor for simple events that only need to point at an sObject.-->
-<!--</p>-->
-
-<!--<p>-->
-    <!--<code>global ServiceBus.Job(String sequence, Id recordId)</code>-->
-<!--</p>-->
-
-<!--<dl>-->
-    <!--<dt>sequence</dt>-->
-    <!--<dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>-->
-    <!--<dd>Name of the sequence the data is destined for. This is set on the <code>Sequence</code> event parameter for your convenience.</dd>-->
-    
-    <!--<dt>recordId</dt>-->
-    <!--<dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>-->
-    <!--<dd>Id of some record that the sequence will operate on. This is set on the <code>RecordId</code> event parameter for your convenience.</dd>-->
-<!--</dl>-->
-
 <h2>
     Single event invoke
 </h2>
@@ -61,29 +38,6 @@
     <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_list.htm" target="_blank">List&lt;Map&lt;String,Object&gt;&gt;</a></dd>
     <dd>A collection of multiple events, each of which must carry a <code>ToService</code> or <code>ToSequence</code> parameter with a string value.</dd>
 </dl>
-
-<!--
- ! TODO
- !-->
-<!--
-<h2>
-    Blob Signature
-</h2>
-
-<p>
-    <code>global ServiceBus.Job(String sequenceName, Blob entityData)</code>
-</p>
-
-<dl>
-    <dt>sequenceName</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
-    <dd>Name of the sequence the data is destined for. This sets <code>SequenceName</code> as a convenience.</dd>
-    
-    <dt>entityData</dt>
-    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_blob.htm" target="_blank">Blob</a></dd>
-    <dd>Blob representation of the data the sequence will operate on. This sets <code>RecordId</code> as a convenience.</dd>
-</dl>
--->
 
 <h1>
     Invocable Action

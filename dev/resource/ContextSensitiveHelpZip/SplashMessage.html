@@ -21,24 +21,22 @@
 </p>
 
 <p>
-    If an exception happens, modify the service or the event, then take action:
+    If an exception happens, you can modify the service logic or the event data, then take action:
 </p>
 
 <dl>
-    <dt>Restart the message</dt>
+    <dt>Restart</dt>
     <dd>
-        This action is synchronous and responds immediately.
+        Synchronously and immediately reprocesses one message.
     </dd>
 
-    <dt>Rebuffer messages</dt>
+    <dt>Rebuffer</dt>
     <dd>
-        This action is asynchronously, for larger groups of messages.
+        Asynchronously reprocesses multiple messages.
     </dd>
 
-    <dt>Kill messages</dt>
+    <dt>Kill</dt>
     <dd>
-        This action asserts that the event should be dismissed.
-        <br />
-        For example if the failure was expected or recovered manually.
+        Discards multiple messages.
     </dd>
 </dl>

@@ -1,5 +1,5 @@
 <h1>
-    Framework Boundaries
+    Package Boundaries
 </h1>
 
 <h2>
@@ -8,9 +8,9 @@
 
 <p>
     External events (for example <em>"Time is 12:01"</em> or <em>"Stock price changed"</em>) are
-    not directly consumable by the Services framework. Instead, Service configurators make use of the
+    not directly consumable by the Services Package. Instead, Service configurators make use of the
     <code>Services.Enqueue.invoke()</code> method to transform an external events into event messages that are
-    consumable by the Services framework.
+    consumable by the Services Package.
 </p>
 
 <p>
@@ -29,13 +29,6 @@
     <li>
         <code>Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{ 'ToConfig' => 'MyConfig'};</code>
     </li>
-
-    <!--
-     ! TODO
-     ! <li>
-     !     <code>ServiceBus.Job(String sequenceName, Blob data)</code>
-     ! </li>
-     !-->
 </ul>
 
 <p>
@@ -77,21 +70,12 @@
     (see <a href="?topic=ApiNamespace">Api Guide</a> for further details.)
 </p>
 
-
-<!--<p>
- !    Use the <code>Enqueue(String SequenceName, Blob data )</code> method
- !    <br/>whenever the data related to the external event is a stream of data not yet
- !    persisted in Salesforce by passing in that stream in the form of a
- !    <code>Blob</code>.  
- ! </p>
- !-->
-
 <h2>
     External Boundary - Outbound
 </h2>
 
 <p>
-    Any service is free to communicate outside the framework boundary via:
+    Any service is free to communicate outside the boundary via:
 </p>
 
 <ul>

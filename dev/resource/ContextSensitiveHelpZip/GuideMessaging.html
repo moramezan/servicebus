@@ -18,7 +18,7 @@
 </h2>
 
 <p>
-    Specific events are only relevant to specific services. For this reason the Services framework
+    Specific events are only relevant to specific services. For this reason the Services Package
     routes events to specific services within the system.
 
     An ordered list of  event types to specific services can be reduced to a
@@ -31,7 +31,7 @@
     Event Driven Architecture (
     <a href="https://en.wikipedia.org/wiki/Event-driven_architecture" target="_blank">EDA</a>
     ).
-    The Services framework is a
+    The Services Package is a
     <a href="https://en.wikipedia.org/wiki/Staged_event-driven_architecture" target="_blank">SEDA</a>
     implementation of this evented architecture.
 </p>
@@ -69,7 +69,7 @@
     cause the service to execute.
     Developers are responsible for creating services while
     the responsibility of routing  any given event to the appropriate
-    service is delegated to the services framework.
+    service is delegated to the services package.
 </p>
 
 <h2>
@@ -77,7 +77,7 @@
 </h2>
 
 <p>
-    The Services framework facilitates useful work on the Salesforce platform via services that have
+    The Services Package facilitates useful work on the Salesforce platform via services that have
     previously registered their collective interest the occurrence of  specific event types.
     In practise and under SEDA architecture, this normally
     means that a service registers an interest in events emitted from the service that immediately
@@ -105,11 +105,11 @@
 </h2>
 
 <p>
-    The Services framework is built using a SEDA implementation of Event Driven Architecture.
+    The Services Package is built using a SEDA implementation of Event Driven Architecture.
 </p>
 
 <p>
-    The Services framework logically
+    The Services Package logically
     maps processing steps to an underlying business requirements.
     Emphasis is placed on narrowly defined, composable units of work called Services.
     Each unit of work responds to
@@ -120,7 +120,7 @@
 </p>
 
 <p>
-    The Services framework provides a clean model that limits complexity in the system.
+    The Services Package provides a clean model that limits complexity in the system.
     In contrast, the Command-Response
     paradigm attempts to attach all possible logical code paths and associated exception handling to
     a single specific command. This creates code complexity that is not easily tested or modified.
