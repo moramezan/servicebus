@@ -2,6 +2,30 @@
     
     //TODO needs more tests
     
+    @TestSetup static void testSetup() {
+        //act
+        new PostInstallHandler().onInstall(null);
+        
+        //assert
+        System.assertNotEquals(null, Application__c.getOrgDefaults().Id, 'Wrong id.');
+    }
+    
+    static testmethod void testInvocableMethodEnqueue() {
+        //arrange
+        Map<String,Object> event = new Map<String,Object>();
+        event.put('ToService', TerminateService.class.getName());
+        
+        //act
+        String data = Json.serialize(event);
+        List<Id> jobIds = Enqueue.invoke(new List<String>{data});
+        
+        //assemble
+        String jobId = jobIds[0];
+        
+        //assert
+        System.assert(jobId.startsWith('707'), 'Wrong jobId.');
+    }
+    
     static testmethod void testToConfigIdsMissPreviousVersion() {
         //arrange prev version
         insert new Step__c(

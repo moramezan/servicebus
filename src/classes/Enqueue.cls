@@ -123,6 +123,24 @@ global class Enqueue implements Process.Plugin {
         
         return plugin;
     }
+
+    /**
+     * Per #1268
+     * We use the singular name "event" because that is described
+     * on the generated REST endpoint and becomes codified JSON.
+     * eg the raw POST data is {"inputs":[{"event":"{}"}]}
+     */
+    @InvocableMethod(label='Services Enqueue') static global List<Id> invoke(List<String> event) {
+        List<Id> jobIds = new List<Id>();
+        
+        for (String data : event) {
+            Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(data);
+            Id jobId = Enqueue.invoke(inputEvent);
+            jobIds.add(jobId);
+        }
+        
+        return jobIds;
+    }
     
     /**
      * Per #702 this enables developers to Enqueue into Services without a compile-time
