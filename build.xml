@@ -180,6 +180,7 @@
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
     <fullName>Services</fullName>
+    <packageType>UNMANAGED</packageType>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacevalue>
         </replace>
@@ -198,6 +199,7 @@
         <replace file="src/package.xml" encoding="UTF-8">
             <replacetoken><![CDATA[
     <fullName>Services</fullName>
+    <packageType>UNMANAGED</packageType>
     <setupWeblink>Configure</setupWeblink>
     <types>]]></replacetoken>
             <replacevalue><![CDATA[
