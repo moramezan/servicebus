@@ -1,6 +1,6 @@
 public with sharing class MessageViewExtension {
     
-    String mid;
+    Id mid;
     ApexPages.StandardController controller;
     static Application__c application = Application__c.getOrgDefaults();
 
@@ -133,7 +133,7 @@ public with sharing class MessageViewExtension {
     public class DoDml {
         public DoDml() {
             upsert application;
-            String mid = ApexPages.currentPage().getParameters().get('mid');
+            Id mid = ApexPages.currentPage().getParameters().get('mid');
             MessageModel.fromId(mid).healExtendedStatus();
         }
     }
