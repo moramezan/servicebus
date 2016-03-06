@@ -69,7 +69,8 @@
         URLFOR['/'] = '{!URLFOR("/")}';
         URLFOR[$Page.ApexClassView] = '{!URLFOR($Page.ApexClassView, null, ["id"="000000000000000AAA"])}';
         URLFOR[$Page.StepConfig] = '{!URLFOR($Page.StepConfig, null, ["id"="000000000000000AAA"])}';
-        
+        URLFOR[$Page.MessageView] = '{!URLFOR($Page.MessageView, null, ["mid"="000000000000000AAA"])}';
+
         window.Launch = function(callback) {
             //#1096
             callback();

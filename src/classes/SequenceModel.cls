@@ -72,9 +72,12 @@ public class SequenceModel extends ApexDomain.StandardModel {
         
         //initial position
         Integer position = 0;
-        
+
+        Enqueue.AllowRoute = true;
+
         Map<String,Object> event = new Map<String,Object>{
-            'ToSequence' => this.Sequence.Name
+            //use the draft version, not the selected version!
+            'Route' => version + '#' + this.Sequence.Name + '#' + position
         };
         
         return Enqueue.invoke(event);

@@ -102,11 +102,13 @@ public with sharing class SequenceEditExtension {
         model.destroyStep(stepName);
     }
     
-    @RemoteAction static public Id enqueue(Id sequenceId) {
+    @RemoteAction static public List<Id> enqueue(Id sequenceId) {
         SequenceModel model = SequenceModel.fromId(sequenceId);
-        return model.enqueueTestMessage();
+        Id jobId = model.enqueueTestMessage();
+        Message__c message = [SELECT Id FROM Message__c WHERE JobId__c = :jobId];
+        return new List<Id>{jobId, message.Id};
     }
-    
+
     /**
      * Health check stuff
      */

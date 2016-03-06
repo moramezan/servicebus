@@ -1,7 +1,9 @@
 global class Enqueue implements Process.Plugin {
     
     public class EnqueueException extends Exception {}
-    
+
+    static public Boolean AllowRoute = false;
+
     /**
      * <?xml version=1.0 encoding=UTF-8?>
      * <env:Envelope xmlns:env=http://schemas.xmlsoap.org/soap/envelope/ xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance xmlns:xsd=http://www.w3.org/2001/XMLSchema>
@@ -249,13 +251,16 @@ global class Enqueue implements Process.Plugin {
             'ToService',
             'Hops'
         };
-        
+
+        if (AllowRoute) legalKeys.add('Route');
+
         Datetime timestamp = System.now();
+        Object route = inputEvents[0].get('Route');
         Object immediate = inputEvents[0].get('Immediate');
         Object toService = inputEvents[0].get('ToService');
         Object toSequence = inputEvents[0].get('ToSequence');
         Object toConfigIds = inputEvents[0].get('ToConfigIds');
-        
+
         for (Integer i = 0; i < inputEvents.size(); i++) {
             
             Map<String,Object> inputEvent = inputEvents[i];
@@ -285,7 +290,7 @@ global class Enqueue implements Process.Plugin {
                 throw new EnqueueException('Enqueueing groups of events to different services is not permitted. List the events together by service and enqueue the different services in separate jobs.');
             }
             
-            if (toService == null && toSequence == null && toConfigIds == null) {
+            if (toService == null && toSequence == null && toConfigIds == null && route == null) {
                 //failure, completely unroutable
                 throw new EnqueueException('Enqueueing events without a route is not permitted. Populate one of the event parameters: ToService, ToSequence, ToConfigIds.');
             }

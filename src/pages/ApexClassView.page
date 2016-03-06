@@ -27,7 +27,7 @@
                 <apex:actionStatus id="busy">
                     <apex:facet name="stop">
                         <apex:commandButton rendered="{!Definition.StepConfig == null}" value="Enqueue Test Event" onclick="enqueue(); return false;">
-                            <apex:actionFunction name="enqueue" reRender="form" action="{!doEnqueue}" status="busy" oncomplete="Ext.Msg.alert('Success', 'Test message has been enqueued. <br />Submitted Job Id: {!JobId}').setIcon(Ext.Msg.QUESTION);" />
+                            <apex:actionFunction name="enqueue" reRender="form" action="{!doEnqueue}" status="busy" oncomplete="Ext.Msg.alert('Success', 'Test message has been enqueued. <br />Submitted Job Id: {!LINKTO(JobId, URLFOR($Page.MessageView, null, [mid=MessageId]))}').setIcon(Ext.Msg.QUESTION);" />
                         </apex:commandButton>
                     </apex:facet>
                     <apex:facet name="start">

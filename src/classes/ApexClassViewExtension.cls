@@ -40,9 +40,12 @@ public with sharing class ApexClassViewExtension {
      * #1096
      */
     public Id JobId {get; set;}
-    
+    public Id MessageId {get; set;}
+
     public void doEnqueue() {
         this.JobId = this.model.enqueueTestMessage();
+        Message__c message = [SELECT Id FROM Message__c WHERE JobId__c = :this.JobId];
+        this.MessageId = message.Id;
     }
     
 }
