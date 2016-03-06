@@ -238,6 +238,7 @@ global class Enqueue implements Process.Plugin {
         }
         
         Set<String> legalKeys = new Set<String>{
+            'Immediate',
             'EnqueuedById',
             'EntryPointTimestamp',
             'CorrelationUuid',
@@ -250,6 +251,7 @@ global class Enqueue implements Process.Plugin {
         };
         
         Datetime timestamp = System.now();
+        Object immediate = inputEvents[0].get('Immediate');
         Object toService = inputEvents[0].get('ToService');
         Object toSequence = inputEvents[0].get('ToSequence');
         Object toConfigIds = inputEvents[0].get('ToConfigIds');
@@ -262,7 +264,12 @@ global class Enqueue implements Process.Plugin {
                 //failure, one bad input event
                 throw new EnqueueException('Enqueued event cannot be null'); //a la System.NullPointerException: Argument cannot be null
             }
-            
+
+            if (immediate != null && inputEvent.get('Immediate') != immediate) {
+                //failure, mixed immediacy
+                throw new EnqueueException('Enqueueing groups of immediate and non-immediate events is not permitted. List the Immediate events together and enqueue those in a separate job.');
+            }
+
             if (toService != null && toSequence != null) {
                 //failure, mixed one-shot / sequence routing
                 throw new EnqueueException('Enqueueing groups of events to a mix of sequences and services is not permitted. List the ToSequence events together and enqueue those in a separate job.');
@@ -319,7 +326,15 @@ global class Enqueue implements Process.Plugin {
         
         //#1220 COMMON ENQUEUE
         Job job = new Job();
+
+        //#1242 need jobid even when paused
+        Savepoint savepoint = Database.setSavepoint();
+
         Id jobId = System.enqueueJob(job);
+
+        //#1242 consistently consume DML whether or not paused or IMMEDIATE
+        if (Application__c.getOrgDefaults().BrokerIsPaused__c || immediate == false) Database.rollback(savepoint); else savepoint = Database.setSavepoint();
+
         if (Test.isRunningTest()) jobId = '707000123456789';
         
         //convert events to messages
@@ -336,13 +351,21 @@ global class Enqueue implements Process.Plugin {
                 numberOfAttempts = 1;
                 status = 'Started';
             }
-            
+
+            //immediate fields
+            if (immediate == false) {
+                slot = null;
+                numberOfAttempts = 0;
+                status = 'Buffered';
+            }
+
             //paused fields
             if (Application__c.getOrgDefaults().BrokerIsPaused__c) {
                 slot = null;
+                numberOfAttempts = 0;
                 status = 'Paused';
             }
-            
+
             //populate job id inside event
             inputEvents[i].put('JobId', jobId);
             
@@ -369,14 +392,6 @@ global class Enqueue implements Process.Plugin {
     public class QueueImpl implements Job.Queueable {
         
         public void execute(QueueableContext context) {
-            
-            if (Application__c.getOrgDefaults().BrokerIsPaused__c) {
-                //TODO paused, do nothing
-                //TODO (savepoint and rollback costs 2 DML)
-                //TODO (system abort job costs 1 DML)
-                //TODO consider using fake id generator
-                return;
-            }
             
             Id jobId = context.getJobId();
             if (Test.isRunningTest()) jobId = '707000123456789';

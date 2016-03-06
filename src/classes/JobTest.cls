@@ -95,6 +95,10 @@
         //#1226 no longer updating after insert, no longer x2
         Integer expectedAfter = 1000; //#955 possibly 10000, but headspace
         Integer actualAfter = dmlRows;
+
+        //#1242 savepoint and rollback costs 2 dml
+        expectedAfter += 2;
+
         System.assertEquals(expectedAfter, actualAfter, 'Wrong size.');
     }
     
