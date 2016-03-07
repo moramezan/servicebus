@@ -516,5 +516,21 @@
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Completed' ALL ROWS];
         System.assertEquals(expectedCount, actualCount, 'Wrong message');
     }
+
+    static testmethod void testScrubCauseRemovesToStringFromStackTrace() {
+        //arrange message
+        String cause = 'Class.DoCallout.callout: line 12, column 1'
+            + '\n(Services)'
+            + '\n(abstract)'
+        ;
+
+        //act
+        cause = MessageModel.scrubCause(cause);
+
+        //assert
+        String expectedCause = 'Class.DoCallout.callout: line 12, column 1';
+        String actualCause = cause;
+        System.assertEquals(expectedCause, actualCause, 'Cause should not contain a reference to toString');
+    }
     
 }

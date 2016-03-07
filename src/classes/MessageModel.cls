@@ -78,8 +78,8 @@ public class MessageModel extends ApexDomain.StandardModel {
         } catch (Exception e) {
             //#581 smoking gun should point at the user, NOT at our broker
             RestartException = e;
-            this.Message.Exception__c = (e.getTypeName() + ': ' + e.getMessage()).abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-            this.Message.Cause__c = e.getStackTraceString().replaceAll('[\r]?\n', '\r\n').abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            this.Message.Exception__c = scrubException(e.getTypeName() + ': ' + e.getMessage());
+            this.Message.Cause__c = scrubCause(e.getStackTraceString());
         }
         
         //execution time profiler
@@ -150,8 +150,8 @@ public class MessageModel extends ApexDomain.StandardModel {
         } catch (Exception e) {
             //#581 smoking gun should point at the user, NOT at our broker
             RestartException = e;
-            this.Message.Exception__c = (e.getTypeName() + ': ' + e.getMessage()).abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-            this.Message.Cause__c = e.getStackTraceString().replaceAll('[\r]?\n', '\r\n').abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+            this.Message.Exception__c = scrubException(e.getTypeName() + ': ' + e.getMessage());
+            this.Message.Cause__c = scrubCause(e.getStackTraceString());
         }
         
         //execution time profiler
@@ -318,9 +318,40 @@ public class MessageModel extends ApexDomain.StandardModel {
         
         this.Message.Slot__c = null; //avoid multiple heals
         this.Message.ExecuteDuration__c = 0; //job lacks completed date
-        this.Message.Exception__c = asyncApexJobs[0].ExtendedStatus.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
-        this.Message.Cause__c = cause.replaceAll('[\r]?\n', '\r\n').abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+        this.Message.Exception__c = scrubException(asyncApexJobs[0].ExtendedStatus);
+        this.Message.Cause__c = scrubCause(cause);
         
         update this.Message;
+    }
+
+    static public String scrubException(String exceptions) {
+
+        //pessimistic line endings and truncate
+        exceptions = exceptions.replaceAll('[\r]?\n', '\r\n');
+        exceptions = exceptions.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+
+        return exceptions;
+    }
+
+    /**
+     * Swallow toString() in trace
+     * The intent is to NOT confuse or misdirect the end user and to .. (cough) .. reveal our secret sauce
+     * https://github.com/bigassforce/services/issues/581
+     * https://github.com/bigassforce/services/commit/2dd94e19c156170b86dc30b50e5e375876f5e758
+     */
+    static public String scrubCause(String cause) {
+
+        //remove framework artefacts
+        cause = cause.replaceAll('\r?\n?\\(abstract\\)', '');
+        cause = cause.replaceAll('\r?\n?\\(Services\\)', '');
+        cause = cause.replaceAll('\r?\n?External entry point', '');
+        cause = cause.replaceAll('\r?\n?AnonymousBlock: line 1, column 1', '');
+        cause = cause.replaceAll('\r?\n?Class\\.\\w*Service\\.toString\\: line \\d+, column \\d+', '');
+
+        //pessimistic line endings and truncate
+        cause = cause.replaceAll('[\r]?\n', '\r\n');
+        cause = cause.abbreviate(SObjectType.Message__c.Fields.Cause__c.Length);
+
+        return cause;
     }
 }

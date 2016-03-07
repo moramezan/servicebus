@@ -68,8 +68,8 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
                 Id = message.Id,
                 Slot__c = null, //avoid multiple heals
                 ExecuteDuration__c = 0, //job lacks completed date
-                Exception__c = asyncApexJob.ExtendedStatus.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length),
-                Cause__c = cause.replaceAll('[\r]?\n', '\r\n').abbreviate(SObjectType.Message__c.Fields.Cause__c.Length)
+                Exception__c = MessageModel.scrubException(asyncApexJob.ExtendedStatus),
+                Cause__c = MessageModel.scrubCause(cause)
             ));
         }
         
@@ -110,7 +110,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             
             if (killableMessage.Status__c == 'Paused') {
                 //#1191 paused messages are killable
-                killableMessage.Exception__c = ('Killed by ' + UserInfo.getName()).abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
+                killableMessage.Exception__c = MessageModel.scrubException('Killed by ' + UserInfo.getName());
             }
             
             //per #825 and #827 we do NOT clear cause/exception
@@ -425,7 +425,6 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     override public void onBeforeInsert() {
         this.inhibitCreationFromGui();
         this.alphabetizeJsonAndPopulateFields();
-        this.swallowToString();
     }
     
     override public void onAfterUndelete() {
@@ -437,7 +436,6 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     
     override public void onBeforeUpdate(List<SObject> oldObjects) {
         this.alphabetizeJsonAndPopulateFields();
-        this.swallowToString();
     }
     
     /**
@@ -480,24 +478,6 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
             message.Event__c = new SortedSerializer(event).toString();
         } catch (JsonException e) {
             message.Event__c.addError(e);
-        }
-    }
-    
-    /**
-     * Swallow toString() in trace
-     * The intent is to NOT confuse or misdirect the end user and to .. (cough) .. reveal our secret sauce
-     * https://github.com/bigassforce/services/issues/581
-     * https://github.com/bigassforce/services/commit/2dd94e19c156170b86dc30b50e5e375876f5e758
-     */
-    @TestVisible void swallowToString() {
-        for (Message__c message : this.Messages) {
-            if (message.Cause__c != null) {
-                message.Cause__c = message.Cause__c.replaceAll('\r?\n?\\(abstract\\)', '');
-                message.Cause__c = message.Cause__c.replaceAll('\r?\n?\\(Services\\)', '');
-                message.Cause__c = message.Cause__c.replaceAll('\r?\n?External entry point', '');
-                message.Cause__c = message.Cause__c.replaceAll('\r?\n?AnonymousBlock: line 1, column 1', '');
-                message.Cause__c = message.Cause__c.replaceAll('\r?\n?Class\\.\\w*Service\\.toString\\: line \\d+, column \\d+', ''); //TODO test this
-            }
         }
     }
     

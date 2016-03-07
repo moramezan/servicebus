@@ -101,29 +101,7 @@
         System.assert(ApexPages.hasMessages(), 'Should have errors after.');
     }
     
-    static testmethod void callingSwallowToStringCorrectlySwallowsToStringOnTrace() {
-        //arrange message
-        String cause = 'Class.DoCallout.callout: line 12, column 1'
-            + '\n(Services)'
-            + '\n(abstract)'
-        ;
-        
-        Message__c message = new Message__c(
-                Cause__c = cause
-        );
-
-        //act
-        new MessageSetModel(new List<Message__c>{message}).swallowToString();
-        
-        //assert
-        String expectedCause = 'Class.DoCallout.callout: line 12, column 1';
-        String actualCause = message.Cause__c;
-        System.assertEquals(expectedCause, actualCause, 'Cause should not contain a reference to toString');
-    }
-
-
-    
-     static testmethod void callingPopulateJsonFieldsCorrectlyPopulatesJobId() {
+    static testmethod void callingPopulateJsonFieldsCorrectlyPopulatesJobId() {
          //arrange message
          Id jobId = UserInfo.getUserId();
          Message__c message = new Message__c(

@@ -10,8 +10,8 @@ public with sharing class MessageViewExtension {
             Id = messageId,
             Status__c = 'Started',
             ExecuteDuration__c = duration,
-            Exception__c = exceptions.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length),
-            Cause__c = cause.replaceAll('[\r]?\n', '\r\n').abbreviate(SObjectType.Message__c.Fields.Cause__c.Length)
+            Exception__c = MessageModel.scrubException(exceptions),
+            Cause__c = MessageModel.scrubCause(cause)
         );
     }
     
