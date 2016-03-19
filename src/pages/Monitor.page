@@ -14,7 +14,7 @@
     
     <apex:pageMessages showDetail="false" />
     
-    <apex:sectionHeader title="Monitor" description="The message queue monitor shows system activity at a glance. Green areas are buffered events, red areas are events with exceptions." help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashMonitor'])}" />
+    <apex:sectionHeader title="Monitor" description="The message queue monitor shows system activity at a glance. Green areas are queued events, red areas are events with exceptions." help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashMonitor'])}" />
     
     <!-- #769 -->
     <input checked="checked" type="checkbox" id="realtime" onclick="if(this.checked){var that=this;this.disabled = true;setTimeout(function() {that.checked=false;that.disabled=false;}, 60000);}" />
@@ -29,7 +29,7 @@
         <apex:axis type="Category" position="bottom" title="Route" fields="Route">
             <apex:chartLabel rotate="270" />
         </apex:axis>
-        <apex:axis type="Numeric" position="left" fields="Paused,Buffered,Started,Exceptions">
+        <apex:axis type="Numeric" position="left" fields="Paused,Queued,Started,Exceptions">
             <apex:chartLabel />
         </apex:axis>
         <apex:barSeries colorSet="#C00" orientation="vertical" axis="left" xField="Route" yField="Exceptions" title="Exception" />
@@ -37,8 +37,8 @@
             opacity="0.6"
             axis="left"
             xField="Route"
-            yField="Queued,Paused,Buffered,Started"
-            title="Queued,Paused,Buffered,Started"
+            yField="Jobs,Paused,Queued,Started"
+            title="Jobs,Paused,Queued,Started"
         />
     </apex:chart>
     
@@ -55,24 +55,24 @@
                     {!JSENCODE($Setup.Application__c.PrefixDot__c)}Stats.reload(data); //#782 stored xss
                     setTimeout(redrawStatistics, 1000);
                     
-                    var jobs = data[0].Jobs;
+                    var job = data[0].Job;
                     var jobStatus = document.getElementById('JobStatus');
-                    if (!jobs.length) {
+                    if (!job.length) {
                         jobStatus.src = "{!URLFOR('/img/newStar.png')}";
                         jobStatus.title = '';
-                    } else if (jobs[0].Status == 'Holding') {
+                    } else if (job[0].Status == 'Holding') {
                         jobStatus.src = "{!URLFOR('/img/loading.gif')}";
                         jobStatus.title = 'Holding';
-                    } else if (jobs[0].Status == 'Queued') {
+                    } else if (job[0].Status == 'Queued') {
                         jobStatus.src = "{!URLFOR('/img/loading.gif')}";
                         jobStatus.title = 'Queued';
-                    } else if (jobs[0].Status == 'Preparing') {
+                    } else if (job[0].Status == 'Preparing') {
                         jobStatus.src = "{!URLFOR('/img/loading.gif')}";
                         jobStatus.title = 'Preparing';
-                    } else if (jobs[0].Status == 'Processing') {
+                    } else if (job[0].Status == 'Processing') {
                         jobStatus.src = "{!URLFOR('/img/loading.gif')}";
                         jobStatus.title = 'Processing';
-                    } else if (jobs[0].Status == 'Aborted') {
+                    } else if (job[0].Status == 'Aborted') {
                         jobStatus.src = "{!URLFOR('/s.gif')}";
                         jobStatus.title = 'All messages processed';
                     }

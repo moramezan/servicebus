@@ -56,7 +56,7 @@ public class Router extends ApexClassModel.Service {
         ];
         
         for (Message__c message : messages) {
-            message.Status__c = 'Buffered';
+            message.Status__c = 'Queued';
             message.Exception__c = null;
         }
         

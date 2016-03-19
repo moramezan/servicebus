@@ -348,7 +348,7 @@ global class Enqueue implements Process.Plugin {
             //sequence fields
             String slot = null;
             Decimal numberOfAttempts = 0;
-            String status = 'Buffered';
+            String status = 'Queued';
             
             //one-shot fields
             if (toService != null) {
@@ -361,7 +361,7 @@ global class Enqueue implements Process.Plugin {
             if (immediate == false) {
                 slot = null;
                 numberOfAttempts = 0;
-                status = 'Buffered';
+                status = 'Queued';
             }
 
             //paused fields

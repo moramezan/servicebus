@@ -1,25 +1,25 @@
 public with sharing class MonitorController {
     
     public class Statistic {
-        public Statistic(String route, Integer paused, Integer buffered, Integer started, Integer exceptions) {
+        public Statistic(String route, Integer paused, Integer queued, Integer started, Integer exceptions) {
             this.Route = route;
             this.Paused = paused;
-            this.Buffered = buffered;
+            this.Queued = queued;
             this.Started = started;
             this.Exceptions = exceptions;
             
-            this.Queued = 0;
-            this.Jobs = null;
+            this.Jobs = 0;
+            this.Job = null;
         }
         
         public String Route {get; set;}
         public Integer Paused {get; set;}
-        public Integer Buffered {get; set;}
+        public Integer Queued {get; set;}
         public Integer Started {get; set;}
         public Integer Exceptions {get; set;}
         
-        public Integer Queued {get; set;}
-        public List<AsyncApexJob> Jobs {get; set;}
+        public Integer Jobs {get; set;}
+        public List<AsyncApexJob> Job {get; set;}
     }
     
     @ReadOnly @RemoteAction static public List<Statistic> fetchTestStatistics() {
@@ -69,12 +69,12 @@ public with sharing class MonitorController {
         for (AggregateResult result : [
             SELECT Route__c route, COUNT(Status__c) total
             FROM Message__c
-            WHERE Status__c = 'Buffered'
+            WHERE Status__c = 'Queued'
             GROUP BY Route__c
         ]) {
             Statistic statistic = route2statistic.get((String)result.get('route')); //#761
             if (statistic == null) statistic = route2statistic.get(null);
-            statistic.Buffered += (Integer)result.get('total');
+            statistic.Queued += (Integer)result.get('total');
         }
         
         for (AggregateResult result : [
@@ -109,12 +109,12 @@ public with sharing class MonitorController {
             AND Status IN ('Queued', 'Processing', 'Preparing')
         ]) {
             Statistic statistic = route2statistic.get(null);
-            statistic.Queued += (Integer)result.get('total');
+            statistic.Jobs += (Integer)result.get('total');
         }
         
         //glorified twirly representing broker batch
         Statistic statistic = route2statistic.get(null);
-        statistic.Jobs = ApexDomain.get([
+        statistic.Job = ApexDomain.get([
             SELECT Id
             FROM AsyncApexJob
             WHERE ApexClass.NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c AND ApexClass.Name = 'BrokerBatch'
@@ -122,12 +122,12 @@ public with sharing class MonitorController {
             LIMIT 1
         ]);
         
-        //pluck out the buffered guys (null per #697)
+        //pluck out the queued guys (null per #697)
         Statistic none = route2statistic.remove(null);
         List<String> stepNames = new List<String>(route2statistic.keySet());
         stepNames.sort();
         
-        //sort buffered then alphabetical
+        //sort queued then alphabetical
         List<Statistic> statistics = new List<Statistic>{none};
         for (String stepName : stepNames) statistics.add(route2statistic.get(stepName));
         return statistics;

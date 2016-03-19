@@ -335,7 +335,7 @@
 
 
 
-    static testmethod void  callingExecuteReturnsZeroWhenOthersInGroupBufferedOrPaused() {
+    static testmethod void  callingExecuteReturnsZeroWhenOthersInGroupQueuedOrPaused() {
         // Arrange
         Integer totalCount = 5;
         Integer rangeCount =  3 ;
@@ -362,7 +362,7 @@
         List<Message__c> otherMessages = new List<Message__c> ();
         i = 1;
         while (i <= otherCount) {
-            otherMessages.add(new Message__c(Status__c = 'Buffered', JobId__c = jobId) );  //Buffered or Paused
+            otherMessages.add(new Message__c(Status__c = 'Queued', JobId__c = jobId) );  //Queued or Paused
             i++;
         }
         insert otherMessages;
@@ -622,7 +622,7 @@
         Integer chunkTotal = 2;
         Integer chunk = 2;
 
-        Message__c messageB = new Message__c( Status__c = 'Buffered', Event__c = '{"JobId":"' + jobId + '"}');
+        Message__c messageB = new Message__c( Status__c = 'Queued', Event__c = '{"JobId":"' + jobId + '"}');
         insert messageB;
 
         Message__c message1 = new Message__c( Status__c = 'Started', Event__c = '{"JobId":"' + jobId + '"}');

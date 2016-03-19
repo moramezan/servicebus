@@ -453,11 +453,11 @@
         System.assertEquals(expectedRoute, actualRoute, 'Wrong route.');
     }
     
-    static testmethod void testCantRestartBuffered() {
+    static testmethod void testCantRestartQueued() {
         Id messageId;
         
         //arrange
-        messageId = Database.insert(new Message__c(Status__c = 'Buffered')).getId();
+        messageId = Database.insert(new Message__c(Status__c = 'Queued')).getId();
         
         try {
             //act

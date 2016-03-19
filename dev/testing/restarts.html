@@ -1,5 +1,5 @@
 <h1>
-    Rebuffering unsuccessful messages
+    Restarts multiple unsuccessful messages
 </h1>
 
 <p>
@@ -12,14 +12,14 @@
 </h2>
 
 <ol>
-    <li>Create a new Sequence 'RebufferTest' containing an <em>unconfigured</em> 'Jump' step in position 1.</li>
+    <li>Create a new Sequence 'RestartsTest' containing an <em>unconfigured</em> 'Jump' step in position 1.</li>
     <li>Click <strong>Enqueue Test Event</strong> to process a message, which should fail.</li>
     <li>Wait for the monitor to graph the 'Exception' message for 'Jump'.</li>
     
     <li>Create a new Sequence 'TerminateTest' with just the default 'Terminate' step.</li>
-    <li>View the 'RebufferTest' sequence and configure the 'Jump' step to point to 'TerminateTest'</li>
+    <li>View the 'RestartsTest' sequence and configure the 'Jump' step to point to 'TerminateTest'</li>
     <li>From the Messages tab, go to the 'Exception' listview.</li>
-    <li>Select the checkbox next to the message and click <strong>Rebuffer</strong>.</li>
+    <li>Select the checkbox next to the message and click <strong>Restart</strong>.</li>
 </ol>
 
 <h2>

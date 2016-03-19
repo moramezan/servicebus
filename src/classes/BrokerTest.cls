@@ -57,7 +57,7 @@
             if (this.OutputMessages != null) new MessageSetModel(this.InputMessages).persist(this.OutputMessages); //PERSIST
             
             //MORE
-            if (![SELECT Id FROM Message__c WHERE Status__c = 'Buffered' LIMIT 1].isEmpty()) this.run();
+            if (![SELECT Id FROM Message__c WHERE Status__c = 'Queued' LIMIT 1].isEmpty()) this.run();
             
         }
         
@@ -123,9 +123,9 @@
         Test.stopTest();
         
         //assert
-        Integer expectedBuffered = 1;
-        Integer actualBuffered = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
-        System.assertEquals(expectedBuffered, actualBuffered, 'Wrong count.');
+        Integer expectedQueued = 1;
+        Integer actualQueued = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Queued'];
+        System.assertEquals(expectedQueued, actualQueued, 'Wrong count.');
         
         //act
         Broker.MaximumHops = 1;
@@ -332,7 +332,7 @@
         System.assertEquals(expectedCount, actualCount);
     }
     
-    static testmethod void testLocatorReturnsOnlyBufferedWork() {
+    static testmethod void testLocatorReturnsOnlyQueuedWork() {
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
@@ -346,10 +346,10 @@
             new Message__c(Status__c = 'Started', Event__c = Json.serialize(event))
         };
         
-        //arrange Buffered messages
+        //arrange Queued messages
         insert new List<Message__c>{
-            new Message__c(Status__c = 'Buffered', Event__c = Json.serialize(event)),
-            new Message__c(Status__c = 'Buffered', Event__c = Json.serialize(event))
+            new Message__c(Status__c = 'Queued', Event__c = Json.serialize(event)),
+            new Message__c(Status__c = 'Queued', Event__c = Json.serialize(event))
         };
         
         //act
@@ -534,7 +534,7 @@
         Test.stopTest();
         
         Integer expectedCount = 1;
-        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Queued'];
         System.assertEquals(expectedCount, actualCount, 'Wrong count.');
     }
  
@@ -963,7 +963,7 @@
         Broker.BatchImpl impl = new Broker.BatchImpl();
         
         //assert
-        System.assertEquals(1, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'], 'Wrong count.');
+        System.assertEquals(1, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Queued'], 'Wrong count.');
         
         impl.start(context);
         
@@ -988,7 +988,7 @@
         System.assert([SELECT Id FROM CronTrigger WHERE Id = :jobId].isEmpty(), 'Job not aborted.');
     }
 
-    static testmethod void testMarkLimitedToTotalPotentialMarksWhenBufferedMessagesGtTotalPotentialMarks() {
+    static testmethod void testMarkLimitedToTotalPotentialMarksWhenQueuedMessagesGtTotalPotentialMarks() {
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
@@ -1017,14 +1017,14 @@
         Test.stopTest();
         
         //arrange
-        Integer totalPotentialMarks = 3; // Less than Buffered Messages Count
+        Integer totalPotentialMarks = 3; // Less than Queued Messages Count
         
         //arrange context
         BatchableContext context = new BatchableContext();
         
         //arrange resolution
         Broker.BatchImpl impl = new Broker.BatchImpl();
-        Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        Integer actualQueuedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Queued'];
         
         impl.start(context);
         
@@ -1035,12 +1035,12 @@
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
         
         //assert
-        System.assert(actualBufferedCount > 0, 'Buffered Messages should be greater than zero');
-        Integer expectedCount = (totalPotentialMarks > actualBufferedCount) ? actualBufferedCount : totalPotentialMarks;
+        System.assert(actualQueuedCount > 0, 'Queued Messages should be greater than zero');
+        Integer expectedCount = (totalPotentialMarks > actualQueuedCount) ? actualQueuedCount : totalPotentialMarks;
         System.assertEquals(expectedCount, actualCount, 'Message should be started.');
     }
 
-    static testmethod void testMarkLimitedToTotalBufferedMessagesWhenTotalPotentialMarksGtTotaBufferedMessagesCount() {
+    static testmethod void testMarkLimitedToTotalQueuedMessagesWhenTotalPotentialMarksGtTotaQueuedMessagesCount() {
         //arrange sequence
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
@@ -1072,11 +1072,11 @@
         BatchableContext context = new BatchableContext();
         
         //arrange
-        Integer totalPotentialMarks = 4;  // Greater than Buffered Messages Count
+        Integer totalPotentialMarks = 4;  // Greater than Queued Messages Count
 
         //arrange resolution
         Broker.BatchImpl impl = new Broker.BatchImpl();
-        Integer actualBufferedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        Integer actualQueuedCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Queued'];
         impl.start(context);
         
         //act MARK
@@ -1086,8 +1086,8 @@
         Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'];
         
         //assert
-        System.assert(actualBufferedCount > 0, 'Buffered Messages should be greater than zero');
-        Integer expectedCount = (totalPotentialMarks > actualBufferedCount) ? actualBufferedCount : totalPotentialMarks;
+        System.assert(actualQueuedCount > 0, 'Queued Messages should be greater than zero');
+        Integer expectedCount = (totalPotentialMarks > actualQueuedCount) ? actualQueuedCount : totalPotentialMarks;
         System.assertEquals(expectedCount, actualCount, 'Message should be started.');
     }
     

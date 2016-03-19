@@ -573,7 +573,7 @@
         
         //assert
         Integer expectedCount = 1;
-        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Queued'];
         System.assertEquals(expectedCount, actualCount, 'Wrong count.');
     }
 }

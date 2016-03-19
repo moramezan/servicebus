@@ -222,7 +222,7 @@
         System.assert(!Application__c.getOrgDefaults().BrokerIsPaused__c, 'Wrong flag after.');
         
         Integer expectedAfter = 1;
-        Integer actualAfter = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        Integer actualAfter = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Queued'];
         System.assertEquals(expectedAfter, actualAfter, 'Wrong count after.');
     }
     
@@ -253,31 +253,31 @@
         
     }
     
-    static testmethod void testPausedMessagesCanBeRebuffered() {
+    static testmethod void testPausedMessagesCanBeRequeued() {
         //arrange messages
         insert new Message__c(Status__c = 'Paused');
         insert new Message__c(Status__c = 'Started');
         
         //act
-        new MessageSetModel([SELECT Id FROM Message__c]).rebuffer();
+        new MessageSetModel([SELECT Id FROM Message__c]).restart();
         
         //assert
         Integer expectedCount = 1;
-        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Queued'];
         System.assertEquals(expectedCount, actualCount, 'Wrong count.');
     }
     
-    static testmethod void testExceptionMessagesCanBeRebuffered() {
+    static testmethod void testExceptionMessagesCanBeRequeued() {
         //arrange messages
         insert new Message__c(Status__c = 'Started', Exception__c = 'Exception');
         insert new Message__c(Status__c = 'Started', Exception__c = null);
         
         //act
-        new MessageSetModel([SELECT Id FROM Message__c]).rebuffer();
+        new MessageSetModel([SELECT Id FROM Message__c]).restart();
         
         //assert
         Integer expectedCount = 1;
-        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Buffered'];
+        Integer actualCount = [SELECT COUNT() FROM Message__c WHERE Status__c = 'Queued'];
         System.assertEquals(expectedCount, actualCount, 'Wrong count.');
     }
     

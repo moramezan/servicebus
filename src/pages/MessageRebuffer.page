@@ -1,3 +1,0 @@
-<apex:page setup="true" standardController="Message__c" recordSetVar="messageset" extensions="MessageRebufferExtension" action="{!doRebuffer}">
-    <apex:pageMessages showDetail="false" /><!-- summary and detail are same, false prevents double message -->
-</apex:page>

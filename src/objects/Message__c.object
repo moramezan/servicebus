@@ -208,7 +208,7 @@ This id the Id of the job that enqueued the message representing the &quot;busin
                 <default>false</default>
             </picklistValues>
             <picklistValues>
-                <fullName>Buffered</fullName>
+                <fullName>Queued</fullName>
                 <default>true</default>
             </picklistValues>
             <picklistValues>
@@ -219,6 +219,7 @@ This id the Id of the job that enqueued the message representing the &quot;busin
                 <fullName>Completed</fullName>
                 <default>false</default>
             </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
             <sorted>false</sorted>
         </picklist>
         <trackTrending>false</trackTrending>
@@ -315,7 +316,7 @@ This id the Id of the job that enqueued the message representing the &quot;busin
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <excludedStandardButtons>New</excludedStandardButtons>
-        <listViewButtons>Rebuffer</listViewButtons>
+        <listViewButtons>Restart</listViewButtons>
         <listViewButtons>Kill</listViewButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
@@ -334,16 +335,16 @@ Set the status of message(s) with Exception to a Complete status</description>
         <requireRowSelection>true</requireRowSelection>
     </webLinks>
     <webLinks>
-        <fullName>Rebuffer</fullName>
+        <fullName>Restart</fullName>
         <availability>online</availability>
         <description>Refer #808 :
-Sets the status of message(s) to Buffered and start the Broker</description>
+Sets the status of message(s) to Queued and start the Broker</description>
         <displayType>massActionButton</displayType>
         <height>600</height>
         <linkType>page</linkType>
-        <masterLabel>Rebuffer Messages</masterLabel>
+        <masterLabel>Restart Messages</masterLabel>
         <openType>sidebar</openType>
-        <page>MessageRebuffer</page>
+        <page>MessageRestart</page>
         <protected>false</protected>
         <requireRowSelection>true</requireRowSelection>
     </webLinks>

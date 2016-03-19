@@ -1,12 +1,12 @@
-@IsTest class MessageRebufferExtensionTest {
+@IsTest class MessageRestartExtensionTest {
     
     static testmethod void coverCode() {
         //arrange
         ApexPages.StandardSetController controller = new ApexPages.StandardSetController(new List<Message__c>());
-        MessageRebufferExtension extension = new MessageRebufferExtension(controller);
+        MessageRestartExtension extension = new MessageRestartExtension(controller);
         
         //act
-        extension.doRebuffer();
+        extension.doRestart();
         
         //assert
         System.assert(ApexPages.hasMessages(), 'Wrong messages.');

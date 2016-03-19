@@ -121,37 +121,37 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     }
     
     /**
-     * "Rebuffering" is the asynchronous re-attempt of
+     * "Restarting" is the asynchronous re-attempt of
      * several messages, with the hope of them re doing
      * successfully (presumably after changing the service)
      */
-    public void rebuffer() {
+    public void restart() {
         Set<Id> attemptedIds = this.keySet();
         
         if (attemptedIds.isEmpty()) {
             throw new ModelException('You must select some messages.');
         }
         
-        List<Message__c> rebufferableMessages = [
+        List<Message__c> restartableMessages = [
             SELECT Id
             FROM Message__c
             WHERE Id IN :attemptedIds
             AND (Status__c = 'Paused' OR Exception__c != null)
         ];
         
-        if (rebufferableMessages.isEmpty()) {
+        if (restartableMessages.isEmpty()) {
             //maybe selected messages were not killable...
-            throw new ModelException('Only Paused or Exception messages can be rebuffered.');
+            throw new ModelException('Only Paused or Exception messages can be requeued.');
         }
         
-        for (Message__c rebufferableMessage : rebufferableMessages) {
-            rebufferableMessage.Status__c = 'Buffered';
-            rebufferableMessage.Exception__c = null; //#827
-            rebufferableMessage.Cause__c = null; //#827
-            rebufferableMessage.Slot__c = null; //per #1231
+        for (Message__c restartableMessage : restartableMessages) {
+            restartableMessage.Status__c = 'Queued';
+            restartableMessage.Exception__c = null; //#827
+            restartableMessage.Cause__c = null; //#827
+            restartableMessage.Slot__c = null; //per #1231
         }
         
-        update rebufferableMessages;
+        update restartableMessages;
         
         //already running
         if (Broker.isRunning()) return;
@@ -180,7 +180,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
     
     /**
      * Determines which messages are eligible to be moved into the Started status (by finding Messages
-     * with 'Buffered' status).
+     * with 'Queued' status).
      *
      * Messages that should be worked on have their status marked as Started in the database before being
      * submitted the query locator. That way, if any given execution fails, those messages will remain in the
@@ -201,7 +201,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         List<Message__c> specimen = [
             SELECT Id, Route__c, Event__c
             FROM Message__c
-            WHERE Status__c = 'Buffered'
+            WHERE Status__c = 'Queued'
             ORDER BY CreatedDate ASC //reattempts will naturally lead
             LIMIT 1
         ];
@@ -230,7 +230,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         return new MessageSetModel([
             SELECT Id, Route__c, Event__c
             FROM Message__c
-            WHERE Status__c = 'Buffered'
+            WHERE Status__c = 'Queued'
             AND Route__c = :specimen[0].Route__c //#1004 Route__c field only ever used here to LOCATE, and for GATE and MONITOR
             LIMIT :chunks
             FOR UPDATE //#695 investigate broker race condition
@@ -336,7 +336,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
      *
      * We used to have two arguments for inputMessages and outputMessages. The idea being:
      * that inputMessages were all gonna be written away as "Completed"
-     * and outputMessages were all gonna be written away as "Buffered"
+     * and outputMessages were all gonna be written away as "Queued"
      * (ka-chunk)
      *
      * But the checkmarx scanner chokes "Bulkify_Apex_Methods_Using_Collections_In_Methods"
@@ -345,7 +345,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
      * To keep the amount of back and forth and delay to a minimum, we can get away with merging
      * the two collections into one, and doing all the status changes in memory:
      * the inputMessages get "Completed" by mark()
-     * and outputMessages get "Buffered" by execute()
+     * and outputMessages get "Queued" by execute()
      *
      *
      */
@@ -506,8 +506,8 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         //So that they can be excluded from the RESOLVE / MARK cycle at a very early stage.
         //We want to be able to reintroduce messages on a one-by-one basis without turning on the tap.
         
-        //advance them from Paused to Buffered
-        for (Message__c message : messages) message.Status__c = 'Buffered';
+        //advance them from Paused to Queued
+        for (Message__c message : messages) message.Status__c = 'Queued';
         update messages;
         
         //already running
@@ -520,7 +520,7 @@ public class MessageSetModel extends ApexDomain.StandardSetModel {
         if (Test.isRunningTest()) return;
         
         //nothing to do
-        if ([SELECT Id FROM Message__c WHERE Status__c = 'Buffered' LIMIT 1].isEmpty()) return;
+        if ([SELECT Id FROM Message__c WHERE Status__c = 'Queued' LIMIT 1].isEmpty()) return;
 
         //#952 restart REAL broker
         Enqueue.integrationCommand(new Map<String,Object>{'ToService' => 'Services.RunBrokerBatch'});

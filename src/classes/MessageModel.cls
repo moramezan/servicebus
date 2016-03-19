@@ -137,7 +137,7 @@ public class MessageModel extends ApexDomain.StandardModel {
                 
                 outputMessages.add(new Message__c(
                     Event__c = Json.serializePretty(outputEvent),
-                    Status__c = 'Buffered',
+                    Status__c = 'Queued',
                     ParentId__c = this.getId()
                 ));
             }
