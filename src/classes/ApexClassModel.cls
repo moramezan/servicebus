@@ -355,14 +355,12 @@ abstract public class Service {
         if (toSequence != null) {
             Integer position = 1;
             event.remove('ToSequence');
-            event.put('services:ToSequence', toSequence);
             event.put('Route', version + '#' + toSequence + '#' + position);
         }
         
         //converts service to route
         if (toService != null) {
             event.remove('ToService');
-            event.put('services:ToService', toService);
             event.put('Route', toService);
         }
         
@@ -370,8 +368,6 @@ abstract public class Service {
         if (toConfigIds != null) {
             Integer position = 1;
             event.remove('ToConfigIds');
-            event.put('services:ToConfigIds', toConfigIds);
-            
             for (Step__c step : Step__c.getAll().values()) {
                 if (step.Version__c == version && toConfigIds.contains(step.ConfigId__c)) {
                     //correct version with correct config

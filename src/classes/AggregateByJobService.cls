@@ -127,7 +127,7 @@ public class AggregateByJobService extends ApexClassModel.Service {
     @TestVisible static Map<String,Object> cleanParameters(Map<String,Object> inputEvent) {
         for (String input : inputEvent.keySet()) {
             Object value = (Object)inputEvent.get(input);
-            value =  (input.startsWith(':') || input.startsWith('services:'))  ? value : null;
+            value = input.startsWith(':') ? value : null;
             inputEvent.put(input, value);
         }
 

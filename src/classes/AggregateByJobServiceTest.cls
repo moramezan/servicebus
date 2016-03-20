@@ -524,7 +524,6 @@
         // Arrange :
         Map<String,Object> parameters = new Map<String,Object> {
             ':x' => 'v1',
-            'services:x' => 'v2',
             'balls' => 'v3'
         };
 
@@ -533,14 +532,11 @@
 
         // prepare
         Boolean actual01 = (actualParameters.get(':x') != null);
-        Boolean actual02 = (actualParameters.get('services:x') != null);
         Boolean actual03 = (actualParameters.get('balls') == null);
 
         // Assert
         Boolean expected01 = true;
         System.assertEquals(expected01 , actual01);
-        Boolean expected02 = true;
-        System.assertEquals(expected02 , actual02);
         Boolean expected03 = true;
         System.assertEquals(expected03 , actual03);
     }

@@ -344,10 +344,6 @@
         actualParam = outputEvent.get('Route');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
-        expectedParam = 'Test';
-        actualParam = outputEvent.get('services:ToSequence');
-        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
-        
         //act
         outputEvent = new Map<String,Object>{'ToService' => 'WiretapService'};
         ApexClassModel.route(outputEvent);
@@ -355,10 +351,6 @@
         //assert
         expectedParam = 'WiretapService';
         actualParam = outputEvent.get('Route');
-        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
-        
-        expectedParam = 'WiretapService';
-        actualParam = outputEvent.get('services:ToService');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         //arrange
@@ -375,10 +367,6 @@
         //assert
         expectedParam = '1#Test#1';
         actualParam = outputEvent.get('Route');
-        System.assertEquals(expectedParam, actualParam, 'Wrong param.');
-        
-        expectedParam = new Set<Id>{document.Id};
-        actualParam = outputEvent.get('services:ToConfigIds');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
     }
     
