@@ -56,16 +56,14 @@ public class AggregateByJobService extends ApexClassModel.Service {
 
         
         String fieldName = SObjectType.Message__c.Fields.Event__c.Name;
-        String queryString = Database.getQueryLocator([
-            SELECT Event__c
-            FROM Message__c
-            WHERE JobId__c = :jobId //JobId__c field only ever used to AGGREGATE BY JOB
-            AND Route__c = :route
-            ALL ROWS
-        ]).getQuery();
-        
-        queryString = queryString.replace(':tmpVar1', '\'' + String.escapeSingleQuotes(jobId) + '\'');
-        queryString = queryString.replace(':tmpVar2', '\'' + String.escapeSingleQuotes(route) + '\'');
+        String queryString = ''
+            + ' SELECT ' + SObjectType.Message__c.Fields.Event__c.Name
+            + ' FROM ' + SObjectType.Message__c.Name
+            + ' WHERE ' + SObjectType.Message__c.Fields.JobId__c.Name + ' = ' + '\'' + String.escapeSingleQuotes(jobId) + '\''
+            + ' AND ' + SObjectType.Message__c.Fields.Route__c.Name + ' = ' + '\'' + String.escapeSingleQuotes(route) + '\''
+            + ' ALL ROWS'
+        ;
+
 
         //this is the last item, let's release
         //conceptual note:
