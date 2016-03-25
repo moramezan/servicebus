@@ -50,7 +50,7 @@
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
             ApexClassModel.Service service = new JumpService();
-            List<Map<String,Object>> outputs = service.handle(inputEvent);
+            List<Map<String,Object>> outputs = service.execute(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -83,8 +83,8 @@
         };
         
         //act
-        ApexClassModel.Service service = new JumpService();
-        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
+        ApexClassModel service = new ApexClassModel(JumpService.class);
+        List<Map<String,Object>> outputEvents = service.invokeExecute(inputEvent);
         
         //assert
         Integer expectedSize = 1;

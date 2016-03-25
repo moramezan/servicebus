@@ -29,7 +29,7 @@
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
             ApexClassModel.Service service = new WiretapService();
-            List<Map<String,Object>> outputs = service.handle(inputEvent);
+            List<Map<String,Object>> outputs = service.execute(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -61,7 +61,7 @@
         // Act
         Boolean actualFlagException = false;
         ApexClassModel.Service service = new WiretapService();
-        List<Map<String,Object>> results = service.handle(parameters);
+        List<Map<String,Object>> results = service.execute(parameters);
  
         // Assert
         Boolean expectedFlagException = false;
@@ -87,7 +87,7 @@
 
         // Act
         ApexClassModel.Service service = new WiretapService();
-        List<Map<String,Object>> actualParametersList = service.handle(inputEvent);
+        List<Map<String,Object>> actualParametersList = service.execute(inputEvent);
 
         // prepare
         Integer actualSize = actualParametersList.size();

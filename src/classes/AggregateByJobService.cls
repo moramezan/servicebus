@@ -1,5 +1,4 @@
 public class AggregateByJobService extends ApexClassModel.Service {
-    void callout(Map<String,Object> inputEvent) {}
 
     public class ServiceException extends Exception {}
 
@@ -23,7 +22,7 @@ public class AggregateByJobService extends ApexClassModel.Service {
 
 
 
-    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+    override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
 
         if (!inputEvent.containsKey('JobId'))
             throw new ServiceException('Input event missing mandatory JobId parameter');

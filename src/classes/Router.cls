@@ -3,12 +3,11 @@
  * Formerly known as Heartbeat
  */
 public class Router extends ApexClassModel.Service {
-    void callout(Map<String,Object> inputEvent) {}
     
     //#575 heartbeat evades discovery
     //public class Definition {}
     
-    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+    override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
         //#1124
         this.retryStartedMessages();
@@ -218,7 +217,9 @@ public class Router extends ApexClassModel.Service {
         
         //heartbeats are processed immediately
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
-        for (Map<String,Object> inputEvent : inputEvents) outputEvents.addAll(new Router().handle(inputEvent));
+        for (Map<String,Object> inputEvent : inputEvents) outputEvents.addAll(
+            new ApexClassModel(Router.class).invokeExecute(inputEvent)
+        );
 
         if (outputEvents.isEmpty()) {
             //nothing to do

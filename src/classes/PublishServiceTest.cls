@@ -51,7 +51,7 @@
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
             ApexClassModel.Service service = new PublishService();
-            List<Map<String,Object>> outputs = service.handle(inputEvent);
+            List<Map<String,Object>> outputs = service.execute(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -69,7 +69,7 @@
         try {
             //act
             ApexClassModel.Service service = new PublishService();
-            service.handle(parameters);
+            service.execute(parameters);
             System.assert(false, 'Line above should throw exception.');
         } catch (PublishService.ServiceException e) {
             //assert
@@ -93,7 +93,7 @@
         
         //act
         ApexClassModel.Service service = new PublishService();
-        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
+        List<Map<String,Object>> outputEvents = service.execute(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -135,7 +135,7 @@
         
         //act
         ApexClassModel.Service service = new PublishService();
-        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
+        List<Map<String,Object>> outputEvents = service.execute(inputEvent);
         
         //assert
         Integer expectedSize = 3;

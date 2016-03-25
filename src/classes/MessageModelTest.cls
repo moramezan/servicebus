@@ -32,8 +32,7 @@
     }
     
     public class MemoryError extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             inputEvent.put('c:OrganizationId', UserInfo.getOrganizationId());
             Integer i = 1 / 0;
             return null;
@@ -82,8 +81,7 @@
     }
     
     public class InserterError extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             insert new Document(Name = 'Test.txt', FolderId = UserInfo.getUserId());
             Integer i = 1 / 0;
             return null;
@@ -132,8 +130,7 @@
     }
     
     public class Memory extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             inputEvent.put('c:OrganizationId', UserInfo.getOrganizationId());
             return new List<Map<String,Object>>();
         }
@@ -181,8 +178,7 @@
     }
     
     public class Inserter extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             Map<String,Object> outputEvent = inputEvent.clone();
             Integer i = 1 / 0;
             return new List<Map<String,Object>>();
@@ -231,8 +227,7 @@
     }
     
     public class PassThroughService extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{inputEvent};
         }
     }
@@ -270,8 +265,7 @@
     
     //SurpriseNullOutputs
     public class SNO extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{'herp' => 'derp'},
                 null,

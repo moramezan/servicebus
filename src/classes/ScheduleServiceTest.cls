@@ -33,8 +33,8 @@
         Integer chunks = definition.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
-            ApexClassModel.Service service = new ScheduleService();
-            List<Map<String,Object>> outputs = service.handle(inputEvent);
+            ApexClassModel service = new ApexClassModel(ScheduleService.class);
+            List<Map<String,Object>> outputs = service.invokeExecute(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -67,8 +67,8 @@
         Integer chunks = definition.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
-            ApexClassModel.Service service = new ScheduleService();
-            List<Map<String,Object>> outputs = service.handle(inputEvent);
+            ApexClassModel service = new ApexClassModel(ScheduleService.class);
+            List<Map<String,Object>> outputs = service.invokeExecute(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -87,8 +87,8 @@
         };
         
         //act
-        ApexClassModel.Service service = new ScheduleService();
-        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
+        ApexClassModel service = new ApexClassModel(ScheduleService.class);
+        List<Map<String,Object>> outputEvents = service.invokeExecute(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -113,8 +113,8 @@
         };
         
         //act
-        ApexClassModel.Service service = new ScheduleService();
-        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
+        ApexClassModel service = new ApexClassModel(ScheduleService.class);
+        List<Map<String,Object>> outputEvents = service.invokeExecute(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -144,8 +144,8 @@
         };
         
         //act
-        ApexClassModel.Service service = new ScheduleService();
-        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
+        ApexClassModel service = new ApexClassModel(ScheduleService.class);
+        List<Map<String,Object>> outputEvents = service.invokeExecute(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -174,8 +174,8 @@
         };
         
         ///act on working days only
-        ApexClassModel.Service service = new ScheduleService();
-        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
+        ApexClassModel service = new ApexClassModel(ScheduleService.class);
+        List<Map<String,Object>> outputEvents = service.invokeExecute(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -205,8 +205,8 @@
         };
         
         ///act on working days only
-        ApexClassModel.Service service = new ScheduleService();
-        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
+        ApexClassModel service = new ApexClassModel(ScheduleService.class);
+        List<Map<String,Object>> outputEvents = service.invokeExecute(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -235,8 +235,8 @@
         };
  
         //act
-        ApexClassModel.Service service = new ScheduleService();
-        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
+        ApexClassModel service = new ApexClassModel(ScheduleService.class);
+        List<Map<String,Object>> outputEvents = service.invokeExecute(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -266,8 +266,8 @@
         };
  
         //act
-        ApexClassModel.Service service = new ScheduleService();
-        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
+        ApexClassModel service = new ApexClassModel(ScheduleService.class);
+        List<Map<String,Object>> outputEvents = service.invokeExecute(inputEvent);
         
         //assert
         Integer expectedSize = 1;
@@ -297,8 +297,8 @@
         };
  
         //act
-        ApexClassModel.Service service = new ScheduleService();
-        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
+        ApexClassModel service = new ApexClassModel(ScheduleService.class);
+        List<Map<String,Object>> outputEvents = service.invokeExecute(inputEvent);
         
         //assert
         Integer expectedSize = 0;
@@ -323,8 +323,8 @@
         };
  
         //act
-        ApexClassModel.Service service = new ScheduleService();
-        List<Map<String,Object>> outputEvents = service.handle(inputEvent);
+        ApexClassModel service = new ApexClassModel(ScheduleService.class);
+        List<Map<String,Object>> outputEvents = service.invokeExecute(inputEvent);
         
         //assert
         Integer expectedSize = 0;
@@ -349,8 +349,8 @@
         
         try {
             //act
-            ApexClassModel.Service service = new ScheduleService();
-            service.handle(inputEvent);
+            ApexClassModel service = new ApexClassModel(ScheduleService.class);
+            service.invokeExecute(inputEvent);
             System.assert(false, 'Line above should throw exception.');
         } catch (ScheduleService.ServiceException e) {
             //assert

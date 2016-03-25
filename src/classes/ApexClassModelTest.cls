@@ -2,8 +2,7 @@
     
     //@TestVisible private preferred, but Type.forName does not support
     public class DescribeService extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return null;
         }
     }
@@ -46,8 +45,7 @@
  
     //@TestVisible private preferred, but Type.forName does not support
     public class DefaultService extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return null;
         }
     }
@@ -116,8 +114,7 @@
     }
     
     public class NullReturnValue extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {return null;}
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {return null;}
     }
     
     static testmethod void testInvokeCalloutSuccessWhenNullReturnValue() {
@@ -147,8 +144,7 @@
     }
     
     public class GoodReturnValue extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>();
         }
     }
@@ -176,8 +172,7 @@
     }
     
     public class InputService extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             String expectedChristmas = '"2015-12-25T13:59:59.000Z"';
             String actualChristmas = '"' + inputEvent.get('christmas') + '"';
             System.assertEquals(expectedChristmas, actualChristmas, 'Wrong cycle.');
@@ -194,14 +189,13 @@
         Map<String,Object> inputEvent = new Map<String,Object>{'christmas' => christmas};
         
         //assert (inside service)
-        List<Map<String,Object>> outputEvents = impl.handle(inputEvent);
+        List<Map<String,Object>> outputEvents = new ApexClassModel(InputService.class).invokeExecute(inputEvent);
         
         System.assert(outputEvents.isEmpty(), 'Wrong output.');
     }
     
     public class OutputService extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
                     'foo' => 'baz',
@@ -214,7 +208,7 @@
     
     static testmethod void testServiceAggregatesAndCyclesOutputParameters() {
         //arrange service
-        ApexClassModel.Service impl = new OutputService();
+        ApexClassModel impl = new ApexClassModel(OutputService.class);
         
         //arrange input
         Map<String,Object> inputEvent = new Map<String,Object>{
@@ -222,7 +216,7 @@
         };
         
         //act
-        List<Map<String,Object>> outputEvents = impl.handle(inputEvent);
+        List<Map<String,Object>> outputEvents = impl.invokeExecute(inputEvent);
         
         //assert
         System.assert(outputEvents[0].containsKey('foo'));
@@ -233,8 +227,7 @@
     }
     
     public class TooManyOutputs extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
             for (Integer i = 0; i < 5123; i++) outputEvents.add(inputEvent);
             return outputEvents;
@@ -261,8 +254,7 @@
     }
     
     public class TooManyInputs extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return null;
         }
     }
@@ -286,8 +278,7 @@
     
     //TooManyEvents
     public class TME extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             insert new Document(Name = 'Test', FolderId = UserInfo.getUserId());
             List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
             for (Integer i = 0; i < 200; i++) outputEvents.add(new Map<String,Object>{
@@ -333,8 +324,7 @@
     }
     
     public class SpecialOneShotWithSequenceOutput extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
                     'Route' => '1#Test#1'
@@ -358,8 +348,7 @@
     }
     
     public class SpecialOneShotWithServiceOutput extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
                     'Route' => WiretapService.class.getName()
@@ -383,8 +372,7 @@
     }
     
     public class NormalOneShotWithOutputs extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>()
             };
@@ -408,8 +396,7 @@
     }
     
     public class ChainedOneShotWithOutputs extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
                     'Route' => WiretapService.class.getName()
@@ -436,11 +423,11 @@
     }
     
     public class ThrowerService extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {
+        override public void callout(Map<String,Object> inputEvent) {
             Integer i = 1 / 0; //System.MathException: Divide by 0
             throw new Broker.ServiceException('Line above should throw exception.');
         }
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             new ApexPages.StandardController(null); //System.NullPointerException: Argument cannot be null
             throw new Broker.ServiceException('Line above should throw exception.');
         }

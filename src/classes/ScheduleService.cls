@@ -1,5 +1,4 @@
 public class ScheduleService extends ApexClassModel.Service {
-    void callout(Map<String,Object> inputEvent) {}
     
     public class Definition extends ApexClassModel.Definition {
         String Tag = 'Services';
@@ -17,7 +16,7 @@ public class ScheduleService extends ApexClassModel.Service {
     
     public class ServiceException extends Exception {}
     
-    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+    override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
         String recordId = (String)inputEvent.get('RecordId');
         //if (recordId == null) throw new ServiceException('Null record id.'); //TODO (schedule does not necessarily contain heartbeat)

@@ -1,5 +1,4 @@
 public class TerminateService extends ApexClassModel.Service {
-    void callout(Map<String,Object> inputEvent) {}
     
     public class Definition extends ApexClassModel.Definition {
         String Tag = 'Services';
@@ -10,7 +9,7 @@ public class TerminateService extends ApexClassModel.Service {
         String Cardinality = 'Zero';
     }
     
-    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+    override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
         //TODO #995 synchronous
         //probably outputs will survive!

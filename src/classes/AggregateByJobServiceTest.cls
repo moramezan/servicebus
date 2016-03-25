@@ -66,7 +66,7 @@
             inputEvent.put('Chunk' , i+1);
 
             ApexClassModel.Service service = new AggregateByJobService();
-            List<Map<String,Object>> outputs = service.handle(inputEvent);
+            List<Map<String,Object>> outputs = service.execute(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -89,7 +89,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.Service service = new AggregateByJobService();
-            List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = service.execute(inputEvent);
         } catch (AggregateByJobService.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory JobId');
         }
@@ -116,7 +116,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.Service service = new AggregateByJobService();
-            List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = service.execute(inputEvent);
         } catch (AggregateByJobService.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory Route');
         }
@@ -142,7 +142,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.Service service = new AggregateByJobService();
-            List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = service.execute(inputEvent);
         } catch (AggregateByJobService.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory Range');
         }
@@ -168,7 +168,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.Service service = new AggregateByJobService();
-            List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = service.execute(inputEvent);
         } catch (AggregateByJobService.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory Chunk');
         }
@@ -194,7 +194,7 @@
         Boolean actualFlag = false;
         try {
             ApexClassModel.Service service = new AggregateByJobService();
-            List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
+            List<Map<String,Object>> actualOutputEvents = service.execute(inputEvent);
         } catch (AggregateByJobService.ServiceException e) {
             actualFlag = e.getMessage().contains('missing mandatory SiblingIds');
         }
@@ -260,7 +260,7 @@
 
         // Act
         ApexClassModel.Service service = new AggregateByJobService();
-        List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
+        List<Map<String,Object>> actualOutputEvents = service.execute(inputEvent);
 
         // Assemble
         Integer actualSize = actualOutputEvents.size();
@@ -323,7 +323,7 @@
 
         // Act
         ApexClassModel.Service service = new AggregateByJobService();
-        List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
+        List<Map<String,Object>> actualOutputEvents = service.execute(inputEvent);
 
         // Assemble
         Integer actualSize = actualOutputEvents.size();
@@ -385,7 +385,7 @@
 
         // Act
         ApexClassModel.Service service = new AggregateByJobService();
-        List<Map<String,Object>> actualOutputEvents = service.handle(inputEvent);
+        List<Map<String,Object>> actualOutputEvents = service.execute(inputEvent);
 
         // Assemble
         Integer actualSize = actualOutputEvents.size();
@@ -667,8 +667,7 @@
     }
 
     public class Split extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{'RecordId' => '001,Account'},
                 new Map<String,Object>{'RecordId' => '0ca,ChatterActivity'},

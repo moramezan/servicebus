@@ -1,5 +1,4 @@
 public class PublishService extends ApexClassModel.Service {
-    void callout(Map<String,Object> inputEvent) {}
     
     public class Definition extends ApexClassModel.Definition {
         String Tag = 'Services';
@@ -13,7 +12,7 @@ public class PublishService extends ApexClassModel.Service {
     
     public class ServiceException extends Exception {}
 
-    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+    override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
         String stepConfigId = (Id)inputEvent.get('StepConfigId');
         if (stepConfigId == null) throw new ServiceException('Null step config id.');

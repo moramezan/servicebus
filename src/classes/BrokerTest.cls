@@ -740,8 +740,7 @@
     }
     
     public class ChunkErrorService extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             Boolean isError = (Boolean)inputEvent.get('c:IsError');
             if (isError == true) Integer i = 1 / 0;
             return new List<Map<String,Object>>{inputEvent.clone()}; //one message
@@ -793,8 +792,7 @@
      * Sibling ID population...
      */
     public class FakeGate extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             DidRun = true;
             SiblingIds = (Set<Id>)Json.deserialize(Json.serialize(inputEvent.get('SiblingIds')), Set<Id>.class);
             return new List<Map<String,Object>>();

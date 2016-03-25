@@ -51,7 +51,7 @@
             };
                 
             ApexClassModel.Service service = new TransactionService();
-            List<Map<String,Object>> outputs = service.handle(inputEvent);
+            List<Map<String,Object>> outputs = service.execute(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -115,7 +115,7 @@
         try {
             //act (no config!)
             ApexClassModel.Service service = new TransactionService();
-            service.handle(new Map<String,Object>());
+            service.execute(new Map<String,Object>());
             System.assert(false, 'Line above should throw exception.');
         } catch (TransactionService.ServiceException e) {
             //assert
@@ -126,16 +126,14 @@
     }
 
     public class Inserter extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             insert new Document(Name = 'Test', FolderId = UserInfo.getUserId());
             return new List<Map<String,Object>>{inputEvent};
         }
     }
     
     public class Error extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             Integer i = 1 / 0;
             return null;
         }
@@ -174,7 +172,7 @@
             
             //act
             ApexClassModel.Service service = new TransactionService();
-            service.handle(inputEvent);
+            service.execute(inputEvent);
             System.assert(false, 'Line above should throw exception.');
             
         } catch (MathException e) {
@@ -199,14 +197,14 @@
     }
     
     public class Callout extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {
+        override public void callout(Map<String,Object> inputEvent) {
             HttpRequest request = new HttpRequest();
             request.setMethod('GET');
             request.setEndpoint('https://herp.derp/');
             new Http().send(request);
         }
         
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{inputEvent};
         }
     }
@@ -241,7 +239,7 @@
             //act
             Test.setMock(HttpCalloutMock.class, new CalloutMock());
             ApexClassModel.Service service = new TransactionService();
-            service.handle(event);
+            service.execute(event);
             System.assert(false, 'Line above should throw exception.');
             
         } catch (Broker.ServiceException e) {
@@ -254,8 +252,7 @@
     }
     
     public class Split extends ApexClassModel.Service {
-        void callout(Map<String,Object> inputEvent) {}
-        List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{inputEvent.clone(), inputEvent.clone(), inputEvent.clone()};
         }
     }
@@ -279,7 +276,7 @@
         
         //act
         Map<String,Object> inputEvent = new Map<String,Object>{'Route' => '1#Test#1', 'StepConfigId' => stepConfigId};
-        List<Map<String,Object>> outputEvents = new TransactionService().handle(inputEvent);
+        List<Map<String,Object>> outputEvents = new TransactionService().execute(inputEvent);
         
         //assert
         Integer expectedSize = 1;

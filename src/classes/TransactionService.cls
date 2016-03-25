@@ -1,5 +1,4 @@
 public class TransactionService extends ApexClassModel.Service {
-    void callout(Map<String,Object> inputEvent) {}
     
     static public Boolean IsRunning = false;
     
@@ -45,7 +44,7 @@ public class TransactionService extends ApexClassModel.Service {
         }
     }
     
-    List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+    override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
         
         //#995 help transaction bail out
         IsRunning = true;

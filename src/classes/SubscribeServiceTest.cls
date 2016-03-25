@@ -28,7 +28,7 @@
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
             ApexClassModel.Service service = new SubscribeService();
-            List<Map<String,Object>> outputs = service.handle(inputEvent);
+            List<Map<String,Object>> outputs = service.execute(inputEvent);
             counter++;
         }
         Test.stopTest();
@@ -44,7 +44,7 @@
             
         //act
         ApexClassModel.Service service = new SubscribeService();
-        List<Map<String,Object>> parametersList = service.handle(parameters);
+        List<Map<String,Object>> parametersList = service.execute(parameters);
         
         //assert
         integer expectedSize = 1;

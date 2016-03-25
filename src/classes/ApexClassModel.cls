@@ -206,102 +206,48 @@ public class ApexClassModel extends ApexDomain.StandardModel {
     
 //THERE IS A BINDING BETWEEN: abstract/classes/Service.cls and src/classes/ApexClassModel.cls
 /**
- * MUST BE GLOBAL IN ABSTRACT PACKAGE
+ * Nuclear tip
  */
-//abstract global class Service {
 abstract public class Service {
-    
-    /**
-     * MUST BE PRESENT IN ABSTRACT PACKAGE
-     */
-    //abstract global class Definition {override public String toString() {return Json.serialize(this);}}
-    
-    /**
-     * MUST BE VIRTUAL GLOBAL IN ABSTRACT PACKAGE
-     */
-    //virtual global void callout(Map<String,Object> inputEvent) {}
-    abstract private void callout(Map<String,Object> inputEvent);
-    
-    /**
-     * MUST BE VIRTUAL GLOBAL IN ABSTRACT PACKAGE
-     */
-    //virtual global List<Map<String,Object>> execute(Map<String,Object> inputEvent) {return new List<Map<String,Object>>{inputEvent};}
-    abstract private List<Map<String,Object>> execute(Map<String,Object> inputEvent);
-    
-    /**
-     * MUST BE GLOBAL IN ABSTRACT PACKAGE
-     */
-    //global List<Map<String,Object>> handle(Map<String,Object> inputEvent) {
-    public List<Map<String,Object>> handle(Map<String,Object> inputEvent) {
-        
-        //invoke callout
-        this.EventProvider = Json.serialize(inputEvent);
-        this.AllowsCallouts = true;
-        String.valueOf(this);
-        
-        //invoke execute
-        this.EventProvider = Json.serialize(inputEvent);
-        this.AllowsCallouts = false;
-        String data = String.valueOf(this);
-        
-        //respect null return
-        if (data == null) return null;
-        
-        //prepare real outputs
-        List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
-        
-        //cast each one
-        for (Object result : (List<Object>)Json.deserializeUntyped(data)) outputEvents.add((Map<String,Object>)result);
-        
-        //eg works with [ {}, null, {} ]
-        return outputEvents;
-    }
-    
-    /**
-     * Our only cross-namespace capability
-     */
-    override public String toString() {
-        //#797 cycle json so service author sees consistent inputs
-        Map<String,Object> inputEvent = (Map<String,Object>)Json.deserializeUntyped(this.EventProvider);
-        
-        if (this.AllowsCallouts == true) {
-            
-            //invoke callout
-            this.AllowsCallouts = false;
-            this.callout(inputEvent);
-            return null;
-            
-        } else if (this.AllowsCallouts == false) {
-            
-            //invoke execute
-            List<Map<String,Object>> outputEvents = this.execute(inputEvent);
-            
-            //#746 accumulate outputs so event parameters carry forwards
-            if (outputEvents != null) for (Integer i = 0; i < outputEvents.size(); i++) {
-                if (outputEvents[i] == null) continue;
-                
-                //"aggregate" equals our "input balance" plus their "output delta"
-                Map<String,Object> aggregate = inputEvent.clone();
-                aggregate.putAll(outputEvents[i]);
-                outputEvents[i] = aggregate;
-            }
-            
-            //retain camouflage after
-            this.AllowsCallouts = null;
-            
-            //#797 cycle json so service author sees consistent outputs
-            return Json.serialize(outputEvents);
-            
-        } else { //this.AllowsCallouts == null
-            
-            //camouflage... lol
-            return 'Service:[]';
-            
+
+    /*abstract public class Definition {
+        override public String toString() {
+            return Json.serialize(this);
         }
+    }*/
+
+    private String EventProvider;
+    private Boolean AllowsCallouts;
+
+    override public String toString() {
+
+        if (this.AllowsCallouts == true) {
+            this.AllowsCallouts = false;
+            this.callout((Map<String,Object>)Json.deserializeUntyped(this.EventProvider));
+            return null;
+        }
+
+        else if (this.AllowsCallouts == false) {
+            this.AllowsCallouts = null;
+            List<Map<String,Object>> events = this.execute((Map<String,Object>)Json.deserializeUntyped(this.EventProvider));
+            return Json.serialize(events);
+        }
+
+        else {
+            //camouflage
+            return 'Service:[]';
+        }
+
     }
-    
-    String EventProvider = '{}';
-    Boolean AllowsCallouts;
+
+    virtual public void callout(Map<String,Object> inputEvent) {
+        //
+    }
+
+    virtual public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
+        return new List<Map<String,Object>>{inputEvent};
+    }
+
 }
     
     /**
@@ -488,9 +434,13 @@ abstract public class Service {
                 throw new Broker.ServiceException(this.Reflector.getName() + ': Output event must be a Map<String,Object>'); //a la Return type of an Apex action method must be a PageReference. Found: java.lang.Integer
             }
             
+            //#746 accumulate outputs so event parameters carry forwards
+            //"aggregate" equals our "input balance" plus their "output delta"
             Map<String,Object> outputEvent = (Map<String,Object>)result;
-            
-            
+            Map<String,Object> aggregate = inputEvent.clone();
+            aggregate.putAll(outputEvent);
+            outputEvent = aggregate;
+
             String route = (String)outputEvent.get('Route');
             if (route != null && !route.contains('#') && inputEvent.get('Route') == outputEvent.get('Route')) {
                 //#956 "fire and forget" means don't persist outputs, unless they were explicitly destined to sequence or service

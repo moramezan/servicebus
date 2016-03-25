@@ -1,5 +1,4 @@
 public class WiretapService extends ApexClassModel.Service {
-    void callout(Map<String,Object> inputEvent) {}
     
     public class Definition extends ApexClassModel.Definition {
         String Tag = 'Services';
@@ -11,7 +10,7 @@ public class WiretapService extends ApexClassModel.Service {
         String Cardinality = 'One';
     }
     
-    List<Map<String,Object>> execute(Map<String,Object> parameters) {
+    override public List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
         WiretapServiceConfig__c wiretapServiceConfig = WiretapServiceConfig__c.getOrgDefaults();
         Id userId = wiretapServiceConfig.UserId__c;
