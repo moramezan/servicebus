@@ -1,3 +1,9 @@
-<apex:page setup="true" standardController="ApexClass" extensions="ApexClassConfigExtension" action="{!URLFOR($Action[ServiceConfig][Action], KeyPrefix, ["isdtp"=Isdtp])}">
+<apex:page setup="true" showHeader="false" standardController="ApexClass" extensions="ApexClassConfigExtension" action="{!redirect}">
+    
     <apex:pageMessages showDetail="false" />
+    
+    <apex:sectionHeader title="{!$ObjectType[ServiceConfig].LabelPlural}" />
+    
+    <apex:dynamicComponent componentValue="{!ListViews}" />
+    
 </apex:page>

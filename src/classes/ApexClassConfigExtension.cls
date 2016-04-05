@@ -1,24 +1,46 @@
 public with sharing class ApexClassConfigExtension {
-
+    
+    DescribeSObjectResult result;
     ApexPages.StandardController controller;
     ApexClassModel model;
-
+    
     public ApexClassConfigExtension(ApexPages.StandardController controller) {
         this.controller = controller;
         this.model = ApexClassModel.fromId(controller.getId());
         Map<String,String> parameters = ApexPages.CurrentPage().GetParameters();
         
         try {
-            DescribeSObjectResult result = this.model.describeServiceConfig();
+            this.result = this.model.describeServiceConfig();
             this.ServiceConfig = result.getName();
             this.KeyPrefix = result.getKeyPrefix();
-            this.Action = result.isCustomSetting() ? 'Tab' : 'List';
-            this.Isdtp = result.isCustomSetting() ? parameters.get('isdtp') : 'vw';
             
         } catch (ApexClassModel.ModelException e) {
             ApexPages.addMessages(e);
             
         }
+    }
+    
+    public PageReference redirect() {
+        
+        if (!this.result.isCustomSetting()) {
+            //custom objects display list view without sidebar
+            return null;
+        }
+        
+        //custom settings display setup menu
+        PageReference redirect = new PageReference('/setup/ui/listCustomSettingsData.apexp');
+        redirect.getParameters().put('id', 'a0A');
+        return redirect;
+    }
+    
+    /**
+     * Must use dynamic component because 'type'
+     * attribute cannot be an expression.
+     */
+    public ApexPages.Component getListViews() {
+        Component.Apex.ListViews listViews = new Component.Apex.ListViews();
+        listViews.type = this.ServiceConfig;
+        return listViews;
     }
     
     /**
@@ -27,18 +49,5 @@ public with sharing class ApexClassConfigExtension {
      */
     public String ServiceConfig {get; set;}
     public String KeyPrefix {get; set;}
-    
-    /**
-     * tab suffix only for custom settings
-     * list suffix for custom objects
-     */
-    public String Action {get; set;}
-    
-    /**
-     * normal style for custom settings
-     * console style only for custom objects
-     */
-    public String Isdtp {get; set;}
-    
     
 }
