@@ -81,6 +81,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>BrokerJob</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>BrokerJobTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>BrokerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -98,14 +106,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>EnqueueTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>Job</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>JobTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

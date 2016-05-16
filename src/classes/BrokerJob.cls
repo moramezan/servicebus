@@ -4,7 +4,7 @@
  * Don't modify class body!
  * It'll never reinstall!
  */
-public without sharing class Job implements System.Queueable, Database.AllowsCallouts {
+public without sharing class BrokerJob implements System.Queueable, Database.AllowsCallouts {
     
     /**
      * We might prefer the system interface, but

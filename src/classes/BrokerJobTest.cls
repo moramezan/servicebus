@@ -1,4 +1,4 @@
-@IsTest class JobTest {
+@IsTest class BrokerJobTest {
     
     @TestSetup static void testSetup() {
         //act

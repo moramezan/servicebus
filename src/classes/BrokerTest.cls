@@ -376,7 +376,7 @@
         
         //act (this calls blob enqueue signature that does inserts a document)
         Test.startTest();
-        Job job = new Job('TestSequence', Blob.valueOf('PDF'));
+        BrokerJob job = new BrokerJob('TestSequence', Blob.valueOf('PDF'));
         System.enqueueJob(job);
         Test.stopTest();
         

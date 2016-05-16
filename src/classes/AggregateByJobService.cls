@@ -73,7 +73,7 @@ public class AggregateByJobService extends ApexClassModel.Service {
 
         // derive common parameters
         // this isn't strictly correct from the perspective of
-        // 'common' meaning parameters at the point of insertion of the message by Job()
+        // 'common' meaning parameters at the point of insertion of the message by BrokerJob()
         // but from the perspective of 'these parameters are all the same and appear on
         // every gated message's parameters collection' .. it is correct
         Map<String,Object> commonParameters = getCommonParameters((List<Message__c>)Database.query(queryString));

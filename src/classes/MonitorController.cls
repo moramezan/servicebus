@@ -104,7 +104,7 @@ public with sharing class MonitorController {
             SELECT COUNT(Id) total
             FROM AsyncApexJob
             WHERE ApexClass.NamespacePrefix = :Application__c.getOrgDefaults().Prefix__c
-            AND ApexClass.Name = 'Job'
+            AND ApexClass.Name = 'BrokerJob'
             AND JobType = 'Queueable' //#890
             AND Status IN ('Queued', 'Processing', 'Preparing')
         ]) {

@@ -25,13 +25,13 @@
         <members>Broker</members>
         <members>BrokerBatch</members>
         <members>BrokerBatchTest</members>
+        <members>BrokerJob</members>
+        <members>BrokerJobTest</members>
         <members>BrokerTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
         <members>Enqueue</members>
         <members>EnqueueTest</members>
-        <members>Job</members>
-        <members>JobTest</members>
         <members>JumpService</members>
         <members>JumpServiceTest</members>
         <members>MessageKillExtension</members>

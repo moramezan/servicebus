@@ -330,7 +330,7 @@ global class Enqueue implements Process.Plugin {
         }
         
         //#1220 COMMON ENQUEUE
-        Job job = new Job();
+        BrokerJob job = new BrokerJob();
 
         //#1242 need jobid even when paused
         Savepoint savepoint = Database.setSavepoint();
@@ -394,7 +394,7 @@ global class Enqueue implements Process.Plugin {
         return jobId;
     }
     
-    public class QueueImpl implements Job.Queueable {
+    public class QueueImpl implements BrokerJob.Queueable {
         
         public void execute(QueueableContext context) {
             
@@ -450,7 +450,7 @@ global class Enqueue implements Process.Plugin {
          * NOT TO BE CONFUSED WITH BROKER.EXECUTE
          *
          * But since we aren't actually doing anything with the QueueableContext
-         * this works without startTest/stopTest: new Job(inputEvent).execute(null)
+         * this works without startTest/stopTest: new BrokerJob(inputEvent).execute(null)
          *
          * #816 https://cloud.githubusercontent.com/assets/1878631/6813469/15c4d956-d27e-11e4-9d3d-e7026e95eade.jpg
          */
@@ -471,7 +471,7 @@ global class Enqueue implements Process.Plugin {
          *     "compiled": true,
          *     "success": false,
          *     "compileProblem": null,
-         *     "exceptionStackTrace": "Class.Broker: line 534, column 1\nClass.Job.RunOneBroker.runImpl: line 282, column 1\nClass.Job.runOne: line 296, column 1\nAnonymousBlock: line 1, column 1\nCaused by\nClass.Fuckup.toString: line 10, column 1\nClass.Broker.Wrapper.invokeMain: line 340, column 1\nClass.Broker: line 529, column 1\nClass.Job.RunOneBroker.runImpl: line 282, column 1\nClass.Job.runOne: line 296, column 1\nAnonymousBlock: line 1, column 1",
+         *     "exceptionStackTrace": "Class.Broker: line 534, column 1\nClass.BrokerJob.RunOneBroker.runImpl: line 282, column 1\nClass.BrokerJob.runOne: line 296, column 1\nAnonymousBlock: line 1, column 1\nCaused by\nClass.Fuckup.toString: line 10, column 1\nClass.Broker.Wrapper.invokeMain: line 340, column 1\nClass.Broker: line 529, column 1\nClass.BrokerJob.RunOneBroker.runImpl: line 282, column 1\nClass.BrokerJob.runOne: line 296, column 1\nAnonymousBlock: line 1, column 1",
          *     "exceptionMessage": "System.AssertException: Kablam again"
          * }
          */
