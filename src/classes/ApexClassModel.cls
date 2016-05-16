@@ -204,52 +204,34 @@ public class ApexClassModel extends ApexDomain.StandardModel {
         return new PageReference(definition.HelpUrl);
     }
     
-//THERE IS A BINDING BETWEEN: abstract/classes/Service.cls and src/classes/ApexClassModel.cls
-/**
- * Nuclear tip
- */
-abstract public class Service {
+    abstract public class Service implements Comparable {
 
-    /*abstract public class Definition {
-        override public String toString() {
-            return Json.serialize(this);
-        }
-    }*/
+        public Integer compareTo(Object input) {
 
-    private String EventProvider;
-    private Boolean AllowsCallouts;
+            //prepare inputs
+            List<Map<String,Object>> inputs = (List<Map<String,Object>>)input;
+            List<Map<String,Object>> outputs = new List<Map<String,Object>>();
 
-    override public String toString() {
+            //dynamic invocation
+            if (inputs[0].get('Method') == 'Callout') this.callout(inputs[0]);
+            if (inputs[0].get('Method') == 'Execute') outputs = this.execute(inputs[0]);
 
-        if (this.AllowsCallouts == true) {
-            this.AllowsCallouts = false;
-            this.callout((Map<String,Object>)Json.deserializeUntyped(this.EventProvider));
+            //return by reference
+            inputs.clear();
+            inputs.addAll(outputs);
             return null;
+
         }
 
-        else if (this.AllowsCallouts == false) {
-            this.AllowsCallouts = null;
-            List<Map<String,Object>> events = this.execute((Map<String,Object>)Json.deserializeUntyped(this.EventProvider));
-            return Json.serialize(events);
+        virtual public void callout(Map<String,Object> event) {
+            //
         }
 
-        else {
-            //camouflage
-            return 'Service:[]';
+        virtual public List<Map<String,Object>> execute(Map<String,Object> event) {
+            return new List<Map<String,Object>>{event};
         }
-
     }
 
-    virtual public void callout(Map<String,Object> inputEvent) {
-        //
-    }
-
-    virtual public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
-        return new List<Map<String,Object>>{inputEvent};
-    }
-
-}
-    
     /**
      * Used in callout and execute
      */
@@ -327,7 +309,7 @@ abstract public class Service {
             }
         }
     }
-    
+
     public void invokeCallout(Map<String,Object> inputEvent) {
         
         if (inputEvent == null) {
@@ -336,16 +318,19 @@ abstract public class Service {
         }
         
         if (this.Service == null) {
-            //provide input event and set flag
-            Map<String,Object> proxy = new Map<String,Object>{'EventProvider' => Json.serialize(inputEvent), 'AllowsCallouts' => true};
-            this.Service = Json.deserialize(Json.serialize(proxy), this.Reflector);
+            //construct service instance
+            this.Service = this.Reflector.newInstance();
         }
         
         //do invocation
-        String data;
+        List<Map<String,Object>> events = new List<Map<String,Object>>();
+        inputEvent.put('Method', 'Callout');
+        events.add(inputEvent);
+
         try {
-            data = String.valueOf(this.Service);
-            
+            ((Comparable)this.Service).compareTo(events);
+        } catch (TypeException e) {
+            throw new Broker.ServiceException(this.Reflector.getName() + ': Service must extend Abstract.Service');
         } catch (Exception e) {
             if (TransactionService.IsRunning) {
                 //#995 help transaction bail out
@@ -364,11 +349,12 @@ abstract public class Service {
             //https://github.com/bigassforce/services/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843056
             throw e;
         }
-        
-        if (data != null) {
+
+        //TODO
+        /*if (data != null) {
             //#886 a la "MyCustomException: Exception class must extend another Exception class"
             throw new Broker.ServiceException(this.Reflector.getName() + ': Service must extend Abstract.Service');
-        }
+        }*/
     }
     
     public List<Map<String,Object>> invokeExecute(Map<String,Object> inputEvent) {
@@ -379,20 +365,26 @@ abstract public class Service {
         }
         
         if (this.Service == null) {
-            //provide input event and set flag
-            Map<String,Object> proxy = new Map<String,Object>{'EventProvider' => Json.serialize(inputEvent), 'AllowsCallouts' => false};
-            this.Service = Json.deserialize(Json.serialize(proxy), this.Reflector);
+            //construct service instance
+            this.Service = this.Reflector.newInstance();
         }
-        
+
         //#877 surface SessionId to select few orgs and packages
         //Boolean allowSessionId = Broker.isAllowedSessionId(step.ApexTypeName__c, UserInfo.getOrganizationId());
         //if (allowSessionId) BrokerJob.Event.put('SessionId', Application__c.getOrgDefaults().RunAsAccessToken__c);
         //TODO for #886
         
+        //TODO cycle the inputs here?!
+        inputEvent = (Map<String,Object>)Json.deserializeUntyped(Json.serialize(inputEvent));
+
         //do invocation
-        String data;
+        List<Map<String,Object>> events = new List<Map<String,Object>>();
+        inputEvent.put('Method', 'Execute');
+        events.add(inputEvent);
+
+
         try {
-            data = String.valueOf(this.Service);
+            ((Comparable)this.Service).compareTo(events);
         } catch (System.CalloutException e) {
             if (e.getMessage() == 'You have uncommitted work pending. Please commit or rollback before calling out') {
                 //#981 put callout in proper method please
@@ -401,23 +393,28 @@ abstract public class Service {
             
             //https://github.com/bigassforce/services/commit/529cffff570ef99dccb8f5589a0767a498f2c019#commitcomment-12843061
             throw e;
-        }
-        
-        if (data == null || data == 'null') {
-            //#945 a la "System.VisualforceException: Return type of an Apex action method must be a PageReference. Found: java.lang.Integer"
-            throw new Broker.ServiceException(this.Reflector.getName() + ': Return type of a Service execute method must be a List<Map<String,Object>>');
-        }
-        
-        if (data.startsWith(('.' + this.Reflector.getName()).substringAfterLast('.') + ':[')) {
-            //#886 a la "MyCustomException: Exception class must extend another Exception class"
+        } catch (TypeException e) {
             throw new Broker.ServiceException(this.Reflector.getName() + ': Service must extend Abstract.Service');
         }
-        
+
+        //TODO
+        /*if (data == null || data == 'null') {
+            //#945 a la "System.VisualforceException: Return type of an Apex action method must be a PageReference. Found: java.lang.Integer"
+            throw new Broker.ServiceException(this.Reflector.getName() + ': Return type of a Service execute method must be a List<Map<String,Object>>');
+        }*/
+
+        //TODO
+        /*if (data.startsWith(('.' + this.Reflector.getName()).substringAfterLast('.') + ':[')) {
+            //#886 a la "MyCustomException: Exception class must extend another Exception class"
+            throw new Broker.ServiceException(this.Reflector.getName() + ': Service must extend Abstract.Service');
+        }*/
+
         //wrap up results into events (new guys should have Position = 0)
         List<Map<String,Object>> outputEvents = new List<Map<String,Object>>();
-        
-        List<Object> results = (List<Object>)Json.deserializeUntyped(data);
-        
+
+        //TODO cycle the outputs here?!
+        List<Object> results = (List<Object>)Json.deserializeUntyped(Json.serialize(events));
+
         if (results.size() > 1000) { //#955 possibly 5000, but headspace
             //#955 blow up too many output events emitted
             throw new Broker.ServiceException(this.Reflector.getName() + ': Too many output events: ' + results.size());

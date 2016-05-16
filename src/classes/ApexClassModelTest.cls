@@ -84,7 +84,7 @@
     static testmethod void testInvokeCalloutFailureWhenMissingToString() {
         //arrange model
         ApexClassModel model = new ApexClassModel(MissingToString.class);
-        
+
         try {
             //act
             model.invokeCallout(new Map<String,Object>());
@@ -100,7 +100,7 @@
     static testmethod void testInvokeExecuteFailureWhenMissingToString() {
         //arrange model
         ApexClassModel model = new ApexClassModel(MissingToString.class);
-        
+
         try {
             //act
             model.invokeExecute(new Map<String,Object>());
@@ -127,11 +127,12 @@
         //assert
         System.assert(true, 'Got here.');
     }
-    
-    static testmethod void testInvokeExecuteFailureWhenNullReturnValue() {
+
+    //TODO #1069
+    /*static testmethod void testInvokeExecuteFailureWhenNullReturnValue() {
         //arrange model
         ApexClassModel model = new ApexClassModel(NullReturnValue.class);
-        
+
         try {
             //act
             model.invokeExecute(new Map<String,Object>());
@@ -141,7 +142,7 @@
             String actualMessage = e.getMessage();
             System.assertEquals(expectedMessage, actualMessage, 'Wrong message.');
         }
-    }
+    }*/
     
     public class GoodReturnValue extends ApexClassModel.Service {
         override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {

@@ -225,7 +225,10 @@ public class Router extends ApexClassModel.Service {
             //nothing to do
             return;
         }
-        
+
+        //TODO tidy this up somehow?
+        for (Map<String,Object> outputEvent : outputEvents) outputEvent.remove('Method');
+
         //#952 wake up broker
         Enqueue.invoke(outputEvents);
     }
