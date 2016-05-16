@@ -30,6 +30,8 @@
         <members>BrokerTest</members>
         <members>ConfigureController</members>
         <members>ConfigureControllerTest</members>
+        <members>DebugService</members>
+        <members>DebugServiceTest</members>
         <members>Enqueue</members>
         <members>EnqueueTest</members>
         <members>JumpService</members>
@@ -86,8 +88,6 @@
         <members>TerminateServiceTest</members>
         <members>TransactionService</members>
         <members>TransactionServiceTest</members>
-        <members>WiretapService</members>
-        <members>WiretapServiceTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -145,6 +145,7 @@
         <members>Application__c.RunAsAccessToken__c</members>
         <members>Application__c.RunAsRefreshToken__c</members>
         <members>Application__c.RunAsUserId__c</members>
+        <members>DebugServiceConfig__c.UserId__c</members>
         <members>JumpStepConfig__c.Sequence__c</members>
         <members>Message__c.Cause__c</members>
         <members>Message__c.CorrelationUuid__c</members>
@@ -194,11 +195,11 @@
         <members>Step__c.Version__c</members>
         <members>SubscribeStepConfig__c.Topic__c</members>
         <members>TransactionStepConfig__c.Sequence__c</members>
-        <members>WiretapServiceConfig__c.UserId__c</members>
         <name>CustomField</name>
     </types>
     <types>
         <members>Application__c</members>
+        <members>DebugServiceConfig__c</members>
         <members>JumpStepConfig__c</members>
         <members>Message__c</members>
         <members>PublishStepConfig__c</members>
@@ -208,7 +209,6 @@
         <members>Step__c</members>
         <members>SubscribeStepConfig__c</members>
         <members>TransactionStepConfig__c</members>
-        <members>WiretapServiceConfig__c</members>
         <name>CustomObject</name>
     </types>
     <types>

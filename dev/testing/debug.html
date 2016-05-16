@@ -1,0 +1,28 @@
+<h1>
+    Operating the debug process
+</h1>
+
+<p>
+    The debug process reads all event parameters and emails them to the user.
+    <br />The user is nominated through the Debug custom setting.
+</p>
+
+<h2>
+    Procedure
+</h2>
+
+<ol>
+    <li>From Setup > Custom Settings > Debug Settings, create an org level setting with your User Id.</li>
+    <li>Create a new Sequence 'DebugTest' containing a 'Debug' step in position 1.</li>
+    <li>Click <strong>Enqueue Test Event</strong>.</li>
+    <li>Wait for the monitor to show all processing has finished.</li>
+</ol>
+
+<h2>
+    Outcomes
+</h2>
+
+<ol>
+    <li>No messages should be graphed in the monitor.</li>
+    <li>The monitor should graph exactly one 'Paused' message for 'Debug'.</li>
+</ol>

@@ -461,14 +461,14 @@ public with sharing class ConfigureController {
     }
     
     /**
-     * Set the Wiretap Settings
+     * Set the Debug Settings
      * (Performed in a FUTURE method to prevent MIXED_DML_OPERATION exception)
      */
-    @Future static public void settings(Id userId) { //#969 obfuscation of 'createWiretapSettings()'
+    @Future static public void settings(Id userId) { //#969 obfuscation of 'createDebugSettings()'
         //fetch custom setting and write the values
-        WiretapServiceConfig__c wiretapServiceConfig = WiretapServiceConfig__c.getOrgDefaults();
-        wiretapServiceConfig.UserId__c = userId;
-        upsert wiretapServiceConfig;
+        DebugServiceConfig__c debugServiceConfig = DebugServiceConfig__c.getOrgDefaults();
+        debugServiceConfig.UserId__c = userId;
+        upsert debugServiceConfig;
     }
     
     /**

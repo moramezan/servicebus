@@ -1,10 +1,10 @@
-public class WiretapService extends ApexClassModel.Service {
+public class DebugService extends ApexClassModel.Service {
     
     public class Definition extends ApexClassModel.Definition {
         String Tag = 'Services';
-        String Label = 'Wiretap';
+        String Label = 'Debug';
         String Description = 'Emails the message parameters to the user.';
-        String ServiceConfig = WiretapServiceConfig__c.class.getName();
+        String ServiceConfig = DebugServiceConfig__c.class.getName();
         String Icon = 'email';
         Integer Chunks = 5; //leave half of 10 (Total number of sendEmail methods allowed)
         String Cardinality = 'One';
@@ -12,14 +12,14 @@ public class WiretapService extends ApexClassModel.Service {
     
     override public List<Map<String,Object>> execute(Map<String,Object> parameters) {
         
-        WiretapServiceConfig__c wiretapServiceConfig = WiretapServiceConfig__c.getOrgDefaults();
-        Id userId = wiretapServiceConfig.UserId__c;
+        DebugServiceConfig__c debugServiceConfig = DebugServiceConfig__c.getOrgDefaults();
+        Id userId = debugServiceConfig.UserId__c;
         if (userId == null) {
             userId = UserInfo.getUserId();
         }
 
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
-        message.setSubject('[Wiretap] '
+        message.setSubject('[Debug] '
             + UserInfo.getUserId()
             + '@'
             + UserInfo.getOrganizationId()

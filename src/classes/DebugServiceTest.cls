@@ -1,8 +1,8 @@
-@IsTest class WiretapServiceTest {
+@IsTest class DebugServiceTest {
     
     static testmethod void hasTheCorrectChunks() {
         //arrange
-        ApexClassModel.Definition definition = new ApexClassModel.Definition(WiretapService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(DebugService.class);
         
         //assert
         Integer expectedChunks = 5;
@@ -21,14 +21,14 @@
         };
         
         //arrange
-        ApexClassModel.Definition definition = new ApexClassModel.Definition(WiretapService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(DebugService.class);
 
         //act
         Test.startTest();
         Integer chunks = definition.Chunks;
         Integer counter = 0;
         for (Integer i = 0; i < chunks; i++) {
-            ApexClassModel.Service service = new WiretapService();
+            ApexClassModel.Service service = new DebugService();
             List<Map<String,Object>> outputs = service.execute(inputEvent);
             counter++;
         }
@@ -47,7 +47,7 @@
         Integer step = 1;
         String data = 'data';
 
-       //--NOT-DEFINED insert new WiretapServiceConfig__c(UserId__c = UserInfo.getUserId());
+       //--NOT-DEFINED insert new DebugServiceConfig__c(UserId__c = UserInfo.getUserId());
 
         Map<String,Object> parameters = new Map<String,Object> {
             'Route' => '1#Test#1',
@@ -60,7 +60,7 @@
 
         // Act
         Boolean actualFlagException = false;
-        ApexClassModel.Service service = new WiretapService();
+        ApexClassModel.Service service = new DebugService();
         List<Map<String,Object>> results = service.execute(parameters);
  
         // Assert
@@ -74,7 +74,7 @@
         Integer step = 1;
         String data = 'data';
 
-        insert new WiretapServiceConfig__c(UserId__c = UserInfo.getUserId());
+        insert new DebugServiceConfig__c(UserId__c = UserInfo.getUserId());
 
         Map<String,Object> inputEvent = new Map<String,Object> {
             'Route' => '1#Test#1',
@@ -86,7 +86,7 @@
         Integer expectedSize = 1;
 
         // Act
-        ApexClassModel.Service service = new WiretapService();
+        ApexClassModel.Service service = new DebugService();
         List<Map<String,Object>> actualParametersList = service.execute(inputEvent);
 
         // prepare

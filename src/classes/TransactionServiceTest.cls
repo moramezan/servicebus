@@ -65,9 +65,9 @@
         Sequence__c routine = new Sequence__c(Name = 'Routine');
         insert routine;
         
-        SequenceModel.fromId(routine.Id).appendStep(WiretapService.class.getName());
-        SequenceModel.fromId(routine.Id).appendStep(WiretapService.class.getName());
-        SequenceModel.fromId(routine.Id).appendStep(WiretapService.class.getName());
+        SequenceModel.fromId(routine.Id).appendStep(DebugService.class.getName());
+        SequenceModel.fromId(routine.Id).appendStep(DebugService.class.getName());
+        SequenceModel.fromId(routine.Id).appendStep(DebugService.class.getName());
         SequenceModel.fromId(routine.Id).appendStep(TerminateService.class.getName());
         
         //arrange caller

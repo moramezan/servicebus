@@ -300,7 +300,7 @@
         insert new Sequence__c(Name = 'Test');
         
         //arrange step
-        SequenceModel.fromName('Test').appendStep(WiretapService.class.getName());
+        SequenceModel.fromName('Test').appendStep(DebugService.class.getName());
         
         //arrange event
         Map<String,Object> inputEvent = new Map<String,Object>{
@@ -339,11 +339,11 @@
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
         //act
-        outputEvent = new Map<String,Object>{'ToService' => 'WiretapService'};
+        outputEvent = new Map<String,Object>{'ToService' => 'DebugService'};
         ApexClassModel.route(outputEvent);
         
         //assert
-        expectedParam = 'WiretapService';
+        expectedParam = 'DebugService';
         actualParam = outputEvent.get('Route');
         System.assertEquals(expectedParam, actualParam, 'Wrong param.');
         
@@ -486,7 +486,7 @@
         Message__c message = new Message__c(
             Status__c = 'Started',
             Exception__c = 'Exception',
-            Event__c = '{"Route":"' + WiretapService.class.getName() + '"}'
+            Event__c = '{"Route":"' + DebugService.class.getName() + '"}'
         );
         insert message;
         

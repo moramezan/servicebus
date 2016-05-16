@@ -222,9 +222,9 @@
         Test.stopTest();
         
         //assert
-        Id expectedWiretap = UserInfo.getUserId();
-        Id actualWiretap = WiretapServiceConfig__c.getOrgDefaults().UserId__c;
-        System.assertEquals(expectedWiretap, actualWiretap, 'Wrong wiretap user id.');
+        Id expectedDebug = UserInfo.getUserId();
+        Id actualDebug = DebugServiceConfig__c.getOrgDefaults().UserId__c;
+        System.assertEquals(expectedDebug, actualDebug, 'Wrong debug user id.');
     }
     
     static testmethod void testDoRedirectStageCallBackIpRestricted() {

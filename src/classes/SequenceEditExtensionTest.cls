@@ -15,7 +15,7 @@
         SequenceModel model = SequenceModel.fromId(sequence.Id);
         
         //arrange steps
-        model.appendStep(WiretapService.class.getName());
+        model.appendStep(DebugService.class.getName());
         model.appendStep(TerminateService.class.getName());
         
         return sequence.Id;
@@ -78,16 +78,16 @@
         //assemble
         List<Map<String,Object>> steps = SequenceModel.fromId(sequenceId).stepDtos();
         Map<String,Object> terminateStep = steps[0];
-        Map<String,Object> wiretapStep = steps[1];
+        Map<String,Object> debugStep = steps[1];
         
         //assert
         String terminateExpectedApexTypeName = TerminateService.class.getName();
         String terminateActualApexTypeName = (String)terminateStep.get('ApexTypeName');
         System.assertEquals(terminateExpectedApexTypeName, terminateActualApexTypeName);
         
-        String wiretapExpectedApexTypeName = WiretapService.class.getName();
-        String wiretapActualApexTypeName = (String)wiretapStep.get('ApexTypeName');
-        System.assertEquals(wiretapExpectedApexTypeName, wiretapActualApexTypeName);
+        String debugExpectedApexTypeName = DebugService.class.getName();
+        String debugActualApexTypeName = (String)debugStep.get('ApexTypeName');
+        System.assertEquals(debugExpectedApexTypeName, debugActualApexTypeName);
     }
     
     static testmethod void testMoveStepAfter() {
@@ -100,16 +100,16 @@
         //assemble
         List<Map<String,Object>> steps = SequenceModel.fromId(sequenceId).stepDtos();
         Map<String,Object> terminateStep = steps[0];
-        Map<String,Object> wiretapStep = steps[1];
+        Map<String,Object> debugStep = steps[1];
         
         //assert
         String terminateExpectedApexTypeName = TerminateService.class.getName();
         String terminateActualApexTypeName = (String)terminateStep.get('ApexTypeName');
         System.assertEquals(terminateExpectedApexTypeName, terminateActualApexTypeName);
         
-        String wiretapExpectedApexTypeName = WiretapService.class.getName();
-        String wiretapActualApexTypeName = (String)wiretapStep.get('ApexTypeName');
-        System.assertEquals(wiretapExpectedApexTypeName, wiretapActualApexTypeName);
+        String debugExpectedApexTypeName = DebugService.class.getName();
+        String debugActualApexTypeName = (String)debugStep.get('ApexTypeName');
+        System.assertEquals(debugExpectedApexTypeName, debugActualApexTypeName);
     }
     
     static testmethod void testDestroyStep() {
@@ -145,20 +145,20 @@
         insert sequenceD;
         
         // Sequence A - Ok
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(WiretapService.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(DebugService.class.getName());
         Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(TerminateService.class.getName());
         
         // Sequence B - Problem : Terminate Not last Step
         Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(TerminateService.class.getName());
-        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(WiretapService.class.getName());
+        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(DebugService.class.getName());
  
         // Sequence C - Problem : More than One Terminate
         Step__c stepC1 = SequenceModel.fromName(sequenceC.Name).appendStep(TerminateService.class.getName());
         Step__c stepC2 = SequenceModel.fromName(sequenceC.Name).appendStep(TerminateService.class.getName());
         
         // Sequence D - Problem : Zero Terminate
-        Step__c stepD1 = SequenceModel.fromName(sequenceD.Name).appendStep(WiretapService.class.getName());
-        Step__c stepD2 = SequenceModel.fromName(sequenceD.Name).appendStep(WiretapService.class.getName());
+        Step__c stepD1 = SequenceModel.fromName(sequenceD.Name).appendStep(DebugService.class.getName());
+        Step__c stepD2 = SequenceModel.fromName(sequenceD.Name).appendStep(DebugService.class.getName());
 
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceA);
@@ -196,7 +196,7 @@
         // Sequence A - Warning : Ok but event Not Subscribed
         Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(PublishService.class.getName());
         new StepModel(stepA1).upsertConfig();
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(WiretapService.class.getName());
+        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(DebugService.class.getName());
         
         // Config A1
         Id configIdA1 = ((Step__c)ApexDomain.getById(stepA1.Id)).ConfigId__c;
@@ -232,7 +232,7 @@
         // Sequence B - Problem : No Config
         Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(PublishService.class.getName());
         new StepModel(stepB1).upsertConfig();
-        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(WiretapService.class.getName());
+        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(DebugService.class.getName());
         
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceB);
@@ -260,7 +260,7 @@
         // Sequence A - Warning : Ok but event Not published
         Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(SubscribeService.class.getName());
         new StepModel(stepA1).upsertConfig();
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(WiretapService.class.getName());
+        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(DebugService.class.getName());
 
         // Config A1
         Id configIdA1 = ((Step__c)ApexDomain.getById(stepA1.Id)).ConfigId__c;
@@ -294,7 +294,7 @@
         insert sequenceB;
         
         // Sequence B - Problem : Subscribe Not first Step
-        Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(WiretapService.class.getName());
+        Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(DebugService.class.getName());
         Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(SubscribeService.class.getName());
         new StepModel(stepB2).upsertConfig();
         
@@ -367,7 +367,7 @@
         // Sequence B - Problem : No Config
         Step__c stepB1 = SequenceModel.fromName(sequenceB.Name).appendStep(SubscribeService.class.getName());
         new StepModel(stepB1).upsertConfig();
-        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(WiretapService.class.getName());
+        Step__c stepB2 = SequenceModel.fromName(sequenceB.Name).appendStep(DebugService.class.getName());
 
         // Act :
         ApexPages.StandardController standardController = new ApexPages.StandardController(sequenceB);

@@ -332,15 +332,15 @@ public class SequenceModel extends ApexDomain.StandardModel {
      *
      * [
      *     {
-     *         "Name": "Wiretaps#1",
+     *         "Name": "Debugs#1",
      *         "ConfigId": null,
      *         "ConfigName": null,
      *         "ApexClassId": "01p000000000000AAA",
-     *         "ApexTypeName": "Wiretap"
+     *         "ApexTypeName": "Debug"
      *         "Position": 1.0,
      *     },
      *     {
-     *         "Name": "Wiretaps#2",
+     *         "Name": "Debugs#2",
      *         "ConfigId": null,
      *         "ConfigName": null,
      *         "ApexClassId": "01p000000000000AAA",

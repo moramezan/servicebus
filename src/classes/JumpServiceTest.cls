@@ -109,7 +109,7 @@
         Step__c originJump = SequenceModel.fromName('Origin').appendStep(JumpService.class.getName());
         Step__c originTerminate = SequenceModel.fromName('Origin').appendStep(TerminateService.class.getName());
         
-        Step__c targetWiretap = SequenceModel.fromName('Target').appendStep(WiretapService.class.getName());
+        Step__c targetDebug = SequenceModel.fromName('Target').appendStep(DebugService.class.getName());
         Step__c targetTerminate = SequenceModel.fromName('Target').appendStep(TerminateService.class.getName());
         
         //arrange config

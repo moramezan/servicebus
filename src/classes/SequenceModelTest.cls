@@ -171,11 +171,11 @@
         //arrange step
         Step__c step = new Step__c(
             IsDraft__c = true,
-            Name = '1#Wiretaps#1',
+            Name = '1#Debugs#1',
             ConfigId__c = '015000000000000AAA',
             ConfigName__c = 'This step must be configured. Seriously.',
             ApexClassId__c = '01p000000000000AAA',
-            ApexTypeName__c = 'Services.WiretapService',
+            ApexTypeName__c = 'Services.DebugService',
             Position__c = 1.0
         );
         

@@ -6,24 +6,24 @@
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(WiretapService.class.getName());
+        Step__c debugStep = SequenceModel.fromName(sequence.Name).appendStep(DebugService.class.getName());
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class.getName());
         
         //assert before state
-        System.assertEquals(1, wiretapStep.Position__c);
+        System.assertEquals(1, debugStep.Position__c);
         System.assertEquals(2, terminateStep.Position__c);
             
         //act
         StepModel step = StepModel.fromName(terminateStep.Name);
-        step.moveBefore(wiretapStep.Name);
+        step.moveBefore(debugStep.Name);
         
         //assemble
-        wiretapStep = (Step__c)ApexDomain.getById(wiretapStep.Id);
+        debugStep = (Step__c)ApexDomain.getById(debugStep.Id);
         terminateStep = (Step__c)ApexDomain.getById(terminateStep.Id);
         
         //assert after state
         System.assertEquals(1, terminateStep.Position__c);
-        System.assertEquals(2, wiretapStep.Position__c);
+        System.assertEquals(2, debugStep.Position__c);
     }
     
     static testmethod void testMoveStepAfter() {
@@ -32,24 +32,24 @@
         insert sequence;
         
         //arrange steps
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(WiretapService.class.getName());
+        Step__c debugStep = SequenceModel.fromName(sequence.Name).appendStep(DebugService.class.getName());
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class.getName());
         
         //assert before state
-        System.assertEquals(1, wiretapStep.Position__c);
+        System.assertEquals(1, debugStep.Position__c);
         System.assertEquals(2, terminateStep.Position__c);
             
         //act
-        StepModel step = StepModel.fromName(wiretapStep.Name);
+        StepModel step = StepModel.fromName(debugStep.Name);
         step.moveAfter(terminateStep.Name);
         
         //assemble
-        wiretapStep = (Step__c)ApexDomain.getById(wiretapStep.Id);
+        debugStep = (Step__c)ApexDomain.getById(debugStep.Id);
         terminateStep = (Step__c)ApexDomain.getById(terminateStep.Id);
         
         //assert after state
         System.assertEquals(1, terminateStep.Position__c);
-        System.assertEquals(2, wiretapStep.Position__c);
+        System.assertEquals(2, debugStep.Position__c);
     }
     
     static testmethod void testDescribeStepConfig() {

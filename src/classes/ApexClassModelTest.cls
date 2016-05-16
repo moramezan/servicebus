@@ -68,13 +68,13 @@
     
     static testmethod void testDescribeServiceDefinition() {
         //arrange
-        ApexClassModel model = new ApexClassModel(WiretapService.class);
+        ApexClassModel model = new ApexClassModel(DebugService.class);
         
         //act
         DescribeSObjectResult result = model.describeServiceConfig();
         
         //assert
-        String expectedName = WiretapServiceConfig__c.class.getName();
+        String expectedName = DebugServiceConfig__c.class.getName();
         String actualName = result.getName();
         System.assertEquals(expectedName, actualName, 'Wrong Name.');
     }
@@ -352,7 +352,7 @@
         override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
-                    'Route' => WiretapService.class.getName()
+                    'Route' => DebugService.class.getName()
                 }
             };
         }
@@ -400,7 +400,7 @@
         override public List<Map<String,Object>> execute(Map<String,Object> inputEvent) {
             return new List<Map<String,Object>>{
                 new Map<String,Object>{
-                    'Route' => WiretapService.class.getName()
+                    'Route' => DebugService.class.getName()
                 },
                 new Map<String,Object>{
                     'Route' => TerminateService.class.getName()

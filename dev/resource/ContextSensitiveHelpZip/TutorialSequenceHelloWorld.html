@@ -7,7 +7,7 @@
 <p>
     This tutorial demonstrates the invocation of business steps in a logical sequence.
     It makes use of the support infrastructure afforded by the Services Package.
-    In this demonstration, we will create a simple sequence containing three Wiretap steps.
+    In this demonstration, we will create a simple sequence containing three Debug steps.
 </p>
 
 <p>
@@ -58,14 +58,14 @@
                 </p>
             </li>
             <li>
-                From the <em>Services</em> tag choose <em>Wiretap</em>. This will
-                create a Wiretap step at the end of the sequence.
+                From the <em>Services</em> tag choose <em>Debug</em>. This will
+                create a Debug step at the end of the sequence.
             </li>
         </ul>
     </li>
 
     <li>
-        Using drag and drop, reorder the three Wiretap steps so that the Terminate service occupies
+        Using drag and drop, reorder the three Debug steps so that the Terminate service occupies
         the last position in the Sequence.
     </li>
     <li>
@@ -102,11 +102,11 @@
             <img src="resources/TutorialSetupConfirmation/many-emails.png" />
         </p>
         <p>
-            Each email represents an event entering and exiting a Wiretap step in the sequence.
+            Each email represents an event entering and exiting a Debug step in the sequence.
         </p>
         <p>
             In addition, every email contains details  applicable to the context of the  <em>Enqueue Test Event</em> button
-            press action and step specific aspects such as the sequence position of the <code>Wiretap</code>  service.
+            press action and step specific aspects such as the sequence position of the <code>Debug</code>  service.
             Note that some of the context attributes (such as the recipient of the email) are configurable
             while other attributes  (such as the identity of the user generating the enqueue event)
             are determined by the container and are not available for modification.

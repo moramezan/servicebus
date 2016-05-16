@@ -13,7 +13,7 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(WiretapService.class.getName());
+        Step__c debugStep = SequenceModel.fromName(sequence.Name).appendStep(DebugService.class.getName());
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class.getName());
         
         Test.startTest();

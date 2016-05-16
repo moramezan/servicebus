@@ -36,7 +36,7 @@
     The Services Package has a number of pre-built service components to assist us. We will make use of the following
     pre-built services :
     <ul>
-        <li>a Wiretap component to email the list of valid results</li>
+        <li>a Debug component to email the list of valid results</li>
         <li>an Aggregation component to correlate the the valid results into a single list</li>
         <li>a Terminate component to indicate that the Sequence has ended.</li>
     </ul>
@@ -218,7 +218,7 @@
             Add additional steps to the sequence by tapping the 'New Step' button.
             From the 'Services' collection, select the following pre-built service components
             <ul>
-                <li>WireTap</li>
+                <li>Debug</li>
                 <li>Aggregate By Job</li>
             </ul>
             From the 'Tutorial' collection select the the following custom service components
@@ -269,8 +269,8 @@
                 <li>The 4th step in the sequence filters out all invalid combinations produced by the previous
                     three steps effectively forwarding on only valid Salesforce 3-digit prefixes to step five in the sequence.</li>
                 <li>The 5th step in the sequence aggregates all valid prefixes into a single list.</li>
-                <li>This list is forwarded to the 6th step in the sequence (Wiretap) which emails the
-                    list of valid Salesforce Id prefixes to the email account defined on the the Wiretap service.</li>
+                <li>This list is forwarded to the 6th step in the sequence (Debug) which emails the
+                    list of valid Salesforce Id prefixes to the email account defined on the the Debug service.</li>
             </ul>
         </p>
 
@@ -308,7 +308,7 @@
         <p>
             Once the sequence has executed in full,
             browse to your Salesforce email inbox and
-            open the email sent from the Wiretap process. You will be
+            open the email sent from the Debug process. You will be
             presented with a list of all valid Salesforce Id prefixes
             that contain  the numerals '0' through '5'.
         </p>

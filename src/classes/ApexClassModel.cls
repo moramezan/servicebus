@@ -255,7 +255,7 @@ public class ApexClassModel extends ApexDomain.StandardModel {
      *
      * A few examples:
      * - Route:1#Handler#3 becomes 1#Handler#4
-     * - ToService:Wiretap becomes Route:Wiretap
+     * - ToService:Debug becomes Route:Debug
      * - ToSequence:Handle becomes Route:V#Handle#1
      * - ToConfigIds:[new] becomes Route:V#Sequence#1
      * - ToConfigIds:[old] becomes Route:TerminateService

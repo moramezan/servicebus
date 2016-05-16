@@ -101,6 +101,14 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>DebugService</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>DebugServiceTest</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Enqueue</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -322,14 +330,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>TransactionServiceTest</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>WiretapService</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>WiretapServiceTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <description>Administer Sequences, Steps and Services as part of Services.</description>

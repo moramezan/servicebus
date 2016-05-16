@@ -68,7 +68,7 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(WiretapService.class.getName());
+        Step__c debugStep = SequenceModel.fromName(sequence.Name).appendStep(DebugService.class.getName());
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class.getName());
         
         //arrange messages
@@ -94,12 +94,12 @@
         List<Message__c> records = MessageSetModel.locateMarkableWork().getRecords();
         
         //assemble
-        ApexClassModel.Definition definition = new ApexClassModel.Definition(WiretapService.class);
+        ApexClassModel.Definition definition = new ApexClassModel.Definition(DebugService.class);
         
         //assert
         Integer expectedChunks = 5;
         Integer actualChunks = definition.Chunks;
-        System.assertEquals(expectedChunks, actualChunks, 'Wiretap should have definition chunks of five.');
+        System.assertEquals(expectedChunks, actualChunks, 'Debug should have definition chunks of five.');
         
         Integer expectedSize = 5;
         Integer actualSize = records.size();
@@ -114,7 +114,7 @@
         
         //arrange steps
         SequenceModel model = SequenceModel.fromId(sequence.Id);
-        model.appendStep(WiretapService.class.getName());
+        model.appendStep(DebugService.class.getName());
         model.appendStep(TerminateService.class.getName());
         
         //arrange inputs
@@ -192,7 +192,7 @@
         insert sequence;
         
         //arrange steps
-        SequenceModel.fromId(sequence.Id).appendStep(WiretapService.class.getName());
+        SequenceModel.fromId(sequence.Id).appendStep(DebugService.class.getName());
         SequenceModel.fromId(sequence.Id).appendStep(TerminateService.class.getName());
         
         //arrange message
@@ -248,8 +248,8 @@
         
         //arrange steps
         SequenceModel model = SequenceModel.fromId(sequence.Id);
-        model.appendStep(WiretapService.class.getName());
-        model.appendStep(WiretapService.class.getName());
+        model.appendStep(DebugService.class.getName());
+        model.appendStep(DebugService.class.getName());
         model.appendStep(TerminateService.class.getName());
         
         Map<String,Object> event1 = new Map<String,Object>{'Route' => '1#Test#1'};
@@ -560,11 +560,11 @@
         Integer positionA5 = 5;
         Integer positionA6 = 6;
 
-        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(WiretapService.class.getName());
-        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(WiretapService.class.getName());
-        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(WiretapService.class.getName());
-        Step__c issue =  SequenceModel.fromName(sequenceA.Name).appendStep(WiretapService.class.getName()); // deleted - implying a resolution issue
-        Step__c stepA5 = SequenceModel.fromName(sequenceA.Name).appendStep(WiretapService.class.getName());
+        Step__c stepA1 = SequenceModel.fromName(sequenceA.Name).appendStep(DebugService.class.getName());
+        Step__c stepA2 = SequenceModel.fromName(sequenceA.Name).appendStep(DebugService.class.getName());
+        Step__c stepA3 = SequenceModel.fromName(sequenceA.Name).appendStep(DebugService.class.getName());
+        Step__c issue =  SequenceModel.fromName(sequenceA.Name).appendStep(DebugService.class.getName()); // deleted - implying a resolution issue
+        Step__c stepA5 = SequenceModel.fromName(sequenceA.Name).appendStep(DebugService.class.getName());
         Step__c stepA6 = SequenceModel.fromName(sequenceA.Name).appendStep(TerminateService.class.getName());
         
         delete issue;
@@ -848,13 +848,13 @@
         Sequence__c sequence = new Sequence__c(Name = 'Test');
         insert sequence;
         
-        Step__c wiretapStep = SequenceModel.fromName(sequence.Name).appendStep(WiretapService.class.getName());
+        Step__c debugStep = SequenceModel.fromName(sequence.Name).appendStep(DebugService.class.getName());
         Step__c terminateStep = SequenceModel.fromName(sequence.Name).appendStep(TerminateService.class.getName());
         
         //arrange messages
         Map<String,Object> inputEvent = new Map<String,Object>{'ToSequence' => 'Test'};
         List<Map<String,Object>> inputEvents = new List<Map<String,Object>>{
-            //NINE wiretaps
+            //NINE debugs
             inputEvent,
             inputEvent,
             inputEvent,
@@ -882,15 +882,15 @@
         
         impl.start(context);
         
-        //MARK some wiretaps
+        //MARK some debugs
         impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0001')});
         
         //assert
-        System.assertEquals(5, impl.InputMessages.size(), 'Wrong count of input wiretaps.');
+        System.assertEquals(5, impl.InputMessages.size(), 'Wrong count of input debugs.');
         System.assertEquals(9, [SELECT COUNT() FROM Message__c], 'Wrong total message count.');
         System.assertEquals(5, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong marked message count.');
         
-        //EXECUTE some wiretaps
+        //EXECUTE some debugs
         impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0002')});
         
         //assert
@@ -900,11 +900,11 @@
         impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0003')});
         
         //assert
-        System.assertEquals(4, impl.InputMessages.size(), 'Wrong count of input wiretaps.');
+        System.assertEquals(4, impl.InputMessages.size(), 'Wrong count of input debugs.');
         System.assertEquals(14, [SELECT COUNT() FROM Message__c ALL ROWS], 'Wrong total message count.'); //#1114
         System.assertEquals(4, [SELECT COUNT() FROM Message__c WHERE Status__c = 'Started'], 'Wrong marked message count.');
         
-        //EXECUTE some wiretaps
+        //EXECUTE some debugs
         impl.execute(context, new List<Slot__c>{new Slot__c(Name = '0004')});
         
         //assert

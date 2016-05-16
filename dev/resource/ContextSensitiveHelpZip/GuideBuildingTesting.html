@@ -21,7 +21,7 @@
 
 
 <p>
-    Start by creating a empty class called  <code>ChattertapService</code>. Next, paste the code
+    Start by creating a empty class called  <code>ChatterService</code>. Next, paste the code
     listed in <strong>Listing 1</strong>  into the newly created class
     and press Save.
     <br/>
@@ -36,7 +36,7 @@
     <strong>Listing 1</strong>
 </p>
 <pre>
-global class ChattertapService extends Abstract.Service {
+global class ChatterService extends Abstract.Service {
 
     global class Definition extends Abstract.Service.Definition {
         String Description = '';
@@ -99,7 +99,7 @@ global class ChattertapService extends Abstract.Service {
 
 
 <h1>
-    Tutorial - Building  the ChatterTap Service
+    Tutorial - Building  the Chatter Service
 </h1>
 
 
@@ -108,8 +108,8 @@ global class ChattertapService extends Abstract.Service {
     In this guide, we will take a more casual approach
     to understanding the construction and testing of a service.
 
-    We will use the <code>Wiretap</code> service as our inspiration. Instead of sending a message to a
-    specified user's email account, our service (<code>ChattertapService</code>) will instead send the message to the user's
+    We will use the <code>Debug</code> service as our inspiration. Instead of sending a message to a
+    specified user's email account, our service (<code>ChatterService</code>) will instead send the message to the user's
     chatter feed.
 </p>
 
@@ -124,7 +124,7 @@ global class ChattertapService extends Abstract.Service {
 </h2>
 
 <p>
-    The Services Package has a built-in <em>WireTap</em> service that surfaces the parameters of the
+    The Services Package has a built-in <em>Debug</em> service that surfaces the parameters of the
     input event via an email. The email is sent to either:
     <ol>
         <li>
@@ -132,14 +132,14 @@ global class ChattertapService extends Abstract.Service {
         </li>
         <li>
             the inbox of a nominated user as defined by a custom setting associated with the
-            <em>WireTap</em> service
+            <em>Debug</em> service
         </li>
     </ol>
 </p>
 
 <p>
-    This <em>Chattertap</em> service will replicate the <em>WireTap</em> functionality. But as an alternative to
-    surfacing the event parameters in the form of an email, the <em>Chattertap</em> service will instead post
+    This <em>Chatter</em> service will replicate the <em>Debug</em> functionality. But as an alternative to
+    surfacing the event parameters in the form of an email, the <em>Chatter</em> service will instead post
     these event parameters to a user's Chatter Feed.
 
     <ol>
@@ -152,11 +152,11 @@ global class ChattertapService extends Abstract.Service {
             <br/><br/>
             <ul>
                 <li>
-                    the specific user as defined by the <code>UserId</code> field of the <code>ChattertapServiceConfig</code>
+                    the specific user as defined by the <code>UserId</code> field of the <code>ChatterServiceConfig</code>
                     custom setting.
                 </li>
                 <li>
-                    If no <code>UserId</code> has been entered in the <code>ChattertapServiceConfig</code> custom setting,
+                    If no <code>UserId</code> has been entered in the <code>ChatterServiceConfig</code> custom setting,
                     use the <code>Id</code> of the running user context
                 </li>
             </ul>
@@ -189,12 +189,12 @@ global class ChattertapService extends Abstract.Service {
 
     <li>
         <p>
-            Create the custom setting (<code>ChattertapServiceConfig</code>) to hold the <em>ChatterTap</em> configuration and
+            Create the custom setting (<code>ChatterServiceConfig</code>) to hold the <em>Chatter</em> configuration and
             add a custom setting field to hold the <code>UserId</code> of the chatter feed.
         </p>
 
         <p>
-            <img src="resources/GuideBuildingTesting/ChattertapServiceConfig.png" />
+            <img src="resources/GuideBuildingTesting/ChatterServiceConfig.png" />
         </p>
 
         <p>  <br/> </p>
@@ -210,13 +210,13 @@ global class ChattertapService extends Abstract.Service {
             <strong>Listing 2</strong>
         </p>
 <pre>
-global class ChattertapService extends Abstract.Service {
+global class ChatterService extends Abstract.Service {
 
     global class Definition extends Abstract.Service.Definition {
         String Description = 'Chatters a message.';
         String Tag = 'Services';
-        String Label = 'Chattertap';
-        String ServiceConfig = ChattertapServiceConfig__c.class.getName();
+        String Label = 'Chatter';
+        String ServiceConfig = ChatterServiceConfig__c.class.getName();
         String Icon = 'feed';
         Integer Chunks = 5;
         String Cardinality = 'One';
@@ -301,13 +301,13 @@ global class ChattertapService extends Abstract.Service {
             <strong>Listing 3</strong>
         </p>
 <pre>
-global class ChattertapService extends Abstract.Service {
+global class ChatterService extends Abstract.Service {
 
     global class Definition extends Abstract.Service.Definition {
         String Description = 'Chatters a message.';
         String Tag = 'Services';
-        String Label = 'Chattertap';
-        String ServiceConfig = ChattertapServiceConfig__c.class.getName();
+        String Label = 'Chatter';
+        String ServiceConfig = ChatterServiceConfig__c.class.getName();
         String Icon = 'feed';
         Integer Chunks = 5;
         String Cardinality = 'One';
@@ -316,8 +316,8 @@ global class ChattertapService extends Abstract.Service {
     global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
         // input
         Id defaultUserId  = (Id)event.get('EnqueueUserId');
-        ChattertapServiceConfig__c chattertapServiceConfig = ChattertapServiceConfig__c.getOrgDefaults();
-        Id userId = chattertapServiceConfig.UserId__c;
+        ChatterServiceConfig__c ChatterServiceConfig = ChatterServiceConfig__c.getOrgDefaults();
+        Id userId = ChatterServiceConfig.UserId__c;
         if (userId == null) {
             userId = defaultUserId;
         }
@@ -356,13 +356,13 @@ global class ChattertapService extends Abstract.Service {
             <strong>Listing 4</strong>
         </p>
 <pre>
-global class ChattertapService extends Abstract.Service {
+global class ChatterService extends Abstract.Service {
 
     global class Definition extends Abstract.Service.Definition {
         String Description = 'Chatters a message.';
         String Tag = 'Services';
-        String Label = 'Chattertap';
-        String ServiceConfig = ChattertapServiceConfig__c.class.getName();
+        String Label = 'Chatter';
+        String ServiceConfig = ChatterServiceConfig__c.class.getName();
         String Icon = 'feed';
         Integer Chunks = 5;
         String Cardinality = 'One';
@@ -371,8 +371,8 @@ global class ChattertapService extends Abstract.Service {
     global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
         // input
         Id defaultUserId  = (Id)event.get('EnqueueUserId');
-        ChattertapServiceConfig__c chattertapServiceConfig = ChattertapServiceConfig__c.getOrgDefaults();
-        Id userId = chattertapServiceConfig.UserId__c;
+        ChatterServiceConfig__c ChatterServiceConfig = ChatterServiceConfig__c.getOrgDefaults();
+        Id userId = ChatterServiceConfig.UserId__c;
         if (userId == null) {
             userId = defaultUserId;
         }
@@ -428,7 +428,7 @@ global class ChattertapService extends Abstract.Service {
     </p>
 <pre>
 @IsTest
-private class ChatterTapServiceTest {
+private class ChatterServiceTest {
 
     static testmethod void callingExecuteWithoutConfigCreatesExpected() {
         // Arrange
@@ -442,7 +442,7 @@ private class ChatterTapServiceTest {
         Integer actualFeedItemsBeforeSize = [SELECT Id, Body FROM FeedItem].Size();
 
         // Act
-        ChatterTapService service = new ChatterTapService();
+        ChatterService service = new ChatterService();
         List&lt;Map&lt;String,Object&gt;&gt; outputEvents = service.handle(inputEvent);
 
         // Assemble
@@ -460,7 +460,7 @@ private class ChatterTapServiceTest {
     static testmethod void callingExecuteWithConfigCreatesExpected() {
         // Arrange
         Id userId  = UserInfo.getUserId();
-        insert new ChatterTapServiceConfig__c (
+        insert new ChatterServiceConfig__c (
             UserId__c = userId
         );
 
@@ -471,7 +471,7 @@ private class ChatterTapServiceTest {
         Integer actualFeedItemsBeforeSize = [SELECT Id, Body FROM FeedItem].Size();
 
         // Act
-        ChatterTapService service = new ChatterTapService();
+        ChatterService service = new ChatterService();
         List&lt;Map&lt;String,Object&gt;&gt; outputEvents = service.handle(inputEvent);
 
         // Assemble
@@ -516,10 +516,10 @@ private class ChatterTapServiceTest {
     <li>
         <p>
             Run the service as a one shot WITHOUT configuring a chatter user. Navigate to the services tab
-            and click on the <code>ChattertapService</code>.
+            and click on the <code>ChatterService</code>.
         </p>
 
-        <p><img src="resources/GuideBuildingTesting/Chattertap-Enqueue.png" /></p>
+        <p><img src="resources/GuideBuildingTesting/Chatter-Enqueue.png" /></p>
 
         <p>
             From the detail screen, press the Enqueue Test event Button.
@@ -543,21 +543,21 @@ private class ChatterTapServiceTest {
             and click on the Config link to configure the service.
         </p>
 
-        <p><img src="resources/GuideBuildingTesting/ChattertapService-Configure.png" /></p>
+        <p><img src="resources/GuideBuildingTesting/ChatterService-Configure.png" /></p>
 
         <p>
             Manage the custom setting at an org level by
             entering a User Id that that is different from  your own User Id and press Save.
         </p>
 
-        <p><img src="resources/GuideBuildingTesting/Manage-ChattertapServiceConfig.png" /></p>
+        <p><img src="resources/GuideBuildingTesting/Manage-ChatterServiceConfig.png" /></p>
 
 
         <p>
-            From the  services tab, click on the <code>ChattertapService</code>.
+            From the  services tab, click on the <code>ChatterService</code>.
         </p>
 
-        <p><img src="resources/GuideBuildingTesting/Chattertap-Enqueue.png" /></p>
+        <p><img src="resources/GuideBuildingTesting/Chatter-Enqueue.png" /></p>
 
         <p>
             From the detail screen, press the Enqueue Test event Button.
@@ -568,7 +568,7 @@ private class ChatterTapServiceTest {
 
 
         <p>
-            Verify that the chatter feed for the User  configured on the <code>ChattertapService</code>
+            Verify that the chatter feed for the User  configured on the <code>ChatterService</code>
             contains the details of your dispatched event.
         </p>
     </li>

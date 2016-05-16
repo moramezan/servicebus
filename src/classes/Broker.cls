@@ -2,7 +2,7 @@
  * Very fundamental order:
  *
  * Example sequence:
- * Test#1 [wiretap]
+ * Test#1 [debug]
  * Test#2 [terminate]
  *
  * [interactive] System.enqueueJob(job)
@@ -11,9 +11,9 @@
  * [tooling] System.scheduleBatch(broker)
  * [schedule] ...wait...
  * [batch.start]
- * [batch.execute] broker.locate() then broker.mark(wiretap)
- * [batch.execute] broker.execute(wiretap)
- * [batch.execute] broker.locate() then broker.persist(wiretap) then broker.mark(terminate)
+ * [batch.execute] broker.locate() then broker.mark(debug)
+ * [batch.execute] broker.execute(debug)
+ * [batch.execute] broker.locate() then broker.persist(debug) then broker.mark(terminate)
  * [batch.execute] broker.execute(terminate)
  * [batch.execute] broker.locate() then abort()
  */
