@@ -31,6 +31,7 @@ public with sharing class ApexClassViewExtension {
             return this.model.showHelpUrl();
             
         } catch (ApexClassModel.ModelException e) {
+            e.setMessage('ApexClassViewExtension.doInit: ' + e.getMessage());
             ApexPages.addMessages(e);
             return null;
         }

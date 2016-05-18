@@ -15,6 +15,7 @@ public with sharing class MessageKillExtension {
             
         } catch (MessageSetModel.ModelException e) {
             //failure, eg you are not allowed to kill any of those messages
+            e.setMessage('MessageKillExtension.doKill: ' + e.getMessage());
             ApexPages.addMessages(e);
             return null;
         }

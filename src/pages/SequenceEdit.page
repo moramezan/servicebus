@@ -12,7 +12,7 @@
         }());
     </script>
     
-    <apex:pageMessages showDetail="false" />
+    <apex:pageMessages showDetail="true" />
     
     <apex:sectionHeader help="{!URLFOR($Page.SequenceHelp)}" title="Version {!DraftVersion} (Draft)" subtitle="{!Sequence__c.Name}" description="Each step handles events as they flow through the sequence. Drag and drop the steps to reposition them." />
     

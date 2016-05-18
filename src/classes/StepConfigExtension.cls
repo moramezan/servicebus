@@ -21,6 +21,7 @@ public with sharing class StepConfigExtension {
             return this.model.showConfig();
             
         } catch (Exception e) {
+            e.setMessage('StepConfigExtension.doRedirect: ' + e.getMessage());
             ApexPages.addMessages(e);
             return null;
         }

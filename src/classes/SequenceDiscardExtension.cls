@@ -24,6 +24,7 @@ public with sharing class SequenceDiscardExtension implements Database.Batchable
             return currentPage;
             
         } catch (SequenceSetModel.ModelException e) {
+            e.setMessage('SequenceDiscardExtension.doDiscard: ' + e.getMessage());
             ApexPages.addMessages(e);
             return null;
         }

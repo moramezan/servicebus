@@ -1,3 +1,3 @@
 <apex:page setup="true" action="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashMonitor','sidebar'='true','header'='false'])}">
-    <apex:pageMessages showDetail="false" />
+    <apex:pageMessages showDetail="true" />
 </apex:page>

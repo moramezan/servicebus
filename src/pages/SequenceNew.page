@@ -12,7 +12,7 @@
         }());
     </script>
     
-    <apex:pageMessages showDetail="false" />
+    <apex:pageMessages showDetail="true" />
     
     <apex:form rendered="{!ISNULL(Messages)}">
 

@@ -12,7 +12,7 @@
         }());
     </script>
     
-    <apex:pageMessages />
+    <apex:pageMessages showDetail="true" />
     
     <!-- make the loading mask go away -->
     <style>div.z-mask {background: none !important;}</style>

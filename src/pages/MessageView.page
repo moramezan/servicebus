@@ -1,6 +1,6 @@
 <apex:page title="Message: {!$CurrentPage.Parameters.mid}" setup="true" standardController="Message__c" extensions="MessageViewExtension" action="{!doInit}">
     
-    <apex:pageMessages />
+    <apex:pageMessages showDetail="true" />
     
     <script>
         (function() {

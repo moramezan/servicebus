@@ -15,6 +15,7 @@ public with sharing class ApexClassConfigExtension {
             this.KeyPrefix = result.getKeyPrefix();
             
         } catch (ApexClassModel.ModelException e) {
+            e.setMessage('ApexClassConfigExtension: ' + e.getMessage());
             ApexPages.addMessages(e);
             
         }

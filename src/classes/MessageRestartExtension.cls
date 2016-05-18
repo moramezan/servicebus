@@ -15,6 +15,7 @@ public with sharing class MessageRestartExtension {
             
         } catch (MessageSetModel.ModelException e) {
             //failure, eg you are not allowed to restart any of those messages
+            e.setMessage('MessageRestartExtension.doRestart: ' + e.getMessage());
             ApexPages.addMessages(e);
             return null;
         }

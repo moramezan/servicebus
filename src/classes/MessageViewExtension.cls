@@ -30,6 +30,7 @@ public with sharing class MessageViewExtension {
             Message__c message = (Message__c)ApexDomain.getById(this.mid);
             return ApexClassModel.fromRoute(message.Route__c).getDefinition();
         } catch (Exception e) {
+            e.setMessage('MessageViewExtension.getDefinition: ' + e.getMessage());
             ApexPages.addMessages(e);
             return null;
         }
@@ -61,6 +62,7 @@ public with sharing class MessageViewExtension {
         try {
             Type.forName(DoDml.class.getName()).newInstance();
         } catch (Exception e) {
+            e.setMessage('MessageViewExtension.doInit: ' + e.getMessage());
             ApexPages.addMessages(e);
         }
         
@@ -71,6 +73,7 @@ public with sharing class MessageViewExtension {
         try {
             return MessageModel.fromId(this.mid).showService();
         } catch (MessageModel.ModelException e) {
+            e.setMessage('MessageViewExtension.showService: ' + e.getMessage());
             ApexPages.addMessages(e);
             return null;
         }
@@ -80,6 +83,7 @@ public with sharing class MessageViewExtension {
         try {
             return MessageModel.fromId(this.mid).showRecordData();
         } catch (MessageModel.ModelException e) {
+            e.setMessage('MessageViewExtension.showData: ' + e.getMessage());
             ApexPages.addMessages(e);
             return null;
         }

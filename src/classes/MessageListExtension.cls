@@ -15,6 +15,7 @@ public with sharing class MessageListExtension {
         try {
             Type.forName(DoDml.class.getName()).newInstance();
         } catch (Exception e) {
+            e.setMessage('MessageListExtension.doInit: ' + e.getMessage());
             ApexPages.addMessages(e);
         }
     }

@@ -24,6 +24,7 @@ public with sharing class SequenceCheckoutExtension implements Database.Batchabl
             return currentPage;
             
         } catch (SequenceSetModel.ModelException e) {
+            e.setMessage('SequenceCheckoutExtension.doCheckout: ' + e.getMessage());
             ApexPages.addMessages(e);
             return null;
         }

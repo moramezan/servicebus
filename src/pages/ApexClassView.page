@@ -14,7 +14,7 @@
     
     <apex:stylesheet value="{!URLFOR($Resource.SequenceEditZip, '/resources/Builder-all.css')}" />
     
-    <apex:pageMessages showDetail="false" />
+    <apex:pageMessages showDetail="true" />
     
     <apex:sectionHeader rendered="{!FullyQualifiedClassName != Definition.Label}" title="Service" subtitle="{!Definition.Label}" />
     <apex:sectionHeader rendered="{!FullyQualifiedClassName == Definition.Label}" title="Service" subtitle="{!FullyQualifiedClassName}" />

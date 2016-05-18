@@ -24,6 +24,7 @@ public with sharing class SequenceCommitExtension implements Database.Batchable<
             return currentPage;
             
         } catch (SequenceSetModel.ModelException e) {
+            e.setMessage('SequenceCommitExtension.doCommit: ' + e.getMessage());
             ApexPages.addMessages(e);
             return null;
         }

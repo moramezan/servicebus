@@ -1,3 +1,3 @@
 <apex:page setup="true" standardController="Message__c" recordSetVar="messageset" extensions="MessageKillExtension" action="{!doKill}">
-    <apex:pageMessages showDetail="false" /><!-- summary and detail are same, false prevents double message -->
+    <apex:pageMessages showDetail="true" /><!-- summary and detail are same, false prevents double message -->
 </apex:page>

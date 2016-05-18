@@ -12,7 +12,7 @@
         }());
     </script>
     
-    <apex:pageMessages showDetail="false" />
+    <apex:pageMessages showDetail="true" />
     
     <apex:sectionHeader title="Monitor" description="The message queue monitor shows system activity at a glance. Green areas are queued events, red areas are events with exceptions." help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashMonitor'])}" />
     
