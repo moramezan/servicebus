@@ -203,10 +203,6 @@
         String expectedRefreshToken = 'rrrrr';
         String actualRefreshToken = Application__c.getOrgDefaults().RunAsRefreshToken__c;
         System.assertEquals(expectedRefreshToken, actualRefreshToken, 'Wrong refresh token.');
-        
-        String expectedAccessToken = 'aaaaa';
-        String actualAccessToken = Application__c.getOrgDefaults().RunAsAccessToken__c;
-        System.assertEquals(expectedAccessToken, actualAccessToken, 'Wrong access token.');
     }
     
     static testmethod void testDoRedirectPostInstall() {
@@ -302,7 +298,7 @@
         
         //act (pretend to configure)
         Application__c application = Application__c.getOrgDefaults();
-        application.RunAsAccessToken__c = '00D000000000000AAA';
+        application.RunAsRefreshToken__c = '00D000000000000AAA';
         application.OrgConfigured__c = UserInfo.getOrganizationId().substring(3, 15);
         upsert application;
         

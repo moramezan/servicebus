@@ -142,7 +142,6 @@
         <members>Application__c.Prefix__c</members>
         <members>Application__c.RouterIsBusy__c</members>
         <members>Application__c.RouterVersion__c</members>
-        <members>Application__c.RunAsAccessToken__c</members>
         <members>Application__c.RunAsRefreshToken__c</members>
         <members>Application__c.RunAsUserId__c</members>
         <members>DebugServiceConfig__c.UserId__c</members>

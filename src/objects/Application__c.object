@@ -144,17 +144,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>RunAsAccessToken__c</fullName>
-        <description>Roaring and ready access token that can be used to invoke Salesforce APIs.</description>
-        <externalId>false</externalId>
-        <label>Run As Access Token</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>RunAsRefreshToken__c</fullName>
         <description>The access token should be refreshed periodically using this refresh token.</description>
         <externalId>false</externalId>

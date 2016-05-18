@@ -408,7 +408,6 @@ public with sharing class ConfigureController {
             Token t = (Token)Json.deserialize(response.getBody(), Token.class);
             application = Application__c.getOrgDefaults();
             application.RunAsUserId__c = UserInfo.getUserId();
-            application.RunAsAccessToken__c = t.access_token;
             application.RunAsRefreshToken__c = t.refresh_token;
             Type.forName(DoDml.class.getName()).newInstance();
             
@@ -560,11 +559,11 @@ public with sharing class ConfigureController {
      */
     static public PageReference ConfigureIfNeeded(PageReference retURL) {
         
-        String sessionId = Application__c.getOrgDefaults().RunAsAccessToken__c;
+        String theRefreshToken = Application__c.getOrgDefaults().RunAsRefreshToken__c;
         String configuredOrgId = Application__c.getOrgDefaults().OrgConfigured__c;
         String unprefixedOrgId = UserInfo.getOrganizationId().substring(3, 15);
         
-        if (null == sessionId) {
+        if (null == theRefreshToken) {
             //failure, user never clicked configure button
             PageReference configure = Page.Configure;
             if (retURL != null) configure.getParameters().put('retURL', retURL.getUrl());
