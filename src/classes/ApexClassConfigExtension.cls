@@ -29,7 +29,7 @@ public with sharing class ApexClassConfigExtension {
         
         //custom settings display setup menu
         PageReference redirect = new PageReference('/setup/ui/listCustomSettingsData.apexp');
-        redirect.getParameters().put('id', 'a0A');
+        redirect.getParameters().put('id', this.result.getKeyPrefix());
         return redirect;
     }
     
