@@ -29,6 +29,7 @@
         <apex:pageBlock mode="maindetail" title="Message Detail">
             
             <apex:pageBlockButtons location="top">
+                <apex:commandButton action="{!URLFOR($Action.Message__c.Edit, $CurrentPage.Parameters.mid, ['retURL'=$CurrentPage.URL])}" rendered="{!$ObjectType.Message__c.Updateable}" value="Edit" />
                 <apex:dynamicComponent componentValue="{!Restart}" rendered="{!Message.Exception__c != null || Message.Status__c == 'Paused'}" />
                 <apex:commandButton value="Show Record Data" action="{!showData}" />
                 <apex:commandButton rendered="{!Definition != null}" value="Show Apex Service" action="{!showService}" />
