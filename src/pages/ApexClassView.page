@@ -67,6 +67,11 @@
                 <apex:outputLink value="/{!Id}">{!FullyQualifiedClassName}</apex:outputLink>
             </apex:pageBlockSectionItem>
             
+            <apex:pageBlockSectionItem rendered="{!Definition.ServiceConfig != null}">
+                <apex:outputLabel >Service Config</apex:outputLabel>
+                <apex:outputLink value="{!URLFOR($Page.ApexClassConfig, null, ['id'=Definition.Id])}">{!Definition.ServiceConfig}</apex:outputLink>
+            </apex:pageBlockSectionItem>
+            
             <apex:pageBlockSectionItem rendered="{!Definition.Chunks != 1}">
                 <apex:outputLabel style="font-weight: bold;">Chunks</apex:outputLabel>
                 <apex:outputText value="{!Definition.Chunks}" />
