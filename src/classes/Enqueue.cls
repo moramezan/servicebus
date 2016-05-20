@@ -46,7 +46,7 @@ global class Enqueue implements Process.Plugin {
         
         //prepare session
         Application__c setting = Application__c.getOrgDefaults();
-        String accessToken = ConfigureController.refreshAccessToken();
+        setting.RunAsAccessToken__c = ConfigureController.refreshAccessToken();
         
         //prepare command
         String command = ''
@@ -71,7 +71,7 @@ global class Enqueue implements Process.Plugin {
         Dom.XmlNode header = envelope.addChildElement('Header', env, 'env');
         Dom.XmlNode sessionHeader = header.addChildElement('SessionHeader', xmlns, '');
         Dom.XmlNode sessionId = sessionHeader.addChildElement('sessionId', null, null);
-        sessionId.addTextNode(accessToken);
+        sessionId.addTextNode(setting.RunAsAccessToken__c);
         
         //soap body
         Dom.XmlNode body = envelope.addChildElement('Body', env, 'env');

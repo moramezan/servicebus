@@ -1,7 +1,6 @@
 public with sharing class MessageViewExtension {
     
     Id mid;
-    static String accessToken;
     ApexPages.StandardController controller;
     static Application__c application = Application__c.getOrgDefaults();
 
@@ -23,7 +22,7 @@ public with sharing class MessageViewExtension {
         
         //grab latest access token
         this.mid = ApexPages.currentPage().getParameters().get('mid');
-        if (!Test.isRunningTest()) accessToken = ConfigureController.refreshAccessToken();
+        if (!Test.isRunningTest()) application.RunAsAccessToken__c = ConfigureController.refreshAccessToken();
     }
     
     public ApexClassModel.Definition getDefinition() {
@@ -103,7 +102,7 @@ public with sharing class MessageViewExtension {
      * must pull it straight off the refresh happening in constructor
      */
     public String javascript() {
-        String sid = accessToken;
+        String sid = application.RunAsAccessToken__c;
         String bar = Application__c.getOrgDefaults().PrefixBar__c;
         String dot = Application__c.getOrgDefaults().PrefixDot__c;
         if (sid == null) sid = '';
