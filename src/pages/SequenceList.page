@@ -12,7 +12,7 @@
         }());
     </script>
     
-    <apex:sectionHeader title="Sequences" description="A Sequence is an arrangement of processing tasks called steps." help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashSequence'])}" />
+    <apex:sectionHeader title="Sequences" description="A Sequence is an arrangement of processing tasks called steps." help="{!URLFOR($Page.SequenceSplash)}" />
     
     <apex:pageMessage severity="Info" summary="Versioning allows you to snapshot all sequences." detail="After committing a new version, choose it below." strength="2">
     <!--<apex:pageBlock mode="maindetail">-->

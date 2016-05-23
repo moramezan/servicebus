@@ -12,7 +12,7 @@
         }());
     </script>
     
-    <apex:sectionHeader title="Messages" description="A message is a container for holding a real world event. Wrapping each event in a message gives a handle to identify it." help="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashMessage'])}" />
+    <apex:sectionHeader title="Messages" description="A message is a container for holding a real world event. Wrapping each event in a message gives a handle to identify it." help="{!URLFOR($Page.MessageSplash)}" />
     
     <apex:form >
         <apex:pageMessage rendered="{!NOT($Setup.Application__c.BrokerIsPaused__c)}" severity="Confirm" summary="The message broker is listening." detail="New messages will be processed." strength="2">

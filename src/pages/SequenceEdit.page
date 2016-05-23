@@ -14,7 +14,7 @@
     
     <apex:pageMessages showDetail="true" />
     
-    <apex:sectionHeader help="{!URLFOR($Page.SequenceHelp)}" title="Version {!DraftVersion} (Draft)" subtitle="{!Sequence__c.Name}" description="Each step handles events as they flow through the sequence. Drag and drop the steps to reposition them." />
+    <apex:sectionHeader title="Version {!DraftVersion} (Draft)" subtitle="{!Sequence__c.Name}" description="Each step handles events as they flow through the sequence. Drag and drop the steps to reposition them." help="{!URLFOR($Page.SequenceSplash)}" />
     
     <!-- make the loading mask a little bit less harsh -->
     <style>div[id="{!$Component.pageBlockId}"] div.z-mask {background-color: rgba(204,204,204,0.6);}</style>

@@ -19,7 +19,7 @@
     
     <apex:outputPanel rendered="{!$CurrentPage.Parameters.Id != null}" layout="none">
         
-        <apex:sectionHeader help="{!URLFOR($Page.SequenceHelp)}" title="Commit New Version" />
+        <apex:sectionHeader title="Commit New Version" help="{!URLFOR($Page.SequenceSplash)}" />
         
         <div id="pageBlockId"></div>
         

@@ -20,7 +20,7 @@
         $RemoteAction.MessageViewExtension.handleRestart = '{!$RemoteAction.MessageViewExtension.handleRestart}';
     </script>
     
-    <apex:sectionHeader title="{!$ObjectType.Message__c.Label}" subtitle="{!message.Name}" help="{!URLFOR($Page.MessageHelp)}" />
+    <apex:sectionHeader title="{!$ObjectType.Message__c.Label}" subtitle="{!message.Name}" help="{!URLFOR($Page.MessageSplash)}" />
     
     <apex:includeScript value="{!URLFOR('/soap/ajax/36.0/connection.js')}" />
     <apex:includeScript value="{!URLFOR('/soap/ajax/36.0/apex.js')}" />

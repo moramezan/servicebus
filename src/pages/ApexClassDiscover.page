@@ -17,7 +17,7 @@
     <!-- make the loading mask go away -->
     <style>div.z-mask {background: none !important;}</style>
     
-    <apex:sectionHeader help="{!URLFOR($Page.SequenceHelp)}" title="Service Discovery" />
+    <apex:sectionHeader title="Service Discovery" help="{!URLFOR($Page.ApexClassSplash)}" />
     
     <div id="pageBlockId"></div>
     

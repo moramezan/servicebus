@@ -19,7 +19,7 @@
     
     <apex:outputPanel rendered="{!$CurrentPage.Parameters.Id != null}" layout="none">
         
-        <apex:sectionHeader help="{!URLFOR($Page.SequenceHelp)}" title="Discard Draft Version" />
+        <apex:sectionHeader title="Discard Draft Version" help="{!URLFOR($Page.SequenceSplash)}" />
     
         <div id="pageBlockId"></div>
         
