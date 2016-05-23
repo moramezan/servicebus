@@ -281,7 +281,7 @@
                             "    'html': 'Config',",
                             "    'class': 'configurelink',",
                             "    'onclick': 'return false;',",
-                            "    'title': 'Configure Step',",
+                            "    'title': 'Manage Step Config',",
                             "    'href': '#'",
                             "});"
                         ]
