@@ -26,7 +26,7 @@
             <apex:form id="form">
                 <apex:actionStatus id="busy">
                     <apex:facet name="stop">
-                        <apex:commandButton rendered="{!Definition.StepConfig == null}" value="Enqueue Test Event" onclick="enqueue(); return false;">
+                        <apex:commandButton value="Enqueue Test Event" onclick="enqueue(); return false;">
                             <apex:actionFunction name="enqueue" reRender="form" action="{!doEnqueue}" status="busy" oncomplete="Ext.Msg.alert('Success', 'Test message has been enqueued. <br />Submitted Job Id: {!LINKTO(JobId, URLFOR($Page.MessageView, null, [mid=MessageId]))}').setIcon(Ext.Msg.QUESTION);" />
                         </apex:commandButton>
                     </apex:facet>
@@ -72,6 +72,11 @@
                 <apex:outputLink value="{!URLFOR($Page.ApexClassConfig, null, ['id'=Definition.Id])}">{!Definition.ServiceConfig}</apex:outputLink>
             </apex:pageBlockSectionItem>
             
+            <apex:pageBlockSectionItem rendered="{!Definition.StepConfig != null}">
+                <apex:outputLabel >Step Config</apex:outputLabel>
+                <apex:outputText value="{!Definition.StepConfig}" />
+            </apex:pageBlockSectionItem>
+            
             <apex:pageBlockSectionItem rendered="{!Definition.Chunks != 1}">
                 <apex:outputLabel style="font-weight: bold;">Chunks</apex:outputLabel>
                 <apex:outputText value="{!Definition.Chunks}" />
@@ -89,7 +94,7 @@
 
         </apex:pageBlockSection>
     </apex:pageBlock>
-        
+    
     <apex:pageBlock mode="maindetail" title="Input Event Parameters" rendered="{!Definition.Inputs != null}">
         <apex:pageBlockSection showHeader="false" collapsible="false" columns="1" title="Input Event Parameters" rendered="{!Definition.Inputs != null}">
             <apex:repeat value="{!Definition.Inputs}" var="key">
@@ -110,6 +115,30 @@
                 </apex:pageBlockSectionItem>
             </apex:repeat>
         </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+    <apex:pageBlock mode="detail" title="Sequence Steps (Version {!$Setup.Application__c.RouterVersion__c})">
+        <apex:pageBlockTable rendered="{!Steps.Empty}" value="{!Steps}" var="step" captionClass="left">
+            <apex:facet name="caption">
+                No records to display
+            </apex:facet>
+        </apex:pageBlockTable>
+        
+        <apex:pageBlockTable rendered="{!NOT(Steps.Empty)}" value="{!Steps}" var="step">
+            
+            <apex:column headerValue="{!$ObjectType.Step__c.Fields.Sequence__c.Label}">
+                <apex:outputField value="{!step.Sequence__c}" />
+            </apex:column>
+            
+            <apex:column headerValue="{!$ObjectType.Step__c.Fields.Position__c.Label}">
+                <apex:outputField value="{!step.Position__c}" />
+            </apex:column>
+            
+            <apex:column headerValue="Step Config" rendered="{!Definition.StepConfig != null}">
+                <apex:outputLink target="_blank" rendered="{!step.ConfigId__c != null}" value="{!URLFOR($Page.StepConfig, null, ['id'=step.Id])}">{!step.ConfigName__c}</apex:outputLink>
+            </apex:column>
+            
+        </apex:pageBlockTable>
     </apex:pageBlock>
     
     <apex:variable var="application" value="Builder" /><!-- Application namespace such as MyApp -->

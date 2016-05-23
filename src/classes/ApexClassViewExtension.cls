@@ -37,6 +37,16 @@ public with sharing class ApexClassViewExtension {
         }
     }
     
+    public List<Step__c> getSteps() {
+        return [
+            SELECT Id, Name, Version__c, Sequence__c, Position__c, ConfigId__c, ConfigName__c
+            FROM Step__c
+            WHERE ApexTypeName__c = :this.FullyQualifiedClassName
+            AND Version__c = :Application__c.getOrgDefaults().RouterVersion__c
+            ORDER BY Name ASC
+        ];
+    }
+    
     /**
      * #1096
      */
