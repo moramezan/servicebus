@@ -16,7 +16,7 @@
     
     <apex:pageMessages showDetail="true" />
     
-    <apex:sectionHeader rendered="{!}" title="Service" subtitle="{!IF(FullyQualifiedClassName == Definition.Label, FullyQualifiedClassName, Definition.Label)}" help="{!URLFOR($Page.ApexClassSplash)}" />
+    <apex:sectionHeader title="Service" subtitle="{!IF(FullyQualifiedClassName == Definition.Label, FullyQualifiedClassName, Definition.Label)}" help="{!URLFOR($Page.ApexClassSplash)}" />
 
     <apex:pageBlock mode="maindetail" title="Service Detail" id="pageBlockId">
         
