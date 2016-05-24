@@ -235,17 +235,6 @@ public class MessageModel extends ApexDomain.StandardModel {
         Broker.impl().run();
     }
     
-    public PageReference showRecordData() {
-        try {
-            Id recordId = (Id)this.getParam('RecordId');
-            SObject recordData = ApexDomain.getById(recordId);
-            return new ApexPages.StandardController(recordData).view();
-            
-        } catch (ApexDomain.DomainException e) {
-            throw new ModelException('Could not show record data: ' + e.getMessage());
-        }
-    }
-    
     /**
      * Takes us to the standard salesforce page for the apex class
      */

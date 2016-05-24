@@ -31,7 +31,6 @@
             <apex:pageBlockButtons location="top">
                 <apex:commandButton action="{!URLFOR($Action.Message__c.Edit, $CurrentPage.Parameters.mid, ['retURL'=$CurrentPage.URL])}" rendered="{!$ObjectType.Message__c.Updateable && Message.Status__c != 'Completed'}" value="Edit" />
                 <apex:dynamicComponent componentValue="{!Restart}" rendered="{!Message.Exception__c != null || Message.Status__c == 'Paused'}" />
-                <apex:commandButton value="Show Record Data" action="{!showData}" />
             </apex:pageBlockButtons>
             
             <apex:pageBlockSection columns="1" collapsible="false" showHeader="false">
