@@ -98,6 +98,7 @@
         <members>ApexClassView</members>
         <members>Configure</members>
         <members>ContextSensitiveHelp</members>
+        <members>MessageEdit</members>
         <members>MessageHelp</members>
         <members>MessageKill</members>
         <members>MessageList</members>

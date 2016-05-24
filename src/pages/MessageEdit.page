@@ -1,0 +1,40 @@
+<apex:page title="Message: {!Message__c.Name}" setup="true" standardController="Message__c">
+    
+    <apex:pageMessages showDetail="true" />
+    
+    <script>
+        (function() {
+            if (!document.getElementsByClassName) return;
+            var lis = document.getElementsByClassName('wt-Message');
+            if (!lis.length) return;
+            lis[0].className += ' zen-active primaryPalette';
+            var a = lis[0].children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+    </script>
+    
+    <apex:form >
+
+        <apex:sectionHeader title="{!$ObjectType.Message__c.Label}" subtitle="{!Message__c.Name}" help="{!URLFOR($Page.MessageSplash)}" />
+
+        <apex:pageBlock title="Message Edit" mode="edit">
+            <apex:pageBlockSection title="Event" columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:inputField value="{!Message__c.Event__c}" style="box-sizing: border-box; width: 100%; font-family: monospace;" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Save" action="{!save}" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+    
+    <style>
+        .pre {white-space: pre-wrap; font-family: monospace;}
+        .left {text-align: left;}
+        .right {text-align: right;}
+    </style>
+    
+</apex:page>

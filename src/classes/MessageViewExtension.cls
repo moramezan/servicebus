@@ -79,16 +79,6 @@ public with sharing class MessageViewExtension {
         }
     }
     
-    public PageReference showData() {
-        try {
-            return MessageModel.fromId(this.mid).showRecordData();
-        } catch (MessageModel.ModelException e) {
-            e.setMessage('MessageViewExtension.showData: ' + e.getMessage());
-            ApexPages.addMessages(e);
-            return null;
-        }
-    }
-    
     public ApexPages.Component getRestart() {
         Component.Apex.CommandButton commandButton = new Component.Apex.CommandButton();
         commandButton.value = 'Restart Message';

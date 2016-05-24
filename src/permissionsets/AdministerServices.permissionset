@@ -441,6 +441,10 @@
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>
+        <apexPage>MessageEdit</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
         <apexPage>MessageHelp</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
