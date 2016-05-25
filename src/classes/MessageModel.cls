@@ -290,6 +290,7 @@ public class MessageModel extends ApexDomain.StandardModel {
             SELECT Id, ExtendedStatus
             FROM AsyncApexJob
             WHERE Id = :this.Message.JobId__c
+            AND Status IN ('Completed', 'Aborted', 'Failed')
         ];
         
         if (asyncApexJobs.isEmpty()) {
@@ -315,6 +316,11 @@ public class MessageModel extends ApexDomain.StandardModel {
 
     static public String scrubException(String exceptions) {
 
+        if (exceptions == null) {
+            //what, no exception
+            return '';
+        }
+
         //pessimistic line endings and truncate
         exceptions = exceptions.replaceAll('[\r]?\n', '\r\n');
         exceptions = exceptions.abbreviate(SObjectType.Message__c.Fields.Exception__c.Length);
@@ -329,6 +335,11 @@ public class MessageModel extends ApexDomain.StandardModel {
      * https://github.com/bigassforce/services/commit/2dd94e19c156170b86dc30b50e5e375876f5e758
      */
     static public String scrubCause(String cause) {
+
+        if (cause == null) {
+            //what, no cause
+            return '';
+        }
 
         //remove framework artefacts
         cause = cause.replaceAll('\r?\n?\\(abstract\\)', '');
